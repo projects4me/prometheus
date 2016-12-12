@@ -1,0 +1,26 @@
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the login page of the application.
+*/
+
+.sidebar-menu>li:hover>a, .sidebar-menu>li.active>a{
+  border-left-color: $primaryColor;
+}
+
+.sidebar-form .input-group{
+  width: 100%;
+}
+
+.main-sidebar .ember-power-select-trigger{
+  background-color: $primaryColor;
+  border: none;
+  color: $backgroundColor;
+
+  .ember-power-select-placeholder{
+    color: $backgroundColor;
+  }
+  .ember-power-select-status-icon{
+    border-color: $backgroundColor transparent transparent transparent;
+  }
+}

@@ -1,0 +1,1731 @@
+{
+    "project": {
+        "name": "Projects4Me",
+        "description": "Open source project management and collaboration software",
+        "url": "http://porjects4.me/",
+        "version": "0.0.0"
+    },
+    "files": {
+        "app/adapters/application.js": {
+            "name": "app/adapters/application.js",
+            "modules": {},
+            "classes": {
+                "ApplicationAdapter": 1
+            },
+            "fors": {
+                "ApplicationAdapter": 1
+            },
+            "namespaces": {}
+        },
+        "app/authenticators/oauth2.js": {
+            "name": "app/authenticators/oauth2.js",
+            "modules": {},
+            "classes": {
+                "OAuth2Authenticator": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "app/authorizers/oauth2.js": {
+            "name": "app/authorizers/oauth2.js",
+            "modules": {},
+            "classes": {
+                "OAuth2Authorizer": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "app/components/nav-bar.js": {
+            "name": "app/components/nav-bar.js",
+            "modules": {
+                "App.Components": 1
+            },
+            "classes": {
+                "Prometheus.NavBarComponent": 1
+            },
+            "fors": {
+                "nav-bar": 1
+            },
+            "namespaces": {
+                "Prometheus": 1
+            }
+        },
+        "app/controllers/app.js": {
+            "name": "app/controllers/app.js",
+            "modules": {},
+            "classes": {
+                "AppController": 1
+            },
+            "fors": {
+                "AppController": 1
+            },
+            "namespaces": {}
+        },
+        "app/controllers/signin.js": {
+            "name": "app/controllers/signin.js",
+            "modules": {},
+            "classes": {
+                "SigninController": 1
+            },
+            "fors": {
+                "AppController": 1
+            },
+            "namespaces": {}
+        },
+        "app/helpers/get-date.js": {
+            "name": "app/helpers/get-date.js",
+            "modules": {},
+            "classes": {
+                "GetDateHelper": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "app/helpers/not-last.js": {
+            "name": "app/helpers/not-last.js",
+            "modules": {},
+            "classes": {
+                "NotLastHelper": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "app/initializers/inject-router.js": {
+            "name": "app/initializers/inject-router.js",
+            "modules": {},
+            "classes": {
+                "InjectRouterInitializer": 1
+            },
+            "fors": {
+                "Initializer": 1
+            },
+            "namespaces": {}
+        },
+        "app/initializers/javascript-behaviors.js": {
+            "name": "app/initializers/javascript-behaviors.js",
+            "modules": {},
+            "classes": {
+                "JavascriptBehaviorsInitializer": 1
+            },
+            "fors": {
+                "Initializer": 1
+            },
+            "namespaces": {}
+        },
+        "app/initializers/setup-logger.js": {
+            "name": "app/initializers/setup-logger.js",
+            "modules": {},
+            "classes": {
+                "SetupLoggerInitializer": 1
+            },
+            "fors": {
+                "Initializer": 1
+            },
+            "namespaces": {}
+        },
+        "app/locales/en/translations.js": {
+            "name": "app/locales/en/translations.js",
+            "modules": {},
+            "classes": {
+                "Prometheus.en": 1
+            },
+            "fors": {},
+            "namespaces": {
+                "Prometheus": 1
+            }
+        },
+        "app/models/project.js": {
+            "name": "app/models/project.js",
+            "modules": {},
+            "classes": {
+                "Prometheus.ProjectModel": 1
+            },
+            "fors": {
+                "Prometheus.ProjectModel": 1
+            },
+            "namespaces": {}
+        },
+        "app/models/token.js": {
+            "name": "app/models/token.js",
+            "modules": {},
+            "classes": {
+                "Prometheus.TokenModel": 1
+            },
+            "fors": {
+                "Prometheus.TokenModel": 1
+            },
+            "namespaces": {}
+        },
+        "app/models/user.js": {
+            "name": "app/models/user.js",
+            "modules": {},
+            "classes": {
+                "Prometheus.UserModel": 1
+            },
+            "fors": {
+                "Prometheus.UserModel": 1
+            },
+            "namespaces": {}
+        },
+        "app/routes/app/wiki.js": {
+            "name": "app/routes/app/wiki.js",
+            "modules": {},
+            "classes": {
+                "Prometheus.AppWikiRoute": 1
+            },
+            "fors": {
+                "app.module": 1
+            },
+            "namespaces": {}
+        },
+        "app/routes/app.js": {
+            "name": "app/routes/app.js",
+            "modules": {},
+            "classes": {},
+            "fors": {
+                "Routes": 1
+            },
+            "namespaces": {}
+        },
+        "app/routes/application.js": {
+            "name": "app/routes/application.js",
+            "modules": {},
+            "classes": {
+                "ApplicationRoute": 1
+            },
+            "fors": {
+                "Routes": 1,
+                "application": 1
+            },
+            "namespaces": {}
+        },
+        "app/routes/signin.js": {
+            "name": "app/routes/signin.js",
+            "modules": {},
+            "classes": {
+                "AppRoute": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "app/utils/metadata/metadata.js": {
+            "name": "app/utils/metadata/metadata.js",
+            "modules": {},
+            "classes": {
+                "MetadataUtil": 1
+            },
+            "fors": {
+                "MetadataUtil": 1
+            },
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "App.Components": {
+            "name": "App.Components",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "ApplicationAdapter": 1,
+                "OAuth2Authenticator": 1,
+                "OAuth2Authorizer": 1,
+                "Prometheus.NavBarComponent": 1,
+                "Prometheus.nav-bar": 1,
+                "AppController": 1,
+                "SigninController": 1,
+                "GetDateHelper": 1,
+                "NotLastHelper": 1,
+                "InjectRouterInitializer": 1,
+                "Initializer": 1,
+                "JavascriptBehaviorsInitializer": 1,
+                "SetupLoggerInitializer": 1
+            },
+            "fors": {
+                "nav-bar": 1,
+                "AppController": 1,
+                "Initializer": 1
+            },
+            "namespaces": {
+                "Prometheus": 1
+            },
+            "tag": "module",
+            "file": "app/initializers/setup-logger.js",
+            "line": 4,
+            "description": "This component is responsible for rendering the navigation bar in the application"
+        },
+        "i18n": {
+            "name": "i18n",
+            "submodules": {
+                "Application": 1
+            },
+            "elements": {},
+            "classes": {
+                "Prometheus.en": 1,
+                "Prometheus.ProjectModel": 1,
+                "Prometheus.TokenModel": 1,
+                "Prometheus.UserModel": 1,
+                "Prometheus.AppWikiRoute": 1,
+                "Prometheus.app.module": 1,
+                "AppRoute": 1,
+                "Routes": 1,
+                "ApplicationRoute": 1,
+                "application": 1,
+                "MetadataUtil": 1
+            },
+            "fors": {
+                "Prometheus.ProjectModel": 1,
+                "Prometheus.TokenModel": 1,
+                "Prometheus.UserModel": 1,
+                "app.module": 1,
+                "Routes": 1,
+                "application": 1,
+                "MetadataUtil": 1
+            },
+            "namespaces": {
+                "Prometheus": 1
+            },
+            "file": "app/utils/metadata/metadata.js",
+            "line": 5
+        },
+        "Application": {
+            "name": "Application",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "Prometheus.en": 1
+            },
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {
+                "Prometheus": 1
+            },
+            "module": "i18n",
+            "namespace": "",
+            "description": "This is the english language tranlations for the project. For now they are\nhard coded but in future we would want to load them from the server and\nwe would like to allow people to include their own translations.\n\nThis should also be possible for plugins to have their own translations.\n\nNeed to see if we can support rtl",
+            "file": "app/locales/en/translations.js",
+            "line": 2
+        }
+    },
+    "classes": {
+        "ApplicationAdapter": {
+            "name": "ApplicationAdapter",
+            "shortname": "ApplicationAdapter",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "file": "app/adapters/application.js",
+            "line": 7,
+            "description": "This is the application adapter that fetches the information from the API.\nIn order to be able to handle data effectively we are using the JSONAPI\nstandards.",
+            "extends": "DS.JSONAPIAdapter",
+            "uses": [
+                "DataAdapterMixin"
+            ],
+            "todo": [
+                "retrieve the host name from the configurations."
+            ]
+        },
+        "OAuth2Authenticator": {
+            "name": "OAuth2Authenticator",
+            "shortname": "OAuth2Authenticator",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "file": "app/authenticators/oauth2.js",
+            "line": 16,
+            "description": "This class allows the application to authenticate with using a password grant",
+            "extends": "OAuth2PasswordGrant",
+            "author": "Hammad Hassan gollomer@gmail.com"
+        },
+        "OAuth2Authorizer": {
+            "name": "OAuth2Authorizer",
+            "shortname": "OAuth2Authorizer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "file": "app/authorizers/oauth2.js",
+            "line": 4,
+            "description": "This class allows the application to authenticate with using a password grant",
+            "extends": "OAuth2Bearer",
+            "author": "Hammad Hassan gollomer@gmail.com"
+        },
+        "Prometheus.NavBarComponent": {
+            "name": "Prometheus.NavBarComponent",
+            "shortname": "Prometheus.NavBarComponent",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "namespace": "Prometheus",
+            "file": "app/components/nav-bar.js",
+            "line": 6,
+            "description": "This component is responsible for rendering the navigation bar in the application"
+        },
+        "Prometheus.nav-bar": {
+            "name": "Prometheus.nav-bar",
+            "shortname": "nav-bar",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "namespace": "Prometheus"
+        },
+        "AppController": {
+            "name": "AppController",
+            "shortname": "AppController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "namespace": "",
+            "file": "app/controllers/app.js",
+            "line": 4,
+            "description": "This the app controller. App is as the main route for the application's\nauthenticated part",
+            "extends": "Ember.Controller",
+            "author": "Hammad Hassan gollmer@gmail.com"
+        },
+        "SigninController": {
+            "name": "SigninController",
+            "shortname": "SigninController",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "namespace": "",
+            "file": "app/controllers/signin.js",
+            "line": 4,
+            "description": "This the singin controller.",
+            "extends": "Ember.Controller",
+            "author": "Hammad Hassan gollmer@gmail.com"
+        },
+        "GetDateHelper": {
+            "name": "GetDateHelper",
+            "shortname": "GetDateHelper",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "namespace": "",
+            "file": "app/helpers/get-date.js",
+            "line": 26,
+            "description": "The object that provides the getDate helper function",
+            "extends": "Ember.Helper.helper",
+            "author": "Hammad Hassan gollomer@gmail.com"
+        },
+        "NotLastHelper": {
+            "name": "NotLastHelper",
+            "shortname": "NotLastHelper",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "namespace": "",
+            "file": "app/helpers/not-last.js",
+            "line": 23,
+            "description": "The object that provides the notLast helper function",
+            "extends": "Ember.Helper.helper",
+            "author": "Hammad Hassan gollomer@gmail.com"
+        },
+        "InjectRouterInitializer": {
+            "name": "InjectRouterInitializer",
+            "shortname": "InjectRouterInitializer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "namespace": "",
+            "file": "app/initializers/inject-router.js",
+            "line": 19,
+            "description": "This is the initializer for route, we use this function to inject router in\nour components",
+            "author": "Hammad Hassan gollomer@gmail.com"
+        },
+        "Initializer": {
+            "name": "Initializer",
+            "shortname": "Initializer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "namespace": ""
+        },
+        "JavascriptBehaviorsInitializer": {
+            "name": "JavascriptBehaviorsInitializer",
+            "shortname": "JavascriptBehaviorsInitializer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "namespace": "",
+            "file": "app/initializers/javascript-behaviors.js",
+            "line": 9,
+            "description": "This is the initializer for the javascript behaviors in the application. We\nare using some libraries that needs to intiate some behaviors like pave and\ntooltip that is accomplished using this initializer.",
+            "author": "Hammad Hassan gollomer@gmail.com"
+        },
+        "SetupLoggerInitializer": {
+            "name": "SetupLoggerInitializer",
+            "shortname": "SetupLoggerInitializer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Components",
+            "namespace": "",
+            "file": "app/initializers/setup-logger.js",
+            "line": 4,
+            "description": "This is the initializer for the Logger that we use in the application. Logger\nis initialized in here so that it is available throughout the application.",
+            "author": "Hammad Hassan gollomer@gmail.com"
+        },
+        "Prometheus.en": {
+            "name": "Prometheus.en",
+            "shortname": "Prometheus.en",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "i18n",
+            "namespace": "Prometheus",
+            "file": "app/locales/en/translations.js",
+            "line": 2,
+            "description": "This is the english language tranlations for the project. For now they are\nhard coded but in future we would want to load them from the server and\nwe would like to allow people to include their own translations.\n\nThis should also be possible for plugins to have their own translations.\n\nNeed to see if we can support rtl",
+            "submodule": "Application",
+            "todo": [
+                "Support customizations"
+            ]
+        },
+        "Prometheus.ProjectModel": {
+            "name": "Prometheus.ProjectModel",
+            "shortname": "ProjectModel",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "i18n",
+            "namespace": "Prometheus",
+            "file": "app/models/project.js",
+            "line": 4,
+            "description": "The project model",
+            "extends": "DS.Model",
+            "author": "Hammad Hassan gollmer@gmail.com"
+        },
+        "Prometheus.TokenModel": {
+            "name": "Prometheus.TokenModel",
+            "shortname": "TokenModel",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "i18n",
+            "namespace": "Prometheus",
+            "file": "app/models/token.js",
+            "line": 4,
+            "description": "The token model",
+            "extends": "DS.Model",
+            "author": "Hammad Hassan gollmer@gmail.com"
+        },
+        "Prometheus.UserModel": {
+            "name": "Prometheus.UserModel",
+            "shortname": "UserModel",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "i18n",
+            "namespace": "Prometheus",
+            "file": "app/models/user.js",
+            "line": 4,
+            "description": "The user model",
+            "extends": "DS.Model",
+            "author": "Hammad Hassan gollmer@gmail.com"
+        },
+        "Prometheus.AppWikiRoute": {
+            "name": "Prometheus.AppWikiRoute",
+            "shortname": "AppWikiRoute",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "i18n",
+            "namespace": "Prometheus",
+            "file": "app/routes/app/wiki.js",
+            "line": 5,
+            "description": "The wiki route",
+            "extends": "App",
+            "author": "Hammad Hassan gollomer@gmail.com"
+        },
+        "Prometheus.app.module": {
+            "name": "Prometheus.app.module",
+            "shortname": "app.module",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        "AppRoute": {
+            "name": "AppRoute",
+            "shortname": "AppRoute",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "i18n",
+            "namespace": "",
+            "file": "app/routes/signin.js",
+            "line": 5,
+            "description": "This is the app route, the app route is used",
+            "extends": "Ember.Route",
+            "uses": [
+                "AuthenticatedRouteMixin"
+            ],
+            "author": "Hammad Hassan gollmer@gmail.com"
+        },
+        "Routes": {
+            "name": "Routes",
+            "shortname": "Routes",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "i18n",
+            "namespace": ""
+        },
+        "ApplicationRoute": {
+            "name": "ApplicationRoute",
+            "shortname": "ApplicationRoute",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "i18n",
+            "namespace": "",
+            "file": "app/routes/application.js",
+            "line": 5,
+            "description": "This is the application route, in EmberJs the application route is the main\nroute, this is executed no matter what. We have to use this",
+            "extends": "Ember.Route",
+            "uses": [
+                "ApplicationRouteMixin"
+            ],
+            "author": "Hammad Hassan gollmer@gmail.com"
+        },
+        "application": {
+            "name": "application",
+            "shortname": "application",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "i18n",
+            "namespace": ""
+        },
+        "MetadataUtil": {
+            "name": "MetadataUtil",
+            "shortname": "MetadataUtil",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "i18n",
+            "namespace": "",
+            "file": "app/utils/metadata/metadata.js",
+            "line": 5,
+            "description": "The meta is the main object storing the different types of metaata that the\napplication makes use of",
+            "extends": "Ember.Object",
+            "author": "Hammad Hassan gollomer@gmail.com",
+            "todo": [
+                "Allow the metadata to be retrived from the server"
+            ]
+        }
+    },
+    "elements": {},
+    "classitems": [
+        {
+            "file": "app/adapters/application.js",
+            "line": 19,
+            "description": "The namespace of the api.",
+            "itemtype": "property",
+            "name": "namespace",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "ApplicationAdapter"
+        },
+        {
+            "file": "app/adapters/application.js",
+            "line": 29,
+            "description": "Set the authorizer so that the authorization headers are included in all the\noutgoing calls to the API server",
+            "itemtype": "property",
+            "name": "authorizer",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "ApplicationAdapter"
+        },
+        {
+            "file": "app/adapters/application.js",
+            "line": 40,
+            "description": "The host name of the server where the API is hosted.",
+            "itemtype": "property",
+            "name": "host",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "todo": [
+                "Load from the configurations"
+            ],
+            "class": "ApplicationAdapter"
+        },
+        {
+            "file": "app/adapters/application.js",
+            "line": 58,
+            "description": "Set the modelName to singular as that is what our server listens to",
+            "itemtype": "method",
+            "name": "pathForType",
+            "params": [
+                {
+                    "name": "modelName",
+                    "description": "String The model name that is being fetched"
+                }
+            ],
+            "return": {
+                "description": "modelName String The singularized modelName"
+            },
+            "access": "private",
+            "tagname": "",
+            "class": "ApplicationAdapter"
+        },
+        {
+            "file": "app/adapters/application.js",
+            "line": 71,
+            "description": "This function is called whenever an error message is returned by the server",
+            "itemtype": "property",
+            "name": "normalizeErrorResponse",
+            "access": "private",
+            "tagname": "",
+            "todo": [
+                "If the user is not authorized then take him to the singin page",
+                "Take care of the refresh token"
+            ],
+            "class": "ApplicationAdapter",
+            "subprops": [
+                {
+                    "name": "status",
+                    "description": "String The status code returned by the API"
+                }
+            ]
+        },
+        {
+            "file": "app/authenticators/oauth2.js",
+            "line": 24,
+            "description": "The client_id to be sent to the authentication server",
+            "itemtype": "property",
+            "name": "clientId",
+            "type": "String",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "OAuth2Authenticator"
+        },
+        {
+            "file": "app/authenticators/oauth2.js",
+            "line": 34,
+            "description": "The client_secret to be sent to the authentication server",
+            "itemtype": "property",
+            "name": "clientSecret",
+            "type": "String",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "OAuth2Authenticator"
+        },
+        {
+            "file": "app/authenticators/oauth2.js",
+            "line": 44,
+            "description": "The client_secret to be sent to the authentication server",
+            "itemtype": "property",
+            "name": "clientSecret",
+            "type": "String",
+            "default": "null",
+            "access": "public",
+            "tagname": "",
+            "class": "OAuth2Authenticator"
+        },
+        {
+            "file": "app/authenticators/oauth2.js",
+            "line": 54,
+            "description": "Authenticates the session with the specified `identification`, `password`\nand optional `scope`; issues a `POST` request to the",
+            "itemtype": "method",
+            "name": "authenticate",
+            "params": [
+                {
+                    "name": "identification",
+                    "description": "The resource owner username",
+                    "type": "String"
+                },
+                {
+                    "name": "password",
+                    "description": "The resource owner password",
+                    "type": "String"
+                },
+                {
+                    "name": "scope",
+                    "description": "The scope of the access request (see [RFC 6749, section 3.3](http://tools.ietf.org/html/rfc6749#section-3.3))",
+                    "type": "String|Array"
+                },
+                {
+                    "name": "headers",
+                    "description": "Optional headers that particular backends may require (for example sending 2FA challenge responses)",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "A promise that when it resolves results in the session becoming authenticated",
+                "type": "Ember.RSVP.Promise"
+            },
+            "access": "public",
+            "tagname": "",
+            "class": "OAuth2Authenticator"
+        },
+        {
+            "file": "app/components/nav-bar.js",
+            "line": 14,
+            "description": "This function fetches the navigation metaData and makes it available for display",
+            "itemtype": "method",
+            "name": "init",
+            "class": "Prometheus.NavBarComponent",
+            "module": "App.Components",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/components/nav-bar.js",
+            "line": 28,
+            "description": "The actions for the navigation bar, primarily used fo route transition",
+            "itemtype": "property",
+            "name": "actions",
+            "type": "Object",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.nav-bar",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/controllers/app.js",
+            "line": 15,
+            "description": "The session service which is offered by ember-simple-auth that will be used\nin order to verfy whether the used is authenticated",
+            "itemtype": "property",
+            "name": "session",
+            "type": "Object",
+            "access": "public",
+            "tagname": "",
+            "class": "AppController",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/controllers/app.js",
+            "line": 26,
+            "description": "The service that we use to maintain the currentUser",
+            "itemtype": "property",
+            "name": "currentUser",
+            "type": "Object",
+            "access": "public",
+            "tagname": "",
+            "class": "AppController",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/controllers/app.js",
+            "line": 36,
+            "description": "The events that this controller is listing to",
+            "itemtype": "property",
+            "name": "actions",
+            "type": "Object",
+            "access": "public",
+            "tagname": "",
+            "class": "AppController",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/controllers/app.js",
+            "line": 46,
+            "description": "This function invalidates the session which effectively logs the user out\nof the application",
+            "itemtype": "method",
+            "name": "invalidateSession",
+            "access": "public",
+            "tagname": "",
+            "class": "AppController",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/controllers/signin.js",
+            "line": 14,
+            "description": "The session service which is offered by ember-simple-auth that will be used\nin order to verfy whether the used is authenticated",
+            "itemtype": "property",
+            "name": "session",
+            "type": "Object",
+            "access": "public",
+            "tagname": "",
+            "class": "AppController",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/controllers/signin.js",
+            "line": 25,
+            "description": "The events that this controller is listing to",
+            "itemtype": "property",
+            "name": "actions",
+            "type": "Object",
+            "access": "public",
+            "tagname": "",
+            "class": "AppController",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/controllers/signin.js",
+            "line": 35,
+            "description": "This function invalidates the session which effectively logs the user out\nof the application",
+            "itemtype": "method",
+            "name": "authenticate",
+            "access": "public",
+            "tagname": "",
+            "class": "AppController",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/helpers/get-date.js",
+            "line": 4,
+            "description": "This is a helper function that is used to format the dates for Handlebars",
+            "itemtype": "method",
+            "name": "getDate",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "The object that contains the date",
+                    "type": "Object"
+                },
+                {
+                    "name": "index",
+                    "description": "The index on which the data is set",
+                    "type": "String"
+                },
+                {
+                    "name": "format",
+                    "description": "Format of the date. Default MMMM Do YYYY, h:mm:ss a",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "date  Formated date",
+                "type": "String"
+            },
+            "access": "private",
+            "tagname": "",
+            "class": "GetDateHelper",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/helpers/not-last.js",
+            "line": 5,
+            "description": "This is a helper function that is used to format the dates for Handlebars",
+            "itemtype": "method",
+            "name": "notLast",
+            "params": [
+                {
+                    "name": "array",
+                    "description": "The object that contains the data",
+                    "type": "Object"
+                },
+                {
+                    "name": "index",
+                    "description": "The curent index which needs evaluation",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "isNotLast  true if the index is not the last in the array and vice versa",
+                "type": "Boolean"
+            },
+            "access": "private",
+            "tagname": "",
+            "class": "NotLastHelper",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/initializers/inject-router.js",
+            "line": 3,
+            "description": "This function is called by Emberjs by default and in this application we\nsetup the Logger configuration which can be overwritter in the environment\nconfiguration.\nGot the suggestion from http://stackoverflow.com/questions/30697674/ember-transitiontoroute-cleanly-in-a-component-without-sendaction#answer-30787510",
+            "itemtype": "method",
+            "name": "initialize",
+            "params": [
+                {
+                    "name": "application",
+                    "description": "The application in which to inject a service",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "InjectRouterInitializer",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/initializers/inject-router.js",
+            "line": 28,
+            "description": "The name of the initializer",
+            "itemtype": "property",
+            "name": "name",
+            "type": "String",
+            "access": "public",
+            "tagname": "",
+            "class": "Initializer",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/initializers/inject-router.js",
+            "line": 37,
+            "description": "The name of the initializer",
+            "itemtype": "property",
+            "name": "name",
+            "type": "String",
+            "access": "public",
+            "tagname": "",
+            "class": "Initializer",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/initializers/javascript-behaviors.js",
+            "line": 18,
+            "description": "The name of the initializer",
+            "itemtype": "property",
+            "name": "name",
+            "type": "String",
+            "access": "public",
+            "tagname": "",
+            "class": "Initializer",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/initializers/javascript-behaviors.js",
+            "line": 28,
+            "description": "This function is called by Emberjs by default and in this application we\nsetup the Logger configuration which can be overwritter in the environment\nconfiguration.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "Initializer",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/initializers/setup-logger.js",
+            "line": 12,
+            "description": "The name of the initializer",
+            "itemtype": "property",
+            "name": "name",
+            "type": "String",
+            "access": "public",
+            "tagname": "",
+            "class": "Initializer",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/initializers/setup-logger.js",
+            "line": 22,
+            "description": "This function is called by Emberjs by default and in this application we\nsetup the Logger configuration which can be overwritter in the environment\nconfiguration.",
+            "itemtype": "method",
+            "name": "initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "Initializer",
+            "module": "App.Components"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 13,
+            "description": "Name of project",
+            "itemtype": "property",
+            "name": "name",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 24,
+            "description": "Short Code of project",
+            "itemtype": "property",
+            "name": "shortCode",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 35,
+            "description": "Date on which the project was created",
+            "itemtype": "property",
+            "name": "dateCreated",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 46,
+            "description": "Date on which the project was last modified",
+            "itemtype": "property",
+            "name": "dateModified",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 57,
+            "description": "The start date of the project",
+            "itemtype": "property",
+            "name": "startDate",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 68,
+            "description": "The end date of the project",
+            "itemtype": "property",
+            "name": "endDate",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 79,
+            "description": "Type of the project",
+            "itemtype": "property",
+            "name": "type",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 90,
+            "description": "User who last modified the project",
+            "itemtype": "property",
+            "name": "modifiedUser",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 101,
+            "description": "The project owner ot assignee",
+            "itemtype": "property",
+            "name": "assignee",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 112,
+            "description": "Soft delettion flag of the project",
+            "itemtype": "property",
+            "name": "deleted",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 123,
+            "description": "Description of the project",
+            "itemtype": "property",
+            "name": "description",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 134,
+            "description": "Status of the project",
+            "itemtype": "property",
+            "name": "status",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 145,
+            "description": "Scope of th eproject",
+            "itemtype": "property",
+            "name": "scope",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 156,
+            "description": "Product Vision",
+            "itemtype": "property",
+            "name": "vision",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 167,
+            "description": "User who created the project",
+            "itemtype": "property",
+            "name": "createdUser",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 178,
+            "description": "Project owner",
+            "itemtype": "property",
+            "name": "owner",
+            "type": "Relationship",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 189,
+            "description": "User who created the project",
+            "itemtype": "property",
+            "name": "createdBy",
+            "type": "Relationship",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/project.js",
+            "line": 200,
+            "description": "User who modified the project",
+            "itemtype": "property",
+            "name": "modifiedBy",
+            "type": "Relationship",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.ProjectModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/token.js",
+            "line": 13,
+            "description": "Access Token",
+            "itemtype": "property",
+            "name": "access_token",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.TokenModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/token.js",
+            "line": 23,
+            "description": "Expires In",
+            "itemtype": "property",
+            "name": "expires_in",
+            "type": "Date",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.TokenModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/token.js",
+            "line": 33,
+            "description": "Token Type",
+            "itemtype": "property",
+            "name": "token_type",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.TokenModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/token.js",
+            "line": 43,
+            "description": "Scope",
+            "itemtype": "property",
+            "name": "scope",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.TokenModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/token.js",
+            "line": 53,
+            "description": "Refresh Token",
+            "itemtype": "property",
+            "name": "refresh_token",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.TokenModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/token.js",
+            "line": 63,
+            "description": "Greant Type",
+            "itemtype": "property",
+            "name": "grant_type",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.TokenModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/token.js",
+            "line": 73,
+            "description": "Client Id",
+            "itemtype": "property",
+            "name": "client_id",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.TokenModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/token.js",
+            "line": 83,
+            "description": "Client Secret",
+            "itemtype": "property",
+            "name": "client_secret",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.TokenModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 12,
+            "description": "Username",
+            "itemtype": "property",
+            "name": "username",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 22,
+            "description": "Email Address",
+            "itemtype": "property",
+            "name": "email",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 32,
+            "description": "Status",
+            "itemtype": "property",
+            "name": "status",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 42,
+            "description": "name",
+            "itemtype": "property",
+            "name": "name",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 52,
+            "description": "Date on which the user was created",
+            "itemtype": "property",
+            "name": "dateCreated",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 62,
+            "description": "Date on which the user was last modified",
+            "itemtype": "property",
+            "name": "dateModified",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 72,
+            "description": "Soft deletion flag",
+            "itemtype": "property",
+            "name": "deleted",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 82,
+            "description": "Description",
+            "itemtype": "property",
+            "name": "description",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 92,
+            "description": "User who created this user",
+            "itemtype": "property",
+            "name": "createdUser",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 102,
+            "description": "User who modified this user",
+            "itemtype": "property",
+            "name": "modifiedUser",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 112,
+            "description": "Title of the user",
+            "itemtype": "property",
+            "name": "title",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/models/user.js",
+            "line": 122,
+            "description": "Phone number of the user",
+            "itemtype": "property",
+            "name": "phone",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.UserModel",
+            "module": "i18n",
+            "namespace": "Prometheus"
+        },
+        {
+            "file": "app/routes/app/wiki.js",
+            "line": 14,
+            "description": "The data for the current route",
+            "itemtype": "property",
+            "name": "data",
+            "type": "Object",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.app.module",
+            "module": "i18n"
+        },
+        {
+            "file": "app/routes/app/wiki.js",
+            "line": 23,
+            "description": "The setup controller function that will be called every time the user visits\nthe route, this function is responsible for loading the required data",
+            "itemtype": "method",
+            "name": "setupController",
+            "params": [
+                {
+                    "name": "controller",
+                    "description": "the controller object for this route",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.app.module",
+            "module": "i18n"
+        },
+        {
+            "file": "app/routes/app.js",
+            "line": 15,
+            "description": "The i18n library service that is used in order to get the translations",
+            "itemtype": "property",
+            "name": "i18n",
+            "type": "Ember.Service",
+            "access": "public",
+            "tagname": "",
+            "class": "Routes",
+            "module": "i18n"
+        },
+        {
+            "file": "app/routes/application.js",
+            "line": 16,
+            "description": "The i18n library service that is used in order to get the translations",
+            "itemtype": "property",
+            "name": "i18n",
+            "type": "Ember.Service",
+            "access": "public",
+            "tagname": "",
+            "class": "Routes",
+            "module": "i18n"
+        },
+        {
+            "file": "app/routes/application.js",
+            "line": 26,
+            "description": "The session service which is offered by ember-simple-auth that will be used\nin order to verfy whether the used is authenticated",
+            "itemtype": "property",
+            "name": "session",
+            "type": "Object",
+            "access": "public",
+            "tagname": "",
+            "class": "application",
+            "module": "i18n"
+        },
+        {
+            "file": "app/routes/application.js",
+            "line": 37,
+            "description": "This function get triggered before a model fetch is called, this is\ncalled every time and we routing the user to the signin route if a user\nis not authenticated",
+            "itemtype": "method",
+            "name": "afterModel",
+            "access": "private",
+            "tagname": "",
+            "class": "application",
+            "module": "i18n"
+        },
+        {
+            "file": "app/routes/application.js",
+            "line": 53,
+            "description": "This function get triggered right after a model fetch is called, this is\ncalled every time and we are setting up the default language in the i18n\nservice",
+            "itemtype": "method",
+            "name": "afterModel",
+            "access": "private",
+            "tagname": "",
+            "class": "application",
+            "module": "i18n"
+        },
+        {
+            "file": "app/utils/metadata/metadata.js",
+            "line": 16,
+            "description": "The list of modules in the system and their default behaviors",
+            "itemtype": "property",
+            "name": "modules",
+            "type": "Object",
+            "access": "private",
+            "tagname": "",
+            "class": "MetadataUtil",
+            "module": "i18n"
+        },
+        {
+            "file": "app/utils/metadata/metadata.js",
+            "line": 54,
+            "description": "The metadata for the views in the sysetm. I want to built all the views via\nmetadata, this allow me to built very extendible views and application in\nreturn.",
+            "itemtype": "property",
+            "name": "views",
+            "type": "Object",
+            "access": "private",
+            "tagname": "",
+            "class": "MetadataUtil",
+            "module": "i18n"
+        },
+        {
+            "file": "app/utils/metadata/metadata.js",
+            "line": 287,
+            "description": "This variable store the business logic for the system, although the basic\napplication behavior would be hard coded and would not work through the\ndefinitions in this object. However, hard coding the business logic\nmakes us compromise the flexibility that we would otherwise have. This\nis where the businessLogic meta comes into play, this logic will be\nexecuted by the application and thus would allow us to extend the\napplication behavior. All good but this is complex so will come later :)",
+            "itemtype": "property",
+            "name": "businessLogic",
+            "type": "Object",
+            "access": "private",
+            "tagname": "",
+            "todo": [
+                "Yet to be implemented :D"
+            ],
+            "class": "MetadataUtil",
+            "module": "i18n"
+        },
+        {
+            "file": "app/utils/metadata/metadata.js",
+            "line": 304,
+            "description": "This function is used to retrive the metadata for the differnt views in the\nsystem. The function has the capability of translating the labels as well",
+            "itemtype": "method",
+            "name": "getViewMeta",
+            "params": [
+                {
+                    "name": "module",
+                    "description": "The module for which we have to retrive the meta",
+                    "type": "String"
+                },
+                {
+                    "name": "view",
+                    "description": "The view of the module whose meta is required",
+                    "type": "String"
+                },
+                {
+                    "name": "i18n",
+                    "description": "The object for the internationalization library",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "metadata  The requested metadata",
+                "type": "Object"
+            },
+            "class": "MetadataUtil",
+            "module": "i18n"
+        }
+    ],
+    "warnings": []
+}

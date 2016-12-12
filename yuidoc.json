@@ -1,0 +1,14 @@
+{
+  "name": "Projects4Me",
+  "description": "Open source project management and collaboration software",
+  "url": "http://porjects4.me/",
+  "options": {
+    "paths": [
+      "app"
+    ],
+    "exclude": "vendor,tmp,bower_components,node_modules,dist,docs,public,",
+    "outdir":   "docs",
+    "themedir": "node_modules/yuidoc-lucid-theme",
+    "helpers": ["node_modules/yuidoc-lucid-theme/helpers/helpers.js"]
+  }
+}

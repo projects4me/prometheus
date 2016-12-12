@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>app/utils/metadata/metadata.js - Projects4Me</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            Projects4Me
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>0.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AppController", "classes/application", "classes/ApplicationAdapter", "classes/ApplicationRoute", "classes/AppRoute", "classes/GetDateHelper", "classes/Initializer", "classes/InjectRouterInitializer", "classes/JavascriptBehaviorsInitializer", "classes/MetadataUtil", "classes/NotLastHelper", "classes/OAuth2Authenticator", "classes/OAuth2Authorizer", "classes/Prometheus.app.module", "classes/Prometheus.AppWikiRoute", "classes/Prometheus.en", "classes/Prometheus.nav-bar", "classes/Prometheus.NavBarComponent", "classes/Prometheus.ProjectModel", "classes/Prometheus.TokenModel", "classes/Prometheus.UserModel", "classes/Routes", "classes/SetupLoggerInitializer", "classes/SigninController", "modules/App.Components", "modules/Application", "modules/i18n"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AppController.html">AppController</a></li>
+                <li><a href="../classes/application.html">application</a></li>
+                <li><a href="../classes/ApplicationAdapter.html">ApplicationAdapter</a></li>
+                <li><a href="../classes/ApplicationRoute.html">ApplicationRoute</a></li>
+                <li><a href="../classes/AppRoute.html">AppRoute</a></li>
+                <li><a href="../classes/GetDateHelper.html">GetDateHelper</a></li>
+                <li><a href="../classes/Initializer.html">Initializer</a></li>
+                <li><a href="../classes/InjectRouterInitializer.html">InjectRouterInitializer</a></li>
+                <li><a href="../classes/JavascriptBehaviorsInitializer.html">JavascriptBehaviorsInitializer</a></li>
+                <li><a href="../classes/MetadataUtil.html">MetadataUtil</a></li>
+                <li><a href="../classes/NotLastHelper.html">NotLastHelper</a></li>
+                <li><a href="../classes/OAuth2Authenticator.html">OAuth2Authenticator</a></li>
+                <li><a href="../classes/OAuth2Authorizer.html">OAuth2Authorizer</a></li>
+                <li><a href="../classes/Prometheus.app.module.html">Prometheus.app.module</a></li>
+                <li><a href="../classes/Prometheus.AppWikiRoute.html">Prometheus.AppWikiRoute</a></li>
+                <li><a href="../classes/Prometheus.en.html">Prometheus.en</a></li>
+                <li><a href="../classes/Prometheus.nav-bar.html">Prometheus.nav-bar</a></li>
+                <li><a href="../classes/Prometheus.NavBarComponent.html">Prometheus.NavBarComponent</a></li>
+                <li><a href="../classes/Prometheus.ProjectModel.html">Prometheus.ProjectModel</a></li>
+                <li><a href="../classes/Prometheus.TokenModel.html">Prometheus.TokenModel</a></li>
+                <li><a href="../classes/Prometheus.UserModel.html">Prometheus.UserModel</a></li>
+                <li><a href="../classes/Routes.html">Routes</a></li>
+                <li><a href="../classes/SetupLoggerInitializer.html">SetupLoggerInitializer</a></li>
+                <li><a href="../classes/SigninController.html">SigninController</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>app/utils/metadata/metadata.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don&#x27;t remove :) */
+import Ember from &quot;ember&quot;;
+import _ from &quot;lodash&quot;;
+
+/**
+  The meta is the main object storing the different types of metaata that the
+  application makes use of
+
+  @class MetadataUtil
+  @extends Ember.Object
+  @author Hammad Hassan gollomer@gmail.com
+  @todo Allow the metadata to be retrived from the server
+*/
+export default Ember.Object.extend({
+
+  /**
+    The list of modules in the system and their default behaviors
+
+    @property modules
+    @type Object
+    @for MetadataUtil
+    @private
+  */
+  modules:{
+    &quot;dashboard&quot;:{
+      &quot;nav&quot;: true,
+    },
+    &quot;project&quot;:{
+      &quot;nav&quot;: true,
+    },
+    &quot;issue&quot;:{
+      &quot;nav&quot;: true,
+    },
+    &quot;conversation&quot;:{
+      &quot;nav&quot;: true,
+    },
+    &quot;workflow&quot;:{
+      &quot;nav&quot;: true,
+    },
+    &quot;report&quot;:{
+      &quot;nav&quot;: true,
+    },
+    &quot;timelog&quot;:{
+      &quot;nav&quot;: true,
+    },
+    &quot;calendar&quot;:{
+      &quot;nav&quot;: true,
+    },
+    &quot;wiki&quot;:{
+      &quot;nav&quot;: true,
+    }
+  },
+
+  /**
+    The metadata for the views in the sysetm. I want to built all the views via
+    metadata, this allow me to built very extendible views and application in
+    return.
+
+    @property views
+    @type Object
+    @for MetadataUtil
+    @private
+  */
+  views: {
+    Navigation: {
+      items: {
+      Dashboard: {
+        label: &#x27;view.nav.menu.dashboard.label&#x27;,
+        icon: &#x27;dashboard&#x27;,
+        route: &#x27;app&#x27;,
+        anchorRoute: &#x27;&#x27;,
+        routeParams: null
+      },
+      Project: {
+        label: &#x27;view.nav.menu.project.label&#x27;,
+        icon: &#x27;briefcase&#x27;,
+        route: &#x27;app.module&#x27;,
+        anchorRoute: &#x27;project&#x27;,
+        routeParams: {module: &#x27;project&#x27;},
+        actions: {
+          section1: {
+            list: {
+              label: &#x27;view.nav.menu.project.list&#x27;,
+              route: &#x27;app.module&#x27;,
+              className: &#x27;text-teal&#x27;,
+              anchorRoute: &#x27;project&#x27;,
+              routeParams: {module: &#x27;project&#x27;}
+            },
+            create: {
+              label: &#x27;view.nav.menu.project.create&#x27;,
+              route: &#x27;app.create&#x27;,
+              className: &#x27;text-red&#x27;,
+              anchorRoute: &#x27;project/create&#x27;,
+              routeParams: {module: &#x27;project&#x27;}
+            }
+          },
+          section2:{
+            import:{
+              label: &#x27;view.nav.menu.project.import&#x27;,
+              route: &#x27;app.import&#x27;,
+              anchorRoute: &#x27;project/import&#x27;,
+              routeParams: {module: &#x27;project&#x27;}
+            },
+            export:{
+              label: &#x27;view.nav.menu.project.export&#x27;,
+              route: &#x27;app.export&#x27;,
+              anchorRoute: &#x27;project/export&#x27;,
+              routeParams: {module: &#x27;project&#x27;}
+            }
+          }
+        }
+      },
+      Issue:{
+        label: &#x27;view.nav.menu.issue.label&#x27;,
+        icon: &#x27;tasks&#x27;,
+        route: &#x27;app.module&#x27;,
+        anchorRoute: &#x27;issue&#x27;,
+        routeParams: {module: &#x27;issue&#x27;},
+        actions:{
+          section1:{
+            list:{
+              label: &#x27;view.nav.menu.issue.list&#x27;,
+              route: &#x27;app.module&#x27;,
+              className: &#x27;text-teal&#x27;,
+              anchorRoute: &#x27;issue&#x27;,
+              routeParams: {module: &#x27;issue&#x27;}
+            },
+            create:{
+              label: &#x27;view.nav.menu.issue.create&#x27;,
+              route: &#x27;app.create&#x27;,
+              className: &#x27;text-red&#x27;,
+              anchorRoute: &#x27;issue/create&#x27;,
+              routeParams: {module: &#x27;issue&#x27;}
+            }
+          },
+          section2:{
+            import:{
+              label: &#x27;view.nav.menu.issue.import&#x27;,
+              route: &#x27;app.import&#x27;,
+              anchorRoute: &#x27;issue/import&#x27;,
+              routeParams: {module: &#x27;issue&#x27;}
+            },
+            export:{
+              label: &#x27;view.nav.menu.issue.export&#x27;,
+              route: &#x27;app.export&#x27;,
+              anchorRoute: &#x27;issue/export&#x27;,
+              routeParams: {module: &#x27;issue&#x27;}
+            }
+          }
+        }
+      },
+      Conversation:{
+        label: &#x27;view.nav.menu.conversation.label&#x27;,
+        icon: &#x27;comments&#x27;,
+        route: &#x27;app.conversation&#x27;,
+        anchorRoute: &#x27;conversation&#x27;,
+        routeParams: null
+      },
+      Workflow:{
+        label: &#x27;view.nav.menu.workflow.label&#x27;,
+        icon: &#x27;puzzle-piece&#x27;,
+        route: &#x27;app.module&#x27;,
+        anchorRoute: &#x27;workflow&#x27;,
+        routeParams: {module: &#x27;workflow&#x27;},
+        actions:{
+          section1:{
+            list:{
+              label: &#x27;view.nav.menu.workflow.list&#x27;,
+              route: &#x27;app.module&#x27;,
+              className: &#x27;text-teal&#x27;,
+              anchorRoute: &#x27;workflow&#x27;,
+              routeParams: {module: &#x27;workflow&#x27;}
+            },
+            create:{
+              label: &#x27;view.nav.menu.workflow.create&#x27;,
+              route: &#x27;app.create&#x27;,
+              className: &#x27;text-red&#x27;,
+              anchorRoute: &#x27;workflow/create&#x27;,
+              routeParams: {module: &#x27;workflow&#x27;}
+            }
+          },
+          section2:{
+            import:{
+              label: &#x27;view.nav.menu.workflow.import&#x27;,
+              route: &#x27;app.import&#x27;,
+              anchorRoute: &#x27;workflow/import&#x27;,
+              routeParams: {module: &#x27;workflow&#x27;}
+            },
+            export:{
+              label: &#x27;view.nav.menu.workflow.export&#x27;,
+              route: &#x27;app.export&#x27;,
+              anchorRoute: &#x27;workflow/export&#x27;,
+              routeParams: {module: &#x27;workflow&#x27;}
+            }
+          }
+        }
+      },
+      Report:{
+        label: &#x27;view.nav.menu.report.label&#x27;,
+        icon: &#x27;bar-chart&#x27;,
+        route: &#x27;app.module&#x27;,
+        anchorRoute: &#x27;report&#x27;,
+        routeParams: {module: &#x27;report&#x27;},
+        actions:{
+          section1:{
+            list:{
+              label: &#x27;view.nav.menu.report.list&#x27;,
+              route: &#x27;app.module&#x27;,
+              className: &#x27;text-teal&#x27;,
+              anchorRoute: &#x27;report&#x27;,
+              routeParams: {module: &#x27;report&#x27;}
+            },
+            create:{
+              label: &#x27;view.nav.menu.report.create&#x27;,
+              route: &#x27;app.create&#x27;,
+              className: &#x27;text-red&#x27;,
+              anchorRoute: &#x27;report/create&#x27;,
+              routeParams: {module: &#x27;report&#x27;}
+            }
+          },
+          section2:{
+            export:{
+              label: &#x27;view.nav.menu.report.export&#x27;,
+              route: &#x27;app.export&#x27;,
+              anchorRoute: &#x27;report/export&#x27;,
+              routeParams: {module: &#x27;report&#x27;}
+            }
+          }
+        }
+      },
+      Timelog:{
+        label: &#x27;view.nav.menu.timelog.label&#x27;,
+        icon: &#x27;clock-o&#x27;,
+        route: &#x27;app.module&#x27;,
+        anchorRoute: &#x27;timelog&#x27;,
+        routeParams: {module: &#x27;timelog&#x27;},
+        actions:{
+          section1:{
+            list:{
+              label: &#x27;view.nav.menu.timelog.list&#x27;,
+              route: &#x27;app.module&#x27;,
+              className:&quot;text-teal&quot;,
+              anchorRoute: &#x27;timelog&#x27;,
+              routeParams: {module: &#x27;timelog&#x27;}
+            },
+            create:{
+              label: &#x27;view.nav.menu.timelog.create&#x27;,
+              route: &#x27;app.create&#x27;,
+              className: &quot;text-red&quot;,
+              anchorRoute: &#x27;timelog/create&#x27;,
+              routeParams: {module: &#x27;timelog&#x27;}
+            }
+          },
+          section2:{
+            import:{
+              label: &#x27;view.nav.menu.timelog.import&#x27;,
+              route: &#x27;app.import&#x27;,
+              anchorRoute: &#x27;timelog/import&#x27;,
+              routeParams: {module: &#x27;timelog&#x27;}
+            },
+            export:{
+              label: &#x27;view.nav.menu.timelog.export&#x27;,
+              route: &#x27;app.export&#x27;,
+              anchorRoute: &#x27;timelog/export&#x27;,
+              routeParams: {module: &#x27;timelog&#x27;}
+            }
+          }
+        }
+      },
+      Calendar:{
+        label: &#x27;view.nav.menu.calendar.label&#x27;,
+        icon: &#x27;calendar&#x27;,
+        route: &#x27;app.calendar&#x27;,
+        anchorRoute: &#x27;calendar&#x27;,
+        routeParams: null
+      },
+      Wiki:{
+        label: &#x27;view.nav.menu.wiki.label&#x27;,
+        icon: &#x27;book&#x27;,
+        route: &#x27;app.wiki&#x27;,
+        anchorRoute: &#x27;wiki&#x27;,
+        routeParams: null
+      }
+      }
+    },
+  },
+  /**
+    This variable store the business logic for the system, although the basic
+    application behavior would be hard coded and would not work through the
+    definitions in this object. However, hard coding the business logic
+    makes us compromise the flexibility that we would otherwise have. This
+    is where the businessLogic meta comes into play, this logic will be
+    executed by the application and thus would allow us to extend the
+    application behavior. All good but this is complex so will come later :)
+
+    @property businessLogic
+    @type Object
+    @for MetadataUtil
+    @private
+    @todo Yet to be implemented :D
+  */
+  businessLogic:{},
+
+  /**
+    This function is used to retrive the metadata for the differnt views in the
+    system. The function has the capability of translating the labels as well
+
+    @method getViewMeta
+    @param module {String} The module for which we have to retrive the meta
+    @param view {String} The view of the module whose meta is required
+    @param i18n {Object} The object for the internationalization library
+    @return metadata {Object} The requested metadata
+  */
+  getViewMeta:function(module,view,i18n){
+    if (this.views[module] !== undefined &amp;&amp; this.views[module][view] !== undefined)
+    {
+      var meta = this.views[module][view];
+      if (view === &#x27;filters&#x27;)
+      {
+        _.forEach(meta.enabledFilters,function(value){
+          var label = i18n.t(value.label);
+          if (label.string !== undefined){
+            value.label = label.string;
+          }
+        });
+      }
+      return meta;
+    }
+    return false;
+  }
+});
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

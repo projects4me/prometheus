@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Prometheus.ProjectModel - Projects4Me</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            Projects4Me
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>0.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AppController", "classes/application", "classes/ApplicationAdapter", "classes/ApplicationRoute", "classes/AppRoute", "classes/GetDateHelper", "classes/Initializer", "classes/InjectRouterInitializer", "classes/JavascriptBehaviorsInitializer", "classes/MetadataUtil", "classes/NotLastHelper", "classes/OAuth2Authenticator", "classes/OAuth2Authorizer", "classes/Prometheus.app.module", "classes/Prometheus.AppWikiRoute", "classes/Prometheus.en", "classes/Prometheus.nav-bar", "classes/Prometheus.NavBarComponent", "classes/Prometheus.ProjectModel", "classes/Prometheus.TokenModel", "classes/Prometheus.UserModel", "classes/Routes", "classes/SetupLoggerInitializer", "classes/SigninController", "modules/App.Components", "modules/Application", "modules/i18n"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AppController.html">AppController</a></li>
+                <li><a href="../classes/application.html">application</a></li>
+                <li><a href="../classes/ApplicationAdapter.html">ApplicationAdapter</a></li>
+                <li><a href="../classes/ApplicationRoute.html">ApplicationRoute</a></li>
+                <li><a href="../classes/AppRoute.html">AppRoute</a></li>
+                <li><a href="../classes/GetDateHelper.html">GetDateHelper</a></li>
+                <li><a href="../classes/Initializer.html">Initializer</a></li>
+                <li><a href="../classes/InjectRouterInitializer.html">InjectRouterInitializer</a></li>
+                <li><a href="../classes/JavascriptBehaviorsInitializer.html">JavascriptBehaviorsInitializer</a></li>
+                <li><a href="../classes/MetadataUtil.html">MetadataUtil</a></li>
+                <li><a href="../classes/NotLastHelper.html">NotLastHelper</a></li>
+                <li><a href="../classes/OAuth2Authenticator.html">OAuth2Authenticator</a></li>
+                <li><a href="../classes/OAuth2Authorizer.html">OAuth2Authorizer</a></li>
+                <li><a href="../classes/Prometheus.app.module.html">Prometheus.app.module</a></li>
+                <li><a href="../classes/Prometheus.AppWikiRoute.html">Prometheus.AppWikiRoute</a></li>
+                <li><a href="../classes/Prometheus.en.html">Prometheus.en</a></li>
+                <li><a href="../classes/Prometheus.nav-bar.html">Prometheus.nav-bar</a></li>
+                <li><a href="../classes/Prometheus.NavBarComponent.html">Prometheus.NavBarComponent</a></li>
+                <li><a href="../classes/Prometheus.ProjectModel.html">Prometheus.ProjectModel</a></li>
+                <li><a href="../classes/Prometheus.TokenModel.html">Prometheus.TokenModel</a></li>
+                <li><a href="../classes/Prometheus.UserModel.html">Prometheus.UserModel</a></li>
+                <li><a href="../classes/Routes.html">Routes</a></li>
+                <li><a href="../classes/SetupLoggerInitializer.html">SetupLoggerInitializer</a></li>
+                <li><a href="../classes/SigninController.html">SigninController</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>Prometheus.ProjectModel</h1>
+</div>
+
+
+	<div class="well well-small">
+        <div class="extends">
+            Extends DS.Model
+        </div>
+    </div>
+
+	<div class="well well-small">
+            Module: <a href="../modules/i18n.html">i18n</a>
+    </div>
+
+
+
+<div class="yuidoc-class-description">
+<p>The project model</p>
+
+</div>
+
+<!-- table of contents -->
+
+<div id="class-toc" class="page-section">
+	<h2>Table of Contents</h2>
+    <ul>
+
+		<li>
+			<strong>Properties</strong>
+			<ul>
+				<li><a href="#prop-assignee"><span class="ip">assignee</span></a></li>
+				<li><a href="#prop-createdBy"><span class="ip">createdBy</span></a></li>
+				<li><a href="#prop-createdUser"><span class="ip">createdUser</span></a></li>
+				<li><a href="#prop-dateCreated"><span class="ip">dateCreated</span></a></li>
+				<li><a href="#prop-dateModified"><span class="ip">dateModified</span></a></li>
+				<li><a href="#prop-deleted"><span class="ip">deleted</span></a></li>
+				<li><a href="#prop-description"><span class="ip">description</span></a></li>
+				<li><a href="#prop-endDate"><span class="ip">endDate</span></a></li>
+				<li><a href="#prop-modifiedBy"><span class="ip">modifiedBy</span></a></li>
+				<li><a href="#prop-modifiedUser"><span class="ip">modifiedUser</span></a></li>
+				<li><a href="#prop-name"><span class="ip">name</span></a></li>
+				<li><a href="#prop-owner"><span class="ip">owner</span></a></li>
+				<li><a href="#prop-scope"><span class="ip">scope</span></a></li>
+				<li><a href="#prop-shortCode"><span class="ip">shortCode</span></a></li>
+				<li><a href="#prop-startDate"><span class="ip">startDate</span></a></li>
+				<li><a href="#prop-status"><span class="ip">status</span></a></li>
+				<li><a href="#prop-type"><span class="ip">type</span></a></li>
+				<li><a href="#prop-vision"><span class="ip">vision</span></a></li>
+			</ul>
+		</li>
+
+
+	</ul>
+</div>
+
+<!-- details -->
+
+
+
+    <div id="properties" class="page-section">
+        <h2 class="off-left">Properties</h2>
+
+        <div class="item-list">
+<div id="prop-assignee" class="property item private">
+    <h3 class="name"><code>assignee</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l101"><code>app&#x2F;models&#x2F;project.js:101</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>The project owner ot assignee</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-createdBy" class="property item private">
+    <h3 class="name"><code>createdBy</code></h3>
+    <span class="type">Relationship</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l189"><code>app&#x2F;models&#x2F;project.js:189</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>User who created the project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-createdUser" class="property item private">
+    <h3 class="name"><code>createdUser</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l167"><code>app&#x2F;models&#x2F;project.js:167</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>User who created the project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-dateCreated" class="property item private">
+    <h3 class="name"><code>dateCreated</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l35"><code>app&#x2F;models&#x2F;project.js:35</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Date on which the project was created</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-dateModified" class="property item private">
+    <h3 class="name"><code>dateModified</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l46"><code>app&#x2F;models&#x2F;project.js:46</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Date on which the project was last modified</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-deleted" class="property item private">
+    <h3 class="name"><code>deleted</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l112"><code>app&#x2F;models&#x2F;project.js:112</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Soft delettion flag of the project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-description" class="property item private">
+    <h3 class="name"><code>description</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l123"><code>app&#x2F;models&#x2F;project.js:123</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Description of the project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-endDate" class="property item private">
+    <h3 class="name"><code>endDate</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l68"><code>app&#x2F;models&#x2F;project.js:68</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>The end date of the project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-modifiedBy" class="property item private">
+    <h3 class="name"><code>modifiedBy</code></h3>
+    <span class="type">Relationship</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l200"><code>app&#x2F;models&#x2F;project.js:200</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>User who modified the project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-modifiedUser" class="property item private">
+    <h3 class="name"><code>modifiedUser</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l90"><code>app&#x2F;models&#x2F;project.js:90</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>User who last modified the project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-name" class="property item private">
+    <h3 class="name"><code>name</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l13"><code>app&#x2F;models&#x2F;project.js:13</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Name of project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-owner" class="property item private">
+    <h3 class="name"><code>owner</code></h3>
+    <span class="type">Relationship</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l178"><code>app&#x2F;models&#x2F;project.js:178</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Project owner</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-scope" class="property item private">
+    <h3 class="name"><code>scope</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l145"><code>app&#x2F;models&#x2F;project.js:145</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Scope of th eproject</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-shortCode" class="property item private">
+    <h3 class="name"><code>shortCode</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l24"><code>app&#x2F;models&#x2F;project.js:24</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Short Code of project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-startDate" class="property item private">
+    <h3 class="name"><code>startDate</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l57"><code>app&#x2F;models&#x2F;project.js:57</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>The start date of the project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-status" class="property item private">
+    <h3 class="name"><code>status</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l134"><code>app&#x2F;models&#x2F;project.js:134</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Status of the project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-type" class="property item private">
+    <h3 class="name"><code>type</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l79"><code>app&#x2F;models&#x2F;project.js:79</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Type of the project</p>
+
+    </div>
+
+
+
+</div>
+<div id="prop-vision" class="property item private">
+    <h3 class="name"><code>vision</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag private">private</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_models_project.js.html#l156"><code>app&#x2F;models&#x2F;project.js:156</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>Product Vision</p>
+
+    </div>
+
+
+
+</div>
+        </div>
+    </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

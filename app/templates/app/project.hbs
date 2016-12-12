@@ -1,0 +1,20 @@
+<section class="content-header">
+  <h1>
+    {{#if projectId}}
+      {{t "view.app.project.label"}}
+      <small>{{model.name}}</small>
+    {{else}}
+      {{t "view.app.project.select"}}
+    {{/if}}
+  </h1>
+
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>{{t "view.nav.menu.dashboard.label"}}</a></li>
+    <li class="active">{{t "view.nav.menu.project.label"}}</li>
+  </ol></section>
+
+<section class="content">
+  {{#if projectId}}
+    {{outlet}}
+  {{/if}}
+</section>

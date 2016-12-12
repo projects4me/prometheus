@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>OAuth2Authenticator - Projects4Me</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            Projects4Me
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>0.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AppController", "classes/application", "classes/ApplicationAdapter", "classes/ApplicationRoute", "classes/AppRoute", "classes/GetDateHelper", "classes/Initializer", "classes/InjectRouterInitializer", "classes/JavascriptBehaviorsInitializer", "classes/MetadataUtil", "classes/NotLastHelper", "classes/OAuth2Authenticator", "classes/OAuth2Authorizer", "classes/Prometheus.app.module", "classes/Prometheus.AppWikiRoute", "classes/Prometheus.en", "classes/Prometheus.nav-bar", "classes/Prometheus.NavBarComponent", "classes/Prometheus.ProjectModel", "classes/Prometheus.TokenModel", "classes/Prometheus.UserModel", "classes/Routes", "classes/SetupLoggerInitializer", "classes/SigninController", "modules/App.Components", "modules/Application", "modules/i18n"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AppController.html">AppController</a></li>
+                <li><a href="../classes/application.html">application</a></li>
+                <li><a href="../classes/ApplicationAdapter.html">ApplicationAdapter</a></li>
+                <li><a href="../classes/ApplicationRoute.html">ApplicationRoute</a></li>
+                <li><a href="../classes/AppRoute.html">AppRoute</a></li>
+                <li><a href="../classes/GetDateHelper.html">GetDateHelper</a></li>
+                <li><a href="../classes/Initializer.html">Initializer</a></li>
+                <li><a href="../classes/InjectRouterInitializer.html">InjectRouterInitializer</a></li>
+                <li><a href="../classes/JavascriptBehaviorsInitializer.html">JavascriptBehaviorsInitializer</a></li>
+                <li><a href="../classes/MetadataUtil.html">MetadataUtil</a></li>
+                <li><a href="../classes/NotLastHelper.html">NotLastHelper</a></li>
+                <li><a href="../classes/OAuth2Authenticator.html">OAuth2Authenticator</a></li>
+                <li><a href="../classes/OAuth2Authorizer.html">OAuth2Authorizer</a></li>
+                <li><a href="../classes/Prometheus.app.module.html">Prometheus.app.module</a></li>
+                <li><a href="../classes/Prometheus.AppWikiRoute.html">Prometheus.AppWikiRoute</a></li>
+                <li><a href="../classes/Prometheus.en.html">Prometheus.en</a></li>
+                <li><a href="../classes/Prometheus.nav-bar.html">Prometheus.nav-bar</a></li>
+                <li><a href="../classes/Prometheus.NavBarComponent.html">Prometheus.NavBarComponent</a></li>
+                <li><a href="../classes/Prometheus.ProjectModel.html">Prometheus.ProjectModel</a></li>
+                <li><a href="../classes/Prometheus.TokenModel.html">Prometheus.TokenModel</a></li>
+                <li><a href="../classes/Prometheus.UserModel.html">Prometheus.UserModel</a></li>
+                <li><a href="../classes/Routes.html">Routes</a></li>
+                <li><a href="../classes/SetupLoggerInitializer.html">SetupLoggerInitializer</a></li>
+                <li><a href="../classes/SigninController.html">SigninController</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>OAuth2Authenticator</h1>
+</div>
+
+
+	<div class="well well-small">
+        <div class="extends">
+            Extends OAuth2PasswordGrant
+        </div>
+    </div>
+
+	<div class="well well-small">
+            Module: <a href="../modules/App.Components.html">App.Components</a>
+    </div>
+
+
+
+<div class="yuidoc-class-description">
+<p>This class allows the application to authenticate with using a password grant</p>
+
+</div>
+
+<!-- table of contents -->
+
+<div id="class-toc" class="page-section">
+	<h2>Table of Contents</h2>
+    <ul>
+		<li>
+			<strong>Methods</strong>
+			<ul>
+				<li><a href="#method-authenticate"><span class="im">authenticate</span>(<span class="ia">identification</span><span class="ia">password</span><span class="ia">scope</span><span class="ia">headers</span>)</a></li>
+			</ul>
+		</li>
+
+		<li>
+			<strong>Properties</strong>
+			<ul>
+				<li><a href="#prop-clientId"><span class="ip">clientId</span></a></li>
+				<li><a href="#prop-clientSecret"><span class="ip">clientSecret</span></a></li>
+				<li><a href="#prop-clientSecret"><span class="ip">clientSecret</span></a></li>
+			</ul>
+		</li>
+
+
+	</ul>
+</div>
+
+<!-- details -->
+
+
+    <div id="methods" class="page-section">
+        <h2 class="off-left">Methods</h2>
+        <div class="item-list">
+<div id="method-authenticate" class="method item public">
+	<div class="method-signature">
+	<span class="name"><code>authenticate</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>identification</code>
+				</li>
+				<li class="arg">
+						<code>password</code>
+				</li>
+				<li class="arg">
+						<code>scope</code>
+				</li>
+				<li class="arg">
+						<code>headers</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Ember.RSVP.Promise</span>
+		</span>
+	</div>
+
+
+		<span class="flag public">public</span>
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/app_authenticators_oauth2.js.html#l54"><code>app&#x2F;authenticators&#x2F;oauth2.js:54</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Authenticates the session with the specified <code>identification</code>, <code>password</code>
+and optional <code>scope</code>; issues a <code>POST</code> request to the</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">identification</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>The resource owner username</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">password</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>The resource owner password</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">scope</code>
+						<span class="type">String  |  Array</span>
+
+
+					<div class="param-description"><p>The scope of the access request (see <a href="http://tools.ietf.org/html/rfc6749#section-3.3">RFC 6749, section 3.3</a>)</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">headers</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>Optional headers that particular backends may require (for example sending 2FA challenge responses)</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Ember.RSVP.Promise</span>:
+					<p>A promise that when it resolves results in the session becoming authenticated</p>
+
+			</div>
+		</div>
+
+</div>
+        </div>
+    </div>
+
+    <div id="properties" class="page-section">
+        <h2 class="off-left">Properties</h2>
+
+        <div class="item-list">
+<div id="prop-clientId" class="property item public">
+    <h3 class="name"><code>clientId</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag public">public</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_authenticators_oauth2.js.html#l24"><code>app&#x2F;authenticators&#x2F;oauth2.js:24</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>The client_id to be sent to the authentication server</p>
+
+    </div>
+
+        <p><strong>Default:</strong> null</p>
+
+
+</div>
+<div id="prop-clientSecret" class="property item public">
+    <h3 class="name"><code>clientSecret</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag public">public</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_authenticators_oauth2.js.html#l34"><code>app&#x2F;authenticators&#x2F;oauth2.js:34</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>The client_secret to be sent to the authentication server</p>
+
+    </div>
+
+        <p><strong>Default:</strong> null</p>
+
+
+</div>
+<div id="prop-clientSecret" class="property item public">
+    <h3 class="name"><code>clientSecret</code></h3>
+    <span class="type">String</span>
+
+
+        <span class="flag public">public</span>
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_authenticators_oauth2.js.html#l44"><code>app&#x2F;authenticators&#x2F;oauth2.js:44</code></a>
+        </p>
+
+
+    </div>
+
+    <div class="description">
+        <p>The client_secret to be sent to the authentication server</p>
+
+    </div>
+
+        <p><strong>Default:</strong> null</p>
+
+
+</div>
+        </div>
+    </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

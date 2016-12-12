@@ -1,0 +1,40 @@
+<div class="box-header with-border">
+  <h3 class="box-title">{{t "view.app.wiki.create.new"}}</h3>
+</div>
+<!-- /.box-header -->
+<div class="box-body">
+  <div class="form-group">
+    {{input value=model.name placeholder=(t "view.app.wiki.create.name") key-up="changed" class="form-control"}}
+  </div>
+  <div class="form-group">
+    {{#power-select
+      options=wikiList
+      selected=(find-by "value" parentId wikiList)
+      placeholder=(t "view.app.wiki.create.parent")
+      searchField="label"
+      onchange=(action "wikiChanged")
+      as |wiki|}}
+      {{wiki.label}}
+    {{/power-select}}
+  </div>
+  <div class="form-group">
+    {{quill-editor contents=model.markUp update=(action "changed")}}
+    {{textarea-field class="hidden" id="wikiMarkUp" value=model.markUp}}
+  </div>
+
+  <!--div class="form-group">
+    <div class="btn btn-default btn-file">
+      <i class="fa fa-paperclip"></i> Attachment
+      <input type="file" name="attachment">
+    </div>
+    <p class="help-block">Max. 32MB</p>
+  </div-->
+
+</div>
+
+<!-- /.box-body -->
+
+<div class="box-footer">
+  <button type="button" class="btn btn-default" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+  <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+</div>

@@ -1,0 +1,75 @@
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the wiki pages of the application.
+*/
+.wiki-list{
+
+  .node-selected{
+    background-color: $primaryColor !important;
+  }
+
+  ul{
+    list-style: none;
+    padding: 0rem 0rem 0rem 1rem;
+
+    li{
+      line-height: 3.0rem;
+
+      a{
+        border-bottom: 1px solid;
+      }
+    }
+
+    .wiki-list-parent {
+      padding-left: 1.3em;
+    }
+
+    .wiki-list-parent:before {
+      content: "\f107";
+      font-family: FontAwesome;
+      display: inline-block;
+      margin-left: -1.3em;
+      width: 1.3em;
+    }
+
+    .wiki-list-no-parent {
+      padding-left: 1.3em;
+    }
+
+    .wiki-list-no-parent:before {
+      content: "\f111";
+      font-family: FontAwesome;
+      font-size: 0.5rem;
+      display: inline-block;
+      margin-left: -3.5em;
+      width: 1.3em;
+      position: absolute;
+    }
+
+  }
+
+}
+
+.wiki-project #editor{
+  height: 350px;
+}
+
+.wiki-detail .ember-power-select-trigger{
+  border-radius: 0px;
+  line-height: 1.42857;
+  padding: 0.6rem 1.2rem;
+  border-color: #CCC;
+
+  .ember-power-select-placeholder
+  {
+    margin-left: 0px;
+  }
+}
+
+.ember-power-select-dropdown{
+  border-color: #CCC;
+  .ember-power-select-search-input{
+    border-color: #CCC;
+  }
+}

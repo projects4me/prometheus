@@ -1,0 +1,39 @@
+{{#if model}}
+  {{#each model as |wiki|}}
+
+    <div class="box-header with-border">
+      <h3 class="box-title">{{#if wiki.locked}}<i class="fa fa-unlock"></i>{{else}}<i class="fa fa-lock"></i>{{/if}} {{wiki.name}}</h3>
+
+      <div class="box-tools pull-right">
+        <a href="#" class="btn btn-box-tool" data-toggle="tooltip" title="Previous"><i class="fa fa-chevron-left"></i></a>
+        <a href="#" class="btn btn-box-tool" data-toggle="tooltip" title="Next"><i class="fa fa-chevron-right"></i></a>
+      </div>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+
+      <div class="wiki-page-contents ql-container ql-snow">
+        <div class="ql-editor wiki-default-page">
+          {{{wiki.markUp}}}
+        </div>
+      </div>
+      <!--div class="form-group">
+        <div class="btn btn-default btn-file">
+          <i class="fa fa-paperclip"></i> Attachment
+          <input type="file" name="attachment">
+        </div>
+        <p class="help-block">Max. 32MB</p>
+      </div-->
+
+    </div>
+
+    <!-- /.box-body -->
+
+    <div class="box-footer">
+      <button type="button" class="btn btn-default" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+      <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+    </div>
+
+  {{/each}}
+{{/if}}

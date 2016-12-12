@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>app/initializers/javascript-behaviors.js - Projects4Me</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            Projects4Me
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>0.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AppController", "classes/application", "classes/ApplicationAdapter", "classes/ApplicationRoute", "classes/AppRoute", "classes/GetDateHelper", "classes/Initializer", "classes/InjectRouterInitializer", "classes/JavascriptBehaviorsInitializer", "classes/MetadataUtil", "classes/NotLastHelper", "classes/OAuth2Authenticator", "classes/OAuth2Authorizer", "classes/Prometheus.app.module", "classes/Prometheus.AppWikiRoute", "classes/Prometheus.en", "classes/Prometheus.nav-bar", "classes/Prometheus.NavBarComponent", "classes/Prometheus.ProjectModel", "classes/Prometheus.TokenModel", "classes/Prometheus.UserModel", "classes/Routes", "classes/SetupLoggerInitializer", "classes/SigninController", "modules/App.Components", "modules/Application", "modules/i18n"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AppController.html">AppController</a></li>
+                <li><a href="../classes/application.html">application</a></li>
+                <li><a href="../classes/ApplicationAdapter.html">ApplicationAdapter</a></li>
+                <li><a href="../classes/ApplicationRoute.html">ApplicationRoute</a></li>
+                <li><a href="../classes/AppRoute.html">AppRoute</a></li>
+                <li><a href="../classes/GetDateHelper.html">GetDateHelper</a></li>
+                <li><a href="../classes/Initializer.html">Initializer</a></li>
+                <li><a href="../classes/InjectRouterInitializer.html">InjectRouterInitializer</a></li>
+                <li><a href="../classes/JavascriptBehaviorsInitializer.html">JavascriptBehaviorsInitializer</a></li>
+                <li><a href="../classes/MetadataUtil.html">MetadataUtil</a></li>
+                <li><a href="../classes/NotLastHelper.html">NotLastHelper</a></li>
+                <li><a href="../classes/OAuth2Authenticator.html">OAuth2Authenticator</a></li>
+                <li><a href="../classes/OAuth2Authorizer.html">OAuth2Authorizer</a></li>
+                <li><a href="../classes/Prometheus.app.module.html">Prometheus.app.module</a></li>
+                <li><a href="../classes/Prometheus.AppWikiRoute.html">Prometheus.AppWikiRoute</a></li>
+                <li><a href="../classes/Prometheus.en.html">Prometheus.en</a></li>
+                <li><a href="../classes/Prometheus.nav-bar.html">Prometheus.nav-bar</a></li>
+                <li><a href="../classes/Prometheus.NavBarComponent.html">Prometheus.NavBarComponent</a></li>
+                <li><a href="../classes/Prometheus.ProjectModel.html">Prometheus.ProjectModel</a></li>
+                <li><a href="../classes/Prometheus.TokenModel.html">Prometheus.TokenModel</a></li>
+                <li><a href="../classes/Prometheus.UserModel.html">Prometheus.UserModel</a></li>
+                <li><a href="../classes/Routes.html">Routes</a></li>
+                <li><a href="../classes/SetupLoggerInitializer.html">SetupLoggerInitializer</a></li>
+                <li><a href="../classes/SigninController.html">SigninController</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>app/initializers/javascript-behaviors.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don&#x27;t remove :) */
+import Ember from &quot;ember&quot;;
+
+/* Maintain some global variables to keep a track of what has happened */
+var alreadyRun = false;
+var oldConsole = {};
+
+
+/**
+  This is the initializer for the javascript behaviors in the application. We
+  are using some libraries that needs to intiate some behaviors like pave and
+  tooltip that is accomplished using this initializer.
+
+  @class JavascriptBehaviorsInitializer
+  @author Hammad Hassan gollomer@gmail.com
+*/
+export default {
+  /**
+   The name of the initializer
+
+   @property name
+   @type String
+   @for Initializer
+   @public
+  */
+  name: &#x27;javascript-behaviors&#x27;,
+
+  /**
+    This function is called by Emberjs by default and in this application we
+    setup the Logger configuration which can be overwritter in the environment
+    configuration.
+
+    @method initialize
+    @private
+  */
+  initialize: function() {
+    if (alreadyRun) {
+      return;
+    } else {
+      alreadyRun = true;
+    }
+    Ember.Router.reopen({
+      startProgress:function(){
+        Pace.restart();
+      }.on(&#x27;willTransition&#x27;),
+
+      initComponents:function(){
+        Ember.$(function () {
+          Ember.$(&#x27;[data-toggle=&quot;tooltip&quot;]&#x27;).tooltip();
+        });
+      }.on(&#x27;didTransition&#x27;)
+    });
+
+    console.history = [];
+    for (var i in console) {
+    if (typeof console[i] === &#x27;function&#x27;) {
+      oldConsole[i] = console[i];
+      var strr = &#x27;(function(){console.history.push({func:\&#x27;&#x27; + i + &#x27;\&#x27;,args : Array.prototype.slice.call(arguments)});oldConsole[\&#x27;&#x27; + i + &#x27;\&#x27;].apply(console, arguments);})&#x27;;
+      console[i] = eval(strr);
+      }
+    }
+  }
+};
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

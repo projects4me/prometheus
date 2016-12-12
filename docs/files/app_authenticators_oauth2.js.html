@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>app/authenticators/oauth2.js - Projects4Me</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            Projects4Me
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>0.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/AppController", "classes/application", "classes/ApplicationAdapter", "classes/ApplicationRoute", "classes/AppRoute", "classes/GetDateHelper", "classes/Initializer", "classes/InjectRouterInitializer", "classes/JavascriptBehaviorsInitializer", "classes/MetadataUtil", "classes/NotLastHelper", "classes/OAuth2Authenticator", "classes/OAuth2Authorizer", "classes/Prometheus.app.module", "classes/Prometheus.AppWikiRoute", "classes/Prometheus.en", "classes/Prometheus.nav-bar", "classes/Prometheus.NavBarComponent", "classes/Prometheus.ProjectModel", "classes/Prometheus.TokenModel", "classes/Prometheus.UserModel", "classes/Routes", "classes/SetupLoggerInitializer", "classes/SigninController", "modules/App.Components", "modules/Application", "modules/i18n"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+<div>
+    <div id="sidebar">
+    <div id="classes">
+        <ul id="api-classes" class="nav nav-list">
+                <li><a href="../classes/AppController.html">AppController</a></li>
+                <li><a href="../classes/application.html">application</a></li>
+                <li><a href="../classes/ApplicationAdapter.html">ApplicationAdapter</a></li>
+                <li><a href="../classes/ApplicationRoute.html">ApplicationRoute</a></li>
+                <li><a href="../classes/AppRoute.html">AppRoute</a></li>
+                <li><a href="../classes/GetDateHelper.html">GetDateHelper</a></li>
+                <li><a href="../classes/Initializer.html">Initializer</a></li>
+                <li><a href="../classes/InjectRouterInitializer.html">InjectRouterInitializer</a></li>
+                <li><a href="../classes/JavascriptBehaviorsInitializer.html">JavascriptBehaviorsInitializer</a></li>
+                <li><a href="../classes/MetadataUtil.html">MetadataUtil</a></li>
+                <li><a href="../classes/NotLastHelper.html">NotLastHelper</a></li>
+                <li><a href="../classes/OAuth2Authenticator.html">OAuth2Authenticator</a></li>
+                <li><a href="../classes/OAuth2Authorizer.html">OAuth2Authorizer</a></li>
+                <li><a href="../classes/Prometheus.app.module.html">Prometheus.app.module</a></li>
+                <li><a href="../classes/Prometheus.AppWikiRoute.html">Prometheus.AppWikiRoute</a></li>
+                <li><a href="../classes/Prometheus.en.html">Prometheus.en</a></li>
+                <li><a href="../classes/Prometheus.nav-bar.html">Prometheus.nav-bar</a></li>
+                <li><a href="../classes/Prometheus.NavBarComponent.html">Prometheus.NavBarComponent</a></li>
+                <li><a href="../classes/Prometheus.ProjectModel.html">Prometheus.ProjectModel</a></li>
+                <li><a href="../classes/Prometheus.TokenModel.html">Prometheus.TokenModel</a></li>
+                <li><a href="../classes/Prometheus.UserModel.html">Prometheus.UserModel</a></li>
+                <li><a href="../classes/Routes.html">Routes</a></li>
+                <li><a href="../classes/SetupLoggerInitializer.html">SetupLoggerInitializer</a></li>
+                <li><a href="../classes/SigninController.html">SigninController</a></li>
+        </ul>
+    </div>
+    </div>
+</div>
+        </div>
+        <div class="span9">
+    <form id="options-form" class="form-inline pull-right">
+        Show:
+        <label for="api-show-inherited" class="checkbox">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected" class="checkbox">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private" class="checkbox">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated" class="checkbox">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </form>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>app/authenticators/oauth2.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don&#x27;t remove :) */
+import Ember from &#x27;ember&#x27;;
+import OAuth2PasswordGrant from &#x27;ember-simple-auth/authenticators/oauth2-password-grant&#x27;;
+import ENV from &quot;prometheus/config/environment&quot;;
+
+const {
+  RSVP,
+  isEmpty,
+  run,
+  makeArray,
+  assign: emberAssign,
+  merge,
+} = Ember;
+const assign = emberAssign || merge;
+
+/**
+  This class allows the application to authenticate with using a password grant
+
+  @class OAuth2Authenticator
+  @extends OAuth2PasswordGrant
+  @author Hammad Hassan gollomer@gmail.com
+*/
+export default OAuth2PasswordGrant.extend({
+  /**
+    The client_id to be sent to the authentication server
+
+    @property clientId
+    @type String
+    @default null
+    @public
+  */
+  apiClientId: ENV.api.clientId,
+
+  /**
+    The client_secret to be sent to the authentication server
+
+    @property clientSecret
+    @type String
+    @default null
+    @public
+  */
+  apiClientSecret: ENV.api.clientSecret,
+
+  /**
+    The client_secret to be sent to the authentication server
+
+    @property clientSecret
+    @type String
+    @default null
+    @public
+  */
+  serverTokenEndpoint: ENV.api.host+&#x27;/api/v&#x27;+ENV.api.version+&quot;/token&quot;,
+
+  /**
+    Authenticates the session with the specified &#x60;identification&#x60;, &#x60;password&#x60;
+    and optional &#x60;scope&#x60;; issues a &#x60;POST&#x60; request to the
+
+    @method authenticate
+    @param {String} identification The resource owner username
+    @param {String} password The resource owner password
+    @param {String|Array} scope The scope of the access request (see [RFC 6749, section 3.3](http://tools.ietf.org/html/rfc6749#section-3.3))
+    @param {Object} headers Optional headers that particular backends may require (for example sending 2FA challenge responses)
+    @return {Ember.RSVP.Promise} A promise that when it resolves results in the session becoming authenticated
+    @public
+  */
+  authenticate(identification, password, scope = [], headers = {}) {
+    return new RSVP.Promise((resolve, reject) =&gt; {
+      const data                = { &#x27;grant_type&#x27;: &#x27;password&#x27;, username: identification, password,&#x27;client_id&#x27;:this.apiClientId,&#x27;client_secret&#x27;:this.apiClientSecret };
+      const serverTokenEndpoint = this.get(&#x27;serverTokenEndpoint&#x27;);
+      const useResponse = this.get(&#x27;rejectWithResponse&#x27;);
+      const scopesString = makeArray(scope).join(&#x27; &#x27;);
+      if (!isEmpty(scopesString)) {
+        data.scope = scopesString;
+      }
+      this.makeRequest(serverTokenEndpoint, data, headers).then((response) =&gt; {
+        run(() =&gt; {
+          if (!this._validate(response)) {
+            reject(&#x27;access_token is missing in server response&#x27;);
+          }
+
+          const expiresAt = this._absolutizeExpirationTime(response[&#x27;expires_in&#x27;]);
+          this._scheduleAccessTokenRefresh(response[&#x27;expires_in&#x27;], expiresAt, response[&#x27;refresh_token&#x27;]);
+          if (!isEmpty(expiresAt)) {
+            response = assign(response, { &#x27;expires_at&#x27;: expiresAt });
+          }
+
+          resolve(response);
+        });
+      }, (response) =&gt; {
+        run(null, reject, useResponse ? response : response.responseJSON);
+      });
+    });
+  },
+});
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>
