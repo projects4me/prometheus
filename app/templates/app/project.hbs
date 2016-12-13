@@ -8,10 +8,13 @@
     {{/if}}
   </h1>
 
-  <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i>{{t "view.nav.menu.dashboard.label"}}</a></li>
-    <li class="active">{{t "view.nav.menu.project.label"}}</li>
-  </ol></section>
+  {{#bread-crumbs outputStyle="bootstrap" tagName="ol" linkable=true as |component module|}}
+    {{#bread-crumb route=module breadCrumbs=component}}
+        <i class="fa fa-{{navIcon module.title}}"></i> {{module.title}}
+    {{/bread-crumb}}
+  {{/bread-crumbs}}
+
+</section>
 
 <section class="content">
   {{#if projectId}}

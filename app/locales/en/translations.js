@@ -86,6 +86,7 @@ export default {
       "detail": "Detail",
       "toggleDropdown": "Toggle Dropdown",
     },
+    "noentry": "No entry found..",
   },
 
   /*
@@ -137,6 +138,8 @@ export default {
       },
 
       "wiki":{
+          "welcome": "Welcome to Projects4Me documentation tool.",
+          "nohome" : "No wiki page found by the name of <strong>Home</strong>, please create one by clicking on the button below",
           "list":"Wiki List",
           "create":{
             "page": "Create Page",

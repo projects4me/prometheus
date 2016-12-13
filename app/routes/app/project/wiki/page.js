@@ -73,8 +73,8 @@ export default App.extend({
     Logger.debug('Retreiving wiki list with options '+options);
     this.data = this.store.query('wiki',options);
     controller.set('model',this.data);
+    this.set('breadCrumb',{title:params.wikiName});
     controller.set('project',this.project);
-
   },
 
   /**

@@ -1,5 +1,4 @@
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
-import Ember from "ember";
 import App from "../../../app";
 
 /**
@@ -15,7 +14,7 @@ import App from "../../../app";
   @namespace Prometheus
   @extends Ember.Route
 */
-export default Ember.Route.extend({
+export default App.extend({
 
   /**
     The data for the current route

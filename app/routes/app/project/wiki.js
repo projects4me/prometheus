@@ -78,15 +78,18 @@ export default App.extend({
         temp = data.nextObject(i);
         wikiList[i] = {label:temp.get('name'), value:temp.get('id')};
       }
-//     self.controllerFor('app.project.wiki.page').set('wikilist', wikiList);
+     self.controllerFor('app.project.wiki.page').set('wikilist', wikiList);
      self.controllerFor('app.project.wiki.create').set('wikiList', wikiList);
-//     self.controllerFor('app.project.wiki.project.edit').set('wikilist', data);
+     //self.controllerFor('app.project.wiki.edit').set('wikilist', data);
 
       tree = M2T.modelToTree(data);
 
       Logger.debug(tree);
       self.set('tree',tree);
       controller.set('tree',tree);
+      if (data.findBy('name','Home') !== undefined){
+        self.transitionTo('app.project.wiki.page',{projectId:params.projectId,wikiName:'Home'});
+      }
     });
   },
 

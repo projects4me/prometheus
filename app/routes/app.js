@@ -54,6 +54,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
     this.loadCurrentUser().catch(() => this.get('session').invalidate());
   },
 
+
   /**
     This function is used to retrieve the currentUser using the current user
     service
@@ -75,6 +76,8 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
     @private
   */
   setupController:function(controller){
+
+    this.set('breadCrumb', {title: 'Dashboard'});
 
     Logger.debug('AppRoute::setupController');
 

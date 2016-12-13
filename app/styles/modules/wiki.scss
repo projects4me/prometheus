@@ -73,3 +73,35 @@
     border-color: #CCC;
   }
 }
+
+.wiki-default-page {
+  white-space: pre-line;
+  padding: 0rem 0rem;
+}
+
+.ql-container{
+  border: none !important;
+}
+
+.upvotes{
+  font-size: 1.2rem;
+  margin-left: 1rem;
+
+  .fa{
+    color: $primaryColor;
+    font-size: 1.5rem;
+  }
+}
+
+.wiki-no-home{
+  margin: 0px auto;
+  text-align: center;
+  padding: 5rem;
+
+  .fa-file-text-o{
+    font-size: 3rem;
+  }
+  .btn{
+    margin-top: 2rem;
+  }
+}

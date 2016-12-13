@@ -1,0 +1,56 @@
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the entire document
+*/
+
+
+.box.box-primary{
+  border-top-color: $primaryColor !important;
+}
+
+.box.box-primary:after{
+  content:'';
+  width:100%;
+  position: absolute;
+  left:0;
+  top:-0.3rem;
+  height: 0.4rem;
+  background: $primaryColor;
+  background: -moz-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(100,12,68,1) 100%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgba(179,36,79,1)), color-stop(100%, rgba(100,12,68,1)));
+  background: -webkit-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(100,12,68,1) 100%);
+  background: -o-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(100,12,68,1) 100%);
+  background: -ms-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(100,12,68,1) 100%);
+  background: linear-gradient(to right, rgba(179,36,79,1) 0%, rgba(100,12,68,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3244f', endColorstr='#640c44', GradientType=1 );
+}
+
+.btn-primary{
+  background: $primaryColor;
+  border-color: $primaryColor;
+/*
+  background: rgba(179,36,79,1);
+  background: -moz-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(179,36,79,1) 71%, rgba(100,12,68,1) 100%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgba(179,36,79,1)), color-stop(71%, rgba(179,36,79,1)), color-stop(100%, rgba(100,12,68,1)));
+  background: -webkit-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(179,36,79,1) 71%, rgba(100,12,68,1) 100%);
+  background: -o-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(179,36,79,1) 71%, rgba(100,12,68,1) 100%);
+  background: -ms-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(179,36,79,1) 71%, rgba(100,12,68,1) 100%);
+  background: linear-gradient(to right, rgba(179,36,79,1) 0%, rgba(179,36,79,1) 71%, rgba(100,12,68,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3244f', endColorstr='#640c44', GradientType=1 );
+*/
+//http://www.cssmatic.com/gradient-generator#'\-moz\-linear\-gradient\%28left\%2C\%20rgba\%28179\%2C36\%2C79\%2C1\%29\%200\%25\%2C\%20rgba\%28179\%2C36\%2C79\%2C1\%29\%2071\%25\%2C\%20rgba\%28100\%2C12\%2C68\%2C1\%29\%20100\%25\%29\%3B'
+}
+.btn-primary:hover{
+  background: $highlightColor;
+}
+
+
+.path-seperator:after{
+  content:"/";
+}
+
+.no-entry{
+  color: $borderColor;
+  font-style: italic;
+}
