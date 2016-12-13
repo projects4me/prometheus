@@ -76,14 +76,15 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
     @private
   */
   setupController:function(controller){
-
-    this.set('breadCrumb', {title: 'Dashboard'});
-
     Logger.debug('AppRoute::setupController');
+
 
     // If the user navigated directly to the wiki project or page then lets setup the project id
     var projectId = this.paramsFor('app.project').projectId;
     var projectName = null;
+
+    var self = this;
+    self.set('breadCrumb', {title: 'Dashboard'});
 
     Logger.debug(projectId);
     Logger.debug(projectName);
@@ -116,6 +117,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
         controller.set('projectId',projectId);
         controller.set('projectName',projectName);
       }
+
     });
 
   }

@@ -15,8 +15,9 @@ export function objectEmpty(params) {
   var empty = true;
   for(var index in params[0])
   {
-    Logger.debug(index);
     empty = false;
+    // Just to get rid of the jshint
+    index = index;
     break;
   }
   return (empty);

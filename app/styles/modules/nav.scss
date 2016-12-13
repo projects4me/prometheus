@@ -17,6 +17,13 @@
   border: none;
   font-size: 1.8rem;
   color: $backgroundColor;
+  width: 20.8rem;
+
+  .ember-power-select-selected-item{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   .ember-power-select-placeholder{
     color: $backgroundColor;
