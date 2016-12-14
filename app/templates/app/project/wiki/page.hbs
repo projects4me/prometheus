@@ -5,8 +5,8 @@
       {{#if wiki.locked}}<i class="fa fa-unlock"></i>{{else}}<i class="fa fa-lock"></i>{{/if}}
       <h2 class="box-title">{{wiki.name}} - </h2>
       {{#if wiki.parentId}}
-        {{#if wikilist}}
-          <a href="javascript:void(0);" {{action "loadWiki" wiki.projectId (getWiki wiki wikilist)}}>{{getWiki wiki wikilist}}</a>
+        {{#if wikiList}}
+          <a href="javascript:void(0);" {{action "loadWiki" wiki.projectId (getWiki wiki wikiList)}}>{{getWiki wiki wikiList}}</a>
         {{/if}}
       {{/if}}
       <span class="path-seperator"></span> {{wiki.name}}
@@ -39,7 +39,7 @@
     <!-- /.box-body -->
 
     <div class="box-footer">
-      <button type="button" class="btn btn-default" {{action "edit"}}><i class="fa fa-pencil"></i>{{t "global.form.edit"}}</button>
+      <button type="button" class="btn btn-primary" {{action "edit"}}><i class="fa fa-pencil"></i>{{t "global.form.edit"}}</button>
       <button type="button" class="btn btn-default" {{action "delete"}}><i class="fa fa-trash"></i>{{t "global.form.delete"}}</button>
     </div>
 

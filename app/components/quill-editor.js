@@ -60,7 +60,7 @@ export default Ember.Component.extend({
 */
         editor.on('text-change', function() {
 
-          Ember.$('#wikiMarkUp').val(Ember.$('#editor .ql-editor').html());
+          //Ember.$('#wikiMarkUp').val(Ember.$('#editor .ql-editor').html());
           //Ember.$('#wikiMarkUp').trigger('change');
 
           /**
@@ -69,7 +69,7 @@ export default Ember.Component.extend({
           */
           if (typeof self.update === 'function')
           {
-            self.sendAction('update');
+            self.sendAction('update',{'markUp':Ember.$('#editor .ql-editor').html()});
           }
 
         });

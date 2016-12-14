@@ -147,6 +147,9 @@ export default {
             "name": "Page Name",
             "parent": "Parent Page",
           },
+          "page":{
+            "edit": "Edit {{page}} Page"
+          }
       },
 
     },
@@ -158,6 +161,9 @@ export default {
       "mainnav": "Main Navigation",
       "selectproject":"Select a project..",
       "menu":{
+        "app": {
+          "label": "Dashboard",
+        },
         "dashboard":{
           "label":"Dashboard",
         },

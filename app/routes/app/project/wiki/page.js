@@ -1,5 +1,4 @@
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
-import Ember from "ember";
 import App from "../../../app";
 
 /**
@@ -71,9 +70,12 @@ export default App.extend({
     };
 
     Logger.debug('Retreiving wiki list with options '+options);
-    this.data = this.store.query('wiki',options);
-    controller.set('model',this.data);
-    this.set('breadCrumb',{title:params.wikiName});
+    this.data = this.store.query('wiki',options).then(function(data){
+      controller.set('model',data);
+      controller.set('markUp',data.nextObject(0).get('markUp'));
+    });
+    //controller.set('model',this.data);
+    this.set('breadCrumb',{title:params.wikiName,record:true});
     controller.set('project',this.project);
   },
 

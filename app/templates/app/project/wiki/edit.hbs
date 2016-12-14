@@ -1,0 +1,56 @@
+{{#if model}}
+  {{#each model as |wiki|}}
+    <div class="box-header with-border">
+      <h3 class="box-title">{{t "view.app.wiki.page.edit" page=wiki.name}}</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <div class="form-group">
+        {{input value=wiki.name placeholder=(t "view.app.wiki.create.name") key-up="changed" class="form-control"}}
+      </div>
+      <div class="form-group">
+        {{#power-select
+          options=wikiList
+          selected=(find-by "value" parentId wikiList)
+          placeholder=(t "view.app.wiki.create.parent")
+          searchField="label"
+          onchange=(action "wikiChanged")
+          as |wiki|}}
+          {{wiki.label}}
+        {{/power-select}}
+      </div>
+      <div class="form-group">
+        {{quill-editor contents=markUp update=(action "changed")}}
+
+      </div>
+
+      <!--div class="form-group">
+        <div class="btn btn-default btn-file">
+          <i class="fa fa-paperclip"></i> Attachment
+          <input type="file" name="attachment">
+        </div>
+        <p class="help-block">Max. 32MB</p>
+      </div-->
+
+    </div>
+
+    <!-- /.box-body -->
+
+    <div class="box-footer">
+      <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+      <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+    </div>
+  {{/each}}
+{{else}}
+  <div class="wiki-page-empty">
+    <div class="well">
+      <i class="fa fa-file-text-o"></i>
+      <div class="clearfix"></div>
+      <h3>{{t "view.wiki.main.welcome.header"}}</h3>
+      <div class="clearfix"></div>
+      {{t "view.wiki.main.page.empty"}}
+      <div class="clearfix"></div>
+      <button type="button" class="btn btn-default" {{action "create"}}><i class="fa fa-plus"></i> {{t "view.wiki.main.create.page"}}</button>
+    </div>
+  </div>
+{{/if}}

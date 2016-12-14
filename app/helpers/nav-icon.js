@@ -15,6 +15,9 @@ import MD from "../utils/metadata/metadata";
 export function navIcon(params) {
   var metaData = MD.create().getViewMeta('Navigation','items');
   var navModule = Ember.String.capitalize(params[0]);
+  if (navModule === 'App'){
+    navModule = 'Dashboard';
+  }
   if (metaData[navModule] !== undefined)
   {
     return metaData[navModule].icon;
