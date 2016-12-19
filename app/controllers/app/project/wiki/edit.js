@@ -61,8 +61,8 @@ export default Ember.Controller.extend({
           //self.set('markUp','');
           //self.destroy();
           //(self);
-          self.send('redirectOnSave',{projectId:data.get('projectId'),wikiName:data.get('name')}); 
-          //self.transitionToRoute('app.project.wiki.page', {projectId:data.get('projectId'),wikiName:data.get('name')});
+          //self.send('redirectOnSave',{projectId:data.get('projectId'),wikiName:data.get('name')});
+          self.transitionToRoute('app.project.wiki.page', {projectId:data.get('projectId'),wikiName:data.get('name')});
         });
       }
     },
@@ -120,11 +120,23 @@ export default Ember.Controller.extend({
       @param wikiName
       @public
     */
-    wikiChanged:function(event){
+    wikiChanged:function(target){
       var model = this.get('model').nextObject(0);
-      model.set('parentId',event.target.selectedOptions[0].value);
-      model.set('parentName',event.target.selectedOptions[0].label);
+      this.set('parentId',target.value);
+      model.set('parentId',target.value);
+      model.set('parentName',target.label);
       this.send('changed');
+    },
+
+    /**
+      This function is used to select the tags in the system
+
+      @method tagSelected
+      @param e {Object} the list of selected items
+    */
+    tagSelected:function(e){
+      Logger.debug('AppProjectWikiEditController:tagSelected');
+      this.set('selectedTags',e);
     }
   }
 });

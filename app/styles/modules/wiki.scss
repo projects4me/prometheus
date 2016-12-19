@@ -111,3 +111,31 @@
     margin-top: 2rem;
   }
 }
+
+.wiki-tags{
+  display: inline-flex;
+  line-height: 2.6rem;
+
+  .ember-power-select-trigger{
+    padding: 0.6rem 0.6rem 0rem;
+      line-height: 2.6rem;
+      min-width: 30rem;
+      height: 3.2rem;
+  }
+
+  .ember-power-select-multiple-option{
+    background-color: $primaryColor;
+    color: $backgroundColor;
+    border-color: $primaryColor;
+    line-height: 1.42;
+    border: none !important;
+    margin: 0rem 0.2rem;
+  }
+
+  .ember-power-select-trigger-multiple-input{
+      line-height: 1.42;
+      border: none !important;
+      margin: 0rem;
+  }
+
+}

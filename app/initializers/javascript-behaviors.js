@@ -51,6 +51,11 @@ export default {
       }.on('didTransition')
     });
 
+    Messenger.options = {
+      extraClasses: 'messenger-fixed messenger-on-top',
+      theme: 'air'
+    };
+
     console.history = [];
     for (var i in console) {
     if (typeof console[i] === 'function') {

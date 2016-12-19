@@ -14,6 +14,8 @@ import Ember from "ember";
 
 export default Ember.Controller.extend({
 
+  selectedTags:[],
+
   actions: {
 
     /**
@@ -57,7 +59,11 @@ export default Ember.Controller.extend({
       @public
     */
     delete:function(){
-      alert('No can\'t do');
+      Messenger().post({
+        message: 'No can\'t do',
+        type: 'error',
+        showCloseButton: true
+      });
     },
 
     /**
@@ -68,7 +74,7 @@ export default Ember.Controller.extend({
     */
     upvote:function(wikiId){
       Logger.debug("AppProjectWikiPageController:upvote("+wikiId+")");
-    }
+    },
 
   }
 });

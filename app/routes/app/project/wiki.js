@@ -2,6 +2,7 @@
 import Ember from "ember";
 import M2T from "../../../utils/data/modeltotree";
 import App from '../../app';
+//import { translationMacro as t } from "ember-i18n";
 
 /**
   The project wiki page route, it is loaded when a user tried to navigate to
@@ -38,8 +39,10 @@ export default App.extend({
     @param controller {Object} the controller object for this route
     @private
   */
-  setupController:function(controller,model){
-    this._super(controller, model);
+  setupController:function(controller){
+
+    Logger.debug('AppProjectWikiRoute::setupController');
+
     var self = this;
     var params = this.paramsFor('app.project');
 
@@ -50,6 +53,11 @@ export default App.extend({
     var i18n = this.get('i18n');
     controller.set('i18n',i18n);
 
+    Logger.debug("----------------------");
+    Logger.debug("----------------------");
+    Logger.debug("----------------------");
+    Logger.debug("----------------------");
+    this.loadTags();
     var options = {
       query: '(Wiki.projectId : '+params.projectId+')',
       sort : 'Wiki.name',
@@ -73,9 +81,10 @@ export default App.extend({
       var wikiCount = data.get('length');
       var wikiList = [];
       var temp = null;
-      for (var i=0;i<wikiCount;i++)
+      wikiList[0] = {label:i18n.t("global.blank"), value:null};
+      for (var i=1;i<=wikiCount;i++)
       {
-        temp = data.nextObject(i);
+        temp = data.nextObject(i-1);
         wikiList[i] = {label:temp.get('name'), value:temp.get('id')};
       }
      self.controllerFor('app.project.wiki.page').set('wikiList', wikiList);
@@ -90,6 +99,43 @@ export default App.extend({
       //if (data.findBy('name','Home') !== undefined){
       //  self.transitionTo('app.project.wiki.page',{projectId:params.projectId,wikiName:'Home'});
       //}
+    });
+  },
+
+  /**
+    This function is used to retrieve the list of tags in the system
+
+    @method loadTags
+  */
+  loadTags:function(){
+    var self = this;
+    var options = {
+      fields: 'Tag.tag,Tag.id',
+      sort : 'Tag.tag',
+      rels: 'none',
+      order: 'ASC',
+      limit: -1
+    };
+
+    this.data = this.store.query('tag',options).then(function(data){
+      Logger.debug('Tags Retrieved');
+      Logger.debug(data);
+
+      // There might be a better way to handle this but I couldn't find it
+      // Ideally I should not have to pass the wikilist retrieved to the
+      // sub route, they should be able to pick it up but that is not working
+      // late binding/promise and all so lets just set for all the subroutes
+      var tagCount = data.get('length');
+      var tagList = [];
+      var temp = null;
+      for (var i=0;i<tagCount;i++)
+      {
+        temp = data.nextObject(i);
+        tagList[i] = {label:temp.get('tag'), value:temp.get('id')};
+      }
+      self.controllerFor('app.project.wiki.page').set('tagList', tagList);
+      self.controllerFor('app.project.wiki.edit').set('tagList', tagList);
+//     self.controllerFor('app.project.wiki.create').set('wikiList', wikiList);
     });
   },
 

@@ -8,6 +8,7 @@
   </div>
   <div class="form-group">
     {{#power-select
+      class="form-control"
       options=wikiList
       selected=(find-by "value" parentId wikiList)
       placeholder=(t "view.app.wiki.create.parent")
@@ -35,6 +36,6 @@
 <!-- /.box-body -->
 
 <div class="box-footer">
-  <button type="button" class="btn btn-default" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+  <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
   <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
 </div>

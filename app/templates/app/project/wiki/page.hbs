@@ -46,7 +46,7 @@
         {{t "view.app.wiki.tags"}}<span class="colon"></span>
         {{#if wiki.tagged}}
           {{#each wiki.tagged as |tags|}}
-            <span class="label label-primary">{{tags.tag}}</span>
+            <span class="label label-primary"><i class="fa fa-tag"></i> {{tags.tag}}</span>
           {{/each}}
         {{else}}
           <span class="disabled-text">{{t "global.noentry"}}</span>

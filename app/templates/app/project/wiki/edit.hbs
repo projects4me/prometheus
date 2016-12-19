@@ -39,6 +39,19 @@
     <div class="box-footer">
       <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
       <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+
+      <div class="pull-right wiki-tags">
+        {{t "view.app.wiki.tags"}}<span class="colon"></span>
+        {{#power-select-multiple
+          options=tagList
+          selected=selectedTags
+          placeholder=(t "view.app.wiki.selecttags")
+          searchField="label"
+          onchange=(action "tagSelected")
+          as |tag|}}
+          {{tag.label}}
+        {{/power-select-multiple}}
+      </div>
     </div>
   {{/each}}
 {{else}}

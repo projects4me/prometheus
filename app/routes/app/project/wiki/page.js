@@ -73,9 +73,25 @@ export default App.extend({
     Logger.debug('Retreiving wiki list with options '+options);
     this.data = this.store.query('wiki',options).then(function(data){
       controller.set('model',data);
-      var markUp = data.nextObject(0).get('markUp');
+      var model = data.nextObject(0);
+      var markUp = model.get('markUp');
+
+
+      var tags = model.get('tagged');
+      var tagCount = tags.get('length');
+      var selectedTags = [];
+      for(var i=0;i<tagCount;i++)
+      {
+        selectedTags[i] = {label:tags.nextObject(i).get('tag'),value:tags.nextObject(i).get('id')};
+      }
+      Logger.debug('++++++++++');
+      Logger.debug('++++++++++');
+      Logger.debug(selectedTags);
+      Logger.debug('++++++++++');
+      Logger.debug('++++++++++');
       controller.set('markUp',markUp);
-      controller.set('parentId',data.nextObject(0).get('parentId'));
+      controller.set('selectedTags',selectedTags);
+      controller.set('parentId',model.get('parentId'));
     });
     //controller.set('model',this.data);
     this.set('breadCrumb',{title:params.wikiName,record:true});

@@ -26,7 +26,7 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3244f', endColorstr='#640c44', GradientType=1 );
 }
 
-.btn-primary{
+.btn-primary, .btn-primary[disabled]{
   background: $primaryColor;
   border-color: $primaryColor;
 /*
@@ -41,11 +41,10 @@
 */
 //http://www.cssmatic.com/gradient-generator#'\-moz\-linear\-gradient\%28left\%2C\%20rgba\%28179\%2C36\%2C79\%2C1\%29\%200\%25\%2C\%20rgba\%28179\%2C36\%2C79\%2C1\%29\%2071\%25\%2C\%20rgba\%28100\%2C12\%2C68\%2C1\%29\%20100\%25\%29\%3B'
 }
-.btn-primary:hover,.btn-primary:active,.btn-primary:visited,.btn-primary:focus{
+.btn-primary:hover,.btn-primary:active,.btn-primary:visited,.btn-primary:focus,.btn-primary[disabled]:hover,.btn-primary[disabled]:active,.btn-primary[disabled]:visited,.btn-primary[disabled]:focus{
   background: $highlightColor;
   border-color: $highlightColor;
 }
-
 
 .path-seperator:after{
   content:"/";
@@ -63,6 +62,7 @@
 
 .label-primary, .modal-primary .modal-body{
   background-color: $primaryColor !important;
+  font-size: 1.2rem;
 }
 
 .disabled-text{
@@ -76,16 +76,36 @@
       color: $darkColor !important;
     }
 
-    .messenger-message.alert-warning .messenger-message-inner:before{
-      background-color: #db8b0b !important;
+    .messenger-message.alert-error{
+      border:0.1rem solid $errorColor !important;
     }
 
-    .messenger-message.alert-danger .messenger-message-inner:before{
-      background-color: #d33724 !important;
+    .messenger-message.alert-success{
+      border:0.1rem solid $successColor !important;
     }
 
-    .messenger-message.alert-missing .messenger-message-inner:before{
-      background-color: #000000 !important;
+    .messenger-message.alert-info{
+      border:0.1rem solid $infoColor !important;
     }
 
+    .messenger-message.alert-warning{
+      border:0.1rem solid $warningColor !important;
+      .messenger-message-inner:before{
+        background-color: $warningColor !important;
+      }
+    }
+
+    .messenger-message.alert-danger{
+      border:0.1rem solid $dangerColor !important;
+      .messenger-message-inner:before{
+      background-color: $dangerColor !important;
+      }
+    }
+
+    .messenger-message.alert-missing{
+      border:0.1rem solid $missingColor !important;
+      .messenger-message-inner:before{
+        background-color: $missingColor !important;
+      }
+    }
 }

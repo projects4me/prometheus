@@ -87,6 +87,7 @@ export default {
       "toggleDropdown": "Toggle Dropdown",
     },
     "noentry": "No entry found..",
+    "blank": "<span class='disabled-text'>-- blank --</em>",
   },
 
   /*
@@ -151,7 +152,8 @@ export default {
           "upvote" : "Click to upvote",
           "page":{
             "edit" : "Edit {{page}} Page"
-          }
+          },
+          "selecttags" : "Select tags",
       },
 
     },

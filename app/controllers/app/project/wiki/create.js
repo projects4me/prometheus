@@ -3,17 +3,34 @@ import Ember from "ember";
 /**
   The controller for the wiki create route, it is loaded when a user clicks on
   create button
-  e.g. acme.projects4.me/app/wiki/1/create
-  @class app.wiki.project.create
-  @module app
-  @submodule Controller
-  @namespace Prometheus
+  e.g. acme.projects4.me/app/1/wiki/create
+
+  @class AppProjectWikiCreateController
   @extends Ember.Controller
 */
 export default Ember.Controller.extend({
 
+  /**
+    This property is used to control the enabling and disabling of the save
+    button, the save is only enabled if the current model has been modified
 
+    @property saveDisabled
+    @type String
+    @for AppProjectWikiCreateController
+    @private
+  */
   saveDisabled: 'true',
+
+  /**
+    This is the parentId of the wiki page that is being created. Initially it is
+    null
+
+    @property
+    @type String
+    @for AppProjectWikiCreateController
+    @private
+  */
+  parentId:'',
 
   actions: {
     /**
@@ -78,6 +95,7 @@ export default Ember.Controller.extend({
     */
     wikiChanged:function(wiki){
       var model = this.get('model');
+      this.set('parentId',wiki.value);
       model.set('parentId',wiki.value);
       model.set('parentName',wiki.label);
       this.send('changed');
