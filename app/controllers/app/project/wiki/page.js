@@ -18,6 +18,7 @@ export default Ember.Controller.extend({
 
     /**
       Load the eidt page
+
       @method edit
       @public
       @todo Trigger the notificaiton
@@ -29,6 +30,7 @@ export default Ember.Controller.extend({
 
     /**
       This function is used to navigate the user to the parent Id
+
       @method loadWiki
       @public
     */
@@ -38,6 +40,7 @@ export default Ember.Controller.extend({
 
     /**
       This function is called when the user presses the create button
+
       @method create
       @public
     */
@@ -49,11 +52,22 @@ export default Ember.Controller.extend({
 
     /**
       This function is called when the user presses the delete button
+
       @method delete
       @public
     */
     delete:function(){
       alert('No can\'t do');
+    },
+
+    /**
+      This action is called when we wish to upvote on a wiki page.
+
+      @method upvote
+      @param wikiId
+    */
+    upvote:function(wikiId){
+      Logger.debug("AppProjectWikiPageController:upvote("+wikiId+")");
     }
 
   }

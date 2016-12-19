@@ -25,6 +25,13 @@ export default Page.extend({
     params['projectId'] = this.paramsFor('app.project').projectId;
     params['wikiName'] = this.paramsFor('app.project.wiki.edit').wikiName;
     return params;
+  },
+
+  action:{
+    redirectOnSave:function(routeParams){
+      this.refresh();
+      this.transitionTo('app.project.wiki.page',routeParams);
+    }
   }
 
 });

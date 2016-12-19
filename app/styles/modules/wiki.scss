@@ -86,10 +86,16 @@
 .upvotes{
   font-size: 1.2rem;
   margin-left: 1rem;
+  cursor: pointer;
 
   .fa{
     color: $primaryColor;
     font-size: 1.5rem;
+  }
+  .fa:hover{
+    font-size: 1.7rem;
+    text-shadow: 2px 2px 4px rgba(179,36,79, 0.5);
+    font-weight: bold;
   }
 }
 

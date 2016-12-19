@@ -57,8 +57,12 @@ export default Ember.Controller.extend({
             self.send('modelUpdated', data);
           }
 
-          model.reload();
-          self.transitionToRoute('app.project.wiki.page', {projectId:data.get('projectId'),wikiName:data.get('name')});
+          //model.reload();
+          //self.set('markUp','');
+          //self.destroy();
+          //(self);
+          self.send('redirectOnSave',{projectId:data.get('projectId'),wikiName:data.get('name')}); 
+          //self.transitionToRoute('app.project.wiki.page', {projectId:data.get('projectId'),wikiName:data.get('name')});
         });
       }
     },

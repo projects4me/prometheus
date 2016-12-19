@@ -148,5 +148,15 @@ export default DS.Model.extend({
    @for WikiModel
    @private
   */
-  parentId: DS.attr('string')
+  parentId: DS.attr('string'),
+
+  /**
+   Comments made on this conversation room
+
+   @property tags
+   @type Relationship
+   @for ConversationroomModel
+   @private
+  */
+  tagged: DS.hasMany('tagged')
 });

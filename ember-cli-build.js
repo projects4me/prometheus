@@ -36,6 +36,7 @@ module.exports = function(defaults) {
   app.import("bower_components/jquery-slimscroll/jquery.slimscroll.min.js");
   app.import("bower_components/highlightjs/highlight.pack.min.js");
   app.import("vendor/quill/dist/quill.min.js");
+  app.import("vendor/messenger/build/js/messenger.min.js");
   app.import("vendor/AdminLTE/dist/js/app.js");
   return app.toTree();
 };

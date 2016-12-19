@@ -41,8 +41,9 @@
 */
 //http://www.cssmatic.com/gradient-generator#'\-moz\-linear\-gradient\%28left\%2C\%20rgba\%28179\%2C36\%2C79\%2C1\%29\%200\%25\%2C\%20rgba\%28179\%2C36\%2C79\%2C1\%29\%2071\%25\%2C\%20rgba\%28100\%2C12\%2C68\%2C1\%29\%20100\%25\%29\%3B'
 }
-.btn-primary:hover{
+.btn-primary:hover,.btn-primary:active,.btn-primary:visited,.btn-primary:focus{
   background: $highlightColor;
+  border-color: $highlightColor;
 }
 
 
@@ -50,7 +51,41 @@
   content:"/";
 }
 
+.colon:after {
+    content: ":";
+    padding: 0.2rem;
+}
+
 .no-entry{
   color: $borderColor;
   font-style: italic;
+}
+
+.label-primary, .modal-primary .modal-body{
+  background-color: $primaryColor !important;
+}
+
+.disabled-text{
+  color: $lightColor;
+  font-style: italic;
+}
+
+.messenger{
+    .alert-success, .alert-danger, .alert-error, .alert-warning, .alert-info{
+      background-color: $backgroundColor !important;
+      color: $darkColor !important;
+    }
+
+    .messenger-message.alert-warning .messenger-message-inner:before{
+      background-color: #db8b0b !important;
+    }
+
+    .messenger-message.alert-danger .messenger-message-inner:before{
+      background-color: #d33724 !important;
+    }
+
+    .messenger-message.alert-missing .messenger-message-inner:before{
+      background-color: #000000 !important;
+    }
+
 }

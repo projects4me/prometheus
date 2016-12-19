@@ -38,8 +38,8 @@ export default App.extend({
     @param controller {Object} the controller object for this route
     @private
   */
-  setupController:function(controller){
-
+  setupController:function(controller,model){
+    this._super(controller, model);
     var self = this;
     var params = this.paramsFor('app.project');
 
@@ -164,7 +164,7 @@ export default App.extend({
       Logger.debug(this);
       this.set('controller.tree',tree);
       */
-    }
+    },
 
   },
 

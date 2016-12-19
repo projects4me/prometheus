@@ -27,8 +27,8 @@ export default App.extend({
     @param controller {Object} the controller object for this route
     @private
   */
-  setupController:function(controller){
-
+  setupController:function(controller,model){
+    this._super(controller, model);
     Logger.debug('AppProjectRoute::setupController');
 
     // If the user navigated directly to the wiki project or page then lets setup the project id

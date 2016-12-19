@@ -47,6 +47,7 @@ export default App.extend({
     @private
   */
   setupController:function(controller){
+
     Logger.debug('Wiki Route');
     Logger.debug(this);
 
@@ -72,7 +73,9 @@ export default App.extend({
     Logger.debug('Retreiving wiki list with options '+options);
     this.data = this.store.query('wiki',options).then(function(data){
       controller.set('model',data);
-      controller.set('markUp',data.nextObject(0).get('markUp'));
+      var markUp = data.nextObject(0).get('markUp');
+      controller.set('markUp',markUp);
+      controller.set('parentId',data.nextObject(0).get('parentId'));
     });
     //controller.set('model',this.data);
     this.set('breadCrumb',{title:params.wikiName,record:true});

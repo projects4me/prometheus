@@ -1,4 +1,5 @@
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+import Ember from "ember";
 import App from "../../../app";
 
 /**
@@ -35,16 +36,25 @@ export default App.extend({
   project: {},
 
   /**
+   The current user service
+
+   @property currentUser
+   @type Ember.Service
+   @for Routes
+   @public
+  */
+  currentUser: Ember.inject.service(),
+
+  /**
     The setup controller function that will be called every time the user visits the module route, this function is responsible for loading the required data for the route
     @method setupController
     @param controller {Object} the controller object for this route
     @private
   */
   setupController:function(controller){
-
     this.module = 'Wiki';
 
-    Logger.debug('Wiki Create Route');
+    Logger.debug('AppProjectWikiCreateRoute::setupController');
     Logger.debug(this);
 
     var params = this.getParams();
@@ -52,19 +62,20 @@ export default App.extend({
     Logger.debug(params);
 
     this.project = this.store.findRecord('project',params.projectId,{rels:'none'});
-
+    var currentUser = this.get('currentUser').loadUser();
+    Logger.debug(currentUser);
     this.data = this.store.createRecord('wiki',{
       dateCreated:'CURRENT_DATETIME',
       dateModified:'CURRENT_DATETIME',
       deleted:0,
-      createdUser:'1',
-      modifiedUser:'1',
+      createdUser:currentUser.id,
+      modifiedUser:currentUser.id,
       status:'published',
       locked:0,
       upvotes:1,
       projectId:params.projectId,
-      createdUserName: "Hammad Hassan",
-      modifiedUserName: "Hammad Hassan",
+      createdUserName: currentUser.name,
+      modifiedUserName: currentUser.name,
     });
     Logger.debug(this.data);
 

@@ -11,7 +11,7 @@
       {{/if}}
       <span class="path-seperator"></span> {{wiki.name}}
 
-      <span class="upvotes">{{#if (ifMatch wiki.upvotes "0")}}<i class="fa fa-heart-o"></i>{{else}}{{wiki.upvotes}} <i class="fa fa-heart"></i>{{/if}}</span>
+      <span class="upvotes" data-toggle="tooltip" title="{{t "view.app.wiki.upvote"}}">{{#if (ifMatch wiki.upvotes "0")}}<i class="fa fa-heart-o" {{action "upvote" wiki.id}}></i>{{else}}{{wiki.upvotes}} <i class="fa fa-heart"></i>{{/if}}</span>
       <div class="box-tools pull-right">
 
       </div>
@@ -39,9 +39,22 @@
     <!-- /.box-body -->
 
     <div class="box-footer">
-      <button type="button" class="btn btn-primary" {{action "edit"}}><i class="fa fa-pencil"></i>{{t "global.form.edit"}}</button>
-      <button type="button" class="btn btn-default" {{action "delete"}}><i class="fa fa-trash"></i>{{t "global.form.delete"}}</button>
+      <button type="button" class="btn btn-primary" {{action "edit"}}><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</button>
+      <button type="button" class="btn btn-default" {{action "delete"}}><i class="fa fa-trash"></i> {{t "global.form.delete"}}</button>
+
+      <div class="pull-right">
+        {{t "view.app.wiki.tags"}}<span class="colon"></span>
+        {{#if wiki.tagged}}
+          {{#each wiki.tagged as |tags|}}
+            <span class="label label-primary">{{tags.tag}}</span>
+          {{/each}}
+        {{else}}
+          <span class="disabled-text">{{t "global.noentry"}}</span>
+        {{/if}}
+      </div>
+
     </div>
+
 
   {{/each}}
 {{/if}}

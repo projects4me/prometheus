@@ -142,13 +142,15 @@ export default {
           "nohome" : "No wiki page found by the name of <strong>Home</strong>, please create one by clicking on the button below",
           "list":"Wiki List",
           "create":{
-            "page": "Create Page",
-            "new": "Create New Page",
-            "name": "Page Name",
-            "parent": "Parent Page",
+            "page" : "Create Page",
+            "new" : "Create New Page",
+            "name" : "Page Name",
+            "parent" : "Parent Page",
           },
+          "tags" : "Tags",
+          "upvote" : "Click to upvote",
           "page":{
-            "edit": "Edit {{page}} Page"
+            "edit" : "Edit {{page}} Page"
           }
       },
 
