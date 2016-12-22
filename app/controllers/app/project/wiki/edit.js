@@ -1,5 +1,6 @@
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 import Ember from "ember";
+import _ from "lodash";
 
 /**
   The controller for the wiki edit route, it is loaded when a user clicks on the
@@ -12,6 +13,7 @@ import Ember from "ember";
 */
 
 export default Ember.Controller.extend({
+  addTagDialog: false,
 
   saveDisabled: 'true',
   /**
@@ -137,6 +139,71 @@ export default Ember.Controller.extend({
     tagSelected:function(e){
       Logger.debug('AppProjectWikiEditController:tagSelected');
       this.set('selectedTags',e);
+    },
+
+    /**
+      This function is used to select the tags in the system
+
+      @method tagSelected
+      @param e {Object} the list of selected items
+    */
+    addTag:function(tag){
+      Logger.debug('AppProjectWikiEditController:addTag');
+      Logger.debug(tag);
+      Logger.debug(this.get('selectedTags'));
+      Logger.debug(this.get('availableTags'));
+
+      var selectedTags = this.get('selectedTags');
+      var availableTags = this.get('availableTags');
+
+      selectedTags = _.concat(selectedTags,tag);
+      availableTags = _.pull(availableTags,tag);
+
+      this.set('selectedTags',selectedTags);
+      this.set('availableTags',availableTags);
+      this.set('addTagDialog',false);
+
+
+      Logger.debug(this.get('selectedTags'));
+      Logger.debug(this.get('availableTags'));
+    },
+
+    removeTag:function(tag){
+      Logger.debug('AppProjectWikiEditController:removeTag');
+      Logger.debug(tag);
+      Logger.debug(this.get('selectedTags'));
+      Logger.debug(this.get('availableTags'));
+
+      var selectedTags = this.get('selectedTags');
+      var availableTags = this.get('availableTags');
+
+      selectedTags = _.pull(selectedTags,tag);
+      availableTags = _.concat(availableTags,tag);
+
+      this.set('selectedTags',selectedTags);
+      this.set('availableTags',availableTags);
+
+      // Unfortunately we have to remove the dom element
+      Ember.$(".md-chip-content strong")
+        .contents()
+        .filter(function(){
+          return this.data === tag;
+        }).parent().parent().parent().remove();
+        
+      Logger.debug(this.get('selectedTags'));
+      Logger.debug(this.get('availableTags'));
+
+    },
+
+    showDialog:function()
+    {
+      this.set('addTagDialog',true);
+    },
+
+    closePromptDialog:function(){
+      this.set('addTagDialog',false);
     }
+
+
   }
 });

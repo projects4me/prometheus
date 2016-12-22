@@ -148,12 +148,18 @@ export default {
             "name" : "Page Name",
             "parent" : "Parent Page",
           },
+          "created" : "Wiki page <strong>{{name}}</strong> has been created successfully",
           "tags" : "Tags",
           "upvote" : "Click to upvote",
+          "voted" : "Your vote has been registered",
           "page":{
             "edit" : "Edit {{page}} Page"
           },
-          "selecttags" : "Select tags",
+          "tag":{
+            "select" : "Select tags",
+            "add" : "Add a tag",
+            "create" : "Create a tag"
+          },
       },
 
     },
@@ -167,6 +173,9 @@ export default {
       "menu":{
         "app": {
           "label": "Dashboard",
+        },
+        "create": {
+          "label": "Create",
         },
         "dashboard":{
           "label":"Dashboard",

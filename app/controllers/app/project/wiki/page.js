@@ -1,6 +1,8 @@
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 import Ember from "ember";
 
+const { inject: { service } } = Ember;
+
 /**
   The controller for the wiki page route, it is loaded when a user tried to
   navigate to a particular wiki page
@@ -14,8 +16,45 @@ import Ember from "ember";
 
 export default Ember.Controller.extend({
 
+  /**
+    These are the tags that the user has selected.
+
+    @property selectedTags
+    @type Array
+    @for AppProjectWikiPageController
+    @private
+  */
   selectedTags:[],
 
+  /**
+    Count of the votes cast for this wiki page
+
+    @property votes
+    @type Integer
+    @for AppProjectWikiPageController
+    @private
+  */
+  votes:0,
+
+  /**
+    This is the store service which is used to interact with the data API
+
+    @property store
+    @type Service
+    @for AppProjectWikiPageController
+    @private
+  */
+  store: service(),
+
+
+  /**
+    These are the actions hanlded by this Controller
+
+    @property actions
+    @type Object
+    @for AppProjectWikiPageController
+    @public
+  */
   actions: {
 
     /**
@@ -59,7 +98,7 @@ export default Ember.Controller.extend({
       @public
     */
     delete:function(){
-      Messenger().post({
+      new Messenger().post({
         message: 'No can\'t do',
         type: 'error',
         showCloseButton: true
@@ -74,6 +113,33 @@ export default Ember.Controller.extend({
     */
     upvote:function(wikiId){
       Logger.debug("AppProjectWikiPageController:upvote("+wikiId+")");
+
+      var self = this;
+      var vote = this.get('store').createRecord('vote',{
+        dateCreated:'CURRENT_DATETIME',
+        dateModified:'CURRENT_DATETIME',
+        createdUser:1,
+        modifiedUser:1,
+        createdUserName: "Hammad Hassan",
+        modifiedUserName: "Hammad Hassan",
+        vote: 1,
+        relatedTo:'wiki',
+        relatedId:wikiId
+      });
+
+
+      vote.save().then(function(data){
+        if (data.get('id') !== undefined)
+        {
+          new Messenger().post({
+            message: self.get('i18n').t("view.app.wiki.voted"),
+            tpye: 'success',
+            showCloseButton: true
+          });
+          self.get('model').nextObject(0).get('vote').addObject(data);
+          self.set('iVoted',1);
+        }
+      });
     },
 
   }

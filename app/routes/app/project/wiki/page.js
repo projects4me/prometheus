@@ -67,7 +67,7 @@ export default App.extend({
       query: '((Wiki.name : '+params.wikiName+') AND (Wiki.projectId : '+params.projectId+'))',
       sort : 'Wiki.name',
       order: 'ASC',
-      limit: 1
+      limit: -1
     };
 
     Logger.debug('Retreiving wiki list with options '+options);
@@ -82,13 +82,9 @@ export default App.extend({
       var selectedTags = [];
       for(var i=0;i<tagCount;i++)
       {
-        selectedTags[i] = {label:tags.nextObject(i).get('tag'),value:tags.nextObject(i).get('id')};
+        selectedTags[i] = tags.nextObject(i).get('tag');
       }
-      Logger.debug('++++++++++');
-      Logger.debug('++++++++++');
-      Logger.debug(selectedTags);
-      Logger.debug('++++++++++');
-      Logger.debug('++++++++++');
+      controller.set('iVoted',model.get('vote').filterBy('createdUser',"1").length);
       controller.set('markUp',markUp);
       controller.set('selectedTags',selectedTags);
       controller.set('parentId',model.get('parentId'));

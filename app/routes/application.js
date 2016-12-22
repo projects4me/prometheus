@@ -18,7 +18,7 @@ export default Ember.Route.extend(ApplicationRouteMixin,{
 
    @property i18n
    @type Ember.Service
-   @for Routes
+   @for ApplicationRoute
    @public
   */
   i18n: Ember.inject.service(),
@@ -29,7 +29,7 @@ export default Ember.Route.extend(ApplicationRouteMixin,{
 
     @property session
     @type Object
-    @for application
+    @for ApplicationRoute
     @public
   */
   session: Ember.inject.service('session'),
@@ -65,4 +65,50 @@ export default Ember.Route.extend(ApplicationRouteMixin,{
     this.set('i18n.locale',lang);
     this.get('session').set('data.locale', lang);
   },
+
+  /**
+    These are the actions that this route supports
+
+    @property actions
+    @type Object
+    @for ApplicationRoute
+    @public
+  */
+  actions: {
+
+    /**
+      This function is used to display the modal
+
+      Inspiration from http://ember.guru/2014/master-your-modals-in-ember-js
+
+      @method showModal
+      @param name {String} The name of the modal that needs to be displayed
+      @param model {Object} The model object
+      @private
+    */
+    showModal: function(name, controller, model) {
+      this.render(name, {
+        into: 'application',
+        outlet: 'modal',
+        controller: 'modals.'+controller,
+        model: model
+      });
+    },
+
+    /**
+      This function is used to dispaly the modal
+
+      Inspiration from http://ember.guru/2014/master-your-modals-in-ember-js
+
+      @method removeModal
+      @private
+    */
+    removeModal: function() {
+      this.disconnectOutlet({
+        outlet: 'modal',
+        parentView: 'application'
+      });
+    }
+  }
+
 });

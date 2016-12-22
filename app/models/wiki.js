@@ -151,12 +151,23 @@ export default DS.Model.extend({
   parentId: DS.attr('string'),
 
   /**
-   Comments made on this conversation room
+   The tags for the wiki page
 
    @property tags
    @type Relationship
-   @for ConversationroomModel
+   @for WikiModel
    @private
   */
-  tagged: DS.hasMany('tagged')
+  tagged: DS.hasMany('tagged'),
+
+  /**
+   The votes for this wiki page
+
+   @property vote
+   @type Relationship
+   @for WikiModel
+   @private
+  */
+  vote: DS.hasMany('vote')
+
 });

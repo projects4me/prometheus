@@ -19,8 +19,7 @@
     {{/power-select}}
   </div>
   <div class="form-group">
-    {{quill-editor contents=model.markUp update=(action "changed")}}
-    {{textarea-field class="hidden" id="wikiMarkUp" value=model.markUp}}
+    {{quill-editor contents=markUp update=(action "changed")}}
   </div>
 
   <!--div class="form-group">

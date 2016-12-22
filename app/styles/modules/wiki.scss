@@ -139,3 +139,42 @@
   }
 
 }
+
+md-chips{
+  .md-chips{
+    padding: 0;
+
+    .md-chip-input-container{
+      margin: 0 !important;
+    }
+
+    .md-chip{
+      background: $primaryColor !important;
+      color: $backgroundColor !important;
+      height: 2.4rem;
+      line-height: 2.4rem;
+      border-radius: 0rem;
+      margin: 0rem 0.5rem;
+      padding: 0 2.0rem 0 0.8rem;
+
+      .md-chip-remove{
+        height: 2.4rem;
+        padding: 0.2rem 0rem;
+      }
+
+      .paper-icon{
+        color:$backgroundColor !important;
+        height: 1.2rem;
+        width: 1.2rem;
+      }
+    }
+  }
+  .md-focused{
+    box-shadow: 0 0.2rem $primaryColor !important;
+  }
+  .ember-power-select-trigger{
+    padding: 0rem 0.5rem;
+    border: none;
+    overflow: hidden;
+  }
+}

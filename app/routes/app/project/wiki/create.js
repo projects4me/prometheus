@@ -68,14 +68,14 @@ export default App.extend({
       dateCreated:'CURRENT_DATETIME',
       dateModified:'CURRENT_DATETIME',
       deleted:0,
-      createdUser:currentUser.id,
-      modifiedUser:currentUser.id,
+      createdUser:'1',
+      modifiedUser:'1',
       status:'published',
       locked:0,
       upvotes:1,
       projectId:params.projectId,
-      createdUserName: currentUser.name,
-      modifiedUserName: currentUser.name,
+      createdUserName: 'Hammad Hassan',
+      modifiedUserName: 'Hammad Hassan',
     });
     Logger.debug(this.data);
 

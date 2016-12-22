@@ -22,6 +22,16 @@ export default Ember.Controller.extend({
   saveDisabled: 'true',
 
   /**
+   The i18n library service that is used in order to get the translations
+
+   @property i18n
+   @type Ember.Service
+   @for ApplicationRoute
+   @public
+  */
+  i18n: Ember.inject.service(),
+
+  /**
     This is the parentId of the wiki page that is being created. Initially it is
     null
 
@@ -47,6 +57,13 @@ export default Ember.Controller.extend({
         Logger.debug('Data saved:');
         Logger.debug(data);
         self.send('refreshWiki');
+
+        new Messenger().post({
+          message: self.get('i18n').t('view.app.wiki.created',{name:data.get('name')}),
+          type: 'success',
+          showCloseButton: true
+        });
+
         self.transitionToRoute('app.project.wiki.page', {projectId:data.get('projectId'),wikiName:data.get('name')});
       });
     },
@@ -69,8 +86,17 @@ export default Ember.Controller.extend({
       @public
       @todo Trigger the notificaiton
     */
-    changed:function(){
+    changed:function(data){
+      Logger.debug('AppProjectWikiCreateController::changed()');
       var model = this.get('model');
+
+      if (typeof(data) === 'object' && data.markUp !== undefined)
+      {
+        Logger.debug(model);
+        model._internalModel._attributes['markUp'] = data.markUp;
+        model.set('markUp',data.markUp);
+      }
+
       if (model.get('name') === undefined ||
             model.get('name') === null ||
             model.get('name') === '' ||

@@ -10,8 +10,14 @@
         {{/if}}
       {{/if}}
       <span class="path-seperator"></span> {{wiki.name}}
-
-      <span class="upvotes" data-toggle="tooltip" title="{{t "view.app.wiki.upvote"}}">{{#if (ifMatch wiki.upvotes "0")}}<i class="fa fa-heart-o" {{action "upvote" wiki.id}}></i>{{else}}{{wiki.upvotes}} <i class="fa fa-heart"></i>{{/if}}</span>
+      <span class="upvotes">
+        {{wiki.vote.length}}
+        {{#if iVoted}}
+          <i class="fa fa-heart" data-toggle="tooltip" title="{{t "view.app.wiki.voted"}}" ></i>
+        {{else}}
+          <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "view.app.wiki.upvote"}}" {{action "upvote" wiki.id}}></i>
+        {{/if}}
+      </span>
       <div class="box-tools pull-right">
 
       </div>

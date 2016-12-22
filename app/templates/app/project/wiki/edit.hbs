@@ -42,15 +42,32 @@
 
       <div class="pull-right wiki-tags">
         {{t "view.app.wiki.tags"}}<span class="colon"></span>
-        {{#power-select-multiple
-          options=tagList
-          selected=selectedTags
-          placeholder=(t "view.app.wiki.selecttags")
-          searchField="label"
-          onchange=(action "tagSelected")
-          as |tag|}}
-          {{tag.label}}
-        {{/power-select-multiple}}
+
+        {{#paper-chips
+          removeItem=(action "removeTag")
+          addItem=(action "addTag")
+          placeholder=(t "view.app.wiki.tag.add")
+          content=selectedTags
+          options=availableTags as |tag|}}
+          <strong>{{tag}}</strong>
+        {{/paper-chips}}
+
+        <button type="button" class="btn btn-primary" {{action "showDialog"}}>{{t "view.app.wiki.tag.add"}}</button>
+        {{#if addTagDialog}}
+          {{#paper-dialog fullscreen=fullscreen onClose=(action "closePromptDialog") origin=dialogOrigin}}
+
+            {{#paper-dialog-content}}
+              {{paper-input placeholder=(t "view.app.wiki.tag.add") autofocus=true value=tagName onChange=(action (mut tagName))}}
+            {{/paper-dialog-content}}
+
+            {{#paper-dialog-actions class="layout-row"}}
+              <span class="flex"></span>
+              {{#paper-button primary=true onClick=(action "addTag" tagName)}}{{t "global.form.save"}}{{/paper-button}}
+              {{#paper-button primary=true onClick=(action "closePromptDialog")}}{{t "global.form.cancel"}}{{/paper-button}}
+            {{/paper-dialog-actions}}
+
+          {{/paper-dialog}}
+        {{/if}}
       </div>
     </div>
   {{/each}}

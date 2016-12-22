@@ -127,14 +127,18 @@ export default App.extend({
       // late binding/promise and all so lets just set for all the subroutes
       var tagCount = data.get('length');
       var tagList = [];
+      var availableTags = [];
       var temp = null;
       for (var i=0;i<tagCount;i++)
       {
         temp = data.nextObject(i);
         tagList[i] = {label:temp.get('tag'), value:temp.get('id')};
+        availableTags[i] = temp.get('tag');
       }
       self.controllerFor('app.project.wiki.page').set('tagList', tagList);
       self.controllerFor('app.project.wiki.edit').set('tagList', tagList);
+      self.controllerFor('app.project.wiki.page').set('availableTags', availableTags);
+      self.controllerFor('app.project.wiki.edit').set('availableTags', availableTags);
 //     self.controllerFor('app.project.wiki.create').set('wikiList', wikiList);
     });
   },
@@ -187,6 +191,7 @@ export default App.extend({
       @public
     */
     refreshWiki:function(){
+      Logger.debug('AppProjectWikiRoute::refreshWiki');
       this.refresh();
       /*
       Logger.debug('The updated model is ');
