@@ -158,7 +158,7 @@ export default DS.Model.extend({
    @for WikiModel
    @private
   */
-  tagged: DS.hasMany('tagged'),
+  tag: DS.hasMany('tag'),
 
   /**
    The votes for this wiki page

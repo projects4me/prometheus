@@ -77,12 +77,12 @@ export default App.extend({
       var markUp = model.get('markUp');
 
 
-      var tags = model.get('tagged');
+      var tags = model.get('tag');
       var tagCount = tags.get('length');
       var selectedTags = [];
       for(var i=0;i<tagCount;i++)
       {
-        selectedTags[i] = tags.nextObject(i).get('tag');
+        selectedTags[i] = {label:tags.nextObject(i).get('tag'),value:tags.nextObject(i).get('id')};
       }
       controller.set('iVoted',model.get('vote').filterBy('createdUser',"1").length);
       controller.set('markUp',markUp);

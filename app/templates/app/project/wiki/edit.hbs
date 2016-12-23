@@ -43,30 +43,31 @@
       <div class="pull-right wiki-tags">
         {{t "view.app.wiki.tags"}}<span class="colon"></span>
 
-        {{#paper-chips
-          removeItem=(action "removeTag")
-          addItem=(action "addTag")
-          placeholder=(t "view.app.wiki.tag.add")
-          content=selectedTags
-          options=availableTags as |tag|}}
-          <strong>{{tag}}</strong>
-        {{/paper-chips}}
+        {{#power-select-multiple
+          options=tagList
+          selected=selectedTags
+          placeholder=(t "view.app.wiki.selecttags")
+          searchField="label"
+          onchange=(action "tagSelected")
+          as |tag|}}
+          {{tag.label}}
+        {{/power-select-multiple}}
 
         <button type="button" class="btn btn-primary" {{action "showDialog"}}>{{t "view.app.wiki.tag.add"}}</button>
         {{#if addTagDialog}}
-          {{#paper-dialog fullscreen=fullscreen onClose=(action "closePromptDialog") origin=dialogOrigin}}
-
-            {{#paper-dialog-content}}
-              {{paper-input placeholder=(t "view.app.wiki.tag.add") autofocus=true value=tagName onChange=(action (mut tagName))}}
-            {{/paper-dialog-content}}
-
-            {{#paper-dialog-actions class="layout-row"}}
-              <span class="flex"></span>
-              {{#paper-button primary=true onClick=(action "addTag" tagName)}}{{t "global.form.save"}}{{/paper-button}}
-              {{#paper-button primary=true onClick=(action "closePromptDialog")}}{{t "global.form.cancel"}}{{/paper-button}}
-            {{/paper-dialog-actions}}
-
-          {{/paper-dialog}}
+          {{#bootstrap-modal
+            title="view.app.wiki.tag.create"
+            confirmLabel="global.form.save"
+            closeLabel="global.form.cancel"
+            confirm=(action "addTag")
+            close="removeModal"}}
+            <form {{action 'addTag' on='submit'}}>
+              <div class="form-group">
+                <label>Name</label>
+                {{input class="form-control" autofocus=true value=tagName onChange=(action (mut tagName))}}
+              </div>
+            </form>
+          {{/bootstrap-modal}}
         {{/if}}
       </div>
     </div>

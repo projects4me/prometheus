@@ -2,6 +2,8 @@
 import Ember from "ember";
 import _ from "lodash";
 
+const { inject: { service } } = Ember;
+
 /**
   The controller for the wiki edit route, it is loaded when a user clicks on the
   edit button on the wiki page
@@ -14,6 +16,16 @@ import _ from "lodash";
 
 export default Ember.Controller.extend({
   addTagDialog: false,
+
+  /**
+    This is the store service which is used to interact with the data API
+
+    @property store
+    @type Service
+    @for AppProjectWikiPageController
+    @private
+  */
+  store: service(),
 
   saveDisabled: 'true',
   /**
@@ -139,6 +151,7 @@ export default Ember.Controller.extend({
     tagSelected:function(e){
       Logger.debug('AppProjectWikiEditController:tagSelected');
       this.set('selectedTags',e);
+      this.send('syncTags');
     },
 
     /**
@@ -147,52 +160,40 @@ export default Ember.Controller.extend({
       @method tagSelected
       @param e {Object} the list of selected items
     */
-    addTag:function(tag){
+    addTag:function(){
       Logger.debug('AppProjectWikiEditController:addTag');
-      Logger.debug(tag);
+      var tag = {label:this.get('tagName'),value:'_new'};
+      Logger.debug(this.get('tagName'));
       Logger.debug(this.get('selectedTags'));
-      Logger.debug(this.get('availableTags'));
 
       var selectedTags = this.get('selectedTags');
-      var availableTags = this.get('availableTags');
 
       selectedTags = _.concat(selectedTags,tag);
-      availableTags = _.pull(availableTags,tag);
 
       this.set('selectedTags',selectedTags);
-      this.set('availableTags',availableTags);
+      this.set('tagName','');
+
+      Ember.$('.modal').modal('hide');
       this.set('addTagDialog',false);
 
-
       Logger.debug(this.get('selectedTags'));
-      Logger.debug(this.get('availableTags'));
+
+      this.send('syncTags');
     },
 
     removeTag:function(tag){
       Logger.debug('AppProjectWikiEditController:removeTag');
       Logger.debug(tag);
       Logger.debug(this.get('selectedTags'));
-      Logger.debug(this.get('availableTags'));
 
       var selectedTags = this.get('selectedTags');
-      var availableTags = this.get('availableTags');
 
       selectedTags = _.pull(selectedTags,tag);
-      availableTags = _.concat(availableTags,tag);
 
       this.set('selectedTags',selectedTags);
-      this.set('availableTags',availableTags);
 
-      // Unfortunately we have to remove the dom element
-      Ember.$(".md-chip-content strong")
-        .contents()
-        .filter(function(){
-          return this.data === tag;
-        }).parent().parent().parent().remove();
-        
       Logger.debug(this.get('selectedTags'));
-      Logger.debug(this.get('availableTags'));
-
+      this.send('syncTags');
     },
 
     showDialog:function()
@@ -200,8 +201,63 @@ export default Ember.Controller.extend({
       this.set('addTagDialog',true);
     },
 
-    closePromptDialog:function(){
+    removeModal:function(){
       this.set('addTagDialog',false);
+    },
+
+    syncTags:function(){
+      Logger.debug('AppProjectWikiEditController::syncTags()');
+      var selectedTags = this.get('selectedTags');
+      var tagList = this.get('tagList');
+      var tags = this.get('model').nextObject(0).get('tagged');
+      var self = this;
+
+      Logger.debug(tagList);
+      Logger.debug(tags);
+      Logger.debug(selectedTags);
+
+      var newTags = selectedTags.filterBy('value',"_new");
+      var newTagObjects = [];
+      Logger.debug('The new tags are ');
+      Logger.debug(newTags);
+      var newTagCount = newTags.length;
+
+      for (var tagIdx=0; tagIdx < newTagCount;tagIdx++ ) {
+        console.log('A new tag is to be addedd');
+
+        newTagObjects[tagIdx] = this.get('store').createRecord('tag',{
+          dateCreated:'CURRENT_DATETIME',
+          dateModified:'CURRENT_DATETIME',
+          deleted:0,
+          createdUser:'1',
+          modifiedUser:'1',
+          tag:newTags[tagIdx].label,
+          createdUserName: 'Hammad Hassan',
+          modifiedUserName: 'Hammad Hassan',
+        });
+
+        newTagObjects[tagIdx].save().then(function(tag){
+          new Messenger().post({
+            message: "Tag by the name <strong>"+tag.get('tag')+"</strong> saved",
+            type: 'success',
+            showCloseButton: true
+          });
+
+          selectedTags = _.pull(selectedTags,newTags[0]);
+          selectedTags = _.concat(selectedTags,{label:tag.get('tag'),value:tag.get('id')});
+          self.set('selectedTags',selectedTags);
+          Logger.debug(selectedTags);
+
+          var tagged = self.get('store').createRecord('tagged',{
+            tagId : tag.get('id'),
+            relatedId : self.get('model').nextObject(0).get('id'),
+            relatedTo: "wiki"
+          });
+          tagged.save();
+        });
+      }
+
+      this.send('changed');
     }
 
 

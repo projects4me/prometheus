@@ -2,7 +2,8 @@
 import DS from "ember-data";
 
 /**
-  The tagged room model
+  The tagged model. This model is used to maint the relationship between tags
+  and the related entities.
 
   @class TaggedModel
   @extends DS.Model
@@ -11,82 +12,33 @@ import DS from "ember-data";
 export default DS.Model.extend({
 
   /**
-   The tag
+   The identifier of the entity the tag is related to
 
-   @property tag
+   @property relatedId
    @type String
    @for TaggedModel
    @private
   */
-  "tag": DS.attr('string'),
+  "relatedId": DS.attr('string'),
 
   /**
-   The date on which the tag was created
+   The entity the tag is related to
 
-   @property dateCreated
+   @property relatedTo
    @type String
    @for TaggedModel
    @private
   */
-  "dateCreated": DS.attr('string'),
+  "relatedTo": DS.attr('string'),
 
   /**
-   The date on which the tag was last mofidied
+   The identifier of the tag
 
-   @property dateModified
+   @property tagId
    @type String
    @for TaggedModel
    @private
   */
-  "dateModified": DS.attr('string'),
-
-  /**
-   The soft deletion flag of the tag
-
-   @property tag
-   @type String
-   @for TaggedModel
-   @private
-  */
-  "deleted": DS.attr('string'),
-
-  /**
-   The identifier of the user who last created the tag
-
-   @property createdUser
-   @type String
-   @for TaggedModel
-   @private
-  */
-  "createdUser": DS.attr('string'),
-
-  /**
-   The name of the user who created the tag
-
-   @property createdUserName
-   @type String
-   @for TaggedModel
-   @private
-  */
-  "createdUserName": DS.attr('string'),
-
-  /**
-   The identifier of the user who last modified the tag
-
-   @property modifiedUser
-   @type String
-   @for TaggedModel
-   @private
-  */
-  "modifiedUser": DS.attr('string'),
-
-  /**
-   The name of the user who last modified the tag
-
-   @property modifiedUserName
-   @type String
-   @for TaggedModel
-   @private
-  */
-  "modifiedUserName": DS.attr('string'),
+  "tagId": DS.attr('string')
+  
 });

@@ -50,8 +50,8 @@
 
       <div class="pull-right">
         {{t "view.app.wiki.tags"}}<span class="colon"></span>
-        {{#if wiki.tagged}}
-          {{#each wiki.tagged as |tags|}}
+        {{#if wiki.tag}}
+          {{#each wiki.tag as |tags|}}
             <span class="label label-primary"><i class="fa fa-tag"></i> {{tags.tag}}</span>
           {{/each}}
         {{else}}
