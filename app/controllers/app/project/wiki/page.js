@@ -17,6 +17,16 @@ const { inject: { service } } = Ember;
 export default Ember.Controller.extend({
 
   /**
+   The current user service
+
+   @property currentUser
+   @type Ember.Service
+   @for Routes
+   @public
+  */
+  currentUser: Ember.inject.service(),
+
+  /**
     These are the tags that the user has selected.
 
     @property selectedTags
@@ -141,6 +151,45 @@ export default Ember.Controller.extend({
         }
       });
     },
+
+    /**
+      This action is called when we wish to lock or unlock a wiki page
+
+      @method lockWiki
+      @param wikiId
+    */
+    lockWiki:function(action){
+      var self = this;
+      var model = this.get('model').nextObject(0);
+      if (action === 'unlock')
+      {
+        Ember.set(model,'locked',"1");
+      }
+      else if (action === 'lock')
+      {
+        Ember.set(model,'locked',"0");
+      }
+
+      model.save().then(function(){
+        var message = '';
+        if (action === 'unlock')
+        {
+          message = self.get('i18n').t("view.app.wiki.page.unlocked");
+        }
+        else if (action === 'lock')
+        {
+          message = self.get('i18n').t("view.app.wiki.page.locked");
+        }
+
+        new Messenger().post({
+          message: self.get('i18n').t("view.app.wiki.page.lock",{action:message}),
+          tpye: 'success',
+          showCloseButton: true
+        });
+
+      });
+
+    }
 
   }
 });

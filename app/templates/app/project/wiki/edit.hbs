@@ -1,87 +1,96 @@
 {{#if model}}
   {{#each model as |wiki|}}
-    <div class="box-header with-border">
-      <h3 class="box-title">{{t "view.app.wiki.page.edit" page=wiki.name}}</h3>
-    </div>
-    <!-- /.box-header -->
-    <div class="box-body">
-      <div class="form-group">
-        {{input value=wiki.name placeholder=(t "view.app.wiki.create.name") key-up="changed" class="form-control"}}
+    {{#if (ifMatch wiki.locked "0")}}
+      <div class="box-header with-border">
+        <h3 class="box-title">{{t "view.app.wiki.page.edit" page=wiki.name}}</h3>
       </div>
-      <div class="form-group">
-        {{#power-select
-          options=wikiList
-          selected=(find-by "value" parentId wikiList)
-          placeholder=(t "view.app.wiki.create.parent")
-          searchField="label"
-          onchange=(action "wikiChanged")
-          as |wiki|}}
-          {{wiki.label}}
-        {{/power-select}}
-      </div>
-      <div class="form-group">
-        {{quill-editor contents=markUp update=(action "changed")}}
-
-      </div>
-
-      <!--div class="form-group">
-        <div class="btn btn-default btn-file">
-          <i class="fa fa-paperclip"></i> Attachment
-          <input type="file" name="attachment">
+      <!-- /.box-header -->
+      <div class="box-body">
+        <div class="form-group">
+          {{input value=wiki.name placeholder=(t "view.app.wiki.create.name") key-up="changed" class="form-control"}}
         </div>
-        <p class="help-block">Max. 32MB</p>
-      </div-->
+        <div class="form-group">
+          {{#power-select
+            options=wikiList
+            selected=(find-by "value" parentId wikiList)
+            placeholder=(t "view.app.wiki.create.parent")
+            searchField="label"
+            onchange=(action "wikiChanged")
+            as |wiki|}}
+            {{wiki.label}}
+          {{/power-select}}
+        </div>
+        <div class="form-group">
+          {{quill-editor contents=markUp update=(action "changed")}}
 
-    </div>
+        </div>
 
-    <!-- /.box-body -->
+        <!--div class="form-group">
+          <div class="btn btn-default btn-file">
+            <i class="fa fa-paperclip"></i> Attachment
+            <input type="file" name="attachment">
+          </div>
+          <p class="help-block">Max. 32MB</p>
+        </div-->
 
-    <div class="box-footer">
-      <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
-      <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
-
-      <div class="pull-right wiki-tags">
-        {{t "view.app.wiki.tags"}}<span class="colon"></span>
-
-        {{#power-select-multiple
-          options=tagList
-          selected=selectedTags
-          placeholder=(t "view.app.wiki.selecttags")
-          searchField="label"
-          onchange=(action "tagSelected")
-          as |tag|}}
-          {{tag.label}}
-        {{/power-select-multiple}}
-
-        <button type="button" class="btn btn-primary" {{action "showDialog"}}>{{t "view.app.wiki.tag.add"}}</button>
-        {{#if addTagDialog}}
-          {{#bootstrap-modal
-            title="view.app.wiki.tag.create"
-            confirmLabel="global.form.save"
-            closeLabel="global.form.cancel"
-            confirm=(action "addTag")
-            close="removeModal"}}
-            <form {{action 'addTag' on='submit'}}>
-              <div class="form-group">
-                <label>Name</label>
-                {{input class="form-control" autofocus=true value=tagName onChange=(action (mut tagName))}}
-              </div>
-            </form>
-          {{/bootstrap-modal}}
-        {{/if}}
       </div>
-    </div>
+
+      <!-- /.box-body -->
+
+      <div class="box-footer">
+        <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+        <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+
+        <div class="pull-right wiki-tags">
+          {{t "view.app.wiki.tags"}}<span class="colon"></span>
+
+          {{#power-select-multiple
+            options=tagList
+            selected=selectedTags
+            placeholder=(t "view.app.wiki.selecttags")
+            searchField="label"
+            onchange=(action "tagSelected")
+            as |tag|}}
+            {{tag.label}}
+          {{/power-select-multiple}}
+
+          <button type="button" class="btn btn-primary" {{action "showDialog"}}>{{t "view.app.wiki.tag.add"}}</button>
+          {{#if addTagDialog}}
+            {{#bootstrap-modal
+              title="view.app.wiki.tag.create"
+              confirmLabel="global.form.save"
+              closeLabel="global.form.cancel"
+              confirm=(action "addTag")
+              close="removeModal"}}
+              <form {{action 'addTag' on='submit'}}>
+                <div class="form-group">
+                  <label>Name</label>
+                  {{input class="form-control" autofocus=true value=tagName onChange=(action (mut tagName))}}
+                </div>
+              </form>
+            {{/bootstrap-modal}}
+          {{/if}}
+        </div>
+      </div>
+    {{else}}
+      <div class="wiki-page-islocked">
+        <div class="callout callout-danger">
+          <h4>
+            <i class="fa fa-lock"></i> {{t "view.app.wiki.page.lockedhead"}}
+          </h4>
+          {{t "view.app.wiki.page.islocked"}}
+        </div>
+      </div>
+    {{/if}}
   {{/each}}
 {{else}}
   <div class="wiki-page-empty">
-    <div class="well">
-      <i class="fa fa-file-text-o"></i>
-      <div class="clearfix"></div>
-      <h3>{{t "view.wiki.main.welcome.header"}}</h3>
-      <div class="clearfix"></div>
-      {{t "view.wiki.main.page.empty"}}
-      <div class="clearfix"></div>
-      <button type="button" class="btn btn-default" {{action "create"}}><i class="fa fa-plus"></i> {{t "view.wiki.main.create.page"}}</button>
+
+    <div class="callout callout-danger">
+      <h4>
+        <i class="fa fa-exclamation-triangle"></i> {{t "view.app.wiki.notfound"}}
+      </h4>
+      {{t "view.app.wiki.page.empty"}}
     </div>
   </div>
 {{/if}}

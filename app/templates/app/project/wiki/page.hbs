@@ -2,7 +2,15 @@
   {{#each model as |wiki|}}
 
     <div class="box-header with-border">
-      {{#if wiki.locked}}<i class="fa fa-unlock"></i>{{else}}<i class="fa fa-lock"></i>{{/if}}
+      {{#if (ifMatch wiki.createdUser currentUser.user.id)}}
+        {{#if (ifMatch wiki.locked "0")}}
+          <i class="fa fa-unlock lock" data-toggle="tooltip" title="{{t "view.app.wiki.lock"}}" {{action "lockWiki" "unlock"}}></i>
+        {{else}}
+          <i class="fa fa-lock lock" data-toggle="tooltip" title="{{t "view.app.wiki.unlock"}}" {{action "lockWiki" "lock"}}></i>
+        {{/if}}
+      {{else}}
+        {{#if (ifMatch wiki.locked "0")}}<i class="fa fa-unlock disabled"></i>{{else}}<i class="fa fa-lock disabled"></i>{{/if}}
+      {{/if}}
       <h2 class="box-title">{{wiki.name}} - </h2>
       {{#if wiki.parentId}}
         {{#if wikiList}}
@@ -19,7 +27,7 @@
         {{/if}}
       </span>
       <div class="box-tools pull-right">
-
+        <span class="modified-by">{{t "global.form.modified" user=wiki.modifiedUserName date=(getDate wiki 'dateModified' 'MMM Do \'YY, h:mm a')}}</span>
       </div>
 
     </div>
@@ -45,8 +53,10 @@
     <!-- /.box-body -->
 
     <div class="box-footer">
-      <button type="button" class="btn btn-primary" {{action "edit"}}><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</button>
-      <button type="button" class="btn btn-default" {{action "delete"}}><i class="fa fa-trash"></i> {{t "global.form.delete"}}</button>
+      {{#if (ifMatch wiki.locked "0")}}
+        <button type="button" class="btn btn-primary" {{action "edit"}}><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</button>
+        <button type="button" class="btn btn-default" {{action "delete"}}><i class="fa fa-trash"></i> {{t "global.form.delete"}}</button>
+      {{/if}}
 
       <div class="pull-right">
         {{t "view.app.wiki.tags"}}<span class="colon"></span>
@@ -63,4 +73,15 @@
 
 
   {{/each}}
+{{else}}
+  <div class="wiki-page-empty">
+
+    <div class="callout callout-danger">
+      <h4>
+        <i class="fa fa-exclamation-triangle"></i> {{t "view.app.wiki.notfound"}}
+      </h4>
+      {{t "view.app.wiki.page.empty"}}
+    </div>
+  </div>
+
 {{/if}}

@@ -70,6 +70,24 @@
   font-style: italic;
 }
 
+.disabled{
+  color: $lightColor;
+  cursor: not-allowed;
+}
+
+.lock{
+  cursor: pointer;
+}
+
+.lock:hover{
+  color: $highlightColor;
+}
+
+.modified-by{
+  color: $mediumColor;
+  font-style: italic;
+}
+
 .messenger{
     .alert-success, .alert-danger, .alert-error, .alert-warning, .alert-info{
       background-color: $backgroundColor !important;

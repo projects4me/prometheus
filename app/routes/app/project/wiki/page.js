@@ -74,20 +74,22 @@ export default App.extend({
     this.data = this.store.query('wiki',options).then(function(data){
       controller.set('model',data);
       var model = data.nextObject(0);
-      var markUp = model.get('markUp');
+      if (model !== undefined){
+        var markUp = model.get('markUp');
 
 
-      var tags = model.get('tag');
-      var tagCount = tags.get('length');
-      var selectedTags = [];
-      for(var i=0;i<tagCount;i++)
-      {
-        selectedTags[i] = {label:tags.nextObject(i).get('tag'),value:tags.nextObject(i).get('id')};
+        var tags = model.get('tag');
+        var tagCount = tags.get('length');
+        var selectedTags = [];
+        for(var i=0;i<tagCount;i++)
+        {
+          selectedTags[i] = {label:tags.nextObject(i).get('tag'),value:tags.nextObject(i).get('id')};
+        }
+        controller.set('iVoted',model.get('vote').filterBy('createdUser',"1").length);
+        controller.set('markUp',markUp);
+        controller.set('selectedTags',selectedTags);
+        controller.set('parentId',model.get('parentId'));
       }
-      controller.set('iVoted',model.get('vote').filterBy('createdUser',"1").length);
-      controller.set('markUp',markUp);
-      controller.set('selectedTags',selectedTags);
-      controller.set('parentId',model.get('parentId'));
     });
     //controller.set('model',this.data);
     this.set('breadCrumb',{title:params.wikiName,record:true});

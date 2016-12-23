@@ -62,17 +62,18 @@ export default {
     being declared under the global name so that we don't have to delcare these
     translations individually.
   */
-  "global": {
-    "form": {
-      "save": "Save",
-      "cancel": "Cancel",
-      "delete": "Delete",
-      "search": "Search",
-      "edit": "Edit",
-      "findDuplicate": "Find Duplicate",
-      "signin": "Sign In",
-      "signout": "Sign Out",
-      "signup": "Sign Up",
+  "global" : {
+    "form" : {
+      "save" : "Save",
+      "cancel" : "Cancel",
+      "delete" : "Delete",
+      "search" : "Search",
+      "edit" : "Edit",
+      "findDuplicate" : "Find Duplicate",
+      "signin" : "Sign In",
+      "signout" : "Sign Out",
+      "signup" : "Sign Up",
+      "modified" : "Modified by <strong>{{user}}</strong> on <strong>{{date}}<strong>",
     },
     "list": {
       "selectAll": "Select All",
@@ -141,6 +142,7 @@ export default {
       "wiki":{
           "welcome": "Welcome to Projects4Me documentation tool.",
           "nohome" : "No wiki page found by the name of <strong>Home</strong>, please create one by clicking on the button below",
+          "notfound" : "Not found",
           "list":"Wiki List",
           "create":{
             "page" : "Create Page",
@@ -152,8 +154,16 @@ export default {
           "tags" : "Tags",
           "upvote" : "Click to upvote",
           "voted" : "Your vote has been registered",
+          "lock" : "Lock",
+          "unlock" : "Unlock",
           "page":{
-            "edit" : "Edit {{page}} Page"
+            "edit" : "Edit {{page}} Page",
+            "lock" : "Wiki page was {{action}}",
+            "unlocked" : "locked",
+            "locked" : "unlocked",
+            "islocked" : "This page is locked",
+            "lockedhead" : "Locked",
+            "empty" : "The page you are looking for does not exists or has been deleted, please check the name.",
           },
           "tag":{
             "select" : "Select tags",

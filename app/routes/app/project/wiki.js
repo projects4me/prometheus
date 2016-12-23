@@ -53,11 +53,8 @@ export default App.extend({
     var i18n = this.get('i18n');
     controller.set('i18n',i18n);
 
-    Logger.debug("----------------------");
-    Logger.debug("----------------------");
-    Logger.debug("----------------------");
-    Logger.debug("----------------------");
     this.loadTags();
+
     var options = {
       query: '(Wiki.projectId : '+params.projectId+')',
       sort : 'Wiki.name',
@@ -96,8 +93,16 @@ export default App.extend({
       Logger.debug(tree);
       self.set('tree',tree);
       controller.set('tree',tree);
-      if (data.findBy('name','Home') !== undefined){
-        self.transitionTo('app.project.wiki.page',{projectId:params.projectId,wikiName:'Home'});
+
+      Logger.debug('***********************************');
+      Logger.debug('***********************************');
+      Logger.debug(self.get('router.currentRouteName'));
+
+      // We need the direction
+      if (self.get('router.currentRouteName') === 'app.project.wiki.index'){
+        if (data.findBy('name','Home') !== undefined){
+          self.transitionTo('app.project.wiki.page',{projectId:params.projectId,wikiName:'Home'});
+        }
       }
     });
   },
