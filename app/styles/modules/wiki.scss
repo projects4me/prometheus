@@ -52,7 +52,11 @@
 }
 
 .wiki-project #editor{
-  height: 350px;
+  height: 35rem;
+}
+.wiki-page-contents{
+  min-height: 35rem;
+  height: 100%;
 }
 
 .wiki-detail .ember-power-select-trigger{

@@ -161,6 +161,17 @@ export default DS.Model.extend({
   tag: DS.hasMany('tag'),
 
   /**
+   These are the tag relationship entries
+
+   @property tagged
+   @type Relationship
+   @for WikiModel
+   @private
+  */
+  tagged: DS.hasMany('tagged'),
+
+
+  /**
    The votes for this wiki page
 
    @property vote

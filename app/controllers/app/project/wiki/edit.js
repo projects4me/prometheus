@@ -15,35 +15,50 @@ const { inject: { service } } = Ember;
 */
 
 export default Ember.Controller.extend({
-  addTagDialog: false,
 
   /**
     This is the store service which is used to interact with the data API
 
     @property store
     @type Service
-    @for AppProjectWikiPageController
+    @for AppProjectWikiEditController
     @private
   */
   store: service(),
 
-  saveDisabled: 'true',
   /**
-    The wiki list, this list is retrieved by the app.wiki.project route but
-    since I do not want to send a network call to reteive the same list again
-    I am making it accessible within the same route. This propert is set by
-    the parent route.
-    @property wikilist
-    @type Object
-    @for app.wiki.project.eidt
+    This flag is used to show or hide the modal dialog box for adding new tags
+
+    @property addTagDialog
+    @type bool
+    @for AppProjectWikiEditController
     @private
   */
-//  wikilist: {},
+  addTagDialog: false,
 
+  /**
+    This flag is used to enable and disable the save button
+
+    @property saveDisabled
+    @type String
+    @for AppProjectWikiEditController
+    @private
+  */
+  saveDisabled: 'true',
+
+  /**
+    These are the actions that are handled by this controller
+
+    @property actions
+    @type Object
+    @for AppProjectWikiEditController
+    @public
+  */
   actions: {
     /**
       This function is responsible for saving the model. After successfully
       saving the function takes the user to the saved page.
+
       @method save
       @public
       @todo Trigger the notificaiton
@@ -71,11 +86,12 @@ export default Ember.Controller.extend({
             self.send('modelUpdated', data);
           }
 
-          //model.reload();
-          //self.set('markUp','');
-          //self.destroy();
-          //(self);
-          //self.send('redirectOnSave',{projectId:data.get('projectId'),wikiName:data.get('name')});
+          new Messenger().post({
+            message: self.get('i18n').t("view.app.wiki.created",{name:data.get('name')}),
+            type: 'success',
+            showCloseButton: true
+          });
+
           self.transitionToRoute('app.project.wiki.page', {projectId:data.get('projectId'),wikiName:data.get('name')});
         });
       }
@@ -143,123 +159,159 @@ export default Ember.Controller.extend({
     },
 
     /**
-      This function is used to select the tags in the system
+      This function is used to select the tags from the system
 
       @method tagSelected
       @param e {Object} the list of selected items
     */
     tagSelected:function(e){
       Logger.debug('AppProjectWikiEditController:tagSelected');
-      this.set('selectedTags',e);
-      this.send('syncTags');
+      Logger.debug(e);
+
+      var self = this;
+
+      // If a tag was removed then remove it
+      var removedTag = _.difference(this.get('selectedTags'),e);
+      Logger.debug('tag to be removed');
+      Logger.debug(removedTag);
+
+      if (removedTag[0] !== undefined)
+      {
+        this.send('removeTag',removedTag[0],e);
+      }
+
+      // If a tag was selected then associate it with the wiki
+      var selectedTag = _.difference(e,this.get('selectedTags'));
+      Logger.debug('tag that was selected');
+      Logger.debug(selectedTag);
+      if (selectedTag[0] !== undefined)
+      {
+        // Save the relationship and then show the message to the user
+        self.get('store').createRecord('tagged',{
+          tagId : selectedTag[0].value,
+          relatedId : self.get('model').nextObject(0).get('id'),
+          relatedTo: "wiki"
+        }).save().then(function(){
+          new Messenger().post({
+            message: self.get('i18n').t("view.app.wiki.tag.associated",{name:selectedTag[0].label}),
+            type: 'success',
+            showCloseButton: true
+          });
+        });
+        this.set('selectedTags',e);
+      }
     },
 
     /**
-      This function is used to select the tags in the system
+      This function is used to add a new in the system
 
-      @method tagSelected
-      @param e {Object} the list of selected items
+      @method addTag
+      @todo Load the current info within the API
     */
     addTag:function(){
       Logger.debug('AppProjectWikiEditController:addTag');
-      var tag = {label:this.get('tagName'),value:'_new'};
       Logger.debug(this.get('tagName'));
-      Logger.debug(this.get('selectedTags'));
 
+      var self = this;
       var selectedTags = this.get('selectedTags');
-
-      selectedTags = _.concat(selectedTags,tag);
-
-      this.set('selectedTags',selectedTags);
-      this.set('tagName','');
-
-      Ember.$('.modal').modal('hide');
-      this.set('addTagDialog',false);
-
       Logger.debug(this.get('selectedTags'));
 
-      this.send('syncTags');
+      // Initialize the tag record
+      var newTag = this.get('store').createRecord('tag',{
+        dateCreated:'CURRENT_DATETIME',
+        dateModified:'CURRENT_DATETIME',
+        deleted:0,
+        createdUser:'1',
+        modifiedUser:'1',
+        tag:this.get('tagName'),
+        createdUserName: 'Hammad Hassan',
+        modifiedUserName: 'Hammad Hassan',
+      });
+
+      // Save it
+      newTag.save().then(function(tag){
+
+        // Then save the relationship
+        var tagged = self.get('store').createRecord('tagged',{
+          tagId : tag.get('id'),
+          relatedId : self.get('model').nextObject(0).get('id'),
+          relatedTo: "wiki"
+        });
+
+        tagged.save().then(function(){
+          // After it has been saved then show the message to the user
+          new Messenger().post({
+            message: self.get('i18n').t("view.app.wiki.tag.created",{name:tag.get('tag')}),
+            type: 'success',
+            showCloseButton: true
+          });
+
+          selectedTags = _.concat(selectedTags,{label:tag.get('tag'),value:tag.get('id')});
+
+          // set the values
+          self.set('selectedTags',selectedTags);
+          self.set('tagName','');
+
+          // Remove the modal
+          Ember.$('.modal').modal('hide');
+          self.set('addTagDialog',false);
+
+          Logger.debug(selectedTags);
+        });
+      });
     },
 
-    removeTag:function(tag){
+    /**
+      This function is used to remove a tag from current wiki
+
+      @method removeTag
+      @param tag {Object} The tag that needs to be removed
+      @param list {Object} The list of the tags that are currently set
+    */
+    removeTag:function(tag,list){
       Logger.debug('AppProjectWikiEditController:removeTag');
       Logger.debug(tag);
       Logger.debug(this.get('selectedTags'));
+      Logger.debug(list);
 
-      var selectedTags = this.get('selectedTags');
+      var self = this;
+      var tagged = self.get('model').nextObject(0).get('tagged').filterBy('tagId',tag.value)[0];
 
-      selectedTags = _.pull(selectedTags,tag);
+      // Delete the record
+      tagged.deleteRecord();
+      tagged.save().then(function(){
 
-      this.set('selectedTags',selectedTags);
+        // Display the message
+        new Messenger().post({
+          message: self.get('i18n').t("view.app.wiki.tag.removed",{name:tag.label}),
+          type: 'success',
+          showCloseButton: true
+        });
 
-      Logger.debug(this.get('selectedTags'));
-      this.send('syncTags');
+        //  Update the selected tags
+        self.set('selectedTags',list);
+        Logger.debug(self.get('selectedTags'));
+      });
     },
 
+    /**
+      This function is used to show the add modal dialog box
+
+      @method showDialog
+    */
     showDialog:function()
     {
       this.set('addTagDialog',true);
     },
 
+    /**
+      This function is used to hide the add tag modal
+
+      @method removeModal
+    */
     removeModal:function(){
       this.set('addTagDialog',false);
-    },
-
-    syncTags:function(){
-      Logger.debug('AppProjectWikiEditController::syncTags()');
-      var selectedTags = this.get('selectedTags');
-      var tagList = this.get('tagList');
-      var tags = this.get('model').nextObject(0).get('tagged');
-      var self = this;
-
-      Logger.debug(tagList);
-      Logger.debug(tags);
-      Logger.debug(selectedTags);
-
-      var newTags = selectedTags.filterBy('value',"_new");
-      var newTagObjects = [];
-      Logger.debug('The new tags are ');
-      Logger.debug(newTags);
-      var newTagCount = newTags.length;
-
-      for (var tagIdx=0; tagIdx < newTagCount;tagIdx++ ) {
-        console.log('A new tag is to be addedd');
-
-        newTagObjects[tagIdx] = this.get('store').createRecord('tag',{
-          dateCreated:'CURRENT_DATETIME',
-          dateModified:'CURRENT_DATETIME',
-          deleted:0,
-          createdUser:'1',
-          modifiedUser:'1',
-          tag:newTags[tagIdx].label,
-          createdUserName: 'Hammad Hassan',
-          modifiedUserName: 'Hammad Hassan',
-        });
-
-        newTagObjects[tagIdx].save().then(function(tag){
-          new Messenger().post({
-            message: "Tag by the name <strong>"+tag.get('tag')+"</strong> saved",
-            type: 'success',
-            showCloseButton: true
-          });
-
-          selectedTags = _.pull(selectedTags,newTags[0]);
-          selectedTags = _.concat(selectedTags,{label:tag.get('tag'),value:tag.get('id')});
-          self.set('selectedTags',selectedTags);
-          Logger.debug(selectedTags);
-
-          var tagged = self.get('store').createRecord('tagged',{
-            tagId : tag.get('id'),
-            relatedId : self.get('model').nextObject(0).get('id'),
-            relatedTo: "wiki"
-          });
-          tagged.save();
-        });
-      }
-
-      this.send('changed');
     }
-
 
   }
 });

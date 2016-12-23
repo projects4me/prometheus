@@ -158,7 +158,10 @@ export default {
           "tag":{
             "select" : "Select tags",
             "add" : "Add a tag",
-            "create" : "Create a tag"
+            "create" : "Create a tag",
+            "created" : "Tag by the name <strong>{{name}}</strong> saved",
+            "removed" : "Tag by the name <strong>{{name}}</strong> was removed",
+            "associated" : "Tag by the name <strong>{{name}}</strong> was associated",
           },
       },
 
