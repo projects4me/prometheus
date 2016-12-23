@@ -96,9 +96,9 @@ export default App.extend({
       Logger.debug(tree);
       self.set('tree',tree);
       controller.set('tree',tree);
-      //if (data.findBy('name','Home') !== undefined){
-      //  self.transitionTo('app.project.wiki.page',{projectId:params.projectId,wikiName:'Home'});
-      //}
+      if (data.findBy('name','Home') !== undefined){
+        self.transitionTo('app.project.wiki.page',{projectId:params.projectId,wikiName:'Home'});
+      }
     });
   },
 
