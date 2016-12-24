@@ -136,7 +136,8 @@ export default {
 
       "project":{
           "label":"Project",
-          "selectproject":"Please select a project first from the sidebar on right",
+          "noproject" : "No project selected",
+          "select":"This section is dependant on a project. Please select a project first from the sidebar on right.",
       },
 
       "wiki":{
