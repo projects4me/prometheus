@@ -131,3 +131,16 @@
       }
     }
 }
+
+span[data-atwho-at-query*="@"]{
+  background: $primaryColor !important;
+  color: $backgroundColor;
+  padding: 0rem 0.3rem;
+  border-radius: 0.3rem;
+}
+
+[contenteditable=true]:empty:before {
+  color: $mediumColor;
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+}

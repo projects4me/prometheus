@@ -45,4 +45,8 @@ export default DS.JSONAPISerializer.extend({
   keyForAttribute(key/*, method*/) {
     return Ember.String.camelize(key);
   },
+
+  keyForRelationship(key/*, typeClass, method)*/) {
+    return Ember.String.camelize(key);
+  },
 });

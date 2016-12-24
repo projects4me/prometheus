@@ -1,0 +1,144 @@
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the conversation page of the application.
+*/
+
+.conversations{
+
+  .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12{
+    padding: 0rem;
+  }
+
+  .user-block .subject{
+    font-size: 1.6rem;
+    font-weight: 600;
+    display: block;
+    margin-left: 5rem;
+  }
+
+  .box-comments{
+
+    .editable{
+      height: 8rem;
+      border: 0.1rem solid $borderColor;
+      padding: 0.5rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    .message-box{
+      display: inline-flex;
+      width: 100%;
+
+      .btn{
+        height: 8rem;
+        margin-left: 1rem;
+      }
+
+    }
+  }
+
+}
+
+/*====================================
+=            masonry Page            =
+====================================*/
+/* Inspired fom http://www.nextbootstrap.com/2016/01/masonry-layout-for-bootstrap-3.html */
+.masonry{
+  display: block;
+}
+
+/* 5 columns */
+.masonry.masonry-columns{
+  -webkit-column-count: 3;
+  -moz-column-count: 3;
+  column-count: 3;
+}
+
+
+/*--------Responsive---------*/
+@media(max-width: 1170px){
+  .masonry.masonry-columns{
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    column-count: 2;
+  }
+}
+@media(max-width: 991px){
+  .masonry.masonry-columns{
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    column-count: 2;
+  }
+}
+
+@media(max-width: 767px){
+  .masonry.masonry-columns{
+    -webkit-column-count: 1;
+    -moz-column-count: 1;
+    column-count: 1;
+  }
+}
+
+@media(max-width: 540px){
+  .masonry.masonry-columns{
+    -webkit-column-count: 1;
+    -moz-column-count: 1;
+    column-count: 1;
+  }
+}
+
+.masonry .masonry-item{
+  display: inline-block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  position: relative;
+  display: block;
+  background-color: $backgroundColor;
+  border: 0.1rem solid $primaryColor;
+  border-radius: .25rem;
+  float: none !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  margin-bottom: 1.75rem !important;
+}
+
+.masonry .masonry-item {
+    display: inline-block;
+    margin-bottom: 2rem;
+    width: 100%;
+    border: 0.1rem solid transparent;
+    transition: all 0.4s ease-in-out;
+}
+
+.masonry-item:hover {
+  border: 0.1rem solid $borderColor;
+}
+
+.masonry-item .post-title {
+  font-size: 2rem;
+}
+
+.masonry-item .post-info {
+  color: #999;
+  text-transform: uppercase;
+}
+
+.masonry-item p {
+  color: #666;
+}
+
+.masonry-item .read-more {
+  color: $secondaryColor;
+}
+
+.masonry-item .tag-comment {
+  border-top: 0.1rem solid $borderColor;
+  margin-top: 1rem;
+  padding: 0.5rem 0;
+  color: #999;
+}
+
+/*=====  End of masonry Page  ======*/

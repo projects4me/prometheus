@@ -101,6 +101,26 @@ export default DS.Model.extend({
   projectId: DS.attr('string'),
 
   /**
+   The user who created the room
+
+   @property createdBy
+   @type UserModel
+   @for ConversationroomModel
+   @private
+  */
+  createdBy:DS.belongsTo('user'),
+
+  /**
+   The user who modified the room
+
+   @property modifiedBy
+   @type UserModel
+   @for ConversationroomModel
+   @private
+  */
+  modifiedBy:DS.belongsTo('user'),
+
+  /**
    The project this room belongs to
 
    @property project
@@ -118,5 +138,15 @@ export default DS.Model.extend({
    @for ConversationroomModel
    @private
   */
-  comments: DS.hasMany('comment')
+  comments: DS.hasMany('comment'),
+
+  /**
+   Votes made on this conversation room
+
+   @property votes
+   @type VoteModel
+   @for ConversationroomModel
+   @private
+  */
+  votes: DS.hasMany('vote')
 });
