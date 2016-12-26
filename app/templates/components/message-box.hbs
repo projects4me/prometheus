@@ -1,6 +1,4 @@
-<div class="editable" contenteditable="true" placeholder="{{t "view.app.conversation.messagebox"}}"  data-related=entity.id spellcheck=false {{action "commentChanged"}}>
-  {{comment}}
-</div>
+{{content-editable  placeholder=(t "view.app.conversation.messagebox") spellcheck=false value=comment}}
 <div class="pull-right">
-    <button type="button" class="btn btn-primary" {{action "saveComment" entity.id}}>Post</button>
+    <button type="button" class="btn btn-primary" {{action "saveComment" entity.id}}>{{t "view.app.conversation.post"}}</button>
 </div>

@@ -71,7 +71,7 @@
                         <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="{{currentUser.user.name}}">
                         <!-- .img-push is used to add margin to elements next to floating images -->
                         <div class="img-push">
-                          {{message-box entity=entity save=(action "saveme")}}
+                          {{message-box issuesList=issuesList usersList=usersList entity=entity save=(action "save")}}
                         </div>
 
                       </form>

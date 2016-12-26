@@ -139,6 +139,57 @@ span[data-atwho-at-query*="@"]{
   border-radius: 0.3rem;
 }
 
+span[data-atwho-at-query*="#"]{
+  color: $backgroundColor;
+  border-radius: 0.3rem;
+
+  a.done,a.complete{
+    background-color: #5AC594 !important;
+    padding: 0rem 0.3rem;
+    color: $backgroundColor;
+  }
+  a.done:hover,a.complete:hover{
+    background-color: #00a65a !important;
+  }
+
+  a.closed{
+    background-color: #e98a7e;
+    padding: 0rem 0.3rem;
+    color: $backgroundColor;
+  }
+  a.closed:hover{
+    background-color: #d33724 !important;
+  }
+
+  a.deferred,a.pending,a.feedback{
+    background-color: #f7bf65;
+    padding: 0rem 0.3rem;
+    color: $backgroundColor;
+  }
+  a.deferred:hover,a.pending:hover,a.feedback:hover{
+    background-color: #f39c12 !important;
+  }
+
+  a.new{
+    background-color: #80b5d3;
+    padding: 0rem 0.3rem;
+    color: $backgroundColor;
+  }
+  a.new:hover{
+    background-color: #3c8dbc !important;
+  }
+
+  a.in_progress{
+    background-color: $primaryColor;
+    padding: 0rem 0.3rem;
+    color: $backgroundColor;
+  }
+  a.in_progress:hover{
+    background-color: $highlightColor !important;
+  }
+
+}
+
 [contenteditable=true]:empty:before {
   color: $mediumColor;
   content: attr(placeholder);

@@ -28,72 +28,72 @@ export default Ember.Controller.extend({
   */
   shiftPressed:false,
 
+  /**
+   This is the list of issues related to the current project
 
+   @property issuesList
+   @type Array
+   @for AppProjectConversationController
+   @public
+  */
+  issuesList: [],
 
-  init: function () {
-    this._super();
-    //Ember.run.schedule("afterRender",this,function() {
-    //  this.send("setupMasonary");
-    //});
-  },
+  /**
+   This is the list users in the system
 
+   @property usersList
+   @type Array
+   @for AppProjectConversationController
+   @public
+  */
+  usersList: [],
+
+  /**
+   These are the actions that are handled by this controller
+
+   @property actions
+   @type Object
+   @for AppProjectConversationController
+   @public
+  */
   actions: {
 
-    saveme:function(id,contents){
+    save:function(relatedId,contents){
       Logger.debug('AppProjectConversationController::saveme()');
-      Logger.debug(id);
+      Logger.debug(relatedId);
       Logger.debug(contents);
+      var self = this;
+
+      let comment = this.get('store').createRecord('comment', {
+          relatedId: relatedId,
+          relatedTo: 'conversationrooms',
+          comment: contents,
+          dateCreated: 'CURRENT_DATETIME',
+          dateModified: 'CURRENT_DATETIME',
+          createdUser: '1',
+          createdUserName: 'Hammad Hassan',
+          modifiedUser: '1',
+          modifiedUserName: 'Hammad Hassan',
+          deleted: 0
+      });
+
+      comment.save().then(function (comment) {
+        Logger.debug('Comment Saved');
+        Logger.debug(comment);
+        var count = self.model.get('length');
+        while (count > 0)
+        {
+          count--;
+          if(self.model.nextObject(count).get('id') === relatedId)
+          {
+            self.model.nextObject(count).get('comments').pushObject(comment);
+            self.set('comment',"");
+            break;
+          }
+        }
+      });
+
     },
-
-    save:function() {
-       var self = this;
-       if (event.keyCode === 13)
-       {
-         if (!this.shiftPressed)
-         {
-           var relatedId = event.target.attributes['data-related'].nodeValue;
-           let comment = this.get('store').createRecord('comment', {
-               relatedId: relatedId,
-               relatedTo: 'conversationrooms',
-               comment: el.slice(0, -1),
-               dateCreated: 'CURRENT_DATETIME',
-               dateModified: 'CURRENT_DATETIME',
-               createdUser: '1',
-               createdUserName: 'Hammad Hassan',
-               modifiedUser: '1',
-               modifiedUserName: 'Hammad Hassan',
-               deleted: 0
-           });
-
-           event.target.disabled = true;
-           comment.save().then(function (savedComment) {
-             //console.log('Comment Saved');
-             //console.log(comment);
-             //console.log(savedComment);
-             var count = self.model.get('length');
-             while (count > 0)
-             {
-                 count--;
-                 if(self.model.nextObject(count).get('id') === relatedId)
-                 {
-                   self.model.nextObject(count).get('comments').pushObject(comment);
-                   event.target.value = '';
-                   break;
-                 }
-             }
-             event.target.disabled = false;
-           });
-         }
-       }
-
-       this.shiftPressed = false;
-     },
-
-     keydown:function(el,event) {
-       if(event.keyCode === 16){
-         this.shiftPressed=true;
-       }
-     },
 
      /**
       This function allows us to save votes in the database as comments
@@ -134,5 +134,6 @@ export default Ember.Controller.extend({
          }
        });
      },
+
    }
 });

@@ -45,7 +45,6 @@ export default App.extend({
     @private
   */
   setupController:function(controller){
-
     Logger.debug('AppProjectConversationRoute::setupController');
 
     var self = this;
@@ -56,6 +55,9 @@ export default App.extend({
 
     // Set the data in the current instance of the object, this is required. Unless this is done the route will display the same data every time
     //this.module = Ember.String.capitalize(this.module);
+
+    self.loadIssues(params.projectId);
+    self.loadUsers();
     //var metaData = MD.create();
     var i18n = this.get('i18n');
     controller.set('i18n',i18n);
@@ -76,13 +78,6 @@ export default App.extend({
     options.query = "(Conversationroom.projectId : "+params.projectId+")";
     this.data = this.store.query(this.module,options).then(function(data){
       controller.set('model',data);
-      Logger.debug('------------------------');
-      Logger.debug(self);
-      Logger.debug(data);
-      Logger.debug(data.getEach('id'));
-      Logger.debug(data.getEach('project'));
-      Logger.debug(data.getEach('createdBy'));
-      Logger.debug('------------------------');
     });
 
 
@@ -90,5 +85,85 @@ export default App.extend({
     controller.set('module',this.module);
     //controller.set('metaData',this.metaData);
     //controller.setupController();
-  }
+  },
+
+  /**
+    This function is used to load the Issues List. This list is used in the
+    message-box to allow users to mention issues in the project.
+
+    @method loadIssues
+    @param projectId
+    @private
+  */
+  loadIssues:function(projectId){
+    Logger.debug("AppProjectConversationRoute::loadIssues("+projectId+")");
+    var self = this;
+    var module = "issue";
+
+    var options = {
+      fields: "Issue.id,Issue.subject,Issue.issueNumber,Issue.status,Issue.projectId",
+      query: "(Issue.projectId : "+projectId+")",
+      rels: "none",
+      sort: "Issue.issueNumber",
+      order: "ASC",
+      page: 0,
+      limit:-1,
+    };
+
+    this.data = this.store.query(module,options).then(function(data){
+      var issuesList = [];
+      var issuesCount = data.get('length');
+
+      for (var i=0; i<issuesCount;i++)
+      {
+        issuesList[i] = {
+          id:data.nextObject(i).get('id'),
+          name:data.nextObject(i).get('subject'),
+          number:data.nextObject(i).get('issueNumber'),
+          status:data.nextObject(i).get('status'),
+          projectId:data.nextObject(i).get('projectId')
+        };
+      }
+      Logger.debug(issuesList);
+      self.get('controller').set('issuesList',issuesList);
+    });
+  },
+
+  /**
+    This function is used to load the User List. This list is used in the
+    message-box to allow users to mention the users in the system
+
+    @method loadIssues
+    @param projectId
+    @private
+  */
+  loadUsers:function(){
+    Logger.debug("AppProjectConversationRoute::loadUsers()");
+    var self = this;
+    var module = "user";
+
+    var options = {
+      fields: "User.id,User.name",
+      rels: "none",
+      sort: "User.name",
+      order: "ASC",
+      page: 0,
+      limit:-1,
+    };
+
+    this.data = this.store.query(module,options).then(function(data){
+      var usersList = [];
+      var usersCount = data.get('length');
+
+      for (var i=0; i<usersCount;i++)
+      {
+        usersList[i] = {
+          id:data.nextObject(i).get('id'),
+          name:data.nextObject(i).get('name'),
+        };
+      }
+      Logger.debug(usersList);
+      self.get('controller').set('usersList',usersList);
+    });
+  },
 });
