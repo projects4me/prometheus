@@ -254,10 +254,33 @@ export default {
       "conversation" : {
         "label" : "Conversations",
         "create" : "Create New",
+        "start" : "Start a new conversation",
         "messagebox" : "Write a comment ..",
+        "created" : "A new conversation by the name {{name}} has been added",
         "comments" : "comments",
         "upvote" : "Upvote",
         "post" : "Post",
+        "votes": "votes",
+        "voted" : "Your vote has been registered",
+        "you" : "You ",
+        "vote" : {
+          "upvote" : "Upvotes",
+          "downvote" : "Downvotes",
+          "agree" : " are in agreement",
+          "disagree" : " are in disagreement",
+          "clickup" : "click to upvote",
+          "clickdown" : "Click to downvote",
+          "voted" : "Your vote has been registered",
+        },
+        "new" : {
+          "subject" : "Subject",
+          "description" : "Topic",
+          "type" : "Type",
+          "roomType" : [
+            {"value": "discussion", "label": "Discussion"},
+            {"value": "vote", "label": "Vote"},
+          ]
+        },
       },
 
       "wiki":{

@@ -3,9 +3,11 @@ import Ember from 'ember';
 
 /**
   This helper lets us translate the comment markup stored in the database.
-  
+
   The current suuport is for `{{}}` mentions with the type user, `>. \n` for list
   and `\n` converted to <br />
+
+  No longer necessary as we are now using At.js
 
   @method getWiki
   @param data {String} The comment
@@ -15,7 +17,7 @@ import Ember from 'ember';
 export function translateComment(params) {
   var data = params[0];
 
-
+  /*
   // Find {{}}
   var str = data;
   var rex = new RegExp("{{.*?}}", "g"); // "g" for global
@@ -58,6 +60,7 @@ export function translateComment(params) {
     }
     data = data.replace($listGroup,'<ul>'+$listGroup+'</ul>');
   }
+  */
 
   // Handle end lines
   data = data.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br />' + '$2');

@@ -10,6 +10,14 @@ import Ember from "ember";
 */
 export default Ember.Component.extend({
 
+  /**
+   The comment that we are gathering
+
+   @property comment
+   @type Ember.Service
+   @for MessageBoxComponent
+   @private
+  */
   comment: null,
 
   /**
@@ -17,11 +25,19 @@ export default Ember.Component.extend({
 
    @property i18n
    @type Ember.Service
-   @for Routes
-   @public
+   @for MessageBoxComponent
+   @private
   */
   i18n: Ember.inject.service(),
 
+  /**
+   This is the list of emojis that we support
+
+   @property emojiList
+   @type Array
+   @for MessageBoxComponent
+   @private
+  */
   emojiList : [
     'grinning',
     'joy',
@@ -131,53 +147,224 @@ export default Ember.Component.extend({
     '100',
   ],
 
-  classNames: ["message-box"],
+
+  /**
+    These are the classes the must be registered with the component
+
+    @property classNames
+    @type Array
+    @for MessageBoxComponent
+    @private
+  */
+  classNames: ["editable"],
+
+  /**
+    These are the attributes that are bound with the element
+
+    @property classNames
+    @type Array
+    @for MessageBoxComponent
+    @private
+  */
+  attributeBindings: ['contenteditable','spellcheck','placeholder'],
+
+
+  /**
+    These are the translated emojis
+
+    @property translatedEmojis
+    @type Array
+    @for MessageBoxComponent
+    @private
+  */
+  translatedEmojis: [],
+
+  /**
+    Whether the content box is editable or not
+
+    @property editable
+    @type Bool
+    @for MessageBoxComponent
+    @private
+  */
+  editable: true,
+
+  /**
+    This flag is used to clear up the contents
+
+    @property clearContentsBinding
+    @type Bool
+    @for MessageBoxComponent
+    @private
+  */
+  //clearContentsBinding: 'controller.clearContents',
+
+  /**
+    This flag is used to enable or disable spell checking
+
+    @property checkSpelling
+    @type Bool
+    @for MessageBoxComponent
+    @private
+  */
+  checkSpelling: false,
+
+  /**
+    Flag that maintains whether the user is typing or not
+
+    @property isUserTyping
+    @type Bool
+    @for MessageBoxComponent
+    @private
+  */
+	isUserTyping: false,
+
+  /**
+    This is the computed property that enables or disabled the HTML5 contenteditable
+    flag on the div
+
+    @property contenteditable
+    @type Computer
+    @for MessageBoxComponent
+    @private
+  */
+  contenteditable: (function() {
+    var editable = this.get('editable');
+
+    return editable ? 'true' : undefined;
+  }).property('editable'),
+
+  /**
+    This is the property that enables or disabled the HTML5 spellcheck flag on
+    the div
+
+    @property spellcheck
+    @type Computed
+    @for MessageBoxComponent
+    @private
+  */
+  spellcheck: (function() {
+    var spelling = this.get('checkSpelling');
+
+    return spelling ? 'true' : 'false';
+  }).property('checkSpelling'),
+
+  /**
+    This function is called when the object is created, we are using this
+    function to translate the emojis
+
+    @method init
+  */
+  init:function(){
+    this._super(...arguments);
+    var self = this;
+    var emojiList = Ember.$.map(this.get('emojiList'), function(emoji) {
+      return {'id':emoji, 'name':self.get('i18n').t('emoji.'+emoji)};
+    });
+    self.set('translatedEmojis',emojiList);
+  },
+
+  // Processors:
+	processValue: function() {
+		if (!this.get('isUserTyping') && this.get('value')) {
+			return this.setContents();
+		}
+	},
+
+	// Observers:
+	valueObserver: (function() {
+		Ember.run.once(this, 'processValue');
+	}).observes('value', 'isUserTyping'),
+
+	// Events:
+	focusOut: function() {
+		return this.set('isUserTyping', false);
+	},
+
+  /**
+    If the user is typing then set the flag to true
+
+    @method keyDown
+    @param event {Object} the event that triggered this function
+  */
+	keyDown: function(event) {
+		if (!event.metaKey) {
+			this.set('isUserTyping', true);
+		}
+	},
+
+  /**
+    As soon as the user has typed in a key we update the value
+
+    @method keyUp
+    @param event {Object} the event that triggered this function
+  */
+	keyUp: function() {
+		this.set('value', this.$().html());
+	},
+
+  /**
+    Return the contents set within this object
+
+    @method setContents
+    @return result {Mixed} The current value
+  */
+	setContents: function() {
+    return this.get('value');
+	},
+
+  /**
+    Clear the contents
+
+    @method clearContents
+  */
+	clearContents: function() {
+    this.set('value','');
+    Ember.$(this.element).html('');
+	},
 
   /**
     Load the message box after it has been loaded
 
-    @todo perhaps delegate the did render per type
+    @method didRender
+    @todo get the base link for issues and users via a function.
   */
   didRender: function() {
     var self = this;
 
-    Logger.debug(this.get('i18n'));
+    // Add a listener for clearing the contents
+    self.get('_targetObject').on('clearContents', Ember.$.proxy(self.clearContents, self));
 
-    var emojiList = Ember.$.map(this.get('emojiList'), function(emoji) {
-      return {'id':emoji, 'name':self.get('i18n').t('emoji.'+emoji)};
-    });
-    Logger.debug(emojiList);
-    Ember.$('#'+this.elementId +' .editable')
+    // Setup the message box to load listen to the keyword @, # and :
+    Ember.$('#'+this.elementId)
       .atwho({
         at: "@",
         data: self.get('usersList'),
         displayTpl: "<li>${name}</li>",
-        insertTpl: "${atwho-at}${name}"
+        insertTpl: "<a href='/app/users/${id}' class='${status}'>${atwho-at}${name}</a>"
       }).atwho({
         at: "#",
         data: self.get('issuesList'),
         displayTpl: "<li>${number} - ${name}</li>",
-        insertTpl: "<a href='/app/${projectId}/issues/${id}' class='${status}'>#${number} - ${name}</a>"
+        searchKey: "number",
+        insertTpl: "<a href='/app/${projectId}/issues/${id}' class='${status}'>${atwho-at}${number} - ${name}</a>"
       }).atwho({
         at: ':',
         displayTpl: "<li><i class='twa twa-${id}'></i> ${name} </li>",
         insertTpl: "<i class='twa twa-${id}'></i>",
-        data: emojiList
+        data: self.get('translatedEmojis')
       });
+
+      return this.setContents();
   },
 
+  /**
+    This function is called when the rendered component is being destroyed
+
+    @method willDestroyElement
+  */
   willDestroyElement() {
     this._super(...arguments);
-    Ember.$('#'+this.elementId +' .editable').atwho('destroy');
+    Ember.$('#'+this.elementId).atwho('destroy');
   },
-
-  actions:{
-    saveComment:function(id){
-      this.sendAction('save',id,this.get('comment'));
-    },
-
-    commentChanged:function(event){
-      Logger.debug(event);
-    }
-  }
 });

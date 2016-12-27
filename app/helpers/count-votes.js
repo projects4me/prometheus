@@ -13,7 +13,8 @@ import _ from "lodash";
   @todo Handle exception. If possible then make generic
 */
 export function countVotes(params) {
-  return (_.countBy(params[0].getEach('comment'))[params[1]]);
+  var voteCount = (_.countBy(params[0].getEach('comment'))[params[1]]);
+  return (voteCount === undefined)?0:voteCount;
 }
 
 /**

@@ -5,7 +5,7 @@
   </h1>
 
   <div class="btn-group">
-    <button type="button" class="btn btn-default"> <i class="fa fa-plus"></i>{{t "view.app.conversation.create"}}</button>
+    <button type="button" class="btn btn-default" {{action "showDialog"}}> <i class="fa fa-plus"></i>{{t "view.app.conversation.create"}}</button>
   </div>
 
 </section>
@@ -31,7 +31,18 @@
                   </div>
                   <!-- /.user-block -->
                   <div class="box-tools">
-                    <span class="upvotes">{{entity.votes.length}} {{#if entity.votes}}<i class="fa fa-heart"></i>{{else}}<i class="fa fa-heart-o"></i>{{/if}}</span>
+
+                    <span class="upvotes">{{entity.votes.length}}
+                      {{#if entity.votes}}
+                        {{#if (userCreated entity.votes currentUser.user.id)}}
+                          <i class="fa fa-heart"></i>
+                        {{else}}
+                          <i class="fa fa-heart-o"></i>
+                        {{/if}}
+                      {{else}}
+                        <i class="fa fa-heart-o"></i>
+                      {{/if}}
+                    </span>
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                     </button>
                   </div>
@@ -40,13 +51,26 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                   <!-- post text -->
-                  <p>{{entity.description}}</p>
+                  <p>{{translateComment entity.description}}</p>
 
                   <!-- /.attachment-block -->
 
                   <!-- Social sharing buttons -->
-                  <button type="button" class="btn btn-default btn-xs"><i class="fa fa-heart-o"></i> {{t "view.app.conversation.upvote"}}</button>
-                  <span class="pull-right text-muted">{{entity.comments.length}} {{t "view.app.conversation.comments"}}</span>
+                  {{#if (userCreated entity.votes currentUser.user.id)}}
+                    {{t "view.app.conversation.you"}} <i class="fa fa-heart"></i>
+                  {{else}}
+                    <button type="button" class="btn btn-default btn-xs" {{action "upvote" entity.id}}>
+                      <i class="fa fa-heart-o"></i> {{t "view.app.conversation.upvote"}}
+                    </button>
+                  {{/if}}
+                  <span class="pull-right text-muted">
+                    {{entity.comments.length}}
+                    {{#if (ifMatch entity.roomType "discussion")}}
+                      {{t "view.app.conversation.comments"}}
+                    {{else}}
+                      {{t "view.app.conversation.votes"}}
+                    {{/if}}
+                  </span>
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer box-comments">
@@ -71,7 +95,19 @@
                         <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="{{currentUser.user.name}}">
                         <!-- .img-push is used to add margin to elements next to floating images -->
                         <div class="img-push">
-                          {{message-box issuesList=issuesList usersList=usersList entity=entity save=(action "save")}}
+                          <div class="message-box">
+                            {{message-box
+                              issuesList=issuesList
+                              usersList=usersList
+                              spellcheck=false
+                              entity=entity
+                              placeholder=(t "view.app.conversation.messagebox")
+                              value=comment
+                              }}
+                            <div class="pull-right">
+                                  <button type="button" class="btn btn-primary" {{action "save" entity.id comment}}>{{t "view.app.conversation.post"}}</button>
+                            </div>
+                          </div>
                         </div>
 
                       </form>
@@ -82,12 +118,49 @@
 
                       <div class="vote">
                         <div class="agree">
-                          <div class="vote-message" {{action "vote" "I agree" entity.id}}><span>{{t "view.conversation.vote.agree"}}</span><i class="fa fa-thumbs-up"></i></div>
-                          <div class="vote-count">{{countVotes entity.comments "I agree"}}</div>
+                          <div class="info-box">
+                            {{#if (userCreated entity.comments currentUser.user.id)}}
+                              <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "view.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-up"></i></span>
+                            {{else}}
+                              <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "view.app.conversation.vote.clickup"}}" {{action "vote" "I agree" entity.id}}><i class="fa fa-thumbs-o-up"></i></span>
+                            {{/if}}
+                            <div class="info-box-content">
+                              <span class="info-box-text">{{t "view.app.conversation.vote.upvote"}}</span>
+                              <span class="info-box-number">{{countVotes entity.comments "I agree"}}</span>
+
+                              <div class="progress">
+                                <div class="progress-bar bg-green" style="width: {{round (mult (div (countVotes entity.comments "I agree") entity.comments.length) 100)}}%"></div>
+                              </div>
+                                <span class="progress-description">
+                                  {{round (mult (div (countVotes entity.comments "I agree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.agree"}}
+                                </span>
+                            </div>
+                            <!-- /.info-box-content -->
+                          </div>
+
                         </div>
                         <div class="disagree">
-                          <div class="vote-message" {{action "vote" "I disagree" entity.id}}><span>{{t "view.conversation.vote.disagree"}}</span><i class="fa fa-thumbs-o-down"></i></div>
-                          <div class="vote-count">{{countVotes entity.comments "I disagree"}}</div>
+
+                          <div class="info-box">
+                            {{#if (userCreated entity.comments currentUser.user.id)}}
+                              <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "view.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-down"></i></span>
+                            {{else}}
+                              <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "view.app.conversation.vote.clickdown"}}" {{action "vote" "I disagree" entity.id}}><i class="fa fa-thumbs-o-down"></i></span>
+                            {{/if}}
+                            <div class="info-box-content">
+                              <span class="info-box-text">{{t "view.app.conversation.vote.downvote"}}</span>
+                              <span class="info-box-number">{{countVotes entity.comments "I disagree"}}</span>
+
+                              <div class="progress">
+                                <div class="progress-bar bg-red" style="width: {{round (mult (div (countVotes entity.comments "I disagree") entity.comments.length) 100)}}%"></div>
+                              </div>
+                                <span class="progress-description">
+                                  {{round (mult (div (countVotes entity.comments "I disagree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.disagree"}}
+                                </span>
+                            </div>
+                            <!-- /.info-box-content -->
+                          </div>
+
                         </div>
                       </div>
 
@@ -107,4 +180,47 @@
     </div>
 
   </div>
+
+  {{#if addConversationDialog}}
+
+    {{#bootstrap-modal
+      title="view.app.conversation.create"
+      confirmLabel="global.form.save"
+      closeLabel="global.form.cancel"
+      confirm=(action "addConversation")
+      close="removeModal"}}
+      <form {{action 'addConversation' on='submit'}}>
+        <div class="box-body">
+          <div class="form-group">
+            <label for="subject">{{t "view.app.conversation.new.subject"}}</label>
+            {{input class="form-control" value=newSubject placeholder=(t "view.app.conversation.new.subject")}}
+          </div>
+          <div class="form-group">
+            <label for="description">{{t "view.app.conversation.new.description"}}</label>
+            {{message-box
+              issuesList=issuesList
+              usersList=usersList
+              spellcheck=false
+              entity=entity
+              placeholder=(t "view.app.conversation.new.description")
+              value=newTopic
+            }}
+          </div>
+          <div class="form-group">
+            <label for="type">{{t "view.app.conversation.new.type"}}</label>
+            {{#power-select
+              options=roomTypes
+              placeholder=(t "view.app.conversation.new.type")
+              selected=roomType
+              onchange=(action (mut roomType))
+              searchField="label"
+              as |type|}}
+              {{type.label}}
+            {{/power-select}}
+          </div>
+        </div>
+      </form>
+    {{/bootstrap-modal}}
+
+  {{/if}}
 </section>

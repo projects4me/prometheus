@@ -203,7 +203,7 @@ export default Ember.Controller.extend({
     },
 
     /**
-      This function is used to add a new in the system
+      This function is used to add a new tag in the system
 
       @method addTag
       @todo Load the current info within the API

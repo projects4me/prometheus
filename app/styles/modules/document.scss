@@ -133,10 +133,17 @@
 }
 
 span[data-atwho-at-query*="@"]{
-  background: $primaryColor !important;
-  color: $backgroundColor;
-  padding: 0rem 0.3rem;
   border-radius: 0.3rem;
+
+  a{
+    background: $primaryColor !important;
+    color: $backgroundColor;
+    padding: 0rem 0.3rem;
+  }
+  a:hover{
+    background: $highlightColor !important;
+    color: $backgroundColor;
+  }
 }
 
 span[data-atwho-at-query*="#"]{
@@ -194,4 +201,17 @@ span[data-atwho-at-query*="#"]{
   color: $mediumColor;
   content: attr(placeholder);
   display: block; /* For Firefox */
+}
+
+.ember-basic-dropdown-content{
+  z-index:2000 !important;
+}
+
+.editable{
+  height: 8rem;
+  border: 0.1rem solid $borderColor;
+  padding: 0.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
 }

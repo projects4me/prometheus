@@ -71,6 +71,26 @@ export default DS.Model.extend({
   createdUser: DS.attr('string'),
 
   /**
+   The name of the user who created the room
+
+   @property createdUserName
+   @type String
+   @for ConversationroomModel
+   @private
+  */
+  createdUserName: DS.attr('string'),
+
+  /**
+   The name of the user who last modified the room
+
+   @property modifiedUserName
+   @type String
+   @for ConversationroomModel
+   @private
+  */
+  modifiedUserName: DS.attr('string'),
+
+  /**
    The identifier of the user who last modified the room
 
    @property subject

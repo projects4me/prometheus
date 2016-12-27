@@ -16,6 +16,10 @@
     font-size: 1.8rem;
   }
 
+  .box{
+    margin-bottom: 0rem;
+  }
+
   .user-block .subject{
     font-size: 1.6rem;
     font-weight: 600;
@@ -24,16 +28,6 @@
   }
 
   .box-comments{
-
-    .editable{
-      height: 8rem;
-      border: 0.1rem solid $borderColor;
-      padding: 0.5rem;
-      overflow-y: auto;
-      overflow-x: hidden;
-      width: 100%;
-    }
-
     .message-box{
       display: inline-flex;
       width: 100%;
@@ -44,6 +38,19 @@
       }
 
     }
+  }
+
+  .vote .info-box-icon{
+    cursor: pointer;
+  }
+
+  .vote .info-box-icon:hover{
+    font-size: 5rem;
+  }
+
+  .vote .disagree .info-box-content{
+    margin-left: 0rem !important;
+    margin-right: 9rem !important;
   }
 
 }
