@@ -19,6 +19,7 @@ Router.map(function() {
         this.route('edit',{path:'/edit/:wikiName'});
       });
       this.route('conversation',{path:'conversations'});
+      this.route('calendar',{path:'calendar'});
     });
 /*
     this.route('module',{path:':module'});

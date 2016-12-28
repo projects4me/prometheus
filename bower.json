@@ -20,6 +20,8 @@
     "jquery-slimscroll": "^1.3.8",
     "Ionicons": "ionicons#^2.0.1",
     "Caret.js": "caret.js#^0.3.1",
-    "At.js": "jquery.atwho#^1.5.2"
+    "At.js": "jquery.atwho#^1.5.2",
+    "fullcalendar": "^3.0.0",
+    "fullcalendar-scheduler": "^1.4.0"
   }
 }
