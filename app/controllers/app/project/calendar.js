@@ -13,28 +13,46 @@ export default Ember.Controller.extend({
 
    @property currentUser
    @type Ember.Service
-   @for AppProjectConversationController
-   @public
+   @for AppProjectCalendarController
+   @private
   */
   currentUser: Ember.inject.service(),
 
-  events: Ember.A([{
-   title: 'Event 1',
-   start: '2016-05-05T07:08:08',
-   end: '2016-05-05T09:08:08'
-  }, {
-   title: 'Event 2',
-   start: '2016-05-06T07:08:08',
-   end: '2016-05-07T09:08:08'
-  }, {
-   title: 'Event 3',
-   start: '2016-05-10T07:08:08',
-   end: '2016-05-10T09:48:08'
-  }, {
-   title: 'Event 4',
-   start: '2016-05-11T07:15:08',
-   end: '2016-05-11T09:08:08'
- }]),
+  /**
+   The i18n library service that is used in order to get the translations
+
+   @property i18n
+   @type Ember.Service
+   @for AppProjectCalendarController
+   @private
+  */
+  i18n: Ember.inject.service(),
+
+  /**
+   Locale value, the default is en
+
+   @property localeCode
+   @type String
+   @for AppProjectCalendarController
+   @private
+  */
+  localeCode: 'en',
+
+  /**
+   These are the header option for the calendar
+
+   @property header
+   @type Object
+   @for AppProjectCalendarController
+   @public
+  */
+  header: {
+    left: 'prev,next today',
+    center: 'title',
+    right: 'month,agendaWeek,agendaDay,listWeek'
+  },
+
+  events: null,
 
 
   /**
@@ -46,6 +64,60 @@ export default Ember.Controller.extend({
    @public
   */
   actions: {
+//    clicked(event, jsEvent, view){
+//        this.showModal(event);
+//    },
+    eventDragStart:function(event){
+      Logger.debug("AppProjectCalendarController::eventDragStart()");
+      Logger.debug(event);
+    },
 
-   } // end definition actions
+    eventRender:function(event,eventElement){
+      var self = this;
+      if (event.priority)
+      {
+        eventElement.find('div.fc-content').prepend(this.getPriorityHTML(event.priority));
+        eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));
+      }
+      if (event.className)
+      {
+        var tooltip = self.get('i18n').t("view.app.issue.lists.priority."+event.priority);
+        tooltip += ' '+self.get('i18n').t("view.app.issue.priority");
+        tooltip += ' - '+self.get('i18n').t("view.app.issue.lists.status."+event.className);
+        eventElement.find('div.fc-content').attr('data-toggle','tooltip');
+        eventElement.find('div.fc-content').attr('title',tooltip);
+        //eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));
+      }
+    },
+
+
+  }, // end definition actions
+
+
+  getPriorityHTML:function(priority){
+    var HTML = '';
+    switch (priority) {
+      case 'blocker':
+        HTML += '<i class="fa fa-ban"></i>';
+        break;
+      case 'critical':
+        HTML += '<i class="fa fa-angle-double-up"></i>';
+        break;
+      case 'high':
+        HTML += '<i class="fa fa-arrow-up"></i>';
+        break;
+      case 'medium':
+        HTML += '<i class="fa fa-dot-circle-o"></i>';
+        break;
+      case 'low':
+        HTML += '<i class="fa fa-arrow-down"></i>';
+        break;
+      case 'lowest':
+        HTML += '<i class="fa fa-angle-double-down"></i>';
+        break;
+      default:
+      break;
+    }
+    return HTML;
+  }
 });

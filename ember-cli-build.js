@@ -40,5 +40,6 @@ module.exports = function(defaults) {
   app.import("vendor/quill/dist/quill.min.js");
   app.import("vendor/messenger/build/js/messenger.min.js");
   app.import("vendor/AdminLTE/dist/js/app.js");
+  app.import("bower_components/fullcalendar/dist/locale-all.js");
   return app.toTree();
 };

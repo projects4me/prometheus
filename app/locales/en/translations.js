@@ -319,6 +319,30 @@ export default {
         },
       },
 
+      "issue" : {
+        "priority" : "priority",
+        "lists" : {
+          "priority" : {
+            "blocker" : "Blocker",
+            "critical" : "Critical",
+            "high" : "High",
+            "medium" : "Medium",
+            "low" : "Low",
+            "lowest" : "Lowest",
+          },
+          "status" : {
+            "done" : "Done",
+            "complete" : "Complete",
+            "new" : "New",
+            "in_progress" : "In Progress",
+            "pending" : "Pending",
+            "closed" : "Closed",
+            "deferred" : "Deferred",
+            "feedback" : "Feedback",
+          },
+        },
+      },
+
     },
 
     /*

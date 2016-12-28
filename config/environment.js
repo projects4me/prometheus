@@ -28,6 +28,9 @@ module.exports = function(environment) {
       port:'3000',
       protocol:'http'
     },
+    emberFullCalendar: {
+      schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source'
+    },
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build

@@ -36,7 +36,7 @@
                     <a href="#">
                       <div class="pull-left">
                         <!-- User Image -->
-                        <img src="/img/newpf.jpg" class="img-circle" alt="User Image">
+                        <img src="http://projects4me/userimage/get/{{currentUser.user.id}}" class="img-circle" alt="User Image">
                       </div>
                       <!-- Message title and timestamp -->
                       <h4>
@@ -120,7 +120,7 @@
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="/img/newpf.jpg" class="user-image" alt="User Image">
+              <img src="http://projects4me/userimage/get/{{currentUser.user.id}}" class="user-image" alt="{{currentUser.user.name}}">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs">{{currentUser.user.name}}</span>
 
@@ -128,7 +128,7 @@
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="/img/newpf.jpg" class="img-circle" alt="User Image">
+                <img src="http://projects4me/userimage/get/{{currentUser.user.id}}" class="img-circle" alt="{{currentUser.user.name}}">
 
                 <p>
                   {{currentUser.user.name}} - {{currentUser.user.title}}
@@ -178,7 +178,7 @@
 
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
-      {{nav-bar projectList=projectList projectId=projectId}}
+      {{nav-bar projectList=projectList projectId=projectId currentUser=currentUser}}
     </section>
     <!-- /.sidebar -->
   </aside>

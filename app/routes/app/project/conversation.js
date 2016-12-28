@@ -1,5 +1,4 @@
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
-import Ember from "ember";
 import App from '../../app';
 
 /**
@@ -62,7 +61,7 @@ export default App.extend({
     var i18n = this.get('i18n');
     controller.set('i18n',i18n);
     controller.set('projectId',params.projectId);
-    
+
     //this.metaData = MD.create().getViewMeta(this.module,'list',i18n);
     var options = {
       //limit: ENV.app.list.pagelimit
