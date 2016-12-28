@@ -343,6 +343,11 @@ export default {
         },
       },
 
+      "chat" : {
+        "messagebox" : "Type a message ..",
+        "send" : "Send"
+      },
+
     },
 
     /*

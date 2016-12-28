@@ -1,0 +1,50 @@
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the chat boxes in the application.
+*/
+
+.chat-boxes{
+  position: fixed;
+  bottom: 0rem;
+  right: 0rem;
+
+  .direct-chat-primary{
+    border: 0.1rem solid $primaryColor;
+    border-top: 0.3rem solid;
+    border-radius: 0.3rem 0.3rem 0rem 0rem;
+  }
+
+  .badge{
+    background: $primaryColor;
+  }
+
+
+  .direct-chat-primary .direct-chat-text{
+
+  }
+
+
+  .direct-chat-primary .right > .direct-chat-text{
+    background-color: $primaryColor;
+    border-color: $primaryColor;
+  }
+
+  .direct-chat-primary .right > .direct-chat-text:after, .direct-chat-primary .right > .direct-chat-text:before{
+      border-left-color: $primaryColor;
+  }
+
+  .chat-box{
+    width: 30rem;
+    margin-right:1.5rem;
+
+    button[type="submit"]{
+      height: 8rem;
+      margin-left: 1rem;
+    }
+
+    .box{
+      margin-bottom: 0rem;
+    }
+  }
+}
