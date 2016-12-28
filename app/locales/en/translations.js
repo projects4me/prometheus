@@ -253,7 +253,7 @@ export default {
 
       "conversation" : {
         "label" : "Conversations",
-        "create" : "Create New",
+        "create" : "Start a new conversation ..",
         "start" : "Start a new conversation",
         "messagebox" : "Write a comment ..",
         "created" : "A new conversation by the name {{name}} has been added",

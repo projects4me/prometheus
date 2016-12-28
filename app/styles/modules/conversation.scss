@@ -25,6 +25,7 @@
     font-weight: 600;
     display: block;
     margin-left: 5rem;
+    margin-right: 5rem;
   }
 
   .box-comments{
@@ -53,6 +54,28 @@
     margin-right: 9rem !important;
   }
 
+
+  .box-start:before, .box-start:after {
+    content: " ";
+    display: table;
+  }
+
+  .box-start:after {
+    clear: both;
+  }
+
+  .box-start{
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 10px;
+    background-color: $backgroundColor;
+    .new-conversation{
+      font-size: 2rem;
+      cursor: pointer;
+    }
+  }
 }
 
 /*====================================
@@ -68,6 +91,10 @@
   -webkit-column-count: 3;
   -moz-column-count: 3;
   column-count: 3;
+
+  -webkit-column-gap: 2.5rem;
+  -moz-column-gap: 2.5rem;
+  column-gap: 2.5rem;
 }
 
 
@@ -115,7 +142,9 @@
   float: none !important;
   margin-right: 0 !important;
   margin-bottom: 0 !important;
-  margin-bottom: 1.75rem !important;
+  margin-bottom: 2.5rem !important;
+  -webkit-box-shadow: 0 0.1rem 0.4rem 0 rgba(0,0,0,0.2);
+  box-shadow: 0 0.1rem 0.4rem 0 rgba(0,0,0,0.2);
 }
 
 .masonry .masonry-item {
