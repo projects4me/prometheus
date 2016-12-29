@@ -5,14 +5,19 @@
 */
 
 .chat-boxes{
+  display: inline-flex;
   position: fixed;
   bottom: 0rem;
   right: 0rem;
+  z-index: 500;
 
   .direct-chat-primary{
     border: 0.1rem solid $primaryColor;
     border-top: 0.3rem solid;
     border-radius: 0.3rem 0.3rem 0rem 0rem;
+    bottom: 0;
+    position: absolute;
+    width: 30rem;
   }
 
   .badge{

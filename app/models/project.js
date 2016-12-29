@@ -206,4 +206,60 @@ export default DS.Model.extend({
    @private
   */
   modifiedBy:DS.belongsTo('user'),
+
+  /**
+   The members of this project
+
+   @property members
+   @type UserModel
+   @for ProjectModel
+   @private
+  */
+  members:DS.hasMany('user'),
+
+  /**
+   The conversations that are happening on this project
+
+   @property conversations
+   @type Relationship
+   @for ProjectModel
+   @private
+  */
+  conversations:DS.hasMany('conversationroom'),
+
+  /**
+   These are the issues that are related to the project, since the number of
+   issues related to a project can grow significantly it is adviseable that they
+   are not retreive via the same query as the other project information
+
+   @property issues
+   @type Relationship
+   @for ProjectModel
+   @private
+  */
+  issues:DS.hasMany('issue'),
+
+  /**
+   The roles related to the members of this project, please note that these
+   roles are not related to the users directly. The API simply returns all
+   the roles as well as the memerbship rules. The application has to relate the
+   user to the role via the code.
+
+   @property roles
+   @type Relationship
+   @for ProjectModel
+   @private
+  */
+  roles:DS.hasMany('role'),
+
+  /**
+   The memerbship rules for this project.
+
+   @property memberships
+   @type Relationship
+   @for ProjectModel
+   @private
+  */
+  memberships:DS.hasMany('membership'),
+
 });

@@ -1,11 +1,11 @@
   <div class="chat-box">
-    <div class="box box-primary direct-chat direct-chat-primary">
+    <div class="box box-primary direct-chat direct-chat-primary collapsed-box">
       <div class="box-header with-border">
-        <h3 class="box-title">Direct Chat</h3>
+        <h3 class="box-title">Mahnoor Hammad</h3>
 
         <div class="box-tools pull-right">
           <span data-toggle="tooltip" title="3 New Messages" class="badge">3</span>
-          <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+          <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
           </button>
           <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" data-widget="chat-pane-toggle" data-original-title="Contacts">
             <i class="fa fa-comments"></i></button>
@@ -26,7 +26,7 @@
             <!-- /.direct-chat-info -->
             <img class="direct-chat-img" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="Message User Image"><!-- /.direct-chat-img -->
             <div class="direct-chat-text">
-              Is this template really for free? That's unbelievable!
+              Is this template really f or free? That's unbelievable!
             </div>
             <!-- /.direct-chat-text -->
           </div>
@@ -147,7 +147,7 @@
           <ul class="contacts-list">
             <li>
               <a href="#">
-                <img class="contacts-list-img" src="../dist/img/user1-128x128.jpg" alt="User Image">
+                <img class="contacts-list-img" src="http://projects4me/userimage/get/2" alt="User Image">
 
                 <div class="contacts-list-info">
                       <span class="contacts-list-name">
@@ -167,11 +167,8 @@
       </div>
       <!-- /.box-body -->
       <div class="box-footer">
-        <form action="#" method="post">
           <div class="input-group">
             {{message-box
-              issuesList=issuesList
-              usersList=usersList
               spellcheck=false
               entity=entity
               placeholder=(t "view.app.chat.messagebox")
@@ -181,7 +178,6 @@
                 <button type="submit" class="btn btn-primary btn-flat">{{t "view.app.chat.send"}}</button>
               </span>
           </div>
-        </form>
       </div>
       <!-- /.box-footer-->
     </div>

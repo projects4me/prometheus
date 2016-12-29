@@ -249,6 +249,26 @@ export default {
         "label":"Project",
         "noproject" : "No project selected",
         "select":"This section is dependant on a project. Please select a project first from the sidebar on right.",
+        "detail" : {
+          "members" : "Members",
+          "viewallmembers" : "View all members",
+          "description" : "Project description",
+          "startdate" : "Start date",
+          "enddate" : "End date",
+          "status" : "Status",
+          "type" : "Type",
+          "duration" : "Duration",
+          "lists" : {
+            "status" : {
+              "in_progress" : "In Progress",
+              "new" : "New",
+              "closed" : "Closed",
+              "completed" : "Complete",
+              "pending" : "Pending",
+              "deferred" : "Deferred",
+            }
+          },
+        },
       },
 
       "conversation" : {
@@ -345,7 +365,7 @@ export default {
 
       "chat" : {
         "messagebox" : "Type a message ..",
-        "send" : "Send"
+        "send" : "Send",
       },
 
     },
