@@ -22,6 +22,8 @@
     "Caret.js": "caret.js#^0.3.1",
     "At.js": "jquery.atwho#^1.5.2",
     "fullcalendar": "^3.0.0",
-    "fullcalendar-scheduler": "^1.4.0"
+    "fullcalendar-scheduler": "^1.4.0",
+    "chart.js": "^2.4.0",
+    "color-hash": "^1.0.3"
   }
 }

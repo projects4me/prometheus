@@ -14,7 +14,7 @@ export default Ember.Component.extend({
 
    @property i18n
    @type Ember.Service
-   @for MessageBoxComponent
+   @for ChatBoxComponent
    @private
   */
   i18n: Ember.inject.service(),
@@ -24,7 +24,7 @@ export default Ember.Component.extend({
 
     @property classNames
     @type Array
-    @for MessageBoxComponent
+    @for ChatBoxComponent
     @private
   */
   classNames: ["chat-boxes"],
@@ -34,7 +34,7 @@ export default Ember.Component.extend({
 
     @property isUserTyping
     @type Bool
-    @for MessageBoxComponent
+    @for ChatBoxComponent
     @private
   */
 	isUserTyping: false,

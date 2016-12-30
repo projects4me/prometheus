@@ -9,7 +9,9 @@
     "Logger",
     "Quill",
     "hljs",
-    "Messenger"
+    "Messenger",
+    "Chart",
+    "ColorHash"
   ],
   "browser": true,
   "boss": true,

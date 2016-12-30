@@ -38,11 +38,14 @@ export default App.extend({
     Logger.debug(projectId);
     Logger.debug(projectName);
 
+    this.loadIssuesTime(projectId);
+
     var options = {
 //      fields: "Project.id,Project.name",
       query: "(Project.id : "+projectId+")",
 //      rels : 'none',
-//      order: 'ASC',
+      sort: "conversations.dateModified, issues.dateCreated",
+      order: 'ASC',
       limit: -1
     };
 
@@ -58,5 +61,23 @@ export default App.extend({
       }
       controller.set('model',data.nextObject(0));
     });
+  },
+
+  loadIssuesTime:function(projectId){
+
+    var self = this;
+
+    var options = {
+      query: "(Issue.projectId : "+projectId+")",
+//      sort: "Issues.dateModified, issues.dateCreated",
+//      order: 'ASC',
+      rels:'estimated,spent',
+      limit: -1
+    };
+
+    this.store.query('issue',options).then(function(data){
+      self.get('controller').set('issuetime',data);
+    });
+
   }
 });

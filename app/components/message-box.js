@@ -190,16 +190,6 @@ export default Ember.Component.extend({
   editable: true,
 
   /**
-    This flag is used to clear up the contents
-
-    @property clearContentsBinding
-    @type Bool
-    @for MessageBoxComponent
-    @private
-  */
-  //clearContentsBinding: 'controller.clearContents',
-
-  /**
     This flag is used to enable or disable spell checking
 
     @property checkSpelling
@@ -228,6 +218,7 @@ export default Ember.Component.extend({
     @for MessageBoxComponent
     @private
   */
+  
   contenteditable: (function() {
     var editable = this.get('editable');
 

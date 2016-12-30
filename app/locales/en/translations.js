@@ -250,6 +250,7 @@ export default {
         "noproject" : "No project selected",
         "select":"This section is dependant on a project. Please select a project first from the sidebar on right.",
         "detail" : {
+          "status." : "Loading ..",
           "members" : "Members",
           "viewallmembers" : "View all members",
           "description" : "Project description",
@@ -258,7 +259,15 @@ export default {
           "status" : "Status",
           "type" : "Type",
           "duration" : "Duration",
+          "owner" : "Project Owner",
+          "vision" : "Project Vision",
+          "issueratio" : "Issue Distribution Ratio",
+          "conversations" : "Conversations",
+          "viewallconversations" : "View all conversations",
+          "latestissues" : "Latest Issues",
+          "viewallissues" : "View all issues",
           "lists" : {
+            "status." : "Loading ..",
             "status" : {
               "in_progress" : "In Progress",
               "new" : "New",
@@ -341,6 +350,7 @@ export default {
 
       "issue" : {
         "priority" : "priority",
+        "status" : "Status",
         "lists" : {
           "priority" : {
             "blocker" : "Blocker",

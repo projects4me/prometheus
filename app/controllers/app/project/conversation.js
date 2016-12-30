@@ -160,7 +160,7 @@ export default Ember.Controller.extend(Ember.Evented,{
              count--;
              if(self.model.nextObject(count).get('id') === relatedId)
              {
-               self.model.nextObject(count).get('comments').pushObject(comment);
+               self.model.nextObject(count).get('comments').pushObject(savedComment);
                event.target.value = '';
                break;
              }
@@ -189,10 +189,6 @@ export default Ember.Controller.extend(Ember.Evented,{
          relatedTo:'conversationrooms',
          relatedId:conversationId
        });
-       Logger.debug('*******************');
-       Logger.debug('*******************');
-       Logger.debug('*******************');
-       Logger.debug(self.get('model'));
 
 
        vote.save().then(function(data){

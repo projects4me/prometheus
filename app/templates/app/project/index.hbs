@@ -1,19 +1,9 @@
 <!--
 Project Card
 ======================
-Name (shortCode)
-Project Description
-Type
-Status
-Owner
-Scope
-Vision
-Start date
-End date
 Current Milestone
 
-Members
-======================
+
 
 Milestones with progress
 ======================
@@ -27,9 +17,6 @@ time track report
 Recent activities
 ======================
 
-issue ratio (closed vs open)
-======================
-
 Budget?
 ======================
 
@@ -39,64 +26,187 @@ Budget?
 
   <div class="row">
 
+    <!-- The first Column that contains the project information , conversation, issues and time time tracks -->
     <div class="col-md-8">
 
-      <div class="box box-primary">
+      <!-- This are the project details -->
+      <div class="box box-primary project-details">
         <div class="box-header with-border">
           <h2 class="box-title">{{model.name}} - ({{model.shortCode}})</h2>
 
           <div class="box-tools pull-right">
-            <span class="info-box-text">{{t (concat "view.app.project.detail.lists.status." model.status)}}</span>
+            <span class="info-box-text"><span class="badge {{model.status}}">{{t (concat "view.app.project.detail.lists.status." model.status)}}</span></span>
           </div>
           <!-- /.box-tools -->
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-          <h4>{{t "view.app.project.detail.description"}}</h4>
-          <p>
-            {{model.description}}
-          </p>
 
-          <h4>{{t "view.app.project.detail.duration"}}</h4>
-          <p>
-            {{moment-format model.startDate 'Do MMM \'YY'}} - {{moment-format model.endDate 'DD MMM \'YY'}}
-            ({{moment model.startDate}})
-          </p>
+          <div class="row">
 
-          <p>
-            {{moment '12-25-1995' 'MM-DD-YYYY'}}
-          </p>
-          <p>
-            {{moment-format '12-25-1995' 'MM/DD/YYYY' 'MM-DD-YYYY'}} {{!-- outputFormat and inputFormat are optional --}}
-          </p>
-          <p>
-            {{moment-from-now model.startDate) hideSuffix=true}} {{!-- hideSuffix is optional --}}
-          </p>
-          <p>
-            {{moment-to-now (unix timeStamp) model.startDate hidePrefix=true}} {{!-- hidePrefix is optional --}}
-          </p>
-          <p>
-            {{moment-duration number units}} {{!-- units is optional --}}
-          </p>
-          <p>
-            {{moment-calendar model.startDate referenceDate}} {{!-- reference date is optional --}}
-          </p>
-          <p>
-            {{is-before model.startDate comparison precision='year'}} {{!-- precision is optional --}}
-          </p>
+            <div class="col-xs-3 col-md-2">
+              <div class="project-owner">
+                <img class="img-circle" src="http://projects4me/userimage/get/{{model.owner.id}}" alt="{{model.owner.name}}">
+                <a class="users-list-name" href="#">{{model.owner.name}}</a>
+                <span class="users-list-date">{{t "view.app.project.detail.owner"}}</span>
+              </div>
+            </div>
+
+            <div class="col-xs-9 col-md-10">
+              <h4>{{t "view.app.project.detail.description"}}</h4>
+              <p>
+                {{model.description}}
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="col-xs-6 col-md-4">
+              <h4>{{t "view.app.project.detail.duration"}}</h4>
+              <p>
+                {{moment-format model.startDate 'Do MMM \'YY'}} - {{moment-format model.endDate 'DD MMM \'YY'}}
+              </p>
+            </div>
+
+            <div class="col-xs-6 col-md-4">
+              <h4>{{t "view.app.project.detail.type"}}</h4>
+              <p>
+                {{model.type}}
+              </p>
+            </div>
+
+            <div class="col-xs-6 col-md-4">
+              <h4>{{t "view.app.project.detail.vision"}}</h4>
+              <p>
+                {{model.vision}}
+              </p>
+            </div>
+          </div>
+
         </div>
         <!-- /.box-body -->
 
         <div class="box-footer no-padding">
-
         </div>
       </div>
+      <!-- /.end project details -->
 
+      <!-- This div contains the project conversations and milestones -->
+      <div class="row">
+
+        <!-- This is the project conversations -->
+        <div class="col-md-6">
+          <div class="box box-info  project-conversations-section">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "view.app.project.detail.conversations"}}</h3>
+
+              <div class="box-tools pull-right">
+              </div>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding" style="display: block;">
+              <ul class="project-conversations show-5">
+                {{#each model.conversations as |conversation|}}
+                  <li>
+                    <div class="user-block">
+                      <img class="img-circle" src="http://projects4me/userimage/get/{{conversation.createdBy}}">
+                      <span class="subject">{{conversation.subject}}</span>
+                      <span class="description">{{translateComment conversation.description}}</span>
+                    </div>
+                  </li>
+                {{/each}}
+              </ul>
+              <!-- /.users-list -->
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer text-center" style="display: block;">
+              <a href="javascript:void(0)" class="uppercase">{{t "view.app.project.detail.viewallconversations"}}</a>
+            </div>
+            <!-- /.box-footer -->
+          </div>
+        </div>
+        <!-- end of project conversations -->
+
+        <!-- These are the lastest 5 open issues in this project -->
+        <div class="col-md-6">
+          <div class="box box-success open-issues-section">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "view.app.project.detail.latestissues"}}</h3>
+
+              <div class="box-tools pull-right">
+              </div>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding" style="display: block;">
+              <ul class="open-issues show-5 clearfix">
+                {{#each model.issues as |issue|}}
+                  <li>
+                    <div class="issue-block">
+                      <div class="priority">{{priorityIcon issue.priority}}</div>
+                      <div class="data-block">
+                        <span class="subject">{{issue.issueNumber}} - {{issue.subject}}</span>
+                        <span class="description">{{translateComment issue.description}}</span>
+                        <strong>{{t "view.app.issue.status"}}:</strong> <span class="badge {{issue.status}}">{{t (concat "view.app.issue.lists.status." issue.status)}}</span>
+                      </div>
+                    </div>
+                  </li>
+                {{/each}}
+              </ul>
+              <!-- /.users-list -->
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer text-center" style="display: block;">
+              <a href="javascript:void(0)" class="uppercase">{{t "view.app.project.detail.viewallissues"}}</a>
+            </div>
+            <!-- /.box-footer -->
+          </div>
+        </div>
+        <!-- end of last 5 open projects -->
+
+      </div>
+
+
+      <div class="row">
+
+        <!-- This is the project time estimated vs spent -->
+        <div class="col-md-12">
+          <div class="box box-default project-estimated-spent-section">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "view.app.project.detail.conversations"}}</h3>
+
+              <div class="box-tools pull-right">
+              </div>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding" style="display: block;">
+              <ul class="project-estimated-spent">
+                {{chart-estimatedspent
+                  issues=issuetime
+                  height="100"
+                }}
+              </ul>
+              <!-- /.users-list -->
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer text-center" style="display: block;">
+              <a href="javascript:void(0)" class="uppercase">{{t "view.app.project.detail.viewallconversations"}}</a>
+            </div>
+            <!-- /.box-footer -->
+          </div>
+        </div>
+        <!-- end of project time estimated vs spent -->
+
+      </div>
 
     </div>
     <!-- /.end col-md -8 -->
 
     <div class="col-md-4">
+
       <div class="box box-warning">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.members"}}</h3>
@@ -125,8 +235,23 @@ Budget?
         </div>
         <!-- /.box-footer -->
       </div>
+
+      <!-- These are the issues of the project distributed w.r.t. to status -->
+      <div class="box box-danger">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{t "view.app.project.detail.issueratio"}}</h3>
+        </div>
+        <div class="box-body no-padding" style="display: block;">
+          <ul class="users-list clearfix">
+              {{chart-issueratio issues=model.issues}}
+          </ul>
+        </div>
+      </div>
+
+
     </div>
-    <!-- /.end col-md -8 -->
+    <!-- /.end col-md -4 -->
+
   </div>
   <!-- /.end row -->
 </div>
