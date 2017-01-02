@@ -266,6 +266,14 @@ export default {
           "viewallconversations" : "View all conversations",
           "latestissues" : "Latest Issues",
           "viewallissues" : "View all issues",
+          "estimatedspent" : "Estimated Time vs Spent Time",
+          "summary" : "Project Summary",
+          "teamsize" : "Team Size",
+          "openissues" : "Open Issues",
+          "closedissues" : "Closed Issues",
+          "estimatedtime" : "Total Estimated Time",
+          "spenttime" : "Total Time Spent",
+          "projectactivities" : "Project Activities",
           "lists" : {
             "status." : "Loading ..",
             "status" : {
@@ -277,6 +285,10 @@ export default {
               "deferred" : "Deferred",
             }
           },
+          "charts" : {
+            "estimatedspent" : "Estimated vs Spent (Time in %)",
+            "efficiency" : "Efficiency"
+          }
         },
       },
 

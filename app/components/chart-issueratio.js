@@ -60,9 +60,15 @@ export default Ember.Component.extend({
     var self = this;
     var issues = this.get('issues');
 
+    var chartel = self.get('issueratio');
+    if (chartel !== undefined) {
+      chartel.destroy();
+    }
+
+
     if (issues !== undefined){
       var issueratio = new Chart(self.get('element'),{
-        type: 'pie',
+        type: 'polarArea',
         data: self.getDatasets(issues),
         options: {
         }
@@ -83,9 +89,7 @@ export default Ember.Component.extend({
         borderWidth: 1
       }]
     };
-    Logger.debug(issues);
-    var statuses = _.sortedUniq(issues.getEach('status'));
-    Logger.debug(statuses);
+    var statuses = _.uniqBy(issues.getEach('status'));
     var count = 0;
     var ch = new ColorHash();
 

@@ -20,7 +20,11 @@ export function getDate(params) {
     format = params[2];
   }
 
-  return moment(data.get(index)).format(format);
+  if (data !== undefined)
+  {
+    return moment(data.get(index)).format(format);
+  }
+  return false;
 }
 
 /**

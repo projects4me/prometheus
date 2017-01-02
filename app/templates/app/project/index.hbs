@@ -3,15 +3,7 @@ Project Card
 ======================
 Current Milestone
 
-
-
 Milestones with progress
-======================
-
-Recent Conversations
-======================
-
-time track report
 ======================
 
 Recent activities
@@ -142,7 +134,7 @@ Budget?
             <!-- /.box-header -->
             <div class="box-body no-padding" style="display: block;">
               <ul class="open-issues show-5 clearfix">
-                {{#each model.issues as |issue|}}
+                {{#each issuetime as |issue|}}
                   <li>
                     <div class="issue-block">
                       <div class="priority">{{priorityIcon issue.priority}}</div>
@@ -175,10 +167,7 @@ Budget?
         <div class="col-md-12">
           <div class="box box-default project-estimated-spent-section">
             <div class="box-header with-border">
-              <h3 class="box-title">{{t "view.app.project.detail.conversations"}}</h3>
-
-              <div class="box-tools pull-right">
-              </div>
+              <h3 class="box-title">{{t "view.app.project.detail.estimatedspent"}}</h3>
 
             </div>
             <!-- /.box-header -->
@@ -202,18 +191,46 @@ Budget?
 
       </div>
 
+
+      <div class="row">
+
+        <!-- This is the project activities section -->
+        <div class="col-md-12">
+          <div class="box box-primary project-activities-section">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "view.app.project.detail.projectactivities"}}</h3>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding" style="display: block;">
+              <div class="project-activities">
+
+                {{time-line activities=activities}}
+
+              </div>
+              <!-- /.users-list -->
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer text-center" style="display: block;">
+              <a href="javascript:void(0)" class="uppercase">{{t "view.app.project.detail.viewallconversations"}}</a>
+            </div>
+            <!-- /.box-footer -->
+          </div>
+        </div>
+        <!-- end of project activities section -->
+
+      </div>
+
+
     </div>
     <!-- /.end col-md -8 -->
 
     <div class="col-md-4">
 
+      <!-- Project Members -->
       <div class="box box-warning">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.members"}}</h3>
-
-          <div class="box-tools pull-right">
-          </div>
-
         </div>
         <!-- /.box-header -->
         <div class="box-body no-padding" style="display: block;">
@@ -225,7 +242,6 @@ Budget?
                 <span class="users-list-date">{{getRole member.id model.roles model.memberships}}</span>
               </li>
             {{/each}}
-
           </ul>
           <!-- /.users-list -->
         </div>
@@ -235,6 +251,7 @@ Budget?
         </div>
         <!-- /.box-footer -->
       </div>
+      <!-- /. Project Members -->
 
       <!-- These are the issues of the project distributed w.r.t. to status -->
       <div class="box box-danger">
@@ -243,11 +260,61 @@ Budget?
         </div>
         <div class="box-body no-padding" style="display: block;">
           <ul class="users-list clearfix">
-              {{chart-issueratio issues=model.issues}}
+              {{chart-issueratio issues=issuetime}}
           </ul>
         </div>
       </div>
 
+      <!-- These are the issues of the project distributed w.r.t. to status -->
+      <div class="box box-info">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{t "view.app.project.detail.summary"}}</h3>
+        </div>
+        <div class="box-body no-padding" style="display: block;">
+
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-users"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">{{t "view.app.project.detail.teamsize"}}</span>
+              <span class="info-box-number">{{model.members.length}}</span>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">{{t "view.app.project.detail.openissues"}}</span>
+              <span class="info-box-number">{{getIssuecount issuetime "open"}}</span>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">{{t "view.app.project.detail.closedissues"}}</span>
+              <span class="info-box-number">{{getIssuecount issuetime "closed"}}</span>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer-outline"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">{{t "view.app.project.detail.estimatedtime"}}</span>
+              <span class="info-box-number">{{getTimelog issuetime "estimated"}}</span>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer"></i></span>
+            <div class="info-box-content">
+              <span class="info-box-text">{{t "view.app.project.detail.spenttime"}}</span>
+              <span class="info-box-number">{{getTimelog issuetime "spent"}}</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- Project Summary -->
 
     </div>
     <!-- /.end col-md -4 -->

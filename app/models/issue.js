@@ -198,5 +198,26 @@ export default DS.Model.extend({
    @for IssueModel
    @private
   */
-  typeId: DS.attr('string')
+  typeId: DS.attr('string'),
+
+  /**
+   The estimated time on the issue
+
+   @property estimated
+   @type Relationship
+   @for IssueModel
+   @private
+  */
+  estimated: DS.hasMany('timelog'),
+
+  /**
+   The spent time on the issue
+
+   @property spent
+   @type Relationship
+   @for IssueModel
+   @private
+  */
+  spent: DS.hasMany('timelog')
+
 });

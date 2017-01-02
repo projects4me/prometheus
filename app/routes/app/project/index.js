@@ -39,12 +39,13 @@ export default App.extend({
     Logger.debug(projectName);
 
     this.loadIssuesTime(projectId);
+    this.loadActivities(projectId);
 
     var options = {
 //      fields: "Project.id,Project.name",
       query: "(Project.id : "+projectId+")",
-//      rels : 'none',
-      sort: "conversations.dateModified, issues.dateCreated",
+      rels : 'members,conversations,createdBy,owner,memberships,roles',
+      sort: "conversations.dateModified",
       order: 'ASC',
       limit: -1
     };
@@ -66,11 +67,10 @@ export default App.extend({
   loadIssuesTime:function(projectId){
 
     var self = this;
-
     var options = {
       query: "(Issue.projectId : "+projectId+")",
-//      sort: "Issues.dateModified, issues.dateCreated",
-//      order: 'ASC',
+      sort: "Issue.dateModified",
+      order: 'DESC',
       rels:'estimated,spent',
       limit: -1
     };
@@ -78,6 +78,22 @@ export default App.extend({
     this.store.query('issue',options).then(function(data){
       self.get('controller').set('issuetime',data);
     });
+  },
 
-  }
+  loadActivities:function(projectId){
+    var self = this;
+    var options = {
+      query: "((Activity.relatedId : "+projectId+") AND (Activity.relatedTo : project))",
+      sort: "Activity.dateCreated",
+      order: 'DESC',
+//      rels:'estimated,spent',
+      limit: -1
+    };
+
+    this.store.query('activity',options).then(function(data){
+      self.get('controller').set('activities',data);
+    });
+  },
+
+
 });

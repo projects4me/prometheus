@@ -69,67 +69,97 @@ export default Ember.Component.extend({
   didRender:function(){
     var self = this;
     var issues = this.get('issues');
+    var chartel = self.get('estimatedspent');
+    if (chartel !== undefined) {
+      chartel.destroy();
+    }
 
     if (issues !== undefined){
-      Logger.debug('Lets get some lines');
       var estimatedspent = new Chart(self.get('element'),{
-        type: 'line',
+        type:"bar",
         data: self.getDatasets(issues),
-        options: {
-            scales: {
-                xAxes: [{
-                    type: 'linear',
-                    position: 'bottom'
-                }]
-            }
-        }
+        options: {}
       });
-
       self.set('estimatedspent',estimatedspent);
     }
   },
 
   getDatasets:function(issues){
-    var self = this;
+    //var self = this;
     var data = {
       labels:[],
       datasets:[{
+        label: this.get('i18n').t("view.app.project.detail.charts.estimatedspent"),
         data:[],
         backgroundColor: [],
-        borderColor: [],
-        borderWidth: 1
-      }]
-    };
-    /*
-    var statuses = issues.getEach('status');
-    var count = 0;
-    var ch = new ColorHash();
+        type: 'bar',
+        borderWidth: 0
+      },
+      {
+        label: this.get('i18n').t("view.app.project.detail.charts.efficiency"),
+        type: "line",
+        data:[],
+        backgroundColor: "rgba(220,220,220,0)",
+        borderColor: "rgba(220,20,20,0.8)",
+      }
+    ]};
 
-    _.forEach(statuses,function(status){
-      data.labels[count] = self.get('i18n').t("view.app.issue.lists.status."+status).string;
-      data.datasets[0].data[count] = issues.filterBy('status',status).length;
+    var issuesCount = issues.get('length');
+    var estimated = null;
+    var spent = null;
+    var estimatedHours = 0;
+    var spentHours = 0;
+    var issue = null;
 
-      var color = ch.rgb(data.labels[count]);
-      data.datasets[0].backgroundColor[count] = 'rgba('+color[0]+', '+color[1]+', '+color[2]+', 0.8)';
-      data.datasets[0].borderColor[count] = 'rgba('+color[0]+', '+color[1]+', '+color[2]+', 0.8)';
-      count++;
-    });*/
-    data['datasets'][0].data = [{
-        x: -10,
-        y: 0
-    }, {
-        x: 0,
-        y: 10
-    }, {
-        x: 10,
-        y: 5
-    }];
+    for (var i=0; i<issuesCount;i++)
+    {
+      issue = issues.nextObject(i);
+      estimated = issue.get('estimated');
+      spent = issue.get('spent');
+      estimatedHours = 0;
+      if (estimated !== undefined)
+      {
+        estimatedHours = _.sum(estimated.getEach('days').map(Number)) * 24;
+        estimatedHours += _.sum(estimated.getEach('hours').map(Number));
+        estimatedHours += _.sum(estimated.getEach('minutes').map(Number)) / 60;
+      }
+
+      spentHours = 0;
+      if(spent !== undefined)
+      {
+        spentHours = _.sum(spent.getEach('days').map(Number)) * 24;
+        spentHours += _.sum(spent.getEach('hours').map(Number));
+        spentHours += _.sum(spent.getEach('minutes').map(Number)) / 60;
+      }
+
+      data.labels[i] = "#"+issue.get('issueNumber');
+
+      data.datasets[0]['data'][i] = _.round((spentHours/estimatedHours) * 100);
+
+      data.datasets[1]['data'][i] = (100 - data.datasets[0]['data'][i]);
+      if (data.datasets[0]['data'][i] === undefined || data.datasets[0]['data'][i] === 0)
+      {
+        data.datasets[1]['data'][i] = 0;
+      }
+
+      data.datasets[0]['backgroundColor'][i] = '#dd4b39';
+      if (estimatedHours > spentHours) {
+        data.datasets[0]['backgroundColor'][i] = '#00a65a';
+      }
+
+    }
 
     return data;
   },
 
   willDestroyElement:function(){
+    Logger.debug('ChartEstimatedspentComponent::willDestroyElement()');
     this.get('estimatedspent').destroy();
-  }
+  },
+
+  willClearRender:function(){
+    Logger.debug('ChartEstimatedspentComponent::willDestroyElement()');
+    this.get('estimatedspent').destroy();
+  },
 
 });
