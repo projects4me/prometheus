@@ -27,7 +27,9 @@ Budget?
           <h2 class="box-title">{{model.name}} - ({{model.shortCode}})</h2>
 
           <div class="box-tools pull-right">
-            <span class="info-box-text"><span class="badge {{model.status}}">{{t (concat "view.app.project.detail.lists.status." model.status)}}</span></span>
+            <span class="project-status"><span class="badge {{model.status}}">{{t (concat "view.app.project.detail.lists.status." model.status)}}</span></span>
+            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-pencil"></i></button>
+            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
           </div>
           <!-- /.box-tools -->
         </div>
@@ -114,7 +116,7 @@ Budget?
             </div>
             <!-- /.box-body -->
             <div class="box-footer text-center" style="display: block;">
-              <a href="javascript:void(0)" class="uppercase">{{t "view.app.project.detail.viewallconversations"}}</a>
+              <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "conversation"}}>{{t "view.app.project.detail.viewallconversations"}}</a>
             </div>
             <!-- /.box-footer -->
           </div>
@@ -128,6 +130,7 @@ Budget?
               <h3 class="box-title">{{t "view.app.project.detail.latestissues"}}</h3>
 
               <div class="box-tools pull-right">
+
               </div>
 
             </div>
@@ -231,6 +234,9 @@ Budget?
       <div class="box box-warning">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.members"}}</h3>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
+          </div>
         </div>
         <!-- /.box-header -->
         <div class="box-body no-padding" style="display: block;">

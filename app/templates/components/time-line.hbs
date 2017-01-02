@@ -1,25 +1,30 @@
 <ul class="timeline">
+<!--
 
+  The timeline supports the following use cases
+
+  01. Project created
+  02. Project updated
+  03. Project closed
+  04. Project completed
+  05. Related created
+  06. Related updated
+  07. Related overdue
+  08. Related attached
+  09. Related completed
+  // Others to be added here
+-->
   {{#each activities as |activity|}}
+
+  <!-- Group the time label -->
     <li class="time-label">
       <span class="bg-red">
         {{getDate activity "dateCreated" "do MMM. YYYY"}}
       </span>
     </li>
 
-    {{#if (ifMatch activity.type "created")}}
-    <li>
-      <i class="fa fa-briefcase bg-green"></i>
+    {{activity-block activity=activity}}
 
-      <div class="timeline-item">
-        <span class="time"><i class="fa fa-clock-o"></i> {{getDate activity "dateCreated" "hh:mm"}}</span>
-        <h3 class="timeline-header"><a href="#">{{activity.createdBy.name}}</a> created the project</h3>
-        <div class="timeline-body">
-          {{activity.description}}
-        </div>
-      </div>
-    </li>
-    {{/if}}
 
 
   {{/each}}
