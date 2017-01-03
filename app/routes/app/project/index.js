@@ -1,6 +1,7 @@
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 import App from "../../app";
-
+import _ from "lodash";
+import moment from "moment";
 /**
   The wiki route
 
@@ -91,7 +92,22 @@ export default App.extend({
     };
 
     this.store.query('activity',options).then(function(data){
-      self.get('controller').set('activities',data);
+      var activities = {};
+      var dates = data.getEach('dateCreated');
+      dates = _.uniqBy(_.map(dates,function(val){return val.substring(0,10);}));
+
+      data.forEach(function(activity){
+        var dateCreated = activity.get('dateCreated').substring(0,10);
+        if (activities[dateCreated] !== undefined)
+        {
+          activities[dateCreated]['data'].push(activity);
+        }
+        else {
+          activities[dateCreated] = {dateCreated:dateCreated,data:[activity]};
+        }
+      });
+
+      self.get('controller').set('activities',activities);
     });
   },
 

@@ -41,16 +41,18 @@ export default Ember.Component.extend({
     var createdSince = moment.duration(moment(new Date()).diff(moment(activity.get('dateCreated')))).humanize();
     Ember.set(activity,"createdSince",createdSince);
 
-    if (activity.get('type') !== 'related'){
-      template = 'components/activity-blocks/'+activity.get('type');
+
+    if (activity.get('type') === 'related'){
+      template = 'components/activity-blocks/related-'+activity.get('relatedActivity');
     }
     else {
-      template = 'components/activity-blocks/related-'+activity.get('relatedActivity');
+      template = 'components/activity-blocks/'+activity.get('type');
     }
 
     if (Prometheus.__container__.lookup('template:'+template) === undefined) {
       template = 'components/activity-blocks/index';
     }
+
     return template;
   }.property('activity','model').volatile(),
 

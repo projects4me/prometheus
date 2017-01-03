@@ -147,3 +147,9 @@
   }
 
 }
+
+@media print{
+  .wiki-list-wrapper{
+    display: none;
+  }
+}

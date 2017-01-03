@@ -90,6 +90,25 @@ export default {
     "noentry": "No entry found..",
     "blank": "<span class='disabled-text'>-- blank --</em>",
     "ago" : "ago",
+    "module" : {
+      "singular" : {
+        "project" : "Project",
+        "issue" : "Issue",
+        "wiki" : "Wiki",
+        "conversation" : "Conversation",
+        "report" : "Report",
+        "timelog" : "Time Log",
+        "activity" : "Activity",
+        "tag" : "Tag",
+        "user" : "User",
+        "member" : "Member",
+        "vote" : "Vote",
+        "comment" : "Comment",
+        "role" : "Role",
+        "milestone" : "Milestone",
+        "file" : "File",
+      }
+    }
   },
 
   /**
@@ -232,7 +251,7 @@ export default {
       "offline": "Offline",
       "away": "away",
       "busy": "busy",
-      "activity": "Activity",
+      //"activity": "Activity",
       "today": "Today",
       "history": "History",
       "tasks": "You have {{count}} tasks",
@@ -389,6 +408,20 @@ export default {
       "chat" : {
         "messagebox" : "Type a message ..",
         "send" : "Send",
+      },
+
+      "activity" : {
+        "created" : "created the",
+        "closed" : "closed the",
+        "updated" : "updated the",
+        "related" : {
+          "created" : "created a",
+          "updated" : "updated a",
+          "completed" : "marked completed a",
+          "attached" : "added a",
+          "overdue" : "is overdue",
+        }
+
       },
 
     },

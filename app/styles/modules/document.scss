@@ -9,6 +9,10 @@
   border-top-color: $primaryColor !important;
 }
 
+.bg-primary{
+  background-color: $primaryColor !important;
+}
+
 //colors
 $color_maroon_flush_approx: #b3244f;
 $color_pompadour_approx: rgba(100,12,68,1);
@@ -245,4 +249,11 @@ span[data-atwho-at-query*="#"]{
   overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
+}
+
+@media print{
+  .chat-boxes,
+  .chat-box{
+    display: none;
+  }
 }

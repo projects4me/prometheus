@@ -82,6 +82,38 @@ export default DS.Model.extend({
   createdUserName: DS.attr('string'),
 
   /**
+    If the type of activity is related when this field tells us the type of
+    acitivity that was perfomed for the related item
+
+    @property relatedActivity
+    @type String
+    @for ActivtyModel
+    @private
+  */
+  relatedActivity: DS.attr('string'),
+
+  /**
+    The identifier of related entity that created the activity
+
+    @property relatedActivityId
+    @type String
+    @for ActivtyModel
+    @private
+  */
+  relatedActivityId: DS.attr('string'),
+
+  /**
+    If the type of activity is related when this field tells us the type of
+    acitivity that was perfomed for the related item
+
+    @property relatedActivityModule
+    @type String
+    @for ActivtyModel
+    @private
+  */
+  relatedActivityModule: DS.attr('string'),
+
+  /**
     The object of the user who created te activty
 
     @property createdBy
