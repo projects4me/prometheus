@@ -65,6 +65,27 @@ export default App.extend({
     });
   },
 
+
+  /**
+    This function is used to retrieve and process the issues related to a project
+    There are two reasons that the issues are being loaded separately and not
+    part of the orginal call sent to retrive the project information. The first
+    reason is performance, the numbder of issues on a large project can easily
+    exceed 1000 issues and if we retireve the information along with project
+    information due to the obviously complex nature of many relationships between
+    a project and other entities the retrieval cost for even a single project
+    would be in hundread of thousand of rows examined. So we only bring in the
+    information that for there are going to be one a few decade rows in total
+    with the original project retrieval call.
+    The second reason is to retrive the related information. The API automatically`
+    retireves the related data but is restricted to first degree relationships.
+    Second degree and above relationships are not retrieved via the default call
+    due to obvious performance and complexity constraints.
+
+    @method loadIssuesTime
+    @param projectId {String} The identifier of the project being viewed
+    @todo Explore the possibility of using the url project/:id/:relation as it is supported by the API
+  */
   loadIssuesTime:function(projectId){
 
     var self = this;
@@ -81,21 +102,29 @@ export default App.extend({
     });
   },
 
+  /**
+    This function is used to retrive the activities related to a project. Just
+    like the loadIssuesTime function the activities are loaded seperately to
+    avoid performance and complexity issues.
+
+    @method loadActivities
+    @param projectId {String} The identifier of the project which is being viewed
+    @todo test performance and load in chunks if required.
+  */
   loadActivities:function(projectId){
     var self = this;
     var options = {
+      // Retreiving the activities related to a project
       query: "((Activity.relatedId : "+projectId+") AND (Activity.relatedTo : project))",
       sort: "Activity.dateCreated",
       order: 'DESC',
-//      rels:'estimated,spent',
+      // Get all the activities
       limit: -1
     };
 
     this.store.query('activity',options).then(function(data){
       var activities = {};
-      var dates = data.getEach('dateCreated');
-      dates = _.uniqBy(_.map(dates,function(val){return val.substring(0,10);}));
-
+      // Group the activities with respect to the dateCreated
       data.forEach(function(activity){
         var dateCreated = activity.get('dateCreated').substring(0,10);
         if (activities[dateCreated] !== undefined)

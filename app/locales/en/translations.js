@@ -294,6 +294,8 @@ export default {
           "estimatedtime" : "Total Estimated Time",
           "spenttime" : "Total Time Spent",
           "projectactivities" : "Project Activities",
+          "milestones" : "Project Milestones",
+          "managemilestones" : "Manage Milestones",
           "lists" : {
             "status." : "Loading ..",
             "status" : {

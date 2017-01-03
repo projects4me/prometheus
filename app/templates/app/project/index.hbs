@@ -249,6 +249,71 @@ Budget?
       </div>
       <!-- /. Project Members -->
 
+
+      <!-- Project Milestones -->
+      <div class="box box-success">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{t "view.app.project.detail.milestones"}}</h3>
+        </div>
+        <div class="box-body no-padding" style="display: block;">
+
+          <div class="info-box bg-green">
+            <span class="info-box-icon"><i class="fa fa-check"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Complete</span>
+              <span class="info-box-number">v1.0 - 4 issues</span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 100%" data-toggle='tooltip' title='4 out of 4 issues complete'></div>
+              </div>
+                  <span class="progress-description">
+                    1st Jan. 2016 - 31st Dec. 2016
+                  </span>
+            </div>
+          </div>
+
+
+          <div class="info-box bg-yellow">
+            <span class="info-box-icon"><i class="fa fa-bullseye"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">In Progress</span>
+              <span class="info-box-number">v1.1 - 4 issues</span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 75%" data-toggle='tooltip' title='3 out of 4 issues complete'></div>
+              </div>
+                  <span class="progress-description">
+                    31st Jul. 2016 - 1st Feb. 2017
+                  </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+
+
+          <div class="info-box bg-red">
+            <span class="info-box-icon"><i class="fa fa-exclamation-triangle"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Overdue</span>
+              <span class="info-box-number">v1.2 - 4 issues</span>
+
+              <div class="progress">
+                <div class="progress-bar" style="width: 75%" data-toggle='tooltip' title='3 out of 4 issues complete'></div>
+              </div>
+                  <span class="progress-description">
+                    1st Jan. 2016 - 31st Dec. 2016, overdue by 4 days
+                  </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+
+        </div>
+      </div>
+      <!-- Project Milestones -->
+
+
       <!-- These are the issues of the project distributed w.r.t. to status -->
       <div class="box box-danger">
         <div class="box-header with-border">
@@ -261,7 +326,7 @@ Budget?
         </div>
       </div>
 
-      <!-- These are the issues of the project distributed w.r.t. to status -->
+      <!-- This is the project summary -->
       <div class="box box-info">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.summary"}}</h3>
