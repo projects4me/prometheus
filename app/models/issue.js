@@ -200,6 +200,29 @@ export default DS.Model.extend({
   */
   typeId: DS.attr('string'),
 
+
+  /**
+   The project which this issues belongs to
+
+   @property project
+   @type ProjectModel
+   @for IssueModel
+   @private
+  */
+  project: DS.belongsTo('project'),
+
+
+  /**
+   The milestone which this issue belongs to
+
+   @property milestone
+   @type MilestoneModel
+   @for IssueModel
+   @private
+  */
+  milestone: DS.belongsTo('milestone'),
+
+
   /**
    The estimated time on the issue
 

@@ -93,12 +93,32 @@ export default App.extend({
       query: "(Issue.projectId : "+projectId+")",
       sort: "Issue.dateModified",
       order: 'DESC',
-      rels:'estimated,spent',
+      rels:'estimated,spent,project',
       limit: -1
     };
 
-    this.store.query('issue',options).then(function(data){
-      self.get('controller').set('issuetime',data);
+    this.store.query('issue',options).then(function(issues){
+      self.get('controller').set('issuetime',issues);
+
+      // We have to fetch the milestone list seperately as there might be a
+      // project milestone with no issue associated with it
+      var options = {
+        query: "(Milestone.projectId : "+projectId+")",
+        sort: "Milestone.startDate",
+        order: 'DESC',
+        rels:'none',
+        limit: -1
+      };
+      self.store.query('milestone',options).then(function(milestones){
+        milestones.forEach(function(milestone){
+          var milestoneIssues = issues.filterBy('milestoneId',milestone.get('id'));
+          if (milestoneIssues !== undefined)
+          {
+            milestone.get('issues').pushObjects(milestoneIssues);
+          }
+        });
+        self.get('controller').set('milestones',milestones);
+      });
     });
   },
 

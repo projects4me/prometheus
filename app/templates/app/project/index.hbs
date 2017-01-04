@@ -1,13 +1,6 @@
 <!--
 Project Card
 ======================
-Current Milestone
-
-Milestones with progress
-======================
-
-Recent activities
-======================
 
 Budget?
 ======================
@@ -66,7 +59,7 @@ Budget?
             <div class="col-xs-6 col-md-4">
               <h4>{{t "view.app.project.detail.type"}}</h4>
               <p>
-                {{model.type}}
+                {{t (concat "view.app.project.detail.lists.type." model.type)}}
               </p>
             </div>
 
@@ -76,6 +69,21 @@ Budget?
                 {{model.vision}}
               </p>
             </div>
+
+            <div class="col-xs-6 col-md-4">
+              <h4>{{t "view.app.project.detail.estimatedBudget"}}</h4>
+              <p>
+                {{format-money model.estimatedBudget symbol='$' format="%s%v"}}
+              </p>
+            </div>
+
+            <div class="col-xs-6 col-md-4">
+              <h4>{{t "view.app.project.detail.spentBudget"}}</h4>
+              <p>
+                {{format-money model.spentBudget symbol='$' format="%s%v"}}
+              </p>
+            </div>
+
           </div>
 
         </div>
@@ -225,7 +233,7 @@ Budget?
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.members"}}</h3>
           <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
+            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "view.app.project.detail.managemembers"}}"><i class="fa fa-gear"></i></button>
           </div>
         </div>
         <!-- /.box-header -->
@@ -251,64 +259,30 @@ Budget?
 
 
       <!-- Project Milestones -->
-      <div class="box box-success">
+      <div class="box box-success project-milestones-section">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.milestones"}}</h3>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "view.app.project.detail.managemilestones"}}"><i class="fa fa-gear"></i></button>
+          </div>
         </div>
         <div class="box-body no-padding" style="display: block;">
-
-          <div class="info-box bg-green">
-            <span class="info-box-icon"><i class="fa fa-check"></i></span>
-
-            <div class="info-box-content">
-              <span class="info-box-text">Complete</span>
-              <span class="info-box-number">v1.0 - 4 issues</span>
-
-              <div class="progress">
-                <div class="progress-bar" style="width: 100%" data-toggle='tooltip' title='4 out of 4 issues complete'></div>
-              </div>
-                  <span class="progress-description">
-                    1st Jan. 2016 - 31st Dec. 2016
-                  </span>
-            </div>
-          </div>
-
-
-          <div class="info-box bg-yellow">
-            <span class="info-box-icon"><i class="fa fa-bullseye"></i></span>
-
-            <div class="info-box-content">
-              <span class="info-box-text">In Progress</span>
-              <span class="info-box-number">v1.1 - 4 issues</span>
+          {{#each milestones as |milestone|}}
+            {{#milestone-block milestone=milestone}}
+              <span class="pull-right">
+                {{milestone.progress}}%
+              </span>
+              <span class="info-box-number">{{milestone.name}} - {{milestone.issues.length}} {{t "global.module.plural.issue"}}</span>
 
               <div class="progress">
-                <div class="progress-bar" style="width: 75%" data-toggle='tooltip' title='3 out of 4 issues complete'></div>
+                <div class="progress-bar" style="width:{{milestone.progress}}%" data-toggle='tooltip' title='{{t "view.app.project.detail.milestone.progress" closed=(getIssuecount milestone.issues 'closed') total=milestone.issues.length}}'></div>
               </div>
-                  <span class="progress-description">
-                    31st Jul. 2016 - 1st Feb. 2017
-                  </span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-
-
-          <div class="info-box bg-red">
-            <span class="info-box-icon"><i class="fa fa-exclamation-triangle"></i></span>
-
-            <div class="info-box-content">
-              <span class="info-box-text">Overdue</span>
-              <span class="info-box-number">v1.2 - 4 issues</span>
-
-              <div class="progress">
-                <div class="progress-bar" style="width: 75%" data-toggle='tooltip' title='3 out of 4 issues complete'></div>
-              </div>
-                  <span class="progress-description">
-                    1st Jan. 2016 - 31st Dec. 2016, overdue by 4 days
-                  </span>
-            </div>
-            <!-- /.info-box-content -->
-          </div>
-
+              <span class="progress-description">
+                {{moment-format milestone.startDate 'Do MMM. YYYY'}} - {{moment-format milestone.endDate 'Do MMM. YYYY'}}
+                <span class="pull-right">({{getIssuecount milestone.issues 'closed'}}/{{milestone.issues.length}} {{t "global.module.plural.issue"}})</span>
+              </span>
+            {{/milestone-block}}
+          {{/each}}
         </div>
       </div>
       <!-- Project Milestones -->

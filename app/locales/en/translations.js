@@ -90,6 +90,7 @@ export default {
     "noentry": "No entry found..",
     "blank": "<span class='disabled-text'>-- blank --</em>",
     "ago" : "ago",
+    "outof" : "out of",
     "module" : {
       "singular" : {
         "project" : "Project",
@@ -107,6 +108,23 @@ export default {
         "role" : "Role",
         "milestone" : "Milestone",
         "file" : "File",
+      },
+      "plural" : {
+        "project" : "Projects",
+        "issue" : "Issues",
+        "wiki" : "Wiki",
+        "conversation" : "Conversations",
+        "report" : "Reports",
+        "timelog" : "Time Logs",
+        "activity" : "Activities",
+        "tag" : "Tags",
+        "user" : "Users",
+        "member" : "Members",
+        "vote" : "Votes",
+        "comment" : "Comments",
+        "role" : "Roles",
+        "milestone" : "Milestones",
+        "file" : "Files",
       }
     }
   },
@@ -281,6 +299,8 @@ export default {
           "duration" : "Duration",
           "owner" : "Project Owner",
           "vision" : "Project Vision",
+          "estimatedBudget" : "Budget Estimated",
+          "spentBudget" : "Budget Spent",
           "issueratio" : "Issue Distribution Ratio",
           "conversations" : "Conversations",
           "viewallconversations" : "View all conversations",
@@ -296,6 +316,7 @@ export default {
           "projectactivities" : "Project Activities",
           "milestones" : "Project Milestones",
           "managemilestones" : "Manage Milestones",
+          "managemembers" : "Manage Members",
           "lists" : {
             "status." : "Loading ..",
             "status" : {
@@ -305,11 +326,21 @@ export default {
               "completed" : "Complete",
               "pending" : "Pending",
               "deferred" : "Deferred",
-            }
+            },
+            "type." : "Loading ..",
+            "type" : {
+              "civil" : "Civil",
+              "software" : "Software",
+              "other" : "Other",
+            },
           },
           "charts" : {
             "estimatedspent" : "Estimated vs Spent (Time in %)",
             "efficiency" : "Efficiency"
+          },
+          "milestone" : {
+            "overdue" : "overdue",
+            "progress" : "{{closed}} out of {{total}} issues complete",
           }
         },
       },
@@ -423,7 +454,21 @@ export default {
           "attached" : "added a",
           "overdue" : "is overdue",
         }
+      },
 
+      "milestone" : {
+        "lists" : {
+          "status." : "Loading ..",
+          "status" : {
+            "complete" : "Complete",
+            "closed" : "Closed",
+            "in_progress" : "In Progress",
+            "planned" : "Planned",
+            "overdue" : "Overdue",
+            "deferred" : "Deferred",
+            "failed" : "Failed",
+          },
+        },
       },
 
     },

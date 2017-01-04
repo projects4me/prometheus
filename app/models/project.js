@@ -163,7 +163,6 @@ export default DS.Model.extend({
   */
   vision: DS.attr('string'),
 
-
   /**
     User who created the project
 
@@ -174,6 +173,25 @@ export default DS.Model.extend({
   */
   createdUser: DS.attr('string'),
 
+  /**
+    The estimated budget of the project
+
+   @property estimatedBudget
+   @type String
+   @for ProjectModel
+   @private
+  */
+  estimatedBudget: DS.attr('string'),
+
+  /**
+    The amount of budget spent on the project
+
+   @property spentBudget
+   @type String
+   @for ProjectModel
+   @private
+  */
+  spentBudget: DS.attr('string'),
 
   /**
    Project owner
