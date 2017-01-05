@@ -1,0 +1,8 @@
+<!-- List template for text input field-->
+<span>
+  {{#if definition.link}}
+    <a href="javascript:void(0);" {{action navigate}}>{{getProp model field}}</a>
+  {{else}}
+    {{getProp model field}}
+  {{/if}}
+</span>

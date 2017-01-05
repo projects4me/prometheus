@@ -1,0 +1,158 @@
+<section class="content-header">
+  <h1>
+    {{t "global.module.plural.project"}}
+    <small>Everything is awesome</small>
+  </h1>
+
+  {{#bread-crumbs outputStyle="bootstrap" tagName="ol" linkable=true as |component module|}}
+    {{#bread-crumb route=module breadCrumbs=component}}
+        <i class="fa fa-{{navIcon module.title}}"></i>
+        {{#if module.record}}
+          {{module.title}}
+        {{else}}
+          {{t (concat "view.nav.menu." (camelize module.title) ".label")}}
+        {{/if}}
+    {{/bread-crumb}}
+  {{/bread-crumbs}}
+
+</section>
+
+
+<section class="content">
+  <div class="row module">
+    <div class="col-md-2">
+      <a href="compose.html" class="btn btn-primary btn-block margin-bottom"><i class="fa fa-plus"></i> {{t "global.form.create"}} {{t "global.module.singular.project"}}</a>
+
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <h3 class="box-title">Saved Searches</h3>
+
+          <div class="box-tools">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="box-body no-padding">
+          <ul class="nav nav-pills nav-stacked">
+            <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox
+              <span class="label label-primary pull-right">12</span></a></li>
+            <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
+            <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
+            <li><a href="#"><i class="fa fa-filter"></i> Junk <span class="label label-warning pull-right">65</span></a>
+            </li>
+            <li><a href="#"><i class="fa fa-trash-o"></i> Trash</a></li>
+          </ul>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /. box -->
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <h3 class="box-title">Tags</h3>
+
+          <div class="box-tools">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+          </div>
+        </div>
+        <div class="box-body no-padding">
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="#"><i class="fa fa-circle-o text-red"></i> Important</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Promotions</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Social</a></li>
+          </ul>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-10">
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <div class="search">
+            <div class="has-feedback">
+              <input type="text" class="form-control input-sm" placeholder="{{t "global.form.search"}} {{t "global.module.plural.project"}} ..">
+              <span class="glyphicon glyphicon-search form-control-feedback"></span>
+              <div class="list-view-filters">
+                <div id="builder"></div>
+                <button id="btn-get" type="button" class="btn btn-primary" {{action "searchByRules"}}>{{t "global.form.search"}}</button>
+              </div>
+            </div>
+          </div>
+          <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body no-padding">
+          <div class="mailbox-controls">
+            <!-- Check all button -->
+            <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
+            </button>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
+              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
+              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
+            </div>
+            <!-- /.btn-group -->
+            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
+            <div class="pull-right">
+              1-50/200
+              <div class="btn-group">
+                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
+                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+              </div>
+              <!-- /.btn-group -->
+            </div>
+            <!-- /.pull-right -->
+          </div>
+          <div class="table-responsive mailbox-messages">
+            <table class="table table-hover table-striped">
+              <tbody>
+
+              {{#each model as |project|}}
+                <tr>
+                  <td><input type="checkbox"></td>
+                  <td class="project-name"><a href="#">{{project.name}}</a></td>
+                  <td class="project-created"><a href="read-mail.html">{{project.createdBy.name}}</a></td>
+                  <td class="project-description">{{project.description}}</td>
+                  <td class="project-status">{{project.status}}</td>
+                  <td class="project-date">{{project.dateModified}}</td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+            <!-- /.table -->
+          </div>
+          <!-- /.mail-box-messages -->
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer no-padding">
+          <div class="mailbox-controls">
+            <!-- Check all button -->
+            <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
+            </button>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
+              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
+              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
+            </div>
+            <!-- /.btn-group -->
+            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
+            <div class="pull-right">
+              1-50/200
+              <div class="btn-group">
+                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
+                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+              </div>
+              <!-- /.btn-group -->
+            </div>
+            <!-- /.pull-right -->
+          </div>
+        </div>
+      </div>
+      <!-- /. box -->
+    </div>
+    <!-- /.col -->
+  </div>
+  <!-- /.row -->
+</section>

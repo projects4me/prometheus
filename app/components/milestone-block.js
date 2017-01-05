@@ -72,5 +72,11 @@ export default Ember.Component.extend({
     return template;
   }.property('milestone','model').volatile(),
 
+  didInsertElement:function(){
+    Ember.$('#'+this.elementId+' [data-toggle="popover"]').popover();
+  },
+  willDestroyElement:function(){
+    Ember.$('#'+this.elementId+' [data-toggle="popover"]').popover('destroy');
+  }
 
 });

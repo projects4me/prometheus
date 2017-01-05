@@ -61,6 +61,23 @@ $color_jumbo_approx: rgba(127, 127, 135,1);
 	}
 }
 
+.popover {
+  border-radius: 0.2rem;
+  &.popover:after {
+    @include gradient-border-top($color_maroon_flush_approx,$color_pompadour_approx);
+  }
+  
+  .popover-title{
+    background-color: $backgroundColor;
+    font-weight: 600;
+  }
+
+  .popover-title,.popover-content{
+    color:#444;
+  }
+
+}
+
 .btn-primary, .btn-primary[disabled]{
   background: $primaryColor;
   border-color: $primaryColor;

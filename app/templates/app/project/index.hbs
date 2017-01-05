@@ -1,12 +1,3 @@
-<!--
-Project Card
-======================
-
-Budget?
-======================
-
--->
-
 <div class="project">
 
   <div class="row">
@@ -259,7 +250,7 @@ Budget?
 
 
       <!-- Project Milestones -->
-      <div class="box box-success project-milestones-section">
+      <div class="box box-info project-milestones-section">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.milestones"}}</h3>
           <div class="box-tools pull-right">
@@ -272,7 +263,7 @@ Budget?
               <span class="pull-right">
                 {{milestone.progress}}%
               </span>
-              <span class="info-box-number">{{milestone.name}} - {{milestone.issues.length}} {{t "global.module.plural.issue"}}</span>
+              <span class="info-box-number" data-trigger="hover" data-toggle="popover" title="{{t (concat "view.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}" data-placement="top" data-content="{{milestone.description}}">{{milestone.name}} - {{milestone.issues.length}} {{t "global.module.plural.issue"}}</span>
 
               <div class="progress">
                 <div class="progress-bar" style="width:{{milestone.progress}}%" data-toggle='tooltip' title='{{t "view.app.project.detail.milestone.progress" closed=(getIssuecount milestone.issues 'closed') total=milestone.issues.length}}'></div>

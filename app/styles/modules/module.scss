@@ -1,0 +1,24 @@
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the list views in the application.
+*/
+
+.module{
+
+  .query-builder .rules-group-container{
+    border: 1px solid #d2d6de;
+    background: $backgroundColor;
+    border-radius: 0;
+  }
+
+  .btn-success, .btn-success[disabled]{
+    background: $primaryColor;
+    border-color: $primaryColor;
+  }
+  .btn-success:hover,.btn-success:active,.btn-success:visited,.btn-success:focus,.btn-success[disabled]:hover,.btn-success[disabled]:active,.btn-success[disabled]:visited,.btn-success[disabled]:focus{
+    background: $highlightColor;
+    border-color: $highlightColor;
+  }
+
+}

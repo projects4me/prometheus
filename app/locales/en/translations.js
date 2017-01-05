@@ -65,6 +65,7 @@ export default {
   "global" : {
     "form" : {
       "save" : "Save",
+      "create" : "Create",      
       "cancel" : "Cancel",
       "delete" : "Delete",
       "search" : "Search",
@@ -467,6 +468,14 @@ export default {
             "overdue" : "Overdue",
             "deferred" : "Deferred",
             "failed" : "Failed",
+          },
+          "type." : "Loading ..",
+          "type" : {
+            "version" : "Version",
+            "sprint" : "Sprint",
+            "patch" : "Patch",
+            "release" : "Release",
+            "milestone" : "Milestone",
           },
         },
       },

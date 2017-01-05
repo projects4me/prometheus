@@ -11,7 +11,9 @@ Router.map(function() {
   this.route('index', { path: '/' });
   this.route(config.api.prefix,function() {
     this.route('index',{path:'/'});
-    this.route('project',{ path: "/:projectId" },function(){
+    this.route('module',{path:':module'});
+    this.route('projectlist',{path:'project'});
+    this.route('project',{ path: "project/:projectId" },function(){
       this.route('wiki',function(){
         this.route('index',{path:'/'});
         this.route('create',{path:'/create'});
