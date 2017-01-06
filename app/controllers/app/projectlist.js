@@ -48,7 +48,7 @@ export default Ember.Controller.extend({
     @type Integer
     @public
   */
-  page:0,
+  page:1,
 
   /**
     The current query
@@ -175,8 +175,8 @@ export default Ember.Controller.extend({
      @public
      */
     detail:function(id){
-      var URIData = navi.buildURL(Ember.String.camelize(this.module),'detail',{id:id});
-      this.transitionToRoute(URIData.route,URIData.options);
+      //var URIData = navi.buildURL(Ember.String.camelize(this.module),'detail',{id:id});
+      this.transitionToRoute("app.project.index",{projectId:id});
     },
 
     /**
@@ -270,7 +270,7 @@ export default Ember.Controller.extend({
       @private
     */
     sortData:function(field){
-      field = this.module+'.'+field;
+      //field = this.module+'.'+field;
       // If the field is already being sorted on then just toggle it
       if (field === this.sort) {
         if (this.sortOrder === 'desc') {
@@ -307,8 +307,11 @@ export default Ember.Controller.extend({
       if (this.page === undefined || this.page === '' || this.page === null){
         this.set('page',0);
       }
-      var URIData = navi.buildURL(Ember.String.camelize(this.module),'module');
-      this.transitionToRoute(URIData.route,URIData.options,{ queryParams: { page: this.page, query:this.queryString, sort:this.sort, order:this.sortOrder }});
+      //var URIData = navi.buildURL(Ember.String.camelize(this.module),'projectlist');
+      //this.send('navigateRoute',URIData.route,{ queryParams: { page: this.page, query:this.queryString, sort:this.sort, order:this.sortOrder }});
+      //this.transitionToRoute(URIData.route,{ queryParams: { page: this.page, query:this.queryString, sort:this.sort, order:this.sortOrder }});
+      Logger.debug("Trying to navigate .... ");
+      this.send('refreshRoute',{ queryParams: { page: this.page, query:this.queryString, sort:this.sort, order:this.sortOrder }});
     },
 
     /**
@@ -318,7 +321,7 @@ export default Ember.Controller.extend({
     */
     openFilters:function(){
       if (Ember.$('.list-view-filters').css('display') === 'none'){
-        Ember.$('.list-view-actions [data-toggle=collapse]').click();
+        Ember.$('.search [data-toggle=collapse]').click();
       }
     },
 

@@ -65,7 +65,7 @@ export default {
   "global" : {
     "form" : {
       "save" : "Save",
-      "create" : "Create",      
+      "create" : "Create",
       "cancel" : "Cancel",
       "delete" : "Delete",
       "search" : "Search",
@@ -332,6 +332,9 @@ export default {
             "type" : {
               "civil" : "Civil",
               "software" : "Software",
+              "business" : "Business",
+              "architecture" : "Architecture",
+              "government" : "Government",
               "other" : "Other",
             },
           },
@@ -343,6 +346,12 @@ export default {
             "overdue" : "overdue",
             "progress" : "{{closed}} out of {{total}} issues complete",
           }
+        },
+        "filter":{
+          "name" : "Name",
+          "type" : "Type",
+          "status" : "Status",
+          "shortCode" : "Short Code",
         },
       },
 

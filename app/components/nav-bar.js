@@ -40,7 +40,10 @@ export default Ember.Component.extend({
       {
         routeParams = {};
       }
-      routeParams['projectId'] = projectId;
+      if (projectId !== undefined)
+      {
+        routeParams['projectId'] = projectId;
+      }
       Ember.set(this,'pathname','/'+this.appPrefix+'/'+anchorRoute);
       if (routeParams !== undefined && routeParams !== null && routeParams !== ''){
         this.get('router').transitionTo(route,routeParams);

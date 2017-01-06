@@ -71,9 +71,12 @@ export default App.extend({
     @param controller {Object} the controller object for this route
     @private
   */
-  setupController:function(controller){
+  setupController:function(controller,model){
+    Logger.debug("AppProjectListRoute");
     // Get the parameters for the current route every time as they might change from one record to another
-    var params = this.paramsFor('app.module');
+    var params = this.paramsFor('app.projectlist');
+    Logger.debug("Params are");
+    Logger.debug(params);
 
     params['module'] = 'project';
     // Set the data in the current instance of the object, this is required. Unless this is done the route will display the same data every time
@@ -82,6 +85,33 @@ export default App.extend({
     var i18n = this.get('i18n');
     controller.set('i18n',i18n);
     this.metaData = MD.create().getViewMeta(this.module,'list',i18n);
+    model = this.loadData();
+
+    // Set the data in the controller so that any data bound in the view can get re-rendered
+    controller.set('model',model);
+    controller.set('module',this.module);
+    controller.set('metaData',this.metaData);
+    controller.setupController();
+  },
+
+  loadData:function(){
+    var params = this.paramsFor('app.projectlist');
+    Logger.debug(params);
+    params['module'] = 'project';
+    var controller = this.get('controller');
+
+    // is the controller has already been setup then use the params from there.
+    if (controller !== undefined)
+    {
+      params.page = controller.get('page');
+      params.query = controller.get('query');
+      params.sort = controller.get('sort');
+      params.order = controller.get('order');
+    }
+
+    // Set the data in the current instance of the object, this is required. Unless this is done the route will display the same data every time
+    this.module = Ember.String.capitalize(params.module);
+    //var metaData = MD.create();
     var options = {
       limit: ENV.app.list.pagelimit,
       rels : 'createdBy,modifiedBy,owner'
@@ -104,14 +134,28 @@ export default App.extend({
     if (params.order !== undefined && params.order !== '' &&  params.order !== null) {
       options.order = params.order;
     }
-
     this.data = this.store.query(this.module,options);
-    //console.log(this);
 
-    // Set the data in the controller so that any data bound in the view can get re-rendered
-    controller.set('model',this.data);
-    controller.set('module',this.module);
-    controller.set('metaData',this.metaData);
-    controller.setupController();
+    if (controller !== undefined)
+    {
+      controller.set('model',this.data);
+    }
+    this.set('model',this.data);
+    return this.data;
+  },
+
+  // afterModel:function(){
+  //   this._super(...arguments);
+  // },
+
+  /**
+    These are the actions handled by this route
+  */
+  actions: {
+    refreshRoute:function(params){
+      Logger.debug('Trying to so what you wanted, hope you know what you are doing !!!');
+      this.transitionTo(params);
+      this.loadData();
+    }
   }
 });

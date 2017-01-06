@@ -21,4 +21,16 @@
     border-color: $highlightColor;
   }
 
+  .query-builder .rules-list > ::before, .query-builder .rules-list > ::after {
+    border-color: #ddd !important;
+  }
+
+  .query-builder .rules-list > ::before, .query-builder .rules-list > ::after {
+    border-width: 0 0 0.4rem 0.4rem;
+  }
+
+  .query-builder .rules-group-container, .query-builder .rule-container, .query-builder .rule-placeholder{
+    border-radius: 0.2rem;
+  }
+
 }

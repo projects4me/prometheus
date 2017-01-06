@@ -19,7 +19,7 @@
 
 
 <section class="content">
-  <div class="row module">
+  <div class="row module project">
     <div class="col-md-2">
       <a href="compose.html" class="btn btn-primary btn-block margin-bottom"><i class="fa fa-plus"></i> {{t "global.form.create"}} {{t "global.module.singular.project"}}</a>
 
@@ -71,14 +71,18 @@
       <div class="box box-primary">
         <div class="box-header with-border">
           <div class="search">
+            <button id="toggleFilters" {{action "toggleFilters"}} type="button" class="btn dropdown-toggle" data-toggle="collapse" data-target=".list-view-filters">
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
             <div class="has-feedback">
-              <input type="text" class="form-control input-sm" placeholder="{{t "global.form.search"}} {{t "global.module.plural.project"}} ..">
+              {{text-field key-up="populateQuery" focus-in="openFilters" insert-newline="filter" value=query name="query" placeholder=(concat (t "global.form.search") (t "global.module.plural.project"))}}
               <span class="glyphicon glyphicon-search form-control-feedback"></span>
-              <div class="list-view-filters">
-                <div id="builder"></div>
-                <button id="btn-get" type="button" class="btn btn-primary" {{action "searchByRules"}}>{{t "global.form.search"}}</button>
-              </div>
             </div>
+            <button type="button" class="btn btn-primary" {{action "searchByRules"}}>{{t "global.form.search"}}</button>
+          </div>
+          <div class="list-view-filters collapse">
+            <div id="builder"></div>
           </div>
           <!-- /.box-tools -->
         </div>
@@ -86,8 +90,7 @@
         <div class="box-body no-padding">
           <div class="mailbox-controls">
             <!-- Check all button -->
-            <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-            </button>
+            <span class="btn btn-default btn-sm checkbox-toggle">{{checkbox-field action="selectAll" type="checkbox" data-select="all"}}</span>
             <div class="btn-group">
               <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
               <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
@@ -96,26 +99,48 @@
             <!-- /.btn-group -->
             <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
             <div class="pull-right">
-              1-50/200
+              <span class="list-view-count">(Selected : {{selectedCount}}) </span>
+              {{add (mult (sub page 1) 20) 1}}-{{add (mult (sub page 1) 20) model.length}} / {{add (mult (sub page 1) 20) model.length}}
+              {{#unless (sub model.length 20)}}+{{/unless}}
               <div class="btn-group">
-                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+                {{#if model.content.meta._links.prev}}
+                  <button type="button" class="btn btn-default btn-sm" {{action "paginate" (getPage model.content.meta._links.prev.href)}}><i class="fa fa-chevron-left"></i></button>
+                {{else}}
+                  <button type="button" class="btn btn-default btn-sm disabled"><i class="fa fa-chevron-left"></i></button>
+                {{/if}}
+                {{#if model.content.meta._links.next}}
+                  <button type="button" class="btn btn-default btn-sm" {{action "paginate" (getPage model.content.meta._links.next.href)}}><i class="fa fa-chevron-right"></i></button>
+                {{else}}
+                  <button type="button" class="btn btn-default btn-sm disabled"><i class="fa fa-chevron-right"></i></button>
+                {{/if}}
               </div>
               <!-- /.btn-group -->
             </div>
             <!-- /.pull-right -->
           </div>
-          <div class="table-responsive mailbox-messages">
+          <div class="table-responsive list-view">
             <table class="table table-hover table-striped">
-              <tbody>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="project-name sortable" data-sort="Project.nameSortable" {{action "sortData" 'Project.name'}}>Name</th>
+                  <th class="project-type sortable" data-sort="Project.typeSortable" {{action "sortData" 'Project.type'}}>Type</th>
+                  <th class="project-owner sortable" data-sort="owner.nameSortable" {{action "sortData" 'owner.name'}}>Owner</th>
+                  <th class="project-description">Description</th>
+                  <th class="project-status sortable" data-sort="Project.statusSortable" {{action "sortData" 'Project.status'}}>Status</th>
+                  <th class="project-date">Date</th>
+                </tr>
+              </thead>
 
+              <tbody>
               {{#each model as |project|}}
                 <tr>
-                  <td><input type="checkbox"></td>
-                  <td class="project-name"><a href="#">{{project.name}}</a></td>
-                  <td class="project-created"><a href="read-mail.html">{{project.createdBy.name}}</a></td>
+                  <td>{{checkbox-field action="select" type="checkbox" data-select=project.id}}</td>
+                  <td class="project-name"><a href="#" {{action "detail" project.id}}>{{project.name}}</a></td>
+                  <td class="project-type">{{t (concat "view.app.project.detail.lists.type." project.type)}}</td>
+                  <td class="project-owner"><a href="#">{{project.owner.name}}</a></td>
                   <td class="project-description">{{project.description}}</td>
-                  <td class="project-status">{{project.status}}</td>
+                  <td class="project-status"><span class="badge {{project.status}}">{{t (concat "view.app.project.detail.lists.status." project.status)}}</span></td>
                   <td class="project-date">{{project.dateModified}}</td>
                 </tr>
               {{/each}}
