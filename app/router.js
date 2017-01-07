@@ -22,21 +22,13 @@ Router.map(function() {
       });
       this.route('conversation',{path:'conversations'});
       this.route('calendar',{path:'calendar'});
-    });
-/*
-    this.route('module',{path:':module'});
-    this.route('detail',{path:':module/:id'});
-    this.route('create',{path:':module/create'});
-    this.route('conversation',{path:'conversations'});
-    this.route('wiki',function(){
-      this.route('index',{path:'/'});
-      this.route('project',{ path: "/:projectId" },function(){
+      this.route('issue',function(){
+        this.route('index',{path:'/'});
         this.route('create',{path:'/create'});
-        this.route('page',{path:'/:wikiName'});
-        this.route('edit',{path:'/edit/:wikiName'});
+        this.route('page',{path:'/:issueNumber'});
+        this.route('edit',{path:'/edit/:issueNumber'});
       });
     });
-    */
   });
   this.route('signin', { path: '/signin' }, function() {});
 });
