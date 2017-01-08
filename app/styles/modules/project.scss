@@ -170,67 +170,29 @@
   }
 }
 
-.project{
-  .search{
-    display: inline-flex;
-    width: 100%;
+.list-controls{
+  padding: 0.5rem;
 
-    .has-feedback{
-      width: 100%;
-    }
-    .btn-primary{
-      width: 8rem;
-      margin-left: 0.5rem;
-      height: 3rem;
-      margin-top: -0.1rem;
-    }
 
-    .dropdown-toggle{
-      height: 3rem;
-      border-radius: 0.2rem 0rem 0rem 0.2rem;
-    }
-
-    .dropToggle{
-     transform:         rotate(180deg); /* CSS3 */
-     -moz-transform:    rotate(180deg); /* Firefox */
-     -webkit-transform: rotate(180deg); /* Webkit */
-     -o-transform:      rotate(180deg); /* Opera */
-     -ms-transform:     rotate(180deg); /* IE 9 */
-    }
+  .checkbox-toggle{
+    padding: 0.3rem 0.8rem;
   }
+}
 
-  .list-view{
-    th{
-      position: relative;
-    }
-    .sortable{
-      cursor: pointer;
-    }
-    .sortable:hover:after{
-        color: $primaryColor;
-        opacity: 0.8;
-    }
-    .sortable:after{
-      opacity: 0.2;
-      content: "\e150";
-      font-family: 'Glyphicons Halflings';
-      position: absolute;
-      display: block;
-      right: 8px;
-      bottom: 8px;
-    }
-    .sortable-asc:after{
-      content: "\e155";
-      opacity: 0.8;
-      color: $highlightColor;
-    }
-    .sortable-desc:after{
-      content: "\e156";
-      opacity: 0.8;
-      color: $highlightColor;
+.table-responsive{
+  tbody{
+    .checkbox-toggle{
+      padding: 0rem 0.5rem;
     }
   }
 }
+
+.list-view{
+  .select-box{
+    width: 4rem;
+  }
+}
+
 
 
 .show-5{

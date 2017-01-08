@@ -115,6 +115,10 @@ export default {
       throw 'First initialize the utility';
     }
     return Ember.$(this.element).queryBuilder('getRules');
+  },
+
+  destroy:function(element){
+    Ember.$(element).queryBuilder('destroy');
   }
 
 };

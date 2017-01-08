@@ -50,57 +50,84 @@
   <!-- /.col -->
   <div class="col-md-10">
 
-    <div class="box box-primary">
+    <div class="box box-primary list-view">
       <div class="box-header with-border">
-        <h3 class="box-title">Inbox</h3>
 
-        <div class="box-tools pull-right">
+        <div class="search">
+          <span data-toggle="tooltip" title="{{t "global.list.searchbox"}}">
+          <button id="toggleFilters" {{action "toggleFilters"}} type="button" class="btn dropdown-toggle" data-toggle="collapse" data-target=".list-view-filters">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+        </span>
           <div class="has-feedback">
-            <input type="text" class="form-control input-sm" placeholder="Search Mail">
+            {{text-field
+                key-up="populateQuery"
+                focus-in="openFilters"
+                insert-newline="filter"
+                value=query
+                name="query"
+                readonly="readonly"
+                placeholder=(concat (t "global.form.search") " " (t "global.module.plural.issue") " ..")}}
             <span class="glyphicon glyphicon-search form-control-feedback"></span>
           </div>
+          <button type="button" class="btn btn-primary" {{action "searchByRules"}}>{{t "global.form.search"}}</button>
         </div>
-        <!-- /.box-tools -->
+        <div class="list-view-filters collapse">
+          {{query-builder module="Issue" query=query}}
+        </div>
+
       </div>
       <!-- /.box-header -->
       <div class="box-body no-padding">
-        <div class="mailbox-controls">
-          <!-- Check all button -->
-          <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-          </button>
+        <div class="list-controls">
+
+          <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">{{checkbox-field action="selectAll" type="checkbox" data-select="all"}}</span>
           <div class="btn-group">
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
+            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></button>
+            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.massupdate"}}"><i class="fa fa-pencil"></i></button>
+            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.discuss"}}"><i class="fa fa-comments-o"></i></button>
           </div>
-          <!-- /.btn-group -->
-          <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
+          <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" {{action "reloadPage"}}><i class="fa fa-refresh"></i></button>
           <div class="pull-right">
-            1-50/200
+            <span class="list-view-count">(Selected : {{selectedCount}}) </span>
+            {{add (mult (sub page 1) 2) 1}}-{{add (mult (sub page 1) 2) model.length}} / {{add (mult (sub page 1) 2) model.length}}
+            {{#if model.meta.links.next}}+{{/if}}
             <div class="btn-group">
-              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+              {{#if model.meta.links.prev}}
+                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" {{action "paginate" (getPage model.meta.links.prev.href)}}><i class="fa fa-chevron-left"></i></button>
+              {{else}}
+                <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}}"><i class="fa fa-chevron-left"></i></button>
+              {{/if}}
+              {{#if model.meta.links.next}}
+                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" {{action "paginate" (getPage model.meta.links.next.href)}}><i class="fa fa-chevron-right"></i></button>
+              {{else}}
+                <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></button>
+              {{/if}}
             </div>
-            <!-- /.btn-group -->
+
           </div>
-          <!-- /.pull-right -->
         </div>
+
         <div class="table-responsive issue-list">
           <table class="table table-hover table-striped">
 
             <thead>
-              <th></th>
-              <th>#</th>
-              <th>Subject</th>
-              <th>Status</th>
-              <th>Priority</th>
-              <th>Milestone</th>
+              <tr>
+                <th></th>
+                <th class="issue-number sortable" data-sort="Issue.issueNumberSortable" {{action "sortData" 'Issue.issueNumber'}}>#</th>
+                <th class="issue-subject sortable" data-sort="Issue.subjectSortable" {{action "sortData" 'Issue.subject'}}>Subject</th>
+                <th class="issue-status sortable" data-sort="Issue.statusSortable" {{action "sortData" 'Issue.status'}}>Status</th>
+                <th class="issue-priority sortable" data-sort="Issue.prioritySortable" {{action "sortData" 'Issue.priority'}}>Priority</th>
+                <th class="issue-milestone sortable" data-sort="milestone.nameSortable" {{action "sortData" 'milestone.name'}}>Milestone</th>
+              </tr>
             </thead>
 
             <tbody>
               {{#each model as |issue|}}
                 <tr>
-                  <td></td>
+                  <td class="select-box"><span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.select"}}">{{checkbox-field action="select" type="checkbox" data-select=issue.id}}</span></td>
                   <td class="issue-number">{{issue.issueNumber}}</td>
                   <td class="issue-subject">{{issue.subject}}</td>
                   <td class="issue-status">{{issue.status}}</td>
@@ -112,30 +139,38 @@
           </table>
           <!-- /.table -->
         </div>
-        <!-- /.mail-box-messages -->
+
       </div>
       <!-- /.box-body -->
       <div class="box-footer no-padding">
-        <div class="mailbox-controls">
-          <!-- Check all button -->
-          <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-          </button>
+        <div class="list-controls">
+
+          <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">{{checkbox-field action="selectAll" type="checkbox" data-select="all"}}</span>
           <div class="btn-group">
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
-            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
+            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></button>
+            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.massupdate"}}"><i class="fa fa-pencil"></i></button>
+            <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.discuss"}}"><i class="fa fa-comments-o"></i></button>
           </div>
-          <!-- /.btn-group -->
-          <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
+          <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" {{action "reloadPage"}}><i class="fa fa-refresh"></i></button>
           <div class="pull-right">
-            1-50/200
+            <span class="list-view-count">(Selected : {{selectedCount}}) </span>
+            {{add (mult (sub page 1) 2) 1}}-{{add (mult (sub page 1) 2) model.length}} / {{add (mult (sub page 1) 2) model.length}}
+            {{#if model.meta.links.next}}+{{/if}}
             <div class="btn-group">
-              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-              <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+              {{#if model.meta.links.prev}}
+                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" {{action "paginate" (getPage model.meta.links.prev.href)}}><i class="fa fa-chevron-left"></i></button>
+              {{else}}
+                <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}}"><i class="fa fa-chevron-left"></i></button>
+              {{/if}}
+              {{#if model.meta.links.next}}
+                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" {{action "paginate" (getPage model.meta.links.next.href)}}><i class="fa fa-chevron-right"></i></button>
+              {{else}}
+                <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></button>
+              {{/if}}
             </div>
-            <!-- /.btn-group -->
           </div>
-          <!-- /.pull-right -->
+
         </div>
       </div>
     </div>

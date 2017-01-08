@@ -448,6 +448,50 @@ export default Ember.Object.extend({
         ]
       }
     },
+    Issue:{
+      filters:{
+        enabledFilters:[
+          {
+            id: 'Issue.issueNumber',
+            label: "view.app.issue.filter.issueNumber",
+            type: 'string'
+          },
+          {
+            id: 'Issue.subject',
+            label: "view.app.issue.filter.subject",
+            type: 'string',
+            operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null','contains']
+          },
+          {
+            id: 'Issue.status',
+            label: "view.app.issue.filter.type",
+            type: 'integer',
+            input: 'select',
+            values: {
+              'new': 'New',
+              'in_progress': 'In Progress',
+            },
+            operators: ['equal']
+          },
+          {
+            id: 'Issue.priority',
+            label: "view.app.issue.filter.priority",
+            type: 'integer',
+            input: 'select',
+            values: {
+              'blocker': 'Blocker',
+              'critical': 'Critical',
+              'high': 'High',
+              'medium': 'Medium',
+              'low': 'Low',
+              'lowest': 'Lowest'
+            },
+            operators: ['equal']
+          },
+
+        ]
+      }
+    },
   },
   /**
     This variable store the business logic for the system, although the basic

@@ -1,5 +1,8 @@
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 import Ember from "ember";
+import _ from "lodash";
+import queryBuilder from "../../../utils/query/builder";
+import queryParser from "../../../utils/query/parser";
 
 /**
   This controller is used to provide the interaction between the template and
@@ -69,6 +72,16 @@ export default Ember.Controller.extend({
   query: '',
 
   /**
+    The count of the selected items in the list view.
+
+    @property selectedCount
+    @for AppProjectIssueController
+    @type Integer
+    @private
+  */
+  selectedCount: 0,
+
+  /**
     The action handlers for the issue list view
 
     @property action
@@ -88,7 +101,6 @@ export default Ember.Controller.extend({
     */
     paginate:function(page){
       Logger.debug('AppProjectIssueController::paginate('+page+')');
-
       this.set('page',page);
       Logger.debug('-AppProjectIssueController::paginate()');
     },
@@ -109,14 +121,28 @@ export default Ember.Controller.extend({
 
       @method sortData
       @param field {String} The field that the user wishes to sort the data on
-      @param order {String} The order in which the data is required to be sorted
       @public
     */
-    sortData:function(field,order){
-      Logger.debug('AppProjectIssueController::sortData('+field+','+order+')');
+    sortData:function(field){
+      Logger.debug('AppProjectIssueController::sortData('+field+')');
+
+      if (field === this.get('sort')) {
+        if (this.get('order') === 'desc') {
+          this.set('order','asc');
+        } else {
+          this.set('order','desc');
+        }
+      }
+      // Else first clear the previous sort and set the new one
+      else {
+        Ember.$('[data-sort="'+this.get('sort')+'Sortable"]').attr('class','sortable');
+        this.set('order','desc');
+      }
+
+      // Set the styling
+      Ember.$('[data-sort="'+field+'Sortable"]').attr('class','sortable sortable-'+this.get('order'));
 
       this.set('sort',field);
-      this.set('order',order);
       Logger.debug('-AppProjectIssueController::sortData()');
     },
 
@@ -127,34 +153,117 @@ export default Ember.Controller.extend({
 
       @method reloadPage
       @public
+      @todo Hack Alert!!
     */
     reloadPage:function(){
       Logger.debug('AppProjectIssueController::reloadPage()');
-
-      this.transitionToRoute({
-        queryParams: {
-          query:this.get('query'),
-          sort:this.get('sort'),
-          order:this.get('order'),
-          page:this.get('page'),
-        }
-      });
-
+      // Hack Alert!!!
+      this.set('query',this.get('query')+' ');
       Logger.debug('-AppProjectIssueController::reloadPage()');
     },
 
     /**
-      This function is called when the search query has been changed
+      Keep the query being searched in the controller
 
-      @method updateQuery
-      @param
+      @method populateQuery
+      @param query
+      @return void
+      @public
+      @todo allow auto complete
+    */
+    populateQuery:function(query){
+      this.queryString = query;
+    },
+
+    /**
+      Conver the rul object to string and perform searched
+
+      @method searchByRules
+      @return void
       @public
     */
-    updateQuery:function(){
-      Logger.debug('AppProjectIssueController::updateQuery()');
+    searchByRules:function(){
+      var result = queryBuilder.getRules();
+      if (!Ember.$.isEmptyObject(result)) {
+        var query = queryParser.getQueryString(result);
+        this.queryString = query;
+        this.set('query', query);
+      }
+    },
 
-      Logger.debug('-AppProjectIssueController::updateQuery()');
-    }
+    /**
+      Open the filter view if not already Open
+
+      @method openFilters
+    */
+    openFilters:function(){
+      Ember.$('.search [data-toggle=collapse]').click();
+      Ember.$('.search input').blur();
+    },
+
+    /**
+      Toggle the dropdown arrow on toggle
+
+      @method toggleFilters
+      @for app.module
+      @private
+    */
+    toggleFilters:function(){
+      Ember.$('#toggleFilters').toggleClass('dropToggle');
+    },
+
+    /**
+     This function is triggered when the checkbox on the the top right of the list is called
+     This function only selects the items currently visible in the list-view
+
+     @method selectAll
+     @param value {Boolean} whether the selectAll checkbox was selected of not
+     @return void
+     @todo allow the retention of the checkboxes across the multiple pages
+     @public
+     */
+    selectAll:function(value){
+      // Select all the checkboxes in the list view
+      _.each(Ember.$('.list-view input[type=checkbox]').not('[data-select=all]'),function(element) {
+        element.checked = value;
+      });
+
+      _.each(Ember.$('.list-view [data-select=all]'),function(element) {
+        element.checked = value;
+      });
+
+
+      this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
+    },
+
+    /**
+     This function is triggerd when an item in the list is selected
+
+     @method select
+     @param value {Boolean} whether the checkbox was selected of not
+     @return void
+     @todo allow the retention of the checkboxes across the multiple pages
+     @public
+     */
+    select:function(value){
+      // Select/Deslect one checkboxes in the list view
+      this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
+
+      // uncheck the select all checkbox, if an item was deselected and the select all checkbox was checked
+      if (!value) {
+        var selectAll = Ember.$('[data-select=all]').prop('checked');
+        if (selectAll){
+          Ember.$('[data-select=all]').prop('checked',false);
+        }
+      }
+      // If all the items in the list were selected then check the select all checkbox as well
+      else {
+        // if checked boxes are equal to total boxes then enable check all box
+        if (Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length === Ember.$('.list-view input[type=checkbox]').not('[data-select=all]').length) {
+          Ember.$('[data-select=all]').prop('checked',true);
+        }
+      }
+    },
 
   }
 });

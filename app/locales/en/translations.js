@@ -65,6 +65,10 @@ export default {
   "global" : {
     "form" : {
       "save" : "Save",
+      "refresh" : "Refresh",
+      "massupdate" : "Mass Update",
+      "share" : "Share",
+      "discuss" : "Discuss",
       "create" : "Create",
       "cancel" : "Cancel",
       "delete" : "Delete",
@@ -87,6 +91,11 @@ export default {
       "edit": "Edit",
       "detail": "Detail",
       "toggleDropdown": "Toggle Dropdown",
+      "nextPage": "Next Page",
+      "prevPage": "Previous Page",
+      "firstPage": "First Page",
+      "last": "Last Page",
+      "searchbox" : "Toggle search box"
     },
     "noentry": "No entry found..",
     "blank": "<span class='disabled-text'>-- blank --</em>",
@@ -426,6 +435,25 @@ export default {
       "issue" : {
         "priority" : "priority",
         "status" : "Status",
+        "list" : {
+          "create" : "Create New",
+        },
+        "filter" : {
+          "issueNumber" : "Issue Number",
+          "subject" : "Subject",
+          "description" : "Description",
+          "status" : "Status",
+          "type" : "Type",
+          "priority" : "Priority",
+          "milestone" : "Milestone",
+          "owner" : "Owner",
+          "endDate" : "End Date",
+          "startDate" : "Start Date",
+          "dateCreated" : "Date Created",
+          "dateModified" : "Date Modified",
+          "assignee" : "Assignee",
+          "reportedUser" : "Reported User",
+        },
         "lists" : {
           "priority" : {
             "blocker" : "Blocker",

@@ -133,6 +133,7 @@ export default App.extend({
       sort: this.get('sort'),
       order: this.get('order'),
       page: this.get('page'),
+      limit: 2,
     };
 
     // Retrieve the data

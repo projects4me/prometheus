@@ -4,33 +4,37 @@
   This contains the CSS related to the list views in the application.
 */
 
-.module{
 
-  .query-builder .rules-group-container{
-    border: 1px solid #d2d6de;
-    background: $backgroundColor;
-    border-radius: 0;
-  }
+.query-builder .rules-group-container{
+  border: 1px solid #d2d6de;
+  background: $backgroundColor;
+  border-radius: 0;
+}
 
-  .btn-success, .btn-success[disabled]{
-    background: $primaryColor;
-    border-color: $primaryColor;
-  }
-  .btn-success:hover,.btn-success:active,.btn-success:visited,.btn-success:focus,.btn-success[disabled]:hover,.btn-success[disabled]:active,.btn-success[disabled]:visited,.btn-success[disabled]:focus{
-    background: $highlightColor;
-    border-color: $highlightColor;
-  }
+.btn-success, .btn-success[disabled]{
+  background: $primaryColor;
+  border-color: $primaryColor;
+}
+.btn-success:hover,.btn-success:active,.btn-success:visited,.btn-success:focus,.btn-success[disabled]:hover,.btn-success[disabled]:active,.btn-success[disabled]:visited,.btn-success[disabled]:focus{
+  background: $highlightColor;
+  border-color: $highlightColor;
+}
 
-  .query-builder .rules-list > ::before, .query-builder .rules-list > ::after {
-    border-color: #ddd !important;
-  }
+.query-builder .rules-list > ::before, .query-builder .rules-list > ::after {
+  border-color: #ddd !important;
+}
 
-  .query-builder .rules-list > ::before, .query-builder .rules-list > ::after {
-    border-width: 0 0 0.4rem 0.4rem;
-  }
+.query-builder .rules-list > ::before, .query-builder .rules-list > ::after {
+  border-width: 0 0 0.4rem 0.4rem;
+}
 
-  .query-builder .rules-group-container, .query-builder .rule-container, .query-builder .rule-placeholder{
-    border-radius: 0.2rem;
-  }
+.query-builder .rules-group-container, .query-builder .rule-container, .query-builder .rule-placeholder{
+  border-radius: 0.2rem;
+}
 
+.search {
+  .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+    background-color: $backgroundColor;
+    cursor: text;
+  }
 }
