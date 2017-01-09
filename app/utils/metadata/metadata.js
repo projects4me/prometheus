@@ -113,14 +113,14 @@ export default Ember.Object.extend({
       Issue:{
         label: 'view.nav.menu.issue.label',
         icon: 'tasks',
-        route: 'app.project.issues',
+        route: 'app.project.issue',
         anchorRoute: 'issue',
         routeParams: {module: 'issue'},
         actions:{
           section1:{
             list:{
               label: 'view.nav.menu.issue.list',
-              route: 'app.module',
+              route: 'app.project.issue',
               className: 'text-teal',
               anchorRoute: 'issue',
               routeParams: {module: 'issue'}

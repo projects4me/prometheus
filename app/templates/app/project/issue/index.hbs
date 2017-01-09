@@ -1,4 +1,3 @@
-{{query}}|{{sort}}|{{order}}|{{page}}
 <div class="row issues">
 
   <div class="col-md-2">
@@ -92,7 +91,7 @@
           <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" {{action "reloadPage"}}><i class="fa fa-refresh"></i></button>
           <div class="pull-right">
             <span class="list-view-count">(Selected : {{selectedCount}}) </span>
-            {{add (mult (sub page 1) 2) 1}}-{{add (mult (sub page 1) 2) model.length}} / {{add (mult (sub page 1) 2) model.length}}
+            {{add (mult (sub page 1) 20) 1}}-{{add (mult (sub page 1) 20) model.length}} / {{add (mult (sub page 1) 20) model.length}}
             {{#if model.meta.links.next}}+{{/if}}
             <div class="btn-group">
               {{#if model.meta.links.prev}}
@@ -116,11 +115,11 @@
             <thead>
               <tr>
                 <th></th>
-                <th class="issue-number sortable" data-sort="Issue.issueNumberSortable" {{action "sortData" 'Issue.issueNumber'}}>#</th>
-                <th class="issue-subject sortable" data-sort="Issue.subjectSortable" {{action "sortData" 'Issue.subject'}}>Subject</th>
-                <th class="issue-status sortable" data-sort="Issue.statusSortable" {{action "sortData" 'Issue.status'}}>Status</th>
-                <th class="issue-priority sortable" data-sort="Issue.prioritySortable" {{action "sortData" 'Issue.priority'}}>Priority</th>
-                <th class="issue-milestone sortable" data-sort="milestone.nameSortable" {{action "sortData" 'milestone.name'}}>Milestone</th>
+                <th class="{{sortableClass "Issue.issueNumber" sort order}}" data-sort="Issue.issueNumberSortable" {{action "sortData" 'Issue.issueNumber'}}>#</th>
+                <th class="{{sortableClass "Issue.subject" sort order}}" data-sort="Issue.subjectSortable" {{action "sortData" 'Issue.subject'}}>Subject</th>
+                <th class="{{sortableClass "Issue.status" sort order}}" data-sort="Issue.statusSortable" {{action "sortData" 'Issue.status'}}>Status</th>
+                <th class="{{sortableClass "Issue.priority" sort order}}" data-sort="Issue.prioritySortable" {{action "sortData" 'Issue.priority'}}>Priority</th>
+                <th class="{{sortableClass "milestone.name" sort order}}" data-sort="milestone.nameSortable" {{action "sortData" 'milestone.name'}}>Milestone</th>
               </tr>
             </thead>
 
@@ -128,11 +127,11 @@
               {{#each model as |issue|}}
                 <tr>
                   <td class="select-box"><span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.select"}}">{{checkbox-field action="select" type="checkbox" data-select=issue.id}}</span></td>
-                  <td class="issue-number">{{issue.issueNumber}}</td>
-                  <td class="issue-subject">{{issue.subject}}</td>
+                  <td class="issue-number"><a href="#" {{action "openDetail" issue}}>{{issue.issueNumber}}</a></td>
+                  <td class="issue-subject"><a href="#" {{action "openDetail" issue}}>{{issue.subject}}</a></td>
                   <td class="issue-status">{{issue.status}}</td>
                   <td class="issue-priority">{{issue.priority}}</td>
-                  <td class="issue-milestone">{{issue.milestone.name}}</td>
+                  <td class="issue-milestone"><a href="#">{{issue.milestone.name}}</a></td>
                 </tr>
               {{/each}}
             </tbody>
@@ -155,7 +154,7 @@
           <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" {{action "reloadPage"}}><i class="fa fa-refresh"></i></button>
           <div class="pull-right">
             <span class="list-view-count">(Selected : {{selectedCount}}) </span>
-            {{add (mult (sub page 1) 2) 1}}-{{add (mult (sub page 1) 2) model.length}} / {{add (mult (sub page 1) 2) model.length}}
+            {{add (mult (sub page 1) 20) 1}}-{{add (mult (sub page 1) 20) model.length}} / {{add (mult (sub page 1) 20) model.length}}
             {{#if model.meta.links.next}}+{{/if}}
             <div class="btn-group">
               {{#if model.meta.links.prev}}

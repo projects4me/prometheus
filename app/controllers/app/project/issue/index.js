@@ -1,8 +1,8 @@
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 import Ember from "ember";
 import _ from "lodash";
-import queryBuilder from "../../../utils/query/builder";
-import queryParser from "../../../utils/query/parser";
+import queryBuilder from "../../../../utils/query/builder";
+import queryParser from "../../../../utils/query/parser";
 
 /**
   This controller is used to provide the interaction between the template and
@@ -126,6 +126,7 @@ export default Ember.Controller.extend({
     sortData:function(field){
       Logger.debug('AppProjectIssueController::sortData('+field+')');
 
+      // If the current field is being sorted then toggle it
       if (field === this.get('sort')) {
         if (this.get('order') === 'desc') {
           this.set('order','asc');
@@ -133,15 +134,13 @@ export default Ember.Controller.extend({
           this.set('order','desc');
         }
       }
-      // Else first clear the previous sort and set the new one
+      // Otherwise start with the default value
       else {
-        Ember.$('[data-sort="'+this.get('sort')+'Sortable"]').attr('class','sortable');
         this.set('order','desc');
       }
 
-      // Set the styling
-      Ember.$('[data-sort="'+field+'Sortable"]').attr('class','sortable sortable-'+this.get('order'));
-
+      // Set the field that is being sorted, if it is changed then the model
+      // update will be triggered by Ember
       this.set('sort',field);
       Logger.debug('-AppProjectIssueController::sortData()');
     },
@@ -243,6 +242,7 @@ export default Ember.Controller.extend({
      @param value {Boolean} whether the checkbox was selected of not
      @return void
      @todo allow the retention of the checkboxes across the multiple pages
+     @todo convert to a component
      @public
      */
     select:function(value){
@@ -263,6 +263,19 @@ export default Ember.Controller.extend({
           Ember.$('[data-select=all]').prop('checked',true);
         }
       }
+    },
+
+    /**
+      This function is used to navigate the user to the detail page for the issues
+
+      @method openDetail
+      @param issue {IssueModel} Te issue model to which we have to navigate to
+      @public
+    */
+    openDetail:function(issue){
+      Logger.debug("AppProjectIssueController::openDetail");
+      this.transitionToRoute('app.project.issue.page',issue);
+      Logger.debug("-AppProjectIssueController::openDetail");
     },
 
   }

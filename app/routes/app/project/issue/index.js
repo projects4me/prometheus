@@ -1,5 +1,5 @@
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
-import App from "../../app";
+import App from "../../../app";
 
 /**
   The issues route
@@ -133,7 +133,6 @@ export default App.extend({
       sort: this.get('sort'),
       order: this.get('order'),
       page: this.get('page'),
-      limit: 2,
     };
 
     // Retrieve the data

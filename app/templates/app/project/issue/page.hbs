@@ -1,0 +1,8 @@
+{{model.issueNumber}} -- {{model.subject}}
+<br/>
+
+<ul>
+  {{#each model.spent as |estimated|}}
+    <li>{{estimated.id}}</li>
+  {{/each}}
+</ul>

@@ -328,6 +328,7 @@ span[data-atwho-at-query*="#"]{
   .dropdown-toggle{
     height: 3rem;
     border-radius: 0.2rem 0rem 0rem 0.2rem;
+    padding-top: 4px;
   }
 
   .dropToggle{
@@ -337,4 +338,13 @@ span[data-atwho-at-query*="#"]{
    -o-transform:      rotate(180deg); /* Opera */
    -ms-transform:     rotate(180deg); /* IE 9 */
   }
+}
+
+
+.btn-group .btn + .btn, .btn-group .btn + .btn-group, .btn-group .btn-group + .btn, .btn-group .btn-group + .btn-group{
+  margin-left:0;
+}
+
+.breadcrumb li:last-child {
+    font-weight: 600;
 }
