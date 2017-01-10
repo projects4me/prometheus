@@ -27,7 +27,7 @@ export default App.extend({
       sort : 'Issue.issueNumber',
       order: 'ASC',
       limit: -1,
-      rels: 'none'
+      //rels: 'none'
     };
 
     Logger.debug('Retreiving issue with options '+options);
@@ -51,6 +51,18 @@ export default App.extend({
     @private
   */
   setupController:function(controller,model){
+    if (model.issues !== undefined)
+    {
+      model = model.issues.filterBy('issueNumber',model.issueNumber)[0];
+    }
+    else if (typeof model.nextObject === 'function'){
+      model = model.nextObject(0);
+      // Load relavent data
+    }
+    Logger.debug("AppProjectIssuePageController");
+    Logger.debug(model);
     controller.set('model',model);
+    //var params = this.paramsFor('app.project.issue.page');
+    //Logger.debug(params);
   },
 });

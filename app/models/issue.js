@@ -200,6 +200,55 @@ export default DS.Model.extend({
   */
   typeId: DS.attr('string'),
 
+  /**
+   The user to whom this issue is currently assigned to
+
+   @property assignedTo
+   @type UserModel
+   @for IssueModel
+   @private
+  */
+  assignedTo: DS.belongsTo('user'),
+
+  /**
+   The user who created this issue
+
+   @property createdBy
+   @type UserModel
+   @for IssueModel
+   @private
+  */
+  createdBy: DS.belongsTo('user'),
+
+  /**
+   The user who last modified this issue
+
+   @property modifiedBy
+   @type UserModel
+   @for IssueModel
+   @private
+  */
+  modifiedBy: DS.belongsTo('user'),
+
+  /**
+   The user who is responsible for this issue
+
+   @property ownedBy
+   @type UserModel
+   @for IssueModel
+   @private
+  */
+  ownedBy: DS.belongsTo('user'),
+
+  /**
+   The user who reported this issue
+
+   @property reportedBy
+   @type UserModel
+   @for IssueModel
+   @private
+  */
+  reportedBy: DS.belongsTo('user'),
 
   /**
    The project which this issues belongs to
@@ -211,7 +260,6 @@ export default DS.Model.extend({
   */
   project: DS.belongsTo('project'),
 
-
   /**
    The milestone which this issue belongs to
 
@@ -222,6 +270,25 @@ export default DS.Model.extend({
   */
   milestone: DS.belongsTo('milestone'),
 
+  /**
+   The parent issue of this issue
+
+   @property parentissue
+   @type IssueModel
+   @for IssueModel
+   @private
+  */
+  parentissue: DS.belongsTo('issue',{inverse:null}),
+
+  /**
+   The type of the issue
+
+   @property issuetype
+   @type IssuetypeModel
+   @for IssueModel
+   @private
+  */
+  issuetype: DS.belongsTo('issuetype'),
 
   /**
    The estimated time on the issue
@@ -241,6 +308,36 @@ export default DS.Model.extend({
    @for IssueModel
    @private
   */
-  spent: DS.hasMany('timelog')
+  spent: DS.hasMany('timelog'),
+
+  /**
+   The child issues of this issue
+
+   @property childissues
+   @type IssueModel
+   @for IssueModel
+   @private
+  */
+  childissues: DS.hasMany('issue',{inverse:null}),
+
+  /**
+   The comments made on this issue
+
+   @property comments
+   @type IssueModel
+   @for IssueModel
+   @private
+  */
+  comments: DS.hasMany('comment'),
+
+  /**
+   The child issues of this issue
+
+   @property childissues
+   @type IssueModel
+   @for IssueModel
+   @private
+  */
+  activities: DS.hasMany('activity'),
 
 });

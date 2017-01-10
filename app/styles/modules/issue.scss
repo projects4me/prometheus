@@ -1,0 +1,50 @@
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the project in the application.
+*/
+
+
+.issue{
+
+  .fa-ban{
+    color: #d33724;
+  }
+  .fa-angle-double-up{
+    color: #d33724;
+    font-weight: bold;
+  }
+  .fa-arrow-up{
+    color: #e98a7e;
+  }
+  .fa-dot-circle-o{
+    color: $primaryColor;
+  }
+  .fa-arrow-down{
+    color: #5ac594;
+  }
+  .fa-angle-double-down{
+    color: #00a65a;
+    font-weight: bold;
+  }
+
+  .done,.complete{
+    background-color: #5AC594 !important;
+  }
+
+  .closed{
+    background-color: #e98a7e;
+  }
+
+  .deferred,.pending,.feedback{
+    background-color: #f7bf65;
+  }
+
+  .new{
+    background-color: #80b5d3;
+  }
+
+  .in_progress{
+    background-color: $primaryColor;
+  }
+}

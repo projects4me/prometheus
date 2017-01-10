@@ -129,7 +129,7 @@ export default App.extend({
     // Prepare the options
     var options = {
       query: query,
-      rels: 'owner,assignee,milestone,project,createdUser,modifiedUser,reportedUser',
+      rels: 'ownedBy,assignedTo,milestone,project,createdBy,modifiedBy,reportedBy',
       sort: this.get('sort'),
       order: this.get('order'),
       page: this.get('page'),
