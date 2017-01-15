@@ -274,9 +274,7 @@ export default Ember.Controller.extend({
     */
     openDetail:function(issue){
       Logger.debug("AppProjectIssueController::openDetail");
-      Logger.debug(issue);
-      Logger.debug(this.get('model'));
-      this.transitionToRoute('app.project.issue.page',{issueNumber:issue.get('issueNumber'),issues:this.get('model')});
+      this.transitionToRoute('app.project.issue.page',{issueNumber:issue.get('issueNumber')});
       Logger.debug("-AppProjectIssueController::openDetail");
     },
 

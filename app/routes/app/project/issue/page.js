@@ -29,10 +29,10 @@ export default App.extend({
       limit: -1,
       //rels: 'none'
     };
-
+    this.set('breadCrumb',{title:'#'+params.issueNumber,record:true});
     Logger.debug('Retreiving issue with options '+options);
     var data = this.get('store').query('issue',options);
-    Logger.debug(data);
+    Logger.debug('-AppProjectIssuePageRoute::model()');
     return data;
   },
 
@@ -51,18 +51,36 @@ export default App.extend({
     @private
   */
   setupController:function(controller,model){
-    if (model.issues !== undefined)
-    {
-      model = model.issues.filterBy('issueNumber',model.issueNumber)[0];
+    Logger.debug('AppProjectIssuePageRoute::setupController');
+
+    if (typeof model.get !== 'function'){
+      model = this.model(this.paramsFor('app.project.issue.page'));
     }
-    else if (typeof model.nextObject === 'function'){
-      model = model.nextObject(0);
-      // Load relavent data
-    }
-    Logger.debug("AppProjectIssuePageController");
-    Logger.debug(model);
+    this.setupActivities(controller,model);
     controller.set('model',model);
-    //var params = this.paramsFor('app.project.issue.page');
-    //Logger.debug(params);
+
+    Logger.debug('-AppProjectIssuePageRoute::setupController');
   },
+
+  setupActivities:function(controller,model){
+    var activities = {};
+    Logger.debug('AppProjectIssuePageRoute::setupActivities');
+
+    if (model.getEach('activities')[0] !== undefined)
+    {
+      // Group the activities with respect to the dateCreated
+      model.getEach('activities')[0].forEach(function(activity){
+        var dateCreated = activity.get('dateCreated').substring(0,10);
+        if (activities[dateCreated] !== undefined)
+        {
+          activities[dateCreated]['data'].push(activity);
+        }
+        else {
+          activities[dateCreated] = {dateCreated:dateCreated,data:[activity]};
+        }
+      });
+      controller.set('activities',activities);
+    }
+    Logger.debug('-AppProjectIssuePageRoute::setupActivities');
+  }
 });

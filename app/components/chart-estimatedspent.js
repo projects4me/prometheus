@@ -154,12 +154,16 @@ export default Ember.Component.extend({
 
   willDestroyElement:function(){
     Logger.debug('ChartEstimatedspentComponent::willDestroyElement()');
-    this.get('estimatedspent').destroy();
+    if (this.get('estimatedspent') !== undefined) {
+      this.get('estimatedspent').destroy();
+    }
   },
 
   willClearRender:function(){
     Logger.debug('ChartEstimatedspentComponent::willDestroyElement()');
-    this.get('estimatedspent').destroy();
+    if (this.get('estimatedspent') !== undefined) {
+      this.get('estimatedspent').destroy();
+    }
   },
 
 });

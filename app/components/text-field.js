@@ -10,5 +10,5 @@ import Ember from "ember";
  * Thank you Jason for sharing :), I have been at this problem for some time now.
  */
 export default Ember.TextField.extend({
-  classNames:['form-control','input-sm'],
+  classNames:['form-control','input-sm','data-input'],
 });

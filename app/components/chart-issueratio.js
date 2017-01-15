@@ -46,7 +46,7 @@ export default Ember.Component.extend({
 
     @method init
   */
-  init:function(){
+  init:function() {
     this._super(...arguments);
   },
 
@@ -56,7 +56,7 @@ export default Ember.Component.extend({
 
     @method didRender
   */
-  didRender:function(){
+  didRender:function() {
     var self = this;
     var issues = this.get('issues');
 
@@ -66,7 +66,7 @@ export default Ember.Component.extend({
     }
 
 
-    if (issues !== undefined){
+    if (issues !== undefined) {
       var issueratio = new Chart(self.get('element'),{
         type: 'polarArea',
         data: self.getDatasets(issues),
@@ -78,7 +78,7 @@ export default Ember.Component.extend({
     }
   },
 
-  getDatasets:function(issues){
+  getDatasets:function(issues) {
     var self = this;
     var data = {
       labels:[],
@@ -93,7 +93,7 @@ export default Ember.Component.extend({
     var count = 0;
     var ch = new ColorHash();
 
-    _.forEach(statuses,function(status){
+    _.forEach(statuses,function(status) {
       data.labels[count] = self.get('i18n').t("view.app.issue.lists.status."+status).string;
       data.datasets[0].data[count] = issues.filterBy('status',status).length;
 
@@ -106,8 +106,10 @@ export default Ember.Component.extend({
     return data;
   },
 
-  willDestroyElement:function(){
-    this.get('issueratio').destroy();
+  willDestroyElement:function() {
+    if (this.get('issueratio') !== undefined) {
+      this.get('issueratio').destroy();
+    }
   }
 
 });

@@ -1,0 +1,93 @@
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This file contains the CSS related to the form-field of the application.
+*/
+
+
+.form-field{
+  position:relative;
+  margin: 3rem;
+
+  .data-input{
+    font-size:1.8rem;
+    padding:1rem 1rem 1rem 1rem;
+    display:block;
+      border:none;
+    border-bottom:0.1rem solid #999;
+  }
+
+  .data-input:focus{ outline:none;border-color:$highlightColor}
+
+  /* LABEL ======================================= */
+
+  label 				 {
+    color:#999;
+    font-size:1.4rem;
+    font-weight:normal;
+    position:absolute;
+    pointer-events:none;
+    left:0.5rem;
+    top:0.5rem;
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
+    -webkit-transition:0.2s ease all;
+  }
+
+  /* active state */
+  .data-input:focus ~ label, .data-input:valid ~ label 		{
+    top:-2rem;
+    font-size:1rem;
+    color: $primaryColor;
+  }
+
+  /* BOTTOM BARS ================================= */
+  .bar 	{ position:relative; display:block; }
+  .bar:before, .bar:after 	{
+    content:'';
+    height:0.1rem;
+    width:0;
+    bottom:0.1rem;
+    position:absolute;
+    background: $highlightColor;
+    transition:opacity 2s ease-in;
+    -moz-transition:opacity 2s ease-in;
+    -webkit-transition:opacity 2s ease-in;
+  }
+  .bar:before {
+    left:50%;
+  }
+  .bar:after {
+    right:50%;
+  }
+
+  /* active state */
+  .data-input:focus ~ .bar:before, .data-input:focus ~ .bar:after {
+    width:50%;
+  }
+
+
+  /* active state */
+  .data-input:focus ~ .highlight {
+    -webkit-animation:inputHighlighter 0.3s ease;
+    -moz-animation:inputHighlighter 0.3s ease;
+    animation:inputHighlighter 0.3s ease;
+  }
+
+}
+
+
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+	from { background:$primaryColor; }
+  to 	{ width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+	from { background:$primaryColor; }
+  to 	{ width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+	from { background:$primaryColor; }
+  to 	{ width:0; background:transparent; }
+}
