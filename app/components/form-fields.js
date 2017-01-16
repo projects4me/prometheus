@@ -110,7 +110,11 @@ export default Ember.Component.extend({
     @for FormFieldComponent
     @private
   */
-  isChanged: true,
+  isChanged: Ember.computed('value', 'oldValue', function() {
+    Logger.debug(this.get('value'));
+    Logger.debug(this.get('oldValue'));
+    return (this.get('value') !== this.get('oldValue'));
+  }),
 
   /**
     Some fields are dependant on other fields or rules. This flag is used to
@@ -169,6 +173,17 @@ export default Ember.Component.extend({
     @private
   */
   scheduler: null,
+
+  /**
+    This field stores the old value for audit puposed.
+
+    @property oldValue
+    @type mixed
+    @for FormFieldComponent
+    @private
+  */
+  oldValue: null,
+
   /**
     All the fields will have their own display needs so instead of handling
     them all in template, which would be very very unwise as we are talking
@@ -203,6 +218,16 @@ export default Ember.Component.extend({
     var isEmpty = false;
     const value = this.get('value');
 
+    if (this.get('oldValue') === null) {
+      if (value === undefined) {
+        this.set('value','');
+        this.set('oldValue','');
+      }
+      else {
+        this.set('oldValue',value);
+      }
+    }
+
     if (value === null || value === undefined) {
         isEmpty = true;
     }
@@ -217,22 +242,32 @@ export default Ember.Component.extend({
     this.set('isEmpty',isEmpty);
   },
 
+  /**
+    This function is called when the view has been rendered, we should ideally
+    use didRender but it was getting called every time the value was changed
+    which would mean that we have to add a mask every time a value is changed
+    that would not be good.
 
+    @method didInsertElement
+    @private
+  */
   didInsertElement:function(){
-    Logger.debug('********************************');
     const mask = this.getMask(this.get('mask'));
     const tagName = this.getTag(this.get('type'));
 
-    Logger.debug(mask);
-    Logger.debug(tagName);
-
     if (mask !== undefined && mask !== '' && tagName !== undefined && tagName !== '') {
-      Logger.debug("Applying the mask");
-      Logger.debug(this);
       Ember.$('#'+this.elementId+' '+tagName).mask(mask.mask,{translation:mask.maskTranslation});
     }
   },
 
+  /**
+    This function is used retrive the mask options
+
+    @method getMask
+    @param mask {String} The mask required e.g. alpha, alphanumeric, email, etc.
+    @returns maskOptions {Object} The settings required for masking the data
+    @todo possibly store the masks and options somewhere else to allow customizations
+  */
   getMask:function(mask){
     const masks = {
       'alpha' : {
@@ -246,25 +281,57 @@ export default Ember.Component.extend({
         'maskTranslation': {
           "C": { pattern: /^[a-zA-Z0-9\s]+$/, recursive: true }
         }
+      },
+      'email' : {
+        'mask' : "C",
+        'maskTranslation': {
+          "C": { pattern: /[\w@\-.+]/, recursive: true }
+        }
       }
 
     };
     return masks[mask];
   },
 
+  /**
+    This function is used to retrive the tag that is to be used for the selection
+    for a type
+
+    @method getTag
+    @param type {String} The type of field requried
+    @returns tagname {String} The tag name for the field type
+  */
   getTag:function(type){
     const tagNames = {
       'text' : 'input',
+      'textarea' : 'textarea',
+      'date' : 'input',
     };
     return tagNames[type];
   },
 
+  /**
+    This function is fired when a user presses a key on the keybord. We capture
+    this event in order to set the flag isTyping
+
+    @method keyDown
+  */
   keyDown:function(){
     if (this.get('isTyping') === false) {
       this.set('isTyping',true);
     }
   },
 
+  /**
+    This function if fired when a user releases a key on the keyborad. We are
+    capturing this event in order to update the isTyping flag. We are taking the
+    average typing speed of 41.4 words per minutes which is 0.69 words per second,
+    which results in 1495ms per word.
+
+    @method keyUp
+    @todo Maybe we can calculate the average typing speed at run time based on the user who is typing.
+    @todo Should clear the data on focus-out as well.
+  */
   keyUp:function(){
     const self = this;
     if (self.scheduler !== null)

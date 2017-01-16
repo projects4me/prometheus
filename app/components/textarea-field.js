@@ -33,5 +33,5 @@ export default Ember.TextArea.extend({
     @for TextareaFieldComponent
     @private
   */
-  classNames: ['form-control'],
+  classNames: ['form-control','data-input'],
 });

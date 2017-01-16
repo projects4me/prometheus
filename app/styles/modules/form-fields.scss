@@ -21,7 +21,7 @@
 
   /* LABEL ======================================= */
 
-  label 				 {
+  .floating-label {
     color:#999;
     font-size:1.4rem;
     font-weight:normal;
@@ -35,7 +35,7 @@
   }
 
   /* active state */
-  .data-input:focus ~ label, .data-input:valid ~ label 		{
+  .data-input:focus ~ .floating-label, .data-input:valid ~ .floating-label {
     top:-2rem;
     font-size:1rem;
     color: $primaryColor;
@@ -72,6 +72,12 @@
     -webkit-animation:inputHighlighter 0.3s ease;
     -moz-animation:inputHighlighter 0.3s ease;
     animation:inputHighlighter 0.3s ease;
+  }
+
+
+  .checkbox-primary input[type="checkbox"]:checked + label::before, .checkbox-primary input[type="radio"]:checked + label::before{
+    background-color: $primaryColor;
+    border-color: $primaryColor;
   }
 
 }

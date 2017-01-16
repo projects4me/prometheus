@@ -24,6 +24,7 @@
     "fullcalendar": "^3.0.0",
     "fullcalendar-scheduler": "^1.4.0",
     "chart.js": "^2.4.0",
-    "color-hash": "^1.0.3"
+    "color-hash": "^1.0.3",
+    "awesome-bootstrap-checkbox": "^0.3.7"
   }
 }
