@@ -215,6 +215,17 @@ export default Ember.Component.extend({
   */
   didReceiveAttrs() {
     this._super(...arguments);
+    this.setEmpty();
+  },
+
+  /**
+    This function is used to set the empty flag, this is isolated so that it
+    can be overridden by the form components whenever required.
+
+    @method setEmpty
+    @protected
+  */
+  setEmpty:function(){
     var isEmpty = false;
     const value = this.get('value');
 

@@ -59,7 +59,7 @@
               </ul>
             </li>
           {{else}}
-            <li>
+            <li class="treeview">
               <a href="/{{appPrefix}}/{{projectId}}/{{definition.anchorRoute}}" {{action "navigate" definition.route definition.routeParams definition.anchorRoute projectId}}>
                 <i class="fa fa-{{definition.icon}}"></i>
                 <span>{{t definition.label}}</span>

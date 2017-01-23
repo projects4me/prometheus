@@ -19,6 +19,11 @@
 
   .data-input:focus{ outline:none;border-color:$highlightColor}
 
+  .count, .error{
+    font-size: 1rem;
+    color: $primaryColor;
+  }
+
   /* LABEL ======================================= */
 
   .floating-label {
@@ -78,6 +83,14 @@
   .checkbox-primary input[type="checkbox"]:checked + label::before, .checkbox-primary input[type="radio"]:checked + label::before{
     background-color: $primaryColor;
     border-color: $primaryColor;
+  }
+
+  .radio-primary input[type="radio"]:checked + label::before{
+    border-color: $primaryColor;
+  }
+
+  .radio-primary input[type="radio"]:checked + label::after{
+    background-color: $primaryColor;
   }
 
 }

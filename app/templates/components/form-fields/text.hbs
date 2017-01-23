@@ -1,8 +1,10 @@
 <!-- This should be loaded later via the field view ideally -->
-{{text-field required="required" value=value}}
+{{text-field required="required" value=value maxlength=length}}
 <span class="highlight"></span>
 <span class="bar"></span>
 <label class="floating-label">{{label}}</label>
+<span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
+<span class="error hidden text-red">This field cannot be required</span>
 
 <br/>
 typing : {{isTyping}} | empty : {{isEmpty}} | changed : {{isChanged}}

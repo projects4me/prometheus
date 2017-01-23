@@ -4,20 +4,48 @@
   <div>
 
     Input Text field
-    {{form-fields
-      type="checkbox"
+    {{field-checkbox
+      placeholder="Select the data .."
+      label="Check box"
+      value=checkbox
+    }}
+
+    {{field-text
+      placeholder="Enter the issue name .."
+      label="Text"
+      value=text
+      mask="alphanumeric"
+    }}
+
+    {{field-textarea
+      placeholder="Enter the issue name .."
+      label="TextArea"
+      value=textbox
+      mask="alphanumeric"
+    }}
+
+    {{field-radio
       placeholder="Enter the issue name .."
       label="Name"
-      value=something
+      value=radio
       options=options
-      mask="alphanumeric"
+    }}
+
+    {{field-image
+      placeholder="Enter the issue name .."
+      label="Image"
+      value=img
     }}
 
   </div>
 
 </div>
 
-{{something}}
+{{checkbox}}
+{{text}}
+{{textbox}}
+{{radio}}
+
 <div class="issue">
   <div class="row">
 {{#each model as |issue|}}
