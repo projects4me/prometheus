@@ -1,8 +1,8 @@
 <!-- List template for text input field-->
 <span>
   {{#if definition.link}}
-    <a href="javascript:void(0);" {{action navigate}}>{{getProp model field}}</a>
+    <a href="javascript:void(0);" {{action navigate}}>{{get-prop model field}}</a>
   {{else}}
-    {{getProp model field}}
+    {{get-prop model field}}
   {{/if}}
 </span>

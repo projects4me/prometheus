@@ -1,6 +1,6 @@
 {{#if model}}
   {{#each model as |wiki|}}
-    {{#if (ifMatch wiki.locked "0")}}
+    {{#if (if-match wiki.locked "0")}}
       <div class="box-header with-border">
         <h3 class="box-title">{{t "view.app.wiki.page.edit" page=wiki.name}}</h3>
       </div>

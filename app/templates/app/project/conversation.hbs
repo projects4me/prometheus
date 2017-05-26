@@ -37,14 +37,14 @@
                   <div class="user-block">
                     <img class="img-circle" src="http://projects4me/userimage/get/{{entity.createdUser}}" alt="User Image">
                     <span class="subject"><a href="#">{{entity.subject}}</a></span>
-                    <span class="description"><a href="/app/user/{{entity.createdBy.id}}">{{entity.createdBy.name}}</a> - {{getDate entity "dateModified" "MMM Do 'YY, h:mm a"}}</span>
+                    <span class="description"><a href="/app/user/{{entity.createdBy.id}}">{{entity.createdBy.name}}</a> - {{get-date entity "dateModified" "MMM Do 'YY, h:mm a"}}</span>
                   </div>
                   <!-- /.user-block -->
                   <div class="box-tools">
 
                     <span class="upvotes">{{entity.votes.length}}
                       {{#if entity.votes}}
-                        {{#if (userCreated entity.votes currentUser.user.id)}}
+                        {{#if (user-created entity.votes currentUser.user.id)}}
                           <i class="fa fa-heart"></i>
                         {{else}}
                           <i class="fa fa-heart-o"></i>
@@ -61,12 +61,12 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                   <!-- post text -->
-                  <p>{{translateComment entity.description}}</p>
+                  <p>{{translate-comment entity.description}}</p>
 
                   <!-- /.attachment-block -->
 
                   <!-- Social sharing buttons -->
-                  {{#if (userCreated entity.votes currentUser.user.id)}}
+                  {{#if (user-created entity.votes currentUser.user.id)}}
                     {{t "view.app.conversation.you"}} <i class="fa fa-heart"></i>
                   {{else}}
                     <button type="button" class="btn btn-default btn-xs" {{action "upvote" entity.id}}>
@@ -75,7 +75,7 @@
                   {{/if}}
                   <span class="pull-right text-muted">
                     {{entity.comments.length}}
-                    {{#if (ifMatch entity.roomType "discussion")}}
+                    {{#if (if-match entity.roomType "discussion")}}
                       {{t "view.app.conversation.comments"}}
                     {{else}}
                       {{t "view.app.conversation.votes"}}
@@ -85,7 +85,7 @@
                 <!-- /.box-body -->
                 <div class="box-footer box-comments">
 
-                  {{#if (ifMatch entity.roomType "discussion")}}
+                  {{#if (if-match entity.roomType "discussion")}}
                     {{#each entity.comments as |comment|}}
                       <div class="box-comment">
                         <img class="img-circle img-sm" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
@@ -93,9 +93,9 @@
                         <div class="comment-text">
                           <span class="username">
                             <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
-                            <span class="text-muted pull-right">{{getDate comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
+                            <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
                           </span><!-- /.username -->
-                          {{translateComment comment.comment}}
+                          {{translate-comment comment.comment}}
                         </div>
                       </div>
                     {{/each}}
@@ -123,26 +123,26 @@
                       </form>
                     </div>
 
-                  {{else if (ifMatch entity.roomType "vote")}}
+                  {{else if (if-match entity.roomType "vote")}}
                     <div class="panel-body">
 
                       <div class="vote">
                         <div class="agree">
                           <div class="info-box">
-                            {{#if (userCreated entity.comments currentUser.user.id)}}
+                            {{#if (user-created entity.comments currentUser.user.id)}}
                               <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "view.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-up"></i></span>
                             {{else}}
                               <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "view.app.conversation.vote.clickup"}}" {{action "vote" "I agree" entity.id}}><i class="fa fa-thumbs-o-up"></i></span>
                             {{/if}}
                             <div class="info-box-content">
                               <span class="info-box-text">{{t "view.app.conversation.vote.upvote"}}</span>
-                              <span class="info-box-number">{{countVotes entity.comments "I agree"}}</span>
+                              <span class="info-box-number">{{count-votes entity.comments "I agree"}}</span>
 
                               <div class="progress">
-                                <div class="progress-bar bg-green" style="width: {{round (mult (div (countVotes entity.comments "I agree") entity.comments.length) 100)}}%"></div>
+                                <div class="progress-bar bg-green" style="width: {{round (mult (div (count-votes entity.comments "I agree") entity.comments.length) 100)}}%"></div>
                               </div>
                                 <span class="progress-description">
-                                  {{round (mult (div (countVotes entity.comments "I agree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.agree"}}
+                                  {{round (mult (div (count-votes entity.comments "I agree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.agree"}}
                                 </span>
                             </div>
                             <!-- /.info-box-content -->
@@ -152,20 +152,20 @@
                         <div class="disagree">
 
                           <div class="info-box">
-                            {{#if (userCreated entity.comments currentUser.user.id)}}
+                            {{#if (user-created entity.comments currentUser.user.id)}}
                               <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "view.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-down"></i></span>
                             {{else}}
                               <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "view.app.conversation.vote.clickdown"}}" {{action "vote" "I disagree" entity.id}}><i class="fa fa-thumbs-o-down"></i></span>
                             {{/if}}
                             <div class="info-box-content">
                               <span class="info-box-text">{{t "view.app.conversation.vote.downvote"}}</span>
-                              <span class="info-box-number">{{countVotes entity.comments "I disagree"}}</span>
+                              <span class="info-box-number">{{count-votes entity.comments "I disagree"}}</span>
 
                               <div class="progress">
-                                <div class="progress-bar bg-red" style="width: {{round (mult (div (countVotes entity.comments "I disagree") entity.comments.length) 100)}}%"></div>
+                                <div class="progress-bar bg-red" style="width: {{round (mult (div (count-votes entity.comments "I disagree") entity.comments.length) 100)}}%"></div>
                               </div>
                                 <span class="progress-description">
-                                  {{round (mult (div (countVotes entity.comments "I disagree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.disagree"}}
+                                  {{round (mult (div (count-votes entity.comments "I disagree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.disagree"}}
                                 </span>
                             </div>
                             <!-- /.info-box-content -->

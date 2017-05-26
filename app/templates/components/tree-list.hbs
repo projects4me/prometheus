@@ -1,5 +1,5 @@
 {{#each-in lists as |key item|}}
-  {{#if (objectEmpty item.nodes)}}
+  {{#if (object-empty item.nodes)}}
     <li class="wiki-list-no-parent">
       <a href="javascript:void(0);" {{action "loadWiki" projectId item.name}}>{{item.name}}</a>
     </li>

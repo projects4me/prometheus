@@ -95,12 +95,12 @@
             {{#if model.meta.links.next}}+{{/if}}
             <div class="btn-group">
               {{#if model.meta.links.prev}}
-                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" {{action "paginate" (getPage model.meta.links.prev.href)}}><i class="fa fa-chevron-left"></i></button>
+                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" {{action "paginate" (get-page model.meta.links.prev.href)}}><i class="fa fa-chevron-left"></i></button>
               {{else}}
                 <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}}"><i class="fa fa-chevron-left"></i></button>
               {{/if}}
               {{#if model.meta.links.next}}
-                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" {{action "paginate" (getPage model.meta.links.next.href)}}><i class="fa fa-chevron-right"></i></button>
+                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" {{action "paginate" (get-page model.meta.links.next.href)}}><i class="fa fa-chevron-right"></i></button>
               {{else}}
                 <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></button>
               {{/if}}
@@ -115,11 +115,11 @@
             <thead>
               <tr>
                 <th></th>
-                <th class="{{sortableClass "Issue.issueNumber" sort order}}" data-sort="Issue.issueNumberSortable" {{action "sortData" 'Issue.issueNumber'}}>#</th>
-                <th class="{{sortableClass "Issue.subject" sort order}}" data-sort="Issue.subjectSortable" {{action "sortData" 'Issue.subject'}}>Subject</th>
-                <th class="{{sortableClass "Issue.status" sort order}}" data-sort="Issue.statusSortable" {{action "sortData" 'Issue.status'}}>Status</th>
-                <th class="{{sortableClass "Issue.priority" sort order}}" data-sort="Issue.prioritySortable" {{action "sortData" 'Issue.priority'}}>Priority</th>
-                <th class="{{sortableClass "milestone.name" sort order}}" data-sort="milestone.nameSortable" {{action "sortData" 'milestone.name'}}>Milestone</th>
+                <th class="{{sortable-class "Issue.issueNumber" sort order}}" data-sort="Issue.issueNumberSortable" {{action "sortData" 'Issue.issueNumber'}}>#</th>
+                <th class="{{sortable-class "Issue.subject" sort order}}" data-sort="Issue.subjectSortable" {{action "sortData" 'Issue.subject'}}>Subject</th>
+                <th class="{{sortable-class "Issue.status" sort order}}" data-sort="Issue.statusSortable" {{action "sortData" 'Issue.status'}}>Status</th>
+                <th class="{{sortable-class "Issue.priority" sort order}}" data-sort="Issue.prioritySortable" {{action "sortData" 'Issue.priority'}}>Priority</th>
+                <th class="{{sortable-class "milestone.name" sort order}}" data-sort="milestone.nameSortable" {{action "sortData" 'milestone.name'}}>Milestone</th>
               </tr>
             </thead>
 
@@ -158,12 +158,12 @@
             {{#if model.meta.links.next}}+{{/if}}
             <div class="btn-group">
               {{#if model.meta.links.prev}}
-                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" {{action "paginate" (getPage model.meta.links.prev.href)}}><i class="fa fa-chevron-left"></i></button>
+                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" {{action "paginate" (get-page model.meta.links.prev.href)}}><i class="fa fa-chevron-left"></i></button>
               {{else}}
                 <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}}"><i class="fa fa-chevron-left"></i></button>
               {{/if}}
               {{#if model.meta.links.next}}
-                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" {{action "paginate" (getPage model.meta.links.next.href)}}><i class="fa fa-chevron-right"></i></button>
+                <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" {{action "paginate" (get-page model.meta.links.next.href)}}><i class="fa fa-chevron-right"></i></button>
               {{else}}
                 <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></button>
               {{/if}}

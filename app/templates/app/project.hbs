@@ -16,9 +16,9 @@
     </div>
   {{/if}}
 
-  {{#bread-crumbs outputStyle="bootstrap" tagName="ol" linkable=true as |component module|}}
+  {{#bread-crumbs tagName="ol" linkable=true as |component module|}}
     {{#bread-crumb route=module breadCrumbs=component}}
-        <i class="fa fa-{{navIcon module.title}}"></i>
+        <i class="fa fa-{{nav-icon module.title}}"></i>
         {{#if module.record}}
           {{module.title}}
         {{else}}

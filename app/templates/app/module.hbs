@@ -31,13 +31,13 @@
         <span class="list-view-count pull-left">Selected : {{selectedCount}}</span>
         <span class="pagination">
           {{#if model.content.meta._links.prev}}
-            <button type="button" class="btn btn-default" {{action "paginate" (getPage model.content.meta._links.next.href)}}><i class="fa fa-angle-double-left"></i></button>
+            <button type="button" class="btn btn-default" {{action "paginate" (get-page model.content.meta._links.next.href)}}><i class="fa fa-angle-double-left"></i></button>
           {{else}}
             <button type="button" class="btn btn-default disabled"><i class="fa fa-angle-double-left"></i></button>
           {{/if}}
 
           {{#if model.content.meta._links.next}}
-            <button type="button" class="btn btn-default" {{action "paginate" (getPage model.content.meta._links.next.href)}}><i class="fa fa-angle-double-right"></i></button>
+            <button type="button" class="btn btn-default" {{action "paginate" (get-page model.content.meta._links.next.href)}}><i class="fa fa-angle-double-right"></i></button>
           {{else}}
             <button type="button" class="btn btn-default disabled"><i class="fa fa-angle-double-right"></i></button>
           {{/if}}

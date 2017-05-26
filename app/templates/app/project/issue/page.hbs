@@ -148,7 +148,7 @@
                   <li>
                     <div class="user-block">
                       <img class="img-circle" src="http://projects4me/userimage/get/{{comment.createdBy}}">
-                      <span class="description">{{translateComment comment.comment}}</span>
+                      <span class="description">{{translate-comment comment.comment}}</span>
                     </div>
                   </li>
                 {{/each}}
@@ -181,10 +181,10 @@
                 {{#each issue.childissues as |issue|}}
                   <li>
                     <div class="issue-block">
-                      <div class="priority">{{priorityIcon issue.priority}}</div>
+                      <div class="priority">{{priority-icon issue.priority}}</div>
                       <div class="data-block">
                         <span class="subject">{{issue.issueNumber}} - {{issue.subject}}</span>
-                        <span class="description">{{translateComment issue.description}}</span>
+                        <span class="description">{{translate-comment issue.description}}</span>
                         <strong>{{t "view.app.issue.status"}}:</strong> <span class="badge {{issue.status}}">{{t (concat "view.app.issue.lists.status." issue.status)}}</span>
                       </div>
                     </div>
@@ -276,7 +276,7 @@
               <li>
                 <img src="http://projects4me/userimage/get/{{member.id}}" alt="{{member.name}}">
                 <a class="users-list-name" href="#">{{member.name}}</a>
-                <span class="users-list-date">{{getRole member.id issue.roles issue.memberships}}</span>
+                <span class="users-list-date">{{get-role member.id issue.roles issue.memberships}}</span>
               </li>
             {{/each}}
           </ul>
@@ -308,11 +308,11 @@
               <span class="info-box-number" data-trigger="hover" data-toggle="popover" title="{{t (concat "view.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}" data-placement="top" data-content="{{milestone.description}}">{{milestone.name}} - {{milestone.issues.length}} {{t "global.module.plural.issue"}}</span>
 
               <div class="progress">
-                <div class="progress-bar" style="width:{{milestone.progress}}%" data-toggle='tooltip' title='{{t "view.app.project.detail.milestone.progress" closed=(getIssuecount milestone.issues 'closed') total=milestone.issues.length}}'></div>
+                <div class="progress-bar" style="width:{{milestone.progress}}%" data-toggle='tooltip' title='{{t "view.app.project.detail.milestone.progress" closed=(get-issuecount milestone.issues 'closed') total=milestone.issues.length}}'></div>
               </div>
               <span class="progress-description">
                 {{moment-format milestone.startDate 'Do MMM. YYYY'}} - {{moment-format milestone.endDate 'Do MMM. YYYY'}}
-                <span class="pull-right">({{getIssuecount milestone.issues 'closed'}}/{{milestone.issues.length}} {{t "global.module.plural.issue"}})</span>
+                <span class="pull-right">({{get-issuecount milestone.issues 'closed'}}/{{milestone.issues.length}} {{t "global.module.plural.issue"}})</span>
               </span>
             {{/milestone-block}}
           {{/each}}
@@ -352,7 +352,7 @@
             <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "view.app.project.detail.openissues"}}</span>
-              <span class="info-box-number">{{getIssuecount issuetime "open"}}</span>
+              <span class="info-box-number">{{get-issuecount issuetime "open"}}</span>
             </div>
           </div>
 
@@ -360,7 +360,7 @@
             <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "view.app.project.detail.closedissues"}}</span>
-              <span class="info-box-number">{{getIssuecount issuetime "closed"}}</span>
+              <span class="info-box-number">{{get-issuecount issuetime "closed"}}</span>
             </div>
           </div>
 
@@ -368,7 +368,7 @@
             <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer-outline"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "view.app.project.detail.estimatedtime"}}</span>
-              <span class="info-box-number">{{getTimelog issuetime "estimated"}}</span>
+              <span class="info-box-number">{{get-timelog issuetime "estimated"}}</span>
             </div>
           </div>
 
@@ -376,7 +376,7 @@
             <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "view.app.project.detail.spenttime"}}</span>
-              <span class="info-box-number">{{getTimelog issuetime "spent"}}</span>
+              <span class="info-box-number">{{get-timelog issuetime "spent"}}</span>
             </div>
           </div>
 
