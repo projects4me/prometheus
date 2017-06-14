@@ -1,6 +1,5 @@
 import Ember from "ember";
 import _ from "lodash";
-import navi from "../../utils/navigation/navigation";
 import queryParser from "../../utils/query/parser";
 import queryBuilder from "../../utils/query/builder";
 import MD from "../../utils/metadata/metadata";

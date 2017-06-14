@@ -189,14 +189,17 @@ export default {
           operator = this.rulesOperators[operator];
         }
 
+        /* jshint loopfunc: true */
         var metaDataIndex = _.findIndex(metaData, function(o) { return o.id === field; });
+        /* jshint loopfunc: false */
+
         // create the statement objects
-  			statements[statement] ={
-  				id: field,
-  				field: field,
-  				operator: operator,
-  				value: value
-	    	};
+        statements[statement] ={
+            id: field,
+            field: field,
+            operator: operator,
+            value: value
+        };
 
         if (metaData[metaDataIndex].input !== undefined){
           statements[statement].input = metaData[metaDataIndex].input;
@@ -225,9 +228,11 @@ export default {
 
   				// populate the statement
   				statements[statement].condition = conditon;
+                /* jshint loopfunc: true */
   				toReplace.forEach(function(element){
   					statements[statement].rules.push(statements[element]);
   				});
+                /* jshint loopfunc: false */
   			}
   			else {
   				// populate the statement

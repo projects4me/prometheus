@@ -1,5 +1,4 @@
 import Ember from "ember";
-import _ from "lodash";
 
 /**
   This component is used to render different activity blocks for the system

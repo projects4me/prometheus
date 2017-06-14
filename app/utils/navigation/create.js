@@ -1,5 +1,5 @@
 import Ember from "ember";
-import _ from "lodash";
+
 export default Ember.Controller.extend({
   someValue:'asdfasd',
   actions: {
@@ -12,23 +12,23 @@ export default Ember.Controller.extend({
         // validate the required fields
         // validate the format
         // validate dependencies
-      var metaData = this.get('metaData');
+      // var metaData = this.get('metaData');
       //console.log(metaData);
       //console.log(_);
-      var model = this.get('model');
+      // var model = this.get('model');
       //console.log(metaData);
-      _.forEach(metaData.sections, function(value, key) {
+      // _.forEach(metaData.sections, function(value, key) {
         //console.log(key);
-      });
+      // });
 
-      var sections = _.chain(metaData.sections).map(function(_el){
-        return _el.fields;
-      });
+      // var sections = _.chain(metaData.sections).map(function(_el){
+      //   return _el.fields;
+      // });
 
-      var section2 = _.flatten(metaData.sections).map(function(_el){
+      // var section2 = _.flatten(metaData.sections).map(function(_el){
         //console.log(_el);
-      });
-      model.set('notes','These are all test projects');
+      // });
+      //model.set('notes','These are all test projects');
       //console.log('model element');
       //console.log(model);
       //model.save();

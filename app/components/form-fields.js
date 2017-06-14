@@ -269,6 +269,37 @@ export default Ember.Component.extend({
     if (mask !== undefined && mask !== '' && tagName !== undefined && tagName !== '') {
       Ember.$('#'+this.elementId+' '+tagName).mask(mask.mask,{translation:mask.maskTranslation});
     }
+
+    if (this.type === 'enum' || this.type === 'multienum') {
+      Ember.$('#'+this.elementId+' select').selectpicker();
+    }
+    else if (this.type === 'date') {
+      Ember.$('#'+this.elementId+' input').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        locale: {
+          format: 'MMMM D, YYYY'
+        }
+      });
+    }
+    else if (this.type === 'datetime') {
+      Ember.$('#'+this.elementId+' input').daterangepicker({
+        singleDatePicker: true,
+        timePicker: true,
+        showDropdowns: true,
+        locale: {
+          format: 'MMMM D, YYYY  h:mm A'
+        }
+      });
+    }
+    else if (this.type === 'email') {
+      Ember.$('#'+this.elementId+' input').mask("A", {
+        translation: {
+          "A": { pattern: /[\w@\-.+]/, recursive: true }
+        }
+      });
+    }
+
   },
 
   /**

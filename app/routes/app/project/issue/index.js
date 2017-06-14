@@ -85,6 +85,18 @@ export default App.extend({
   */
   projectId: null,
 
+
+  /**
+    The placeholder object for new issue
+
+    @property newIssue
+    @type IssueModel
+    @for AppProjectIssueRoute
+    @private
+  */
+  newIssue: null,
+
+
   /**
     The model for this route
 
@@ -155,6 +167,8 @@ export default App.extend({
     @private
   */
   setupController:function(controller,model){
+    this.newIssue = this.get('store').createRecord('issue');
+    controller.set('newIssue',this.get('newIssue'));
     controller.set('model',model);
     controller.set('query',this.get('query'));
     controller.set('sort',this.get('sort'));

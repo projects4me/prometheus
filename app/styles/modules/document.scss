@@ -348,3 +348,16 @@ span[data-atwho-at-query*="#"]{
 .breadcrumb li:last-child {
     font-weight: 600;
 }
+
+.dropdown-menu {
+  z-index: 1100;
+
+  i, select, .available{
+    cursor: pointer;
+  }
+
+  .off {
+    color: $lightColor;
+  }
+
+}

@@ -81,6 +81,17 @@ export default Ember.Controller.extend({
   */
   selectedCount: 0,
 
+
+  /**
+    This flag is used to show or hide the modal dialog box for adding new tags
+
+    @property addTagDialog
+    @type bool
+    @for AppProjectWikiEditController
+    @private
+  */
+  addTagDialog: false,
+
   /**
     The action handlers for the issue list view
 
@@ -277,6 +288,37 @@ export default Ember.Controller.extend({
       this.transitionToRoute('app.project.issue.page',{issueNumber:issue.get('issueNumber')});
       Logger.debug("-AppProjectIssueController::openDetail");
     },
+
+    /**
+      This function is used to show the add modal dialog box
+
+      @method showDialog
+    */
+    showDialog:function(){
+      this.set('addTagDialog',true);
+      Logger.debug('newIssue');
+      Logger.debug(this.get('newIssue'));
+
+    },
+
+    /**
+      This function is used to add a new issue in the system
+    */
+
+    addIssue:function(){
+
+    },
+
+
+    /**
+      This function is used to hide the add tag modal
+
+      @method removeModal
+    */
+    removeModal:function(){
+      this.set('addTagDialog',false);
+    }
+
 
   }
 });
