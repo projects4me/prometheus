@@ -6,7 +6,7 @@ moduleFor('service:related-fields', 'Unit | Service | related fields', {
 });
 
 // Replace this with your real tests.
-test('it exists', function(assert) {
+test('get users list', function(assert) {
   let service = this.subject();
-  assert.ok(service);
+  assert.equal(service.getList('users',['id','name'],{'query':'Users.id:1'}),[{'id':{'name':"Hammad"}}]);
 });

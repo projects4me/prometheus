@@ -37,14 +37,14 @@ export default Ember.Service.extend({
     store: service('store'),
 
     /**
-     * This function is responsible for retrieving nd storing the lists required by dropdowns
+     * This function is responsible for retrieving and storing the lists required by dropdowns
      *
      * @param model The name of the model for which the data is required
      * @param fields The fields that should be selected
      * @param queryParams The query based on which the data must be retreived
      * @param valueField The field that will be used as the select identifier
      */
-    getList:function(model, fields, queryParams, valueField = 'id'){
+    getRelated:function(model, fields, queryParams, valueField = 'id'){
         Logger.debug("Model");
         Logger.debug(model);
         Logger.debug("Fields");
@@ -53,9 +53,32 @@ export default Ember.Service.extend({
         Logger.debug(queryParams);
         Logger.debug("Value Field");
         Logger.debug(valueField);
-        return [];
-    }
+        return [{'id':{'name':"Hammad"}}];
+    },
 
+    /**
+     * This function is responsible for retrieving and storing the lists required by dropdowns
+     *
+     * @param list
+     * @param fields The fields that should be selected
+     * @param queryParams The query based on which the data must be retreived
+     * @param valueField The field that will be used as the select identifier
+     */
+    getList:function(list){
+
+        if (list === "issue_type")
+        {
+            return [
+                {value:"epic",label:"Epic"},
+                {value:"story",label:"Story"},
+                {value:"task",label:"Task"},
+                {value:"bug",label:"Bug"},
+                {value:"improvement",label:"Improvement"},
+            ];
+        }
+        return [];
+
+    }
 
 
 });

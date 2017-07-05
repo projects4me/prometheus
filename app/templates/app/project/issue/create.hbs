@@ -1,0 +1,56 @@
+<form {{action 'addIssue' on='submit'}}>
+    <div class="form-group">
+        {{field-text
+                placeholder="Enter the issue subject .."
+                label="Issue Subject"
+                value=newIssue.subject
+                mask="alphanumeric"
+        }}
+
+        {{field-textarea
+                placeholder="Enter the issue description .."
+                label="Description"
+                value=newIssue.description
+                mask="alphanumeric"
+        }}
+
+        type
+        {{#power-select
+                class="form-control"
+                options=projectList
+                selected=(find-by "value" newIssue.type projectList)
+                placeholder=(t "view.nav.selectproject")
+                searchField="label"
+                onchange=(action "projectChanged")
+        as |project|}}
+            {{project.label}}
+        {{/power-select}}
+
+        owner
+
+        assignee
+
+        {{field-date
+                placeholder="Enter the issue name .."
+                label="Start Date"
+                value=newIssue.startDate
+                mask="alphanumeric"
+        }}
+
+        {{field-date
+                placeholder="Enter the issue name .."
+                label="End Date"
+                value=newIssue.endDate
+                mask="alphanumeric"
+        }}
+
+        status
+
+        priority
+
+        milestone
+
+
+
+    </div>
+</form>

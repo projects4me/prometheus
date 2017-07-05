@@ -12,47 +12,57 @@ import Ember from "ember";
 
 export default Ember.Controller.extend({
 
-  /**
-    The session service which is offered by ember-simple-auth that will be used
-    in order to verfy whether the used is authenticated
-
-    @property session
-    @type Object
-    @for AppController
-    @public
-  */
-  session: Ember.inject.service('session'),
-
-  /**
-    The service that we use to maintain the currentUser
-
-    @property currentUser
-    @type Object
-    @for AppController
-    @public
-  */
-  currentUser: Ember.inject.service('current-user'),
-
-  /**
-    The events that this controller is listing to
-
-    @property actions
-    @type Object
-    @for AppController
-    @public
-  */
-  actions: {
+    /**
+     * The session service which is offered by ember-simple-auth that will be used
+     * in order to verfy whether the used is authenticated
+     *
+     * @property session
+     * @type Object
+     * @for AppController
+     * @public
+     */
+    session: Ember.inject.service('session'),
 
     /**
-      This function invalidates the session which effectively logs the user out
-      of the application
+     * The service that we use to maintain the currentUser
+     *
+     * @property currentUser
+     * @type Object
+     * @for AppController
+     * @public
+     */
+    currentUser: Ember.inject.service('current-user'),
 
-      @method invalidateSession
-      @public
-    */
-    invalidateSession() {
-      this.get('session').invalidate();
+    /**
+     * The related field service that is used in order to manage dropdowns and relate fields
+     *
+     * @property relatedField
+     * @type relatedFieldService
+     * @for AppController
+     * @public
+     */
+    relatedFields: Ember.inject.service('related-fields'),
+
+    /**
+     * The events that this controller is listing to
+     *
+     * @property actions
+     * @type Object
+     * @for AppController
+     * @public
+     */
+    actions: {
+
+        /**
+         * This function invalidates the session which effectively logs the user out
+         * of the application
+         *
+         * @method invalidateSession
+         * @public
+         */
+        invalidateSession() {
+          this.get('session').invalidate();
+        }
     }
-  }
 
 });
