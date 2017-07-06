@@ -1,72 +1,198 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
 import Ember from 'ember';
 
 /**
-  This component is used to render the HTML5 div with contenteditable property
-
-  inspired from https://github.com/KasperTidemann/ember-contenteditable-view
-
-  @class ContentEditableComponent
-  @module App.Components
-  @namespace Prometheus
-*/
+ * This component is used to render the HTML5 div with contenteditable property
+ * inspired from https://github.com/KasperTidemann/ember-contenteditable-view
+ *
+ * @class ContentEditable
+ * @namespace Prometheus.Components
+ * @extends Ember.Component
+ * @author Hammad Hassan <gollomer@gmail.com>
+ */
 export default Ember.Component.extend({
-	tagName: 'div',
-	attributeBindings: ['contenteditable','spellcheck','placeholder'],
-  classNames: ["editable"],
 
-	// Variables:
-  editable: true,
-  checkSpelling: false,
-	isUserTyping: false,
-	plaintext: false,
+    /**
+     * The tag to be used for this component
+     *
+     * @property tagName
+     * @for ContentEditable
+     * @type String
+     * @private
+     */
+    tagName: 'div',
 
-	// Properties:
-	contenteditable: (function() {
-		var editable = this.get('editable');
+    /**
+     * The attributes that should be rendered with the element
+     *
+     * @property attributeBindings
+     * @for ContentEditable
+     * @type Array
+     * @private
+     */
+    attributeBindings: ['contenteditable','spellcheck','placeholder'],
 
-		return editable ? 'true' : undefined;
-	}).property('editable'),
+    /**
+     * The classes to be rendered with the element
+     *
+     * @property classNames
+     * @for ContentEditable
+     * @type Array
+     * @private
+     */
+    classNames: ["editable"],
 
-  spellcheck: (function() {
-		var spelling = this.get('checkSpelling');
+    /**
+     * The flag that allows editing
+     *
+     * @property editable
+     * @for ContentEditable
+     * @type Bool
+     * @public
+     */
+    editable: true,
 
-		return spelling ? 'true' : 'false';
-	}).property('checkSpelling'),
+    /**
+     * The flag that controls spell checking
+     *
+     * @property checkSpelling
+     * @for ContentEditable
+     * @type Bool
+     * @public
+     */
+    checkSpelling: false,
 
-	// Processors:
-	processValue: function() {
-		if (!this.get('isUserTyping') && this.get('value')) {
-			return this.setContent();
-		}
-	},
+    /**
+     * The flag that indicates whether a user is typing in the field or not
+     *
+     * @property isUserTyping
+     * @for ContentEditable
+     * @type Bools
+     * @public
+     */
+    isUserTyping: false,
 
-	// Observers:
-	valueObserver: (function() {
-		Ember.run.once(this, 'processValue');
-	}).observes('value', 'isUserTyping'),
+    /**
+     * The flag that forces only plaintext to be used
+     *
+     * @property plaintext
+     * @for ContentEditable
+     * @type Bool
+     * @public
+     */
+    plaintext: false,
 
-	// Events:
-	didInsertElement: function() {
-		return this.setContent();
-	},
+    /**
+     * The function that enables or disables editing in the div
+     *
+     * @property contenteditable
+     * @for ContentEditable
+     * @type function
+     * @public
+     */
+    contenteditable: (function() {
+        var editable = this.get('editable');
 
-	focusOut: function() {
-		return this.set('isUserTyping', false);
-	},
+        return editable ? 'true' : undefined;
+    }).property('editable'),
 
-	keyDown: function(event) {
-		if (!event.metaKey) {
-			return this.set('isUserTyping', true);
-		}
-	},
+    /**
+     * The function that enables or disables spell checking
+     *
+     * @property spellcheck
+     * @for ContentEditable
+     * @type function
+     * @public
+     */
+    spellcheck: (function() {
+        var spelling = this.get('checkSpelling');
 
-	keyUp: function() {
-		return this.set('value', this.$().html());
-	},
+        return spelling ? 'true' : 'false';
+    }).property('checkSpelling'),
 
+    /**
+     * The observer on value and isUserTyping
+     *
+     * @property valueObserver
+     * @for ContentEditable
+     * @type function
+     * @public
+     */
+    valueObserver: (function() {
+        Ember.run.once(this, 'processValue');
+    }).observes('value', 'isUserTyping'),
 
-	setContent: function() {
-		//return this.$().html(Ember.Handlebars.Utils.escapeExpression(this.get('value')));
-    return this.get('value');
-	}
+    /**
+     * This function is used in to set the contents after a value has been changed
+     *
+     * @method processValue
+     * @returns {*}
+     * @public
+     */
+    processValue: function() {
+        if (!this.get('isUserTyping') && this.get('value')) {
+            return this.setContent();
+        }
+    },
+
+    /**
+     * This function is called by Ember when the HTML elements have been rendered in the view
+     *
+     * @method didInsertElement
+     * @returns {*}
+     * @public
+     */
+    didInsertElement: function() {
+        return this.setContent();
+    },
+
+    /**
+     * This is an event handler function which is called when the focus is removed from the div
+     *
+     * @method focusOut
+     * @returns {*}
+     * @public
+     */
+    focusOut: function() {
+        return this.set('isUserTyping', false);
+    },
+
+    /**
+     * This is an event handler function which is called when a key is pressed in the div
+     *
+     * @method keyDown
+     * @param {Object} event
+     * @returns {*}
+     * @public
+     */
+    keyDown: function(event) {
+        if (!event.metaKey) {
+            return this.set('isUserTyping', true);
+        }
+    },
+
+    /**
+     * This is an event handler function which is called when a key is released from the div
+     *
+     * @method keyUp
+     * @returns {*}
+     * @public
+     */
+    keyUp: function() {
+        return this.set('value', this.$().html());
+    },
+
+    /**
+     * This is the function called to retrieve the contents in the element to set up in the component
+     *
+     * @returns {*}
+     * @public
+     */
+    setContent: function() {
+        //return this.$().html(Ember.Handlebars.Utils.escapeExpression(this.get('value')));
+        return this.get('value');
+    }
 });

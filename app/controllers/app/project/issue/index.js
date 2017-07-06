@@ -1,3 +1,7 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 import Ember from "ember";
 import _ from "lodash";
@@ -5,100 +9,102 @@ import queryBuilder from "../../../../utils/query/builder";
 import queryParser from "../../../../utils/query/parser";
 
 /**
- This controller is used to provide the interaction between the template and
- the route. The basic features that this controller provide are pagination,
- sorting and filtering the data.
-
- @class AppProjectIssueController
- @extends Ember.Controller
+ * This controller is used to provide the interaction between the template and
+ * the route. The basic features that this controller provide are pagination,
+ * sorting and filtering the data.
+ *
+ * @class Issue
+ * @namespace Prometheus.Controllers
+ * @module App.Project
+ * @extends Ember.Controller
+ * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default Ember.Controller.extend({
 
     /**
-     Query params that the controller needs to support, it may seem that the
-     same paramters are defined in both the route and the controller but is not
-     the case exactly, the parameters defined in the route are meant for the model
-     while the parameters defined in the controller are meant for the interaction
-     with the view. e.g. the query might be different because the user might be
-     composing it as compared to te query string that was last used to fetch the
-     data.
-
-     @property queryParams
-     @for app.module
-     @type Array
-     @private
+     * Query params that the controller needs to support, it may seem that the
+     * same paramters are defined in both the route and the controller but is not
+     * the case exactly, the parameters defined in the route are meant for the model
+     * while the parameters defined in the controller are meant for the interaction
+     * with the view. e.g. the query might be different because the user might be
+     * composing it as compared to te query string that was last used to fetch the
+     * data.
+     *
+     * @property queryParams
+     * @for Issue
+     * @type Array
+     * @private
      */
     queryParams: ['sort','order','page','query'],
 
     /**
-     This property stores the current sorting order of the page, storing it here
-     allows us to toggle it.
-
-     @property order
-     @type String
-     @for AppProjectIssueController
-     @private
+     * This property stores the current sorting order of the page, storing it here
+     * allows us to toggle it.
+     *
+     * @property order
+     * @type String
+     * @for Issue
+     * @private
      */
     order: 'desc',
 
     /**
-     This property stores the current page that the user is viewing,
-
-     @property page
-     @type String
-     @for AppProjectIssueController
-     @private
+     * This property stores the current page that the user is viewing,
+     *
+     * @property page
+     * @type String
+     * @for Issue
+     * @private
      */
     page: 1,
 
     /**
-     This property stores the field on which the page if currently sored on
-
-     @property sort
-     @type String
-     @for AppProjectIssueController
-     @private
+     * This property stores the field on which the page if currently sored on
+     *
+     * @property sort
+     * @type String
+     * @for Issue
+     * @private
      */
     sort: 'Issue.issueNumber',
 
     /**
-     This property stores the current query based on which the page is filtered.
-
-     @property query
-     @type String
-     @for AppProjectIssueController
-     @private
+     * This property stores the current query based on which the page is filtered.
+     *
+     * @property query
+     * @type String
+     * @for Issue
+     * @private
      */
     query: '',
 
     /**
-     The count of the selected items in the list view.
-
-     @property selectedCount
-     @for AppProjectIssueController
-     @type Integer
-     @private
+     * The count of the selected items in the list view.
+     *
+     * @property selectedCount
+     * @for Issue
+     * @type Integer
+     * @private
      */
     selectedCount: 0,
 
 
     /**
-     The action handlers for the issue list view
-
-     @property action
-     @for app.module
-     @type Object
-     @public
+     * The action handlers for the issue list view
+     *
+     * @property action
+     * @for Issue
+     * @type Object
+     * @public
      */
     actions:{
 
-
         /**
-         This action allows us to more from one page to the other
-
-         @method paginate
-         @param page {Integer} The page that the user wishes to see
-         @public
+         * This action allows us to more from one page to the other
+         *
+         * @method paginate
+         * @param {Integer} page The page that the user wishes to see
+         * @public
          */
         paginate:function(page){
             Logger.debug('AppProjectIssueController::paginate('+page+')');
@@ -107,10 +113,10 @@ export default Ember.Controller.extend({
         },
 
         /**
-         THis action filters the data
-
-         @method filter
-         @public
+         * This action filters the data
+         *
+         * @method filter
+         * @public
          */
         filter:function(){
             Logger.debug('AppProjectIssueController::filter()');
@@ -118,11 +124,11 @@ export default Ember.Controller.extend({
         },
 
         /**
-         This action is used to sort the data
-
-         @method sortData
-         @param field {String} The field that the user wishes to sort the data on
-         @public
+         * This action is used to sort the data
+         *
+         * @method sortData
+         * @param field {String} The field that the user wishes to sort the data on
+         * @public
          */
         sortData:function(field){
             Logger.debug('AppProjectIssueController::sortData('+field+')');
@@ -148,12 +154,12 @@ export default Ember.Controller.extend({
 
 
         /**
-         This action is used to reload the page, whether it be with changes in the
-         paramters or without any change
-
-         @method reloadPage
-         @public
-         @todo Hack Alert!!
+         * This action is used to reload the page, whether it be with changes in the
+         * paramters or without any change
+         *
+         * @method reloadPage
+         * @public
+         * @todo Hack Alert!!
          */
         reloadPage:function(){
             Logger.debug('AppProjectIssueController::reloadPage()');
@@ -163,24 +169,24 @@ export default Ember.Controller.extend({
         },
 
         /**
-         Keep the query being searched in the controller
-
-         @method populateQuery
-         @param query
-         @return void
-         @public
-         @todo allow auto complete
+         * Keep the query being searched in the controller
+         *
+         * @method populateQuery
+         * @param {String} query
+         * @return void
+         * @public
+         * @todo allow auto complete
          */
         populateQuery:function(query){
             this.queryString = query;
         },
 
         /**
-         Conver the rul object to string and perform searched
-
-         @method searchByRules
-         @return void
-         @public
+         * Convert the rul object to string and perform searched
+         *
+         * @method searchByRules
+         * @return void
+         * @public
          */
         searchByRules:function(){
             var result = queryBuilder.getRules();
@@ -192,9 +198,10 @@ export default Ember.Controller.extend({
         },
 
         /**
-         Open the filter view if not already Open
-
-         @method openFilters
+         * Open the filter view if not already Open
+         *
+         * @method openFilters
+         * @public
          */
         openFilters:function(){
             Ember.$('.search [data-toggle=collapse]').click();
@@ -202,25 +209,24 @@ export default Ember.Controller.extend({
         },
 
         /**
-         Toggle the dropdown arrow on toggle
-
-         @method toggleFilters
-         @for app.module
-         @private
+         * Toggle the dropdown arrow on toggle
+         *
+         * @method toggleFilters
+         * @private
          */
         toggleFilters:function(){
             Ember.$('#toggleFilters').toggleClass('dropToggle');
         },
 
         /**
-         This function is triggered when the checkbox on the the top right of the list is called
-         This function only selects the items currently visible in the list-view
-
-         @method selectAll
-         @param value {Boolean} whether the selectAll checkbox was selected of not
-         @return void
-         @todo allow the retention of the checkboxes across the multiple pages
-         @public
+         * This function is triggered when the checkbox on the the top right of the list is called
+         * This function only selects the items currently visible in the list-view
+         *
+         * @method selectAll
+         * @param {Boolean} value whether the selectAll checkbox was selected of not
+         * @return void
+         * @todo allow the retention of the checkboxes across the multiple pages
+         * @public
          */
         selectAll:function(value){
             // Select all the checkboxes in the list view
@@ -237,14 +243,14 @@ export default Ember.Controller.extend({
         },
 
         /**
-         This function is triggerd when an item in the list is selected
-
-         @method select
-         @param value {Boolean} whether the checkbox was selected of not
-         @return void
-         @todo allow the retention of the checkboxes across the multiple pages
-         @todo convert to a component
-         @public
+         * This function is triggerd when an item in the list is selected
+         *
+         * @method select
+         * @param value {Boolean} whether the checkbox was selected of not
+         * @return void
+         * @todo allow the retention of the checkboxes across the multiple pages
+         * @todo convert to a component
+         *@public
          */
         select:function(value){
             // Select/Deslect one checkboxes in the list view
@@ -262,16 +268,15 @@ export default Ember.Controller.extend({
                 // if checked boxes are equal to total boxes then enable check all box
                 if (Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length === Ember.$('.list-view input[type=checkbox]').not('[data-select=all]').length) {
                     Ember.$('[data-select=all]').prop('checked',true);
-                }
-            }
+                }}
         },
 
         /**
-         This function is used to navigate the user to the detail page for the issues
-
-         @method openDetail
-         @param issue {IssueModel} Te issue model to which we have to navigate to
-         @public
+         * This function is used to navigate the user to the detail page for the issues
+         *
+         * @method openDetail
+         * @param {IssueModel} issue the issue model to which we have to navigate to
+         * @public
          */
         openDetail:function(issue){
             Logger.debug("AppProjectIssueController::openDetail");
@@ -291,4 +296,5 @@ export default Ember.Controller.extend({
             Logger.debug("-AppProjectIssueController::createIssue");
         }
     }
+
 });
