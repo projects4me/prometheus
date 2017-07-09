@@ -9,334 +9,336 @@ import queryBuilder from "../../utils/query/builder";
 import MD from "../../utils/metadata/metadata";
 
 /**
-The controller for the module route, it is loaded when a user tried to navigate to the route
-:module
-e.g. acme.projects4.me/app/projects
-By default this controller is configured to load the list view, if a custom implementation of list view is required then it must extend from this class
-
-@class app.module
-@module app
-@submodule Controller
-@namespace Prometheus
-@extends Ember.Controller
-*/
+ * The controller for the module route, it is loaded when a user tried to navigate to the route
+ * :module
+ * e.g. acme.projects4.me/app/projects
+ * By default this controller is configured to load the list view, if a custom implementation of
+ * list view is required then it must extend from this class
+ *
+ * @class Projectlist
+ * @namespace Prometheus.Controller
+ * @module App
+ * @extends Ember.Controller
+ * @author Hammad Hassan <gollomer@gmail.com>
+ */
 
 export default Ember.Controller.extend({
-  /**
-    The count of the selected items in the list view.
 
-    @property selectedCount
-    @for app.module
-    @type Integer
-    @private
-  */
-  selectedCount:0,
-
-  /**
-    Query params that the controller needs to support
-
-    @property queryParams
-    @for app.module
-    @type Array
-    @private
-    @todo See this can be dynamic
-  */
-  queryParams: ['page','query','sort','order'],
-
-  /**
-    The current page number
-
-    @property page
-    @for app.module
-    @type Integer
-    @public
-  */
-  page:1,
-
-  /**
-    The current query
-
-    @property query
-    @for app.module
-    @type String
-    @public
-  */
-  query:null,
-
-  /**
-    The current query string
-
-    @property queryString
-    @for app.module
-    @type String
-    @public
-  */
-  queryString:null,
-
-  /**
-    The current sorted property
-
-    @property sort
-    @for app.module
-    @type String
-  */
-  sort:null,
-
-  /**
-    The current sorted property
-
-    @property sortOrder
-    @for app.module
-    @type String
-  */
-  sortOrder:'desc',
-
-  /**
-    Setup Controller function is called by the router at the end of the
-    setupController function defined in the app.module route. This function
-    is used to perform actions required at the start of each render cycle.
-
-    This is a replacement of init function which is only called once but if the
-    setupController function in router calls this function then it is called
-    every time a user tries to visit the rout
-
-    @method setupController
-    @for app.module
-    @private
-  */
-  setupController: function () {
-    this._super();
-    // call initialize action after the view has been rendered
-    Ember.run.schedule("afterRender",this,function() {
-      this.send("setupQuery");
-    });
-  },
-
-  /**
-    The action handlers for the view
-
-    @property action
-    @for app.module
-    @type Object
-    @public
-  */
-  actions:{
     /**
-     This function is triggered when the checkbox on the the top right of the list is called
-     This function only selects the items currently visible in the list-view
-
-     @method selectAll
-     @param value {Boolean} whether the selectAll checkbox was selected of not
-     @return void
-     @todo allow the retention of the checkboxes across the multiple pages
-     @public
+     * The count of the selected items in the list view.
+     *
+     * @property selectedCount
+     * @for Projectlist
+     * @type Integer
+     * @private
      */
-    selectAll:function(value){
-      // Select all the checkboxes in the list view
-      _.each(Ember.$('.list-view input[type=checkbox]').not('[data-select=all]'),function(element) {
-        element.checked = value;
-      });
-
-      this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
-    },
+    selectedCount:0,
 
     /**
-     This function is triggerd when an item in the list is selected
-
-     @method select
-     @param value {Boolean} whether the checkbox was selected of not
-     @return void
-     @todo allow the retention of the checkboxes across the multiple pages
-     @public
+     * Query params that the controller needs to support
+     *
+     * @property queryParams
+     * @for Projectlist
+     * @type Array
+     * @private
+     * @todo See this can be dynamic
      */
-    select:function(value){
-      // Select/Deslect one checkboxes in the list view
-      this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
+    queryParams: ['page','query','sort','order'],
 
-      // uncheck the select all checkbox, if an item was deselected and the select all checkbox was checked
-      if (!value) {
-        var selectAll = Ember.$('[data-select=all]').prop('checked');
-        if (selectAll){
-          Ember.$('[data-select=all]').prop('checked',false);
-        }
-      }
-      // If all the items in the list were selected then check the select all checkbox as well
-      else {
-        // if checked boxes are equal to total boxes then enable check all box
-        if (Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length === Ember.$('.list-view input[type=checkbox]').not('[data-select=all]').length) {
-          Ember.$('[data-select=all]').prop('checked',true);
-        }
-      }
-
-    },
     /**
-     This action is triggerd when a user tries to navigate to the deatil view
-
-     @method detail
-     @param id {String} the identifier of the module
-     @return void
-     @public
+     * The current page number
+     *
+     * @property page
+     * @for Projectlist
+     * @type Integer
+     * @public
      */
-    detail:function(id){
-      //var URIData = navi.buildURL(Ember.String.camelize(this.module),'detail',{id:id});
-      this.transitionToRoute("app.project.index",{projectId:id});
+    page:1,
+
+    /**
+     * The current query
+     *
+     * @property query
+     * @for Projectlist
+     * @type String
+     * @public
+     */
+    query:null,
+
+    /**
+     * The current query string
+     *
+     * @property queryString
+     * @for Projectlist
+     * @type String
+     * @public
+     */
+    queryString:null,
+
+    /**
+     * The current sorted property
+     *
+     * @property sort
+     * @for Projectlist
+     * @type String
+     * @public
+     */
+    sort:null,
+
+    /**
+     * The current sorted property
+     *
+     * @property sortOrder
+     * @for Projectlist
+     * @type String
+     * @public
+     */
+    sortOrder:'desc',
+
+    /**
+     * Setup Controller function is called by the router at the end of the
+     * setupController function defined in the app.module route. This function
+     * is used to perform actions required at the start of each render cycle.
+     *
+     * This is a replacement of init function which is only called once but if the
+     * setupController function in router calls this function then it is called
+     * every time a user tries to visit the route
+     *
+     * @method setupController
+     * @private
+     */
+    setupController: function () {
+        this._super();
+        // call initialize action after the view has been rendered
+        Ember.run.schedule("afterRender",this,function() {
+            this.send("setupQuery");
+        });
     },
 
     /**
-      This function is used to handle pagination
+     * The action handlers for the view
+     *
+     * @property action
+     * @for Projectlist
+     * @type Object
+     * @public
+     */
+    actions:{
 
-      @method paginate
-      @param pages
-      @return void
-      @public
-    */
-    paginate:function(page){
-      this.set('selectedCount',0);
-      Ember.$('[data-select=all]').prop('checked',false);
-      this.set('page',page);
-      this.send('navigate');
-    },
+        /**
+         * This function is triggered when the checkbox on the the top right of the list is called
+         * This function only selects the items currently visible in the list-view
+         *
+         * @method selectAll
+         * @param {String} value whether the selectAll checkbox was selected of not
+         * @return void
+         * @public
+         * @todo allow the retention of the checkboxes across the multiple pages
+         */
+        selectAll:function(value){
+            // Select all the checkboxes in the list view
+            _.each(Ember.$('.list-view input[type=checkbox]').not('[data-select=all]'),function(element) {
+                element.checked = value;
+            });
 
-    /**
-      This function is used to handle search queries
+            this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
+        },
 
-      @method filter
-      @param query
-      @return void
-      @public
-      @todo Validate query before submission
-    */
-    filter:function(){
-        this.send('navigate');
-    },
+        /**
+         * This function is triggered when an item in the list is selected
+         *
+         * @method select
+         * @param {String} value whether the checkbox was selected of not
+         * @return void
+         * @public
+         * @todo allow the retention of the checkboxes across the multiple pages
+         */
+        select:function(value){
+            // Select/Deslect one checkboxes in the list view
+            this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
 
-    /**
-      Keep the query being searched in the controller
+            // uncheck the select all checkbox, if an item was deselected and the select all checkbox was checked
+            if (!value) {
+                var selectAll = Ember.$('[data-select=all]').prop('checked');
+                if (selectAll){
+                    Ember.$('[data-select=all]').prop('checked',false);
+                }
+            }
+            // If all the items in the list were selected then check the select all checkbox as well
+            else {
+                // if checked boxes are equal to total boxes then enable check all box
+                if (Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length === Ember.$('.list-view input[type=checkbox]').not('[data-select=all]').length) {
+                    Ember.$('[data-select=all]').prop('checked',true);
+                }
+            }
 
-      @method populateQuery
-      @param query
-      @return void
-      @public
-      @todo allow auto complete
-    */
-    populateQuery:function(query){
-      this.queryString = query;
-      this.send('setupQuery');
-    },
+        },
 
-    /**
-      Conver the rul object to string and perform searched
+        /**
+         * This action is triggered when a user tries to navigate to the detail view
+         *
+         * @method detail
+         * @param {String} id the identifier of the module
+         * @return void
+         * @public
+         */
+        detail:function(id){
+            //var URIData = navi.buildURL(Ember.String.camelize(this.module),'detail',{id:id});
+            this.transitionToRoute("app.project.index",{projectId:id});
+        },
 
-      @method searchByRules
-      @return void
-      @public
-    */
-    searchByRules:function(){
-      var result = queryBuilder.getRules();
-      if (!Ember.$.isEmptyObject(result)) {
-        var query = queryParser.getQueryString(result);
-        this.queryString = query;
-        this.set('query', query);
-        /*
-        var URIData = navi.buildURL(Ember.String.camelize(this.module),'module');
-        this.transitionToRoute(URIData.route,URIData.options,{ queryParams: { page: this.page, query:this.queryString }});
-        */
-        this.send('navigate');
-      }
-    },
-    i18n:null,
-    /**
-      This function will be used to initialize the page and initialize the query
-      using jQuery Query Builder
+        /**
+         * This function is used to handle pagination
+         *
+         * @method paginate
+         * @param {Integer} pages
+         * @return void
+         * @public
+         */
+        paginate:function(page){
+            this.set('selectedCount',0);
+            Ember.$('[data-select=all]').prop('checked',false);
+            this.set('page',page);
+            this.send('navigate');
+        },
 
-      @method initialize
-      @for app.module
-      @private
-    */
-    setupQuery:function(){
-      Logger.debug('Setup query');
-      var i18n = this.get('i18n');
-      var filters = MD.create().getViewMeta('Project','filters',i18n).enabledFilters;
-      var rules = queryParser.getRules(this.get('query'),filters);
-      Logger.debug(rules);
-      Logger.debug(filters);
-      queryBuilder.init('#builder',filters);
-      if (rules !== undefined && rules !== '') {
-        queryBuilder.setRules(rules);
-      }
-    },
-    /**
-      This metho is responsible for getting data sorted
+        /**
+         * This function is used to handle search queries
+         *
+         * @method filter
+         * @return void
+         * @public
+         * @todo Validate query before submission
+         */
+        filter:function(){
+            this.send('navigate');
+        },
 
-      @method sortData
-      @for app.module
-      @private
-    */
-    sortData:function(field){
-      //field = this.module+'.'+field;
-      // If the field is already being sorted on then just toggle it
-      if (field === this.sort) {
-        if (this.sortOrder === 'desc') {
-          this.set('sortOrder','asc');
-        } else {
-          this.set('sortOrder','desc');
+        /**
+         * Keep the query being searched in the controller
+         *
+         * @method populateQuery
+         * @param {String} query
+         * @return void
+         * @public
+         * @todo allow auto complete
+         */
+        populateQuery:function(query){
+            this.queryString = query;
+            this.send('setupQuery');
+        },
+
+        /**
+         * Convert the rule object to string and perform searched
+         *
+         * @method searchByRules
+         * @return void
+         * @public
+         */
+        searchByRules:function(){
+            var result = queryBuilder.getRules();
+            if (!Ember.$.isEmptyObject(result)) {
+                var query = queryParser.getQueryString(result);
+                this.queryString = query;
+                this.set('query', query);
+                /*
+                 var URIData = navi.buildURL(Ember.String.camelize(this.module),'module');
+                 this.transitionToRoute(URIData.route,URIData.options,{ queryParams: { page: this.page, query:this.queryString }});
+                 */
+                this.send('navigate');
+            }
+        },
+
+        /**
+         * This function will be used to initialize the page and initialize the query
+         * using jQuery Query Builder
+         *
+         * @method setupQuery
+         * @private
+         */
+        setupQuery:function(){
+            Logger.debug('Setup query');
+            var i18n = this.get('i18n');
+            var filters = MD.create().getViewMeta('Project','filters',i18n).enabledFilters;
+            var rules = queryParser.getRules(this.get('query'),filters);
+            Logger.debug(rules);
+            Logger.debug(filters);
+            queryBuilder.init('#builder',filters);
+            if (rules !== undefined && rules !== '') {
+                queryBuilder.setRules(rules);
+            }
+        },
+
+        /**
+         * This method is responsible for getting data sorted
+         *
+         * @method sortData
+         * @private
+         */
+        sortData:function(field){
+            //field = this.module+'.'+field;
+            // If the field is already being sorted on then just toggle it
+            if (field === this.sort) {
+                if (this.sortOrder === 'desc') {
+                    this.set('sortOrder','asc');
+                } else {
+                    this.set('sortOrder','desc');
+                }
+            }
+            // Else first clear the previous sort and set the new one
+            /**
+             @todo for some reason sortOrder is not set before navigation
+             */
+            else {
+                Ember.$('[data-sort="'+this.sort+'Sortable"]').attr('class','sortable');
+                this.set('sortOrder','desc');
+                this.set('sort',field);
+            }
+
+            // Set the styling
+            Ember.$('[data-sort="'+field+'Sortable"]').attr('class','sortable sortable-'+this.sortOrder);
+
+            // Perform the sorting
+            this.send('navigate');
+        },
+
+        /**
+         * Navigate to the desired page in the list
+         *
+         * @method navigate
+         * @private
+         */
+        navigate:function(){
+            if (this.page === undefined || this.page === '' || this.page === null){
+                this.set('page',0);
+            }
+            //var URIData = navi.buildURL(Ember.String.camelize(this.module),'projectlist');
+            //this.send('navigateRoute',URIData.route,{ queryParams: { page: this.page, query:this.queryString, sort:this.sort, order:this.sortOrder }});
+            //this.transitionToRoute(URIData.route,{ queryParams: { page: this.page, query:this.queryString, sort:this.sort, order:this.sortOrder }});
+            Logger.debug("Trying to navigate .... ");
+            this.send('refreshRoute',{ queryParams: { page: this.page, query:this.queryString, sort:this.sort, order:this.sortOrder }});
+        },
+
+        /**
+         * Open the filter view if not already Open
+         *
+         * @method openFilters
+         * @public
+         */
+        openFilters:function(){
+            if (Ember.$('.list-view-filters').css('display') === 'none'){
+                Ember.$('.search [data-toggle=collapse]').click();
+            }
+        },
+
+        /**
+         * Toggle the dropdown arrow on toggle
+         *
+         * @method toggleFilters
+         * @public
+         */
+        toggleFilters:function(){
+            Ember.$('#toggleFilters').toggleClass('dropToggle');
         }
-      }
-      // Else first clear the previous sort and set the new one
-      /**
-        @todo for some reason sortOrder is not set before navigation
-      */
-      else {
-        Ember.$('[data-sort="'+this.sort+'Sortable"]').attr('class','sortable');
-        this.set('sortOrder','desc');
-        this.set('sort',field);
-      }
-
-      // Set the styling
-      Ember.$('[data-sort="'+field+'Sortable"]').attr('class','sortable sortable-'+this.sortOrder);
-
-      // Perform the sorting
-      this.send('navigate');
-    },
-
-    /**
-      Navigate to the desired page in the list
-
-      @method navigate
-      @for app.module
-      @private
-    */
-    navigate:function(){
-      if (this.page === undefined || this.page === '' || this.page === null){
-        this.set('page',0);
-      }
-      //var URIData = navi.buildURL(Ember.String.camelize(this.module),'projectlist');
-      //this.send('navigateRoute',URIData.route,{ queryParams: { page: this.page, query:this.queryString, sort:this.sort, order:this.sortOrder }});
-      //this.transitionToRoute(URIData.route,{ queryParams: { page: this.page, query:this.queryString, sort:this.sort, order:this.sortOrder }});
-      Logger.debug("Trying to navigate .... ");
-      this.send('refreshRoute',{ queryParams: { page: this.page, query:this.queryString, sort:this.sort, order:this.sortOrder }});
-    },
-
-    /**
-      Open the filter view if not already Open
-
-      @method openFilters
-    */
-    openFilters:function(){
-      if (Ember.$('.list-view-filters').css('display') === 'none'){
-        Ember.$('.search [data-toggle=collapse]').click();
-      }
-    },
-
-    /**
-      Toggle the dropdown arrow on toggle
-
-      @method toggleFilters
-      @for app.module
-      @private
-    */
-    toggleFilters:function(){
-      Ember.$('#toggleFilters').toggleClass('dropToggle');
     }
-  }
 });

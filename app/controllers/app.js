@@ -2,18 +2,17 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 import Ember from "ember";
 
 /**
-  This the app controller. App is as the main route for the application's
-  authenticated part
-
-  @class AppController
-  @extends Ember.Controller
-  @author Hammad Hassan gollmer@gmail.com
-*/
-
+ * This the app controller. App is as the main route for the application's
+ * authenticated part
+ *
+ * @class App
+ * @namespace Prometheus.Controller
+ * @extends Ember.Controller
+ * @author Hammad Hassan gollmer@gmail.com
+ */
 export default Ember.Controller.extend({
 
     /**
@@ -22,7 +21,7 @@ export default Ember.Controller.extend({
      *
      * @property session
      * @type Object
-     * @for AppController
+     * @for App
      * @public
      */
     session: Ember.inject.service('session'),
@@ -32,7 +31,7 @@ export default Ember.Controller.extend({
      *
      * @property currentUser
      * @type Object
-     * @for AppController
+     * @for App
      * @public
      */
     currentUser: Ember.inject.service('current-user'),
@@ -42,7 +41,7 @@ export default Ember.Controller.extend({
      *
      * @property relatedField
      * @type relatedFieldService
-     * @for AppController
+     * @for App
      * @public
      */
     relatedFields: Ember.inject.service('related-fields'),
@@ -52,7 +51,7 @@ export default Ember.Controller.extend({
      *
      * @property actions
      * @type Object
-     * @for AppController
+     * @for App
      * @public
      */
     actions: {
@@ -65,8 +64,9 @@ export default Ember.Controller.extend({
          * @public
          */
         invalidateSession() {
-          this.get('session').invalidate();
+            this.get('session').invalidate();
         }
+
     }
 
 });

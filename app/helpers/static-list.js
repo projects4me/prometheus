@@ -2,7 +2,6 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 import Ember from "ember";
 
 /**
@@ -11,7 +10,7 @@ import Ember from "ember";
  * @method staticList
  * @param name {String} The list name
  * @return list {Array} The list
- * @todo Optimize
+ * @todo Not sure if this is used
  */
 export function staticList(params) {
     return Ember.String.htmlSafe(HTML);
@@ -20,8 +19,9 @@ export function staticList(params) {
 /**
  * The object that provides the PriorityIcon helper function
  *
- * @class PriorityIconHelper
+ * @class PriorityIcon
+ * @namespace Prometheus.Helpers
  * @extends Ember.Helper.helper
- * @author Hammad Hassan gollomer@gmail.com
+ * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(priorityIcon);
+export default Ember.Helper.helper(staticList);

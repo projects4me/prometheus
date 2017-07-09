@@ -16,8 +16,10 @@ const { inject: { service } } = Ember;
  * This job is this service to retrieve, store, and handle this. In order to do so this service is dependant on
  * ember-simple-auth's Adaptive Storage, Socket.IO service and Ember Data Store Service
  *
- * @class RelatedFieldService
+ * @class RelatedField
+ * @namespace Prometheus.Services
  * @extends Ember.Service
+ * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default Ember.Service.extend({
 
@@ -83,6 +85,5 @@ export default Ember.Service.extend({
         return [];
 
     }
-
 
 });

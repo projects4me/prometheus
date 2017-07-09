@@ -9,12 +9,18 @@ import config from './config/environment';
 
 let App;
 
-//Ember.MODEL_FACTORY_INJECTIONS = true;
-
+/**
+ * This is the Application variable what is used to extend the Ember Application object
+ *
+ * @class Application
+ * @namespace Prometheus
+ * @extends Ember.Application
+ * @author Hammad Hassan <gollomer@gmail.com>
+ */
 App = Ember.Application.extend({
-  modulePrefix: config.modulePrefix,
-  podModulePrefix: config.podModulePrefix,
-  Resolver
+    modulePrefix: config.modulePrefix,
+    podModulePrefix: config.podModulePrefix,
+    Resolver
 });
 
 loadInitializers(App, config.modulePrefix);

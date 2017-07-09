@@ -2,71 +2,70 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 import Ember from "ember";
 
 /* Maintain some global variables to keep a track of what has happened */
 var alreadyRun = false;
 var oldConsole = {};
 
-
 /**
-  This is the initializer for the javascript behaviors in the application. We
-  are using some libraries that needs to intiate some behaviors like pave and
-  tooltip that is accomplished using this initializer.
-
-  @class JavascriptBehaviorsInitializer
-  @author Hammad Hassan gollomer@gmail.com
-*/
+ * This is the initializer for the javascript behaviors in the application. We
+ * are using some libraries that needs to intiate some behaviors like pave and
+ * tooltip that is accomplished using this initializer.
+ *
+ * @class JavascriptBehaviors
+ * @namespace Prometheus.Initializers
+ * @author Hammad Hassan <gollomer@gmail.com>
+ */
 export default {
-  /**
-   The name of the initializer
+    /**
+     * The name of the initializer
+     *
+     * @property name
+     * @type String
+     * @for JavascriptBehaviors
+     * @public
+     */
+    name: 'javascript-behaviors',
 
-   @property name
-   @type String
-   @for Initializer
-   @public
-  */
-  name: 'javascript-behaviors',
+    /**
+     * This function is called by Emberjs by default and in this application we
+     * setup the Logger configuration which can be overwritter in the environment
+     * configuration.
+     *
+     * @method initialize
+     * @private
+     */
+    initialize: function() {
+        if (alreadyRun) {
+            return;
+        } else {
+            alreadyRun = true;
+        }
+        Ember.Router.reopen({
+            startProgress:function(){
+                Pace.restart();
+            }.on('willTransition'),
 
-  /**
-    This function is called by Emberjs by default and in this application we
-    setup the Logger configuration which can be overwritter in the environment
-    configuration.
-
-    @method initialize
-    @private
-  */
-  initialize: function() {
-    if (alreadyRun) {
-      return;
-    } else {
-      alreadyRun = true;
-    }
-    Ember.Router.reopen({
-      startProgress:function(){
-        Pace.restart();
-      }.on('willTransition'),
-
-      initComponents:function(){
-        Ember.$(function () {
-          Ember.$('[data-toggle="tooltip"]').tooltip();
+            initComponents:function(){
+                Ember.$(function () {
+                    Ember.$('[data-toggle="tooltip"]').tooltip();
+                });
+            }.on('didTransition')
         });
-      }.on('didTransition')
-    });
 
-    Messenger.options = {
-      extraClasses: 'messenger-fixed messenger-on-top',
-      theme: 'air'
-    };
+        Messenger.options = {
+            extraClasses: 'messenger-fixed messenger-on-top',
+            theme: 'air'
+        };
 
-    console.history = [];
-    for (var i in console) {
-    if (typeof console[i] === 'function') {
-      oldConsole[i] = console[i];
-      var strr = '(function(){console.history.push({func:\'' + i + '\',args : Array.prototype.slice.call(arguments)});oldConsole[\'' + i + '\'].apply(console, arguments);})';
-      console[i] = eval(strr);
-      }
+        console.history = [];
+        for (var i in console) {
+            if (typeof console[i] === 'function') {
+                oldConsole[i] = console[i];
+                var strr = '(function(){console.history.push({func:\'' + i + '\',args : Array.prototype.slice.call(arguments)});oldConsole[\'' + i + '\'].apply(console, arguments);})';
+                console[i] = eval(strr);
+            }
+        }
     }
-  }
 };

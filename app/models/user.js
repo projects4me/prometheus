@@ -2,134 +2,136 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 import DS from "ember-data";
 
 /**
-  The user model
-
-  @class UserModel
-  @extends DS.Model
-  @author Hammad Hassan gollmer@gmail.com
-*/
+ * The user model
+ *
+ * @class User
+ * @namespace Prometheus.Model
+ * @extends DS.Model
+ * @author Hammad Hassan <gollomer@gmail.com>
+ */
 export default DS.Model.extend({
-  /**
-   Username
 
-   @property username
-   @type String
-   @for UserModel
-   @private
-  */
-  username: DS.attr('string'),
+    /**
+     * Username
+     *
+     * @property username
+     * @type String
+     * @for User
+     * @private
+     */
+    username: DS.attr('string'),
 
-  /**
-   Email Address
+    /**
+     * Email Address
+     *
+     * @property email
+     * @type String
+     * @for User
+     * @private
+     */
+    email: DS.attr('string'),
 
-   @property email
-   @type String
-   @for UserModel
-   @private
-  */
-  email: DS.attr('string'),
+    /**
+     * Status
+     *
+     * @property status
+     * @type String
+     * @for User
+     * @private
+     */
+    status: DS.attr('string'),
 
-  /**
-   Status
+    /**
+     * Name
+     *
+     * @property name
+     * @type String
+     * @for User
+     * @private
+     */
+    name: DS.attr('string'),
 
-   @property status
-   @type String
-   @for UserModel
-   @private
-  */
-  status: DS.attr('string'),
+    /**
+     * Date on which the user was created
+     *
+     * @property dateCreated
+     * @type String
+     * @for User
+     * @private
+     */
+    dateCreated: DS.attr('string'),
 
-  /**
-   name
+    /**
+     * Date on which the user was last modified
+     *
+     * @property dateModified
+     * @type String
+     * @for User
+     * @private
+     */
+    dateModified: DS.attr('string'),
 
-   @property name
-   @type String
-   @for UserModel
-   @private
-  */
-  name: DS.attr('string'),
+    /**
+     * Soft deletion flag
+     *
+     * @property deleted
+     * @type String
+     * @for User
+     * @private
+     */
+    deleted: DS.attr('string'),
 
-  /**
-   Date on which the user was created
+    /**
+     * Description
+     *
+     * @property description
+     * @type String
+     * @for User
+     * @private
+     */
+    description: DS.attr('string'),
 
-   @property dateCreated
-   @type String
-   @for UserModel
-   @private
-  */
-  dateCreated: DS.attr('string'),
+    /**
+     * User who created this user
+     *
+     * @property createdUser
+     * @type String
+     * @for User
+     * @private
+     */
+    createdUser: DS.attr('string'),
 
-  /**
-   Date on which the user was last modified
+    /**
+     * User who modified this user
+     *
+     * @property modifiedUser
+     * @type String
+     * @for User
+     * @private
+     */
+    modifiedUser: DS.attr('string'),
 
-   @property dateModified
-   @type String
-   @for UserModel
-   @private
-  */
-  dateModified: DS.attr('string'),
+    /**
+     * Title of the user
+     *
+     * @property title
+     * @type String
+     * @for User
+     * @private
+     */
+    title: DS.attr('string'),
 
-  /**
-   Soft deletion flag
+    /**
+     * Phone number of the user
+     *
+     * @property phone
+     * @type String
+     * @for User
+     * @private
+     */
+    phone: DS.attr('string')
 
-   @property deleted
-   @type String
-   @for UserModel
-   @private
-  */
-  deleted: DS.attr('string'),
-
-  /**
-   Description
-
-   @property description
-   @type String
-   @for UserModel
-   @private
-  */
-  description: DS.attr('string'),
-
-  /**
-   User who created this user
-
-   @property createdUser
-   @type String
-   @for UserModel
-   @private
-  */
-  createdUser: DS.attr('string'),
-
-  /**
-   User who modified this user
-
-   @property modifiedUser
-   @type String
-   @for UserModel
-   @private
-  */
-  modifiedUser: DS.attr('string'),
-
-  /**
-   Title of the user
-
-   @property title
-   @type String
-   @for UserModel
-   @private
-  */
-  title: DS.attr('string'),
-
-  /**
-   Phone number of the user
-
-   @property phone
-   @type String
-   @for UserModel
-   @private
-  */
-  phone: DS.attr('string')
 });
