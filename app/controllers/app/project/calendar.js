@@ -89,6 +89,8 @@ export default Ember.Controller.extend({
          * @public
          */
         clicked(event, jsEvent, view){
+            jsEvent = jsEvent;
+            view = view;
             this.showModal(event);
         },
 

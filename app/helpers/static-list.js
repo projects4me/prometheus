@@ -13,7 +13,7 @@ import Ember from "ember";
  * @todo Not sure if this is used
  */
 export function staticList(params) {
-    return Ember.String.htmlSafe(HTML);
+    return Ember.String.htmlSafe(params[0]);
 }
 
 /**
