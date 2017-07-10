@@ -458,13 +458,13 @@
             "name": "app/controllers/app/projectlist.js",
             "modules": {},
             "classes": {
-                "Prometheus.Controller.Projectlist": 1
+                "Prometheus.Controllers.Projectlist": 1
             },
             "fors": {
                 "Projectlist": 1
             },
             "namespaces": {
-                "Prometheus.Controller": 1
+                "Prometheus.Controllers": 1
             }
         },
         "app/controllers/app.js": {
@@ -1015,9 +1015,7 @@
                 "Prometheus.Routes.Conversation": 1
             },
             "fors": {
-                "Conversation": 1,
-                "app.Conversation": 1,
-                "app.module": 1
+                "Conversation": 1
             },
             "namespaces": {
                 "Prometheus.Routes": 1
@@ -1154,11 +1152,10 @@
         "app/services/related-fields.js": {
             "name": "app/services/related-fields.js",
             "modules": {},
-            "classes": {
-                "Prometheus.Services.RelatedField": 1
-            },
+            "classes": {},
             "fors": {
-                "RelatedFieldService": 1
+                "RelatedField": 1,
+                "Prometheus.Services.RelatedField": 1
             },
             "namespaces": {
                 "Prometheus.Services": 1
@@ -1256,13 +1253,6 @@
             "namespaces": {
                 "Prometheus": 1
             }
-        },
-        "app/router.js": {
-            "name": "app/router.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
         }
     },
     "modules": {
@@ -1312,8 +1302,6 @@
                 "Wiki": 1,
                 "Prometheus.Routes.Index": 1,
                 "Prometheus.Routes.Conversation": 1,
-                "app.Conversation": 1,
-                "app.module": 1,
                 "Prometheus.Routes.Wiki": 1
             },
             "fors": {
@@ -1321,9 +1309,7 @@
                 "Calendar": 1,
                 "Conversation": 1,
                 "Index": 1,
-                "Wiki": 1,
-                "app.Conversation": 1,
-                "app.module": 1
+                "Wiki": 1
             },
             "namespaces": {
                 "Prometheus.Controllers": 1,
@@ -1378,7 +1364,7 @@
                 "Prometheus.Routes.Module": 1,
                 "Prometheus.Controller.Module": 1,
                 "Module": 1,
-                "Prometheus.Controller.Projectlist": 1,
+                "Prometheus.Controllers.Projectlist": 1,
                 "Projectlist": 1,
                 "Prometheus.Controller.App": 1,
                 "Prometheus.Controller.Signin": 1,
@@ -1409,8 +1395,7 @@
                 "Prometheus.Routes.AppRoute": 1,
                 "Prometheus.Serializers.Application": 1,
                 "Prometheus.Services.CurrentUser": 1,
-                "Prometheus.Services.RelatedField": 1,
-                "Prometheus.Services.RelatedFieldService": 1
+                "Prometheus.Services.RelatedField": 1
             },
             "fors": {
                 "Module": 1,
@@ -1428,9 +1413,11 @@
                 "Prometheus.Routes.Application": 1,
                 "CurrentUser": 1,
                 "Prometheus.Services.CurrentUser": 1,
-                "RelatedFieldService": 1
+                "RelatedField": 1,
+                "Prometheus.Services.RelatedField": 1
             },
             "namespaces": {
+                "Prometheus.Controllers": 1,
                 "Prometheus.Controller": 1,
                 "Prometheus.Helpers": 1,
                 "Prometheus.Initializers": 1,
@@ -1440,8 +1427,8 @@
                 "Prometheus.Utils": 1
             },
             "tag": "module",
-            "file": "app/services/related-fields.js",
-            "line": 9,
+            "file": "app/serializers/application.js",
+            "line": 8,
             "description": "The module route, it is loaded when a user tried to navigate to the route :module e.g. acme.projects4.me/app/projects/"
         },
         "i18n": {
@@ -2232,16 +2219,16 @@
             "module": "App",
             "namespace": ""
         },
-        "Prometheus.Controller.Projectlist": {
-            "name": "Prometheus.Controller.Projectlist",
-            "shortname": "Prometheus.Controller.Projectlist",
+        "Prometheus.Controllers.Projectlist": {
+            "name": "Prometheus.Controllers.Projectlist",
+            "shortname": "Prometheus.Controllers.Projectlist",
             "classitems": [],
             "plugins": [],
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
             "module": "App",
-            "namespace": "Prometheus.Controller",
+            "namespace": "Prometheus.Controllers",
             "file": "app/controllers/app/projectlist.js",
             "line": 11,
             "description": "The controller for the module route, it is loaded when a user tried to navigate to the route\n:module\ne.g. acme.projects4.me/app/projects\nBy default this controller is configured to load the list view, if a custom implementation of\nlist view is required then it must extend from this class",
@@ -2908,28 +2895,6 @@
             "extends": "AppRoute",
             "author": "Hammad Hassan <gollomer@gmail.com>"
         },
-        "app.Conversation": {
-            "name": "app.Conversation",
-            "shortname": "app.Conversation",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "App.Project",
-            "namespace": ""
-        },
-        "app.module": {
-            "name": "app.module",
-            "shortname": "app.module",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "App.Project",
-            "namespace": ""
-        },
         "Prometheus.Routes.Wiki": {
             "name": "Prometheus.Routes.Wiki",
             "shortname": "Prometheus.Routes.Wiki",
@@ -3072,23 +3037,7 @@
         },
         "Prometheus.Services.RelatedField": {
             "name": "Prometheus.Services.RelatedField",
-            "shortname": "Prometheus.Services.RelatedField",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "App",
-            "namespace": "Prometheus.Services",
-            "file": "app/services/related-fields.js",
-            "line": 9,
-            "description": "This is the service that is used to mange relate field. In many cased e.g. Owner, AssignedUser, Projects. The total\nnumber of these entities in the system are low but they are very widely used throughout the application. In order to\nensure good performance we can simply store these lists in the local storage or cookies but alas that is not simple.\nAs a local storage persists over the course of the application and if an update is made in any of the stored lists\nthis would not get updated.\n\nThis job is this service to retrieve, store, and handle this. In order to do so this service is dependant on\nember-simple-auth's Adaptive Storage, Socket.IO service and Ember Data Store Service",
-            "extends": "Ember.Service",
-            "author": "Hammad Hassan <gollomer@gmail.com>"
-        },
-        "Prometheus.Services.RelatedFieldService": {
-            "name": "Prometheus.Services.RelatedFieldService",
-            "shortname": "RelatedFieldService",
+            "shortname": "RelatedField",
             "classitems": [],
             "plugins": [],
             "extensions": [],
@@ -3414,8 +3363,10 @@
         },
         {
             "file": "app/components/action-menu.js",
-            "line": 28,
+            "line": 29,
             "description": "Allowing capture of all possible event and simply forwarding them",
+            "itemtype": "method",
+            "name": "onAction",
             "params": [
                 {
                     "name": "action",
@@ -3988,6 +3939,8 @@
             "file": "app/components/content-editable.js",
             "line": 188,
             "description": "This is the function called to retrieve the contents in the element to set up in the component",
+            "itemtype": "method",
+            "name": "setContent",
             "return": {
                 "description": "",
                 "type": "*"
@@ -4171,32 +4124,14 @@
         },
         {
             "file": "app/components/field-view.js",
-            "line": 92,
-            "todo": [
-                "fix multi enum",
-                "on apply update model for date field"
-            ],
-            "class": "Prometheus.Components.FieldView",
-            "namespace": "Prometheus.Components"
-        },
-        {
-            "file": "app/components/field-view.js",
             "line": 129,
             "description": "This is a utility function that is used to display the error message above\nthe field and add a blink effect on the input to highlight error.",
-            "mehtod": "blickError",
+            "itemtype": "method",
+            "name": "blickError",
             "access": "public",
             "tagname": "",
             "todo": [
                 "get the display time from the application configuration"
-            ],
-            "class": "Prometheus.Components.FieldView",
-            "namespace": "Prometheus.Components"
-        },
-        {
-            "file": "app/components/field-view.js",
-            "line": 150,
-            "todo": [
-                "clear the previous timeout"
             ],
             "class": "Prometheus.Components.FieldView",
             "namespace": "Prometheus.Components"
@@ -4230,16 +4165,6 @@
                 "at the moment the meta key used for field validation is 'filter'",
                 "verify if that will be used instead of the 'type'",
                 "implement field masking in order to support better user experience"
-            ],
-            "class": "Prometheus.Components.FieldView",
-            "namespace": "Prometheus.Components"
-        },
-        {
-            "file": "app/components/field-view.js",
-            "line": 198,
-            "todo": [
-                "see if there is a better way to set the value",
-                "this method takes more time then direct observe."
             ],
             "class": "Prometheus.Components.FieldView",
             "namespace": "Prometheus.Components"
@@ -4987,13 +4912,6 @@
             "todo": [
                 "perhaps delegate the did render per type"
             ],
-            "class": "Prometheus.Components.QuillEditor",
-            "namespace": "Prometheus.Components"
-        },
-        {
-            "file": "app/components/quill-editor.js",
-            "line": 90,
-            "description": "If update is defined as a function then trigger it.\nThis is used to let the controller handle anything that it may need",
             "class": "Prometheus.Components.QuillEditor",
             "namespace": "Prometheus.Components"
         },
@@ -6845,15 +6763,6 @@
         },
         {
             "file": "app/controllers/app/projectlist.js",
-            "line": 289,
-            "todo": [
-                "for some reason sortOrder is not set before navigation"
-            ],
-            "class": "Projectlist",
-            "module": "App"
-        },
-        {
-            "file": "app/controllers/app/projectlist.js",
             "line": 305,
             "description": "Navigate to the desired page in the list",
             "itemtype": "method",
@@ -7546,14 +7455,6 @@
             "tagname": "",
             "class": "Prometheus.Initializers.SetupLogger",
             "module": "App"
-        },
-        {
-            "file": "app/locales/en/translations.js",
-            "line": 146,
-            "description": "These are the emoji translations",
-            "class": "Prometheus.Locales.en",
-            "module": "i18n",
-            "namespace": "Prometheus.Locales"
         },
         {
             "file": "app/models/activity.js",
@@ -10587,7 +10488,7 @@
             "type": "Object",
             "access": "private",
             "tagname": "",
-            "class": "app.Conversation",
+            "class": "Conversation",
             "module": "App.Project"
         },
         {
@@ -10596,10 +10497,10 @@
             "description": "The selected items in the list view",
             "itemtype": "property",
             "name": "selectedCount",
-            "type": "Integet",
+            "type": "Integer",
             "access": "private",
             "tagname": "",
-            "class": "app.module",
+            "class": "Conversation",
             "module": "App.Project"
         },
         {
@@ -10617,7 +10518,7 @@
             ],
             "access": "private",
             "tagname": "",
-            "class": "app.module",
+            "class": "Conversation",
             "module": "App.Project"
         },
         {
@@ -10635,7 +10536,7 @@
             ],
             "access": "private",
             "tagname": "",
-            "class": "app.module",
+            "class": "Conversation",
             "module": "App.Project"
         },
         {
@@ -10646,7 +10547,7 @@
             "name": "loadIssues",
             "access": "private",
             "tagname": "",
-            "class": "app.module",
+            "class": "Conversation",
             "module": "App.Project"
         },
         {
@@ -11003,6 +10904,8 @@
             "file": "app/routes/app/projectlist.js",
             "line": 104,
             "description": "This function is used in order to load the data for the list view",
+            "itemtype": "method",
+            "name": "loadData",
             "return": {
                 "description": "",
                 "type": "Object"
@@ -11014,7 +10917,7 @@
         },
         {
             "file": "app/routes/app/projectlist.js",
-            "line": 172,
+            "line": 173,
             "description": "These are the actions handled by this route",
             "itemtype": "property",
             "name": "actions",
@@ -11026,7 +10929,7 @@
         },
         {
             "file": "app/routes/app/projectlist.js",
-            "line": 182,
+            "line": 183,
             "description": "This function is used to reload the route when required",
             "itemtype": "method",
             "name": "refreshRoute",
@@ -11242,6 +11145,8 @@
             "file": "app/serializers/application.js",
             "line": 54,
             "description": "Camelize the relationship key",
+            "itemtype": "method",
+            "name": "keyForRelationship",
             "params": [
                 {
                     "name": "key",
@@ -11300,13 +11205,21 @@
             "file": "app/services/related-fields.js",
             "line": 26,
             "description": "This is the cached data that we use in order to store the lists we have retrieved",
-            "params": [
-                {
-                    "name": "data",
-                    "description": ""
-                }
-            ],
+            "itemtype": "property",
+            "name": "data",
             "type": "Array",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.Services.RelatedField",
+            "module": "App"
+        },
+        {
+            "file": "app/services/related-fields.js",
+            "line": 36,
+            "description": "The store is injected as a service",
+            "itemtype": "property",
+            "name": "store",
+            "type": "Service",
             "access": "private",
             "tagname": "",
             "class": "Prometheus.Services.RelatedField",
@@ -11315,20 +11228,10 @@
         },
         {
             "file": "app/services/related-fields.js",
-            "line": 35,
-            "description": "The store is injected as a service",
-            "itemtype": "property",
-            "name": "store",
-            "type": "Service",
-            "access": "private",
-            "tagname": "",
-            "class": "Prometheus.Services.RelatedFieldService",
-            "module": "App"
-        },
-        {
-            "file": "app/services/related-fields.js",
-            "line": 45,
+            "line": 46,
             "description": "This function is responsible for retrieving and storing the lists required by dropdowns",
+            "itemtype": "method",
+            "name": "getRelated",
             "params": [
                 {
                     "name": "model",
@@ -11340,20 +11243,27 @@
                 },
                 {
                     "name": "queryParams",
-                    "description": "The query based on which the data must be retreived"
+                    "description": "The query based on which the data must be retrieved"
                 },
                 {
                     "name": "valueField",
                     "description": "The field that will be used as the select identifier"
                 }
             ],
-            "class": "Prometheus.Services.RelatedFieldService",
-            "module": "App"
+            "return": {
+                "description": "related",
+                "type": "Array"
+            },
+            "class": "Prometheus.Services.RelatedField",
+            "module": "App",
+            "namespace": "Prometheus.Services"
         },
         {
             "file": "app/services/related-fields.js",
-            "line": 65,
+            "line": 68,
             "description": "This function is responsible for retrieving and storing the lists required by dropdowns",
+            "itemtype": "method",
+            "name": "getList",
             "params": [
                 {
                     "name": "list",
@@ -11372,8 +11282,13 @@
                     "description": "The field that will be used as the select identifier"
                 }
             ],
-            "class": "Prometheus.Services.RelatedFieldService",
-            "module": "App"
+            "return": {
+                "description": "list",
+                "type": "Array"
+            },
+            "class": "Prometheus.Services.RelatedField",
+            "module": "App",
+            "namespace": "Prometheus.Services"
         },
         {
             "file": "app/utils/data/modeltotree.js",
@@ -11575,12 +11490,8 @@
             "file": "app/utils/query/builder.js",
             "line": 18,
             "description": "The current element that the query is applied on",
-            "params": [
-                {
-                    "name": "element",
-                    "description": ""
-                }
-            ],
+            "itemtype": "property",
+            "name": "element",
             "type": "String",
             "access": "private",
             "tagname": "",
@@ -11591,12 +11502,8 @@
             "file": "app/utils/query/builder.js",
             "line": 28,
             "description": "The current filters that the query is applied on",
-            "params": [
-                {
-                    "name": "filters",
-                    "description": ""
-                }
-            ],
+            "itemtype": "property",
+            "name": "filters",
             "type": "Array",
             "access": "private",
             "tagname": "",
@@ -11692,12 +11599,8 @@
             "file": "app/utils/query/parser.js",
             "line": 18,
             "description": "The default query operator mapping",
-            "params": [
-                {
-                    "name": "queryOperators",
-                    "description": ""
-                }
-            ],
+            "itemtype": "property",
+            "name": "queryOperators",
             "type": "Object",
             "access": "private",
             "tagname": "",
@@ -11708,12 +11611,8 @@
             "file": "app/utils/query/parser.js",
             "line": 49,
             "description": "The default rules operator mapping",
-            "params": [
-                {
-                    "name": "rulesOperators",
-                    "description": ""
-                }
-            ],
+            "itemtype": "property",
+            "name": "rulesOperators",
             "type": "Object",
             "access": "private",
             "tagname": "",
@@ -11921,164 +11820,7 @@
             ],
             "class": "Prometheus.Utils.Fields",
             "module": "Validator"
-        },
-        {
-            "file": "app/router.js",
-            "line": 13,
-            "description": "This is the default router mapping",
-            "class": "",
-            "module": "Validator",
-            "namespace": "Prometheus"
         }
     ],
-    "warnings": [
-        {
-            "message": "replacing incorrect tag: params with param",
-            "line": " app/components/action-menu.js:28"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/chart-estimatedspent.js:94"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/chart-issueratio.js:88"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/content-editable.js:128"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/content-editable.js:141"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/content-editable.js:152"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/content-editable.js:163"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/content-editable.js:177"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/content-editable.js:188"
-        },
-        {
-            "message": "unknown tag: mehtod",
-            "line": " app/components/field-view.js:129"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/form-fields.js:313"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/form-fields.js:346"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/message-box.js:273"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/components/message-box.js:286"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/controllers/app/project/calendar.js:136"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/routes/app/project/wiki/create.js:94"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/routes/app/project/wiki/edit.js:20"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " app/routes/app/project/wiki/page.js:111"
-        },
-        {
-            "message": "Missing item type\nAllowing capture of all possible event and simply forwarding them",
-            "line": " app/components/action-menu.js:28"
-        },
-        {
-            "message": "Missing item type\nThis is the function called to retrieve the contents in the element to set up in the component",
-            "line": " app/components/content-editable.js:188"
-        },
-        {
-            "message": "Missing item type",
-            "line": " app/components/field-view.js:92"
-        },
-        {
-            "message": "Missing item type\nThis is a utility function that is used to display the error message above\nthe field and add a blink effect on the input to highlight error.",
-            "line": " app/components/field-view.js:129"
-        },
-        {
-            "message": "Missing item type",
-            "line": " app/components/field-view.js:150"
-        },
-        {
-            "message": "Missing item type",
-            "line": " app/components/field-view.js:198"
-        },
-        {
-            "message": "Missing item type\nIf update is defined as a function then trigger it.\nThis is used to let the controller handle anything that it may need",
-            "line": " app/components/quill-editor.js:90"
-        },
-        {
-            "message": "Missing item type",
-            "line": " app/controllers/app/projectlist.js:289"
-        },
-        {
-            "message": "Missing item type\nThese are the emoji translations",
-            "line": " app/locales/en/translations.js:146"
-        },
-        {
-            "message": "Missing item type\nThis function is used in order to load the data for the list view",
-            "line": " app/routes/app/projectlist.js:104"
-        },
-        {
-            "message": "Missing item type\nCamelize the relationship key",
-            "line": " app/serializers/application.js:54"
-        },
-        {
-            "message": "Missing item type\nThis is the cached data that we use in order to store the lists we have retrieved",
-            "line": " app/services/related-fields.js:26"
-        },
-        {
-            "message": "Missing item type\nThis function is responsible for retrieving and storing the lists required by dropdowns",
-            "line": " app/services/related-fields.js:45"
-        },
-        {
-            "message": "Missing item type\nThis function is responsible for retrieving and storing the lists required by dropdowns",
-            "line": " app/services/related-fields.js:65"
-        },
-        {
-            "message": "Missing item type\nThe current element that the query is applied on",
-            "line": " app/utils/query/builder.js:18"
-        },
-        {
-            "message": "Missing item type\nThe current filters that the query is applied on",
-            "line": " app/utils/query/builder.js:28"
-        },
-        {
-            "message": "Missing item type\nThe default query operator mapping",
-            "line": " app/utils/query/parser.js:18"
-        },
-        {
-            "message": "Missing item type\nThe default rules operator mapping",
-            "line": " app/utils/query/parser.js:49"
-        },
-        {
-            "message": "Missing item type\nThis is the default router mapping",
-            "line": " app/router.js:13"
-        }
-    ]
+    "warnings": []
 }

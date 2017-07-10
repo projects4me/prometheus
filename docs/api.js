@@ -47,7 +47,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "Prometheus.Components.TreeList",
         "Prometheus.Controller.App",
         "Prometheus.Controller.Module",
-        "Prometheus.Controller.Projectlist",
         "Prometheus.Controller.Signin",
         "Prometheus.Controllers.Calendar",
         "Prometheus.Controllers.Conversation",
@@ -56,6 +55,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "Prometheus.Controllers.Index",
         "Prometheus.Controllers.Issue",
         "Prometheus.Controllers.Page",
+        "Prometheus.Controllers.Projectlist",
         "Prometheus.Controllers.Wiki",
         "Prometheus.Helpers.CountVotes",
         "Prometheus.Helpers.GetDate",
@@ -110,7 +110,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "Prometheus.Serializers.Application",
         "Prometheus.Services.CurrentUser",
         "Prometheus.Services.RelatedField",
-        "Prometheus.Services.RelatedFieldService",
         "Prometheus.Utils.Builder",
         "Prometheus.Utils.Fields",
         "Prometheus.Utils.Metadata",
@@ -118,8 +117,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "Prometheus.Utils.Navigation",
         "Prometheus.Utils.Parser",
         "Wiki",
-        "app.Conversation",
-        "app.module",
         "page"
     ],
     "modules": [
