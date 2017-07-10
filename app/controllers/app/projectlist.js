@@ -16,7 +16,7 @@ import MD from "../../utils/metadata/metadata";
  * list view is required then it must extend from this class
  *
  * @class Projectlist
- * @namespace Prometheus.Controller
+ * @namespace Prometheus.Controllers
  * @module App
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
@@ -286,8 +286,8 @@ export default Ember.Controller.extend({
                 }
             }
             // Else first clear the previous sort and set the new one
-            /**
-             @todo for some reason sortOrder is not set before navigation
+            /*
+             * @todo for some reason sortOrder is not set before navigation
              */
             else {
                 Ember.$('[data-sort="'+this.sort+'Sortable"]').attr('class','sortable');

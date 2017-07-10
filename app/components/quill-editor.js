@@ -71,26 +71,26 @@ export default Ember.Component.extend({
                 },
                 theme: 'snow'
             });
-            /*
-             var toolbar = editor.getModule('toolbar');
-             toolbar.addHandler('link',function(value){
-             if (value) {
-             var href = prompt('Enter the URL');
-             this.quill.format('link', href);
-             } else {
-             this.quill.format('link', false);
-             }
-             });
-             */
+
+            // var toolbar = editor.getModule('toolbar');
+            // toolbar.addHandler('link',function(value){
+            //     if (value) {
+            //         var href = prompt('Enter the URL');
+            //         this.quill.format('link', href);
+            //     } else {
+            //         this.quill.format('link', false);
+            //     }
+            // });
+
             editor.on('text-change', function() {
 
                 //Ember.$('#wikiMarkUp').val(Ember.$('#editor .ql-editor').html());
                 //Ember.$('#wikiMarkUp').trigger('change');
 
-                /**
-                 If update is defined as a function then trigger it.
-                 This is used to let the controller handle anything that it may need
-                 */
+
+                // If update is defined as a function then trigger it.
+                // This is used to let the controller handle anything that it may need
+
                 if (typeof self.update === 'function')
                 {
                     self.sendAction('update',{'markUp':Ember.$('#editor .ql-editor').html()});

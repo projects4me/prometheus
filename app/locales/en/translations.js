@@ -143,8 +143,8 @@ export default {
         }
     },
 
-    /**
-     These are the emoji translations
+    /*
+     * These are the emoji translations
      */
     "emoji" : {
         'grinning' : 'grin',

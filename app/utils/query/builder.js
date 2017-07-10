@@ -18,7 +18,7 @@ export default {
     /**
      * The current element that the query is applied on
      *
-     * @param element
+     * @property element
      * @type String
      * @for Builder
      * @private
@@ -28,7 +28,7 @@ export default {
     /**
      * The current filters that the query is applied on
      *
-     * @param filters
+     * @property filters
      * @type Array
      * @for Builder
      * @private

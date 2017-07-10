@@ -138,7 +138,7 @@ export default Ember.Controller.extend({
      *
      * @method getPriorityHTML
      * @param priority
-     * @returns {string}
+     * @return {string}
      * @public
      */
     getPriorityHTML:function(priority){

@@ -10,7 +10,7 @@ const Router = Ember.Router.extend({
     rootURL: config.rootURL
 });
 
-/**
+/*
  * This is the default router mapping
  */
 Router.map(function() {

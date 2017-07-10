@@ -96,7 +96,7 @@ export default Ember.Component.extend({
      *
      * @method getDatasets
      * @param {Object} issues
-     * @returns {{labels: Array, datasets: [*,*]}}
+     * @return {{labels: Array, datasets: [*,*]}}
      */
     getDatasets:function(issues){
         //var self = this;

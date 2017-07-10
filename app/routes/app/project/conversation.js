@@ -30,7 +30,7 @@ export default App.extend({
      *
      * @property data
      * @type Object
-     * @for app.Conversation
+     * @for Conversation
      * @private
      */
     data: null,
@@ -39,8 +39,8 @@ export default App.extend({
      * The selected items in the list view
      *
      * @property selectedCount
-     * @type Integet
-     * @for app.module
+     * @type Integer
+     * @for Conversation
      * @private
      */
     selectedCount:0,

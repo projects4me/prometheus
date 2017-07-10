@@ -25,10 +25,12 @@ export default Ember.Component.extend({
      * @public
      */
     actions: {
+
         /**
          * Allowing capture of all possible event and simply forwarding them
          *
-         * @params {String} action delegate the specified event over to the controller
+         * @method onAction
+         * @param {String} action delegate the specified event over to the controller
          * @public
          */
         onAction:function(action) {

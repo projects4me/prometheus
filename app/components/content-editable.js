@@ -129,7 +129,7 @@ export default Ember.Component.extend({
      * This function is used in to set the contents after a value has been changed
      *
      * @method processValue
-     * @returns {*}
+     * @return {*}
      * @public
      */
     processValue: function() {
@@ -142,7 +142,7 @@ export default Ember.Component.extend({
      * This function is called by Ember when the HTML elements have been rendered in the view
      *
      * @method didInsertElement
-     * @returns {*}
+     * @return {*}
      * @public
      */
     didInsertElement: function() {
@@ -153,7 +153,7 @@ export default Ember.Component.extend({
      * This is an event handler function which is called when the focus is removed from the div
      *
      * @method focusOut
-     * @returns {*}
+     * @return {*}
      * @public
      */
     focusOut: function() {
@@ -165,7 +165,7 @@ export default Ember.Component.extend({
      *
      * @method keyDown
      * @param {Object} event
-     * @returns {*}
+     * @return {*}
      * @public
      */
     keyDown: function(event) {
@@ -178,7 +178,7 @@ export default Ember.Component.extend({
      * This is an event handler function which is called when a key is released from the div
      *
      * @method keyUp
-     * @returns {*}
+     * @return {*}
      * @public
      */
     keyUp: function() {
@@ -188,7 +188,8 @@ export default Ember.Component.extend({
     /**
      * This is the function called to retrieve the contents in the element to set up in the component
      *
-     * @returns {*}
+     * @method setContent
+     * @return {*}
      * @public
      */
     setContent: function() {

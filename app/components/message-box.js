@@ -274,7 +274,7 @@ export default Ember.Component.extend({
      * This function is used to process the values
      *
      * @method processValue
-     * @returns {*|result}
+     * @return {*|result}
      * @public
      */
     processValue: function() {
@@ -287,7 +287,7 @@ export default Ember.Component.extend({
      * This function is an event handler that is called when the focus is removed from the div
      *
      * @method focusOut
-     * @returns {*}
+     * @return {*}
      * @public
      */
     focusOut: function() {

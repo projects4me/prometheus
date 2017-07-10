@@ -18,7 +18,7 @@ export default {
     /**
      * The default query operator mapping
      *
-     * @param queryOperators
+     * @property queryOperators
      * @type Object
      * @for Parser
      * @private
@@ -49,7 +49,7 @@ export default {
     /**
      * The default rules operator mapping
      *
-     * @param rulesOperators
+     * @property rulesOperators
      * @type Object
      * @for Parser
      * @private

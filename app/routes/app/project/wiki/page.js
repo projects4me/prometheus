@@ -115,7 +115,7 @@ export default App.extend({
      * have exposed this function.
      *
      * @method getParams
-     * @returns {Object} params The parameters for this route
+     * @return {Object} params The parameters for this route
      * @private
      */
     getParams:function(){

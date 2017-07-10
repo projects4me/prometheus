@@ -315,7 +315,7 @@ export default Ember.Component.extend({
      *
      * @method getMask
      * @param mask {String} The mask required e.g. alpha, alphanumeric, email, etc.
-     * @returns maskOptions {Object} The settings required for masking the data
+     * @return maskOptions {Object} The settings required for masking the data
      * @todo possibly store the masks and options somewhere else to allow customizations
      */
     getMask:function(mask){
@@ -349,7 +349,7 @@ export default Ember.Component.extend({
      *
      * @method getTag
      * @param type {String} The type of field requried
-     * @returns tagname {String} The tag name for the field type
+     * @return tagname {String} The tag name for the field type
      */
     getTag:function(type){
         const tagNames = {

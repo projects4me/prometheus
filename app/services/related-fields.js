@@ -26,8 +26,9 @@ export default Ember.Service.extend({
     /**
      * This is the cached data that we use in order to store the lists we have retrieved
      *
-     * @param data
+     * @property data
      * @type Array
+     * @for RelatedField
      * @private
      */
     data:null,
@@ -37,7 +38,7 @@ export default Ember.Service.extend({
      *
      * @property store
      * @type Service
-     * @for RelatedFieldService
+     * @for RelatedField
      * @private
      */
     store: service('store'),
@@ -45,10 +46,12 @@ export default Ember.Service.extend({
     /**
      * This function is responsible for retrieving and storing the lists required by dropdowns
      *
+     * @method getRelated
      * @param model The name of the model for which the data is required
      * @param fields The fields that should be selected
-     * @param queryParams The query based on which the data must be retreived
+     * @param queryParams The query based on which the data must be retrieved
      * @param valueField The field that will be used as the select identifier
+     * @return {Array} related
      */
     getRelated:function(model, fields, queryParams, valueField = 'id'){
         Logger.debug("Model");
@@ -65,10 +68,12 @@ export default Ember.Service.extend({
     /**
      * This function is responsible for retrieving and storing the lists required by dropdowns
      *
+     * @method getList
      * @param list
      * @param fields The fields that should be selected
      * @param queryParams The query based on which the data must be retreived
      * @param valueField The field that will be used as the select identifier
+     * @return {Array} list
      */
     getList:function(list){
 

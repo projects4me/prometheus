@@ -104,6 +104,7 @@ export default App.extend({
     /**
      * This function is used in order to load the data for the list view
      *
+     * @method loadData
      * @return {Object}
      * @private
      */

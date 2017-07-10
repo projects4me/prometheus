@@ -89,7 +89,7 @@ export default Ember.Component.extend({
             Ember.$('#'+this.elementId+' '+definition.tagName).mask(definition.mask,options);
         }
 
-        /**
+        /*
          * @todo fix multi enum
          * @todo on apply update model for date field
          */
@@ -130,7 +130,7 @@ export default Ember.Component.extend({
      * This is a utility function that is used to display the error message above
      * the field and add a blink effect on the input to highlight error.
      *
-     * @mehtod blickError
+     * @method blickError
      * @public
      * @todo get the display time from the application configuration
      */
@@ -147,7 +147,7 @@ export default Ember.Component.extend({
             Ember.$('#'+_element.elementId+' [name='+(_element.get('definition').fieldName)+']').removeClass('highlight-error');
         }, 500,this);
 
-        /**
+        /*
          * @todo clear the previous timeout
          */
         // Add the hidden class in the error message tag to hide it from display after 1.5 seconds
@@ -195,7 +195,7 @@ export default Ember.Component.extend({
                 {
                     // set the error flag to true so that the error can be displayed
                     validationFailure = true;
-                    /**
+                    /*
                      * @todo see if there is a better way to set the value, this method takes more time then direct observe.
                      */
                     if (this.childViews[0] !== undefined) {

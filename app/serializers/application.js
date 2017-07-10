@@ -54,6 +54,7 @@ export default DS.JSONAPISerializer.extend({
     /**
      * Camelize the relationship key
      *
+     * @method keyForRelationship
      * @param {String} key
      * @return {*}
      * @protected
