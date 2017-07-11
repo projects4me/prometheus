@@ -269,4 +269,14 @@ export default DS.Model.extend({
      */
     memberships:DS.hasMany('membership'),
 
+    /**
+     * The milestones for this project
+     *
+     * @property milestones
+     * @type Relationship
+     * @for Project
+     * @private
+     */
+    milestones:DS.hasMany('milestone'),
+
 });

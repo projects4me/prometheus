@@ -44,10 +44,14 @@
   }
 
   /* active state */
-  .data-input:focus ~ .floating-label, .data-input:valid ~ .floating-label {
+  .data-input:focus ~ .floating-label, .data-input:valid ~ .floating-label, .select-input ~ .floating-label{
     top:-2rem;
     font-size:1rem;
     color: $primaryColor;
+  }
+
+  .select-input{
+    width:100%;
   }
 
   /* BOTTOM BARS ================================= */
