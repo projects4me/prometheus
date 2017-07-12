@@ -2,8 +2,8 @@
     "project": {
         "name": "Projects4Me",
         "description": "Open source project management and collaboration software",
-        "url": "http://porjects4.me/",
-        "version": "0.0.0"
+        "version": "v0.1.0",
+        "url": "http://porjects4.me/"
     },
     "files": {
         "app/adapters/application.js": {
@@ -325,6 +325,17 @@
                 "Prometheus.Components": 1
             }
         },
+        "app/controllers/app/project/issue/create.js": {
+            "name": "app/controllers/app/project/issue/create.js",
+            "modules": {},
+            "classes": {},
+            "fors": {
+                "Create": 1
+            },
+            "namespaces": {
+                "Prometheus.Controllers": 1
+            }
+        },
         "app/controllers/app/project/issue/index.js": {
             "name": "app/controllers/app/project/issue/index.js",
             "modules": {},
@@ -382,7 +393,6 @@
                 "Prometheus.Controllers.Page": 1
             },
             "fors": {
-                "page": 1,
                 "Page": 1
             },
             "namespaces": {
@@ -926,7 +936,9 @@
                 "App.Project.Issue": 1
             },
             "classes": {},
-            "fors": {},
+            "fors": {
+                "Create": 1
+            },
             "namespaces": {
                 "Prometheus.Routes": 1
             }
@@ -1256,13 +1268,11 @@
         }
     },
     "modules": {
-        "App.Project": {
-            "name": "App.Project",
+        "App.Project.Issue": {
+            "name": "App.Project.Issue",
             "submodules": {},
             "elements": {},
             "classes": {
-                "Prometheus.Controllers.Calendar": 1,
-                "Prometheus.Routes.Calendar": 1,
                 "Prometheus.Adapter.Application": 1,
                 "Prometheus.Adapter.ApplicationAdapter": 1,
                 "Prometheus.Authenticators.OAuth2Authenticator": 1,
@@ -1292,6 +1302,28 @@
                 "Prometheus.Component.TextField": 1,
                 "Prometheus.Components.TextareaField": 1,
                 "Prometheus.Components.TreeList": 1,
+                "Create": 1
+            },
+            "fors": {
+                "Create": 1,
+                "Index": 1
+            },
+            "namespaces": {
+                "Prometheus.Controllers": 1,
+                "Prometheus.Routes": 1
+            },
+            "tag": "module",
+            "file": "app/components/quill-editor.js",
+            "line": 7,
+            "description": "This is the route that will handle the creation of new issues"
+        },
+        "App.Project": {
+            "name": "App.Project",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "Prometheus.Controllers.Calendar": 1,
+                "Prometheus.Routes.Calendar": 1,
                 "Prometheus.Controllers.Issue": 1,
                 "Issue": 1,
                 "Prometheus.Controllers.Index": 1,
@@ -1328,12 +1360,10 @@
             "classes": {
                 "Prometheus.Routes.Create": 1,
                 "Prometheus.Controllers.Create": 1,
-                "Create": 1,
                 "Prometheus.Controllers.Edit": 1,
                 "Edit": 1,
                 "Index": 1,
                 "Prometheus.Controllers.Page": 1,
-                "page": 1,
                 "Page": 1,
                 "Prometheus.Routes.Page": 1,
                 "Prometheus.Routes.Wiki.Create": 1,
@@ -1343,7 +1373,6 @@
                 "Create": 1,
                 "Edit": 1,
                 "Index": 1,
-                "page": 1,
                 "Page": 1,
                 "Prometheus.Routes.Wiki.Create": 1
             },
@@ -1498,22 +1527,6 @@
             "line": 7,
             "description": "This is the english language tranlations for the project. For now they are\nhard coded but in future we would want to load them from the server and\nwe would like to allow people to include their own translations.\n\nThis should also be possible for plugins to have their own translations.\n\nNeed to see if we can support rtl"
         },
-        "App.Project.Issue": {
-            "name": "App.Project.Issue",
-            "submodules": {},
-            "elements": {},
-            "classes": {},
-            "fors": {
-                "Index": 1
-            },
-            "namespaces": {
-                "Prometheus.Routes": 1
-            },
-            "tag": "module",
-            "file": "app/routes/app/project/issue/create.js",
-            "line": 7,
-            "description": "This is the route that will handle the creation of new issues"
-        },
         "Data": {
             "name": "Data",
             "submodules": {},
@@ -1614,7 +1627,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Adapter",
             "file": "app/adapters/application.js",
             "line": 10,
@@ -1636,7 +1649,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Adapter"
         },
         "Prometheus.Authenticators.OAuth2Authenticator": {
@@ -1647,7 +1660,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Authenticators",
             "file": "app/authenticators/oauth2.js",
             "line": 19,
@@ -1663,7 +1676,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Authorizers",
             "file": "app/authorizers/oauth2.js",
             "line": 7,
@@ -1679,7 +1692,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.ActivityBlock": {
@@ -1690,7 +1703,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.BootstrapModal": {
@@ -1701,7 +1714,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.ChartEstimatedspent": {
@@ -1712,7 +1725,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components",
             "file": "app/components/chart-estimatedspent.js",
             "line": 8,
@@ -1728,7 +1741,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components",
             "file": "app/components/chart-issueratio.js",
             "line": 8,
@@ -1744,7 +1757,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Component"
         },
         "Prometheus.Components.CheckboxField": {
@@ -1755,7 +1768,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.ContentEditable": {
@@ -1766,7 +1779,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.FieldCheckbox": {
@@ -1777,7 +1790,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.FieldDate": {
@@ -1788,7 +1801,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.FieldImage": {
@@ -1799,7 +1812,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.FieldRadio": {
@@ -1810,7 +1823,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.FieldText": {
@@ -1821,7 +1834,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.FieldTextarea": {
@@ -1832,7 +1845,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.FieldView": {
@@ -1843,7 +1856,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.FormFields": {
@@ -1854,7 +1867,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.MessageBox": {
@@ -1865,7 +1878,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.MessageBoxComponent": {
@@ -1876,7 +1889,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.MilestoneBlock": {
@@ -1887,7 +1900,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.NavBar": {
@@ -1898,7 +1911,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.QueryBuilder": {
@@ -1909,7 +1922,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.QuillEditor": {
@@ -1920,7 +1933,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components",
             "file": "app/components/quill-editor.js",
             "line": 7,
@@ -1939,7 +1952,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Component"
         },
         "Prometheus.Components.TextareaField": {
@@ -1950,7 +1963,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
         },
         "Prometheus.Components.TreeList": {
@@ -1961,8 +1974,35 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "App.Project",
+            "module": "App.Project.Issue",
             "namespace": "Prometheus.Components"
+        },
+        "Prometheus.Controllers.Create": {
+            "name": "Prometheus.Controllers.Create",
+            "shortname": "Prometheus.Controllers.Create",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Project.Wiki",
+            "namespace": "Prometheus.Controllers",
+            "file": "app/controllers/app/project/wiki/create.js",
+            "line": 7,
+            "description": "The controller for the wiki create route, it is loaded when a user clicks on\ncreate button\ne.g. acme.projects4.me/app/1/wiki/create",
+            "extends": "Ember.Controller",
+            "author": "Hammad Hassan <gollomer@gmail.com>"
+        },
+        "Create": {
+            "name": "Create",
+            "shortname": "Create",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "App.Project.Issue",
+            "namespace": ""
         },
         "Prometheus.Controllers.Issue": {
             "name": "Prometheus.Controllers.Issue",
@@ -1989,33 +2029,6 @@
             "plugin_for": [],
             "extension_for": [],
             "module": "App.Project",
-            "namespace": ""
-        },
-        "Prometheus.Controllers.Create": {
-            "name": "Prometheus.Controllers.Create",
-            "shortname": "Prometheus.Controllers.Create",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "App.Project.Wiki",
-            "namespace": "Prometheus.Controllers",
-            "file": "app/controllers/app/project/wiki/create.js",
-            "line": 7,
-            "description": "The controller for the wiki create route, it is loaded when a user clicks on\ncreate button\ne.g. acme.projects4.me/app/1/wiki/create",
-            "extends": "Ember.Controller",
-            "author": "Hammad Hassan <gollomer@gmail.com>"
-        },
-        "Create": {
-            "name": "Create",
-            "shortname": "Create",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "App.Project.Wiki",
             "namespace": ""
         },
         "Prometheus.Controllers.Edit": {
@@ -2089,17 +2102,6 @@
             "description": "The controller for the wiki page route, it is loaded when a user tried to\nnavigate to a particular wiki page\n\ne.g. acme.projects4.me/app/1/wiki/Home\nBy default this controller is configured to load the project selection",
             "extends": "Ember.Controller",
             "author": "Hammad Hassan <gollomer@gmail.com>"
-        },
-        "page": {
-            "name": "page",
-            "shortname": "page",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "App.Project.Wiki",
-            "namespace": ""
         },
         "Page": {
             "name": "Page",
@@ -4986,6 +4988,72 @@
             "class": "Prometheus.Components.TreeList"
         },
         {
+            "file": "app/controllers/app/project/issue/create.js",
+            "line": 18,
+            "description": "These are the events that this controller handles",
+            "itemtype": "property",
+            "name": "actions",
+            "type": "Object",
+            "access": "public",
+            "tagname": "",
+            "class": "Create",
+            "module": "App.Project.Issue"
+        },
+        {
+            "file": "app/controllers/app/project/issue/create.js",
+            "line": 28,
+            "description": "This function is called when an assignee is being selected",
+            "itemtype": "method",
+            "name": "selectAssignee",
+            "params": [
+                {
+                    "name": "target",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "access": "public",
+            "tagname": "",
+            "class": "Create",
+            "module": "App.Project.Issue"
+        },
+        {
+            "file": "app/controllers/app/project/issue/create.js",
+            "line": 43,
+            "description": "This function is called when an owner is being selected",
+            "itemtype": "method",
+            "name": "selectOwner",
+            "params": [
+                {
+                    "name": "target",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "access": "public",
+            "tagname": "",
+            "class": "Create",
+            "module": "App.Project.Issue"
+        },
+        {
+            "file": "app/controllers/app/project/issue/create.js",
+            "line": 58,
+            "description": "This function is called when an milestone is being selected",
+            "itemtype": "method",
+            "name": "selectMilestone",
+            "params": [
+                {
+                    "name": "target",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "access": "public",
+            "tagname": "",
+            "class": "Create",
+            "module": "App.Project.Issue"
+        },
+        {
             "file": "app/controllers/app/project/issue/index.js",
             "line": 24,
             "description": "Query params that the controller needs to support, it may seem that the\nsame paramters are defined in both the route and the controller but is not\nthe case exactly, the parameters defined in the route are meant for the model\nwhile the parameters defined in the controller are meant for the interaction\nwith the view. e.g. the query might be different because the user might be\ncomposing it as compared to te query string that was last used to fetch the\ndata.",
@@ -5587,7 +5655,7 @@
             "type": "Ember.Service",
             "access": "public",
             "tagname": "",
-            "class": "page",
+            "class": "Page",
             "module": "App.Project.Wiki"
         },
         {
@@ -5823,7 +5891,7 @@
         },
         {
             "file": "app/controllers/app/project/calendar.js",
-            "line": 95,
+            "line": 97,
             "description": "This function handles the event where the drag is started",
             "itemtype": "method",
             "name": "eventDragStart",
@@ -5841,7 +5909,7 @@
         },
         {
             "file": "app/controllers/app/project/calendar.js",
-            "line": 107,
+            "line": 109,
             "description": "This function handles the action when the view has been rendered",
             "itemtype": "method",
             "name": "eventRender",
@@ -5864,7 +5932,7 @@
         },
         {
             "file": "app/controllers/app/project/calendar.js",
-            "line": 136,
+            "line": 138,
             "description": "This function used to retrieve HTML tag for a priority",
             "itemtype": "method",
             "name": "getPriorityHTML",
@@ -9093,6 +9161,19 @@
             "namespace": "Prometheus.Models"
         },
         {
+            "file": "app/models/project.js",
+            "line": 272,
+            "description": "The milestones for this project",
+            "itemtype": "property",
+            "name": "milestones",
+            "type": "Relationship",
+            "access": "private",
+            "tagname": "",
+            "class": "Prometheus.Models.Project",
+            "module": "i18n",
+            "namespace": "Prometheus.Models"
+        },
+        {
             "file": "app/models/role.js",
             "line": 17,
             "description": "Name of the role",
@@ -10030,6 +10111,41 @@
             "tagname": "",
             "class": "Wiki",
             "module": "i18n"
+        },
+        {
+            "file": "app/routes/app/project/issue/create.js",
+            "line": 18,
+            "description": "This is the model for this route",
+            "itemtype": "property",
+            "name": "model",
+            "type": "function",
+            "access": "protected",
+            "tagname": "",
+            "class": "Create",
+            "module": "App.Project.Issue"
+        },
+        {
+            "file": "app/routes/app/project/issue/create.js",
+            "line": 32,
+            "description": "This function is called every time the controller is being setup",
+            "itemtype": "method",
+            "name": "setupController",
+            "params": [
+                {
+                    "name": "controller",
+                    "description": "",
+                    "type": "Prometheus.Controllers.Issue"
+                },
+                {
+                    "name": "model",
+                    "description": "",
+                    "type": "Prometheus.Models.Issue"
+                }
+            ],
+            "access": "protected",
+            "tagname": "",
+            "class": "Create",
+            "module": "App.Project.Issue"
         },
         {
             "file": "app/routes/app/project/issue/index.js",

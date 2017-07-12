@@ -116,8 +116,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "Prometheus.Utils.Modeltotree",
         "Prometheus.Utils.Navigation",
         "Prometheus.Utils.Parser",
-        "Wiki",
-        "page"
+        "Wiki"
     ],
     "modules": [
         "App",

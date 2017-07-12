@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Data - Projects4Me</title>
+    <title>app/controllers/app/project/issue/create.js - Projects4Me</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -201,39 +201,86 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>Data Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File: app/controllers/app/project/issue/create.js</h1>
 
+<div class="file">
+    <pre class="code prettyprint linenums">
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
 
-        <div class="foundat">
-            Defined in: <a href="../files/app_utils_data_modeltotree.js.html#l5"><code>app&#x2F;utils&#x2F;data&#x2F;modeltotree.js:5</code></a>
-        </div>
+import Ember from &#x27;ember&#x27;;
 
-</div>
+/**
+ * This is the controller for issue create page
+ *
+ * @class Create
+ * @namespace Prometheus.Controllers
+ * @module App.Project.Issue
+ * @extends Ember.Controller
+ * @author Hammad Hassan &lt;gollomer@gmail.com&gt;
+ */
+export default Ember.Controller.extend({
 
+    /**
+     * These are the events that this controller handles
+     *
+     * @property actions
+     * @type Object
+     * @for Create
+     * @public
+     */
+    actions:{
 
-<div class="box intro">
-    <p>This utility class is used to convert model objects to tree</p>
+        /**
+         * This function is called when an assignee is being selected
+         *
+         * @method selectAssignee
+         * @param {Object} target
+         * @public
+         */
+        selectAssignee:function(target)
+        {
+            Logger.debug(&#x27;App.Project.Issue.Create:selectAssignee&#x27;);
+            var model = this.get(&#x27;model&#x27;);
+            model.set(&#x27;assignee&#x27;,target.value);
+            Logger.debug(&#x27;App.Project.Issue.Create:selectAssignee&#x27;);
+        },
 
-</div>
+        /**
+         * This function is called when an owner is being selected
+         *
+         * @method selectOwner
+         * @param {Object} target
+         * @public
+         */
+        selectOwner:function(target)
+        {
+            Logger.debug(&#x27;App.Project.Issue.Create:selectOwner&#x27;);
+            var model = this.get(&#x27;model&#x27;);
+            model.set(&#x27;owner&#x27;,target.value);
+            Logger.debug(&#x27;App.Project.Issue.Create:selectOwner&#x27;);
+        },
 
+        /**
+         * This function is called when an milestone is being selected
+         *
+         * @method selectMilestone
+         * @param {Object} target
+         * @public
+         */
+        selectMilestone:function(target)
+        {
+            Logger.debug(&#x27;App.Project.Issue.Create:selectMilestone&#x27;);
+            var model = this.get(&#x27;model&#x27;);
+            model.set(&#x27;milestoneId&#x27;,target.value);
+            Logger.debug(&#x27;App.Project.Issue.Create:selectMilestone&#x27;);
+        },
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-            <p>This module provides the following classes:</p>
+    }
+});
 
-            <ul class="module-classes">
-                <li class="module-class">
-                    <a href="../classes/Prometheus.Utils.Modeltotree.html">
-                        Prometheus.Utils.Modeltotree
-                    </a>
-                </li>
-            </ul>
-    </div>
-
-
-    <div class="yui3-u-1-2">
-    </div>
+    </pre>
 </div>
                     </div>
                 </div>

@@ -3,301 +3,339 @@
 <head>
     <meta charset="utf-8">
     <title>Prometheus.Components.QueryBuilder - Projects4Me</title>
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
-    <link rel="stylesheet" href="../assets/css/custom.css">
-    <link rel="stylesheet" href="../assets/css/lucid.css">
-    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
-    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
 </head>
 <body class="yui3-skin-sam">
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
-            Projects4Me
-        </h1>
-	<div class="nav">
-            <li class="divider-vertical"></li>
-            <li>
-                <p class="navbar-text">
-                    API Docs for Version: <b>0.0.0</b>
-                </p>
-            </li>
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="Projects4Me" width="117" height="52"></h1>
         </div>
-        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Builder", "classes/Calendar", "classes/Conversation", "classes/Create", "classes/Edit", "classes/Index", "classes/InjectRouter", "classes/Issue", "classes/IssueModel", "classes/Metadata", "classes/Module", "classes/Page", "classes/page", "classes/Parser", "classes/Projectlist", "classes/Prometheus.Adapter.Application", "classes/Prometheus.Adapter.ApplicationAdapter", "classes/Prometheus.Application", "classes/Prometheus.Authenticators.OAuth2Authenticator", "classes/Prometheus.Authorizers.OAuth2Authorizer", "classes/Prometheus.Component.ChatBox", "classes/Prometheus.Component.TextField", "classes/Prometheus.Components.ActionMenu", "classes/Prometheus.Components.ActivityBlock", "classes/Prometheus.Components.BootstrapModal", "classes/Prometheus.Components.ChartEstimatedspent", "classes/Prometheus.Components.ChartIssueratio", "classes/Prometheus.Components.CheckboxField", "classes/Prometheus.Components.ContentEditable", "classes/Prometheus.Components.FieldCheckbox", "classes/Prometheus.Components.FieldDate", "classes/Prometheus.Components.FieldImage", "classes/Prometheus.Components.FieldRadio", "classes/Prometheus.Components.FieldText", "classes/Prometheus.Components.FieldTextarea", "classes/Prometheus.Components.FieldView", "classes/Prometheus.Components.FormFields", "classes/Prometheus.Components.MessageBox", "classes/Prometheus.Components.MessageBoxComponent", "classes/Prometheus.Components.MilestoneBlock", "classes/Prometheus.Components.NavBar", "classes/Prometheus.Components.QueryBuilder", "classes/Prometheus.Components.QuillEditor", "classes/Prometheus.Components.TextareaField", "classes/Prometheus.Components.TreeList", "classes/Prometheus.Controller.App", "classes/Prometheus.Controller.Module", "classes/Prometheus.Controller.Signin", "classes/Prometheus.Controllers.Calendar", "classes/Prometheus.Controllers.Conversation", "classes/Prometheus.Controllers.Create", "classes/Prometheus.Controllers.Edit", "classes/Prometheus.Controllers.Index", "classes/Prometheus.Controllers.Issue", "classes/Prometheus.Controllers.Page", "classes/Prometheus.Controllers.Projectlist", "classes/Prometheus.Controllers.Wiki", "classes/Prometheus.Helpers.CountVotes", "classes/Prometheus.Helpers.GetDate", "classes/Prometheus.Helpers.GetIssuecount", "classes/Prometheus.Helpers.GetPage", "classes/Prometheus.Helpers.GetProp", "classes/Prometheus.Helpers.GetRole", "classes/Prometheus.Helpers.GetTimelog", "classes/Prometheus.Helpers.GetWiki", "classes/Prometheus.Helpers.IfMatch", "classes/Prometheus.Helpers.NavIcon", "classes/Prometheus.Helpers.NotLast", "classes/Prometheus.Helpers.PriorityIcon", "classes/Prometheus.Helpers.SortableClass", "classes/Prometheus.Helpers.TranslateComment", "classes/Prometheus.Helpers.UserCreated", "classes/Prometheus.Initializers.Initializer", "classes/Prometheus.Initializers.InjectRouter", "classes/Prometheus.Initializers.JavascriptBehaviors", "classes/Prometheus.Initializers.SetupLogger", "classes/Prometheus.Locales.en", "classes/Prometheus.Model.User", "classes/Prometheus.Models.Activity", "classes/Prometheus.Models.Comment", "classes/Prometheus.Models.CommentModel", "classes/Prometheus.Models.Conversationroom", "classes/Prometheus.Models.Issue", "classes/Prometheus.Models.Issuetype", "classes/Prometheus.Models.Membership", "classes/Prometheus.Models.Milestone", "classes/Prometheus.Models.Project", "classes/Prometheus.Models.Role", "classes/Prometheus.Models.Tagged", "classes/Prometheus.Models.Timelog", "classes/Prometheus.Models.Token", "classes/Prometheus.Models.Vote", "classes/Prometheus.Models.Wiki", "classes/Prometheus.Routes.App", "classes/Prometheus.Routes.Application", "classes/Prometheus.Routes.AppRoute", "classes/Prometheus.Routes.Calendar", "classes/Prometheus.Routes.Conversation", "classes/Prometheus.Routes.Create", "classes/Prometheus.Routes.Edit", "classes/Prometheus.Routes.Index", "classes/Prometheus.Routes.Module", "classes/Prometheus.Routes.Page", "classes/Prometheus.Routes.Project", "classes/Prometheus.Routes.Projectlist", "classes/Prometheus.Routes.Wiki", "classes/Prometheus.Routes.Wiki.Create", "classes/Prometheus.Serializers.Application", "classes/Prometheus.Services.CurrentUser", "classes/Prometheus.Services.RelatedField", "classes/Prometheus.Utils.Builder", "classes/Prometheus.Utils.Fields", "classes/Prometheus.Utils.Metadata", "classes/Prometheus.Utils.Modeltotree", "classes/Prometheus.Utils.Navigation", "classes/Prometheus.Utils.Parser", "classes/Wiki", "modules/App", "modules/App.Project", "modules/App.Project.Issue", "modules/App.Project.Wiki", "modules/Data", "modules/i18n", "modules/Metadata", "modules/Navigation", "modules/Query", "modules/Validator"]'>
-        </form>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        <div class="span3">
-<div>
-    <div id="sidebar">
-    <div id="classes">
-        <ul id="api-classes" class="nav nav-list">
-                <li><a href="../classes/Builder.html">Builder</a></li>
-                <li><a href="../classes/Calendar.html">Calendar</a></li>
-                <li><a href="../classes/Conversation.html">Conversation</a></li>
-                <li><a href="../classes/Create.html">Create</a></li>
-                <li><a href="../classes/Edit.html">Edit</a></li>
-                <li><a href="../classes/Index.html">Index</a></li>
-                <li><a href="../classes/InjectRouter.html">InjectRouter</a></li>
-                <li><a href="../classes/Issue.html">Issue</a></li>
-                <li><a href="../classes/IssueModel.html">IssueModel</a></li>
-                <li><a href="../classes/Metadata.html">Metadata</a></li>
-                <li><a href="../classes/Module.html">Module</a></li>
-                <li><a href="../classes/Page.html">Page</a></li>
-                <li><a href="../classes/page.html">page</a></li>
-                <li><a href="../classes/Parser.html">Parser</a></li>
-                <li><a href="../classes/Projectlist.html">Projectlist</a></li>
-                <li><a href="../classes/Prometheus.Adapter.Application.html">Prometheus.Adapter.Application</a></li>
-                <li><a href="../classes/Prometheus.Adapter.ApplicationAdapter.html">Prometheus.Adapter.ApplicationAdapter</a></li>
-                <li><a href="../classes/Prometheus.Application.html">Prometheus.Application</a></li>
-                <li><a href="../classes/Prometheus.Authenticators.OAuth2Authenticator.html">Prometheus.Authenticators.OAuth2Authenticator</a></li>
-                <li><a href="../classes/Prometheus.Authorizers.OAuth2Authorizer.html">Prometheus.Authorizers.OAuth2Authorizer</a></li>
-                <li><a href="../classes/Prometheus.Component.ChatBox.html">Prometheus.Component.ChatBox</a></li>
-                <li><a href="../classes/Prometheus.Component.TextField.html">Prometheus.Component.TextField</a></li>
-                <li><a href="../classes/Prometheus.Components.ActionMenu.html">Prometheus.Components.ActionMenu</a></li>
-                <li><a href="../classes/Prometheus.Components.ActivityBlock.html">Prometheus.Components.ActivityBlock</a></li>
-                <li><a href="../classes/Prometheus.Components.BootstrapModal.html">Prometheus.Components.BootstrapModal</a></li>
-                <li><a href="../classes/Prometheus.Components.ChartEstimatedspent.html">Prometheus.Components.ChartEstimatedspent</a></li>
-                <li><a href="../classes/Prometheus.Components.ChartIssueratio.html">Prometheus.Components.ChartIssueratio</a></li>
-                <li><a href="../classes/Prometheus.Components.CheckboxField.html">Prometheus.Components.CheckboxField</a></li>
-                <li><a href="../classes/Prometheus.Components.ContentEditable.html">Prometheus.Components.ContentEditable</a></li>
-                <li><a href="../classes/Prometheus.Components.FieldCheckbox.html">Prometheus.Components.FieldCheckbox</a></li>
-                <li><a href="../classes/Prometheus.Components.FieldDate.html">Prometheus.Components.FieldDate</a></li>
-                <li><a href="../classes/Prometheus.Components.FieldImage.html">Prometheus.Components.FieldImage</a></li>
-                <li><a href="../classes/Prometheus.Components.FieldRadio.html">Prometheus.Components.FieldRadio</a></li>
-                <li><a href="../classes/Prometheus.Components.FieldText.html">Prometheus.Components.FieldText</a></li>
-                <li><a href="../classes/Prometheus.Components.FieldTextarea.html">Prometheus.Components.FieldTextarea</a></li>
-                <li><a href="../classes/Prometheus.Components.FieldView.html">Prometheus.Components.FieldView</a></li>
-                <li><a href="../classes/Prometheus.Components.FormFields.html">Prometheus.Components.FormFields</a></li>
-                <li><a href="../classes/Prometheus.Components.MessageBox.html">Prometheus.Components.MessageBox</a></li>
-                <li><a href="../classes/Prometheus.Components.MessageBoxComponent.html">Prometheus.Components.MessageBoxComponent</a></li>
-                <li><a href="../classes/Prometheus.Components.MilestoneBlock.html">Prometheus.Components.MilestoneBlock</a></li>
-                <li><a href="../classes/Prometheus.Components.NavBar.html">Prometheus.Components.NavBar</a></li>
-                <li><a href="../classes/Prometheus.Components.QueryBuilder.html">Prometheus.Components.QueryBuilder</a></li>
-                <li><a href="../classes/Prometheus.Components.QuillEditor.html">Prometheus.Components.QuillEditor</a></li>
-                <li><a href="../classes/Prometheus.Components.TextareaField.html">Prometheus.Components.TextareaField</a></li>
-                <li><a href="../classes/Prometheus.Components.TreeList.html">Prometheus.Components.TreeList</a></li>
-                <li><a href="../classes/Prometheus.Controller.App.html">Prometheus.Controller.App</a></li>
-                <li><a href="../classes/Prometheus.Controller.Module.html">Prometheus.Controller.Module</a></li>
-                <li><a href="../classes/Prometheus.Controller.Signin.html">Prometheus.Controller.Signin</a></li>
-                <li><a href="../classes/Prometheus.Controllers.Calendar.html">Prometheus.Controllers.Calendar</a></li>
-                <li><a href="../classes/Prometheus.Controllers.Conversation.html">Prometheus.Controllers.Conversation</a></li>
-                <li><a href="../classes/Prometheus.Controllers.Create.html">Prometheus.Controllers.Create</a></li>
-                <li><a href="../classes/Prometheus.Controllers.Edit.html">Prometheus.Controllers.Edit</a></li>
-                <li><a href="../classes/Prometheus.Controllers.Index.html">Prometheus.Controllers.Index</a></li>
-                <li><a href="../classes/Prometheus.Controllers.Issue.html">Prometheus.Controllers.Issue</a></li>
-                <li><a href="../classes/Prometheus.Controllers.Page.html">Prometheus.Controllers.Page</a></li>
-                <li><a href="../classes/Prometheus.Controllers.Projectlist.html">Prometheus.Controllers.Projectlist</a></li>
-                <li><a href="../classes/Prometheus.Controllers.Wiki.html">Prometheus.Controllers.Wiki</a></li>
-                <li><a href="../classes/Prometheus.Helpers.CountVotes.html">Prometheus.Helpers.CountVotes</a></li>
-                <li><a href="../classes/Prometheus.Helpers.GetDate.html">Prometheus.Helpers.GetDate</a></li>
-                <li><a href="../classes/Prometheus.Helpers.GetIssuecount.html">Prometheus.Helpers.GetIssuecount</a></li>
-                <li><a href="../classes/Prometheus.Helpers.GetPage.html">Prometheus.Helpers.GetPage</a></li>
-                <li><a href="../classes/Prometheus.Helpers.GetProp.html">Prometheus.Helpers.GetProp</a></li>
-                <li><a href="../classes/Prometheus.Helpers.GetRole.html">Prometheus.Helpers.GetRole</a></li>
-                <li><a href="../classes/Prometheus.Helpers.GetTimelog.html">Prometheus.Helpers.GetTimelog</a></li>
-                <li><a href="../classes/Prometheus.Helpers.GetWiki.html">Prometheus.Helpers.GetWiki</a></li>
-                <li><a href="../classes/Prometheus.Helpers.IfMatch.html">Prometheus.Helpers.IfMatch</a></li>
-                <li><a href="../classes/Prometheus.Helpers.NavIcon.html">Prometheus.Helpers.NavIcon</a></li>
-                <li><a href="../classes/Prometheus.Helpers.NotLast.html">Prometheus.Helpers.NotLast</a></li>
-                <li><a href="../classes/Prometheus.Helpers.PriorityIcon.html">Prometheus.Helpers.PriorityIcon</a></li>
-                <li><a href="../classes/Prometheus.Helpers.SortableClass.html">Prometheus.Helpers.SortableClass</a></li>
-                <li><a href="../classes/Prometheus.Helpers.TranslateComment.html">Prometheus.Helpers.TranslateComment</a></li>
-                <li><a href="../classes/Prometheus.Helpers.UserCreated.html">Prometheus.Helpers.UserCreated</a></li>
-                <li><a href="../classes/Prometheus.Initializers.Initializer.html">Prometheus.Initializers.Initializer</a></li>
-                <li><a href="../classes/Prometheus.Initializers.InjectRouter.html">Prometheus.Initializers.InjectRouter</a></li>
-                <li><a href="../classes/Prometheus.Initializers.JavascriptBehaviors.html">Prometheus.Initializers.JavascriptBehaviors</a></li>
-                <li><a href="../classes/Prometheus.Initializers.SetupLogger.html">Prometheus.Initializers.SetupLogger</a></li>
-                <li><a href="../classes/Prometheus.Locales.en.html">Prometheus.Locales.en</a></li>
-                <li><a href="../classes/Prometheus.Model.User.html">Prometheus.Model.User</a></li>
-                <li><a href="../classes/Prometheus.Models.Activity.html">Prometheus.Models.Activity</a></li>
-                <li><a href="../classes/Prometheus.Models.Comment.html">Prometheus.Models.Comment</a></li>
-                <li><a href="../classes/Prometheus.Models.CommentModel.html">Prometheus.Models.CommentModel</a></li>
-                <li><a href="../classes/Prometheus.Models.Conversationroom.html">Prometheus.Models.Conversationroom</a></li>
-                <li><a href="../classes/Prometheus.Models.Issue.html">Prometheus.Models.Issue</a></li>
-                <li><a href="../classes/Prometheus.Models.Issuetype.html">Prometheus.Models.Issuetype</a></li>
-                <li><a href="../classes/Prometheus.Models.Membership.html">Prometheus.Models.Membership</a></li>
-                <li><a href="../classes/Prometheus.Models.Milestone.html">Prometheus.Models.Milestone</a></li>
-                <li><a href="../classes/Prometheus.Models.Project.html">Prometheus.Models.Project</a></li>
-                <li><a href="../classes/Prometheus.Models.Role.html">Prometheus.Models.Role</a></li>
-                <li><a href="../classes/Prometheus.Models.Tagged.html">Prometheus.Models.Tagged</a></li>
-                <li><a href="../classes/Prometheus.Models.Timelog.html">Prometheus.Models.Timelog</a></li>
-                <li><a href="../classes/Prometheus.Models.Token.html">Prometheus.Models.Token</a></li>
-                <li><a href="../classes/Prometheus.Models.Vote.html">Prometheus.Models.Vote</a></li>
-                <li><a href="../classes/Prometheus.Models.Wiki.html">Prometheus.Models.Wiki</a></li>
-                <li><a href="../classes/Prometheus.Routes.App.html">Prometheus.Routes.App</a></li>
-                <li><a href="../classes/Prometheus.Routes.Application.html">Prometheus.Routes.Application</a></li>
-                <li><a href="../classes/Prometheus.Routes.AppRoute.html">Prometheus.Routes.AppRoute</a></li>
-                <li><a href="../classes/Prometheus.Routes.Calendar.html">Prometheus.Routes.Calendar</a></li>
-                <li><a href="../classes/Prometheus.Routes.Conversation.html">Prometheus.Routes.Conversation</a></li>
-                <li><a href="../classes/Prometheus.Routes.Create.html">Prometheus.Routes.Create</a></li>
-                <li><a href="../classes/Prometheus.Routes.Edit.html">Prometheus.Routes.Edit</a></li>
-                <li><a href="../classes/Prometheus.Routes.Index.html">Prometheus.Routes.Index</a></li>
-                <li><a href="../classes/Prometheus.Routes.Module.html">Prometheus.Routes.Module</a></li>
-                <li><a href="../classes/Prometheus.Routes.Page.html">Prometheus.Routes.Page</a></li>
-                <li><a href="../classes/Prometheus.Routes.Project.html">Prometheus.Routes.Project</a></li>
-                <li><a href="../classes/Prometheus.Routes.Projectlist.html">Prometheus.Routes.Projectlist</a></li>
-                <li><a href="../classes/Prometheus.Routes.Wiki.html">Prometheus.Routes.Wiki</a></li>
-                <li><a href="../classes/Prometheus.Routes.Wiki.Create.html">Prometheus.Routes.Wiki.Create</a></li>
-                <li><a href="../classes/Prometheus.Serializers.Application.html">Prometheus.Serializers.Application</a></li>
-                <li><a href="../classes/Prometheus.Services.CurrentUser.html">Prometheus.Services.CurrentUser</a></li>
-                <li><a href="../classes/Prometheus.Services.RelatedField.html">Prometheus.Services.RelatedField</a></li>
-                <li><a href="../classes/Prometheus.Utils.Builder.html">Prometheus.Utils.Builder</a></li>
-                <li><a href="../classes/Prometheus.Utils.Fields.html">Prometheus.Utils.Fields</a></li>
-                <li><a href="../classes/Prometheus.Utils.Metadata.html">Prometheus.Utils.Metadata</a></li>
-                <li><a href="../classes/Prometheus.Utils.Modeltotree.html">Prometheus.Utils.Modeltotree</a></li>
-                <li><a href="../classes/Prometheus.Utils.Navigation.html">Prometheus.Utils.Navigation</a></li>
-                <li><a href="../classes/Prometheus.Utils.Parser.html">Prometheus.Utils.Parser</a></li>
-                <li><a href="../classes/Wiki.html">Wiki</a></li>
-        </ul>
-    </div>
-    </div>
-</div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: v0.1.0</em>
         </div>
-        <div class="span9">
-    <form id="options-form" class="form-inline pull-right">
-        Show:
-        <label for="api-show-inherited" class="checkbox">
-            <input type="checkbox" id="api-show-inherited" checked>
-            Inherited
-        </label>
+    </div>
+    <div id="bd" class="yui3-g">
 
-        <label for="api-show-protected" class="checkbox">
-            <input type="checkbox" id="api-show-protected">
-            Protected
-        </label>
-
-        <label for="api-show-private" class="checkbox">
-            <input type="checkbox" id="api-show-private">
-            Private
-        </label>
-        <label for="api-show-deprecated" class="checkbox">
-            <input type="checkbox" id="api-show-deprecated">
-            Deprecated
-        </label>
-
-    </form>
-
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/Builder.html">Builder</a></li>
+                                <li><a href="../classes/Calendar.html">Calendar</a></li>
+                                <li><a href="../classes/Conversation.html">Conversation</a></li>
+                                <li><a href="../classes/Create.html">Create</a></li>
+                                <li><a href="../classes/Edit.html">Edit</a></li>
+                                <li><a href="../classes/Index.html">Index</a></li>
+                                <li><a href="../classes/InjectRouter.html">InjectRouter</a></li>
+                                <li><a href="../classes/Issue.html">Issue</a></li>
+                                <li><a href="../classes/IssueModel.html">IssueModel</a></li>
+                                <li><a href="../classes/Metadata.html">Metadata</a></li>
+                                <li><a href="../classes/Module.html">Module</a></li>
+                                <li><a href="../classes/Page.html">Page</a></li>
+                                <li><a href="../classes/Parser.html">Parser</a></li>
+                                <li><a href="../classes/Projectlist.html">Projectlist</a></li>
+                                <li><a href="../classes/Prometheus.Adapter.Application.html">Prometheus.Adapter.Application</a></li>
+                                <li><a href="../classes/Prometheus.Adapter.ApplicationAdapter.html">Prometheus.Adapter.ApplicationAdapter</a></li>
+                                <li><a href="../classes/Prometheus.Application.html">Prometheus.Application</a></li>
+                                <li><a href="../classes/Prometheus.Authenticators.OAuth2Authenticator.html">Prometheus.Authenticators.OAuth2Authenticator</a></li>
+                                <li><a href="../classes/Prometheus.Authorizers.OAuth2Authorizer.html">Prometheus.Authorizers.OAuth2Authorizer</a></li>
+                                <li><a href="../classes/Prometheus.Component.ChatBox.html">Prometheus.Component.ChatBox</a></li>
+                                <li><a href="../classes/Prometheus.Component.TextField.html">Prometheus.Component.TextField</a></li>
+                                <li><a href="../classes/Prometheus.Components.ActionMenu.html">Prometheus.Components.ActionMenu</a></li>
+                                <li><a href="../classes/Prometheus.Components.ActivityBlock.html">Prometheus.Components.ActivityBlock</a></li>
+                                <li><a href="../classes/Prometheus.Components.BootstrapModal.html">Prometheus.Components.BootstrapModal</a></li>
+                                <li><a href="../classes/Prometheus.Components.ChartEstimatedspent.html">Prometheus.Components.ChartEstimatedspent</a></li>
+                                <li><a href="../classes/Prometheus.Components.ChartIssueratio.html">Prometheus.Components.ChartIssueratio</a></li>
+                                <li><a href="../classes/Prometheus.Components.CheckboxField.html">Prometheus.Components.CheckboxField</a></li>
+                                <li><a href="../classes/Prometheus.Components.ContentEditable.html">Prometheus.Components.ContentEditable</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldCheckbox.html">Prometheus.Components.FieldCheckbox</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldDate.html">Prometheus.Components.FieldDate</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldImage.html">Prometheus.Components.FieldImage</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldRadio.html">Prometheus.Components.FieldRadio</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldText.html">Prometheus.Components.FieldText</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldTextarea.html">Prometheus.Components.FieldTextarea</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldView.html">Prometheus.Components.FieldView</a></li>
+                                <li><a href="../classes/Prometheus.Components.FormFields.html">Prometheus.Components.FormFields</a></li>
+                                <li><a href="../classes/Prometheus.Components.MessageBox.html">Prometheus.Components.MessageBox</a></li>
+                                <li><a href="../classes/Prometheus.Components.MessageBoxComponent.html">Prometheus.Components.MessageBoxComponent</a></li>
+                                <li><a href="../classes/Prometheus.Components.MilestoneBlock.html">Prometheus.Components.MilestoneBlock</a></li>
+                                <li><a href="../classes/Prometheus.Components.NavBar.html">Prometheus.Components.NavBar</a></li>
+                                <li><a href="../classes/Prometheus.Components.QueryBuilder.html">Prometheus.Components.QueryBuilder</a></li>
+                                <li><a href="../classes/Prometheus.Components.QuillEditor.html">Prometheus.Components.QuillEditor</a></li>
+                                <li><a href="../classes/Prometheus.Components.TextareaField.html">Prometheus.Components.TextareaField</a></li>
+                                <li><a href="../classes/Prometheus.Components.TreeList.html">Prometheus.Components.TreeList</a></li>
+                                <li><a href="../classes/Prometheus.Controller.App.html">Prometheus.Controller.App</a></li>
+                                <li><a href="../classes/Prometheus.Controller.Module.html">Prometheus.Controller.Module</a></li>
+                                <li><a href="../classes/Prometheus.Controller.Signin.html">Prometheus.Controller.Signin</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Calendar.html">Prometheus.Controllers.Calendar</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Conversation.html">Prometheus.Controllers.Conversation</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Create.html">Prometheus.Controllers.Create</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Edit.html">Prometheus.Controllers.Edit</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Index.html">Prometheus.Controllers.Index</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Issue.html">Prometheus.Controllers.Issue</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Page.html">Prometheus.Controllers.Page</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Projectlist.html">Prometheus.Controllers.Projectlist</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Wiki.html">Prometheus.Controllers.Wiki</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.CountVotes.html">Prometheus.Helpers.CountVotes</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetDate.html">Prometheus.Helpers.GetDate</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetIssuecount.html">Prometheus.Helpers.GetIssuecount</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetPage.html">Prometheus.Helpers.GetPage</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetProp.html">Prometheus.Helpers.GetProp</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetRole.html">Prometheus.Helpers.GetRole</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetTimelog.html">Prometheus.Helpers.GetTimelog</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetWiki.html">Prometheus.Helpers.GetWiki</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.IfMatch.html">Prometheus.Helpers.IfMatch</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.NavIcon.html">Prometheus.Helpers.NavIcon</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.NotLast.html">Prometheus.Helpers.NotLast</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.PriorityIcon.html">Prometheus.Helpers.PriorityIcon</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.SortableClass.html">Prometheus.Helpers.SortableClass</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.TranslateComment.html">Prometheus.Helpers.TranslateComment</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.UserCreated.html">Prometheus.Helpers.UserCreated</a></li>
+                                <li><a href="../classes/Prometheus.Initializers.Initializer.html">Prometheus.Initializers.Initializer</a></li>
+                                <li><a href="../classes/Prometheus.Initializers.InjectRouter.html">Prometheus.Initializers.InjectRouter</a></li>
+                                <li><a href="../classes/Prometheus.Initializers.JavascriptBehaviors.html">Prometheus.Initializers.JavascriptBehaviors</a></li>
+                                <li><a href="../classes/Prometheus.Initializers.SetupLogger.html">Prometheus.Initializers.SetupLogger</a></li>
+                                <li><a href="../classes/Prometheus.Locales.en.html">Prometheus.Locales.en</a></li>
+                                <li><a href="../classes/Prometheus.Model.User.html">Prometheus.Model.User</a></li>
+                                <li><a href="../classes/Prometheus.Models.Activity.html">Prometheus.Models.Activity</a></li>
+                                <li><a href="../classes/Prometheus.Models.Comment.html">Prometheus.Models.Comment</a></li>
+                                <li><a href="../classes/Prometheus.Models.CommentModel.html">Prometheus.Models.CommentModel</a></li>
+                                <li><a href="../classes/Prometheus.Models.Conversationroom.html">Prometheus.Models.Conversationroom</a></li>
+                                <li><a href="../classes/Prometheus.Models.Issue.html">Prometheus.Models.Issue</a></li>
+                                <li><a href="../classes/Prometheus.Models.Issuetype.html">Prometheus.Models.Issuetype</a></li>
+                                <li><a href="../classes/Prometheus.Models.Membership.html">Prometheus.Models.Membership</a></li>
+                                <li><a href="../classes/Prometheus.Models.Milestone.html">Prometheus.Models.Milestone</a></li>
+                                <li><a href="../classes/Prometheus.Models.Project.html">Prometheus.Models.Project</a></li>
+                                <li><a href="../classes/Prometheus.Models.Role.html">Prometheus.Models.Role</a></li>
+                                <li><a href="../classes/Prometheus.Models.Tagged.html">Prometheus.Models.Tagged</a></li>
+                                <li><a href="../classes/Prometheus.Models.Timelog.html">Prometheus.Models.Timelog</a></li>
+                                <li><a href="../classes/Prometheus.Models.Token.html">Prometheus.Models.Token</a></li>
+                                <li><a href="../classes/Prometheus.Models.Vote.html">Prometheus.Models.Vote</a></li>
+                                <li><a href="../classes/Prometheus.Models.Wiki.html">Prometheus.Models.Wiki</a></li>
+                                <li><a href="../classes/Prometheus.Routes.App.html">Prometheus.Routes.App</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Application.html">Prometheus.Routes.Application</a></li>
+                                <li><a href="../classes/Prometheus.Routes.AppRoute.html">Prometheus.Routes.AppRoute</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Calendar.html">Prometheus.Routes.Calendar</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Conversation.html">Prometheus.Routes.Conversation</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Create.html">Prometheus.Routes.Create</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Edit.html">Prometheus.Routes.Edit</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Index.html">Prometheus.Routes.Index</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Module.html">Prometheus.Routes.Module</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Page.html">Prometheus.Routes.Page</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Project.html">Prometheus.Routes.Project</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Projectlist.html">Prometheus.Routes.Projectlist</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Wiki.html">Prometheus.Routes.Wiki</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Wiki.Create.html">Prometheus.Routes.Wiki.Create</a></li>
+                                <li><a href="../classes/Prometheus.Serializers.Application.html">Prometheus.Serializers.Application</a></li>
+                                <li><a href="../classes/Prometheus.Services.CurrentUser.html">Prometheus.Services.CurrentUser</a></li>
+                                <li><a href="../classes/Prometheus.Services.RelatedField.html">Prometheus.Services.RelatedField</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Builder.html">Prometheus.Utils.Builder</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Fields.html">Prometheus.Utils.Fields</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Metadata.html">Prometheus.Utils.Metadata</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Modeltotree.html">Prometheus.Utils.Modeltotree</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Navigation.html">Prometheus.Utils.Navigation</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Parser.html">Prometheus.Utils.Parser</a></li>
+                                <li><a href="../classes/Wiki.html">Wiki</a></li>
+                            </ul>
+                
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/App.html">App</a></li>
+                                <li><a href="../modules/App.Project.html">App.Project</a></li>
+                                <li><a href="../modules/App.Project.Issue.html">App.Project.Issue</a></li>
+                                <li><a href="../modules/App.Project.Wiki.html">App.Project.Wiki</a></li>
+                                <li><a href="../modules/Data.html">Data</a></li>
+                                <li><a href="../modules/i18n.html">i18n</a></li>
+                                <li><a href="../modules/Metadata.html">Metadata</a></li>
+                                <li><a href="../modules/Navigation.html">Navigation</a></li>
+                                <li><a href="../modules/Query.html">Query</a></li>
+                                <li><a href="../modules/Validator.html">Validator</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<div class="page-header">
-    <h1>Prometheus.Components.QueryBuilder</h1>
+<h1>Prometheus.Components.QueryBuilder Class</h1>
+<div class="box meta">
+
+
+
+            Module: <a href="../modules/App.Project.Issue.html">App.Project.Issue</a>
+
+</div>
+
+
+<div class="box intro">
+    
 </div>
 
 
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
 
-	<div class="well well-small">
-            Module: <a href="../modules/App.Project.html">App.Project</a>
-    </div>
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
+    </ul>
 
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
 
+                <div class="index-section methods">
+                    <h3>Methods</h3>
 
+                    <ul class="index-list methods">
+                            <li class="index-item method public">
+                                <a href="#method_didInsertElement">didInsertElement</a>
 
-<!-- table of contents -->
+                            </li>
+                            <li class="index-item method public">
+                                <a href="#method_willDestroyElement">willDestroyElement</a>
 
-<div id="class-toc" class="page-section">
-	<h2>Table of Contents</h2>
-    <ul>
-		<li>
-			<strong>Methods</strong>
-			<ul>
-				<li><a href="#method-didInsertElement"><span class="im">didInsertElement</span>()</a></li>
-				<li><a href="#method-willDestroyElement"><span class="im">willDestroyElement</span>()</a></li>
-			</ul>
-		</li>
+                            </li>
+                    </ul>
+                </div>
 
-		<li>
-			<strong>Properties</strong>
-			<ul>
-				<li><a href="#prop-classNames"><span class="ip">classNames</span></a></li>
-				<li><a href="#prop-i18n"><span class="ip">i18n</span></a></li>
-			</ul>
-		</li>
+                <div class="index-section properties">
+                    <h3>Properties</h3>
 
+                    <ul class="index-list properties">
+                            <li class="index-item property private">
+                                <a href="#property_classNames">classNames</a>
 
-	</ul>
-</div>
+                            </li>
+                            <li class="index-item property private">
+                                <a href="#property_i18n">i18n</a>
 
-<!-- details -->
-
-
-    <div id="methods" class="page-section">
-        <h2 class="off-left">Methods</h2>
-        <div class="item-list">
-<div id="method-didInsertElement" class="method item public">
-	<div class="method-signature">
-	<span class="name"><code>didInsertElement</code></span>
-
-		<span class="paren">()</span>
-	</div>
+                            </li>
+                    </ul>
+                </div>
 
 
-		<span class="flag public">public</span>
-
-
-
-
-	<div class="meta">
-				<p>
-				Defined in
-		<a href="../files/app_components_query-builder.js.html#l40"><code>app&#x2F;components&#x2F;query-builder.js:40</code></a>
-		</p>
-
-
-
-	</div>
-
-	<div class="description"><p>This function is called by Ember after it has finished rendering the HTML elements, we
-use this function in order to setup the query builder</p>
-</div>
-
-
-
-</div>
-<div id="method-willDestroyElement" class="method item public">
-	<div class="method-signature">
-	<span class="name"><code>willDestroyElement</code></span>
-
-		<span class="paren">()</span>
-	</div>
-
-
-		<span class="flag public">public</span>
-
-
-
-
-	<div class="meta">
-				<p>
-				Defined in
-		<a href="../files/app_components_query-builder.js.html#l58"><code>app&#x2F;components&#x2F;query-builder.js:58</code></a>
-		</p>
-
-
-
-	</div>
-
-	<div class="description"><p>This function is call by Ember when it is about to destroy the HTML elements rendered. We
-use this function in order to destroy the querybuilder object we initiated</p>
-</div>
-
-
-
-</div>
         </div>
+
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
+
+<div id="method_didInsertElement" class="method item public">
+    <h3 class="name"><code>didInsertElement</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+        <span class="flag public">public</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_components_query-builder.js.html#l40"><code>app&#x2F;components&#x2F;query-builder.js:40</code></a>
+        </p>
+
+
+
     </div>
 
-    <div id="properties" class="page-section">
-        <h2 class="off-left">Properties</h2>
+    <div class="description">
+        <p>This function is called by Ember after it has finished rendering the HTML elements, we
+use this function in order to setup the query builder</p>
 
-        <div class="item-list">
-<div id="prop-classNames" class="property item private">
+    </div>
+
+
+
+
+</div>
+<div id="method_willDestroyElement" class="method item public">
+    <h3 class="name"><code>willDestroyElement</code></h3>
+
+        <span class="paren">()</span>
+
+
+
+        <span class="flag public">public</span>
+
+
+
+
+
+    <div class="meta">
+                <p>
+                Defined in
+        <a href="../files/app_components_query-builder.js.html#l58"><code>app&#x2F;components&#x2F;query-builder.js:58</code></a>
+        </p>
+
+
+
+    </div>
+
+    <div class="description">
+        <p>This function is call by Ember when it is about to destroy the HTML elements rendered. We
+use this function in order to destroy the querybuilder object we initiated</p>
+
+    </div>
+
+
+
+
+</div>
+            </div>
+
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+<div id="property_classNames" class="property item private">
     <h3 class="name"><code>classNames</code></h3>
     <span class="type">Array</span>
 
@@ -323,7 +361,7 @@ use this function in order to destroy the querybuilder object we initiated</p>
 
 
 </div>
-<div id="prop-i18n" class="property item private">
+<div id="property_i18n" class="property item private">
     <h3 class="name"><code>i18n</code></h3>
     <span class="type">Ember.Service</span>
 
@@ -349,21 +387,24 @@ use this function in order to destroy the querybuilder object we initiated</p>
 
 
 </div>
-        </div>
+            </div>
+
+
     </div>
-
-
-
+</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
-<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
 <script src="../assets/vendor/prettify/prettify-min.js"></script>
-<script src="../assets/js/yuidoc-bootstrap.js"></script>
 <script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
 </body>
 </html>
