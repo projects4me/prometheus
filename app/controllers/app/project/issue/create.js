@@ -70,5 +70,50 @@ export default Ember.Controller.extend({
             Logger.debug('App.Project.Issue.Create:selectMilestone');
         },
 
+        /**
+         * This function is called when the status is being selected
+         *
+         * @method selectStatus
+         * @param {Object} target
+         * @public
+         */
+        selectStatus:function(target)
+        {
+            Logger.debug('App.Project.Issue.Create:selectStatus');
+            var model = this.get('model');
+            model.set('status',target.value);
+            Logger.debug('App.Project.Issue.Create:selectStatus');
+        },
+
+        /**
+         * This function is called when the priority is being selected
+         *
+         * @method selectPriority
+         * @param {Object} target
+         * @public
+         */
+        selectPriority:function(target)
+        {
+            Logger.debug('App.Project.Issue.Create:selectPriority');
+            var model = this.get('model');
+            model.set('priority',target.value);
+            Logger.debug('App.Project.Issue.Create:selectPriority');
+        },
+
+        /**
+         * This function is called when the issue type is being selected
+         *
+         * @method selectType
+         * @param {Object} target
+         * @public
+         */
+        selectType:function(target)
+        {
+            Logger.debug('App.Project.Issue.Create:selectType');
+            var model = this.get('model');
+            model.set('typeId',target.value);
+            Logger.debug('App.Project.Issue.Create:selectType');
+        },
+
     }
 });

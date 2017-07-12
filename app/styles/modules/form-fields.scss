@@ -46,7 +46,7 @@
   /* active state */
   .data-input:focus ~ .floating-label, .data-input:valid ~ .floating-label, .select-input ~ .floating-label{
     top:-2rem;
-    font-size:1rem;
+    font-size:1.4rem;
     color: $primaryColor;
   }
 

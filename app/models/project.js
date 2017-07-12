@@ -279,4 +279,14 @@ export default DS.Model.extend({
      */
     milestones:DS.hasMany('milestone'),
 
+    /**
+     * The issue types for this project
+     *
+     * @property issuetypes
+     * @type Relationship
+     * @for Project
+     * @private
+     */
+    issuetypes:DS.hasMany('issuetype'),
+
 });

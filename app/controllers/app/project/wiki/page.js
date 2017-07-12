@@ -26,7 +26,7 @@ export default Ember.Controller.extend({
      *
      * @property currentUser
      * @type Ember.Service
-     * @for page
+     * @for Page
      * @public
      */
     currentUser: Ember.inject.service(),

@@ -51,7 +51,7 @@ export default App.extend({
 
         var options = {
             query: "(Project.id : "+projectId+")",
-            rels : 'members,milestones',
+            rels : 'members,milestones,issuetypes',
             sort: "members.name",
             limit: -1
         };
@@ -81,11 +81,71 @@ export default App.extend({
                 milestoneList[i] = {label:temp.get('name'), value:temp.get('id')};
             }
 
+            var typeCount = data.nextObject(0).get('issuetypes.length');
+            var typeList = [];
+            temp = null;
+            for (var i=0;i<typeCount;i++)
+            {
+                temp = data.nextObject(0).get('issuetypes').nextObject(i);
+                typeList[i] = {label:temp.get('name'), value:temp.get('id')};
+            }
+
+            var priority = [
+                {
+                    "label":"Medium",
+                    "value":"medium"
+                },
+                {
+                    "label":"High",
+                    "value":"high"
+                },
+                {
+                    "label":"Low",
+                    "value":"low"
+                },
+                {
+                    "label":"Critical",
+                    "value":"critical"
+                },
+                {
+                    "label":"Bloker",
+                    "value":"blocker"
+                }
+            ];
+
+            var status = [
+                {
+                    "label":"New",
+                    "value":"new"
+                },
+                {
+                    "label":"In Progress",
+                    "value":"in_progress"
+                },
+                {
+                    "label":"Pending",
+                    "value":"pending"
+                },
+                {
+                    "label":"Done",
+                    "value":"done"
+                },
+                {
+                    "label":"Wont't Fix",
+                    "value":"wont_fix"
+                }
+            ];
+
+
             Logger.debug('Data to be given');
             Logger.debug(memberList);
             Logger.debug(milestoneList);
+            Logger.debug(typeList);
             controller.set('memberList',memberList);
             controller.set('milestoneList',milestoneList);
+            controller.set('type',typeList);
+            controller.set('status',status);
+            controller.set('priority',priority);
 
         });
 
