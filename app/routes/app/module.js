@@ -61,7 +61,7 @@ export default App.extend({
     /**
      * The internationalization service
      *
-     * @property selectedCount
+     * @property i18n
      * @type Service
      * @for Module
      * @private

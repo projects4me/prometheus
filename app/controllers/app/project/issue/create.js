@@ -15,6 +15,38 @@ import Ember from 'ember';
  */
 export default Ember.Controller.extend({
 
+
+    /**
+     * The current user service
+     *
+     * @property currentUser
+     * @type Ember.Service
+     * @for Create
+     * @public
+     */
+    currentUser: Ember.inject.service(),
+
+    /**
+     * The i18n library service that is used in order to get the translations
+     *
+     * @property i18n
+     * @type Ember.Service
+     * @for Create
+     * @public
+     */
+    i18n: Ember.inject.service(),
+
+    /**
+     * This property is used to control the enabling and disabling of the save
+     * button, the save is only enabled if the current model has been modified
+     *
+     * @property saveDisabled
+     * @type String
+     * @for Create
+     * @private
+     */
+    saveDisabled: null,
+
     /**
      * These are the events that this controller handles
      *
@@ -115,5 +147,57 @@ export default Ember.Controller.extend({
             Logger.debug('App.Project.Issue.Create:selectType');
         },
 
+        /**
+         * This function is responsible for saving the model. After successfully
+         * saving the function takes the user to the saved page.
+         *
+         * @method save
+         * @public
+         * @todo Trigger the notificaiton
+         */
+        save:function() {
+            var self = this;
+            var model = this.get('model');
+
+            model.projectId = this.target.currentState.routerJs.state.params["app.project"].projectId;
+            model.dateCreated = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+            model.dateModified = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+            model.modifiedUser = self.get('currentUser.user.id');
+            model.reportedUser = self.get('currentUser.user.id');
+            model.createdUser = self.get('currentUser.user.id');
+            model.modifedUserName = self.get('currentUser.user.name');
+            model.createdUserName = self.get('currentUser.user.name');
+            model.deleted = '0';
+
+            model.startDate = moment(model.startDate).format("YYYY-MM-DD");
+            model.endDate= moment(model.endDate).format("YYYY-MM-DD");
+
+            Logger.debug(model);
+            Logger.debug(self);
+            model.save().then(function(data){
+                Logger.debug('Data saved:');
+                Logger.debug(data);
+
+                new Messenger().post({
+                    message: self.get('i18n').t('view.app.issue.created',{name:data.get('subject'),issueNumber:data.get('issueNumber')}),
+                    type: 'success',
+                    showCloseButton: true
+                });
+
+                self.transitionToRoute('app.project.issue.page', {projectId:data.get('projectId'),id:data.get('id')});
+            });
+        },
+
+        /**
+         * This function lets a user traverse to the issue list view of the project
+         *
+         * @method cancel
+         * @public
+         * @todo Trigger the notificaiton
+         */
+        cancel:function(){
+            var model = this.get('model');
+            this.transitionToRoute('app.project.issue', {projectId:model.get('projectId')});
+        },
     }
 });

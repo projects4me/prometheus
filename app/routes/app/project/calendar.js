@@ -84,7 +84,7 @@ export default App.extend({
         var options = {
             fields: "Issue.id,Issue.subject,Issue.issueNumber,Issue.status,Issue.startDate,Issue.endDate,Issue.priority",
             query: "(Issue.projectId : "+projectId+")",
-            rels: "assignee",
+            rels: "assignedTo",
             sort: "Issue.startDate",
             order: "ASC",
             page: 0,

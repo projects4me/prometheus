@@ -30,25 +30,16 @@
                                         value=model.description
                                 }}
 
-                                <div class="form-field ember-view">
-                                    <div class="input-group select-input">
-                                        {{#power-select
-                                                class="form-control"
-                                                options=type
-                                                placeholder=(t "view.app.issue.create.type")
-                                                selected=(find-by "value" model.typeId type)
-                                                searchField="label"
-                                                onchange=(action "selectType")
-                                        as |type|}}
-                                            {{type.label}}
-                                        {{/power-select}}
-                                    </div>
-                                    <span class="highlight"></span>
-                                    <span class="bar"></span>
-                                    <label class="floating-label">{{t "view.app.issue.create.type"}}</label>
-                                    <span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
-                                    <span class="error hidden text-red">This field cannot be required</span>
-                                </div>
+                                {{field-relate
+                                        placeholder=(t "view.app.issue.create.type")
+                                        label=(t "view.app.issue.create.type")
+                                        value=model.typeId
+                                        options=type
+                                        selected=(find-by "value" model.typeId type)
+                                        searchField="label"
+                                        onchange=(action "selectType")
+                                        relateType="relate-simple"
+                                }}
 
                                 {{field-date
                                         placeholder="Enter the issue name .."
@@ -64,65 +55,38 @@
                                         mask="alphanumeric"
                                 }}
 
-                                <div class="form-field ember-view">
-                                    <div class="input-group select-input">
-                                        {{#power-select
-                                                class="form-control"
-                                                options=status
-                                                placeholder=(t "view.app.issue.create.status")
-                                                selected=(find-by "value" model.status status)
-                                                searchField="label"
-                                                onchange=(action "selectStatus")
-                                        as |status|}}
-                                            {{status.label}}
-                                        {{/power-select}}
-                                    </div>
-                                    <span class="highlight"></span>
-                                    <span class="bar"></span>
-                                    <label class="floating-label">{{t "view.app.issue.create.status"}}</label>
-                                    <span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
-                                    <span class="error hidden text-red">This field cannot be required</span>
-                                </div>
+                                {{field-relate
+                                        placeholder=(t "view.app.issue.create.status")
+                                        label=(t "view.app.issue.create.status")
+                                        value=model.status
+                                        options=status
+                                        selected=(find-by "value" model.status status)
+                                        searchField="label"
+                                        onchange=(action "selectStatus")
+                                        relateType="relate-simple"
+                                }}
 
-                                <div class="form-field ember-view">
-                                    <div class="input-group select-input">
-                                        {{#power-select
-                                                class="form-control"
-                                                options=priority
-                                                placeholder=(t "view.app.issue.create.priority")
-                                                selected=(find-by "value" model.priority priority)
-                                                searchField="label"
-                                                onchange=(action "selectPriority")
-                                        as |priority|}}
-                                            {{priority.label}}
-                                        {{/power-select}}
-                                    </div>
-                                    <span class="highlight"></span>
-                                    <span class="bar"></span>
-                                    <label class="floating-label">{{t "view.app.issue.create.priority"}}</label>
-                                    <span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
-                                    <span class="error hidden text-red">This field cannot be required</span>
-                                </div>
+                                {{field-relate
+                                        placeholder=(t "view.app.issue.create.priority")
+                                        label=(t "view.app.issue.create.priority")
+                                        value=model.priority
+                                        options=priority
+                                        selected=(find-by "value" model.priority priority)
+                                        searchField="label"
+                                        onchange=(action "selectPriority")
+                                        relateType="relate-issuepriority"
+                                }}
 
-                                <div class="form-field ember-view">
-                                    <div class="input-group select-input">
-                                        {{#power-select
-                                                class="form-control"
-                                                options=milestoneList
-                                                placeholder=(t "view.app.issue.create.selectmilestone")
-                                                selected=(find-by "value" model.milestoneId milestoneList)
-                                                searchField="label"
-                                                onchange=(action "selectMilestone")
-                                        as |milestone|}}
-                                            {{milestone.label}}
-                                        {{/power-select}}
-                                    </div>
-                                    <span class="highlight"></span>
-                                    <span class="bar"></span>
-                                    <label class="floating-label">{{t "view.app.issue.create.milestone"}}</label>
-                                    <span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
-                                    <span class="error hidden text-red">This field cannot be required</span>
-                                </div>
+                                {{field-relate
+                                        placeholder=(t "view.app.issue.create.selectmilestone")
+                                        label=(t "view.app.issue.create.milestone")
+                                        value=model.milestoneId
+                                        options=milestoneList
+                                        selected=(find-by "value" model.milestoneId milestoneList)
+                                        searchField="label"
+                                        onchange=(action "selectMilestone")
+                                        relateType="relate-simple"
+                                }}
 
                             </div>
                         </form>
@@ -130,7 +94,7 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer text-center" style="display: block;">
-                        <a href="javascript:void(0)" class="uppercase">{{t "view.app.project.detail.viewallissues"}}</a>
+
                     </div>
                     <!-- /.box-footer -->
                 </div>
@@ -152,46 +116,30 @@
                     <!-- /.box-header -->
                     <div class="box-body no-padding" style="display: block;">
 
-                        <div class="form-field ember-view">
-                            <div class="input-group select-input">
-                                {{#power-select
-                                        class="form-control"
-                                        options=memberList
-                                        placeholder=(t "view.app.issue.create.selectassignee")
-                                        selected=(find-by "value" model.assignee memberList)
-                                        searchField="label"
-                                        onchange=(action "selectAssignee")
-                                as |member|}}
-                                    {{member.label}}
-                                {{/power-select}}
-                            </div>
-                            <span class="highlight"></span>
-                            <span class="bar"></span>
-                            <label class="floating-label">{{t "view.app.issue.create.assignedTo"}}</label>
-                            <span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
-                            <span class="error hidden text-red">This field cannot be required</span>
-                        </div>
+
+                        {{field-relate
+                            placeholder=(t "view.app.issue.create.selectassignee")
+                            label=(t "view.app.issue.create.assignedTo")
+                            value=model.assignee
+                            options=memberList
+                            selected=(find-by "value" model.assignee memberList)
+                            searchField="label"
+                            onchange=(action "selectAssignee")
+                            relateType="relate-user"
+                        }}
 
 
-                        <div class="form-field ember-view">
-                            <div class="input-group select-input">
-                                {{#power-select
-                                        class="form-control"
-                                        options=memberList
-                                        placeholder=(t "view.app.issue.create.selectowner")
-                                        selected=(find-by "value" model.owner memberList)
-                                        searchField="label"
-                                        onchange=(action "selectOwner")
-                                as |member|}}
-                                    {{member.label}}
-                                {{/power-select}}
-                            </div>
-                            <span class="highlight"></span>
-                            <span class="bar"></span>
-                            <label class="floating-label">{{t "view.app.issue.create.ownedBy"}}</label>
-                            <span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
-                            <span class="error hidden text-red">This field cannot be required</span>
-                        </div>
+                        {{field-relate
+                                placeholder=(t "view.app.issue.create.selectowner")
+                                label=(t "view.app.issue.create.ownedBy")
+                                value=model.owner
+                                options=memberList
+                                selected=(find-by "value" model.owner memberList)
+                                searchField="label"
+                                onchange=(action "selectOwner")
+                                relateType="relate-user"
+                        }}
+
 
                     </div>
                     <!-- /.box-body -->
@@ -203,6 +151,11 @@
 
             </div>
 
-        </div>
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+                <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+            </div>
+
+            </div>
 
 </div>

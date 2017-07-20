@@ -439,6 +439,7 @@ export default {
             "issue" : {
                 "priority" : "priority",
                 "status" : "Status",
+                "created" : "Issue <strong>{{issueNumber}} : {{name}}</strong> has been created successfully",
                 "list" : {
                     "create" : "Create New",
                 },

@@ -103,7 +103,58 @@
 
 }
 
+.calendar-table {
+  box-shadow: 1rem 1rem 1rem $borderColor;
+}
 
+.calendar-table:after{
+  content: '';
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0rem;
+  height: 0.4rem;
+  background: $color_maroon_flush_approx;
+  background: linear-gradient(to right, $color_maroon_flush_approx 0, $color_pompadour_approx 100%);
+  filter: progid:dximagetransform.microsoft.gradient(startcolorstr=$color_maroon_flush_approx, endcolorstr=$color_pompadour_approx, gradienttype=1 );
+}
+
+.user-relate-icon{
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0.2rem 0rem;
+  border-radius: 2rem;
+}
+
+.ember-power-select-option, .select-input{
+  .fa{
+    margin-right:0.5rem;
+  }
+  .fa-ban{
+    color: #d33724;
+  }
+  .fa-angle-double-up{
+    color: #d33724;
+    font-weight: bold;
+  }
+  .fa-arrow-up{
+    color: #e98a7e;
+  }
+  .fa-dot-circle-o{
+    color: $primaryColor;
+  }
+  .fa-arrow-down{
+    color: #5ac594;
+  }
+  .fa-angle-double-down{
+    color: #00a65a;
+    font-weight: bold;
+  }
+}
+
+.ember-power-select-trigger, .btn{
+  border-radius: 0rem;
+}
 
 /* ANIMATIONS ================ */
 @-webkit-keyframes inputHighlighter {
