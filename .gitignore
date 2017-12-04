@@ -13,7 +13,7 @@
 /connect.lock
 /coverage/*
 /libpeerconnection.log
-npm-debug.log*
-testem.log
-package-lock.json
-.idea/workspace.xml
+/npm-debug.log*
+/testem.log
+/package-lock.json
+/.idea/workspace.xml
