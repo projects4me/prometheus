@@ -15,3 +15,5 @@
 /libpeerconnection.log
 npm-debug.log*
 testem.log
+package-lock.json
+.idea/workspace.xml
