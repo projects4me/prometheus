@@ -463,6 +463,9 @@ export default {
                     "reportedBy" : "Reported User",
                     "parent" : "Parent",
                 },
+                "edit" : {
+                    "page" : "Edit Issue : <strong>#{{issueNumber}} - {{name}}</strong>"
+                },
                 "create" : {
                     "issueNumber" : "Issue Number",
                     "subject" : "Subject",
@@ -625,6 +628,9 @@ export default {
                 },
                 "wiki": {
                     "label":"Wiki",
+                },
+                "edit": {
+                    "label":"Edit",
                 },
             },
         },

@@ -1,51 +1,3 @@
-<div class="testSection">
-  <span>This is the test section where are are going to develop the form-field and field-view components</span>
-
-  <div>
-
-    Input Text field
-    {{field-checkbox
-      placeholder="Select the data .."
-      label="Check box"
-      value=checkbox
-    }}
-
-    {{field-text
-      placeholder="Enter the issue name .."
-      label="Text"
-      value=text
-      mask="alphanumeric"
-    }}
-
-    {{field-textarea
-      placeholder="Enter the issue name .."
-      label="TextArea"
-      value=textbox
-      mask="alphanumeric"
-    }}
-
-    {{field-radio
-      placeholder="Enter the issue name .."
-      label="Name"
-      value=radio
-      options=options
-    }}
-
-    {{field-image
-      placeholder="Enter the issue name .."
-      label="Image"
-      value=img
-    }}
-
-  </div>
-
-</div>
-
-{{checkbox}}
-{{text}}
-{{textbox}}
-{{radio}}
-
 <div class="issue">
   <div class="row">
 {{#each model as |issue|}}
@@ -58,7 +10,7 @@
           <h2 class="box-title">{{issue.issuetype.name}} - #{{issue.issueNumber}} | {{issue.subject}}</h2>
           <div class="box-tools pull-right">
             <span class="project-status"><span class="badge {{issue.status}}">{{t (concat "view.app.issue.lists.status." issue.status)}}</span></span>
-            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-pencil"></i></button>
+            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" {{action 'editIssue' issue.issueNumber}}><i class="fa fa-pencil"></i></button>
             <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
           </div>
         </div>
