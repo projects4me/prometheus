@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../projects4me/.idea/projects4me.iml" filepath="$PROJECT_DIR$/../projects4me/.idea/projects4me.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/prometheus-new.iml" filepath="$PROJECT_DIR$/.idea/prometheus-new.iml" />
     </modules>
   </component>
