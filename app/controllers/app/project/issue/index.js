@@ -23,7 +23,7 @@ export default Ember.Controller.extend({
 
     /**
      * Query params that the controller needs to support, it may seem that the
-     * same paramters are defined in both the route and the controller but is not
+     * same parameters are defined in both the route and the controller but is not
      * the case exactly, the parameters defined in the route are meant for the model
      * while the parameters defined in the controller are meant for the interaction
      * with the view. e.g. the query might be different because the user might be
