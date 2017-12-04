@@ -44,15 +44,13 @@
                                 {{field-date
                                         placeholder="Enter the issue name .."
                                         label="Start Date"
-                                        value=(moment-format model.startDate 'MMMM D, YYYY' 'YYYY-MM-DD')
-                                        mask="alphanumeric"
+                                        value=model.startDate
                                 }}
 
                                 {{field-date
                                         placeholder="Enter the issue name .."
                                         label="End Date"
-                                        value=(moment-format model.endDate  'MMMM D, YYYY' 'YYYY-MM-DD')
-                                        mask="alphanumeric"
+                                        value=model.endDate
                                 }}
 
                                 {{field-relate

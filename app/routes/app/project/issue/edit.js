@@ -23,23 +23,23 @@ export default App.extend({
      * @return Prometheus.Issue
      * @private
      */
-    model:function(params){
-        Logger.debug('AppProjectIssueEditRoute::model()');
-        Logger.debug(params);
-
-        let options = {
-            query: '(Issue.issueNumber : '+params.issueNumber+')',
-            sort : 'Issue.issueNumber',
-            order: 'ASC',
-            limit: -1,
-            //rels: 'none'
-        };
-        this.set('breadCrumb',{title:'#'+params.issueNumber,record:true});
-        Logger.debug('Retrieving issue with options '+options);
-        let data = this.get('store').query('issue',options);
-        Logger.debug('-AppProjectIssueEditRoute::model()');
-        return data;
-    },
+    // model:function(params){
+    //     Logger.debug('AppProjectIssueEditRoute::model()');
+    //     Logger.debug(params);
+    //
+    //     let options = {
+    //         query: '(Issue.issueNumber : '+params.issueNumber+')',
+    //         sort : 'Issue.issueNumber',
+    //         order: 'ASC',
+    //         limit: -1,
+    //         //rels: 'none'
+    //     };
+    //     this.set('breadCrumb',{title:'#'+params.issueNumber,record:true});
+    //     Logger.debug('Retrieving issue with options '+options);
+    //     let data = this.get('store').query('issue',options);
+    //     Logger.debug('-AppProjectIssueEditRoute::model()');
+    //     return data;
+    // },
 
     /**
      * This function is called by the route when it has created the controller and
@@ -58,17 +58,39 @@ export default App.extend({
     setupController:function(controller,model){
         Logger.debug('AppProjectIssueEditRoute::setupController');
 
-        if (typeof model.get !== 'function'){
-            model = this.model(this.paramsFor('app.project.issue.edit'));
-        }
-        Logger.debug(model);
-        model = model.nextObject(0);
-        // let startDate = moment(model.get('startDate'),'YYYY-MM-DD').format('MMMM D, YYYY');
-        // let endDate = moment(model.get('endDate'),'YYYY-MM-DD').format('MMMM D, YYYY');
-        // model.set('startDate',startDate);
-        // model.set('endDate',endDate);
-        controller.set('model',model);
-        this.loadRelated(controller);
+        let self = this;
+
+        let params = this.paramsFor('app.project.issue.edit');
+
+        let options = {
+            query: '(Issue.issueNumber : '+params.issueNumber+')',
+            sort : 'Issue.issueNumber',
+            order: 'ASC',
+            limit: -1,
+            //rels: 'none'
+        };
+
+        this.set('breadCrumb',{title:'#'+params.issueNumber,record:true});
+
+        Logger.debug('Retrieving issue with options '+options);
+
+        this.get('store').query('issue',options).then(function(data){
+            let issue = data.nextObject(0);
+            Logger.debug(issue.get('startDate'));
+            let startDate = moment(issue.get('startDate'),['YYYY-MM-DD','MMMM D, YYYY']).format('MMMM D, YYYY');
+            let endDate = moment(issue.get('endDate'),['YYYY-MM-DD','MMMM D, YYYY']).format('MMMM D, YYYY');
+            issue.set('startDate',startDate);
+            issue.set('endDate',endDate);
+
+            Logger.debug('==================');
+            Logger.debug(issue);
+            Logger.debug(startDate);
+            Logger.debug(endDate);
+
+            controller.set('model',issue);
+            self.loadRelated(controller);
+        });
+
         Logger.debug('-AppProjectIssueEditRoute::setupController');
     },
 
@@ -93,7 +115,7 @@ export default App.extend({
             limit: -1
         };
 
-        let project = this.store.query('project',options).then(function(data){
+        this.store.query('project',options).then(function(data){
 
             let memberCount = data.nextObject(0).get('members.length');
             let memberList = [];
