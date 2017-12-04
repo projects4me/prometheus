@@ -132,7 +132,7 @@ export default Ember.Object.extend({
                             },
                             create:{
                                 label: 'view.nav.menu.issue.create',
-                                route: 'app.create',
+                                route: 'app.project.issue.create',
                                 className: 'text-red',
                                 anchorRoute: 'issue/create',
                                 routeParams: {module: 'issue'}
