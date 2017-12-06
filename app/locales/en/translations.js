@@ -67,6 +67,26 @@ export default {
      translations individually.
      */
     "global" : {
+        "file" : {
+            "units" : {
+                "b" : "b",
+                "B" : "B",
+                "KB" : "KB",
+                "Kb" : "Kb",
+                "MB" : "MB",
+                "Mb" : "Mb",
+                "TB" : "TB",
+                "Tb" : "Tb",
+                "PB" : "PB",
+                "Pb" : "Pb",
+                "EB" : "EB",
+                "Eb" : "Eb",
+                "ZB" : "ZB",
+                "Zb" : "Zb",
+                "YB" : "YB",
+                "Yb" : "Yb"
+            }
+        },
         "form" : {
             "save" : "Save",
             "refresh" : "Refresh",
@@ -83,6 +103,12 @@ export default {
             "signout" : "Sign Out",
             "signup" : "Sign Up",
             "modified" : "Modified by <strong>{{user}}</strong> on <strong>{{date}}<strong>",
+            "upload" : {
+                "drop" : "Drop to upload",
+                "invalid" : "Invalid file, cannot upload",
+                "uploading" : "Uploading {{length}} files. ({{progress}}%)",
+                "drag" : "Drag and drop a file or "
+            }
         },
         "list": {
             "selectAll": "Select All",
@@ -462,9 +488,12 @@ export default {
                     "assignedTo" : "Assignee",
                     "reportedBy" : "Reported User",
                     "parent" : "Parent",
+                    "files" : "Files",
+                    "selectfile" : "select a file to upload"
                 },
                 "edit" : {
-                    "page" : "Edit Issue : <strong>#{{issueNumber}} - {{name}}</strong>"
+                    "page" : "Edit Issue : <strong>#{{issueNumber}} - {{name}}</strong>",
+                    "files" : "Files"
                 },
                 "create" : {
                     "issueNumber" : "Issue Number",

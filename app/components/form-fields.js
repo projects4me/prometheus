@@ -285,9 +285,9 @@ export default Ember.Component.extend({
             Ember.$('#'+this.elementId+' input').daterangepicker({
                 singleDatePicker: true,
                 showDropdowns: true,
-                locale: {
-                    format: 'MMMM D, YYYY'
-                }
+               locale: {
+                   format: 'YYYY-MM-DD'
+               }
             });
         }
         else if (this.type === 'datetime') {

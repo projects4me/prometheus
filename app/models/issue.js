@@ -344,4 +344,13 @@ export default DS.Model.extend({
      */
     activities: DS.hasMany('activity'),
 
+    /**
+     * The files uploaded against the issue
+     *
+     * @property files
+     * @type UploadModel
+     * @for Issue
+     * @private
+     */
+    files: DS.hasMany('upload'),
 });

@@ -15,7 +15,7 @@ import Ember from 'ember';
  * @private
  */
 export function getIssuecount(params) {
-    var count = 0;
+    let count = 0;
     if (params[0] !== undefined)
     {
         if (params[1] === 'open')

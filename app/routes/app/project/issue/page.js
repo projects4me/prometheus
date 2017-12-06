@@ -27,7 +27,7 @@ export default App.extend({
         Logger.debug('AppProjectIssuePageRoute::model()');
         Logger.debug(params);
 
-        var options = {
+        let options = {
             query: '(Issue.issueNumber : '+params.issueNumber+')',
             sort : 'Issue.issueNumber',
             order: 'ASC',
@@ -36,7 +36,7 @@ export default App.extend({
         };
         this.set('breadCrumb',{title:'#'+params.issueNumber,record:true});
         Logger.debug('Retreiving issue with options '+options);
-        var data = this.get('store').query('issue',options);
+        let data = this.get('store').query('issue',options);
         Logger.debug('-AppProjectIssuePageRoute::model()');
         return data;
     },
@@ -63,13 +63,6 @@ export default App.extend({
         }
         this.setupActivities(controller,model);
         controller.set('model',model);
-        controller.set('options',[
-            {'label':'Item 1','value':'1'},
-            {'label':'Item 2','value':'2'},
-            {'label':'Item 3','value':'3'},
-            {'label':'Item 4','value':'4'},
-            {'label':'Item 5','value':'5'}
-        ]);
         Logger.debug('-AppProjectIssuePageRoute::setupController');
     },
 
@@ -101,6 +94,6 @@ export default App.extend({
             controller.set('activities',activities);
         }
         Logger.debug('-AppProjectIssuePageRoute::setupActivities');
-    }
+    },
 
 });

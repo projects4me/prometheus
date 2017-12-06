@@ -63,11 +63,12 @@ export default Ember.Controller.extend({
          * @method selectAssignee
          * @param {Object} target
          * @public
+         * @todo we should be able able to delegate this to the select component
          */
         selectAssignee:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectAssignee');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('assignee',target.value);
             Logger.debug('App.Project.Issue.Create:selectAssignee');
         },
@@ -82,7 +83,7 @@ export default Ember.Controller.extend({
         selectOwner:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectOwner');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('owner',target.value);
             Logger.debug('App.Project.Issue.Create:selectOwner');
         },
@@ -97,7 +98,7 @@ export default Ember.Controller.extend({
         selectMilestone:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectMilestone');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('milestoneId',target.value);
             Logger.debug('App.Project.Issue.Create:selectMilestone');
         },
@@ -112,7 +113,7 @@ export default Ember.Controller.extend({
         selectStatus:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectStatus');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('status',target.value);
             Logger.debug('App.Project.Issue.Create:selectStatus');
         },
@@ -127,7 +128,7 @@ export default Ember.Controller.extend({
         selectPriority:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectPriority');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('priority',target.value);
             Logger.debug('App.Project.Issue.Create:selectPriority');
         },
@@ -142,7 +143,7 @@ export default Ember.Controller.extend({
         selectType:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectType');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('typeId',target.value);
             Logger.debug('App.Project.Issue.Create:selectType');
         },
@@ -153,23 +154,19 @@ export default Ember.Controller.extend({
          *
          * @method save
          * @public
-         * @todo Trigger the notificaiton
+         * @todo Trigger the notification
          */
         save:function() {
-            var self = this;
-            var model = this.get('model');
+            let self = this;
+            let model = this.get('model');
 
             model.projectId = this.target.currentState.routerJs.state.params["app.project"].projectId;
-            //model.dateCreated = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
             model.dateModified = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
             model.modifiedUser = self.get('currentUser.user.id');
-            //model.reportedUser = self.get('currentUser.user.id');
-            //model.createdUser = self.get('currentUser.user.id');
             model.modifedUserName = self.get('currentUser.user.name');
-            //model.createdUserName = self.get('currentUser.user.name');
-            //model.deleted = '0';
-            model.startDate = moment(model.get('startDate'),'MMMM D, YYYY').format("YYYY-MM-DD");
-            model.endDate= moment(model.get('endDate'),'MMMM D, YYYY').format("YYYY-MM-DD");
+
+            //model.startDate = moment(model.get('startDate'),'MMMM D, YYYY').format("YYYY-MM-DD");
+            //model.endDate= moment(model.get('endDate'),'MMMM D, YYYY').format("YYYY-MM-DD");
 
             Logger.debug(model);
             Logger.debug(self);
@@ -195,7 +192,7 @@ export default Ember.Controller.extend({
          * @todo Trigger the notificaiton
          */
         cancel:function(){
-            var model = this.get('model');
+            let model = this.get('model');
             this.transitionToRoute('app.project.issue', {projectId:model.get('projectId')});
         },
     }

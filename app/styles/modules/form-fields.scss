@@ -169,3 +169,15 @@
 	from { background:$primaryColor; }
   to 	{ width:0; background:transparent; }
 }
+
+.calendar-table .active
+{
+    border: 0.1rem solid $primaryColor;
+    border-radius: 0.3rem;
+    outline: none;
+    box-shadow: 0 0 1rem $primaryColor;
+}
+
+.calendar-table .table-condensed .available:hover{
+  font-weight:bold;
+}
