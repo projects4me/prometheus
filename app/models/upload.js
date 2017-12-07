@@ -121,6 +121,26 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    filePath: DS.attr('string')
+    filePath: DS.attr('string'),
+
+    /**
+     * Does this file have a thumbnail
+     *
+     * @property fileThumbnail
+     * @type String
+     * @for Upload
+     * @private
+     */
+    fileThumbnail: DS.attr('string'),
+
+    /**
+     * Where is this file stored.
+     *
+     * @property fileDestination
+     * @type String
+     * @for Upload
+     * @private
+     */
+    fileDestination: DS.attr('string')
 
 });

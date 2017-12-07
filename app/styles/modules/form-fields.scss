@@ -181,3 +181,20 @@
 .calendar-table .table-condensed .available:hover{
   font-weight:bold;
 }
+
+.dropzone-field{
+  p{
+    border: 0.3rem dashed $borderColor;
+    text-align: center;
+    margin:0rem;
+    padding: 2rem;
+  }
+
+  .dropzone-uploading {
+    color:$primaryColor;
+  }
+
+  .dropzone-active {
+    border-color: $primaryColor;
+  }
+}
