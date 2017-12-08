@@ -79,6 +79,7 @@ export default Ember.Controller.extend({
             set(upload, 'createdUser',data.data.attributes.createdUser);
             set(upload, 'relatedTo',data.data.attributes.relatedTo);
             set(upload, 'relatedId',data.data.attributes.relatedId);
+            set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
             self.get('model').nextObject(0).get('files').pushObject(upload);
         } catch (e) {
             //upload.rollback();

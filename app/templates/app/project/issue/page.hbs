@@ -264,8 +264,16 @@
                             <ul class="mailbox-attachments clearfix">
                                 {{#each issue.files as |file|}}
                                     <li>
-                                        <span class="mailbox-attachment-icon"><i class="fa fa-file-pdf-o"></i></span>
+                                        {{#if (not-eq file.fileThumbnail '0')}}
+                                            <span class="mailbox-attachment-icon has-img">
+                                                <img src="{{file.fileThumbnail}}" alt="Attachment" style="width: 198px; height: 132px;">
+                                            </span>
+                                        {{else}}
+                                            <span class="mailbox-attachment-icon">
+                                                {{attachment-icon file.fileMime}}
 
+                                            </span>
+                                        {{/if}}
                                         <div class="mailbox-attachment-info">
                                             <a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{file.name}}</a>
                                             <span class="mailbox-attachment-size">
