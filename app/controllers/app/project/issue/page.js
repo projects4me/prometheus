@@ -34,14 +34,9 @@ export default Ember.Controller.extend({
      * @private
      */
     handleUpload: task(function * (file) {
-        Logger.debug('============================');
-        Logger.debug(file);
         let self = this;
-        Logger.debug(self);
 
         let upload = this.store.createRecord('upload', {});
-
-        Logger.debug(upload);
 
         try {
 
@@ -110,8 +105,63 @@ export default Ember.Controller.extend({
 
         },
 
+        /**
+         * This event is called when it is required to upload a file
+         * This function acts as a bridge event
+         *
+         * @param file
+         */
         uploadFile:function(file){
             get(this, 'handleUpload').perform(file);
+        },
+
+        /**
+         * This function is used to handle the deletion of a file
+         *
+         * @param file
+         */
+        deleteFile:function(file){
+            Logger.debug('App.Project.Issue.PageController->deleteFile');
+            let self = this;
+            Logger.debug(self);
+
+            let deleting = new Messenger().post({
+                message: self.get('i18n').t("view.app.issue.detail.file.delete",{name:file.get('name')}).toString(),
+                type: 'warning',
+                showCloseButton: true,
+                actions: {
+                    confirm: {
+                        label: self.get('i18n').t("view.app.issue.detail.file.confirmdelete").toString(),
+                        action: function() {
+
+                            // destroy the upload
+                            file.destroyRecord().then(function(data){
+                                // remove from the view by updating the model
+                                self.get('model').nextObject(0).get('files').removeObject(file);
+
+                                return deleting.update({
+                                    message: self.get('i18n').t("view.app.issue.detail.file.deleted"),
+                                    type: 'success',
+                                    actions: false
+                                });
+                            });
+                        }
+                    },
+                    cancel: {
+                        label: self.get('i18n').t("view.app.issue.detail.file.onsecondthought").toString(),
+                        action: function() {
+                            return deleting.update({
+                                message: self.get('i18n').t("view.app.issue.detail.file.deletecancel"),
+                                type: 'success',
+                                actions: false
+                            });
+                        }
+                    },
+
+                }
+            });
+
+            Logger.debug('-App.Project.Issue.PageController->deleteFile');
         }
 
     }

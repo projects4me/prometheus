@@ -58,6 +58,9 @@ export default App.extend({
     setupController:function(controller,model){
         Logger.debug('AppProjectIssuePageRoute::setupController');
 
+        let i18n = this.get('i18n');
+        controller.set('i18n',i18n);
+
         if (typeof model.get !== 'function'){
             model = this.model(this.paramsFor('app.project.issue.page'));
         }

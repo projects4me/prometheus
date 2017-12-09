@@ -266,18 +266,18 @@
                                     <li>
                                         {{#if (not-eq file.fileThumbnail '0')}}
                                             <span class="mailbox-attachment-icon has-img">
-                                                <img src="{{file.fileThumbnail}}" alt="Attachment" style="width: 198px; height: 132px;">
+                                                <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
                                             </span>
                                         {{else}}
                                             <span class="mailbox-attachment-icon">
                                                 {{attachment-icon file.fileMime}}
-
                                             </span>
                                         {{/if}}
                                         <div class="mailbox-attachment-info">
                                             <a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{file.name}}</a>
                                             <span class="mailbox-attachment-size">
                                             {{file-size file.fileSize}}
+                                            <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
                                             <a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
                                             </span>
                                         </div>

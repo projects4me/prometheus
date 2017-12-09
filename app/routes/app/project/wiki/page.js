@@ -68,7 +68,7 @@ export default App.extend({
         Logger.debug(params);
 
         Logger.debug('Inside the setup controller for the wiki page');
-        var i18n = this.get('i18n');
+        let i18n = this.get('i18n');
         controller.set('i18n',i18n);
 
         this.project = this.store.findRecord('project',params.projectId,{rels:'none'});
@@ -85,15 +85,15 @@ export default App.extend({
         Logger.debug('Retreiving wiki list with options '+options);
         this.data = this.store.query('wiki',options).then(function(data){
             controller.set('model',data);
-            var model = data.nextObject(0);
+            let model = data.nextObject(0);
             if (model !== undefined){
-                var markUp = model.get('markUp');
+                let markUp = model.get('markUp');
 
 
-                var tags = model.get('tag');
-                var tagCount = tags.get('length');
-                var selectedTags = [];
-                for(var i=0;i<tagCount;i++)
+                let tags = model.get('tag');
+                let tagCount = tags.get('length');
+                let selectedTags = [];
+                for(let i=0;i<tagCount;i++)
                 {
                     selectedTags[i] = {label:tags.nextObject(i).get('tag'),value:tags.nextObject(i).get('id')};
                 }

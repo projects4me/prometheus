@@ -489,7 +489,14 @@ export default {
                     "reportedBy" : "Reported User",
                     "parent" : "Parent",
                     "files" : "Files",
-                    "selectfile" : "select a file to upload"
+                    "selectfile" : "select a file to upload",
+                    "file" : {
+                        "delete" : "You are about to delete the file <strong>{{name}}</strong>, once deleted it <strong>cannot be recovered</strong>.",
+                        "confirmdelete" : "<strong>Yes, delete the file!</strong>",
+                        "deletecancel" : "Deletion cancelled",
+                        "onsecondthought" : "Hmm, I will just keep it.",
+                        "deleted" : "File has been deleted"
+                    }
                 },
                 "edit" : {
                     "page" : "Edit Issue : <strong>#{{issueNumber}} - {{name}}</strong>",
