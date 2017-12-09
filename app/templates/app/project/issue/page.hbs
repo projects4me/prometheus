@@ -261,25 +261,29 @@
 
 
                         <div class="box-footer">
-                            <ul class="mailbox-attachments clearfix">
+                            <ul class="attachments clearfix">
                                 {{#each issue.files as |file|}}
                                     <li>
                                         {{#if (not-eq file.fileThumbnail '0')}}
-                                            <span class="mailbox-attachment-icon has-img">
+                                            <span class="attachment-icon has-img">
                                                 <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
                                             </span>
                                         {{else}}
-                                            <span class="mailbox-attachment-icon">
+                                            <span class="attachment-icon">
                                                 {{attachment-icon file.fileMime}}
                                             </span>
                                         {{/if}}
-                                        <div class="mailbox-attachment-info">
-                                            <a href="#" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{file.name}}</a>
-                                            <span class="mailbox-attachment-size">
-                                            {{file-size file.fileSize}}
-                                            <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
-                                            <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
-                                            </span>
+                                        <div class="attachment-info">
+                                            <div class="attachment-name clearfix">
+                                                <a href="#"><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
+                                            </div>
+                                            <div class="attachment-additional">
+                                                <span class="attachment-size">
+                                                {{file-size file.fileSize}}
+                                                <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
+                                                <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                                                </span>
+                                            </div>
                                         </div>
                                     </li>
                                 {{/each}}

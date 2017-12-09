@@ -1,0 +1,65 @@
+/* Define media */
+.attachments {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    float: left;
+    width: 200px;
+    border: 1px solid $lightColor;
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
+
+}
+
+.attachment-icon {
+  text-align: center;
+  color: #666;
+  padding: 3.4rem 1rem;
+
+  .fa {
+    font-size: 6.5rem;
+  }
+}
+
+.attachment-icon.has-img {
+  padding: 0;
+}
+.attachment-icon, .attachment-info, .attachment-size {
+  display: block;
+}
+
+.attachment-info {
+  padding: 1rem;
+  background: #f4f4f4;
+}
+
+.attachment-name {
+  width:178px;
+
+  a {
+    font-weight: bold;
+    color: #666;
+  }
+
+  .fa{
+    float: left;
+  }
+  
+  .attachment-file-name{
+    padding-left: 0.4rem;
+    width: 16rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    float: left;
+  }
+
+}
+
+.attachment-size {
+  color: #999;
+  font-size: 1.2rem;
+}
