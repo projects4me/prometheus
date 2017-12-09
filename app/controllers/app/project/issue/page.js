@@ -162,6 +162,38 @@ export default Ember.Controller.extend({
             });
 
             Logger.debug('-App.Project.Issue.PageController->deleteFile');
+        },
+
+        /**
+         * This function is used to handle the download of a file
+         *
+         * @param file
+         */
+        downloadFile:function(file){
+            Logger.debug('App.Project.Issue.PageController->downloadFile');
+            let self = this;
+            Logger.debug(self);
+
+            // get a download token
+            let options = {
+                id: file.get('id'),
+                download: true
+            };
+            Logger.debug('Retrieving upload with options '+options);
+            let upload = this.get('store').query('upload',options).then(function(data){
+                let downloadLink = data.nextObject(0).get('downloadLink');
+                Logger.debug('Download link found : '+downloadLink);
+
+                let path = self.get('store').adapterFor('upload').host+'/download/get/'+downloadLink;
+                window.open(path,'_blank');
+                Logger.debug(path);
+
+            });
+
+
+            // navigate user to the page for download
+
+            Logger.debug('-App.Project.Issue.PageController->downloadFile');
         }
 
     }

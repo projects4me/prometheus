@@ -2,7 +2,7 @@
     {{#file-dropzone name="file" as |dropzone queue|}}
         {{#if dropzone.active}}
             <p class="dropzone-active">
-                {{#if dropzone.valid}}
+                {{#if dropzone.valid}}-
                     {{t "global.form.upload.drop"}}
                 {{else}}
                     {{t "global.form.upload.invalid"}}

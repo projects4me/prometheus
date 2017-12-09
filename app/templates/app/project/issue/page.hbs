@@ -278,7 +278,7 @@
                                             <span class="mailbox-attachment-size">
                                             {{file-size file.fileSize}}
                                             <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
-                                            <a href="#" class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                                            <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
                                             </span>
                                         </div>
                                     </li>

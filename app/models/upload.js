@@ -141,6 +141,16 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    fileDestination: DS.attr('string')
+    fileDestination: DS.attr('string'),
+
+    /**
+     * This is the download token to be used for download
+     *
+     * @property downloadLink
+     * @type String
+     * @for Upload
+     * @private
+     */
+    downloadLink: DS.attr('string')
 
 });
