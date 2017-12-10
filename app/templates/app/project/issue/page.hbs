@@ -275,7 +275,7 @@
                                         {{/if}}
                                         <div class="attachment-info">
                                             <div class="attachment-name clearfix">
-                                                <a href="#"><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
+                                                <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
                                             </div>
                                             <div class="attachment-additional">
                                                 <span class="attachment-size">
@@ -288,6 +288,16 @@
                                     </li>
                                 {{/each}}
                             </ul>
+                            <div class="filePreviewModal">
+                                {{#if filePreviewDialog}}
+                                    {{#bootstrap-modal
+                                            title="view.app.issue.detail.file.preview"
+                                            closeLabel="global.form.close"
+                                            close="removeModal"}}
+                                        <iframe id="file_preview"></iframe>
+                                    {{/bootstrap-modal}}
+                                {{/if}}
+                            </div>
 
                         </div>
                         {{field-upload

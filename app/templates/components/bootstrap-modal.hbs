@@ -1,17 +1,19 @@
 <div class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content box box-primary">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">{{t title}}</h4>
-      </div>
-      <div class="modal-body">
-        {{yield}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{t closeLabel}}</button>
-        <button type="button" class="btn btn-primary" {{action 'confirm'}}>{{t confirmLabel}}</button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content box box-primary">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">{{t title}}</h4>
+            </div>
+            <div class="modal-body">
+                {{yield}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{t closeLabel}}</button>
+                {{#if confirmLabel}}
+                    <button type="button" class="btn btn-primary" {{action 'confirm'}}>{{t confirmLabel}}</button>
+                {{/if}}
+            </div>
+        </div>
     </div>
-  </div>
 </div>

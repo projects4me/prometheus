@@ -26,6 +26,18 @@ export default Ember.Controller.extend({
      * @private
      */
     session: Ember.inject.service(),
+
+    /**
+     * This flag is used to show or hide the modal dialog box
+     * for file previews
+     *
+     * @property previewFileDialog
+     * @type bool
+     * @for Edit
+     * @private
+     */
+    previewFileDialog: false,
+
     /**
      * This is a task to handle file uploading
      *
@@ -194,7 +206,61 @@ export default Ember.Controller.extend({
             // navigate user to the page for download
 
             Logger.debug('-App.Project.Issue.PageController->downloadFile');
+        },
+
+        /**
+         * This function is used to handle the preview of a file
+         *
+         * @param file
+         */
+        previewFile:function(file){
+            Logger.debug('App.Project.Issue.PageController->previewFile');
+            let self = this;
+            Logger.debug(self);
+            self.send('showDialog');
+
+            // get a download token
+            let options = {
+                id: file.get('id'),
+                download: true
+            };
+            Logger.debug('Retrieving upload with options '+options);
+            self.get('store').query('upload',options).then(function(contents){
+                let downloadLink = contents.nextObject(0).get('downloadLink');
+                Logger.debug('Download link found : '+downloadLink);
+
+                let path = self.get('store').adapterFor('upload').host+'/preview/get/'+downloadLink;
+                Ember.$('#file_preview').attr('src',path);
+                Logger.debug(path);
+            });
+
+
+            // navigate user to the page for download
+
+            Logger.debug('-App.Project.Issue.PageController->previewFile');
+        },
+
+        /**
+         * This function is used to show the add modal dialog box
+         *
+         * @method showDialog
+         * @public
+         */
+        showDialog:function()
+        {
+            this.set('filePreviewDialog',true);
+        },
+
+        /**
+         * This function is used to hide the add tag modal
+         *
+         * @method removeModal
+         * @public
+         */
+        removeModal:function(){
+            this.set('filePreviewDialog',false);
         }
+
 
     }
 

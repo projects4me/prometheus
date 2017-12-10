@@ -95,6 +95,7 @@ export default {
             "discuss" : "Discuss",
             "create" : "Create",
             "cancel" : "Cancel",
+            "close" : "Close",
             "delete" : "Delete",
             "search" : "Search",
             "edit" : "Edit",
@@ -495,7 +496,8 @@ export default {
                         "confirmdelete" : "<strong>Yes, delete the file!</strong>",
                         "deletecancel" : "Deletion cancelled",
                         "onsecondthought" : "Hmm, I will just keep it.",
-                        "deleted" : "File has been deleted"
+                        "deleted" : "File has been deleted",
+                        'preview' : "Preview File",
                     }
                 },
                 "edit" : {
