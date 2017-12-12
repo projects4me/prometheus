@@ -63,6 +63,7 @@ export default Ember.Component.extend({
             hljs.configure({   // optionally configure hljs
                 languages: ['apache','javascript', 'ruby', 'python','php','java','html','sql','scss','less','json','coffeescript','cpp','go','htmlbars','handlebars','bash']
             });
+
             var editor = new Quill('#editor', {
                 modules: {
                     syntax: true,

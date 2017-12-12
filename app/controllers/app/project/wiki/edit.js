@@ -51,6 +51,47 @@ export default Ember.Controller.extend({
     saveDisabled: 'true',
 
     /**
+     * We are pre-loading the project issues and the users in the
+     * system when a use navigates to the project view. Inside the
+     * this page we are simply fetching the information stored in
+     * the project controller. For that purpose we are loading injecting
+     * the project controller controller inside this controller.
+     *
+     * @property projectController
+     * @type Prometheus.Controllers.Project
+     * @for Edit
+     * @private
+     */
+    projectController: Ember.inject.controller('app.project'),
+
+    /**
+     * This is a computed property in which gets the list of users
+     * in the system loaded by the project controller
+     *
+     * @property usersList
+     * @type Array
+     * @for Ecit
+     * @private
+     */
+    usersList: Ember.computed(function(){
+        return this.get('projectController').get('usersList');
+    }),
+
+    /**
+     * This is a computed property in which gets the list of issues
+     * associated with a project loaded by the project controller
+     *
+     * @property issuesList
+     * @type Array
+     * @for Ecit
+     * @private
+     * @todo I think we would need to observe the project id as this might be updated as there is no dependant key
+     */
+    issuesList: Ember.computed(function(){
+        return this.get('projectController').get('issuesList');
+    }),
+
+    /**
      * These are the actions that are handled by this controller
      *
      * @property actions
@@ -110,7 +151,7 @@ export default Ember.Controller.extend({
          * @todo Trigger the notificaiton
          */
         cancel:function(){
-            var model = this.get('model').nextObject(0);
+            let model = this.get('model').nextObject(0);
             this.transitionToRoute('app.project.wiki.page', {projectId:model.get('projectId'),wikiName:model.get('name')});
         },
 
@@ -122,19 +163,23 @@ export default Ember.Controller.extend({
          * @public
          * @todo Trigger the notificaiton
          */
-        changed:function(data){
+        changed:function(){
             Logger.debug("AppProjectWikiEditController::changed()");
             Logger.debug("Something was updated");
 
-            var model = this.get('model').nextObject(0);
-            if (typeof(data) === 'object' && data.markUp !== undefined)
-            {
-                Logger.debug(model);
-                model._internalModel._attributes['markUp'] = data.markUp;
-                model.set('markUp',data.markUp);
-            }
-            var changedAttributes = model.changedAttributes();
-            var changed = false;
+            let self = this;
+            Logger.debug(self);
+
+            let model = this.get('model').nextObject(0);
+            // if (typeof(data) === 'object' && data.markUp !== undefined)
+            // {
+            //     Logger.debug(model);
+            //     model._internalModel._attributes['markUp'] = data.markUp;
+            //     model.set('markUp',data.markUp);
+            // }
+
+            let changedAttributes = model.changedAttributes();
+            let changed = false;
             for (var key in changedAttributes) {
                 Logger.debug(key);
                 changed = true;
@@ -163,6 +208,25 @@ export default Ember.Controller.extend({
             model.set('parentId',target.value);
             model.set('parentName',target.label);
             this.send('changed');
+        },
+
+        /**
+         * This is the action that is called by summernote
+         * A separate action is created as we are trying to follow
+         * the data down action up approach
+         *
+         * @method onContentChange
+         * @param contents
+         * @private
+         */
+        onContentChange:function (contents) {
+            Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
+            let self = this;
+            //let model = self.get(model)
+            self.get('model').nextObject(0).set('markUp',contents);
+            //model._internalModel._attributes['markUp'] = data.markUp;
+            self.send('changed');
+            -Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
         },
 
         /**

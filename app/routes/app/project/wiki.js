@@ -52,19 +52,19 @@ export default App.extend({
 
         Logger.debug('AppProjectWikiRoute::setupController');
 
-        var self = this;
-        var params = this.paramsFor('app.project');
+        let self = this;
+        let params = this.paramsFor('app.project');
 
         Logger.debug('The parameters are as follows');
         Logger.debug(params);
 
         Logger.debug('Inside the setup controller for the wiki project');
-        var i18n = this.get('i18n');
+        let i18n = this.get('i18n');
         controller.set('i18n',i18n);
 
-        this.loadTags();
+        self.loadTags();
 
-        var options = {
+        let options = {
             query: '(Wiki.projectId : '+params.projectId+')',
             sort : 'Wiki.name',
             rels: 'none',
@@ -72,10 +72,10 @@ export default App.extend({
             limit: -1
         };
         controller.set('projectId',params.projectId);
-        var tree={};
+        let tree={};
 
         Logger.debug('Retreiving projects list with options '+options);
-        this.data = this.store.query('wiki',options).then(function(data){
+        self.store.query('wiki',options).then(function(data){
             Logger.debug('Wiki Retrieved');
             Logger.debug(data);
             controller.set('model',data);
@@ -84,15 +84,18 @@ export default App.extend({
             // Ideally I should not have to pass the wikilist retrieved to the
             // sub route, they should be able to pick it up but that is not working
             // late binding/promise and all so lets just set for all the subroutes
-            var wikiCount = data.get('length');
-            var wikiList = [];
-            var temp = null;
+            let wikiCount = data.get('length');
+            let wikiList = [];
+            let temp = null;
+
             wikiList[0] = {label:i18n.t("global.blank"), value:null};
-            for (var i=1;i<=wikiCount;i++)
+            for (let i=1;i<=wikiCount;i++)
             {
                 temp = data.nextObject(i-1);
                 wikiList[i] = {label:temp.get('name'), value:temp.get('id')};
             }
+
+            controller.set('wikiList',wikiList);
             self.controllerFor('app.project.wiki.page').set('wikiList', wikiList);
             self.controllerFor('app.project.wiki.create').set('wikiList', wikiList);
             self.controllerFor('app.project.wiki.edit').set('wikiList', wikiList);
@@ -103,8 +106,6 @@ export default App.extend({
             self.set('tree',tree);
             controller.set('tree',tree);
 
-            Logger.debug('***********************************');
-            Logger.debug('***********************************');
             Logger.debug(self.get('router.currentRouteName'));
 
             // We need the direction
@@ -123,8 +124,8 @@ export default App.extend({
      * @private
      */
     loadTags:function(){
-        var self = this;
-        var options = {
+        let self = this;
+        let options = {
             fields: 'Tag.tag,Tag.id',
             sort : 'Tag.tag',
             rels: 'none',
@@ -132,7 +133,7 @@ export default App.extend({
             limit: -1
         };
 
-        this.data = this.store.query('tag',options).then(function(data){
+        this.store.query('tag',options).then(function(data){
             Logger.debug('Tags Retrieved');
             Logger.debug(data);
 
@@ -140,10 +141,10 @@ export default App.extend({
             // Ideally I should not have to pass the wikilist retrieved to the
             // sub route, they should be able to pick it up but that is not working
             // late binding/promise and all so lets just set for all the subroutes
-            var tagCount = data.get('length');
-            var tagList = [];
-            var temp = null;
-            for (var i=0;i<tagCount;i++)
+            let tagCount = data.get('length');
+            let tagList = [];
+            let temp = null;
+            for (let i=0;i<tagCount;i++)
             {
                 temp = data.nextObject(i);
                 tagList[i] = {label:temp.get('tag'), value:temp.get('id')};
@@ -183,8 +184,8 @@ export default App.extend({
             Logger.debug(model);
             Logger.debug('The tree is');
             Logger.debug(this.get('tree'));
-            var tree = this.get('tree');
-            var node = M2T.findNode(model.get('id'),tree);
+            let tree = this.get('tree');
+            let node = M2T.findNode(model.get('id'),tree);
             if (node)
             {
                 Ember.set(node,'name',model.get('name'));

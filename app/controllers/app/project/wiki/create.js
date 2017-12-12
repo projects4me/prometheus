@@ -50,6 +50,47 @@ export default Ember.Controller.extend({
     parentId:'',
 
     /**
+     * We are pre-loading the project issues and the users in the
+     * system when a use navigates to the project view. Inside the
+     * this page we are simply fetching the information stored in
+     * the project controller. For that purpose we are loading injecting
+     * the project controller controller inside this controller.
+     *
+     * @property projectController
+     * @type Prometheus.Controllers.Project
+     * @for Create
+     * @private
+     */
+    projectController: Ember.inject.controller('app.project'),
+
+    /**
+     * This is a computed property in which gets the list of users
+     * in the system loaded by the project controller
+     *
+     * @property usersList
+     * @type Array
+     * @for Create
+     * @private
+     */
+    usersList: Ember.computed(function(){
+        return this.get('projectController').get('usersList');
+    }),
+
+    /**
+     * This is a computed property in which gets the list of issues
+     * associated with a project loaded by the project controller
+     *
+     * @property issuesList
+     * @type Array
+     * @for Create
+     * @private
+     * @todo I think we would need to observe the project id as this might be updated as there is no dependant key
+     */
+    issuesList: Ember.computed(function(){
+        return this.get('projectController').get('issuesList');
+    }),
+
+    /**
      * These are the event handled by this controller
      *
      * @property actions
@@ -68,8 +109,8 @@ export default Ember.Controller.extend({
          * @todo Trigger the notificaiton
          */
         save:function() {
-            var self = this;
-            var model = this.get('model');
+            let self = this;
+            let model = this.get('model');
             model.save().then(function(data){
                 Logger.debug('Data saved:');
                 Logger.debug(data);
@@ -93,7 +134,7 @@ export default Ember.Controller.extend({
          * @todo Trigger the notificaiton
          */
         cancel:function(){
-            var model = this.get('model');
+            let model = this.get('model');
             this.transitionToRoute('app.project.wiki', {projectId:model.get('projectId')});
         },
 
@@ -104,16 +145,16 @@ export default Ember.Controller.extend({
          * @public
          * @todo Trigger the notificaiton
          */
-        changed:function(data){
+        changed:function(){
             Logger.debug('AppProjectWikiCreateController::changed()');
-            var model = this.get('model');
+            let model = this.get('model');
 
-            if (typeof(data) === 'object' && data.markUp !== undefined)
-            {
-                Logger.debug(model);
-                model._internalModel._attributes['markUp'] = data.markUp;
-                model.set('markUp',data.markUp);
-            }
+            // if (typeof(data) === 'object' && data.markUp !== undefined)
+            // {
+            //     Logger.debug(model);
+            //     model._internalModel._attributes['markUp'] = data.markUp;
+            //     model.set('markUp',data.markUp);
+            // }
 
             if (model.get('name') === undefined ||
                 model.get('name') === null ||
@@ -143,6 +184,25 @@ export default Ember.Controller.extend({
             model.set('parentId',wiki.value);
             model.set('parentName',wiki.label);
             this.send('changed');
+        },
+
+        /**
+         * This is the action that is passed to used to get
+         * changed from summernote following the data down
+         * action up approach
+         *
+         * @method onContentChange
+         * @param contents
+         * @private
+         */
+        onContentChange:function (contents) {
+            Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
+            let self = this;
+
+            Logger.debug(self);
+            self.get('model').set('markUp',contents);
+            self.send('changed');
+            -Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
         }
 
     }

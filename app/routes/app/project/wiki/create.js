@@ -50,6 +50,9 @@ export default App.extend({
      */
     currentUser: Ember.inject.service(),
 
+
+
+
     /**
      * The setup controller function that will be called every time the user visits the module route,
      * this function is responsible for loading the required data for the route
@@ -59,35 +62,36 @@ export default App.extend({
      * @private
      */
     setupController:function(controller){
+        let self = this;
+
         this.module = 'Wiki';
 
         Logger.debug('AppProjectWikiCreateRoute::setupController');
         Logger.debug(this);
 
-        var params = this.getParams();
+        let params = this.getParams();
         Logger.debug('The parameters are as follows');
         Logger.debug(params);
 
-        this.project = this.store.findRecord('project',params.projectId,{rels:'none'});
-        var currentUser = this.get('currentUser').loadUser();
-        Logger.debug(currentUser);
+        //this.project = this.store.findRecord('project',params.projectId,{rels:'none'});
+
         this.data = this.store.createRecord('wiki',{
             dateCreated:'CURRENT_DATETIME',
             dateModified:'CURRENT_DATETIME',
             deleted:0,
-            createdUser:'1',
-            modifiedUser:'1',
+            createdUser:self.get('currentUser.user.id'),
+            modifiedUser:self.get('currentUser.user.id'),
             status:'published',
             locked:0,
             upvotes:1,
             projectId:params.projectId,
-            createdUserName: 'Hammad Hassan',
-            modifiedUserName: 'Hammad Hassan',
+            createdUserName: self.get('currentUser.user.name'),
+            modifiedUserName: self.get('currentUser.user.name'),
         });
         Logger.debug(this.data);
 
         controller.set('model',this.data);
-        controller.set('project',this.project);
+        //controller.set('project',this.project);
         controller.set('module',this.module);
     },
 
@@ -102,7 +106,7 @@ export default App.extend({
      * @private
      */
     getParams:function(){
-        var params = {};
+        let params = {};
         params['projectId'] = this.paramsFor('app.project').projectId;
         return params;
     }

@@ -452,6 +452,16 @@ export default {
                     "islocked" : "This page is locked",
                     "lockedhead" : "Locked",
                     "empty" : "The page you are looking for does not exists or has been deleted, please check the name.",
+                    "files" : "Files",
+                    "selectfile" : "select a file to upload",
+                    "file" : {
+                        "delete" : "You are about to delete the file <strong>{{name}}</strong>, once deleted it <strong>cannot be recovered</strong>.",
+                        "confirmdelete" : "<strong>Yes, delete the file!</strong>",
+                        "deletecancel" : "Deletion cancelled",
+                        "onsecondthought" : "Hmm, I will just keep it.",
+                        "deleted" : "File has been deleted",
+                        'preview' : "Preview File",
+                    }
                 },
                 "tag":{
                     "select" : "Select tags",

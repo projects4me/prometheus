@@ -174,7 +174,6 @@ export default DS.Model.extend({
      */
     tagged: DS.hasMany('tagged'),
 
-
     /**
      * The votes for this wiki page
      *
@@ -183,6 +182,16 @@ export default DS.Model.extend({
      * @for Wiki
      * @private
      */
-    vote: DS.hasMany('vote')
+    vote: DS.hasMany('vote'),
+
+    /**
+     * The file associated with this wiki
+     *
+     * @property files
+     * @type Relationship
+     * @for Wiki
+     * @private
+     */
+    files: DS.hasMany('upload')
 
 });

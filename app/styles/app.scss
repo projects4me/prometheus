@@ -34,7 +34,6 @@
 @import 'bower_components/jQuery-QueryBuilder/dist/scss/default.scss';
 @import 'bower_components/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss';
 
-
 /*
   Include the application variables
 */
@@ -61,6 +60,7 @@
 @import "modules/form-fields.scss";
 @import "modules/uploads.scss";
 
+@import 'summernote.scss';
 @import '../../custom/styles/custom.scss';
 
 /**

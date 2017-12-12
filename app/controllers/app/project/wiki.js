@@ -4,6 +4,7 @@
 
 import Ember from "ember";
 
+
 /**
  * The controller for the wiki route, it is loaded when a user tried to navigate to the route
  * wiki
