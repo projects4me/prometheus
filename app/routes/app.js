@@ -77,23 +77,43 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
      *
      * @method setupController
      * @param {Prometheus.Controllers.App} controller the controller object for this route
+     * @protected
+     */
+    setupController:function(controller)
+    {
+        Logger.debug('Prometheus.App.Route->setupController');
+
+        let _self = this;
+
+        // Load the required data
+        _self._loadProjects(controller);
+        _self._loadRoles(controller);
+        _self._loadUsers(controller);
+
+        Logger.debug('-Prometheus.App.Route->setupController');
+    },
+
+    /**
+     * This function loads the projects in the system and lists them
+     *
+     * @param {Prometheus.Controllers.App} controller the controller object for this route
      * @private
      */
-    setupController:function(controller){
-        Logger.debug('AppRoute::setupController');
-
+    _loadProjects:function(controller)
+    {
+        Logger.debug('Prometheus.App.Route->loadProjects');
+        let _self = this;
 
         // If the user navigated directly to the wiki project or page then lets setup the project id
-        var projectId = this.paramsFor('app.project').projectId;
-        var projectName = null;
+        let projectId = this.paramsFor('app.project').projectId;
+        let projectName = null;
 
-        var self = this;
-        self.set('breadCrumb', {title: 'Dashboard'});
+        _self.set('breadCrumb', {title: 'Dashboard'});
 
         Logger.debug(projectId);
         Logger.debug(projectName);
 
-        var options = {
+        let options = {
             fields: "Project.id,Project.name",
             query: "((Project.name STARTS A) OR (Project.name STARTS P))",
             rels : 'none',
@@ -103,11 +123,11 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
         };
 
         Logger.debug('Retreiving projects list with options '+options);
-        this.data = this.store.query('project',options).then(function(data){
-            var projectCount = data.get('length');
-            var projectList = [];
-            var temp = null;
-            for (var i=0;i<projectCount;i++)
+        _self.store.query('project',options).then(function(data){
+            let projectCount = data.get('length');
+            let projectList = [];
+            let temp = null;
+            for (let i=0;i<projectCount;i++)
             {
                 temp = data.nextObject(i);
                 projectList[i] = {label:temp.get('name'), value:temp.get('id')};
@@ -124,6 +144,58 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
 
         });
 
-    }
+        Logger.debug('-Prometheus.App.Route->loadProjects');
+    },
 
+
+    /**
+     * This function loads all the roles in the system and sets them
+     * in the App.Controller
+     *
+     * @param {Prometheus.Controllers.App} controller the controller object for this route
+     * @private
+     */
+    _loadRoles:function(controller)
+    {
+        Logger.debug('Prometheus.App.Route->loadRoles');
+        let _self = this;
+
+        let options = {
+            rels : 'none',
+            sort : 'Role.name',
+            order: 'ASC',
+            limit: -1
+        };
+
+        let roles = _self.store.query('role',options);
+        controller.set('roles',roles);
+
+        Logger.debug('-Prometheus.App.Route->loadRoles');
+    },
+
+    /**
+     * This function loads all the users in the system and sets them
+     * in the App.Controller
+     *
+     * @param {Prometheus.Controllers.App} controller the controller object for this route
+     * @private
+     */
+    _loadUsers:function(controller)
+    {
+        Logger.debug('Prometheus.App.Route->loadUsers');
+        let _self = this;
+
+        let options = {
+            fields : 'User.id,User.name',
+            rels : 'none',
+            sort : 'User.name',
+            order: 'ASC',
+            limit: -1
+        };
+
+        let users = _self.store.query('user',options);
+        controller.set('users',users);
+
+        Logger.debug('-Prometheus.App.Route->loadUsers');
+    }
 });

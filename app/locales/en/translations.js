@@ -358,6 +358,15 @@ export default {
                     "milestones" : "Project Milestones",
                     "managemilestones" : "Manage Milestones",
                     "managemembers" : "Manage Members",
+                    "membership" : {
+                        "add" : "Add a new member",
+                        "selectrole" : "Select a role",
+                        "role" : "Role of the new member",
+                        "selectuser" : "Select a new member",
+                        "user" : "Member",
+                        "added" : "<strong>{{user}}</strong> has been added to the project as <strong>{{role}}</strong>",
+                        "missing" : "Both the user and role selection is required"
+                    },
                     "lists" : {
                         "status." : "Loading ..",
                         "status" : {

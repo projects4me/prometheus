@@ -44,6 +44,13 @@ $color_jumbo_approx: rgba(127, 127, 135,1);
   filter: progid:dximagetransform.microsoft.gradient(startcolorstr=$startColor, endcolorstr=$endColor, gradienttype=1 );
 }
 
+@mixin gradient-border($startColor,$endColor) {
+  border-color: $startColor;
+  border-color: linear-gradient(to right, $startColor 0, $color_pompadour_approx 100%);
+  filter: progid:dximagetransform.microsoft.gradient(startcolorstr=$startColor, endcolorstr=$endColor, gradienttype=1 );
+}
+
+
 .box {
 	&.box-primary:after {
     @include gradient-border-top($color_maroon_flush_approx,$color_pompadour_approx);

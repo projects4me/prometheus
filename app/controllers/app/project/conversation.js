@@ -110,7 +110,7 @@ export default Ember.Controller.extend(Ember.Evented,{
             Logger.debug('AppProjectConversationController::save()');
             Logger.debug(relatedId);
             Logger.debug(contents);
-            var self = this;
+            let _self = this;
 
             let comment = this.get('store').createRecord('comment', {
                 relatedId: relatedId,
@@ -118,17 +118,17 @@ export default Ember.Controller.extend(Ember.Evented,{
                 comment: contents,
                 dateCreated: 'CURRENT_DATETIME',
                 dateModified: 'CURRENT_DATETIME',
-                createdUser: '1',
-                createdUserName: 'Hammad Hassan',
-                modifiedUser: '1',
-                modifiedUserName: 'Hammad Hassan',
+                createdUser: _self.get('currentUser.user.id'),
+                createdUserName: _self.get('currentUser.user.name'),
+                modifiedUser: _self.get('currentUser.user.id'),
+                modifiedUserName: _self.get('currentUser.user.name'),
                 deleted: 0
             });
 
             comment.save().then(function (comment) {
                 Logger.debug('Comment Saved');
                 Logger.debug(comment);
-                var count = self.model.get('length');
+                let count = self.model.get('length');
                 while (count > 0)
                 {
                     count--;

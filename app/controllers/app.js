@@ -3,6 +3,7 @@
  */
 
 import Ember from "ember";
+import format from "../utils/data/format";
 
 /**
  * This the app controller. App is as the main route for the application's
@@ -45,6 +46,50 @@ export default Ember.Controller.extend({
      * @public
      */
     relatedFields: Ember.inject.service('related-fields'),
+
+    /**
+     * These are the roles in the system
+     *
+     * @property roles
+     * @type Prometheus.Model.Role
+     * @for App
+     * @public
+     */
+    roles: {},
+
+    /**
+     * These are the users in the system
+     *
+     * @property users
+     * @type Prometheus.Model.User
+     * @for App
+     * @public
+     */
+    users: {},
+
+    /**
+     * This is the list of roles that has been extracted
+     *
+     * @property rolesList
+     * @type Ember.computed
+     * @returns array
+     * @public
+     */
+    rolesList: Ember.computed(function(){
+        return format.getSelectList(this.get('roles'));
+    }).property('roles'),
+
+    /**
+     * This is the list of users that has been extracted
+     *
+     * @property usersList
+     * @type Ember.computed
+     * @returns array
+     * @public
+     */
+    usersList: Ember.computed(function(){
+        return format.getSelectList(this.get('users'));
+    }).property('users'),
 
     /**
      * The events that this controller is listing to
