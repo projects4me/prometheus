@@ -508,7 +508,8 @@ export default {
                         "onsecondthought" : "Hmm, I will just keep it.",
                         "deleted" : "File has been deleted",
                         'preview' : "Preview File",
-                    }
+                    },
+                    "timelogs" : "Time Logs",
                 },
                 "edit" : {
                     "page" : "Edit Issue : <strong>#{{issueNumber}} - {{name}}</strong>",

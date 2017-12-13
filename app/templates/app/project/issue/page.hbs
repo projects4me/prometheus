@@ -218,27 +218,35 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{t "view.app.project.detail.members"}}</h3>
                         <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "view.app.project.detail.managemembers"}}"><i class="fa fa-gear"></i></button>
                         </div>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body no-padding" style="display: block;">
                         <ul class="users-list clearfix">
-                            {{#each issue.members as |member|}}
-                                <li>
-                                    <img src="http://projects4me/userimage/get/{{member.id}}" alt="{{member.name}}">
-                                    <a class="users-list-name" href="#">{{member.name}}</a>
-                                    <span class="users-list-date">{{get-role member.id issue.roles issue.memberships}}</span>
-                                </li>
-                            {{/each}}
+                            <li>
+                                <img src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
+                                <a class="users-list-name" href="#">{{issue.assignedTo.name}}</a>
+                                <span class="users-list-date">{{t "view.app.issue.detail.assignedTo"}}</span>
+                            </li>
+                            <li>
+                                <img src="http://projects4me/userimage/get/{{issue.ownedBy.id}}" alt="{{issue.ownedBy.name}}">
+                                <a class="users-list-name" href="#">{{issue.ownedBy.name}}</a>
+                                <span class="users-list-date">{{t "view.app.issue.detail.ownedBy"}}</span>
+                            </li>
+                            <li>
+                                <img src="http://projects4me/userimage/get/{{issue.modifiedBy.id}}" alt="{{issue.modifiedBy.name}}">
+                                <a class="users-list-name" href="#">{{issue.modifiedBy.name}}</a>
+                                <span class="users-list-date">{{t "view.app.issue.detail.modifiedBy"}}</span>
+                            </li>
+                            <li>
+                                <img src="http://projects4me/userimage/get/{{issue.reportedBy.id}}" alt="{{issue.reportedBy.name}}">
+                                <a class="users-list-name" href="#">{{issue.reportedBy.name}}</a>
+                                <span class="users-list-date">{{t "view.app.issue.detail.reportedBy"}}</span>
+                            </li>
                         </ul>
                         <!-- /.users-list -->
                     </div>
                     <!-- /.box-body -->
-                    <div class="box-footer text-center" style="display: block;">
-                        <a href="javascript:void(0)" class="uppercase">{{t "view.app.project.detail.viewallmembers"}}</a>
-                    </div>
-                    <!-- /.box-footer -->
                 </div>
                 <!-- /. Project Members -->
 
@@ -251,7 +259,6 @@
                         <h3 class="box-title">{{t "view.app.issue.detail.files"}}</h3>
 
                         <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "view.app.project.detail.managemilestones"}}"><i class="fa fa-gear"></i></button>
                         </div>
 
                     </div>
@@ -310,14 +317,29 @@
                 <!-- Issue Files -->
 
 
-                <!-- These are the issues of the project distributed w.r.t. to status -->
+                <!-- Issue Timelogs -->
                 <div class="box box-danger">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{t "view.app.project.detail.issueratio"}}</h3>
+                        <h3 class="box-title">{{t "view.app.issue.detail.timelogs"}}</h3>
                     </div>
                     <div class="box-body no-padding" style="display: block;">
                         <ul class="users-list clearfix">
-                            {{chart-issueratio issues=issuetime}}
+                            {{#each issue.estimated as |timelog|}}
+                                <li>
+                                    <div class="issue-block">
+                                        {{timelog.days}} Days - {{timelog.hours}} Hours
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ul>
+                        <ul class="users-list clearfix">
+                            {{#each issue.spent as |timelog|}}
+                                <li>
+                                    <div class="issue-block">
+                                        {{timelog.days}} Days - {{timelog.hours}} Hours
+                                    </div>
+                                </li>
+                            {{/each}}
                         </ul>
                     </div>
                 </div>

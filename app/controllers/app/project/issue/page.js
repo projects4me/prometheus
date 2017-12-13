@@ -39,6 +39,33 @@ export default Ember.Controller.extend({
     previewFileDialog: false,
 
     /**
+     * We are pre-loading the project issues and the users in the
+     * system when a use navigates to the project view. Inside the
+     * this page we are simply fetching the information stored in
+     * the project controller. For that purpose we are loading injecting
+     * the project controller controller inside this controller.
+     *
+     * @property projectController
+     * @type Prometheus.Controllers.Project
+     * @for Create
+     * @private
+     */
+    projectController: Ember.inject.controller('app.project'),
+
+    /**
+     * This is a computed property in which gets the list of users
+     * in the system loaded by the project controller
+     *
+     * @property usersList
+     * @type Array
+     * @for Create
+     * @private
+     */
+    usersList: Ember.computed(function(){
+        return this.get('projectController').get('usersList');
+    }),
+
+    /**
      * This is a task to handle file uploading
      *
      * @param handleUpload
@@ -251,6 +278,7 @@ export default Ember.Controller.extend({
             this.set('filePreviewDialog',true);
         },
 
+
         /**
          * This function is used to hide the add tag modal
          *
@@ -259,8 +287,7 @@ export default Ember.Controller.extend({
          */
         removeModal:function(){
             this.set('filePreviewDialog',false);
-        }
-
+        },
 
     }
 

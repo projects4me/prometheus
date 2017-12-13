@@ -192,8 +192,12 @@ export default Ember.Controller.extend({
          * @todo Trigger the notificaiton
          */
         cancel:function(){
-            let model = this.get('model');
-            this.transitionToRoute('app.project.issue', {projectId:model.get('projectId')});
+//            history.back();
+            let self = this;
+            let model = self.get('model');
+            // Logger.debug('Cancel Called');
+            // Logger.debug(model);
+            self.transitionToRoute('app.project.issue.page', {projectId:model.get('projectId'),issueNumber:model.get('issueNumber')});
         },
     }
 });

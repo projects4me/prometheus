@@ -65,6 +65,7 @@ export default App.extend({
             model = this.model(this.paramsFor('app.project.issue.page'));
         }
         this.setupActivities(controller,model);
+
         controller.set('model',model);
         Logger.debug('-AppProjectIssuePageRoute::setupController');
     },
