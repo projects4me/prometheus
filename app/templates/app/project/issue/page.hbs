@@ -265,8 +265,6 @@
 
                     <div class="box-body no-padding" style="display: block;">
 
-
-
                         <div class="box-footer">
                             <ul class="attachments clearfix">
                                 {{#each issue.files as |file|}}
@@ -323,25 +321,98 @@
                         <h3 class="box-title">{{t "view.app.issue.detail.timelogs"}}</h3>
                     </div>
                     <div class="box-body no-padding" style="display: block;">
-                        <ul class="users-list clearfix">
-                            {{#each issue.estimated as |timelog|}}
-                                <li>
-                                    <div class="issue-block">
-                                        {{timelog.days}} Days - {{timelog.hours}} Hours
+
+                        <ul class="time-log time-log-in-box products-list product-list-in-box">
+                            {{#if (gt issue.spent.length 0)}}
+                                {{#each issue.spent as |timelog|}}
+                                <li class="item">
+                                    <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
+                                        <img class="img-circle" src="http://projects4me/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
+                                    </div>
+                                    <div class="log-info">
+                                        <a href="javascript:void(0);" class="user-title">{{timelog.createdUserName}}</a>
+                                        <span>{{t "view.app.issue.detail.timelog.on"}}<strong>{{moment-format timelog.spentOn 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
+                                        <span class="log-edit pull-right" data-toggle="tooltip" title="{{t "global.form.edit"}}"><i  {{action "showEditLogDialog" timelog}} class="fa fa-pencil"></i></span>
+                                        <span class="log-entry pull-right">
+                                            {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "view.app.issue.detail.timelog.d"}}{{/if}}
+                                            {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "view.app.issue.detail.timelog.h"}}{{/if}}
+                                            {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "view.app.issue.detail.timelog.m"}}{{/if}}
+                                        </span>
+                                        <span class="log-description">
+                                          {{timelog.description}}
+                                        </span>
                                     </div>
                                 </li>
-                            {{/each}}
+                                {{/each}}
+                            {{else}}
+                                <li class="no-entry">{{t "view.app.issue.detail.timelog.noentry"}}</li>
+                            {{/if}}
                         </ul>
-                        <ul class="users-list clearfix">
-                            {{#each issue.spent as |timelog|}}
-                                <li>
-                                    <div class="issue-block">
-                                        {{timelog.days}} Days - {{timelog.hours}} Hours
-                                    </div>
-                                </li>
-                            {{/each}}
-                        </ul>
+
+                        {{#if editLogDialog}}
+                            {{#bootstrap-modal
+                                    title="view.app.issue.detail.timelog.edit"
+                                    closeLabel="global.form.close"
+                                    confirmLabel="global.form.save"
+                                    close="removeEditLogModal"
+                                    confirm=(action "editLog")}}
+
+                                {{interval-selector
+                                        days=editingLog.days
+                                        hours=editingLog.hours
+                                        minutes=editingLog.minutes}}
+
+                                {{field-date
+                                        placeholder=(t "view.app.issue.detail.timelog.iputspenton")
+                                        label=(t "view.app.issue.detail.timelog.spenton")
+                                        value=editingLog.spentOn
+                                        mask="alphanumeric"
+                                }}
+
+                                {{field-textarea
+                                        placeholder=(t "view.app.issue.detail.timelog.iputdescription")
+                                        label=(t "view.app.issue.detail.timelog.description")
+                                        value=editingLog.description
+                                }}
+
+                            {{/bootstrap-modal}}
+                        {{/if}}
+
+
+                        {{#if logTimeDialog}}
+                            {{#bootstrap-modal
+                                    title="view.app.issue.detail.timelog.log"
+                                    closeLabel="global.form.close"
+                                    confirmLabel="global.form.save"
+                                    close="removeLogTimeModal"
+                                    confirm=(action "logTime")}}
+
+                                    {{interval-selector
+                                            days=newTimeLog.days
+                                            hours=newTimeLog.hours
+                                            minutes=newTimeLog.minutes}}
+
+                                {{field-date
+                                        placeholder=(t "view.app.issue.detail.timelog.iputspenton")
+                                        label=(t "view.app.issue.detail.timelog.spenton")
+                                        value=newTimeLog.spentOn
+                                        mask="alphanumeric"
+                                }}
+
+                                {{field-textarea
+                                        placeholder=(t "view.app.issue.detail.timelog.iputdescription")
+                                        label=(t "view.app.issue.detail.timelog.description")
+                                        value=newTimeLog.description
+                                }}
+
+                            {{/bootstrap-modal}}
+                        {{/if}}
                     </div>
+
+                    <div class="box-footer text-center" style="display: block;">
+                        <span {{action "showLogTimeDialog"}}><a href="javascript:void();"><ion class="ion-android-stopwatch"></ion> {{t "view.app.issue.detail.timelog.log"}}</a></span>
+                    </div>
+                    <!-- /.box-footer -->
                 </div>
 
                 <!-- This is the project summary -->

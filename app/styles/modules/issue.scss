@@ -53,6 +53,85 @@
   }
 }
 
+.time-log {
+  list-style: none;
+  margin: 0;
+  padding: 0rem 0.5rem;
+
+  .item {
+    border-radius: 3px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    background: #fff;
+  }
+
+  .item:before, .item:after {
+    content: " ";
+    display: table;
+  }
+
+  .item:after{
+    clear: both;
+  }
+
+  .user-title {
+    font-weight: 600;
+  }
+
+  .user-img {
+    float: left;
+
+    img {
+      width: 5rem;
+      height: 5rem;
+    }
+
+  }
+
+  .log-edit{
+    position:absolute;
+    right:0;
+    margin-right: 2rem;
+    font-size: 1.4rem;
+    color: $lightColor;
+    cursor: pointer;
+    &:hover{
+      color: $dangerColor;
+    }
+  }
+
+  .no-entry{
+    text-align: center;
+    margin: 2rem;
+    color: $lightColor;
+    font-style: italic;
+  }
+
+  .log-info {
+    margin-left:6rem;
+
+    .log-description {
+      display: block;
+      color: $darkColor;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .log-entry {
+      font-size: 2rem;
+      padding: 1.5rem;
+    }
+  }
+}
+
+.time-log-in-box > .item {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0;
+  border-bottom: 1px solid #f4f4f4;
+}
 
 .filePreviewModal
 {

@@ -55,6 +55,16 @@ export default DS.Model.extend({
     "createdUser": DS.attr('string'),
 
     /**
+     * The name of the user who created the time log entry
+     *
+     * @property createdUserName
+     * @type String
+     * @for Timelog
+     * @private
+     */
+    "createdUserName": DS.attr('string'),
+
+    /**
      * The identifier of the user who last modifed the time log entry
      *
      * @property modifedUser
@@ -63,6 +73,16 @@ export default DS.Model.extend({
      * @private
      */
     "modifiedUser": DS.attr('string'),
+
+    /**
+     * The name of the user who last modified the time log entry
+     *
+     * @property modifiedUserName
+     * @type String
+     * @for Timelog
+     * @private
+     */
+    "modifiedUserName": DS.attr('string'),
 
     /**
      * The identifier of the issue for which the time log entry was made
@@ -114,6 +134,26 @@ export default DS.Model.extend({
      * @for Timelog
      * @private
      */
-    "context": DS.attr('string')
+    "context": DS.attr('string'),
+
+    /**
+     * The description of the task
+     *
+     * @property description
+     * @type String
+     * @for Timelog
+     * @private
+     */
+    "description": DS.attr('string'),
+
+    /**
+     * The date the time was spent on
+     *
+     * @property spentON
+     * @type String
+     * @for Timelog
+     * @private
+     */
+    "spentOn": DS.attr('string'),
 
 });

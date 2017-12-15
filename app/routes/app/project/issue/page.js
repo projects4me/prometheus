@@ -66,6 +66,9 @@ export default App.extend({
         }
         this.setupActivities(controller,model);
 
+        let timelog = this.store.createRecord('timelog');
+
+        controller.set('newTimeLog',timelog);
         controller.set('model',model);
         Logger.debug('-AppProjectIssuePageRoute::setupController');
     },

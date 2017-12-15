@@ -28,15 +28,66 @@ export default Ember.Controller.extend({
     session: Ember.inject.service(),
 
     /**
+     * The current user
+     *
+     * @param currentUser
+     * @type service
+     * @private
+     */
+    currentUser: Ember.inject.service(),
+
+    /**
      * This flag is used to show or hide the modal dialog box
      * for file previews
      *
      * @property previewFileDialog
      * @type bool
-     * @for Edit
+     * @for Page
      * @private
      */
     previewFileDialog: false,
+
+    /**
+     * This flag is used to show or hide the modal dialog box
+     * for time log
+     *
+     * @property logTimeDialog
+     * @type bool
+     * @for Page
+     * @private
+     */
+    logTimeDialog: false,
+
+    /**
+     * This is the container object for a new time log entry
+     *
+     * @property newLogTime
+     * @type Prometheus.Models.Timelog
+     * @for PAge
+     * @private
+     */
+    newTimeLog: null,
+
+    /**
+     * This flag is used to show or hide the modal dialog box
+     * for editing time log entry
+     *
+     * @property editLogDialog
+     * @type bool
+     * @for Page
+     * @private
+     */
+    editLogDialog: false,
+
+    /**
+     * This is the container object for a new time log entry
+     *
+     * @property editingLog
+     * @type Prometheus.Models.Timelog
+     * @for PAge
+     * @private
+     */
+    editingLog: null,
 
     /**
      * We are pre-loading the project issues and the users in the
@@ -119,6 +170,33 @@ export default Ember.Controller.extend({
             //upload.rollback();
         }
     }).maxConcurrency(3).enqueue(),
+
+    /**
+     * This function is used to validate the time log
+     *
+     * @param timeLog
+     * @private
+     */
+    _validateLog:function(timeLog){
+        if (timeLog.get('days') === undefined) {
+            timeLog.set('days',0);
+        }
+
+        if (timeLog.get('hours') === undefined) {
+            timeLog.set('hours',0);
+        }
+
+        if (timeLog.get('minutes') === undefined) {
+            timeLog.set('minutes',0);
+        }
+
+        if (((timeLog.get('days')*8) + (timeLog.get('hours')*60) + timeLog.get('minutes')) === 0 ) {
+            return false;
+        } else if (timeLog.get('spentOn') === undefined || timeLog.get('spentOn') === '') {
+            return false;
+        }
+        return true;
+    },
 
     /**
      * The action handlers for the issue detail page
@@ -268,6 +346,120 @@ export default Ember.Controller.extend({
         },
 
         /**
+         * This function is used to log time against the issue
+         *
+         * @method logTime
+         * @public
+         */
+        logTime:function(){
+            Logger.debug('App.Project.Issue.PageController->logTime');
+            let _self = this;
+            let newLog = _self.get('newTimeLog');
+
+            Logger.debug(_self);
+            Logger.debug(newLog);
+
+            // Validate the time log and spentOn
+            if (_self._validateLog(newLog)) {
+                newLog.set('dateCreated','CURRENT_DATETIME');
+                newLog.set('dateModified','CURRENT_DATETIME');
+                newLog.set('createdUser',_self.get('currentUser.user.id'));
+                newLog.set('modifiedUser',_self.get('currentUser.user.id'));
+                newLog.set('createdUserName',_self.get('currentUser.user.name'));
+                newLog.set('modifiedUserName',_self.get('currentUser.user.name'));
+                newLog.set('deleted',0);
+                newLog.set('issueId',_self.get('model').nextObject(0).get('id'));
+                newLog.set('context','spent');
+
+                newLog.save().then(function (data) {
+                    let timelog = _self.get('store').createRecord('timelog');
+                    _self.set('newTimeLog',timelog);
+                    _self.get('model').nextObject(0).get('spent').pushObject(newLog);
+
+                    new Messenger().post({
+                        message: _self.get('i18n').t("view.app.issue.detail.timelog.added"),
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                });
+            } else {
+                new Messenger().post({
+                    message: _self.get('i18n').t("view.app.issue.detail.timelog.missing"),
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+
+            _self.send('removeLogTimeModal');
+
+            Logger.debug('-App.Project.Issue.PageController->logTime');
+        },
+
+        /**
+         * This function is used to edit the logged time
+         * against the issue
+         *
+         * @method editLog
+         * @public
+         */
+        editLog:function(){
+            Logger.debug('App.Project.Issue.PageController->editLog');
+            let _self = this;
+            Logger.debug(_self);
+            let log = _self.get('editingLog');
+
+            // Validate the time log and spentOn
+            if (_self._validateLog(log)) {
+                log.set('dateModified',moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
+                log.set('modifiedUser',_self.get('currentUser.user.id'));
+                log.set('modifiedUserName',_self.get('currentUser.user.name'));
+
+                log.save().then(function (data) {
+
+                    new Messenger().post({
+                        message: _self.get('i18n').t("view.app.issue.detail.timelog.edited"),
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                });
+            } else {
+                new Messenger().post({
+                    message: _self.get('i18n').t("view.app.issue.detail.timelog.missing"),
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+
+            _self.set('editingLog',null);
+            _self.send('removeEditLogModal');
+
+            Logger.debug('-App.Project.Issue.PageController->logTime');
+        },
+
+        /**
+         * This function is used to show the time log modal dialog box
+         *
+         * @method showEditLogDialog
+         * @public
+         */
+        showEditLogDialog:function(log)
+        {
+            this.set('editingLog',log);
+            this.set('editLogDialog',true);
+        },
+
+        /**
+         * This function is used to show the time log modal dialog box
+         *
+         * @method showLogTimeDialog
+         * @public
+         */
+        showLogTimeDialog:function()
+        {
+            this.set('logTimeDialog',true);
+        },
+
+        /**
          * This function is used to show the add modal dialog box
          *
          * @method showDialog
@@ -277,7 +469,6 @@ export default Ember.Controller.extend({
         {
             this.set('filePreviewDialog',true);
         },
-
 
         /**
          * This function is used to hide the add tag modal
@@ -289,6 +480,26 @@ export default Ember.Controller.extend({
             this.set('filePreviewDialog',false);
         },
 
+        /**
+         * This function is used to hide the log time modal
+         *
+         * @method removeLogTimeModal
+         * @public
+         */
+        removeLogTimeModal:function(){
+            this.set('logTimeDialog',false);
+        },
+
+        /**
+         * This function is used to hide the edit log time modal
+         *
+         * @method removeEditLogModal
+         * @public
+         */
+        removeEditLogModal:function(){
+            this.set('editingLog',null);
+            this.set('editLogDialog',false);
+        },
     }
 
 });

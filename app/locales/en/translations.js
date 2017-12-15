@@ -519,6 +519,22 @@ export default {
                         'preview' : "Preview File",
                     },
                     "timelogs" : "Time Logs",
+                    "timelog" : {
+                        "log" : "Log Time",
+                        "inputspenton" : "Which date was the time spent on",
+                        "spenton" : "Spent On",
+                        "inputdescription" : "What was the time spent on",
+                        "description" : "Description",
+                        "added" : "Time logged",
+                        "missing" : "Both time and spent date are required to log the time",
+                        "on" : " logged time on ",
+                        "noentry" : "No time logged against this issue",
+                        "d" : "d",
+                        "h" : "h",
+                        "m" : "m",
+                        "edited" : "Time log has been updated",
+                        "edit" : "Edit time log"
+                    }
                 },
                 "edit" : {
                     "page" : "Edit Issue : <strong>#{{issueNumber}} - {{name}}</strong>",
@@ -625,6 +641,13 @@ export default {
                     },
                 },
             },
+            "components" : {
+                "intervalselector" : {
+                    "days" : "Days",
+                    "hours" : "Hours",
+                    "minutes" : "Minutes"
+                }
+            }
 
         },
 
