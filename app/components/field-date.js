@@ -36,4 +36,37 @@ export default FormField.extend({
     charLength: Ember.computed('value', function() {
         return (this.get('value'));
     }),
+
+    /**
+     * This function is called when the view has been rendered, we should ideally
+     * use didRender but it was getting called every time the value was changed
+     * which would mean that we have to add a mask every time a value is changed
+     * that would not be good.
+     *
+     * @method didInsertElement
+     * @private
+     */
+    didInsertElement:function(){
+        let _self = this;
+        const mask = _self.getMask(this.get('mask'));
+        const tagName = _self.getTag(this.get('type'));
+
+        if (mask !== undefined && mask !== '' && tagName !== undefined && tagName !== '') {
+            Ember.$('#'+_self.elementId+' '+tagName).mask(mask.mask,{translation:mask.maskTranslation});
+        }
+
+        Ember.$('#'+_self.elementId+' input').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+        });
+
+        Ember.$('#'+_self.elementId+' input').on('apply.daterangepicker', function(ev, picker) {
+            if (typeof _self.update === 'function') {
+                _self.sendAction('update',picker.startDate.format('YYYY-MM-DD'));
+            }
+        });
+    },
 });

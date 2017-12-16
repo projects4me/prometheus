@@ -61,6 +61,7 @@
                                         placeholder=(t "view.app.project.edit.startdateplaceholder")
                                         label=(t "view.app.project.edit.startdate")
                                         value=(readonly model.startDate)
+                                        update=(action "startDateChanged")
                                         mask="alphanumeric"
                                 }}
 
@@ -68,6 +69,7 @@
                                         placeholder=(t "view.app.project.edit.enddateplaceholder")
                                         label=(t "view.app.project.edit.enddate")
                                         value=(readonly model.endDate)
+                                        update=(action "endDateChanged")
                                         mask="alphanumeric"
                                 }}
 
