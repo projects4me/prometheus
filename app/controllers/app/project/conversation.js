@@ -128,14 +128,14 @@ export default Ember.Controller.extend(Ember.Evented,{
             comment.save().then(function (comment) {
                 Logger.debug('Comment Saved');
                 Logger.debug(comment);
-                let count = self.model.get('length');
+                let count = _self.model.get('length');
                 while (count > 0)
                 {
                     count--;
-                    if(self.model.nextObject(count).get('id') === relatedId)
+                    if(_self.model.nextObject(count).get('id') === relatedId)
                     {
-                        self.model.nextObject(count).get('comments').pushObject(comment);
-                        self.trigger('clearContents');
+                        _self.model.nextObject(count).get('comments').pushObject(comment);
+                        _self.trigger('clearContents');
                         break;
                     }
                 }
@@ -158,29 +158,29 @@ export default Ember.Controller.extend(Ember.Evented,{
                 return false;
             }
 
-            var self = this;
+            let _self = this;
             let comment = this.get('store').createRecord('comment', {
                 relatedId: relatedId,
                 relatedTo: 'conversationrooms',
                 comment: vote,
                 dateCreated: 'CURRENT_DATETIME',
                 dateModified: 'CURRENT_DATETIME',
-                createdUser: '1',
-                createdUserName: 'Hammad Hassan',
-                modifiedUser: '1',
-                modifiedUserName: 'Hammad Hassan',
+                createdUser: _self.get('currentUser.user.id'),
+                createdUserName: _self.get('currentUser.user.name'),
+                modifiedUser: _self.get('currentUser.user.id'),
+                modifiedUserName: _self.get('currentUser.user.name'),
                 deleted: 0
             });
 
 
             comment.save().then(function (savedComment) {
-                var count = self.model.get('length');
+                let count = _self.model.get('length');
                 while (count > 0)
                 {
                     count--;
-                    if(self.model.nextObject(count).get('id') === relatedId)
+                    if(_self.model.nextObject(count).get('id') === relatedId)
                     {
-                        self.model.nextObject(count).get('comments').pushObject(savedComment);
+                        _self.model.nextObject(count).get('comments').pushObject(savedComment);
                         event.target.value = '';
                         break;
                     }
@@ -198,14 +198,14 @@ export default Ember.Controller.extend(Ember.Evented,{
         upvote:function(conversationId){
             Logger.debug("AppProjectConversationController:upvote("+conversationId+")");
 
-            var self = this;
-            var vote = this.get('store').createRecord('vote',{
+            let _self = this;
+            let vote = this.get('store').createRecord('vote',{
                 dateCreated:'CURRENT_DATETIME',
                 dateModified:'CURRENT_DATETIME',
-                createdUser:1,
-                modifiedUser:1,
-                createdUserName: "Hammad Hassan",
-                modifiedUserName: "Hammad Hassan",
+                createdUser:_self.get('currentUser.user.id'),
+                modifiedUser:_self.get('currentUser.user.id'),
+                createdUserName: _self.get('currentUser.user.name'),
+                modifiedUserName: _self.get('currentUser.user.name'),
                 vote: 1,
                 relatedTo:'conversationrooms',
                 relatedId:conversationId
@@ -215,12 +215,12 @@ export default Ember.Controller.extend(Ember.Evented,{
                 if (data.get('id') !== undefined)
                 {
                     new Messenger().post({
-                        message: self.get('i18n').t("view.app.conversation.voted"),
+                        message: _self.get('i18n').t("view.app.conversation.voted"),
                         tpye: 'success',
                         showCloseButton: true
                     });
 
-                    self.get('model').filterBy('id',conversationId)[0].get('votes').addObject(data);
+                    _self.get('model').filterBy('id',conversationId)[0].get('votes').addObject(data);
                 }
             });
         },
@@ -235,41 +235,34 @@ export default Ember.Controller.extend(Ember.Evented,{
          */
         addConversation:function(){
             Logger.debug('AppProjectConversationController:addConversation');
-            Logger.debug(this.get('newSubject'));
-            Logger.debug(this.get('newTopic'));
-            Logger.debug(this.get('roomType'));
 
-            var self = this;
+            let _self = this;
 
-            var newConversation = this.get('store').createRecord('conversationroom',{
+            let newConversation = this.get('store').createRecord('conversationroom',{
                 dateCreated:'CURRENT_DATETIME',
                 dateModified:'CURRENT_DATETIME',
                 deleted:0,
-                createdUser:'1',
-                modifiedUser:'1',
-                createdUserName: 'Hammad Hassan',
-                modifiedUserName: 'Hammad Hassan',
-                subject: self.get('newSubject'),
-                description: self.get('newTopic'),
-                roomType: self.get('roomType').value,
-                projectId: self.get('projectId')
+                createdUser:_self.get('currentUser.user.id'),
+                modifiedUser:_self.get('currentUser.user.id'),
+                createdUserName: _self.get('currentUser.user.name'),
+                modifiedUserName: _self.get('currentUser.user.name'),
+                subject: _self.get('newSubject'),
+                description: _self.get('newTopic'),
+                roomType: _self.get('roomType').value,
+                projectId: _self.get('projectId')
             });
 
             // Save it
             newConversation.save().then(function(conversation){
                 Logger.debug('A new conversation has been saved');
-                Logger.debug(conversation);
-                Logger.debug(self);
-                //self.set('newSubject','');
-                //self.set('newTopic','');
-                //self.set('roomType',{value:"discussion", label:"Discussion"});
 
+                _self.get('model').unshiftObject(conversation);
                 new Messenger().post({
-                    message: self.get('i18n').t("view.app.conversation.created",{name:conversation.get('subject')}),
+                    message: _self.get('i18n').t("view.app.conversation.created",{name:conversation.get('subject')}),
                     type: 'success',
                     showCloseButton: true
                 });
-                window.location.reload(true);
+                //window.location.reload(true);
                 //self.get('model').addObject(conversation);
 
             });

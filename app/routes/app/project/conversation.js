@@ -64,8 +64,8 @@ export default App.extend({
         // Set the data in the current instance of the object, this is required. Unless this is done the route will display the same data every time
         //this.module = Ember.String.capitalize(this.module);
 
-        self.loadIssues(params.projectId);
-        self.loadUsers();
+        //self.loadIssues(params.projectId);
+        //self.loadUsers();
         //var metaData = MD.create();
         var i18n = this.get('i18n');
         controller.set('i18n',i18n);
@@ -82,11 +82,11 @@ export default App.extend({
             options.query = params.query;
         }
 
-        options.order = 'ASC';
+        options.order = 'DESC';
         options.sort = 'comments.dateModified, Conversationroom.dateModified';
         options.query = "(Conversationroom.projectId : "+params.projectId+")";
-        this.data = this.store.query(this.module,options).then(function(data){
-            controller.set('model',data);
+        this.store.query(this.module,options).then(function(data){
+            controller.set('model',data.toArray());
         });
 
 
@@ -119,7 +119,7 @@ export default App.extend({
             limit:-1,
         };
 
-        this.data = this.store.query(module,options).then(function(data){
+        this.store.query(module,options).then(function(data){
             var issuesList = [];
             var issuesCount = data.get('length');
 
@@ -159,7 +159,7 @@ export default App.extend({
             limit:-1,
         };
 
-        this.data = this.store.query(module,options).then(function(data){
+        this.store.query(module,options).then(function(data){
             var usersList = [];
             var usersCount = data.get('length');
 

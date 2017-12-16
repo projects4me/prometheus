@@ -32,7 +32,7 @@ export default DS.Model.extend({
      * @for Conversationroom
      * @private
      */
-    dateCreated: DS.attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}),
+    dateCreated: DS.attr('string'),
 
     /**
      * Date on which the conversation room was last modified
@@ -42,7 +42,7 @@ export default DS.Model.extend({
      * @for Conversationroom
      * @private
      */
-    dateModified: DS.attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}),
+    dateModified: DS.attr('string'),
 
     /**
      * Soft deletion flag
