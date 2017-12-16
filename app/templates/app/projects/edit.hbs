@@ -1,0 +1,166 @@
+<section class="content-header">
+    <h1>
+        {{t "view.app.project.edit.header"}}
+        <small>{{model.name}}</small>
+    </h1>
+
+    {{#bread-crumbs tagName="ol" linkable=true as |component module|}}
+        {{#bread-crumb route=module breadCrumbs=component}}
+            <i class="fa fa-{{nav-icon module.title}}"></i>
+            {{#if module.record}}
+                {{module.title}}
+            {{else}}
+                {{t (concat "view.nav.menu." (camelize module.title) ".label")}}
+            {{/if}}
+        {{/bread-crumb}}
+    {{/bread-crumbs}}
+
+</section>
+
+<section class="content">
+    <div class="create-issue">
+        <div class="row">
+            <div class="col-md-8">
+
+                <div class="box box-primary issues-details">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{t "view.app.project.edit.project"}}</h3>
+
+                        <div class="box-tools pull-right">
+                        </div>
+
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body no-padding" style="display: block;">
+
+                        <form {{action 'addIssue' on='submit'}}>
+                            <div class="form-group">
+                                <div class="field-group">
+                                    {{field-text
+                                            placeholder=(t "view.app.project.edit.nameplaceholder")
+                                            label=(t "view.app.project.edit.name")
+                                            value=model.name
+                                            mask="alphanumeric"
+                                    }}
+
+                                    <div class="form-field form-field-static ember-view">
+                                        <span class="ember-text-field form-control input-sm data-input ember-view">{{model.shortCode}}</span>
+                                        <span class="highlight"></span>
+                                        <span class="bar"></span>
+                                        <label class="floating-label active">{{t "view.app.project.edit.shortcode"}}</label>
+                                    </div>
+                                </div>
+
+                                {{field-textarea
+                                        placeholder=(t "view.app.project.edit.descriptionplaceholder")
+                                        label=(t "view.app.project.edit.description")
+                                        value=model.description
+                                }}
+
+                                {{field-date
+                                        placeholder=(t "view.app.project.edit.startdateplaceholder")
+                                        label=(t "view.app.project.edit.startdate")
+                                        value=(readonly model.startDate)
+                                        mask="alphanumeric"
+                                }}
+
+                                {{field-date
+                                        placeholder=(t "view.app.project.edit.enddateplaceholder")
+                                        label=(t "view.app.project.edit.enddate")
+                                        value=(readonly model.endDate)
+                                        mask="alphanumeric"
+                                }}
+
+                                {{field-relate
+                                        placeholder=(t "view.app.project.edit.typeplaceholder")
+                                        label=(t "view.app.project.edit.type")
+                                        value=model.type
+                                        options=type
+                                        selected=(find-by "value" model.type type)
+                                        searchField="label"
+                                        onchange=(action "selectType")
+                                        relateType="relate-simple"
+                                }}
+
+                                {{field-relate
+                                        placeholder=(t "view.app.project.edit.statusplaceholder")
+                                        label=(t "view.app.project.edit.status")
+                                        value=model.status
+                                        options=status
+                                        selected=(find-by "value" model.status status)
+                                        searchField="label"
+                                        onchange=(action "selectStatus")
+                                        relateType="relate-simple"
+                                }}
+
+                                {{field-textarea
+                                        placeholder=(t "view.app.project.edit.visionplaceholder")
+                                        label=(t "view.app.project.edit.vision")
+                                        value=model.vision
+                                }}
+
+                                {{field-textarea
+                                        placeholder=(t "view.app.project.edit.scopeplaceholder")
+                                        label=(t "view.app.project.edit.scope")
+                                        value=model.scope
+                                }}
+
+                            </div>
+                        </form>
+
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer text-center" style="display: block;">
+
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="box box-warning issues-details">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{t "view.app.project.edit.people"}}</h3>
+
+                        <div class="box-tools pull-right">
+
+                        </div>
+
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body no-padding" style="display: block;">
+
+                        {{field-relate
+                                placeholder=(t "view.app.project.edit.selectassignee")
+                                label=(t "view.app.project.edit.assignee")
+                                value=model.assignee
+                                options=usersList
+                                selected=(find-by "value" model.assignee usersList)
+                                searchField="label"
+                                onchange=(action "selectOwner")
+                                relateType="relate-user"
+                        }}
+
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer text-center" style="display: block;">
+
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+            </div>
+
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+                <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+

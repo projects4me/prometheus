@@ -396,12 +396,62 @@ export default {
                         "progress" : "{{closed}} out of {{total}} issues complete",
                     }
                 },
-                "filter":{
+                "filter" : {
                     "name" : "Name",
                     "type" : "Type",
                     "status" : "Status",
                     "shortCode" : "Short Code",
                 },
+                "create" : {
+                    "header" : "Create Project",
+                    "project" : "Project Information",
+                    "name" : "Name",
+                    "shortcode" : "Short Code",
+                    "description" : "Project Summary",
+                    "type" : "Type",
+                    "assignee" : "Owner",
+                    "selectassignee" : "Select the owner of the project",
+                    "status" : "Status",
+                    "scope" : "Scope",
+                    "vision" : "Vision",
+                    "startdate" : "Start Date",
+                    "enddate" : "End Date",
+                    "people" : "People",
+                    "nameplaceholder" : "Enter a name",
+                    "descriptionplaceholder" : "Enter project summary",
+                    "enddateplaceholder" : "Enter the target end date",
+                    "startdateplaceholder" : "Enter the project start date",
+                    "typeplaceholder" : "Select the type of project",
+                    "statusplaceholder" : "Which status is the project in?",
+                    "visionholder" : "What is the project vision",
+                    "scopeplaceholder" : "What is the project scope",
+                    "created" : "<strong>{{name}}</strong> created successfully"
+                },
+                "edit" : {
+                    "header" : "Edit Project",
+                    "project" : "Project Information",
+                    "name" : "Name",
+                    "shortcode" : "Short Code",
+                    "description" : "Project Summary",
+                    "type" : "Type",
+                    "assignee" : "Owner",
+                    "selectassignee" : "Select the owner of the project",
+                    "status" : "Status",
+                    "scope" : "Scope",
+                    "vision" : "Vision",
+                    "startdate" : "Start Date",
+                    "enddate" : "End Date",
+                    "people" : "People",
+                    "nameplaceholder" : "Enter a name",
+                    "descriptionplaceholder" : "Enter project summary",
+                    "enddateplaceholder" : "Enter the target end date",
+                    "startdateplaceholder" : "Enter the project start date",
+                    "typeplaceholder" : "Select the type of project",
+                    "statusplaceholder" : "Which status is the project in?",
+                    "visionholder" : "What is the project vision",
+                    "scopeplaceholder" : "What is the project scope",
+                    "edited" : "<strong>{{name}}</strong> created updated"
+                }
             },
 
             "conversation" : {
@@ -673,6 +723,9 @@ export default {
                     "list": "List Projects",
                     "import": "Import Projects",
                     "export": "Export Projects",
+                },
+                "projects": {
+                    "label": "Projects",
                 },
                 "issue":{
                     "label": "Issues",

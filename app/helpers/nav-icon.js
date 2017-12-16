@@ -15,10 +15,12 @@ import MD from "../utils/metadata/metadata";
  * @private
  */
 export function navIcon(params) {
-    var metaData = MD.create().getViewMeta('Navigation','items');
-    var navModule = Ember.String.capitalize(params[0]);
-    if (navModule === 'App'){
+    let metaData = MD.create().getViewMeta('Navigation','items');
+    let navModule = Ember.String.capitalize(params[0]);
+    if (navModule === 'App') {
         navModule = 'Dashboard';
+    } else if (navModule === 'Projects') {
+        navModule = 'Project';
     }
     if (metaData[navModule] !== undefined)
     {

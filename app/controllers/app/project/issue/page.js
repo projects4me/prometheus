@@ -219,7 +219,6 @@ export default Ember.Controller.extend({
             Logger.debug('AppProjectIssuePageController::editIssue('+issueNumber+')');
             this.transitionToRoute('app.project.issue.edit',{issueNumber:issueNumber});
             Logger.debug('-AppProjectIssuePageController::paginate()');
-
         },
 
         /**

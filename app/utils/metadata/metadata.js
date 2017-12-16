@@ -86,14 +86,14 @@ export default Ember.Object.extend({
                         section1: {
                             list: {
                                 label: 'view.nav.menu.project.list',
-                                route: 'app.projectlist',
+                                route: 'app.projects',
                                 className: 'text-teal',
                                 anchorRoute: 'project',
                                 //routeParams: {module: 'project'}
                             },
                             create: {
                                 label: 'view.nav.menu.project.create',
-                                route: 'app.create',
+                                route: 'app.projects.create',
                                 className: 'text-red',
                                 anchorRoute: 'project/create',
                                 routeParams: {module: 'project'}

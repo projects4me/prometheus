@@ -156,8 +156,8 @@ export default Ember.Controller.extend({
          * @todo Trigger the notificaiton
          */
         save:function() {
-            var self = this;
-            var model = this.get('model');
+            let self = this;
+            let model = this.get('model');
 
             model.projectId = this.target.currentState.routerJs.state.params["app.project"].projectId;
             model.dateCreated = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");

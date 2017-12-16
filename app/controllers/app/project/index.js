@@ -133,6 +133,19 @@ export default Ember.Controller.extend({
         },
 
         /**
+         * This action is used to navigate the user to the project's edit page
+         *
+         * @method editProject
+         * @param {String} projectId
+         * @public
+         */
+        editProject:function(projectId){
+            Logger.debug('Prometheus.App.Projects.Edit::editProject('+projectId+')');
+            this.transitionToRoute('app.projects.edit',{projectId:projectId});
+            Logger.debug('-Prometheus.App.Projects.Edit::editProject');
+        },
+
+        /**
          * This method is used to set the selectedRole property
          *
          * @method selectRole

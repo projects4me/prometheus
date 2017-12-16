@@ -88,6 +88,7 @@ export default Ember.Controller.extend({
      * @public
      */
     usersList: Ember.computed(function(){
+        Logger.debug(this.get('users'));
         return format.getSelectList(this.get('users'));
     }).property('users'),
 

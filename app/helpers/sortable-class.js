@@ -16,7 +16,7 @@ import Ember from 'ember';
  * @private
  */
 export function sortableClass(params) {
-    var className="sortable";
+    let className="sortable";
     if (params[0] === params[1])
     {
         className += ' sortable-'+params[2];

@@ -1,21 +1,17 @@
-/*
- * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
- */
-
-/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
-import Ember from "ember";
+import Ember from 'ember';
 import _ from "lodash";
-import queryBuilder from "../../../../utils/query/builder";
-import queryParser from "../../../../utils/query/parser";
+import queryBuilder from "../../../utils/query/builder";
+import queryParser from "../../../utils/query/parser";
 
 /**
- * This controller is used to provide the interaction between the template and
- * the route. The basic features that this controller provide are pagination,
- * sorting and filtering the data.
+ * This is empty controller, normally we do not create them. However
+ * Ember's inject in the child controllers was failing on reload
+ * when this controller did not exist. Apparently Ember.inject.controller
+ * does not work on run time generated controllers in case of page reload
  *
- * @class Issue
- * @namespace Prometheus.Controllers
- * @module App.Project
+ * @class Index
+ * @namespace Prometheus.Controller.Projects
+ * @module App
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
@@ -66,7 +62,7 @@ export default Ember.Controller.extend({
      * @for Issue
      * @private
      */
-    sort: 'Issue.issueNumber',
+    sort: 'Project.dateModified',
 
     /**
      * This property stores the current query based on which the page is filtered.
@@ -76,7 +72,7 @@ export default Ember.Controller.extend({
      * @for Issue
      * @private
      */
-    query: '',
+    query: null,
 
     /**
      * The count of the selected items in the list view.
@@ -107,9 +103,10 @@ export default Ember.Controller.extend({
          * @public
          */
         paginate:function(page){
-            Logger.debug('AppProjectIssueController::paginate('+page+')');
+            Logger.debug('Prometheus.Controllers.Projects.Index::paginate('+page+')');
+            this.send('selectAll',false);
             this.set('page',page);
-            Logger.debug('-AppProjectIssueController::paginate()');
+            Logger.debug('-Prometheus.Controllers.Projects.Index::paginate()');
         },
 
         /**
@@ -119,8 +116,8 @@ export default Ember.Controller.extend({
          * @public
          */
         filter:function(){
-            Logger.debug('AppProjectIssueController::filter()');
-            Logger.debug('-AppProjectIssueController::filter()');
+            Logger.debug('Prometheus.Controllers.Projects.Index::filter()');
+            Logger.debug('-Prometheus.Controllers.Projects.Index::filter()');
         },
 
         /**
@@ -131,7 +128,7 @@ export default Ember.Controller.extend({
          * @public
          */
         sortData:function(field){
-            Logger.debug('AppProjectIssueController::sortData('+field+')');
+            Logger.debug('Prometheus.Controllers.Projects.Index::sortData('+field+')');
 
             // If the current field is being sorted then toggle it
             if (field === this.get('sort')) {
@@ -149,7 +146,7 @@ export default Ember.Controller.extend({
             // Set the field that is being sorted, if it is changed then the model
             // update will be triggered by Ember
             this.set('sort',field);
-            Logger.debug('-AppProjectIssueController::sortData()');
+            Logger.debug('-Prometheus.Controllers.Projects.Index::sortData()');
         },
 
 
@@ -162,10 +159,10 @@ export default Ember.Controller.extend({
          * @todo Hack Alert!!
          */
         reloadPage:function(){
-            Logger.debug('AppProjectIssueController::reloadPage()');
+            Logger.debug('Prometheus.Controllers.Projects.Index::reloadPage()');
             // Hack Alert!!!
             this.set('query',this.get('query')+' ');
-            Logger.debug('-AppProjectIssueController::reloadPage()');
+            Logger.debug('-Prometheus.Controllers.Projects.Index::reloadPage()');
         },
 
         /**
@@ -272,28 +269,29 @@ export default Ember.Controller.extend({
         },
 
         /**
-         * This function is used to navigate the user to the detail page for the issues
+         * This function is used to navigate the user to the detail page
+         * for the project
          *
          * @method openDetail
-         * @param {IssueModel} issue the issue model to which we have to navigate to
+         * @param {Prometheus.Model.Project} project the project model to which we have to navigate to
          * @public
          */
-        openDetail:function(issue){
-            Logger.debug("AppProjectIssueController::openDetail");
-            this.transitionToRoute('app.project.issue.page',{issueNumber:issue.get('issueNumber')});
-            Logger.debug("-AppProjectIssueController::openDetail");
+        openDetail:function(project){
+            Logger.debug("Prometheus.Controllers.Projects.Index::openDetail");
+            this.transitionToRoute('app.project.index',{projectId:project.get('id')});
+            Logger.debug("-Prometheus.Controllers.Projects.Index::openDetail");
         },
 
         /**
-         * This function is used to help navigate to the create issue page
+         * This function is used to help navigate to the create project page
          *
-         * @method createIssue
+         * @method createProject
          * @public
          */
-        createIssue:function(){
-            Logger.debug("AppProjectIssueController::createIssue");
-            this.transitionToRoute('app.project.issue.create');
-            Logger.debug("-AppProjectIssueController::createIssue");
+        createProject:function(){
+            Logger.debug("Prometheus.Controllers.Projects.Index::createProject()");
+            this.transitionToRoute('app.projects.create');
+            Logger.debug("-Prometheus.Controllers.Projects.Index::createProject()");
         }
     }
 

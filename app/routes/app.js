@@ -46,6 +46,35 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
         return this.loadCurrentUser();
     },
 
+    afterModel() {
+        let _self = this;
+
+        let usersOptions = {
+            fields : 'User.id,User.name',
+            rels : 'none',
+            sort : 'User.name',
+            order: 'ASC',
+            limit: -1
+        };
+
+        let rolesOptions = {
+            rels : 'none',
+            sort : 'Role.name',
+            order: 'ASC',
+            limit: -1
+        };
+
+
+        return Ember.RSVP.hash({
+            users: _self.store.query('user',usersOptions),
+            roles: _self.store.query('role',rolesOptions)
+        }).then(function(results){
+            Logger.info(results);
+            _self.set('users',results.users);
+            _self.set('roles',results.roles);
+        });
+    },
+
     /**
      * This function catchs any issue thrown by the _loadCurrentUser function and
      * invalidates the session
@@ -85,10 +114,13 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
 
         let _self = this;
 
+        controller.set('roles',this.get('roles'));
+        controller.set('users',this.get('users'));
+
         // Load the required data
         _self._loadProjects(controller);
-        _self._loadRoles(controller);
-        _self._loadUsers(controller);
+        //_self._loadRoles(controller);
+        //_self._loadUsers(controller);
 
         Logger.debug('-Prometheus.App.Route->setupController');
     },
@@ -160,14 +192,14 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
         Logger.debug('Prometheus.App.Route->loadRoles');
         let _self = this;
 
-        let options = {
+        let rolesOptions = {
             rels : 'none',
             sort : 'Role.name',
             order: 'ASC',
             limit: -1
         };
 
-        let roles = _self.store.query('role',options);
+        let roles = _self.store.query('role',rolesOptions);
         controller.set('roles',roles);
 
         Logger.debug('-Prometheus.App.Route->loadRoles');

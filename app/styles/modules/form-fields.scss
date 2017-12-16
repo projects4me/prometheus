@@ -103,6 +103,33 @@
 
 }
 
+.field-group{
+  display: inline-flex;
+  width:100%;
+  margin-bottom:-3rem;
+
+  >.form-field{
+    width:100%;
+  }
+
+  .form-field-static{
+    width:20rem;
+
+    .data-input {
+      padding-top:0rem;
+    }
+
+    .floating-label {
+      top:-2rem;
+      font-size:1.4rem;
+      color: $primaryColor;
+    }
+
+  }
+
+}
+
+
 .calendar-table {
   box-shadow: 1rem 1rem 1rem $borderColor;
 }
