@@ -372,3 +372,12 @@ span[data-atwho-at-query*="#"]{
   }
 
 }
+
+.note-editing-area{
+  table{
+    border-collapse: collapse;
+  }
+  table, th, td{
+    border: 1px solid $borderColor !important;
+  }
+}

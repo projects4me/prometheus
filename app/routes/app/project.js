@@ -25,6 +25,33 @@ export default App.extend({
      */
     projectId: null,
 
+    afterModel() {
+        let _self = this;
+        let projectId = _self.paramsFor('app.project').projectId;
+        if (projectId === undefined && _self.context !== undefined) {
+            if (_self.context.projectId !== undefined) {
+                projectId = _self.context.projectId;
+            }
+        }
+
+        let issuesOptions = {
+            fields: "Issue.id,Issue.subject,Issue.issueNumber,Issue.status,Issue.projectId",
+            query: "(Issue.projectId : "+projectId+")",
+            rels: "none",
+            sort: "Issue.issueNumber",
+            order: "ASC",
+            page: 0,
+            limit:-1,
+        };
+
+        return Ember.RSVP.hash({
+            issues: _self.store.query('issue',issuesOptions)
+        }).then(function(results){
+            _self.set('issues',{});
+            _self.set('issues',results.issues);
+        });
+    },
+
     /**
      * The setup controller function that will be called every time the user visits
      * the route, this function is responsible for loading the required data
@@ -36,14 +63,14 @@ export default App.extend({
     setupController:function(controller){
         Logger.debug('AppProjectRoute::setupController');
 
-        let self = this;
+        let _self = this;
 
         // If the user navigated directly to the wiki project or page then lets setup the project id
         let projectId = this.paramsFor('app.project').projectId;
         let projectName = null;
 
-        self.loadIssues(projectId);
-        self.loadUsers();
+        // self.loadIssues(projectId);
+        // self.loadUsers();
 
         Logger.debug(projectId);
         Logger.debug(projectName);
@@ -59,7 +86,7 @@ export default App.extend({
         Logger.debug('Retreiving the project with options ');
         Logger.debug(options);
 
-        this.data = this.store.query('project',options).then(function(data){
+        _self.store.query('project',options).then(function(data){
             if (projectId !== null)
             {
                 projectName = data.findBy('id',projectId).get('name');
@@ -68,7 +95,7 @@ export default App.extend({
             }
             controller.set('model',data.nextObject(0));
         });
-
+        controller.set('issues',_self.get('issues'));
     },
 
 

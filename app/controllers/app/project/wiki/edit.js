@@ -51,31 +51,15 @@ export default Ember.Controller.extend({
     saveDisabled: 'true',
 
     /**
-     * We are pre-loading the project issues and the users in the
-     * system when a use navigates to the project view. Inside the
-     * this page we are simply fetching the information stored in
-     * the project controller. For that purpose we are loading injecting
-     * the project controller controller inside this controller.
+     * This is the controller of the project, we are injecting it in order to
+     * gain access to the data that is fetched by this controller
      *
      * @property projectController
-     * @type Prometheus.Controllers.Project
+     * @type Prometheus.Controllers.App.Project
      * @for Edit
-     * @private
+     * @public
      */
     projectController: Ember.inject.controller('app.project'),
-
-    /**
-     * This is a computed property in which gets the list of users
-     * in the system loaded by the project controller
-     *
-     * @property usersList
-     * @type Array
-     * @for Ecit
-     * @private
-     */
-    usersList: Ember.computed(function(){
-        return this.get('projectController').get('usersList');
-    }),
 
     /**
      * This is a computed property in which gets the list of issues
@@ -83,13 +67,37 @@ export default Ember.Controller.extend({
      *
      * @property issuesList
      * @type Array
-     * @for Ecit
+     * @for Edit
      * @private
-     * @todo I think we would need to observe the project id as this might be updated as there is no dependant key
      */
     issuesList: Ember.computed(function(){
         return this.get('projectController').get('issuesList');
-    }),
+    }).property('projectController.issuesList'),
+
+    /**
+     * This is the controller for the app, we are injecting it in order to
+     * gain access to the data that is fetched by this controller
+     *
+     * @property appController
+     * @type Prometheus.Controllers.App.Project
+     * @for Edit
+     * @public
+     */
+    appController: Ember.inject.controller('app'),
+
+    /**
+     * This is a computed property in which gets the list of user
+     * associated in the system fetched by the app controller
+     *
+     * @property usersList
+     * @type Array
+     * @for Edit
+     * @private
+     */
+    usersList: Ember.computed(function(){
+        return this.get('appController').get('usersList');
+    }).property('appController.usersList'),
+
 
     /**
      * These are the actions that are handled by this controller

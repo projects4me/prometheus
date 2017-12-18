@@ -39,8 +39,8 @@ export default Ember.Controller.extend({
     i18n: Ember.inject.service(),
 
     /**
-     * This is the parentId of the wiki page that is being created. Initially it is
-     * null
+     * This is the parentId of the wiki page that is being created. Initially
+     * it is null
      *
      * @property parentId
      * @type String
@@ -50,6 +50,17 @@ export default Ember.Controller.extend({
     parentId:'',
 
     /**
+     * This is the controller of the project, we are injecting it in order to
+     * gain access to the data that is fetched by this controller
+     *
+     * @property projectController
+     * @type Prometheus.Controllers.App.Project
+     * @for Create
+     * @public
+     */
+    projectController: Ember.inject.controller('app.project'),
+
+    /**
      * This is a computed property in which gets the list of issues
      * associated with a project loaded by the project controller
      *
@@ -57,11 +68,34 @@ export default Ember.Controller.extend({
      * @type Array
      * @for Create
      * @private
-     * @todo I think we would need to observe the project id as this might be updated as there is no dependant key
      */
     issuesList: Ember.computed(function(){
         return this.get('projectController').get('issuesList');
-    }),
+    }).property('projectController.issuesList'),
+
+    /**
+     * This is the controller for the app, we are injecting it in order to
+     * gain access to the data that is fetched by this controller
+     *
+     * @property appController
+     * @type Prometheus.Controllers.App.Project
+     * @for Create
+     * @public
+     */
+    appController: Ember.inject.controller('app'),
+
+    /**
+     * This is a computed property in which gets the list of user
+     * associated in the system fetched by the app controller
+     *
+     * @property usersList
+     * @type Array
+     * @for Create
+     * @private
+     */
+    usersList: Ember.computed(function(){
+        return this.get('appController').get('usersList');
+    }).property('appController.usersList'),
 
     /**
      * These are the event handled by this controller

@@ -208,8 +208,8 @@ export default Ember.Component.extend({
                         .atwho({
                             at: "@",
                             data: self.get('usersList'),
-                            displayTpl: "<li>${name}</li>",
-                            insertTpl: "<a href='/app/users/${id}' class='${status}'>${atwho-at}${name}</a>"
+                            displayTpl: "<li>${label}</li>",
+                            insertTpl: "<a href='/app/users/${value}' class='${status}'>${atwho-at}${label}</a>"
                         }).atwho({
                         at: "#",
                         data: self.get('issuesList'),

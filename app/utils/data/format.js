@@ -18,9 +18,8 @@ export default {
      * @method getSelectList
      * @param {Prometheus.Models.Object} model The model that needs to be converted
      * @return {Array} list The array list of name and values
-     * @todo be able to convert most of the trees
      */
-    getSelectList:function(model,blank){
+    getSelectList:function(model,map,blank){
         let count = model.get('length');
         let list = [];
         let temp = null;
@@ -28,7 +27,13 @@ export default {
         for (let i=0;i<count;i++)
         {
             temp = model.nextObject(i);
-            list[i] = {label:temp.get('name'), value:temp.get('id')};
+            if (map)
+            {
+                list[i] = _.mapValues(map,function(o){return temp.get(o)});
+            } else {
+                list[i] = {label:temp.get('name'), value:temp.get('id')};
+            }
+
         }
 
         if (blank)
