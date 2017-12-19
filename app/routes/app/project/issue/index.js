@@ -90,6 +90,15 @@ export default App.extend({
      */
     projectId: null,
 
+    /**
+     * These are the saved searches related to the issues
+     *
+     * @property savedsearches
+     * @type Prometheus.Models.Savedsearch
+     * @for Index
+     * @private
+     */
+    savedsearches: null,
 
     /**
      * The model for this route
@@ -103,7 +112,7 @@ export default App.extend({
         Logger.debug('AppIssueRoute::model()');
         Logger.debug(params);
 
-        var query = null;
+        let query = null;
 
         // Load the data if are passed via the parameter
         if(params.sort){
@@ -121,7 +130,7 @@ export default App.extend({
         }
 
         // Get the projectId from the parent
-        var projectId = this.paramsFor('app.project').projectId;
+        let projectId = this.paramsFor('app.project').projectId;
         Logger.debug('ProjectId : '+projectId);
 
         // Make sure that projectId is set for every query
@@ -133,7 +142,7 @@ export default App.extend({
         }
 
         // Prepare the options
-        var options = {
+        let options = {
             query: query,
             rels: 'ownedBy,assignedTo,milestone,project,createdBy,modifiedBy,reportedBy',
             sort: this.get('sort'),
@@ -142,8 +151,24 @@ export default App.extend({
         };
 
         // Retrieve the data
-        var data = this.get('store').query('issue',options);
+        let data = this.get('store').query('issue',options);
         return data;
+    },
+
+    afterModel:function(){
+        let _self = this;
+
+        let savedSearchesOption = {
+            query: '(Savedsearch.relatedTo : issue)',
+            limit: -1
+        };
+
+        return Ember.RSVP.hash({
+            savedsearches: _self.store.query('savedsearch',savedSearchesOption)
+        }).then(function(results){
+            _self.set('savedsearches',results.savedsearches);
+        });
+
     },
 
     /**
@@ -161,6 +186,9 @@ export default App.extend({
      * @private
      */
     setupController:function(controller,model){
+        let savedSearch = this.store.createRecord('savedsearch');
+        controller.set('newSavedsearch',savedSearch);
+        controller.set('savedsearches',this.get('savedsearches'));
         controller.set('model',model);
         controller.set('query',this.get('query'));
         controller.set('sort',this.get('sort'));

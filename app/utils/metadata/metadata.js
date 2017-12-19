@@ -424,8 +424,10 @@ export default Ember.Object.extend({
                         type: 'integer',
                         input: 'select',
                         values: {
-                            'software': 'Software',
-                            'civil': 'Civil',
+                            'scrum': 'Scrum',
+                            'kanban': 'Kanban',
+                            'business': 'Business',
+                            'other': 'Other',
                         },
                         operators: ['equal']
                     },
@@ -437,6 +439,10 @@ export default Ember.Object.extend({
                         values: {
                             'new': 'New',
                             'in_progress': 'In Progress',
+                            'pending': 'Pending',
+                            'completed': 'Completed',
+                            'closed': 'Closed',
+                            'deferred': 'Deferred',
                         },
                         operators: ['equal']
                     },

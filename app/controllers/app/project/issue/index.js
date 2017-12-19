@@ -88,6 +88,46 @@ export default Ember.Controller.extend({
      */
     selectedCount: 0,
 
+    /**
+     * This is the flag which is used to the display of the saved
+     * search dialog
+     *
+     * @property saveSearchDialog
+     * @for Index
+     * @type bool
+     * @public
+     */
+    saveSearchDialog:false,
+
+    /**
+     * The empty saved search object that we utilize for saving searches
+     *
+     * @property savedsearch
+     * @for Index
+     * @type Prometheus.Models.Savedsearch
+     * @public
+     */
+    savedsearch:{},
+
+    /**
+     * The internationalization service
+     *
+     * @property i18n
+     * @type Ember.Services.i18n
+     * @for Index
+     * @public
+     */
+    i18n : Ember.inject.service(),
+
+    /**
+     * The current user service
+     *
+     * @property currentUser
+     * @type Prometheus.Services.currentUser
+     * @for Index
+     * @public
+     */
+    currentUser : Ember.inject.service(),
 
     /**
      * The action handlers for the issue list view
@@ -189,9 +229,9 @@ export default Ember.Controller.extend({
          * @public
          */
         searchByRules:function(){
-            var result = queryBuilder.getRules();
+            let result = queryBuilder.getRules();
             if (!Ember.$.isEmptyObject(result)) {
-                var query = queryParser.getQueryString(result);
+                let query = queryParser.getQueryString(result);
                 this.queryString = query;
                 this.set('query', query);
             }
@@ -294,6 +334,80 @@ export default Ember.Controller.extend({
             Logger.debug("AppProjectIssueController::createIssue");
             this.transitionToRoute('app.project.issue.create');
             Logger.debug("-AppProjectIssueController::createIssue");
+        },
+
+        /**
+         * This function is used to display the dialog that allows user to save
+         * their searches
+         *
+         * @method openSave
+         * @pulic
+         */
+
+        saveSearch:function () {
+            Logger.debug('Prometheus.Controllers.Project.Issue->openSaveSearch');
+            let _self = this;
+            _self.send('searchByRules');
+            let query = _self.get('query');
+            Logger.debug(_self);
+
+            if (query !== null) {
+                let _savedSearch = _self.get('newSavedsearch');
+                _savedSearch.set('dateCreated','CURRENT_DATETIME');
+                _savedSearch.set('createdUser',_self.get('currentUser.user.id'));
+                _savedSearch.set('createdUserName',_self.get('currentUser.user.name'));
+                _savedSearch.set('relatedTo','issue');
+                _savedSearch.set('query',query);
+                _savedSearch.set('public',0);
+
+                // Add membership to the system
+                _savedSearch.save().then(function (data) {
+                    _self.get('savedsearches').pushObject(data);
+
+                    new Messenger().post({
+                        message: _self.get('i18n').t("view.app.issue.detail.savedsearch.added",{name:data.get('name')}),
+                        type: 'success',
+                        showCloseButton: true
+                    });
+
+                });
+            } else  {
+
+                new Messenger().post({
+                    message: _self.get('i18n').t("view.app.issue.detail.savedsearch.missing"),
+                    type: 'error',
+                    showCloseButton: true
+                });
+
+            }
+
+            _self.send('removeSaveSearchDialog');
+
+            Logger.debug('-Prometheus.Controllers.Project.Issue->openSaveSearch');
+        },
+
+        /**
+         * This function is used to display the dialog that allows user to save
+         * their searches
+         *
+         * @method showSaveSearchDialog
+         * @pulic
+         */
+        showSaveSearchDialog:function(){
+            let _self = this;
+            _self.send('searchByRules');
+            _self.set('saveSearchDialog',true);
+        },
+
+        /**
+         * This function is used to hide the dialog that allows user to save
+         * their searches
+         *
+         * @method removeSaveSearchDialog
+         * @pulic
+         */
+        removeSaveSearchDialog:function () {
+            this.set('saveSearchDialog',false);
         }
     }
 

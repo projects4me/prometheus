@@ -98,6 +98,8 @@ export default {
             "close" : "Close",
             "delete" : "Delete",
             "search" : "Search",
+            "savesearch" : "Save This Search",
+            "toggledd" : "Toggle Dropdown",
             "edit" : "Edit",
             "findDuplicate" : "Find Duplicate",
             "signin" : "Sign In",
@@ -379,6 +381,8 @@ export default {
                         },
                         "type." : "Loading ..",
                         "type" : {
+                            "scrum" : "Scrum",
+                            "kanban" : "Kanban",
                             "civil" : "Civil",
                             "software" : "Software",
                             "business" : "Business",

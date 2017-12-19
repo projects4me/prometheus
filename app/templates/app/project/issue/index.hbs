@@ -55,7 +55,7 @@
                     <span data-toggle="tooltip" title="{{t "global.list.searchbox"}}">
                         <button id="toggleFilters" {{action "toggleFilters"}} type="button" class="btn dropdown-toggle" data-toggle="collapse" data-target=".list-view-filters">
                             <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
+                            <span class="sr-only">{{t "global.form.toggledd"}}</span>
                         </button>
                     </span>
                     <div class="has-feedback">
@@ -73,6 +73,27 @@
                 </div>
                 <div class="list-view-filters collapse">
                     {{query-builder module="Issue" query=query}}
+                    <button type="button" class="btn btn-primary pull-right" {{action "showSaveSearchDialog"}}>{{t "global.form.savesearch"}}</button>
+                    {{#if saveSearchDialog}}
+                        {{#bootstrap-modal
+                                title="global.form.savesearch"
+                                confirmLabel="global.form.save"
+                                closeLabel="global.form.cancel"
+                                confirm=(action "saveSearch")
+                                close="removeSaveSearchModal"}}
+
+                            {{query}}
+
+                            {{field-text
+                                    placeholder=(t "view.app.issue.list.savedsearch.inputname")
+                                    label=(t "view.app.issue.list.savedsearch.name")
+                                    value=newSavedsearch.name
+                            }}
+
+
+                        {{/bootstrap-modal}}
+                    {{/if}}
+
                 </div>
 
             </div>
