@@ -46,7 +46,8 @@ module.exports = function(defaults) {
     app.import("bower_components/fullcalendar/dist/locale-all.js");
     app.import("bower_components/chart.js/dist/Chart.min.js");
     app.import("bower_components/color-hash/dist/color-hash.js");
-    app.import("bower_components/summernote/dist/summernote.js");
+//    app.import("bower_components/summernote/dist/summernote.js");
+    app.import("vendor/summernote/summernote.js");
 
     return app.toTree();
 };

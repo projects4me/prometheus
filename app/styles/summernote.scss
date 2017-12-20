@@ -737,4 +737,13 @@ content, .panel-heading.note-toolbar {
     background-color: $darkColor !important;
     color: $lightColor !important;
   }
+
+  th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+
+  .note-editing-area {
+    border-top: 1px solid #ccc;
+  }
 }
