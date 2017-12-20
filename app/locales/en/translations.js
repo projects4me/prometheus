@@ -456,6 +456,26 @@ export default {
                     "visionholder" : "What is the project vision",
                     "scopeplaceholder" : "What is the project scope",
                     "edited" : "<strong>{{name}}</strong> created updated"
+                },
+                "list" : {
+                    "savedsearch": {
+                        "name": "Name of the search",
+                        "public": "Public",
+                        "missing": "Information missing",
+                        "label": "Saved Searches",
+                        "shared": "Shared Searches",
+                        "apply": "Apply the search",
+                        "import": "Import this search",
+                        "copied": "The search <strong>{{name}}</strong> has been copied",
+                        "added": "The search <strong>{{name}}</strong> has been saved",
+                        "updated": "The search <strong>{{name}}</strong> has been updated",
+                        "delete": "You are about to delete the saved search <strong>{{name}}</strong>, once deleted it <strong>cannot be recovered</strong>.",
+                        "confirmdelete": "<strong>Yes, delete the search!</strong>",
+                        "deletecancel": "Phew!! close one.",
+                        "onsecondthought": "Hmm, I will just keep it.",
+                        "deleted": "The search <strong>{{name}}</strong> has been deleted",
+                        "query": "Query : "
+                    }
                 }
             },
 

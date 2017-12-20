@@ -230,3 +230,45 @@
   }
 
 }
+
+
+.issues{
+  .nav-pills{
+    >li>a{
+      margin-right: 2rem;
+    }
+
+    a:hover{
+      color: $primaryColor;
+    }
+
+    .btn-group > .btn-box-tool:hover > .fa {
+      color: $primaryColor;
+    }
+
+    .dropdown-menu > li > a:hover {
+      background-color: $backgroundColor;
+    }
+
+    .dropdown-menu li + li {
+      border-top: 0.1rem solid $borderColor;
+    }
+
+    .search-name{
+      margin-right: 1rem;
+    }
+
+    .btn-group{
+      position: absolute;
+      right:1rem;
+      top:0.3rem;
+    }
+
+    .fa-filter {
+      position: absolute;
+      right:0.5rem;
+      top:1rem;
+    }
+
+  }
+}

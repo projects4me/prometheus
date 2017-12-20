@@ -80,6 +80,36 @@ export default App.extend({
     query: '',
 
     /**
+     * These are the saved searches related to the projects
+     *
+     * @property savedsearches
+     * @type Prometheus.Models.Savedsearch
+     * @for Index
+     * @private
+     */
+    savedsearches: null,
+
+    /**
+     * These are the saved searches related to the projects
+     * that are publicly available but not created by currentUser
+     *
+     * @property publicsearches
+     * @type Prometheus.Models.Savedsearch
+     * @for Index
+     * @private
+     */
+    publicsearches: null,
+
+    /**
+     * The current user
+     *
+     * @property currentUser
+     * @type Prometheus.Models.User
+     * @for Index
+     * @private
+     */
+    currentUser: Ember.inject.service(),
+    /**
      * The model for this route
      *
      * @method model
@@ -124,6 +154,38 @@ export default App.extend({
     },
 
     /**
+     * This function is called by Ember after the model function
+     * has been called, we are using this function to return
+     * Promises so that the route can wait until this data has been
+     * retrieved.
+     *
+     * @method afterModel
+     * @protected
+     */
+    afterModel(){
+        let _self = this;
+
+        let savedSearchesOption = {
+            query: '((Savedsearch.relatedTo : project) AND (Savedsearch.createdUser : '+_self.get('currentUser.user.id')+'))',
+            limit: -1
+        };
+
+        let publicSearchesOption = {
+            query: '((Savedsearch.relatedTo : project) AND (Savedsearch.public : 1) AND (Savedsearch.createdUser !: '+_self.get('currentUser.user.id')+'))',
+            limit: -1
+        };
+
+        return Ember.RSVP.hash({
+            savedsearches: _self.store.query('savedsearch',savedSearchesOption),
+            publicsearches: _self.store.query('savedsearch',publicSearchesOption)
+        }).then(function(results){
+            _self.set('savedsearches',results.savedsearches.toArray());
+            _self.set('publicsearches',results.publicsearches.toArray());
+        });
+
+    },
+
+    /**
      * This function is called by the route when it has created the controller and
      * the controller is ready to be setup with any data that we may need. We are
      * using this function in order to bind the model of the route to the model
@@ -139,6 +201,10 @@ export default App.extend({
      */
     setupController:function(controller,model){
         Logger.debug('Prometheus.App.Routes.Projects::setupController()');
+        let savedSearch = this.store.createRecord('savedsearch');
+        controller.set('newSavedsearch',savedSearch);
+        controller.set('savedsearches',this.get('savedsearches'));
+        controller.set('publicsearches',this.get('publicsearches'));
         controller.set('model',model);
         controller.set('query',this.get('query'));
         controller.set('sort',this.get('sort'));
