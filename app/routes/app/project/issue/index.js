@@ -177,7 +177,16 @@ export default App.extend({
         return data;
     },
 
-    afterModel:function(){
+    /**
+     * This function is called by Ember after the model function
+     * has been called, we are using this function to return
+     * Promises so that the route can wait until this data has been
+     * retrieved.
+     *
+     * @method afterModel
+     * @protected
+     */
+    afterModel(){
         let _self = this;
         let projectId = _self.paramsFor('app.project').projectId;
         if (projectId === undefined && _self.context !== undefined) {
@@ -186,7 +195,7 @@ export default App.extend({
             }
         }
         let savedSearchesOption = {
-            query: '((Savedsearch.relatedTo : issue) AND (Savedsearch.projectId : '+projectId+'))',
+            query: '((Savedsearch.relatedTo : issue) AND (Savedsearch.projectId : '+projectId+') AND (Savedsearch.createdUser : '+_self.get('currentUser.user.id')+'))',
             limit: -1
         };
 
