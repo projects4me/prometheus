@@ -4,9 +4,11 @@
 
 import Ember from 'ember';
 import MD from "../utils/metadata/metadata";
+import Helper from '@ember/component/helper';
 
 /**
  * This is a helper function that is used get the icon for the nav item
+ * in the nav bar
  *
  * @method navIcon
  * @param {Object} array The object that contains the data
@@ -37,4 +39,4 @@ export function navIcon(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(navIcon);
+export default Helper.helper(navIcon);

@@ -2,9 +2,10 @@
 
     <div class="col-md-2">
         <a href="javascript:void(0);" {{action "createIssue"}} class="btn btn-primary btn-block margin-bottom">{{t "view.app.issue.list.create"}}</a>
+
         <div class="box box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title">Saved Searches</h3>
+                <h3 class="box-title">{{t "view.app.issue.list.savedsearch.label"}}</h3>
 
                 <div class="box-tools">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -13,13 +14,22 @@
             </div>
             <div class="box-body no-padding">
                 <ul class="nav nav-pills nav-stacked">
-                    <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox
-                        <span class="label label-primary pull-right">12</span></a></li>
-                    <li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
-                    <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
-                    <li><a href="#"><i class="fa fa-filter"></i> Junk <span class="label label-warning pull-right">65</span></a>
-                    </li>
-                    <li><a href="#"><i class="fa fa-trash-o"></i> Trash</a></li>
+                    {{#each savedsearches as |search|}}
+                        {{#if (eq currentUser.user.id search.createdUser)}}
+                            <li>
+                                <a href="javascript:void(0);" {{action "applySearch" search}}>
+                                    <div class="search-name">{{search.name}}</div>
+                                    <i class="fa fa-filter pull-right" data-toggle="tooltip" title="{{t "view.app.issue.list.savedsearch.apply"}}"></i></a>
+                                <div class="btn-group" data-toggle="tooltip" title="{{t "global.form.more"}}">
+                                    <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                        <i class="fa fa-ellipsis-v"></i></button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="javascript:void(0);" {{action "deleteSearch" search}}><i class="fa fa-trash"></i>{{t "global.form.delete"}}</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        {{/if}}
+                    {{/each}}
                 </ul>
             </div>
             <!-- /.box-body -->
@@ -27,7 +37,7 @@
         <!-- /. box -->
         <div class="box box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title">Tags</h3>
+                <h3 class="box-title">{{t "view.app.issue.list.savedsearch.shared"}}</h3>
 
                 <div class="box-tools">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -36,9 +46,9 @@
             </div>
             <div class="box-body no-padding">
                 <ul class="nav nav-pills nav-stacked">
-                    <li><a href="#"><i class="fa fa-circle-o text-red"></i> Important</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> Promotions</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o text-light-blue"></i> Social</a></li>
+                    {{#each publicsearches as |search|}}
+                        <li><a href="javascript:void(0);" {{action "copySearch" search}}>{{search.name}}<i class="fa fa-copy pull-right" data-toggle="tooltip" title="{{t "view.app.issue.list.savedsearch.import"}}"></i></a></li>
+                    {{/each}}
                 </ul>
             </div>
             <!-- /.box-body -->
@@ -80,9 +90,12 @@
                                 confirmLabel="global.form.save"
                                 closeLabel="global.form.cancel"
                                 confirm=(action "saveSearch")
-                                close="removeSaveSearchModal"}}
+                                close="removeSaveSearchDialog"}}
 
-                            {{query}}
+                            <div class="ember-view">
+                                <label>{{t "view.app.issue.list.savedsearch.query"}}</label>
+                                <span>{{query}}</span>
+                            </div>
 
                             {{field-text
                                     placeholder=(t "view.app.issue.list.savedsearch.inputname")
@@ -90,6 +103,11 @@
                                     value=newSavedsearch.name
                             }}
 
+                            {{field-checkbox
+                                    placeholder=(t "view.app.issue.list.savedsearch.selectpublic")
+                                    label=(t "view.app.issue.list.savedsearch.public")
+                                    value=newSavedsearch.public
+                            }}
 
                         {{/bootstrap-modal}}
                     {{/if}}

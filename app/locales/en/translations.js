@@ -98,6 +98,7 @@ export default {
             "close" : "Close",
             "delete" : "Delete",
             "search" : "Search",
+            "more" : "More",
             "savesearch" : "Save This Search",
             "toggledd" : "Toggle Dropdown",
             "edit" : "Edit",
@@ -542,6 +543,24 @@ export default {
                 "created" : "Issue <strong>{{issueNumber}} : {{name}}</strong> has been created successfully",
                 "list" : {
                     "create" : "Create New",
+                    "savedsearch" : {
+                        "name" : "Name of the search",
+                        "public" : "Public",
+                        "missing" : "Information missing",
+                        "label" : "Saved Searches",
+                        "shared" : "Shared Searches",
+                        "apply" : "Apply the search",
+                        "import" : "Import this search",
+                        "copied" : "The search <strong>{{name}}</strong> has been copied",
+                        "added" : "The search <strong>{{name}}</strong> has been saved",
+                        "updated" : "The search <strong>{{name}}</strong> has been updated",
+                        "delete" : "You are about to delete the saved search <strong>{{name}}</strong>, once deleted it <strong>cannot be recovered</strong>.",
+                        "confirmdelete" : "<strong>Yes, delete the search!</strong>",
+                        "deletecancel" : "Phew!! close one.",
+                        "onsecondthought" : "Hmm, I will just keep it.",
+                        "deleted" : "The search <strong>{{name}}</strong> has been deleted",
+                        "query" : "Query : "
+                    }
                 },
                 "detail" : {
                     "issueNumber" : "Issue Number",

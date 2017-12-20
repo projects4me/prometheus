@@ -2,11 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 import Ember from "ember";
 import _ from "lodash";
-import queryBuilder from "../../../../utils/query/builder";
-import queryParser from "../../../../utils/query/parser";
+import queryBuilder from "prometheus/utils/query/builder";
+import queryParser from "prometheus/utils/query/parser";
 
 /**
  * This controller is used to provide the interaction between the template and
@@ -82,8 +81,8 @@ export default Ember.Controller.extend({
      * The count of the selected items in the list view.
      *
      * @property selectedCount
-     * @for Issue
      * @type Integer
+     * @for Issue
      * @private
      */
     selectedCount: 0,
@@ -94,10 +93,10 @@ export default Ember.Controller.extend({
      *
      * @property saveSearchDialog
      * @for Index
-     * @type bool
+     * @type boolean
      * @public
      */
-    saveSearchDialog:false,
+    saveSearchDialog: false,
 
     /**
      * The empty saved search object that we utilize for saving searches
@@ -107,7 +106,7 @@ export default Ember.Controller.extend({
      * @type Prometheus.Models.Savedsearch
      * @public
      */
-    savedsearch:{},
+    savedsearch:null,
 
     /**
      * The internationalization service
@@ -130,6 +129,28 @@ export default Ember.Controller.extend({
     currentUser : Ember.inject.service(),
 
     /**
+     * The project controller
+     *
+     * @property appProjectController
+     * @type Prometheus.Controllers.App.Project
+     * @for Index
+     * @public
+     */
+    appProjectController : Ember.inject.controller('app.project'),
+
+    /**
+     * The project controller
+     *
+     * @property appProjectController
+     * @type Prometheus.Controllers.App.Project
+     * @for Index
+     * @public
+     */
+    projectId : Ember.computed(function () {
+        return this.get('appProjectController.projectId');
+    }).property('appProjectController.projectId'),
+
+    /**
      * The action handlers for the issue list view
      *
      * @property action
@@ -146,7 +167,7 @@ export default Ember.Controller.extend({
          * @param {Integer} page The page that the user wishes to see
          * @public
          */
-        paginate:function(page){
+        paginate(page){
             Logger.debug('AppProjectIssueController::paginate('+page+')');
             this.set('page',page);
             Logger.debug('-AppProjectIssueController::paginate()');
@@ -158,7 +179,7 @@ export default Ember.Controller.extend({
          * @method filter
          * @public
          */
-        filter:function(){
+        filter(){
             Logger.debug('AppProjectIssueController::filter()');
             Logger.debug('-AppProjectIssueController::filter()');
         },
@@ -170,7 +191,7 @@ export default Ember.Controller.extend({
          * @param field {String} The field that the user wishes to sort the data on
          * @public
          */
-        sortData:function(field){
+        sortData(field){
             Logger.debug('AppProjectIssueController::sortData('+field+')');
 
             // If the current field is being sorted then toggle it
@@ -194,14 +215,14 @@ export default Ember.Controller.extend({
 
 
         /**
-         * This action is used to reload the page, whether it be with changes in the
-         * paramters or without any change
+         * This action is used to reload the page, whether it be with changes
+         * in the parameters or without any change
          *
          * @method reloadPage
          * @public
          * @todo Hack Alert!!
          */
-        reloadPage:function(){
+        reloadPage(){
             Logger.debug('AppProjectIssueController::reloadPage()');
             // Hack Alert!!!
             this.set('query',this.get('query')+' ');
@@ -217,7 +238,7 @@ export default Ember.Controller.extend({
          * @public
          * @todo allow auto complete
          */
-        populateQuery:function(query){
+        populateQuery(query){
             this.queryString = query;
         },
 
@@ -228,7 +249,7 @@ export default Ember.Controller.extend({
          * @return void
          * @public
          */
-        searchByRules:function(){
+        searchByRules(){
             let result = queryBuilder.getRules();
             if (!Ember.$.isEmptyObject(result)) {
                 let query = queryParser.getQueryString(result);
@@ -243,7 +264,7 @@ export default Ember.Controller.extend({
          * @method openFilters
          * @public
          */
-        openFilters:function(){
+        openFilters(){
             Ember.$('.search [data-toggle=collapse]').click();
             Ember.$('.search input').blur();
         },
@@ -254,7 +275,7 @@ export default Ember.Controller.extend({
          * @method toggleFilters
          * @private
          */
-        toggleFilters:function(){
+        toggleFilters(){
             Ember.$('#toggleFilters').toggleClass('dropToggle');
         },
 
@@ -268,7 +289,7 @@ export default Ember.Controller.extend({
          * @todo allow the retention of the checkboxes across the multiple pages
          * @public
          */
-        selectAll:function(value){
+        selectAll(value){
             // Select all the checkboxes in the list view
             _.each(Ember.$('.list-view input[type=checkbox]').not('[data-select=all]'),function(element) {
                 element.checked = value;
@@ -283,7 +304,7 @@ export default Ember.Controller.extend({
         },
 
         /**
-         * This function is triggerd when an item in the list is selected
+         * This function is triggered when an item in the list is selected
          *
          * @method select
          * @param value {Boolean} whether the checkbox was selected of not
@@ -292,13 +313,13 @@ export default Ember.Controller.extend({
          * @todo convert to a component
          *@public
          */
-        select:function(value){
-            // Select/Deslect one checkboxes in the list view
+        select(value){
+            // Select/Deselect one checkboxes in the list view
             this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
 
             // uncheck the select all checkbox, if an item was deselected and the select all checkbox was checked
             if (!value) {
-                var selectAll = Ember.$('[data-select=all]').prop('checked');
+                let selectAll = Ember.$('[data-select=all]').prop('checked');
                 if (selectAll){
                     Ember.$('[data-select=all]').prop('checked',false);
                 }
@@ -315,10 +336,10 @@ export default Ember.Controller.extend({
          * This function is used to navigate the user to the detail page for the issues
          *
          * @method openDetail
-         * @param {IssueModel} issue the issue model to which we have to navigate to
+         * @param {Prometheus.Models.Issue} issue the issue model to which we have to navigate to
          * @public
          */
-        openDetail:function(issue){
+        openDetail(issue){
             Logger.debug("AppProjectIssueController::openDetail");
             this.transitionToRoute('app.project.issue.page',{issueNumber:issue.get('issueNumber')});
             Logger.debug("-AppProjectIssueController::openDetail");
@@ -330,21 +351,19 @@ export default Ember.Controller.extend({
          * @method createIssue
          * @public
          */
-        createIssue:function(){
+        createIssue(){
             Logger.debug("AppProjectIssueController::createIssue");
             this.transitionToRoute('app.project.issue.create');
             Logger.debug("-AppProjectIssueController::createIssue");
         },
 
         /**
-         * This function is used to display the dialog that allows user to save
-         * their searches
+         * This function is used to save a search
          *
-         * @method openSave
-         * @pulic
+         * @method saveSearch
+         * @public
          */
-
-        saveSearch:function () {
+        saveSearch () {
             Logger.debug('Prometheus.Controllers.Project.Issue->openSaveSearch');
             let _self = this;
             _self.send('searchByRules');
@@ -357,15 +376,15 @@ export default Ember.Controller.extend({
                 _savedSearch.set('createdUser',_self.get('currentUser.user.id'));
                 _savedSearch.set('createdUserName',_self.get('currentUser.user.name'));
                 _savedSearch.set('relatedTo','issue');
-                _savedSearch.set('query',query);
-                _savedSearch.set('public',0);
+                _savedSearch.set('searchquery',query);
+                _savedSearch.set('projectId',_self.get('projectId'));
 
-                // Add membership to the system
                 _savedSearch.save().then(function (data) {
                     _self.get('savedsearches').pushObject(data);
+                    _self.set('newSavedsearch',{});
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.issue.detail.savedsearch.added",{name:data.get('name')}),
+                        message: _self.get('i18n').t("view.app.issue.list.savedsearch.added",{name:data.get('name')}),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -374,7 +393,7 @@ export default Ember.Controller.extend({
             } else  {
 
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.issue.detail.savedsearch.missing"),
+                    message: _self.get('i18n').t("view.app.issue.list.savedsearch.missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -387,13 +406,115 @@ export default Ember.Controller.extend({
         },
 
         /**
+         * This function is used to copy a public saved search
+         *
+         * @method copySearch
+         * @public
+         */
+        copySearch (search) {
+            Logger.debug('Prometheus.Controllers.Project.Issue->copySearch');
+            let _self = this;
+            Logger.debug(search);
+
+            let _savedSearch = _self.get('newSavedsearch');
+            _savedSearch.set('dateCreated','CURRENT_DATETIME');
+            _savedSearch.set('createdUser',_self.get('currentUser.user.id'));
+            _savedSearch.set('createdUserName',_self.get('currentUser.user.name'));
+            _savedSearch.set('relatedTo','issue');
+            _savedSearch.set('searchquery',search.get('searchquery'));
+            _savedSearch.set('projectId',_self.get('projectId'));
+            _savedSearch.set('name',search.get('name'));
+            _savedSearch.set('public',0);
+
+            _savedSearch.save().then(function (data) {
+                _self.get('savedsearches').pushObject(data);
+                let newSavedSearch = _self.get('store').createRecord('savedsearch');
+                _self.set('newSavedsearch',newSavedSearch);
+
+                new Messenger().post({
+                    message: _self.get('i18n').t("view.app.issue.list.savedsearch.copied",{name:data.get('name')}),
+                    type: 'success',
+                    showCloseButton: true
+                });
+
+            });
+
+            Logger.debug('-Prometheus.Controllers.Project.Issue->copySearch');
+        },
+
+        /**
+         * This function is used to delete a saved search
+         *
+         * @method deleteSearch
+         * @public
+         */
+        deleteSearch(search) {
+            Logger.debug('Prometheus.Controllers.Project.Issue->deleteSearch');
+            let _self = this;
+            let toBeDeleted = _self.get('savedsearches').findBy('id',search.get('id'));
+
+            let deleting = new Messenger().post({
+                message: _self.get('i18n').t("view.app.issue.list.savedsearch.delete",{name:search.get('name')}).toString(),
+                type: 'warning',
+                showCloseButton: true,
+                actions: {
+                    confirm: {
+                        label: _self.get('i18n').t("view.app.issue.list.savedsearch.confirmdelete").toString(),
+                        action: function() {
+
+                            // destroy the saved search
+                            toBeDeleted.destroyRecord().then(function(){
+                                // remove from the view by updating the model
+                                _self.get('savedsearches').removeObject(toBeDeleted);
+
+                                return deleting.update({
+                                    message: _self.get('i18n').t("view.app.issue.list.savedsearch.deleted",{name:search.get('name')}),
+                                    type: 'success',
+                                    actions: false
+                                });
+                            });
+                        }
+                    },
+                    cancel: {
+                        label: _self.get('i18n').t("view.app.issue.list.savedsearch.onsecondthought").toString(),
+                        action: function() {
+                            return deleting.update({
+                                message: _self.get('i18n').t("view.app.issue.list.savedsearch.deletecancel"),
+                                type: 'success',
+                                actions: false
+                            });
+                        }
+                    },
+
+                }
+            });
+
+            Logger.debug('-Prometheus.Controllers.Project.Issue->deleteSearch');
+        },
+
+        /**
+         * This function is used to apply the saved searches
+         *
+         * @method applySearch
+         * @param {Prometheus.Models.Savedsearch} search
+         * @public
+         */
+        applySearch(search) {
+            Logger.debug('Prometheus.Controllers.Project.Issue.Index::applySearch');
+            Logger.debug(search);
+
+            this.set('query',search.get('searchquery'));
+            Logger.debug('-Prometheus.Controllers.Project.Issue.Index::applySearch');
+        },
+
+        /**
          * This function is used to display the dialog that allows user to save
          * their searches
          *
          * @method showSaveSearchDialog
-         * @pulic
+         * @public
          */
-        showSaveSearchDialog:function(){
+        showSaveSearchDialog() {
             let _self = this;
             _self.send('searchByRules');
             _self.set('saveSearchDialog',true);
@@ -404,9 +525,9 @@ export default Ember.Controller.extend({
          * their searches
          *
          * @method removeSaveSearchDialog
-         * @pulic
+         * @public
          */
-        removeSaveSearchDialog:function () {
+        removeSaveSearchDialog() {
             this.set('saveSearchDialog',false);
         }
     }

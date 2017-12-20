@@ -2,10 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import DS from "ember-data";
 import ENV from "prometheus/config/environment";
 import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
+import { singularize } from 'ember-inflector';
 
 /**
  * This is the application adapter that fetches the information from the API.
@@ -70,7 +70,7 @@ export default DS.JSONAPIAdapter.extend(DataAdapterMixin,{
      * @private
      */
     pathForType: function(modelName) {
-        return Ember.String.singularize(modelName);
+        return singularize(modelName);
     },
 
     /**

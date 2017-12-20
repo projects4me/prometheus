@@ -62,7 +62,7 @@ export default DS.Model.extend({
      * @for Savedsearch
      * @private
      */
-    public: DS.attr('string'),
+    public: DS.attr('bool'),
 
     /**
      * The query string for the search
@@ -72,7 +72,7 @@ export default DS.Model.extend({
      * @for Savedsearch
      * @private
      */
-    query: DS.attr('string'),
+    searchquery: DS.attr('string'),
 
     /**
      * The module for which this saved search was created
@@ -82,6 +82,16 @@ export default DS.Model.extend({
      * @for Savedsearch
      * @private
      */
-    relatedTo: DS.attr('string')
+    relatedTo: DS.attr('string'),
+
+    /**
+     * The project for which this search was created
+     *
+     * @property projectId
+     * @type String
+     * @for Savedsearch
+     * @private
+     */
+    projectId: DS.attr('string')
 
 });

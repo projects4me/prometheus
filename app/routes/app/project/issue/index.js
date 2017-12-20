@@ -2,6 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import Ember from "ember";
 import App from "../../../app";
 
 /**
@@ -101,6 +102,27 @@ export default App.extend({
     savedsearches: null,
 
     /**
+     * These are the saved searches related to the issues
+     * that are publicly available but not created by currentUser
+     *
+     * @property publicsearches
+     * @type Prometheus.Models.Savedsearch
+     * @for Index
+     * @private
+     */
+    publicsearches: null,
+
+    /**
+     * The current user
+     *
+     * @property currentUser
+     * @type Prometheus.Models.User
+     * @for Index
+     * @private
+     */
+    currentUser: Ember.inject.service(),
+
+    /**
      * The model for this route
      *
      * @method model
@@ -157,16 +179,28 @@ export default App.extend({
 
     afterModel:function(){
         let _self = this;
-
+        let projectId = _self.paramsFor('app.project').projectId;
+        if (projectId === undefined && _self.context !== undefined) {
+            if (_self.context.projectId !== undefined) {
+                projectId = _self.context.projectId;
+            }
+        }
         let savedSearchesOption = {
-            query: '(Savedsearch.relatedTo : issue)',
+            query: '((Savedsearch.relatedTo : issue) AND (Savedsearch.projectId : '+projectId+'))',
+            limit: -1
+        };
+
+        let publicSearchesOption = {
+            query: '((Savedsearch.relatedTo : issue) AND (Savedsearch.projectId : '+projectId+') AND (Savedsearch.public : 1) AND (Savedsearch.createdUser !: '+_self.get('currentUser.user.id')+'))',
             limit: -1
         };
 
         return Ember.RSVP.hash({
-            savedsearches: _self.store.query('savedsearch',savedSearchesOption)
+            savedsearches: _self.store.query('savedsearch',savedSearchesOption),
+            publicsearches: _self.store.query('savedsearch',publicSearchesOption)
         }).then(function(results){
-            _self.set('savedsearches',results.savedsearches);
+            _self.set('savedsearches',results.savedsearches.toArray());
+            _self.set('publicsearches',results.publicsearches.toArray());
         });
 
     },
@@ -189,6 +223,7 @@ export default App.extend({
         let savedSearch = this.store.createRecord('savedsearch');
         controller.set('newSavedsearch',savedSearch);
         controller.set('savedsearches',this.get('savedsearches'));
+        controller.set('publicsearches',this.get('publicsearches'));
         controller.set('model',model);
         controller.set('query',this.get('query'));
         controller.set('sort',this.get('sort'));

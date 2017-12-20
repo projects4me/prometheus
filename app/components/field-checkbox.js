@@ -3,7 +3,7 @@
  */
 
 //import Ember from "ember";
-import FormField from "../components/form-fields";
+import FormField from "prometheus/components/form-fields";
 
 /**
  * This is the checkbox field component.
@@ -32,8 +32,8 @@ export default FormField.extend({
      * @method setEmpty
      * @protected
      */
-    setEmpty:function(){
-        var isEmpty = false;
+    setEmpty(){
+        let isEmpty = false;
         const value = this.get('value');
 
         if (this.get('oldValue') === null) {
