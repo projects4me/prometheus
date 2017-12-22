@@ -33,6 +33,7 @@
 @import 'twemoji-awesome.scss';
 @import 'bower_components/jQuery-QueryBuilder/dist/scss/default.scss';
 @import 'bower_components/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss';
+@import 'vendor/DataTables/datatables.min.scss';
 
 /*
   Include the application variables
@@ -59,6 +60,7 @@
 @import "modules/issue.scss";
 @import "modules/form-fields.scss";
 @import "modules/uploads.scss";
+@import "modules/widgets.scss";
 
 @import 'summernote.scss';
 @import '../../custom/styles/custom.scss';

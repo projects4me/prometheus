@@ -54,6 +54,11 @@ export default App.extend({
         let widgetSettings = _self._getWidgetSettings();
         let widgets = _.split(_self.get('currentUser.user.dashboard.widgets'),',');
         _self.set('availableWidgets', _.keys(widgetSettings));
+
+        _.forEach(widgets,function(widget,idx){
+            widgets[idx] = _.trim(widget);
+        });
+
         _self.set('widgets', widgets);
 
         let Promises = {};
@@ -109,8 +114,17 @@ export default App.extend({
         _.forEach(widgetSettings,function(widgetSetting,idx){
             let query = widgetSettings[idx].options.query;
             query = _.replace(query,'```ME```',_self.get('currentUser.user.id'));
-            query = _.replace(query,'```TODAY_START```',moment.utc().format('YYYY-MM-DD 00:00:00'));
-            query = _.replace(query,'```TODAY_END```',moment.utc().format('YYYY-MM-DD 23:59:59'));
+            query = _.replace(query,'```TODAY_START```',moment.utc().startOf('day').format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```TODAY_END```',moment.utc().endOf('day').format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```WEEK_START```',moment.utc().startOf('week').format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```WEEK_END```',moment.utc().endOf('week').format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```YEAR_START```',moment.utc().startOf('year').format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```YEAR_END```',moment.utc().endOf('year').format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```YESTERDAY_START```',moment.utc().add(-1,'days').startOf('day').format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```YESTERDAY_END```',moment.utc().add(-1,'days').endOf('day').format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```TOMORROW_START```',moment.utc().add(1,'days').startOf('day').format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```TOMORROW_END```',moment.utc().add(1,'days').endOf('day').format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```NOW```',moment.utc().format('YYYY-MM-DD HH:mm:ss'));
             widgetSettings[idx].options.query = query;
             Logger.debug(query);
         });

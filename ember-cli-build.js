@@ -47,6 +47,7 @@ module.exports = function(defaults) {
     app.import("bower_components/color-hash/dist/color-hash.js");
 //    app.import("bower_components/summernote/dist/summernote.js");
     app.import("vendor/summernote/summernote.js");
+    app.import("vendor/DataTables/datatables.min.js");
 
     app.import("vendor/AdminLTE/dist/js/app.js");
     return app.toTree();
