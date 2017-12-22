@@ -74,14 +74,15 @@ export default Ember.Object.extend({
                     icon: 'dashboard',
                     route: 'app',
                     anchorRoute: '',
-                    routeParams: null
+                    routeParams: null,
+                    projectRelated: false
                 },
                 Project: {
                     label: 'view.nav.menu.project.label',
                     icon: 'briefcase',
                     route: 'app.projectlist',
                     anchorRoute: 'project',
-                    //routeParams: {module: 'project'},
+                    projectRelated: false,
                     actions: {
                         section1: {
                             list: {
@@ -89,14 +90,14 @@ export default Ember.Object.extend({
                                 route: 'app.projects',
                                 className: 'text-teal',
                                 anchorRoute: 'project',
-                                //routeParams: {module: 'project'}
+                                projectRelated: false,
                             },
                             create: {
                                 label: 'view.nav.menu.project.create',
                                 route: 'app.projects.create',
                                 className: 'text-red',
                                 anchorRoute: 'project/create',
-                                routeParams: {module: 'project'}
+                                projectRelated: false,
                             }
                         },
                         section2:{
@@ -104,13 +105,13 @@ export default Ember.Object.extend({
                                 label: 'view.nav.menu.project.import',
                                 route: 'app.import',
                                 anchorRoute: 'project/import',
-                                routeParams: {module: 'project'}
+                                projectRelated: false,
                             },
                             export:{
                                 label: 'view.nav.menu.project.export',
                                 route: 'app.export',
                                 anchorRoute: 'project/export',
-                                routeParams: {module: 'project'}
+                                projectRelated: false,
                             }
                         }
                     }
@@ -121,6 +122,7 @@ export default Ember.Object.extend({
                     route: 'app.project.issue',
                     anchorRoute: 'issue',
                     routeParams: {module: 'issue'},
+                    projectRelated: true,
                     actions:{
                         section1:{
                             list:{
@@ -128,6 +130,7 @@ export default Ember.Object.extend({
                                 route: 'app.project.issue',
                                 className: 'text-teal',
                                 anchorRoute: 'issue',
+                                projectRelated: true,
                                 routeParams: {module: 'issue'}
                             },
                             create:{
@@ -135,6 +138,7 @@ export default Ember.Object.extend({
                                 route: 'app.project.issue.create',
                                 className: 'text-red',
                                 anchorRoute: 'issue/create',
+                                projectRelated: true,
                                 routeParams: {module: 'issue'}
                             }
                         },
@@ -143,12 +147,14 @@ export default Ember.Object.extend({
                                 label: 'view.nav.menu.issue.import',
                                 route: 'app.import',
                                 anchorRoute: 'issue/import',
+                                projectRelated: true,
                                 routeParams: {module: 'issue'}
                             },
                             export:{
                                 label: 'view.nav.menu.issue.export',
                                 route: 'app.export',
                                 anchorRoute: 'issue/export',
+                                projectRelated: true,
                                 routeParams: {module: 'issue'}
                             }
                         }
@@ -159,6 +165,7 @@ export default Ember.Object.extend({
                     icon: 'comments',
                     route: 'app.project.conversation',
                     anchorRoute: 'conversation',
+                    projectRelated: true,
                     routeParams: null
                 },
                 Workflow:{
@@ -167,6 +174,7 @@ export default Ember.Object.extend({
                     route: 'app.module',
                     anchorRoute: 'workflow',
                     routeParams: {module: 'workflow'},
+                    projectRelated: false,
                     actions:{
                         section1:{
                             list:{
@@ -174,6 +182,7 @@ export default Ember.Object.extend({
                                 route: 'app.module',
                                 className: 'text-teal',
                                 anchorRoute: 'workflow',
+                                projectRelated: false,
                                 routeParams: {module: 'workflow'}
                             },
                             create:{
@@ -181,6 +190,7 @@ export default Ember.Object.extend({
                                 route: 'app.create',
                                 className: 'text-red',
                                 anchorRoute: 'workflow/create',
+                                projectRelated: false,
                                 routeParams: {module: 'workflow'}
                             }
                         },
@@ -189,12 +199,14 @@ export default Ember.Object.extend({
                                 label: 'view.nav.menu.workflow.import',
                                 route: 'app.import',
                                 anchorRoute: 'workflow/import',
+                                projectRelated: false,
                                 routeParams: {module: 'workflow'}
                             },
                             export:{
                                 label: 'view.nav.menu.workflow.export',
                                 route: 'app.export',
                                 anchorRoute: 'workflow/export',
+                                projectRelated: false,
                                 routeParams: {module: 'workflow'}
                             }
                         }
@@ -206,6 +218,7 @@ export default Ember.Object.extend({
                     route: 'app.module',
                     anchorRoute: 'report',
                     routeParams: {module: 'report'},
+                    projectRelated: false,
                     actions:{
                         section1:{
                             list:{
@@ -213,6 +226,7 @@ export default Ember.Object.extend({
                                 route: 'app.module',
                                 className: 'text-teal',
                                 anchorRoute: 'report',
+                                projectRelated: false,
                                 routeParams: {module: 'report'}
                             },
                             create:{
@@ -220,6 +234,7 @@ export default Ember.Object.extend({
                                 route: 'app.create',
                                 className: 'text-red',
                                 anchorRoute: 'report/create',
+                                projectRelated: false,
                                 routeParams: {module: 'report'}
                             }
                         },
@@ -228,6 +243,7 @@ export default Ember.Object.extend({
                                 label: 'view.nav.menu.report.export',
                                 route: 'app.export',
                                 anchorRoute: 'report/export',
+                                projectRelated: false,
                                 routeParams: {module: 'report'}
                             }
                         }
@@ -239,6 +255,7 @@ export default Ember.Object.extend({
                     route: 'app.module',
                     anchorRoute: 'timelog',
                     routeParams: {module: 'timelog'},
+                    projectRelated: false,
                     actions:{
                         section1:{
                             list:{
@@ -246,6 +263,7 @@ export default Ember.Object.extend({
                                 route: 'app.module',
                                 className:"text-teal",
                                 anchorRoute: 'timelog',
+                                projectRelated: false,
                                 routeParams: {module: 'timelog'}
                             },
                             create:{
@@ -253,6 +271,7 @@ export default Ember.Object.extend({
                                 route: 'app.create',
                                 className: "text-red",
                                 anchorRoute: 'timelog/create',
+                                projectRelated: false,
                                 routeParams: {module: 'timelog'}
                             }
                         },
@@ -261,12 +280,14 @@ export default Ember.Object.extend({
                                 label: 'view.nav.menu.timelog.import',
                                 route: 'app.import',
                                 anchorRoute: 'timelog/import',
+                                projectRelated: false,
                                 routeParams: {module: 'timelog'}
                             },
                             export:{
                                 label: 'view.nav.menu.timelog.export',
                                 route: 'app.export',
                                 anchorRoute: 'timelog/export',
+                                projectRelated: false,
                                 routeParams: {module: 'timelog'}
                             }
                         }
@@ -277,6 +298,7 @@ export default Ember.Object.extend({
                     icon: 'calendar',
                     route: 'app.project.calendar',
                     anchorRoute: 'calendar',
+                    projectRelated: true,
                     routeParams: null
                 },
                 Wiki:{
@@ -284,6 +306,7 @@ export default Ember.Object.extend({
                     icon: 'book',
                     route: 'app.project.wiki',
                     anchorRoute: 'wiki',
+                    projectRelated: true,
                     routeParams: null
                 }
             }
