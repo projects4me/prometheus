@@ -32,6 +32,26 @@ export default Ember.Component.extend({
     },
 
     /**
+     * Initialize the sidebar
+     *
+     * @method didInsertElement
+     * @public
+     */
+    didInsertElement(){
+        let o = $.AdminLTE.options;
+        Ember.$.AdminLTE.tree('.sidebar');
+        //Add slimscroll to navbar dropdown
+        Ember.$(".navbar .menu").slimscroll({
+            height: o.navbarMenuHeight,
+            alwaysVisible: false,
+            size: o.navbarMenuSlimscrollWidth
+        }).css("width", "100%");
+
+        //Activate sidebar push menu
+        $.AdminLTE.pushMenu.activate(o.sidebarToggleSelector);
+    },
+
+    /**
      * The actions for the navigation bar, primarily used fo route transition
      *
      * @property actions

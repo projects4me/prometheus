@@ -7,7 +7,7 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
-    var app = new EmberApp(defaults, {
+    let app = new EmberApp(defaults, {
         // Add options here
     });
 
@@ -42,12 +42,12 @@ module.exports = function(defaults) {
     app.import("bower_components/At.js/dist/js/jquery.atwho.min.js");
     app.import("vendor/quill/dist/quill.min.js");
     app.import("vendor/messenger/build/js/messenger.min.js");
-    app.import("vendor/AdminLTE/dist/js/app.js");
     app.import("bower_components/fullcalendar/dist/locale-all.js");
     app.import("bower_components/chart.js/dist/Chart.min.js");
     app.import("bower_components/color-hash/dist/color-hash.js");
 //    app.import("bower_components/summernote/dist/summernote.js");
     app.import("vendor/summernote/summernote.js");
 
+    app.import("vendor/AdminLTE/dist/js/app.js");
     return app.toTree();
 };

@@ -55,4 +55,15 @@ export default Ember.Component.extend({
     init:function(){
         this._super(...arguments);
     },
+
+    didInsertElement(){
+        let o = Ember.$.AdminLTE.options;
+
+        //Activate direct chat widget
+        Ember.$(document).on('click', o.directChat.contactToggleSelector, function () {
+            let box = Ember.$(this).parents('.direct-chat').first();
+            box.toggleClass('direct-chat-contacts-open');
+        });
+    }
+
 });
