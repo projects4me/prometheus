@@ -72,9 +72,7 @@ export default Ember.Component.extend({
          * @public
          */
         navigate:function(route,routeParams,anchorRoute,projectId){
-            Logger.debug('A transition requested to route '+route+' with params');
-            Logger.debug(routeParams);
-
+            Logger.debug('A transition requested to route '+route);
             if (projectId !== undefined)
             {
                 if (routeParams === null)
@@ -85,14 +83,9 @@ export default Ember.Component.extend({
             }
             this.set('pathname','/'+this.appPrefix+'/'+anchorRoute);
             if (routeParams !== undefined && routeParams !== null && routeParams !== ''){
-                Logger.debug('routing with params');
-                Logger.debug(route);
-                Logger.debug(routeParams);
                 this.get('router').transitionTo(route,routeParams);
             }
             else {
-                Logger.debug('routing without params');
-                Logger.debug(route);
                 this.get('router').transitionTo(route);
             }
         },

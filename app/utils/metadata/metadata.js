@@ -526,6 +526,44 @@ export default Ember.Object.extend({
                 ]
             }
         },
+        Dashboard:{
+            widgets: {
+                issuesToday: {
+                    /**
+                     * @example
+                     *      ``` javascript
+                     *      options: {
+                     *          fields: "Project.id,Project.name",
+                     *          query: "(Project.id : "+projectId+")",
+                     *          rels : 'members',
+                     *          sort: "conversations.dateModified",
+                     *          order: 'ASC',
+                     *          limit: -1
+                     *      }
+                     *      ```
+                     */
+                    model: 'issue',
+                    options: {
+                        query: "((Issue.dateModified BETWEEN ```TODAY_START``` AND ```TODAY_END```) AND (Issue.assignee : ```ME```))",
+                        rels : 'createdBy,modifiedBy',
+                        sort: "Issue.dateModified",
+                        order: 'ASC',
+                        limit: -1
+                    }
+                },
+                weeklyMilestones: {
+                    model: 'milestone',
+                    options: {
+                        query: "((Milestone.projectId CONTAINS ```MY_PROJECTS```) AND (Milestone.endDate BETWEEN ```WEEK_START``` AND ```WEEK_END```))",
+                        rels : 'issues',
+                        sort: "issues.dateModified",
+                        order: 'ASC',
+                        limit: -1
+                    }
+                }
+
+            }
+        }
     },
 
     /**
@@ -558,11 +596,11 @@ export default Ember.Object.extend({
     getViewMeta:function(module,view,i18n){
         if (this.views[module] !== undefined && this.views[module][view] !== undefined)
         {
-            var meta = this.views[module][view];
+            let meta = this.views[module][view];
             if (view === 'filters')
             {
                 _.forEach(meta.enabledFilters,function(value){
-                    var label = i18n.t(value.label);
+                    let label = i18n.t(value.label);
                     if (label.string !== undefined){
                         value.label = label.string;
                     }

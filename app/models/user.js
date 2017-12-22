@@ -132,6 +132,15 @@ export default DS.Model.extend({
      * @for User
      * @private
      */
-    phone: DS.attr('string')
+    phone: DS.attr('string'),
 
+    /**
+     * The users's dashboard
+     *
+     * @property dashboard
+     * @type Prometheus.Models.Dashboard
+     * @for User
+     * @private
+     */
+    dashboard: DS.belongsTo('dashboard')
 });

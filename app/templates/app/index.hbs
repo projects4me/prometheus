@@ -5,5 +5,7 @@
 </section>
 
 <section class="content">
-
+    {{#each widgets as |value key|}}
+        {{component (concat 'widgets/' (dasherize value)) data=(get-prop this value)}}
+    {{/each}}
 </section>
