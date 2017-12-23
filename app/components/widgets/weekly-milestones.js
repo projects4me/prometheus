@@ -3,6 +3,7 @@
  */
 
 import Ember from "ember";
+import Widget from "./widgets";
 
 /**
  * This class adds the functionality of dropdown action menu in the system
@@ -14,6 +15,6 @@ import Ember from "ember";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Widget.extend({
 
 });

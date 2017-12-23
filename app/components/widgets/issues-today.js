@@ -3,7 +3,7 @@
  */
 
 import Ember from "ember";
-import issue from "../../models/issue";
+import Widget from "./widgets";
 
 /**
  * This class adds the functionality of dropdown action menu in the system
@@ -15,7 +15,7 @@ import issue from "../../models/issue";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Widget.extend({
 
     /**
      * The i18n Service
@@ -45,6 +45,8 @@ export default Ember.Component.extend({
      * @protected
      */
     didInsertElement(){
+        Logger.debug(this._super());
+
         let _self = this;
         let data = _self.get('data');
         let dataSet = [];
@@ -58,6 +60,7 @@ export default Ember.Component.extend({
                 moment(issue.get('startDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 moment(issue.get('endDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 issue.get('project.name'),
+                issue.get('projectId')
             ])
         });
 
@@ -70,16 +73,27 @@ export default Ember.Component.extend({
                 { title: "Status" },
                 { title: "Start date" },
                 { title: "End data" },
-                { title: "Project" }
+                { title: "Project" },
+                { title: "projectId" }
+            ],
+            columnDefs: [
+                {
+                    targets: [ 6 ],
+                    visible: false,
+                    searchable: false
+                }
             ]
         });
 
         table.on( 'select', function ( e, dt, type, indexes ) {
             if ( type === 'row' ) {
                 let issueNumber = table.rows( indexes ).data().pluck(0)[0];
+                let projectId = table.rows( indexes ).data().pluck(6)[0];
+
                 issueNumber = _.replace(issueNumber,'<a href="javascript:void(0);">','');
                 issueNumber = _.replace(issueNumber,'</a>','');
-                _self.get('router').transitionTo('app.project.issue.page', {projectId:'645',issueNumber:issueNumber});
+                _self.get('router').transitionTo('app.project', {projectId:projectId});
+                _self.get('router').transitionTo('app.project.issue.page', {projectId:projectId,issueNumber:issueNumber});
             }
         } );
     }

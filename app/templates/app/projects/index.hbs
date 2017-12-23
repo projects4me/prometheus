@@ -184,7 +184,7 @@
                             {{#each model as |project|}}
                                 <tr>
                                     <td>{{checkbox-field action="select" type="checkbox" data-select=project.id}}</td>
-                                    <td class="project-name"><a href="#" {{action "detail" project.id}}>{{project.name}}</a></td>
+                                    <td class="project-name"><a href="#" {{action "openDetail" project}}>{{project.name}}</a></td>
                                     <td class="project-type">{{t (concat "view.app.project.detail.lists.type." project.type)}}</td>
                                     <td class="project-owner"><a href="#">{{project.owner.name}}</a></td>
                                     <td class="project-description">{{project.description}}</td>

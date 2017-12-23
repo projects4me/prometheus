@@ -545,7 +545,7 @@ export default Ember.Object.extend({
                     model: 'issue',
                     options: {
 //                        query: "((Issue.dateModified BETWEEN ```TODAY_START``` AND ```TODAY_END```) AND (Issue.assignee : ```ME```))",
-                        query: "((Issue.createdUser : ```ME```))",
+                        query: "((Issue.assignee : ```ME```) AND ((Issue.startDate BETWEEN ```TODAY_START``` AND ```TODAY_END``` ) OR (Issue.status : in_progress)))",
                         rels : 'createdBy,modifiedBy,project',
                         sort: "Issue.dateModified",
                         order: 'ASC',

@@ -25,6 +25,7 @@ module.exports = function(defaults) {
     // along with the exports of each module as its value.
 
     app.import("vendor/pace/pace.min.js");
+    app.import("vendor/jquery-ui/jquery-ui.min.js");
     app.import('bower_components/js-logger/src/logger.min.js');
     app.import('bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js');
     app.import("bower_components/jquery-cookie/jquery.cookie.js");
