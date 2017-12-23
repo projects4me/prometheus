@@ -1,0 +1,97 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the entire document
+*/
+
+.calendar{
+  .fc-event,.fc-event-dot{
+    background-color: $primaryColor;
+    border: 0.1rem solid $primaryColor;
+  }
+  .fc-event:hover,.fc-event-dot:hover{
+    background-color: $highlightColor;
+  }
+
+  .fc-event-container,.fc-list-table{
+
+    a.done,a.complete,.done .fc-event-dot, .complete .fc-event-dot{
+      background-color: #5AC594 !important;
+      border-color: #5AC594 !important;
+      color: $backgroundColor;
+    }
+    a.done:hover,a.complete:hover,.done .fc-event-dot:hover, .complete .fc-event-dot:hover{
+      background-color: #00a65a !important;
+    }
+
+    a.closed,.closed .fc-event-dot{
+      background-color: #e98a7e;
+      border-color: #e98a7e !important;
+      color: $backgroundColor;
+    }
+    a.closed:hover,.closed .fc-event-dot:hover{
+      background-color: #d33724 !important;
+    }
+
+    a.deferred,a.pending,a.feedback,.deferred .fc-event-dot, .pending .fc-event-dot,.feedback .fc-event-dot{
+      background-color: #f7bf65;
+      border-color: #f7bf65 !important;
+      color: $backgroundColor;
+    }
+    a.deferred:hover,a.pending:hover,a.feedback:hover,.deferred .fc-event-dot:hover, .pending .fc-event-dot:hover,.feedback .fc-event-dot:hover{
+      background-color: #f39c12 !important;
+    }
+
+    a.new,.new .fc-event-dot{
+      background-color: #80b5d3;
+      border-color: #80b5d3 !important;
+      color: $backgroundColor;
+    }
+    a.new:hover,.new .fc-event-dot:hover{
+      background-color: #3c8dbc !important;
+    }
+
+    a.in_progress,.in_progress .fc-event-dot{
+      background-color: $primaryColor;
+      border-color: $primaryColor !important;
+      color: $backgroundColor;
+    }
+    a.in_progress:hover,.in_progress .fc-event-dot:hover{
+      background-color: $highlightColor !important;
+    }
+
+    .fc-title{
+      font-size: 1.4rem;
+    }
+
+    .fa{
+      margin-right:0.5rem;
+    }
+    .fa-ban{
+      color: #d33724;
+    }
+    .fa-angle-double-up{
+      color: #d33724;
+      font-weight: bold;
+    }
+    .fa-arrow-up{
+      color: #e98a7e;
+    }
+    .fa-dot-circle-o{
+      color: $primaryColor;
+    }
+    .fa-arrow-down{
+      color: #5ac594;
+    }
+    .fa-angle-double-down{
+      color: #00a65a;
+      font-weight: bold;
+    }
+
+
+  }
+}

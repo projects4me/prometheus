@@ -1,0 +1,166 @@
+<section class="content-header">
+  <h1>
+    {{t "view.app.project.create.header"}}
+    <small>{{model.name}}</small>
+  </h1>
+
+  {{#bread-crumbs tagName="ol" linkable=true as |component module|}}
+    {{#bread-crumb route=module breadCrumbs=component}}
+      <i class="fa fa-{{nav-icon module.title}}"></i>
+      {{#if module.record}}
+        {{module.title}}
+      {{else}}
+        {{t (concat "view.nav.menu." (camelize module.title) ".label")}}
+      {{/if}}
+    {{/bread-crumb}}
+  {{/bread-crumbs}}
+
+</section>
+
+<section class="content">
+  <div class="create-issue">
+    <div class="row">
+      <div class="col-md-8">
+
+        <div class="box box-primary issues-details">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "view.app.project.create.project"}}</h3>
+          </div>
+
+          <div class="box-body no-padding" style="display: block;">
+
+            <form {{action 'addIssue' on='submit'}}>
+              <div class="form-group">
+                <div class="field-group">
+                  {{field-text
+                          placeholder=(t "view.app.project.create.nameplaceholder")
+                          label=(t "view.app.project.create.name")
+                          value=model.name
+                          mask="alphanumeric"
+                  }}
+
+                  <div class="form-field form-field-static ember-view">
+                    <span class="ember-text-field form-control input-sm data-input ember-view">{{shortCode}}</span>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label class="floating-label active">{{t "view.app.project.create.shortcode"}}</label>
+                  </div>
+                </div>
+
+                {{field-textarea
+                        placeholder=(t "view.app.project.create.descriptionplaceholder")
+                        label=(t "view.app.project.create.description")
+                        value=model.description
+                }}
+
+                {{field-date
+                        placeholder=(t "view.app.project.create.startdateplaceholder")
+                        label=(t "view.app.project.create.startdate")
+                        value=model.startDate
+                        mask="alphanumeric"
+                }}
+
+                {{field-date
+                        placeholder=(t "view.app.project.create.enddateplaceholder")
+                        label=(t "view.app.project.create.enddate")
+                        value=model.endDate
+                        mask="alphanumeric"
+                }}
+
+                {{field-relate
+                        placeholder=(t "view.app.project.create.typeplaceholder")
+                        label=(t "view.app.project.create.type")
+                        value=model.type
+                        options=type
+                        selected=(find-by "value" model.type type)
+                        searchField="label"
+                        onchange=(action "selectType")
+                        relateType="relate-simple"
+                }}
+
+                {{field-relate
+                        placeholder=(t "view.app.project.create.statusplaceholder")
+                        label=(t "view.app.project.create.status")
+                        value=model.status
+                        options=status
+                        selected=(find-by "value" model.status status)
+                        searchField="label"
+                        onchange=(action "selectStatus")
+                        relateType="relate-simple"
+                }}
+
+                {{field-textarea
+                        placeholder=(t "view.app.project.create.visionplaceholder")
+                        label=(t "view.app.project.create.vision")
+                        value=model.vision
+                }}
+
+                {{field-textarea
+                        placeholder=(t "view.app.project.create.scopeplaceholder")
+                        label=(t "view.app.project.create.scope")
+                        value=model.scope
+                }}
+
+              </div>
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="col-md-4">
+
+        <div class="box box-warning project-people">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "view.app.project.create.people"}}</h3>
+          </div>
+
+          <div class="box-body no-padding" style="display: block;">
+            {{field-relate
+                    placeholder=(t "view.app.project.create.selectassignee")
+                    label=(t "view.app.project.create.assignee")
+                    value=model.assignee
+                    options=usersList
+                    selected=(find-by "value" model.assignee usersList)
+                    searchField="label"
+                    onchange=(action "selectOwner")
+                    relateType="relate-user"
+            }}
+          </div>
+        </div>
+
+        <div class="box box-danger project-issue-types">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "view.app.project.create.issuetypes"}}</h3>
+          </div>
+
+          <div class="box-body no-padding" style="display: block;">
+
+            {{field-relatemulti
+                placeholder=(t "view.app.project.create.selectissuetypes")
+                label=(t "view.app.project.create.selectissuetypes")
+                value=model.assignee
+                options=issuetypeList
+                selected=selectedIssuetypes
+                searchField="label"
+                onchange=(action "issuetypeSelected")
+                relateType="relate-simple"
+            }}
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-sm-12">
+        <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+        <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+

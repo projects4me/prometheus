@@ -1,0 +1,274 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the project in the application.
+*/
+
+.project-owner{
+  text-align: center;
+
+  h4{
+    text-align: left;
+  }
+
+  img{
+    width:100%;
+  }
+}
+
+.project-details .badge{
+  border-radius: 0.2rem;
+}
+
+.project-status .badge {
+    text-transform: uppercase;
+}
+
+.project-milestones-section{
+
+  .info-box{
+    position: relative;
+  }
+  .info-box-icon{
+    height: 100%;
+    padding-top: 1.5rem;
+    position: absolute;
+    line-height: 6rem;
+  }
+
+  .info-box-content > .pull-right{
+    margin-top:0.5rem;
+  }
+  .info-box-content .pull-right{
+    margin-left:1.5rem;
+  }
+  .info-box-number{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: pre;
+  }
+}
+
+.project-conversations{
+  list-style: none;
+  margin:0;
+  padding:0;
+
+  li{
+    border-bottom: 1px solid #f4f4f4;
+    padding: 1rem;
+
+    .subject {
+      margin-left: 1rem;
+      font-weight: 600;
+    }
+
+    .description {
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+.project-conversations, .open-issues{
+  max-height: 35rem;
+  overflow-x:hidden;
+  overflow-y: auto;
+}
+
+.project-estimated-spent{
+  height: 35rem;
+}
+
+.project-activities{
+  padding-left: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+.open-issues{
+  list-style: none;
+  margin:0;
+  padding:0;
+
+  li{
+    border-bottom: 1px solid #f4f4f4;
+    padding: 1rem;
+
+    .issue-block{
+      .priority{
+        float:left;
+        font-size:2rem;
+        width:4rem;
+        text-align: center;
+      }
+
+      .data-block{
+        margin-left:5rem;
+        .subject {
+          display: block;
+          font-weight: 600;
+        }
+
+        .description {
+          display: block;
+          margin-top: 0.5rem;
+        }
+      }
+    }
+
+    .issue-block:before, .issue-block:after {
+      content: " ";
+      display: table;
+    }
+
+    .issue-block:after {
+      clear: both;
+    }
+  }
+}
+
+.project{
+
+  .fa-ban{
+    color: #d33724;
+  }
+  .fa-angle-double-up{
+    color: #d33724;
+    font-weight: bold;
+  }
+  .fa-arrow-up{
+    color: #e98a7e;
+  }
+  .fa-dot-circle-o{
+    color: $primaryColor;
+  }
+  .fa-arrow-down{
+    color: #5ac594;
+  }
+  .fa-angle-double-down{
+    color: #00a65a;
+    font-weight: bold;
+  }
+
+  .done,.complete{
+    background-color: #5AC594 !important;
+  }
+
+  .closed{
+    background-color: #e98a7e;
+  }
+
+  .deferred,.pending,.feedback{
+    background-color: #f7bf65;
+  }
+
+  .new{
+    background-color: #80b5d3;
+  }
+
+  .in_progress{
+    background-color: $primaryColor;
+  }
+}
+
+.list-controls{
+  padding: 0.5rem;
+
+
+  .checkbox-toggle{
+    padding: 0.3rem 0.8rem;
+  }
+}
+
+.table-responsive{
+  tbody{
+    .checkbox-toggle{
+      padding: 0rem 0.5rem;
+    }
+  }
+}
+
+.list-view{
+  .select-box{
+    width: 4rem;
+  }
+}
+
+
+
+.show-5{
+  li:nth-of-type(1n+6) {
+    display: none;
+  }
+}
+
+.membership-add{
+  background: transparent;
+  border: 0.3rem dashed $borderColor;
+  color: $borderColor;
+  height: 10rem;
+  width: 10rem;
+  border-radius:50%;
+  -moz-border-radius:50%;
+  -webkit-border-radius:50%;
+  margin-top: 2.5rem;
+
+  &:hover{
+    border-color: $warningColor;
+    color: $warningColor;
+  }
+
+  ion.ion-android-add{
+    font-size: 6rem;
+    color: inherit;
+  }
+  .ion-android-add:before{
+    margin-top:1.5rem;
+  }
+
+}
+
+
+.issues{
+  .nav-pills{
+    >li>a{
+      margin-right: 2rem;
+    }
+
+    a:hover{
+      color: $primaryColor;
+    }
+
+    .btn-group > .btn-box-tool:hover > .fa {
+      color: $primaryColor;
+    }
+
+    .dropdown-menu > li > a:hover {
+      background-color: $backgroundColor;
+    }
+
+    .dropdown-menu li + li {
+      border-top: 0.1rem solid $borderColor;
+    }
+
+    .search-name{
+      margin-right: 1rem;
+    }
+
+    .btn-group{
+      position: absolute;
+      right:1rem;
+      top:0.3rem;
+    }
+
+    .fa-filter {
+      position: absolute;
+      right:0.5rem;
+      top:1rem;
+    }
+
+  }
+}

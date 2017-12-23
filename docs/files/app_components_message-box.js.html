@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>app/components/message-box.js - Projects4Me</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="Projects4Me" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: v0.1.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/Builder.html">Builder</a></li>
+                                <li><a href="../classes/Calendar.html">Calendar</a></li>
+                                <li><a href="../classes/Conversation.html">Conversation</a></li>
+                                <li><a href="../classes/Create.html">Create</a></li>
+                                <li><a href="../classes/Edit.html">Edit</a></li>
+                                <li><a href="../classes/Index.html">Index</a></li>
+                                <li><a href="../classes/InjectRouter.html">InjectRouter</a></li>
+                                <li><a href="../classes/Issue.html">Issue</a></li>
+                                <li><a href="../classes/IssueModel.html">IssueModel</a></li>
+                                <li><a href="../classes/Metadata.html">Metadata</a></li>
+                                <li><a href="../classes/Module.html">Module</a></li>
+                                <li><a href="../classes/Page.html">Page</a></li>
+                                <li><a href="../classes/Parser.html">Parser</a></li>
+                                <li><a href="../classes/Projectlist.html">Projectlist</a></li>
+                                <li><a href="../classes/Prometheus.Adapter.Application.html">Prometheus.Adapter.Application</a></li>
+                                <li><a href="../classes/Prometheus.Adapter.ApplicationAdapter.html">Prometheus.Adapter.ApplicationAdapter</a></li>
+                                <li><a href="../classes/Prometheus.Application.html">Prometheus.Application</a></li>
+                                <li><a href="../classes/Prometheus.Authenticators.OAuth2Authenticator.html">Prometheus.Authenticators.OAuth2Authenticator</a></li>
+                                <li><a href="../classes/Prometheus.Authorizers.OAuth2Authorizer.html">Prometheus.Authorizers.OAuth2Authorizer</a></li>
+                                <li><a href="../classes/Prometheus.Component.ChatBox.html">Prometheus.Component.ChatBox</a></li>
+                                <li><a href="../classes/Prometheus.Component.TextField.html">Prometheus.Component.TextField</a></li>
+                                <li><a href="../classes/Prometheus.Components.ActionMenu.html">Prometheus.Components.ActionMenu</a></li>
+                                <li><a href="../classes/Prometheus.Components.ActivityBlock.html">Prometheus.Components.ActivityBlock</a></li>
+                                <li><a href="../classes/Prometheus.Components.BootstrapModal.html">Prometheus.Components.BootstrapModal</a></li>
+                                <li><a href="../classes/Prometheus.Components.ChartEstimatedspent.html">Prometheus.Components.ChartEstimatedspent</a></li>
+                                <li><a href="../classes/Prometheus.Components.ChartIssueratio.html">Prometheus.Components.ChartIssueratio</a></li>
+                                <li><a href="../classes/Prometheus.Components.CheckboxField.html">Prometheus.Components.CheckboxField</a></li>
+                                <li><a href="../classes/Prometheus.Components.ContentEditable.html">Prometheus.Components.ContentEditable</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldCheckbox.html">Prometheus.Components.FieldCheckbox</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldDate.html">Prometheus.Components.FieldDate</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldImage.html">Prometheus.Components.FieldImage</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldRadio.html">Prometheus.Components.FieldRadio</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldText.html">Prometheus.Components.FieldText</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldTextarea.html">Prometheus.Components.FieldTextarea</a></li>
+                                <li><a href="../classes/Prometheus.Components.FieldView.html">Prometheus.Components.FieldView</a></li>
+                                <li><a href="../classes/Prometheus.Components.FormFields.html">Prometheus.Components.FormFields</a></li>
+                                <li><a href="../classes/Prometheus.Components.MessageBox.html">Prometheus.Components.MessageBox</a></li>
+                                <li><a href="../classes/Prometheus.Components.MessageBoxComponent.html">Prometheus.Components.MessageBoxComponent</a></li>
+                                <li><a href="../classes/Prometheus.Components.MilestoneBlock.html">Prometheus.Components.MilestoneBlock</a></li>
+                                <li><a href="../classes/Prometheus.Components.NavBar.html">Prometheus.Components.NavBar</a></li>
+                                <li><a href="../classes/Prometheus.Components.QueryBuilder.html">Prometheus.Components.QueryBuilder</a></li>
+                                <li><a href="../classes/Prometheus.Components.QuillEditor.html">Prometheus.Components.QuillEditor</a></li>
+                                <li><a href="../classes/Prometheus.Components.TextareaField.html">Prometheus.Components.TextareaField</a></li>
+                                <li><a href="../classes/Prometheus.Components.TreeList.html">Prometheus.Components.TreeList</a></li>
+                                <li><a href="../classes/Prometheus.Controller.App.html">Prometheus.Controller.App</a></li>
+                                <li><a href="../classes/Prometheus.Controller.Module.html">Prometheus.Controller.Module</a></li>
+                                <li><a href="../classes/Prometheus.Controller.Signin.html">Prometheus.Controller.Signin</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Calendar.html">Prometheus.Controllers.Calendar</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Conversation.html">Prometheus.Controllers.Conversation</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Create.html">Prometheus.Controllers.Create</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Edit.html">Prometheus.Controllers.Edit</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Index.html">Prometheus.Controllers.Index</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Issue.html">Prometheus.Controllers.Issue</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Page.html">Prometheus.Controllers.Page</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Projectlist.html">Prometheus.Controllers.Projectlist</a></li>
+                                <li><a href="../classes/Prometheus.Controllers.Wiki.html">Prometheus.Controllers.Wiki</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.CountVotes.html">Prometheus.Helpers.CountVotes</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetDate.html">Prometheus.Helpers.GetDate</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetIssuecount.html">Prometheus.Helpers.GetIssuecount</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetPage.html">Prometheus.Helpers.GetPage</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetProp.html">Prometheus.Helpers.GetProp</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetRole.html">Prometheus.Helpers.GetRole</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetTimelog.html">Prometheus.Helpers.GetTimelog</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.GetWiki.html">Prometheus.Helpers.GetWiki</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.IfMatch.html">Prometheus.Helpers.IfMatch</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.NavIcon.html">Prometheus.Helpers.NavIcon</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.NotLast.html">Prometheus.Helpers.NotLast</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.PriorityIcon.html">Prometheus.Helpers.PriorityIcon</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.SortableClass.html">Prometheus.Helpers.SortableClass</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.TranslateComment.html">Prometheus.Helpers.TranslateComment</a></li>
+                                <li><a href="../classes/Prometheus.Helpers.UserCreated.html">Prometheus.Helpers.UserCreated</a></li>
+                                <li><a href="../classes/Prometheus.Initializers.Initializer.html">Prometheus.Initializers.Initializer</a></li>
+                                <li><a href="../classes/Prometheus.Initializers.InjectRouter.html">Prometheus.Initializers.InjectRouter</a></li>
+                                <li><a href="../classes/Prometheus.Initializers.JavascriptBehaviors.html">Prometheus.Initializers.JavascriptBehaviors</a></li>
+                                <li><a href="../classes/Prometheus.Initializers.SetupLogger.html">Prometheus.Initializers.SetupLogger</a></li>
+                                <li><a href="../classes/Prometheus.Locales.en.html">Prometheus.Locales.en</a></li>
+                                <li><a href="../classes/Prometheus.Model.User.html">Prometheus.Model.User</a></li>
+                                <li><a href="../classes/Prometheus.Models.Activity.html">Prometheus.Models.Activity</a></li>
+                                <li><a href="../classes/Prometheus.Models.Comment.html">Prometheus.Models.Comment</a></li>
+                                <li><a href="../classes/Prometheus.Models.CommentModel.html">Prometheus.Models.CommentModel</a></li>
+                                <li><a href="../classes/Prometheus.Models.Conversationroom.html">Prometheus.Models.Conversationroom</a></li>
+                                <li><a href="../classes/Prometheus.Models.Issue.html">Prometheus.Models.Issue</a></li>
+                                <li><a href="../classes/Prometheus.Models.Issuetype.html">Prometheus.Models.Issuetype</a></li>
+                                <li><a href="../classes/Prometheus.Models.Membership.html">Prometheus.Models.Membership</a></li>
+                                <li><a href="../classes/Prometheus.Models.Milestone.html">Prometheus.Models.Milestone</a></li>
+                                <li><a href="../classes/Prometheus.Models.Project.html">Prometheus.Models.Project</a></li>
+                                <li><a href="../classes/Prometheus.Models.Role.html">Prometheus.Models.Role</a></li>
+                                <li><a href="../classes/Prometheus.Models.Tagged.html">Prometheus.Models.Tagged</a></li>
+                                <li><a href="../classes/Prometheus.Models.Timelog.html">Prometheus.Models.Timelog</a></li>
+                                <li><a href="../classes/Prometheus.Models.Token.html">Prometheus.Models.Token</a></li>
+                                <li><a href="../classes/Prometheus.Models.Vote.html">Prometheus.Models.Vote</a></li>
+                                <li><a href="../classes/Prometheus.Models.Wiki.html">Prometheus.Models.Wiki</a></li>
+                                <li><a href="../classes/Prometheus.Routes.App.html">Prometheus.Routes.App</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Application.html">Prometheus.Routes.Application</a></li>
+                                <li><a href="../classes/Prometheus.Routes.AppRoute.html">Prometheus.Routes.AppRoute</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Calendar.html">Prometheus.Routes.Calendar</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Conversation.html">Prometheus.Routes.Conversation</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Create.html">Prometheus.Routes.Create</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Edit.html">Prometheus.Routes.Edit</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Index.html">Prometheus.Routes.Index</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Module.html">Prometheus.Routes.Module</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Page.html">Prometheus.Routes.Page</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Project.html">Prometheus.Routes.Project</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Projectlist.html">Prometheus.Routes.Projectlist</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Wiki.html">Prometheus.Routes.Wiki</a></li>
+                                <li><a href="../classes/Prometheus.Routes.Wiki.Create.html">Prometheus.Routes.Wiki.Create</a></li>
+                                <li><a href="../classes/Prometheus.Serializers.Application.html">Prometheus.Serializers.Application</a></li>
+                                <li><a href="../classes/Prometheus.Services.CurrentUser.html">Prometheus.Services.CurrentUser</a></li>
+                                <li><a href="../classes/Prometheus.Services.RelatedField.html">Prometheus.Services.RelatedField</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Builder.html">Prometheus.Utils.Builder</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Fields.html">Prometheus.Utils.Fields</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Metadata.html">Prometheus.Utils.Metadata</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Modeltotree.html">Prometheus.Utils.Modeltotree</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Navigation.html">Prometheus.Utils.Navigation</a></li>
+                                <li><a href="../classes/Prometheus.Utils.Parser.html">Prometheus.Utils.Parser</a></li>
+                                <li><a href="../classes/Wiki.html">Wiki</a></li>
+                            </ul>
+                
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/App.html">App</a></li>
+                                <li><a href="../modules/App.Project.html">App.Project</a></li>
+                                <li><a href="../modules/App.Project.Issue.html">App.Project.Issue</a></li>
+                                <li><a href="../modules/App.Project.Wiki.html">App.Project.Wiki</a></li>
+                                <li><a href="../modules/Data.html">Data</a></li>
+                                <li><a href="../modules/i18n.html">i18n</a></li>
+                                <li><a href="../modules/Metadata.html">Metadata</a></li>
+                                <li><a href="../modules/Navigation.html">Navigation</a></li>
+                                <li><a href="../modules/Query.html">Query</a></li>
+                                <li><a href="../modules/Validator.html">Validator</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: app/components/message-box.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+import Ember from &quot;ember&quot;;
+
+/**
+ * This component is used to render the quill editor in the application in order
+ * to composer messages for the conversations
+ *
+ * @class MessageBox
+ * @namespace Prometheus.Components
+ * @extends Ember.Component
+ * @author Hammad Hassan &lt;gollomer@gmail.com&gt;
+ */
+export default Ember.Component.extend({
+
+    /**
+     * The comment that we are gathering
+     *
+     * @property comment
+     * @type Ember.Service
+     * @for MessageBox
+     * @private
+     */
+    comment: null,
+
+    /**
+     * The i18n library service that is used in order to get the translations
+     *
+     * @property i18n
+     * @type Ember.Service
+     * @for MessageBox
+     * @private
+     */
+    i18n: Ember.inject.service(),
+
+    /**
+     * This is the list of emojis that we support
+     *
+     * @property emojiList
+     * @type Array
+     * @for MessageBoxComponent
+     * @private
+     */
+    emojiList : [
+        &#x27;grinning&#x27;,
+        &#x27;joy&#x27;,
+        &#x27;rolling-on-the-floor-laughing&#x27;,
+        &#x27;smile&#x27;,
+        &#x27;sweat-smile&#x27;,
+        &#x27;laughing&#x27;,
+        &#x27;wink&#x27;,
+        &#x27;blush&#x27;,
+        &#x27;yum&#x27;,
+        &#x27;smiling-face-with-sunglasses&#x27;,
+        &#x27;heart-eyes&#x27;,
+        &#x27;slightly-smiling-face&#x27;,
+        &#x27;thinking-face&#x27;,
+        &#x27;neutral-face&#x27;,
+        &#x27;expressionless&#x27;,
+        &#x27;no-mouth&#x27;,
+        &#x27;face-with-rolling-eyes&#x27;,
+        &#x27;smirk&#x27;,
+        &#x27;persevere&#x27;,
+        &#x27;disappointed-but-relieved-face&#x27;,
+        &#x27;open-mouth&#x27;,
+        &#x27;zipper-mouth-face&#x27;,
+        &#x27;hushed&#x27;,
+        &#x27;sleepy&#x27;,
+        &#x27;tired-face&#x27;,
+        &#x27;sleeping&#x27;,
+        &#x27;nerd-face&#x27;,
+        &#x27;stuck-out-tongue&#x27;,
+        &#x27;stuck-out-tongue-winking-eye&#x27;,
+        &#x27;drooling-face&#x27;,
+        &#x27;unamused&#x27;,
+        &#x27;sweat&#x27;,
+        &#x27;pensive&#x27;,
+        &#x27;confused&#x27;,
+        &#x27;upside-down-face&#x27;,
+        &#x27;money-mouth-face&#x27;,
+        &#x27;astonished&#x27;,
+        &#x27;slightly-frowning-face&#x27;,
+        &#x27;confounded&#x27;,
+        &#x27;disappointed&#x27;,
+        &#x27;worried&#x27;,
+        &#x27;triumph&#x27;,
+        &#x27;cry&#x27;,
+        &#x27;sob&#x27;,
+        &#x27;frowning-face&#x27;,
+        &#x27;fearful&#x27;,
+        &#x27;weary&#x27;,
+        &#x27;grimacing&#x27;,
+        &#x27;cold-sweat&#x27;,
+        &#x27;scream&#x27;,
+        &#x27;dizzy-face&#x27;,
+        &#x27;rage&#x27;,
+        &#x27;angry&#x27;,
+        &#x27;innocent&#x27;,
+        &#x27;face-with-cowboy-hat&#x27;,
+        &#x27;clown-face&#x27;,
+        &#x27;mask&#x27;,
+        &#x27;face-with-thermometer&#x27;,
+        &#x27;face-with-head-bandage&#x27;,
+        &#x27;nauseated-face&#x27;,
+        &#x27;sneezing-face&#x27;,
+        &#x27;smiling-imp&#x27;,
+        &#x27;skull&#x27;,
+        &#x27;alien&#x27;,
+        &#x27;v&#x27;,
+        &#x27;hand-with-index-and-middle-fingers-crossed-type-1-2&#x27;,
+        &#x27;ok-hand&#x27;,
+        &#x27;thumbsup&#x27;,
+        &#x27;thumbsdown&#x27;,
+        &#x27;clap&#x27;,
+        &#x27;zzz&#x27;,
+        &#x27;sunglasses&#x27;,
+        &#x27;ant&#x27;,
+        &#x27;hamburger&#x27;,
+        &#x27;pizza&#x27;,
+        &#x27;fries&#x27;,
+        &#x27;popcorn&#x27;,
+        &#x27;coffee&#x27;,
+        &#x27;first-place-medal&#x27;,
+        &#x27;second-place-medal&#x27;,
+        &#x27;third-place-medal&#x27;,
+        &#x27;military-medal&#x27;,
+        &#x27;checkered-flag&#x27;,
+        &#x27;skull-and-crossbones&#x27;,
+        &#x27;alarm-clock&#x27;,
+        &#x27;watch&#x27;,
+        &#x27;tada&#x27;,
+        &#x27;ribbon&#x27;,
+        &#x27;stopwatch&#x27;,
+        &#x27;bulb&#x27;,
+        &#x27;moneybag&#x27;,
+        &#x27;money-with-wings&#x27;,
+        &#x27;date&#x27;,
+        &#x27;chart-with-upwards-trend&#x27;,
+        &#x27;chart-with-downwards-trend&#x27;,
+        &#x27;anger&#x27;,
+        &#x27;no-entry&#x27;,
+        &#x27;no-entry-sign&#x27;,
+        &#x27;radioactive&#x27;,
+        &#x27;heavy-check-mark&#x27;,
+        &#x27;x&#x27;,
+        &#x27;bangbang&#x27;,
+        &#x27;interrobang&#x27;,
+        &#x27;question&#x27;,
+        &#x27;exclamation&#x27;,
+        &#x27;100&#x27;,
+    ],
+
+    /**
+     * These are the classes the must be registered with the component
+     *
+     * @property classNames
+     * @type Array
+     * @for MessageBox
+     * @private
+     */
+    classNames: [&quot;editable&quot;],
+
+    /**
+     * These are the attributes that are bound with the element
+     *
+     * @property classNames
+     * @type Array
+     * @for MessageBox
+     * @private
+     */
+    attributeBindings: [&#x27;contenteditable&#x27;,&#x27;spellcheck&#x27;,&#x27;placeholder&#x27;],
+
+    /**
+     * These are the translated emojis
+     *
+     * @property translatedEmojis
+     * @type Array
+     * @for MessageBox
+     * @private
+     */
+    translatedEmojis: [],
+
+    /**
+     * Whether the content box is editable or not
+     *
+     * @property editable
+     * @type Bool
+     * @for MessageBoxComponent
+     * @private
+     */
+    editable: true,
+
+    /**
+     * This flag is used to enable or disable spell checking
+     *
+     * @property checkSpelling
+     * @type Bool
+     * @for MessageBox
+     * @private
+     */
+    checkSpelling: false,
+
+    /**
+     * Flag that maintains whether the user is typing or not
+     *
+     * @property isUserTyping
+     * @type Bool
+     * @for MessageBox
+     * @private
+     */
+    isUserTyping: false,
+
+    /**
+     * This is the computed property that enables or disabled the HTML5 contenteditable
+     * flag on the div
+     *
+     * @property contenteditable
+     * @type Computed
+     * @for MessageBox
+     * @private
+     */
+    contenteditable: (function() {
+        var editable = this.get(&#x27;editable&#x27;);
+
+        return editable ? &#x27;true&#x27; : undefined;
+    }).property(&#x27;editable&#x27;),
+
+    /**
+     * This is the property that enables or disabled the HTML5 spellcheck flag on
+     * the div
+     *
+     * @property spellcheck
+     * @type Computed
+     * @for MessageBox
+     * @private
+     */
+    spellcheck: (function() {
+        var spelling = this.get(&#x27;checkSpelling&#x27;);
+
+        return spelling ? &#x27;true&#x27; : &#x27;false&#x27;;
+    }).property(&#x27;checkSpelling&#x27;),
+
+    /**
+     * This function is used to observe the value and isUserTyping attributes
+     *
+     * @property valueObserver
+     * @type function
+     * @for MessageBox
+     * @public
+     */
+    valueObserver: (function() {
+        Ember.run.once(this, &#x27;processValue&#x27;);
+    }).observes(&#x27;value&#x27;, &#x27;isUserTyping&#x27;),
+
+    /**
+     * This function is called when the object is created, we are using this
+     * function to translate the emojis
+     *
+     * @method init
+     * @private
+     */
+    init:function(){
+        this._super(...arguments);
+        var self = this;
+        var emojiList = Ember.$.map(this.get(&#x27;emojiList&#x27;), function(emoji) {
+            return {&#x27;id&#x27;:emoji, &#x27;name&#x27;:self.get(&#x27;i18n&#x27;).t(&#x27;emoji.&#x27;+emoji)};
+        });
+        self.set(&#x27;translatedEmojis&#x27;,emojiList);
+    },
+
+    /**
+     * This function is used to process the values
+     *
+     * @method processValue
+     * @return {*|result}
+     * @public
+     */
+    processValue: function() {
+        if (!this.get(&#x27;isUserTyping&#x27;) &amp;&amp; this.get(&#x27;value&#x27;)) {
+            return this.setContents();
+        }
+    },
+
+    /**
+     * This function is an event handler that is called when the focus is removed from the div
+     *
+     * @method focusOut
+     * @return {*}
+     * @public
+     */
+    focusOut: function() {
+        return this.set(&#x27;isUserTyping&#x27;, false);
+    },
+
+    /**
+     * If the user is typing then set the flag to true
+     *
+     * @method keyDown
+     * @param event {Object} the event that triggered this function
+     * @public
+     */
+    keyDown: function(event) {
+        if (!event.metaKey) {
+            this.set(&#x27;isUserTyping&#x27;, true);
+        }
+    },
+
+    /**
+     * As soon as the user has typed in a key we update the value
+     *
+     * @method keyUp
+     * @param event {Object} the event that triggered this function
+     * @public
+     */
+    keyUp: function() {
+        this.set(&#x27;value&#x27;, this.$().html());
+    },
+
+    /**
+     * Return the contents set within this object
+     *
+     * @method setContents
+     * @return result {Mixed} The current value
+     * @public
+     */
+    setContents: function() {
+        return this.get(&#x27;value&#x27;);
+    },
+
+    /**
+     * Clear the contents
+     *
+     * @method clearContents
+     * @public
+     */
+    clearContents: function() {
+        this.set(&#x27;value&#x27;,&#x27;&#x27;);
+        Ember.$(this.element).html(&#x27;&#x27;);
+    },
+
+    /**
+     * Load the message box after it has been loaded
+     *
+     * @method didRender
+     * @public
+     * @todo get the base link for issues and users via a function.
+     */
+    didRender: function() {
+        var self = this;
+
+        // Add a listener for clearing the contents
+        self.get(&#x27;_targetObject&#x27;).on(&#x27;clearContents&#x27;, Ember.$.proxy(self.clearContents, self));
+
+        // Setup the message box to load listen to the keyword @, # and :
+        Ember.$(&#x27;#&#x27;+this.elementId)
+            .atwho({
+                at: &quot;@&quot;,
+                data: self.get(&#x27;usersList&#x27;),
+                displayTpl: &quot;&lt;li&gt;${name}&lt;/li&gt;&quot;,
+                insertTpl: &quot;&lt;a href=&#x27;/app/users/${id}&#x27; class=&#x27;${status}&#x27;&gt;${atwho-at}${name}&lt;/a&gt;&quot;
+            }).atwho({
+            at: &quot;#&quot;,
+            data: self.get(&#x27;issuesList&#x27;),
+            displayTpl: &quot;&lt;li&gt;${number} - ${name}&lt;/li&gt;&quot;,
+            searchKey: &quot;number&quot;,
+            insertTpl: &quot;&lt;a href=&#x27;/app/${projectId}/issues/${id}&#x27; class=&#x27;${status}&#x27;&gt;${atwho-at}${number} - ${name}&lt;/a&gt;&quot;
+        }).atwho({
+            at: &#x27;:&#x27;,
+            displayTpl: &quot;&lt;li&gt;&lt;i class=&#x27;twa twa-${id}&#x27;&gt;&lt;/i&gt; ${name} &lt;/li&gt;&quot;,
+            insertTpl: &quot;&lt;i class=&#x27;twa twa-${id}&#x27;&gt;&lt;/i&gt;&quot;,
+            data: self.get(&#x27;translatedEmojis&#x27;)
+        });
+
+        return this.setContents();
+    },
+
+    /**
+     * This function is called when the rendered component is being destroyed
+     *
+     * @method willDestroyElement
+     * @public
+     */
+    willDestroyElement() {
+        this._super(...arguments);
+        Ember.$(&#x27;#&#x27;+this.elementId).atwho(&#x27;destroy&#x27;);
+    },
+
+});
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<section class="content-header">
+</section>
+
+<section class="content">
+    <div class="row">
+        {{#each widgets as |value key|}}
+            <div class="col-md-6 col-sm-12 widgets connectedSortable ui-sortable">
+                {{component (concat 'widgets/' (dasherize value)) data=(get-prop this value)}}
+            </div>
+        {{/each}}
+    </div>
+</section>

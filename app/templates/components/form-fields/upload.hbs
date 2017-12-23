@@ -1,0 +1,28 @@
+<div class="dropzone-field">
+    {{#file-dropzone name="file" as |dropzone queue|}}
+        {{#if dropzone.active}}
+            <p class="dropzone-active">
+                {{#if dropzone.valid}}-
+                    {{t "global.form.upload.drop"}}
+                {{else}}
+                    {{t "global.form.upload.invalid"}}
+                {{/if}}
+            </p>
+        {{else if queue.files.length}}
+            <p class="dropzone-uploading">
+                {{t "global.form.upload.uploading" length=queue.files.length progress=queue.progress}}
+            </p>
+        {{else}}
+            <p class="dropzone-ready">
+                {{#if dropzone.supported}}
+                    {{t "global.form.upload.drag"}}
+                {{/if}}
+                {{#file-upload name="file"
+                               multiple=true
+                               onfileadd=uploadFile}}
+                    <a id="upload-image" tabindex=0>{{label}}</a>
+                {{/file-upload}}
+            </p>
+        {{/if}}
+    {{/file-dropzone}}
+</div>

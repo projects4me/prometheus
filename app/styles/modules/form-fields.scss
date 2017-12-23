@@ -1,0 +1,279 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This file contains the CSS related to the form-field of the application.
+*/
+
+
+.form-field{
+  position:relative;
+  margin: 3rem;
+
+  .data-input{
+    font-size:1.8rem;
+    padding:1rem 1rem 1rem 1rem;
+    display:block;
+      border:none;
+    border-bottom:0.1rem solid #999;
+  }
+
+  .data-input:focus{ outline:none;border-color:$highlightColor}
+
+  .count, .error{
+    font-size: 1rem;
+    color: $primaryColor;
+  }
+
+  /* LABEL ======================================= */
+
+  .floating-label {
+    color:#999;
+    font-size:1.4rem;
+    font-weight:normal;
+    position:absolute;
+    pointer-events:none;
+    left:0.5rem;
+    top:0.5rem;
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
+    -webkit-transition:0.2s ease all;
+  }
+
+  /* active state */
+  .data-input:focus ~ .floating-label, .data-input:valid ~ .floating-label, .select-input ~ .floating-label, .multiselect-input ~ .floating-label{
+    top:-2rem;
+    font-size:1.4rem;
+    color: $primaryColor;
+  }
+
+  .select-input,.multiselect-input{
+    width:100%;
+  }
+
+  .multiselect-input{
+    .form-control {
+      display: block;
+      width: 100%;
+      height: 3.4rem;
+      padding: 0rem;
+      font-size: 1.4rem;
+      line-height: 1.42857;
+      color: #555555;
+      background-color: #fff;
+      background-image: none;
+      border: none;
+      border-radius: 0rem;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      -webkit-transition: none;
+      -o-transition: none;
+      transition: none;
+    }
+
+    .ember-power-select-multiple-option{
+      background-color: $primaryColor;
+      color: #FFF;
+      border-color: $primaryColor;
+      border-radius: 0.2rem;
+    }
+  }
+
+  /* BOTTOM BARS ================================= */
+  .bar 	{ position:relative; display:block; }
+  .bar:before, .bar:after 	{
+    content:'';
+    height:0.1rem;
+    width:0;
+    bottom:0.1rem;
+    position:absolute;
+    background: $highlightColor;
+    transition:opacity 2s ease-in;
+    -moz-transition:opacity 2s ease-in;
+    -webkit-transition:opacity 2s ease-in;
+  }
+  .bar:before {
+    left:50%;
+  }
+  .bar:after {
+    right:50%;
+  }
+
+  /* active state */
+  .data-input:focus ~ .bar:before, .data-input:focus ~ .bar:after {
+    width:50%;
+  }
+
+
+  /* active state */
+  .data-input:focus ~ .highlight {
+    -webkit-animation:inputHighlighter 0.3s ease;
+    -moz-animation:inputHighlighter 0.3s ease;
+    animation:inputHighlighter 0.3s ease;
+  }
+
+
+  .checkbox-primary input[type="checkbox"]:checked + label::before, .checkbox-primary input[type="radio"]:checked + label::before{
+    background-color: $primaryColor;
+    border-color: $primaryColor;
+  }
+
+  .radio-primary input[type="radio"]:checked + label::before{
+    border-color: $primaryColor;
+  }
+
+  .radio-primary input[type="radio"]:checked + label::after{
+    background-color: $primaryColor;
+  }
+
+}
+
+.field-group{
+  display: inline-flex;
+  width:100%;
+  margin-bottom:-3rem;
+
+  >.form-field{
+    width:100%;
+  }
+
+  .form-field-static{
+    width:20rem;
+
+    .data-input {
+      padding-top:0rem;
+    }
+
+    .floating-label {
+      top:-2rem;
+      font-size:1.4rem;
+      color: $primaryColor;
+    }
+
+  }
+
+}
+
+
+.calendar-table {
+  box-shadow: 1rem 1rem 1rem $borderColor;
+}
+
+.calendar-table:after{
+  content: '';
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0rem;
+  height: 0.4rem;
+  background: $color_maroon_flush_approx;
+  background: linear-gradient(to right, $color_maroon_flush_approx 0, $color_pompadour_approx 100%);
+  filter: progid:dximagetransform.microsoft.gradient(startcolorstr=$color_maroon_flush_approx, endcolorstr=$color_pompadour_approx, gradienttype=1 );
+}
+
+.user-relate-icon{
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0.2rem 0rem;
+  border-radius: 2rem;
+}
+
+.ember-power-select-option, .select-input{
+  .fa{
+    margin-right:0.5rem;
+  }
+  .fa-ban{
+    color: #d33724;
+  }
+  .fa-angle-double-up{
+    color: #d33724;
+    font-weight: bold;
+  }
+  .fa-arrow-up{
+    color: #e98a7e;
+  }
+  .fa-dot-circle-o{
+    color: $primaryColor;
+  }
+  .fa-arrow-down{
+    color: #5ac594;
+  }
+  .fa-angle-double-down{
+    color: #00a65a;
+    font-weight: bold;
+  }
+}
+
+.ember-power-select-trigger, .btn{
+  border-radius: 0rem;
+}
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+	from { background:$primaryColor; }
+  to 	{ width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+	from { background:$primaryColor; }
+  to 	{ width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+	from { background:$primaryColor; }
+  to 	{ width:0; background:transparent; }
+}
+
+.calendar-table .active
+{
+    border: 0.1rem solid $primaryColor;
+    border-radius: 0.3rem;
+    outline: none;
+    box-shadow: 0 0 1rem $primaryColor;
+}
+
+.calendar-table .table-condensed .available:hover{
+  font-weight:bold;
+}
+
+.dropzone-field{
+  p{
+    border: 0.3rem dashed $borderColor;
+    text-align: center;
+    margin:0rem;
+    padding: 2rem;
+  }
+
+  .dropzone-uploading {
+    color:$primaryColor;
+  }
+
+  .dropzone-active {
+    border-color: $primaryColor;
+  }
+}
+
+.interval-selector{
+  text-align: center;
+  margin: 0px auto;
+
+  div{
+    display: inline-table;
+    width: 10.4rem;
+  }
+
+  label{
+    position: absolute;
+    font-size: 2rem;
+    width: 6rem;
+
+  }
+  input[type="number"] {
+    font-size: 3.8rem;
+    width: 6.4rem;
+    border: none;
+    margin-top: 3rem;
+    margin-left:2rem
+  }
+}

@@ -1,0 +1,33 @@
+{{#application-wrapper}}
+
+    <!-- Main Header -->
+    {{application-header
+            currentUser=currentUser
+            session=session
+            invalidateSession=(action "invalidateSession")}}
+
+    <!-- Left side column. contains the logo and sidebar -->
+    {{application-sidebar
+            projectList=projectList
+            projectId=projectId
+            currentUser=currentUser
+    }}
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        {{outlet}}
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    {{application-footer}}
+
+    <!-- Control Sidebar -->
+    {{application-controlbar}}
+    <!-- /.control-sidebar -->
+
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+{{/application-wrapper}}
+{{chat-box currentUser=currentUser}}

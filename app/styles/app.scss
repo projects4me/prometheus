@@ -1,0 +1,71 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This is tha main scss file in which we include all the other scss files
+  This files is an a part of projects4me and should not be modified. If you
+  require any change please see below the application supports custom scss files
+  in order you cater any style chnages that you may want
+*/
+
+
+/*
+  Including the dependencies, this is where you would include any third party
+  Sass file. The reason is simple, basically we would want to retain the
+  capability of being able to override the rule in our application related
+  Sass files.
+*/
+@import 'bower_components/bootstrap-sass/assets/stylesheets/_bootstrap';
+@import 'bower_components/Ionicons/scss/ionicons';
+@import 'bower_components/font-awesome/scss/font-awesome.scss';
+@import 'ember-power-select';
+@import 'vendor/AdminLTE/dist/css/AdminLTE.min.scss';
+@import 'vendor/AdminLTE/dist/css/skins/skin-black-light.min.scss';
+@import 'highlight/monokai_sublime.scss';
+@import 'quill.scss';
+@import 'quill-bubble.scss';
+@import 'messenger/messenger.scss';
+@import 'messenger/messenger-spinner.scss';
+@import 'messenger/messenger-theme-air.scss';
+@import 'twemoji-awesome.scss';
+@import 'bower_components/jQuery-QueryBuilder/dist/scss/default.scss';
+@import 'bower_components/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss';
+@import 'vendor/DataTables/datatables.min.scss';
+
+/*
+  Include the application variables
+*/
+
+@import "variables.scss";
+@import 'modules/document.scss';
+
+
+/*
+  Inclde all the module related Scss files
+*/
+
+@import "modules/header.scss";
+@import "modules/login.scss";
+@import "modules/nav.scss";
+@import "modules/wiki.scss";
+@import "modules/atwho.scss";
+@import "modules/conversation.scss";
+@import "modules/calendar.scss";
+@import "modules/chat.scss";
+@import "modules/project.scss";
+@import "modules/module.scss";
+@import "modules/issue.scss";
+@import "modules/form-fields.scss";
+@import "modules/uploads.scss";
+@import "modules/widgets.scss";
+
+@import 'summernote.scss';
+@import '../../custom/styles/custom.scss';
+
+/**
+ @todo allow plugins to add their own scss changes
+ @import '../../custom/plugins/ ** /*.scss';
+*/

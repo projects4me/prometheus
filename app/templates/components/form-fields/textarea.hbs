@@ -1,0 +1,7 @@
+<!-- This should be loaded later via the field view ideally -->
+{{textarea-field required="required" value=value}}
+<span class="highlight"></span>
+<span class="bar"></span>
+<label class="floating-label">{{label}}</label>
+<span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
+<span class="error hidden text-red">This field cannot be required</span>

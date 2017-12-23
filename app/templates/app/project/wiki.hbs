@@ -1,0 +1,32 @@
+<div class="wiki-project-wrapper">
+  <div class="wiki-project row">
+
+    <div class="wiki-list-wrapper col-md-2">
+      <div class="wiki-list">
+
+        <a href="#" class="btn btn-primary btn-block margin-bottom" {{action "create"}}><i class="fa fa-plus"></i> {{t "view.app.wiki.create.page"}}</a>
+
+        <div class="box box-solid">
+          <div class="box-header with-border">
+              <h3 class="box-title">{{t "view.app.wiki.list"}}</h3>
+          </div>
+          <div class="box-body">
+            <ul class="nav nav-pills nav-stacked">
+              {{#if (object-empty tree)}}
+                <li class="no-entry">{{t "global.noentry"}}</li>
+              {{else}}
+                {{tree-list lists=tree projectId=projectId}}
+              {{/if}}
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="wiki-detail-wrapper col-md-10">
+        {{outlet}}
+    </div>
+
+  </div>
+</div>

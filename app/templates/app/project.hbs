@@ -1,0 +1,36 @@
+<section class="content-header">
+  {{#if projectId}}
+    <h1>
+      {{t "view.app.project.label"}}
+      <small>{{model.name}}</small>
+    </h1>
+  {{else}}
+    <div class="callout callout-warning no-project-selected">
+      <h4>
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-briefcase fa-stack-1x fa-inverse"></i>
+          <i class="fa fa-ban fa-stack-2x text-danger"></i>
+        </span> {{t "view.app.project.noproject"}}
+      </h4>
+      {{t "view.app.project.select"}}
+    </div>
+  {{/if}}
+
+  {{#bread-crumbs tagName="ol" linkable=true as |component module|}}
+    {{#bread-crumb route=module breadCrumbs=component}}
+        <i class="fa fa-{{nav-icon module.title}}"></i>
+        {{#if module.record}}
+          {{module.title}}
+        {{else}}
+          {{t (concat "view.nav.menu." (camelize module.title) ".label")}}
+        {{/if}}
+    {{/bread-crumb}}
+  {{/bread-crumbs}}
+
+</section>
+
+<section class="content">
+  {{#if projectId}}
+    {{outlet}}
+  {{/if}}
+</section>

@@ -1,0 +1,29 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+
+.widgets{
+    table.dataTable thead .sorting_asc:after{
+        color: $primaryColor;
+        opacity: 1;
+    }
+
+    table.dataTable thead .sorting_desc:after{
+        color: $primaryColor;
+        opacity: 1;
+    }
+
+    .pagination > .active > a, .pagination > .active > a:hover, .pagination > .active > a:focus, .pagination > .active > span, .pagination > .active > span:hover, .pagination > .active > span:focus {
+        background-color: $primaryColor;
+        border-color: $primaryColor;
+    }
+
+    table.dataTable tbody tr.selected, table.dataTable tbody th.selected, table.dataTable tbody td.selected{
+        color: $darkColor;
+    }
+
+    table.dataTable tbody > tr.selected, table.dataTable tbody > tr > .selected {
+        background-color: transparent;
+    }
+}

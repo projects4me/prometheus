@@ -1,0 +1,26 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the login page of the application.
+*/
+
+.login-logo {
+  margin-top:2.5rem;
+  margin-bottom: 0rem;
+
+  img{
+    width: 12.8rem;
+    height: 12.8rem;
+  }
+}
+
+.login-box{
+  border: 0.1rem solid $borderColor;
+  -moz-box-shadow:    0.3rem 0.3rem 0.5rem 0.3rem #CCC;
+  -webkit-box-shadow: 0.3rem 0.3rem 0.5rem 0.3rem #CCC;
+  box-shadow:         0.3rem 0.3rem 0.5rem 0.3rem #CCC;
+}

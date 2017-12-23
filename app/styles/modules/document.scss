@@ -1,0 +1,383 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the entire document
+*/
+
+
+.box.box-primary{
+  border-top-color: $primaryColor !important;
+}
+
+.bg-primary{
+  background-color: $primaryColor !important;
+}
+
+//colors
+$color_maroon_flush_approx: #b3244f;
+$color_pompadour_approx: rgba(100,12,68,1);
+$color_tree_poppy_approx: #f39c12;
+$color_mai_tai_approx: rgba(175, 112, 12,1);
+$color_valencia_approx: #dd4b39;
+$color_burnt_umber_approx: rgba(145, 45, 33,1);
+$color_green_haze_approx: #00a65a;
+$color_fun_green_approx: rgba(0, 100, 50,1);
+$color_robins_egg_blue_approx: #00c0ef;
+$color_allports_approx: rgba(0, 120, 150,1);
+$color_mischka_approx: #d2d6de;
+$color_jumbo_approx: rgba(127, 127, 135,1);
+
+
+@mixin gradient-border-top($startColor,$endColor) {
+  content: '';
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: -0.3rem;
+  height: 0.4rem;
+  background: $startColor;
+  background: linear-gradient(to right, $startColor 0, $color_pompadour_approx 100%);
+  filter: progid:dximagetransform.microsoft.gradient(startcolorstr=$startColor, endcolorstr=$endColor, gradienttype=1 );
+}
+
+@mixin gradient-border($startColor,$endColor) {
+  border-color: $startColor;
+  border-color: linear-gradient(to right, $startColor 0, $color_pompadour_approx 100%);
+  filter: progid:dximagetransform.microsoft.gradient(startcolorstr=$startColor, endcolorstr=$endColor, gradienttype=1 );
+}
+
+
+.box {
+	&.box-primary:after {
+    @include gradient-border-top($color_maroon_flush_approx,$color_pompadour_approx);
+	}
+	&.box-warning:after {
+    @include gradient-border-top($color_tree_poppy_approx,$color_mai_tai_approx);
+	}
+	&.box-danger:after {
+    @include gradient-border-top($color_valencia_approx, $color_burnt_umber_approx);
+	}
+	&.box-success:after {
+    @include gradient-border-top($color_green_haze_approx, $color_fun_green_approx);
+	}
+	&.box-info:after {
+    @include gradient-border-top($color_robins_egg_blue_approx, $color_allports_approx);
+	}
+	&.box-default:after {
+    @include gradient-border-top($color_mischka_approx, $color_jumbo_approx);
+	}
+}
+
+.popover {
+  border-radius: 0.2rem;
+  &.popover:after {
+    @include gradient-border-top($color_maroon_flush_approx,$color_pompadour_approx);
+  }
+
+  .popover-title{
+    background-color: $backgroundColor;
+    font-weight: 600;
+  }
+
+  .popover-title,.popover-content{
+    color:#444;
+  }
+
+}
+
+.btn-primary, .btn-primary[disabled]{
+  background: $primaryColor;
+  border-color: $primaryColor;
+/*
+  background: rgba(179,36,79,1);
+  background: -moz-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(179,36,79,1) 71%, rgba(100,12,68,1) 100%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgba(179,36,79,1)), color-stop(71%, rgba(179,36,79,1)), color-stop(100%, rgba(100,12,68,1)));
+  background: -webkit-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(179,36,79,1) 71%, rgba(100,12,68,1) 100%);
+  background: -o-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(179,36,79,1) 71%, rgba(100,12,68,1) 100%);
+  background: -ms-linear-gradient(left, rgba(179,36,79,1) 0%, rgba(179,36,79,1) 71%, rgba(100,12,68,1) 100%);
+  background: linear-gradient(to right, rgba(179,36,79,1) 0%, rgba(179,36,79,1) 71%, rgba(100,12,68,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3244f', endColorstr='#640c44', GradientType=1 );
+*/
+//http://www.cssmatic.com/gradient-generator#'\-moz\-linear\-gradient\%28left\%2C\%20rgba\%28179\%2C36\%2C79\%2C1\%29\%200\%25\%2C\%20rgba\%28179\%2C36\%2C79\%2C1\%29\%2071\%25\%2C\%20rgba\%28100\%2C12\%2C68\%2C1\%29\%20100\%25\%29\%3B'
+}
+.btn-primary:hover,.btn-primary:active,.btn-primary:visited,.btn-primary:focus,.btn-primary[disabled]:hover,.btn-primary[disabled]:active,.btn-primary[disabled]:visited,.btn-primary[disabled]:focus{
+  background: $highlightColor;
+  border-color: $highlightColor;
+}
+
+.path-seperator:after{
+  content:"/";
+}
+
+.colon:after {
+    content: ":";
+    padding: 0.2rem;
+}
+
+.no-entry{
+  color: $borderColor;
+  font-style: italic;
+}
+
+.label-primary, .modal-primary .modal-body{
+  background-color: $primaryColor !important;
+  font-size: 1.2rem;
+}
+
+.disabled-text{
+  color: $lightColor;
+  font-style: italic;
+}
+
+.disabled{
+  color: $lightColor;
+  cursor: not-allowed;
+}
+
+.lock{
+  cursor: pointer;
+}
+
+.lock:hover{
+  color: $highlightColor;
+}
+
+.modified-by{
+  color: $mediumColor;
+  font-style: italic;
+}
+
+.no-project-selected{
+  margin: 4rem 0rem;
+}
+
+.messenger{
+    .alert-success, .alert-danger, .alert-error, .alert-warning, .alert-info{
+      background-color: $backgroundColor !important;
+      color: $darkColor !important;
+    }
+
+    .messenger-message.alert-error{
+      border:0.1rem solid $errorColor !important;
+    }
+
+    .messenger-message.alert-success{
+      border:0.1rem solid $successColor !important;
+    }
+
+    .messenger-message.alert-info{
+      border:0.1rem solid $infoColor !important;
+    }
+
+    .messenger-message.alert-warning{
+      border:0.1rem solid $warningColor !important;
+      .messenger-message-inner:before{
+        background-color: $warningColor !important;
+      }
+    }
+
+    .messenger-message.alert-danger{
+      border:0.1rem solid $dangerColor !important;
+      .messenger-message-inner:before{
+      background-color: $dangerColor !important;
+      }
+    }
+
+    .messenger-message.alert-missing{
+      border:0.1rem solid $missingColor !important;
+      .messenger-message-inner:before{
+        background-color: $missingColor !important;
+      }
+    }
+}
+
+span[data-atwho-at-query*="@"]{
+  border-radius: 0.3rem;
+
+  a{
+    background: $primaryColor !important;
+    color: $backgroundColor;
+    padding: 0rem 0.3rem;
+  }
+  a:hover{
+    background: $highlightColor !important;
+    color: $backgroundColor;
+  }
+}
+
+span[data-atwho-at-query*="#"]{
+  color: $backgroundColor;
+  border-radius: 0.3rem;
+
+  a.done,a.complete{
+    background-color: #5AC594 !important;
+    padding: 0rem 0.3rem;
+    color: $backgroundColor;
+  }
+  a.done:hover,a.complete:hover{
+    background-color: #00a65a !important;
+  }
+
+  a.closed{
+    background-color: #e98a7e;
+    padding: 0rem 0.3rem;
+    color: $backgroundColor;
+  }
+  a.closed:hover{
+    background-color: #d33724 !important;
+  }
+
+  a.deferred,a.pending,a.feedback{
+    background-color: #f7bf65;
+    padding: 0rem 0.3rem;
+    color: $backgroundColor;
+  }
+  a.deferred:hover,a.pending:hover,a.feedback:hover{
+    background-color: #f39c12 !important;
+  }
+
+  a.new{
+    background-color: #80b5d3;
+    padding: 0rem 0.3rem;
+    color: $backgroundColor;
+  }
+  a.new:hover{
+    background-color: #3c8dbc !important;
+  }
+
+  a.in_progress{
+    background-color: $primaryColor;
+    padding: 0rem 0.3rem;
+    color: $backgroundColor;
+  }
+  a.in_progress:hover{
+    background-color: $highlightColor !important;
+  }
+
+}
+
+[contenteditable=true]:empty:before {
+  color: $mediumColor;
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+}
+
+.ember-basic-dropdown-content{
+  z-index:2000 !important;
+}
+
+.editable{
+  height: 8rem;
+  border: 0.1rem solid $borderColor;
+  padding: 0.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+@media print{
+  .chat-boxes,
+  .chat-box{
+    display: none;
+  }
+}
+
+.badge{
+  border-radius: 0.2rem;
+}
+
+.table-responsive{
+  th{
+    position: relative;
+  }
+  .sortable{
+    cursor: pointer;
+  }
+  .sortable:hover:after{
+      color: $primaryColor;
+      opacity: 0.8;
+  }
+  .sortable:after{
+    opacity: 0.2;
+    content: "\e150";
+    font-family: 'Glyphicons Halflings';
+    position: absolute;
+    display: block;
+    right: 8px;
+    bottom: 8px;
+  }
+  .sortable-asc:after{
+    content: "\e155";
+    opacity: 0.8;
+    color: $highlightColor;
+  }
+  .sortable-desc:after{
+    content: "\e156";
+    opacity: 0.8;
+    color: $highlightColor;
+  }
+}
+
+.search{
+  display: inline-flex;
+  width: 100%;
+
+  .has-feedback{
+    width: 100%;
+  }
+  .btn-primary{
+    width: 8rem;
+    margin-left: 0.5rem;
+    height: 3rem;
+    margin-top: -0.1rem;
+  }
+
+  .dropdown-toggle{
+    height: 3rem;
+    border-radius: 0.2rem 0rem 0rem 0.2rem;
+    padding-top: 4px;
+  }
+
+  .dropToggle{
+   transform:         rotate(180deg); /* CSS3 */
+   -moz-transform:    rotate(180deg); /* Firefox */
+   -webkit-transform: rotate(180deg); /* Webkit */
+   -o-transform:      rotate(180deg); /* Opera */
+   -ms-transform:     rotate(180deg); /* IE 9 */
+  }
+}
+
+
+.btn-group .btn + .btn, .btn-group .btn + .btn-group, .btn-group .btn-group + .btn, .btn-group .btn-group + .btn-group{
+  margin-left:0;
+}
+
+.breadcrumb li:last-child {
+    font-weight: 600;
+}
+
+.dropdown-menu {
+  z-index: 1100;
+
+  i, select, .available{
+    cursor: pointer;
+  }
+
+  .off {
+    color: $lightColor;
+  }
+
+}
+
+.note-editing-area{
+  table{
+    border-collapse: collapse;
+  }
+  table, th, td{
+    border: 1px solid $borderColor !important;
+  }
+}

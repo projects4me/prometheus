@@ -1,0 +1,26 @@
+<div class="calendar">
+  <div class="row">
+
+    <div class="col-md-12">
+      <div class="box box-primary">
+        <div class="box-body no-padding">
+          <!-- THE CALENDAR -->
+          {{full-calendar
+            events=events
+            editable=true
+            header=header
+            eventLimit=true
+            locale=localeCode
+            eventRender=(action "eventRender")
+            }}
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /. box -->
+    </div>
+    <!-- /.col -->
+
+  </div>
+  <!-- /.row -->
+</div>
+<!-- /.calendar -->
