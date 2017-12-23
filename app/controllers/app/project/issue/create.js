@@ -184,7 +184,7 @@ export default Ember.Controller.extend({
                     showCloseButton: true
                 });
 
-                self.transitionToRoute('app.project.issue.page', {projectId:data.get('projectId'),issueNumber:data.get('id')});
+                self.transitionToRoute('app.project.issue.page', {projectId:data.get('projectId'),issueNumber:data.get('issueNumber')});
             });
         },
 

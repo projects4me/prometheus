@@ -16,21 +16,45 @@ import App from "../../app";
 export default App.extend({
 
     /**
+     * We use the after model hook here in order to load the
+     * system issue types
+     */
+    afterModel(){
+        let _self = this;
+
+        let issuetypeOptions = {
+            query: '(Issuetype.system : 1)',
+            limit: -1
+        };
+
+        return Ember.RSVP.hash({
+            issuetypes: _self.store.query('issuetype',issuetypeOptions),
+        }).then(function(results){
+            _self.set('issuetypes',results.issuetypes.toArray());
+        });
+
+    },
+
+    /**
      * This function is called every time the controller is being setup
      *
      * @method setupController
      * @param {Prometheus.Controllers.Issue} controller
      * @param {Prometheus.Models.Issue} model
      * @protected
+     * @todo Store static lists elsewhere
      */
     setupController:function(controller,model)
     {
         Logger.debug('AppProjectIndexRoute::setupController');
-        let i18n = this.get('i18n');
+        let _self = this;
+        let i18n = _self.get('i18n');
 
+        controller.set('issuetypes',_self.get('issuetypes'));
 
-        let project = this.get('store').createRecord('project');
+        let project = _self.get('store').createRecord('project');
         controller.set('model',project);
+
         let type = [
             {
                 "label":"Scrum",

@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import  format from "../../../utils/data/format";
+
 /**
  * This is empty controller, normally we do not create them. However
  * Ember's inject in the child controllers was failing on reload
@@ -92,6 +93,20 @@ export default Ember.Controller.extend({
         this.set('model.shortCode',shortCode);
         return shortCode;
     }).property('model.name'),
+
+    /**
+     * This is a computed property in which gets the list of issue
+     * types in the system
+     *
+     * @property issuetypeList
+     * @type Array
+     * @for Create
+     * @private
+     */
+    issuetypeList: Ember.computed(function(){
+        return format.getSelectList(this.get('issuetypes'));
+    }).property('issuetypes'),
+
     /**
      * These are the events that this controller handles
      *
@@ -109,7 +124,7 @@ export default Ember.Controller.extend({
          * @param {Object} target
          * @public
          */
-        selectOwner:function(target)
+        selectOwner(target)
         {
             Logger.debug('App.Projects.Create:selectAssignee');
             let model = this.get('model');
@@ -124,7 +139,7 @@ export default Ember.Controller.extend({
          * @param {Object} target
          * @public
          */
-        selectStatus:function(target)
+        selectStatus(target)
         {
             Logger.debug('App.Projects.Create:selectStatus');
             let model = this.get('model');
@@ -139,7 +154,7 @@ export default Ember.Controller.extend({
          * @param {Object} target
          * @public
          */
-        selectType:function(target)
+        selectType(target)
         {
             Logger.debug('App.Projects.Create:selectType');
             let model = this.get('model');
@@ -155,9 +170,11 @@ export default Ember.Controller.extend({
          * @public
          * @todo Trigger the notificaiton
          */
-        save:function() {
+        save() {
             let _self = this;
             let model = _self.get('model');
+
+            let selectedIssuetypes = _self.get('selectedIssuetypes');
 
             model.dateCreated = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
             model.dateModified = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
@@ -175,14 +192,35 @@ export default Ember.Controller.extend({
             model.save().then(function(data){
                 Logger.debug('Data saved:');
                 Logger.debug(data);
+                let Promises = {};
 
-                new Messenger().post({
-                    message: _self.get('i18n').t('view.app.project.create.created',{name:data.get('name')}),
-                    type: 'success',
-                    showCloseButton: true
+                _.forEach(selectedIssuetypes,function(issueType){
+                    let newIssueType = _self.get('store').createRecord('issuetype',{
+                        name: issueType.label,
+                        dateCreated: moment().utc().format("YYYY-MM-DD HH:mm:ss"),
+                        dateModified: moment().utc().format("YYYY-MM-DD HH:mm:ss"),
+                        deleted: 0,
+                        description: issueType.label,
+                        createdUser: _self.get('currentUser.user.id'),
+                        modifiedUser: _self.get('currentUser.user.id'),
+                        system: 0,
+                        projectId: data.get('id')
+                    });
+                    Promises[issueType.label] = newIssueType.save();
                 });
 
-                _self.transitionToRoute('app.project.index', {projectId:data.get('id')});
+                Ember.RSVP.hash(Promises).then(function(){
+
+                    new Messenger().post({
+                        message: _self.get('i18n').t('view.app.project.create.created',{name:data.get('name')}),
+                        type: 'success',
+                        showCloseButton: true
+                    });
+
+                    _self.transitionToRoute('app.project.index', {projectId:data.get('id')});
+
+                });
+
             });
         },
 
@@ -193,9 +231,25 @@ export default Ember.Controller.extend({
          * @public
          * @todo Trigger the notificaiton
          */
-        cancel:function(){
+        cancel(){
             this.transitionToRoute('app.projects');
         },
+
+        /**
+         * This function is called when an issuetype is selected
+         *
+         * @method issuetypeSelected
+         * @param {*} issue
+         * @public
+         */
+        issuetypeSelected(issue){
+            Logger.debug('Prometheus.Controllers.App.Projects.Create::issuetypeSelected');
+
+            let _self = this;
+            _self.set('selectedIssuetypes',issue);
+
+            Logger.debug('-Prometheus.Controllers.App.Projects.Create::issuetypeSelected');
+        }
     }
 
 });

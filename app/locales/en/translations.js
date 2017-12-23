@@ -430,7 +430,9 @@ export default {
                     "statusplaceholder" : "Which status is the project in?",
                     "visionholder" : "What is the project vision",
                     "scopeplaceholder" : "What is the project scope",
-                    "created" : "<strong>{{name}}</strong> created successfully"
+                    "created" : "<strong>{{name}}</strong> created successfully",
+                    "issuetypes" : "Issue Types",
+                    "selectissuetypes" : "Select issue type this project will support"
                 },
                 "edit" : {
                     "header" : "Edit Project",

@@ -1,5 +1,5 @@
-<div class="input-group select-input">
-  {{#power-select
+<div class="input-group multiselect-input">
+  {{#power-select-multiple
       class="form-control"
       options=options
       placeholder=placeholder
@@ -8,7 +8,7 @@
       onchange=onchange
   as |data|}}
     {{component relateType data=data}}
-  {{/power-select}}
+  {{/power-select-multiple}}
 </div>
 <span class="highlight"></span>
 <span class="bar"></span>
