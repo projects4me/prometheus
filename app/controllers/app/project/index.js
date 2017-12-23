@@ -50,6 +50,17 @@ export default Ember.Controller.extend({
     addMemberDialog: false,
 
     /**
+     * This flag is used to show or hide the modal dialog box
+     * for editing milestones
+     *
+     * @property milestoneDialog
+     * @type bool
+     * @for Index
+     * @private
+     */
+    milestoneDialog: false,
+
+    /**
      * This field stores the selected role in the add member dialog
      *
      * @property selectedRole
@@ -108,6 +119,25 @@ export default Ember.Controller.extend({
         return (_.differenceWith(usersList,currentMembers,_.isEqual));
     }).property('model','model.members'),
 
+    milestoneTypes : [
+        {"label":"Milestone","value":"milestone"},
+        {"label":"Version","value":"version"},
+        {"label":"Patch","value":"patch"},
+        {"label":"Release","value":"release"},
+        {"label":"Sprint","value":"sprint"},
+    ],
+
+    milestoneStatuses : [
+        {"label":"Completed","value":"completed"},
+        {"label":"Closed","value":"closed"},
+        {"label":"In Progress","value":"in_progress"},
+        {"label":"Planned","value":"planned"},
+        {"label":"Complete","value":"complete"},
+        {"label":"Overdue","value":"overdue"},
+        {"label":"Deferred","value":"deferred"},
+        {"label":"Failed","value":"failed"},
+    ],
+
     /**
      * These are the actions that we are going to handle for this controller
      *
@@ -127,7 +157,7 @@ export default Ember.Controller.extend({
          * @param {String} query The params passed in the format of encoded URL string
          * @public
          */
-        navigateToProjectPage:function(entity,query){
+        navigateToProjectPage(entity,query){
             Logger.debug("AppProjectIndexController::navigateToProjectPage("+entity+","+query+")");
             this.transitionToRoute('app.project.'+entity,{projectId:this.get('projectId')});
         },
@@ -139,7 +169,7 @@ export default Ember.Controller.extend({
          * @param {String} projectId
          * @public
          */
-        editProject:function(projectId){
+        editProject(projectId){
             Logger.debug('Prometheus.App.Projects.Edit::editProject('+projectId+')');
             this.transitionToRoute('app.projects.edit',{projectId:projectId});
             Logger.debug('-Prometheus.App.Projects.Edit::editProject');
@@ -152,7 +182,7 @@ export default Ember.Controller.extend({
          * @param role
          * @public
          */
-        selectRole:function(role){
+        selectRole(role){
             Logger.debug('Prometheus.App.Project.Controller->selectRole');
             this.set('selectedRole',role.value);
             Logger.debug('-Prometheus.App.Project.Controller->selectRole');
@@ -165,7 +195,7 @@ export default Ember.Controller.extend({
          * @param user
          * @public
          */
-        selectUser:function(user){
+        selectUser(user){
             Logger.debug('Prometheus.App.Project.Controller->selectUser');
             this.set('selectedUser',user.value);
             Logger.debug('-Prometheus.App.Project.Controller->selectUser');
@@ -176,7 +206,7 @@ export default Ember.Controller.extend({
          *
          * @method addTag
          */
-        addMember:function(){
+        addMember(){
             Logger.debug('AppProjectIndexController:addMember');
             let _self = this;
             Logger.debug(_self);
@@ -229,13 +259,126 @@ export default Ember.Controller.extend({
             _self.send('removeAddMemberModal');
             Logger.debug('-AppProjectIndexController:addMember');
         },
+
         /**
-         * This function is used to show the add modal dialog box
+         * This function is called when the milestone type is
+         * being selected
+         *
+         * @method selectMilestoneType
+         * @param {Object} target
+         * @public
+         */
+        selectMilestoneType(target)
+        {
+            Logger.debug('Prometheus.Controllers.Project.Index::selectMileStoneType');
+            this.set('newMilestone.milestoneType',target.value);
+            Logger.debug('-Prometheus.Controllers.Project.Index::selectMileStoneType');
+        },
+
+        /**
+         * This function is called when the milestone status is
+         * being selected
+         *
+         * @method selectMilestoneStatus
+         * @param {Object} target
+         * @public
+         */
+        selectMilestoneStatus(target)
+        {
+            Logger.debug('Prometheus.Controllers.Project.Index::selectMileStoneStatus');
+            this.set('newMilestone.status',target.value);
+            Logger.debug('-Prometheus.Controllers.Project.Index::selectMileStoneStatus');
+        },
+
+        /**
+         * This function is called when the start date field is changed
+         *
+         * @method milestoneStartDateChanged
+         * @param {String} date
+         * @public
+         */
+        milestoneStartDateChanged(date) {
+            Logger.debug('Prometheus.Controllers.Project.Index::startDateChanged('+date+')');
+            if (this.get('newMilestone') !== undefined) {
+                this.get('newMilestone').set('startDate', date);
+            }
+            Logger.debug('Prometheus.Controllers.Project.Index::startDateChanged');
+        },
+
+        /**
+         * This function is called when the end date field is changed
+         *
+         * @method milestonEndDateChanged
+         * @param {String} date
+         * @public
+         */
+        milestoneEndDateChanged(date) {
+            Logger.debug('Prometheus.Controllers.Projects.Index::endDateChanged('+date+')');
+            if (this.get('newMilestone') !== undefined) {
+                this.get('newMilestone').set('endDate', date);
+            }
+            Logger.debug('Prometheus.Controllers.Projects.Index::endDateChanged');
+        },
+
+
+        /**
+         * This function is used to save a milestone
+         *
+         * @method saveMilestone
+         * @public
+         * @todo validate milestone information
+         */
+        saveMilestone(){
+            Logger.debug('Prometheus.Controllers.Project.Index::saveMilestone');
+            let _self = this;
+            let newMilestone = _self.get('newMilestone');
+            Logger.debug(_self);
+
+            if (newMilestone.get('name') !== null
+                && newMilestone.get('startDate') !== null
+                && newMilestone.get('endDate') !== null
+                && newMilestone.get('typeDate') !== null
+                && newMilestone.get('statusDate') !== null) {
+
+                newMilestone.set('dateCreated',moment().utc().format('YYYY-MM-DD HH:mm:ss'));
+                newMilestone.set('dateModified',moment().utc().format('YYYY-MM-DD HH:mm:ss'));
+                newMilestone.set('createdUser',_self.get('currentUser.user.id'));
+                newMilestone.set('modifiedUser',_self.get('currentUser.user.id'));
+                newMilestone.set('projectId',_self.get('model.id'));
+                newMilestone.set('deleted',0);
+
+                // Add milestone to the system
+                newMilestone.save().then(function (data) {
+                    _self.get('milestones').pushObject(newMilestone);
+
+                    newMilestone = _self.get('store').createRecord('milestone');
+                    _self.set('newMilestone',newMilestone);
+
+                    new Messenger().post({
+                        message: _self.get('i18n').t("view.app.project.detail.milestone.added",{name:data.get('name')}),
+                        type: 'success',
+                        showCloseButton: true
+                    });
+                });
+            } else  {
+                new Messenger().post({
+                    message: _self.get('i18n').t("view.app.project.detail.milestone.missing"),
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+
+            _self.send('removeMilestoneDialog');
+            Logger.debug('-Prometheus.Controllers.Project.Index::saveMilestone');
+        },
+
+        /**
+         * This function is used to show the add members dialog box
          *
          * @method showDialog
          * @public
          */
-        showAddMemberDialog:function()
+        showAddMemberDialog()
         {
             this.set('addMemberDialog',true);
         },
@@ -243,12 +386,34 @@ export default Ember.Controller.extend({
         /**
          * This function is used to hide the add tag modal
          *
-         * @method removeModal
+         * @method removeAddMemberModal
          * @public
          */
-        removeAddMemberModal:function(){
+        removeAddMemberModal(){
             this.set('addMemberDialog',false);
+        },
+
+        /**
+         * This function is used to show the milestone dialog box
+         *
+         * @method showMilestoneDialog
+         * @public
+         */
+        showMilestoneDialog()
+        {
+            this.set('milestoneDialog',true);
+        },
+
+        /**
+         * This function is used to hide the milestone dialog
+         *
+         * @method removeMilestoneDialog
+         * @public
+         */
+        removeMilestoneDialog(){
+            this.set('milestoneDialog',false);
         }
+
 
     }
 

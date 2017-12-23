@@ -32,22 +32,23 @@ export default App.extend({
      * @method setupController
      * @param {Promethues.Controllers.Project} controller the controller object for this route
      * @private
+     * @todo move the loading of related to afterModel
      */
     setupController:function(controller){
-
         Logger.debug('AppProjectIndexRoute::setupController');
+        let _self = this;
 
         // If the user navigated directly to the wiki project or page then lets setup the project id
-        var projectId = this.paramsFor('app.project').projectId;
-        var projectName = null;
+        let projectId = _self.paramsFor('app.project').projectId;
+        let projectName = null;
 
         Logger.debug(projectId);
         Logger.debug(projectName);
 
-        this.loadIssuesTime(projectId);
-        this.loadActivities(projectId);
+        _self.loadIssuesTime(projectId,controller);
+        _self.loadActivities(projectId,controller);
 
-        var options = {
+        let options = {
 //      fields: "Project.id,Project.name",
             query: "(Project.id : "+projectId+")",
             rels : 'members,conversations,createdBy,owner,memberships,roles',
@@ -59,7 +60,7 @@ export default App.extend({
         Logger.debug('Retreiving the project with options ');
         Logger.debug(options);
 
-        this.data = this.store.query('project',options).then(function(data){
+        _self.store.query('project',options).then(function(data){
             if (projectId !== null)
             {
                 projectName = data.findBy('id',projectId).get('name');
@@ -68,6 +69,9 @@ export default App.extend({
             }
             controller.set('model',data.nextObject(0));
         });
+
+        let newMilestone = _self.store.createRecord('milestone');
+        controller.set('newMilestone',newMilestone);
     },
 
 
@@ -91,10 +95,10 @@ export default App.extend({
      * @param {String} projectId The identifier of the project being viewed
      * @todo Explore the possibility of using the url project/:id/:relation as it is supported by the API
      */
-    loadIssuesTime:function(projectId){
+    loadIssuesTime:function(projectId,controller){
 
-        var self = this;
-        var options = {
+        let self = this;
+        let options = {
             query: "(Issue.projectId : "+projectId+")",
             sort: "Issue.dateModified",
             order: 'DESC',
@@ -122,7 +126,7 @@ export default App.extend({
                         milestone.get('issues').pushObjects(milestoneIssues);
                     }
                 });
-                self.get('controller').set('milestones',milestones);
+                controller.set('milestones',milestones.toArray());
             });
         });
     },
@@ -136,9 +140,9 @@ export default App.extend({
      * @param {String} projectId The identifier of the project which is being viewed
      * @todo test performance and load in chunks if required.
      */
-    loadActivities:function(projectId){
-        var self = this;
-        var options = {
+    loadActivities:function(projectId,controller){
+        let self = this;
+        let options = {
             // Retreiving the activities related to a project
             query: "((Activity.relatedId : "+projectId+") AND (Activity.relatedTo : project))",
             sort: "Activity.dateCreated",
@@ -161,7 +165,7 @@ export default App.extend({
                 }
             });
 
-            self.get('controller').set('activities',activities);
+            controller.set('activities',activities);
         });
     },
 

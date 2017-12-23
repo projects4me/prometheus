@@ -399,6 +399,23 @@ export default {
                     "milestone" : {
                         "overdue" : "overdue",
                         "progress" : "{{closed}} out of {{total}} issues complete",
+                        "noentry" : "No milestone found for the project, please create one",
+                        "add" : "Add a Milestone",
+                        "manage" : "Manage Milestone",
+                        "inputname" : "Please specify the name of the milestone",
+                        "name" : "Name",
+                        "inputdescription" : "Please specify the description of the milestone",
+                        "description" : "Description",
+                        "inputenddate" : "Please specify the end date of the milestone",
+                        "enddate" : "End Date",
+                        "inputstartdate" : "Please specify the start date of the milestone",
+                        "startdate" : "Start Date",
+                        "inputtype" : "Please specify the type of the milestone",
+                        "type" : "Type",
+                        "inputstatus" : "Please specify the status of the milestone",
+                        "status" : "Status",
+                        "added" : "Milestone with name <strong>{{name}}</strong> has been added",
+                        "missing" : "Name, Start Date, End Date, Type and Status are all required",
                     }
                 },
                 "filter" : {
