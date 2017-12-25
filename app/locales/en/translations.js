@@ -735,7 +735,7 @@ export default {
                 "lists" : {
                     "status." : "Loading ..",
                     "status" : {
-                        "complete" : "Complete",
+                        "completed" : "Completed",
                         "closed" : "Closed",
                         "in_progress" : "In Progress",
                         "planned" : "Planned",

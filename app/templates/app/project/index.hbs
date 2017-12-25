@@ -284,9 +284,6 @@
       <div class="box box-info project-milestones-section">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.milestones"}}</h3>
-          <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "view.app.project.detail.managemilestones"}}"><i class="fa fa-gear"></i></button>
-          </div>
         </div>
 
         <div class="box-body no-padding" style="display: block;">
@@ -295,6 +292,7 @@
           {{else}}
             {{#each milestones as |milestone|}}
               {{#milestone-block milestone=milestone}}
+                <i class="fa fa-pencil edit-milestone" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editMilestone" milestone}}></i>
                 <span class="pull-right">
                 {{milestone.progress}}%
               </span>
@@ -324,7 +322,6 @@
                 placeholder=(t "view.app.project.detail.milestone.inputname")
                 label=(t "view.app.project.detail.milestone.name")
                 value=newMilestone.name
-                mask="alphanumeric"
             }}
 
             {{field-date

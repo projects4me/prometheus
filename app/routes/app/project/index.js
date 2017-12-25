@@ -97,7 +97,7 @@ export default App.extend({
      */
     loadIssuesTime:function(projectId,controller){
 
-        let self = this;
+        let _self = this;
         let options = {
             query: "(Issue.projectId : "+projectId+")",
             sort: "Issue.dateModified",
@@ -107,20 +107,20 @@ export default App.extend({
         };
 
         this.store.query('issue',options).then(function(issues){
-            self.get('controller').set('issuetime',issues);
+            _self.get('controller').set('issuetime',issues);
 
-            // We have to fetch the milestone list seperately as there might be a
+            // We have to fetch the milestone list separately as there might be a
             // project milestone with no issue associated with it
-            var options = {
+            let options = {
                 query: "(Milestone.projectId : "+projectId+")",
                 sort: "Milestone.startDate",
                 order: 'DESC',
                 rels:'none',
                 limit: -1
             };
-            self.store.query('milestone',options).then(function(milestones){
+            _self.store.query('milestone',options).then(function(milestones){
                 milestones.forEach(function(milestone){
-                    var milestoneIssues = issues.filterBy('milestoneId',milestone.get('id'));
+                    let milestoneIssues = issues.filterBy('milestoneId',milestone.get('id'));
                     if (milestoneIssues !== undefined)
                     {
                         milestone.get('issues').pushObjects(milestoneIssues);

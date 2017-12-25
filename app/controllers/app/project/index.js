@@ -349,10 +349,11 @@ export default Ember.Controller.extend({
 
                 // Add milestone to the system
                 newMilestone.save().then(function (data) {
-                    _self.get('milestones').pushObject(newMilestone);
 
-                    newMilestone = _self.get('store').createRecord('milestone');
-                    _self.set('newMilestone',newMilestone);
+                    if (newMilestone.get('id') === undefined) {
+                        _self.get('milestones').pushObject(newMilestone);
+
+                    }
 
                     new Messenger().post({
                         message: _self.get('i18n').t("view.app.project.detail.milestone.added",{name:data.get('name')}),
@@ -370,6 +371,19 @@ export default Ember.Controller.extend({
 
             _self.send('removeMilestoneDialog');
             Logger.debug('-Prometheus.Controllers.Project.Index::saveMilestone');
+        },
+
+        /**
+         * This function is used to edit the milestone dialog box
+         *
+         * @method editMilestone
+         * @public
+         */
+        editMilestone(milestone)
+        {
+            let _self = this;
+            _self.set('newMilestone',milestone);
+            _self.set('milestoneDialog',true);
         },
 
         /**
@@ -401,7 +415,10 @@ export default Ember.Controller.extend({
          */
         showMilestoneDialog()
         {
-            this.set('milestoneDialog',true);
+            let _self = this;
+            let newMilestone = _self.get('store').createRecord('milestone');
+            _self.set('newMilestone',newMilestone);
+            _self.set('milestoneDialog',true);
         },
 
         /**
@@ -411,7 +428,13 @@ export default Ember.Controller.extend({
          * @public
          */
         removeMilestoneDialog(){
-            this.set('milestoneDialog',false);
+            let _self = this;
+
+            if (_self.get('newMilestone.id') !== undefined){
+                _self.get('milestones').findBy('id',_self.get('newMilestone.id')).rollbackAttributes();
+            }
+
+            _self.set('milestoneDialog',false);
         }
 
 
