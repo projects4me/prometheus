@@ -8,14 +8,27 @@ import Ember from 'ember';
  * This function is used to retrieve a property in a object
  *
  * @method getProp
- * @param {Object} data
- * @param {String} index
+ * @param {Object} params[0] data
+ * @param {String} params[1] index
  * @return {*} data
  */
 export function getProp(params) {
-    var data = params[0];
-    var index = params[1];
-    return data.get(index);
+    let data = params[0];
+    let index = params[1];
+
+    Logger.debug(data);
+    Logger.debug(index);
+    if (typeof data.get === 'undefined'){
+        if (data[index] !== undefined) {
+            Logger.debug(data[index]);
+            return data[index];
+        } else{
+            // Handle more cases in the future
+            return '';
+        }
+    } else {
+        return data.get(index);
+    }
 }
 
 /**

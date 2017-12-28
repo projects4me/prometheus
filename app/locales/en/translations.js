@@ -799,6 +799,9 @@ export default {
                 "conversation": {
                     "label":"Conversations",
                 },
+                "board": {
+                    "label":"Task Board",
+                },
                 "workflow": {
                     "label":"Workflows",
                     "create": "Create Workflow",

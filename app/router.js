@@ -30,6 +30,7 @@ Router.map(function() {
                 this.route('edit',{path:'/edit/:wikiName'});
             });
             this.route('conversation',{path:'conversations'});
+            this.route('board',{path:'board'});
             this.route('calendar',{path:'calendar'});
             this.route('issue',function(){
                 this.route('index',{path:'/'});

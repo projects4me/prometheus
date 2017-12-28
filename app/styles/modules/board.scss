@@ -1,0 +1,64 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the entire document
+*/
+
+.board{
+
+  .lane{
+
+    .box-body{
+
+      min-height:45rem;
+
+      .item{
+        cursor: move;
+        margin: 0 0 2rem 0;
+        padding: 1.5rem 3rem 1.5rem 1.5rem;
+        border: 0.1rem solid #eee;
+        border-left: 0.5rem solid #eee;
+        background-color: #FFF;
+      }
+
+    .item-closed{
+        border-left-color: $darkColor;
+      }
+
+      .item-complete{
+        border-left-color: $successColor;
+      }
+
+      .item-deferred{
+        border-left-color: $infoColor;
+      }
+
+      .item-done{
+        border-left-color: $successColor;
+      }
+
+      .item-feedback{
+        border-left-color: $warningColor;
+      }
+
+      .item-in-progress {
+        border-left-color: $primaryColor;
+      }
+
+      .item-new{
+        border-left-color: $lightColor;
+      }
+
+      .item-pending{
+        border-left-color: $dangerColor;
+      }
+
+    }
+
+  }
+
+}

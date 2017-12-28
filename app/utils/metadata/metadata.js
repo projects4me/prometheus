@@ -168,6 +168,14 @@ export default Ember.Object.extend({
                     projectRelated: true,
                     routeParams: null
                 },
+                Board:{
+                    label: 'view.nav.menu.board.label',
+                    icon: 'columns',
+                    route: 'app.project.board',
+                    anchorRoute: 'board',
+                    projectRelated: true,
+                    routeParams: null
+                },
                 Workflow:{
                     label: 'view.nav.menu.workflow.label',
                     icon: 'puzzle-piece',
