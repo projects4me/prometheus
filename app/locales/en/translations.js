@@ -753,6 +753,11 @@ export default {
                     },
                 },
             },
+
+            "board" : {
+                "backlog" : "Backlog"
+            },
+
             "components" : {
                 "intervalselector" : {
                     "days" : "Days",

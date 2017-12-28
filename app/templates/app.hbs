@@ -23,11 +23,18 @@
     {{application-footer}}
 
     <!-- Control Sidebar -->
-    {{application-controlbar}}
+    {{application-controlbar
+        initChat=(action 'startChat')
+        gotMessage=(action 'newMessage')
+    }}
     <!-- /.control-sidebar -->
 
     <!-- Add the sidebar's background. This div must be placed
          immediately after the control sidebar -->
     <div class="control-sidebar-bg"></div>
 {{/application-wrapper}}
-{{chat-box currentUser=currentUser}}
+{{#each chatrooms as |chatroom|}}
+  {{chat-box
+      chatroom=chatroom
+      currentUser=currentUser}}
+{{/each}}
