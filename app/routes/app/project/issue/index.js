@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import App from "../../../app";
+import { inject } from '@ember/service';
+import { hash } from 'rsvp';
 
 /**
  * The issues route
@@ -120,7 +121,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject(),
 
     /**
      * The model for this route
@@ -204,7 +205,7 @@ export default App.extend({
             limit: -1
         };
 
-        return Ember.RSVP.hash({
+        return hash({
             savedsearches: _self.store.query('savedsearch',savedSearchesOption),
             publicsearches: _self.store.query('savedsearch',publicSearchesOption)
         }).then(function(results){

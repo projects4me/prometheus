@@ -3,6 +3,7 @@
  */
 
 import App from "../app";
+import { hash } from 'rsvp';
 
 /**
  * The wiki route
@@ -44,7 +45,7 @@ export default App.extend({
             limit:-1,
         };
 
-        return Ember.RSVP.hash({
+        return hash({
             issues: _self.store.query('issue',issuesOptions)
         }).then(function(results){
             _self.set('issues',{});

@@ -2,7 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Component from '@ember/component';
+import { inject } from '@ember/service';
+import { set } from '@ember/object';
+import { computed } from '@ember/object';
 
 /**
  * This component is used to render different activity blocks for the system
@@ -14,7 +17,7 @@ import Ember from "ember";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -24,7 +27,7 @@ export default Ember.Component.extend({
      * @for ActivityBlock
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * We need the compoent to render inside an li so that the UI does not break
@@ -48,12 +51,12 @@ export default Ember.Component.extend({
      * @for ActivityBlock
      * @private
      */
-    layoutName: function() {
-        var activity = this.get('activity');
-        var template = null;
+    layoutName: computed('activity','model', function() {
+        let activity = this.get('activity');
+        let template = null;
 
-        var createdSince = moment.duration(moment(new Date()).diff(moment(activity.get('dateCreated')))).humanize();
-        Ember.set(activity,"createdSince",createdSince);
+        let createdSince = moment.duration(moment(new Date()).diff(moment(activity.get('dateCreated')))).humanize();
+        set(activity,"createdSince",createdSince);
 
 
         if (activity.get('type') === 'related'){
@@ -68,6 +71,6 @@ export default Ember.Component.extend({
         }
 
         return template;
-    }.property('activity','model').volatile(),
+    }).volatile(),
 
 });

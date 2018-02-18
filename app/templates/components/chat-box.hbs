@@ -1,63 +1,63 @@
-  <div class="chat-box">
-    <div class="box box-primary direct-chat direct-chat-primary">
-      <div class="box-header with-border">
-        <h3 class="box-title">{{chatroom.conversers.firstObject.name}}</h3>
+<div class="chat-box">
+  <div class="box box-primary direct-chat direct-chat-primary">
+    <div class="box-header with-border">
+      <h3 class="box-title">{{chatroom.conversers.firstObject.name}}</h3>
 
-        <div class="box-tools pull-right">
-          <span data-toggle="tooltip" title="3 New Messages" class="badge">3</span>
-          <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-          </button>
-          <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-        </div>
+      <div class="box-tools pull-right">
+        <span data-toggle="tooltip" title="3 New Messages" class="badge">3</span>
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+        </button>
+        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
       </div>
-      <!-- /.box-header -->
-      <div class="box-body">
-        <!-- Conversations are loaded here -->
-        <div class="direct-chat-messages">
+    </div>
+    {{!-- /.box-header --}}
+    <div class="box-body">
+      {{!-- Conversations are loaded here --}}
+      <div class="direct-chat-messages">
 
-          {{#each chatroom.comments as |comment|}}
-            {{#if (eq comment.createdUser currentUser.user.id)}}
-              <div class="direct-chat-msg">
-                <div class="direct-chat-info clearfix">
-                  <span class="direct-chat-name pull-left">{{comment.createdUserName}}</span>
-                  <span class="direct-chat-timestamp pull-right">{{moment-from-now comment.dateCreated}}</span>
-                </div>
+        {{#each chatroom.comments as |comment|}}
+          {{#if (eq comment.createdUser currentUser.user.id)}}
+            <div class="direct-chat-msg">
+              <div class="direct-chat-info clearfix">
+                <span class="direct-chat-name pull-left">{{comment.createdUserName}}</span>
+                <span class="direct-chat-timestamp pull-right">{{moment-from-now comment.dateCreated}}</span>
+              </div>
 
-                <img class="direct-chat-img" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
-                <div class="direct-chat-text">
-                  {{comment.comment}}
-                </div>
+              <img class="direct-chat-img" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
+              <div class="direct-chat-text">
+                {{comment.comment}}
               </div>
-            {{else}}
-              <div class="direct-chat-msg right">
-                <div class="direct-chat-info clearfix">
-                  <span class="direct-chat-name pull-right">{{comment.createdUserName}}</span>
-                  <span class="direct-chat-timestamp pull-left">{{moment-from-now comment.dateCreated}}</span>
-                </div>
-                <!-- /.direct-chat-info -->
-                <img class="direct-chat-img" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
-                <div class="direct-chat-text">
-                  {{comment.comment}}
-                </div>
+            </div>
+          {{else}}
+            <div class="direct-chat-msg right">
+              <div class="direct-chat-info clearfix">
+                <span class="direct-chat-name pull-right">{{comment.createdUserName}}</span>
+                <span class="direct-chat-timestamp pull-left">{{moment-from-now comment.dateCreated}}</span>
               </div>
-            {{/if}}
-          {{/each}}
-        </div>
+              {{!-- /.direct-chat-info --}}
+              <img class="direct-chat-img" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
+              <div class="direct-chat-text">
+                {{comment.comment}}
+              </div>
+            </div>
+          {{/if}}
+        {{/each}}
       </div>
+    </div>
 
-      <div class="box-footer">
-          <div class="input-group">
-            {{message-box
-              spellcheck=false
-              entity=entity
-              placeholder=(t "view.app.chat.messagebox")
-              value=comment
-              }}
-              <span class="input-group-btn">
+    <div class="box-footer">
+      <div class="input-group">
+        {{message-box
+            spellcheck=false
+            entity=entity
+            placeholder=(t "view.app.chat.messagebox")
+            value=comment
+        }}
+        <span class="input-group-btn">
                 <button type="submit" class="btn btn-primary btn-flat">{{t "view.app.chat.send"}}</button>
               </span>
-          </div>
       </div>
-      <!-- /.box-footer-->
     </div>
+    {{!-- /.box-footer--}}
   </div>
+</div>

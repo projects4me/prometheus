@@ -2,9 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import M2T from "../../../utils/data/modeltotree";
 import App from '../../app';
+import { set } from '@ember/object';
+
 //import { translationMacro as t } from "ember-i18n";
 
 /**
@@ -188,7 +189,7 @@ export default App.extend({
             let node = M2T.findNode(model.get('id'),tree);
             if (node)
             {
-                Ember.set(node,'name',model.get('name'));
+                set(node,'name',model.get('name'));
             }
         },
 

@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import { helper } from '@ember/component/helper';
+import { htmlSafe } from '@ember/string';
 
 /**
  * This helper is used to get the icon for the priorityIcon
@@ -13,7 +14,7 @@ import Ember from "ember";
  * @todo Optimize
  */
 export function priorityIcon(params) {
-    var HTML = '';
+    let HTML = '';
     switch (params[0]) {
         case 'blocker':
             HTML += '<i class="fa fa-ban"></i>';
@@ -37,7 +38,7 @@ export function priorityIcon(params) {
             break;
     }
 
-    return Ember.String.htmlSafe(HTML);
+    return htmlSafe(HTML);
 }
 
 /**
@@ -48,4 +49,4 @@ export function priorityIcon(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(priorityIcon);
+export default helper(priorityIcon);

@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import DS from "ember-data";
+import { camelize } from '@ember/string';
 
 /**
  * This is the application serializer, we are using it to override some of the
@@ -11,9 +11,9 @@ import DS from "ember-data";
  *
  * @class Application
  * @namespace Prometheus.Serializers
- * @extends DS.JSONAPISerializer
  * @author Hammad Hassan <gollomer@gmail.com>
  */
+
 export default DS.JSONAPISerializer.extend({
 
     /**
@@ -48,7 +48,7 @@ export default DS.JSONAPISerializer.extend({
      * @protected
      */
     keyForAttribute(key/*, method*/) {
-        return Ember.String.camelize(key);
+        return camelize(key);
     },
 
     /**
@@ -60,7 +60,7 @@ export default DS.JSONAPISerializer.extend({
      * @protected
      */
     keyForRelationship(key/*, typeClass, method)*/) {
-        return Ember.String.camelize(key);
+        return camelize(key);
     },
 
 });

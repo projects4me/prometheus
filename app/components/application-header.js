@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 
 /**
  * This component is used to render the application header
@@ -12,7 +12,7 @@ import Ember from 'ember';
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The tag to be used for this component

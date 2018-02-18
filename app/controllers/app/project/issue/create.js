@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import Controller from '@ember/controller';
+import { inject } from '@ember/service';
 
 /**
  * This is the controller for issue create page
@@ -13,7 +14,7 @@ import Ember from 'ember';
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
 
     /**
@@ -24,7 +25,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @public
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject('current-user'),
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -34,7 +35,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @public
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * This property is used to control the enabling and disabling of the save

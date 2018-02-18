@@ -1,7 +1,7 @@
 <section class="content">
   <div class="board row">
     {{#task-lanes}}
-      {{!-- Display the active milestones --}}
+    {{!-- Display the active milestones --}}
       {{#each milestones as |milestone|}}
         {{#if (or (eq milestone.status 'in_progress') (eq milestone.status 'planned'))}}
           <div class="box">

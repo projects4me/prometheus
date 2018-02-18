@@ -2,11 +2,13 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import _ from "lodash";
 import queryParser from "../../utils/query/parser";
 import queryBuilder from "../../utils/query/builder";
 import MD from "../../utils/metadata/metadata";
+import $ from 'jquery';
+import Controller from '@ember/controller';
+import { schedule } from '@ember/runloop';
 
 /**
  * The controller for the module route, it is loaded when a user tried to navigate to the route
@@ -22,7 +24,7 @@ import MD from "../../utils/metadata/metadata";
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * The count of the selected items in the list view.
@@ -110,7 +112,7 @@ export default Ember.Controller.extend({
     setupController: function () {
         this._super();
         // call initialize action after the view has been rendered
-        Ember.run.schedule("afterRender",this,function() {
+        schedule("afterRender",this,function() {
             this.send("setupQuery");
         });
     },
@@ -137,11 +139,11 @@ export default Ember.Controller.extend({
          */
         selectAll:function(value){
             // Select all the checkboxes in the list view
-            _.each(Ember.$('.list-view input[type=checkbox]').not('[data-select=all]'),function(element) {
+            _.each($('.list-view input[type=checkbox]').not('[data-select=all]'),function(element) {
                 element.checked = value;
             });
 
-            this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
+            this.set('selectedCount',$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
         },
 
         /**
@@ -155,20 +157,20 @@ export default Ember.Controller.extend({
          */
         select:function(value){
             // Select/Deslect one checkboxes in the list view
-            this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
+            this.set('selectedCount',$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
 
             // uncheck the select all checkbox, if an item was deselected and the select all checkbox was checked
             if (!value) {
-                var selectAll = Ember.$('[data-select=all]').prop('checked');
+                var selectAll = $('[data-select=all]').prop('checked');
                 if (selectAll){
-                    Ember.$('[data-select=all]').prop('checked',false);
+                    $('[data-select=all]').prop('checked',false);
                 }
             }
             // If all the items in the list were selected then check the select all checkbox as well
             else {
                 // if checked boxes are equal to total boxes then enable check all box
-                if (Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length === Ember.$('.list-view input[type=checkbox]').not('[data-select=all]').length) {
-                    Ember.$('[data-select=all]').prop('checked',true);
+                if ($('.list-view input[type=checkbox]:checked').not('[data-select=all]').length === $('.list-view input[type=checkbox]').not('[data-select=all]').length) {
+                    $('[data-select=all]').prop('checked',true);
                 }
             }
 
@@ -197,7 +199,7 @@ export default Ember.Controller.extend({
          */
         paginate:function(page){
             this.set('selectedCount',0);
-            Ember.$('[data-select=all]').prop('checked',false);
+            $('[data-select=all]').prop('checked',false);
             this.set('page',page);
             this.send('navigate');
         },
@@ -237,7 +239,7 @@ export default Ember.Controller.extend({
          */
         searchByRules:function(){
             var result = queryBuilder.getRules();
-            if (!Ember.$.isEmptyObject(result)) {
+            if (!$.isEmptyObject(result)) {
                 var query = queryParser.getQueryString(result);
                 this.queryString = query;
                 this.set('query', query);
@@ -290,13 +292,13 @@ export default Ember.Controller.extend({
              * @todo for some reason sortOrder is not set before navigation
              */
             else {
-                Ember.$('[data-sort="'+this.sort+'Sortable"]').attr('class','sortable');
+                $('[data-sort="'+this.sort+'Sortable"]').attr('class','sortable');
                 this.set('sortOrder','desc');
                 this.set('sort',field);
             }
 
             // Set the styling
-            Ember.$('[data-sort="'+field+'Sortable"]').attr('class','sortable sortable-'+this.sortOrder);
+            $('[data-sort="'+field+'Sortable"]').attr('class','sortable sortable-'+this.sortOrder);
 
             // Perform the sorting
             this.send('navigate');
@@ -326,8 +328,8 @@ export default Ember.Controller.extend({
          * @public
          */
         openFilters:function(){
-            if (Ember.$('.list-view-filters').css('display') === 'none'){
-                Ember.$('.search [data-toggle=collapse]').click();
+            if ($('.list-view-filters').css('display') === 'none'){
+                $('.search [data-toggle=collapse]').click();
             }
         },
 
@@ -338,7 +340,7 @@ export default Ember.Controller.extend({
          * @public
          */
         toggleFilters:function(){
-            Ember.$('#toggleFilters').toggleClass('dropToggle');
+            $('#toggleFilters').toggleClass('dropToggle');
         }
     }
 });

@@ -1,10 +1,10 @@
 <div class="project">
   <div class="row">
 
-    <!-- The first Column that contains the project information , conversation, issues and time time tracks -->
+    {{!-- The first Column that contains the project information , conversation, issues and time time tracks --}}
     <div class="col-md-8">
 
-      <!-- This are the project details -->
+      {{!-- This are the project details --}}
       <div class="box box-primary project-details">
         <div class="box-header with-border">
           <h2 class="box-title">{{model.name}} - ({{model.shortCode}})</h2>
@@ -14,9 +14,9 @@
             <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editProject" model.id}}><i class="fa fa-pencil"></i></button>
             <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
           </div>
-          <!-- /.box-tools -->
+          {{!-- /.box-tools --}}
         </div>
-        <!-- /.box-header -->
+        {{!-- /.box-header --}}
         <div class="box-body">
 
           <div class="row">
@@ -77,17 +77,17 @@
           </div>
 
         </div>
-        <!-- /.box-body -->
+        {{!-- /.box-body --}}
 
         <div class="box-footer no-padding">
         </div>
       </div>
-      <!-- /.end project details -->
+      {{!-- /.end project details --}}
 
-      <!-- This div contains the project conversations and milestones -->
+      {{!-- This div contains the project conversations and milestones --}}
       <div class="row">
 
-        <!-- This is the project conversations -->
+        {{!-- This is the project conversations --}}
         <div class="col-md-6">
           <div class="box box-info  project-conversations-section">
             <div class="box-header with-border">
@@ -97,7 +97,7 @@
               </div>
 
             </div>
-            <!-- /.box-header -->
+            {{!-- /.box-header --}}
             <div class="box-body no-padding" style="display: block;">
               <ul class="project-conversations show-5">
                 {{#each model.conversations as |conversation|}}
@@ -110,18 +110,18 @@
                   </li>
                 {{/each}}
               </ul>
-              <!-- /.users-list -->
+              {{!-- /.users-list --}}
             </div>
-            <!-- /.box-body -->
+            {{!-- /.box-body --}}
             <div class="box-footer text-center" style="display: block;">
               <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "conversation"}}>{{t "view.app.project.detail.viewallconversations"}}</a>
             </div>
-            <!-- /.box-footer -->
+            {{!-- /.box-footer --}}
           </div>
         </div>
-        <!-- end of project conversations -->
+        {{!-- end of project conversations --}}
 
-        <!-- These are the lastest 5 open issues in this project -->
+        {{!-- These are the lastest 5 open issues in this project --}}
         <div class="col-md-6">
           <div class="box box-success open-issues-section">
             <div class="box-header with-border">
@@ -132,7 +132,7 @@
               </div>
 
             </div>
-            <!-- /.box-header -->
+            {{!-- /.box-header --}}
             <div class="box-body no-padding" style="display: block;">
               <ul class="open-issues show-5 clearfix">
                 {{#each issuetime as |issue|}}
@@ -148,30 +148,30 @@
                   </li>
                 {{/each}}
               </ul>
-              <!-- /.users-list -->
+              {{!-- /.users-list --}}
             </div>
-            <!-- /.box-body -->
+            {{!-- /.box-body --}}
             <div class="box-footer text-center" style="display: block;">
               <a href="javascript:void(0)" class="uppercase">{{t "view.app.project.detail.viewallissues"}}</a>
             </div>
-            <!-- /.box-footer -->
+            {{!-- /.box-footer --}}
           </div>
         </div>
-        <!-- end of last 5 open projects -->
+        {{!-- end of last 5 open projects --}}
 
       </div>
 
 
       <div class="row">
 
-        <!-- This is the project time estimated vs spent -->
+        {{!-- This is the project time estimated vs spent --}}
         <div class="col-md-12">
           <div class="box box-default project-estimated-spent-section">
             <div class="box-header with-border">
               <h3 class="box-title">{{t "view.app.project.detail.estimatedspent"}}</h3>
 
             </div>
-            <!-- /.box-header -->
+            {{!-- /.box-header --}}
             <div class="box-body no-padding" style="display: block;">
               <ul class="project-estimated-spent">
                 {{chart-estimatedspent
@@ -179,23 +179,23 @@
                     height="100"
                 }}
               </ul>
-              <!-- /.users-list -->
+              {{!-- /.users-list --}}
             </div>
-            <!-- /.box-body -->
+            {{!-- /.box-body --}}
             <div class="box-footer text-center" style="display: block;">
               <a href="javascript:void(0)" class="uppercase">{{t "view.app.project.detail.viewallconversations"}}</a>
             </div>
-            <!-- /.box-footer -->
+            {{!-- /.box-footer --}}
           </div>
         </div>
-        <!-- end of project time estimated vs spent -->
+        {{!-- end of project time estimated vs spent --}}
 
       </div>
 
 
       <div class="row">
 
-        <!-- This is the project activities section -->
+        {{!-- This is the project activities section --}}
         <div class="col-md-12">
           <div class="box box-primary project-activities-section">
             <div class="box-header with-border">
@@ -208,17 +208,17 @@
             </div>
           </div>
         </div>
-        <!-- ./ end project activities section -->
+        {{!-- ./ end project activities section --}}
 
       </div>
 
 
     </div>
-    <!-- /.end col-md -8 -->
+    {{!-- /.end col-md -8 --}}
 
     <div class="col-md-4">
 
-      <!-- Project Members -->
+      {{!-- Project Members --}}
       <div class="box box-warning">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.members"}}</h3>
@@ -226,7 +226,7 @@
             <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "view.app.project.detail.managemembers"}}"><i class="fa fa-gear"></i></button>
           </div>
         </div>
-        <!-- /.box-header -->
+        {{!-- /.box-header --}}
         <div class="box-body no-padding" style="display: block;">
           <ul class="users-list clearfix">
             {{#each model.members as |member|}}
@@ -273,14 +273,14 @@
                 </div>
               </form>
             {{/bootstrap-modal}}
-          {{/if}}          <!-- /.users-list -->
+          {{/if}}          {{!-- /.users-list --}}
         </div>
-        <!-- /.box-body -->
+        {{!-- /.box-body --}}
       </div>
-      <!-- /. Project Members -->
+      {{!-- /. Project Members --}}
 
 
-      <!-- Project Milestones -->
+      {{!-- Project Milestones --}}
       <div class="box box-info project-milestones-section">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.milestones"}}</h3>
@@ -376,10 +376,10 @@
         </div>
 
       </div>
-      <!-- Project Milestones -->
+      {{!-- Project Milestones --}}
 
 
-      <!-- These are the issues of the project distributed w.r.t. to status -->
+      {{!-- These are the issues of the project distributed w.r.t. to status --}}
       <div class="box box-danger">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.issueratio"}}</h3>
@@ -391,7 +391,7 @@
         </div>
       </div>
 
-      <!-- This is the project summary -->
+      {{!-- This is the project summary --}}
       <div class="box box-info">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "view.app.project.detail.summary"}}</h3>
@@ -440,12 +440,12 @@
 
         </div>
       </div>
-      <!-- Project Summary -->
+      {{!-- Project Summary --}}
 
     </div>
-    <!-- /.end col-md -4 -->
+    {{!-- /.end col-md -4 --}}
 
   </div>
-  <!-- /.end row -->
+  {{!-- /.end row --}}
 </div>
-<!-- /.end project -->
+{{!-- /.end project --}}

@@ -2,8 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import _ from "lodash";
+import Component from '@ember/component';
+import { inject } from '@ember/service';
+import $ from 'jquery';
 
 /**
  * This component is used to render different milestone blocks for the system
@@ -15,7 +17,7 @@ import _ from "lodash";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -25,7 +27,7 @@ export default Ember.Component.extend({
      * @for MilestoneBlock
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * This is the layout name that determines the HBS file to be rendered, we are
@@ -84,7 +86,7 @@ export default Ember.Component.extend({
      * @public
      */
     didInsertElement(){
-        Ember.$('#'+this.elementId+' [data-toggle="popover"]').popover();
+        $('#'+this.elementId+' [data-toggle="popover"]').popover();
     },
 
     /**
@@ -95,7 +97,7 @@ export default Ember.Component.extend({
      * @public
      */
     willDestroyElement(){
-        Ember.$('#'+this.elementId+' [data-toggle="popover"]').popover('destroy');
+        $('#'+this.elementId+' [data-toggle="popover"]').popover('destroy');
     }
 
 });

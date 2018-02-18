@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Component from '@ember/component';
+import $ from 'jquery';
 
 /**
  * This class adds the functionality of task lanes
@@ -12,7 +13,7 @@ import Ember from "ember";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * This function is used to initialize the sortable behavior
@@ -22,7 +23,7 @@ export default Ember.Component.extend({
      * @protected
      */
     didInsertElement(){
-        Ember.$('.board .lane .box-body').sortable({
+        $('.board .lane .box-body').sortable({
             placeholder         : 'sort-highlight',
             connectWith         : '.board .lane .box-body',
             //handle              : '.item',

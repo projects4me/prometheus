@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import { helper } from '@ember/component/helper';
 
 /**
  * This helper is used to convert a file size in bytes into KB, MB, GB, etc
@@ -36,4 +36,4 @@ export function fileSize(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(fileSize);
+export default helper(fileSize);

@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import App from "../../../app";
+import { inject } from '@ember/service';
 
 /**
  * This is the create route for the wiki pages section
@@ -48,7 +48,7 @@ export default App.extend({
      * @for Prometheus.Routes.Wiki.Create
      * @public
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject(),
 
 
 

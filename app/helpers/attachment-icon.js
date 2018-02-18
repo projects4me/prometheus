@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import { htmlSafe } from '@ember/string';
+import { helper } from '@ember/component/helper';
 
 /**
  * This helper is used to get the icon for the file attachment
@@ -43,7 +44,7 @@ export function attachmentIcon(params) {
         HTML = '<i class="fa fa-file-o"></i>';
     }
 
-    return Ember.String.htmlSafe(HTML);
+    return htmlSafe(HTML);
 }
 
 /**
@@ -54,4 +55,4 @@ export function attachmentIcon(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(attachmentIcon);
+export default helper(attachmentIcon);

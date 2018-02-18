@@ -2,10 +2,12 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import _ from "lodash";
-
-const { inject: { service } } = Ember;
+import Controller from '@ember/controller';
+import { inject } from '@ember/service';
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
+import $ from 'jquery';
 
 /**
  * The controller for the wiki edit route, it is loaded when a user clicks on the
@@ -18,7 +20,7 @@ const { inject: { service } } = Ember;
  * @extends Ember.Controller
  * @todo Minimize the code
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * This is the store service which is used to interact with the data API
@@ -28,7 +30,7 @@ export default Ember.Controller.extend({
      * @for Edit
      * @private
      */
-    store: service(),
+    store: inject(),
 
     /**
      * This flag is used to show or hide the modal dialog box for adding new tags
@@ -59,7 +61,7 @@ export default Ember.Controller.extend({
      * @for Edit
      * @public
      */
-    projectController: Ember.inject.controller('app.project'),
+    projectController: injectController('app.project'),
 
     /**
      * This is a computed property in which gets the list of issues
@@ -70,9 +72,9 @@ export default Ember.Controller.extend({
      * @for Edit
      * @private
      */
-    issuesList: Ember.computed(function(){
+    issuesList: computed('projectController.issuesList', function(){
         return this.get('projectController').get('issuesList');
-    }).property('projectController.issuesList'),
+    }),
 
     /**
      * This is the controller for the app, we are injecting it in order to
@@ -83,7 +85,7 @@ export default Ember.Controller.extend({
      * @for Edit
      * @public
      */
-    appController: Ember.inject.controller('app'),
+    appController: injectController('app'),
 
     /**
      * This is a computed property in which gets the list of user
@@ -94,9 +96,9 @@ export default Ember.Controller.extend({
      * @for Edit
      * @private
      */
-    usersList: Ember.computed(function(){
+    usersList: computed('appController.usersList', function(){
         return this.get('appController').get('usersList');
-    }).property('appController.usersList'),
+    }),
 
 
     /**
@@ -332,7 +334,7 @@ export default Ember.Controller.extend({
                     self.set('tagName','');
 
                     // Remove the modal
-                    Ember.$('.modal').modal('hide');
+                    $('.modal').modal('hide');
                     self.set('addTagDialog',false);
 
                     Logger.debug(selectedTags);

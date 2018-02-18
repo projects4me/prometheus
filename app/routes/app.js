@@ -2,8 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+import Route from '@ember/routing/route';
+import { inject } from '@ember/service';
+import { hash } from 'rsvp';
 
 /**
  * This is the app route, the app route is used
@@ -14,7 +16,7 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
  * @uses AuthenticatedRouteMixin
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Route.extend(AuthenticatedRouteMixin,{
+export default Route.extend(AuthenticatedRouteMixin,{
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -24,7 +26,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
      * @for App
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * The current user service
@@ -34,7 +36,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
      * @for App
      * @public
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject(),
 
     /**
      * This function is called by EmberJs before it retrieves the model
@@ -65,7 +67,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin,{
         };
 
 
-        return Ember.RSVP.hash({
+        return hash({
             users: _self.store.query('user',usersOptions),
             roles: _self.store.query('role',rolesOptions)
         }).then(function(results){

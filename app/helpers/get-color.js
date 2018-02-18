@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 /**
  * This function is used to retrieve a color for the
@@ -36,4 +36,4 @@ export function getColor(params) {
  * @author Hammad Hassan <gollomer@gamilcom
  * @deprecated
  */
-export default Ember.Helper.helper(getColor);
+export default helper(getColor);

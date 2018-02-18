@@ -55,8 +55,8 @@ export default App.extend({
     setupController:function(controller){
         Logger.debug('AppProjectConversationRoute::setupController');
 
-        var self = this;
-        var params = this.paramsFor('app.project');
+        let _self = this;
+        let params = this.paramsFor('app.project');
 
         // Get the parameters for the current route every time as they might change from one record to another
         //var params = this.paramsFor('app.conversations');
@@ -67,12 +67,12 @@ export default App.extend({
         //self.loadIssues(params.projectId);
         //self.loadUsers();
         //var metaData = MD.create();
-        var i18n = this.get('i18n');
+        let i18n = _self.get('i18n');
         controller.set('i18n',i18n);
         controller.set('projectId',params.projectId);
 
         //this.metaData = MD.create().getViewMeta(this.module,'list',i18n);
-        var options = {
+        let options = {
             //limit: ENV.app.list.pagelimit
             limit:-1,
             page: 0
@@ -106,10 +106,10 @@ export default App.extend({
      */
     loadIssues:function(projectId){
         Logger.debug("AppProjectConversationRoute::loadIssues("+projectId+")");
-        var self = this;
-        var module = "issue";
+        let _self = this;
+        let module = "issue";
 
-        var options = {
+        let options = {
             fields: "Issue.id,Issue.subject,Issue.issueNumber,Issue.status,Issue.projectId",
             query: "(Issue.projectId : "+projectId+")",
             rels: "none",
@@ -119,11 +119,11 @@ export default App.extend({
             limit:-1,
         };
 
-        this.store.query(module,options).then(function(data){
-            var issuesList = [];
-            var issuesCount = data.get('length');
+        _self.store.query(module,options).then(function(data){
+            let issuesList = [];
+            let issuesCount = data.get('length');
 
-            for (var i=0; i<issuesCount;i++)
+            for (let i=0; i<issuesCount;i++)
             {
                 issuesList[i] = {
                     id:data.nextObject(i).get('id'),
@@ -134,7 +134,7 @@ export default App.extend({
                 };
             }
             Logger.debug(issuesList);
-            self.get('controller').set('issuesList',issuesList);
+            _self.get('controller').set('issuesList',issuesList);
         });
     },
 
@@ -147,10 +147,10 @@ export default App.extend({
      */
     loadUsers:function(){
         Logger.debug("AppProjectConversationRoute::loadUsers()");
-        var self = this;
-        var module = "user";
+        let _self = this;
+        let module = "user";
 
-        var options = {
+        let options = {
             fields: "User.id,User.name",
             rels: "none",
             sort: "User.name",
@@ -159,11 +159,11 @@ export default App.extend({
             limit:-1,
         };
 
-        this.store.query(module,options).then(function(data){
-            var usersList = [];
-            var usersCount = data.get('length');
+        _self.store.query(module,options).then(function(data){
+            let usersList = [];
+            let usersCount = data.get('length');
 
-            for (var i=0; i<usersCount;i++)
+            for (let i=0; i<usersCount;i++)
             {
                 usersList[i] = {
                     id:data.nextObject(i).get('id'),
@@ -171,7 +171,7 @@ export default App.extend({
                 };
             }
             Logger.debug(usersList);
-            self.get('controller').set('usersList',usersList);
+            _self.get('controller').set('usersList',usersList);
         });
 
     },

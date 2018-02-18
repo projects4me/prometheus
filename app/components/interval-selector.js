@@ -2,9 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import { observer } from '@ember/object';
 import { on } from "@ember/object/evented";
+import Component from '@ember/component';
 
 /**
  * This class adds the functionality of dropdown action menu in the system
@@ -16,7 +16,7 @@ import { on } from "@ember/object/evented";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The number of days selected
@@ -113,28 +113,4 @@ export default Ember.Component.extend({
         }
         Logger.debug('-Prometheus.Components.IntervalSelector->minutesDidChange');
     })),
-
-    /**
-     * The events that this component is listing to
-     *
-     * @property actions
-     * @type Object
-     * @for ActionMenu
-     * @public
-     */
-    actions: {
-
-        onDayChange:function(value){
-
-        },
-
-        onHourChange:function(value){
-
-        },
-
-        onMinuteChange:function(value){
-
-        },
-
-    },
 });

@@ -2,12 +2,15 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import _ from "lodash";
 import navi from "../../utils/navigation/navigation";
 import queryParser from "../../utils/query/parser";
 import queryBuilder from "../../utils/query/builder";
 import MD from "../../utils/metadata/metadata";
+import Controller from '@ember/controller';
+import { schedule } from '@ember/runloop';
+import { camelize } from '@ember/string';
+import $ from 'jquery';
 
 /**
  * The controller for the module route, it is loaded when a user tried to navigate to the route
@@ -22,7 +25,7 @@ import MD from "../../utils/metadata/metadata";
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * The count of the selected items in the list view.
@@ -110,7 +113,7 @@ export default Ember.Controller.extend({
     setupController: function () {
         this._super();
         // call initialize action after the view has been rendered
-        Ember.run.schedule("afterRender",this,function() {
+        schedule("afterRender",this,function() {
             this.send("setupQuery");
         });
     },
@@ -137,11 +140,11 @@ export default Ember.Controller.extend({
          */
         selectAll:function(value){
             // Select all the checkboxes in the list view
-            _.each(Ember.$('.list-view input[type=checkbox]').not('[data-select=all]'),function(element) {
+            _.each($('.list-view input[type=checkbox]').not('[data-select=all]'),function(element) {
                 element.checked = value;
             });
 
-            this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
+            this.set('selectedCount',$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
         },
 
         /**
@@ -155,27 +158,27 @@ export default Ember.Controller.extend({
          */
         select:function(value){
             // Select/Deslect one checkboxes in the list view
-            this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
+            this.set('selectedCount',$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
 
             // uncheck the select all checkbox, if an item was deselected and the select all checkbox was checked
             if (!value) {
-                var selectAll = Ember.$('[data-select=all]').prop('checked');
+                let selectAll = $('[data-select=all]').prop('checked');
                 if (selectAll){
-                    Ember.$('[data-select=all]').prop('checked',false);
+                    $('[data-select=all]').prop('checked',false);
                 }
             }
             // If all the items in the list were selected then check the select all checkbox as well
             else {
                 // if checked boxes are equal to total boxes then enable check all box
-                if (Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length === Ember.$('.list-view input[type=checkbox]').not('[data-select=all]').length) {
-                    Ember.$('[data-select=all]').prop('checked',true);
+                if ($('.list-view input[type=checkbox]:checked').not('[data-select=all]').length === $('.list-view input[type=checkbox]').not('[data-select=all]').length) {
+                    $('[data-select=all]').prop('checked',true);
                 }
             }
 
         },
 
         /**
-         * This action is triggerd when a user tries to navigate to the deatil view
+         * This action is triggered when a user tries to navigate to the detail view
          *
          * @method detail
          * @param {String} id the identifier of the module
@@ -183,7 +186,7 @@ export default Ember.Controller.extend({
          * @public
          */
         detail:function(id){
-            var URIData = navi.buildURL(Ember.String.camelize(this.module),'detail',{id:id});
+            let URIData = navi.buildURL(camelize(this.module),'detail',{id:id});
             this.transitionToRoute(URIData.route,URIData.options);
         },
 
@@ -197,7 +200,7 @@ export default Ember.Controller.extend({
          */
         paginate:function(page){
             this.set('selectedCount',0);
-            Ember.$('[data-select=all]').prop('checked',false);
+            $('[data-select=all]').prop('checked',false);
             this.set('page',page);
             this.send('navigate');
         },
@@ -236,9 +239,9 @@ export default Ember.Controller.extend({
          * @public
          */
         searchByRules:function(){
-            var result = queryBuilder.getRules();
-            if (!Ember.$.isEmptyObject(result)) {
-                var query = queryParser.getQueryString(result);
+            let result = queryBuilder.getRules();
+            if (!$.isEmptyObject(result)) {
+                let query = queryParser.getQueryString(result);
                 this.queryString = query;
                 this.set('query', query);
                 /*
@@ -257,9 +260,9 @@ export default Ember.Controller.extend({
          * @private
          */
         setupQuery:function(){
-            var i18n = this.get('i18n');
-            var filters = MD.create().getViewMeta(this.module,'filters',i18n).enabledFilters;
-            var rules = queryParser.getRules(this.get('query'),filters);
+            let i18n = this.get('i18n');
+            let filters = MD.create().getViewMeta(this.module,'filters',i18n).enabledFilters;
+            let rules = queryParser.getRules(this.get('query'),filters);
             queryBuilder.init('#builder',filters);
             if (rules !== undefined && rules !== '') {
                 queryBuilder.setRules(rules);
@@ -274,7 +277,7 @@ export default Ember.Controller.extend({
          * @private
          * @todo for some reason sortOrder in not set before navigation
          */
-        sortData:function(field){
+        sortData(field){
             field = this.module+'.'+field;
             // If the field is already being sorted on then just toggle it
             if (field === this.sort) {
@@ -287,13 +290,13 @@ export default Ember.Controller.extend({
 
             // Else first clear the previous sort and set the new one
             else {
-                Ember.$('[data-sort="'+this.sort+'Sortable"]').attr('class','sortable');
+                $('[data-sort="'+this.sort+'Sortable"]').attr('class','sortable');
                 this.set('sortOrder','desc');
                 this.set('sort',field);
             }
 
             // Set the styling
-            Ember.$('[data-sort="'+field+'Sortable"]').attr('class','sortable sortable-'+this.sortOrder);
+            $('[data-sort="'+field+'Sortable"]').attr('class','sortable sortable-'+this.sortOrder);
 
             // Perform the sorting
             this.send('navigate');
@@ -305,11 +308,11 @@ export default Ember.Controller.extend({
          * @method navigate
          * @private
          */
-        navigate:function(){
+        navigate(){
             if (this.page === undefined || this.page === '' || this.page === null){
                 this.set('page',0);
             }
-            var URIData = navi.buildURL(Ember.String.camelize(this.module),'module');
+            let URIData = navi.buildURL(camelize(this.module),'module');
             this.transitionToRoute(URIData.route,URIData.options,{ queryParams: { page: this.page, query:this.queryString, sort:this.sort, order:this.sortOrder }});
         },
 
@@ -319,9 +322,9 @@ export default Ember.Controller.extend({
          * @method openFilters
          * @public
          */
-        openFilters:function(){
-            if (Ember.$('.list-view-filters').css('display') === 'none'){
-                Ember.$('.list-view-actions [data-toggle=collapse]').click();
+        openFilters(){
+            if ($('.list-view-filters').css('display') === 'none'){
+                $('.list-view-actions [data-toggle=collapse]').click();
             }
         },
 
@@ -331,8 +334,8 @@ export default Ember.Controller.extend({
          * @method toggleFilters
          * @private
          */
-        toggleFilters:function(){
-            Ember.$('#toggleFilters').toggleClass('dropToggle');
+        toggleFilters(){
+            $('#toggleFilters').toggleClass('dropToggle');
         }
 
     }

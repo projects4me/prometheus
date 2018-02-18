@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Component from '@ember/component';
 
 /**
  * This class adds the functionality of dropdown action menu in the system
@@ -14,7 +14,7 @@ import Ember from "ember";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The events that this component is listing to

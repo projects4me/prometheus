@@ -6,14 +6,14 @@
 
         <div class="masonry masonry-columns">
 
-          <!-- Sections that lets us create a new conversation -->
+          {{!-- Sections that lets us create a new conversation --}}
           <div class="masonry-item">
             <div class="box box-widget">
 
               <div class="box-start">
-                  <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="{{currentUser.user.name}}">
-                  <!-- .img-push is used to add margin to elements next to floating images -->
-                  <div class="img-push">
+                <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="{{currentUser.user.name}}">
+                {{!-- .img-push is used to add margin to elements next to floating images --}}
+                <div class="img-push">
                     <span class="disabled-text new-conversation" {{action "showDialog"}}>
                       {{t "view.app.conversation.create"}}
                       <div class="pull-right">
@@ -21,9 +21,9 @@
                       </div>
                     </span>
 
-                  </div>
+                </div>
               </div>
-              <!-- /.box-footer -->
+              {{!-- /.box-footer --}}
             </div>
           </div>
 
@@ -39,7 +39,7 @@
                     <span class="subject"><a href="#">{{entity.subject}}</a></span>
                     <span class="description"><a href="/app/user/{{entity.createdBy.id}}">{{entity.createdBy.name}}</a> - {{get-date entity "dateModified" "MMM Do 'YY, h:mm a"}}</span>
                   </div>
-                  <!-- /.user-block -->
+                  {{!-- /.user-block --}}
                   <div class="box-tools">
 
                     <span class="upvotes">{{entity.votes.length}}
@@ -56,16 +56,16 @@
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                     </button>
                   </div>
-                  <!-- /.box-tools -->
+                  {{!-- /.box-tools --}}
                 </div>
-                <!-- /.box-header -->
+                {{!-- /.box-header --}}
                 <div class="box-body">
-                  <!-- post text -->
+                  {{!-- post text --}}
                   <p>{{translate-comment entity.description}}</p>
 
-                  <!-- /.attachment-block -->
+                  {{!-- /.attachment-block --}}
 
-                  <!-- Social sharing buttons -->
+                  {{!-- Social sharing buttons --}}
                   {{#if (user-created entity.votes currentUser.user.id)}}
                     {{t "view.app.conversation.you"}} <i class="fa fa-heart"></i>
                   {{else}}
@@ -82,7 +82,7 @@
                     {{/if}}
                   </span>
                 </div>
-                <!-- /.box-body -->
+                {{!-- /.box-body --}}
                 <div class="box-footer box-comments">
 
                   {{#if (if-match entity.roomType "discussion")}}
@@ -94,7 +94,7 @@
                           <span class="username">
                             <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
                             <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
-                          </span><!-- /.username -->
+                          </span>{{!-- /.username --}}
                           {{translate-comment comment.comment}}
                         </div>
                       </div>
@@ -103,19 +103,19 @@
                     <div class="box-footer">
                       <form action="#" method="post">
                         <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="{{currentUser.user.name}}">
-                        <!-- .img-push is used to add margin to elements next to floating images -->
+                        {{!-- .img-push is used to add margin to elements next to floating images --}}
                         <div class="img-push">
                           <div class="message-box">
                             {{message-box
-                              issuesList=issuesList
-                              usersList=usersList
-                              spellcheck=false
-                              entity=entity
-                              placeholder=(t "view.app.conversation.messagebox")
-                              value=comment
-                              }}
+                                issuesList=issuesList
+                                usersList=usersList
+                                spellcheck=false
+                                entity=entity
+                                placeholder=(t "view.app.conversation.messagebox")
+                                value=comment
+                            }}
                             <div class="pull-right">
-                                  <button type="button" class="btn btn-primary" {{action "save" entity.id comment}}>{{t "view.app.conversation.post"}}</button>
+                              <button type="button" class="btn btn-primary" {{action "save" entity.id comment}}>{{t "view.app.conversation.post"}}</button>
                             </div>
                           </div>
                         </div>
@@ -141,11 +141,11 @@
                               <div class="progress">
                                 <div class="progress-bar bg-green" style="width: {{round (mult (div (count-votes entity.comments "I agree") entity.comments.length) 100)}}%"></div>
                               </div>
-                                <span class="progress-description">
+                              <span class="progress-description">
                                   {{round (mult (div (count-votes entity.comments "I agree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.agree"}}
                                 </span>
                             </div>
-                            <!-- /.info-box-content -->
+                            {{!-- /.info-box-content --}}
                           </div>
 
                         </div>
@@ -164,11 +164,11 @@
                               <div class="progress">
                                 <div class="progress-bar bg-red" style="width: {{round (mult (div (count-votes entity.comments "I disagree") entity.comments.length) 100)}}%"></div>
                               </div>
-                                <span class="progress-description">
+                              <span class="progress-description">
                                   {{round (mult (div (count-votes entity.comments "I disagree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.disagree"}}
                                 </span>
                             </div>
-                            <!-- /.info-box-content -->
+                            {{!-- /.info-box-content --}}
                           </div>
 
                         </div>
@@ -194,11 +194,11 @@
   {{#if addConversationDialog}}
 
     {{#bootstrap-modal
-      title="view.app.conversation.create"
-      confirmLabel="global.form.save"
-      closeLabel="global.form.cancel"
-      confirm=(action "addConversation")
-      close="removeModal"}}
+        title="view.app.conversation.create"
+        confirmLabel="global.form.save"
+        closeLabel="global.form.cancel"
+        confirm=(action "addConversation")
+        close="removeModal"}}
       <form {{action 'addConversation' on='submit'}}>
         <div class="box-body">
           <div class="form-group">
@@ -208,23 +208,23 @@
           <div class="form-group">
             <label for="description">{{t "view.app.conversation.new.description"}}</label>
             {{message-box
-              issuesList=issuesList
-              usersList=usersList
-              spellcheck=false
-              entity=entity
-              placeholder=(t "view.app.conversation.new.description")
-              value=newTopic
+                issuesList=issuesList
+                usersList=usersList
+                spellcheck=false
+                entity=entity
+                placeholder=(t "view.app.conversation.new.description")
+                value=newTopic
             }}
           </div>
           <div class="form-group">
             <label for="type">{{t "view.app.conversation.new.type"}}</label>
             {{#power-select
-              options=roomTypes
-              placeholder=(t "view.app.conversation.new.type")
-              selected=roomType
-              onchange=(action (mut roomType))
-              searchField="label"
-              as |type|}}
+                options=roomTypes
+                placeholder=(t "view.app.conversation.new.type")
+                selected=roomType
+                onchange=(action (mut roomType))
+                searchField="label"
+            as |type|}}
               {{type.label}}
             {{/power-select}}
           </div>

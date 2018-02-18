@@ -1,152 +1,152 @@
 {{#if model}}
-    {{#each model as |wiki|}}
-        <div class="wiki-detail box box-primary">
-            <div class="box-header with-border">
-                {{#if (if-match wiki.createdUser currentUser.user.id)}}
-                    {{#if (if-match wiki.locked "0")}}
-                        <i class="fa fa-unlock lock" data-toggle="tooltip" title="{{t "view.app.wiki.lock"}}" {{action "lockWiki" "unlock"}}></i>
-                    {{else}}
-                        <i class="fa fa-lock lock" data-toggle="tooltip" title="{{t "view.app.wiki.unlock"}}" {{action "lockWiki" "lock"}}></i>
-                    {{/if}}
-                {{else}}
-                    {{#if (if-match wiki.locked "0")}}<i class="fa fa-unlock disabled"></i>{{else}}<i class="fa fa-lock disabled"></i>{{/if}}
-                {{/if}}
-                <h2 class="box-title">{{wiki.name}} - </h2>
-                {{#if wiki.parentId}}
-                    {{#if wikiList}}
-                        <a href="javascript:void(0);" {{action "loadWiki" wiki.projectId (get-wiki wiki wikiList)}}>{{get-wiki wiki wikiList}}</a>
-                    {{/if}}
-                {{/if}}
-                <span class="path-seperator"></span> {{wiki.name}}
-                <span class="upvotes">
+  {{#each model as |wiki|}}
+    <div class="wiki-detail box box-primary">
+      <div class="box-header with-border">
+        {{#if (if-match wiki.createdUser currentUser.user.id)}}
+          {{#if (if-match wiki.locked "0")}}
+            <i class="fa fa-unlock lock" data-toggle="tooltip" title="{{t "view.app.wiki.lock"}}" {{action "lockWiki" "unlock"}}></i>
+          {{else}}
+            <i class="fa fa-lock lock" data-toggle="tooltip" title="{{t "view.app.wiki.unlock"}}" {{action "lockWiki" "lock"}}></i>
+          {{/if}}
+        {{else}}
+          {{#if (if-match wiki.locked "0")}}<i class="fa fa-unlock disabled"></i>{{else}}<i class="fa fa-lock disabled"></i>{{/if}}
+        {{/if}}
+        <h2 class="box-title">{{wiki.name}} - </h2>
+        {{#if wiki.parentId}}
+          {{#if wikiList}}
+            <a href="javascript:void(0);" {{action "loadWiki" wiki.projectId (get-wiki wiki wikiList)}}>{{get-wiki wiki wikiList}}</a>
+          {{/if}}
+        {{/if}}
+        <span class="path-seperator"></span> {{wiki.name}}
+        <span class="upvotes">
                     {{wiki.vote.length}}
-                    {{#if iVoted}}
-                        <i class="fa fa-heart" data-toggle="tooltip" title="{{t "view.app.wiki.voted"}}" ></i>
-                    {{else}}
-                        <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "view.app.wiki.upvote"}}" {{action "upvote" wiki.id}}></i>
-                    {{/if}}
+          {{#if iVoted}}
+            <i class="fa fa-heart" data-toggle="tooltip" title="{{t "view.app.wiki.voted"}}" ></i>
+          {{else}}
+            <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "view.app.wiki.upvote"}}" {{action "upvote" wiki.id}}></i>
+          {{/if}}
                 </span>
-                <div class="box-tools pull-right">
-                    <span class="modified-by">{{t "global.form.modified" user=wiki.modifiedUserName date=(get-date wiki 'dateModified' 'MMM Do \'YY, h:mm a')}}</span>
-                </div>
-
-            </div>
-            <!-- /.box-header -->
-
-            <div class="box-body">
-
-                <div class="wiki-page-contents ql-container ql-snow">
-                    <div class="note-editor wiki-default-page">
-                        {{{wiki.markUp}}}
-                    </div>
-                </div>
-                <!--div class="form-group">
-                  <div class="btn btn-default btn-file">
-                    <i class="fa fa-paperclip"></i> Attachment
-                    <input type="file" name="attachment">
-                  </div>
-                  <p class="help-block">Max. 32MB</p>
-                </div-->
-
-            </div>
-
-            <!-- /.box-body -->
-
-            <div class="box-footer">
-                {{#if (if-match wiki.locked "0")}}
-                    <button type="button" class="btn btn-primary" {{action "edit"}}><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</button>
-                    <button type="button" class="btn btn-default" {{action "delete"}}><i class="fa fa-trash"></i> {{t "global.form.delete"}}</button>
-                {{/if}}
-
-                <div class="pull-right">
-                    {{t "view.app.wiki.tags"}}<span class="colon"></span>
-                    {{#if wiki.tag}}
-                        {{#each wiki.tag as |tags|}}
-                            <span class="label label-primary"><i class="fa fa-tag"></i> {{tags.tag}}</span>
-                        {{/each}}
-                    {{else}}
-                        <span class="disabled-text">{{t "global.noentry"}}</span>
-                    {{/if}}
-                </div>
-
-            </div>
+        <div class="box-tools pull-right">
+          <span class="modified-by">{{t "global.form.modified" user=wiki.modifiedUserName date=(get-date wiki 'dateModified' 'MMM Do \'YY, h:mm a')}}</span>
         </div>
 
-        <div class="clearfix"></div>
+      </div>
+      {{!-- /.box-header --}}
 
-        <!-- Issue Files-->
-        <div class="box box-info wiki-files-section">
+      <div class="box-body">
 
-            <div class="box-header with-border">
+        <div class="wiki-page-contents ql-container ql-snow">
+          <div class="note-editor wiki-default-page">
+            {{{wiki.markUp}}}
+          </div>
+        </div>
+        {{!--div class="form-group">
+          <div class="btn btn-default btn-file">
+            <i class="fa fa-paperclip"></i> Attachment
+            <input type="file" name="attachment">
+          </div>
+          <p class="help-block">Max. 32MB</p>
+        </div--}}
 
-                <h3 class="box-title">{{t "view.app.wiki.page.files"}}</h3>
+      </div>
 
-                <div class="box-tools pull-right">
-                </div>
+      {{!-- /.box-body --}}
 
-            </div>
+      <div class="box-footer">
+        {{#if (if-match wiki.locked "0")}}
+          <button type="button" class="btn btn-primary" {{action "edit"}}><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</button>
+          <button type="button" class="btn btn-default" {{action "delete"}}><i class="fa fa-trash"></i> {{t "global.form.delete"}}</button>
+        {{/if}}
 
-            <div class="box-body no-padding" style="display: block;">
+        <div class="pull-right">
+          {{t "view.app.wiki.tags"}}<span class="colon"></span>
+          {{#if wiki.tag}}
+            {{#each wiki.tag as |tags|}}
+              <span class="label label-primary"><i class="fa fa-tag"></i> {{tags.tag}}</span>
+            {{/each}}
+          {{else}}
+            <span class="disabled-text">{{t "global.noentry"}}</span>
+          {{/if}}
+        </div>
 
-                <div class="box-footer">
-                    <ul class="attachments clearfix">
-                        {{#each wiki.files as |file|}}
-                            <li>
-                                {{#if (not-eq file.fileThumbnail '0')}}
-                                    <span class="attachment-icon has-img">
+      </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    {{!-- Issue Files--}}
+    <div class="box box-info wiki-files-section">
+
+      <div class="box-header with-border">
+
+        <h3 class="box-title">{{t "view.app.wiki.page.files"}}</h3>
+
+        <div class="box-tools pull-right">
+        </div>
+
+      </div>
+
+      <div class="box-body no-padding" style="display: block;">
+
+        <div class="box-footer">
+          <ul class="attachments clearfix">
+            {{#each wiki.files as |file|}}
+              <li>
+                {{#if (not-eq file.fileThumbnail '0')}}
+                  <span class="attachment-icon has-img">
                                         <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
                                     </span>
-                                {{else}}
-                                    <span class="attachment-icon">
-                                        {{attachment-icon file.fileMime}}
-                                    </span>
-                                {{/if}}
-                                <div class="attachment-info">
-                                    <div class="attachment-name clearfix">
-                                        <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
-                                    </div>
-                                    <div class="attachment-additional">
+                {{else}}
+                  <span class="attachment-icon">
+                    {{attachment-icon file.fileMime}}
+                  </span>
+                {{/if}}
+                <div class="attachment-info">
+                  <div class="attachment-name clearfix">
+                    <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
+                  </div>
+                  <div class="attachment-additional">
                                                 <span class="attachment-size">
                                                 {{file-size file.fileSize}}
-                                                    <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
+                                                  <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
                                                 <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
                                                 </span>
-                                    </div>
-                                </div>
-                            </li>
-                        {{/each}}
-                    </ul>
-                    <div class="filePreviewModal">
-                        {{#if filePreviewDialog}}
-                            {{#bootstrap-modal
-                                    title="view.app.wiki.page.file.preview"
-                                    closeLabel="global.form.close"
-                                    close="removeModal"}}
-                                <iframe id="file_preview"></iframe>
-                            {{/bootstrap-modal}}
-                        {{/if}}
-                    </div>
-
+                  </div>
                 </div>
-                {{field-upload
-                        label=(t "view.app.wiki.page.selectfile")
-                        uploadFile=(action "uploadFile")
-                }}
+              </li>
+            {{/each}}
+          </ul>
+          <div class="filePreviewModal">
+            {{#if filePreviewDialog}}
+              {{#bootstrap-modal
+                  title="view.app.wiki.page.file.preview"
+                  closeLabel="global.form.close"
+                  close="removeModal"}}
+                <iframe id="file_preview"></iframe>
+              {{/bootstrap-modal}}
+            {{/if}}
+          </div>
 
-            </div>
         </div>
-        <!-- Issue Files -->
+        {{field-upload
+            label=(t "view.app.wiki.page.selectfile")
+            uploadFile=(action "uploadFile")
+        }}
 
-    {{/each}}
-{{else}}
-    <div class="wiki-page-empty">
-
-        <div class="callout callout-danger">
-            <h4>
-                <i class="fa fa-exclamation-triangle"></i> {{t "view.app.wiki.notfound"}}
-            </h4>
-            {{t "view.app.wiki.page.empty"}}
-        </div>
+      </div>
     </div>
+  {{!-- Issue Files --}}
+
+  {{/each}}
+{{else}}
+  <div class="wiki-page-empty">
+
+    <div class="callout callout-danger">
+      <h4>
+        <i class="fa fa-exclamation-triangle"></i> {{t "view.app.wiki.notfound"}}
+      </h4>
+      {{t "view.app.wiki.page.empty"}}
+    </div>
+  </div>
 
 {{/if}}

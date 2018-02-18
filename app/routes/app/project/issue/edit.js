@@ -55,7 +55,7 @@ export default App.extend({
      * @param {Prometheus.Models.Issue} model The model that is created by this route
      * @private
      */
-    setupController:function(controller,model){
+    setupController:function(controller){
         Logger.debug('AppProjectIssueEditRoute::setupController');
 
         let self = this;

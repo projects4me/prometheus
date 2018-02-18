@@ -2,9 +2,12 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import format from "../../../utils/data/format";
 import _ from "lodash";
+import Controller from '@ember/controller';
+import { inject } from '@ember/service';
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
 
 /**
  * This is the index page of the project, index page for the project is
@@ -16,7 +19,7 @@ import _ from "lodash";
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * The current user service
@@ -26,7 +29,7 @@ export default Ember.Controller.extend({
      * @for Index
      * @public
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject('current-user'),
 
     /**
      * The internationalization service
@@ -36,7 +39,7 @@ export default Ember.Controller.extend({
      * @for Index
      * @public
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * This flag is used to show or hide the modal dialog box
@@ -89,7 +92,7 @@ export default Ember.Controller.extend({
      * @for Index
      * @private
      */
-    appController: Ember.inject.controller('app'),
+    appController: injectController('app'),
 
     /**
      * This is the list of roles fetched by the app controller
@@ -99,7 +102,7 @@ export default Ember.Controller.extend({
      * @for Index
      * @private
      */
-    rolesList: Ember.computed(function(){
+    rolesList: computed(function(){
         return this.get('appController.rolesList');
     }),
 
@@ -111,13 +114,13 @@ export default Ember.Controller.extend({
      * @for Index
      * @private
      */
-    usersList: Ember.computed(function(){
+    usersList: computed('model', 'model.members', function(){
         let _self = this;
         let currentMembers = format.getSelectList(_self.get('model.members'));
         let usersList = _self.get('appController.usersList');
 
         return (_.differenceWith(usersList,currentMembers,_.isEqual));
-    }).property('model','model.members'),
+    }),
 
     milestoneTypes : [
         {"label":"Milestone","value":"milestone"},
@@ -225,9 +228,6 @@ export default Ember.Controller.extend({
                     modifiedUser: _self.get('currentUser.user.id'),
                     deleted: 0
                 });
-
-                let rolesList = _self.get('rolesList');
-                let usersList = _self.get('usersList');
 
                 let role = _self.get('store').peekRecord('role',_selectedRole);
                 let user = _self.get('store').peekRecord('user',_selectedUser);

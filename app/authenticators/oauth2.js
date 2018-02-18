@@ -2,19 +2,13 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
 import OAuth2PasswordGrant from 'ember-simple-auth/authenticators/oauth2-password-grant';
 import ENV from "prometheus/config/environment";
-
-const {
-    RSVP,
-    isEmpty,
-    run,
-    makeArray,
-    assign: emberAssign,
-    merge,
-} = Ember;
-const assign = emberAssign || merge;
+import RSVP from 'rsvp';
+import { isEmpty } from '@ember/utils';
+import { run } from '@ember/runloop';
+import { makeArray } from '@ember/array';
+import { assign } from '@ember/polyfills';
 
 /**
  * This class allows the application to authenticate with using a password grant

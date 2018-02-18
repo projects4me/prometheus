@@ -2,7 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+import { once } from '@ember/runloop';
+import { computed } from '@ember/object';
+import { observer } from '@ember/object';
 
 /**
  * This component is used to render the HTML5 div with contenteditable property
@@ -13,7 +16,7 @@ import Ember from 'ember';
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The tag to be used for this component
@@ -50,7 +53,7 @@ export default Ember.Component.extend({
      *
      * @property editable
      * @for ContentEditable
-     * @type Bool
+     * @type boolean
      * @public
      */
     editable: true,
@@ -60,7 +63,7 @@ export default Ember.Component.extend({
      *
      * @property checkSpelling
      * @for ContentEditable
-     * @type Bool
+     * @type boolean
      * @public
      */
     checkSpelling: false,
@@ -70,7 +73,7 @@ export default Ember.Component.extend({
      *
      * @property isUserTyping
      * @for ContentEditable
-     * @type Bools
+     * @type boolean
      * @public
      */
     isUserTyping: false,
@@ -80,7 +83,7 @@ export default Ember.Component.extend({
      *
      * @property plaintext
      * @for ContentEditable
-     * @type Bool
+     * @type boolean
      * @public
      */
     plaintext: false,
@@ -93,11 +96,11 @@ export default Ember.Component.extend({
      * @type function
      * @public
      */
-    contenteditable: (function() {
-        var editable = this.get('editable');
+    contenteditable: computed('editable' ,function() {
+        let editable = this.get('editable');
 
         return editable ? 'true' : undefined;
-    }).property('editable'),
+    }),
 
     /**
      * The function that enables or disables spell checking
@@ -107,11 +110,11 @@ export default Ember.Component.extend({
      * @type function
      * @public
      */
-    spellcheck: (function() {
-        var spelling = this.get('checkSpelling');
+    spellcheck: computed('checkSpelling', function() {
+        let spelling = this.get('checkSpelling');
 
         return spelling ? 'true' : 'false';
-    }).property('checkSpelling'),
+    }),
 
     /**
      * The observer on value and isUserTyping
@@ -121,9 +124,9 @@ export default Ember.Component.extend({
      * @type function
      * @public
      */
-    valueObserver: (function() {
-        Ember.run.once(this, 'processValue');
-    }).observes('value', 'isUserTyping'),
+    valueObserver: observer('value', 'isUserTyping', function() {
+        once(this, 'processValue');
+    }),
 
     /**
      * This function is used in to set the contents after a value has been changed
@@ -132,7 +135,7 @@ export default Ember.Component.extend({
      * @return {*}
      * @public
      */
-    processValue: function() {
+    processValue() {
         if (!this.get('isUserTyping') && this.get('value')) {
             return this.setContent();
         }
@@ -145,7 +148,7 @@ export default Ember.Component.extend({
      * @return {*}
      * @public
      */
-    didInsertElement: function() {
+    didInsertElement() {
         return this.setContent();
     },
 
@@ -156,7 +159,7 @@ export default Ember.Component.extend({
      * @return {*}
      * @public
      */
-    focusOut: function() {
+    focusOut() {
         return this.set('isUserTyping', false);
     },
 
@@ -168,7 +171,7 @@ export default Ember.Component.extend({
      * @return {*}
      * @public
      */
-    keyDown: function(event) {
+    keyDown(event) {
         if (!event.metaKey) {
             return this.set('isUserTyping', true);
         }
@@ -181,7 +184,7 @@ export default Ember.Component.extend({
      * @return {*}
      * @public
      */
-    keyUp: function() {
+    keyUp() {
         return this.set('value', this.$().html());
     },
 
@@ -192,7 +195,7 @@ export default Ember.Component.extend({
      * @return {*}
      * @public
      */
-    setContent: function() {
+    setContent() {
         //return this.$().html(Ember.Handlebars.Utils.escapeExpression(this.get('value')));
         return this.get('value');
     }

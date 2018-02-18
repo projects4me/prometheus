@@ -3,6 +3,8 @@
  */
 
 import App from '../../app';
+import { hash } from 'rsvp';
+import _ from 'lodash';
 
 /**
  * This is the route to load the task board for a project
@@ -40,7 +42,7 @@ export default App.extend({
 
         Logger.debug('-Prometheus.Routes.Project.Board->afterModel');
         // Fetch all the milestones
-        return Ember.RSVP.hash({
+        return hash({
             milestones : _self.store.query('milestone',_milestoneOptions)
         }).then(function(results){
             // For each milestone that is still open fetch the issues
@@ -67,7 +69,7 @@ export default App.extend({
 
             Promises['backlog'] = _self.store.query('issue',_backlogOptions);
 
-            return Ember.RSVP.hash(Promises).then(function(issues) {
+            return hash(Promises).then(function(issues) {
                 Logger.debug('Fetched the issues');
 
                 _.forEach(issues,function (milestoneIssues,idx) {

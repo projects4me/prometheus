@@ -2,8 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
 import format from "../utils/data/format";
+import Controller from '@ember/controller';
+import { inject } from '@ember/service';
+import { computed } from '@ember/object';
 
 /**
  * This the app controller. App is as the main route for the application's
@@ -14,7 +16,7 @@ import format from "../utils/data/format";
  * @extends Ember.Controller
  * @author Hammad Hassan gollmer@gmail.com
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * The session service which is offered by ember-simple-auth that will be used
@@ -25,7 +27,7 @@ export default Ember.Controller.extend({
      * @for App
      * @public
      */
-    session: Ember.inject.service('session'),
+    session: inject(),
 
     /**
      * The service that we use to maintain the currentUser
@@ -35,7 +37,7 @@ export default Ember.Controller.extend({
      * @for App
      * @public
      */
-    currentUser: Ember.inject.service('current-user'),
+    currentUser: inject('current-user'),
 
     /**
      * The related field service that is used in order to manage dropdowns and relate fields
@@ -45,7 +47,7 @@ export default Ember.Controller.extend({
      * @for App
      * @public
      */
-    relatedFields: Ember.inject.service('related-fields'),
+    relatedFields: inject('related-fields'),
 
     /**
      * These are the roles in the system
@@ -75,9 +77,9 @@ export default Ember.Controller.extend({
      * @returns array
      * @public
      */
-    rolesList: Ember.computed(function(){
+    rolesList: computed('roles', function(){
         return format.getSelectList(this.get('roles'));
-    }).property('roles'),
+    }),
 
     /**
      * This is the list of users that has been extracted
@@ -87,10 +89,10 @@ export default Ember.Controller.extend({
      * @returns array
      * @public
      */
-    usersList: Ember.computed(function(){
+    usersList: computed('users', function(){
         Logger.debug(this.get('users'));
         return format.getSelectList(this.get('users'));
-    }).property('users'),
+    }),
 
     /**
      * The events that this controller is listing to

@@ -2,14 +2,18 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Component from '@ember/component';
 //import Validator from  "../utils/validator/fields";
+import { computed } from '@ember/object';
+import { cancel } from '@ember/runloop';
+import { later } from '@ember/runloop';
+import $ from 'jquery';
 
 /**
- * This componet is used to serve as a contianre for the fields that we intend to
+ * This component is used to serve as a container for the fields that we intend to
  * use in the system.
  *
- * The main featres that we wish to provide in the system with respect the form
+ * The main features that we wish to provide in the system with respect the form
  * fields all
  *
  * inline edit
@@ -17,14 +21,14 @@ import Ember from "ember";
  * help text
  * validation with masking
  *
- * each form field will be renderred on its own.
+ * each form field will be rendered on its own.
  *
  * @class FormFields
  * @namespace Prometheus.Components
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The type of the current field, the default type is text. If the field type
@@ -97,7 +101,7 @@ export default Ember.Component.extend({
     isTyping: false,
 
     /**
-     * Some fields may not be viewwable at all, This checks supercedes the checks
+     * Some fields may not be viewable at all, This checks supersedes the checks
      * for edit and isEditable. The default value is true
      *
      * @property isViewable
@@ -109,14 +113,14 @@ export default Ember.Component.extend({
 
     /**
      * This flag is used to maintain the state of the field, whether it has been
-     * changged or not. The default value is false
+     * changed or not. The default value is false
      *
      * @property isChanged
      * @type Boolean
      * @for FormFields
      * @private
      */
-    isChanged: Ember.computed('value', 'oldValue', function() {
+    isChanged: computed('value', 'oldValue', function() {
         Logger.debug(this.get('value'));
         Logger.debug(this.get('oldValue'));
         return (this.get('value') !== this.get('oldValue'));
@@ -124,7 +128,7 @@ export default Ember.Component.extend({
 
     /**
      * Some fields are dependant on other fields or rules. This flag is used to
-     * specify whehter it is or not. The default value is false
+     * specify whether it is or not. The default value is false
      *
      * @property isDependant
      * @type Boolean
@@ -135,7 +139,7 @@ export default Ember.Component.extend({
 
     /**
      * This flag is used to maintain whether the field is required or not. The
-     * defult is false
+     * default is false
      *
      * @property isRequired
      * @type Boolean
@@ -146,7 +150,7 @@ export default Ember.Component.extend({
 
     /**
      * This flag is used specify whether we need to load the field in an editable
-     * mannner. This is different from editable as it supercedes the editable flag.
+     * manner. This is different from editable as it supersedes the editable flag.
      * A field may be disabled for edit view but due to acl or dependencies it may
      * not be editable.
      *
@@ -181,7 +185,7 @@ export default Ember.Component.extend({
     scheduler: null,
 
     /**
-     * This field stores the old value for audit puposed.
+     * This field stores the old value for audit purposed.
      *
      * @property oldValue
      * @type mixed
@@ -193,7 +197,7 @@ export default Ember.Component.extend({
     /**
      * All the fields will have their own display needs so instead of handling
      * them all in template, which would be very very unwise as we are talking
-     * about handlebars, we would wish to load a diffrent template based on the
+     * about handlebars, we would wish to load a different template based on the
      * field type being requested.
      *
      * @property layoutName
@@ -202,10 +206,10 @@ export default Ember.Component.extend({
      * @private
      */
     layoutName: function() {
-        var type = this.get('type');
+        let type = this.get('type');
         //var edit = this.get('edit');
 
-        var template = 'components/form-fields/'+type;
+        let template = 'components/form-fields/'+type;
         if (Prometheus.__container__.lookup('template:'+template) === undefined) {
             template = 'components/form-fields/text';
         }
@@ -233,8 +237,8 @@ export default Ember.Component.extend({
      * @method setEmpty
      * @protected
      */
-    setEmpty:function(){
-        var isEmpty = false;
+    setEmpty(){
+        let isEmpty = false;
         const value = this.get('value');
 
         if (this.get('oldValue') === null) {
@@ -270,19 +274,19 @@ export default Ember.Component.extend({
      * @method didInsertElement
      * @private
      */
-    didInsertElement:function(){
+    didInsertElement(){
         const mask = this.getMask(this.get('mask'));
         const tagName = this.getTag(this.get('type'));
 
         if (mask !== undefined && mask !== '' && tagName !== undefined && tagName !== '') {
-            Ember.$('#'+this.elementId+' '+tagName).mask(mask.mask,{translation:mask.maskTranslation});
+            $('#'+this.elementId+' '+tagName).mask(mask.mask,{translation:mask.maskTranslation});
         }
 
         if (this.type === 'enum' || this.type === 'multienum') {
-            Ember.$('#'+this.elementId+' select').selectpicker();
+            $('#'+this.elementId+' select').selectpicker();
         }
         else if (this.type === 'date') {
-            Ember.$('#'+this.elementId+' input').daterangepicker({
+            $('#'+this.elementId+' input').daterangepicker({
                 singleDatePicker: true,
                 showDropdowns: true,
                locale: {
@@ -291,7 +295,7 @@ export default Ember.Component.extend({
             });
         }
         else if (this.type === 'datetime') {
-            Ember.$('#'+this.elementId+' input').daterangepicker({
+            $('#'+this.elementId+' input').daterangepicker({
                 singleDatePicker: true,
                 timePicker: true,
                 showDropdowns: true,
@@ -301,7 +305,7 @@ export default Ember.Component.extend({
             });
         }
         else if (this.type === 'email') {
-            Ember.$('#'+this.elementId+' input').mask("A", {
+            $('#'+this.elementId+' input').mask("A", {
                 translation: {
                     "A": { pattern: /[\w@\-.+]/, recursive: true }
                 }
@@ -318,7 +322,7 @@ export default Ember.Component.extend({
      * @return maskOptions {Object} The settings required for masking the data
      * @todo possibly store the masks and options somewhere else to allow customizations
      */
-    getMask:function(mask){
+    getMask(mask){
         const masks = {
             'alpha' : {
                 'mask' : "C",
@@ -351,7 +355,7 @@ export default Ember.Component.extend({
      * @param type {String} The type of field requried
      * @return tagname {String} The tag name for the field type
      */
-    getTag:function(type){
+    getTag(type){
         const tagNames = {
             'text' : 'input',
             'textarea' : 'textarea',
@@ -367,7 +371,7 @@ export default Ember.Component.extend({
      * @method keyDown
      * @public
      */
-    keyDown:function(){
+    keyDown(){
         if (this.get('isTyping') === false) {
             this.set('isTyping',true);
         }
@@ -384,14 +388,14 @@ export default Ember.Component.extend({
      * @todo Maybe we can calculate the average typing speed at run time based on the user who is typing.
      * @todo Should clear the data on focus-out as well.
      */
-    keyUp:function(){
+    keyUp(){
         const self = this;
         if (self.scheduler !== null)
         {
-            Ember.run.cancel(self.scheduler);
+            cancel(self.scheduler);
         }
 
-        self.scheduler = Ember.run.later((function(){
+        self.scheduler = later((function(){
             self.set('isTyping',false);
         }),1500);
     }

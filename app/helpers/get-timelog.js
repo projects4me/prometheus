@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
 import _ from "lodash";
+import { helper } from '@ember/component/helper';
 
 /**
  * This is a helper function that is used to retrieve the sum of time log entries
@@ -46,4 +46,4 @@ export function getTimelog(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(getTimelog);
+export default helper(getTimelog);

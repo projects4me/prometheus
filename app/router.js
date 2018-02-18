@@ -2,10 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
 import config from './config/environment';
+import EmberRouter from '@ember/routing/router';
 
-const Router = Ember.Router.extend({
+const Router = EmberRouter.extend({
     location: config.locationType,
     rootURL: config.rootURL
 });
@@ -15,7 +15,7 @@ const Router = Ember.Router.extend({
  */
 Router.map(function() {
     this.route('index', { path: '/' });
-    this.route(config.api.prefix,function() {
+    this.route('app',function() {
         this.route('index',{path:'/'});
         this.route('module',{path:':module'});
         this.route('projects',{path:'project'},function(){

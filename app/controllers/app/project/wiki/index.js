@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Controller from '@ember/controller';
 
 /**
  * The controller for the wiki route, it is loaded when a user tried to navigate to the route
@@ -16,7 +16,7 @@ import Ember from "ember";
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * These are the actions that we are going to handle for this controller

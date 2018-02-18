@@ -18,12 +18,12 @@
 
   {{#bread-crumbs tagName="ol" linkable=true as |component module|}}
     {{#bread-crumb route=module breadCrumbs=component}}
-        <i class="fa fa-{{nav-icon module.title}}"></i>
-        {{#if module.record}}
-          {{module.title}}
-        {{else}}
-          {{t (concat "view.nav.menu." (camelize module.title) ".label")}}
-        {{/if}}
+      <i class="fa fa-{{nav-icon module.title}}"></i>
+      {{#if module.record}}
+        {{module.title}}
+      {{else}}
+        {{t (concat "view.nav.menu." (camelize module.title) ".label")}}
+      {{/if}}
     {{/bread-crumb}}
   {{/bread-crumbs}}
 

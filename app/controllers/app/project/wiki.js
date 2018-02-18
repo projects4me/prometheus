@@ -2,8 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
-
+import Controller from '@ember/controller';
 
 /**
  * The controller for the wiki route, it is loaded when a user tried to navigate to the route
@@ -16,7 +15,7 @@ import Ember from "ember";
  * @module App.Project
  * @extends Ember.Controller
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * This is the tree that we use in order to maintain the list of wiki pages for a particular project
@@ -45,7 +44,7 @@ export default Ember.Controller.extend({
          * @public
          */
         save:function() {
-            var model = this.get('model').nextObject(0);
+            let model = this.get('model').nextObject(0);
             model.save();
         },
 

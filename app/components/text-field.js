@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import TextField from '@ember/component/text-field';
 
 /**
  * This object is used to modify the default TextFeild of emberjs in order to
@@ -19,7 +19,7 @@ import Ember from "ember";
  * @extends Ember.TextField
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.TextField.extend({
+export default TextField.extend({
 
     /**
      * These are the classes that must be added in the HTML tag

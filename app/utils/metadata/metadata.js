@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import _ from "lodash";
+import Object from '@ember/object';
 
 /**
  * The meta is the main object storing the different types of metadata that the
@@ -16,7 +16,7 @@ import _ from "lodash";
  * @author Hammad Hassan <gollomer@gmail.com>
  * @todo Allow the metadata to be retrived from the server
  */
-export default Ember.Object.extend({
+export default Object.extend({
 
     /**
      * The list of modules in the system and their default behaviors

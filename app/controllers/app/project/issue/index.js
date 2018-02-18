@@ -2,10 +2,14 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import _ from "lodash";
 import queryBuilder from "prometheus/utils/query/builder";
 import queryParser from "prometheus/utils/query/parser";
+import $ from 'jquery';
+import { inject } from '@ember/service';
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
+import Controller from '@ember/controller';
 
 /**
  * This controller is used to provide the interaction between the template and
@@ -18,7 +22,7 @@ import queryParser from "prometheus/utils/query/parser";
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * Query params that the controller needs to support, it may seem that the
@@ -116,7 +120,7 @@ export default Ember.Controller.extend({
      * @for Index
      * @public
      */
-    i18n : Ember.inject.service(),
+    i18n : inject(),
 
     /**
      * The current user service
@@ -126,7 +130,7 @@ export default Ember.Controller.extend({
      * @for Index
      * @public
      */
-    currentUser : Ember.inject.service(),
+    currentUser : inject('current-user'),
 
     /**
      * The project controller
@@ -136,7 +140,7 @@ export default Ember.Controller.extend({
      * @for Index
      * @public
      */
-    appProjectController : Ember.inject.controller('app.project'),
+    appProjectController : injectController('app.project'),
 
     /**
      * The project controller
@@ -146,9 +150,9 @@ export default Ember.Controller.extend({
      * @for Index
      * @public
      */
-    projectId : Ember.computed(function () {
+    projectId : computed('appProjectController.projectId', function () {
         return this.get('appProjectController.projectId');
-    }).property('appProjectController.projectId'),
+    }),
 
     /**
      * The action handlers for the issue list view
@@ -251,7 +255,7 @@ export default Ember.Controller.extend({
          */
         searchByRules(){
             let result = queryBuilder.getRules();
-            if (!Ember.$.isEmptyObject(result)) {
+            if (!$.isEmptyObject(result)) {
                 let query = queryParser.getQueryString(result);
                 this.queryString = query;
                 this.set('query', query);
@@ -265,8 +269,8 @@ export default Ember.Controller.extend({
          * @public
          */
         openFilters(){
-            Ember.$('.search [data-toggle=collapse]').click();
-            Ember.$('.search input').blur();
+            $('.search [data-toggle=collapse]').click();
+            $('.search input').blur();
         },
 
         /**
@@ -276,7 +280,7 @@ export default Ember.Controller.extend({
          * @private
          */
         toggleFilters(){
-            Ember.$('#toggleFilters').toggleClass('dropToggle');
+            $('#toggleFilters').toggleClass('dropToggle');
         },
 
         /**
@@ -291,16 +295,16 @@ export default Ember.Controller.extend({
          */
         selectAll(value){
             // Select all the checkboxes in the list view
-            _.each(Ember.$('.list-view input[type=checkbox]').not('[data-select=all]'),function(element) {
+            _.each($('.list-view input[type=checkbox]').not('[data-select=all]'),function(element) {
                 element.checked = value;
             });
 
-            _.each(Ember.$('.list-view [data-select=all]'),function(element) {
+            _.each($('.list-view [data-select=all]'),function(element) {
                 element.checked = value;
             });
 
 
-            this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
+            this.set('selectedCount',$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
         },
 
         /**
@@ -315,20 +319,20 @@ export default Ember.Controller.extend({
          */
         select(value){
             // Select/Deselect one checkboxes in the list view
-            this.set('selectedCount',Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
+            this.set('selectedCount',$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
 
             // uncheck the select all checkbox, if an item was deselected and the select all checkbox was checked
             if (!value) {
-                let selectAll = Ember.$('[data-select=all]').prop('checked');
+                let selectAll = $('[data-select=all]').prop('checked');
                 if (selectAll){
-                    Ember.$('[data-select=all]').prop('checked',false);
+                    $('[data-select=all]').prop('checked',false);
                 }
             }
             // If all the items in the list were selected then check the select all checkbox as well
             else {
                 // if checked boxes are equal to total boxes then enable check all box
-                if (Ember.$('.list-view input[type=checkbox]:checked').not('[data-select=all]').length === Ember.$('.list-view input[type=checkbox]').not('[data-select=all]').length) {
-                    Ember.$('[data-select=all]').prop('checked',true);
+                if ($('.list-view input[type=checkbox]:checked').not('[data-select=all]').length === $('.list-view input[type=checkbox]').not('[data-select=all]').length) {
+                    $('[data-select=all]').prop('checked',true);
                 }}
         },
 

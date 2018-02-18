@@ -2,7 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Component from '@ember/component';
+import { inject } from '@ember/service';
+import $ from 'jquery';
 
 /**
  * This is the wrapper component fo Summernote WYISWYG editor
@@ -13,7 +15,7 @@ import Ember from "ember";
  * @author Hammad Hassan <gollomer@gmail.com>
  * @todo allow passing of the parameters to this component
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
 
     /**
@@ -24,7 +26,7 @@ export default Ember.Component.extend({
      * @for Prometheus.Components.SummerNote
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * This is the list of emojis that we support
@@ -163,7 +165,7 @@ export default Ember.Component.extend({
     init:function(){
         this._super(...arguments);
         let self = this;
-        let emojiList = Ember.$.map(this.get('emojiList'), function(emoji) {
+        let emojiList = $.map(this.get('emojiList'), function(emoji) {
             return {'id':emoji, 'name':self.get('i18n').t('emoji.'+emoji)};
         });
         self.set('translatedEmojis',emojiList);
@@ -197,14 +199,14 @@ export default Ember.Component.extend({
         let self = this;
         Logger.debug(self);
 
-        Ember.$(self.element).summernote({
+        $(self.element).summernote({
             height: 350,
             minHeight: 350,
             maxHeight: 700,
             focus: true,
             callbacks: {
                 onInit: function() {
-                    Ember.$('.note-editable')
+                    $('.note-editable')
                         .atwho({
                             at: "@",
                             data: self.get('usersList'),

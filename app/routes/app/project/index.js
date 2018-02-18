@@ -30,7 +30,7 @@ export default App.extend({
      * the route, this function is responsible for loading the required data
      *
      * @method setupController
-     * @param {Promethues.Controllers.Project} controller the controller object for this route
+     * @param {Prometheus.Controllers.Project} controller the controller object for this route
      * @private
      * @todo move the loading of related to afterModel
      */
@@ -86,7 +86,7 @@ export default App.extend({
      * would be in hundred of thousand of rows examined. So we only bring in the
      * information that for there are going to be one a few decade rows in total
      * with the original project retrieval call.
-     * The second reason is to retrive the related information. The API automatically`
+     * The second reason is to retrieve the related information. The API automatically`
      * retrieves the related data but is restricted to first degree relationships.
      * Second degree and above relationships are not retrieved via the default call
      * due to obvious performance and complexity constraints.
@@ -132,8 +132,8 @@ export default App.extend({
     },
 
     /**
-     * This function is used to retrive the activities related to a project. Just
-     * like the loadIssuesTime function the activities are loaded seperately to
+     * This function is used to retrieve the activities related to a project. Just
+     * like the loadIssuesTime function the activities are loaded separately to
      * avoid performance and complexity issues.
      *
      * @method loadActivities
@@ -141,9 +141,9 @@ export default App.extend({
      * @todo test performance and load in chunks if required.
      */
     loadActivities:function(projectId,controller){
-        let self = this;
+        let _self = this;
         let options = {
-            // Retreiving the activities related to a project
+            // Retrieving the activities related to a project
             query: "((Activity.relatedId : "+projectId+") AND (Activity.relatedTo : project))",
             sort: "Activity.dateCreated",
             order: 'DESC',
@@ -151,11 +151,11 @@ export default App.extend({
             limit: -1
         };
 
-        this.store.query('activity',options).then(function(data){
-            var activities = {};
+        _self.store.query('activity',options).then(function(data){
+            let activities = {};
             // Group the activities with respect to the dateCreated
             data.forEach(function(activity){
-                var dateCreated = activity.get('dateCreated').substring(0,10);
+                let dateCreated = activity.get('dateCreated').substring(0,10);
                 if (activities[dateCreated] !== undefined)
                 {
                     activities[dateCreated]['data'].push(activity);

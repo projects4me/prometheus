@@ -2,8 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
-import FormField from "../components/form-fields";
+import Component from '@ember/component';
 
 /**
  * This component is used to manage the relate field template, as we might
@@ -17,7 +16,7 @@ import FormField from "../components/form-fields";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * This is the tag name of this component

@@ -3,10 +3,15 @@
  */
 
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
-import Ember from "ember";
 import { task } from 'ember-concurrency';
+import Controller from '@ember/controller';
+import { inject } from '@ember/service';
+import { inject as injectController } from '@ember/controller';
+import { get } from '@ember/object';
+import { set } from '@ember/object';
+import $ from 'jquery';
+import { computed } from '@ember/object';
 
-const { get, set } = Ember;
 /**
  * This controller is used to manage the issues detail/page view
  *
@@ -16,7 +21,7 @@ const { get, set } = Ember;
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * The ESA session storage service
@@ -25,7 +30,7 @@ export default Ember.Controller.extend({
      * @type service
      * @private
      */
-    session: Ember.inject.service(),
+    session: inject(),
 
     /**
      * The current user
@@ -34,14 +39,14 @@ export default Ember.Controller.extend({
      * @type service
      * @private
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject('current-user'),
 
     /**
      * This flag is used to show or hide the modal dialog box
      * for file previews
      *
      * @property previewFileDialog
-     * @type bool
+     * @type boolean
      * @for Page
      * @private
      */
@@ -52,7 +57,7 @@ export default Ember.Controller.extend({
      * for time log
      *
      * @property logTimeDialog
-     * @type bool
+     * @type boolean
      * @for Page
      * @private
      */
@@ -73,7 +78,7 @@ export default Ember.Controller.extend({
      * for editing time log entry
      *
      * @property editLogDialog
-     * @type bool
+     * @type boolean
      * @for Page
      * @private
      */
@@ -101,7 +106,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    projectController: Ember.inject.controller('app.project'),
+    projectController: injectController('app.project'),
 
     /**
      * This is a computed property in which gets the list of users
@@ -112,7 +117,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    usersList: Ember.computed(function(){
+    usersList: computed(function(){
         return this.get('projectController').get('usersList');
     }),
 
@@ -251,7 +256,7 @@ export default Ember.Controller.extend({
                         action: function() {
 
                             // destroy the upload
-                            file.destroyRecord().then(function(data){
+                            file.destroyRecord().then(function(){
                                 // remove from the view by updating the model
                                 self.get('model').nextObject(0).get('files').removeObject(file);
 
@@ -296,7 +301,7 @@ export default Ember.Controller.extend({
                 download: true
             };
             Logger.debug('Retrieving upload with options '+options);
-            let upload = this.get('store').query('upload',options).then(function(data){
+            this.get('store').query('upload',options).then(function(data){
                 let downloadLink = data.nextObject(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
@@ -334,7 +339,7 @@ export default Ember.Controller.extend({
                 Logger.debug('Download link found : '+downloadLink);
 
                 let path = self.get('store').adapterFor('upload').host+'/preview/get/'+downloadLink;
-                Ember.$('#file_preview').attr('src',path);
+                $('#file_preview').attr('src',path);
                 Logger.debug(path);
             });
 
@@ -370,7 +375,7 @@ export default Ember.Controller.extend({
                 newLog.set('issueId',_self.get('model').nextObject(0).get('id'));
                 newLog.set('context','spent');
 
-                newLog.save().then(function (data) {
+                newLog.save().then(function () {
                     let timelog = _self.get('store').createRecord('timelog');
                     _self.set('newTimeLog',timelog);
                     _self.get('model').nextObject(0).get('spent').pushObject(newLog);
@@ -413,7 +418,7 @@ export default Ember.Controller.extend({
                 log.set('modifiedUser',_self.get('currentUser.user.id'));
                 log.set('modifiedUserName',_self.get('currentUser.user.name'));
 
-                log.save().then(function (data) {
+                log.save().then(function () {
 
                     new Messenger().post({
                         message: _self.get('i18n').t("view.app.issue.detail.timelog.edited"),

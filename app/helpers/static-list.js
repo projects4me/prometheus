@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import { helper } from '@ember/component/helper';
+import { htmlSafe} from '@ember/string';
 
 /**
  * This helper is used to get related list
@@ -13,7 +14,7 @@ import Ember from "ember";
  * @todo Not sure if this is used
  */
 export function staticList(params) {
-    return Ember.String.htmlSafe(params[0]);
+    return htmlSafe(params[0]);
 }
 
 /**
@@ -24,4 +25,4 @@ export function staticList(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(staticList);
+export default helper(staticList);

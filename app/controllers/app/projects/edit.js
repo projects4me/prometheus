@@ -1,5 +1,8 @@
-import Ember from 'ember';
-import  format from "../../../utils/data/format";
+import Controller from '@ember/controller';
+import { inject } from '@ember/service';
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
+
 /**
  * This is empty controller, normally we do not create them. However
  * Ember's inject in the child controllers was failing on reload
@@ -12,7 +15,7 @@ import  format from "../../../utils/data/format";
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
 
     /**
@@ -23,7 +26,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @public
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject('current-user'),
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -33,7 +36,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @public
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * This property is used to control the enabling and disabling of the save
@@ -58,7 +61,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    appController: Ember.inject.controller('app'),
+    appController: injectController('app'),
 
     /**
      * This is a computed property in which gets the list of users
@@ -69,9 +72,9 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    usersList: Ember.computed(function(){
+    usersList: computed('appController.usersList', function(){
         return this.get('appController').get('usersList');
-    }).property('appController.usersList'),
+    }),
 
     // /**
     //  * This is a computed property that generated the project short

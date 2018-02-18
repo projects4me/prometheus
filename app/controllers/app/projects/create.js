@@ -1,5 +1,10 @@
-import Ember from 'ember';
 import  format from "../../../utils/data/format";
+import Controller from '@ember/controller';
+import { inject } from '@ember/service';
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
+import { hash } from 'rsvp';
+import _ from 'lodash';
 
 /**
  * This is empty controller, normally we do not create them. However
@@ -13,7 +18,7 @@ import  format from "../../../utils/data/format";
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
 
     /**
@@ -24,7 +29,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @public
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject('current-user'),
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -34,7 +39,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @public
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * This property is used to control the enabling and disabling of the save
@@ -59,7 +64,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    appController: Ember.inject.controller('app'),
+    appController: injectController('app'),
 
     /**
      * This is a computed property in which gets the list of users
@@ -70,9 +75,9 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    usersList: Ember.computed(function(){
+    usersList: computed('appController.usersList', function(){
         return this.get('appController').get('usersList');
-    }).property('appController.usersList'),
+    }),
 
     /**
      * This is a computed property that generated the project short
@@ -84,15 +89,16 @@ export default Ember.Controller.extend({
      * @public
      * @todo optimize the short code generation algorithm to reduce conflicts
      */
-    shortCode: Ember.computed(function(){
+    shortCode: computed('model.name', function(){
         let name = '';
         if (this.get('model.name') !== undefined) {
             name = this.get('model.name');
         }
         let shortCode = name.slice(0,5).toUpperCase();
+
         this.set('model.shortCode',shortCode);
         return shortCode;
-    }).property('model.name'),
+    }),
 
     /**
      * This is a computed property in which gets the list of issue
@@ -103,9 +109,9 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    issuetypeList: Ember.computed(function(){
+    issuetypeList: computed('issuetypes', function(){
         return format.getSelectList(this.get('issuetypes'));
-    }).property('issuetypes'),
+    }),
 
     /**
      * These are the events that this controller handles
@@ -209,7 +215,7 @@ export default Ember.Controller.extend({
                     Promises[issueType.label] = newIssueType.save();
                 });
 
-                Ember.RSVP.hash(Promises).then(function(){
+                hash(Promises).then(function(){
 
                     new Messenger().post({
                         message: _self.get('i18n').t('view.app.project.create.created',{name:data.get('name')}),

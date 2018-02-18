@@ -2,8 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import Widget from "./widgets";
+import { inject } from '@ember/service';
+import _ from "lodash";
+import $ from 'jquery';
 
 /**
  * This class adds the functionality of dropdown action menu in the system
@@ -25,7 +27,7 @@ export default Widget.extend({
      * @for IssuesToday
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * The i18n Service
@@ -35,7 +37,7 @@ export default Widget.extend({
      * @for IssuesToday
      * @private
      */
-    router: Ember.inject.service(),
+    router: inject(),
 
     /**
      * This function is called after the HTML elements have been
@@ -64,7 +66,7 @@ export default Widget.extend({
             ])
         });
 
-        let table = Ember.$('#'+this.elementId+' table').DataTable({
+        let table = $('#'+this.elementId+' table').DataTable({
             data: dataSet,
             select: true,
             columns: [

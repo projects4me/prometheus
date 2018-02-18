@@ -8,7 +8,7 @@
       </div>
 
       <div class="btn-group">
-          <button type="button" class="btn btn-default"> <i class="fa fa-plus"></i> Create New</button>
+        <button type="button" class="btn btn-default"> <i class="fa fa-plus"></i> Create New</button>
       </div>
 
     </div>
@@ -53,55 +53,55 @@
     <div class="list-view table-responsive">
       <table class="table table-hover table-striped table-bordered">
         <thead>
-          <tr>
-            <th>
-              <div class="btn-group">
-                <button type="button" class="btn">{{checkbox-field action="selectAll" type="checkbox" data-select="all"}}</button>
-                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="caret"></span>
-                  <span class="sr-only">{{t 'global.list.toggleDropdown'}}</span>
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a href="javascript:void(0);" {{action "selectAll"}}>{{t 'global.list.selectAll'}}</a></li>
-                  <li><a href="javascript:void(0);" {{action "deleteAll"}}>{{t 'global.list.deleteAll'}}</a></li>
-                  <li><a href="javascript:void(0);" {{action "exportAll"}}>{{t 'global.list.exportAll'}}</a></li>
-                  <li><a href="javascript:void(0);" {{action "updateAll"}}>{{t 'global.list.updateAll'}}</a></li>
-                </ul>
-              </div>
-            </th>
-            {{#each-in metaData.fields as |field definition|}}
-              {{#if definition.sort}}
-                <th class="sortable" data-sort="{{module}}.{{definition.fieldName}}Sortable" {{action "sortData" definition.fieldName}}>{{t definition.label}}</th>
-              {{else}}
-                <th>{{t definition.label}}</th>
-              {{/if}}
-            {{/each-in}}
-          </tr>
+        <tr>
+          <th>
+            <div class="btn-group">
+              <button type="button" class="btn">{{checkbox-field action="selectAll" type="checkbox" data-select="all"}}</button>
+              <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">{{t 'global.list.toggleDropdown'}}</span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="javascript:void(0);" {{action "selectAll"}}>{{t 'global.list.selectAll'}}</a></li>
+                <li><a href="javascript:void(0);" {{action "deleteAll"}}>{{t 'global.list.deleteAll'}}</a></li>
+                <li><a href="javascript:void(0);" {{action "exportAll"}}>{{t 'global.list.exportAll'}}</a></li>
+                <li><a href="javascript:void(0);" {{action "updateAll"}}>{{t 'global.list.updateAll'}}</a></li>
+              </ul>
+            </div>
+          </th>
+          {{#each-in metaData.fields as |field definition|}}
+            {{#if definition.sort}}
+              <th class="sortable" data-sort="{{module}}.{{definition.fieldName}}Sortable" {{action "sortData" definition.fieldName}}>{{t definition.label}}</th>
+            {{else}}
+              <th>{{t definition.label}}</th>
+            {{/if}}
+          {{/each-in}}
+        </tr>
         </thead>
         <tbody>
-          {{#each model as |entity|}}
-            <tr>
-              <td>
-                <div class="btn-group">
-                  <button type="button" class="btn">{{checkbox-field action="select" type="checkbox" data-select=entity.id}}</button>
-                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="javascript:void(0);" {{action "select"}}>{{t 'global.list.select'}}</a></li>
-                    <li><a href="javascript:void(0);" {{action "export"}}>{{t 'global.list.export'}}</a></li>
-                    <li><a href="javascript:void(0);" {{action "delete"}}>{{t 'global.list.delete'}}</a></li>
-                    <li><a href="javascript:void(0);" {{action "edit" entity.id}}>{{t 'global.list.edit'}}</a></li>
-                    <li><a href="javascript:void(0);" {{action "detail" entity.id}}>{{t 'global.list.detail'}}</a></li>
-                  </ul>
-                </div>
-              </td>
-              {{#each-in metaData.fields as |field definition|}}
-                <td>{{field-view view='list' navigate=(action "detail" entity.id) definition=definition model=entity field=field module=module}}</td>
-              {{/each-in}}
-            </tr>
-          {{/each}}
+        {{#each model as |entity|}}
+          <tr>
+            <td>
+              <div class="btn-group">
+                <button type="button" class="btn">{{checkbox-field action="select" type="checkbox" data-select=entity.id}}</button>
+                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a href="javascript:void(0);" {{action "select"}}>{{t 'global.list.select'}}</a></li>
+                  <li><a href="javascript:void(0);" {{action "export"}}>{{t 'global.list.export'}}</a></li>
+                  <li><a href="javascript:void(0);" {{action "delete"}}>{{t 'global.list.delete'}}</a></li>
+                  <li><a href="javascript:void(0);" {{action "edit" entity.id}}>{{t 'global.list.edit'}}</a></li>
+                  <li><a href="javascript:void(0);" {{action "detail" entity.id}}>{{t 'global.list.detail'}}</a></li>
+                </ul>
+              </div>
+            </td>
+            {{#each-in metaData.fields as |field definition|}}
+              <td>{{field-view view='list' navigate=(action "detail" entity.id) definition=definition model=entity field=field module=module}}</td>
+            {{/each-in}}
+          </tr>
+        {{/each}}
         </tbody>
       </table>
     </div>

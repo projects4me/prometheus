@@ -2,11 +2,12 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import { task } from 'ember-concurrency';
-
-const { get, set } = Ember;
-const { inject: { service } } = Ember;
+import Controller from '@ember/controller';
+import { inject } from '@ember/service';
+import { get } from '@ember/object';
+import { set } from '@ember/object';
+import $ from 'jquery';
 
 /**
  * The controller for the wiki page route, it is loaded when a user tried to
@@ -21,7 +22,7 @@ const { inject: { service } } = Ember;
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * The current user service
@@ -31,7 +32,7 @@ export default Ember.Controller.extend({
      * @for Page
      * @public
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject(),
 
     /**
      * These are the tags that the user has selected.
@@ -61,7 +62,7 @@ export default Ember.Controller.extend({
      * @for Page
      * @private
      */
-    store: service(),
+    store: inject(),
 
 
     /**
@@ -238,11 +239,11 @@ export default Ember.Controller.extend({
             var model = this.get('model').nextObject(0);
             if (action === 'unlock')
             {
-                Ember.set(model,'locked',"1");
+                set(model,'locked',"1");
             }
             else if (action === 'lock')
             {
-                Ember.set(model,'locked',"0");
+                set(model,'locked',"0");
             }
 
             model.save().then(function(){
@@ -296,7 +297,7 @@ export default Ember.Controller.extend({
                         action: function() {
 
                             // destroy the upload
-                            file.destroyRecord().then(function(data){
+                            file.destroyRecord().then(function(){
                                 // remove from the view by updating the model
                                 self.get('model').nextObject(0).get('files').removeObject(file);
 
@@ -341,7 +342,7 @@ export default Ember.Controller.extend({
                 download: true
             };
             Logger.debug('Retrieving upload with options '+options);
-            let upload = this.get('store').query('upload',options).then(function(data){
+            this.get('store').query('upload',options).then(function(data){
                 let downloadLink = data.nextObject(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
@@ -377,7 +378,7 @@ export default Ember.Controller.extend({
                 Logger.debug('Download link found : '+downloadLink);
 
                 let path = self.get('store').adapterFor('upload').host+'/preview/get/'+downloadLink;
-                Ember.$('#file_preview').attr('src',path);
+                $('#file_preview').attr('src',path);
                 Logger.debug(path);
             });
 

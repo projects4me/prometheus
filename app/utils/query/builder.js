@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import $ from 'jquery';
 
 /**
  * This utility class is used for help interact with the plugin jQuery Query
@@ -47,7 +47,7 @@ export default {
     init:function(element,filters){
         this.element = element;
         this.filters = filters;
-        Ember.$(element).queryBuilder({
+        $(element).queryBuilder({
             plugins: ['bt-tooltip-errors'],
             operators: [
                 'equal',
@@ -87,8 +87,8 @@ export default {
         {
             throw 'First initialize the utility';
         }
-        Ember.$(this.element).queryBuilder('reset');
-        Ember.$(this.element).queryBuilder('setRules', rules);
+        $(this.element).queryBuilder('reset');
+        $(this.element).queryBuilder('setRules', rules);
     },
 
     /**
@@ -102,7 +102,7 @@ export default {
         {
             throw 'First initialize the utility';
         }
-        Ember.$(this.element).queryBuilder('reset');
+        $(this.element).queryBuilder('reset');
     },
 
     /**
@@ -117,7 +117,7 @@ export default {
         {
             throw 'First initialize the utility';
         }
-        return Ember.$(this.element).queryBuilder('getRules');
+        return $(this.element).queryBuilder('getRules');
     },
 
     /**
@@ -128,7 +128,7 @@ export default {
      * @public
      */
     destroy:function(element){
-        Ember.$(element).queryBuilder('destroy');
+        $(element).queryBuilder('destroy');
     }
 
 };

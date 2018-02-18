@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import FormField from "../components/form-fields";
+import $ from 'jquery';
 
 /**
  * This is the checkbox field component.
@@ -43,7 +43,7 @@ export default FormField.extend({
          * @public
          */
         changed:function(){
-            var val = Ember.$('#'+this.elementId+' [name='+this.elementId+'-option]:checked').val();
+            let val = $('#'+this.elementId+' [name='+this.elementId+'-option]:checked').val();
             this.set('value',val);
         }
     },

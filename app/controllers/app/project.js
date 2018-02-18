@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
 import format from "../../utils/data/format";
+import Controller from '@ember/controller';
+import { computed } from '@ember/object';
 
 /**
  * This the app controller. App is as the main route for the application's
@@ -14,7 +15,7 @@ import format from "../../utils/data/format";
  * @extends Ember.Controller
  * @author Hammad Hassan gollmer@gmail.com
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * These are the users in the system
@@ -34,7 +35,7 @@ export default Ember.Controller.extend({
      * @returns array
      * @public
      */
-    issuesList: Ember.computed(function(){
+    issuesList: computed('projectId', 'issues', function(){
         let map ={
             id:'id',
             name:'subject',
@@ -43,6 +44,6 @@ export default Ember.Controller.extend({
             projectId:'projectId'
         };
         return format.getSelectList(this.get('issues'),map);
-    }).property('projectId','issues')
+    })
 
 });

@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Controller from '@ember/controller';
+import { inject } from '@ember/service';
 
 /**
  * This is the controller for the calendar controller route
@@ -13,7 +14,7 @@ import Ember from "ember";
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * The current user service
@@ -23,7 +24,7 @@ export default Ember.Controller.extend({
      * @for Calendar
      * @private
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject('current-user'),
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -33,7 +34,7 @@ export default Ember.Controller.extend({
      * @for Calendar
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * Locale value, the default is en
@@ -84,13 +85,9 @@ export default Ember.Controller.extend({
          *
          * @method clicked
          * @param {Object} event
-         * @param {Object} jsEvent
-         * @param {String} view
          * @public
          */
-        clicked(event, jsEvent, view){
-            jsEvent = jsEvent;
-            view = view;
+        clicked(event){
             this.showModal(event);
         },
 
@@ -101,7 +98,7 @@ export default Ember.Controller.extend({
          * @param {Object} event
          * @public
          */
-        eventDragStart:function(event){
+        eventDragStart(event){
             Logger.debug("AppProjectCalendarController::eventDragStart()");
             Logger.debug(event);
         },
@@ -114,8 +111,8 @@ export default Ember.Controller.extend({
          * @param {Object} eventElement
          * @public
          */
-        eventRender:function(event,eventElement){
-            var self = this;
+        eventRender(event,eventElement){
+            let self = this;
             if (event.priority)
             {
                 eventElement.find('div.fc-content').prepend(this.getPriorityHTML(event.priority));
@@ -123,7 +120,7 @@ export default Ember.Controller.extend({
             }
             if (event.className)
             {
-                var tooltip = self.get('i18n').t("view.app.issue.lists.priority."+event.priority);
+                let tooltip = self.get('i18n').t("view.app.issue.lists.priority."+event.priority);
                 tooltip += ' '+self.get('i18n').t("view.app.issue.priority");
                 tooltip += ' - '+self.get('i18n').t("view.app.issue.lists.status."+event.className);
                 eventElement.find('div.fc-content').attr('data-toggle','tooltip');
@@ -144,7 +141,7 @@ export default Ember.Controller.extend({
      * @public
      */
     getPriorityHTML:function(priority){
-        var HTML = '';
+        let HTML = '';
         switch (priority) {
             case 'blocker':
                 HTML += '<i class="fa fa-ban"></i>';

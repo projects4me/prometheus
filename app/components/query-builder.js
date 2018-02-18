@@ -2,11 +2,14 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import queryParser from "../utils/query/parser";
 import queryBuilder from "../utils/query/builder";
 import MD from "../utils/metadata/metadata";
 import { observer } from '@ember/object';
+import Component from '@ember/component';
+import { inject } from '@ember/service';
+
+
 /**
  * This component is used to render the chat-boxes in the application
  *
@@ -15,7 +18,7 @@ import { observer } from '@ember/object';
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -25,7 +28,7 @@ export default Ember.Component.extend({
      * @for QueryBuilder
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * These are the classes the must be registered with the component

@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import _ from "lodash";
+import Component from '@ember/component';
+import { inject } from '@ember/service';
 
 /**
  * This component is used to render the issue ratio chart in the application
@@ -13,7 +14,7 @@ import _ from "lodash";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -23,7 +24,7 @@ export default Ember.Component.extend({
      * @for ChartIssueratio
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * These are the classes the must be registered with the component

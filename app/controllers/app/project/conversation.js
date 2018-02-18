@@ -2,7 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Controller from '@ember/controller';
+import { inject } from '@ember/service';
+import Evented from '@ember/object/evented';
 
 /**
  * This is the controller for the conversation controller route
@@ -13,7 +15,7 @@ import Ember from "ember";
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend(Ember.Evented,{
+export default Controller.extend(Evented,{
 
     /**
      * The current user service
@@ -23,7 +25,7 @@ export default Ember.Controller.extend(Ember.Evented,{
      * @for Conversation
      * @public
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject('current-user'),
 
     /**
      * This is the flag which is used to

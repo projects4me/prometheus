@@ -23,10 +23,9 @@ export default App.extend({
      * @param {Prometheus.Models.Issue} model
      * @protected
      */
-    setupController:function(controller,model)
+    setupController:function(controller)
     {
         Logger.debug('AppProjectIndexRoute::setupController');
-        let i18n = this.get('i18n');
 
         let params = this.paramsFor('app.projects.edit');
         Logger.debug(params);

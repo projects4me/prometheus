@@ -11,7 +11,7 @@
  * @return {{modulePrefix: string, environment: *, rootURL: string, locationType: string, api: {version: string, clientId: string, clientSecret: string, prefix: string, host: string}, app: {list: {pagelimit: number}, logger: {level: string, default: boolean}}, chat: {host: string, port: string, protocol: string}, emberFullCalendar: {schedulerLicenseKey: string}, EmberENV: {FEATURES: {}, EXTEND_PROTOTYPES: {Date: boolean}}, APP: {}}}
  */
 module.exports = function(environment) {
-    var ENV = {
+    let ENV = {
         modulePrefix: 'prometheus',
         environment: environment,
         rootURL: '/',

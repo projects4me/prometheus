@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import EmberRouter from '@ember/routing/router';
+import $ from 'jquery';
 
 /* Maintain some global variables to keep a track of what has happened */
 var alreadyRun = false;
@@ -42,14 +43,14 @@ export default {
         } else {
             alreadyRun = true;
         }
-        Ember.Router.reopen({
+        EmberRouter.reopen({
             startProgress:function(){
                 Pace.restart();
             }.on('willTransition'),
 
             initComponents:function(){
-                Ember.$(function () {
-                    Ember.$('[data-toggle="tooltip"]').tooltip();
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip();
                 });
             }.on('didTransition')
         });
@@ -60,10 +61,10 @@ export default {
         };
 
         console.history = [];
-        for (var i in console) {
+        for (let i in console) {
             if (typeof console[i] === 'function') {
                 oldConsole[i] = console[i];
-                var strr = '(function(){console.history.push({func:\'' + i + '\',args : Array.prototype.slice.call(arguments)});oldConsole[\'' + i + '\'].apply(console, arguments);})';
+                let strr = '(function(){console.history.push({func:\'' + i + '\',args : Array.prototype.slice.call(arguments)});oldConsole[\'' + i + '\'].apply(console, arguments);})';
                 console[i] = eval(strr);
             }
         }

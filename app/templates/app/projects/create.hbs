@@ -33,10 +33,10 @@
               <div class="form-group">
                 <div class="field-group">
                   {{field-text
-                          placeholder=(t "view.app.project.create.nameplaceholder")
-                          label=(t "view.app.project.create.name")
-                          value=model.name
-                          mask="alphanumeric"
+                      placeholder=(t "view.app.project.create.nameplaceholder")
+                      label=(t "view.app.project.create.name")
+                      value=model.name
+                      mask="alphanumeric"
                   }}
 
                   <div class="form-field form-field-static ember-view">
@@ -48,57 +48,57 @@
                 </div>
 
                 {{field-textarea
-                        placeholder=(t "view.app.project.create.descriptionplaceholder")
-                        label=(t "view.app.project.create.description")
-                        value=model.description
+                    placeholder=(t "view.app.project.create.descriptionplaceholder")
+                    label=(t "view.app.project.create.description")
+                    value=model.description
                 }}
 
                 {{field-date
-                        placeholder=(t "view.app.project.create.startdateplaceholder")
-                        label=(t "view.app.project.create.startdate")
-                        value=model.startDate
-                        mask="alphanumeric"
+                    placeholder=(t "view.app.project.create.startdateplaceholder")
+                    label=(t "view.app.project.create.startdate")
+                    value=model.startDate
+                    mask="alphanumeric"
                 }}
 
                 {{field-date
-                        placeholder=(t "view.app.project.create.enddateplaceholder")
-                        label=(t "view.app.project.create.enddate")
-                        value=model.endDate
-                        mask="alphanumeric"
+                    placeholder=(t "view.app.project.create.enddateplaceholder")
+                    label=(t "view.app.project.create.enddate")
+                    value=model.endDate
+                    mask="alphanumeric"
                 }}
 
                 {{field-relate
-                        placeholder=(t "view.app.project.create.typeplaceholder")
-                        label=(t "view.app.project.create.type")
-                        value=model.type
-                        options=type
-                        selected=(find-by "value" model.type type)
-                        searchField="label"
-                        onchange=(action "selectType")
-                        relateType="relate-simple"
+                    placeholder=(t "view.app.project.create.typeplaceholder")
+                    label=(t "view.app.project.create.type")
+                    value=model.type
+                    options=type
+                    selected=(find-by "value" model.type type)
+                    searchField="label"
+                    onchange=(action "selectType")
+                    relateType="relate-simple"
                 }}
 
                 {{field-relate
-                        placeholder=(t "view.app.project.create.statusplaceholder")
-                        label=(t "view.app.project.create.status")
-                        value=model.status
-                        options=status
-                        selected=(find-by "value" model.status status)
-                        searchField="label"
-                        onchange=(action "selectStatus")
-                        relateType="relate-simple"
+                    placeholder=(t "view.app.project.create.statusplaceholder")
+                    label=(t "view.app.project.create.status")
+                    value=model.status
+                    options=status
+                    selected=(find-by "value" model.status status)
+                    searchField="label"
+                    onchange=(action "selectStatus")
+                    relateType="relate-simple"
                 }}
 
                 {{field-textarea
-                        placeholder=(t "view.app.project.create.visionplaceholder")
-                        label=(t "view.app.project.create.vision")
-                        value=model.vision
+                    placeholder=(t "view.app.project.create.visionplaceholder")
+                    label=(t "view.app.project.create.vision")
+                    value=model.vision
                 }}
 
                 {{field-textarea
-                        placeholder=(t "view.app.project.create.scopeplaceholder")
-                        label=(t "view.app.project.create.scope")
-                        value=model.scope
+                    placeholder=(t "view.app.project.create.scopeplaceholder")
+                    label=(t "view.app.project.create.scope")
+                    value=model.scope
                 }}
 
               </div>
@@ -119,14 +119,14 @@
 
           <div class="box-body no-padding" style="display: block;">
             {{field-relate
-                    placeholder=(t "view.app.project.create.selectassignee")
-                    label=(t "view.app.project.create.assignee")
-                    value=model.assignee
-                    options=usersList
-                    selected=(find-by "value" model.assignee usersList)
-                    searchField="label"
-                    onchange=(action "selectOwner")
-                    relateType="relate-user"
+                placeholder=(t "view.app.project.create.selectassignee")
+                label=(t "view.app.project.create.assignee")
+                value=model.assignee
+                options=usersList
+                selected=(find-by "value" model.assignee usersList)
+                searchField="label"
+                onchange=(action "selectOwner")
+                relateType="relate-user"
             }}
           </div>
         </div>

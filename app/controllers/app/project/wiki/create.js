@@ -2,7 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Controller from '@ember/controller';
+import { inject } from '@ember/service';
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
 
 /**
  * The controller for the wiki create route, it is loaded when a user clicks on
@@ -15,7 +18,7 @@ import Ember from "ember";
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * This property is used to control the enabling and disabling of the save
@@ -36,7 +39,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @public
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * This is the parentId of the wiki page that is being created. Initially
@@ -58,7 +61,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @public
      */
-    projectController: Ember.inject.controller('app.project'),
+    projectController: injectController('app.project'),
 
     /**
      * This is a computed property in which gets the list of issues
@@ -69,9 +72,9 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    issuesList: Ember.computed(function(){
+    issuesList: computed('projectController.issuesList', function(){
         return this.get('projectController').get('issuesList');
-    }).property('projectController.issuesList'),
+    }),
 
     /**
      * This is the controller for the app, we are injecting it in order to
@@ -82,7 +85,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @public
      */
-    appController: Ember.inject.controller('app'),
+    appController: injectController('app'),
 
     /**
      * This is a computed property in which gets the list of user
@@ -93,9 +96,9 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    usersList: Ember.computed(function(){
+    usersList: computed('appController.usersList', function(){
         return this.get('appController').get('usersList');
-    }).property('appController.usersList'),
+    }),
 
     /**
      * These are the event handled by this controller
@@ -186,7 +189,7 @@ export default Ember.Controller.extend({
          * @public
          */
         wikiChanged:function(wiki){
-            var model = this.get('model');
+            let model = this.get('model');
             this.set('parentId',wiki.value);
             model.set('parentId',wiki.value);
             model.set('parentName',wiki.label);
@@ -209,7 +212,7 @@ export default Ember.Controller.extend({
             Logger.debug(self);
             self.get('model').set('markUp',contents);
             self.send('changed');
-            -Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
+            Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
         }
 
     }

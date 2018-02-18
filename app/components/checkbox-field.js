@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Checkbox from '@ember/component/checkbox';
 
 /**
  * This object is used to modify the default TextFeild of emberjs in order to
@@ -18,7 +18,7 @@ import Ember from "ember";
  * @extends Ember.Checkbox
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Checkbox.extend({
+export default Checkbox.extend({
 
     /**
      * Adding paramater binding for data-select so that it is disabled on the view and then used to identify selected
@@ -38,7 +38,7 @@ export default Ember.Checkbox.extend({
      * @private
      */
     onInit: function(){
-        var action = this.get('action');
+        let action = this.get('action');
         if(action){
             this.on('change', this, this.changeEvent);
         }
@@ -50,7 +50,7 @@ export default Ember.Checkbox.extend({
      * @method changeEvent
      * @public
      */
-    changeEvent: function(){
+    changeEvent(){
         this.sendAction('action',  this.$().prop('checked'));
     },
 

@@ -18,9 +18,9 @@
   capability of being able to override the rule in our application related
   Sass files.
 */
-@import 'bower_components/bootstrap-sass/assets/stylesheets/_bootstrap';
-@import 'bower_components/Ionicons/scss/ionicons';
-@import 'bower_components/font-awesome/scss/font-awesome.scss';
+@import 'node_modules/bootstrap-sass/assets/stylesheets/_bootstrap';
+@import 'node_modules/ionicons/dist/scss/ionicons';
+@import 'node_modules/font-awesome/scss/font-awesome.scss';
 @import 'ember-power-select';
 @import 'vendor/AdminLTE/dist/css/AdminLTE.min.scss';
 @import 'vendor/AdminLTE/dist/css/skins/skin-black-light.min.scss';
@@ -31,8 +31,8 @@
 @import 'messenger/messenger-spinner.scss';
 @import 'messenger/messenger-theme-air.scss';
 @import 'twemoji-awesome.scss';
-@import 'bower_components/jQuery-QueryBuilder/dist/scss/default.scss';
-@import 'bower_components/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss';
+@import 'node_modules/jQuery-QueryBuilder/dist/scss/default.scss';
+@import 'node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss';
 @import 'vendor/DataTables/datatables.min.scss';
 
 /*
