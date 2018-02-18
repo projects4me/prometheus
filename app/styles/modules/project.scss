@@ -172,6 +172,25 @@
   .in_progress{
     background-color: $primaryColor;
   }
+
+  .no-entry{
+    text-align: center;
+    margin: 2rem 0rem;
+    color: $lightColor;
+    font-style: italic;
+  }
+
+  .edit-milestone {
+    position: absolute;
+    right: 1.2rem;
+    top:0.8rem;
+    cursor: pointer;
+  }
+
+  .edit-milestone:hover{
+    font-weight: bold;
+  }
+
 }
 
 .list-controls{

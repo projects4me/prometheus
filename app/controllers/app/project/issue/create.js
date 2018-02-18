@@ -172,11 +172,8 @@ export default Ember.Controller.extend({
             model.startDate = moment(model.startDate).format("YYYY-MM-DD");
             model.endDate= moment(model.endDate).format("YYYY-MM-DD");
 
-            Logger.debug(model);
-            Logger.debug(self);
             model.save().then(function(data){
-                Logger.debug('Data saved:');
-                Logger.debug(data);
+
 
                 new Messenger().post({
                     message: self.get('i18n').t('view.app.issue.created',{name:data.get('subject'),issueNumber:data.get('issueNumber')}),

@@ -37,6 +37,9 @@ module.exports = function(environment) {
             port:'3000',
             protocol:'http'
         },
+        'ember-websockets': {
+            socketIO: true
+        },
         emberFullCalendar: {
             schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source'
         },

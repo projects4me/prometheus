@@ -111,7 +111,43 @@ export default Ember.Controller.extend({
          */
         invalidateSession() {
             this.get('session').invalidate();
+        },
+
+        startChat(user){
+            Logger.debug('Prometheus.Controllers.App::startChat');
+            let _self = this;
+            Logger.debug(user);
+            Logger.debug(_self);
+
+            let options = {
+                query:'((Chatroom.type : private) AND (((ownedby.id : '+_self.get('currentUser.user.id')+') AND (conversers.id : '+user.id+')) OR ((ownedby.id : '+user.id+') AND (conversers.id : '+_self.get('currentUser.user.id')+'))))'
+            };
+
+            _self.get('store').query('chatroom',options).then(function(data){
+               Logger.debug(data);
+               let chatrooms = _self.get('chatrooms');
+               Logger.debug(chatrooms);
+               if (chatrooms === undefined) {
+                   Logger.debug('Initing chatrooms');
+                   _self.set('chatrooms',data);
+               } else {
+                   Logger.debug('Adding room');
+                   chatrooms.pushObject(data.get('firstObject'));
+                   _self.set('chatrooms',chatrooms);
+               }
+            });
+            // If no chatroom was found then create one
+
+            Logger.debug(options);
+            Logger.debug('-Prometheus.Controllers.App::startChat');
+        },
+
+        newMessage(message){
+            Logger.debug('Prometheus.Controllers.App::newMessage');
+            Logger.debug(message);
+            Logger.debug('-Prometheus.Controllers.App::newMessage');
         }
+
 
     }
 

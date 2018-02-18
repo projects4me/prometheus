@@ -38,15 +38,15 @@ export default Ember.Component.extend({
      * @private
      */
     layoutName: function() {
-        var milestone = this.get('milestone');
-        var status = milestone.get('status');
-        var progress = 0;
-        var template = null;
+        let milestone = this.get('milestone');
+        let status = milestone.get('status');
+        let progress = 0;
+        let template;
 
         // Calculate the progres
         if (milestone.get('issues.length') > 0)
         {
-            var closed = 0;
+            let closed = 0;
             closed += milestone.get('issues').filterBy('status','done').length;
             closed += milestone.get('issues').filterBy('status','complete').length;
             closed += milestone.get('issues').filterBy('status','closed').length;
@@ -56,9 +56,6 @@ export default Ember.Component.extend({
 
         // Set the milestone progress
         milestone.set('progress',progress);
-
-        // Set the translated status
-        milestone.set('status',this.get('i18n').t('view.app.milestone.lists.status.'+status));
 
         // Check if milestone is overdue
         if (status === 'in_progress' || status === 'planned')
@@ -86,7 +83,7 @@ export default Ember.Component.extend({
      * @method didInsertElement
      * @public
      */
-    didInsertElement:function(){
+    didInsertElement(){
         Ember.$('#'+this.elementId+' [data-toggle="popover"]').popover();
     },
 
@@ -97,7 +94,7 @@ export default Ember.Component.extend({
      * @method willDestroyElement
      * @public
      */
-    willDestroyElement:function(){
+    willDestroyElement(){
         Ember.$('#'+this.elementId+' [data-toggle="popover"]').popover('destroy');
     }
 

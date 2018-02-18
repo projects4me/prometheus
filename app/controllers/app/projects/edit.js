@@ -154,7 +154,7 @@ export default Ember.Controller.extend({
          * @param {String} date
          * @public
          */
-        startDateChanged:function (date) {
+        startDateChanged(date) {
             Logger.debug('Prometheus.App.Projects.Edit.Controller::startDateChanged('+date+')');
             if (this.get('model') !== undefined) {
                 this.get('model').set('startDate', date);
@@ -169,7 +169,7 @@ export default Ember.Controller.extend({
          * @param {String} date
          * @public
          */
-        endDateChanged:function (date) {
+        endDateChanged(date) {
             Logger.debug('Prometheus.App.Projects.Edit.Controller::endDateChanged('+date+')');
             if (this.get('model') !== undefined) {
                 this.get('model').set('endDate', date);
