@@ -3,7 +3,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/7af2dc872656791a4540/maintainability)](https://codeclimate.com/github/projects4me/prometheus/maintainability)
 [![bitHound Overall Score](https://www.bithound.io/github/projects4me/prometheus/badges/score.svg)](https://www.bithound.io/github/projects4me/prometheus)
 [![Dependency Status](https://beta.gemnasium.com/badges/github.com/projects4me/prometheus.svg)](https://beta.gemnasium.com/projects/github.com/projects4me/prometheus)
-[![Build Status](https://travis-ci.org/projects4me/prometheus.svg?branch=master)](https://travis-ci.org/projects4me/prometheus)
+[![Build Status](https://travis-ci.org/projects4me/prometheus.svg?branch=upgrade3)](https://travis-ci.org/projects4me/prometheus)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/7af2dc872656791a4540/test_coverage)](https://codeclimate.com/github/projects4me/prometheus/test_coverage)
 
 
