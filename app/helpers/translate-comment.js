@@ -21,6 +21,11 @@ import { htmlSafe } from '@ember/string';
 export function translateComment(params) {
     let data = params[0];
 
+    if (data === null)
+    {
+        data = '';
+    }
+
     /*
      // Find {{}}
      var str = data;

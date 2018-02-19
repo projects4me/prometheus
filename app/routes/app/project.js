@@ -94,7 +94,7 @@ export default App.extend({
                 controller.set('projectId',projectId);
                 controller.set('projectName',projectName);
             }
-            controller.set('model',data.nextObject(0));
+            controller.set('model',data.objectAt(0));
         });
         controller.set('issues',_self.get('issues'));
     },
@@ -130,11 +130,11 @@ export default App.extend({
             for (let i=0; i<issuesCount;i++)
             {
                 issuesList[i] = {
-                    id:data.nextObject(i).get('id'),
-                    name:data.nextObject(i).get('subject'),
-                    number:data.nextObject(i).get('issueNumber'),
-                    status:data.nextObject(i).get('status'),
-                    projectId:data.nextObject(i).get('projectId')
+                    id:data.objectAt(i).get('id'),
+                    name:data.objectAt(i).get('subject'),
+                    number:data.objectAt(i).get('issueNumber'),
+                    status:data.objectAt(i).get('status'),
+                    projectId:data.objectAt(i).get('projectId')
                 };
             }
             Logger.debug(issuesList);
@@ -171,8 +171,8 @@ export default App.extend({
             for (let i=0; i<usersCount;i++)
             {
                 usersList[i] = {
-                    id:data.nextObject(i).get('id'),
-                    name:data.nextObject(i).get('name'),
+                    id:data.objectAt(i).get('id'),
+                    name:data.objectAt(i).get('name'),
                 };
             }
             Logger.debug(usersList);

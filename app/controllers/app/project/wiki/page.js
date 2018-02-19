@@ -94,7 +94,7 @@ export default Controller.extend({
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'wiki',
-                    relatedId: self.get('model').nextObject(0).get('id')
+                    relatedId: self.get('model').objectAt(0).get('id')
                 },
                 headers: upload.store.adapterFor('upload').headersForRequest()
             };
@@ -125,7 +125,7 @@ export default Controller.extend({
             set(upload, 'relatedTo',data.data.attributes.relatedTo);
             set(upload, 'relatedId',data.data.attributes.relatedId);
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
-            self.get('model').nextObject(0).get('files').pushObject(upload);
+            self.get('model').objectAt(0).get('files').pushObject(upload);
         } catch (e) {
             //upload.rollback();
         }
@@ -149,7 +149,7 @@ export default Controller.extend({
          * @todo Trigger the notificaiton
          */
         edit:function() {
-            var model = this.get('model').nextObject(0);
+            var model = this.get('model').objectAt(0);
             this.transitionToRoute('app.project.wiki.edit', {projectId:model.get('projectId'),wikiName:model.get('name')});
         },
 
@@ -221,7 +221,7 @@ export default Controller.extend({
                         tpye: 'success',
                         showCloseButton: true
                     });
-                    self.get('model').nextObject(0).get('vote').addObject(data);
+                    self.get('model').objectAt(0).get('vote').addObject(data);
                     self.set('iVoted',1);
                 }
             });
@@ -236,7 +236,7 @@ export default Controller.extend({
          */
         lockWiki:function(action){
             var self = this;
-            var model = this.get('model').nextObject(0);
+            var model = this.get('model').objectAt(0);
             if (action === 'unlock')
             {
                 set(model,'locked',"1");
@@ -299,7 +299,7 @@ export default Controller.extend({
                             // destroy the upload
                             file.destroyRecord().then(function(){
                                 // remove from the view by updating the model
-                                self.get('model').nextObject(0).get('files').removeObject(file);
+                                self.get('model').objectAt(0).get('files').removeObject(file);
 
                                 return deleting.update({
                                     message: self.get('i18n').t("view.app.wiki.page.file.deleted"),
@@ -343,7 +343,7 @@ export default Controller.extend({
             };
             Logger.debug('Retrieving upload with options '+options);
             this.get('store').query('upload',options).then(function(data){
-                let downloadLink = data.nextObject(0).get('downloadLink');
+                let downloadLink = data.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
                 // navigate user to the page for download
@@ -374,7 +374,7 @@ export default Controller.extend({
             };
             Logger.debug('Retrieving upload with options '+options);
             self.get('store').query('upload',options).then(function(contents){
-                let downloadLink = contents.nextObject(0).get('downloadLink');
+                let downloadLink = contents.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
                 let path = self.get('store').adapterFor('upload').host+'/preview/get/'+downloadLink;

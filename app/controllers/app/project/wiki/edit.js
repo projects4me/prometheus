@@ -121,7 +121,7 @@ export default Controller.extend({
          */
         save:function() {
             var self = this;
-            var model = this.get('model').nextObject(0);
+            var model = this.get('model').objectAt(0);
             var changedAttributes = model.changedAttributes();
             var changed = false;
             for (var key in changedAttributes) {
@@ -161,7 +161,7 @@ export default Controller.extend({
          * @todo Trigger the notificaiton
          */
         cancel:function(){
-            let model = this.get('model').nextObject(0);
+            let model = this.get('model').objectAt(0);
             this.transitionToRoute('app.project.wiki.page', {projectId:model.get('projectId'),wikiName:model.get('name')});
         },
 
@@ -180,7 +180,7 @@ export default Controller.extend({
             let self = this;
             Logger.debug(self);
 
-            let model = this.get('model').nextObject(0);
+            let model = this.get('model').objectAt(0);
             // if (typeof(data) === 'object' && data.markUp !== undefined)
             // {
             //     Logger.debug(model);
@@ -213,7 +213,7 @@ export default Controller.extend({
          * @public
          */
         wikiChanged:function(target){
-            var model = this.get('model').nextObject(0);
+            var model = this.get('model').objectAt(0);
             this.set('parentId',target.value);
             model.set('parentId',target.value);
             model.set('parentName',target.label);
@@ -233,7 +233,7 @@ export default Controller.extend({
             Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
             let self = this;
             //let model = self.get(model)
-            self.get('model').nextObject(0).set('markUp',contents);
+            self.get('model').objectAt(0).set('markUp',contents);
             //model._internalModel._attributes['markUp'] = data.markUp;
             self.send('changed');
             -Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
@@ -270,7 +270,7 @@ export default Controller.extend({
                 // Save the relationship and then show the message to the user
                 self.get('store').createRecord('tagged',{
                     tagId : selectedTag[0].value,
-                    relatedId : self.get('model').nextObject(0).get('id'),
+                    relatedId : self.get('model').objectAt(0).get('id'),
                     relatedTo: "wiki"
                 }).save().then(function(){
                     new Messenger().post({
@@ -315,7 +315,7 @@ export default Controller.extend({
                 // Then save the relationship
                 var tagged = self.get('store').createRecord('tagged',{
                     tagId : tag.get('id'),
-                    relatedId : self.get('model').nextObject(0).get('id'),
+                    relatedId : self.get('model').objectAt(0).get('id'),
                     relatedTo: "wiki"
                 });
 
@@ -356,7 +356,7 @@ export default Controller.extend({
             Logger.debug(list);
 
             var self = this;
-            var tagged = self.get('model').nextObject(0).get('tagged').filterBy('tagId',tag.value)[0];
+            var tagged = self.get('model').objectAt(0).get('tagged').filterBy('tagId',tag.value)[0];
 
             // Delete the record
             tagged.deleteRecord();

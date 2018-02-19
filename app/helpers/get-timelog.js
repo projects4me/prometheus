@@ -22,7 +22,7 @@ export function getTimelog(params) {
     {
         var issueCount = params[0].get('length');
         for (var i=0;i<issueCount;i++){
-            var issue = params[0].nextObject(i);
+            var issue = params[0].objectAt(i);
             if (issue !== undefined)
             {
                 var timelog = issue.get(params[1]);

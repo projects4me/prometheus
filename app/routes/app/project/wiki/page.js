@@ -85,7 +85,7 @@ export default App.extend({
         Logger.debug('Retreiving wiki list with options '+options);
         this.data = this.store.query('wiki',options).then(function(data){
             controller.set('model',data);
-            let model = data.nextObject(0);
+            let model = data.objectAt(0);
             if (model !== undefined){
                 let markUp = model.get('markUp');
 
@@ -95,7 +95,7 @@ export default App.extend({
                 let selectedTags = [];
                 for(let i=0;i<tagCount;i++)
                 {
-                    selectedTags[i] = {label:tags.nextObject(i).get('tag'),value:tags.nextObject(i).get('id')};
+                    selectedTags[i] = {label:tags.objectAt(i).get('tag'),value:tags.objectAt(i).get('id')};
                 }
                 controller.set('iVoted',model.get('vote').filterBy('createdUser',"1").length);
                 controller.set('markUp',markUp);

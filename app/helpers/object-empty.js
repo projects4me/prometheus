@@ -15,6 +15,7 @@ import { helper } from '@ember/component/helper';
  */
 export function objectEmpty(params) {
     let empty = true;
+
     for (let index in params[0]) { // eslint-disable-line no-unused-vars
         empty = false;
         break;

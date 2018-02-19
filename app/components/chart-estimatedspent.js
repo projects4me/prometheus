@@ -128,7 +128,7 @@ export default Component.extend({
 
         for (let i=0; i<issuesCount;i++)
         {
-            issue = issues.nextObject(i);
+            issue = issues.objectAt(i);
             estimated = issue.get('estimated');
             spent = issue.get('spent');
             estimatedHours = 0;

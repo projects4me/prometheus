@@ -28,7 +28,7 @@ export default {
 
         for (let i=0;i<count;i++)
         {
-            temp = model.nextObject(i);
+            temp = model.objectAt(i);
             if (map)
             {
                 list[i] = _.mapValues(map,function(o){return temp.get(o)});

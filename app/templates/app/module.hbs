@@ -8,7 +8,7 @@
       </div>
 
       <div class="btn-group">
-        <button type="button" class="btn btn-default"> <i class="fa fa-plus"></i> Create New</button>
+        <button type="button" class="btn btn-default"> <i class="fa fa-plus"></i> {{t "global.form.createnew"}}</button>
       </div>
 
     </div>
@@ -18,7 +18,7 @@
         <div class="input-group">
           <button id="toggleFilters" {{action "toggleFilters"}} type="button" class="btn dropdown-toggle" data-toggle="collapse" data-target=".list-view-filters">
             <span class="caret"></span>
-            <span class="sr-only">Toggle Dropdown</span>
+            <span class="sr-only">{{t "global.list.toggleDropdown"}}</span>
           </button>
           {{text-field key-up="populateQuery" focus-in="openFilters" insert-newline="filter" value=query name="query" placeholder=(t "global.form.search" class="form-control")}}
           <span class="input-group-btn">
@@ -28,7 +28,7 @@
       </div>
 
       <div class="btn-group col-sm-2">
-        <span class="list-view-count pull-left">Selected : {{selectedCount}}</span>
+        <span class="list-view-count pull-left">{{t "global.list.selected"}} {{selectedCount}}</span>
         <span class="pagination">
           {{#if model.content.meta._links.prev}}
             <button type="button" class="btn btn-default" {{action "paginate" (get-page model.content.meta._links.next.href)}}><i class="fa fa-angle-double-left"></i></button>
@@ -53,55 +53,55 @@
     <div class="list-view table-responsive">
       <table class="table table-hover table-striped table-bordered">
         <thead>
-        <tr>
-          <th>
-            <div class="btn-group">
-              <button type="button" class="btn">{{checkbox-field action="selectAll" type="checkbox" data-select="all"}}</button>
-              <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="caret"></span>
-                <span class="sr-only">{{t 'global.list.toggleDropdown'}}</span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a href="javascript:void(0);" {{action "selectAll"}}>{{t 'global.list.selectAll'}}</a></li>
-                <li><a href="javascript:void(0);" {{action "deleteAll"}}>{{t 'global.list.deleteAll'}}</a></li>
-                <li><a href="javascript:void(0);" {{action "exportAll"}}>{{t 'global.list.exportAll'}}</a></li>
-                <li><a href="javascript:void(0);" {{action "updateAll"}}>{{t 'global.list.updateAll'}}</a></li>
-              </ul>
-            </div>
-          </th>
-          {{#each-in metaData.fields as |field definition|}}
-            {{#if definition.sort}}
-              <th class="sortable" data-sort="{{module}}.{{definition.fieldName}}Sortable" {{action "sortData" definition.fieldName}}>{{t definition.label}}</th>
-            {{else}}
-              <th>{{t definition.label}}</th>
-            {{/if}}
-          {{/each-in}}
-        </tr>
-        </thead>
-        <tbody>
-        {{#each model as |entity|}}
           <tr>
-            <td>
+            <th>
               <div class="btn-group">
-                <button type="button" class="btn">{{checkbox-field action="select" type="checkbox" data-select=entity.id}}</button>
+                <button type="button" class="btn">{{checkbox-field action="selectAll" type="checkbox" data-select="all"}}</button>
                 <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <span class="caret"></span>
-                  <span class="sr-only">Toggle Dropdown</span>
+                  <span class="sr-only">{{t 'global.list.toggleDropdown'}}</span>
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a href="javascript:void(0);" {{action "select"}}>{{t 'global.list.select'}}</a></li>
-                  <li><a href="javascript:void(0);" {{action "export"}}>{{t 'global.list.export'}}</a></li>
-                  <li><a href="javascript:void(0);" {{action "delete"}}>{{t 'global.list.delete'}}</a></li>
-                  <li><a href="javascript:void(0);" {{action "edit" entity.id}}>{{t 'global.list.edit'}}</a></li>
-                  <li><a href="javascript:void(0);" {{action "detail" entity.id}}>{{t 'global.list.detail'}}</a></li>
+                  <li><a href="javascript:void(0);" {{action "selectAll"}}>{{t 'global.list.selectAll'}}</a></li>
+                  <li><a href="javascript:void(0);" {{action "deleteAll"}}>{{t 'global.list.deleteAll'}}</a></li>
+                  <li><a href="javascript:void(0);" {{action "exportAll"}}>{{t 'global.list.exportAll'}}</a></li>
+                  <li><a href="javascript:void(0);" {{action "updateAll"}}>{{t 'global.list.updateAll'}}</a></li>
                 </ul>
               </div>
-            </td>
+            </th>
             {{#each-in metaData.fields as |field definition|}}
-              <td>{{field-view view='list' navigate=(action "detail" entity.id) definition=definition model=entity field=field module=module}}</td>
+              {{#if definition.sort}}
+                <th class="sortable" data-sort="{{module}}.{{definition.fieldName}}Sortable"><a href="javascript:void(0);" {{action "sortData" definition.fieldName}}>{{t definition.label}}</a></th>
+              {{else}}
+                <th>{{t definition.label}}</th>
+              {{/if}}
             {{/each-in}}
           </tr>
-        {{/each}}
+        </thead>
+        <tbody>
+          {{#each model as |entity|}}
+            <tr>
+              <td>
+                <div class="btn-group">
+                  <button type="button" class="btn">{{checkbox-field action="select" type="checkbox" data-select=entity.id}}</button>
+                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">{{t "global.list.toggleDropdown"}}</span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="javascript:void(0);" {{action "select"}}>{{t 'global.list.select'}}</a></li>
+                    <li><a href="javascript:void(0);" {{action "export"}}>{{t 'global.list.export'}}</a></li>
+                    <li><a href="javascript:void(0);" {{action "delete"}}>{{t 'global.list.delete'}}</a></li>
+                    <li><a href="javascript:void(0);" {{action "edit" entity.id}}>{{t 'global.list.edit'}}</a></li>
+                    <li><a href="javascript:void(0);" {{action "detail" entity.id}}>{{t 'global.list.detail'}}</a></li>
+                  </ul>
+                </div>
+              </td>
+              {{#each-in metaData.fields as |field definition|}}
+                <td>{{field-view view='list' navigate=(action "detail" entity.id) definition=definition model=entity field=field module=module}}</td>
+              {{/each-in}}
+            </tr>
+          {{/each}}
         </tbody>
       </table>
     </div>

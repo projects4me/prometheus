@@ -99,6 +99,8 @@ export default {
             "delete" : "Delete",
             "search" : "Search",
             "more" : "More",
+            "image" : "Image",
+            "createnew": "Create New",
             "savesearch" : "Save This Search",
             "toggledd" : "Toggle Dropdown",
             "edit" : "Edit",
@@ -116,6 +118,7 @@ export default {
         },
         "list": {
             "selectAll": "Select All",
+            "selected": "Selected :",
             "deleteAll": "Deleted Selected",
             "exportAll": "Export Selected",
             "updateAll": "Updated Selected",

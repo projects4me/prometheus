@@ -139,7 +139,7 @@ export default Controller.extend({
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'issue',
-                    relatedId: self.get('model').nextObject(0).get('id')
+                    relatedId: self.get('model').objectAt(0).get('id')
                 },
                 headers: upload.store.adapterFor('upload').headersForRequest()
             };
@@ -170,7 +170,7 @@ export default Controller.extend({
             set(upload, 'relatedTo',data.data.attributes.relatedTo);
             set(upload, 'relatedId',data.data.attributes.relatedId);
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
-            self.get('model').nextObject(0).get('files').pushObject(upload);
+            self.get('model').objectAt(0).get('files').pushObject(upload);
         } catch (e) {
             //upload.rollback();
         }
@@ -258,7 +258,7 @@ export default Controller.extend({
                             // destroy the upload
                             file.destroyRecord().then(function(){
                                 // remove from the view by updating the model
-                                self.get('model').nextObject(0).get('files').removeObject(file);
+                                self.get('model').objectAt(0).get('files').removeObject(file);
 
                                 return deleting.update({
                                     message: self.get('i18n').t("view.app.issue.detail.file.deleted"),
@@ -302,7 +302,7 @@ export default Controller.extend({
             };
             Logger.debug('Retrieving upload with options '+options);
             this.get('store').query('upload',options).then(function(data){
-                let downloadLink = data.nextObject(0).get('downloadLink');
+                let downloadLink = data.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
                 let path = self.get('store').adapterFor('upload').host+'/download/get/'+downloadLink;
@@ -335,7 +335,7 @@ export default Controller.extend({
             };
             Logger.debug('Retrieving upload with options '+options);
             self.get('store').query('upload',options).then(function(contents){
-                let downloadLink = contents.nextObject(0).get('downloadLink');
+                let downloadLink = contents.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
                 let path = self.get('store').adapterFor('upload').host+'/preview/get/'+downloadLink;
@@ -372,13 +372,13 @@ export default Controller.extend({
                 newLog.set('createdUserName',_self.get('currentUser.user.name'));
                 newLog.set('modifiedUserName',_self.get('currentUser.user.name'));
                 newLog.set('deleted',0);
-                newLog.set('issueId',_self.get('model').nextObject(0).get('id'));
+                newLog.set('issueId',_self.get('model').objectAt(0).get('id'));
                 newLog.set('context','spent');
 
                 newLog.save().then(function () {
                     let timelog = _self.get('store').createRecord('timelog');
                     _self.set('newTimeLog',timelog);
-                    _self.get('model').nextObject(0).get('spent').pushObject(newLog);
+                    _self.get('model').objectAt(0).get('spent').pushObject(newLog);
 
                     new Messenger().post({
                         message: _self.get('i18n').t("view.app.issue.detail.timelog.added"),

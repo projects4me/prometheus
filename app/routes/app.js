@@ -163,7 +163,7 @@ export default Route.extend(AuthenticatedRouteMixin,{
             let temp = null;
             for (let i=0;i<projectCount;i++)
             {
-                temp = data.nextObject(i);
+                temp = data.objectAt(i);
                 projectList[i] = {label:temp.get('name'), value:temp.get('id')};
             }
             controller.set('projectList',projectList);

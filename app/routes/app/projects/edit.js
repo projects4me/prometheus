@@ -38,7 +38,7 @@ export default App.extend({
 
         Logger.debug('Retrieving projects with options '+options);
         this.get('store').query('project',options).then(function(data){
-            let project = data.nextObject(0);
+            let project = data.objectAt(0);
             controller.set('model',project);
         });
 

@@ -67,7 +67,7 @@ export default App.extend({
                 controller.set('projectId',projectId);
                 controller.set('projectName',projectName);
             }
-            controller.set('model',data.nextObject(0));
+            controller.set('model',data.objectAt(0));
         });
 
         let newMilestone = _self.store.createRecord('milestone');

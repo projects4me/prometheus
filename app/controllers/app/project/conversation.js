@@ -134,9 +134,9 @@ export default Controller.extend(Evented,{
                 while (count > 0)
                 {
                     count--;
-                    if(_self.model.nextObject(count).get('id') === relatedId)
+                    if(_self.model.objectAt(count).get('id') === relatedId)
                     {
-                        _self.model.nextObject(count).get('comments').pushObject(comment);
+                        _self.model.objectAt(count).get('comments').pushObject(comment);
                         _self.trigger('clearContents');
                         break;
                     }
@@ -180,9 +180,9 @@ export default Controller.extend(Evented,{
                 while (count > 0)
                 {
                     count--;
-                    if(_self.model.nextObject(count).get('id') === relatedId)
+                    if(_self.model.objectAt(count).get('id') === relatedId)
                     {
-                        _self.model.nextObject(count).get('comments').pushObject(savedComment);
+                        _self.model.objectAt(count).get('comments').pushObject(savedComment);
                         event.target.value = '';
                         break;
                     }

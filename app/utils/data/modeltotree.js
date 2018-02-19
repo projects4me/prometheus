@@ -32,7 +32,7 @@ export default {
         // Conver the model to flat object
         for (var i=0;i<length;i++)
         {
-            node = model.nextObject(i);
+            node = model.objectAt(i);
             temp[node.get('id')] = {id:node.get('id'),name:node.get('name')};
             if (!(node.get('parentId') === '' || node.get('parentId') === undefined || node.get('parentId') === null))
             {

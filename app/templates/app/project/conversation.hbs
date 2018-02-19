@@ -14,13 +14,12 @@
                 <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="{{currentUser.user.name}}">
                 {{!-- .img-push is used to add margin to elements next to floating images --}}
                 <div class="img-push">
-                    <span class="disabled-text new-conversation" {{action "showDialog"}}>
-                      {{t "view.app.conversation.create"}}
-                      <div class="pull-right">
-                        <i class="fa fa-plus btn"></i>
-                      </div>
-                    </span>
-
+                  <span class="disabled-text new-conversation" {{action "showDialog"}}>
+                    {{t "view.app.conversation.create"}}
+                    <div class="pull-right">
+                      <i class="fa fa-plus btn"></i>
+                    </div>
+                  </span>
                 </div>
               </div>
               {{!-- /.box-footer --}}
@@ -35,14 +34,15 @@
               <div class="box box-widget">
                 <div class="box-header with-border">
                   <div class="user-block">
-                    <img class="img-circle" src="http://projects4me/userimage/get/{{entity.createdUser}}" alt="User Image">
+                    <img class="img-circle" src="http://projects4me/userimage/get/{{entity.createdUser}}" alt="{{t "global.form.image"}}">
                     <span class="subject"><a href="#">{{entity.subject}}</a></span>
                     <span class="description"><a href="/app/user/{{entity.createdBy.id}}">{{entity.createdBy.name}}</a> - {{get-date entity "dateModified" "MMM Do 'YY, h:mm a"}}</span>
                   </div>
                   {{!-- /.user-block --}}
                   <div class="box-tools">
 
-                    <span class="upvotes">{{entity.votes.length}}
+                    <span class="upvotes">
+                      {{entity.votes.length}}
                       {{#if entity.votes}}
                         {{#if (user-created entity.votes currentUser.user.id)}}
                           <i class="fa fa-heart"></i>
@@ -53,7 +53,8 @@
                         <i class="fa fa-heart-o"></i>
                       {{/if}}
                     </span>
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                      <i class="fa fa-minus"></i>
                     </button>
                   </div>
                   {{!-- /.box-tools --}}
@@ -142,8 +143,8 @@
                                 <div class="progress-bar bg-green" style="width: {{round (mult (div (count-votes entity.comments "I agree") entity.comments.length) 100)}}%"></div>
                               </div>
                               <span class="progress-description">
-                                  {{round (mult (div (count-votes entity.comments "I agree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.agree"}}
-                                </span>
+                                {{round (mult (div (count-votes entity.comments "I agree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.agree"}}
+                              </span>
                             </div>
                             {{!-- /.info-box-content --}}
                           </div>
@@ -165,8 +166,8 @@
                                 <div class="progress-bar bg-red" style="width: {{round (mult (div (count-votes entity.comments "I disagree") entity.comments.length) 100)}}%"></div>
                               </div>
                               <span class="progress-description">
-                                  {{round (mult (div (count-votes entity.comments "I disagree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.disagree"}}
-                                </span>
+                                {{round (mult (div (count-votes entity.comments "I disagree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.disagree"}}
+                              </span>
                             </div>
                             {{!-- /.info-box-content --}}
                           </div>
@@ -192,13 +193,12 @@
   </div>
 
   {{#if addConversationDialog}}
-
     {{#bootstrap-modal
-        title="view.app.conversation.create"
-        confirmLabel="global.form.save"
-        closeLabel="global.form.cancel"
-        confirm=(action "addConversation")
-        close="removeModal"}}
+      title="view.app.conversation.create"
+      confirmLabel="global.form.save"
+      closeLabel="global.form.cancel"
+      confirm=(action "addConversation")
+      close="removeModal"}}
       <form {{action 'addConversation' on='submit'}}>
         <div class="box-body">
           <div class="form-group">

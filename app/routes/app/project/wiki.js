@@ -92,7 +92,7 @@ export default App.extend({
             wikiList[0] = {label:i18n.t("global.blank"), value:null};
             for (let i=1;i<=wikiCount;i++)
             {
-                temp = data.nextObject(i-1);
+                temp = data.objectAt(i-1);
                 wikiList[i] = {label:temp.get('name'), value:temp.get('id')};
             }
 
@@ -147,7 +147,7 @@ export default App.extend({
             let temp = null;
             for (let i=0;i<tagCount;i++)
             {
-                temp = data.nextObject(i);
+                temp = data.objectAt(i);
                 tagList[i] = {label:temp.get('tag'), value:temp.get('id')};
             }
             self.controllerFor('app.project.wiki.page').set('tagList', tagList);

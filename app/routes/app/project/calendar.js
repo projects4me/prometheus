@@ -97,7 +97,7 @@ export default App.extend({
             var issue = null;
             for (var i=0; i<issuesCount;i++)
             {
-                issue = data.nextObject(i);
+                issue = data.objectAt(i);
                 issuesList[i] = {
                     id:issue.get('id'),
                     title:'#'+issue.get('issueNumber')+' - '+issue.get('subject'),

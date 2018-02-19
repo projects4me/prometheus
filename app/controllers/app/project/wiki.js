@@ -44,7 +44,7 @@ export default Controller.extend({
          * @public
          */
         save:function() {
-            let model = this.get('model').nextObject(0);
+            let model = this.get('model').objectAt(0);
             model.save();
         },
 
