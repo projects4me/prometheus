@@ -23,4 +23,5 @@ before_install:
 
 script:
   - npm run lint:js
+  - bower install
   - npm test
