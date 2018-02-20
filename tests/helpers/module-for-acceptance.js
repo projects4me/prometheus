@@ -1,7 +1,7 @@
 /*
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
-
+/**
 import { module } from 'qunit';
 import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
@@ -23,3 +23,4 @@ export default function(name, options = {}) {
     }
   });
 }
+*/
