@@ -36,6 +36,8 @@ before_script:
 script:
   - npm run lint:js
   - npm test
-  
+
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter format-coverage -t lcov -o codeclimate.cc.json coverage/lcov.info
+  - ./cc-test-reporter sum-coverage codeclimate.*.json -p 2 -o codeclimate.total.json
+  - ./cc-test-reporter upload-coverage -i codeclimate.total.json
