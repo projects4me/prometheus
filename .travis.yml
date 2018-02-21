@@ -17,6 +17,7 @@ env:
   global:
     # See https://git.io/vdao3 for details.
     - JOBS=1
+  CODECLIMATE_REPO_TOKEN: 091c13b355fe326a9afff6e5963012bcb1f29addfea61699bc2f29ea1f17151a
 
 before_install:
   - npm config set spin false
@@ -29,4 +30,4 @@ install:
 
 script:
   - npm run lint:js
-  - npm test
+  - COVERAGE=true npm test
