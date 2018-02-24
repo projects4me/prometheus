@@ -1,7 +1,7 @@
 <div class="issue">
   <div class="row">
     {{#each model as |issue|}}
-    {{!-- The first Column that contains the issue details,etc --}}
+      {{!-- The first Column that contains the issue details,etc --}}
       <div class="col-md-8">
 
         {{!-- This are the issue details --}}
@@ -99,7 +99,7 @@
                   {{#each issue.comments as |comment|}}
                     <li>
                       <div class="user-block">
-                        <img class="img-circle" src="http://projects4me/userimage/get/{{comment.createdBy}}">
+                        <img class="img-circle" src="http://projects4me/userimage/get/{{comment.createdBy}}" alt="{{t "global.form.image"}}">
                         <span class="description">{{translate-comment comment.comment}}</span>
                       </div>
                     </li>
@@ -271,23 +271,21 @@
                   <li>
                     {{#if (not-eq file.fileThumbnail '0')}}
                       <span class="attachment-icon has-img">
-                                                <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
-                                            </span>
-                    {{else}}
-                      <span class="attachment-icon">
-                        {{attachment-icon file.fileMime}}
+                        <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
                       </span>
+                    {{else}}
+                      {{attachment-icon mime=(readonly file.fileMime)}}
                     {{/if}}
                     <div class="attachment-info">
                       <div class="attachment-name clearfix">
                         <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
                       </div>
                       <div class="attachment-additional">
-                                                <span class="attachment-size">
-                                                {{file-size file.fileSize}}
-                                                  <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
-                                                <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
-                                                </span>
+                        <span class="attachment-size">
+                          {{file-size file.fileSize}}
+                          <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
+                          <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                        </span>
                       </div>
                     </div>
                   </li>
@@ -332,12 +330,14 @@
                     <div class="log-info">
                       <a href="javascript:void(0);" class="user-title">{{timelog.createdUserName}}</a>
                       <span>{{t "view.app.issue.detail.timelog.on"}}<strong>{{moment-format timelog.spentOn 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
-                      <span class="log-edit pull-right" data-toggle="tooltip" title="{{t "global.form.edit"}}"><i  {{action "showEditLogDialog" timelog}} class="fa fa-pencil"></i></span>
+                      <span class="log-edit pull-right" data-toggle="tooltip" title="{{t "global.form.edit"}}">
+                        <a href="javascript:void(0);" {{action "showEditLogDialog" timelog}}><i class="fa fa-pencil"></i></a>
+                      </span>
                       <span class="log-entry pull-right">
-                                            {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "view.app.issue.detail.timelog.d"}}{{/if}}
+                        {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "view.app.issue.detail.timelog.d"}}{{/if}}
                         {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "view.app.issue.detail.timelog.h"}}{{/if}}
                         {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "view.app.issue.detail.timelog.m"}}{{/if}}
-                                        </span>
+                      </span>
                       <span class="log-description">
                         {{timelog.description}}
                       </span>
@@ -410,7 +410,9 @@
           </div>
 
           <div class="box-footer text-center" style="display: block;">
-            <span {{action "showLogTimeDialog"}}><a href="javascript:void();"><ion class="ion-android-stopwatch"></ion> {{t "view.app.issue.detail.timelog.log"}}</a></span>
+            <span>
+              <a href="javascript:void();" {{action "showLogTimeDialog"}}><ion class="ion-android-stopwatch"></ion> {{t "view.app.issue.detail.timelog.log"}}</a>
+            </span>
           </div>
           {{!-- /.box-footer --}}
         </div>
@@ -467,7 +469,7 @@
         {{!-- Project Summary --}}
 
       </div>
-    {{!-- /.end col-md -4 --}}
+      {{!-- /.end col-md -4 --}}
     {{/each}}
   </div>
   {{!-- /.end row --}}

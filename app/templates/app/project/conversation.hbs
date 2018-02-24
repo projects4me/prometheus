@@ -14,12 +14,14 @@
                 <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="{{currentUser.user.name}}">
                 {{!-- .img-push is used to add margin to elements next to floating images --}}
                 <div class="img-push">
-                  <span class="disabled-text new-conversation" {{action "showDialog"}}>
-                    {{t "view.app.conversation.create"}}
-                    <div class="pull-right">
-                      <i class="fa fa-plus btn"></i>
-                    </div>
-                  </span>
+                  <a href="javascript:void(0);" {{action "showDialog"}}>
+                    <span class="disabled-text new-conversation">
+                      {{t "view.app.conversation.create"}}
+                      <div class="pull-right">
+                        <i class="fa fa-plus btn"></i>
+                      </div>
+                    </span>
+                  </a>
                 </div>
               </div>
               {{!-- /.box-footer --}}
@@ -133,7 +135,9 @@
                             {{#if (user-created entity.comments currentUser.user.id)}}
                               <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "view.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-up"></i></span>
                             {{else}}
-                              <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "view.app.conversation.vote.clickup"}}" {{action "vote" "I agree" entity.id}}><i class="fa fa-thumbs-o-up"></i></span>
+                              <a href="javascript:void(0);" {{action "vote" "I agree" entity.id}}>
+                                <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "view.app.conversation.vote.clickup"}}"><i class="fa fa-thumbs-o-up"></i></span>
+                              </a>
                             {{/if}}
                             <div class="info-box-content">
                               <span class="info-box-text">{{t "view.app.conversation.vote.upvote"}}</span>
@@ -156,7 +160,9 @@
                             {{#if (user-created entity.comments currentUser.user.id)}}
                               <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "view.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-down"></i></span>
                             {{else}}
-                              <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "view.app.conversation.vote.clickdown"}}" {{action "vote" "I disagree" entity.id}}><i class="fa fa-thumbs-o-down"></i></span>
+                              <a href="javascript:void(0);" {{action "vote" "I disagree" entity.id}}>
+                                <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "view.app.conversation.vote.clickdown"}}"><i class="fa fa-thumbs-o-down"></i></span>
+                              </a>
                             {{/if}}
                             <div class="info-box-content">
                               <span class="info-box-text">{{t "view.app.conversation.vote.downvote"}}</span>

@@ -602,7 +602,13 @@ export default {
                         "onsecondthought" : "Hmm, I will just keep it.",
                         "deleted" : "The search <strong>{{name}}</strong> has been deleted",
                         "query" : "Query : "
-                    }
+                    },
+                    "sr" : "#",
+                    "subject" : "Subject",
+                    "status" : "Status",
+                    "priority" : "Priority",
+                    "milestone" : "Milestone",
+                    "selectedCount" : "(Selected : {{count}}) "
                 },
                 "detail" : {
                     "issueNumber" : "Issue Number",
@@ -653,9 +659,11 @@ export default {
                 },
                 "edit" : {
                     "page" : "Edit Issue : <strong>#{{issueNumber}} - {{name}}</strong>",
-                    "files" : "Files"
+                    "files" : "Files",
+                    "people" : "People"
                 },
                 "create" : {
+                    "title" : "Create Issue",
                     "issueNumber" : "Issue Number",
                     "subject" : "Subject",
                     "description" : "Description",
@@ -677,6 +685,7 @@ export default {
                     "selectassignee" : "Select an assignee",
                     "reportedBy" : "Reported User",
                     "parent" : "Parent",
+                    "people" : "People"
                 },
                 "filter" : {
                     "issueNumber" : "Issue Number",

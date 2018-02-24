@@ -4,9 +4,13 @@
       <div class="box-header with-border">
         {{#if (eq wiki.createdUser currentUser.user.id)}}
           {{#if (eq wiki.locked "0")}}
-            <i class="fa fa-unlock lock" data-toggle="tooltip" title="{{t "view.app.wiki.lock"}}" {{action "lockWiki" "unlock"}}></i>
+            <a href="javascript:void(0);" {{action "lockWiki" "unlock"}}>
+              <i class="fa fa-unlock lock" data-toggle="tooltip" title="{{t "view.app.wiki.lock"}}"></i>
+            </a>
           {{else}}
-            <i class="fa fa-lock lock" data-toggle="tooltip" title="{{t "view.app.wiki.unlock"}}" {{action "lockWiki" "lock"}}></i>
+            <a href="javascript:void(0);" {{action "lockWiki" "lock"}}>
+              <i class="fa fa-lock lock" data-toggle="tooltip" title="{{t "view.app.wiki.unlock"}}"></i>
+            </a>
           {{/if}}
         {{else}}
           {{#if (eq wiki.locked "0")}}<i class="fa fa-unlock disabled"></i>{{else}}<i class="fa fa-lock disabled"></i>{{/if}}
@@ -19,13 +23,15 @@
         {{/if}}
         <span class="path-seperator"></span> {{wiki.name}}
         <span class="upvotes">
-                    {{wiki.vote.length}}
+          {{wiki.vote.length}}
           {{#if iVoted}}
             <i class="fa fa-heart" data-toggle="tooltip" title="{{t "view.app.wiki.voted"}}" ></i>
           {{else}}
-            <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "view.app.wiki.upvote"}}" {{action "upvote" wiki.id}}></i>
+            <a href="javascript:void(0);" {{action "upvote" wiki.id}}>
+              <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "view.app.wiki.upvote"}}"></i>
+            </a>
           {{/if}}
-                </span>
+        </span>
         <div class="box-tools pull-right">
           <span class="modified-by">{{t "global.form.modified" user=wiki.modifiedUserName date=(get-date wiki 'dateModified' 'MMM Do \'YY, h:mm a')}}</span>
         </div>
@@ -37,17 +43,9 @@
 
         <div class="wiki-page-contents ql-container ql-snow">
           <div class="note-editor wiki-default-page">
-            {{{wiki.markUp}}}
+            {{wiki.markUp}}
           </div>
         </div>
-        {{!--div class="form-group">
-          <div class="btn btn-default btn-file">
-            <i class="fa fa-paperclip"></i> Attachment
-            <input type="file" name="attachment">
-          </div>
-          <p class="help-block">Max. 32MB</p>
-        </div--}}
-
       </div>
 
       {{!-- /.box-body --}}
@@ -94,23 +92,21 @@
               <li>
                 {{#if (not-eq file.fileThumbnail '0')}}
                   <span class="attachment-icon has-img">
-                                        <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
-                                    </span>
-                {{else}}
-                  <span class="attachment-icon">
-                    {{attachment-icon file.fileMime}}
+                    <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
                   </span>
+                {{else}}
+                  {{attachment-icon mime=(readonly file.fileMime)}}
                 {{/if}}
                 <div class="attachment-info">
                   <div class="attachment-name clearfix">
                     <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
                   </div>
                   <div class="attachment-additional">
-                                                <span class="attachment-size">
-                                                {{file-size file.fileSize}}
-                                                  <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
-                                                <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
-                                                </span>
+                    <span class="attachment-size">
+                      {{file-size file.fileSize}}
+                      <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
+                      <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                    </span>
                   </div>
                 </div>
               </li>
@@ -135,7 +131,7 @@
 
       </div>
     </div>
-  {{!-- Issue Files --}}
+    {{!-- Issue Files --}}
 
   {{/each}}
 {{else}}

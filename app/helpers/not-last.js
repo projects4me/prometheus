@@ -19,15 +19,6 @@ export function notLast(params) {
 
     let lastElement = array[Object.keys(array)[Object.keys(array).length - 1]];
 
-    if ((lastElement) == (index)) {
-        Logger.debug('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
-        Logger.debug('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
-        Logger.debug('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
-        Logger.debug(params);
-        Logger.debug('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
-        Logger.debug('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
-        Logger.debug('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
-    }
     return (lastElement) !== (index);
 }
 

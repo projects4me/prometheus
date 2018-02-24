@@ -30,7 +30,7 @@ export default Component.extend({
     i18n: inject(),
 
     /**
-     * We need the compoent to render inside an li so that the UI does not break
+     * We need the component to render inside an li so that the UI does not break
      *
      * @property tagName
      * @type String
@@ -41,7 +41,7 @@ export default Component.extend({
 
     /**
      * This is the layout name that determines the HBS file to be rendered, we are
-     * using this so that we can created dynamic activty blockes without having to
+     * using this so that we can created dynamic activity blockers without having to
      * check for the type using if else statements that can be very taxing as the
      * number of activities in the system can grow and comparing the type against
      * each possible combination can be very taxing

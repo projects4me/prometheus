@@ -103,7 +103,7 @@
                 {{#each model.conversations as |conversation|}}
                   <li>
                     <div class="user-block">
-                      <img class="img-circle" src="http://projects4me/userimage/get/{{conversation.createdBy}}">
+                      <img class="img-circle" src="http://projects4me/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
                       <span class="subject">{{conversation.subject}}</span>
                       <span class="description">{{translate-comment conversation.description}}</span>
                     </div>
@@ -237,7 +237,11 @@
               </li>
             {{/each}}
             <li>
-              <div {{action "showAddMemberDialog"}}class="membership-add" data-toggle="tooltip" title="{{t "view.app.project.detail.membership.add"}}"><ion class="ion-android-add"></ion></div>
+              <a href="javascript:void(0);" {{action "showAddMemberDialog"}}>
+                <div class="membership-add" data-toggle="tooltip" title="{{t "view.app.project.detail.membership.add"}}">
+                  <ion class="ion-android-add"></ion>
+                </div>
+              </a>
             </li>
           </ul>
           {{#if addMemberDialog}}
@@ -292,19 +296,21 @@
           {{else}}
             {{#each milestones as |milestone|}}
               {{#milestone-block milestone=milestone}}
-                <i class="fa fa-pencil edit-milestone" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editMilestone" milestone}}></i>
+                <a href="javascript:void(0);" {{action "editMilestone" milestone}}>
+                  <i class="fa fa-pencil edit-milestone" data-toggle="tooltip" title="{{t "global.form.edit"}}"></i>
+                </a>
                 <span class="pull-right">
-                {{milestone.progress}}%
-              </span>
+                  {{milestone.progress}}%
+                </span>
                 <span class="info-box-number" data-trigger="hover" data-toggle="popover" title="{{t (concat "view.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}" data-placement="top" data-content="{{milestone.description}}">{{milestone.name}} - {{milestone.issues.length}} {{t "global.module.plural.issue"}}</span>
 
                 <div class="progress">
                   <div class="progress-bar" style="width:{{milestone.progress}}%" data-toggle='tooltip' title='{{t "view.app.project.detail.milestone.progress" closed=(get-issuecount milestone.issues 'closed') total=milestone.issues.length}}'></div>
                 </div>
                 <span class="progress-description">
-                {{moment-format milestone.startDate 'Do MMM. YYYY'}} - {{moment-format milestone.endDate 'Do MMM. YYYY'}}
+                  {{moment-format milestone.startDate 'Do MMM. YYYY'}} - {{moment-format milestone.endDate 'Do MMM. YYYY'}}
                   <span class="pull-right">({{get-issuecount milestone.issues 'closed'}}/{{milestone.issues.length}} {{t "global.module.plural.issue"}})</span>
-              </span>
+                </span>
               {{/milestone-block}}
             {{/each}}
           {{/if}}
