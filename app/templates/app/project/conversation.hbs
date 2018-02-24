@@ -76,7 +76,7 @@
                   {{/if}}
                   <span class="pull-right text-muted">
                     {{entity.comments.length}}
-                    {{#if (if-match entity.roomType "discussion")}}
+                    {{#if (eq entity.roomType "discussion")}}
                       {{t "view.app.conversation.comments"}}
                     {{else}}
                       {{t "view.app.conversation.votes"}}
@@ -86,7 +86,7 @@
                 {{!-- /.box-body --}}
                 <div class="box-footer box-comments">
 
-                  {{#if (if-match entity.roomType "discussion")}}
+                  {{#if (eq entity.roomType "discussion")}}
                     {{#each entity.comments as |comment|}}
                       <div class="box-comment">
                         <img class="img-circle img-sm" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
@@ -124,7 +124,7 @@
                       </form>
                     </div>
 
-                  {{else if (if-match entity.roomType "vote")}}
+                  {{else if (eq entity.roomType "vote")}}
                     <div class="panel-body">
 
                       <div class="vote">
