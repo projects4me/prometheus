@@ -13,7 +13,7 @@ describe('Integration | Helper | not-last', function() {
             {
                 "section1": {
                     "list": {
-                        "label": "view.nav.menu.timelog.list",
+                        "label": "views.nav.menu.timelog.list",
                         "route": "app.module",
                         "className": "text-teal",
                         "anchorRoute": "timelog",
@@ -23,7 +23,7 @@ describe('Integration | Helper | not-last', function() {
                         }
                     },
                     "create": {
-                        "label": "view.nav.menu.timelog.create",
+                        "label": "views.nav.menu.timelog.create",
                         "route": "app.create",
                         "className": "text-red",
                         "anchorRoute": "timelog/create",
@@ -35,7 +35,7 @@ describe('Integration | Helper | not-last', function() {
                 },
                 "section2": {
                     "import": {
-                        "label": "view.nav.menu.timelog.import",
+                        "label": "views.nav.menu.timelog.import",
                         "route": "app.import",
                         "anchorRoute": "timelog/import",
                         "projectRelated": false,
@@ -44,7 +44,7 @@ describe('Integration | Helper | not-last', function() {
                         }
                     },
                     "export": {
-                        "label": "view.nav.menu.timelog.export",
+                        "label": "views.nav.menu.timelog.export",
                         "route": "app.export",
                         "anchorRoute": "timelog/export",
                         "projectRelated": false,
@@ -56,7 +56,7 @@ describe('Integration | Helper | not-last', function() {
             },
             {
                 "list": {
-                    "label": "view.nav.menu.timelog.list",
+                    "label": "views.nav.menu.timelog.list",
                     "route": "app.module",
                     "className": "text-teal",
                     "anchorRoute": "timelog",
@@ -66,7 +66,7 @@ describe('Integration | Helper | not-last', function() {
                     }
                 },
                 "create": {
-                    "label": "view.nav.menu.timelog.create",
+                    "label": "views.nav.menu.timelog.create",
                     "route": "app.create",
                     "className": "text-red",
                     "anchorRoute": "timelog/create",
@@ -82,7 +82,7 @@ describe('Integration | Helper | not-last', function() {
             {
                 "section1": {
                     "list": {
-                        "label": "view.nav.menu.report.list",
+                        "label": "views.nav.menu.report.list",
                         "route": "app.module",
                         "className": "text-teal",
                         "anchorRoute": "report",
@@ -92,7 +92,7 @@ describe('Integration | Helper | not-last', function() {
                         }
                     },
                     "create": {
-                        "label": "view.nav.menu.report.create",
+                        "label": "views.nav.menu.report.create",
                         "route": "app.create",
                         "className": "text-red",
                         "anchorRoute": "report/create",
@@ -104,7 +104,7 @@ describe('Integration | Helper | not-last', function() {
                 },
                 "section2": {
                     "export": {
-                        "label": "view.nav.menu.report.export",
+                        "label": "views.nav.menu.report.export",
                         "route": "app.export",
                         "anchorRoute": "report/export",
                         "projectRelated": false,
@@ -116,7 +116,7 @@ describe('Integration | Helper | not-last', function() {
             },
             {
                 "export": {
-                    "label": "view.nav.menu.report.export",
+                    "label": "views.nav.menu.report.export",
                     "route": "app.export",
                     "anchorRoute": "report/export",
                     "projectRelated": false,
@@ -125,7 +125,7 @@ describe('Integration | Helper | not-last', function() {
                     }
                 }
             },
-            'false'
+            'true'
         ]
     ];
 

@@ -96,7 +96,6 @@ export default Controller.extend({
         }
         let shortCode = name.slice(0,5).toUpperCase();
 
-        this.set('model.shortCode',shortCode);
         return shortCode;
     }),
 
@@ -188,6 +187,7 @@ export default Controller.extend({
             model.createdUser = _self.get('currentUser.user.id');
             model.modifedUserName = _self.get('currentUser.user.name');
             model.createdUserName = _self.get('currentUser.user.name');
+            model.shortCode = _self.get('shortCode');
             model.deleted = '0';
 
             model.startDate = moment(model.startDate).format("YYYY-MM-DD");
@@ -218,12 +218,12 @@ export default Controller.extend({
                 hash(Promises).then(function(){
 
                     new Messenger().post({
-                        message: _self.get('i18n').t('view.app.project.create.created',{name:data.get('name')}),
+                        message: _self.get('i18n').t('views.app.project.create.created',{name:data.get('name')}),
                         type: 'success',
                         showCloseButton: true
                     });
 
-                    _self.transitionToRoute('app.project.index', {projectId:data.get('id')});
+                    _self.transitionToRoute('app.project.index', {project_id:data.get('id')});
 
                 });
 

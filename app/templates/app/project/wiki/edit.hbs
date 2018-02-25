@@ -4,18 +4,18 @@
 
       {{#if (eq wiki.locked "0")}}
         <div class="box-header with-border">
-          <h3 class="box-title">{{t "view.app.wiki.page.edit" page=wiki.name}}</h3>
+          <h3 class="box-title">{{t "views.app.wiki.page.edit" page=wiki.name}}</h3>
         </div>
         {{!-- /.box-header --}}
         <div class="box-body">
           <div class="form-group">
-            {{input value=wiki.name placeholder=(t "view.app.wiki.create.name") key-up="changed" class="form-control"}}
+            {{input value=wiki.name placeholder=(t "views.app.wiki.create.name") key-up="changed" class="form-control"}}
           </div>
           <div class="form-group">
             {{#power-select
                 options=wikiList
                 selected=(find-by "value" parentId wikiList)
-                placeholder=(t "view.app.wiki.create.parent")
+                placeholder=(t "views.app.wiki.create.parent")
                 searchField="label"
                 onchange=(action "wikiChanged")
             as |wiki|}}
@@ -48,29 +48,29 @@
           <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
 
           <div class="pull-right wiki-tags">
-            {{t "view.app.wiki.tags"}}<span class="colon"></span>
+            {{t "views.app.wiki.tags"}}<span class="colon"></span>
 
             {{#power-select-multiple
                 options=tagList
                 selected=selectedTags
-                placeholder=(t "view.app.wiki.selecttags")
+                placeholder=(t "views.app.wiki.selecttags")
                 searchField="label"
                 onchange=(action "tagSelected")
             as |tag|}}
               {{tag.label}}
             {{/power-select-multiple}}
 
-            <button type="button" class="btn btn-primary" {{action "showDialog"}}>{{t "view.app.wiki.tag.add"}}</button>
+            <button type="button" class="btn btn-primary" {{action "showDialog"}}>{{t "views.app.wiki.tag.add"}}</button>
             {{#if addTagDialog}}
               {{#bootstrap-modal
-                  title="view.app.wiki.tag.create"
+                  title="views.app.wiki.tag.create"
                   confirmLabel="global.form.save"
                   closeLabel="global.form.cancel"
                   confirm=(action "addTag")
                   close="removeModal"}}
                 <form {{action 'addTag' on='submit'}}>
                   <div class="form-group">
-                    <label>Name</label>
+                    <label>{{t "views.app.wiki.edit.name"}}</label>
                     {{input class="form-control" autofocus=true value=tagName onChange=(action (mut tagName))}}
                   </div>
                 </form>
@@ -82,9 +82,9 @@
         <div class="wiki-page-islocked">
           <div class="callout callout-danger">
             <h4>
-              <i class="fa fa-lock"></i> {{t "view.app.wiki.page.lockedhead"}}
+              <i class="fa fa-lock"></i> {{t "views.app.wiki.page.lockedhead"}}
             </h4>
-            {{t "view.app.wiki.page.islocked"}}
+            {{t "views.app.wiki.page.islocked"}}
           </div>
         </div>
       {{/if}}
@@ -94,9 +94,9 @@
 
       <div class="callout callout-danger">
         <h4>
-          <i class="fa fa-exclamation-triangle"></i> {{t "view.app.wiki.notfound"}}
+          <i class="fa fa-exclamation-triangle"></i> {{t "views.app.wiki.notfound"}}
         </h4>
-        {{t "view.app.wiki.page.empty"}}
+        {{t "views.app.wiki.page.empty"}}
       </div>
     </div>
   {{/if}}

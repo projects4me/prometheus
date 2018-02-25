@@ -63,7 +63,7 @@ export default App.extend({
         Logger.debug('Wiki Route');
         Logger.debug(this);
 
-        var params = this.getParams();
+        let params = this.getParams();
         Logger.debug('The parameters are as follows');
         Logger.debug(params);
 
@@ -75,7 +75,7 @@ export default App.extend({
 
         controller.set('projectId',params.projectId);
 
-        var options = {
+        let options = {
             query: '((Wiki.name : '+params.wikiName+') AND (Wiki.projectId : '+params.projectId+'))',
             sort : 'Wiki.name',
             order: 'ASC',
@@ -119,9 +119,9 @@ export default App.extend({
      * @private
      */
     getParams:function(){
-        var params = {};
-        params['projectId'] = this.paramsFor('app.project').projectId;
-        params['wikiName'] = this.paramsFor('app.project.wiki.page').wikiName;
+        let params = {};
+        params['projectId'] = this.paramsFor('app.project').project_id;
+        params['wikiName'] = this.paramsFor('app.project.wiki.page').wiki_name;
         return params;
     }
 

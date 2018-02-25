@@ -66,13 +66,13 @@ export default App.extend({
         self.loadTags();
 
         let options = {
-            query: '(Wiki.projectId : '+params.projectId+')',
+            query: '(Wiki.projectId : '+params.project_id+')',
             sort : 'Wiki.name',
             rels: 'none',
             order: 'ASC',
             limit: -1
         };
-        controller.set('projectId',params.projectId);
+        controller.set('projectId',params.project_id);
         let tree={};
 
         Logger.debug('Retreiving projects list with options '+options);
@@ -112,7 +112,7 @@ export default App.extend({
             // We need the direction
             if (self.get('router.currentRouteName') === 'app.project.wiki.index'){
                 if (data.findBy('name','Home') !== undefined){
-                    self.transitionTo('app.project.wiki.page',{projectId:params.projectId,wikiName:'Home'});
+                    self.transitionTo('app.project.wiki.page',{project_id:params.projectId,wiki_name:'Home'});
                 }
             }
         });

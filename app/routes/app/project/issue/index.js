@@ -153,7 +153,7 @@ export default App.extend({
         }
 
         // Get the projectId from the parent
-        let projectId = this.paramsFor('app.project').projectId;
+        let projectId = this.paramsFor('app.project').project_id;
         Logger.debug('ProjectId : '+projectId);
 
         // Make sure that projectId is set for every query
@@ -189,10 +189,10 @@ export default App.extend({
      */
     afterModel(){
         let _self = this;
-        let projectId = _self.paramsFor('app.project').projectId;
+        let projectId = _self.paramsFor('app.project').project_id;
         if (projectId === undefined && _self.context !== undefined) {
-            if (_self.context.projectId !== undefined) {
-                projectId = _self.context.projectId;
+            if (_self.context.project_id !== undefined) {
+                projectId = _self.context.project_id;
             }
         }
         let savedSearchesOption = {

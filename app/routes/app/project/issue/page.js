@@ -28,13 +28,13 @@ export default App.extend({
         Logger.debug(params);
 
         let options = {
-            query: '(Issue.issueNumber : '+params.issueNumber+')',
+            query: '(Issue.issueNumber : '+params.issue_number+')',
             sort : 'Issue.issueNumber',
             order: 'ASC',
             limit: -1,
             //rels: 'none'
         };
-        this.set('breadCrumb',{title:'#'+params.issueNumber,record:true});
+        this.set('breadCrumb',{title:'#'+params.issue_number,record:true});
         Logger.debug('Retreiving issue with options '+options);
         let data = this.get('store').query('issue',options);
         Logger.debug('-AppProjectIssuePageRoute::model()');

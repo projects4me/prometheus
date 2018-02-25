@@ -217,7 +217,7 @@ export default Controller.extend(Evented,{
                 if (data.get('id') !== undefined)
                 {
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.conversation.voted"),
+                        message: _self.get('i18n').t("views.app.conversation.voted"),
                         tpye: 'success',
                         showCloseButton: true
                     });
@@ -260,7 +260,7 @@ export default Controller.extend(Evented,{
 
                 _self.get('model').unshiftObject(conversation);
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.conversation.created",{name:conversation.get('subject')}),
+                    message: _self.get('i18n').t("views.app.conversation.created",{name:conversation.get('subject')}),
                     type: 'success',
                     showCloseButton: true
                 });

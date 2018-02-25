@@ -7,7 +7,7 @@ import $ from 'jquery';
 
 /* Maintain some global variables to keep a track of what has happened */
 var alreadyRun = false;
-var oldConsole = {};
+//var oldConsole = {};
 
 /**
  * This is the initializer for the javascript behaviors in the application. We
@@ -30,8 +30,8 @@ export default {
     name: 'javascript-behaviors',
 
     /**
-     * This function is called by Emberjs by default and in this application we
-     * setup the Logger configuration which can be overwritter in the environment
+     * This function is called by EmberJs by default and in this application we
+     * setup the Logger configuration which can be overwritten in the environment
      * configuration.
      *
      * @method initialize
@@ -44,15 +44,21 @@ export default {
             alreadyRun = true;
         }
         EmberRouter.reopen({
-            startProgress:function(){
-                Pace.restart();
-            }.on('willTransition'),
+            // startProgress:function(){
+            //     Pace.restart();
+            // }.on('willTransition'),
 
-            initComponents:function(){
+            willTransition() {
+                Pace.restart();
+            },
+
+            didTransition() {
+                this._super(...arguments);
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();
                 });
-            }.on('didTransition')
+            }
+
         });
 
         Messenger.options = {
@@ -60,6 +66,7 @@ export default {
             theme: 'air'
         };
 
+        /*
         console.history = [];
         for (let i in console) {
             if (typeof console[i] === 'function') {
@@ -68,5 +75,6 @@ export default {
                 console[i] = eval(strr);
             }
         }
+        */
     }
 };

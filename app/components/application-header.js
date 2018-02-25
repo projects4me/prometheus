@@ -3,6 +3,7 @@
  */
 
 import Component from '@ember/component';
+import { get } from '@ember/object';
 
 /**
  * This component is used to render the application header
@@ -55,7 +56,7 @@ export default Component.extend({
 
             if (typeof this.invalidateSession === 'function')
             {
-                this.sendAction('invalidateSession');
+                get(this, 'invalidateSession')();
             }
 
         },

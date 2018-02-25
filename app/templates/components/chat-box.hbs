@@ -4,10 +4,13 @@
       <h3 class="box-title">{{chatroom.conversers.firstObject.name}}</h3>
 
       <div class="box-tools pull-right">
-        <span data-toggle="tooltip" title="3 New Messages" class="badge">3</span>
-        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+        <span data-toggle="tooltip" title="{{t "views.app.components.chatBox.newMessage" count="3"}}" class="badge">{{t "views.app.components.chatBox.three"}}</span>
+        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+          <i class="fa fa-minus"></i>
         </button>
-        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+        <button type="button" class="btn btn-box-tool" data-widget="remove">
+          <i class="fa fa-times"></i>
+        </button>
       </div>
     </div>
     {{!-- /.box-header --}}
@@ -50,12 +53,12 @@
         {{message-box
             spellcheck=false
             entity=entity
-            placeholder=(t "view.app.chat.messagebox")
+            placeholder=(t "views.app.chat.messagebox")
             value=comment
         }}
         <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary btn-flat">{{t "view.app.chat.send"}}</button>
-              </span>
+          <button type="submit" class="btn btn-primary btn-flat">{{t "views.app.chat.send"}}</button>
+        </span>
       </div>
     </div>
     {{!-- /.box-footer--}}

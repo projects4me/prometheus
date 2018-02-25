@@ -150,7 +150,7 @@ export default Controller.extend({
          */
         edit:function() {
             var model = this.get('model').objectAt(0);
-            this.transitionToRoute('app.project.wiki.edit', {projectId:model.get('projectId'),wikiName:model.get('name')});
+            this.transitionToRoute('app.project.wiki.edit', {project_id:model.get('projectId'),wiki_name:model.get('name')});
         },
 
         /**
@@ -160,7 +160,7 @@ export default Controller.extend({
          * @public
          */
         loadWiki(projectId,wikiName){
-            this.transitionToRoute('app.project.wiki.page', {projectId:projectId,wikiName:wikiName});
+            this.transitionToRoute('app.project.wiki.page', {project_id:projectId,wiki_name:wikiName});
         },
 
         /**
@@ -172,7 +172,7 @@ export default Controller.extend({
         create:function(){
             Logger.debug('Create a page for ');
             Logger.debug(this.get('projectId'));
-            this.transitionToRoute('app.project.wiki.create', {projectId:this.get('projectId')});
+            this.transitionToRoute('app.project.wiki.create', {project_id:this.get('projectId')});
         },
 
         /**
@@ -217,7 +217,7 @@ export default Controller.extend({
                 if (data.get('id') !== undefined)
                 {
                     new Messenger().post({
-                        message: self.get('i18n').t("view.app.wiki.voted"),
+                        message: self.get('i18n').t("views.app.wiki.voted"),
                         tpye: 'success',
                         showCloseButton: true
                     });
@@ -250,15 +250,15 @@ export default Controller.extend({
                 var message = '';
                 if (action === 'unlock')
                 {
-                    message = self.get('i18n').t("view.app.wiki.page.unlocked");
+                    message = self.get('i18n').t("views.app.wiki.page.unlocked");
                 }
                 else if (action === 'lock')
                 {
-                    message = self.get('i18n').t("view.app.wiki.page.locked");
+                    message = self.get('i18n').t("views.app.wiki.page.locked");
                 }
 
                 new Messenger().post({
-                    message: self.get('i18n').t("view.app.wiki.page.lock",{action:message}),
+                    message: self.get('i18n').t("views.app.wiki.page.lock",{action:message}),
                     tpye: 'success',
                     showCloseButton: true
                 });
@@ -288,12 +288,12 @@ export default Controller.extend({
             Logger.debug(self);
 
             let deleting = new Messenger().post({
-                message: self.get('i18n').t("view.app.wiki.page.file.delete",{name:file.get('name')}).toString(),
+                message: self.get('i18n').t("views.app.wiki.page.file.delete",{name:file.get('name')}).toString(),
                 type: 'warning',
                 showCloseButton: true,
                 actions: {
                     confirm: {
-                        label: self.get('i18n').t("view.app.wiki.page.file.confirmdelete").toString(),
+                        label: self.get('i18n').t("views.app.wiki.page.file.confirmdelete").toString(),
                         action: function() {
 
                             // destroy the upload
@@ -302,7 +302,7 @@ export default Controller.extend({
                                 self.get('model').objectAt(0).get('files').removeObject(file);
 
                                 return deleting.update({
-                                    message: self.get('i18n').t("view.app.wiki.page.file.deleted"),
+                                    message: self.get('i18n').t("views.app.wiki.page.file.deleted"),
                                     type: 'success',
                                     actions: false
                                 });
@@ -310,10 +310,10 @@ export default Controller.extend({
                         }
                     },
                     cancel: {
-                        label: self.get('i18n').t("view.app.wiki.page.file.onsecondthought").toString(),
+                        label: self.get('i18n').t("views.app.wiki.page.file.onsecondthought").toString(),
                         action: function() {
                             return deleting.update({
-                                message: self.get('i18n').t("view.app.wiki.page.file.deletecancel"),
+                                message: self.get('i18n').t("views.app.wiki.page.file.deletecancel"),
                                 type: 'success',
                                 actions: false
                             });

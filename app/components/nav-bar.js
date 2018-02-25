@@ -80,7 +80,7 @@ export default Component.extend({
                 {
                     routeParams = {};
                 }
-                routeParams['projectId'] = projectId;
+                routeParams['project_id'] = projectId;
             }
             this.set('pathname','/'+this.appPrefix+'/'+anchorRoute);
             if (routeParams !== undefined && routeParams !== null && routeParams !== ''){
@@ -101,7 +101,7 @@ export default Component.extend({
         projectChanged:function(project){
             this.set('projectId',project.value);
             if (project.value !== undefined && project.value !== null && project.value !== ''){
-                this.get('router').transitionTo('app.project',{projectId:project.value});
+                this.get('router').transitionTo('app.project',{project_id:project.value});
             }
         }
     }

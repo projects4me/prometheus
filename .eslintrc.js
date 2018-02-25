@@ -16,9 +16,9 @@ module.exports = {
     },
     rules: {
         "ember/avoid-leaking-state-in-ember-objects": "off",
-        "ember/no-function-prototype-extensions": "off",
-        "ember/closure-actions": "off",
-        "deprecated-inline-view-helper": "off"
+//        "ember/no-function-prototype-extensions": "off",
+//        "ember/closure-actions": "off",
+//        "ember/deprecated-inline-view-helper": "off"
 },
     overrides: [
         // node files

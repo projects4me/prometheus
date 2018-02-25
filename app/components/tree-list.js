@@ -39,7 +39,7 @@ export default Component.extend({
             // intializer. Normally this would not be required but the tree view
             // causes us to call the same component recursively and thus it becomes
             // very difficult to pass action context across
-            this.get('router').transitionTo('app.project.wiki.page',{projectId:projectId,wikiName:wikiName});
+            this.get('router').transitionTo('app.project.wiki.page',{project_id:projectId,wiki_name:wikiName});
         }
 
     }

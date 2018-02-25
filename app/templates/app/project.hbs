@@ -1,7 +1,7 @@
 <section class="content-header">
   {{#if projectId}}
     <h1>
-      {{t "view.app.project.label"}}
+      {{t "views.app.project.label"}}
       <small>{{model.name}}</small>
     </h1>
   {{else}}
@@ -10,9 +10,9 @@
         <span class="fa-stack fa-lg">
           <i class="fa fa-briefcase fa-stack-1x fa-inverse"></i>
           <i class="fa fa-ban fa-stack-2x text-danger"></i>
-        </span> {{t "view.app.project.noproject"}}
+        </span> {{t "views.app.project.noproject"}}
       </h4>
-      {{t "view.app.project.select"}}
+      {{t "views.app.project.select"}}
     </div>
   {{/if}}
 
@@ -22,7 +22,7 @@
       {{#if module.record}}
         {{module.title}}
       {{else}}
-        {{t (concat "view.nav.menu." (camelize module.title) ".label")}}
+        {{t (concat "views.nav.menu." (camelize module.title) ".label")}}
       {{/if}}
     {{/bread-crumb}}
   {{/bread-crumbs}}

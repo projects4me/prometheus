@@ -143,7 +143,7 @@ export default Controller.extend({
         selectType:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectType');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('typeId',target.value);
             Logger.debug('App.Project.Issue.Create:selectType');
         },
@@ -160,29 +160,29 @@ export default Controller.extend({
             let self = this;
             let model = this.get('model');
 
-            model.projectId = this.target.currentState.routerJs.state.params["app.project"].projectId;
-            model.dateCreated = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-            model.dateModified = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-            model.modifiedUser = self.get('currentUser.user.id');
-            model.reportedUser = self.get('currentUser.user.id');
-            model.createdUser = self.get('currentUser.user.id');
-            model.modifedUserName = self.get('currentUser.user.name');
-            model.createdUserName = self.get('currentUser.user.name');
-            model.deleted = '0';
+            model.set('projectId',this.target.currentState.routerJs.state.params["app.project"].project_id);
+            model.set('dateCreated', moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
+            model.set('dateModified', moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
+            model.set('modifiedUser',self.get('currentUser.user.id'));
+            model.set('reportedUser',self.get('currentUser.user.id'));
+            model.set('createdUser',self.get('currentUser.user.id'));
+            model.set('modifedUserName',self.get('currentUser.user.name'));
+            model.set('createdUserName',self.get('currentUser.user.name'));
+            model.set('deleted','0');
 
-            model.startDate = moment(model.startDate).format("YYYY-MM-DD");
-            model.endDate= moment(model.endDate).format("YYYY-MM-DD");
+            model.set('startDate',moment(model.startDate).format("YYYY-MM-DD"));
+            model.set('endDate',moment(model.endDate).format("YYYY-MM-DD"));
 
             model.save().then(function(data){
 
 
                 new Messenger().post({
-                    message: self.get('i18n').t('view.app.issue.created',{name:data.get('subject'),issueNumber:data.get('issueNumber')}),
+                    message: self.get('i18n').t('views.app.issue.created',{name:data.get('subject'),issue_number:data.get('issueNumber')}),
                     type: 'success',
                     showCloseButton: true
                 });
 
-                self.transitionToRoute('app.project.issue.page', {projectId:data.get('projectId'),issueNumber:data.get('issueNumber')});
+                self.transitionToRoute('app.project.issue.page', {project_id:data.get('projectId'),issue_number:data.get('issueNumber')});
             });
         },
 
@@ -194,8 +194,8 @@ export default Controller.extend({
          * @todo Trigger the notificaiton
          */
         cancel:function(){
-            var model = this.get('model');
-            this.transitionToRoute('app.project.issue', {projectId:model.get('projectId')});
+            let model = this.get('model');
+            this.transitionToRoute('app.project.issue', {project_id:model.get('projectId')});
         },
     }
 });

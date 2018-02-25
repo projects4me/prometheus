@@ -37,7 +37,7 @@ export default Controller.extend({
         create:function(){
             Logger.debug('AppProjectWikiController::setupController');
             Logger.debug(this.get('model.projectId'));
-            this.transitionToRoute('app.project.wiki.create', {projectId:this.get('model.projectId')});
+            this.transitionToRoute('app.project.wiki.create', {project_id:this.get('model.projectId')});
         }
 
     }

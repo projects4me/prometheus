@@ -5,11 +5,11 @@
         {{#if (eq wiki.createdUser currentUser.user.id)}}
           {{#if (eq wiki.locked "0")}}
             <a href="javascript:void(0);" {{action "lockWiki" "unlock"}}>
-              <i class="fa fa-unlock lock" data-toggle="tooltip" title="{{t "view.app.wiki.lock"}}"></i>
+              <i class="fa fa-unlock lock" data-toggle="tooltip" title="{{t "views.app.wiki.lock"}}"></i>
             </a>
           {{else}}
             <a href="javascript:void(0);" {{action "lockWiki" "lock"}}>
-              <i class="fa fa-lock lock" data-toggle="tooltip" title="{{t "view.app.wiki.unlock"}}"></i>
+              <i class="fa fa-lock lock" data-toggle="tooltip" title="{{t "views.app.wiki.unlock"}}"></i>
             </a>
           {{/if}}
         {{else}}
@@ -25,10 +25,10 @@
         <span class="upvotes">
           {{wiki.vote.length}}
           {{#if iVoted}}
-            <i class="fa fa-heart" data-toggle="tooltip" title="{{t "view.app.wiki.voted"}}" ></i>
+            <i class="fa fa-heart" data-toggle="tooltip" title="{{t "views.app.wiki.voted"}}" ></i>
           {{else}}
             <a href="javascript:void(0);" {{action "upvote" wiki.id}}>
-              <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "view.app.wiki.upvote"}}"></i>
+              <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "views.app.wiki.upvote"}}"></i>
             </a>
           {{/if}}
         </span>
@@ -43,7 +43,7 @@
 
         <div class="wiki-page-contents ql-container ql-snow">
           <div class="note-editor wiki-default-page">
-            {{wiki.markUp}}
+            {{safe-html wiki.markUp}}
           </div>
         </div>
       </div>
@@ -57,7 +57,7 @@
         {{/if}}
 
         <div class="pull-right">
-          {{t "view.app.wiki.tags"}}<span class="colon"></span>
+          {{t "views.app.wiki.tags"}}<span class="colon"></span>
           {{#if wiki.tag}}
             {{#each wiki.tag as |tags|}}
               <span class="label label-primary"><i class="fa fa-tag"></i> {{tags.tag}}</span>
@@ -77,7 +77,7 @@
 
       <div class="box-header with-border">
 
-        <h3 class="box-title">{{t "view.app.wiki.page.files"}}</h3>
+        <h3 class="box-title">{{t "views.app.wiki.page.files"}}</h3>
 
         <div class="box-tools pull-right">
         </div>
@@ -115,7 +115,7 @@
           <div class="filePreviewModal">
             {{#if filePreviewDialog}}
               {{#bootstrap-modal
-                  title="view.app.wiki.page.file.preview"
+                  title="views.app.wiki.page.file.preview"
                   closeLabel="global.form.close"
                   close="removeModal"}}
                 <iframe id="file_preview"></iframe>
@@ -125,7 +125,7 @@
 
         </div>
         {{field-upload
-            label=(t "view.app.wiki.page.selectfile")
+            label=(t "views.app.wiki.page.selectfile")
             uploadFile=(action "uploadFile")
         }}
 
@@ -139,9 +139,9 @@
 
     <div class="callout callout-danger">
       <h4>
-        <i class="fa fa-exclamation-triangle"></i> {{t "view.app.wiki.notfound"}}
+        <i class="fa fa-exclamation-triangle"></i> {{t "views.app.wiki.notfound"}}
       </h4>
-      {{t "view.app.wiki.page.empty"}}
+      {{t "views.app.wiki.page.empty"}}
     </div>
   </div>
 

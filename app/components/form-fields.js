@@ -205,7 +205,7 @@ export default Component.extend({
      * @return template {String} The template name that will be rendered
      * @private
      */
-    layoutName: function() {
+    layoutName: computed('type', 'model', function() {
         let type = this.get('type');
         //var edit = this.get('edit');
 
@@ -215,7 +215,7 @@ export default Component.extend({
         }
 
         return template;
-    }.property('type','model').volatile(),
+    }).volatile(),
 
     /**
      * During the initialize ohase of the field we are need to evaluate if the

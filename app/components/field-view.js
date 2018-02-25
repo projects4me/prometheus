@@ -4,6 +4,7 @@
 
 import Validator from  "../utils/validator/fields";
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 import $ from 'jquery';
 
 /**
@@ -27,7 +28,7 @@ export default Component.extend({
      * @type function
      * @private
      */
-    layoutName: function() {
+    layoutName: computed('view', 'definition', 'model', function() {
         let type = this.get('definition').type;
         let view = this.get('view');
 
@@ -36,7 +37,7 @@ export default Component.extend({
             template = 'components/field/text/'+view;
         }
         return template;
-    }.property('view','definition','model').volatile(),
+    }).volatile(),
 
     /**
      * Add the calss fieldSize to every feild element in order to allow easy
@@ -58,9 +59,9 @@ export default Component.extend({
      * @type function
      * @public
      */
-    fieldSize: function() {
+    fieldSize: computed('definition', function() {
         return this.get('definition').size;
-    }.property('definition').volatile(),
+    }).volatile(),
 
     /**
      * Perform some actions after the render is complete
@@ -69,7 +70,7 @@ export default Component.extend({
      * @public
      * @todo perhaps delegate the did render per type
      */
-    didRender: function() {
+    didRender() {
         let definition = this.get('definition');
 
         // Apply input mask

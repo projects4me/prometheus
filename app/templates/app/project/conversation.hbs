@@ -16,7 +16,7 @@
                 <div class="img-push">
                   <a href="javascript:void(0);" {{action "showDialog"}}>
                     <span class="disabled-text new-conversation">
-                      {{t "view.app.conversation.create"}}
+                      {{t "views.app.conversation.create"}}
                       <div class="pull-right">
                         <i class="fa fa-plus btn"></i>
                       </div>
@@ -70,18 +70,18 @@
 
                   {{!-- Social sharing buttons --}}
                   {{#if (user-created entity.votes currentUser.user.id)}}
-                    {{t "view.app.conversation.you"}} <i class="fa fa-heart"></i>
+                    {{t "views.app.conversation.you"}} <i class="fa fa-heart"></i>
                   {{else}}
                     <button type="button" class="btn btn-default btn-xs" {{action "upvote" entity.id}}>
-                      <i class="fa fa-heart-o"></i> {{t "view.app.conversation.upvote"}}
+                      <i class="fa fa-heart-o"></i> {{t "views.app.conversation.upvote"}}
                     </button>
                   {{/if}}
                   <span class="pull-right text-muted">
                     {{entity.comments.length}}
                     {{#if (eq entity.roomType "discussion")}}
-                      {{t "view.app.conversation.comments"}}
+                      {{t "views.app.conversation.comments"}}
                     {{else}}
-                      {{t "view.app.conversation.votes"}}
+                      {{t "views.app.conversation.votes"}}
                     {{/if}}
                   </span>
                 </div>
@@ -114,11 +114,11 @@
                                 usersList=usersList
                                 spellcheck=false
                                 entity=entity
-                                placeholder=(t "view.app.conversation.messagebox")
+                                placeholder=(t "views.app.conversation.messagebox")
                                 value=comment
                             }}
                             <div class="pull-right">
-                              <button type="button" class="btn btn-primary" {{action "save" entity.id comment}}>{{t "view.app.conversation.post"}}</button>
+                              <button type="button" class="btn btn-primary" {{action "save" entity.id comment}}>{{t "views.app.conversation.post"}}</button>
                             </div>
                           </div>
                         </div>
@@ -133,21 +133,21 @@
                         <div class="agree">
                           <div class="info-box">
                             {{#if (user-created entity.comments currentUser.user.id)}}
-                              <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "view.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-up"></i></span>
+                              <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "views.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-up"></i></span>
                             {{else}}
                               <a href="javascript:void(0);" {{action "vote" "I agree" entity.id}}>
-                                <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "view.app.conversation.vote.clickup"}}"><i class="fa fa-thumbs-o-up"></i></span>
+                                <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "views.app.conversation.vote.clickup"}}"><i class="fa fa-thumbs-o-up"></i></span>
                               </a>
                             {{/if}}
                             <div class="info-box-content">
-                              <span class="info-box-text">{{t "view.app.conversation.vote.upvote"}}</span>
+                              <span class="info-box-text">{{t "views.app.conversation.vote.upvote"}}</span>
                               <span class="info-box-number">{{count-votes entity.comments "I agree"}}</span>
 
                               <div class="progress">
-                                <div class="progress-bar bg-green" style="width: {{round (mult (div (count-votes entity.comments "I agree") entity.comments.length) 100)}}%"></div>
+                                <div class="progress-bar bg-green" style={{progress-width (round (mult (div (count-votes entity.comments "I agree") entity.comments.length) 100))}}></div>
                               </div>
                               <span class="progress-description">
-                                {{round (mult (div (count-votes entity.comments "I agree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.agree"}}
+                                {{round (mult (div (count-votes entity.comments "I agree") entity.comments.length) 100)}}% {{t "views.app.conversation.vote.agree"}}
                               </span>
                             </div>
                             {{!-- /.info-box-content --}}
@@ -158,21 +158,21 @@
 
                           <div class="info-box">
                             {{#if (user-created entity.comments currentUser.user.id)}}
-                              <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "view.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-down"></i></span>
+                              <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "views.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-down"></i></span>
                             {{else}}
                               <a href="javascript:void(0);" {{action "vote" "I disagree" entity.id}}>
-                                <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "view.app.conversation.vote.clickdown"}}"><i class="fa fa-thumbs-o-down"></i></span>
+                                <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "views.app.conversation.vote.clickdown"}}"><i class="fa fa-thumbs-o-down"></i></span>
                               </a>
                             {{/if}}
                             <div class="info-box-content">
-                              <span class="info-box-text">{{t "view.app.conversation.vote.downvote"}}</span>
+                              <span class="info-box-text">{{t "views.app.conversation.vote.downvote"}}</span>
                               <span class="info-box-number">{{count-votes entity.comments "I disagree"}}</span>
 
                               <div class="progress">
-                                <div class="progress-bar bg-red" style="width: {{round (mult (div (count-votes entity.comments "I disagree") entity.comments.length) 100)}}%"></div>
+                                <div class="progress-bar bg-red" style={{progress-width (round (mult (div (count-votes entity.comments "I disagree") entity.comments.length) 100))}}></div>
                               </div>
                               <span class="progress-description">
-                                {{round (mult (div (count-votes entity.comments "I disagree") entity.comments.length) 100)}}% {{t "view.app.conversation.vote.disagree"}}
+                                {{round (mult (div (count-votes entity.comments "I disagree") entity.comments.length) 100)}}% {{t "views.app.conversation.vote.disagree"}}
                               </span>
                             </div>
                             {{!-- /.info-box-content --}}
@@ -200,7 +200,7 @@
 
   {{#if addConversationDialog}}
     {{#bootstrap-modal
-      title="view.app.conversation.create"
+      title="views.app.conversation.create"
       confirmLabel="global.form.save"
       closeLabel="global.form.cancel"
       confirm=(action "addConversation")
@@ -208,25 +208,25 @@
       <form {{action 'addConversation' on='submit'}}>
         <div class="box-body">
           <div class="form-group">
-            <label for="subject">{{t "view.app.conversation.new.subject"}}</label>
-            {{input class="form-control" value=newSubject placeholder=(t "view.app.conversation.new.subject")}}
+            <label for="subject">{{t "views.app.conversation.new.subject"}}</label>
+            {{input class="form-control" value=newSubject placeholder=(t "views.app.conversation.new.subject")}}
           </div>
           <div class="form-group">
-            <label for="description">{{t "view.app.conversation.new.description"}}</label>
+            <label for="description">{{t "views.app.conversation.new.description"}}</label>
             {{message-box
                 issuesList=issuesList
                 usersList=usersList
                 spellcheck=false
                 entity=entity
-                placeholder=(t "view.app.conversation.new.description")
+                placeholder=(t "views.app.conversation.new.description")
                 value=newTopic
             }}
           </div>
           <div class="form-group">
-            <label for="type">{{t "view.app.conversation.new.type"}}</label>
+            <label for="type">{{t "views.app.conversation.new.type"}}</label>
             {{#power-select
                 options=roomTypes
-                placeholder=(t "view.app.conversation.new.type")
+                placeholder=(t "views.app.conversation.new.type")
                 selected=roomType
                 onchange=(action (mut roomType))
                 searchField="label"

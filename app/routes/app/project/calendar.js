@@ -55,16 +55,16 @@ export default App.extend({
     setupController:function(controller){
         Logger.debug('AppProjectCalendarRoute::setupController');
 
-        var self = this;
-        var params = this.paramsFor('app.project');
+        let self = this;
+        let params = this.paramsFor('app.project');
 
         self.loadIssues(params.projectId);
 
-        var i18n = this.get('i18n');
+        let i18n = this.get('i18n');
 
         // Set the values in the controller
         controller.set('i18n',i18n);
-        controller.set('projectId',params.projectId);
+        controller.set('projectId',params.project_id);
         controller.set('module',this.module);
     },
 

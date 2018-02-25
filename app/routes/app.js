@@ -139,7 +139,7 @@ export default Route.extend(AuthenticatedRouteMixin,{
         let _self = this;
 
         // If the user navigated directly to the wiki project or page then lets setup the project id
-        let projectId = this.paramsFor('app.project').projectId;
+        let projectId = this.paramsFor('app.project').project_id;
         let projectName = null;
 
         _self.set('breadCrumb', {title: 'Dashboard'});

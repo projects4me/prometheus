@@ -107,7 +107,7 @@ export default App.extend({
      */
     getParams:function(){
         let params = {};
-        params['projectId'] = this.paramsFor('app.project').projectId;
+        params['projectId'] = this.paramsFor('app.project').project_id;
         return params;
     }
 });

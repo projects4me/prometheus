@@ -28,10 +28,10 @@ export default App.extend({
 
     afterModel() {
         let _self = this;
-        let projectId = _self.paramsFor('app.project').projectId;
+        let projectId = _self.paramsFor('app.project').project_id;
         if (projectId === undefined && _self.context !== undefined) {
-            if (_self.context.projectId !== undefined) {
-                projectId = _self.context.projectId;
+            if (_self.context.project_id !== undefined) {
+                projectId = _self.context.project_id;
             }
         }
 
@@ -67,7 +67,7 @@ export default App.extend({
         let _self = this;
 
         // If the user navigated directly to the wiki project or page then lets setup the project id
-        let projectId = this.paramsFor('app.project').projectId;
+        let projectId = this.paramsFor('app.project').project_id;
         let projectName = null;
 
         // self.loadIssues(projectId);
@@ -88,6 +88,7 @@ export default App.extend({
         Logger.debug(options);
 
         _self.store.query('project',options).then(function(data){
+            Logger.debug(data);
             if (projectId !== null)
             {
                 projectName = data.findBy('id',projectId).get('name');

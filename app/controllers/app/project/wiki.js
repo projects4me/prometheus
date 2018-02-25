@@ -57,7 +57,7 @@ export default Controller.extend({
         create:function(){
             Logger.debug('Create a page for ');
             Logger.debug(this.get('projectId'));
-            this.transitionToRoute('app.project.wiki.create', {projectId:this.get('projectId')});
+            this.transitionToRoute('app.project.wiki.create', {project_id:this.get('projectId')});
         }
     }
 

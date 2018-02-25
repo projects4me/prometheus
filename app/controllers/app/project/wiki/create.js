@@ -127,12 +127,12 @@ export default Controller.extend({
                 self.send('refreshWiki');
 
                 new Messenger().post({
-                    message: self.get('i18n').t('view.app.wiki.created',{name:data.get('name')}),
+                    message: self.get('i18n').t('views.app.wiki.created',{name:data.get('name')}),
                     type: 'success',
                     showCloseButton: true
                 });
 
-                self.transitionToRoute('app.project.wiki.page', {projectId:data.get('projectId'),wikiName:data.get('name')});
+                self.transitionToRoute('app.project.wiki.page', {project_id:data.get('projectId'),wiki_name:data.get('name')});
             });
         },
 
@@ -145,7 +145,7 @@ export default Controller.extend({
          */
         cancel:function(){
             let model = this.get('model');
-            this.transitionToRoute('app.project.wiki', {projectId:model.get('projectId')});
+            this.transitionToRoute('app.project.wiki', {project_id:model.get('projectId')});
         },
 
         /**

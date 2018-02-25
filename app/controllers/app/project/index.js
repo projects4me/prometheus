@@ -162,7 +162,7 @@ export default Controller.extend({
          */
         navigateToProjectPage(entity,query){
             Logger.debug("AppProjectIndexController::navigateToProjectPage("+entity+","+query+")");
-            this.transitionToRoute('app.project.'+entity,{projectId:this.get('projectId')});
+            this.transitionToRoute('app.project.'+entity,{project_id:this.get('projectId')});
         },
 
         /**
@@ -174,7 +174,7 @@ export default Controller.extend({
          */
         editProject(projectId){
             Logger.debug('Prometheus.App.Projects.Edit::editProject('+projectId+')');
-            this.transitionToRoute('app.projects.edit',{projectId:projectId});
+            this.transitionToRoute('app.projects.edit',{project_id:projectId});
             Logger.debug('-Prometheus.App.Projects.Edit::editProject');
         },
 
@@ -243,14 +243,14 @@ export default Controller.extend({
 
                     _self.set('selectedUser', null);
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.project.detail.membership.added",{role:role.get('name'),user:user.get('name')}),
+                        message: _self.get('i18n').t("views.app.project.detail.membership.added",{role:role.get('name'),user:user.get('name')}),
                         type: 'success',
                         showCloseButton: true
                     });
                 });
             } else  {
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.project.detail.membership.missing"),
+                    message: _self.get('i18n').t("views.app.project.detail.membership.missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -356,14 +356,14 @@ export default Controller.extend({
                     }
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.project.detail.milestone.added",{name:data.get('name')}),
+                        message: _self.get('i18n').t("views.app.project.detail.milestone.added",{name:data.get('name')}),
                         type: 'success',
                         showCloseButton: true
                     });
                 });
             } else  {
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.project.detail.milestone.missing"),
+                    message: _self.get('i18n').t("views.app.project.detail.milestone.missing"),
                     type: 'error',
                     showCloseButton: true
                 });

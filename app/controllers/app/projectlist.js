@@ -186,7 +186,7 @@ export default Controller.extend({
          */
         detail:function(id){
             //var URIData = navi.buildURL(Ember.String.camelize(this.module),'detail',{id:id});
-            this.transitionToRoute("app.project.index",{projectId:id});
+            this.transitionToRoute("app.project.index",{project_id:id});
         },
 
         /**

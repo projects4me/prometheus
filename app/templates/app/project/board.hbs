@@ -6,7 +6,7 @@
         {{#if (or (eq milestone.status 'in_progress') (eq milestone.status 'planned'))}}
           <div class="box">
             <div class="box-header with-border">
-              <strong>{{t (concat "view.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}</strong>
+              <strong>{{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}</strong>
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse">
                   <i class="fa fa-minus"></i>
@@ -23,7 +23,7 @@
                   <div class="box {{get-prop statusClass status}}">
 
                     <div class="box-header with-border">
-                      {{t (concat "view.app.issue.lists.status." status)}}
+                      {{t (concat "views.app.issue.lists.status." status)}}
                     </div>
 
                     <div class="box-body">
@@ -31,7 +31,7 @@
                       {{#each milestone.issues as |issue|}}
                         {{#if (eq issue.status status)}}
 
-                          <div class="item" style="border-left-color:{{get-color issue.issuetype.name}}">
+                          <div class="item" style={{laneitem-color issue.issuetype.name}}>
                             <h4>#{{issue.issueNumber}} - {{issue.subject}}</h4>
                             <p>{{issue.description}}</p>
                           </div>
@@ -53,7 +53,7 @@
       {{!-- Display the backlog--}}
       <div class="box ">
         <div class="box-header with-border">
-          <strong>{{t "view.app.board.backlog"}}</strong>
+          <strong>{{t "views.app.board.backlog"}}</strong>
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse">
               <i class="fa fa-minus"></i>
@@ -70,7 +70,7 @@
               <div class="box {{get-prop statusClass status}}">
 
                 <div class="box-header with-border">
-                  {{t (concat "view.app.issue.lists.status." status)}}
+                  {{t (concat "views.app.issue.lists.status." status)}}
                 </div>
 
                 <div class="box-body">
@@ -78,7 +78,7 @@
                   {{#each backlog.issues as |issue|}}
                     {{#if (eq issue.status status)}}
 
-                      <div class="item" style="border-left-color:{{get-color issue.issuetype.name}}">
+                      <div class="item" style={{laneitem-color issue.issuetype.name}}>
                         <h4>#{{issue.issueNumber}} - {{issue.subject}}</h4>
                         <p>{{issue.description}}</p>
                       </div>
@@ -100,7 +100,7 @@
         {{#if (and (not-eq milestone.status 'in_progress') (not-eq milestone.status 'planned'))}}
           <div class="box collapsed-box">
             <div class="box-header with-border">
-              <strong>{{t (concat "view.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}</strong>
+              <strong>{{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}</strong>
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse">
                   <i class="fa fa-plus"></i>
@@ -117,7 +117,7 @@
                   <div class="box {{get-prop statusClass status}}">
 
                     <div class="box-header with-border">
-                      {{t (concat "view.app.issue.lists.status." status)}}
+                      {{t (concat "views.app.issue.lists.status." status)}}
                     </div>
 
                     <div class="box-body">
@@ -125,7 +125,7 @@
                       {{#each milestone.issues as |issue|}}
                         {{#if (eq issue.status status)}}
 
-                          <div class="item" style="border-left-color:{{get-color issue.issuetype.name}}">
+                          <div class="item" style={{laneitem-color issue.issuetype.name}}>
                             <h4>#{{issue.issueNumber}} - {{issue.subject}}</h4>
                             <p>{{issue.description}}</p>
                           </div>

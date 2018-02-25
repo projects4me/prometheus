@@ -104,14 +104,14 @@ export default Component.extend({
         let data = {
             labels:[],
             datasets:[{
-                label: this.get('i18n').t("view.app.project.detail.charts.estimatedspent"),
+                label: this.get('i18n').t("views.app.project.detail.charts.estimatedspent"),
                 data:[],
                 backgroundColor: [],
                 type: 'bar',
                 borderWidth: 0
             },
                 {
-                    label: this.get('i18n').t("view.app.project.detail.charts.efficiency"),
+                    label: this.get('i18n').t("views.app.project.detail.charts.efficiency"),
                     type: "line",
                     data:[],
                     backgroundColor: "rgba(220,220,220,0)",

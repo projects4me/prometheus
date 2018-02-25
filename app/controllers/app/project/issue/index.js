@@ -345,7 +345,7 @@ export default Controller.extend({
          */
         openDetail(issue){
             Logger.debug("AppProjectIssueController::openDetail");
-            this.transitionToRoute('app.project.issue.page',{issueNumber:issue.get('issueNumber')});
+            this.transitionToRoute('app.project.issue.page',{issue_number:issue.get('issueNumber')});
             Logger.debug("-AppProjectIssueController::openDetail");
         },
 
@@ -388,7 +388,7 @@ export default Controller.extend({
                     _self.set('newSavedsearch',{});
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.issue.list.savedsearch.added",{name:data.get('name')}),
+                        message: _self.get('i18n').t("views.app.issue.list.savedsearch.added",{name:data.get('name')}),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -397,7 +397,7 @@ export default Controller.extend({
             } else  {
 
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.issue.list.savedsearch.missing"),
+                    message: _self.get('i18n').t("views.app.issue.list.savedsearch.missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -436,7 +436,7 @@ export default Controller.extend({
                 _self.set('newSavedsearch',newSavedSearch);
 
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.issue.list.savedsearch.copied",{name:data.get('name')}),
+                    message: _self.get('i18n').t("views.app.issue.list.savedsearch.copied",{name:data.get('name')}),
                     type: 'success',
                     showCloseButton: true
                 });
@@ -458,12 +458,12 @@ export default Controller.extend({
             let toBeDeleted = _self.get('savedsearches').findBy('id',search.get('id'));
 
             let deleting = new Messenger().post({
-                message: _self.get('i18n').t("view.app.issue.list.savedsearch.delete",{name:search.get('name')}).toString(),
+                message: _self.get('i18n').t("views.app.issue.list.savedsearch.delete",{name:search.get('name')}).toString(),
                 type: 'warning',
                 showCloseButton: true,
                 actions: {
                     confirm: {
-                        label: _self.get('i18n').t("view.app.issue.list.savedsearch.confirmdelete").toString(),
+                        label: _self.get('i18n').t("views.app.issue.list.savedsearch.confirmdelete").toString(),
                         action: function() {
 
                             // destroy the saved search
@@ -472,7 +472,7 @@ export default Controller.extend({
                                 _self.get('savedsearches').removeObject(toBeDeleted);
 
                                 return deleting.update({
-                                    message: _self.get('i18n').t("view.app.issue.list.savedsearch.deleted",{name:search.get('name')}),
+                                    message: _self.get('i18n').t("views.app.issue.list.savedsearch.deleted",{name:search.get('name')}),
                                     type: 'success',
                                     actions: false
                                 });
@@ -480,10 +480,10 @@ export default Controller.extend({
                         }
                     },
                     cancel: {
-                        label: _self.get('i18n').t("view.app.issue.list.savedsearch.onsecondthought").toString(),
+                        label: _self.get('i18n').t("views.app.issue.list.savedsearch.onsecondthought").toString(),
                         action: function() {
                             return deleting.update({
-                                message: _self.get('i18n').t("view.app.issue.list.savedsearch.deletecancel"),
+                                message: _self.get('i18n').t("views.app.issue.list.savedsearch.deletecancel"),
                                 type: 'success',
                                 actions: false
                             });

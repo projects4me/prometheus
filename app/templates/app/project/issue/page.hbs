@@ -9,7 +9,7 @@
           <div class="box-header with-border">
             <h2 class="box-title">{{issue.issuetype.name}} - #{{issue.issueNumber}} | {{issue.subject}}</h2>
             <div class="box-tools pull-right">
-              <span class="project-status"><span class="badge {{issue.status}}">{{t (concat "view.app.issue.lists.status." issue.status)}}</span></span>
+              <span class="project-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></span>
               <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" {{action 'editIssue' issue.issueNumber}}><i class="fa fa-pencil"></i></button>
               <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
             </div>
@@ -22,11 +22,11 @@
                 <div class="project-owner">
                   <img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
                   <a class="users-list-name" href="#">{{issue.assignedTo.name}}</a>
-                  <span class="users-list-date">{{t "view.app.issue.detail.assignedTo"}}</span>
+                  <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
                 </div>
               </div>
               <div class="col-xs-9 col-md-10">
-                <h4>{{t "view.app.issue.detail.description"}}</h4>
+                <h4>{{t "views.app.issue.detail.description"}}</h4>
                 <p>
                   {{issue.description}}
                 </p>
@@ -36,35 +36,35 @@
             <div class="row">
 
               <div class="col-xs-6 col-md-4">
-                <h4>{{t "view.app.issue.detail.priority"}}</h4>
+                <h4>{{t "views.app.issue.detail.priority"}}</h4>
                 <p>
-                  {{t (concat "view.app.issue.lists.priority." issue.priority)}}
+                  {{t (concat "views.app.issue.lists.priority." issue.priority)}}
                 </p>
               </div>
 
               <div class="col-xs-6 col-md-4">
-                <h4>{{t "view.app.issue.detail.duration"}}</h4>
+                <h4>{{t "views.app.issue.detail.duration"}}</h4>
                 <p>
                   {{moment-format issue.startDate 'Do MMM \'YY'}} - {{moment-format issue.endDate 'DD MMM \'YY'}}
                 </p>
               </div>
 
               <div class="col-xs-6 col-md-4">
-                <h4>{{t "view.app.issue.detail.type"}}</h4>
+                <h4>{{t "views.app.issue.detail.type"}}</h4>
                 <p>
                   {{issue.issuetype.name}}
                 </p>
               </div>
 
               <div class="col-xs-6 col-md-4">
-                <h4>{{t "view.app.issue.detail.milestone"}}</h4>
+                <h4>{{t "views.app.issue.detail.milestone"}}</h4>
                 <p>
                   {{issue.milestone.name}}
                 </p>
               </div>
 
               <div class="col-xs-6 col-md-4">
-                <h4>{{t "view.app.issue.detail.parent"}}</h4>
+                <h4>{{t "views.app.issue.detail.parent"}}</h4>
                 <p>
                   {{issue.parentissue.issueNumber}} - {{issue.parentissue.subject}}
                 </p>
@@ -87,7 +87,7 @@
           <div class="col-md-6">
             <div class="box box-info  project-conversations-section">
               <div class="box-header with-border">
-                <h3 class="box-title">{{t "view.app.project.detail.conversations"}}</h3>
+                <h3 class="box-title">{{t "views.app.project.detail.conversations"}}</h3>
 
                 <div class="box-tools pull-right">
                 </div>
@@ -109,7 +109,7 @@
               </div>
               {{!-- /.box-body --}}
               <div class="box-footer text-center" style="display: block;">
-                <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "conversation"}}>{{t "view.app.project.detail.viewallconversations"}}</a>
+                <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "conversation"}}>{{t "views.app.project.detail.viewallconversations"}}</a>
               </div>
               {{!-- /.box-footer --}}
             </div>
@@ -120,7 +120,7 @@
           <div class="col-md-6">
             <div class="box box-success open-issues-section">
               <div class="box-header with-border">
-                <h3 class="box-title">{{t "view.app.project.detail.latestissues"}}</h3>
+                <h3 class="box-title">{{t "views.app.project.detail.latestissues"}}</h3>
 
                 <div class="box-tools pull-right">
 
@@ -137,7 +137,7 @@
                         <div class="data-block">
                           <span class="subject">{{issue.issueNumber}} - {{issue.subject}}</span>
                           <span class="description">{{translate-comment issue.description}}</span>
-                          <strong>{{t "view.app.issue.status"}}:</strong> <span class="badge {{issue.status}}">{{t (concat "view.app.issue.lists.status." issue.status)}}</span>
+                          <strong>{{t "views.app.issue.status"}}:</strong> <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
                         </div>
                       </div>
                     </li>
@@ -147,7 +147,7 @@
               </div>
               {{!-- /.box-body --}}
               <div class="box-footer text-center" style="display: block;">
-                <a href="javascript:void(0)" class="uppercase">{{t "view.app.project.detail.viewallissues"}}</a>
+                <a href="javascript:void(0)" class="uppercase">{{t "views.app.project.detail.viewallissues"}}</a>
               </div>
               {{!-- /.box-footer --}}
             </div>
@@ -163,7 +163,7 @@
           <div class="col-md-12">
             <div class="box box-default project-estimated-spent-section">
               <div class="box-header with-border">
-                <h3 class="box-title">{{t "view.app.project.detail.estimatedspent"}}</h3>
+                <h3 class="box-title">{{t "views.app.project.detail.estimatedspent"}}</h3>
 
               </div>
               {{!-- /.box-header --}}
@@ -178,7 +178,7 @@
               </div>
               {{!-- /.box-body --}}
               <div class="box-footer text-center" style="display: block;">
-                <a href="javascript:void(0)" class="uppercase">{{t "view.app.project.detail.viewallconversations"}}</a>
+                <a href="javascript:void(0)" class="uppercase">{{t "views.app.project.detail.viewallconversations"}}</a>
               </div>
               {{!-- /.box-footer --}}
             </div>
@@ -194,7 +194,7 @@
           <div class="col-md-12">
             <div class="box box-primary project-activities-section">
               <div class="box-header with-border">
-                <h3 class="box-title">{{t "view.app.project.detail.projectactivities"}}</h3>
+                <h3 class="box-title">{{t "views.app.project.detail.projectactivities"}}</h3>
               </div>
               <div class="box-body no-padding" style="display: block;">
                 <div class="project-activities">
@@ -216,7 +216,7 @@
         {{!-- Project Members --}}
         <div class="box box-warning">
           <div class="box-header with-border">
-            <h3 class="box-title">{{t "view.app.project.detail.members"}}</h3>
+            <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
             <div class="box-tools pull-right">
             </div>
           </div>
@@ -226,22 +226,22 @@
               <li>
                 <img src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
                 <a class="users-list-name" href="#">{{issue.assignedTo.name}}</a>
-                <span class="users-list-date">{{t "view.app.issue.detail.assignedTo"}}</span>
+                <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
               </li>
               <li>
                 <img src="http://projects4me/userimage/get/{{issue.ownedBy.id}}" alt="{{issue.ownedBy.name}}">
                 <a class="users-list-name" href="#">{{issue.ownedBy.name}}</a>
-                <span class="users-list-date">{{t "view.app.issue.detail.ownedBy"}}</span>
+                <span class="users-list-date">{{t "views.app.issue.detail.ownedBy"}}</span>
               </li>
               <li>
                 <img src="http://projects4me/userimage/get/{{issue.modifiedBy.id}}" alt="{{issue.modifiedBy.name}}">
                 <a class="users-list-name" href="#">{{issue.modifiedBy.name}}</a>
-                <span class="users-list-date">{{t "view.app.issue.detail.modifiedBy"}}</span>
+                <span class="users-list-date">{{t "views.app.issue.detail.modifiedBy"}}</span>
               </li>
               <li>
                 <img src="http://projects4me/userimage/get/{{issue.reportedBy.id}}" alt="{{issue.reportedBy.name}}">
                 <a class="users-list-name" href="#">{{issue.reportedBy.name}}</a>
-                <span class="users-list-date">{{t "view.app.issue.detail.reportedBy"}}</span>
+                <span class="users-list-date">{{t "views.app.issue.detail.reportedBy"}}</span>
               </li>
             </ul>
             {{!-- /.users-list --}}
@@ -256,7 +256,7 @@
 
           <div class="box-header with-border">
 
-            <h3 class="box-title">{{t "view.app.issue.detail.files"}}</h3>
+            <h3 class="box-title">{{t "views.app.issue.detail.files"}}</h3>
 
             <div class="box-tools pull-right">
             </div>
@@ -294,7 +294,7 @@
               <div class="filePreviewModal">
                 {{#if filePreviewDialog}}
                   {{#bootstrap-modal
-                      title="view.app.issue.detail.file.preview"
+                      title="views.app.issue.detail.file.preview"
                       closeLabel="global.form.close"
                       close="removeModal"}}
                     <iframe id="file_preview"></iframe>
@@ -304,7 +304,7 @@
 
             </div>
             {{field-upload
-                label=(t "view.app.issue.detail.selectfile")
+                label=(t "views.app.issue.detail.selectfile")
                 uploadFile=(action "uploadFile")
             }}
 
@@ -316,7 +316,7 @@
         {{!-- Issue Timelogs --}}
         <div class="box box-danger">
           <div class="box-header with-border">
-            <h3 class="box-title">{{t "view.app.issue.detail.timelogs"}}</h3>
+            <h3 class="box-title">{{t "views.app.issue.detail.timelogs"}}</h3>
           </div>
           <div class="box-body no-padding" style="display: block;">
 
@@ -329,14 +329,14 @@
                     </div>
                     <div class="log-info">
                       <a href="javascript:void(0);" class="user-title">{{timelog.createdUserName}}</a>
-                      <span>{{t "view.app.issue.detail.timelog.on"}}<strong>{{moment-format timelog.spentOn 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
+                      <span>{{t "views.app.issue.detail.timelog.on"}}<strong>{{moment-format timelog.spentOn 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
                       <span class="log-edit pull-right" data-toggle="tooltip" title="{{t "global.form.edit"}}">
                         <a href="javascript:void(0);" {{action "showEditLogDialog" timelog}}><i class="fa fa-pencil"></i></a>
                       </span>
                       <span class="log-entry pull-right">
-                        {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "view.app.issue.detail.timelog.d"}}{{/if}}
-                        {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "view.app.issue.detail.timelog.h"}}{{/if}}
-                        {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "view.app.issue.detail.timelog.m"}}{{/if}}
+                        {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}
+                        {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "views.app.issue.detail.timelog.h"}}{{/if}}
+                        {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
                       </span>
                       <span class="log-description">
                         {{timelog.description}}
@@ -345,13 +345,13 @@
                   </li>
                 {{/each}}
               {{else}}
-                <li class="no-entry">{{t "view.app.issue.detail.timelog.noentry"}}</li>
+                <li class="no-entry">{{t "views.app.issue.detail.timelog.noentry"}}</li>
               {{/if}}
             </ul>
 
             {{#if editLogDialog}}
               {{#bootstrap-modal
-                  title="view.app.issue.detail.timelog.edit"
+                  title="views.app.issue.detail.timelog.edit"
                   closeLabel="global.form.close"
                   confirmLabel="global.form.save"
                   close="removeEditLogModal"
@@ -363,15 +363,15 @@
                     minutes=editingLog.minutes}}
 
                 {{field-date
-                    placeholder=(t "view.app.issue.detail.timelog.iputspenton")
-                    label=(t "view.app.issue.detail.timelog.spenton")
+                    placeholder=(t "views.app.issue.detail.timelog.iputspenton")
+                    label=(t "views.app.issue.detail.timelog.spenton")
                     value=editingLog.spentOn
                     mask="alphanumeric"
                 }}
 
                 {{field-textarea
-                    placeholder=(t "view.app.issue.detail.timelog.iputdescription")
-                    label=(t "view.app.issue.detail.timelog.description")
+                    placeholder=(t "views.app.issue.detail.timelog.iputdescription")
+                    label=(t "views.app.issue.detail.timelog.description")
                     value=editingLog.description
                 }}
 
@@ -381,7 +381,7 @@
 
             {{#if logTimeDialog}}
               {{#bootstrap-modal
-                  title="view.app.issue.detail.timelog.log"
+                  title="views.app.issue.detail.timelog.log"
                   closeLabel="global.form.close"
                   confirmLabel="global.form.save"
                   close="removeLogTimeModal"
@@ -393,15 +393,15 @@
                     minutes=newTimeLog.minutes}}
 
                 {{field-date
-                    placeholder=(t "view.app.issue.detail.timelog.iputspenton")
-                    label=(t "view.app.issue.detail.timelog.spenton")
+                    placeholder=(t "views.app.issue.detail.timelog.iputspenton")
+                    label=(t "views.app.issue.detail.timelog.spenton")
                     value=newTimeLog.spentOn
                     mask="alphanumeric"
                 }}
 
                 {{field-textarea
-                    placeholder=(t "view.app.issue.detail.timelog.iputdescription")
-                    label=(t "view.app.issue.detail.timelog.description")
+                    placeholder=(t "views.app.issue.detail.timelog.iputdescription")
+                    label=(t "views.app.issue.detail.timelog.description")
                     value=newTimeLog.description
                 }}
 
@@ -411,7 +411,7 @@
 
           <div class="box-footer text-center" style="display: block;">
             <span>
-              <a href="javascript:void();" {{action "showLogTimeDialog"}}><ion class="ion-android-stopwatch"></ion> {{t "view.app.issue.detail.timelog.log"}}</a>
+              <a href="javascript:void();" {{action "showLogTimeDialog"}}><ion class="ion-android-stopwatch"></ion> {{t "views.app.issue.detail.timelog.log"}}</a>
             </span>
           </div>
           {{!-- /.box-footer --}}
@@ -420,14 +420,14 @@
         {{!-- This is the project summary --}}
         <div class="box box-info">
           <div class="box-header with-border">
-            <h3 class="box-title">{{t "view.app.project.detail.summary"}}</h3>
+            <h3 class="box-title">{{t "views.app.project.detail.summary"}}</h3>
           </div>
           <div class="box-body no-padding" style="display: block;">
 
             <div class="info-box">
               <span class="info-box-icon bg-aqua"><i class="fa fa-users"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">{{t "view.app.project.detail.teamsize"}}</span>
+                <span class="info-box-text">{{t "views.app.project.detail.teamsize"}}</span>
                 <span class="info-box-number">{{issue.members.length}}</span>
               </div>
             </div>
@@ -435,7 +435,7 @@
             <div class="info-box">
               <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">{{t "view.app.project.detail.openissues"}}</span>
+                <span class="info-box-text">{{t "views.app.project.detail.openissues"}}</span>
                 <span class="info-box-number">{{get-issuecount issuetime "open"}}</span>
               </div>
             </div>
@@ -443,7 +443,7 @@
             <div class="info-box">
               <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">{{t "view.app.project.detail.closedissues"}}</span>
+                <span class="info-box-text">{{t "views.app.project.detail.closedissues"}}</span>
                 <span class="info-box-number">{{get-issuecount issuetime "closed"}}</span>
               </div>
             </div>
@@ -451,7 +451,7 @@
             <div class="info-box">
               <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer-outline"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">{{t "view.app.project.detail.estimatedtime"}}</span>
+                <span class="info-box-text">{{t "views.app.project.detail.estimatedtime"}}</span>
                 <span class="info-box-number">{{get-timelog issuetime "estimated"}}</span>
               </div>
             </div>
@@ -459,7 +459,7 @@
             <div class="info-box">
               <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer"></i></span>
               <div class="info-box-content">
-                <span class="info-box-text">{{t "view.app.project.detail.spenttime"}}</span>
+                <span class="info-box-text">{{t "views.app.project.detail.spenttime"}}</span>
                 <span class="info-box-number">{{get-timelog issuetime "spent"}}</span>
               </div>
             </div>

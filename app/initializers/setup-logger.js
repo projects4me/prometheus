@@ -2,6 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import Ember from 'ember';
 import ENV from "../config/environment";
 
 /**
@@ -48,7 +49,7 @@ export default {
             }
         }
         else {
-            console.error("Logger cannot be found this will cause the application to fail");
+            Ember.Logger.error("Logger cannot be found this will cause the application to fail");
         }
 
     }

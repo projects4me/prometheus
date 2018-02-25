@@ -20,14 +20,14 @@ Router.map(function() {
         this.route('module',{path:':module'});
         this.route('projects',{path:'project'},function(){
             this.route('create',{path:'/create'});
-            this.route('edit',{path:'/edit/:projectId'});
+            this.route('edit',{path:'/edit/:project_id'});
         });
-        this.route('project',{ path: "project/:projectId" },function(){
+        this.route('project',{ path: "project/:project_id" },function(){
             this.route('wiki',function(){
                 this.route('index',{path:'/'});
                 this.route('create',{path:'/create'});
-                this.route('page',{path:'/:wikiName'});
-                this.route('edit',{path:'/edit/:wikiName'});
+                this.route('page',{path:'/:wiki_name'});
+                this.route('edit',{path:'/edit/:wiki_name'});
             });
             this.route('conversation',{path:'conversations'});
             this.route('board',{path:'board'});
@@ -35,8 +35,8 @@ Router.map(function() {
             this.route('issue',function(){
                 this.route('index',{path:'/'});
                 this.route('create',{path:'/create'});
-                this.route('page',{path:'/:issueNumber'});
-                this.route('edit',{path:'/edit/:issueNumber'});
+                this.route('page',{path:'/:issue_number'});
+                this.route('edit',{path:'/edit/:issue_number'});
             });
         });
     });

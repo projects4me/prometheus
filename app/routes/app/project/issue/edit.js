@@ -63,14 +63,14 @@ export default App.extend({
         let params = this.paramsFor('app.project.issue.edit');
 
         let options = {
-            query: '(Issue.issueNumber : '+params.issueNumber+')',
+            query: '(Issue.issueNumber : '+params.issue_number+')',
             sort : 'Issue.issueNumber',
             order: 'ASC',
             limit: -1,
             //rels: 'none'
         };
 
-        this.set('breadCrumb',{title:'#'+params.issueNumber,record:true});
+        this.set('breadCrumb',{title:'#'+params.issue_number,record:true});
 
         Logger.debug('Retrieving issue with options '+options);
 
@@ -110,7 +110,7 @@ export default App.extend({
 
         let i18n = this.get('i18n');
 
-        let projectId = this.paramsFor('app.project').projectId;
+        let projectId = this.paramsFor('app.project').project_id;
 
         let options = {
             query: "(Project.id : "+projectId+")",

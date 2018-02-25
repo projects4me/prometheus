@@ -20,11 +20,12 @@ export default Component.extend({
      * @method show
      * @private
      */
-    show: function() {
-        this.$('.modal').modal().on('hidden.bs.modal', function() {
-            this.sendAction('close');
+    didRender() {
+        let _self = this;
+        _self.$('.modal').modal().on('hidden.bs.modal', function() {
+            _self.sendAction('close');
         }.bind(this));
-    }.on('didRender'),
+    },
 
     /**
      * These are the actions supported by this components
@@ -44,8 +45,9 @@ export default Component.extend({
          * @public
          */
         confirm: function() {
-            this.$('.modal').modal('hide');
-            this.sendAction('confirm');
+            let _self = this;
+            _self.$('.modal').modal('hide');
+            _self.sendAction('confirm');
         }
     },
 

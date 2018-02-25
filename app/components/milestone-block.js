@@ -5,6 +5,7 @@
 import _ from "lodash";
 import Component from '@ember/component';
 import { inject } from '@ember/service';
+import { computed } from '@ember/object';
 import $ from 'jquery';
 
 /**
@@ -39,7 +40,7 @@ export default Component.extend({
      * @for MilestoneBlock
      * @private
      */
-    layoutName: function() {
+    layoutName: computed('milestone', 'model', function() {
         let milestone = this.get('milestone');
         let status = milestone.get('status');
         let progress = 0;
@@ -76,7 +77,7 @@ export default Component.extend({
         }
 
         return template;
-    }.property('milestone','model').volatile(),
+    }).volatile(),
 
     /**
      * This function is called by Ember after it has rendered the HTML elements in the view, we

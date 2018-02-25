@@ -69,7 +69,7 @@ export default App.extend({
         //var metaData = MD.create();
         let i18n = _self.get('i18n');
         controller.set('i18n',i18n);
-        controller.set('projectId',params.projectId);
+        controller.set('projectId',params.project_id);
 
         //this.metaData = MD.create().getViewMeta(this.module,'list',i18n);
         let options = {
@@ -84,7 +84,7 @@ export default App.extend({
 
         options.order = 'DESC';
         options.sort = 'comments.dateModified, Conversationroom.dateModified';
-        options.query = "(Conversationroom.projectId : "+params.projectId+")";
+        options.query = "(Conversationroom.projectId : "+params.project_id+")";
         this.store.query(this.module,options).then(function(data){
             controller.set('model',data.toArray());
         });

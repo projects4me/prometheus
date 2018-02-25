@@ -58,7 +58,7 @@ export default Widget.extend({
             dataSet.push([
                 '<a href="javascript:void(0);">'+issue.get('issueNumber')+'</a>',
                 '<a href="javascript:void(0);">'+issue.get('subject')+'</a>',
-                i18n.t("view.app.issue.lists.status."+issue.get('status')),
+                i18n.t("views.app.issue.lists.status."+issue.get('status')),
                 moment(issue.get('startDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 moment(issue.get('endDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 issue.get('project.name'),
@@ -94,8 +94,8 @@ export default Widget.extend({
 
                 issueNumber = _.replace(issueNumber,'<a href="javascript:void(0);">','');
                 issueNumber = _.replace(issueNumber,'</a>','');
-                _self.get('router').transitionTo('app.project', {projectId:projectId});
-                _self.get('router').transitionTo('app.project.issue.page', {projectId:projectId,issueNumber:issueNumber});
+                _self.get('router').transitionTo('app.project', {project_id:projectId});
+                _self.get('router').transitionTo('app.project.issue.page', {project_id:projectId,issue_number:issueNumber});
             }
         } );
     }

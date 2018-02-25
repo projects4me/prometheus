@@ -110,7 +110,7 @@ export default Component.extend({
         var ch = new ColorHash();
 
         _.forEach(statuses,function(status) {
-            data.labels[count] = self.get('i18n').t("view.app.issue.lists.status."+status).string;
+            data.labels[count] = self.get('i18n').t("views.app.issue.lists.status."+status).string;
             data.datasets[0].data[count] = issues.filterBy('status',status).length;
 
             var color = ch.rgb(data.labels[count]);

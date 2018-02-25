@@ -143,12 +143,12 @@ export default Controller.extend({
                     }
 
                     new Messenger().post({
-                        message: self.get('i18n').t("view.app.wiki.created",{name:data.get('name')}),
+                        message: self.get('i18n').t("views.app.wiki.created",{name:data.get('name')}),
                         type: 'success',
                         showCloseButton: true
                     });
 
-                    self.transitionToRoute('app.project.wiki.page', {projectId:data.get('projectId'),wikiName:data.get('name')});
+                    self.transitionToRoute('app.project.wiki.page', {project_id:data.get('projectId'),wiki_name:data.get('name')});
                 });
             }
         },
@@ -162,7 +162,7 @@ export default Controller.extend({
          */
         cancel:function(){
             let model = this.get('model').objectAt(0);
-            this.transitionToRoute('app.project.wiki.page', {projectId:model.get('projectId'),wikiName:model.get('name')});
+            this.transitionToRoute('app.project.wiki.page', {project_id:model.get('projectId'),wiki_name:model.get('name')});
         },
 
 
@@ -274,7 +274,7 @@ export default Controller.extend({
                     relatedTo: "wiki"
                 }).save().then(function(){
                     new Messenger().post({
-                        message: self.get('i18n').t("view.app.wiki.tag.associated",{name:selectedTag[0].label}),
+                        message: self.get('i18n').t("views.app.wiki.tag.associated",{name:selectedTag[0].label}),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -322,7 +322,7 @@ export default Controller.extend({
                 tagged.save().then(function(){
                     // After it has been saved then show the message to the user
                     new Messenger().post({
-                        message: self.get('i18n').t("view.app.wiki.tag.created",{name:tag.get('tag')}),
+                        message: self.get('i18n').t("views.app.wiki.tag.created",{name:tag.get('tag')}),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -364,7 +364,7 @@ export default Controller.extend({
 
                 // Display the message
                 new Messenger().post({
-                    message: self.get('i18n').t("view.app.wiki.tag.removed",{name:tag.label}),
+                    message: self.get('i18n').t("views.app.wiki.tag.removed",{name:tag.label}),
                     type: 'success',
                     showCloseButton: true
                 });

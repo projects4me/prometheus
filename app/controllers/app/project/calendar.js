@@ -120,9 +120,9 @@ export default Controller.extend({
             }
             if (event.className)
             {
-                let tooltip = self.get('i18n').t("view.app.issue.lists.priority."+event.priority);
-                tooltip += ' '+self.get('i18n').t("view.app.issue.priority");
-                tooltip += ' - '+self.get('i18n').t("view.app.issue.lists.status."+event.className);
+                let tooltip = self.get('i18n').t("views.app.issue.lists.priority."+event.priority);
+                tooltip += ' '+self.get('i18n').t("views.app.issue.priority");
+                tooltip += ' - '+self.get('i18n').t("views.app.issue.lists.status."+event.className);
                 eventElement.find('div.fc-content').attr('data-toggle','tooltip');
                 eventElement.find('div.fc-content').attr('title',tooltip);
                 //eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));

@@ -45,7 +45,7 @@ export default App.extend({
         let i18n = this.get('i18n');
 
         // If the user navigated directly to the wiki project or page then lets setup the project id
-        let projectId = this.paramsFor('app.project').projectId;
+        let projectId = this.paramsFor('app.project').project_id;
 
         Logger.debug(projectId);
 

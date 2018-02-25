@@ -5,7 +5,7 @@
 
       <div class="box box-primary issues-details">
         <div class="box-header with-border">
-          <h3 class="box-title">{{t "view.app.issue.create.title"}}</h3>
+          <h3 class="box-title">{{t "views.app.issue.create.title"}}</h3>
 
           <div class="box-tools pull-right">
 
@@ -31,8 +31,8 @@
               }}
 
               {{field-relate
-                  placeholder=(t "view.app.issue.create.type")
-                  label=(t "view.app.issue.create.type")
+                  placeholder=(t "views.app.issue.create.type")
+                  label=(t "views.app.issue.create.type")
                   value=model.typeId
                   options=type
                   selected=(find-by "value" model.typeId type)
@@ -56,8 +56,8 @@
               }}
 
               {{field-relate
-                  placeholder=(t "view.app.issue.create.status")
-                  label=(t "view.app.issue.create.status")
+                  placeholder=(t "views.app.issue.create.status")
+                  label=(t "views.app.issue.create.status")
                   value=model.status
                   options=status
                   selected=(find-by "value" model.status status)
@@ -67,8 +67,8 @@
               }}
 
               {{field-relate
-                  placeholder=(t "view.app.issue.create.priority")
-                  label=(t "view.app.issue.create.priority")
+                  placeholder=(t "views.app.issue.create.priority")
+                  label=(t "views.app.issue.create.priority")
                   value=model.priority
                   options=priority
                   selected=(find-by "value" model.priority priority)
@@ -78,8 +78,8 @@
               }}
 
               {{field-relate
-                  placeholder=(t "view.app.issue.create.selectmilestone")
-                  label=(t "view.app.issue.create.milestone")
+                  placeholder=(t "views.app.issue.create.selectmilestone")
+                  label=(t "views.app.issue.create.milestone")
                   value=model.milestoneId
                   options=milestoneList
                   selected=(find-by "value" model.milestoneId milestoneList)
@@ -106,7 +106,7 @@
 
       <div class="box box-warning issues-details">
         <div class="box-header with-border">
-          <h3 class="box-title">{{t "view.app.issue.create.people"}}</h3>
+          <h3 class="box-title">{{t "views.app.issue.create.people"}}</h3>
 
           <div class="box-tools pull-right">
 
@@ -118,8 +118,8 @@
 
 
           {{field-relate
-              placeholder=(t "view.app.issue.create.selectassignee")
-              label=(t "view.app.issue.create.assignedTo")
+              placeholder=(t "views.app.issue.create.selectassignee")
+              label=(t "views.app.issue.create.assignedTo")
               value=model.assignee
               options=memberList
               selected=(find-by "value" model.assignee memberList)
@@ -130,8 +130,8 @@
 
 
           {{field-relate
-              placeholder=(t "view.app.issue.create.selectowner")
-              label=(t "view.app.issue.create.ownedBy")
+              placeholder=(t "views.app.issue.create.selectowner")
+              label=(t "views.app.issue.create.ownedBy")
               value=model.owner
               options=memberList
               selected=(find-by "value" model.owner memberList)

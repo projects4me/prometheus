@@ -31,7 +31,7 @@ export default App.extend({
         Logger.debug(params);
 
         let options = {
-            query: '(Project.id : '+params.projectId+')',
+            query: '(Project.id : '+params.project_id+')',
             rels: 'none'
         };
 

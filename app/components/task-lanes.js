@@ -33,25 +33,4 @@ export default Component.extend({
        // Ember.$('.board .lane .box-body .item').css('cursor', 'move');
     },
 
-    /**
-     * The events that this component is listing to
-     *
-     * @property actions
-     * @type Object
-     * @for ActionMenu
-     * @public
-     */
-    actions: {
-
-        /**
-         * Allowing capture of all possible event and simply forwarding them
-         *
-         * @method onAction
-         * @param {String} action delegate the specified event over to the controller
-         * @public
-         */
-        onAction:function(action) {
-            this.sendAction(action);
-        }
-    },
 });

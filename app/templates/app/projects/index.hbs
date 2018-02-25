@@ -1,7 +1,6 @@
 <section class="content-header">
   <h1>
     {{t "global.module.plural.project"}}
-    <small>Everything is awesome</small>
   </h1>
 
   {{#bread-crumbs outputStyle="bootstrap" tagName="ol" linkable=true as |component module|}}
@@ -10,7 +9,7 @@
       {{#if module.record}}
         {{module.title}}
       {{else}}
-        {{t (concat "view.nav.menu." (camelize module.title) ".label")}}
+        {{t (concat "views.nav.menu." (camelize module.title) ".label")}}
       {{/if}}
     {{/bread-crumb}}
   {{/bread-crumbs}}
@@ -25,10 +24,11 @@
 
       <div class="box box-solid">
         <div class="box-header with-border">
-          <h3 class="box-title">{{t "view.app.project.list.savedsearch.label"}}</h3>
+          <h3 class="box-title">{{t "views.app.project.list.savedsearch.label"}}</h3>
 
           <div class="box-tools">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+              <i class="fa fa-minus"></i>
             </button>
           </div>
         </div>
@@ -38,10 +38,12 @@
               <li>
                 <a href="javascript:void(0);" {{action "applySearch" search}}>
                   <div class="search-name">{{search.name}}</div>
-                  <i class="fa fa-filter pull-right" data-toggle="tooltip" title="{{t "view.app.project.list.savedsearch.apply"}}"></i></a>
+                  <i class="fa fa-filter pull-right" data-toggle="tooltip" title="{{t "views.app.project.list.savedsearch.apply"}}"></i>
+                </a>
                 <div class="btn-group" data-toggle="tooltip" title="{{t "global.form.more"}}">
                   <button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                    <i class="fa fa-ellipsis-v"></i></button>
+                    <i class="fa fa-ellipsis-v"></i>
+                  </button>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="javascript:void(0);" {{action "deleteSearch" search}}><i class="fa fa-trash"></i>{{t "global.form.delete"}}</a></li>
                   </ul>
@@ -55,17 +57,18 @@
       {{!-- /. box --}}
       <div class="box box-solid">
         <div class="box-header with-border">
-          <h3 class="box-title">{{t "view.app.project.list.savedsearch.shared"}}</h3>
+          <h3 class="box-title">{{t "views.app.project.list.savedsearch.shared"}}</h3>
 
           <div class="box-tools">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+              <i class="fa fa-minus"></i>
             </button>
           </div>
         </div>
         <div class="box-body no-padding">
           <ul class="nav nav-pills nav-stacked">
             {{#each publicsearches as |search|}}
-              <li><a href="javascript:void(0);" {{action "copySearch" search}}>{{search.name}}<i class="fa fa-copy pull-right" data-toggle="tooltip" title="{{t "view.app.project.list.savedsearch.import"}}"></i></a></li>
+              <li><a href="javascript:void(0);" {{action "copySearch" search}}>{{search.name}}<i class="fa fa-copy pull-right" data-toggle="tooltip" title="{{t "views.app.project.list.savedsearch.import"}}"></i></a></li>
             {{/each}}
           </ul>
         </div>
@@ -80,12 +83,12 @@
         <div class="box-header with-border">
 
           <div class="search">
-                      <span data-toggle="tooltip" title="{{t "global.list.searchbox"}}">
-                        <button id="toggleFilters" {{action "toggleFilters"}} type="button" class="btn dropdown-toggle" data-toggle="collapse" data-target=".list-view-filters">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                    </span>
+            <span data-toggle="tooltip" title="{{t "global.list.searchbox"}}">
+              <button id="toggleFilters" {{action "toggleFilters"}} type="button" class="btn dropdown-toggle" data-toggle="collapse" data-target=".list-view-filters">
+                <span class="caret"></span>
+                <span class="sr-only">{{t "global.list.toggleDropdown"}}</span>
+              </button>
+            </span>
             <div class="has-feedback">
               {{text-field
                   key-up="populateQuery"
@@ -101,7 +104,7 @@
             <button type="button" class="btn btn-primary" {{action "searchByRules"}}>{{t "global.form.search"}}</button>
           </div>
           <div class="list-view-filters collapse">
-            {{query-builder module="Project" query=query}}
+            {{!-- query-builder module="Project" query=query --}}
             <button type="button" class="btn btn-primary pull-right" {{action "showSaveSearchDialog"}}>{{t "global.form.savesearch"}}</button>
             {{#if saveSearchDialog}}
               {{#bootstrap-modal
@@ -112,19 +115,19 @@
                   close="removeSaveSearchDialog"}}
 
                 <div class="ember-view">
-                  <label>{{t "view.app.project.list.savedsearch.query"}}</label>
+                  <label>{{t "views.app.project.list.savedsearch.query"}}</label>
                   <span>{{query}}</span>
                 </div>
 
                 {{field-text
-                    placeholder=(t "view.app.project.list.savedsearch.inputname")
-                    label=(t "view.app.project.list.savedsearch.name")
+                    placeholder=(t "views.app.project.list.savedsearch.inputname")
+                    label=(t "views.app.project.list.savedsearch.name")
                     value=newSavedsearch.name
                 }}
 
                 {{field-checkbox
-                    placeholder=(t "view.app.project.list.savedsearch.selectpublic")
-                    label=(t "view.app.project.list.savedsearch.public")
+                    placeholder=(t "views.app.project.list.savedsearch.selectpublic")
+                    label=(t "views.app.project.list.savedsearch.public")
                     value=newSavedsearch.public
                 }}
 
@@ -137,7 +140,7 @@
         <div class="box-body no-padding">
           <div class="list-controls">
             {{!-- Check all button --}}
-            <span class="btn btn-default btn-sm checkbox-toggle">{{checkbox-field action="selectAll" type="checkbox" data-select="all"}}</span>
+            <span class="btn btn-default btn-sm checkbox-toggle">{{checkbox-field action=(action "selectAll") type="checkbox" data-select="all"}}</span>
             <div class="btn-group">
               <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></button>
               <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></button>
@@ -147,7 +150,7 @@
             {{!-- /.btn-group --}}
             <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
             <div class="pull-right">
-              <span class="list-view-count">(Selected : {{selectedCount}}) </span>
+              <span class="list-view-count">{{t "global.list.selectedCount" count=selectedCount}}</span>
               {{add (mult (sub page 1) 20) 1}}-{{add (mult (sub page 1) 20) model.length}} / {{add (mult (sub page 1) 20) model.length}}
               {{#if model.meta.links.next}}+{{/if}}
               <div class="btn-group">
@@ -169,29 +172,29 @@
           <div class="table-responsive list-view">
             <table class="table table-hover table-striped">
               <thead>
-              <tr>
-                <th></th>
-                <th class="{{sortable-class "Project.name" sort order}}" data-sort="Project.nameSortable" {{action "sortData" 'Project.name'}}>Name</th>
-                <th class="{{sortable-class "Project.type" sort order}}" data-sort="Project.typeSortable" {{action "sortData" 'Project.type'}}>Type</th>
-                <th class="{{sortable-class "owner.name" sort order}}" data-sort="owner.nameSortable" {{action "sortData" 'owner.name'}}>Owner</th>
-                <th class="project-description">Description</th>
-                <th class="{{sortable-class "Project.status" sort order}}" data-sort="Project.statusSortable" {{action "sortData" 'Project.status'}}>Status</th>
-                <th class="project-date">Date</th>
-              </tr>
+                <tr>
+                  <th></th>
+                  <th class="{{sortable-class "Project.name" sort order}}" data-sort="Project.nameSortable"><a href="javascript:void(0);" {{action "sortData" 'Project.name'}}>{{t "views.app.project.list.name"}}</a></th>
+                  <th class="{{sortable-class "Project.type" sort order}}" data-sort="Project.typeSortable"><a href="javascript:void(0);" {{action "sortData" 'Project.type'}}>{{t "views.app.project.list.type"}}</a></th>
+                  <th class="{{sortable-class "owner.name" sort order}}" data-sort="owner.nameSortable"><a href="javascript:void(0);" {{action "sortData" 'owner.name'}}>{{t "views.app.project.list.owner"}}</a></th>
+                  <th class="project-description">{{t "views.app.project.list.description"}}</th>
+                  <th class="{{sortable-class "Project.status" sort order}}" data-sort="Project.statusSortable"><a href="javascript:void(0);" {{action "sortData" 'Project.status'}}>{{t "views.app.project.list.status"}}</a></th>
+                  <th class="project-date">{{t "views.app.project.list.date"}}</th>
+                </tr>
               </thead>
 
               <tbody>
-              {{#each model as |project|}}
-                <tr>
-                  <td>{{checkbox-field action="select" type="checkbox" data-select=project.id}}</td>
-                  <td class="project-name"><a href="#" {{action "openDetail" project}}>{{project.name}}</a></td>
-                  <td class="project-type">{{t (concat "view.app.project.detail.lists.type." project.type)}}</td>
-                  <td class="project-owner"><a href="#">{{project.owner.name}}</a></td>
-                  <td class="project-description">{{project.description}}</td>
-                  <td class="project-status"><span class="badge {{project.status}}">{{t (concat "view.app.project.detail.lists.status." project.status)}}</span></td>
-                  <td class="project-date">{{project.dateModified}}</td>
-                </tr>
-              {{/each}}
+                {{#each model as |project|}}
+                  <tr>
+                    <td>{{checkbox-field action=(action "select") type="checkbox" data-select=project.id}}</td>
+                    <td class="project-name"><a href="#" {{action "openDetail" project}}>{{project.name}}</a></td>
+                    <td class="project-type">{{t (concat "views.app.project.detail.lists.type." project.type)}}</td>
+                    <td class="project-owner"><a href="#">{{project.owner.name}}</a></td>
+                    <td class="project-description">{{project.description}}</td>
+                    <td class="project-status"><span class="badge {{project.status}}">{{t (concat "views.app.project.detail.lists.status." project.status)}}</span></td>
+                    <td class="project-date">{{project.dateModified}}</td>
+                  </tr>
+                {{/each}}
               </tbody>
             </table>
             {{!-- /.table --}}
@@ -202,7 +205,7 @@
         <div class="box-footer no-padding">
           <div class="list-controls">
 
-            <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">{{checkbox-field action="selectAll" type="checkbox" data-select="all"}}</span>
+            <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">{{checkbox-field action=(action "selectAll") type="checkbox" data-select="all"}}</span>
             <div class="btn-group">
               <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></button>
               <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></button>
@@ -211,7 +214,7 @@
             </div>
             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" {{action "reloadPage"}}><i class="fa fa-refresh"></i></button>
             <div class="pull-right">
-              <span class="list-view-count">(Selected : {{selectedCount}}) </span>
+              <span class="list-view-count">{{t "global.list.selectedCount" count=selectedCount}}</span>
               {{add (mult (sub page 1) 20) 1}}-{{add (mult (sub page 1) 20) model.length}} / {{add (mult (sub page 1) 20) model.length}}
               {{#if model.meta.links.next}}+{{/if}}
               <div class="btn-group">

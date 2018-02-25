@@ -229,7 +229,7 @@ export default Component.extend({
                     //     languages: ['apache','javascript', 'ruby', 'python','php','java','html','sql','scss','less','json','coffeescript','cpp','go','htmlbars','handlebars','bash']
                     // });
                 },
-                onChange: function(contents, $editable) {
+                onChange: function(contents/*, $editable*/) {
                     //Logger.debug('onChange:', contents, $editable);
 
                     self.sendAction('onContentChange',contents);

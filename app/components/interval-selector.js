@@ -3,7 +3,6 @@
  */
 
 import { observer } from '@ember/object';
-import { on } from "@ember/object/evented";
 import Component from '@ember/component';
 
 /**
@@ -55,11 +54,11 @@ export default Component.extend({
      * @method daysDidChange
      * @public
      */
-    daysDidChange: on('init', observer('days', function() {
+    daysDidChange: observer('days', function() {
         Logger.debug('Prometheus.Components.IntervalSelector->daysDidChange');
 
         let _self = this;
-        let days = _self.get('days');
+        let days = parseInt(_self.get('days'));
 
         if (days >= 356)
         {
@@ -67,7 +66,7 @@ export default Component.extend({
         }
 
         Logger.debug('-Prometheus.Components.IntervalSelector->daysDidChange');
-    })),
+    }),
 
     /**
      * This is the observer function that is called when the
@@ -76,12 +75,12 @@ export default Component.extend({
      * @method hoursDidChange
      * @public
      */
-    hoursDidChange: on('init', observer('hours', function() {
+    hoursDidChange: observer('hours', function() {
         Logger.debug('Prometheus.Components.IntervalSelector->hoursDidChange');
 
         let _self = this;
-        let hours = _self.get('hours');
-        let days = _self.get('days');
+        let hours = parseInt(_self.get('hours'));
+        let days = parseInt(_self.get('days'));
 
         if (hours >= 8)
         {
@@ -90,7 +89,7 @@ export default Component.extend({
         }
 
         Logger.debug('-Prometheus.Components.IntervalSelector->hoursDidChange');
-    })),
+    }),
 
     /**
      * This is the observer function that is called when the
@@ -99,12 +98,12 @@ export default Component.extend({
      * @method minutesDidChange
      * @public
      */
-    minutesDidChange: on('init', observer('minutes', function() {
+    minutesDidChange: observer('minutes', function() {
         Logger.debug('Prometheus.Components.IntervalSelector->minutesDidChange');
 
         let _self = this;
-        let minutes = _self.get('minutes');
-        let hours = _self.get('hours');
+        let minutes = parseInt(_self.get('minutes'));
+        let hours = parseInt(_self.get('hours'));
 
         if (minutes >= 60)
         {
@@ -112,5 +111,5 @@ export default Component.extend({
             _self.set('minutes',minutes%60);
         }
         Logger.debug('-Prometheus.Components.IntervalSelector->minutesDidChange');
-    })),
+    }),
 });

@@ -3,14 +3,14 @@
   {{!-- mini logo for sidebar mini 50x50 pixels --}}
   <span class="logo-mini"><img alt="{{t "application"}}" src="/img/app/logo-256.png"></span>
   {{!-- logo for regular state and mobile devices --}}
-  <span class="logo-lg"><img alt="{{t "application"}}" src="/img/app/logo-256.png"><b>Projects</b>4<b>Me</b></span>
+  <span class="logo-lg"><img alt="{{t "application"}}" src="/img/app/logo-256.png">{{t "views.app.application.header.title"}}</span>
 </a>
 
 {{!-- He ader Navbar --}}
 <nav class="navbar navbar-static-top" role="navigation">
   {{!-- Sidebar toggle button--}}
   <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-    <span class="sr-only">{{t "view.app.togglenav"}}</span>
+    <span class="sr-only">{{t "views.app.togglenav"}}</span>
   </a>
   {{!-- Navbar Right Menu --}}
   <div class="navbar-custom-menu">
@@ -20,33 +20,34 @@
         {{!-- Menu toggle button --}}
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           <i class="fa fa-envelope-o"></i>
-          <span class="label label-success">4</span>
+          <span class="label label-success">{{t "views.app.application.header.four"}}</span>
         </a>
         <ul class="dropdown-menu">
-          <li class="header">{{t "view.app.messages" count="4"}}</li>
+          <li class="header">{{t "views.app.messages" count="4"}}</li>
           <li>
             {{!-- inner menu: contains the messages --}}
             <ul class="menu">
-              <li>{{!-- start message --}}
+              <li>
+                {{!-- start message --}}
                 <a href="#">
                   <div class="pull-left">
                     {{!-- User Image --}}
-                    <img src="http://projects4me/userimage/get/{{currentUser.user.id}}" class="img-circle" alt="User Image">
+                    <img src="http://projects4me/userimage/get/{{currentUser.user.id}}" class="img-circle" alt="{{t "global.form.image"}}">
                   </div>
                   {{!-- Message title and timestamp --}}
                   <h4>
-                    Support Team
-                    <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                    {{t "views.app.application.header.supportTeam"}}
+                    <small><i class="fa fa-clock-o"></i>{{t "views.app.application.header.fiveMins"}}</small>
                   </h4>
                   {{!-- The message --}}
-                  <p>Why not buy a new awesome theme?</p>
+                  <p>{{t "views.app.application.header.buyTheme"}}</p>
                 </a>
               </li>
               {{!-- end message --}}
             </ul>
             {{!-- /.menu --}}
           </li>
-          <li class="footer"><a href="#">{{t "view.app.allmessages"}}</a></li>
+          <li class="footer"><a href="#">{{t "views.app.allmessages"}}</a></li>
         </ul>
       </li>
       {{!-- /.messages-menu --}}
@@ -56,22 +57,23 @@
         {{!-- Menu toggle button --}}
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           <i class="fa fa-bell-o"></i>
-          <span class="label label-warning">13</span>
+          <span class="label label-warning">{{t "views.app.application.header.thirteen"}}</span>
         </a>
         <ul class="dropdown-menu">
-          <li class="header">{{t "view.app.notifications" count="13"}}</li>
+          <li class="header">{{t "views.app.notifications" count="13"}}</li>
           <li>
             {{!-- Inner Menu: contains the notifications --}}
             <ul class="menu">
-              <li>{{!-- start notification --}}
+              {{!-- start notification --}}
+              <li>
                 <a href="#">
-                  <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                  <i class="fa fa-users text-aqua"></i>{{t "views.app.application.header.fiveMembers"}}
                 </a>
               </li>
               {{!-- end notification --}}
             </ul>
           </li>
-          <li class="footer"><a href="#">{{t "view.app.allnotifications"}}</a></li>
+          <li class="footer"><a href="#">{{t "views.app.allnotifications"}}</a></li>
         </ul>
       </li>
       {{!-- Tasks Menu --}}
@@ -79,25 +81,26 @@
         {{!-- Menu Toggle Button --}}
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           <i class="fa fa-flag-o"></i>
-          <span class="label label-danger">10</span>
+          <span class="label label-danger">{{t "views.app.application.header.ten"}}</span>
         </a>
         <ul class="dropdown-menu">
-          <li class="header">{{t "view.app.tasks" count="10"}}</li>
+          <li class="header">{{t "views.app.tasks" count="10"}}</li>
           <li>
             {{!-- Inner menu: contains the tasks --}}
             <ul class="menu">
-              <li>{{!-- Task item --}}
+              {{!-- Task item --}}
+              <li>
                 <a href="#">
                   {{!-- Task title and progress text --}}
                   <h3>
-                    Design some buttons
-                    <small class="pull-right">20%</small>
+                    {{t "views.app.application.header.designButtons"}}
+                    <small class="pull-right">{{t "views.app.application.header.twenty"}}</small>
                   </h3>
                   {{!-- The progress bar --}}
                   <div class="progress xs">
                     {{!-- Change the css width attribute to simulate progress --}}
                     <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                      <span class="sr-only">20% Complete</span>
+                      <span class="sr-only">{{t "views.app.application.header.twentyComplete"}}</span>
                     </div>
                   </div>
                 </a>
@@ -106,7 +109,7 @@
             </ul>
           </li>
           <li class="footer">
-            <a href="#">{{t "view.app.alltasks"}}</a>
+            <a href="#">{{t "views.app.alltasks"}}</a>
           </li>
         </ul>
       </li>
@@ -127,20 +130,20 @@
 
             <p>
               {{currentUser.user.name}} - {{currentUser.user.title}}
-              <small>{{t "view.app.member"}}{{get-date currentUser.user 'createdDate' 'MMM YYYY'}}</small>
+              <small>{{t "views.app.member"}}{{get-date currentUser.user 'createdDate' 'MMM YYYY'}}</small>
             </p>
           </li>
           {{!-- Menu Body --}}
           <li class="user-body">
             <div class="row">
               <div class="col-xs-4 text-center">
-                <a href="#">{{t "view.app.activity"}}</a>
+                <a href="#">{{t "views.app.activity"}}</a>
               </div>
               <div class="col-xs-4 text-center">
-                <a href="#">{{t "view.app.today"}}</a>
+                <a href="#">{{t "views.app.today"}}</a>
               </div>
               <div class="col-xs-4 text-center">
-                <a href="#">{{t "view.app.history"}}</a>
+                <a href="#">{{t "views.app.history"}}</a>
               </div>
             </div>
             {{!-- /.row --}}
@@ -148,7 +151,7 @@
           {{!-- Menu Footer--}}
           <li class="user-footer">
             <div class="pull-left">
-              <a href="#" class="btn btn-default btn-flat">{{t "view.app.profile"}}</a>
+              <a href="#" class="btn btn-default btn-flat">{{t "views.app.profile"}}</a>
             </div>
             <div class="pull-right">
               {{#if session.isAuthenticated}}

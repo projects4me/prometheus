@@ -70,7 +70,7 @@ export default Object.extend({
         Navigation: {
             items: {
                 Dashboard: {
-                    label: 'view.nav.menu.dashboard.label',
+                    label: 'views.nav.menu.dashboard.label',
                     icon: 'dashboard',
                     route: 'app',
                     anchorRoute: '',
@@ -78,7 +78,7 @@ export default Object.extend({
                     projectRelated: false
                 },
                 Project: {
-                    label: 'view.nav.menu.project.label',
+                    label: 'views.nav.menu.project.label',
                     icon: 'briefcase',
                     route: 'app.projectlist',
                     anchorRoute: 'project',
@@ -86,14 +86,14 @@ export default Object.extend({
                     actions: {
                         section1: {
                             list: {
-                                label: 'view.nav.menu.project.list',
+                                label: 'views.nav.menu.project.list',
                                 route: 'app.projects',
                                 className: 'text-teal',
                                 anchorRoute: 'project',
                                 projectRelated: false,
                             },
                             create: {
-                                label: 'view.nav.menu.project.create',
+                                label: 'views.nav.menu.project.create',
                                 route: 'app.projects.create',
                                 className: 'text-red',
                                 anchorRoute: 'project/create',
@@ -102,13 +102,13 @@ export default Object.extend({
                         },
                         section2:{
                             import:{
-                                label: 'view.nav.menu.project.import',
+                                label: 'views.nav.menu.project.import',
                                 route: 'app.import',
                                 anchorRoute: 'project/import',
                                 projectRelated: false,
                             },
                             export:{
-                                label: 'view.nav.menu.project.export',
+                                label: 'views.nav.menu.project.export',
                                 route: 'app.export',
                                 anchorRoute: 'project/export',
                                 projectRelated: false,
@@ -117,7 +117,7 @@ export default Object.extend({
                     }
                 },
                 Issue:{
-                    label: 'view.nav.menu.issue.label',
+                    label: 'views.nav.menu.issue.label',
                     icon: 'tasks',
                     route: 'app.project.issue',
                     anchorRoute: 'issue',
@@ -126,7 +126,7 @@ export default Object.extend({
                     actions:{
                         section1:{
                             list:{
-                                label: 'view.nav.menu.issue.list',
+                                label: 'views.nav.menu.issue.list',
                                 route: 'app.project.issue',
                                 className: 'text-teal',
                                 anchorRoute: 'issue',
@@ -134,7 +134,7 @@ export default Object.extend({
                                 routeParams: {module: 'issue'}
                             },
                             create:{
-                                label: 'view.nav.menu.issue.create',
+                                label: 'views.nav.menu.issue.create',
                                 route: 'app.project.issue.create',
                                 className: 'text-red',
                                 anchorRoute: 'issue/create',
@@ -144,14 +144,14 @@ export default Object.extend({
                         },
                         section2:{
                             import:{
-                                label: 'view.nav.menu.issue.import',
+                                label: 'views.nav.menu.issue.import',
                                 route: 'app.import',
                                 anchorRoute: 'issue/import',
                                 projectRelated: true,
                                 routeParams: {module: 'issue'}
                             },
                             export:{
-                                label: 'view.nav.menu.issue.export',
+                                label: 'views.nav.menu.issue.export',
                                 route: 'app.export',
                                 anchorRoute: 'issue/export',
                                 projectRelated: true,
@@ -161,7 +161,7 @@ export default Object.extend({
                     }
                 },
                 Conversation:{
-                    label: 'view.nav.menu.conversation.label',
+                    label: 'views.nav.menu.conversation.label',
                     icon: 'comments',
                     route: 'app.project.conversation',
                     anchorRoute: 'conversation',
@@ -169,7 +169,7 @@ export default Object.extend({
                     routeParams: null
                 },
                 Board:{
-                    label: 'view.nav.menu.board.label',
+                    label: 'views.nav.menu.board.label',
                     icon: 'columns',
                     route: 'app.project.board',
                     anchorRoute: 'board',
@@ -177,7 +177,7 @@ export default Object.extend({
                     routeParams: null
                 },
                 Workflow:{
-                    label: 'view.nav.menu.workflow.label',
+                    label: 'views.nav.menu.workflow.label',
                     icon: 'puzzle-piece',
                     route: 'app.module',
                     anchorRoute: 'workflow',
@@ -186,7 +186,7 @@ export default Object.extend({
                     actions:{
                         section1:{
                             list:{
-                                label: 'view.nav.menu.workflow.list',
+                                label: 'views.nav.menu.workflow.list',
                                 route: 'app.module',
                                 className: 'text-teal',
                                 anchorRoute: 'workflow',
@@ -194,7 +194,7 @@ export default Object.extend({
                                 routeParams: {module: 'workflow'}
                             },
                             create:{
-                                label: 'view.nav.menu.workflow.create',
+                                label: 'views.nav.menu.workflow.create',
                                 route: 'app.create',
                                 className: 'text-red',
                                 anchorRoute: 'workflow/create',
@@ -204,14 +204,14 @@ export default Object.extend({
                         },
                         section2:{
                             import:{
-                                label: 'view.nav.menu.workflow.import',
+                                label: 'views.nav.menu.workflow.import',
                                 route: 'app.import',
                                 anchorRoute: 'workflow/import',
                                 projectRelated: false,
                                 routeParams: {module: 'workflow'}
                             },
                             export:{
-                                label: 'view.nav.menu.workflow.export',
+                                label: 'views.nav.menu.workflow.export',
                                 route: 'app.export',
                                 anchorRoute: 'workflow/export',
                                 projectRelated: false,
@@ -221,7 +221,7 @@ export default Object.extend({
                     }
                 },
                 Report:{
-                    label: 'view.nav.menu.report.label',
+                    label: 'views.nav.menu.report.label',
                     icon: 'bar-chart',
                     route: 'app.module',
                     anchorRoute: 'report',
@@ -230,7 +230,7 @@ export default Object.extend({
                     actions:{
                         section1:{
                             list:{
-                                label: 'view.nav.menu.report.list',
+                                label: 'views.nav.menu.report.list',
                                 route: 'app.module',
                                 className: 'text-teal',
                                 anchorRoute: 'report',
@@ -238,7 +238,7 @@ export default Object.extend({
                                 routeParams: {module: 'report'}
                             },
                             create:{
-                                label: 'view.nav.menu.report.create',
+                                label: 'views.nav.menu.report.create',
                                 route: 'app.create',
                                 className: 'text-red',
                                 anchorRoute: 'report/create',
@@ -248,7 +248,7 @@ export default Object.extend({
                         },
                         section2:{
                             export:{
-                                label: 'view.nav.menu.report.export',
+                                label: 'views.nav.menu.report.export',
                                 route: 'app.export',
                                 anchorRoute: 'report/export',
                                 projectRelated: false,
@@ -258,7 +258,7 @@ export default Object.extend({
                     }
                 },
                 Timelog:{
-                    label: 'view.nav.menu.timelog.label',
+                    label: 'views.nav.menu.timelog.label',
                     icon: 'clock-o',
                     route: 'app.module',
                     anchorRoute: 'timelog',
@@ -267,7 +267,7 @@ export default Object.extend({
                     actions:{
                         section1:{
                             list:{
-                                label: 'view.nav.menu.timelog.list',
+                                label: 'views.nav.menu.timelog.list',
                                 route: 'app.module',
                                 className:"text-teal",
                                 anchorRoute: 'timelog',
@@ -275,7 +275,7 @@ export default Object.extend({
                                 routeParams: {module: 'timelog'}
                             },
                             create:{
-                                label: 'view.nav.menu.timelog.create',
+                                label: 'views.nav.menu.timelog.create',
                                 route: 'app.create',
                                 className: "text-red",
                                 anchorRoute: 'timelog/create',
@@ -285,14 +285,14 @@ export default Object.extend({
                         },
                         section2:{
                             import:{
-                                label: 'view.nav.menu.timelog.import',
+                                label: 'views.nav.menu.timelog.import',
                                 route: 'app.import',
                                 anchorRoute: 'timelog/import',
                                 projectRelated: false,
                                 routeParams: {module: 'timelog'}
                             },
                             export:{
-                                label: 'view.nav.menu.timelog.export',
+                                label: 'views.nav.menu.timelog.export',
                                 route: 'app.export',
                                 anchorRoute: 'timelog/export',
                                 projectRelated: false,
@@ -302,7 +302,7 @@ export default Object.extend({
                     }
                 },
                 Calendar:{
-                    label: 'view.nav.menu.calendar.label',
+                    label: 'views.nav.menu.calendar.label',
                     icon: 'calendar',
                     route: 'app.project.calendar',
                     anchorRoute: 'calendar',
@@ -310,7 +310,7 @@ export default Object.extend({
                     routeParams: null
                 },
                 Wiki:{
-                    label: 'view.nav.menu.wiki.label',
+                    label: 'views.nav.menu.wiki.label',
                     icon: 'book',
                     route: 'app.project.wiki',
                     anchorRoute: 'wiki',
@@ -440,18 +440,18 @@ export default Object.extend({
                 enabledFilters:[
                     {
                         id: 'Project.name',
-                        label: "view.app.project.filter.name",
+                        label: "views.app.project.filter.name",
                         type: 'string'
                     },
                     {
                         id: 'Project.shortCode',
-                        label: "view.app.project.filter.shortCode",
+                        label: "views.app.project.filter.shortCode",
                         type: 'string',
                         operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null','contains']
                     },
                     {
                         id: 'Project.type',
-                        label: "view.app.project.filter.type",
+                        label: "views.app.project.filter.type",
                         type: 'integer',
                         input: 'select',
                         values: {
@@ -464,7 +464,7 @@ export default Object.extend({
                     },
                     {
                         id: 'Project.status',
-                        label: "view.app.project.filter.status",
+                        label: "views.app.project.filter.status",
                         type: 'integer',
                         input: 'select',
                         values: {
@@ -479,7 +479,7 @@ export default Object.extend({
                     },
                     // {
                     //   id: 'Project.phoneField',
-                    //   label: "view.app.project.filter.phoneField",
+                    //   label: "views.app.project.filter.phoneField",
                     //   type: 'string',
                     //   placeholder: '____-____-____',
                     //   operators: ['equal', 'not_equal'],
@@ -495,18 +495,18 @@ export default Object.extend({
                 enabledFilters:[
                     {
                         id: 'Issue.issueNumber',
-                        label: "view.app.issue.filter.issueNumber",
+                        label: "views.app.issue.filter.issueNumber",
                         type: 'string'
                     },
                     {
                         id: 'Issue.subject',
-                        label: "view.app.issue.filter.subject",
+                        label: "views.app.issue.filter.subject",
                         type: 'string',
                         operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null','contains']
                     },
                     {
                         id: 'Issue.status',
-                        label: "view.app.issue.filter.type",
+                        label: "views.app.issue.filter.type",
                         type: 'integer',
                         input: 'select',
                         values: {
@@ -517,7 +517,7 @@ export default Object.extend({
                     },
                     {
                         id: 'Issue.priority',
-                        label: "view.app.issue.filter.priority",
+                        label: "views.app.issue.filter.priority",
                         type: 'integer',
                         input: 'select',
                         values: {

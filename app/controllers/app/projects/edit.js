@@ -206,12 +206,12 @@ export default Controller.extend({
                 Logger.debug(data);
 
                 new Messenger().post({
-                    message: _self.get('i18n').t('view.app.project.edit.saved',{name:data.get('name')}),
+                    message: _self.get('i18n').t('views.app.project.edit.saved',{name:data.get('name')}),
                     type: 'success',
                     showCloseButton: true
                 });
 
-                _self.transitionToRoute('app.project.index', {projectId:data.get('id')});
+                _self.transitionToRoute('app.project.index', {project_id:data.get('id')});
             });
         },
 

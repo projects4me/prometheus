@@ -222,7 +222,7 @@ export default Controller.extend({
          */
         editIssue:function(issueNumber){
             Logger.debug('AppProjectIssuePageController::editIssue('+issueNumber+')');
-            this.transitionToRoute('app.project.issue.edit',{issueNumber:issueNumber});
+            this.transitionToRoute('app.project.issue.edit',{issue_number:issueNumber});
             Logger.debug('-AppProjectIssuePageController::paginate()');
         },
 
@@ -247,12 +247,12 @@ export default Controller.extend({
             Logger.debug(self);
 
             let deleting = new Messenger().post({
-                message: self.get('i18n').t("view.app.issue.detail.file.delete",{name:file.get('name')}).toString(),
+                message: self.get('i18n').t("views.app.issue.detail.file.delete",{name:file.get('name')}).toString(),
                 type: 'warning',
                 showCloseButton: true,
                 actions: {
                     confirm: {
-                        label: self.get('i18n').t("view.app.issue.detail.file.confirmdelete").toString(),
+                        label: self.get('i18n').t("views.app.issue.detail.file.confirmdelete").toString(),
                         action: function() {
 
                             // destroy the upload
@@ -261,7 +261,7 @@ export default Controller.extend({
                                 self.get('model').objectAt(0).get('files').removeObject(file);
 
                                 return deleting.update({
-                                    message: self.get('i18n').t("view.app.issue.detail.file.deleted"),
+                                    message: self.get('i18n').t("views.app.issue.detail.file.deleted"),
                                     type: 'success',
                                     actions: false
                                 });
@@ -269,10 +269,10 @@ export default Controller.extend({
                         }
                     },
                     cancel: {
-                        label: self.get('i18n').t("view.app.issue.detail.file.onsecondthought").toString(),
+                        label: self.get('i18n').t("views.app.issue.detail.file.onsecondthought").toString(),
                         action: function() {
                             return deleting.update({
-                                message: self.get('i18n').t("view.app.issue.detail.file.deletecancel"),
+                                message: self.get('i18n').t("views.app.issue.detail.file.deletecancel"),
                                 type: 'success',
                                 actions: false
                             });
@@ -381,14 +381,14 @@ export default Controller.extend({
                     _self.get('model').objectAt(0).get('spent').pushObject(newLog);
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.issue.detail.timelog.added"),
+                        message: _self.get('i18n').t("views.app.issue.detail.timelog.added"),
                         type: 'success',
                         showCloseButton: true
                     });
                 });
             } else {
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.issue.detail.timelog.missing"),
+                    message: _self.get('i18n').t("views.app.issue.detail.timelog.missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -421,14 +421,14 @@ export default Controller.extend({
                 log.save().then(function () {
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.issue.detail.timelog.edited"),
+                        message: _self.get('i18n').t("views.app.issue.detail.timelog.edited"),
                         type: 'success',
                         showCloseButton: true
                     });
                 });
             } else {
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.issue.detail.timelog.missing"),
+                    message: _self.get('i18n').t("views.app.issue.detail.timelog.missing"),
                     type: 'error',
                     showCloseButton: true
                 });

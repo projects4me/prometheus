@@ -3,7 +3,7 @@ import { describe, it } from 'mocha';
 import { setupComponentTest } from 'ember-mocha';
 import hbs from 'htmlbars-inline-precompile';
 
-describe('Integration | Helper | attachment-icon', function() {
+describe('Integration | Component | attachment-icon', function() {
   setupComponentTest('attachment-icon', {
     integration: true
   });
@@ -35,8 +35,8 @@ describe('Integration | Helper | attachment-icon', function() {
   scenarios.forEach(function (scenario) {
       it('renders '+scenario[0], function() {
           this.set('inputValue', scenario[0]);
-          this.render(hbs`{{attachment-icon inputValue}}`);
-          expect(this.$().html().trim()).to.equal(scenario[1]);
+          this.render(hbs`{{attachment-icon mime=inputValue}}`);
+          expect(this.$('.attachment-icon').html().trim()).to.equal(scenario[1]);
       });
   });
 

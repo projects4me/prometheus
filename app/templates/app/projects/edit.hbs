@@ -1,6 +1,6 @@
 <section class="content-header">
   <h1>
-    {{t "view.app.project.edit.header"}}
+    {{t "views.app.project.edit.header"}}
     <small>{{model.name}}</small>
   </h1>
 
@@ -10,7 +10,7 @@
       {{#if module.record}}
         {{module.title}}
       {{else}}
-        {{t (concat "view.nav.menu." (camelize module.title) ".label")}}
+        {{t (concat "views.nav.menu." (camelize module.title) ".label")}}
       {{/if}}
     {{/bread-crumb}}
   {{/bread-crumbs}}
@@ -24,7 +24,7 @@
 
         <div class="box box-primary issues-details">
           <div class="box-header with-border">
-            <h3 class="box-title">{{t "view.app.project.edit.project"}}</h3>
+            <h3 class="box-title">{{t "views.app.project.edit.project"}}</h3>
 
             <div class="box-tools pull-right">
             </div>
@@ -37,8 +37,8 @@
               <div class="form-group">
                 <div class="field-group">
                   {{field-text
-                      placeholder=(t "view.app.project.edit.nameplaceholder")
-                      label=(t "view.app.project.edit.name")
+                      placeholder=(t "views.app.project.edit.nameplaceholder")
+                      label=(t "views.app.project.edit.name")
                       value=model.name
                       mask="alphanumeric"
                   }}
@@ -47,35 +47,35 @@
                     <span class="ember-text-field form-control input-sm data-input ember-view">{{model.shortCode}}</span>
                     <span class="highlight"></span>
                     <span class="bar"></span>
-                    <label class="floating-label active">{{t "view.app.project.edit.shortcode"}}</label>
+                    <label class="floating-label active">{{t "views.app.project.edit.shortcode"}}</label>
                   </div>
                 </div>
 
                 {{field-textarea
-                    placeholder=(t "view.app.project.edit.descriptionplaceholder")
-                    label=(t "view.app.project.edit.description")
+                    placeholder=(t "views.app.project.edit.descriptionplaceholder")
+                    label=(t "views.app.project.edit.description")
                     value=model.description
                 }}
 
                 {{field-date
-                    placeholder=(t "view.app.project.edit.startdateplaceholder")
-                    label=(t "view.app.project.edit.startdate")
+                    placeholder=(t "views.app.project.edit.startdateplaceholder")
+                    label=(t "views.app.project.edit.startdate")
                     value=(readonly model.startDate)
                     update=(action "startDateChanged")
                     mask="alphanumeric"
                 }}
 
                 {{field-date
-                    placeholder=(t "view.app.project.edit.enddateplaceholder")
-                    label=(t "view.app.project.edit.enddate")
+                    placeholder=(t "views.app.project.edit.enddateplaceholder")
+                    label=(t "views.app.project.edit.enddate")
                     value=(readonly model.endDate)
                     update=(action "endDateChanged")
                     mask="alphanumeric"
                 }}
 
                 {{field-relate
-                    placeholder=(t "view.app.project.edit.typeplaceholder")
-                    label=(t "view.app.project.edit.type")
+                    placeholder=(t "views.app.project.edit.typeplaceholder")
+                    label=(t "views.app.project.edit.type")
                     value=model.type
                     options=type
                     selected=(find-by "value" model.type type)
@@ -85,8 +85,8 @@
                 }}
 
                 {{field-relate
-                    placeholder=(t "view.app.project.edit.statusplaceholder")
-                    label=(t "view.app.project.edit.status")
+                    placeholder=(t "views.app.project.edit.statusplaceholder")
+                    label=(t "views.app.project.edit.status")
                     value=model.status
                     options=status
                     selected=(find-by "value" model.status status)
@@ -96,14 +96,14 @@
                 }}
 
                 {{field-textarea
-                    placeholder=(t "view.app.project.edit.visionplaceholder")
-                    label=(t "view.app.project.edit.vision")
+                    placeholder=(t "views.app.project.edit.visionplaceholder")
+                    label=(t "views.app.project.edit.vision")
                     value=model.vision
                 }}
 
                 {{field-textarea
-                    placeholder=(t "view.app.project.edit.scopeplaceholder")
-                    label=(t "view.app.project.edit.scope")
+                    placeholder=(t "views.app.project.edit.scopeplaceholder")
+                    label=(t "views.app.project.edit.scope")
                     value=model.scope
                 }}
 
@@ -125,7 +125,7 @@
 
         <div class="box box-warning issues-details">
           <div class="box-header with-border">
-            <h3 class="box-title">{{t "view.app.project.edit.people"}}</h3>
+            <h3 class="box-title">{{t "views.app.project.edit.people"}}</h3>
 
             <div class="box-tools pull-right">
 
@@ -136,8 +136,8 @@
           <div class="box-body no-padding" style="display: block;">
 
             {{field-relate
-                placeholder=(t "view.app.project.edit.selectassignee")
-                label=(t "view.app.project.edit.assignee")
+                placeholder=(t "views.app.project.edit.selectassignee")
+                label=(t "views.app.project.edit.assignee")
                 value=model.assignee
                 options=usersList
                 selected=(find-by "value" model.assignee usersList)

@@ -113,7 +113,11 @@ export default {
                 "drop" : "Drop to upload",
                 "invalid" : "Invalid file, cannot upload",
                 "uploading" : "Uploading {{length}} files. ({{progress}}%)",
-                "drag" : "Drag and drop a file or "
+                "drag" : "Drag and drop a file or ",
+                "dash" : "-"
+            },
+            "fields" :{
+                "required" : "This field cannot be empty",
             }
         },
         "list": {
@@ -132,7 +136,8 @@ export default {
             "prevPage": "Previous Page",
             "firstPage": "First Page",
             "last": "Last Page",
-            "searchbox" : "Toggle search box"
+            "searchbox" : "Toggle search box",
+            "selectedCount" : "(Selected : {{count}}) "
         },
         "noentry": "No entry found..",
         "blank": "<span class='disabled-text'>-- blank --</em>",
@@ -290,7 +295,7 @@ export default {
     /*
      These labels are related to the views in the system
      */
-    "view":{
+    "views":{
 
         /*
          The labels for the signin view
@@ -304,6 +309,7 @@ export default {
             "remember": "Remember Me",
             "or": "- OR -",
             "forgot": "I forgot my password",
+            "title" : "<b>Projects</b>4<b>Me</b>"
         },
 
         /*
@@ -497,7 +503,13 @@ export default {
                         "onsecondthought": "Hmm, I will just keep it.",
                         "deleted": "The search <strong>{{name}}</strong> has been deleted",
                         "query": "Query : "
-                    }
+                    },
+                    "name" : "Name",
+                    "type" : "Type",
+                    "owner" : "Owner",
+                    "description" : "Description",
+                    "status" : "Status",
+                    "date" : "Date"
                 }
             },
 
@@ -577,6 +589,9 @@ export default {
                     "removed" : "Tag by the name <strong>{{name}}</strong> was removed",
                     "associated" : "Tag by the name <strong>{{name}}</strong> was associated",
                 },
+                "edit": {
+                    "name" : "Name"
+                }
             },
 
             "issue" : {
@@ -731,6 +746,7 @@ export default {
             },
 
             "activity" : {
+                "performedActivity" : " performed an activity",
                 "created" : "created the",
                 "closed" : "closed the",
                 "updated" : "updated the",
@@ -740,6 +756,15 @@ export default {
                     "completed" : "marked completed a",
                     "attached" : "added a",
                     "overdue" : "is overdue",
+                }
+            },
+
+            "widgets" : {
+                "issuesToday" : {
+                    "title" : "Issues Today",
+                },
+                "weeklyMilestones" : {
+                    "title" : "Weekly Milestones",
                 }
             },
 
@@ -775,8 +800,52 @@ export default {
                     "days" : "Days",
                     "hours" : "Hours",
                     "minutes" : "Minutes"
+                },
+                "modal" : {
+                    "times" : "&times;",
+                },
+                "chatBox" : {
+                    "newMessages" : "{{count}} New Messages",
+                    "three" : "3"
+                },
+                "navBar" : {
+                    "admin" : "Admin",
+                    "information" : "Information",
+                    "warning" : "Warning",
+                    "important" : "Important"
                 }
-            }
+            },
+            /**
+             * Most of these are going to be obsolete
+             * @todo after control bar fixing we need to remove the redundant entries
+             */
+            "application" : {
+                "controlBar" : {
+                    "onlineUser" : "Online Users",
+                    "tasksProgress" : "Tasks Progress",
+                    "customTemplate" : "Custom Template Design",
+                    "seventy" : "70%",
+                    "statsTab" : "Stats Tab Content",
+                    "generalSettings" : "General Settings",
+                    "reportPanel" : "Report panel usage",
+                    "settingsInfo" : "Some information about this general settings option",
+
+                },
+                "header" : {
+                    "title" : "<b>Projects</b>4<b>Me</b>",
+                    "supportTeam" : "Support Team",
+                    "fiveMins" : " 5 mins",
+                    "buyTheme" : "Why not buy a new awesome theme?",
+                    "thirteen" : "13",
+                    "fiveMembers" : "5 new members joined today",
+                    "ten" : "10",
+                    "designButtons" : "Design some buttons",
+                    "twenty" : "20",
+                    "twentyComplete" : "20% Complete",
+                    "four" : "4",
+
+                }
+            },
 
         },
 
