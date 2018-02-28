@@ -1,4 +1,4 @@
-import Application from '../../app';
+import Application from 'prometheus/app';
 import config from '../../config/environment';
 import { merge } from '@ember/polyfills';
 import { run } from '@ember/runloop';

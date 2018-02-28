@@ -44,14 +44,16 @@
               {{field-date
                   placeholder="Enter the issue name .."
                   label="Start Date"
-                  value=model.startDate
+                  value=(readonly model.startDate)
+                  update=(action "startDateChanged")
                   mask="alphanumeric"
               }}
 
               {{field-date
                   placeholder="Enter the issue name .."
                   label="End Date"
-                  value=model.endDate
+                  value=(readonly model.endDate)
+                  update=(action "endDateChanged")
                   mask="alphanumeric"
               }}
 

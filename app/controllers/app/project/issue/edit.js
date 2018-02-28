@@ -150,6 +150,36 @@ export default Controller.extend({
         },
 
         /**
+         * This function is called when the start date field is changed
+         *
+         * @method startDateChanged
+         * @param {String} date
+         * @public
+         */
+        startDateChanged(date) {
+            Logger.debug('Prometheus.App.Project.Issue.Edit.Controller::startDateChanged('+date+')');
+            if (this.get('model') !== undefined) {
+                this.get('model').set('startDate', date);
+            }
+            Logger.debug('Prometheus.App.Project.Issue.Edit.Controller::startDateChanged');
+        },
+
+        /**
+         * This function is called when the end date field is changed
+         *
+         * @method endDateChanged
+         * @param {String} date
+         * @public
+         */
+        endDateChanged(date) {
+            Logger.debug('Prometheus.App.Project.Issue.Edit.Controller::endDateChanged('+date+')');
+            if (this.get('model') !== undefined) {
+                this.get('model').set('endDate', date);
+            }
+            Logger.debug('Prometheus.App.Project.Issue.Edit.Controller::endDateChanged');
+        },
+
+        /**
          * This function is responsible for saving the model. After successfully
          * saving the function takes the user to the saved page.
          *

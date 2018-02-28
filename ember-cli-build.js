@@ -33,9 +33,9 @@ module.exports = function(defaults) {
     app.import("node_modules/moment/moment.js");
     app.import("node_modules/bootstrap-daterangepicker/daterangepicker.js");
     app.import("node_modules/jquery-mask-plugin/dist/jquery.mask.min.js");
-//    app.import("node_modules/dot/doT.min.js");
+    app.import("node_modules/dot/doT.min.js");
     app.import("node_modules/jquery-extendext/jQuery.extendext.min.js");
-    app.import("node_modules/jQuery-QueryBuilder/dist/js/query-builder.min.js");
+    app.import("node_modules/jQuery-QueryBuilder/dist/js/query-builder.js");
     app.import("node_modules/jquery-slimscroll/jquery.slimscroll.min.js");
     app.import("node_modules/highlightjs/highlight.pack.min.js");
     app.import("bower_components/Caret.js/dist/jquery.caret.min.js");
