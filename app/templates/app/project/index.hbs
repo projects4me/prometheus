@@ -138,7 +138,7 @@
                 {{#each issuetime as |issue|}}
                   <li>
                     <div class="issue-block">
-                      <div class="priority">{{priority-icon issue.priority}}</div>
+                      <div class="priority">{{priority-icon priority=issue.priority}}</div>
                       <div class="data-block">
                         <span class="subject">{{issue.issueNumber}} - {{issue.subject}}</span>
                         <span class="description">{{translate-comment issue.description}}</span>
