@@ -94,7 +94,8 @@ export default Controller.extend({
         if (this.get('model.name') !== undefined) {
             name = this.get('model.name');
         }
-        let shortCode = name.slice(0,5).toUpperCase();
+        let shortCode = name.replace(/[^a-zA-Z]+/g,'');
+        shortCode = shortCode.slice(0,5).toUpperCase();
 
         return shortCode;
     }),
@@ -181,17 +182,17 @@ export default Controller.extend({
 
             let selectedIssuetypes = _self.get('selectedIssuetypes');
 
-            model.dateCreated = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-            model.dateModified = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-            model.modifiedUser = _self.get('currentUser.user.id');
-            model.createdUser = _self.get('currentUser.user.id');
-            model.modifedUserName = _self.get('currentUser.user.name');
-            model.createdUserName = _self.get('currentUser.user.name');
-            model.shortCode = _self.get('shortCode');
-            model.deleted = '0';
+            model.set('dateCreated',moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
+            model.set('dateModified',moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
+            model.set('modifiedUser',_self.get('currentUser.user.id'));
+            model.set('createdUser',_self.get('currentUser.user.id'));
+            model.set('modifedUserName',_self.get('currentUser.user.name'));
+            model.set('createdUserName',_self.get('currentUser.user.name'));
+            model.set('shortCode',_self.get('shortCode'));
+            model.set('deleted','0');
 
-            model.startDate = moment(model.startDate).format("YYYY-MM-DD");
-            model.endDate= moment(model.endDate).format("YYYY-MM-DD");
+            model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
+            model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
 
             Logger.debug(model);
             Logger.debug(_self);

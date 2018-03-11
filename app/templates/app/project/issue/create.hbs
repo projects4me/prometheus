@@ -22,12 +22,14 @@
                   label="Issue Subject"
                   value=model.subject
                   mask="alphanumeric"
+                  data-field="issue.subject"
               }}
 
               {{field-textarea
                   placeholder="Enter the issue description .."
                   label="Description"
                   value=model.description
+                  data-field="issue.description"
               }}
 
               {{field-relate
@@ -39,6 +41,7 @@
                   searchField="label"
                   onchange=(action "selectType")
                   relateType="relate-simple"
+                  data-field="issue.type"
               }}
 
               {{field-date
@@ -47,6 +50,7 @@
                   value=(readonly model.startDate)
                   update=(action "startDateChanged")
                   mask="alphanumeric"
+                  data-field="issue.startDate"
               }}
 
               {{field-date
@@ -55,6 +59,7 @@
                   value=(readonly model.endDate)
                   update=(action "endDateChanged")
                   mask="alphanumeric"
+                  data-field="issue.endDate"
               }}
 
               {{field-relate
@@ -66,6 +71,7 @@
                   searchField="label"
                   onchange=(action "selectStatus")
                   relateType="relate-simple"
+                  data-field="issue.status"
               }}
 
               {{field-relate
@@ -77,6 +83,7 @@
                   searchField="label"
                   onchange=(action "selectPriority")
                   relateType="relate-issuepriority"
+                  data-field="issue.priority"
               }}
 
               {{field-relate
@@ -88,6 +95,7 @@
                   searchField="label"
                   onchange=(action "selectMilestone")
                   relateType="relate-simple"
+                  data-field="issue.milestone"
               }}
 
             </div>
@@ -128,6 +136,7 @@
               searchField="label"
               onchange=(action "selectAssignee")
               relateType="relate-user"
+              data-field="issue.assignee"
           }}
 
 
@@ -140,6 +149,7 @@
               searchField="label"
               onchange=(action "selectOwner")
               relateType="relate-user"
+              data-field="issue.owner"
           }}
 
 

@@ -1,32 +1,3 @@
-/*
-import { describe, it, beforeEach, afterEach } from 'mocha';
-import { expect } from 'chai';
-import startApp from '../helpers/start-app';
-import destroyApp from '../helpers/destroy-app';
-import { visit, currentURL, andThen } from '@ember/test-helpers';
-
-describe('Acceptance | signin', function() {
-    let application;
-
-    beforeEach(function() {
-        application = startApp();
-    });
-
-    afterEach(function() {
-        destroyApp(application);
-    });
-
-    it('can visit /signin', function() {
-        visit('/signin');
-
-        return andThen(() => {
-            expect(currentURL()).to.equal('/signin');
-        });
-    });
-
-});
-*/
-
 import App from '../../app';
 import { describe, it } from 'mocha';
 import { assert, expect } from 'chai';

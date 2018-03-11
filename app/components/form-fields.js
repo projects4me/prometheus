@@ -174,6 +174,15 @@ export default Component.extend({
     classNames: ['form-field'],
 
     /**
+     * These are the attributes that are permitted to be attached with a field
+     *
+     * @property attributeBinding
+     * @type Array
+     * @for FormFields
+     * @private
+     */
+    attributeBindings: ['data-field'],
+    /**
      * This is the property that is used to set the set the scheduled events e.g.
      * isTyping under check
      *
@@ -275,6 +284,7 @@ export default Component.extend({
      * @private
      */
     didInsertElement(){
+
         const mask = this.getMask(this.get('mask'));
         const tagName = this.getTag(this.get('type'));
 
