@@ -7,7 +7,7 @@
         {{!-- This are the issue details --}}
         <div class="box box-primary issue-details">
           <div class="box-header with-border">
-            <h2 class="box-title">{{issue.issuetype.name}} - #{{issue.issueNumber}} | {{issue.subject}}</h2>
+            <h2 class="box-title">{{issue.issuetype.name}} - #{{issue.issueNumber}} | <span class="issueSubject">{{issue.subject}}</span></h2>
             <div class="box-tools pull-right">
               <span class="project-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></span>
               <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" {{action 'editIssue' issue.issueNumber}}><i class="fa fa-pencil"></i></button>
