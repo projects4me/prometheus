@@ -152,7 +152,7 @@ export default DS.Model.extend({
      * @for Issue
      * @private
      */
-    status: DS.attr('string'),
+    status: DS.attr('string', { defaultValue: 'new' }),
 
     /**
      * Priority of the issue
@@ -162,7 +162,7 @@ export default DS.Model.extend({
      * @for Issue
      * @private
      */
-    priority: DS.attr('string'),
+    priority: DS.attr('string', { defaultValue: 'medium' }),
 
     /**
      * The identifier of the project the issue belongs to

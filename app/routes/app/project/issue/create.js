@@ -25,7 +25,11 @@ export default App.extend({
      */
     model:function()
     {
-        return this.get('store').createRecord('issue');
+        let self = this;
+        return self.get('store').createRecord('issue',{
+            assignee : self.get('currentUser').user.id,
+            owner : self.get('currentUser').user.id
+        });
     },
 
 
