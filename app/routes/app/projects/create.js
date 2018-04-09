@@ -51,7 +51,9 @@ export default App.extend({
 
         controller.set('issuetypes',_self.get('issuetypes'));
 
-        let project = _self.get('store').createRecord('project');
+        let project = _self.get('store').createRecord('project',{
+            assignee: _self.get('currentUser').user.id
+        });
         controller.set('model',project);
 
         let type = [
