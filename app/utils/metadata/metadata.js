@@ -506,12 +506,16 @@ export default Object.extend({
                     },
                     {
                         id: 'Issue.status',
-                        label: "views.app.issue.filter.type",
+                        label: "views.app.issue.filter.status",
                         type: 'integer',
                         input: 'select',
                         values: {
                             'new': 'New',
                             'in_progress': 'In Progress',
+                            'done': 'Done',
+                            'pending': 'Pending',
+                            'feedback': 'Feedback',
+                            'deferred': 'Deferred',
                         },
                         operators: ['equal']
                     },
