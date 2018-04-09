@@ -62,6 +62,22 @@ export default Component.extend({
         },
 
         /**
+         * This function is used to forward the user profile function
+         *
+         * @method viewProfile
+         * @for ApplicationHeader
+         * @public
+         */
+        viewProfile(){
+
+            if (typeof this.userProfile === 'function')
+            {
+                get(this, 'userProfile')();
+            }
+
+        },
+
+        /**
          * This function should not be triggered
          *
          * @method signIn

@@ -191,10 +191,10 @@ export default Controller.extend({
             let self = this;
             let model = this.get('model');
 
-            model.projectId = this.target.currentState.routerJs.state.params["app.project"].project_id;
-            model.dateModified = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-            model.modifiedUser = self.get('currentUser.user.id');
-            model.modifedUserName = self.get('currentUser.user.name');
+            model.set('projectId', this.target.currentState.routerJs.state.params["app.project"].project_id);
+            model.set('dateModified', moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
+            model.set('modifiedUser', self.get('currentUser.user.id'));
+            model.set('modifedUserName', self.get('currentUser.user.name'));
 
             //model.startDate = moment(model.get('startDate'),'MMMM D, YYYY').format("YYYY-MM-DD");
             //model.endDate= moment(model.get('endDate'),'MMMM D, YYYY').format("YYYY-MM-DD");
@@ -206,7 +206,7 @@ export default Controller.extend({
                 Logger.debug(data);
 
                 new Messenger().post({
-                    message: self.get('i18n').t('views.app.issue.created',{name:data.get('subject'),issue_number:data.get('issueNumber')}),
+                    message: self.get('i18n').t('views.app.issue.updated',{name:data.get('subject'),issue_number:data.get('issueNumber')}),
                     type: 'success',
                     showCloseButton: true
                 });

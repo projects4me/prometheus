@@ -38,7 +38,7 @@
               <div class="col-xs-6 col-md-4">
                 <h4>{{t "views.app.issue.detail.priority"}}</h4>
                 <p>
-                  {{t (concat "views.app.issue.lists.priority." issue.priority)}}
+                  {{priority-icon priority=(readonly issue.priority)}} {{t (concat "views.app.issue.lists.priority." issue.priority)}}
                 </p>
               </div>
 

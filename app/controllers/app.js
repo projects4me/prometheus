@@ -115,6 +115,27 @@ export default Controller.extend({
             this.get('session').invalidate();
         },
 
+        /**
+         * This function navigates a user to the current user's profile page
+         *
+         * @method userProfile
+         * @public
+         */
+        userProfile() {
+            Logger.debug('+Prometheus.Controllers.App::userProfile');
+            let self = this;
+            let user_id = self.get('currentUser').user.id;
+
+            self.transitionToRoute('app.user.page',{user_id: user_id});
+            Logger.debug('-Prometheus.Controllers.App::userProfile');
+        },
+
+        /**
+         * This function is used to start a private chat with another user
+         *
+         * @method startChat
+         * @param Prometheus.Models.User user
+         */
         startChat(user){
             Logger.debug('Prometheus.Controllers.App::startChat');
             let _self = this;
@@ -144,6 +165,12 @@ export default Controller.extend({
             Logger.debug('-Prometheus.Controllers.App::startChat');
         },
 
+        /**
+         * This function is called when a new message arrives for a user
+         *
+         * @method newMessage
+         * @param message
+         */
         newMessage(message){
             Logger.debug('Prometheus.Controllers.App::newMessage');
             Logger.debug(message);

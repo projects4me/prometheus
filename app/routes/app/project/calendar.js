@@ -54,11 +54,11 @@ export default App.extend({
      */
     setupController:function(controller){
         Logger.debug('AppProjectCalendarRoute::setupController');
-
+        Logger.debug(this);
         let self = this;
         let params = this.paramsFor('app.project');
 
-        self.loadIssues(params.projectId);
+        self.loadIssues(params.project_id);
 
         let i18n = this.get('i18n');
 

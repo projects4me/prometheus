@@ -39,6 +39,18 @@ Router.map(function() {
                 this.route('edit',{path:'/edit/:issue_number'});
             });
         });
+        this.route('user',function(){
+            this.route('index',{path:'/'});
+            this.route('create',{path:'/create'});
+            this.route('page',{path:'/:user_id'});
+            this.route('edit',{path:'/edit/:user_id'});
+        });
+        this.route('admin',function(){
+            this.route('index',{path:'/'});
+            this.route('create',{path:'/create'});
+            this.route('page',{path:'/:user_id'});
+            this.route('edit',{path:'/edit/:user_id'});
+        });
     });
     this.route('signin', { path: '/signin' }, function() {});
 });

@@ -165,12 +165,12 @@
 
             <tbody>
               {{#each model as |issue|}}
-                <tr>
+                <tr class="issue">
                   <td class="select-box"><span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.select"}}">{{checkbox-field action=(action "select") type="checkbox" data-select=issue.id}}</span></td>
                   <td class="issue-number"><a href="#" {{action "openDetail" issue}}>{{issue.issueNumber}}</a></td>
                   <td class="issue-subject"><a href="#" {{action "openDetail" issue}}>{{issue.subject}}</a></td>
-                  <td class="issue-status">{{issue.status}}</td>
-                  <td class="issue-priority">{{issue.priority}}</td>
+                  <td class="issue-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></td>
+                  <td class="issue-priority">{{priority-icon priority=(readonly issue.priority)}} {{t (concat "views.app.issue.lists.priority." issue.priority)}}</td>
                   <td class="issue-milestone"><a href="#">{{issue.milestone.name}}</a></td>
                 </tr>
               {{/each}}

@@ -38,7 +38,7 @@ describe('Acceptance | create issue', function() {
         await selectChoose("div[data-field='issue.owner'] .ember-power-select-trigger", 'Hammad Hassan');
         await fillIn("div[data-field='issue.startDate'] input",'2015-13-19');
         await click('.create-issue button.btn.btn-primary');
-        
+
         expect(this.$('.issue-details .issueSubject').html().trim()).to.equal(name);
     });
 });

@@ -598,6 +598,7 @@ export default {
                 "priority" : "priority",
                 "status" : "Status",
                 "created" : "Issue <strong>{{issueNumber}} : {{name}}</strong> has been created successfully",
+                "updated" : "Issue <strong>{{issueNumber}} : {{name}}</strong> has been updated successfully",
                 "list" : {
                     "create" : "Create New",
                     "savedsearch" : {
@@ -738,6 +739,14 @@ export default {
                         "feedback" : "Feedback",
                     },
                 },
+            },
+
+            "user" : {
+              "page" : {
+                  "aboutme" : "About Me",
+                  "education" : "Education",
+                  "skills" : "Skills"
+              },
             },
 
             "chat" : {

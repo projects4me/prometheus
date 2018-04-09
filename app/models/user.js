@@ -135,6 +135,16 @@ export default DS.Model.extend({
     phone: DS.attr('string'),
 
     /**
+     * A user's education
+     *
+     * @property education
+     * @type String
+     * @for User
+     * @private
+     */
+    education: DS.attr('string'),
+
+    /**
      * The users's dashboard
      *
      * @property dashboard
@@ -142,5 +152,25 @@ export default DS.Model.extend({
      * @for User
      * @private
      */
-    dashboard: DS.belongsTo('dashboard')
+    dashboard: DS.belongsTo('dashboard'),
+
+    /**
+     * The skills for a user
+     *
+     * @property skills
+     * @type Relationship
+     * @for User
+     * @private
+     */
+    skills: DS.hasMany('tag'),
+
+    /**
+     * These are the tag relationship entries
+     *
+     * @property tagged
+     * @type Relationship
+     * @for User
+     * @private
+     */
+    tagged: DS.hasMany('tagged'),
 });
