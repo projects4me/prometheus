@@ -647,6 +647,7 @@ export default {
                     "parent" : "Parent",
                     "files" : "Files",
                     "selectfile" : "select a file to upload",
+                    "issueactivities" : "Issue Activities",
                     "file" : {
                         "delete" : "You are about to delete the file <strong>{{name}}</strong>, once deleted it <strong>cannot be recovered</strong>.",
                         "confirmdelete" : "<strong>Yes, delete the file!</strong>",
