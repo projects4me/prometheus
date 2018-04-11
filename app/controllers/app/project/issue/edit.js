@@ -192,12 +192,8 @@ export default Controller.extend({
             let model = this.get('model');
 
             model.set('projectId', this.target.currentState.routerJs.state.params["app.project"].project_id);
-            model.set('dateModified', moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
             model.set('modifiedUser', self.get('currentUser.user.id'));
             model.set('modifedUserName', self.get('currentUser.user.name'));
-
-            //model.startDate = moment(model.get('startDate'),'MMMM D, YYYY').format("YYYY-MM-DD");
-            //model.endDate= moment(model.get('endDate'),'MMMM D, YYYY').format("YYYY-MM-DD");
 
             Logger.debug(model);
             Logger.debug(self);

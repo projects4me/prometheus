@@ -191,8 +191,6 @@ export default Controller.extend({
             let model = this.get('model');
 
             model.set('projectId',this.target.currentState.routerJs.state.params["app.project"].project_id);
-            model.set('dateCreated', moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
-            model.set('dateModified', moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
             model.set('modifiedUser',self.get('currentUser.user.id'));
             model.set('reportedUser',self.get('currentUser.user.id'));
             model.set('createdUser',self.get('currentUser.user.id'));

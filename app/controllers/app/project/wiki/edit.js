@@ -299,8 +299,6 @@ export default Controller.extend({
 
             // Initialize the tag record
             var newTag = this.get('store').createRecord('tag',{
-                dateCreated:'CURRENT_DATETIME',
-                dateModified:'CURRENT_DATETIME',
                 deleted:0,
                 createdUser:'1',
                 modifiedUser:'1',

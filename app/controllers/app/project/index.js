@@ -222,8 +222,6 @@ export default Controller.extend({
                     roleId: _self.get('selectedRole'),
                     userId: _self.get('selectedUser'),
                     projectId: _self.get('model.id'),
-                    dateCreated: 'CURRENT_DATETIME',
-                    dateModified: 'CURRENT_DATETIME',
                     createdUser: _self.get('currentUser.user.id'),
                     modifiedUser: _self.get('currentUser.user.id'),
                     deleted: 0
@@ -340,8 +338,6 @@ export default Controller.extend({
                 && newMilestone.get('typeDate') !== null
                 && newMilestone.get('statusDate') !== null) {
 
-                newMilestone.set('dateCreated',moment().utc().format('YYYY-MM-DD HH:mm:ss'));
-                newMilestone.set('dateModified',moment().utc().format('YYYY-MM-DD HH:mm:ss'));
                 newMilestone.set('createdUser',_self.get('currentUser.user.id'));
                 newMilestone.set('modifiedUser',_self.get('currentUser.user.id'));
                 newMilestone.set('projectId',_self.get('model.id'));

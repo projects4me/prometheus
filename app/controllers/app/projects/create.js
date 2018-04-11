@@ -182,8 +182,6 @@ export default Controller.extend({
 
             let selectedIssuetypes = _self.get('selectedIssuetypes');
 
-            model.set('dateCreated',moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
-            model.set('dateModified',moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
             model.set('modifiedUser',_self.get('currentUser.user.id'));
             model.set('createdUser',_self.get('currentUser.user.id'));
             model.set('modifedUserName',_self.get('currentUser.user.name'));
@@ -204,8 +202,6 @@ export default Controller.extend({
                 _.forEach(selectedIssuetypes,function(issueType){
                     let newIssueType = _self.get('store').createRecord('issuetype',{
                         name: issueType.label,
-                        dateCreated: moment().utc().format("YYYY-MM-DD HH:mm:ss"),
-                        dateModified: moment().utc().format("YYYY-MM-DD HH:mm:ss"),
                         deleted: 0,
                         description: issueType.label,
                         createdUser: _self.get('currentUser.user.id'),

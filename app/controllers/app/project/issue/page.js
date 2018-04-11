@@ -163,8 +163,6 @@ export default Controller.extend({
             set(upload, 'fileSize',data.data.attributes.fileSize);
             set(upload, 'fileType',data.data.attributes.fileType);
             set(upload, 'fileMime',data.data.attributes.fileMime);
-            set(upload, 'dateCreated',data.data.attributes.dateCreated);
-            set(upload, 'dateModified',data.data.attributes.dateModified);
             set(upload, 'modifiedUser',data.data.attributes.modifiedUser);
             set(upload, 'createdUser',data.data.attributes.createdUser);
             set(upload, 'relatedTo',data.data.attributes.relatedTo);
@@ -365,8 +363,6 @@ export default Controller.extend({
 
             // Validate the time log and spentOn
             if (_self._validateLog(newLog)) {
-                newLog.set('dateCreated','CURRENT_DATETIME');
-                newLog.set('dateModified','CURRENT_DATETIME');
                 newLog.set('createdUser',_self.get('currentUser.user.id'));
                 newLog.set('modifiedUser',_self.get('currentUser.user.id'));
                 newLog.set('createdUserName',_self.get('currentUser.user.name'));

@@ -76,8 +76,6 @@ export default App.extend({
         //this.project = this.store.findRecord('project',params.projectId,{rels:'none'});
 
         this.data = this.store.createRecord('wiki',{
-            dateCreated:'CURRENT_DATETIME',
-            dateModified:'CURRENT_DATETIME',
             deleted:0,
             createdUser:self.get('currentUser.user.id'),
             modifiedUser:self.get('currentUser.user.id'),

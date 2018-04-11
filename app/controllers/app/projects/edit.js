@@ -192,7 +192,6 @@ export default Controller.extend({
             let _self = this;
             let model = _self.get('model');
 
-            model.dateModified = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
             model.modifiedUser = _self.get('currentUser.user.id');
             model.modifedUserName = _self.get('currentUser.user.name');
 

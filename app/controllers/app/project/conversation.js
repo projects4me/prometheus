@@ -118,8 +118,6 @@ export default Controller.extend(Evented,{
                 relatedId: relatedId,
                 relatedTo: 'conversationrooms',
                 comment: contents,
-                dateCreated: 'CURRENT_DATETIME',
-                dateModified: 'CURRENT_DATETIME',
                 createdUser: _self.get('currentUser.user.id'),
                 createdUserName: _self.get('currentUser.user.name'),
                 modifiedUser: _self.get('currentUser.user.id'),
@@ -165,8 +163,6 @@ export default Controller.extend(Evented,{
                 relatedId: relatedId,
                 relatedTo: 'conversationrooms',
                 comment: vote,
-                dateCreated: 'CURRENT_DATETIME',
-                dateModified: 'CURRENT_DATETIME',
                 createdUser: _self.get('currentUser.user.id'),
                 createdUserName: _self.get('currentUser.user.name'),
                 modifiedUser: _self.get('currentUser.user.id'),
@@ -202,8 +198,6 @@ export default Controller.extend(Evented,{
 
             let _self = this;
             let vote = this.get('store').createRecord('vote',{
-                dateCreated:'CURRENT_DATETIME',
-                dateModified:'CURRENT_DATETIME',
                 createdUser:_self.get('currentUser.user.id'),
                 modifiedUser:_self.get('currentUser.user.id'),
                 createdUserName: _self.get('currentUser.user.name'),
@@ -241,8 +235,6 @@ export default Controller.extend(Evented,{
             let _self = this;
 
             let newConversation = this.get('store').createRecord('conversationroom',{
-                dateCreated:'CURRENT_DATETIME',
-                dateModified:'CURRENT_DATETIME',
                 deleted:0,
                 createdUser:_self.get('currentUser.user.id'),
                 modifiedUser:_self.get('currentUser.user.id'),

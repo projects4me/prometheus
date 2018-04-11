@@ -118,8 +118,6 @@ export default Controller.extend({
             set(upload, 'fileSize',data.data.attributes.fileSize);
             set(upload, 'fileType',data.data.attributes.fileType);
             set(upload, 'fileMime',data.data.attributes.fileMime);
-            set(upload, 'dateCreated',data.data.attributes.dateCreated);
-            set(upload, 'dateModified',data.data.attributes.dateModified);
             set(upload, 'modifiedUser',data.data.attributes.modifiedUser);
             set(upload, 'createdUser',data.data.attributes.createdUser);
             set(upload, 'relatedTo',data.data.attributes.relatedTo);
@@ -199,10 +197,8 @@ export default Controller.extend({
         upvote:function(wikiId){
             Logger.debug("AppProjectWikiPageController:upvote("+wikiId+")");
 
-            var self = this;
-            var vote = this.get('store').createRecord('vote',{
-                dateCreated:'CURRENT_DATETIME',
-                dateModified:'CURRENT_DATETIME',
+            let self = this;
+            let vote = this.get('store').createRecord('vote',{
                 createdUser:1,
                 modifiedUser:1,
                 createdUserName: "Hammad Hassan",

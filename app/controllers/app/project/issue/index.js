@@ -376,7 +376,6 @@ export default Controller.extend({
 
             if (query !== null) {
                 let _savedSearch = _self.get('newSavedsearch');
-                _savedSearch.set('dateCreated','CURRENT_DATETIME');
                 _savedSearch.set('createdUser',_self.get('currentUser.user.id'));
                 _savedSearch.set('createdUserName',_self.get('currentUser.user.name'));
                 _savedSearch.set('relatedTo','issue');
@@ -421,7 +420,6 @@ export default Controller.extend({
             Logger.debug(search);
 
             let _savedSearch = _self.get('newSavedsearch');
-            _savedSearch.set('dateCreated','CURRENT_DATETIME');
             _savedSearch.set('createdUser',_self.get('currentUser.user.id'));
             _savedSearch.set('createdUserName',_self.get('currentUser.user.name'));
             _savedSearch.set('relatedTo','issue');
