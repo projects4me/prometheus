@@ -163,8 +163,6 @@ export default Controller.extend({
             set(upload, 'fileSize',data.data.attributes.fileSize);
             set(upload, 'fileType',data.data.attributes.fileType);
             set(upload, 'fileMime',data.data.attributes.fileMime);
-            set(upload, 'modifiedUser',data.data.attributes.modifiedUser);
-            set(upload, 'createdUser',data.data.attributes.createdUser);
             set(upload, 'relatedTo',data.data.attributes.relatedTo);
             set(upload, 'relatedId',data.data.attributes.relatedId);
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
@@ -363,10 +361,6 @@ export default Controller.extend({
 
             // Validate the time log and spentOn
             if (_self._validateLog(newLog)) {
-                newLog.set('createdUser',_self.get('currentUser.user.id'));
-                newLog.set('modifiedUser',_self.get('currentUser.user.id'));
-                newLog.set('createdUserName',_self.get('currentUser.user.name'));
-                newLog.set('modifiedUserName',_self.get('currentUser.user.name'));
                 newLog.set('deleted',0);
                 newLog.set('issueId',_self.get('model').objectAt(0).get('id'));
                 newLog.set('context','spent');
@@ -410,10 +404,6 @@ export default Controller.extend({
 
             // Validate the time log and spentOn
             if (_self._validateLog(log)) {
-                log.set('dateModified',moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
-                log.set('modifiedUser',_self.get('currentUser.user.id'));
-                log.set('modifiedUserName',_self.get('currentUser.user.name'));
-
                 log.save().then(function () {
 
                     new Messenger().post({

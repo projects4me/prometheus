@@ -182,10 +182,6 @@ export default Controller.extend({
 
             let selectedIssuetypes = _self.get('selectedIssuetypes');
 
-            model.set('modifiedUser',_self.get('currentUser.user.id'));
-            model.set('createdUser',_self.get('currentUser.user.id'));
-            model.set('modifedUserName',_self.get('currentUser.user.name'));
-            model.set('createdUserName',_self.get('currentUser.user.name'));
             model.set('shortCode',_self.get('shortCode'));
             model.set('deleted','0');
 
@@ -204,8 +200,6 @@ export default Controller.extend({
                         name: issueType.label,
                         deleted: 0,
                         description: issueType.label,
-                        createdUser: _self.get('currentUser.user.id'),
-                        modifiedUser: _self.get('currentUser.user.id'),
                         system: 0,
                         projectId: data.get('id')
                     });

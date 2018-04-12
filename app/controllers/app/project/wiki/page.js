@@ -118,8 +118,6 @@ export default Controller.extend({
             set(upload, 'fileSize',data.data.attributes.fileSize);
             set(upload, 'fileType',data.data.attributes.fileType);
             set(upload, 'fileMime',data.data.attributes.fileMime);
-            set(upload, 'modifiedUser',data.data.attributes.modifiedUser);
-            set(upload, 'createdUser',data.data.attributes.createdUser);
             set(upload, 'relatedTo',data.data.attributes.relatedTo);
             set(upload, 'relatedId',data.data.attributes.relatedId);
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
@@ -199,10 +197,6 @@ export default Controller.extend({
 
             let self = this;
             let vote = this.get('store').createRecord('vote',{
-                createdUser:1,
-                modifiedUser:1,
-                createdUserName: "Hammad Hassan",
-                modifiedUserName: "Hammad Hassan",
                 vote: 1,
                 relatedTo:'wiki',
                 relatedId:wikiId

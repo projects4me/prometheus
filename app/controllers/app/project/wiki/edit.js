@@ -300,11 +300,7 @@ export default Controller.extend({
             // Initialize the tag record
             var newTag = this.get('store').createRecord('tag',{
                 deleted:0,
-                createdUser:'1',
-                modifiedUser:'1',
                 tag:this.get('tagName'),
-                createdUserName: 'Hammad Hassan',
-                modifiedUserName: 'Hammad Hassan',
             });
 
             // Save it

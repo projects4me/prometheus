@@ -77,14 +77,10 @@ export default App.extend({
 
         this.data = this.store.createRecord('wiki',{
             deleted:0,
-            createdUser:self.get('currentUser.user.id'),
-            modifiedUser:self.get('currentUser.user.id'),
             status:'published',
             locked:0,
             upvotes:1,
             projectId:params.projectId,
-            createdUserName: self.get('currentUser.user.name'),
-            modifiedUserName: self.get('currentUser.user.name'),
         });
         Logger.debug(this.data);
 

@@ -192,8 +192,6 @@ export default Controller.extend({
             let model = this.get('model');
 
             model.set('projectId', this.target.currentState.routerJs.state.params["app.project"].project_id);
-            model.set('modifiedUser', self.get('currentUser.user.id'));
-            model.set('modifedUserName', self.get('currentUser.user.name'));
 
             Logger.debug(model);
             Logger.debug(self);

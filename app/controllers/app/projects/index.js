@@ -350,8 +350,6 @@ export default Controller.extend({
 
             if (query !== null) {
                 let _savedSearch = _self.get('newSavedsearch');
-                _savedSearch.set('createdUser',_self.get('currentUser.user.id'));
-                _savedSearch.set('createdUserName',_self.get('currentUser.user.name'));
                 _savedSearch.set('relatedTo','project');
                 _savedSearch.set('searchquery',query);
 
@@ -392,8 +390,6 @@ export default Controller.extend({
             let _self = this;
 
             let _savedSearch = _self.get('newSavedsearch');
-            _savedSearch.set('createdUser',_self.get('currentUser.user.id'));
-            _savedSearch.set('createdUserName',_self.get('currentUser.user.name'));
             _savedSearch.set('relatedTo','project');
             _savedSearch.set('searchquery',search.get('searchquery'));
             _savedSearch.set('name',search.get('name'));

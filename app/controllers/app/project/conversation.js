@@ -118,10 +118,6 @@ export default Controller.extend(Evented,{
                 relatedId: relatedId,
                 relatedTo: 'conversationrooms',
                 comment: contents,
-                createdUser: _self.get('currentUser.user.id'),
-                createdUserName: _self.get('currentUser.user.name'),
-                modifiedUser: _self.get('currentUser.user.id'),
-                modifiedUserName: _self.get('currentUser.user.name'),
                 deleted: 0
             });
 
@@ -163,10 +159,6 @@ export default Controller.extend(Evented,{
                 relatedId: relatedId,
                 relatedTo: 'conversationrooms',
                 comment: vote,
-                createdUser: _self.get('currentUser.user.id'),
-                createdUserName: _self.get('currentUser.user.name'),
-                modifiedUser: _self.get('currentUser.user.id'),
-                modifiedUserName: _self.get('currentUser.user.name'),
                 deleted: 0
             });
 
@@ -198,10 +190,6 @@ export default Controller.extend(Evented,{
 
             let _self = this;
             let vote = this.get('store').createRecord('vote',{
-                createdUser:_self.get('currentUser.user.id'),
-                modifiedUser:_self.get('currentUser.user.id'),
-                createdUserName: _self.get('currentUser.user.name'),
-                modifiedUserName: _self.get('currentUser.user.name'),
                 vote: 1,
                 relatedTo:'conversationrooms',
                 relatedId:conversationId
@@ -236,10 +224,6 @@ export default Controller.extend(Evented,{
 
             let newConversation = this.get('store').createRecord('conversationroom',{
                 deleted:0,
-                createdUser:_self.get('currentUser.user.id'),
-                modifiedUser:_self.get('currentUser.user.id'),
-                createdUserName: _self.get('currentUser.user.name'),
-                modifiedUserName: _self.get('currentUser.user.name'),
                 subject: _self.get('newSubject'),
                 description: _self.get('newTopic'),
                 roomType: _self.get('roomType').value,
