@@ -222,7 +222,6 @@ export default Controller.extend({
                     roleId: _self.get('selectedRole'),
                     userId: _self.get('selectedUser'),
                     projectId: _self.get('model.id'),
-                    deleted: 0
                 });
 
                 let role = _self.get('store').peekRecord('role',_selectedRole);
@@ -337,7 +336,6 @@ export default Controller.extend({
                 && newMilestone.get('statusDate') !== null) {
 
                 newMilestone.set('projectId',_self.get('model.id'));
-                newMilestone.set('deleted',0);
 
                 // Add milestone to the system
                 newMilestone.save().then(function (data) {

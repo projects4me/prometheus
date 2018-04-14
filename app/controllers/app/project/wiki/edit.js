@@ -293,13 +293,12 @@ export default Controller.extend({
             Logger.debug('AppProjectWikiEditController:addTag');
             Logger.debug(this.get('tagName'));
 
-            var self = this;
-            var selectedTags = this.get('selectedTags');
+            let self = this;
+            let selectedTags = this.get('selectedTags');
             Logger.debug(this.get('selectedTags'));
 
             // Initialize the tag record
-            var newTag = this.get('store').createRecord('tag',{
-                deleted:0,
+            let newTag = this.get('store').createRecord('tag',{
                 tag:this.get('tagName'),
             });
 
@@ -307,7 +306,7 @@ export default Controller.extend({
             newTag.save().then(function(tag){
 
                 // Then save the relationship
-                var tagged = self.get('store').createRecord('tagged',{
+                let tagged = self.get('store').createRecord('tagged',{
                     tagId : tag.get('id'),
                     relatedId : self.get('model').objectAt(0).get('id'),
                     relatedTo: "wiki"

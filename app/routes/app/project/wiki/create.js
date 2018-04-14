@@ -76,7 +76,6 @@ export default App.extend({
         //this.project = this.store.findRecord('project',params.projectId,{rels:'none'});
 
         this.data = this.store.createRecord('wiki',{
-            deleted:0,
             status:'published',
             locked:0,
             upvotes:1,

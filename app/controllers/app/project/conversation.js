@@ -118,7 +118,6 @@ export default Controller.extend(Evented,{
                 relatedId: relatedId,
                 relatedTo: 'conversationrooms',
                 comment: contents,
-                deleted: 0
             });
 
             comment.save().then(function (comment) {
@@ -159,7 +158,6 @@ export default Controller.extend(Evented,{
                 relatedId: relatedId,
                 relatedTo: 'conversationrooms',
                 comment: vote,
-                deleted: 0
             });
 
 
@@ -223,7 +221,6 @@ export default Controller.extend(Evented,{
             let _self = this;
 
             let newConversation = this.get('store').createRecord('conversationroom',{
-                deleted:0,
                 subject: _self.get('newSubject'),
                 description: _self.get('newTopic'),
                 roomType: _self.get('roomType').value,

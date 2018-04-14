@@ -361,7 +361,6 @@ export default Controller.extend({
 
             // Validate the time log and spentOn
             if (_self._validateLog(newLog)) {
-                newLog.set('deleted',0);
                 newLog.set('issueId',_self.get('model').objectAt(0).get('id'));
                 newLog.set('context','spent');
 
