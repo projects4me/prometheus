@@ -770,6 +770,7 @@ export default {
                     "completed" : "marked completed a",
                     "attached" : "added a",
                     "overdue" : "is overdue",
+                    "deleted" : "deleted a",
                 }
             },
 
