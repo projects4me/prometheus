@@ -15,31 +15,21 @@ import App from "../../../app";
  */
 export default App.extend({
 
-    /**
-     * The model for this route
-     *
-     * @method model
-     * @param {Object} params
-     * @return Prometheus.Issue
-     * @private
-     */
-    model:function(params){
-        Logger.debug('AppProjectIssuePageRoute::model()');
-        Logger.debug(params);
-
-        let options = {
-            query: '(Issue.issueNumber : '+params.issue_number+')',
-            sort : 'Issue.issueNumber',
-            order: 'ASC',
-            limit: -1,
-            //rels: 'none'
-        };
-        this.set('breadCrumb',{title:'#'+params.issue_number,record:true});
-        Logger.debug('Retreiving issue with options '+options);
-        let data = this.get('store').query('issue',options);
-        Logger.debug('-AppProjectIssuePageRoute::model()');
-        return data;
-    },
+    // /**
+    //  * The model for this route
+    //  *
+    //  * @method model
+    //  * @param {Object} params
+    //  * @return Prometheus.Issue
+    //  * @private
+    //  */
+    // model:function(params){
+    //     Logger.debug('AppProjectIssuePageRoute::model()');
+    //     Logger.debug(params);
+    //
+    //     Logger.debug('-AppProjectIssuePageRoute::model()');
+    //     return data;
+    // },
 
     /**
      * This function is called by the route when it has created the controller and
@@ -55,21 +45,31 @@ export default App.extend({
      * @param {Prometheus.Models.Issue} model The model that is created by this route
      * @private
      */
-    setupController:function(controller,model){
+    setupController:function(controller){
         Logger.debug('AppProjectIssuePageRoute::setupController');
 
-        let i18n = this.get('i18n');
+        let _self = this;
+        let i18n = _self.get('i18n');
         controller.set('i18n',i18n);
 
-        if (typeof model.get !== 'function'){
-            model = this.model(this.paramsFor('app.project.issue.page'));
-        }
-        this.setupActivities(controller,model);
+        let params = _self.paramsFor('app.project.issue.page');
 
-        let timelog = this.store.createRecord('timelog');
+        _self.set('breadCrumb',{title:'#'+params.issue_number,record:true});
+
+        let options = {
+            query: '(Issue.issueNumber : '+params.issue_number+')',
+            sort : 'Issue.issueNumber',
+            order: 'ASC',
+            limit: -1,
+        };
+        _self.get('store').query('issue',options).then(function(data){
+            controller.set('model', data);
+            _self.setupActivities(controller,data);
+        });
+
+        let timelog = _self.store.createRecord('timelog');
 
         controller.set('newTimeLog',timelog);
-        controller.set('model',model);
         Logger.debug('-AppProjectIssuePageRoute::setupController');
     },
 
@@ -82,14 +82,14 @@ export default App.extend({
      * @private
      */
     setupActivities:function(controller,model){
-        var activities = {};
+        let activities = {};
         Logger.debug('AppProjectIssuePageRoute::setupActivities');
 
         if (model.getEach('activities')[0] !== undefined)
         {
             // Group the activities with respect to the dateCreated
             model.getEach('activities')[0].forEach(function(activity){
-                var dateCreated = activity.get('dateCreated').substring(0,10);
+                let dateCreated = activity.get('dateCreated').substring(0,10);
                 if (activities[dateCreated] !== undefined)
                 {
                     activities[dateCreated]['data'].push(activity);
