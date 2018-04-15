@@ -140,7 +140,7 @@
                     <div class="issue-block">
                       <div class="priority">{{priority-icon priority=issue.priority}}</div>
                       <div class="data-block">
-                        <span class="subject">{{issue.issueNumber}} - {{issue.subject}}</span>
+                        <span class="subject"><a href="javascript:void(0);" {{action "navigateToIssuePage" issue.issueNumber}}>{{issue.issueNumber}}</a> - {{issue.subject}}</span>
                         <span class="description">{{translate-comment issue.description}}</span>
                         <strong>{{t "views.app.issue.status"}}:</strong> <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
                       </div>
@@ -152,7 +152,7 @@
             </div>
             {{!-- /.box-body --}}
             <div class="box-footer text-center" style="display: block;">
-              <a href="javascript:void(0)" class="uppercase">{{t "views.app.project.detail.viewallissues"}}</a>
+              <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "issue"}}>{{t "views.app.project.detail.viewallissues"}}</a>
             </div>
             {{!-- /.box-footer --}}
           </div>

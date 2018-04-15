@@ -166,6 +166,20 @@ export default Controller.extend({
         },
 
         /**
+         * This action is used to allow navigation to a user to a project related
+         * page
+         *
+         * @method navigateToProjectPage
+         * @param {String} entity This is the entity the user wants to navigate to
+         * @param {String} query The params passed in the format of encoded URL string
+         * @public
+         */
+        navigateToIssuePage(issueNumber){
+            Logger.debug("AppProjectIndexController::navigateToIssuePage("+issueNumber+")");
+            this.transitionToRoute('app.project.issue.page',{project_id:this.get('projectId'), issue_number:issueNumber});
+        },
+
+        /**
          * This action is used to navigate the user to the project's edit page
          *
          * @method editProject
