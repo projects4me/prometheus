@@ -624,6 +624,8 @@ export default {
                     "status" : "Status",
                     "priority" : "Priority",
                     "milestone" : "Milestone",
+                    "startDate" : "Start Date",
+                    "endDate" : "End Date",
                     "selectedCount" : "(Selected : {{count}}) "
                 },
                 "detail" : {

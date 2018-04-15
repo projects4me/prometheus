@@ -160,6 +160,8 @@
                 <th class="{{sortable-class "Issue.status" sort order}}" data-sort="Issue.statusSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.status'}}>{{t "views.app.issue.list.status"}}</a></th>
                 <th class="{{sortable-class "Issue.priority" sort order}}" data-sort="Issue.prioritySortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.priority'}}>{{t "views.app.issue.list.priority"}}</a></th>
                 <th class="{{sortable-class "milestone.name" sort order}}" data-sort="milestone.nameSortable"><a href="javascript:void(0);" {{action "sortData" 'milestone.name'}}>{{t "views.app.issue.list.milestone"}}</a></th>
+                <th class="{{sortable-class "Issue.startDate" sort order}}" data-sort="Issue.startDateSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.startDate'}}>{{t "views.app.issue.list.startDate"}}</a></th>
+                <th class="{{sortable-class "Issue.endDate" sort order}}" data-sort="Issue.endDateSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.endDate'}}>{{t "views.app.issue.list.endDate"}}</a></th>
               </tr>
             </thead>
 
@@ -172,6 +174,8 @@
                   <td class="issue-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></td>
                   <td class="issue-priority">{{priority-icon priority=(readonly issue.priority)}} {{t (concat "views.app.issue.lists.priority." issue.priority)}}</td>
                   <td class="issue-milestone"><a href="#">{{issue.milestone.name}}</a></td>
+                  <td class="issue-start">{{moment-format issue.startDate 'DD/MMM/YY'}}</td>
+                  <td class="issue-end">{{moment-format issue.endDate 'DD/MMM/YY'}}</td>
                 </tr>
               {{/each}}
             </tbody>
