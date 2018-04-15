@@ -648,6 +648,8 @@ export default {
                     "reportedBy" : "Reported User",
                     "parent" : "Parent",
                     "files" : "Files",
+                    "conversation" : "Conversation",
+                    "hierarchy" : "Issue Hierarchy",
                     "selectfile" : "select a file to upload",
                     "issueactivities" : "Issue Activities",
                     "file" : {

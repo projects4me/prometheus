@@ -84,10 +84,10 @@
         <div class="row">
 
           {{!-- This is the project conversations --}}
-          <div class="col-md-6">
-            <div class="box box-info  project-conversations-section">
+          <div class="col-md-12">
+            <div class="box box-info  issue-conversation-section">
               <div class="box-header with-border">
-                <h3 class="box-title">{{t "views.app.project.detail.conversations"}}</h3>
+                <h3 class="box-title">{{t "views.app.issue.detail.conversation"}}</h3>
 
                 <div class="box-tools pull-right">
                 </div>
@@ -95,7 +95,7 @@
               </div>
               {{!-- /.box-header --}}
               <div class="box-body no-padding" style="display: block;">
-                <ul class="project-conversations show-5">
+                <ul class="issue-conversation show-5">
                   {{#each issue.comments as |comment|}}
                     <li>
                       <div class="user-block">
@@ -116,77 +116,7 @@
           </div>
           {{!-- end of project conversations --}}
 
-          {{!-- These are the lastest 5 open issues in this project --}}
-          <div class="col-md-6">
-            <div class="box box-success open-issues-section">
-              <div class="box-header with-border">
-                <h3 class="box-title">{{t "views.app.project.detail.latestissues"}}</h3>
-
-                <div class="box-tools pull-right">
-
-                </div>
-
-              </div>
-              {{!-- /.box-header --}}
-              <div class="box-body no-padding" style="display: block;">
-                <ul class="open-issues show-5 clearfix">
-                  {{#each issue.childissues as |issue|}}
-                    <li>
-                      <div class="issue-block">
-                        <div class="priority">{{priority-icon priority=issue.priority}}</div>
-                        <div class="data-block">
-                          <span class="subject">{{issue.issueNumber}} - {{issue.subject}}</span>
-                          <span class="description">{{translate-comment issue.description}}</span>
-                          <strong>{{t "views.app.issue.status"}}:</strong> <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
-                        </div>
-                      </div>
-                    </li>
-                  {{/each}}
-                </ul>
-                {{!-- /.users-list --}}
-              </div>
-              {{!-- /.box-body --}}
-              <div class="box-footer text-center" style="display: block;">
-                <a href="javascript:void(0)" class="uppercase">{{t "views.app.project.detail.viewallissues"}}</a>
-              </div>
-              {{!-- /.box-footer --}}
-            </div>
-          </div>
-          {{!-- end of last 5 open projects --}}
-
         </div>
-
-
-        <div class="row">
-
-          {{!-- This is the project time estimated vs spent --}}
-          <div class="col-md-12">
-            <div class="box box-default project-estimated-spent-section">
-              <div class="box-header with-border">
-                <h3 class="box-title">{{t "views.app.project.detail.estimatedspent"}}</h3>
-
-              </div>
-              {{!-- /.box-header --}}
-              <div class="box-body no-padding" style="display: block;">
-                <ul class="project-estimated-spent">
-                  {{chart-estimatedspent
-                      issues=issuetime
-                      height="100"
-                  }}
-                </ul>
-                {{!-- /.users-list --}}
-              </div>
-              {{!-- /.box-body --}}
-              <div class="box-footer text-center" style="display: block;">
-                <a href="javascript:void(0)" class="uppercase">{{t "views.app.project.detail.viewallconversations"}}</a>
-              </div>
-              {{!-- /.box-footer --}}
-            </div>
-          </div>
-          {{!-- end of project time estimated vs spent --}}
-
-        </div>
-
 
         <div class="row">
 
@@ -420,49 +350,9 @@
         {{!-- This is the project summary --}}
         <div class="box box-info">
           <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.project.detail.summary"}}</h3>
+            <h3 class="box-title">{{t "views.app.issue.detail.hierarchy"}}</h3>
           </div>
           <div class="box-body no-padding" style="display: block;">
-
-            <div class="info-box">
-              <span class="info-box-icon bg-aqua"><i class="fa fa-users"></i></span>
-              <div class="info-box-content">
-                <span class="info-box-text">{{t "views.app.project.detail.teamsize"}}</span>
-                <span class="info-box-number">{{issue.members.length}}</span>
-              </div>
-            </div>
-
-            <div class="info-box">
-              <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
-              <div class="info-box-content">
-                <span class="info-box-text">{{t "views.app.project.detail.openissues"}}</span>
-                <span class="info-box-number">{{get-issuecount issuetime "open"}}</span>
-              </div>
-            </div>
-
-            <div class="info-box">
-              <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
-              <div class="info-box-content">
-                <span class="info-box-text">{{t "views.app.project.detail.closedissues"}}</span>
-                <span class="info-box-number">{{get-issuecount issuetime "closed"}}</span>
-              </div>
-            </div>
-
-            <div class="info-box">
-              <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer-outline"></i></span>
-              <div class="info-box-content">
-                <span class="info-box-text">{{t "views.app.project.detail.estimatedtime"}}</span>
-                <span class="info-box-number">{{get-timelog issuetime "estimated"}}</span>
-              </div>
-            </div>
-
-            <div class="info-box">
-              <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer"></i></span>
-              <div class="info-box-content">
-                <span class="info-box-text">{{t "views.app.project.detail.spenttime"}}</span>
-                <span class="info-box-number">{{get-timelog issuetime "spent"}}</span>
-              </div>
-            </div>
 
           </div>
         </div>
