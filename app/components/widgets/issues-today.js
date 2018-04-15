@@ -58,7 +58,7 @@ export default Widget.extend({
             dataSet.push([
                 '<a href="javascript:void(0);">'+issue.get('issueNumber')+'</a>',
                 '<a href="javascript:void(0);">'+issue.get('subject')+'</a>',
-                i18n.t("views.app.issue.lists.status."+issue.get('status')),
+                '<span class="badge '+issue.get('status')+'">'+i18n.t("views.app.issue.lists.status."+issue.get('status'))+'</span>',
                 moment(issue.get('startDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 moment(issue.get('endDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 issue.get('project.name'),
