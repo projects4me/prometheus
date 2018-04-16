@@ -534,7 +534,32 @@ export default Object.extend({
                         },
                         operators: ['equal']
                     },
-
+                    {
+                        id: 'Issue.startDate',
+                        label: "views.app.issue.filter.startDate",
+                        type: 'date',
+                        input: "text",
+                        operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between', 'not_between'],
+                        plugin: 'datepicker',
+                        plugin_config: {
+                            todayBtn: 'linked',
+                            todayHighlight: true,
+                            autoclose: true
+                        }
+                    },
+                    {
+                        id: 'Issue.endDate',
+                        label: "views.app.issue.filter.endDate",
+                        type: 'date',
+                        input: "text",
+                        operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between', 'not_between'],
+                        plugin: 'datepicker',
+                        plugin_config: {
+                            todayBtn: 'linked',
+                            todayHighlight: true,
+                            autoclose: true
+                        }
+                    },
                 ]
             }
         },

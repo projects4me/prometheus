@@ -86,6 +86,10 @@ export default {
      * @private
      */
     evalRule:function(rule){
+        if (rule.type == 'date'){
+            rule.value = moment(rule.value,'MM/DD/YYYY').format('YYYY-MM-DD');
+        }
+
         return '('+rule.field+' '+(this.queryOperators[rule.operator])+' '+rule.value+')';
     },
 
@@ -230,11 +234,11 @@ export default {
                 // If a group statement is found then resolve it by replacing individual parts
                 if (cur_statement.match(/ AND | OR /g)) {
                     // Get the current operator
-                    let conditon = cur_statement.match(/ AND | OR /);
-                    conditon = conditon[0].trim();
+                    let condition = cur_statement.match(/ AND | OR /);
+                    condition = condition[0].trim();
 
                     // populate the statement
-                    statements[statement].condition = conditon;
+                    statements[statement].condition = condition;
                     /* jshint loopfunc: true */
                     toReplace.forEach(function(element){
                         statements[statement].rules.push(statements[element]);

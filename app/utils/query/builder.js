@@ -83,7 +83,7 @@ export default {
      * @public
      */
     setRules:function(rules){
-        if (this.elemet === null)
+        if (this.element === null)
         {
             throw 'First initialize the utility';
         }
@@ -98,7 +98,7 @@ export default {
      * @public
      */
     clear:function(){
-        if (this.elemet === null)
+        if (this.element === null)
         {
             throw 'First initialize the utility';
         }
@@ -113,7 +113,7 @@ export default {
      * @public
      */
     getRules:function(){
-        if (this.elemet === null)
+        if (this.element === null)
         {
             throw 'First initialize the utility';
         }
