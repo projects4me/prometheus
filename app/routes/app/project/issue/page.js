@@ -56,21 +56,34 @@ export default App.extend({
 
         _self.set('breadCrumb',{title:'#'+params.issue_number,record:true});
 
+        _self.loadIssue(controller,params);
+
+        let timelog = _self.store.createRecord('timelog');
+
+        controller.set('newTimeLog',timelog);
+        Logger.debug('-AppProjectIssuePageRoute::setupController');
+    },
+
+    /**
+     * This function load the issue
+     *
+     * @param {Prometheus.Controllers.Issue} controller
+     * @param {Object} params
+     */
+    loadIssue(controller,params){
+        let _self = this;
+
         let options = {
             query: '(Issue.issueNumber : '+params.issue_number+')',
             sort : 'Issue.issueNumber',
             order: 'ASC',
             limit: -1,
         };
+
         _self.get('store').query('issue',options).then(function(data){
             controller.set('model', data);
             _self.setupActivities(controller,data);
         });
-
-        let timelog = _self.store.createRecord('timelog');
-
-        controller.set('newTimeLog',timelog);
-        Logger.debug('-AppProjectIssuePageRoute::setupController');
     },
 
     /**
@@ -83,6 +96,7 @@ export default App.extend({
      */
     setupActivities:function(controller,model){
         let activities = {};
+        controller.set('activities',activities);
         Logger.debug('AppProjectIssuePageRoute::setupActivities');
 
         if (model.getEach('activities')[0] !== undefined)
@@ -102,5 +116,18 @@ export default App.extend({
         }
         Logger.debug('-AppProjectIssuePageRoute::setupActivities');
     },
+
+    actions: {
+
+        reload(){
+            let _self = this;
+            Logger.debug('Reloading the route for issue page');
+            Logger.debug(_self);
+            let params = _self.paramsFor('app.project.issue.page');
+            let controller = _self.get('controller');
+
+            this.loadIssue(controller,params);
+        }
+    }
 
 });

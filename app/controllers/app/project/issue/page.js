@@ -357,8 +357,7 @@ export default Controller.extend({
                 newLog.set('context','spent');
 
                 newLog.save().then(function (data) {
-                    Logger.debug("New log");
-                    Logger.debug(data);
+
                     let timelog = _self.get('store').createRecord('timelog');
                     _self.set('newTimeLog',timelog);
                     _self.get('model').objectAt(0).get('spent').pushObject(newLog);
@@ -368,6 +367,9 @@ export default Controller.extend({
                         type: 'success',
                         showCloseButton: true
                     });
+
+                    _self.send('reload');
+
                 });
             } else {
                 new Messenger().post({
@@ -404,6 +406,8 @@ export default Controller.extend({
                         type: 'success',
                         showCloseButton: true
                     });
+                    _self.send('reload');
+
                 });
             } else {
                 new Messenger().post({

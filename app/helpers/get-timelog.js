@@ -16,16 +16,16 @@ import { helper } from '@ember/component/helper';
  * @private
  */
 export function getTimelog(params) {
-    var sum = 0;
+    let sum = 0;
 
     if (params[0] !== undefined)
     {
-        var issueCount = params[0].get('length');
-        for (var i=0;i<issueCount;i++){
-            var issue = params[0].objectAt(i);
+        let issueCount = params[0].get('length');
+        for (let i=0;i<issueCount;i++){
+            let issue = params[0].objectAt(i);
             if (issue !== undefined)
             {
-                var timelog = issue.get(params[1]);
+                let timelog = issue.get(params[1]);
                 if (timelog !== undefined)
                 {
                     sum += _.sum(timelog.getEach('days').map(Number)) * 24;
