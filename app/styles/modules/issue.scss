@@ -122,6 +122,12 @@
   }
 }
 
+.issue-activities{
+  padding-left: 1.5rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
 .time-log-in-box > .item {
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -151,7 +157,7 @@
   }
 }
 
-.projects{
+.issues{
   .nav-pills{
     >li>a{
       margin-right: 2rem;
