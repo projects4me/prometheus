@@ -204,6 +204,11 @@ export default {
                 let metaDataIndex = _.findIndex(metaData, function(o) { return o.id === field; });
                 /* jshint loopfunc: false */
 
+                /* If these statements grow then they must isolated in objects and functions */
+                if (metaData[metaDataIndex]['type'] == 'date') {
+                    value = moment(value,'YYYY-MM-DD').format('MM/DD/YYYY');
+                }
+
                 // create the statement objects
                 statements[statement] ={
                     id: field,
@@ -211,6 +216,7 @@ export default {
                     operator: operator,
                     value: value
                 };
+
 
                 if (metaData[metaDataIndex].input !== undefined){
                     statements[statement].input = metaData[metaDataIndex].input;
