@@ -156,4 +156,23 @@ export default DS.Model.extend({
      */
     "spentOn": DS.attr('string'),
 
+    /**
+     * The user who created this timelog
+     *
+     * @property createdBy
+     * @type UserModel
+     * @for Timelog
+     * @private
+     */
+    createdBy: DS.belongsTo('user'),
+
+    /**
+     * The user who last modified this timelog
+     *
+     * @property modifiedBy
+     * @type UserModel
+     * @for Timelog
+     * @private
+     */
+    modifiedBy: DS.belongsTo('user'),
 });

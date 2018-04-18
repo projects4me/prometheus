@@ -148,15 +148,7 @@ export default Controller.extend({
 
             let data = JSON.parse(response.body);
             /**
-             *
-             *
-             *
-             *
              *  @todo check for errors
-             *
-             *
-             *
-             *
              */
             set(upload, 'id',data.data.id);
             set(upload, 'name',data.data.attributes.name);
@@ -364,7 +356,9 @@ export default Controller.extend({
                 newLog.set('issueId',_self.get('model').objectAt(0).get('id'));
                 newLog.set('context','spent');
 
-                newLog.save().then(function () {
+                newLog.save().then(function (data) {
+                    Logger.debug("New log");
+                    Logger.debug(data);
                     let timelog = _self.get('store').createRecord('timelog');
                     _self.set('newTimeLog',timelog);
                     _self.get('model').objectAt(0).get('spent').pushObject(newLog);
