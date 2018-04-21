@@ -157,6 +157,7 @@
                 <th></th>
                 <th class="{{sortable-class "Issue.issueNumber" sort order}}" data-sort="Issue.issueNumberSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.issueNumber'}}>{{t "views.app.issue.list.sr"}}</a></th>
                 <th class="{{sortable-class "Issue.subject" sort order}}" data-sort="Issue.subjectSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.subject'}}>{{t "views.app.issue.list.subject"}}</a></th>
+                <th class="{{sortable-class "issuetype.name" sort order}}" data-sort="Issue.statusSortable"><a href="javascript:void(0);" {{action "sortData" 'issuetype.name'}}>{{t "views.app.issue.list.issuetype"}}</a></th>
                 <th class="{{sortable-class "Issue.status" sort order}}" data-sort="Issue.statusSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.status'}}>{{t "views.app.issue.list.status"}}</a></th>
                 <th class="{{sortable-class "Issue.priority" sort order}}" data-sort="Issue.prioritySortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.priority'}}>{{t "views.app.issue.list.priority"}}</a></th>
                 <th class="{{sortable-class "milestone.name" sort order}}" data-sort="milestone.nameSortable"><a href="javascript:void(0);" {{action "sortData" 'milestone.name'}}>{{t "views.app.issue.list.milestone"}}</a></th>
@@ -171,6 +172,7 @@
                   <td class="select-box"><span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.select"}}">{{checkbox-field action=(action "select") type="checkbox" data-select=issue.id}}</span></td>
                   <td class="issue-number"><a href="#" {{action "openDetail" issue}}>{{issue.issueNumber}}</a></td>
                   <td class="issue-subject"><a href="#" {{action "openDetail" issue}}>{{issue.subject}}</a></td>
+                  <td class="issue-type">{{issue.issuetype.name}}</td>
                   <td class="issue-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></td>
                   <td class="issue-priority">{{priority-icon priority=(readonly issue.priority)}} {{t (concat "views.app.issue.lists.priority." issue.priority)}}</td>
                   <td class="issue-milestone"><a href="#">{{issue.milestone.name}}</a></td>

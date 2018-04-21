@@ -622,6 +622,7 @@ export default {
                     "sr" : "#",
                     "subject" : "Subject",
                     "status" : "Status",
+                    "issuetype" : "Type",
                     "priority" : "Priority",
                     "milestone" : "Milestone",
                     "startDate" : "Start Date",
