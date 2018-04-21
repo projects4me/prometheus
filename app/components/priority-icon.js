@@ -44,6 +44,7 @@ export default Component.extend({
      */
     classNames: ['fa'],
 
+    classNameBindings: ['getClassNames'],
 
     /**
      * These are the class names to be associated with this component
@@ -81,6 +82,6 @@ export default Component.extend({
         }
 
         return className;
-    }).volatile()
+    })
 
 });
