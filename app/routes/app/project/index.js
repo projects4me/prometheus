@@ -70,8 +70,7 @@ export default App.extend({
             controller.set('model',data.objectAt(0));
         });
 
-        let newMilestone = _self.store.createRecord('milestone');
-        controller.set('newMilestone',newMilestone);
+        controller.send('resetNewMilestone');
     },
 
 

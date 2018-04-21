@@ -342,6 +342,8 @@ export default Controller.extend({
             let _self = this;
             let newMilestone = _self.get('newMilestone');
             Logger.debug(_self);
+            Logger.debug(newMilestone.get('id'));
+            let isUpdate = (newMilestone.get('id') != undefined);
 
             if (newMilestone.get('name') !== null
                 && newMilestone.get('startDate') !== null
@@ -353,10 +355,10 @@ export default Controller.extend({
 
                 // Add milestone to the system
                 newMilestone.save().then(function (data) {
+                    console.log(newMilestone.get('id'));
 
-                    if (newMilestone.get('id') === undefined) {
-                        _self.get('milestones').pushObject(newMilestone);
-
+                    if (!isUpdate) {
+                        _self.get('milestones').pushObject(data);
                     }
 
                     new Messenger().post({
@@ -420,8 +422,7 @@ export default Controller.extend({
         showMilestoneDialog()
         {
             let _self = this;
-            let newMilestone = _self.get('store').createRecord('milestone');
-            _self.set('newMilestone',newMilestone);
+            _self.send('resetNewMilestone');
             _self.set('milestoneDialog',true);
         },
 
@@ -435,10 +436,28 @@ export default Controller.extend({
             let _self = this;
 
             if (_self.get('newMilestone.id') !== undefined){
-                _self.get('milestones').findBy('id',_self.get('newMilestone.id')).rollbackAttributes();
+                _self.get('newMilestone').rollbackAttributes();
             }
 
+            _self.send('resetNewMilestone');
             _self.set('milestoneDialog',false);
+        },
+
+        /**
+         * This function is used to reset the newMilestone
+         *
+         * @method resetNewMilestone
+         * @public
+         */
+        resetNewMilestone:function(){
+            let _self = this;
+
+            let newMilestone = _self.get('store').createRecord('milestone',{
+                startDate: moment().format('YYYY-MM-DD'),
+                endDate: moment().format('YYYY-MM-DD'),
+            });
+
+            _self.set('newMilestone',newMilestone);
         }
 
 
