@@ -44,6 +44,27 @@ export default Controller.extend({
             projectId:'projectId'
         };
         return format.getSelectList(this.get('issues'),map);
-    })
+    }),
+
+    /**
+     * These are the actions supported by this controller
+     *
+     * @property actions
+     * @type Object
+     * @for Project
+     * @public
+     */
+    actions:{
+
+        /**
+         * This function navigates a user to the project page
+         *
+         * @method navigateToProject
+         * @public
+         */
+        navigateToProject(projectId){
+            this.transitionToRoute('app.project', {project_id:projectId});
+        }
+    }
 
 });
