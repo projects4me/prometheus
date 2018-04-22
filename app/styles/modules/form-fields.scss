@@ -44,7 +44,7 @@
   }
 
   /* active state */
-  .data-input:focus ~ .floating-label, .data-input:valid ~ .floating-label, .select-input ~ .floating-label, .multiselect-input ~ .floating-label{
+  .data-input:focus ~ .floating-label, .data-input:valid ~ .floating-label, .select-input ~ .floating-label, .multiselect-input ~ .floating-label, .focused-field{
     top:-2rem;
     font-size:1.4rem;
     color: $primaryColor;

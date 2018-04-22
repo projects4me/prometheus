@@ -24,11 +24,19 @@
                   mask="alphanumeric"
               }}
 
-              {{field-textarea
-                  placeholder="Enter the issue description .."
-                  label="Description"
-                  value=model.description
-              }}
+
+              <div data-field="issue.description" class="form-field ember-view">
+                {{summer-note
+                    usersList=usersList
+                    issuesList=issuesList
+                    contents=(readonly model.description)
+                    onContentChange=(action 'onContentChange')
+                }}
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="floating-label focused-field">{{t "views.app.issue.create.description"}}</label>
+                <span class="count pull-right"></span>
+              </div>
 
               {{field-relate
                   placeholder=(t "views.app.issue.create.type")

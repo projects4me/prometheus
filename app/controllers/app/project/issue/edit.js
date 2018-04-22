@@ -4,6 +4,8 @@
 
 import Controller from '@ember/controller';
 import { inject } from '@ember/service';
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
 
 /**
  * This is the controller for issue create page
@@ -47,6 +49,54 @@ export default Controller.extend({
      * @private
      */
     saveDisabled: null,
+
+    /**
+     * This is the controller of the project, we are injecting it in order to
+     * gain access to the data that is fetched by this controller
+     *
+     * @property projectController
+     * @type Prometheus.Controllers.App.Project
+     * @for Edit
+     * @public
+     */
+    projectController: injectController('app.project'),
+
+    /**
+     * This is a computed property in which gets the list of issues
+     * associated with a project loaded by the project controller
+     *
+     * @property issuesList
+     * @type Array
+     * @for Edit
+     * @private
+     */
+    issuesList: computed('projectController.issuesList', function(){
+        return this.get('projectController').get('issuesList');
+    }),
+
+    /**
+     * This is the controller for the app, we are injecting it in order to
+     * gain access to the data that is fetched by this controller
+     *
+     * @property appController
+     * @type Prometheus.Controllers.App.Project
+     * @for Edit
+     * @public
+     */
+    appController: injectController('app'),
+
+    /**
+     * This is a computed property in which gets the list of user
+     * associated in the system fetched by the app controller
+     *
+     * @property usersList
+     * @type Array
+     * @for Edit
+     * @private
+     */
+    usersList: computed('appController.usersList', function(){
+        return this.get('appController').get('usersList');
+    }),
 
     /**
      * These are the events that this controller handles
@@ -223,6 +273,22 @@ export default Controller.extend({
             // Logger.debug('Cancel Called');
             // Logger.debug(model);
             self.transitionToRoute('app.project.issue.page', {project_id:model.get('projectId'),issue_number:model.get('issueNumber')});
+        },
+
+        /**
+         * This is the action that is called by summernote
+         * A separate action is created as we are trying to follow
+         * the data down action up approach
+         *
+         * @method onContentChange
+         * @param contents
+         * @private
+         */
+        onContentChange:function (contents) {
+            Logger.debug('Prometheus.App.Project.Edit.onContentChange');
+            let self = this;
+            self.get('model').set('description',contents);
+            -Logger.debug('Prometheus.App.Project.Edit.onContentChange');
         },
     }
 });

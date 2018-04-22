@@ -76,22 +76,8 @@ export default App.extend({
 
         this.get('store').query('issue',options).then(function(data){
             let issue = data.objectAt(0);
-            let startDate = issue.get('startDate');
-            let endDate = issue.get('endDate');
-
-            Logger.debug(startDate);
-            Logger.debug(endDate);
-            // let startDate = moment(issue.get('startDate'),['YYYY-MM-DD','MMMM D, YYYY']).format('MMMM D, YYYY');
-            // let endDate = moment(issue.get('endDate'),['YYYY-MM-DD','MMMM D, YYYY']).format('MMMM D, YYYY');
-            // issue.set('startDate',startDate);
-            // issue.set('endDate',endDate);
-
-            // Logger.debug('================');
-            // Logger.debug(issue);
-            // Logger.debug(startDate);
-            // Logger.debug(endDate);
-
             controller.set('model',issue);
+            controller.set('model.description',issue.description);
             self.loadRelated(controller);
         });
 

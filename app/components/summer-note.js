@@ -211,13 +211,13 @@ export default Component.extend({
                             at: "@",
                             data: self.get('usersList'),
                             displayTpl: "<li>${label}</li>",
-                            insertTpl: "<a href='/app/users/${value}' class='${status}'>${atwho-at}${label}</a>"
+                            insertTpl: "<a href='/app/user/${value}' class='${status}'>${atwho-at}${label}</a>"
                         }).atwho({
                         at: "#",
                         data: self.get('issuesList'),
                         displayTpl: "<li>${number} - ${name}</li>",
                         searchKey: "number",
-                        insertTpl: "<a href='/app/${projectId}/issues/${id}' class='${status}'>${atwho-at}${number} - ${name}</a>"
+                        insertTpl: "<a href='/app/${projectId}/issues/${number}' class='${status}'>${atwho-at}${number} - ${name}</a>"
                     }).atwho({
                         at: ':',
                         displayTpl: "<li><i class='twa twa-${id}'></i> ${name} </li>",
