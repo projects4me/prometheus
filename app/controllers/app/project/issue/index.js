@@ -259,6 +259,7 @@ export default Controller.extend({
                 let query = queryParser.getQueryString(result);
                 this.queryString = query;
                 this.set('query', query);
+                this.set('page',1);
             }
         },
 
@@ -502,6 +503,8 @@ export default Controller.extend({
             Logger.debug(search);
 
             this.set('query',search.get('searchquery'));
+            this.set('page',1);
+
             Logger.debug('-Prometheus.Controllers.Project.Issue.Index::applySearch');
         },
 
