@@ -98,6 +98,7 @@ export default {
             "close" : "Close",
             "delete" : "Delete",
             "search" : "Search",
+            "clear" : "Clear",
             "more" : "More",
             "image" : "Image",
             "createnew": "Create New",

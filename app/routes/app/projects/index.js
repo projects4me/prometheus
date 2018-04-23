@@ -133,7 +133,9 @@ export default App.extend({
         if(params.order){
             this.set('order',params.order);
         }
-        if(params.query){
+        if(params.query === ''){
+            this.set('query',null);
+        } else if(params.query){
             query = params.query;
             this.set('query',params.query);
         }

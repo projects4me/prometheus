@@ -322,15 +322,19 @@ span[data-atwho-at-query*="#"]{
   }
 }
 
-.search{
+.search {
   display: inline-flex;
   width: 100%;
 
-  .has-feedback{
+  .has-feedback {
     width: 100%;
   }
-  .btn-primary{
+
+  .btn-primary {
     width: 8rem;
+  }
+
+  .btn {
     margin-left: 0.5rem;
     height: 3rem;
     margin-top: -0.1rem;
@@ -340,6 +344,7 @@ span[data-atwho-at-query*="#"]{
     height: 3rem;
     border-radius: 0.2rem 0rem 0rem 0.2rem;
     padding-top: 4px;
+    margin-top: 0px;
   }
 
   .dropToggle{

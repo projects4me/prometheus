@@ -100,8 +100,8 @@
                   placeholder=(concat (t "global.form.search") " " (t "global.module.plural.project") " ..")}}
               <span class="glyphicon glyphicon-search form-control-feedback"></span>
             </div>
-
             <button type="button" class="btn btn-primary" {{action "searchByRules"}}>{{t "global.form.search"}}</button>
+            <button type="button" class="btn" {{action "clearSearch"}}>{{t "global.form.clear"}}</button>
           </div>
           <div class="list-view-filters collapse">
             {{query-builder module="Project" query=query}}

@@ -264,6 +264,19 @@ export default Controller.extend({
         },
 
         /**
+         * Clear the search
+         *
+         * @method clearSearch
+         * @return void
+         * @public
+         */
+        clearSearch(){
+            queryBuilder.clear();
+            this.set('query', '');
+            this.set('page',1);
+        },
+
+        /**
          * Open the filter view if not already Open
          *
          * @method openFilters

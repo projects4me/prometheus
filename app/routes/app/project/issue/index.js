@@ -144,7 +144,9 @@ export default App.extend({
         if(params.order){
             this.set('order',params.order);
         }
-        if(params.query){
+        if(params.query === ''){
+            this.set('query',null);
+        } else if(params.query){
             query = params.query;
             this.set('query',params.query);
         }
@@ -163,7 +165,7 @@ export default App.extend({
         else{
             query = '(('+query+') AND (Issue.projectId : '+projectId+'))';
         }
-
+        Logger.debug(query);
         // Prepare the options
         let options = {
             query: query,
@@ -235,6 +237,7 @@ export default App.extend({
         controller.set('savedsearches',this.get('savedsearches'));
         controller.set('publicsearches',this.get('publicsearches'));
         controller.set('model',model);
+        console.log(this.get('query'));
         controller.set('query',this.get('query'));
         controller.set('sort',this.get('sort'));
         controller.set('order',this.get('order'));
