@@ -3,6 +3,8 @@
  */
 
 import App from "../../../app";
+import { hash } from 'rsvp';
+import _ from "lodash";
 
 /**
  * The issues edit route
@@ -16,30 +18,49 @@ import App from "../../../app";
 export default App.extend({
 
     /**
-     * The model for this route
+     * We are using dynamic segments and since model is not called
+     * again for a route that is using dynamic segment we are relying
+     * on the afterModel hook so that the controller waits since we
+     * return a Promise.
      *
      * @method model
      * @param {Object} params
      * @return Prometheus.Issue
      * @private
      */
-    // model:function(params){
-    //     Logger.debug('AppProjectIssueEditRoute::model()');
-    //     Logger.debug(params);
-    //
-    //     let options = {
-    //         query: '(Issue.issueNumber : '+params.issueNumber+')',
-    //         sort : 'Issue.issueNumber',
-    //         order: 'ASC',
-    //         limit: -1,
-    //         //rels: 'none'
-    //     };
-    //     this.set('breadCrumb',{title:'#'+params.issueNumber,record:true});
-    //     Logger.debug('Retrieving issue with options '+options);
-    //     let data = this.get('store').query('issue',options);
-    //     Logger.debug('-AppProjectIssueEditRoute::model()');
-    //     return data;
-    // },
+    afterModel(model, transition){
+        Logger.debug('Prometheus.Routes.App.Project.Issue.Edit::afterModel()');
+        let _self = this;
+        let params = transition.params;
+
+        let projectId = params['app.project'].project_id;
+        let issueNumber = model.issue_number;
+
+        let projectOptions = {
+            query: "(Project.id : "+projectId+")",
+            rels : 'members,milestones,issuetypes',
+            sort: "members.name",
+            limit: -1
+        };
+
+        let issueOptions = {
+            query: '(Issue.issueNumber : '+issueNumber+')',
+            sort : 'Issue.issueNumber',
+            order: 'ASC',
+            limit: -1,
+            //rels: 'none'
+        };
+
+        Logger.debug('-Prometheus.Routes.App.Project.Issue.Edit::afterModel()');
+        return hash({
+            issue: _self.get('store').query('issue',issueOptions),
+            project: _self.store.query('project',projectOptions)
+        }).then(function(results){
+            _self.set('issue',results.issue.objectAt(0));
+            _self.set('project',results.project.objectAt(0));
+            _self.set('types',results.project.objectAt(0).get('issuetypes'));
+        });
+    },
 
     /**
      * This function is called by the route when it has created the controller and
@@ -58,142 +79,66 @@ export default App.extend({
     setupController:function(controller){
         Logger.debug('AppProjectIssueEditRoute::setupController');
 
-        let self = this;
+        let _self = this;
 
         let params = this.paramsFor('app.project.issue.edit');
 
-        let options = {
-            query: '(Issue.issueNumber : '+params.issue_number+')',
-            sort : 'Issue.issueNumber',
-            order: 'ASC',
-            limit: -1,
-            //rels: 'none'
-        };
-
         this.set('breadCrumb',{title:'#'+params.issue_number,record:true});
 
-        Logger.debug('Retrieving issue with options '+options);
+        controller.set('model',_self.get('issue'));
+        controller.set('project',_self.get('project'));
+        controller.set('types',_self.get('types'));
 
-        this.get('store').query('issue',options).then(function(data){
-            let issue = data.objectAt(0);
-            controller.set('model',issue);
-            controller.set('model.description',issue.description);
-            self.loadRelated(controller);
-        });
+        let priority = [
+            {
+                "label":"Medium",
+                "value":"medium"
+            },
+            {
+                "label":"High",
+                "value":"high"
+            },
+            {
+                "label":"Low",
+                "value":"low"
+            },
+            {
+                "label":"Critical",
+                "value":"critical"
+            },
+            {
+                "label":"Bloker",
+                "value":"blocker"
+            }
+        ];
+
+        let status = [
+            {
+                "label":"New",
+                "value":"new"
+            },
+            {
+                "label":"In Progress",
+                "value":"in_progress"
+            },
+            {
+                "label":"Pending",
+                "value":"pending"
+            },
+            {
+                "label":"Done",
+                "value":"done"
+            },
+            {
+                "label":"Wont't Fix",
+                "value":"wont_fix"
+            }
+        ];
+
+        controller.set('status',status);
+        controller.set('priority',priority);
 
         Logger.debug('-AppProjectIssueEditRoute::setupController');
     },
 
-    /**
-     * This function is used to load the project related data e.g. project issue
-     * types, etc.
-     *
-     * @method loadRelated
-     * @param {Prometheus.Controllers.Issue} controller The controller object for the issue edit page
-     * @private
-     */
-    loadRelated:function(controller){
-
-        let i18n = this.get('i18n');
-
-        let projectId = this.paramsFor('app.project').project_id;
-
-        let options = {
-            query: "(Project.id : "+projectId+")",
-            rels : 'members,milestones,issuetypes',
-            sort: "members.name",
-            limit: -1
-        };
-
-        this.store.query('project',options).then(function(data){
-
-            let memberCount = data.objectAt(0).get('members.length');
-            let memberList = [];
-            let temp = null;
-            memberList[0] = {label:i18n.t("global.blank"), value:null};
-            for (let i=1;i<=memberCount;i++)
-            {
-                temp = data.objectAt(0).get('members').objectAt(i-1);
-                memberList[i] = {label:temp.get('name'), value:temp.get('id')};
-            }
-
-            let milestoneCount = data.objectAt(0).get('milestones.length');
-            let milestoneList = [];
-            temp = null;
-            milestoneList[0] = {label:i18n.t("global.blank"), value:null};
-            for (let i=1;i<=milestoneCount;i++)
-            {
-                temp = data.objectAt(0).get('milestones').objectAt(i-1);
-                milestoneList[i] = {label:temp.get('name'), value:temp.get('id')};
-            }
-
-            let typeCount = data.objectAt(0).get('issuetypes.length');
-            let typeList = [];
-            temp = null;
-            for (let i=0;i<typeCount;i++)
-            {
-                temp = data.objectAt(0).get('issuetypes').objectAt(i);
-                typeList[i] = {label:temp.get('name'), value:temp.get('id')};
-            }
-
-            let priority = [
-                {
-                    "label":"Medium",
-                    "value":"medium"
-                },
-                {
-                    "label":"High",
-                    "value":"high"
-                },
-                {
-                    "label":"Low",
-                    "value":"low"
-                },
-                {
-                    "label":"Critical",
-                    "value":"critical"
-                },
-                {
-                    "label":"Bloker",
-                    "value":"blocker"
-                }
-            ];
-
-            let status = [
-                {
-                    "label":"New",
-                    "value":"new"
-                },
-                {
-                    "label":"In Progress",
-                    "value":"in_progress"
-                },
-                {
-                    "label":"Pending",
-                    "value":"pending"
-                },
-                {
-                    "label":"Done",
-                    "value":"done"
-                },
-                {
-                    "label":"Wont't Fix",
-                    "value":"wont_fix"
-                }
-            ];
-
-
-            Logger.debug('Data to be given');
-            Logger.debug(memberList);
-            Logger.debug(milestoneList);
-            Logger.debug(typeList);
-            controller.set('memberList',memberList);
-            controller.set('milestoneList',milestoneList);
-            controller.set('type',typeList);
-            controller.set('status',status);
-            controller.set('priority',priority);
-
-        });
-
-    },
 });

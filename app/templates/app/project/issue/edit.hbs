@@ -42,8 +42,8 @@
                   placeholder=(t "views.app.issue.create.type")
                   label=(t "views.app.issue.create.type")
                   value=model.typeId
-                  options=type
-                  selected=(find-by "value" model.typeId type)
+                  options=typeList
+                  selected=(find-by "value" model.typeId typeList)
                   searchField="label"
                   onchange=(action "selectType")
                   relateType="relate-simple"

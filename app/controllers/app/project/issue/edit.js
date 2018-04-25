@@ -6,6 +6,7 @@ import Controller from '@ember/controller';
 import { inject } from '@ember/service';
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
+import format from "../../../../utils/data/format";
 
 /**
  * This is the controller for issue create page
@@ -84,6 +85,22 @@ export default Controller.extend({
      * @public
      */
     appController: injectController('app'),
+
+    memberList: computed('project', function(){
+        return format.getSelectList(this.get('project.members'));
+    }),
+
+    milestoneList: computed('project', function(){
+        Logger.debug('------------------------');
+        Logger.debug('-------------------------');
+        Logger.debug('--------------------------');
+        Logger.debug('---------------------------');
+        return format.getSelectList(this.get('project.milestones'));
+    }),
+
+    typeList: computed('types', function(){
+        return format.getSelectList(this.get('types'));
+    }),
 
     /**
      * This is a computed property in which gets the list of user
