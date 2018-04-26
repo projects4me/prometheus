@@ -85,36 +85,54 @@
 
           {{!-- This is the project conversations --}}
           <div class="col-md-12">
-            <div class="box box-info  issue-conversation-section">
+            <div class="box box-info conversations issue-conversation-section">
               <div class="box-header with-border">
                 <h3 class="box-title">{{t "views.app.issue.detail.conversation"}}</h3>
-
                 <div class="box-tools pull-right">
                 </div>
-
               </div>
               {{!-- /.box-header --}}
-              <div class="box-body no-padding" style="display: block;">
-                <ul class="issue-conversation show-5">
-                  {{#each issue.comments as |comment|}}
-                    <li>
-                      <div class="user-block">
-                        <img class="img-circle" src="http://projects4me/userimage/get/{{comment.createdBy}}" alt="{{t "global.form.image"}}">
-                        <span class="description">{{translate-comment comment.comment}}</span>
+              <div class="box-body no-padding" class="box-footer box-comments" style="display: block;">
+
+                {{#each issue.comments as |comment|}}
+                  <div class="box-comment">
+                    <img class="img-circle img-sm" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
+
+                    <div class="comment-text">
+                          <span class="username">
+                            <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
+                            <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
+                          </span>{{!-- /.username --}}
+                      {{translate-comment comment.comment}}
+                    </div>
+                  </div>
+                {{/each}}
+
+                <div class="box-footer box-comments">
+                  <form action="#" method="post">
+                    <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="{{currentUser.user.name}}">
+                    {{!-- .img-push is used to add margin to elements next to floating images --}}
+                    <div class="img-push">
+                      <div class="message-box">
+                        {{message-box
+                            issuesList=issuesList
+                            usersList=usersList
+                            spellcheck=false
+                            entity=issue
+                            placeholder=(t "views.app.conversation.messagebox")
+                            value=comment
+                        }}
+                        <div class="pull-right">
+                          <button type="button" class="btn btn-primary" {{action "saveComment" issue comment}}>{{t "views.app.conversation.post"}}</button>
+                        </div>
                       </div>
-                    </li>
-                  {{/each}}
-                </ul>
-                {{!-- /.users-list --}}
+                    </div>
+
+                  </form>
+                </div>
               </div>
-              {{!-- /.box-body --}}
-              <div class="box-footer text-center" style="display: block;">
-                <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "conversation"}}>{{t "views.app.project.detail.viewallconversations"}}</a>
-              </div>
-              {{!-- /.box-footer --}}
             </div>
           </div>
-          {{!-- end of project conversations --}}
 
         </div>
 

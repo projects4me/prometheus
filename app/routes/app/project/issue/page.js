@@ -75,7 +75,7 @@ export default App.extend({
 
         let options = {
             query: '(Issue.issueNumber : '+params.issue_number+')',
-            sort : 'Issue.issueNumber',
+            sort : 'Issue.issueNumber,comments.dateCreated',
             order: 'ASC',
             limit: -1,
         };

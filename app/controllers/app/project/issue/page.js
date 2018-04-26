@@ -11,6 +11,7 @@ import { get } from '@ember/object';
 import { set } from '@ember/object';
 import $ from 'jquery';
 import { computed } from '@ember/object';
+import Evented from '@ember/object/evented';
 
 /**
  * This controller is used to manage the issues detail/page view
@@ -21,7 +22,7 @@ import { computed } from '@ember/object';
  * @extends Ember.Controller
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Controller.extend({
+export default Controller.extend(Evented,{
 
     /**
      * The ESA session storage service
@@ -108,6 +109,7 @@ export default Controller.extend({
      */
     projectController: injectController('app.project'),
 
+
     /**
      * This is a computed property in which gets the list of users
      * in the system loaded by the project controller
@@ -121,6 +123,28 @@ export default Controller.extend({
         return this.get('projectController').get('usersList');
     }),
 
+    /**
+     * This is a computed property in which gets the list of issues
+     * associated with a project loaded by the project controller
+     *
+     * @property issuesList
+     * @type Array
+     * @for Page
+     * @private
+     */
+    issuesList: computed('projectController.issuesList', function(){
+        return this.get('projectController').get('issuesList');
+    }),
+
+    /**
+     * The comments from the comment box
+     *
+     * @property comment
+     * @type Array
+     * @for Page
+     * @public
+     */
+    comment:null,
     /**
      * This is a task to handle file uploading
      *
@@ -163,6 +187,31 @@ export default Controller.extend({
             //upload.rollback();
         }
     }).maxConcurrency(3).enqueue(),
+
+    /**
+     * This function saves the comment in the database
+     *
+     * @param issue
+     * @param comment
+     * @private
+     */
+    _createComment(issue, content) {
+        Logger.debug('Prometheus.Controllers.App.Project.Issue.Page::_createComment');
+
+        let _self = this;
+        let comment = _self.get('store').createRecord('comment', {
+            relatedId: issue.get('conversationRoomId'),
+            relatedTo: 'conversationrooms',
+            comment: content,
+        });
+
+        comment.save().then(function (savedComment) {
+            issue.get('comments').pushObject(savedComment);
+            _self.trigger('clearContents');
+        });
+
+        Logger.debug('-Prometheus.Controllers.App.Project.Issue.Page::_createComment');
+    },
 
     /**
      * This function is used to validate the time log
@@ -421,6 +470,37 @@ export default Controller.extend({
             _self.send('removeEditLogModal');
 
             Logger.debug('-App.Project.Issue.PageController->logTime');
+        },
+
+        saveComment:function (issue, comment) {
+            Logger.debug('Prometheus.Controller.App.Project.Issue.Page::saveComment');
+
+            let _self = this;
+            Logger.debug(issue);
+            Logger.debug(comment);
+            if (issue.get('conversationRoomId') == undefined)
+            {
+                let newConversation = _self.get('store').createRecord('conversationroom',{
+                    subject: 'Issue #' + issue.get('issueNumber'),
+                    description: issue.get('subject'),
+                    roomType: 'discussion',
+                    projectId: issue.get('projectId'),
+                    projectName: issue.get('project.name'),
+                    issueId: issue.get('id')
+                });
+                Logger.debug(newConversation);
+                // Save it
+                newConversation.save().then(function(conversation){
+                    issue.set('conversationRoomId',conversation.get('id'))
+                    _self._createComment(issue, comment);
+                    _self.set('comment',null);
+                });
+            } else {
+                _self._createComment(issue, comment);
+                _self.set('comment',null);
+            }
+
+            Logger.debug('-Prometheus.Controller.App.Project.Issue.Page::saveComment');
         },
 
         /**

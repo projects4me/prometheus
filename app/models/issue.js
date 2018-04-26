@@ -175,6 +175,16 @@ export default DS.Model.extend({
     projectId: DS.attr('string'),
 
     /**
+     * The identifier of the conversation room for this issue
+     *
+     * @property conversationRoomId
+     * @type String
+     * @for Issue
+     * @private
+     */
+    conversationRoomId: DS.attr('string'),
+
+    /**
      * The identifier of the milestone this issue is set for
      *
      * @property milestoneId

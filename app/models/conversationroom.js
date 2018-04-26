@@ -125,6 +125,16 @@ export default DS.Model.extend({
     projectId: DS.attr('string'),
 
     /**
+     * The identifier of the issue that this room belongs to
+     *
+     * @property issueId
+     * @type String
+     * @for Conversationroom
+     * @private
+     */
+    issueId: DS.attr('string'),
+
+    /**
      * The user who created the room
      *
      * @property createdBy
