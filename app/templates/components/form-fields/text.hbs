@@ -1,7 +1,11 @@
 {{!-- This should be loaded later via the field view ideally --}}
-{{text-field required="required" value=value maxlength=length}}
+{{text-field value=value maxlength=length focus-out=focus-out}}
 <span class="highlight"></span>
 <span class="bar"></span>
 <label class="floating-label">{{label}}</label>
 <span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
-<span class="error hidden text-red">{{t "global.form.fields.required"}}</span>
+{{#if v-focus}}
+  <span class="error text-red">
+    {{v-get v-model v-field v-output}}
+  </span>
+{{/if}}

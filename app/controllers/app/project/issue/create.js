@@ -6,6 +6,7 @@ import Controller from '@ember/controller';
 import { inject } from '@ember/service';
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
+import _ from 'lodash';
 
 /**
  * This is the controller for issue create page
@@ -38,17 +39,6 @@ export default Controller.extend({
      * @public
      */
     i18n: inject(),
-
-    /**
-     * This property is used to control the enabling and disabling of the save
-     * button, the save is only enabled if the current model has been modified
-     *
-     * @property saveDisabled
-     * @type String
-     * @for Create
-     * @private
-     */
-    saveDisabled: null,
 
     /**
      * This is the controller of the project, we are injecting it in order to
@@ -118,7 +108,7 @@ export default Controller.extend({
         selectAssignee:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectAssignee');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('assignee',target.value);
             Logger.debug('App.Project.Issue.Create:selectAssignee');
         },
@@ -133,7 +123,7 @@ export default Controller.extend({
         selectOwner:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectOwner');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('owner',target.value);
             Logger.debug('App.Project.Issue.Create:selectOwner');
         },
@@ -148,7 +138,7 @@ export default Controller.extend({
         selectMilestone:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectMilestone');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('milestoneId',target.value);
             Logger.debug('App.Project.Issue.Create:selectMilestone');
         },
@@ -163,7 +153,7 @@ export default Controller.extend({
         selectStatus:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectStatus');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('status',target.value);
             Logger.debug('App.Project.Issue.Create:selectStatus');
         },
@@ -178,7 +168,7 @@ export default Controller.extend({
         selectPriority:function(target)
         {
             Logger.debug('App.Project.Issue.Create:selectPriority');
-            var model = this.get('model');
+            let model = this.get('model');
             model.set('priority',target.value);
             Logger.debug('App.Project.Issue.Create:selectPriority');
         },
@@ -237,26 +227,39 @@ export default Controller.extend({
          * @todo Trigger the notificaiton
          */
         save:function() {
-            let self = this;
+            let _self = this;
             let model = this.get('model');
 
-            model.set('projectId',this.target.currentState.routerJs.state.params["app.project"].project_id);
-            model.set('reportedUser',self.get('currentUser.user.id'));
+            model.validate()
+                .then(({ validations }) => {
 
-            model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
-            model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
+                    if (validations.get('isValid')) {
 
-            model.save().then(function(data){
+                        model.set('projectId',this.target.currentState.routerJs.state.params["app.project"].project_id);
+                        model.set('reportedUser',_self.get('currentUser.user.id'));
 
+                        model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
+                        model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
 
-                new Messenger().post({
-                    message: self.get('i18n').t('views.app.issue.created',{name:data.get('subject'),issue_number:data.get('issueNumber')}),
-                    type: 'success',
-                    showCloseButton: true
+                        model.save().then(function(data){
+                            new Messenger().post({
+                                message: _self.get('i18n').t('views.app.issue.created',{name:data.get('subject'),issue_number:data.get('issueNumber')}),
+                                type: 'success',
+                                showCloseButton: true
+                            });
+
+                            _self.transitionToRoute('app.project.issue.page', {project_id:data.get('projectId'),issue_number:data.get('issueNumber')});
+                        });
+                    } else {
+                        let messages = _self._buildMessages(validations);
+
+                        new Messenger().post({
+                            message: messages,
+                            type: 'error',
+                            showCloseButton: true
+                        });
+                    }
                 });
-
-                self.transitionToRoute('app.project.issue.page', {project_id:data.get('projectId'),issue_number:data.get('issueNumber')});
-            });
         },
 
         /**
@@ -288,5 +291,22 @@ export default Controller.extend({
 
             Logger.debug('Prometheus.App.Project.Create.onContentChange');
         }
+    },
+
+    /**
+     * This function builds human readable error messages.
+     *
+     * @param validations
+     * @private
+     */
+    _buildMessages(validations){
+        let i18n = this.get('i18n');
+        let messages = [];
+
+        _.each(validations.errors,function(error){
+            messages.push(i18n.t('views.app.issue.create.'+error.attribute)+' : '+error.message);
+        });
+
+        return _.join(messages,'<br\>');
     }
 });
