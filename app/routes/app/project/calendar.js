@@ -54,17 +54,17 @@ export default App.extend({
      */
     setupController:function(controller){
         Logger.debug('AppProjectCalendarRoute::setupController');
+        Logger.debug(this);
+        let self = this;
+        let params = this.paramsFor('app.project');
 
-        var self = this;
-        var params = this.paramsFor('app.project');
+        self.loadIssues(params.project_id);
 
-        self.loadIssues(params.projectId);
-
-        var i18n = this.get('i18n');
+        let i18n = this.get('i18n');
 
         // Set the values in the controller
         controller.set('i18n',i18n);
-        controller.set('projectId',params.projectId);
+        controller.set('projectId',params.project_id);
         controller.set('module',this.module);
     },
 
@@ -97,7 +97,7 @@ export default App.extend({
             var issue = null;
             for (var i=0; i<issuesCount;i++)
             {
-                issue = data.nextObject(i);
+                issue = data.objectAt(i);
                 issuesList[i] = {
                     id:issue.get('id'),
                     title:'#'+issue.get('issueNumber')+' - '+issue.get('subject'),

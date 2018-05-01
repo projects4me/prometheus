@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import _ from "lodash";
+import Component from '@ember/component';
+import { inject } from '@ember/service';
 
 /**
  * This component is used to render the issue ratio chart in the application
@@ -13,7 +14,7 @@ import _ from "lodash";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -23,7 +24,7 @@ export default Ember.Component.extend({
      * @for ChartIssueratio
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * These are the classes the must be registered with the component
@@ -62,7 +63,7 @@ export default Ember.Component.extend({
      * @method init
      * @private
      */
-    init:function(){
+    init(){
         this._super(...arguments);
     },
 
@@ -73,10 +74,10 @@ export default Ember.Component.extend({
      * @method didRender
      * @private
      */
-    didRender:function(){
-        var self = this;
-        var issues = this.get('issues');
-        var chartel = self.get('estimatedspent');
+    didRender(){
+        let self = this;
+        let issues = this.get('issues');
+        let chartel = self.get('estimatedspent');
         if (chartel !== undefined) {
             chartel.destroy();
         }
@@ -98,19 +99,19 @@ export default Ember.Component.extend({
      * @param {Object} issues
      * @return {{labels: Array, datasets: [*,*]}}
      */
-    getDatasets:function(issues){
+    getDatasets(issues){
         //var self = this;
-        var data = {
+        let data = {
             labels:[],
             datasets:[{
-                label: this.get('i18n').t("view.app.project.detail.charts.estimatedspent"),
+                label: this.get('i18n').t("views.app.project.detail.charts.estimatedspent"),
                 data:[],
                 backgroundColor: [],
                 type: 'bar',
                 borderWidth: 0
             },
                 {
-                    label: this.get('i18n').t("view.app.project.detail.charts.efficiency"),
+                    label: this.get('i18n').t("views.app.project.detail.charts.efficiency"),
                     type: "line",
                     data:[],
                     backgroundColor: "rgba(220,220,220,0)",
@@ -118,16 +119,16 @@ export default Ember.Component.extend({
                 }
             ]};
 
-        var issuesCount = issues.get('length');
-        var estimated = null;
-        var spent = null;
-        var estimatedHours = 0;
-        var spentHours = 0;
-        var issue = null;
+        let issuesCount = issues.get('length');
+        let estimated = null;
+        let spent = null;
+        let estimatedHours = 0;
+        let spentHours = 0;
+        let issue = null;
 
-        for (var i=0; i<issuesCount;i++)
+        for (let i=0; i<issuesCount;i++)
         {
-            issue = issues.nextObject(i);
+            issue = issues.objectAt(i);
             estimated = issue.get('estimated');
             spent = issue.get('spent');
             estimatedHours = 0;
@@ -172,7 +173,7 @@ export default Ember.Component.extend({
      * @method willDestroyElement
      * @private
      */
-    willDestroyElement:function(){
+    willDestroyElement(){
         Logger.debug('ChartEstimatedspentComponent::willDestroyElement()');
         if (this.get('estimatedspent') !== undefined) {
             this.get('estimatedspent').destroy();
@@ -185,7 +186,7 @@ export default Ember.Component.extend({
      * @method
      * @private
      */
-    willClearRender:function(){
+    willClearRender(){
         Logger.debug('ChartEstimatedspentComponent::willDestroyElement()');
         if (this.get('estimatedspent') !== undefined) {
             this.get('estimatedspent').destroy();

@@ -2,8 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import Validator from  "../utils/validator/fields";
+import Component from '@ember/component';
+import { computed } from '@ember/object';
+import $ from 'jquery';
 
 /**
  * This class allows us to render different fields according to the field type
@@ -14,7 +16,7 @@ import Validator from  "../utils/validator/fields";
  * @extends Ember.Componet
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * Normally you just specify a string value in the layoutName but in order
@@ -26,16 +28,16 @@ export default Ember.Component.extend({
      * @type function
      * @private
      */
-    layoutName: function() {
-        var type = this.get('definition').type;
-        var view = this.get('view');
+    layoutName: computed('view', 'definition', 'model', function() {
+        let type = this.get('definition').type;
+        let view = this.get('view');
 
-        var template = 'components/field/'+type+'/'+view;
+        let template = 'components/field/'+type+'/'+view;
         if (Prometheus.__container__.lookup('template:'+template) === undefined) {
             template = 'components/field/text/'+view;
         }
         return template;
-    }.property('view','definition','model').volatile(),
+    }).volatile(),
 
     /**
      * Add the calss fieldSize to every feild element in order to allow easy
@@ -57,9 +59,9 @@ export default Ember.Component.extend({
      * @type function
      * @public
      */
-    fieldSize: function() {
+    fieldSize: computed('definition', function() {
         return this.get('definition').size;
-    }.property('definition').volatile(),
+    }).volatile(),
 
     /**
      * Perform some actions after the render is complete
@@ -68,13 +70,13 @@ export default Ember.Component.extend({
      * @public
      * @todo perhaps delegate the did render per type
      */
-    didRender: function() {
-        var definition = this.get('definition');
+    didRender() {
+        let definition = this.get('definition');
 
         // Apply input mask
         if (definition.mask !== undefined && definition.mask !== '' && definition.tagName !== undefined && definition.tagName !== '') {
 
-            var options = {
+            let options = {
                 /*          onInvalid: function(val, e, f, invalid, options){
                  //element.blinkError();
                  //var error = invalid[0];
@@ -86,7 +88,7 @@ export default Ember.Component.extend({
                 options.translation = definition.maskTranslation;
             }
 
-            Ember.$('#'+this.elementId+' '+definition.tagName).mask(definition.mask,options);
+            $('#'+this.elementId+' '+definition.tagName).mask(definition.mask,options);
         }
 
         /*
@@ -95,10 +97,10 @@ export default Ember.Component.extend({
          */
 
         if (definition.type === 'enum' || definition.type === 'multienum') {
-            Ember.$('#'+this.elementId+' select').selectpicker();
+            $('#'+this.elementId+' select').selectpicker();
         }
         else if (definition.type === 'date') {
-            Ember.$('#'+this.elementId+' input').daterangepicker({
+            $('#'+this.elementId+' input').daterangepicker({
                 singleDatePicker: true,
                 showDropdowns: true,
                 locale: {
@@ -107,7 +109,7 @@ export default Ember.Component.extend({
             });
         }
         else if (definition.type === 'datetime') {
-            Ember.$('#'+this.elementId+' input').daterangepicker({
+            $('#'+this.elementId+' input').daterangepicker({
                 singleDatePicker: true,
                 timePicker: true,
                 showDropdowns: true,
@@ -117,7 +119,7 @@ export default Ember.Component.extend({
             });
         }
         else if (definition.type === 'email') {
-            Ember.$('#'+this.elementId+' input').mask("A", {
+            $('#'+this.elementId+' input').mask("A", {
                 translation: {
                     "A": { pattern: /[\w@\-.+]/, recursive: true }
                 }
@@ -135,16 +137,16 @@ export default Ember.Component.extend({
      * @todo get the display time from the application configuration
      */
     blinkError: function(){
-        console.log('blink called');
+        Logger.debug('blink called');
         // Add class to hightlight the border of the field
-        Ember.$('#'+this.elementId+' [name='+(this.get('definition').fieldName+']')).addClass('highlight-error');
+        $('#'+this.elementId+' [name='+(this.get('definition').fieldName+']')).addClass('highlight-error');
 
         // Remove the hidden class from the error message in order to display the error message
-        Ember.$('#'+this.elementId+' .field-error').removeClass('hidden');
+        $('#'+this.elementId+' .field-error').removeClass('hidden');
 
         // Remove the class from the element in to revert it to normal after 0.5 seconds
         setTimeout(function(_element) {
-            Ember.$('#'+_element.elementId+' [name='+(_element.get('definition').fieldName)+']').removeClass('highlight-error');
+            $('#'+_element.elementId+' [name='+(_element.get('definition').fieldName)+']').removeClass('highlight-error');
         }, 500,this);
 
         /*
@@ -152,7 +154,7 @@ export default Ember.Component.extend({
          */
         // Add the hidden class in the error message tag to hide it from display after 1.5 seconds
         setTimeout(function(_element) {
-            Ember.$('#'+_element.elementId+' .field-error').addClass('hidden');
+            $('#'+_element.elementId+' .field-error').addClass('hidden');
         }, 1500,this);
     },
 
@@ -177,10 +179,10 @@ export default Ember.Component.extend({
          * @todo implement field masking in order to support better user experience
          */
         changed:function(value){
-            console.log('Value changed to '+value);
-            var result = true;
-            var validationFailure = false;
-            var filter = this.get('definition.filter');
+            Logger.debug('Value changed to '+value);
+            let result = true;
+            let validationFailure = false;
+            let filter = this.get('definition.filter');
             // If the valu entered is not empty then validate the data type
             if (value !== null && value !== '') {
                 if (filter !== null && filter !== '' && filter !== undefined)
@@ -204,7 +206,7 @@ export default Ember.Component.extend({
                 }
             } // check if the field is required if so then display error
             else {
-                var required = this.get('definition.required');
+                let required = this.get('definition.required');
                 if (required === true){
                     validationFailure = true;
                 }

@@ -3,9 +3,9 @@
  */
 
 import App from "../app";
-import Ember from "ember";
 import MD from "../../utils/metadata/metadata";
-
+import { hash } from 'rsvp';
+import _ from 'lodash';
 /**
  * The dashboard
  *
@@ -72,7 +72,7 @@ export default App.extend({
         Logger.debug(widgets);
         Logger.debug('-Prometheus.Routes.Index::afterModel');
 
-        return Ember.RSVP.hash(Promises).then(function(results){
+        return hash(Promises).then(function(results){
             Logger.info(results);
             _.forEach(widgets,function(widget){
                 _self.set(widget,results[widget]);

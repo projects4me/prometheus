@@ -98,7 +98,10 @@ export default {
             "close" : "Close",
             "delete" : "Delete",
             "search" : "Search",
+            "clear" : "Clear",
             "more" : "More",
+            "image" : "Image",
+            "createnew": "Create New",
             "savesearch" : "Save This Search",
             "toggledd" : "Toggle Dropdown",
             "edit" : "Edit",
@@ -111,11 +114,16 @@ export default {
                 "drop" : "Drop to upload",
                 "invalid" : "Invalid file, cannot upload",
                 "uploading" : "Uploading {{length}} files. ({{progress}}%)",
-                "drag" : "Drag and drop a file or "
+                "drag" : "Drag and drop a file or ",
+                "dash" : "-"
+            },
+            "fields" :{
+                "required" : "This field cannot be empty",
             }
         },
         "list": {
             "selectAll": "Select All",
+            "selected": "Selected :",
             "deleteAll": "Deleted Selected",
             "exportAll": "Export Selected",
             "updateAll": "Updated Selected",
@@ -129,7 +137,8 @@ export default {
             "prevPage": "Previous Page",
             "firstPage": "First Page",
             "last": "Last Page",
-            "searchbox" : "Toggle search box"
+            "searchbox" : "Toggle search box",
+            "selectedCount" : "(Selected : {{count}}) "
         },
         "noentry": "No entry found..",
         "blank": "<span class='disabled-text'>-- blank --</em>",
@@ -287,7 +296,7 @@ export default {
     /*
      These labels are related to the views in the system
      */
-    "view":{
+    "views":{
 
         /*
          The labels for the signin view
@@ -301,6 +310,7 @@ export default {
             "remember": "Remember Me",
             "or": "- OR -",
             "forgot": "I forgot my password",
+            "title" : "<b>Projects</b>4<b>Me</b>"
         },
 
         /*
@@ -494,11 +504,23 @@ export default {
                         "onsecondthought": "Hmm, I will just keep it.",
                         "deleted": "The search <strong>{{name}}</strong> has been deleted",
                         "query": "Query : "
-                    }
+                    },
+                    "name" : "Name",
+                    "type" : "Type",
+                    "owner" : "Owner",
+                    "description" : "Description",
+                    "status" : "Status",
+                    "date" : "Date"
                 }
             },
 
             "conversation" : {
+                "fields" : {
+                    "subject" : "Subject",
+                    "description" : "Topic",
+                    "roomType" : "Type",
+                    "projectId" : "Project"
+                },
                 "label" : "Conversations",
                 "create" : "Start a new conversation ..",
                 "start" : "Start a new conversation",
@@ -574,12 +596,35 @@ export default {
                     "removed" : "Tag by the name <strong>{{name}}</strong> was removed",
                     "associated" : "Tag by the name <strong>{{name}}</strong> was associated",
                 },
+                "edit": {
+                    "name" : "Name"
+                }
             },
 
             "issue" : {
                 "priority" : "priority",
                 "status" : "Status",
                 "created" : "Issue <strong>{{issueNumber}} : {{name}}</strong> has been created successfully",
+                "updated" : "Issue <strong>{{issueNumber}} : {{name}}</strong> has been updated successfully",
+                "fields" : {
+                    "issueNumber" : "Issue Number",
+                    "subject" : "Subject",
+                    "description" : "Description",
+                    "status" : "Status",
+                    "typeId" : "Type",
+                    "priority" : "Priority",
+                    "milestone" : "Milestone",
+                    "owner" : "Owner",
+                    "createdBy" : "Created By",
+                    "modifiedBy" : "Modified By",
+                    "endDate" : "End Date",
+                    "startDate" : "Start Date",
+                    "dateCreated" : "Date Created",
+                    "dateModified" : "Date Modified",
+                    "assignee" : "Assignee",
+                    "reportedBy" : "Reported User",
+                    "parent" : "Parent"
+                },
                 "list" : {
                     "create" : "Create New",
                     "savedsearch" : {
@@ -599,7 +644,16 @@ export default {
                         "onsecondthought" : "Hmm, I will just keep it.",
                         "deleted" : "The search <strong>{{name}}</strong> has been deleted",
                         "query" : "Query : "
-                    }
+                    },
+                    "sr" : "#",
+                    "subject" : "Subject",
+                    "status" : "Status",
+                    "issuetype" : "Type",
+                    "priority" : "Priority",
+                    "milestone" : "Milestone",
+                    "startDate" : "Start Date",
+                    "endDate" : "End Date",
+                    "selectedCount" : "(Selected : {{count}}) "
                 },
                 "detail" : {
                     "issueNumber" : "Issue Number",
@@ -621,7 +675,10 @@ export default {
                     "reportedBy" : "Reported User",
                     "parent" : "Parent",
                     "files" : "Files",
+                    "conversation" : "Conversation",
+                    "hierarchy" : "Issue Hierarchy",
                     "selectfile" : "select a file to upload",
+                    "issueactivities" : "Issue Activities",
                     "file" : {
                         "delete" : "You are about to delete the file <strong>{{name}}</strong>, once deleted it <strong>cannot be recovered</strong>.",
                         "confirmdelete" : "<strong>Yes, delete the file!</strong>",
@@ -650,18 +707,22 @@ export default {
                 },
                 "edit" : {
                     "page" : "Edit Issue : <strong>#{{issueNumber}} - {{name}}</strong>",
-                    "files" : "Files"
+                    "files" : "Files",
+                    "people" : "People"
                 },
                 "create" : {
+                    "title" : "Create Issue",
                     "issueNumber" : "Issue Number",
                     "subject" : "Subject",
                     "description" : "Description",
                     "status" : "Status",
                     "type" : "Type",
+                    "typeId" : "Type",
                     "priority" : "Priority",
                     "milestone" : "Milestone",
                     "selectmilestone" : "Select a milestone",
                     "ownedBy" : "Owner",
+                    "owner" : "Owner",
                     "selectowner" : "Select the owner",
                     "createdBy" : "Created By",
                     "duration" : "Duration",
@@ -671,9 +732,14 @@ export default {
                     "dateCreated" : "Date Created",
                     "dateModified" : "Date Modified",
                     "assignedTo" : "Assignee",
+                    "assignee" : "Assignee",
                     "selectassignee" : "Select an assignee",
                     "reportedBy" : "Reported User",
                     "parent" : "Parent",
+                    "people" : "People",
+                    "cancelcicked" : "You are about to cancel, all progress will be discarded. Are you sure?",
+                    "confirmcancel" : "Yes",
+                    "onsecondthought" : "Take me back"
                 },
                 "filter" : {
                     "issueNumber" : "Issue Number",
@@ -713,12 +779,21 @@ export default {
                 },
             },
 
+            "user" : {
+              "page" : {
+                  "aboutme" : "About Me",
+                  "education" : "Education",
+                  "skills" : "Skills"
+              },
+            },
+
             "chat" : {
                 "messagebox" : "Type a message ..",
                 "send" : "Send",
             },
 
             "activity" : {
+                "performedActivity" : " performed an activity",
                 "created" : "created the",
                 "closed" : "closed the",
                 "updated" : "updated the",
@@ -728,6 +803,16 @@ export default {
                     "completed" : "marked completed a",
                     "attached" : "added a",
                     "overdue" : "is overdue",
+                    "deleted" : "deleted a",
+                }
+            },
+
+            "widgets" : {
+                "issuesToday" : {
+                    "title" : "Issues Today",
+                },
+                "weeklyMilestones" : {
+                    "title" : "Weekly Milestones",
                 }
             },
 
@@ -735,7 +820,7 @@ export default {
                 "lists" : {
                     "status." : "Loading ..",
                     "status" : {
-                        "completed" : "Completed",
+                        "complete" : "Complete",
                         "closed" : "Closed",
                         "in_progress" : "In Progress",
                         "planned" : "Planned",
@@ -763,8 +848,52 @@ export default {
                     "days" : "Days",
                     "hours" : "Hours",
                     "minutes" : "Minutes"
+                },
+                "modal" : {
+                    "times" : "&times;",
+                },
+                "chatBox" : {
+                    "newMessages" : "{{count}} New Messages",
+                    "three" : "3"
+                },
+                "navBar" : {
+                    "admin" : "Admin",
+                    "information" : "Information",
+                    "warning" : "Warning",
+                    "important" : "Important"
                 }
-            }
+            },
+            /**
+             * Most of these are going to be obsolete
+             * @todo after control bar fixing we need to remove the redundant entries
+             */
+            "application" : {
+                "controlBar" : {
+                    "onlineUser" : "Online Users",
+                    "tasksProgress" : "Tasks Progress",
+                    "customTemplate" : "Custom Template Design",
+                    "seventy" : "70%",
+                    "statsTab" : "Stats Tab Content",
+                    "generalSettings" : "General Settings",
+                    "reportPanel" : "Report panel usage",
+                    "settingsInfo" : "Some information about this general settings option",
+
+                },
+                "header" : {
+                    "title" : "<b>Projects</b>4<b>Me</b>",
+                    "supportTeam" : "Support Team",
+                    "fiveMins" : " 5 mins",
+                    "buyTheme" : "Why not buy a new awesome theme?",
+                    "thirteen" : "13",
+                    "fiveMembers" : "5 new members joined today",
+                    "ten" : "10",
+                    "designButtons" : "Design some buttons",
+                    "twenty" : "20",
+                    "twentyComplete" : "20% Complete",
+                    "four" : "4",
+
+                }
+            },
 
         },
 

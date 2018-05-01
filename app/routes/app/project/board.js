@@ -3,6 +3,8 @@
  */
 
 import App from '../../app';
+import { hash } from 'rsvp';
+import _ from 'lodash';
 
 /**
  * This is the route to load the task board for a project
@@ -21,13 +23,13 @@ export default App.extend({
         let _self = this;
 
         // get the project identifier
-        let projectId = _self.paramsFor('app.project').projectId;
+        let projectId = _self.paramsFor('app.project').project_id;
         // depending on whether the page was refreshed or a route
         // transition was invoked the params might not have been
         // initiated
         if (projectId === undefined && _self.context !== undefined) {
-            if (_self.context.projectId !== undefined) {
-                projectId = _self.context.projectId;
+            if (_self.context.project_id !== undefined) {
+                projectId = _self.context.project_id;
             }
         }
 
@@ -40,7 +42,7 @@ export default App.extend({
 
         Logger.debug('-Prometheus.Routes.Project.Board->afterModel');
         // Fetch all the milestones
-        return Ember.RSVP.hash({
+        return hash({
             milestones : _self.store.query('milestone',_milestoneOptions)
         }).then(function(results){
             // For each milestone that is still open fetch the issues
@@ -67,7 +69,7 @@ export default App.extend({
 
             Promises['backlog'] = _self.store.query('issue',_backlogOptions);
 
-            return Ember.RSVP.hash(Promises).then(function(issues) {
+            return hash(Promises).then(function(issues) {
                 Logger.debug('Fetched the issues');
 
                 _.forEach(issues,function (milestoneIssues,idx) {
@@ -101,7 +103,7 @@ export default App.extend({
 
         let i18n = _self.get('i18n');
         controller.set('i18n',i18n);
-        controller.set('projectId',params.projectId);
+        controller.set('projectId',params.project_id);
 
         controller.set('milestones',_self.get('milestones'));
         controller.set('backlog',_self.get('backlog'));

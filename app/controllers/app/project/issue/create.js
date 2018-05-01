@@ -2,7 +2,11 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import Prometheus from "prometheus/controllers/prometheus";
+import { inject } from '@ember/service';
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
+import _ from "lodash";
 
 /**
  * This is the controller for issue create page
@@ -10,42 +14,58 @@ import Ember from 'ember';
  * @class Create
  * @namespace Prometheus.Controllers
  * @module App.Project.Issue
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
-
+export default Prometheus.extend({
 
     /**
-     * The current user service
+     * This is the controller of the project, we are injecting it in order to
+     * gain access to the data that is fetched by this controller
      *
-     * @property currentUser
-     * @type Ember.Service
+     * @property projectController
+     * @type Prometheus.Controllers.App.Project
      * @for Create
      * @public
      */
-    currentUser: Ember.inject.service(),
+    projectController: injectController('app.project'),
 
     /**
-     * The i18n library service that is used in order to get the translations
+     * This is a computed property in which gets the list of issues
+     * associated with a project loaded by the project controller
      *
-     * @property i18n
-     * @type Ember.Service
-     * @for Create
-     * @public
-     */
-    i18n: Ember.inject.service(),
-
-    /**
-     * This property is used to control the enabling and disabling of the save
-     * button, the save is only enabled if the current model has been modified
-     *
-     * @property saveDisabled
-     * @type String
+     * @property issuesList
+     * @type Array
      * @for Create
      * @private
      */
-    saveDisabled: null,
+    issuesList: computed('projectController.issuesList', function(){
+        return this.get('projectController').get('issuesList');
+    }),
+
+    /**
+     * This is the controller for the app, we are injecting it in order to
+     * gain access to the data that is fetched by this controller
+     *
+     * @property appController
+     * @type Prometheus.Controllers.App.Project
+     * @for Create
+     * @public
+     */
+    appController: injectController('app'),
+
+    /**
+     * This is a computed property in which gets the list of user
+     * associated in the system fetched by the app controller
+     *
+     * @property usersList
+     * @type Array
+     * @for Create
+     * @private
+     */
+    usersList: computed('appController.usersList', function(){
+        return this.get('appController').get('usersList');
+    }),
 
     /**
      * These are the events that this controller handles
@@ -58,96 +78,6 @@ export default Ember.Controller.extend({
     actions:{
 
         /**
-         * This function is called when an assignee is being selected
-         *
-         * @method selectAssignee
-         * @param {Object} target
-         * @public
-         */
-        selectAssignee:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectAssignee');
-            var model = this.get('model');
-            model.set('assignee',target.value);
-            Logger.debug('App.Project.Issue.Create:selectAssignee');
-        },
-
-        /**
-         * This function is called when an owner is being selected
-         *
-         * @method selectOwner
-         * @param {Object} target
-         * @public
-         */
-        selectOwner:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectOwner');
-            var model = this.get('model');
-            model.set('owner',target.value);
-            Logger.debug('App.Project.Issue.Create:selectOwner');
-        },
-
-        /**
-         * This function is called when an milestone is being selected
-         *
-         * @method selectMilestone
-         * @param {Object} target
-         * @public
-         */
-        selectMilestone:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectMilestone');
-            var model = this.get('model');
-            model.set('milestoneId',target.value);
-            Logger.debug('App.Project.Issue.Create:selectMilestone');
-        },
-
-        /**
-         * This function is called when the status is being selected
-         *
-         * @method selectStatus
-         * @param {Object} target
-         * @public
-         */
-        selectStatus:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectStatus');
-            var model = this.get('model');
-            model.set('status',target.value);
-            Logger.debug('App.Project.Issue.Create:selectStatus');
-        },
-
-        /**
-         * This function is called when the priority is being selected
-         *
-         * @method selectPriority
-         * @param {Object} target
-         * @public
-         */
-        selectPriority:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectPriority');
-            var model = this.get('model');
-            model.set('priority',target.value);
-            Logger.debug('App.Project.Issue.Create:selectPriority');
-        },
-
-        /**
-         * This function is called when the issue type is being selected
-         *
-         * @method selectType
-         * @param {Object} target
-         * @public
-         */
-        selectType:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectType');
-            var model = this.get('model');
-            model.set('typeId',target.value);
-            Logger.debug('App.Project.Issue.Create:selectType');
-        },
-
-        /**
          * This function is responsible for saving the model. After successfully
          * saving the function takes the user to the saved page.
          *
@@ -156,32 +86,36 @@ export default Ember.Controller.extend({
          * @todo Trigger the notificaiton
          */
         save:function() {
-            let self = this;
+            let _self = this;
             let model = this.get('model');
 
-            model.projectId = this.target.currentState.routerJs.state.params["app.project"].projectId;
-            model.dateCreated = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-            model.dateModified = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-            model.modifiedUser = self.get('currentUser.user.id');
-            model.reportedUser = self.get('currentUser.user.id');
-            model.createdUser = self.get('currentUser.user.id');
-            model.modifedUserName = self.get('currentUser.user.name');
-            model.createdUserName = self.get('currentUser.user.name');
-            model.deleted = '0';
+            model.validate().then(({ validations }) => {
 
-            model.startDate = moment(model.startDate).format("YYYY-MM-DD");
-            model.endDate= moment(model.endDate).format("YYYY-MM-DD");
+                if (validations.get('isValid')) {
+                    model.set('projectId',this.target.currentState.routerJs.state.params["app.project"].project_id);
+                    model.set('reportedUser',_self.get('currentUser.user.id'));
 
-            model.save().then(function(data){
+                    model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
+                    model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
 
+                    model.save().then(function(data){
+                        new Messenger().post({
+                            message: _self.get('i18n').t('views.app.issue.created',{name:data.get('subject'),issue_number:data.get('issueNumber')}),
+                            type: 'success',
+                            showCloseButton: true
+                        });
 
-                new Messenger().post({
-                    message: self.get('i18n').t('view.app.issue.created',{name:data.get('subject'),issueNumber:data.get('issueNumber')}),
-                    type: 'success',
-                    showCloseButton: true
-                });
+                        _self.transitionToRoute('app.project.issue.page', {project_id:data.get('projectId'),issue_number:data.get('issueNumber')});
+                    });
+                } else {
+                    let messages = _self._buildMessages(validations,'issue');
 
-                self.transitionToRoute('app.project.issue.page', {projectId:data.get('projectId'),issueNumber:data.get('issueNumber')});
+                    new Messenger().post({
+                        message: messages,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
             });
         },
 
@@ -193,8 +127,35 @@ export default Ember.Controller.extend({
          * @todo Trigger the notificaiton
          */
         cancel:function(){
-            var model = this.get('model');
-            this.transitionToRoute('app.project.issue', {projectId:model.get('projectId')});
+            let _self = this;
+            let projectId = _self.target.currentState.routerJs.state.params["app.project"].project_id;
+            let model = _self.get('model');
+
+            if (_.size(model.changedAttributes()) > 2) {
+                let message = new Messenger().post({
+                    message: _self.get('i18n').t("views.app.issue.create.cancelcicked").toString(),
+                    type: 'warning',
+                    showCloseButton: true,
+                    actions: {
+                        confirm: {
+                            label: _self.get('i18n').t("views.app.issue.create.confirmcancel").toString(),
+                            action: function() {
+                                message.cancel();
+                                _self.transitionToRoute('app.project.issue', {project_id:projectId});
+                            }
+                        },
+                        cancel: {
+                            label: _self.get('i18n').t("views.app.issue.create.onsecondthought").toString(),
+                            action: function() {
+                                message.cancel();
+                            }
+                        },
+
+                    }
+                });
+            } else {
+                _self.transitionToRoute('app.project.issue', {project_id:projectId});
+            }
         },
     }
 });

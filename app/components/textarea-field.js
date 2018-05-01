@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import TextArea from '@ember/component/text-area';
 
 /**
  * This object is used to modify the default TextFeild of emberjs in order to
@@ -19,7 +19,7 @@ import Ember from "ember";
  * @extends Ember.TextArea
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.TextArea.extend({
+export default TextArea.extend({
 
     /**
      * Adding paramater binding for data-identifier so that we can get the related id with it

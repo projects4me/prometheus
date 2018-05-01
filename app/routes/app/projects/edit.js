@@ -23,23 +23,22 @@ export default App.extend({
      * @param {Prometheus.Models.Issue} model
      * @protected
      */
-    setupController:function(controller,model)
+    setupController:function(controller)
     {
         Logger.debug('AppProjectIndexRoute::setupController');
-        let i18n = this.get('i18n');
 
         let params = this.paramsFor('app.projects.edit');
         Logger.debug(params);
 
         let options = {
-            query: '(Project.id : '+params.projectId+')',
+            query: '(Project.id : '+params.project_id+')',
             rels: 'none'
         };
 
 
         Logger.debug('Retrieving projects with options '+options);
         this.get('store').query('project',options).then(function(data){
-            let project = data.nextObject(0);
+            let project = data.objectAt(0);
             controller.set('model',project);
         });
 

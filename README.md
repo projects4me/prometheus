@@ -1,7 +1,13 @@
-# prometheus
+# Prometheus
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+[![Maintainability](https://api.codeclimate.com/v1/badges/7af2dc872656791a4540/maintainability)](https://codeclimate.com/github/projects4me/prometheus/maintainability)
+[![bitHound Overall Score](https://www.bithound.io/github/projects4me/prometheus/badges/score.svg)](https://www.bithound.io/github/projects4me/prometheus)
+[![Dependency Status](https://beta.gemnasium.com/badges/github.com/projects4me/prometheus.svg)](https://beta.gemnasium.com/projects/github.com/projects4me/prometheus)
+[![Build Status](https://travis-ci.org/projects4me/prometheus.svg?branch=upgrade3)](https://travis-ci.org/projects4me/prometheus)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7af2dc872656791a4540/test_coverage)](https://codeclimate.com/github/projects4me/prometheus/test_coverage)
+
+
+Prometheus is the client side component of Projects4Me. It is built on top of EmberJS.
 
 ## Prerequisites
 
@@ -15,7 +21,7 @@ You will need the following things properly installed on your computer.
 
 ## Installation
 
-* `git clone <repository-url>` this repository
+* `git clone https://github.com/projects4me/prometheus`
 * `cd prometheus`
 * `npm install`
 * `bower install`
@@ -24,10 +30,6 @@ You will need the following things properly installed on your computer.
 
 * `ember serve`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
-
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
 
 ### Running Tests
 
@@ -41,7 +43,7 @@ Make use of the many generators for code, try `ember help generate` for more det
 
 ### Deploying
 
-Specify what it takes to deploy your app.
+
 
 ## Further Reading / Useful Links
 

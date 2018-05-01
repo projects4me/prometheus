@@ -3,9 +3,10 @@
  */
 
 import App from "../app";
-import Ember from "ember";
 import MD from "../../utils/metadata/metadata";
 import ENV from "../../config/environment";
+import { inject } from '@ember/service';
+import { capitalize} from '@ember/string';
 
 /**
  * The module route, it is loaded when a user tried to navigate to the route :module e.g. acme.projects4.me/app/projects/
@@ -66,7 +67,7 @@ export default App.extend({
      * @for Module
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * The setup controller function that will be called every time the user visits
@@ -82,7 +83,7 @@ export default App.extend({
         var params = this.paramsFor('app.module');
 
         // Set the data in the current instance of the object, this is required. Unless this is done the route will display the same data every time
-        this.module = Ember.String.capitalize(params.module);
+        this.module = capitalize(params.module);
         //var metaData = MD.create();
         var i18n = this.get('i18n');
         controller.set('i18n',i18n);

@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import App from "../../../app";
+import { inject } from '@ember/service';
+import { hash } from 'rsvp';
 
 /**
  * The issues route
@@ -120,7 +121,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject(),
 
     /**
      * The model for this route
@@ -143,7 +144,9 @@ export default App.extend({
         if(params.order){
             this.set('order',params.order);
         }
-        if(params.query){
+        if(params.query === ''){
+            this.set('query',null);
+        } else if(params.query){
             query = params.query;
             this.set('query',params.query);
         }
@@ -152,7 +155,7 @@ export default App.extend({
         }
 
         // Get the projectId from the parent
-        let projectId = this.paramsFor('app.project').projectId;
+        let projectId = this.paramsFor('app.project').project_id;
         Logger.debug('ProjectId : '+projectId);
 
         // Make sure that projectId is set for every query
@@ -162,11 +165,11 @@ export default App.extend({
         else{
             query = '(('+query+') AND (Issue.projectId : '+projectId+'))';
         }
-
+        Logger.debug(query);
         // Prepare the options
         let options = {
             query: query,
-            rels: 'ownedBy,assignedTo,milestone,project,createdBy,modifiedBy,reportedBy',
+            rels: 'ownedBy,assignedTo,milestone,project,createdBy,modifiedBy,reportedBy,issuetype',
             sort: this.get('sort'),
             order: this.get('order'),
             page: this.get('page'),
@@ -188,10 +191,10 @@ export default App.extend({
      */
     afterModel(){
         let _self = this;
-        let projectId = _self.paramsFor('app.project').projectId;
+        let projectId = _self.paramsFor('app.project').project_id;
         if (projectId === undefined && _self.context !== undefined) {
-            if (_self.context.projectId !== undefined) {
-                projectId = _self.context.projectId;
+            if (_self.context.project_id !== undefined) {
+                projectId = _self.context.project_id;
             }
         }
         let savedSearchesOption = {
@@ -204,7 +207,7 @@ export default App.extend({
             limit: -1
         };
 
-        return Ember.RSVP.hash({
+        return hash({
             savedsearches: _self.store.query('savedsearch',savedSearchesOption),
             publicsearches: _self.store.query('savedsearch',publicSearchesOption)
         }).then(function(results){
@@ -234,6 +237,7 @@ export default App.extend({
         controller.set('savedsearches',this.get('savedsearches'));
         controller.set('publicsearches',this.get('publicsearches'));
         controller.set('model',model);
+        console.log(this.get('query'));
         controller.set('query',this.get('query'));
         controller.set('sort',this.get('sort'));
         controller.set('order',this.get('order'));

@@ -2,9 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import MD from "../utils/metadata/metadata";
 import ENV from "prometheus/config/environment";
+import Component from '@ember/component';
+import $ from 'jquery';
 
 /**
  * This component is responsible for rendering the navigation bar in the application
@@ -14,7 +15,7 @@ import ENV from "prometheus/config/environment";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * This function fetches the navigation metaData and makes it available for display
@@ -39,9 +40,9 @@ export default Ember.Component.extend({
      */
     didInsertElement(){
         let o = $.AdminLTE.options;
-        Ember.$.AdminLTE.tree('.sidebar');
+        $.AdminLTE.tree('.sidebar');
         //Add slimscroll to navbar dropdown
-        Ember.$(".navbar .menu").slimscroll({
+        $(".navbar .menu").slimscroll({
             height: o.navbarMenuHeight,
             alwaysVisible: false,
             size: o.navbarMenuSlimscrollWidth
@@ -79,7 +80,7 @@ export default Ember.Component.extend({
                 {
                     routeParams = {};
                 }
-                routeParams['projectId'] = projectId;
+                routeParams['project_id'] = projectId;
             }
             this.set('pathname','/'+this.appPrefix+'/'+anchorRoute);
             if (routeParams !== undefined && routeParams !== null && routeParams !== ''){
@@ -100,7 +101,7 @@ export default Ember.Component.extend({
         projectChanged:function(project){
             this.set('projectId',project.value);
             if (project.value !== undefined && project.value !== null && project.value !== ''){
-                this.get('router').transitionTo('app.project',{projectId:project.value});
+                this.get('router').transitionTo('app.project',{project_id:project.value});
             }
         }
     }

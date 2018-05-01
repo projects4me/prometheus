@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Component from '@ember/component';
 
 /**
  * This component is used to help the event handling of route request in the
@@ -13,7 +13,7 @@ import Ember from "ember";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * These are the evet handlers for the component.
@@ -39,7 +39,7 @@ export default Ember.Component.extend({
             // intializer. Normally this would not be required but the tree view
             // causes us to call the same component recursively and thus it becomes
             // very difficult to pass action context across
-            this.get('router').transitionTo('app.project.wiki.page',{projectId:projectId,wikiName:wikiName});
+            this.get('router').transitionTo('app.project.wiki.page',{project_id:projectId,wiki_name:wikiName});
         }
 
     }

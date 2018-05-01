@@ -2,9 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
-
-const { inject: { service } } = Ember;
+import Service from '@ember/service';
+import { inject } from '@ember/service';
 
 /**
  * This is a service that provides currentUser. This service can be injected
@@ -15,7 +14,7 @@ const { inject: { service } } = Ember;
  * @extends Ember.service
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Service.extend({
+export default Service.extend({
 
     /**
      * The session service
@@ -25,7 +24,7 @@ export default Ember.Service.extend({
      * @for CurrentUser
      * @private
      */
-    session: service('session'),
+    session: inject(),
 
     /**
      * The store is injected as a service
@@ -35,7 +34,7 @@ export default Ember.Service.extend({
      * @for CurrentUser
      * @private
      */
-    store: service(),
+    store: inject(),
 
     /**
      * Tis function is called to load the currentUser

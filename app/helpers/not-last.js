@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 /**
  * This is a helper function that is used to format the dates for Handlebars
@@ -14,10 +14,10 @@ import Ember from 'ember';
  * @private
  */
 export function notLast(params) {
-    var array = params[0];
-    var index = params[1];
+    let array = params[0];
+    let index = params[1];
 
-    var lastElement = array[Object.keys(array)[Object.keys(array).length - 1]];
+    let lastElement = array[Object.keys(array)[Object.keys(array).length - 1]];
 
     return (lastElement) !== (index);
 }
@@ -30,4 +30,4 @@ export function notLast(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(notLast);
+export default helper(notLast);

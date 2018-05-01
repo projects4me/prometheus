@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
+import { get } from '@ember/object';
 
 /**
  * This component is used to render the application header
@@ -12,7 +13,7 @@ import Ember from 'ember';
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The tag to be used for this component
@@ -55,7 +56,23 @@ export default Ember.Component.extend({
 
             if (typeof this.invalidateSession === 'function')
             {
-                this.sendAction('invalidateSession');
+                get(this, 'invalidateSession')();
+            }
+
+        },
+
+        /**
+         * This function is used to forward the user profile function
+         *
+         * @method viewProfile
+         * @for ApplicationHeader
+         * @public
+         */
+        viewProfile(){
+
+            if (typeof this.userProfile === 'function')
+            {
+                get(this, 'userProfile')();
             }
 
         },

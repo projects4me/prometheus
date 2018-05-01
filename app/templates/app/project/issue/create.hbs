@@ -1,161 +1,225 @@
 <div class="create-issue">
 
-        <div class="row">
-            <div class="col-md-8">
+  <div class="row">
+    <div class="col-md-8">
 
-                <div class="box box-primary issues-details">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Create Issue</h3>
+      <div class="box box-primary issues-details">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{t "views.app.issue.create.title"}}</h3>
 
-                        <div class="box-tools pull-right">
+          <div class="box-tools pull-right">
 
-                        </div>
+          </div>
 
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body no-padding" style="display: block;">
+        </div>
+        {{!-- /.box-header --}}
+        <div class="box-body no-padding" style="display: block;">
 
-                        <form {{action 'addIssue' on='submit'}}>
-                            <div class="form-group">
-                                {{field-text
-                                        placeholder="Enter the issue subject .."
-                                        label="Issue Subject"
-                                        value=model.subject
-                                        mask="alphanumeric"
-                                }}
+          <form {{action 'addIssue' on='submit'}}>
+            <div class="form-group">
 
-                                {{field-textarea
-                                        placeholder="Enter the issue description .."
-                                        label="Description"
-                                        value=model.description
-                                }}
+              {{field-text
+                  placeholder="Enter the issue subject .."
+                  label="Issue Subject"
+                  value=model.subject
+                  mask="alphanumeric"
+                  data-field="issue.subject"
+                  focus-out=(action (mut showSubjectError) true)
+                  v-focus=showSubjectError
+                  v-model=model
+                  v-field='subject'
+                  v-output='message'
+              }}
 
-                                {{field-relate
-                                        placeholder=(t "view.app.issue.create.type")
-                                        label=(t "view.app.issue.create.type")
-                                        value=model.typeId
-                                        options=type
-                                        selected=(find-by "value" model.typeId type)
-                                        searchField="label"
-                                        onchange=(action "selectType")
-                                        relateType="relate-simple"
-                                }}
-
-                                {{field-date
-                                        placeholder="Enter the issue name .."
-                                        label="Start Date"
-                                        value=model.startDate
-                                        mask="alphanumeric"
-                                }}
-
-                                {{field-date
-                                        placeholder="Enter the issue name .."
-                                        label="End Date"
-                                        value=model.endDate
-                                        mask="alphanumeric"
-                                }}
-
-                                {{field-relate
-                                        placeholder=(t "view.app.issue.create.status")
-                                        label=(t "view.app.issue.create.status")
-                                        value=model.status
-                                        options=status
-                                        selected=(find-by "value" model.status status)
-                                        searchField="label"
-                                        onchange=(action "selectStatus")
-                                        relateType="relate-simple"
-                                }}
-
-                                {{field-relate
-                                        placeholder=(t "view.app.issue.create.priority")
-                                        label=(t "view.app.issue.create.priority")
-                                        value=model.priority
-                                        options=priority
-                                        selected=(find-by "value" model.priority priority)
-                                        searchField="label"
-                                        onchange=(action "selectPriority")
-                                        relateType="relate-issuepriority"
-                                }}
-
-                                {{field-relate
-                                        placeholder=(t "view.app.issue.create.selectmilestone")
-                                        label=(t "view.app.issue.create.milestone")
-                                        value=model.milestoneId
-                                        options=milestoneList
-                                        selected=(find-by "value" model.milestoneId milestoneList)
-                                        searchField="label"
-                                        onchange=(action "selectMilestone")
-                                        relateType="relate-simple"
-                                }}
-
-                            </div>
-                        </form>
-
-                    </div>
-                    <!-- /.box-body -->
-                    <div class="box-footer text-center" style="display: block;">
-
-                    </div>
-                    <!-- /.box-footer -->
-                </div>
-
-            </div>
+              <div data-field="issue.description" class="form-field ember-view">
+                {{summer-note
+                    usersList=usersList
+                    issuesList=issuesList
+                    onContentChange=(action "selectStatic" model 'description')
+                }}
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label class="floating-label focused-field">{{t "views.app.issue.create.description"}}</label>
+                <span class="count pull-right"></span>
+              </div>
 
 
-            <div class="col-md-4">
+              {{field-relate
+                  placeholder=(t "views.app.issue.create.type")
+                  label=(t "views.app.issue.create.type")
+                  value=model.typeId
+                  options=type
+                  selected=(find-by "value" model.typeId type)
+                  searchField="label"
+                  onchange=(action "selectRelated" model 'typeId')
+                  relateType="relate-simple"
+                  data-field="issue.type"
+                  focus-out=(action (mut showTypeError) true)
+                  v-focus=showTypeError
+                  v-model=model
+                  v-field='typeId'
+                  v-output='message'
+              }}
 
-                <div class="box box-warning issues-details">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">People</h3>
+              {{field-date
+                  placeholder="Enter the issue name .."
+                  label="Start Date"
+                  value=(readonly model.startDate)
+                  update=(action "selectStatic" model 'startDate')
+                  mask="alphanumeric"
+                  data-field="issue.startDate"
+                  focus-out=(action (mut showStartDateError) true)
+                  v-focus=showStartDateError
+                  v-model=model
+                  v-field='startDate'
+                  v-output='message'
+              }}
 
-                        <div class="box-tools pull-right">
+              {{field-date
+                  placeholder="Enter the issue name .."
+                  label="End Date"
+                  value=(readonly model.endDate)
+                  update=(action "selectStatic" model 'startDate')
+                  mask="alphanumeric"
+                  data-field="issue.endDate"
+                  focus-out=(action (mut showEndDateError) true)
+                  v-focus=showEndDateError
+                  v-model=model
+                  v-field='endDate'
+                  v-output='message'
+              }}
 
-                        </div>
+              {{field-relate
+                  placeholder=(t "views.app.issue.create.status")
+                  label=(t "views.app.issue.create.status")
+                  value=model.status
+                  options=status
+                  selected=(find-by "value" model.status status)
+                  searchField="label"
+                  onchange=(action "selectRelated" model 'status')
+                  relateType="relate-simple"
+                  data-field="issue.status"
+                  focus-out=(action (mut showStatusError) true)
+                  v-focus=showStatusError
+                  v-model=model
+                  v-field='status'
+                  v-output='message'
+              }}
 
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body no-padding" style="display: block;">
+              {{field-relate
+                  placeholder=(t "views.app.issue.create.priority")
+                  label=(t "views.app.issue.create.priority")
+                  value=model.priority
+                  options=priority
+                  selected=(find-by "value" model.priority priority)
+                  searchField="label"
+                  onchange=(action "selectRelated" model 'priority')
+                  relateType="relate-issuepriority"
+                  data-field="issue.priority"
+                  focus-out=(action (mut showPriorityError) true)
+                  v-focus=showPriorityError
+                  v-model=model
+                  v-field='priority'
+                  v-output='message'
+              }}
 
-
-                        {{field-relate
-                            placeholder=(t "view.app.issue.create.selectassignee")
-                            label=(t "view.app.issue.create.assignedTo")
-                            value=model.assignee
-                            options=memberList
-                            selected=(find-by "value" model.assignee memberList)
-                            searchField="label"
-                            onchange=(action "selectAssignee")
-                            relateType="relate-user"
-                        }}
-
-
-                        {{field-relate
-                                placeholder=(t "view.app.issue.create.selectowner")
-                                label=(t "view.app.issue.create.ownedBy")
-                                value=model.owner
-                                options=memberList
-                                selected=(find-by "value" model.owner memberList)
-                                searchField="label"
-                                onchange=(action "selectOwner")
-                                relateType="relate-user"
-                        }}
-
-
-                    </div>
-                    <!-- /.box-body -->
-                    <div class="box-footer text-center" style="display: block;">
-
-                    </div>
-                    <!-- /.box-footer -->
-                </div>
+              {{field-relate
+                  placeholder=(t "views.app.issue.create.selectmilestone")
+                  label=(t "views.app.issue.create.milestone")
+                  value=model.milestoneId
+                  options=milestoneList
+                  selected=(find-by "value" model.milestoneId milestoneList)
+                  searchField="label"
+                  onchange=(action "selectRelated" model 'milestoneId')
+                  relateType="relate-simple"
+                  data-field="issue.milestone"
+                  focus-out=(action (mut showMilestonError) true)
+                  v-focus=showMilestonError
+                  v-model=model
+                  v-field='milestoneId'
+                  v-output='message'
+              }}
 
             </div>
+          </form>
 
-            <div class="col-sm-12">
-                <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
-                <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
-            </div>
+        </div>
+        {{!-- /.box-body --}}
+        <div class="box-footer text-center" style="display: block;">
 
-            </div>
+        </div>
+        {{!-- /.box-footer --}}
+      </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+
+      <div class="box box-warning issues-details">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{t "views.app.issue.create.people"}}</h3>
+
+          <div class="box-tools pull-right">
+
+          </div>
+
+        </div>
+        {{!-- /.box-header --}}
+        <div class="box-body no-padding" style="display: block;">
+
+
+          {{field-relate
+              placeholder=(t "views.app.issue.create.selectassignee")
+              label=(t "views.app.issue.create.assignedTo")
+              value=model.assignee
+              options=memberList
+              selected=(find-by "value" model.assignee memberList)
+              searchField="label"
+              onchange=(action "selectRelated" model 'assignee')
+              relateType="relate-user"
+              data-field="issue.assignee"
+              focus-out=(action (mut showAssigneeError) true)
+              v-focus=showAssigneeError
+              v-model=model
+              v-field='assignee'
+              v-output='message'
+          }}
+
+
+          {{field-relate
+              placeholder=(t "views.app.issue.create.selectowner")
+              label=(t "views.app.issue.create.ownedBy")
+              value=model.owner
+              options=memberList
+              selected=(find-by "value" model.owner memberList)
+              searchField="label"
+              onchange=(action "selectRelated" model 'owner')
+              relateType="relate-user"
+              data-field="issue.owner"
+              focus-out=(action (mut showOwnerError) true)
+              v-focus=showOwnerError
+              v-model=model
+              v-field='owner'
+              v-output='message'
+          }}
+
+
+        </div>
+        {{!-- /.box-body --}}
+        <div class="box-footer text-center" style="display: block;">
+
+        </div>
+        {{!-- /.box-footer --}}
+      </div>
+
+    </div>
+
+    <div class="col-sm-12">
+      <button type="button" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
+      <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+    </div>
+
+  </div>
 
 </div>

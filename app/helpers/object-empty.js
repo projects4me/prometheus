@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 /**
  * This is a helper function that is used to format the dates for Handlebars
@@ -14,12 +14,10 @@ import Ember from 'ember';
  * @private
  */
 export function objectEmpty(params) {
-    var empty = true;
-    for(var index in params[0])
-    {
+    let empty = true;
+
+    for (let index in params[0]) { // eslint-disable-line no-unused-vars
         empty = false;
-        // Just to get rid of the jshint
-        index = index;
         break;
     }
     return (empty);
@@ -33,4 +31,4 @@ export function objectEmpty(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(objectEmpty);
+export default helper(objectEmpty);

@@ -6,6 +6,7 @@
       selected=selected
       searchField=searchField
       onchange=onchange
+      onblur=focus-out
   as |data|}}
     {{component relateType data=data}}
   {{/power-select}}
@@ -14,5 +15,8 @@
 <span class="bar"></span>
 <label class="floating-label">{{label}}</label>
 <span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
-<span class="error hidden text-red">This field cannot be required</span>
-
+{{#if v-focus}}
+  <span class="error text-red">
+    {{v-get v-model v-field v-output}}
+  </span>
+{{/if}}

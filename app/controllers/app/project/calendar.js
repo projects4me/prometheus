@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Prometheus from "prometheus/controllers/prometheus";
 
 /**
  * This is the controller for the calendar controller route
@@ -10,30 +10,10 @@ import Ember from "ember";
  * @class Calendar
  * @namespace Prometheus.Controllers
  * @module App.Project
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
-
-    /**
-     * The current user service
-     *
-     * @property currentUser
-     * @type Ember.Service
-     * @for Calendar
-     * @private
-     */
-    currentUser: Ember.inject.service(),
-
-    /**
-     * The i18n library service that is used in order to get the translations
-     *
-     * @property i18n
-     * @type Ember.Service
-     * @for Calendar
-     * @private
-     */
-    i18n: Ember.inject.service(),
+export default Prometheus.extend({
 
     /**
      * Locale value, the default is en
@@ -84,13 +64,9 @@ export default Ember.Controller.extend({
          *
          * @method clicked
          * @param {Object} event
-         * @param {Object} jsEvent
-         * @param {String} view
          * @public
          */
-        clicked(event, jsEvent, view){
-            jsEvent = jsEvent;
-            view = view;
+        clicked(event){
             this.showModal(event);
         },
 
@@ -101,7 +77,7 @@ export default Ember.Controller.extend({
          * @param {Object} event
          * @public
          */
-        eventDragStart:function(event){
+        eventDragStart(event){
             Logger.debug("AppProjectCalendarController::eventDragStart()");
             Logger.debug(event);
         },
@@ -114,8 +90,8 @@ export default Ember.Controller.extend({
          * @param {Object} eventElement
          * @public
          */
-        eventRender:function(event,eventElement){
-            var self = this;
+        eventRender(event,eventElement){
+            let self = this;
             if (event.priority)
             {
                 eventElement.find('div.fc-content').prepend(this.getPriorityHTML(event.priority));
@@ -123,9 +99,9 @@ export default Ember.Controller.extend({
             }
             if (event.className)
             {
-                var tooltip = self.get('i18n').t("view.app.issue.lists.priority."+event.priority);
-                tooltip += ' '+self.get('i18n').t("view.app.issue.priority");
-                tooltip += ' - '+self.get('i18n').t("view.app.issue.lists.status."+event.className);
+                let tooltip = self.get('i18n').t("views.app.issue.lists.priority."+event.priority);
+                tooltip += ' '+self.get('i18n').t("views.app.issue.priority");
+                tooltip += ' - '+self.get('i18n').t("views.app.issue.lists.status."+event.className);
                 eventElement.find('div.fc-content').attr('data-toggle','tooltip');
                 eventElement.find('div.fc-content').attr('title',tooltip);
                 //eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));
@@ -144,7 +120,7 @@ export default Ember.Controller.extend({
      * @public
      */
     getPriorityHTML:function(priority){
-        var HTML = '';
+        let HTML = '';
         switch (priority) {
             case 'blocker':
                 HTML += '<i class="fa fa-ban"></i>';

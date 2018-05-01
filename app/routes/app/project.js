@@ -3,6 +3,7 @@
  */
 
 import App from "../app";
+import { hash } from 'rsvp';
 
 /**
  * The wiki route
@@ -27,10 +28,10 @@ export default App.extend({
 
     afterModel() {
         let _self = this;
-        let projectId = _self.paramsFor('app.project').projectId;
+        let projectId = _self.paramsFor('app.project').project_id;
         if (projectId === undefined && _self.context !== undefined) {
-            if (_self.context.projectId !== undefined) {
-                projectId = _self.context.projectId;
+            if (_self.context.project_id !== undefined) {
+                projectId = _self.context.project_id;
             }
         }
 
@@ -44,7 +45,7 @@ export default App.extend({
             limit:-1,
         };
 
-        return Ember.RSVP.hash({
+        return hash({
             issues: _self.store.query('issue',issuesOptions)
         }).then(function(results){
             _self.set('issues',{});
@@ -66,7 +67,7 @@ export default App.extend({
         let _self = this;
 
         // If the user navigated directly to the wiki project or page then lets setup the project id
-        let projectId = this.paramsFor('app.project').projectId;
+        let projectId = this.paramsFor('app.project').project_id;
         let projectName = null;
 
         // self.loadIssues(projectId);
@@ -87,13 +88,14 @@ export default App.extend({
         Logger.debug(options);
 
         _self.store.query('project',options).then(function(data){
+            Logger.debug(data);
             if (projectId !== null)
             {
                 projectName = data.findBy('id',projectId).get('name');
                 controller.set('projectId',projectId);
                 controller.set('projectName',projectName);
             }
-            controller.set('model',data.nextObject(0));
+            controller.set('model',data.objectAt(0));
         });
         controller.set('issues',_self.get('issues'));
     },
@@ -129,11 +131,11 @@ export default App.extend({
             for (let i=0; i<issuesCount;i++)
             {
                 issuesList[i] = {
-                    id:data.nextObject(i).get('id'),
-                    name:data.nextObject(i).get('subject'),
-                    number:data.nextObject(i).get('issueNumber'),
-                    status:data.nextObject(i).get('status'),
-                    projectId:data.nextObject(i).get('projectId')
+                    id:data.objectAt(i).get('id'),
+                    name:data.objectAt(i).get('subject'),
+                    number:data.objectAt(i).get('issueNumber'),
+                    status:data.objectAt(i).get('status'),
+                    projectId:data.objectAt(i).get('projectId')
                 };
             }
             Logger.debug(issuesList);
@@ -170,8 +172,8 @@ export default App.extend({
             for (let i=0; i<usersCount;i++)
             {
                 usersList[i] = {
-                    id:data.nextObject(i).get('id'),
-                    name:data.nextObject(i).get('name'),
+                    id:data.objectAt(i).get('id'),
+                    name:data.objectAt(i).get('name'),
                 };
             }
             Logger.debug(usersList);

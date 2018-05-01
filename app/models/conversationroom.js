@@ -3,6 +3,20 @@
  */
 
 import DS from "ember-data";
+import { validator, buildValidations } from 'ember-cp-validations';
+
+/**
+ * These are the validation that are applied on the model
+ *
+ * @property Validations
+ * @module Conversationroom
+ */
+const Validations = buildValidations({
+    subject: validator('presence', true),
+    description: validator('presence', true),
+    roomType: validator('presence', true),
+    projectId: validator('presence', true),
+});
 
 /**
  * The conversation room model
@@ -12,7 +26,7 @@ import DS from "ember-data";
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend({
+export default DS.Model.extend(Validations, {
 
     /**
      * Subject of the conversation room
@@ -123,6 +137,16 @@ export default DS.Model.extend({
      * @private
      */
     projectId: DS.attr('string'),
+
+    /**
+     * The identifier of the issue that this room belongs to
+     *
+     * @property issueId
+     * @type String
+     * @for Conversationroom
+     * @private
+     */
+    issueId: DS.attr('string'),
 
     /**
      * The user who created the room

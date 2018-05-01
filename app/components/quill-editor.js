@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Component from '@ember/component';
+import $ from 'jquery';
 
 /**
  * This component is used to render the quill editor in the application.
@@ -13,7 +14,7 @@ import Ember from "ember";
  * @author Hammad Hassan <gollomer@gmail.com>
  * @todo allow passing of the parameters to this component
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * This function is called by Ember when it is about to destroy the HTML elements rendered. We
@@ -39,7 +40,7 @@ export default Ember.Component.extend({
     didRender: function() {
         var self = this;
         Logger.debug(this);
-        if (!(Ember.$('#editor').hasClass('ql-container'))){
+        if (!($('#editor').hasClass('ql-container'))){
             var toolbarOptions = [
                 ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
                 ['blockquote', 'code-block', 'link','image'],
@@ -94,7 +95,7 @@ export default Ember.Component.extend({
 
                 if (typeof self.update === 'function')
                 {
-                    self.sendAction('update',{'markUp':Ember.$('#editor .ql-editor').html()});
+                    self.sendAction('update',{'markUp':$('#editor .ql-editor').html()});
                 }
 
             });

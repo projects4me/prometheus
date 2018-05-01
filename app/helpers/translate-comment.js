@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
+import { htmlSafe } from '@ember/string';
 
 /**
  * This helper lets us translate the comment markup stored in the database.
@@ -18,7 +19,12 @@ import Ember from 'ember';
  * @todo Handle exception. If possible then make generic
  */
 export function translateComment(params) {
-    var data = params[0];
+    let data = params[0];
+
+    if (data === null)
+    {
+        data = '';
+    }
 
     /*
      // Find {{}}
@@ -68,7 +74,7 @@ export function translateComment(params) {
     // Handle end lines
     data = data.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br />' + '$2');
 
-    return Ember.String.htmlSafe(data);
+    return htmlSafe(data);
 }
 
 /**
@@ -79,4 +85,4 @@ export function translateComment(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(translateComment);
+export default helper(translateComment);

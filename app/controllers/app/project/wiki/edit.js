@@ -2,10 +2,12 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Prometheus from "prometheus/controllers/prometheus";
 import _ from "lodash";
-
-const { inject: { service } } = Ember;
+import { inject } from '@ember/service';
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
+import $ from 'jquery';
 
 /**
  * The controller for the wiki edit route, it is loaded when a user clicks on the
@@ -15,10 +17,10 @@ const { inject: { service } } = Ember;
  * @class Edit
  * @namespace Prometheus.Controllers
  * @module App.Project.Wiki
- * @extends Ember.Controller
+ * @extends Prometheus
  * @todo Minimize the code
  */
-export default Ember.Controller.extend({
+export default Prometheus.extend({
 
     /**
      * This is the store service which is used to interact with the data API
@@ -28,7 +30,7 @@ export default Ember.Controller.extend({
      * @for Edit
      * @private
      */
-    store: service(),
+    store: inject(),
 
     /**
      * This flag is used to show or hide the modal dialog box for adding new tags
@@ -59,7 +61,7 @@ export default Ember.Controller.extend({
      * @for Edit
      * @public
      */
-    projectController: Ember.inject.controller('app.project'),
+    projectController: injectController('app.project'),
 
     /**
      * This is a computed property in which gets the list of issues
@@ -70,9 +72,9 @@ export default Ember.Controller.extend({
      * @for Edit
      * @private
      */
-    issuesList: Ember.computed(function(){
+    issuesList: computed('projectController.issuesList', function(){
         return this.get('projectController').get('issuesList');
-    }).property('projectController.issuesList'),
+    }),
 
     /**
      * This is the controller for the app, we are injecting it in order to
@@ -83,7 +85,7 @@ export default Ember.Controller.extend({
      * @for Edit
      * @public
      */
-    appController: Ember.inject.controller('app'),
+    appController: injectController('app'),
 
     /**
      * This is a computed property in which gets the list of user
@@ -94,9 +96,9 @@ export default Ember.Controller.extend({
      * @for Edit
      * @private
      */
-    usersList: Ember.computed(function(){
+    usersList: computed('appController.usersList', function(){
         return this.get('appController').get('usersList');
-    }).property('appController.usersList'),
+    }),
 
 
     /**
@@ -118,35 +120,34 @@ export default Ember.Controller.extend({
          * @todo Trigger the notificaiton
          */
         save:function() {
-            var self = this;
-            var model = this.get('model').nextObject(0);
-            var changedAttributes = model.changedAttributes();
-            var changed = false;
-            for (var key in changedAttributes) {
-                Logger.debug(key);
+            let _self = this;
+            let model = _self.get('model').objectAt(0);
+            let changedAttributes = model.changedAttributes();
+            let changed = false;
+
+            for (let key in changedAttributes) {
                 changed = true;
             }
-            Logger.debug(changed);
+
             if (changed){
                 model.save().then(function(data){
-                    Logger.debug(data);
 
                     if (changedAttributes['parentId'] !== undefined)
                     {
-                        self.send('refreshWiki');
+                        _self.send('refreshWiki');
                     }
                     else if (changedAttributes['name'] !== undefined)
                     {
-                        self.send('modelUpdated', data);
+                        _self.send('modelUpdated', data);
                     }
 
                     new Messenger().post({
-                        message: self.get('i18n').t("view.app.wiki.created",{name:data.get('name')}),
+                        message: _self.get('i18n').t("views.app.wiki.created",{name:data.get('name')}),
                         type: 'success',
                         showCloseButton: true
                     });
 
-                    self.transitionToRoute('app.project.wiki.page', {projectId:data.get('projectId'),wikiName:data.get('name')});
+                    _self.transitionToRoute('app.project.wiki.page', {project_id:data.get('projectId'),wiki_name:data.get('name')});
                 });
             }
         },
@@ -159,8 +160,8 @@ export default Ember.Controller.extend({
          * @todo Trigger the notificaiton
          */
         cancel:function(){
-            let model = this.get('model').nextObject(0);
-            this.transitionToRoute('app.project.wiki.page', {projectId:model.get('projectId'),wikiName:model.get('name')});
+            let model = this.get('model').objectAt(0);
+            this.transitionToRoute('app.project.wiki.page', {project_id:model.get('projectId'),wiki_name:model.get('name')});
         },
 
 
@@ -173,33 +174,21 @@ export default Ember.Controller.extend({
          */
         changed:function(){
             Logger.debug("AppProjectWikiEditController::changed()");
-            Logger.debug("Something was updated");
 
-            let self = this;
-            Logger.debug(self);
-
-            let model = this.get('model').nextObject(0);
-            // if (typeof(data) === 'object' && data.markUp !== undefined)
-            // {
-            //     Logger.debug(model);
-            //     model._internalModel._attributes['markUp'] = data.markUp;
-            //     model.set('markUp',data.markUp);
-            // }
+            let _self = this;
+            let model = _self.get('model').objectAt(0);
 
             let changedAttributes = model.changedAttributes();
             let changed = false;
-            for (var key in changedAttributes) {
-                Logger.debug(key);
+            for (let key in changedAttributes) {
                 changed = true;
             }
-            this.set('saveDisabled',null);
+            _self.set('saveDisabled',null);
 
-            if (changed)
-            {
-                this.set('saveDisabled',null);
-            }
-            else {
-                this.set('saveDisabled',true);
+            if (changed) {
+                _self.set('saveDisabled',null);
+            } else {
+                _self.set('saveDisabled',true);
             }
         },
 
@@ -211,7 +200,7 @@ export default Ember.Controller.extend({
          * @public
          */
         wikiChanged:function(target){
-            var model = this.get('model').nextObject(0);
+            let model = this.get('model').objectAt(0);
             this.set('parentId',target.value);
             model.set('parentId',target.value);
             model.set('parentName',target.label);
@@ -229,11 +218,11 @@ export default Ember.Controller.extend({
          */
         onContentChange:function (contents) {
             Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
-            let self = this;
+            let _self = this;
             //let model = self.get(model)
-            self.get('model').nextObject(0).set('markUp',contents);
+            _self.get('model').objectAt(0).set('markUp',contents);
             //model._internalModel._attributes['markUp'] = data.markUp;
-            self.send('changed');
+            _self.send('changed');
             -Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
         },
 
@@ -245,34 +234,28 @@ export default Ember.Controller.extend({
          */
         tagSelected:function(e){
             Logger.debug('AppProjectWikiEditController:tagSelected');
-            Logger.debug(e);
-
-            var self = this;
+            let _self = this;
 
             // If a tag was removed then remove it
-            var removedTag = _.difference(this.get('selectedTags'),e);
-            Logger.debug('tag to be removed');
-            Logger.debug(removedTag);
+            let removedTag = _.difference(this.get('selectedTags'),e);
 
             if (removedTag[0] !== undefined)
             {
-                this.send('removeTag',removedTag[0],e);
+                _self.send('removeTag',removedTag[0],e);
             }
 
             // If a tag was selected then associate it with the wiki
-            var selectedTag = _.difference(e,this.get('selectedTags'));
-            Logger.debug('tag that was selected');
-            Logger.debug(selectedTag);
+            let selectedTag = _.difference(e,this.get('selectedTags'));
             if (selectedTag[0] !== undefined)
             {
                 // Save the relationship and then show the message to the user
-                self.get('store').createRecord('tagged',{
+                _self.get('store').createRecord('tagged',{
                     tagId : selectedTag[0].value,
-                    relatedId : self.get('model').nextObject(0).get('id'),
+                    relatedId : _self.get('model').objectAt(0).get('id'),
                     relatedTo: "wiki"
                 }).save().then(function(){
                     new Messenger().post({
-                        message: self.get('i18n').t("view.app.wiki.tag.associated",{name:selectedTag[0].label}),
+                        message: _self.get('i18n').t("views.app.wiki.tag.associated",{name:selectedTag[0].label}),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -291,36 +274,29 @@ export default Ember.Controller.extend({
             Logger.debug('AppProjectWikiEditController:addTag');
             Logger.debug(this.get('tagName'));
 
-            var self = this;
-            var selectedTags = this.get('selectedTags');
+            let _self = this;
+            let selectedTags = this.get('selectedTags');
             Logger.debug(this.get('selectedTags'));
 
             // Initialize the tag record
-            var newTag = this.get('store').createRecord('tag',{
-                dateCreated:'CURRENT_DATETIME',
-                dateModified:'CURRENT_DATETIME',
-                deleted:0,
-                createdUser:'1',
-                modifiedUser:'1',
+            let newTag = this.get('store').createRecord('tag',{
                 tag:this.get('tagName'),
-                createdUserName: 'Hammad Hassan',
-                modifiedUserName: 'Hammad Hassan',
             });
 
             // Save it
             newTag.save().then(function(tag){
 
                 // Then save the relationship
-                var tagged = self.get('store').createRecord('tagged',{
+                let tagged = _self.get('store').createRecord('tagged',{
                     tagId : tag.get('id'),
-                    relatedId : self.get('model').nextObject(0).get('id'),
+                    relatedId : _self.get('model').objectAt(0).get('id'),
                     relatedTo: "wiki"
                 });
 
                 tagged.save().then(function(){
                     // After it has been saved then show the message to the user
                     new Messenger().post({
-                        message: self.get('i18n').t("view.app.wiki.tag.created",{name:tag.get('tag')}),
+                        message: _self.get('i18n').t("views.app.wiki.tag.created",{name:tag.get('tag')}),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -328,12 +304,12 @@ export default Ember.Controller.extend({
                     selectedTags = _.concat(selectedTags,{label:tag.get('tag'),value:tag.get('id')});
 
                     // set the values
-                    self.set('selectedTags',selectedTags);
-                    self.set('tagName','');
+                    _self.set('selectedTags',selectedTags);
+                    _self.set('tagName','');
 
                     // Remove the modal
-                    Ember.$('.modal').modal('hide');
-                    self.set('addTagDialog',false);
+                    $('.modal').modal('hide');
+                    _self.set('addTagDialog',false);
 
                     Logger.debug(selectedTags);
                 });
@@ -349,12 +325,9 @@ export default Ember.Controller.extend({
          */
         removeTag:function(tag,list){
             Logger.debug('AppProjectWikiEditController:removeTag');
-            Logger.debug(tag);
-            Logger.debug(this.get('selectedTags'));
-            Logger.debug(list);
 
-            var self = this;
-            var tagged = self.get('model').nextObject(0).get('tagged').filterBy('tagId',tag.value)[0];
+            let _self = this;
+            let tagged = _self.get('model').objectAt(0).get('tagged').filterBy('tagId',tag.value)[0];
 
             // Delete the record
             tagged.deleteRecord();
@@ -362,14 +335,14 @@ export default Ember.Controller.extend({
 
                 // Display the message
                 new Messenger().post({
-                    message: self.get('i18n').t("view.app.wiki.tag.removed",{name:tag.label}),
+                    message: _self.get('i18n').t("views.app.wiki.tag.removed",{name:tag.label}),
                     type: 'success',
                     showCloseButton: true
                 });
 
                 //  Update the selected tags
-                self.set('selectedTags',list);
-                Logger.debug(self.get('selectedTags'));
+                _self.set('selectedTags',list);
+                Logger.debug(_self.get('selectedTags'));
             });
         },
 
@@ -392,6 +365,7 @@ export default Ember.Controller.extend({
          */
         removeModal:function(){
             this.set('addTagDialog',false);
+            $('.modal').modal('hide');
         }
 
     }

@@ -63,7 +63,7 @@ export default App.extend({
         Logger.debug('Wiki Route');
         Logger.debug(this);
 
-        var params = this.getParams();
+        let params = this.getParams();
         Logger.debug('The parameters are as follows');
         Logger.debug(params);
 
@@ -75,7 +75,7 @@ export default App.extend({
 
         controller.set('projectId',params.projectId);
 
-        var options = {
+        let options = {
             query: '((Wiki.name : '+params.wikiName+') AND (Wiki.projectId : '+params.projectId+'))',
             sort : 'Wiki.name',
             order: 'ASC',
@@ -85,7 +85,7 @@ export default App.extend({
         Logger.debug('Retreiving wiki list with options '+options);
         this.data = this.store.query('wiki',options).then(function(data){
             controller.set('model',data);
-            let model = data.nextObject(0);
+            let model = data.objectAt(0);
             if (model !== undefined){
                 let markUp = model.get('markUp');
 
@@ -95,7 +95,7 @@ export default App.extend({
                 let selectedTags = [];
                 for(let i=0;i<tagCount;i++)
                 {
-                    selectedTags[i] = {label:tags.nextObject(i).get('tag'),value:tags.nextObject(i).get('id')};
+                    selectedTags[i] = {label:tags.objectAt(i).get('tag'),value:tags.objectAt(i).get('id')};
                 }
                 controller.set('iVoted',model.get('vote').filterBy('createdUser',"1").length);
                 controller.set('markUp',markUp);
@@ -119,9 +119,9 @@ export default App.extend({
      * @private
      */
     getParams:function(){
-        var params = {};
-        params['projectId'] = this.paramsFor('app.project').projectId;
-        params['wikiName'] = this.paramsFor('app.project.wiki.page').wikiName;
+        let params = {};
+        params['projectId'] = this.paramsFor('app.project').project_id;
+        params['wikiName'] = this.paramsFor('app.project.wiki.page').wiki_name;
         return params;
     }
 

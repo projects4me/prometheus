@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 /**
  * This function is used to retrieve a property in a object
@@ -40,4 +40,4 @@ export function getProp(params) {
  * @author Hammad Hassan <gollomer@gamilcom
  * @deprecated
  */
-export default Ember.Helper.helper(getProp);
+export default helper(getProp);

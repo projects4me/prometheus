@@ -25,7 +25,11 @@ export default App.extend({
      */
     model:function()
     {
-        return this.get('store').createRecord('issue');
+        let self = this;
+        return self.get('store').createRecord('issue',{
+            assignee : self.get('currentUser').user.id,
+            owner : self.get('currentUser').user.id
+        });
     },
 
 
@@ -45,7 +49,7 @@ export default App.extend({
         let i18n = this.get('i18n');
 
         // If the user navigated directly to the wiki project or page then lets setup the project id
-        let projectId = this.paramsFor('app.project').projectId;
+        let projectId = this.paramsFor('app.project').project_id;
 
         Logger.debug(projectId);
 
@@ -61,32 +65,32 @@ export default App.extend({
 
         this.data = this.store.query('project',options).then(function(data){
 
-            let memberCount = data.nextObject(0).get('members.length');
+            let memberCount = data.objectAt(0).get('members.length');
             let memberList = [];
             let temp = null;
             memberList[0] = {label:i18n.t("global.blank"), value:null};
             for (let i=1;i<=memberCount;i++)
             {
-                temp = data.nextObject(0).get('members').nextObject(i-1);
+                temp = data.objectAt(0).get('members').objectAt(i-1);
                 memberList[i] = {label:temp.get('name'), value:temp.get('id')};
             }
 
-            let milestoneCount = data.nextObject(0).get('milestones.length');
+            let milestoneCount = data.objectAt(0).get('milestones.length');
             let milestoneList = [];
             temp = null;
             milestoneList[0] = {label:i18n.t("global.blank"), value:null};
             for (let i=1;i<=milestoneCount;i++)
             {
-                temp = data.nextObject(0).get('milestones').nextObject(i-1);
+                temp = data.objectAt(0).get('milestones').objectAt(i-1);
                 milestoneList[i] = {label:temp.get('name'), value:temp.get('id')};
             }
 
-            let typeCount = data.nextObject(0).get('issuetypes.length');
+            let typeCount = data.objectAt(0).get('issuetypes.length');
             let typeList = [];
             temp = null;
             for (let i=0;i<typeCount;i++)
             {
-                temp = data.nextObject(0).get('issuetypes').nextObject(i);
+                temp = data.objectAt(0).get('issuetypes').objectAt(i);
                 typeList[i] = {label:temp.get('name'), value:temp.get('id')};
             }
 

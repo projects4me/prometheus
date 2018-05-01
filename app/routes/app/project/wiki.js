@@ -2,9 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import M2T from "../../../utils/data/modeltotree";
 import App from '../../app';
+import { set } from '@ember/object';
+
 //import { translationMacro as t } from "ember-i18n";
 
 /**
@@ -65,13 +66,13 @@ export default App.extend({
         self.loadTags();
 
         let options = {
-            query: '(Wiki.projectId : '+params.projectId+')',
+            query: '(Wiki.projectId : '+params.project_id+')',
             sort : 'Wiki.name',
             rels: 'none',
             order: 'ASC',
             limit: -1
         };
-        controller.set('projectId',params.projectId);
+        controller.set('projectId',params.project_id);
         let tree={};
 
         Logger.debug('Retreiving projects list with options '+options);
@@ -91,7 +92,7 @@ export default App.extend({
             wikiList[0] = {label:i18n.t("global.blank"), value:null};
             for (let i=1;i<=wikiCount;i++)
             {
-                temp = data.nextObject(i-1);
+                temp = data.objectAt(i-1);
                 wikiList[i] = {label:temp.get('name'), value:temp.get('id')};
             }
 
@@ -111,7 +112,7 @@ export default App.extend({
             // We need the direction
             if (self.get('router.currentRouteName') === 'app.project.wiki.index'){
                 if (data.findBy('name','Home') !== undefined){
-                    self.transitionTo('app.project.wiki.page',{projectId:params.projectId,wikiName:'Home'});
+                    self.transitionTo('app.project.wiki.page',{project_id:params.projectId,wiki_name:'Home'});
                 }
             }
         });
@@ -146,7 +147,7 @@ export default App.extend({
             let temp = null;
             for (let i=0;i<tagCount;i++)
             {
-                temp = data.nextObject(i);
+                temp = data.objectAt(i);
                 tagList[i] = {label:temp.get('tag'), value:temp.get('id')};
             }
             self.controllerFor('app.project.wiki.page').set('tagList', tagList);
@@ -188,7 +189,7 @@ export default App.extend({
             let node = M2T.findNode(model.get('id'),tree);
             if (node)
             {
-                Ember.set(node,'name',model.get('name'));
+                set(node,'name',model.get('name'));
             }
         },
 

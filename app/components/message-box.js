@@ -2,7 +2,12 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Component from '@ember/component';
+import { inject } from '@ember/service';
+import { once } from '@ember/runloop';
+import { computed } from '@ember/object';
+import { observer } from '@ember/object';
+import $ from 'jquery';
 
 /**
  * This component is used to render the quill editor in the application in order
@@ -13,7 +18,7 @@ import Ember from "ember";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The comment that we are gathering
@@ -33,7 +38,7 @@ export default Ember.Component.extend({
      * @for MessageBox
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * This is the list of emojis that we support
@@ -186,7 +191,7 @@ export default Ember.Component.extend({
      * Whether the content box is editable or not
      *
      * @property editable
-     * @type Bool
+     * @type boolean
      * @for MessageBoxComponent
      * @private
      */
@@ -196,7 +201,7 @@ export default Ember.Component.extend({
      * This flag is used to enable or disable spell checking
      *
      * @property checkSpelling
-     * @type Bool
+     * @type boolean
      * @for MessageBox
      * @private
      */
@@ -206,7 +211,7 @@ export default Ember.Component.extend({
      * Flag that maintains whether the user is typing or not
      *
      * @property isUserTyping
-     * @type Bool
+     * @type boolean
      * @for MessageBox
      * @private
      */
@@ -221,11 +226,11 @@ export default Ember.Component.extend({
      * @for MessageBox
      * @private
      */
-    contenteditable: (function() {
-        var editable = this.get('editable');
+    contenteditable: computed('editable', function() {
+        let editable = this.get('editable');
 
         return editable ? 'true' : undefined;
-    }).property('editable'),
+    }),
 
     /**
      * This is the property that enables or disabled the HTML5 spellcheck flag on
@@ -236,11 +241,11 @@ export default Ember.Component.extend({
      * @for MessageBox
      * @private
      */
-    spellcheck: (function() {
-        var spelling = this.get('checkSpelling');
+    spellcheck: ('checkSpelling', function() {
+        let spelling = this.get('checkSpelling');
 
         return spelling ? 'true' : 'false';
-    }).property('checkSpelling'),
+    }),
 
     /**
      * This function is used to observe the value and isUserTyping attributes
@@ -250,9 +255,9 @@ export default Ember.Component.extend({
      * @for MessageBox
      * @public
      */
-    valueObserver: (function() {
-        Ember.run.once(this, 'processValue');
-    }).observes('value', 'isUserTyping'),
+    valueObserver: observer('value', 'isUserTyping', function() {
+        once(this, 'processValue');
+    }),
 
     /**
      * This function is called when the object is created, we are using this
@@ -261,12 +266,14 @@ export default Ember.Component.extend({
      * @method init
      * @private
      */
-    init:function(){
+    init(){
         this._super(...arguments);
-        var self = this;
-        var emojiList = Ember.$.map(this.get('emojiList'), function(emoji) {
+        let self = this;
+
+        let emojiList = $.map(this.get('emojiList'), function(emoji) {
             return {'id':emoji, 'name':self.get('i18n').t('emoji.'+emoji)};
         });
+
         self.set('translatedEmojis',emojiList);
     },
 
@@ -277,7 +284,7 @@ export default Ember.Component.extend({
      * @return {*|result}
      * @public
      */
-    processValue: function() {
+    processValue() {
         if (!this.get('isUserTyping') && this.get('value')) {
             return this.setContents();
         }
@@ -290,7 +297,7 @@ export default Ember.Component.extend({
      * @return {*}
      * @public
      */
-    focusOut: function() {
+    focusOut() {
         return this.set('isUserTyping', false);
     },
 
@@ -301,7 +308,7 @@ export default Ember.Component.extend({
      * @param event {Object} the event that triggered this function
      * @public
      */
-    keyDown: function(event) {
+    keyDown(event) {
         if (!event.metaKey) {
             this.set('isUserTyping', true);
         }
@@ -314,7 +321,7 @@ export default Ember.Component.extend({
      * @param event {Object} the event that triggered this function
      * @public
      */
-    keyUp: function() {
+    keyUp() {
         this.set('value', this.$().html());
     },
 
@@ -325,7 +332,7 @@ export default Ember.Component.extend({
      * @return result {Mixed} The current value
      * @public
      */
-    setContents: function() {
+    setContents() {
         return this.get('value');
     },
 
@@ -335,9 +342,9 @@ export default Ember.Component.extend({
      * @method clearContents
      * @public
      */
-    clearContents: function() {
+    clearContents() {
         this.set('value','');
-        Ember.$(this.element).html('');
+        $(this.element).html('');
     },
 
     /**
@@ -347,14 +354,14 @@ export default Ember.Component.extend({
      * @public
      * @todo get the base link for issues and users via a function.
      */
-    didRender: function() {
-        var self = this;
+    didRender() {
+        let self = this;
 
         // Add a listener for clearing the contents
-        self.get('_targetObject').on('clearContents', Ember.$.proxy(self.clearContents, self));
+        self.get('_targetObject').on('clearContents', $.proxy(self.clearContents, self));
 
         // Setup the message box to load listen to the keyword @, # and :
-        Ember.$('#'+this.elementId)
+        $('#'+this.elementId)
             .atwho({
                 at: "@",
                 data: self.get('usersList'),
@@ -384,7 +391,7 @@ export default Ember.Component.extend({
      */
     willDestroyElement() {
         this._super(...arguments);
-        Ember.$('#'+this.elementId).atwho('destroy');
+        $('#'+this.elementId).atwho('destroy');
     },
 
 });

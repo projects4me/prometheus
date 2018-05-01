@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
 import _ from "lodash";
+import { helper } from '@ember/component/helper';
 
 /**
  * This is a helper function that is used to retrieve the sum of time log entries
@@ -16,16 +16,16 @@ import _ from "lodash";
  * @private
  */
 export function getTimelog(params) {
-    var sum = 0;
+    let sum = 0;
 
     if (params[0] !== undefined)
     {
-        var issueCount = params[0].get('length');
-        for (var i=0;i<issueCount;i++){
-            var issue = params[0].nextObject(i);
+        let issueCount = params[0].get('length');
+        for (let i=0;i<issueCount;i++){
+            let issue = params[0].objectAt(i);
             if (issue !== undefined)
             {
-                var timelog = issue.get(params[1]);
+                let timelog = issue.get(params[1]);
                 if (timelog !== undefined)
                 {
                     sum += _.sum(timelog.getEach('days').map(Number)) * 24;
@@ -46,4 +46,4 @@ export function getTimelog(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(getTimelog);
+export default helper(getTimelog);

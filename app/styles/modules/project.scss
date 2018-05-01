@@ -240,18 +240,17 @@
     color: $warningColor;
   }
 
-  ion.ion-android-add{
+  ion.ion-md-add{
     font-size: 6rem;
     color: inherit;
   }
-  .ion-android-add:before{
+  .ion-md-add:before{
     margin-top:1.5rem;
   }
 
 }
 
-
-.issues{
+.projects{
   .nav-pills{
     >li>a{
       margin-right: 2rem;

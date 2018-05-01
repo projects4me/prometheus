@@ -2,9 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
+import { capitalize } from '@ember/string';
 import MD from "../utils/metadata/metadata";
-import Helper from '@ember/component/helper';
 
 /**
  * This is a helper function that is used get the icon for the nav item
@@ -18,7 +18,7 @@ import Helper from '@ember/component/helper';
  */
 export function navIcon(params) {
     let metaData = MD.create().getViewMeta('Navigation','items');
-    let navModule = Ember.String.capitalize(params[0]);
+    let navModule = capitalize(params[0]);
     if (navModule === 'App') {
         navModule = 'Dashboard';
     } else if (navModule === 'Projects') {
@@ -39,4 +39,4 @@ export function navIcon(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Helper.helper(navIcon);
+export default helper(navIcon);

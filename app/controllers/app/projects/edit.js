@@ -1,5 +1,11 @@
-import Ember from 'ember';
-import  format from "../../../utils/data/format";
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+import Prometheus from "prometheus/controllers/prometheus";
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
+
 /**
  * This is empty controller, normally we do not create them. However
  * Ember's inject in the child controllers was failing on reload
@@ -7,33 +13,12 @@ import  format from "../../../utils/data/format";
  * does not work on run time generated controllers in case of page reload
  *
  * @class Create
- * @namespace Prometheus.Controller.Projects
- * @module App
- * @extends Ember.Controller
+ * @namespace Prometheus.Controllers
+ * @module App.Projects
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
-
-
-    /**
-     * The current user service
-     *
-     * @property currentUser
-     * @type Ember.Service
-     * @for Create
-     * @public
-     */
-    currentUser: Ember.inject.service(),
-
-    /**
-     * The i18n library service that is used in order to get the translations
-     *
-     * @property i18n
-     * @type Ember.Service
-     * @for Create
-     * @public
-     */
-    i18n: Ember.inject.service(),
+export default Prometheus.extend({
 
     /**
      * This property is used to control the enabling and disabling of the save
@@ -58,7 +43,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    appController: Ember.inject.controller('app'),
+    appController: injectController('app'),
 
     /**
      * This is a computed property in which gets the list of users
@@ -69,29 +54,10 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    usersList: Ember.computed(function(){
+    usersList: computed('appController.usersList', function(){
         return this.get('appController').get('usersList');
-    }).property('appController.usersList'),
+    }),
 
-    // /**
-    //  * This is a computed property that generated the project short
-    //  * code automatically based on the project name
-    //  *
-    //  * @property shortCode
-    //  * @type String
-    //  * @for Create
-    //  * @public
-    //  * @todo optimize the short code generation algorithm to reduce conflicts
-    //  */
-    // shortCode: Ember.computed(function(){
-    //     let name = '';
-    //     if (this.get('model.name') !== undefined) {
-    //         name = this.get('model.name');
-    //     }
-    //     let shortCode = name.slice(0,5).toUpperCase();
-    //     this.set('model.shortCode',shortCode);
-    //     return shortCode;
-    // }).property('model.name'),
     /**
      * These are the events that this controller handles
      *
@@ -109,7 +75,7 @@ export default Ember.Controller.extend({
          * @param {Object} target
          * @public
          */
-        selectOwner:function(target)
+        selectOwner(target)
         {
             Logger.debug('App.Projects.Create:selectAssignee');
             let model = this.get('model');
@@ -124,7 +90,7 @@ export default Ember.Controller.extend({
          * @param {Object} target
          * @public
          */
-        selectStatus:function(target)
+        selectStatus(target)
         {
             Logger.debug('App.Projects.Create:selectStatus');
             let model = this.get('model');
@@ -139,7 +105,7 @@ export default Ember.Controller.extend({
          * @param {Object} target
          * @public
          */
-        selectType:function(target)
+        selectType(target)
         {
             Logger.debug('App.Projects.Create:selectType');
             let model = this.get('model');
@@ -185,11 +151,10 @@ export default Ember.Controller.extend({
          * @public
          * @todo Trigger the notificaiton
          */
-        save:function() {
+        save() {
             let _self = this;
             let model = _self.get('model');
 
-            model.dateModified = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
             model.modifiedUser = _self.get('currentUser.user.id');
             model.modifedUserName = _self.get('currentUser.user.name');
 
@@ -203,12 +168,12 @@ export default Ember.Controller.extend({
                 Logger.debug(data);
 
                 new Messenger().post({
-                    message: _self.get('i18n').t('view.app.project.edit.saved',{name:data.get('name')}),
+                    message: _self.get('i18n').t('views.app.project.edit.saved',{name:data.get('name')}),
                     type: 'success',
                     showCloseButton: true
                 });
 
-                _self.transitionToRoute('app.project.index', {projectId:data.get('id')});
+                _self.transitionToRoute('app.project.index', {project_id:data.get('id')});
             });
         },
 
@@ -219,7 +184,7 @@ export default Ember.Controller.extend({
          * @public
          * @todo Trigger the notificaiton
          */
-        cancel:function(){
+        cancel(){
             this.transitionToRoute('app.projects');
         },
     }

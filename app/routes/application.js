@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
+import Route from '@ember/routing/route';
+import { inject } from '@ember/service';
 
 /**
  * This is the application route, in EmberJs the application route is the main
@@ -15,7 +16,7 @@ import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mi
  * @uses ApplicationRouteMixin
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Route.extend(ApplicationRouteMixin,{
+export default Route.extend(ApplicationRouteMixin,{
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -25,7 +26,7 @@ export default Ember.Route.extend(ApplicationRouteMixin,{
      * @for Application
      * @public
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * The session service which is offered by ember-simple-auth that will be used
@@ -36,7 +37,7 @@ export default Ember.Route.extend(ApplicationRouteMixin,{
      * @for Application
      * @public
      */
-    session: Ember.inject.service('session'),
+    session: inject(),
 
     /**
      * This function get triggered before a model fetch is called, this is

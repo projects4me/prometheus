@@ -1,37 +1,38 @@
 {{#application-wrapper}}
 
-    <!-- Main Header -->
-    {{application-header
-            currentUser=currentUser
-            session=session
-            invalidateSession=(action "invalidateSession")}}
+  {{!-- Main Header --}}
+  {{application-header
+      currentUser=currentUser
+      session=session
+      invalidateSession=(action "invalidateSession")
+      userProfile=(action "userProfile")}}
 
-    <!-- Left side column. contains the logo and sidebar -->
-    {{application-sidebar
-            projectList=projectList
-            projectId=projectId
-            currentUser=currentUser
-    }}
+  {{!-- Left side column. contains the logo and sidebar --}}
+  {{application-sidebar
+      projectList=projectList
+      projectId=projectId
+      currentUser=currentUser
+  }}
 
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        {{outlet}}
-    </div>
-    <!-- /.content-wrapper -->
+  {{!-- Content Wrapper. Contains page content --}}
+  <div class="content-wrapper">
+    {{outlet}}
+  </div>
+  {{!-- /.content-wrapper --}}
 
-    <!-- Main Footer -->
-    {{application-footer}}
+  {{!-- Main Footer --}}
+  {{application-footer}}
 
-    <!-- Control Sidebar -->
-    {{application-controlbar
-        initChat=(action 'startChat')
-        gotMessage=(action 'newMessage')
-    }}
-    <!-- /.control-sidebar -->
+  {{!-- Control Sidebar --}}
+  {{application-controlbar
+      initChat=(action 'startChat')
+      gotMessage=(action 'newMessage')
+  }}
+  {{!-- /.control-sidebar --}}
 
-    <!-- Add the sidebar's background. This div must be placed
-         immediately after the control sidebar -->
-    <div class="control-sidebar-bg"></div>
+  {{!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar --}}
+  <div class="control-sidebar-bg"></div>
 {{/application-wrapper}}
 {{#each chatrooms as |chatroom|}}
   {{chat-box

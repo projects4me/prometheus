@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Component from '@ember/component';
+import $ from 'jquery';
 
 /**
  * This class is used to provide the application contents
@@ -13,7 +14,7 @@ import Ember from "ember";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * This function is used to activate the AdminLTE layout
@@ -23,7 +24,7 @@ export default Ember.Component.extend({
      * @public
      */
     didInsertElement(){
-        Ember.$.AdminLTE.layout.activate();
-        Ember.$.AdminLTE.boxWidget.activate();
+        $.AdminLTE.layout.activate();
+        $.AdminLTE.boxWidget.activate();
     }
 });

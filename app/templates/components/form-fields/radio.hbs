@@ -1,12 +1,12 @@
 {{#each-in options as |idx option|}}
 
   <div class="radio radio-primary">
-    <!--input type="radio" name="{{elementId}}-option" value="{{option.value}}" -->
+    {{!--input type="radio" name="{{elementId}}-option" value="{{option.value}}" --}}
     {{input
-      type="radio"
-      value=option.value
-      change=(action "changed")
-      name=(concat elementId "-option")}}
+        type="radio"
+        value=option.value
+        change=(action "changed")
+        name=(concat elementId "-option")}}
 
     <label>
       {{option.label}}

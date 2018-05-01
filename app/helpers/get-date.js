@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import { helper } from '@ember/component/helper';
 
 /**
  * This is a helper function that is used to format the dates for Handlebars
@@ -15,9 +15,9 @@ import Ember from 'ember';
  * @private
  */
 export function getDate(params) {
-    var data = params[0];
-    var index = params[1];
-    var format = "MMMM Do YYYY, h:mm:ss a";
+    let data = params[0];
+    let index = params[1];
+    let format = "MMMM Do YYYY, h:mm:ss a";
     if (params[2] !== undefined)
     {
         format = params[2];
@@ -38,4 +38,4 @@ export function getDate(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(getDate);
+export default helper(getDate);

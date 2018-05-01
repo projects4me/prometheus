@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import _ from "lodash";
+import { helper } from '@ember/component/helper';
 
 /**
  * This method get the count of the votes cast for a conversation room
@@ -27,4 +27,4 @@ export function countVotes(params) {
  * @extends Ember.Helper.helper
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Helper.helper(countVotes);
+export default helper(countVotes);

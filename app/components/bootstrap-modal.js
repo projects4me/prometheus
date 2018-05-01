@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Component from '@ember/component';
 
 /**
  * This component is used used for the control the bootstrap modal
@@ -12,7 +12,7 @@ import Ember from "ember";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * Show the modal
@@ -20,11 +20,12 @@ export default Ember.Component.extend({
      * @method show
      * @private
      */
-    show: function() {
-        this.$('.modal').modal().on('hidden.bs.modal', function() {
-            this.sendAction('close');
+    didRender() {
+        let _self = this;
+        _self.$('.modal').modal().on('hidden.bs.modal', function() {
+            _self.sendAction('close');
         }.bind(this));
-    }.on('didRender'),
+    },
 
     /**
      * These are the actions supported by this components
@@ -44,8 +45,10 @@ export default Ember.Component.extend({
          * @public
          */
         confirm: function() {
-            this.$('.modal').modal('hide');
-            this.sendAction('confirm');
+            let _self = this;
+            if (_self.sendAction('confirm')) {
+                _self.$('.modal').modal('hide');
+            }
         }
     },
 

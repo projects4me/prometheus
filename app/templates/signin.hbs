@@ -1,22 +1,22 @@
 <div class="login-box">
   <div class="login-logo">
-    <a href="#"><img alt="{{t "application"}}" src="/img/app/logo-256.png"><div class="clearfix"></div><b>Projects</b>4<b>Me</b></a>
+    <a href="#"><img alt="{{t "application"}}" src="/img/app/logo-256.png"><div class="clearfix"></div>{{t "views.signin.title"}}</a>
   </div>
-  <!-- /.login-logo -->
+  {{!-- /.login-logo --}}
   <div class="login-box-body">
     {{#if errorMessage}}
       <p class="login-box-msg">{{errorMessage}}</p>
     {{else}}
-      <p class="login-box-msg">{{t "view.signin.message"}}</p>
+      <p class="login-box-msg">{{t "views.signin.message"}}</p>
     {{/if}}
 
     <form {{action 'authenticate' on='submit'}} method="post">
       <div class="form-group has-feedback">
-        {{input id='username' class='form-control' placeholder=(t "view.signin.username") value=username}}
+        {{input id='username' class='form-control' placeholder=(t "views.signin.username") value=username}}
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        {{input id='password' class='form-control' type='password' placeholder=(t "view.signin.password") value=password}}
+        {{input id='password' class='form-control' type='password' placeholder=(t "views.signin.password") value=password}}
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
@@ -28,7 +28,7 @@
         <div class="col-xs-4 col-xs-offset-4">
           <div class="checkbox icheck">
             <label>
-              <input type="checkbox">{{t "view.signin.remember"}}
+              <input type="checkbox">{{t "views.signin.remember"}}
             </label>
           </div>
         </div>
@@ -37,13 +37,13 @@
     </form>
 
     <div class="social-auth-links text-center">
-      <p>{{t "view.signin.or"}}</p>
-      <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i>{{t "view.signin.facebook"}}</a>
-      <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i>{{t "view.signin.google"}}</a>
+      <p>{{t "views.signin.or"}}</p>
+      <a href="#" class="btn btn-block btn-social btn-facebook btn-flat"><i class="fa fa-facebook"></i>{{t "views.signin.facebook"}}</a>
+      <a href="#" class="btn btn-block btn-social btn-google btn-flat"><i class="fa fa-google-plus"></i>{{t "views.signin.google"}}</a>
     </div>
-    <!-- /.social-auth-links -->
+    {{!-- /.social-auth-links --}}
 
-    <a href="#">{{t "view.signin.forgot"}}</a><br>
+    <a href="#">{{t "views.signin.forgot"}}</a><br>
   </div>
-  <!-- /.login-box-body -->
+  {{!-- /.login-box-body --}}
 </div>

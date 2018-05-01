@@ -2,8 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import Component from '@ember/component';
 import ENV from "prometheus/config/environment";
+import { inject } from '@ember/service';
+import $ from 'jquery';
 
 /**
  * This component is used to render the application header
@@ -13,7 +15,7 @@ import ENV from "prometheus/config/environment";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * This is the socket service for the application
@@ -22,7 +24,7 @@ export default Ember.Component.extend({
      * @type Ember.Service
      * @for ApplicationControlbar
      */
-    websockets: Ember.inject.service('socket-io'),
+    websockets: inject('socket-io'),
 
     /**
      * The current user of the application
@@ -31,7 +33,7 @@ export default Ember.Component.extend({
      * @type Ember.Service
      * @for ApplicationControlbar
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject('current-user'),
 
     /**
      * The tag to be used for this component
@@ -61,7 +63,7 @@ export default Ember.Component.extend({
      * @protected
      */
     didInsertElement(){
-        Ember.$.AdminLTE.controlSidebar.activate();
+        $.AdminLTE.controlSidebar.activate();
         this._super(...arguments);
         let _self = this;
         _self.users = [];
@@ -79,6 +81,7 @@ export default Ember.Component.extend({
 
     onConnect(data) {
         Logger.debug('Connection established');
+        Logger.debug(data);
         let _self = this;
         const socket = _self.get('websockets').socketFor(this.serverURI);
 
@@ -89,14 +92,14 @@ export default Ember.Component.extend({
 
     onUserJoined(data){
         Logger.debug('A user has joined');
-        console.log(data);
+        Logger.debug(data);
         const socket = this.get('websockets').socketFor(this.serverURI);
         socket.emit('list');
     },
 
     onUserLeft(data){
         Logger.debug('A user has left');
-        console.log(data);
+        Logger.debug(data);
         const socket = this.get('websockets').socketFor(this.serverURI);
         socket.emit('list');
     },
@@ -115,7 +118,7 @@ export default Ember.Component.extend({
         // This is executed within the ember run loop
         this.set('users',data);
         this.users = data;
-        console.log(data);
+        Logger.debug(data);
     },
 
     willDestroyElement() {

@@ -2,46 +2,32 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
-import Ember from "ember";
+import Prometheus from "prometheus/controllers/prometheus";
 import { task } from 'ember-concurrency';
+import { inject as injectController } from '@ember/controller';
+import { get } from '@ember/object';
+import { set } from '@ember/object';
+import $ from 'jquery';
+import { computed } from '@ember/object';
+import Evented from '@ember/object/evented';
 
-const { get, set } = Ember;
 /**
  * This controller is used to manage the issues detail/page view
  *
  * @class Page
  * @namespace Prometheus.Controllers
  * @module App.Project.Issue
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
-
-    /**
-     * The ESA session storage service
-     *
-     * @param session
-     * @type service
-     * @private
-     */
-    session: Ember.inject.service(),
-
-    /**
-     * The current user
-     *
-     * @param currentUser
-     * @type service
-     * @private
-     */
-    currentUser: Ember.inject.service(),
+export default Prometheus.extend(Evented,{
 
     /**
      * This flag is used to show or hide the modal dialog box
      * for file previews
      *
      * @property previewFileDialog
-     * @type bool
+     * @type boolean
      * @for Page
      * @private
      */
@@ -52,7 +38,7 @@ export default Ember.Controller.extend({
      * for time log
      *
      * @property logTimeDialog
-     * @type bool
+     * @type boolean
      * @for Page
      * @private
      */
@@ -73,7 +59,7 @@ export default Ember.Controller.extend({
      * for editing time log entry
      *
      * @property editLogDialog
-     * @type bool
+     * @type boolean
      * @for Page
      * @private
      */
@@ -101,7 +87,8 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    projectController: Ember.inject.controller('app.project'),
+    projectController: injectController('app.project'),
+
 
     /**
      * This is a computed property in which gets the list of users
@@ -112,10 +99,32 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    usersList: Ember.computed(function(){
+    usersList: computed(function(){
         return this.get('projectController').get('usersList');
     }),
 
+    /**
+     * This is a computed property in which gets the list of issues
+     * associated with a project loaded by the project controller
+     *
+     * @property issuesList
+     * @type Array
+     * @for Page
+     * @private
+     */
+    issuesList: computed('projectController.issuesList', function(){
+        return this.get('projectController').get('issuesList');
+    }),
+
+    /**
+     * The comments from the comment box
+     *
+     * @property comment
+     * @type Array
+     * @for Page
+     * @public
+     */
+    comment:null,
     /**
      * This is a task to handle file uploading
      *
@@ -124,7 +133,7 @@ export default Ember.Controller.extend({
      * @private
      */
     handleUpload: task(function * (file) {
-        let self = this;
+        let _self = this;
 
         let upload = this.store.createRecord('upload', {});
 
@@ -134,7 +143,7 @@ export default Ember.Controller.extend({
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'issue',
-                    relatedId: self.get('model').nextObject(0).get('id')
+                    relatedId: _self.get('model').objectAt(0).get('id')
                 },
                 headers: upload.store.adapterFor('upload').headersForRequest()
             };
@@ -143,33 +152,46 @@ export default Ember.Controller.extend({
 
             let data = JSON.parse(response.body);
             /**
-             *
-             *
-             *
-             *
              *  @todo check for errors
-             *
-             *
-             *
-             *
              */
             set(upload, 'id',data.data.id);
             set(upload, 'name',data.data.attributes.name);
             set(upload, 'fileSize',data.data.attributes.fileSize);
             set(upload, 'fileType',data.data.attributes.fileType);
             set(upload, 'fileMime',data.data.attributes.fileMime);
-            set(upload, 'dateCreated',data.data.attributes.dateCreated);
-            set(upload, 'dateModified',data.data.attributes.dateModified);
-            set(upload, 'modifiedUser',data.data.attributes.modifiedUser);
-            set(upload, 'createdUser',data.data.attributes.createdUser);
             set(upload, 'relatedTo',data.data.attributes.relatedTo);
             set(upload, 'relatedId',data.data.attributes.relatedId);
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
-            self.get('model').nextObject(0).get('files').pushObject(upload);
+            _self.get('model').objectAt(0).get('files').pushObject(upload);
         } catch (e) {
             //upload.rollback();
         }
     }).maxConcurrency(3).enqueue(),
+
+    /**
+     * This function saves the comment in the database
+     *
+     * @param issue
+     * @param comment
+     * @private
+     */
+    _createComment(issue, content) {
+        Logger.debug('Prometheus.Controllers.App.Project.Issue.Page::_createComment');
+
+        let _self = this;
+        let comment = _self.get('store').createRecord('comment', {
+            relatedId: issue.get('conversationRoomId'),
+            relatedTo: 'conversationrooms',
+            comment: content,
+        });
+
+        comment.save().then(function (savedComment) {
+            issue.get('comments').pushObject(savedComment);
+            _self.trigger('clearContents');
+        });
+
+        Logger.debug('-Prometheus.Controllers.App.Project.Issue.Page::_createComment');
+    },
 
     /**
      * This function is used to validate the time log
@@ -217,7 +239,7 @@ export default Ember.Controller.extend({
          */
         editIssue:function(issueNumber){
             Logger.debug('AppProjectIssuePageController::editIssue('+issueNumber+')');
-            this.transitionToRoute('app.project.issue.edit',{issueNumber:issueNumber});
+            this.transitionToRoute('app.project.issue.edit',{issue_number:issueNumber});
             Logger.debug('-AppProjectIssuePageController::paginate()');
         },
 
@@ -238,25 +260,25 @@ export default Ember.Controller.extend({
          */
         deleteFile:function(file){
             Logger.debug('App.Project.Issue.PageController->deleteFile');
-            let self = this;
+            let _self = this;
             Logger.debug(self);
 
             let deleting = new Messenger().post({
-                message: self.get('i18n').t("view.app.issue.detail.file.delete",{name:file.get('name')}).toString(),
+                message: _self.get('i18n').t("views.app.issue.detail.file.delete",{name:file.get('name')}).toString(),
                 type: 'warning',
                 showCloseButton: true,
                 actions: {
                     confirm: {
-                        label: self.get('i18n').t("view.app.issue.detail.file.confirmdelete").toString(),
+                        label: _self.get('i18n').t("views.app.issue.detail.file.confirmdelete").toString(),
                         action: function() {
 
                             // destroy the upload
-                            file.destroyRecord().then(function(data){
+                            file.destroyRecord().then(function(){
                                 // remove from the view by updating the model
-                                self.get('model').nextObject(0).get('files').removeObject(file);
+                                _self.get('model').objectAt(0).get('files').removeObject(file);
 
                                 return deleting.update({
-                                    message: self.get('i18n').t("view.app.issue.detail.file.deleted"),
+                                    message: _self.get('i18n').t("views.app.issue.detail.file.deleted"),
                                     type: 'success',
                                     actions: false
                                 });
@@ -264,10 +286,10 @@ export default Ember.Controller.extend({
                         }
                     },
                     cancel: {
-                        label: self.get('i18n').t("view.app.issue.detail.file.onsecondthought").toString(),
+                        label: _self.get('i18n').t("views.app.issue.detail.file.onsecondthought").toString(),
                         action: function() {
                             return deleting.update({
-                                message: self.get('i18n').t("view.app.issue.detail.file.deletecancel"),
+                                message: _self.get('i18n').t("views.app.issue.detail.file.deletecancel"),
                                 type: 'success',
                                 actions: false
                             });
@@ -287,8 +309,8 @@ export default Ember.Controller.extend({
          */
         downloadFile:function(file){
             Logger.debug('App.Project.Issue.PageController->downloadFile');
-            let self = this;
-            Logger.debug(self);
+            let _self = this;
+            Logger.debug(_self);
 
             // get a download token
             let options = {
@@ -296,11 +318,11 @@ export default Ember.Controller.extend({
                 download: true
             };
             Logger.debug('Retrieving upload with options '+options);
-            let upload = this.get('store').query('upload',options).then(function(data){
-                let downloadLink = data.nextObject(0).get('downloadLink');
+            this.get('store').query('upload',options).then(function(data){
+                let downloadLink = data.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
-                let path = self.get('store').adapterFor('upload').host+'/download/get/'+downloadLink;
+                let path = _self.get('store').adapterFor('upload').host+'/download/get/'+downloadLink;
                 window.open(path,'_blank');
                 Logger.debug(path);
 
@@ -319,9 +341,9 @@ export default Ember.Controller.extend({
          */
         previewFile:function(file){
             Logger.debug('App.Project.Issue.PageController->previewFile');
-            let self = this;
-            Logger.debug(self);
-            self.send('showDialog');
+            let _self = this;
+            Logger.debug(_self);
+            _self.send('showDialog');
 
             // get a download token
             let options = {
@@ -329,12 +351,12 @@ export default Ember.Controller.extend({
                 download: true
             };
             Logger.debug('Retrieving upload with options '+options);
-            self.get('store').query('upload',options).then(function(contents){
-                let downloadLink = contents.nextObject(0).get('downloadLink');
+            _self.get('store').query('upload',options).then(function(contents){
+                let downloadLink = contents.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
-                let path = self.get('store').adapterFor('upload').host+'/preview/get/'+downloadLink;
-                Ember.$('#file_preview').attr('src',path);
+                let path = _self.get('store').adapterFor('upload').host+'/preview/get/'+downloadLink;
+                $('#file_preview').attr('src',path);
                 Logger.debug(path);
             });
 
@@ -360,30 +382,27 @@ export default Ember.Controller.extend({
 
             // Validate the time log and spentOn
             if (_self._validateLog(newLog)) {
-                newLog.set('dateCreated','CURRENT_DATETIME');
-                newLog.set('dateModified','CURRENT_DATETIME');
-                newLog.set('createdUser',_self.get('currentUser.user.id'));
-                newLog.set('modifiedUser',_self.get('currentUser.user.id'));
-                newLog.set('createdUserName',_self.get('currentUser.user.name'));
-                newLog.set('modifiedUserName',_self.get('currentUser.user.name'));
-                newLog.set('deleted',0);
-                newLog.set('issueId',_self.get('model').nextObject(0).get('id'));
+                newLog.set('issueId',_self.get('model').objectAt(0).get('id'));
                 newLog.set('context','spent');
 
                 newLog.save().then(function (data) {
+
                     let timelog = _self.get('store').createRecord('timelog');
                     _self.set('newTimeLog',timelog);
-                    _self.get('model').nextObject(0).get('spent').pushObject(newLog);
+                    _self.get('model').objectAt(0).get('spent').pushObject(newLog);
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.issue.detail.timelog.added"),
+                        message: _self.get('i18n').t("views.app.issue.detail.timelog.added"),
                         type: 'success',
                         showCloseButton: true
                     });
+
+                    _self.send('reload');
+
                 });
             } else {
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.issue.detail.timelog.missing"),
+                    message: _self.get('i18n').t("views.app.issue.detail.timelog.missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -409,21 +428,19 @@ export default Ember.Controller.extend({
 
             // Validate the time log and spentOn
             if (_self._validateLog(log)) {
-                log.set('dateModified',moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
-                log.set('modifiedUser',_self.get('currentUser.user.id'));
-                log.set('modifiedUserName',_self.get('currentUser.user.name'));
-
-                log.save().then(function (data) {
+                log.save().then(function () {
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.issue.detail.timelog.edited"),
+                        message: _self.get('i18n').t("views.app.issue.detail.timelog.edited"),
                         type: 'success',
                         showCloseButton: true
                     });
+                    _self.send('reload');
+
                 });
             } else {
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.issue.detail.timelog.missing"),
+                    message: _self.get('i18n').t("views.app.issue.detail.timelog.missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -433,6 +450,37 @@ export default Ember.Controller.extend({
             _self.send('removeEditLogModal');
 
             Logger.debug('-App.Project.Issue.PageController->logTime');
+        },
+
+        saveComment:function (issue, comment) {
+            Logger.debug('Prometheus.Controller.App.Project.Issue.Page::saveComment');
+
+            let _self = this;
+            Logger.debug(issue);
+            Logger.debug(comment);
+            if (issue.get('conversationRoomId') == undefined)
+            {
+                let newConversation = _self.get('store').createRecord('conversationroom',{
+                    subject: 'Issue #' + issue.get('issueNumber'),
+                    description: issue.get('subject'),
+                    roomType: 'discussion',
+                    projectId: issue.get('projectId'),
+                    projectName: issue.get('project.name'),
+                    issueId: issue.get('id')
+                });
+                Logger.debug(newConversation);
+                // Save it
+                newConversation.save().then(function(conversation){
+                    issue.set('conversationRoomId',conversation.get('id'))
+                    _self._createComment(issue, comment);
+                    _self.set('comment',null);
+                });
+            } else {
+                _self._createComment(issue, comment);
+                _self.set('comment',null);
+            }
+
+            Logger.debug('-Prometheus.Controller.App.Project.Issue.Page::saveComment');
         },
 
         /**
@@ -477,6 +525,7 @@ export default Ember.Controller.extend({
          */
         removeModal:function(){
             this.set('filePreviewDialog',false);
+            $('.modal').modal('hide');
         },
 
         /**
@@ -487,6 +536,7 @@ export default Ember.Controller.extend({
          */
         removeLogTimeModal:function(){
             this.set('logTimeDialog',false);
+            $('.modal').modal('hide');
         },
 
         /**
@@ -498,6 +548,7 @@ export default Ember.Controller.extend({
         removeEditLogModal:function(){
             this.set('editingLog',null);
             this.set('editLogDialog',false);
+            $('.modal').modal('hide');
         },
     }
 

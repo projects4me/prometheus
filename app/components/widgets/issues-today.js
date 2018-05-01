@@ -2,8 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import Widget from "./widgets";
+import { inject } from '@ember/service';
+import _ from "lodash";
+import $ from 'jquery';
 
 /**
  * This class adds the functionality of dropdown action menu in the system
@@ -25,7 +27,7 @@ export default Widget.extend({
      * @for IssuesToday
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * The i18n Service
@@ -35,7 +37,7 @@ export default Widget.extend({
      * @for IssuesToday
      * @private
      */
-    router: Ember.inject.service(),
+    router: inject(),
 
     /**
      * This function is called after the HTML elements have been
@@ -56,7 +58,7 @@ export default Widget.extend({
             dataSet.push([
                 '<a href="javascript:void(0);">'+issue.get('issueNumber')+'</a>',
                 '<a href="javascript:void(0);">'+issue.get('subject')+'</a>',
-                i18n.t("view.app.issue.lists.status."+issue.get('status')),
+                '<span class="badge '+issue.get('status')+'">'+i18n.t("views.app.issue.lists.status."+issue.get('status'))+'</span>',
                 moment(issue.get('startDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 moment(issue.get('endDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 issue.get('project.name'),
@@ -64,7 +66,7 @@ export default Widget.extend({
             ])
         });
 
-        let table = Ember.$('#'+this.elementId+' table').DataTable({
+        let table = $('#'+this.elementId+' table').DataTable({
             data: dataSet,
             select: true,
             columns: [
@@ -92,8 +94,8 @@ export default Widget.extend({
 
                 issueNumber = _.replace(issueNumber,'<a href="javascript:void(0);">','');
                 issueNumber = _.replace(issueNumber,'</a>','');
-                _self.get('router').transitionTo('app.project', {projectId:projectId});
-                _self.get('router').transitionTo('app.project.issue.page', {projectId:projectId,issueNumber:issueNumber});
+                _self.get('router').transitionTo('app.project', {project_id:projectId});
+                _self.get('router').transitionTo('app.project.issue.page', {project_id:projectId,issue_number:issueNumber});
             }
         } );
     }

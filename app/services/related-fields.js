@@ -2,9 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
-
-const { inject: { service } } = Ember;
+import Service from '@ember/service';
+import { inject } from '@ember/service';
 
 /**
  * This is the service that is used to mange relate field. In many cased e.g. Owner, AssignedUser, Projects. The total
@@ -21,7 +20,7 @@ const { inject: { service } } = Ember;
  * @extends Ember.Service
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Service.extend({
+export default Service.extend({
 
     /**
      * This is the cached data that we use in order to store the lists we have retrieved
@@ -41,7 +40,7 @@ export default Ember.Service.extend({
      * @for RelatedField
      * @private
      */
-    store: service('store'),
+    store: inject(),
 
     /**
      * This function is responsible for retrieving and storing the lists required by dropdowns

@@ -2,9 +2,11 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Prometheus from "prometheus/controllers/prometheus";
 import format from "../../../utils/data/format";
 import _ from "lodash";
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
 
 /**
  * This is the index page of the project, index page for the project is
@@ -13,30 +15,10 @@ import _ from "lodash";
  * @class Index
  * @namespace Prometheus.Controllers
  * @module App.Project
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
-
-    /**
-     * The current user service
-     *
-     * @property currentUser
-     * @type Ember.Service
-     * @for Index
-     * @public
-     */
-    currentUser: Ember.inject.service(),
-
-    /**
-     * The internationalization service
-     *
-     * @property i18n
-     * @type Ember.Service
-     * @for Index
-     * @public
-     */
-    i18n: Ember.inject.service(),
+export default Prometheus.extend({
 
     /**
      * This flag is used to show or hide the modal dialog box
@@ -89,7 +71,7 @@ export default Ember.Controller.extend({
      * @for Index
      * @private
      */
-    appController: Ember.inject.controller('app'),
+    appController: injectController('app'),
 
     /**
      * This is the list of roles fetched by the app controller
@@ -99,7 +81,7 @@ export default Ember.Controller.extend({
      * @for Index
      * @private
      */
-    rolesList: Ember.computed(function(){
+    rolesList: computed(function(){
         return this.get('appController.rolesList');
     }),
 
@@ -111,13 +93,13 @@ export default Ember.Controller.extend({
      * @for Index
      * @private
      */
-    usersList: Ember.computed(function(){
+    usersList: computed('model', 'model.members', function(){
         let _self = this;
         let currentMembers = format.getSelectList(_self.get('model.members'));
         let usersList = _self.get('appController.usersList');
 
         return (_.differenceWith(usersList,currentMembers,_.isEqual));
-    }).property('model','model.members'),
+    }),
 
     milestoneTypes : [
         {"label":"Milestone","value":"milestone"},
@@ -159,7 +141,21 @@ export default Ember.Controller.extend({
          */
         navigateToProjectPage(entity,query){
             Logger.debug("AppProjectIndexController::navigateToProjectPage("+entity+","+query+")");
-            this.transitionToRoute('app.project.'+entity,{projectId:this.get('projectId')});
+            this.transitionToRoute('app.project.'+entity,{project_id:this.get('projectId')});
+        },
+
+        /**
+         * This action is used to allow navigation to a user to a project related
+         * page
+         *
+         * @method navigateToProjectPage
+         * @param {String} entity This is the entity the user wants to navigate to
+         * @param {String} query The params passed in the format of encoded URL string
+         * @public
+         */
+        navigateToIssuePage(issueNumber){
+            Logger.debug("AppProjectIndexController::navigateToIssuePage("+issueNumber+")");
+            this.transitionToRoute('app.project.issue.page',{project_id:this.get('projectId'), issue_number:issueNumber});
         },
 
         /**
@@ -171,7 +167,7 @@ export default Ember.Controller.extend({
          */
         editProject(projectId){
             Logger.debug('Prometheus.App.Projects.Edit::editProject('+projectId+')');
-            this.transitionToRoute('app.projects.edit',{projectId:projectId});
+            this.transitionToRoute('app.projects.edit',{project_id:projectId});
             Logger.debug('-Prometheus.App.Projects.Edit::editProject');
         },
 
@@ -219,15 +215,7 @@ export default Ember.Controller.extend({
                     roleId: _self.get('selectedRole'),
                     userId: _self.get('selectedUser'),
                     projectId: _self.get('model.id'),
-                    dateCreated: 'CURRENT_DATETIME',
-                    dateModified: 'CURRENT_DATETIME',
-                    createdUser: _self.get('currentUser.user.id'),
-                    modifiedUser: _self.get('currentUser.user.id'),
-                    deleted: 0
                 });
-
-                let rolesList = _self.get('rolesList');
-                let usersList = _self.get('usersList');
 
                 let role = _self.get('store').peekRecord('role',_selectedRole);
                 let user = _self.get('store').peekRecord('user',_selectedUser);
@@ -243,14 +231,14 @@ export default Ember.Controller.extend({
 
                     _self.set('selectedUser', null);
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.project.detail.membership.added",{role:role.get('name'),user:user.get('name')}),
+                        message: _self.get('i18n').t("views.app.project.detail.membership.added",{role:role.get('name'),user:user.get('name')}),
                         type: 'success',
                         showCloseButton: true
                     });
                 });
             } else  {
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.project.detail.membership.missing"),
+                    message: _self.get('i18n').t("views.app.project.detail.membership.missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -333,6 +321,8 @@ export default Ember.Controller.extend({
             let _self = this;
             let newMilestone = _self.get('newMilestone');
             Logger.debug(_self);
+            Logger.debug(newMilestone.get('id'));
+            let isUpdate = (newMilestone.get('id') != undefined);
 
             if (newMilestone.get('name') !== null
                 && newMilestone.get('startDate') !== null
@@ -340,30 +330,25 @@ export default Ember.Controller.extend({
                 && newMilestone.get('typeDate') !== null
                 && newMilestone.get('statusDate') !== null) {
 
-                newMilestone.set('dateCreated',moment().utc().format('YYYY-MM-DD HH:mm:ss'));
-                newMilestone.set('dateModified',moment().utc().format('YYYY-MM-DD HH:mm:ss'));
-                newMilestone.set('createdUser',_self.get('currentUser.user.id'));
-                newMilestone.set('modifiedUser',_self.get('currentUser.user.id'));
                 newMilestone.set('projectId',_self.get('model.id'));
-                newMilestone.set('deleted',0);
 
                 // Add milestone to the system
                 newMilestone.save().then(function (data) {
+                    console.log(newMilestone.get('id'));
 
-                    if (newMilestone.get('id') === undefined) {
-                        _self.get('milestones').pushObject(newMilestone);
-
+                    if (!isUpdate) {
+                        _self.get('milestones').pushObject(data);
                     }
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.project.detail.milestone.added",{name:data.get('name')}),
+                        message: _self.get('i18n').t("views.app.project.detail.milestone.added",{name:data.get('name')}),
                         type: 'success',
                         showCloseButton: true
                     });
                 });
             } else  {
                 new Messenger().post({
-                    message: _self.get('i18n').t("view.app.project.detail.milestone.missing"),
+                    message: _self.get('i18n').t("views.app.project.detail.milestone.missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -416,8 +401,7 @@ export default Ember.Controller.extend({
         showMilestoneDialog()
         {
             let _self = this;
-            let newMilestone = _self.get('store').createRecord('milestone');
-            _self.set('newMilestone',newMilestone);
+            _self.send('resetNewMilestone');
             _self.set('milestoneDialog',true);
         },
 
@@ -431,10 +415,28 @@ export default Ember.Controller.extend({
             let _self = this;
 
             if (_self.get('newMilestone.id') !== undefined){
-                _self.get('milestones').findBy('id',_self.get('newMilestone.id')).rollbackAttributes();
+                _self.get('newMilestone').rollbackAttributes();
             }
 
+            _self.send('resetNewMilestone');
             _self.set('milestoneDialog',false);
+        },
+
+        /**
+         * This function is used to reset the newMilestone
+         *
+         * @method resetNewMilestone
+         * @public
+         */
+        resetNewMilestone:function(){
+            let _self = this;
+
+            let newMilestone = _self.get('store').createRecord('milestone',{
+                startDate: moment().format('YYYY-MM-DD'),
+                endDate: moment().format('YYYY-MM-DD'),
+            });
+
+            _self.set('newMilestone',newMilestone);
         }
 
 

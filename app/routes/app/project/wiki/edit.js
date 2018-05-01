@@ -28,9 +28,9 @@ export default Page.extend({
      * @private
      */
     getParams:function(){
-        var params = {};
-        params['projectId'] = this.paramsFor('app.project').projectId;
-        params['wikiName'] = this.paramsFor('app.project.wiki.edit').wikiName;
+        let params = {};
+        params['projectId'] = this.paramsFor('app.project').project_id;
+        params['wikiName'] = this.paramsFor('app.project.wiki.edit').wiki_name;
         return params;
     },
 

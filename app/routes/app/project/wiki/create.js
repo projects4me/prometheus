@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import App from "../../../app";
+import { inject } from '@ember/service';
 
 /**
  * This is the create route for the wiki pages section
@@ -48,7 +48,7 @@ export default App.extend({
      * @for Prometheus.Routes.Wiki.Create
      * @public
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject(),
 
 
 
@@ -76,17 +76,10 @@ export default App.extend({
         //this.project = this.store.findRecord('project',params.projectId,{rels:'none'});
 
         this.data = this.store.createRecord('wiki',{
-            dateCreated:'CURRENT_DATETIME',
-            dateModified:'CURRENT_DATETIME',
-            deleted:0,
-            createdUser:self.get('currentUser.user.id'),
-            modifiedUser:self.get('currentUser.user.id'),
             status:'published',
             locked:0,
             upvotes:1,
             projectId:params.projectId,
-            createdUserName: self.get('currentUser.user.name'),
-            modifiedUserName: self.get('currentUser.user.name'),
         });
         Logger.debug(this.data);
 
@@ -107,7 +100,7 @@ export default App.extend({
      */
     getParams:function(){
         let params = {};
-        params['projectId'] = this.paramsFor('app.project').projectId;
+        params['projectId'] = this.paramsFor('app.project').project_id;
         return params;
     }
 });

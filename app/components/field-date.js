@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import FormField from "../components/form-fields";
+import { computed } from '@ember/object';
+import $ from 'jquery';
 
 /**
  * This is the date field
@@ -33,7 +34,7 @@ export default FormField.extend({
      * @for FieldDate
      * @protected
      */
-    charLength: Ember.computed('value', function() {
+    charLength: computed('value', function() {
         return (this.get('value'));
     }),
 
@@ -52,10 +53,10 @@ export default FormField.extend({
         const tagName = _self.getTag(this.get('type'));
 
         if (mask !== undefined && mask !== '' && tagName !== undefined && tagName !== '') {
-            Ember.$('#'+_self.elementId+' '+tagName).mask(mask.mask,{translation:mask.maskTranslation});
+            $('#'+_self.elementId+' '+tagName).mask(mask.mask,{translation:mask.maskTranslation});
         }
 
-        Ember.$('#'+_self.elementId+' input').daterangepicker({
+        $('#'+_self.elementId+' input').daterangepicker({
             singleDatePicker: true,
             showDropdowns: true,
             locale: {
@@ -63,7 +64,7 @@ export default FormField.extend({
             }
         });
 
-        Ember.$('#'+_self.elementId+' input').on('apply.daterangepicker', function(ev, picker) {
+        $('#'+_self.elementId+' input').on('apply.daterangepicker', function(ev, picker) {
             if (typeof _self.update === 'function') {
                 _self.sendAction('update',picker.startDate.format('YYYY-MM-DD'));
             }

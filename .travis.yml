@@ -1,25 +1,43 @@
 ---
 language: node_js
 node_js:
-  - "4"
+  - "6"
 
 sudo: false
+dist: trusty
+
+addons:
+  chrome: stable
 
 cache:
   directories:
     - $HOME/.npm
-    - $HOME/.cache # includes bowers cache
+
+env:
+  global:
+    # See https://git.io/vdao3 for details.
+    - JOBS=1
+    - CC_TEST_REPORTER_ID=091c13b355fe326a9afff6e5963012bcb1f29addfea61699bc2f29ea1f17151a
 
 before_install:
   - npm config set spin false
   - npm install -g bower
   - bower --version
-  - npm install phantomjs-prebuilt
-  - node_modules/phantomjs-prebuilt/bin/phantomjs --version
 
 install:
   - npm install
   - bower install
 
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
 script:
+  - npm run lint:js
   - npm test
+
+after_script:
+  - ./cc-test-reporter format-coverage -t lcov -o codeclimate.cc.json coverage/lcov.info
+  - ./cc-test-reporter sum-coverage codeclimate.*.json -p 1 -o codeclimate.total.json
+  - ./cc-test-reporter upload-coverage -i codeclimate.total.json

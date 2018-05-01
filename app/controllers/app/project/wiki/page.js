@@ -2,11 +2,12 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Prometheus from "prometheus/controllers/prometheus";
 import { task } from 'ember-concurrency';
-
-const { get, set } = Ember;
-const { inject: { service } } = Ember;
+import { inject } from '@ember/service';
+import { get } from '@ember/object';
+import { set } from '@ember/object';
+import $ from 'jquery';
 
 /**
  * The controller for the wiki page route, it is loaded when a user tried to
@@ -18,20 +19,10 @@ const { inject: { service } } = Ember;
  * @class Page
  * @namespace Prometheus.Controllers
  * @module App.Project.Wiki
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
-
-    /**
-     * The current user service
-     *
-     * @property currentUser
-     * @type Ember.Service
-     * @for Page
-     * @public
-     */
-    currentUser: Ember.inject.service(),
+export default Prometheus.extend({
 
     /**
      * These are the tags that the user has selected.
@@ -61,7 +52,7 @@ export default Ember.Controller.extend({
      * @for Page
      * @private
      */
-    store: service(),
+    store: inject(),
 
 
     /**
@@ -83,7 +74,7 @@ export default Ember.Controller.extend({
      * @private
      */
     handleUpload: task(function * (file) {
-        let self = this;
+        let _self = this;
 
         let upload = this.store.createRecord('upload', {});
 
@@ -93,7 +84,7 @@ export default Ember.Controller.extend({
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'wiki',
-                    relatedId: self.get('model').nextObject(0).get('id')
+                    relatedId: _self.get('model').objectAt(0).get('id')
                 },
                 headers: upload.store.adapterFor('upload').headersForRequest()
             };
@@ -117,14 +108,10 @@ export default Ember.Controller.extend({
             set(upload, 'fileSize',data.data.attributes.fileSize);
             set(upload, 'fileType',data.data.attributes.fileType);
             set(upload, 'fileMime',data.data.attributes.fileMime);
-            set(upload, 'dateCreated',data.data.attributes.dateCreated);
-            set(upload, 'dateModified',data.data.attributes.dateModified);
-            set(upload, 'modifiedUser',data.data.attributes.modifiedUser);
-            set(upload, 'createdUser',data.data.attributes.createdUser);
             set(upload, 'relatedTo',data.data.attributes.relatedTo);
             set(upload, 'relatedId',data.data.attributes.relatedId);
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
-            self.get('model').nextObject(0).get('files').pushObject(upload);
+            _self.get('model').objectAt(0).get('files').pushObject(upload);
         } catch (e) {
             //upload.rollback();
         }
@@ -141,15 +128,15 @@ export default Ember.Controller.extend({
     actions: {
 
         /**
-         * Load the eidt page
+         * Load the edit page
          *
          * @method edit
          * @public
          * @todo Trigger the notificaiton
          */
-        edit:function() {
-            var model = this.get('model').nextObject(0);
-            this.transitionToRoute('app.project.wiki.edit', {projectId:model.get('projectId'),wikiName:model.get('name')});
+        edit() {
+            let model = this.get('model').objectAt(0);
+            this.transitionToRoute('app.project.wiki.edit', {project_id:model.get('projectId'),wiki_name:model.get('name')});
         },
 
         /**
@@ -158,8 +145,8 @@ export default Ember.Controller.extend({
          * @method loadWiki
          * @public
          */
-        loadWiki(projectId,wikiName){
-            this.transitionToRoute('app.project.wiki.page', {projectId:projectId,wikiName:wikiName});
+        loadWiki(projectId,wikiName) {
+            this.transitionToRoute('app.project.wiki.page', {project_id:projectId,wiki_name:wikiName});
         },
 
         /**
@@ -168,10 +155,10 @@ export default Ember.Controller.extend({
          * @method create
          * @public
          */
-        create:function(){
+        create() {
             Logger.debug('Create a page for ');
             Logger.debug(this.get('projectId'));
-            this.transitionToRoute('app.project.wiki.create', {projectId:this.get('projectId')});
+            this.transitionToRoute('app.project.wiki.create', {project_id:this.get('projectId')});
         },
 
         /**
@@ -180,7 +167,7 @@ export default Ember.Controller.extend({
          * @method delete
          * @public
          */
-        delete:function(){
+        delete() {
             new Messenger().post({
                 message: 'No can\'t do',
                 type: 'error',
@@ -195,17 +182,11 @@ export default Ember.Controller.extend({
          * @param {String} wikiId
          * @public
          */
-        upvote:function(wikiId){
+        upvote(wikiId) {
             Logger.debug("AppProjectWikiPageController:upvote("+wikiId+")");
 
-            var self = this;
-            var vote = this.get('store').createRecord('vote',{
-                dateCreated:'CURRENT_DATETIME',
-                dateModified:'CURRENT_DATETIME',
-                createdUser:1,
-                modifiedUser:1,
-                createdUserName: "Hammad Hassan",
-                modifiedUserName: "Hammad Hassan",
+            let _self = this;
+            let vote = this.get('store').createRecord('vote',{
                 vote: 1,
                 relatedTo:'wiki',
                 relatedId:wikiId
@@ -216,12 +197,12 @@ export default Ember.Controller.extend({
                 if (data.get('id') !== undefined)
                 {
                     new Messenger().post({
-                        message: self.get('i18n').t("view.app.wiki.voted"),
+                        message: _self.get('i18n').t("views.app.wiki.voted"),
                         tpye: 'success',
                         showCloseButton: true
                     });
-                    self.get('model').nextObject(0).get('vote').addObject(data);
-                    self.set('iVoted',1);
+                    _self.get('model').objectAt(0).get('vote').addObject(data);
+                    _self.set('iVoted',1);
                 }
             });
         },
@@ -233,31 +214,31 @@ export default Ember.Controller.extend({
          * @param {String} action
          * @public
          */
-        lockWiki:function(action){
-            var self = this;
-            var model = this.get('model').nextObject(0);
+        lockWiki(action) {
+            let _self = this;
+            let model = this.get('model').objectAt(0);
             if (action === 'unlock')
             {
-                Ember.set(model,'locked',"1");
+                set(model,'locked',"1");
             }
             else if (action === 'lock')
             {
-                Ember.set(model,'locked',"0");
+                set(model,'locked',"0");
             }
 
             model.save().then(function(){
-                var message = '';
+                let message = '';
                 if (action === 'unlock')
                 {
-                    message = self.get('i18n').t("view.app.wiki.page.unlocked");
+                    message = _self.get('i18n').t("views.app.wiki.page.unlocked");
                 }
                 else if (action === 'lock')
                 {
-                    message = self.get('i18n').t("view.app.wiki.page.locked");
+                    message = _self.get('i18n').t("views.app.wiki.page.locked");
                 }
 
                 new Messenger().post({
-                    message: self.get('i18n').t("view.app.wiki.page.lock",{action:message}),
+                    message: _self.get('i18n').t("views.app.wiki.page.lock",{action:message}),
                     tpye: 'success',
                     showCloseButton: true
                 });
@@ -272,7 +253,7 @@ export default Ember.Controller.extend({
          *
          * @param file
          */
-        uploadFile:function(file){
+        uploadFile(file) {
             get(this, 'handleUpload').perform(file);
         },
 
@@ -281,27 +262,27 @@ export default Ember.Controller.extend({
          *
          * @param file
          */
-        deleteFile:function(file){
+        deleteFile(file) {
             Logger.debug('App.Project.Wiki.PageController->deleteFile');
-            let self = this;
-            Logger.debug(self);
+            let _self = this;
+            Logger.debug(_self);
 
             let deleting = new Messenger().post({
-                message: self.get('i18n').t("view.app.wiki.page.file.delete",{name:file.get('name')}).toString(),
+                message: _self.get('i18n').t("views.app.wiki.page.file.delete",{name:file.get('name')}).toString(),
                 type: 'warning',
                 showCloseButton: true,
                 actions: {
                     confirm: {
-                        label: self.get('i18n').t("view.app.wiki.page.file.confirmdelete").toString(),
+                        label: _self.get('i18n').t("views.app.wiki.page.file.confirmdelete").toString(),
                         action: function() {
 
                             // destroy the upload
-                            file.destroyRecord().then(function(data){
+                            file.destroyRecord().then(function(){
                                 // remove from the view by updating the model
-                                self.get('model').nextObject(0).get('files').removeObject(file);
+                                _self.get('model').objectAt(0).get('files').removeObject(file);
 
                                 return deleting.update({
-                                    message: self.get('i18n').t("view.app.wiki.page.file.deleted"),
+                                    message: _self.get('i18n').t("views.app.wiki.page.file.deleted"),
                                     type: 'success',
                                     actions: false
                                 });
@@ -309,10 +290,10 @@ export default Ember.Controller.extend({
                         }
                     },
                     cancel: {
-                        label: self.get('i18n').t("view.app.wiki.page.file.onsecondthought").toString(),
+                        label: _self.get('i18n').t("views.app.wiki.page.file.onsecondthought").toString(),
                         action: function() {
                             return deleting.update({
-                                message: self.get('i18n').t("view.app.wiki.page.file.deletecancel"),
+                                message: _self.get('i18n').t("views.app.wiki.page.file.deletecancel"),
                                 type: 'success',
                                 actions: false
                             });
@@ -330,10 +311,10 @@ export default Ember.Controller.extend({
          *
          * @param file
          */
-        downloadFile:function(file){
+        downloadFile(file) {
             Logger.debug('App.Project.Wiki.PageController->downloadFile');
-            let self = this;
-            Logger.debug(self);
+            let _self = this;
+            Logger.debug(_self);
 
             // get a download token
             let options = {
@@ -341,12 +322,12 @@ export default Ember.Controller.extend({
                 download: true
             };
             Logger.debug('Retrieving upload with options '+options);
-            let upload = this.get('store').query('upload',options).then(function(data){
-                let downloadLink = data.nextObject(0).get('downloadLink');
+            this.get('store').query('upload',options).then(function(data){
+                let downloadLink = data.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
                 // navigate user to the page for download
-                let path = self.get('store').adapterFor('upload').host+'/download/get/'+downloadLink;
+                let path = _self.get('store').adapterFor('upload').host+'/download/get/'+downloadLink;
                 window.open(path,'_blank');
                 Logger.debug(path);
 
@@ -360,11 +341,11 @@ export default Ember.Controller.extend({
          *
          * @param file
          */
-        previewFile:function(file){
+        previewFile(file) {
             Logger.debug('App.Project.Wiki.PageController->previewFile');
-            let self = this;
-            Logger.debug(self);
-            self.send('showDialog');
+            let _self = this;
+            Logger.debug(_self);
+            _self.send('showDialog');
 
             // get a download token
             let options = {
@@ -372,12 +353,12 @@ export default Ember.Controller.extend({
                 download: true
             };
             Logger.debug('Retrieving upload with options '+options);
-            self.get('store').query('upload',options).then(function(contents){
-                let downloadLink = contents.nextObject(0).get('downloadLink');
+            _self.get('store').query('upload',options).then(function(contents){
+                let downloadLink = contents.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
-                let path = self.get('store').adapterFor('upload').host+'/preview/get/'+downloadLink;
-                Ember.$('#file_preview').attr('src',path);
+                let path = _self.get('store').adapterFor('upload').host+'/preview/get/'+downloadLink;
+                $('#file_preview').attr('src',path);
                 Logger.debug(path);
             });
 
@@ -390,7 +371,7 @@ export default Ember.Controller.extend({
          * @method showDialog
          * @public
          */
-        showDialog:function()
+        showDialog()
         {
             this.set('filePreviewDialog',true);
         },
@@ -401,7 +382,7 @@ export default Ember.Controller.extend({
          * @method removeModal
          * @public
          */
-        removeModal:function(){
+        removeModal(){
             this.set('filePreviewDialog',false);
         }
 

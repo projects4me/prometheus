@@ -3,6 +3,9 @@
  */
 
 import App from "../../app";
+import { inject } from '@ember/service';
+import { hash } from 'rsvp';
+
 /**
  * This is the route for projects list view
  *
@@ -108,7 +111,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    currentUser: Ember.inject.service(),
+    currentUser: inject(),
     /**
      * The model for this route
      *
@@ -130,7 +133,9 @@ export default App.extend({
         if(params.order){
             this.set('order',params.order);
         }
-        if(params.query){
+        if(params.query === ''){
+            this.set('query',null);
+        } else if(params.query){
             query = params.query;
             this.set('query',params.query);
         }
@@ -175,7 +180,7 @@ export default App.extend({
             limit: -1
         };
 
-        return Ember.RSVP.hash({
+        return hash({
             savedsearches: _self.store.query('savedsearch',savedSearchesOption),
             publicsearches: _self.store.query('savedsearch',publicSearchesOption)
         }).then(function(results){

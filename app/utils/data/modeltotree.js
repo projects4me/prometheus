@@ -21,18 +21,18 @@ export default {
      * @todo be able to convert most of the trees
      */
     modelToTree:function(model){
-        var tree = {};
+        let tree = {};
         Logger.debug('The model received is');
         Logger.debug(model);
 
-        var length = model.get('length');
-        var node = null;
-        var temp = {};
+        let length = model.get('length');
+        let node = null;
+        let temp = {};
 
-        // Conver the model to flat object
-        for (var i=0;i<length;i++)
+        // Convert the model to flat object
+        for (let i=0;i<length;i++)
         {
-            node = model.nextObject(i);
+            node = model.objectAt(i);
             temp[node.get('id')] = {id:node.get('id'),name:node.get('name')};
             if (!(node.get('parentId') === '' || node.get('parentId') === undefined || node.get('parentId') === null))
             {
@@ -40,17 +40,13 @@ export default {
             }
         }
 
-        Logger.debug('------------------------------------');
-        Logger.debug(temp);
-        // unflatten the object to get nodes
+        // un-flatten the object to get nodes
         tree = this.unflatten(temp);
-        Logger.debug(tree);
-        Logger.debug('------------------------------------');
         return tree;
     },
 
     /**
-     * inpired from http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript#answer-31247960
+     * Inspired from http://stackoverflow.com/questions/18017869/build-tree-array-from-flat-array-in-javascript#answer-31247960
      * @method unflatten
      * @example
      * var obj = {
@@ -115,19 +111,19 @@ export default {
      * @public
      */
     unflatten : function( obj ){
-        var tree = {},
+        let tree = {},
             mappedArr = {},
             arrElem,
             mappedElem;
 
         // First map the nodes of the array to an object -> create a hash table.
-        for(var i in obj) {
+        for(let i in obj) {
             arrElem = obj[i];
             mappedArr[arrElem['id']] = arrElem;
             mappedArr[arrElem['id']]['nodes'] = {};
         }
 
-        for (var id in mappedArr) {
+        for (let id in mappedArr) {
             if (mappedArr.hasOwnProperty(id)) {
                 mappedElem = mappedArr[id];
                 // If the element is not at the root level, add it to its parent array of children.
@@ -154,7 +150,7 @@ export default {
      */
     findNode:function(id,node){
         // Traverse through the node
-        for(var nodeId in node){
+        for(let nodeId in node){
             // If the node is available at the current level then return it
             if (nodeId === id)
             {
@@ -163,9 +159,9 @@ export default {
             // otherwise look into the next level
             else if (node[nodeId]['nodes'] !== undefined)
             {
-                // Unfortunately tthe length property is not available in the EmptyObject
+                // Unfortunately the length property is not available in the EmptyObject
                 // so we have to check it.
-                var result = this.findNode(id,node[nodeId]['nodes']);
+                let result = this.findNode(id,node[nodeId]['nodes']);
                 if (result)
                 {
                     return result;
@@ -185,7 +181,7 @@ export default {
      */
     findParent:function(id,node){
         // Traverse through the node
-        for(var nodeId in node){
+        for(let nodeId in node){
             // If the node is available at the current level then return it
             if (node[nodeId]['nodes'] !== undefined)
             {
@@ -194,9 +190,9 @@ export default {
                     return node[nodeId];
                 }
                 else {
-                    // Unfortunately tthe length property is not available in the EmptyObject
+                    // Unfortunately the length property is not available in the EmptyObject
                     // so we have to check it.
-                    var result = this.findParent(id,node[nodeId]['nodes']);
+                    let result = this.findParent(id,node[nodeId]['nodes']);
                     if (result)
                     {
                         return result;

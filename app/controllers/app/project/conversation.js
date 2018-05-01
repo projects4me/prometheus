@@ -2,7 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Prometheus from "prometheus/controllers/prometheus";
+import Evented from '@ember/object/evented';
+import $ from "jquery";
 
 /**
  * This is the controller for the conversation controller route
@@ -10,20 +12,10 @@ import Ember from "ember";
  * @class Conversation
  * @namespace Prometheus.Controllers
  * @module App.Project
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend(Ember.Evented,{
-
-    /**
-     * The current user service
-     *
-     * @property currentUser
-     * @type Ember.Service
-     * @for Conversation
-     * @public
-     */
-    currentUser: Ember.inject.service(),
+export default Prometheus.extend(Evented,{
 
     /**
      * This is the flag which is used to
@@ -106,35 +98,24 @@ export default Ember.Controller.extend(Ember.Evented,{
          * @param {String} contents
          * @public
          */
-        save:function(relatedId,contents){
+        save(relatedId,contents){
             Logger.debug('AppProjectConversationController::save()');
-            Logger.debug(relatedId);
-            Logger.debug(contents);
             let _self = this;
 
             let comment = this.get('store').createRecord('comment', {
                 relatedId: relatedId,
                 relatedTo: 'conversationrooms',
                 comment: contents,
-                dateCreated: 'CURRENT_DATETIME',
-                dateModified: 'CURRENT_DATETIME',
-                createdUser: _self.get('currentUser.user.id'),
-                createdUserName: _self.get('currentUser.user.name'),
-                modifiedUser: _self.get('currentUser.user.id'),
-                modifiedUserName: _self.get('currentUser.user.name'),
-                deleted: 0
             });
 
             comment.save().then(function (comment) {
-                Logger.debug('Comment Saved');
-                Logger.debug(comment);
                 let count = _self.model.get('length');
                 while (count > 0)
                 {
                     count--;
-                    if(_self.model.nextObject(count).get('id') === relatedId)
+                    if(_self.model.objectAt(count).get('id') === relatedId)
                     {
-                        _self.model.nextObject(count).get('comments').pushObject(comment);
+                        _self.model.objectAt(count).get('comments').pushObject(comment);
                         _self.trigger('clearContents');
                         break;
                     }
@@ -152,7 +133,7 @@ export default Ember.Controller.extend(Ember.Evented,{
          * @public
          * @todo Check if the user has already voted if so then disable the vote
          */
-        vote:function(vote,relatedId) {
+        vote(vote,relatedId) {
             if (relatedId === null)
             {
                 return false;
@@ -163,13 +144,6 @@ export default Ember.Controller.extend(Ember.Evented,{
                 relatedId: relatedId,
                 relatedTo: 'conversationrooms',
                 comment: vote,
-                dateCreated: 'CURRENT_DATETIME',
-                dateModified: 'CURRENT_DATETIME',
-                createdUser: _self.get('currentUser.user.id'),
-                createdUserName: _self.get('currentUser.user.name'),
-                modifiedUser: _self.get('currentUser.user.id'),
-                modifiedUserName: _self.get('currentUser.user.name'),
-                deleted: 0
             });
 
 
@@ -178,9 +152,9 @@ export default Ember.Controller.extend(Ember.Evented,{
                 while (count > 0)
                 {
                     count--;
-                    if(_self.model.nextObject(count).get('id') === relatedId)
+                    if(_self.model.objectAt(count).get('id') === relatedId)
                     {
-                        _self.model.nextObject(count).get('comments').pushObject(savedComment);
+                        _self.model.objectAt(count).get('comments').pushObject(savedComment);
                         event.target.value = '';
                         break;
                     }
@@ -195,17 +169,11 @@ export default Ember.Controller.extend(Ember.Evented,{
          * @param {String} conversationId
          * @public
          */
-        upvote:function(conversationId){
+        upvote(conversationId){
             Logger.debug("AppProjectConversationController:upvote("+conversationId+")");
 
             let _self = this;
             let vote = this.get('store').createRecord('vote',{
-                dateCreated:'CURRENT_DATETIME',
-                dateModified:'CURRENT_DATETIME',
-                createdUser:_self.get('currentUser.user.id'),
-                modifiedUser:_self.get('currentUser.user.id'),
-                createdUserName: _self.get('currentUser.user.name'),
-                modifiedUserName: _self.get('currentUser.user.name'),
                 vote: 1,
                 relatedTo:'conversationrooms',
                 relatedId:conversationId
@@ -215,7 +183,7 @@ export default Ember.Controller.extend(Ember.Evented,{
                 if (data.get('id') !== undefined)
                 {
                     new Messenger().post({
-                        message: _self.get('i18n').t("view.app.conversation.voted"),
+                        message: _self.get('i18n').t("views.app.conversation.voted"),
                         tpye: 'success',
                         showCloseButton: true
                     });
@@ -230,42 +198,62 @@ export default Ember.Controller.extend(Ember.Evented,{
          *
          * @method addConversation
          * @public
-         * @todo Load the current user info within the API
-         * @todo Unable to add dynamically
          */
-        addConversation:function(){
+        addConversation(){
             Logger.debug('AppProjectConversationController:addConversation');
 
             let _self = this;
 
-            let newConversation = this.get('store').createRecord('conversationroom',{
-                dateCreated:'CURRENT_DATETIME',
-                dateModified:'CURRENT_DATETIME',
-                deleted:0,
-                createdUser:_self.get('currentUser.user.id'),
-                modifiedUser:_self.get('currentUser.user.id'),
-                createdUserName: _self.get('currentUser.user.name'),
-                modifiedUserName: _self.get('currentUser.user.name'),
-                subject: _self.get('newSubject'),
-                description: _self.get('newTopic'),
-                roomType: _self.get('roomType').value,
-                projectId: _self.get('projectId')
-            });
+            let newConversation = this.get('newConversation');
+            newConversation.set('projectId',_self.get('projectId'));
 
-            // Save it
-            newConversation.save().then(function(conversation){
-                Logger.debug('A new conversation has been saved');
+            newConversation.validate()
+                .then(({ validations }) => {
 
-                _self.get('model').unshiftObject(conversation);
-                new Messenger().post({
-                    message: _self.get('i18n').t("view.app.conversation.created",{name:conversation.get('subject')}),
-                    type: 'success',
-                    showCloseButton: true
+                    if (validations.get('isValid')) {
+                        // Save it
+                        newConversation.save().then(function (conversation) {
+                            Logger.debug('A new conversation has been saved');
+
+                            _self.get('model').unshiftObject(conversation);
+                            new Messenger().post({
+                                message: _self.get('i18n').t("views.app.conversation.created", {name: conversation.get('subject')}),
+                                type: 'success',
+                                showCloseButton: true
+                            });
+
+                            _self.send('removeModal');
+
+                            _self.set('newConversation',
+                                _self.get('store').createRecord('conversationroom',{}));
+                        });
+
+                    } else {
+                        let messages = _self._buildMessages(validations,'conversation');
+
+                        new Messenger().post({
+                            message: messages,
+                            type: 'error',
+                            showCloseButton: true
+                        });
+                    }
                 });
-                //window.location.reload(true);
-                //self.get('model').addObject(conversation);
+            return false;
+        },
 
-            });
+        /**
+         * This function is called when the issue type is being selected
+         *
+         * @method selectNewType
+         * @param {Object} target
+         * @public
+         */
+        selectNewType(target)
+        {
+            Logger.debug('App.Project.Conversation.Create:selectNewType');
+            let newConversation = this.get('newConversation');
+            newConversation.set('roomType',target.value);
+            Logger.debug('-App.Project.Conversation.Create:selectNewType');
         },
 
         /**
@@ -274,7 +262,7 @@ export default Ember.Controller.extend(Ember.Evented,{
          * @method showDialog
          * @public
          */
-        showDialog:function()
+        showDialog()
         {
             this.set('addConversationDialog',true);
         },
@@ -285,8 +273,9 @@ export default Ember.Controller.extend(Ember.Evented,{
          * @method removeModal
          * @public
          */
-        removeModal:function(){
+        removeModal(){
             this.set('addConversationDialog',false);
+            $('.modal').modal('hide');
         }
 
     } // end definition actions

@@ -2,7 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Prometheus from "prometheus/controllers/prometheus";
+import { inject } from '@ember/service';
+import { inject as injectController } from '@ember/controller';
+import { computed } from '@ember/object';
 
 /**
  * The controller for the wiki create route, it is loaded when a user clicks on
@@ -12,10 +15,10 @@ import Ember from "ember";
  * @class Create
  * @namespace Prometheus.Controllers
  * @module App.Project.Wiki
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Controller.extend({
+export default Prometheus.extend({
 
     /**
      * This property is used to control the enabling and disabling of the save
@@ -27,16 +30,6 @@ export default Ember.Controller.extend({
      * @private
      */
     saveDisabled: 'true',
-
-    /**
-     * The i18n library service that is used in order to get the translations
-     *
-     * @property i18n
-     * @type Ember.Service
-     * @for Create
-     * @public
-     */
-    i18n: Ember.inject.service(),
 
     /**
      * This is the parentId of the wiki page that is being created. Initially
@@ -58,7 +51,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @public
      */
-    projectController: Ember.inject.controller('app.project'),
+    projectController: injectController('app.project'),
 
     /**
      * This is a computed property in which gets the list of issues
@@ -69,9 +62,9 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    issuesList: Ember.computed(function(){
+    issuesList: computed('projectController.issuesList', function(){
         return this.get('projectController').get('issuesList');
-    }).property('projectController.issuesList'),
+    }),
 
     /**
      * This is the controller for the app, we are injecting it in order to
@@ -82,7 +75,7 @@ export default Ember.Controller.extend({
      * @for Create
      * @public
      */
-    appController: Ember.inject.controller('app'),
+    appController: injectController('app'),
 
     /**
      * This is a computed property in which gets the list of user
@@ -93,9 +86,9 @@ export default Ember.Controller.extend({
      * @for Create
      * @private
      */
-    usersList: Ember.computed(function(){
+    usersList: computed('appController.usersList', function(){
         return this.get('appController').get('usersList');
-    }).property('appController.usersList'),
+    }),
 
     /**
      * These are the event handled by this controller
@@ -116,20 +109,20 @@ export default Ember.Controller.extend({
          * @todo Trigger the notificaiton
          */
         save:function() {
-            let self = this;
+            let _self = this;
             let model = this.get('model');
             model.save().then(function(data){
                 Logger.debug('Data saved:');
                 Logger.debug(data);
-                self.send('refreshWiki');
+                _self.send('refreshWiki');
 
                 new Messenger().post({
-                    message: self.get('i18n').t('view.app.wiki.created',{name:data.get('name')}),
+                    message: _self.get('i18n').t('views.app.wiki.created',{name:data.get('name')}),
                     type: 'success',
                     showCloseButton: true
                 });
 
-                self.transitionToRoute('app.project.wiki.page', {projectId:data.get('projectId'),wikiName:data.get('name')});
+                _self.transitionToRoute('app.project.wiki.page', {project_id:data.get('projectId'),wiki_name:data.get('name')});
             });
         },
 
@@ -142,7 +135,7 @@ export default Ember.Controller.extend({
          */
         cancel:function(){
             let model = this.get('model');
-            this.transitionToRoute('app.project.wiki', {projectId:model.get('projectId')});
+            this.transitionToRoute('app.project.wiki', {project_id:model.get('projectId')});
         },
 
         /**
@@ -155,13 +148,6 @@ export default Ember.Controller.extend({
         changed:function(){
             Logger.debug('AppProjectWikiCreateController::changed()');
             let model = this.get('model');
-
-            // if (typeof(data) === 'object' && data.markUp !== undefined)
-            // {
-            //     Logger.debug(model);
-            //     model._internalModel._attributes['markUp'] = data.markUp;
-            //     model.set('markUp',data.markUp);
-            // }
 
             if (model.get('name') === undefined ||
                 model.get('name') === null ||
@@ -186,7 +172,7 @@ export default Ember.Controller.extend({
          * @public
          */
         wikiChanged:function(wiki){
-            var model = this.get('model');
+            let model = this.get('model');
             this.set('parentId',wiki.value);
             model.set('parentId',wiki.value);
             model.set('parentName',wiki.label);
@@ -204,12 +190,12 @@ export default Ember.Controller.extend({
          */
         onContentChange:function (contents) {
             Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
-            let self = this;
+            let _self = this;
 
-            Logger.debug(self);
-            self.get('model').set('markUp',contents);
-            self.send('changed');
-            -Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
+            Logger.debug(_self);
+            _self.get('model').set('markUp',contents);
+            _self.send('changed');
+            Logger.debug('Prometheus.App.Project.Wiki.onContentChange');
         }
 
     }

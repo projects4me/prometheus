@@ -3,6 +3,7 @@
  */
 
 import App from "../../app";
+import { hash } from 'rsvp';
 
 /**
  *  This is the route that will handle the creation of new issues
@@ -27,7 +28,7 @@ export default App.extend({
             limit: -1
         };
 
-        return Ember.RSVP.hash({
+        return hash({
             issuetypes: _self.store.query('issuetype',issuetypeOptions),
         }).then(function(results){
             _self.set('issuetypes',results.issuetypes.toArray());
@@ -40,19 +41,19 @@ export default App.extend({
      *
      * @method setupController
      * @param {Prometheus.Controllers.Issue} controller
-     * @param {Prometheus.Models.Issue} model
      * @protected
      * @todo Store static lists elsewhere
      */
-    setupController:function(controller,model)
+    setupController:function(controller)
     {
         Logger.debug('AppProjectIndexRoute::setupController');
         let _self = this;
-        let i18n = _self.get('i18n');
 
         controller.set('issuetypes',_self.get('issuetypes'));
 
-        let project = _self.get('store').createRecord('project');
+        let project = _self.get('store').createRecord('project',{
+            assignee: _self.get('currentUser').user.id
+        });
         controller.set('model',project);
 
         let type = [

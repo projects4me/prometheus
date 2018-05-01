@@ -2,50 +2,21 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from 'ember';
+import Prometheus from "prometheus/controllers/prometheus";
 import format from "../utils/data/format";
+import { inject } from '@ember/service';
+import { computed } from '@ember/object';
 
 /**
  * This the app controller. App is as the main route for the application's
  * authenticated part
  *
  * @class App
- * @namespace Prometheus.Controller
- * @extends Ember.Controller
+ * @namespace Prometheus.Controllers
+ * @extends Prometheus
  * @author Hammad Hassan gollmer@gmail.com
  */
-export default Ember.Controller.extend({
-
-    /**
-     * The session service which is offered by ember-simple-auth that will be used
-     * in order to verfy whether the used is authenticated
-     *
-     * @property session
-     * @type Object
-     * @for App
-     * @public
-     */
-    session: Ember.inject.service('session'),
-
-    /**
-     * The service that we use to maintain the currentUser
-     *
-     * @property currentUser
-     * @type Object
-     * @for App
-     * @public
-     */
-    currentUser: Ember.inject.service('current-user'),
-
-    /**
-     * The related field service that is used in order to manage dropdowns and relate fields
-     *
-     * @property relatedField
-     * @type relatedFieldService
-     * @for App
-     * @public
-     */
-    relatedFields: Ember.inject.service('related-fields'),
+export default Prometheus.extend({
 
     /**
      * These are the roles in the system
@@ -75,9 +46,9 @@ export default Ember.Controller.extend({
      * @returns array
      * @public
      */
-    rolesList: Ember.computed(function(){
+    rolesList: computed('roles', function(){
         return format.getSelectList(this.get('roles'));
-    }).property('roles'),
+    }),
 
     /**
      * This is the list of users that has been extracted
@@ -87,10 +58,10 @@ export default Ember.Controller.extend({
      * @returns array
      * @public
      */
-    usersList: Ember.computed(function(){
+    usersList: computed('users', function(){
         Logger.debug(this.get('users'));
         return format.getSelectList(this.get('users'));
-    }).property('users'),
+    }),
 
     /**
      * The events that this controller is listing to
@@ -113,6 +84,27 @@ export default Ember.Controller.extend({
             this.get('session').invalidate();
         },
 
+        /**
+         * This function navigates a user to the current user's profile page
+         *
+         * @method userProfile
+         * @public
+         */
+        userProfile() {
+            Logger.debug('+Prometheus.Controllers.App::userProfile');
+            let self = this;
+            let user_id = self.get('currentUser').user.id;
+
+            self.transitionToRoute('app.user.page',{user_id: user_id});
+            Logger.debug('-Prometheus.Controllers.App::userProfile');
+        },
+
+        /**
+         * This function is used to start a private chat with another user
+         *
+         * @method startChat
+         * @param Prometheus.Models.User user
+         */
         startChat(user){
             Logger.debug('Prometheus.Controllers.App::startChat');
             let _self = this;
@@ -142,13 +134,17 @@ export default Ember.Controller.extend({
             Logger.debug('-Prometheus.Controllers.App::startChat');
         },
 
+        /**
+         * This function is called when a new message arrives for a user
+         *
+         * @method newMessage
+         * @param message
+         */
         newMessage(message){
             Logger.debug('Prometheus.Controllers.App::newMessage');
             Logger.debug(message);
             Logger.debug('-Prometheus.Controllers.App::newMessage');
         }
-
-
     }
 
 });

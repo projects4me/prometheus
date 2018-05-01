@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import { inject } from '@ember/service';
+import Controller from '@ember/controller';
 
 /**
  * This the signin controller.
@@ -12,7 +13,7 @@ import Ember from "ember";
  * @extends Ember.Controller
  * @author Hammad Hassan gollmer@gmail.com
  */
-export default Ember.Controller.extend({
+export default Controller.extend({
 
     /**
      * The session service which is offered by ember-simple-auth that will be used
@@ -23,7 +24,7 @@ export default Ember.Controller.extend({
      * @for Signin
      * @public
      */
-    session: Ember.inject.service('session'),
+    session: inject(),
 
     /**
      * The events that this controller is listing to

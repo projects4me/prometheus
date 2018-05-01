@@ -2,7 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
+import Component from '@ember/component';
+import { inject } from '@ember/service';
+import $ from 'jquery';
 
 /**
  * This component is used to render the chat-boxes in the application
@@ -12,7 +14,7 @@ import Ember from "ember";
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Ember.Component.extend({
+export default Component.extend({
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -22,7 +24,7 @@ export default Ember.Component.extend({
      * @for ChatBox
      * @private
      */
-    i18n: Ember.inject.service(),
+    i18n: inject(),
 
     /**
      * These are the classes the must be registered with the component
@@ -57,11 +59,11 @@ export default Ember.Component.extend({
     },
 
     didInsertElement(){
-        let o = Ember.$.AdminLTE.options;
+        let o = $.AdminLTE.options;
 
         //Activate direct chat widget
-        Ember.$(document).on('click', o.directChat.contactToggleSelector, function () {
-            let box = Ember.$(this).parents('.direct-chat').first();
+        $(document).on('click', o.directChat.contactToggleSelector, function () {
+            let box = $(this).parents('.direct-chat').first();
             box.toggleClass('direct-chat-contacts-open');
         });
     }

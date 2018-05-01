@@ -3,6 +3,22 @@
  */
 
 import DS from "ember-data";
+import { validator, buildValidations } from 'ember-cp-validations';
+
+/**
+ * These are the validation that are applied on the model
+ *
+ * @property Validations
+ * @module Issue
+ */
+const Validations = buildValidations({
+    subject: validator('presence', true),
+    typeId: validator('presence', true),
+    assignee: validator('presence', true),
+    owner: validator('presence', true),
+    status: validator('presence', true),
+    priority: validator('presence', true)
+});
 
 /**
  * The issue model
@@ -10,9 +26,10 @@ import DS from "ember-data";
  * @class Issue
  * @namespace Prometheus.Models
  * @extends DS.Model
+ * @module Issue
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend({
+export default DS.Model.extend(Validations, {
 
     /**
      * Subject of the issue
@@ -152,7 +169,7 @@ export default DS.Model.extend({
      * @for Issue
      * @private
      */
-    status: DS.attr('string'),
+    status: DS.attr('string', { defaultValue: 'new' }),
 
     /**
      * Priority of the issue
@@ -162,7 +179,7 @@ export default DS.Model.extend({
      * @for Issue
      * @private
      */
-    priority: DS.attr('string'),
+    priority: DS.attr('string', { defaultValue: 'medium' }),
 
     /**
      * The identifier of the project the issue belongs to
@@ -173,6 +190,16 @@ export default DS.Model.extend({
      * @private
      */
     projectId: DS.attr('string'),
+
+    /**
+     * The identifier of the conversation room for this issue
+     *
+     * @property conversationRoomId
+     * @type String
+     * @for Issue
+     * @private
+     */
+    conversationRoomId: DS.attr('string'),
 
     /**
      * The identifier of the milestone this issue is set for

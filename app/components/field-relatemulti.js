@@ -2,9 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Ember from "ember";
 import FormField from "../components/form-fields";
-
+import { computed } from '@ember/object';
 /**
  * This is the date field
  *
@@ -34,7 +33,7 @@ export default FormField.extend({
      * @for FieldDate
      * @protected
      */
-    charLength: Ember.computed('value', function() {
+    charLength: computed('value', function() {
         return (this.get('value'));
     }),
 
