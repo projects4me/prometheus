@@ -2,8 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Controller from '@ember/controller';
-import { inject } from '@ember/service';
+import Prometheus from "prometheus/controllers/prometheus";
 
 /**
  * This is the controller for the calendar controller route
@@ -11,30 +10,10 @@ import { inject } from '@ember/service';
  * @class Calendar
  * @namespace Prometheus.Controllers
  * @module App.Project
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Controller.extend({
-
-    /**
-     * The current user service
-     *
-     * @property currentUser
-     * @type Ember.Service
-     * @for Calendar
-     * @private
-     */
-    currentUser: inject('current-user'),
-
-    /**
-     * The i18n library service that is used in order to get the translations
-     *
-     * @property i18n
-     * @type Ember.Service
-     * @for Calendar
-     * @private
-     */
-    i18n: inject(),
+export default Prometheus.extend({
 
     /**
      * Locale value, the default is en

@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Controller from '@ember/controller';
+import Prometheus from "prometheus/controllers/prometheus";
 
 /**
  * The controller for the wiki route, it is loaded when a user tried to navigate to the route
@@ -13,10 +13,10 @@ import Controller from '@ember/controller';
  * @class Index
  * @namespace Prometheus.Controllers
  * @module App.Project.Wiki
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Controller.extend({
+export default Prometheus.extend({
 
     /**
      * These are the actions that we are going to handle for this controller

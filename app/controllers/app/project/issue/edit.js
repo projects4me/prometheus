@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Controller from '@ember/controller';
+import Prometheus from "prometheus/controllers/prometheus";
 import { inject } from '@ember/service';
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
@@ -14,31 +14,10 @@ import format from "../../../../utils/data/format";
  * @class Edit
  * @namespace Prometheus.Controllers
  * @module App.Project.Issue
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Controller.extend({
-
-
-    /**
-     * The current user service
-     *
-     * @property currentUser
-     * @type Ember.Service
-     * @for Create
-     * @public
-     */
-    currentUser: inject('current-user'),
-
-    /**
-     * The i18n library service that is used in order to get the translations
-     *
-     * @property i18n
-     * @type Ember.Service
-     * @for Create
-     * @public
-     */
-    i18n: inject(),
+export default Prometheus.extend({
 
     /**
      * This property is used to control the enabling and disabling of the save
@@ -86,18 +65,38 @@ export default Controller.extend({
      */
     appController: injectController('app'),
 
+    /**
+     * This members for this project
+     *
+     * @property memberList
+     * @type Array
+     * @for Edit
+     * @public
+     */
     memberList: computed('project', function(){
         return format.getSelectList(this.get('project.members'));
     }),
 
+    /**
+     * This milestones available for this project
+     *
+     * @property milestoneList
+     * @type Array
+     * @for Edit
+     * @public
+     */
     milestoneList: computed('project', function(){
-        Logger.debug('------------------------');
-        Logger.debug('-------------------------');
-        Logger.debug('--------------------------');
-        Logger.debug('---------------------------');
         return format.getSelectList(this.get('project.milestones'));
     }),
 
+    /**
+     * This issue types available for the project
+     *
+     * @property typeList
+     * @type Array
+     * @for Edit
+     * @public
+     */
     typeList: computed('types', function(){
         return format.getSelectList(this.get('types'));
     }),
@@ -255,24 +254,34 @@ export default Controller.extend({
          * @todo Trigger the notification
          */
         save:function() {
-            let self = this;
+            let _self = this;
             let model = this.get('model');
 
-            model.set('projectId', this.target.currentState.routerJs.state.params["app.project"].project_id);
+            model.validate().then(({ validations }) => {
 
-            Logger.debug(model);
-            Logger.debug(self);
-            model.save().then(function(data){
-                Logger.debug('Data saved:');
-                Logger.debug(data);
+                if (validations.get('isValid')) {
+                    model.set('projectId', this.target.currentState.routerJs.state.params["app.project"].project_id);
 
-                new Messenger().post({
-                    message: self.get('i18n').t('views.app.issue.updated',{name:data.get('subject'),issue_number:data.get('issueNumber')}),
-                    type: 'success',
-                    showCloseButton: true
-                });
+                    model.save().then(function(data){
 
-                self.transitionToRoute('app.project.issue.page', {project_id:data.get('projectId'),issue_number:data.get('issueNumber')});
+                        new Messenger().post({
+                            message: _self.get('i18n').t('views.app.issue.updated',{name:data.get('subject'),issue_number:data.get('issueNumber')}),
+                            type: 'success',
+                            showCloseButton: true
+                        });
+
+                        _self.transitionToRoute('app.project.issue.page', {project_id:data.get('projectId'),issue_number:data.get('issueNumber')});
+                    });
+
+                } else {
+                    let messages = _self._buildMessages(validations);
+
+                    new Messenger().post({
+                        message: messages,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
             });
         },
 
@@ -284,12 +293,10 @@ export default Controller.extend({
          * @todo Trigger the notificaiton
          */
         cancel:function(){
-//            history.back();
-            let self = this;
-            let model = self.get('model');
-            // Logger.debug('Cancel Called');
-            // Logger.debug(model);
-            self.transitionToRoute('app.project.issue.page', {project_id:model.get('projectId'),issue_number:model.get('issueNumber')});
+            let _self = this;
+            let model = _self.get('model');
+
+            _self.transitionToRoute('app.project.issue.page', {project_id:model.get('projectId'),issue_number:model.get('issueNumber')});
         },
 
         /**
@@ -303,8 +310,8 @@ export default Controller.extend({
          */
         onContentChange:function (contents) {
             Logger.debug('Prometheus.App.Project.Edit.onContentChange');
-            let self = this;
-            self.get('model').set('description',contents);
+            let _self = this;
+            _self.get('model').set('description',contents);
             -Logger.debug('Prometheus.App.Project.Edit.onContentChange');
         },
     }

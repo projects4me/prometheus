@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Controller from '@ember/controller';
+import Prometheus from "prometheus/controllers/prometheus";
 
 /**
  * The controller for the wiki route, it is loaded when a user tried to navigate to the route
@@ -13,9 +13,10 @@ import Controller from '@ember/controller';
  * @class Wiki
  * @namespace Prometheus.Controllers
  * @module App.Project
- * @extends Ember.Controller
+ * @extends Prometheus
+ * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Controller.extend({
+export default Prometheus.extend({
 
     /**
      * This is the tree that we use in order to maintain the list of wiki pages for a particular project
@@ -43,7 +44,7 @@ export default Controller.extend({
          * @method save
          * @public
          */
-        save:function() {
+        save() {
             let model = this.get('model').objectAt(0);
             model.save();
         },
@@ -54,7 +55,7 @@ export default Controller.extend({
          * @method create
          * @public
          */
-        create:function(){
+        create(){
             Logger.debug('Create a page for ');
             Logger.debug(this.get('projectId'));
             this.transitionToRoute('app.project.wiki.create', {project_id:this.get('projectId')});

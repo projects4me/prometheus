@@ -2,9 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Controller from '@ember/controller';
-import { inject } from '@ember/service';
+import Prometheus from "prometheus/controllers/prometheus";
 import Evented from '@ember/object/evented';
+import $ from "jquery";
 
 /**
  * This is the controller for the conversation controller route
@@ -12,20 +12,10 @@ import Evented from '@ember/object/evented';
  * @class Conversation
  * @namespace Prometheus.Controllers
  * @module App.Project
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Controller.extend(Evented,{
-
-    /**
-     * The current user service
-     *
-     * @property currentUser
-     * @type Ember.Service
-     * @for Conversation
-     * @public
-     */
-    currentUser: inject('current-user'),
+export default Prometheus.extend(Evented,{
 
     /**
      * This is the flag which is used to
@@ -108,10 +98,8 @@ export default Controller.extend(Evented,{
          * @param {String} contents
          * @public
          */
-        save:function(relatedId,contents){
+        save(relatedId,contents){
             Logger.debug('AppProjectConversationController::save()');
-            Logger.debug(relatedId);
-            Logger.debug(contents);
             let _self = this;
 
             let comment = this.get('store').createRecord('comment', {
@@ -121,8 +109,6 @@ export default Controller.extend(Evented,{
             });
 
             comment.save().then(function (comment) {
-                Logger.debug('Comment Saved');
-                Logger.debug(comment);
                 let count = _self.model.get('length');
                 while (count > 0)
                 {
@@ -147,7 +133,7 @@ export default Controller.extend(Evented,{
          * @public
          * @todo Check if the user has already voted if so then disable the vote
          */
-        vote:function(vote,relatedId) {
+        vote(vote,relatedId) {
             if (relatedId === null)
             {
                 return false;
@@ -183,7 +169,7 @@ export default Controller.extend(Evented,{
          * @param {String} conversationId
          * @public
          */
-        upvote:function(conversationId){
+        upvote(conversationId){
             Logger.debug("AppProjectConversationController:upvote("+conversationId+")");
 
             let _self = this;
@@ -212,35 +198,62 @@ export default Controller.extend(Evented,{
          *
          * @method addConversation
          * @public
-         * @todo Load the current user info within the API
-         * @todo Unable to add dynamically
          */
-        addConversation:function(){
+        addConversation(){
             Logger.debug('AppProjectConversationController:addConversation');
 
             let _self = this;
 
-            let newConversation = this.get('store').createRecord('conversationroom',{
-                subject: _self.get('newSubject'),
-                description: _self.get('newTopic'),
-                roomType: _self.get('roomType').value,
-                projectId: _self.get('projectId')
-            });
+            let newConversation = this.get('newConversation');
+            newConversation.set('projectId',_self.get('projectId'));
 
-            // Save it
-            newConversation.save().then(function(conversation){
-                Logger.debug('A new conversation has been saved');
+            newConversation.validate()
+                .then(({ validations }) => {
 
-                _self.get('model').unshiftObject(conversation);
-                new Messenger().post({
-                    message: _self.get('i18n').t("views.app.conversation.created",{name:conversation.get('subject')}),
-                    type: 'success',
-                    showCloseButton: true
+                    if (validations.get('isValid')) {
+                        // Save it
+                        newConversation.save().then(function (conversation) {
+                            Logger.debug('A new conversation has been saved');
+
+                            _self.get('model').unshiftObject(conversation);
+                            new Messenger().post({
+                                message: _self.get('i18n').t("views.app.conversation.created", {name: conversation.get('subject')}),
+                                type: 'success',
+                                showCloseButton: true
+                            });
+
+                            _self.send('removeModal');
+
+                            _self.set('newConversation',
+                                _self.get('store').createRecord('conversationroom',{}));
+                        });
+
+                    } else {
+                        let messages = _self._buildMessages(validations,'conversation');
+
+                        new Messenger().post({
+                            message: messages,
+                            type: 'error',
+                            showCloseButton: true
+                        });
+                    }
                 });
-                //window.location.reload(true);
-                //self.get('model').addObject(conversation);
+            return false;
+        },
 
-            });
+        /**
+         * This function is called when the issue type is being selected
+         *
+         * @method selectNewType
+         * @param {Object} target
+         * @public
+         */
+        selectNewType(target)
+        {
+            Logger.debug('App.Project.Conversation.Create:selectNewType');
+            let newConversation = this.get('newConversation');
+            newConversation.set('roomType',target.value);
+            Logger.debug('-App.Project.Conversation.Create:selectNewType');
         },
 
         /**
@@ -249,7 +262,7 @@ export default Controller.extend(Evented,{
          * @method showDialog
          * @public
          */
-        showDialog:function()
+        showDialog()
         {
             this.set('addConversationDialog',true);
         },
@@ -260,8 +273,9 @@ export default Controller.extend(Evented,{
          * @method removeModal
          * @public
          */
-        removeModal:function(){
+        removeModal(){
             this.set('addConversationDialog',false);
+            $('.modal').modal('hide');
         }
 
     } // end definition actions

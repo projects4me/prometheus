@@ -2,12 +2,12 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import Prometheus from "prometheus/controllers/prometheus";
 import _ from "lodash";
 import navi from "../../utils/navigation/navigation";
 import queryParser from "../../utils/query/parser";
 import queryBuilder from "../../utils/query/builder";
 import MD from "../../utils/metadata/metadata";
-import Controller from '@ember/controller';
 import { schedule } from '@ember/runloop';
 import { camelize } from '@ember/string';
 import $ from 'jquery';
@@ -20,12 +20,12 @@ import $ from 'jquery';
  * list view is required then it must extend from this class
  *
  * @class Module
- * @namespace Prometheus.Controller
+ * @namespace Prometheus.Controllers
  * @module App
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Controller.extend({
+export default Prometheus.extend({
 
     /**
      * The count of the selected items in the list view.

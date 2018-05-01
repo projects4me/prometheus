@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import Prometheus from "prometheus/controllers/prometheus";
 import format from "../../utils/data/format";
-import Controller from '@ember/controller';
 import { computed } from '@ember/object';
 
 /**
@@ -11,11 +11,12 @@ import { computed } from '@ember/object';
  * authenticated part
  *
  * @class Project
- * @namespace Prometheus.Controller.App
- * @extends Ember.Controller
+ * @namespace Prometheus.Controllers
+ * @module App
+ * @extends Prometheus
  * @author Hammad Hassan gollmer@gmail.com
  */
-export default Controller.extend({
+export default Prometheus.extend({
 
     /**
      * These are the users in the system

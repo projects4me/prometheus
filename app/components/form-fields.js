@@ -3,7 +3,6 @@
  */
 
 import Component from '@ember/component';
-//import Validator from  "../utils/validator/fields";
 import { computed } from '@ember/object';
 import { cancel } from '@ember/runloop';
 import { later } from '@ember/runloop';

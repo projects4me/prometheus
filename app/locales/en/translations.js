@@ -515,6 +515,12 @@ export default {
             },
 
             "conversation" : {
+                "fields" : {
+                    "subject" : "Subject",
+                    "description" : "Topic",
+                    "roomType" : "Type",
+                    "projectId" : "Project"
+                },
                 "label" : "Conversations",
                 "create" : "Start a new conversation ..",
                 "start" : "Start a new conversation",
@@ -600,6 +606,25 @@ export default {
                 "status" : "Status",
                 "created" : "Issue <strong>{{issueNumber}} : {{name}}</strong> has been created successfully",
                 "updated" : "Issue <strong>{{issueNumber}} : {{name}}</strong> has been updated successfully",
+                "fields" : {
+                    "issueNumber" : "Issue Number",
+                    "subject" : "Subject",
+                    "description" : "Description",
+                    "status" : "Status",
+                    "typeId" : "Type",
+                    "priority" : "Priority",
+                    "milestone" : "Milestone",
+                    "owner" : "Owner",
+                    "createdBy" : "Created By",
+                    "modifiedBy" : "Modified By",
+                    "endDate" : "End Date",
+                    "startDate" : "Start Date",
+                    "dateCreated" : "Date Created",
+                    "dateModified" : "Date Modified",
+                    "assignee" : "Assignee",
+                    "reportedBy" : "Reported User",
+                    "parent" : "Parent"
+                },
                 "list" : {
                     "create" : "Create New",
                     "savedsearch" : {
@@ -711,7 +736,10 @@ export default {
                     "selectassignee" : "Select an assignee",
                     "reportedBy" : "Reported User",
                     "parent" : "Parent",
-                    "people" : "People"
+                    "people" : "People",
+                    "cancelcicked" : "You are about to cancel, all progress will be discarded. Are you sure?",
+                    "confirmcancel" : "Yes",
+                    "onsecondthought" : "Take me back"
                 },
                 "filter" : {
                     "issueNumber" : "Issue Number",

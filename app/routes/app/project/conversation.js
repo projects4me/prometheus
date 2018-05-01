@@ -58,22 +58,11 @@ export default App.extend({
         let _self = this;
         let params = this.paramsFor('app.project');
 
-        // Get the parameters for the current route every time as they might change from one record to another
-        //var params = this.paramsFor('app.conversations');
-
-        // Set the data in the current instance of the object, this is required. Unless this is done the route will display the same data every time
-        //this.module = Ember.String.capitalize(this.module);
-
-        //self.loadIssues(params.projectId);
-        //self.loadUsers();
-        //var metaData = MD.create();
         let i18n = _self.get('i18n');
         controller.set('i18n',i18n);
         controller.set('projectId',params.project_id);
 
-        //this.metaData = MD.create().getViewMeta(this.module,'list',i18n);
         let options = {
-            //limit: ENV.app.list.pagelimit
             limit:-1,
             page: 0
         };
@@ -89,11 +78,11 @@ export default App.extend({
             controller.set('model',data.toArray());
         });
 
+        let newConversation = this.get('store').createRecord('conversationroom',{});
+        controller.set('newConversation',newConversation);
 
         // Set the data in the controller so that any data bound in the view can get re-rendered
         controller.set('module',this.module);
-        //controller.set('metaData',this.metaData);
-        //controller.setupController();
     },
 
     /**
@@ -104,7 +93,7 @@ export default App.extend({
      * @param {String} projectId
      * @private
      */
-    loadIssues:function(projectId){
+    loadIssues(projectId){
         Logger.debug("AppProjectConversationRoute::loadIssues("+projectId+")");
         let _self = this;
         let module = "issue";
@@ -145,7 +134,7 @@ export default App.extend({
      * @method loadIssues
      * @private
      */
-    loadUsers:function(){
+    loadUsers(){
         Logger.debug("AppProjectConversationRoute::loadUsers()");
         let _self = this;
         let module = "user";

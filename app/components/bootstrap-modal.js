@@ -46,8 +46,9 @@ export default Component.extend({
          */
         confirm: function() {
             let _self = this;
-            _self.$('.modal').modal('hide');
-            _self.sendAction('confirm');
+            if (_self.sendAction('confirm')) {
+                _self.$('.modal').modal('hide');
+            }
         }
     },
 

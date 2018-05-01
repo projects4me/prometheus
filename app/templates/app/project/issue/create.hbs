@@ -35,7 +35,7 @@
                 {{summer-note
                     usersList=usersList
                     issuesList=issuesList
-                    onContentChange=(action 'onContentChange')
+                    onContentChange=(action "selectStatic" model 'description')
                 }}
                 <span class="highlight"></span>
                 <span class="bar"></span>
@@ -51,7 +51,7 @@
                   options=type
                   selected=(find-by "value" model.typeId type)
                   searchField="label"
-                  onchange=(action "selectType")
+                  onchange=(action "selectRelated" model 'typeId')
                   relateType="relate-simple"
                   data-field="issue.type"
                   focus-out=(action (mut showTypeError) true)
@@ -65,7 +65,7 @@
                   placeholder="Enter the issue name .."
                   label="Start Date"
                   value=(readonly model.startDate)
-                  update=(action "startDateChanged")
+                  update=(action "selectStatic" model 'startDate')
                   mask="alphanumeric"
                   data-field="issue.startDate"
                   focus-out=(action (mut showStartDateError) true)
@@ -79,7 +79,7 @@
                   placeholder="Enter the issue name .."
                   label="End Date"
                   value=(readonly model.endDate)
-                  update=(action "endDateChanged")
+                  update=(action "selectStatic" model 'startDate')
                   mask="alphanumeric"
                   data-field="issue.endDate"
                   focus-out=(action (mut showEndDateError) true)
@@ -96,7 +96,7 @@
                   options=status
                   selected=(find-by "value" model.status status)
                   searchField="label"
-                  onchange=(action "selectStatus")
+                  onchange=(action "selectRelated" model 'status')
                   relateType="relate-simple"
                   data-field="issue.status"
                   focus-out=(action (mut showStatusError) true)
@@ -113,7 +113,7 @@
                   options=priority
                   selected=(find-by "value" model.priority priority)
                   searchField="label"
-                  onchange=(action "selectPriority")
+                  onchange=(action "selectRelated" model 'priority')
                   relateType="relate-issuepriority"
                   data-field="issue.priority"
                   focus-out=(action (mut showPriorityError) true)
@@ -130,7 +130,7 @@
                   options=milestoneList
                   selected=(find-by "value" model.milestoneId milestoneList)
                   searchField="label"
-                  onchange=(action "selectMilestone")
+                  onchange=(action "selectRelated" model 'milestoneId')
                   relateType="relate-simple"
                   data-field="issue.milestone"
                   focus-out=(action (mut showMilestonError) true)
@@ -176,7 +176,7 @@
               options=memberList
               selected=(find-by "value" model.assignee memberList)
               searchField="label"
-              onchange=(action "selectAssignee")
+              onchange=(action "selectRelated" model 'assignee')
               relateType="relate-user"
               data-field="issue.assignee"
               focus-out=(action (mut showAssigneeError) true)
@@ -194,7 +194,7 @@
               options=memberList
               selected=(find-by "value" model.owner memberList)
               searchField="label"
-              onchange=(action "selectOwner")
+              onchange=(action "selectRelated" model 'owner')
               relateType="relate-user"
               data-field="issue.owner"
               focus-out=(action (mut showOwnerError) true)

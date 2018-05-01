@@ -2,10 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import Prometheus from "prometheus/controllers/prometheus";
 import format from "../../../utils/data/format";
 import _ from "lodash";
-import Controller from '@ember/controller';
-import { inject } from '@ember/service';
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 
@@ -16,30 +15,10 @@ import { computed } from '@ember/object';
  * @class Index
  * @namespace Prometheus.Controllers
  * @module App.Project
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Controller.extend({
-
-    /**
-     * The current user service
-     *
-     * @property currentUser
-     * @type Ember.Service
-     * @for Index
-     * @public
-     */
-    currentUser: inject('current-user'),
-
-    /**
-     * The internationalization service
-     *
-     * @property i18n
-     * @type Ember.Service
-     * @for Index
-     * @public
-     */
-    i18n: inject(),
+export default Prometheus.extend({
 
     /**
      * This flag is used to show or hide the modal dialog box

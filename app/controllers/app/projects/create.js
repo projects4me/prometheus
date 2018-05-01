@@ -1,6 +1,9 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+import Prometheus from "prometheus/controllers/prometheus";
 import  format from "../../../utils/data/format";
-import Controller from '@ember/controller';
-import { inject } from '@ember/service';
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 import { hash } from 'rsvp';
@@ -13,35 +16,14 @@ import _ from 'lodash';
  * does not work on run time generated controllers in case of page reload
  *
  * @class Create
- * @namespace Prometheus.Controller.Projects
- * @module App
- * @extends Ember.Controller
+ * @namespace Prometheus.Controllers
+ * @module App.Projects
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Controller.extend({
+export default Prometheus.extend({
 
-
-    /**
-     * The current user service
-     *
-     * @property currentUser
-     * @type Ember.Service
-     * @for Create
-     * @public
-     */
-    currentUser: inject('current-user'),
-
-    /**
-     * The i18n library service that is used in order to get the translations
-     *
-     * @property i18n
-     * @type Ember.Service
-     * @for Create
-     * @public
-     */
-    i18n: inject(),
-
-    /**
+      /**
      * This property is used to control the enabling and disabling of the save
      * button, the save is only enabled if the current model has been modified
      *

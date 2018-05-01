@@ -3,6 +3,17 @@
  */
 
 import DS from "ember-data";
+import { validator, buildValidations } from 'ember-cp-validations';
+
+/**
+ * These are the validation that are applied on the model
+ *
+ * @property Validations
+ * @module Tag
+ */
+const Validations = buildValidations({
+    tag: validator('presence', true)
+});
 
 /**
  * The tagged room model
@@ -12,7 +23,7 @@ import DS from "ember-data";
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend({
+export default DS.Model.extend(Validations, {
 
     /**
      * The tag

@@ -3,6 +3,20 @@
  */
 
 import DS from "ember-data";
+import { validator, buildValidations } from 'ember-cp-validations';
+
+/**
+ * These are the validation that are applied on the model
+ *
+ * @property Validations
+ * @module Timelog
+ */
+const Validations = buildValidations({
+    issueId: validator('presence', true),
+    minutes: validator('presence', true),
+    hours: validator('presence', true),
+    days: validator('presence', true)
+});
 
 /**
  * The time log model
@@ -12,7 +26,7 @@ import DS from "ember-data";
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend({
+export default DS.Model.extend(Validations, {
 
     /**
      * The date on which the time log entry was made

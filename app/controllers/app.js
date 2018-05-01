@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import Prometheus from "prometheus/controllers/prometheus";
 import format from "../utils/data/format";
-import Controller from '@ember/controller';
 import { inject } from '@ember/service';
 import { computed } from '@ember/object';
 
@@ -12,42 +12,11 @@ import { computed } from '@ember/object';
  * authenticated part
  *
  * @class App
- * @namespace Prometheus.Controller
- * @extends Ember.Controller
+ * @namespace Prometheus.Controllers
+ * @extends Prometheus
  * @author Hammad Hassan gollmer@gmail.com
  */
-export default Controller.extend({
-
-    /**
-     * The session service which is offered by ember-simple-auth that will be used
-     * in order to verfy whether the used is authenticated
-     *
-     * @property session
-     * @type Object
-     * @for App
-     * @public
-     */
-    session: inject(),
-
-    /**
-     * The service that we use to maintain the currentUser
-     *
-     * @property currentUser
-     * @type Object
-     * @for App
-     * @public
-     */
-    currentUser: inject('current-user'),
-
-    /**
-     * The related field service that is used in order to manage dropdowns and relate fields
-     *
-     * @property relatedField
-     * @type relatedFieldService
-     * @for App
-     * @public
-     */
-    relatedFields: inject('related-fields'),
+export default Prometheus.extend({
 
     /**
      * These are the roles in the system
@@ -176,8 +145,6 @@ export default Controller.extend({
             Logger.debug(message);
             Logger.debug('-Prometheus.Controllers.App::newMessage');
         }
-
-
     }
 
 });

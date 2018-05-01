@@ -5,4 +5,8 @@
 <span class="bar"></span>
 <label class="floating-label">{{label}}</label>
 <span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
-<span class="error hidden text-red">{{t "global.form.fields.required"}}</span>
+{{#if v-focus}}
+  <span class="error text-red">
+    {{v-get v-model v-field v-output}}
+  </span>
+{{/if}}

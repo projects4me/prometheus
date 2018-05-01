@@ -2,10 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+import Prometheus from "prometheus/controllers/prometheus";
 import { task } from 'ember-concurrency';
-import Controller from '@ember/controller';
-import { inject } from '@ember/service';
 import { inject as injectController } from '@ember/controller';
 import { get } from '@ember/object';
 import { set } from '@ember/object';
@@ -19,28 +17,10 @@ import Evented from '@ember/object/evented';
  * @class Page
  * @namespace Prometheus.Controllers
  * @module App.Project.Issue
- * @extends Ember.Controller
+ * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Controller.extend(Evented,{
-
-    /**
-     * The ESA session storage service
-     *
-     * @param session
-     * @type service
-     * @private
-     */
-    session: inject(),
-
-    /**
-     * The current user
-     *
-     * @param currentUser
-     * @type service
-     * @private
-     */
-    currentUser: inject('current-user'),
+export default Prometheus.extend(Evented,{
 
     /**
      * This flag is used to show or hide the modal dialog box
@@ -153,7 +133,7 @@ export default Controller.extend(Evented,{
      * @private
      */
     handleUpload: task(function * (file) {
-        let self = this;
+        let _self = this;
 
         let upload = this.store.createRecord('upload', {});
 
@@ -163,7 +143,7 @@ export default Controller.extend(Evented,{
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'issue',
-                    relatedId: self.get('model').objectAt(0).get('id')
+                    relatedId: _self.get('model').objectAt(0).get('id')
                 },
                 headers: upload.store.adapterFor('upload').headersForRequest()
             };
@@ -182,7 +162,7 @@ export default Controller.extend(Evented,{
             set(upload, 'relatedTo',data.data.attributes.relatedTo);
             set(upload, 'relatedId',data.data.attributes.relatedId);
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
-            self.get('model').objectAt(0).get('files').pushObject(upload);
+            _self.get('model').objectAt(0).get('files').pushObject(upload);
         } catch (e) {
             //upload.rollback();
         }
@@ -280,25 +260,25 @@ export default Controller.extend(Evented,{
          */
         deleteFile:function(file){
             Logger.debug('App.Project.Issue.PageController->deleteFile');
-            let self = this;
+            let _self = this;
             Logger.debug(self);
 
             let deleting = new Messenger().post({
-                message: self.get('i18n').t("views.app.issue.detail.file.delete",{name:file.get('name')}).toString(),
+                message: _self.get('i18n').t("views.app.issue.detail.file.delete",{name:file.get('name')}).toString(),
                 type: 'warning',
                 showCloseButton: true,
                 actions: {
                     confirm: {
-                        label: self.get('i18n').t("views.app.issue.detail.file.confirmdelete").toString(),
+                        label: _self.get('i18n').t("views.app.issue.detail.file.confirmdelete").toString(),
                         action: function() {
 
                             // destroy the upload
                             file.destroyRecord().then(function(){
                                 // remove from the view by updating the model
-                                self.get('model').objectAt(0).get('files').removeObject(file);
+                                _self.get('model').objectAt(0).get('files').removeObject(file);
 
                                 return deleting.update({
-                                    message: self.get('i18n').t("views.app.issue.detail.file.deleted"),
+                                    message: _self.get('i18n').t("views.app.issue.detail.file.deleted"),
                                     type: 'success',
                                     actions: false
                                 });
@@ -306,10 +286,10 @@ export default Controller.extend(Evented,{
                         }
                     },
                     cancel: {
-                        label: self.get('i18n').t("views.app.issue.detail.file.onsecondthought").toString(),
+                        label: _self.get('i18n').t("views.app.issue.detail.file.onsecondthought").toString(),
                         action: function() {
                             return deleting.update({
-                                message: self.get('i18n').t("views.app.issue.detail.file.deletecancel"),
+                                message: _self.get('i18n').t("views.app.issue.detail.file.deletecancel"),
                                 type: 'success',
                                 actions: false
                             });
@@ -329,8 +309,8 @@ export default Controller.extend(Evented,{
          */
         downloadFile:function(file){
             Logger.debug('App.Project.Issue.PageController->downloadFile');
-            let self = this;
-            Logger.debug(self);
+            let _self = this;
+            Logger.debug(_self);
 
             // get a download token
             let options = {
@@ -342,7 +322,7 @@ export default Controller.extend(Evented,{
                 let downloadLink = data.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
-                let path = self.get('store').adapterFor('upload').host+'/download/get/'+downloadLink;
+                let path = _self.get('store').adapterFor('upload').host+'/download/get/'+downloadLink;
                 window.open(path,'_blank');
                 Logger.debug(path);
 
@@ -361,9 +341,9 @@ export default Controller.extend(Evented,{
          */
         previewFile:function(file){
             Logger.debug('App.Project.Issue.PageController->previewFile');
-            let self = this;
-            Logger.debug(self);
-            self.send('showDialog');
+            let _self = this;
+            Logger.debug(_self);
+            _self.send('showDialog');
 
             // get a download token
             let options = {
@@ -371,11 +351,11 @@ export default Controller.extend(Evented,{
                 download: true
             };
             Logger.debug('Retrieving upload with options '+options);
-            self.get('store').query('upload',options).then(function(contents){
+            _self.get('store').query('upload',options).then(function(contents){
                 let downloadLink = contents.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
-                let path = self.get('store').adapterFor('upload').host+'/preview/get/'+downloadLink;
+                let path = _self.get('store').adapterFor('upload').host+'/preview/get/'+downloadLink;
                 $('#file_preview').attr('src',path);
                 Logger.debug(path);
             });
@@ -545,6 +525,7 @@ export default Controller.extend(Evented,{
          */
         removeModal:function(){
             this.set('filePreviewDialog',false);
+            $('.modal').modal('hide');
         },
 
         /**
@@ -555,6 +536,7 @@ export default Controller.extend(Evented,{
          */
         removeLogTimeModal:function(){
             this.set('logTimeDialog',false);
+            $('.modal').modal('hide');
         },
 
         /**
@@ -566,6 +548,7 @@ export default Controller.extend(Evented,{
         removeEditLogModal:function(){
             this.set('editingLog',null);
             this.set('editLogDialog',false);
+            $('.modal').modal('hide');
         },
     }
 

@@ -205,37 +205,50 @@
       closeLabel="global.form.cancel"
       confirm=(action "addConversation")
       close="removeModal"}}
-      <form {{action 'addConversation' on='submit'}}>
         <div class="box-body">
-          <div class="form-group">
-            <label for="subject">{{t "views.app.conversation.new.subject"}}</label>
-            {{input class="form-control" value=newSubject placeholder=(t "views.app.conversation.new.subject")}}
-          </div>
-          <div class="form-group">
-            <label for="description">{{t "views.app.conversation.new.description"}}</label>
-            {{message-box
-                issuesList=issuesList
-                usersList=usersList
-                spellcheck=false
-                entity=entity
-                placeholder=(t "views.app.conversation.new.description")
-                value=newTopic
-            }}
-          </div>
-          <div class="form-group">
-            <label for="type">{{t "views.app.conversation.new.type"}}</label>
-            {{#power-select
-                options=roomTypes
-                placeholder=(t "views.app.conversation.new.type")
-                selected=roomType
-                onchange=(action (mut roomType))
-                searchField="label"
-            as |type|}}
-              {{type.label}}
-            {{/power-select}}
-          </div>
+          {{field-text
+              placeholder=(t "views.app.conversation.new.subject")
+              label=(t "views.app.conversation.new.subject")
+              value=newConversation.subject
+              mask="alphanumeric"
+              data-field="newConversation.subject"
+              focus-out=(action (mut showSubjectError) true)
+              v-focus=showSubjectError
+              v-model=newConversation
+              v-field='subject'
+              v-output='message'
+          }}
+
+          {{field-textarea
+              placeholder=(t "views.app.conversation.new.description")
+              label=(t "views.app.conversation.new.description")
+              value=newConversation.description
+              data-field="newConversation.description"
+              focus-out=(action (mut showDescriptionError) true)
+              v-focus=showDescriptionError
+              v-model=newConversation
+              v-field='description'
+              v-output='message'
+          }}
+
+          {{field-relate
+              placeholder=(t "views.app.conversation.new.type")
+              label=(t "views.app.conversation.new.type")
+              value=newConversation.roomType
+              options=roomTypes
+              selected=(find-by "value" newConversation.roomType roomTypes)
+              searchField="label"
+              onchange=(action "selectNewType")
+              relateType="relate-simple"
+              data-field="newConversation.roomType"
+              focus-out=(action (mut showTypeError) true)
+              v-focus=showTypeError
+              v-model=newConversation
+              v-field='roomType'
+              v-output='message'
+          }}
+
         </div>
-      </form>
     {{/bootstrap-modal}}
 
   {{/if}}
