@@ -390,6 +390,7 @@ export default Prometheus.extend({
          */
         removeAddMemberModal(){
             this.set('addMemberDialog',false);
+            $('.modal').modal('hide');
         },
 
         /**
@@ -420,6 +421,7 @@ export default Prometheus.extend({
 
             _self.send('resetNewMilestone');
             _self.set('milestoneDialog',false);
+            $('.modal').modal('hide');
         },
 
         /**

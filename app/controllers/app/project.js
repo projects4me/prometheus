@@ -19,7 +19,7 @@ import { computed } from '@ember/object';
 export default Prometheus.extend({
 
     /**
-     * These are the users in the system
+     * These are the issues for the current project
      *
      * @property issues
      * @type Prometheus.Model.Issue
@@ -27,6 +27,16 @@ export default Prometheus.extend({
      * @public
      */
     issues: {},
+
+    /**
+     * These are the members for the current project
+     *
+     * @property members
+     * @type Prometheus.Model.User
+     * @for Project
+     * @public
+     */
+    members: {},
 
     /**
      * This is the list of users that has been extracted
@@ -45,6 +55,18 @@ export default Prometheus.extend({
             projectId:'projectId'
         };
         return format.getSelectList(this.get('issues'),map);
+    }),
+
+    /**
+     * This is the list of users that has been extracted
+     *
+     * @property membersList
+     * @type Ember.computed
+     * @returns array
+     * @public
+     */
+    membersList: computed('projectId', 'members', function(){
+        return format.getSelectList(this.get('members'));
     }),
 
     /**

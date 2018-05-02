@@ -33,7 +33,7 @@
 
               <div data-field="issue.description" class="form-field ember-view">
                 {{summer-note
-                    usersList=usersList
+                    usersList=membersList
                     issuesList=issuesList
                     onContentChange=(action "selectStatic" model 'description')
                 }}
@@ -173,8 +173,8 @@
               placeholder=(t "views.app.issue.create.selectassignee")
               label=(t "views.app.issue.create.assignedTo")
               value=model.assignee
-              options=memberList
-              selected=(find-by "value" model.assignee memberList)
+              options=membersList
+              selected=(find-by "value" model.assignee membersList)
               searchField="label"
               onchange=(action "selectRelated" model 'assignee')
               relateType="relate-user"
@@ -191,8 +191,8 @@
               placeholder=(t "views.app.issue.create.selectowner")
               label=(t "views.app.issue.create.ownedBy")
               value=model.owner
-              options=memberList
-              selected=(find-by "value" model.owner memberList)
+              options=membersList
+              selected=(find-by "value" model.owner membersList)
               searchField="label"
               onchange=(action "selectRelated" model 'owner')
               relateType="relate-user"

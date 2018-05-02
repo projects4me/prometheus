@@ -3,6 +3,7 @@
  */
 
 import Prometheus from "prometheus/controllers/prometheus";
+import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { inject } from '@ember/service';
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
@@ -17,7 +18,7 @@ import format from "../../../../utils/data/format";
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Prometheus.extend({
+export default Prometheus.extend(ProjectRelated, {
 
     /**
      * This property is used to control the enabling and disabling of the save
@@ -31,30 +32,6 @@ export default Prometheus.extend({
     saveDisabled: null,
 
     /**
-     * This is the controller of the project, we are injecting it in order to
-     * gain access to the data that is fetched by this controller
-     *
-     * @property projectController
-     * @type Prometheus.Controllers.App.Project
-     * @for Edit
-     * @public
-     */
-    projectController: injectController('app.project'),
-
-    /**
-     * This is a computed property in which gets the list of issues
-     * associated with a project loaded by the project controller
-     *
-     * @property issuesList
-     * @type Array
-     * @for Edit
-     * @private
-     */
-    issuesList: computed('projectController.issuesList', function(){
-        return this.get('projectController').get('issuesList');
-    }),
-
-    /**
      * This is the controller for the app, we are injecting it in order to
      * gain access to the data that is fetched by this controller
      *
@@ -64,18 +41,6 @@ export default Prometheus.extend({
      * @public
      */
     appController: injectController('app'),
-
-    /**
-     * This members for this project
-     *
-     * @property memberList
-     * @type Array
-     * @for Edit
-     * @public
-     */
-    memberList: computed('project', function(){
-        return format.getSelectList(this.get('project.members'));
-    }),
 
     /**
      * This milestones available for this project

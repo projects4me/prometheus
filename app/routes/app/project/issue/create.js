@@ -55,8 +55,7 @@ export default App.extend({
 
         let options = {
             query: "(Project.id : "+projectId+")",
-            rels : 'members,milestones,issuetypes',
-            sort: "members.name",
+            rels : 'milestones,issuetypes',
             limit: -1
         };
 
@@ -65,19 +64,9 @@ export default App.extend({
 
         this.data = this.store.query('project',options).then(function(data){
 
-            let memberCount = data.objectAt(0).get('members.length');
-            let memberList = [];
-            let temp = null;
-            memberList[0] = {label:i18n.t("global.blank"), value:null};
-            for (let i=1;i<=memberCount;i++)
-            {
-                temp = data.objectAt(0).get('members').objectAt(i-1);
-                memberList[i] = {label:temp.get('name'), value:temp.get('id')};
-            }
-
             let milestoneCount = data.objectAt(0).get('milestones.length');
             let milestoneList = [];
-            temp = null;
+            let temp = null;
             milestoneList[0] = {label:i18n.t("global.blank"), value:null};
             for (let i=1;i<=milestoneCount;i++)
             {
@@ -142,10 +131,8 @@ export default App.extend({
 
 
             Logger.debug('Data to be given');
-            Logger.debug(memberList);
             Logger.debug(milestoneList);
             Logger.debug(typeList);
-            controller.set('memberList',memberList);
             controller.set('milestoneList',milestoneList);
             controller.set('type',typeList);
             controller.set('status',status);
