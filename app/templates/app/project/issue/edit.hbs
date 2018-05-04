@@ -17,20 +17,26 @@
 
           <form {{action 'addIssue' on='submit'}}>
             <div class="form-group">
+
               {{field-text
                   placeholder="Enter the issue subject .."
                   label="Issue Subject"
                   value=model.subject
                   mask="alphanumeric"
+                  data-field="issue.subject"
+                  focus-out=(action (mut showSubjectError) true)
+                  v-focus=showSubjectError
+                  v-model=model
+                  v-field='subject'
+                  v-output='message'
               }}
-
 
               <div data-field="issue.description" class="form-field ember-view">
                 {{summer-note
                     usersList=membersList
                     issuesList=issuesList
                     contents=(readonly model.description)
-                    onContentChange=(action 'onContentChange')
+                    onContentChange=(action "selectStatic" model 'description')
                 }}
                 <span class="highlight"></span>
                 <span class="bar"></span>
@@ -45,22 +51,40 @@
                   options=typeList
                   selected=(find-by "value" model.typeId typeList)
                   searchField="label"
-                  onchange=(action "selectType")
+                  onchange=(action "selectRelated" model 'typeId')
                   relateType="relate-simple"
+                  data-field="issue.type"
+                  focus-out=(action (mut showTypeError) true)
+                  v-focus=showTypeError
+                  v-model=model
+                  v-field='typeId'
+                  v-output='message'
               }}
 
               {{field-date
                   placeholder="Enter the issue name .."
                   label="Start Date"
                   value=(readonly model.startDate)
-                  update=(action "startDateChanged")
+                  update=(action "selectStatic" model 'startDate')
+                  data-field="issue.startDate"
+                  focus-out=(action (mut showStartDateError) true)
+                  v-focus=showStartDateError
+                  v-model=model
+                  v-field='startDate'
+                  v-output='message'
               }}
 
               {{field-date
                   placeholder="Enter the issue name .."
                   label="End Date"
                   value=(readonly model.endDate)
-                  update=(action "endDateChanged")
+                  update=(action "selectStatic" model 'startDate')
+                  data-field="issue.endDate"
+                  focus-out=(action (mut showEndDateError) true)
+                  v-focus=showEndDateError
+                  v-model=model
+                  v-field='endDate'
+                  v-output='message'
               }}
 
               {{field-relate
@@ -70,8 +94,14 @@
                   options=status
                   selected=(find-by "value" model.status status)
                   searchField="label"
-                  onchange=(action "selectStatus")
+                  onchange=(action "selectRelated" model 'status')
                   relateType="relate-simple"
+                  data-field="issue.status"
+                  focus-out=(action (mut showStatusError) true)
+                  v-focus=showStatusError
+                  v-model=model
+                  v-field='status'
+                  v-output='message'
               }}
 
               {{field-relate
@@ -81,8 +111,14 @@
                   options=priority
                   selected=(find-by "value" model.priority priority)
                   searchField="label"
-                  onchange=(action "selectPriority")
+                  onchange=(action "selectRelated" model 'priority')
                   relateType="relate-issuepriority"
+                  data-field="issue.priority"
+                  focus-out=(action (mut showPriorityError) true)
+                  v-focus=showPriorityError
+                  v-model=model
+                  v-field='priority'
+                  v-output='message'
               }}
 
               {{field-relate
@@ -92,8 +128,14 @@
                   options=milestoneList
                   selected=(find-by "value" model.milestoneId milestoneList)
                   searchField="label"
-                  onchange=(action "selectMilestone")
+                  onchange=(action "selectRelated" model 'milestoneId')
                   relateType="relate-simple"
+                  data-field="issue.milestone"
+                  focus-out=(action (mut showMilestonError) true)
+                  v-focus=showMilestonError
+                  v-model=model
+                  v-field='milestoneId'
+                  v-output='message'
               }}
 
             </div>
@@ -124,7 +166,6 @@
         {{!-- /.box-header --}}
         <div class="box-body no-padding" style="display: block;">
 
-
           {{field-relate
               placeholder=(t "views.app.issue.create.selectassignee")
               label=(t "views.app.issue.create.assignedTo")
@@ -132,10 +173,15 @@
               options=membersList
               selected=(find-by "value" model.assignee membersList)
               searchField="label"
-              onchange=(action "selectAssignee")
+              onchange=(action "selectRelated" model 'assignee')
               relateType="relate-user"
+              data-field="issue.assignee"
+              focus-out=(action (mut showAssigneeError) true)
+              v-focus=showAssigneeError
+              v-model=model
+              v-field='assignee'
+              v-output='message'
           }}
-
 
           {{field-relate
               placeholder=(t "views.app.issue.create.selectowner")
@@ -144,8 +190,14 @@
               options=membersList
               selected=(find-by "value" model.owner membersList)
               searchField="label"
-              onchange=(action "selectOwner")
+              onchange=(action "selectRelated" model 'owner')
               relateType="relate-user"
+              data-field="issue.owner"
+              focus-out=(action (mut showOwnerError) true)
+              v-focus=showOwnerError
+              v-model=model
+              v-field='owner'
+              v-output='message'
           }}
 
 
@@ -160,7 +212,7 @@
     </div>
 
     <div class="col-sm-12">
-      <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+      <button type="button" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
       <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
     </div>
 

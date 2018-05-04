@@ -2,12 +2,11 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Prometheus from "prometheus/controllers/prometheus";
+import Create from "prometheus/controllers/prometheus/create";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
-import { inject } from '@ember/service';
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
-import _ from "lodash";
+import format from "../../../../utils/data/format";
 
 /**
  * This is the controller for issue create page
@@ -18,7 +17,17 @@ import _ from "lodash";
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Prometheus.extend(ProjectRelated, {
+export default Create.extend(ProjectRelated, {
+
+    /**
+     * This is the module for which we are trying to create
+     *
+     * @property module
+     * @type String
+     * @for Create
+     * @protected
+     */
+    module: 'issue',
 
     /**
      * This is the controller for the app, we are injecting it in order to
@@ -31,6 +40,29 @@ export default Prometheus.extend(ProjectRelated, {
      */
     appController: injectController('app'),
 
+    /**
+     * This milestones available for this project
+     *
+     * @property milestoneList
+     * @type Array
+     * @for Create
+     * @public
+     */
+    milestoneList: computed('project', function(){
+        return format.getSelectList(this.get('project.milestones'));
+    }),
+
+    /**
+     * This issue types available for the project
+     *
+     * @property typeList
+     * @type Array
+     * @for Create
+     * @public
+     */
+    typeList: computed('types', function(){
+        return format.getSelectList(this.get('types'));
+    }),
     /**
      * This is a computed property in which gets the list of user
      * associated in the system fetched by the app controller
@@ -55,53 +87,11 @@ export default Prometheus.extend(ProjectRelated, {
     actions:{
 
         /**
-         * This function is responsible for saving the model. After successfully
-         * saving the function takes the user to the saved page.
-         *
-         * @method save
-         * @public
-         * @todo Trigger the notificaiton
-         */
-        save:function() {
-            let _self = this;
-            let model = this.get('model');
-
-            model.validate().then(({ validations }) => {
-
-                if (validations.get('isValid')) {
-                    model.set('projectId',this.target.currentState.routerJs.state.params["app.project"].project_id);
-                    model.set('reportedUser',_self.get('currentUser.user.id'));
-
-                    model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
-                    model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
-
-                    model.save().then(function(data){
-                        new Messenger().post({
-                            message: _self.get('i18n').t('views.app.issue.created',{name:data.get('subject'),issue_number:data.get('issueNumber')}),
-                            type: 'success',
-                            showCloseButton: true
-                        });
-
-                        _self.transitionToRoute('app.project.issue.page', {project_id:data.get('projectId'),issue_number:data.get('issueNumber')});
-                    });
-                } else {
-                    let messages = _self._buildMessages(validations,'issue');
-
-                    new Messenger().post({
-                        message: messages,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
-        },
-
-        /**
          * This function lets a user traverse to the issue list view of the project
          *
          * @method cancel
          * @public
-         * @todo Trigger the notificaiton
+         * @todo move cancel to create controller
          */
         cancel:function(){
             let _self = this;
@@ -134,5 +124,32 @@ export default Prometheus.extend(ProjectRelated, {
                 _self.transitionToRoute('app.project.issue', {project_id:projectId});
             }
         },
+    },
+
+    /**
+     * This function sets the model properties before saving it
+     *
+     * @param model
+     */
+    beforeSave(model){
+        model.set('projectId', this.target.currentState.routerJs.state.params["app.project"].project_id);
+        model.set('reportedUser',this.get('currentUser.user.id'));
+        model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
+        model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
+    },
+
+    getSuccessMessage(model){
+        return this.get('i18n').t('views.app.issue.created',{
+            name:model.get('subject'),
+            issue_number:model.get('issueNumber')
+        });
+    },
+
+    navigateToSuccess(model){
+        this.transitionToRoute('app.project.issue.page', {
+            project_id:model.get('projectId'),
+            issue_number:model.get('issueNumber')
+        });
     }
+
 });

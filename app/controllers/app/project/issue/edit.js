@@ -4,7 +4,6 @@
 
 import Prometheus from "prometheus/controllers/prometheus";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
-import { inject } from '@ember/service';
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 import format from "../../../../utils/data/format";
@@ -20,18 +19,7 @@ import format from "../../../../utils/data/format";
  */
 export default Prometheus.extend(ProjectRelated, {
 
-    /**
-     * This property is used to control the enabling and disabling of the save
-     * button, the save is only enabled if the current model has been modified
-     *
-     * @property saveDisabled
-     * @type String
-     * @for Create
-     * @private
-     */
-    saveDisabled: null,
-
-    /**
+     /**
      * This is the controller for the app, we are injecting it in order to
      * gain access to the data that is fetched by this controller
      *
@@ -90,127 +78,6 @@ export default Prometheus.extend(ProjectRelated, {
     actions:{
 
         /**
-         * This function is called when an assignee is being selected
-         *
-         * @method selectAssignee
-         * @param {Object} target
-         * @public
-         * @todo we should be able able to delegate this to the select component
-         */
-        selectAssignee:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectAssignee');
-            let model = this.get('model');
-            model.set('assignee',target.value);
-            Logger.debug('App.Project.Issue.Create:selectAssignee');
-        },
-
-        /**
-         * This function is called when an owner is being selected
-         *
-         * @method selectOwner
-         * @param {Object} target
-         * @public
-         */
-        selectOwner:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectOwner');
-            let model = this.get('model');
-            model.set('owner',target.value);
-            Logger.debug('App.Project.Issue.Create:selectOwner');
-        },
-
-        /**
-         * This function is called when an milestone is being selected
-         *
-         * @method selectMilestone
-         * @param {Object} target
-         * @public
-         */
-        selectMilestone:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectMilestone');
-            let model = this.get('model');
-            model.set('milestoneId',target.value);
-            Logger.debug('App.Project.Issue.Create:selectMilestone');
-        },
-
-        /**
-         * This function is called when the status is being selected
-         *
-         * @method selectStatus
-         * @param {Object} target
-         * @public
-         */
-        selectStatus:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectStatus');
-            let model = this.get('model');
-            model.set('status',target.value);
-            Logger.debug('App.Project.Issue.Create:selectStatus');
-        },
-
-        /**
-         * This function is called when the priority is being selected
-         *
-         * @method selectPriority
-         * @param {Object} target
-         * @public
-         */
-        selectPriority:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectPriority');
-            let model = this.get('model');
-            model.set('priority',target.value);
-            Logger.debug('App.Project.Issue.Create:selectPriority');
-        },
-
-        /**
-         * This function is called when the issue type is being selected
-         *
-         * @method selectType
-         * @param {Object} target
-         * @public
-         */
-        selectType:function(target)
-        {
-            Logger.debug('App.Project.Issue.Create:selectType');
-            let model = this.get('model');
-            model.set('typeId',target.value);
-            Logger.debug('App.Project.Issue.Create:selectType');
-        },
-
-        /**
-         * This function is called when the start date field is changed
-         *
-         * @method startDateChanged
-         * @param {String} date
-         * @public
-         */
-        startDateChanged(date) {
-            Logger.debug('Prometheus.App.Project.Issue.Edit.Controller::startDateChanged('+date+')');
-            if (this.get('model') !== undefined) {
-                this.get('model').set('startDate', date);
-            }
-            Logger.debug('Prometheus.App.Project.Issue.Edit.Controller::startDateChanged');
-        },
-
-        /**
-         * This function is called when the end date field is changed
-         *
-         * @method endDateChanged
-         * @param {String} date
-         * @public
-         */
-        endDateChanged(date) {
-            Logger.debug('Prometheus.App.Project.Issue.Edit.Controller::endDateChanged('+date+')');
-            if (this.get('model') !== undefined) {
-                this.get('model').set('endDate', date);
-            }
-            Logger.debug('Prometheus.App.Project.Issue.Edit.Controller::endDateChanged');
-        },
-
-        /**
          * This function is responsible for saving the model. After successfully
          * saving the function takes the user to the saved page.
          *
@@ -227,6 +94,8 @@ export default Prometheus.extend(ProjectRelated, {
                 if (validations.get('isValid')) {
                     model.set('projectId', this.target.currentState.routerJs.state.params["app.project"].project_id);
 
+                    _self.beforeSave(model);
+
                     model.save().then(function(data){
 
                         new Messenger().post({
@@ -239,7 +108,7 @@ export default Prometheus.extend(ProjectRelated, {
                     });
 
                 } else {
-                    let messages = _self._buildMessages(validations);
+                    let messages = _self._buildMessages(validations,'issue');
 
                     new Messenger().post({
                         message: messages,
@@ -255,29 +124,45 @@ export default Prometheus.extend(ProjectRelated, {
          *
          * @method cancel
          * @public
-         * @todo Trigger the notificaiton
          */
         cancel:function(){
             let _self = this;
+            let projectId = _self.target.currentState.routerJs.state.params["app.project"].project_id;
             let model = _self.get('model');
 
-            _self.transitionToRoute('app.project.issue.page', {project_id:model.get('projectId'),issue_number:model.get('issueNumber')});
-        },
+            if (_.size(model.changedAttributes()) > 2) {
+                let message = new Messenger().post({
+                    message: _self.get('i18n').t("views.app.issue.create.cancelcicked").toString(),
+                    type: 'warning',
+                    showCloseButton: true,
+                    actions: {
+                        confirm: {
+                            label: _self.get('i18n').t("views.app.issue.create.confirmcancel").toString(),
+                            action: function() {
+                                message.cancel();
+                                _self.transitionToRoute('app.project.issue', {project_id:projectId});
+                            }
+                        },
+                        cancel: {
+                            label: _self.get('i18n').t("views.app.issue.create.onsecondthought").toString(),
+                            action: function() {
+                                message.cancel();
+                            }
+                        },
 
-        /**
-         * This is the action that is called by summernote
-         * A separate action is created as we are trying to follow
-         * the data down action up approach
-         *
-         * @method onContentChange
-         * @param contents
-         * @private
-         */
-        onContentChange:function (contents) {
-            Logger.debug('Prometheus.App.Project.Edit.onContentChange');
-            let _self = this;
-            _self.get('model').set('description',contents);
-            -Logger.debug('Prometheus.App.Project.Edit.onContentChange');
+                    }
+                });
+            } else {
+                _self.transitionToRoute('app.project.issue', {project_id:projectId});
+            }
         },
+    },
+
+    /**
+     * This function sets the model properties before saving it
+     *
+     * @param model
+     */
+    beforeSave(model){
     }
 });

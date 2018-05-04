@@ -35,6 +35,7 @@
                 {{summer-note
                     usersList=membersList
                     issuesList=issuesList
+                    contents=(readonly model.description)
                     onContentChange=(action "selectStatic" model 'description')
                 }}
                 <span class="highlight"></span>
@@ -43,13 +44,12 @@
                 <span class="count pull-right"></span>
               </div>
 
-
               {{field-relate
                   placeholder=(t "views.app.issue.create.type")
                   label=(t "views.app.issue.create.type")
                   value=model.typeId
-                  options=type
-                  selected=(find-by "value" model.typeId type)
+                  options=typeList
+                  selected=(find-by "value" model.typeId typeList)
                   searchField="label"
                   onchange=(action "selectRelated" model 'typeId')
                   relateType="relate-simple"
@@ -66,7 +66,6 @@
                   label="Start Date"
                   value=(readonly model.startDate)
                   update=(action "selectStatic" model 'startDate')
-                  mask="alphanumeric"
                   data-field="issue.startDate"
                   focus-out=(action (mut showStartDateError) true)
                   v-focus=showStartDateError
@@ -80,7 +79,6 @@
                   label="End Date"
                   value=(readonly model.endDate)
                   update=(action "selectStatic" model 'startDate')
-                  mask="alphanumeric"
                   data-field="issue.endDate"
                   focus-out=(action (mut showEndDateError) true)
                   v-focus=showEndDateError
@@ -168,7 +166,6 @@
         {{!-- /.box-header --}}
         <div class="box-body no-padding" style="display: block;">
 
-
           {{field-relate
               placeholder=(t "views.app.issue.create.selectassignee")
               label=(t "views.app.issue.create.assignedTo")
@@ -185,7 +182,6 @@
               v-field='assignee'
               v-output='message'
           }}
-
 
           {{field-relate
               placeholder=(t "views.app.issue.create.selectowner")
