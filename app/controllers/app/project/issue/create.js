@@ -6,7 +6,7 @@ import Create from "prometheus/controllers/prometheus/create";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
-import format from "../../../../utils/data/format";
+import format from "prometheus/utils/data/format";
 
 /**
  * This is the controller for issue create page
@@ -77,58 +77,9 @@ export default Create.extend(ProjectRelated, {
     }),
 
     /**
-     * These are the events that this controller handles
-     *
-     * @property actions
-     * @type Object
-     * @for Create
-     * @public
-     */
-    actions:{
-
-        /**
-         * This function lets a user traverse to the issue list view of the project
-         *
-         * @method cancel
-         * @public
-         * @todo move cancel to create controller
-         */
-        cancel:function(){
-            let _self = this;
-            let projectId = _self.target.currentState.routerJs.state.params["app.project"].project_id;
-            let model = _self.get('model');
-
-            if (_.size(model.changedAttributes()) > 2) {
-                let message = new Messenger().post({
-                    message: _self.get('i18n').t("views.app.issue.create.cancelcicked").toString(),
-                    type: 'warning',
-                    showCloseButton: true,
-                    actions: {
-                        confirm: {
-                            label: _self.get('i18n').t("views.app.issue.create.confirmcancel").toString(),
-                            action: function() {
-                                message.cancel();
-                                _self.transitionToRoute('app.project.issue', {project_id:projectId});
-                            }
-                        },
-                        cancel: {
-                            label: _self.get('i18n').t("views.app.issue.create.onsecondthought").toString(),
-                            action: function() {
-                                message.cancel();
-                            }
-                        },
-
-                    }
-                });
-            } else {
-                _self.transitionToRoute('app.project.issue', {project_id:projectId});
-            }
-        },
-    },
-
-    /**
      * This function sets the model properties before saving it
      *
+     * @method beforeSave
      * @param model
      */
     beforeSave(model){
@@ -138,6 +89,12 @@ export default Create.extend(ProjectRelated, {
         model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
     },
 
+    /**
+     * This function returns the success message
+     *
+     * @method getSuccessMessage
+     * @param model
+     */
     getSuccessMessage(model){
         return this.get('i18n').t('views.app.issue.created',{
             name:model.get('subject'),
@@ -145,11 +102,40 @@ export default Create.extend(ProjectRelated, {
         });
     },
 
+    /**
+     * This function navigate a user to the issue detail page
+     *
+     * @method navigateToSuccess
+     * @param model
+     */
     navigateToSuccess(model){
         this.transitionToRoute('app.project.issue.page', {
             project_id:model.get('projectId'),
             issue_number:model.get('issueNumber')
         });
+    },
+
+    /**
+     * This function checks if a field has changed
+     *
+     * @method _save
+     * @param model
+     * @protected
+     */
+    hasChanged(model){
+        return (_.size(model.changedAttributes()) > 2);
+    },
+
+    /**
+     * This function navigates a use to the issue list view.
+     *
+     * @method afterCancel
+     * @param projectId
+     * @protected
+     */
+    afterCancel(){
+        let projectId = this.target.currentState.routerJs.state.params["app.project"].project_id;
+        this.transitionToRoute('app.project.issue', {project_id:projectId});
     }
 
 });

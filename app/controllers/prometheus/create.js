@@ -5,6 +5,7 @@
 import Prometheus from "prometheus/controllers/prometheus";
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
+import { hash } from 'rsvp';
 
 /**
  * This is the controller for issue create page
@@ -15,6 +16,17 @@ import { computed } from '@ember/object';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default Prometheus.extend({
+
+    /**
+     * This is the layout name that is used to figure out what to
+     * display
+     *
+     * @property layoutName
+     * @for Create
+     * @type String
+     * @private
+     */
+    layoutName:'create',
 
     /**
      * This is the module for which we are trying to create
@@ -79,17 +91,72 @@ export default Prometheus.extend({
                     _self.afterValidate(model, validations);
                     if (validations.get('isValid')) {
                         _self.beforeSave(model);
-                        model.save().then(function(data){
-                            _self.afterSave(data);
-                            _self.showSuccess(data);
-                            _self.navigateToSuccess(data);
-                        });
+                        _self._save(model);
                     } else {
-                        _self._showError(model, validations);
+                        _self._showError(validations);
                     }
                 });
+            } else {
+                _self._save(model);
             }
-        }
+        },
+
+        /**
+         * This function lets a user traverse to the issue list view of the project
+         *
+         * @method cancel
+         * @public
+         * @todo move cancel to create controller
+         */
+        cancel:function(){
+            let _self = this;
+            let model = _self.get('model');
+            let i18n = _self.get('i18n');
+
+            if (_self.hasChanged(model)) {
+                let message = new Messenger().post({
+                    message: i18n.t("global.form.cancelcicked").toString(),
+                    type: 'warning',
+                    showCloseButton: true,
+                    actions: {
+                        confirm: {
+                            label: i18n.t("global.form.confirmcancel").toString(),
+                            action: function() {
+                                message.cancel();
+                                _self.afterCancel(model);
+                            }
+                        },
+                        cancel: {
+                            label: i18n.t("global.form.onsecondthought").toString(),
+                            action: function() {
+                                message.cancel();
+                            }
+                        },
+
+                    }
+                });
+            } else {
+                _self.afterCancel(model);
+            }
+        },
+
+    },
+
+    /**
+     * This function is used to actually save the model
+     *
+     * @method _save
+     * @param model
+     * @private
+     */
+    _save(model){
+        let _self = this;
+        model.save().then(function(data){
+            _self.afterSave(data).then(function(){
+                _self.showSuccess(data);
+                _self.navigateToSuccess(data);
+            });
+        });
     },
 
     /**
@@ -112,13 +179,14 @@ export default Prometheus.extend({
      * @protected
      */
     afterSave(model){
+        return hash({});
     },
 
     /**
      * This a placeholder function that is called before we call
      * the validate function on a model
      *
-     * @method beforeSave
+     * @method beforeValidate
      * @param model
      * @protected
      */
@@ -158,10 +226,9 @@ export default Prometheus.extend({
      * message that need to be displayed in case of success
      *
      * @method getSuccessMessage
-     * @param model
      * @protected
      */
-    getSuccessMessage(model){
+    getSuccessMessage(){
         return '';
     },
 
@@ -181,11 +248,10 @@ export default Prometheus.extend({
      * message
      *
      * @method showSuccess
-     * @param model
      * @param validations
-     * @protected
+     * @private
      */
-    _showError(model, validations) {
+    _showError(validations) {
         let _self = this;
         let messages = _self._buildMessages(validations,_self.get('module'));
 
@@ -194,6 +260,29 @@ export default Prometheus.extend({
             type: 'error',
             showCloseButton: true
         });
+    },
+
+    /**
+     * This is the placeholder function to find out if the model has
+     * changed, this function must be implemented but individual
+     * controllers.
+     *
+     * @method hasChanged
+     * @protected
+     */
+    hasChanged(){
+        return false;
+    },
+
+    /**
+     * This is a placeholder function that is called after the cancel
+     * confirm box has been dismissed in confirmation
+     *
+     * @method afterCancel
+     * @protected
+     */
+    afterCancel(){
     }
+
 
 });

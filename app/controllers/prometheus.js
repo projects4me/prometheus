@@ -72,13 +72,13 @@ export default Controller.extend({
         /**
          * This action helps us set a related fields
          *
-         * @param {Prometheus.Models} model
+         * @param {Object} obj
          * @param {String} field
          * @param {Object} target
          * @public
          */
-        selectStatic(model, field, target) {
-            model.set(field, target);
+        selectStatic(obj, field, target) {
+            obj.set(field, target);
         },
     },
 
@@ -101,7 +101,6 @@ export default Controller.extend({
                 messages.push(i18n.t('views.app.'+module+'.fields.'+error.attribute)+' : '+error.message);
             });
         }
-
         return _.join(messages,'<br\>');
     }
 

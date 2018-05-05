@@ -15,23 +15,7 @@ import App from "../../../app";
  */
 export default App.extend({
 
-    // /**
-    //  * The model for this route
-    //  *
-    //  * @method model
-    //  * @param {Object} params
-    //  * @return Prometheus.Issue
-    //  * @private
-    //  */
-    // model:function(params){
-    //     Logger.debug('AppProjectIssuePageRoute::model()');
-    //     Logger.debug(params);
-    //
-    //     Logger.debug('-AppProjectIssuePageRoute::model()');
-    //     return data;
-    // },
-
-    /**
+     /**
      * This function is called by the route when it has created the controller and
      * the controller is ready to be setup with any data that we may need. We are
      * using this function in order to bind the model of the route to the model

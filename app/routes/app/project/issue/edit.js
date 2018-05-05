@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import App from "prometheus/routes/app";
+import Create from "prometheus/routes/app/project/issue/create";
 import { hash } from 'rsvp';
 
 /**
@@ -14,7 +14,17 @@ import { hash } from 'rsvp';
  * @extends App
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default Create.extend({
+
+    /**
+     * This is the template that we want to display for this the Edit view
+     *
+     * @property templateName
+     * @for Edit
+     * @type String
+     * @public
+     */
+    templateName: 'app/project/issue/create',
 
     /**
      * We are using dynamic segments and since model is not called
@@ -59,85 +69,6 @@ export default App.extend({
             _self.set('project',results.project.objectAt(0));
             _self.set('types',results.project.objectAt(0).get('issuetypes'));
         });
-    },
-
-    /**
-     * This function is called by the route when it has created the controller and
-     * the controller is ready to be setup with any data that we may need. We are
-     * using this function in order to bind the model of the route to the model
-     * of the controller.
-     *
-     * The setup controller is only called once and if the model is changed Ember
-     * reflects the change in the controller as well.
-     *
-     * @method setupController
-     * @param {Prometheus.Controllers.Issue} controller The controller object for the issues
-     * @param {Prometheus.Models.Issue} model The model that is created by this route
-     * @private
-     */
-    setupController:function(controller){
-        Logger.debug('AppProjectIssueEditRoute::setupController');
-
-        let _self = this;
-
-        let params = this.paramsFor('app.project.issue.edit');
-
-        this.set('breadCrumb',{title:'#'+params.issue_number,record:true});
-
-        controller.set('model',_self.get('issue'));
-        controller.set('project',_self.get('project'));
-        controller.set('types',_self.get('types'));
-
-        let priority = [
-            {
-                "label":"Medium",
-                "value":"medium"
-            },
-            {
-                "label":"High",
-                "value":"high"
-            },
-            {
-                "label":"Low",
-                "value":"low"
-            },
-            {
-                "label":"Critical",
-                "value":"critical"
-            },
-            {
-                "label":"Bloker",
-                "value":"blocker"
-            }
-        ];
-
-        let status = [
-            {
-                "label":"New",
-                "value":"new"
-            },
-            {
-                "label":"In Progress",
-                "value":"in_progress"
-            },
-            {
-                "label":"Pending",
-                "value":"pending"
-            },
-            {
-                "label":"Done",
-                "value":"done"
-            },
-            {
-                "label":"Wont't Fix",
-                "value":"wont_fix"
-            }
-        ];
-
-        controller.set('status',status);
-        controller.set('priority',priority);
-
-        Logger.debug('-AppProjectIssueEditRoute::setupController');
     },
 
 });

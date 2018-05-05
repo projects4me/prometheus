@@ -110,6 +110,9 @@ export default {
             "signout" : "Sign Out",
             "signup" : "Sign Up",
             "modified" : "Modified by <strong>{{user}}</strong> on <strong>{{date}}<strong>",
+            "cancelcicked" : "You have made changes, canceling will discard them. Are you sure?",
+            "confirmcancel" : "Yes",
+            "onsecondthought" : "Take me back",
             "upload" : {
                 "drop" : "Drop to upload",
                 "invalid" : "Invalid file, cannot upload",
@@ -341,6 +344,21 @@ export default {
                 "label":"Project",
                 "noproject" : "No project selected",
                 "select":"This section is dependant on a project. Please select a project first from the sidebar on right.",
+                "created" : "Project <strong>{{name}}</strong> has been created successfully",
+                "updated" : "Project <strong>{{name}}</strong> has been updated successfully",
+                "fields" : {
+                    "name" : "Name",
+                    "shortcode" : "Short Code",
+                    "description" : "Project Summary",
+                    "type" : "Type",
+                    "assignee" : "Owner",
+                    "status" : "Status",
+                    "scope" : "Scope",
+                    "vision" : "Vision",
+                    "startdate" : "Start Date",
+                    "enddate" : "End Date",
+                    "issuetypes" : "Issue Types",
+                },
                 "detail" : {
                     "status." : "Loading ..",
                     "members" : "Members",
@@ -379,28 +397,6 @@ export default {
                         "user" : "Member",
                         "added" : "<strong>{{user}}</strong> has been added to the project as <strong>{{role}}</strong>",
                         "missing" : "Both the user and role selection is required"
-                    },
-                    "lists" : {
-                        "status." : "Loading ..",
-                        "status" : {
-                            "in_progress" : "In Progress",
-                            "new" : "New",
-                            "closed" : "Closed",
-                            "completed" : "Complete",
-                            "pending" : "Pending",
-                            "deferred" : "Deferred",
-                        },
-                        "type." : "Loading ..",
-                        "type" : {
-                            "scrum" : "Scrum",
-                            "kanban" : "Kanban",
-                            "civil" : "Civil",
-                            "software" : "Software",
-                            "business" : "Business",
-                            "architecture" : "Architecture",
-                            "government" : "Government",
-                            "other" : "Other",
-                        },
                     },
                     "charts" : {
                         "estimatedspent" : "Estimated vs Spent (Time in %)",
@@ -461,31 +457,6 @@ export default {
                     "issuetypes" : "Issue Types",
                     "selectissuetypes" : "Select issue type this project will support"
                 },
-                "edit" : {
-                    "header" : "Edit Project",
-                    "project" : "Project Information",
-                    "name" : "Name",
-                    "shortcode" : "Short Code",
-                    "description" : "Project Summary",
-                    "type" : "Type",
-                    "assignee" : "Owner",
-                    "selectassignee" : "Select the owner of the project",
-                    "status" : "Status",
-                    "scope" : "Scope",
-                    "vision" : "Vision",
-                    "startdate" : "Start Date",
-                    "enddate" : "End Date",
-                    "people" : "People",
-                    "nameplaceholder" : "Enter a name",
-                    "descriptionplaceholder" : "Enter project summary",
-                    "enddateplaceholder" : "Enter the target end date",
-                    "startdateplaceholder" : "Enter the project start date",
-                    "typeplaceholder" : "Select the type of project",
-                    "statusplaceholder" : "Which status is the project in?",
-                    "visionholder" : "What is the project vision",
-                    "scopeplaceholder" : "What is the project scope",
-                    "edited" : "<strong>{{name}}</strong> created updated"
-                },
                 "list" : {
                     "savedsearch": {
                         "name": "Name of the search",
@@ -511,7 +482,29 @@ export default {
                     "description" : "Description",
                     "status" : "Status",
                     "date" : "Date"
-                }
+                },
+                "lists" : {
+                    "status." : "Loading ..",
+                    "status" : {
+                        "new" : "New",
+                        "in_progress" : "In Progress",
+                        "completed" : "Complete",
+                        "closed" : "Closed",
+                        "pending" : "Pending",
+                        "deferred" : "Deferred",
+                    },
+                    "type." : "Loading ..",
+                    "type" : {
+                        "scrum" : "Scrum",
+                        "kanban" : "Kanban",
+                        "civil" : "Civil",
+                        "software" : "Software",
+                        "business" : "Business",
+                        "architecture" : "Architecture",
+                        "government" : "Government",
+                        "other" : "Other",
+                    },
+                },
             },
 
             "conversation" : {
@@ -736,10 +729,7 @@ export default {
                     "selectassignee" : "Select an assignee",
                     "reportedBy" : "Reported User",
                     "parent" : "Parent",
-                    "people" : "People",
-                    "cancelcicked" : "You are about to cancel, all progress will be discarded. Are you sure?",
-                    "confirmcancel" : "Yes",
-                    "onsecondthought" : "Take me back"
+                    "people" : "People"
                 },
                 "filter" : {
                     "issueNumber" : "Issue Number",
@@ -759,22 +749,18 @@ export default {
                 },
                 "lists" : {
                     "priority" : {
-                        "blocker" : "Blocker",
-                        "critical" : "Critical",
-                        "high" : "High",
                         "medium" : "Medium",
+                        "high" : "High",
                         "low" : "Low",
-                        "lowest" : "Lowest",
+                        "critical" : "Critical",
+                        "blocker" : "Blocker"
                     },
                     "status" : {
-                        "done" : "Done",
-                        "complete" : "Complete",
                         "new" : "New",
                         "in_progress" : "In Progress",
                         "pending" : "Pending",
-                        "closed" : "Closed",
-                        "deferred" : "Deferred",
-                        "feedback" : "Feedback",
+                        "done" : "Done",
+                        "wont_fix" : "Wont't Fix",
                     },
                 },
             },

@@ -4,6 +4,7 @@
 
 import App from "prometheus/routes/app";
 import { hash } from 'rsvp';
+import format from "prometheus/utils/data/format";
 
 /**
  * This is the route that will handle the creation of new issues
@@ -16,8 +17,6 @@ import { hash } from 'rsvp';
  */
 export default App.extend({
 
-    types: {},
-    project: {},
     /**
      * We are using dynamic segments and since model is not called
      * again for a route that is using dynamic segment we are relying
@@ -84,51 +83,8 @@ export default App.extend({
         controller.set('project',_self.get('project'));
         controller.set('types',_self.get('types'));
 
-        let priority = [
-            {
-                "label":"Medium",
-                "value":"medium"
-            },
-            {
-                "label":"High",
-                "value":"high"
-            },
-            {
-                "label":"Low",
-                "value":"low"
-            },
-            {
-                "label":"Critical",
-                "value":"critical"
-            },
-            {
-                "label":"Bloker",
-                "value":"blocker"
-            }
-        ];
-
-        let status = [
-            {
-                "label":"New",
-                "value":"new"
-            },
-            {
-                "label":"In Progress",
-                "value":"in_progress"
-            },
-            {
-                "label":"Pending",
-                "value":"pending"
-            },
-            {
-                "label":"Done",
-                "value":"done"
-            },
-            {
-                "label":"Wont't Fix",
-                "value":"wont_fix"
-            }
-        ];
+        let priority = format.getList('views.app.issue.lists.priority',_self.get('i18n.locale'));
+        let status = format.getList('views.app.issue.lists.status',_self.get('i18n.locale'));
 
         controller.set('status',status);
         controller.set('priority',priority);

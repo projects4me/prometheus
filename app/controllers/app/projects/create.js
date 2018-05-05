@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Prometheus from "prometheus/controllers/prometheus";
+import Create from "prometheus/controllers/prometheus/create";
 import  format from "../../../utils/data/format";
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
@@ -21,18 +21,17 @@ import _ from 'lodash';
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Prometheus.extend({
+export default Create.extend({
 
-      /**
-     * This property is used to control the enabling and disabling of the save
-     * button, the save is only enabled if the current model has been modified
+    /**
+     * This is the module for which we are trying to create
      *
-     * @property saveDisabled
+     * @property module
      * @type String
      * @for Create
-     * @private
+     * @protected
      */
-    saveDisabled: null,
+    module: 'project',
 
     /**
      * We are pre-loading the project issues and the users in the
@@ -96,139 +95,95 @@ export default Prometheus.extend({
     }),
 
     /**
-     * These are the events that this controller handles
+     * This function sets the short code for the project.
      *
-     * @property actions
-     * @type Object
-     * @for Create
-     * @public
+     * @method beforevalidate
+     * @param model
+     * @protected
      */
-    actions:{
+    beforeValidate(model){
+        model.set('shortCode',this.get('shortCode'));
+    },
 
-        /**
-         * This function is called when an assignee is being selected
-         *
-         * @method selectOwner
-         * @param {Object} target
-         * @public
-         */
-        selectOwner(target)
-        {
-            Logger.debug('App.Projects.Create:selectAssignee');
-            let model = this.get('model');
-            model.set('assignee',target.value);
-            Logger.debug('App.Projects.Create:selectAssignee');
-        },
+    /**
+     * This function sets the model properties before saving it
+     *
+     * @method beforeSave
+     * @param model
+     */
+    beforeSave(model){
+        model.set('deleted','0');
+        model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
+        model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
+    },
 
-        /**
-         * This function is called when the status is being selected
-         *
-         * @method selectStatus
-         * @param {Object} target
-         * @public
-         */
-        selectStatus(target)
-        {
-            Logger.debug('App.Projects.Create:selectStatus');
-            let model = this.get('model');
-            model.set('status',target.value);
-            Logger.debug('App.Projects.Create:selectStatus');
-        },
+    /**
+     * This function associates the selected issue type with the project
+     *
+     * @method afterSave
+     * @param model
+     */
+    afterSave(model){
+        let _self = this;
+        let selectedIssuetypes = _self.get('selectedIssuetypes');
+        let Promises = {};
 
-        /**
-         * This function is called when the priority is being selected
-         *
-         * @method selectType
-         * @param {Object} target
-         * @public
-         */
-        selectType(target)
-        {
-            Logger.debug('App.Projects.Create:selectType');
-            let model = this.get('model');
-            model.set('type',target.value);
-            Logger.debug('App.Projects.Create:selectType');
-        },
-
-        /**
-         * This function is responsible for saving the model. After successfully
-         * saving the function takes the user to the saved page.
-         *
-         * @method save
-         * @public
-         * @todo Trigger the notificaiton
-         */
-        save() {
-            let _self = this;
-            let model = _self.get('model');
-
-            let selectedIssuetypes = _self.get('selectedIssuetypes');
-
-            model.set('shortCode',_self.get('shortCode'));
-            model.set('deleted','0');
-
-            model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
-            model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
-
-            Logger.debug(model);
-            Logger.debug(_self);
-            model.save().then(function(data){
-                Logger.debug('Data saved:');
-                Logger.debug(data);
-                let Promises = {};
-
-                _.forEach(selectedIssuetypes,function(issueType){
-                    let newIssueType = _self.get('store').createRecord('issuetype',{
-                        name: issueType.label,
-                        deleted: 0,
-                        description: issueType.label,
-                        system: 0,
-                        projectId: data.get('id')
-                    });
-                    Promises[issueType.label] = newIssueType.save();
-                });
-
-                hash(Promises).then(function(){
-
-                    new Messenger().post({
-                        message: _self.get('i18n').t('views.app.project.create.created',{name:data.get('name')}),
-                        type: 'success',
-                        showCloseButton: true
-                    });
-
-                    _self.transitionToRoute('app.project.index', {project_id:data.get('id')});
-
-                });
-
+        _.forEach(selectedIssuetypes,function(issueType){
+            let newIssueType = _self.get('store').createRecord('issuetype',{
+                name: issueType.label,
+                deleted: 0,
+                description: issueType.label,
+                system: 0,
+                projectId: model.get('id')
             });
-        },
+            Promises[issueType.label] = newIssueType.save();
+        });
+        return hash(Promises);
+    },
 
-        /**
-         * This function lets a user traverse to the issue list view of the project
-         *
-         * @method cancel
-         * @public
-         * @todo Trigger the notificaiton
-         */
-        cancel(){
-            this.transitionToRoute('app.projects');
-        },
+    /**
+     * This function returns the success message
+     *
+     * @method getSuccessMessage
+     * @param model
+     */
+    getSuccessMessage(model){
+        return this.get('i18n').t('views.app.project.created',{
+            name:model.get('name')
+        });
+    },
 
-        /**
-         * This function is called when an issuetype is selected
-         *
-         * @method issuetypeSelected
-         * @param {*} issue
-         * @public
-         */
-        issuetypeSelected(issue){
-            Logger.debug('Prometheus.Controllers.App.Projects.Create::issuetypeSelected');
+    /**
+     * This function navigate a user to the issue detail page
+     *
+     * @method navigateToSuccess
+     * @param model
+     */
+    navigateToSuccess(model){
+        this.transitionToRoute('app.project', {
+            project_id:model.get('id'),
+        });
+    },
 
-            let _self = this;
-            _self.set('selectedIssuetypes',issue);
+    /**
+     * This function checks if a field has changed
+     *
+     * @method _save
+     * @param model
+     * @protected
+     */
+    hasChanged(model){
+        return (_.size(model.changedAttributes()) > 1);
+    },
 
-            Logger.debug('-Prometheus.Controllers.App.Projects.Create::issuetypeSelected');
-        }
+    /**
+     * This function navigates a use to the issue list view.
+     *
+     * @method afterCancel
+     * @param projectId
+     * @protected
+     */
+    afterCancel(){
+        this.transitionToRoute('app.projects');
     }
-
 });

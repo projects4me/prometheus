@@ -5,148 +5,143 @@
 
       <div class="box box-primary issues-details">
         <div class="box-header with-border">
-          <h3 class="box-title">{{t "views.app.issue.create.title"}}</h3>
-
-          <div class="box-tools pull-right">
-
-          </div>
+          <h3 class="box-title">
+            {{#if (eq layoutName 'edit')}}
+              {{t "views.app.issue.edit.page" issueNumber=model.issueNumber name=model.subject}}
+            {{else}}
+              {{t "views.app.issue.create.title"}}
+            {{/if}}
+          </h3>
 
         </div>
         {{!-- /.box-header --}}
         <div class="box-body no-padding" style="display: block;">
 
-          <form {{action 'addIssue' on='submit'}}>
-            <div class="form-group">
+          <div class="form-group">
 
-              {{field-text
-                  placeholder="Enter the issue subject .."
-                  label="Issue Subject"
-                  value=model.subject
-                  mask="alphanumeric"
-                  data-field="issue.subject"
-                  focus-out=(action (mut showSubjectError) true)
-                  v-focus=showSubjectError
-                  v-model=model
-                  v-field='subject'
-                  v-output='message'
+            {{field-text
+                placeholder="Enter the issue subject .."
+                label="Issue Subject"
+                value=model.subject
+                mask="alphanumeric"
+                data-field="issue.subject"
+                focus-out=(action (mut showSubjectError) true)
+                v-focus=showSubjectError
+                v-model=model
+                v-field='subject'
+                v-output='message'
+            }}
+
+            <div data-field="issue.description" class="form-field ember-view">
+              {{summer-note
+                  usersList=membersList
+                  issuesList=issuesList
+                  contents=(readonly model.description)
+                  onContentChange=(action "selectStatic" model 'description')
               }}
-
-              <div data-field="issue.description" class="form-field ember-view">
-                {{summer-note
-                    usersList=membersList
-                    issuesList=issuesList
-                    contents=(readonly model.description)
-                    onContentChange=(action "selectStatic" model 'description')
-                }}
-                <span class="highlight"></span>
-                <span class="bar"></span>
-                <label class="floating-label focused-field">{{t "views.app.issue.create.description"}}</label>
-                <span class="count pull-right"></span>
-              </div>
-
-              {{field-relate
-                  placeholder=(t "views.app.issue.create.type")
-                  label=(t "views.app.issue.create.type")
-                  value=model.typeId
-                  options=typeList
-                  selected=(find-by "value" model.typeId typeList)
-                  searchField="label"
-                  onchange=(action "selectRelated" model 'typeId')
-                  relateType="relate-simple"
-                  data-field="issue.type"
-                  focus-out=(action (mut showTypeError) true)
-                  v-focus=showTypeError
-                  v-model=model
-                  v-field='typeId'
-                  v-output='message'
-              }}
-
-              {{field-date
-                  placeholder="Enter the issue name .."
-                  label="Start Date"
-                  value=(readonly model.startDate)
-                  update=(action "selectStatic" model 'startDate')
-                  data-field="issue.startDate"
-                  focus-out=(action (mut showStartDateError) true)
-                  v-focus=showStartDateError
-                  v-model=model
-                  v-field='startDate'
-                  v-output='message'
-              }}
-
-              {{field-date
-                  placeholder="Enter the issue name .."
-                  label="End Date"
-                  value=(readonly model.endDate)
-                  update=(action "selectStatic" model 'startDate')
-                  data-field="issue.endDate"
-                  focus-out=(action (mut showEndDateError) true)
-                  v-focus=showEndDateError
-                  v-model=model
-                  v-field='endDate'
-                  v-output='message'
-              }}
-
-              {{field-relate
-                  placeholder=(t "views.app.issue.create.status")
-                  label=(t "views.app.issue.create.status")
-                  value=model.status
-                  options=status
-                  selected=(find-by "value" model.status status)
-                  searchField="label"
-                  onchange=(action "selectRelated" model 'status')
-                  relateType="relate-simple"
-                  data-field="issue.status"
-                  focus-out=(action (mut showStatusError) true)
-                  v-focus=showStatusError
-                  v-model=model
-                  v-field='status'
-                  v-output='message'
-              }}
-
-              {{field-relate
-                  placeholder=(t "views.app.issue.create.priority")
-                  label=(t "views.app.issue.create.priority")
-                  value=model.priority
-                  options=priority
-                  selected=(find-by "value" model.priority priority)
-                  searchField="label"
-                  onchange=(action "selectRelated" model 'priority')
-                  relateType="relate-issuepriority"
-                  data-field="issue.priority"
-                  focus-out=(action (mut showPriorityError) true)
-                  v-focus=showPriorityError
-                  v-model=model
-                  v-field='priority'
-                  v-output='message'
-              }}
-
-              {{field-relate
-                  placeholder=(t "views.app.issue.create.selectmilestone")
-                  label=(t "views.app.issue.create.milestone")
-                  value=model.milestoneId
-                  options=milestoneList
-                  selected=(find-by "value" model.milestoneId milestoneList)
-                  searchField="label"
-                  onchange=(action "selectRelated" model 'milestoneId')
-                  relateType="relate-simple"
-                  data-field="issue.milestone"
-                  focus-out=(action (mut showMilestonError) true)
-                  v-focus=showMilestonError
-                  v-model=model
-                  v-field='milestoneId'
-                  v-output='message'
-              }}
-
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="floating-label focused-field">{{t "views.app.issue.create.description"}}</label>
+              <span class="count pull-right"></span>
             </div>
-          </form>
+
+            {{field-relate
+                placeholder=(t "views.app.issue.create.type")
+                label=(t "views.app.issue.create.type")
+                value=model.typeId
+                options=typeList
+                selected=(find-by "value" model.typeId typeList)
+                searchField="label"
+                onchange=(action "selectRelated" model 'typeId')
+                relateType="relate-simple"
+                data-field="issue.type"
+                focus-out=(action (mut showTypeError) true)
+                v-focus=showTypeError
+                v-model=model
+                v-field='typeId'
+                v-output='message'
+            }}
+
+            {{field-date
+                placeholder="Enter the issue name .."
+                label="Start Date"
+                value=(readonly model.startDate)
+                update=(action "selectStatic" model 'startDate')
+                data-field="issue.startDate"
+                focus-out=(action (mut showStartDateError) true)
+                v-focus=showStartDateError
+                v-model=model
+                v-field='startDate'
+                v-output='message'
+            }}
+
+            {{field-date
+                placeholder="Enter the issue name .."
+                label="End Date"
+                value=(readonly model.endDate)
+                update=(action "selectStatic" model 'startDate')
+                data-field="issue.endDate"
+                focus-out=(action (mut showEndDateError) true)
+                v-focus=showEndDateError
+                v-model=model
+                v-field='endDate'
+                v-output='message'
+            }}
+
+            {{field-relate
+                placeholder=(t "views.app.issue.create.status")
+                label=(t "views.app.issue.create.status")
+                value=model.status
+                options=status
+                selected=(find-by "value" model.status status)
+                searchField="label"
+                onchange=(action "selectRelated" model 'status')
+                relateType="relate-simple"
+                data-field="issue.status"
+                focus-out=(action (mut showStatusError) true)
+                v-focus=showStatusError
+                v-model=model
+                v-field='status'
+                v-output='message'
+            }}
+
+            {{field-relate
+                placeholder=(t "views.app.issue.create.priority")
+                label=(t "views.app.issue.create.priority")
+                value=model.priority
+                options=priority
+                selected=(find-by "value" model.priority priority)
+                searchField="label"
+                onchange=(action "selectRelated" model 'priority')
+                relateType="relate-issuepriority"
+                data-field="issue.priority"
+                focus-out=(action (mut showPriorityError) true)
+                v-focus=showPriorityError
+                v-model=model
+                v-field='priority'
+                v-output='message'
+            }}
+
+            {{field-relate
+                placeholder=(t "views.app.issue.create.selectmilestone")
+                label=(t "views.app.issue.create.milestone")
+                value=model.milestoneId
+                options=milestoneList
+                selected=(find-by "value" model.milestoneId milestoneList)
+                searchField="label"
+                onchange=(action "selectRelated" model 'milestoneId')
+                relateType="relate-simple"
+                data-field="issue.milestone"
+                focus-out=(action (mut showMilestonError) true)
+                v-focus=showMilestonError
+                v-model=model
+                v-field='milestoneId'
+                v-output='message'
+            }}
+
+          </div>
 
         </div>
-        {{!-- /.box-body --}}
-        <div class="box-footer text-center" style="display: block;">
-
-        </div>
-        {{!-- /.box-footer --}}
       </div>
 
     </div>
@@ -157,11 +152,6 @@
       <div class="box box-warning issues-details">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "views.app.issue.create.people"}}</h3>
-
-          <div class="box-tools pull-right">
-
-          </div>
-
         </div>
         {{!-- /.box-header --}}
         <div class="box-body no-padding" style="display: block;">
@@ -202,11 +192,6 @@
 
 
         </div>
-        {{!-- /.box-body --}}
-        <div class="box-footer text-center" style="display: block;">
-
-        </div>
-        {{!-- /.box-footer --}}
       </div>
 
     </div>

@@ -4,6 +4,7 @@
 
 import App from "../../app";
 import { hash } from 'rsvp';
+import format from "prometheus/utils/data/format";
 
 /**
  *  This is the route that will handle the creation of new issues
@@ -17,8 +18,11 @@ import { hash } from 'rsvp';
 export default App.extend({
 
     /**
-     * We use the after model hook here in order to load the
-     * system issue types
+     * This function returns returns the project being created
+     * and the issue types available in the system
+     *
+     * @method afterModel
+     * @
      */
     afterModel(){
         let _self = this;
@@ -29,8 +33,12 @@ export default App.extend({
         };
 
         return hash({
+            project: _self.get('store').createRecord('project',{
+                assignee: _self.get('currentUser').user.id
+            }),
             issuetypes: _self.store.query('issuetype',issuetypeOptions),
         }).then(function(results){
+            _self.set('project',results.project);
             _self.set('issuetypes',results.issuetypes.toArray());
         });
 
@@ -49,58 +57,11 @@ export default App.extend({
         Logger.debug('AppProjectIndexRoute::setupController');
         let _self = this;
 
+        controller.set('model',_self.get('project'));
         controller.set('issuetypes',_self.get('issuetypes'));
 
-        let project = _self.get('store').createRecord('project',{
-            assignee: _self.get('currentUser').user.id
-        });
-        controller.set('model',project);
-
-        let type = [
-            {
-                "label":"Scrum",
-                "value":"scrum"
-            },
-            {
-                "label":"Kanban",
-                "value":"kanban"
-            },
-            {
-                "label":"Business",
-                "value":"business"
-            },
-            {
-                "label":"Other",
-                "value":"other"
-            }
-        ];
-
-        let status = [
-            {
-                "label":"New",
-                "value":"new"
-            },
-            {
-                "label":"In Progress",
-                "value":"in_progress"
-            },
-            {
-                "label":"Pending",
-                "value":"pending"
-            },
-            {
-                "label":"Completed",
-                "value":"completed"
-            },
-            {
-                "label":"Deferred",
-                "value":"deferred"
-            },
-            {
-                "label":"Closed",
-                "value":"closed"
-            },
-        ];
+        let type = format.getList('views.app.project.lists.type',_self.get('i18n.locale'));
+        let status = format.getList('views.app.project.lists.status',_self.get('i18n.locale'));
 
         controller.set('status',status);
         controller.set('type',type);
