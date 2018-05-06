@@ -218,7 +218,14 @@ export default Component.extend({
         //var edit = this.get('edit');
 
         let template = 'components/form-fields/'+type;
-        if (Prometheus.__container__.lookup('template:'+template) === undefined) {
+        let container;
+        if (Prometheus.__container__ === undefined) {
+            container = Prometheus._applicationInstances[0].__container__;
+        } else {
+            container = Prometheus.__container__;
+        }
+
+        if (container.lookup('template:'+template) === undefined) {
             template = 'components/form-fields/text';
         }
 

@@ -55,10 +55,6 @@ export default Component.extend({
         let activity = this.get('activity');
         let template = null;
 
-        let createdSince = moment.duration(moment(new Date()).diff(moment(activity.get('dateCreated')))).humanize();
-        set(activity,"createdSince",createdSince);
-
-
         if (activity.get('type') === 'related'){
             template = 'components/activity-blocks/related-'+activity.get('relatedActivity');
         }
@@ -66,11 +62,30 @@ export default Component.extend({
             template = 'components/activity-blocks/'+activity.get('type');
         }
 
-        if (Prometheus.__container__.lookup('template:'+template) === undefined) {
+        let container;
+        if (Prometheus.__container__ === undefined) {
+            container = Prometheus._applicationInstances[0].__container__;
+        } else {
+            container = Prometheus.__container__;
+        }
+
+        if (container.lookup('template:'+template) === undefined) {
             template = 'components/activity-blocks/index';
         }
 
         return template;
     }).volatile(),
+
+    /**
+     * This function is used to set the date since the activity was created
+     *
+     * @method didInsertElement
+     * @public
+     */
+    didInsertElement(){
+        let activity = this.get('activity');
+        let createdSince = moment.duration(moment(new Date()).diff(moment(activity.get('dateCreated')))).humanize();
+        set(activity,"createdSince",createdSince);
+    }
 
 });

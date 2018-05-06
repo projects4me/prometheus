@@ -237,7 +237,6 @@ export default App.extend({
         controller.set('savedsearches',this.get('savedsearches'));
         controller.set('publicsearches',this.get('publicsearches'));
         controller.set('model',model);
-        console.log(this.get('query'));
         controller.set('query',this.get('query'));
         controller.set('sort',this.get('sort'));
         controller.set('order',this.get('order'));

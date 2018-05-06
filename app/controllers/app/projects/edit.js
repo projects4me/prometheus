@@ -3,7 +3,7 @@
  */
 
 import Create from "prometheus/controllers/app/projects/create";
-
+import _ from "lodash";
 /**
  * This is empty controller, normally we do not create them. However
  * Ember's inject in the child controllers was failing on reload

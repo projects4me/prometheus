@@ -116,7 +116,7 @@ export default CreateWiki.extend(ProjectRelated, {
                             relatedTo: "wiki"
                         });
 
-                        tagged.save().then(function(tafRel){
+                        tagged.save().then(function(tagRel){
                             // After it has been saved then show the message to the user
                             new Messenger().post({
                                 message: _self.get('i18n').t("views.app.wiki.tag.created",{name:tag.get('tag')}),

@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import { inject } from '@ember/service';
+/* global require */
 
 /**
  * This utility class is used to format data

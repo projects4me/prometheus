@@ -14,7 +14,6 @@ import { singularize } from 'ember-inflector';
  *
  * @class Application
  * @namespace Prometheus.Adapter
- * @extends DS.JSONAPIAdapter
  * @uses DataAdapterMixin
  * @todo retrieve the host name from the configurations.
  * @author Hammad Hassan <gollomer@gmail.com>
@@ -32,17 +31,6 @@ export default DS.JSONAPIAdapter.extend(DataAdapterMixin,{
     namespace:'api/v'+ENV.api.version,
 
     /**
-     * Set the authorizer so that the authorization headers are included in all the
-     * outgoing calls to the API server
-     *
-     * @property authorizer
-     * @type String
-     * @for ApplicationAdapter
-     * @private
-     */
-    authorizer: 'authorizer:oauth2',
-
-    /**
      * The host name of the server where the API is hosted.
      *
      * @property host
@@ -53,12 +41,18 @@ export default DS.JSONAPIAdapter.extend(DataAdapterMixin,{
      */
     host: ENV.api.host,
 
-    // headers: Ember.computed(function() {
-    //     return {
-    //         "Authorization": "Bearer a670f281c8f01c5aa5dc279f534faa9515594ff4"
-    //     };
-    // }).volatile(),
-
+    /**
+     * This function sets the access token in all the requests being
+     * sent out
+     *
+     * @method authorize
+     * @param xhr
+     * @private
+     */
+    authorize(xhr) {
+        let { access_token } = this.get('session.data.authenticated');
+        xhr.setRequestHeader('Authorization', `Bearer ${access_token}`);
+    },
 
     /**
      * Set the modelName to singular as that is what our server listens to

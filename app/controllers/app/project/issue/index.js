@@ -3,7 +3,6 @@
  */
 
 import List from "prometheus/controllers/prometheus/list";
-import { computed } from '@ember/object';
 
 /**
  * This controller is used to provide the interaction between the template and

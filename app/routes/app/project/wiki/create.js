@@ -41,16 +41,16 @@ export default App.extend({
     setupController:function(controller){
         let _self = this;
 
-        let params = this.getParams();
+        let params = _self.getParams();
 
-        this.data = this.store.createRecord('wiki',{
+        let wiki = this.store.createRecord('wiki',{
             status:'published',
             locked:0,
             upvotes:1,
             projectId:params.projectId,
         });
 
-        controller.set('model',this.data);
+        controller.set('model',wiki);
     },
 
     /**

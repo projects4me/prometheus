@@ -431,6 +431,9 @@ export default {
                     "status" : "Status",
                     "shortCode" : "Short Code",
                 },
+                "edit" : {
+                    "header" : "Edit Project"
+                },
                 "create" : {
                     "header" : "Create Project",
                     "project" : "Project Information",

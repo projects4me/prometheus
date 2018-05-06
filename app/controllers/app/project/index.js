@@ -7,6 +7,7 @@ import format from "../../../utils/data/format";
 import _ from "lodash";
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
+import $ from "jquery";
 
 /**
  * This is the index page of the project, index page for the project is
@@ -205,7 +206,6 @@ export default Prometheus.extend({
         addMember(){
             Logger.debug('AppProjectIndexController:addMember');
             let _self = this;
-            Logger.debug(_self);
 
             let _selectedRole = _self.get('selectedRole');
             let _selectedUser = _self.get('selectedUser');
@@ -320,8 +320,7 @@ export default Prometheus.extend({
             Logger.debug('Prometheus.Controllers.Project.Index::saveMilestone');
             let _self = this;
             let newMilestone = _self.get('newMilestone');
-            Logger.debug(_self);
-            Logger.debug(newMilestone.get('id'));
+
             let isUpdate = (newMilestone.get('id') != undefined);
 
             if (newMilestone.get('name') !== null
@@ -334,8 +333,6 @@ export default Prometheus.extend({
 
                 // Add milestone to the system
                 newMilestone.save().then(function (data) {
-                    console.log(newMilestone.get('id'));
-
                     if (!isUpdate) {
                         _self.get('milestones').pushObject(data);
                     }

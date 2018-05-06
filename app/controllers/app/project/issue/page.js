@@ -385,7 +385,7 @@ export default Prometheus.extend(Evented,{
                 newLog.set('issueId',_self.get('model').objectAt(0).get('id'));
                 newLog.set('context','spent');
 
-                newLog.save().then(function (data) {
+                newLog.save().then(function () {
 
                     let timelog = _self.get('store').createRecord('timelog');
                     _self.set('newTimeLog',timelog);

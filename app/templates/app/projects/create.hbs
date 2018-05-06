@@ -29,113 +29,113 @@
           {{!-- /.box-header --}}
           <div class="box-body no-padding" style="display: block;">
 
-              <div class="form-group">
-                <div class="field-group">
-                  {{field-text
-                      placeholder=(t "views.app.project.create.nameplaceholder")
-                      label=(t "views.app.project.create.name")
-                      value=model.name
-                      mask="alphanumeric"
-                      data-field="project.name"
-                      focus-out=(action (mut showNameError) true)
-                      v-focus=showNameError
-                      v-model=model
-                      v-field='name'
-                      v-output='message'
-                  }}
+            <div class="form-group">
+              <div class="field-group">
+                {{field-text
+                    placeholder=(t "views.app.project.create.nameplaceholder")
+                    label=(t "views.app.project.create.name")
+                    value=model.name
+                    mask="alphanumeric"
+                    data-field="project.name"
+                    focus-out=(action (mut showNameError) true)
+                    v-focus=showNameError
+                    v-model=model
+                    v-field='name'
+                    v-output='message'
+                }}
 
-                  <div class="form-field form-field-static ember-view">
-                    <span class="ember-text-field form-control input-sm data-input ember-view">{{shortCode}}</span>
-                    <span class="highlight"></span>
-                    <span class="bar"></span>
-                    <label class="floating-label active">{{t "views.app.project.create.shortcode"}}</label>
-                  </div>
+                <div class="form-field form-field-static ember-view">
+                  <span class="ember-text-field form-control input-sm data-input ember-view">{{shortCode}}</span>
+                  <span class="highlight"></span>
+                  <span class="bar"></span>
+                  <label class="floating-label active">{{t "views.app.project.create.shortcode"}}</label>
                 </div>
-
-                {{field-textarea
-                    placeholder=(t "views.app.project.create.descriptionplaceholder")
-                    label=(t "views.app.project.create.description")
-                    value=model.description
-                    data-field="project.description"
-                }}
-
-                {{field-date
-                    placeholder=(t "views.app.project.create.startdateplaceholder")
-                    label=(t "views.app.project.create.startdate")
-                    value=(readonly model.startDate)
-                    mask="alphanumeric"
-                    update=(action "selectStatic" model 'startDate')
-                    data-field="project.startDate"
-                    focus-out=(action (mut showStartDateError) true)
-                    v-focus=showStartDateError
-                    v-model=model
-                    v-field='startDate'
-                    v-output='message'
-                }}
-
-                {{field-date
-                    placeholder=(t "views.app.project.create.enddateplaceholder")
-                    label=(t "views.app.project.create.enddate")
-                    value=(readonly model.endDate)
-                    mask="alphanumeric"
-                    update=(action "selectStatic" model 'endDate')
-                    data-field="project.endDate"
-                    focus-out=(action (mut showEndDateError) true)
-                    v-focus=showEndDateError
-                    v-model=model
-                    v-field='endDate'
-                    v-output='message'
-                }}
-
-                {{field-relate
-                    placeholder=(t "views.app.project.create.typeplaceholder")
-                    label=(t "views.app.project.create.type")
-                    value=model.type
-                    options=type
-                    selected=(find-by "value" model.type type)
-                    searchField="label"
-                    onchange=(action "selectRelated" model 'type')
-                    relateType="relate-simple"
-                    data-field="project.type"
-                    focus-out=(action (mut showTypeError) true)
-                    v-focus=showTypeError
-                    v-model=model
-                    v-field='type'
-                    v-output='message'
-                }}
-
-                {{field-relate
-                    placeholder=(t "views.app.project.create.statusplaceholder")
-                    label=(t "views.app.project.create.status")
-                    value=model.status
-                    options=status
-                    selected=(find-by "value" model.status status)
-                    searchField="label"
-                    onchange=(action "selectRelated" model 'status')
-                    relateType="relate-simple"
-                    data-field="project.status"
-                    focus-out=(action (mut showStatusError) true)
-                    v-focus=showStatusError
-                    v-model=model
-                    v-field='status'
-                    v-output='message'
-                }}
-
-                {{field-textarea
-                    placeholder=(t "views.app.project.create.visionplaceholder")
-                    label=(t "views.app.project.create.vision")
-                    value=model.vision
-                    data-field="project.vision"
-                }}
-
-                {{field-textarea
-                    placeholder=(t "views.app.project.create.scopeplaceholder")
-                    label=(t "views.app.project.create.scope")
-                    value=model.scope
-                    data-field="project.scope"
-                }}
-
               </div>
+
+              {{field-textarea
+                  placeholder=(t "views.app.project.create.descriptionplaceholder")
+                  label=(t "views.app.project.create.description")
+                  value=model.description
+                  data-field="project.description"
+              }}
+
+              {{field-date
+                  placeholder=(t "views.app.project.create.startdateplaceholder")
+                  label=(t "views.app.project.create.startdate")
+                  value=(readonly model.startDate)
+                  mask="alphanumeric"
+                  update=(action "selectStatic" model 'startDate')
+                  data-field="project.startDate"
+                  focus-out=(action (mut showStartDateError) true)
+                  v-focus=showStartDateError
+                  v-model=model
+                  v-field='startDate'
+                  v-output='message'
+              }}
+
+              {{field-date
+                  placeholder=(t "views.app.project.create.enddateplaceholder")
+                  label=(t "views.app.project.create.enddate")
+                  value=(readonly model.endDate)
+                  mask="alphanumeric"
+                  update=(action "selectStatic" model 'endDate')
+                  data-field="project.endDate"
+                  focus-out=(action (mut showEndDateError) true)
+                  v-focus=showEndDateError
+                  v-model=model
+                  v-field='endDate'
+                  v-output='message'
+              }}
+
+              {{field-relate
+                  placeholder=(t "views.app.project.create.typeplaceholder")
+                  label=(t "views.app.project.create.type")
+                  value=model.type
+                  options=type
+                  selected=(find-by "value" model.type type)
+                  searchField="label"
+                  onchange=(action "selectRelated" model 'type')
+                  relateType="relate-simple"
+                  data-field="project.type"
+                  focus-out=(action (mut showTypeError) true)
+                  v-focus=showTypeError
+                  v-model=model
+                  v-field='type'
+                  v-output='message'
+              }}
+
+              {{field-relate
+                  placeholder=(t "views.app.project.create.statusplaceholder")
+                  label=(t "views.app.project.create.status")
+                  value=model.status
+                  options=status
+                  selected=(find-by "value" model.status status)
+                  searchField="label"
+                  onchange=(action "selectRelated" model 'status')
+                  relateType="relate-simple"
+                  data-field="project.status"
+                  focus-out=(action (mut showStatusError) true)
+                  v-focus=showStatusError
+                  v-model=model
+                  v-field='status'
+                  v-output='message'
+              }}
+
+              {{field-textarea
+                  placeholder=(t "views.app.project.create.visionplaceholder")
+                  label=(t "views.app.project.create.vision")
+                  value=model.vision
+                  data-field="project.vision"
+              }}
+
+              {{field-textarea
+                  placeholder=(t "views.app.project.create.scopeplaceholder")
+                  label=(t "views.app.project.create.scope")
+                  value=model.scope
+                  data-field="project.scope"
+              }}
+
+            </div>
 
           </div>
         </div>

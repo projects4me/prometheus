@@ -101,9 +101,7 @@ export default Controller.extend({
                 messages.push(i18n.t('views.app.'+module+'.fields.'+error.attribute)+' : '+error.message);
             });
         }
-        return _.join(messages,'<br\>');
+        return _.join(messages,"<br\\>");
     }
-
-
 
 });

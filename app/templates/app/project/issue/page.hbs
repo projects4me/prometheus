@@ -99,10 +99,10 @@
                     <img class="img-circle img-sm" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
 
                     <div class="comment-text">
-                          <span class="username">
-                            <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
-                            <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
-                          </span>{{!-- /.username --}}
+                      <span class="username">
+                        <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
+                        <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
+                      </span>
                       {{translate-comment comment.comment}}
                     </div>
                   </div>

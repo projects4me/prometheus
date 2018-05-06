@@ -1,109 +1,109 @@
 <div class="wiki-detail box box-primary">
   {{#if model}}
-      {{#if (eq model.locked "0")}}
-        <div class="box-header with-border">
-          <h3 class="box-title">{{t "views.app.wiki.page.edit" page=model.name}}</h3>
-        </div>
-        {{!-- /.box-header --}}
-        <div class="box-body">
-          <div class="form-group">
-            {{field-text
-                placeholder=(t "views.app.wiki.create.name")
-                label=(t "views.app.wiki.create.name")
-                value=model.name
-                mask="alphanumeric"
-                data-field="wiki.name"
-                focus-out=(action (mut showNameError) true)
-                v-focus=showNameError
-                v-model=model
-                v-field='name'
-                v-output='message'
-            }}
-          </div>
-
-          <div class="form-group">
-            {{field-relate
-                placeholder=(t "views.app.wiki.create.parent")
-                label=(t "views.app.wiki.create.parent")
-                value=model.parentId
-                options=wikiList
-                selected=(find-by "value" model.parentId wikiList)
-                searchField="label"
-                onchange=(action "selectRelated" model 'parentId')
-                relateType="relate-simple"
-                data-field="wiki.parent"
-                focus-out=(action (mut showParentError) true)
-                v-focus=showParentError
-                v-model=model
-                v-field='parentId'
-                v-output='message'
-            }}
-          </div>
-
-          <div class="form-group">
-            {{summer-note
-                usersList=membersList
-                issuesList=issuesList
-                contents=(readonly model.markUp)
-                onContentChange=(action "selectStatic" model 'markUp')
-            }}
-          </div>
-
+    {{#if (eq model.locked "0")}}
+      <div class="box-header with-border">
+        <h3 class="box-title">{{t "views.app.wiki.page.edit" page=model.name}}</h3>
+      </div>
+      {{!-- /.box-header --}}
+      <div class="box-body">
+        <div class="form-group">
+          {{field-text
+              placeholder=(t "views.app.wiki.create.name")
+              label=(t "views.app.wiki.create.name")
+              value=model.name
+              mask="alphanumeric"
+              data-field="wiki.name"
+              focus-out=(action (mut showNameError) true)
+              v-focus=showNameError
+              v-model=model
+              v-field='name'
+              v-output='message'
+          }}
         </div>
 
-        <div class="box-footer">
-          <button type="button" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
-          <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
-
-          <div class="pull-right wiki-tags">
-            {{t "views.app.wiki.tags"}}<span class="colon"></span>
-
-            {{#power-select-multiple
-                options=tagList
-                selected=selectedTags
-                placeholder=(t "views.app.wiki.selecttags")
-                searchField="label"
-                onchange=(action "tagSelected")
-            as |tag|}}
-              {{tag.label}}
-            {{/power-select-multiple}}
-
-            <button type="button" class="btn btn-primary" {{action "showDialog"}}>{{t "views.app.wiki.tag.add"}}</button>
-            {{#if addTagDialog}}
-              {{#bootstrap-modal
-                  title="views.app.wiki.tag.create"
-                  confirmLabel="global.form.save"
-                  closeLabel="global.form.cancel"
-                  confirm=(action "addTag")
-                  close="removeModal"}}
-                  <div class="form-group">
-                    {{field-text
-                        placeholder=(t "views.app.wiki.edit.name")
-                        label=(t "views.app.wiki.edit.name")
-                        value=newTag.tag
-                        mask="alphanumeric"
-                        data-field="tag.tag"
-                        focus-out=(action (mut showTagNameError) true)
-                        v-focus=showTagNameError
-                        v-model=newTag
-                        v-field='tag'
-                        v-output='message'
-                    }}
-                  </div>
-              {{/bootstrap-modal}}
-            {{/if}}
-          </div>
+        <div class="form-group">
+          {{field-relate
+              placeholder=(t "views.app.wiki.create.parent")
+              label=(t "views.app.wiki.create.parent")
+              value=model.parentId
+              options=wikiList
+              selected=(find-by "value" model.parentId wikiList)
+              searchField="label"
+              onchange=(action "selectRelated" model 'parentId')
+              relateType="relate-simple"
+              data-field="wiki.parent"
+              focus-out=(action (mut showParentError) true)
+              v-focus=showParentError
+              v-model=model
+              v-field='parentId'
+              v-output='message'
+          }}
         </div>
-      {{else}}
-        <div class="wiki-page-islocked">
-          <div class="callout callout-danger">
-            <h4>
-              <i class="fa fa-lock"></i> {{t "views.app.wiki.page.lockedhead"}}
-            </h4>
-            {{t "views.app.wiki.page.islocked"}}
-          </div>
+
+        <div class="form-group">
+          {{summer-note
+              usersList=membersList
+              issuesList=issuesList
+              contents=(readonly model.markUp)
+              onContentChange=(action "selectStatic" model 'markUp')
+          }}
         </div>
-      {{/if}}
+
+      </div>
+
+      <div class="box-footer">
+        <button type="button" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
+        <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+
+        <div class="pull-right wiki-tags">
+          {{t "views.app.wiki.tags"}}<span class="colon"></span>
+
+          {{#power-select-multiple
+              options=tagList
+              selected=selectedTags
+              placeholder=(t "views.app.wiki.selecttags")
+              searchField="label"
+              onchange=(action "tagSelected")
+          as |tag|}}
+            {{tag.label}}
+          {{/power-select-multiple}}
+
+          <button type="button" class="btn btn-primary" {{action "showDialog"}}>{{t "views.app.wiki.tag.add"}}</button>
+          {{#if addTagDialog}}
+            {{#bootstrap-modal
+                title="views.app.wiki.tag.create"
+                confirmLabel="global.form.save"
+                closeLabel="global.form.cancel"
+                confirm=(action "addTag")
+                close="removeModal"}}
+              <div class="form-group">
+                {{field-text
+                    placeholder=(t "views.app.wiki.edit.name")
+                    label=(t "views.app.wiki.edit.name")
+                    value=newTag.tag
+                    mask="alphanumeric"
+                    data-field="tag.tag"
+                    focus-out=(action (mut showTagNameError) true)
+                    v-focus=showTagNameError
+                    v-model=newTag
+                    v-field='tag'
+                    v-output='message'
+                }}
+              </div>
+            {{/bootstrap-modal}}
+          {{/if}}
+        </div>
+      </div>
+    {{else}}
+      <div class="wiki-page-islocked">
+        <div class="callout callout-danger">
+          <h4>
+            <i class="fa fa-lock"></i> {{t "views.app.wiki.page.lockedhead"}}
+          </h4>
+          {{t "views.app.wiki.page.islocked"}}
+        </div>
+      </div>
+    {{/if}}
   {{else}}
     <div class="wiki-page-empty">
 

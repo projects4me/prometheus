@@ -22,15 +22,15 @@
       {{/if}}
       <span class="path-seperator"></span> {{model.name}}
       <span class="upvotes">
-          {{model.vote.length}}
+        {{model.vote.length}}
         {{#if iVoted}}
           <i class="fa fa-heart" data-toggle="tooltip" title="{{t "views.app.wiki.voted"}}" ></i>
         {{else}}
           <a href="javascript:void(0);" {{action "upvote" model.id}}>
-              <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "views.app.wiki.upvote"}}"></i>
-            </a>
+            <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "views.app.wiki.upvote"}}"></i>
+          </a>
         {{/if}}
-        </span>
+      </span>
       <div class="box-tools pull-right">
         <span class="modified-by">{{t "global.form.modified" user=model.modifiedUserName date=(get-date model 'dateModified' 'MMM Do \'YY, h:mm a')}}</span>
       </div>
@@ -91,8 +91,8 @@
             <li>
               {{#if (not-eq file.fileThumbnail '0')}}
                 <span class="attachment-icon has-img">
-                    <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
-                  </span>
+                  <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
+                </span>
               {{else}}
                 {{attachment-icon mime=(readonly file.fileMime)}}
               {{/if}}
@@ -101,11 +101,11 @@
                   <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
                 </div>
                 <div class="attachment-additional">
-                    <span class="attachment-size">
-                      {{file-size file.fileSize}}
-                      <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
-                      <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
-                    </span>
+                  <span class="attachment-size">
+                    {{file-size file.fileSize}}
+                    <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
+                    <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                  </span>
                 </div>
               </div>
             </li>

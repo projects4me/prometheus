@@ -4,7 +4,6 @@
 
 import Prometheus from "prometheus/controllers/prometheus";
 import format from "../utils/data/format";
-import { inject } from '@ember/service';
 import { computed } from '@ember/object';
 
 /**

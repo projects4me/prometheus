@@ -7,6 +7,7 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 import format from "prometheus/utils/data/format";
+import _ from "lodash";
 
 /**
  * This is the controller for issue create page

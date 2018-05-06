@@ -4,9 +4,9 @@
 
 import Create from "prometheus/controllers/prometheus/create";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
-import { inject } from '@ember/service';
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
+import _ from "lodash";
 
 /**
  * The controller for the wiki create route, it is loaded when a user clicks on

@@ -6,6 +6,7 @@ import Prometheus from "prometheus/controllers/prometheus";
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 import { hash } from 'rsvp';
+import _ from "lodash";
 
 /**
  * This is the controller for issue create page
@@ -167,7 +168,7 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    beforeSave(model){
+    beforeSave(){
     },
 
     /**
@@ -178,7 +179,7 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    afterSave(model){
+    afterSave(){
         return hash({});
     },
 
@@ -190,7 +191,7 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    beforeValidate(model){
+    beforeValidate(){
     },
 
     /**
@@ -201,7 +202,7 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    afterValidate(model){
+    afterValidate(){
     },
 
     /**
@@ -240,7 +241,7 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    navigateToSuccess(model){
+    navigateToSuccess(){
     },
 
     /**
