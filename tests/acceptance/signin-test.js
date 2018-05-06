@@ -1,27 +1,16 @@
-import App from '../../app';
-import { describe, it } from 'mocha';
-import { assert, expect } from 'chai';
-import { setupAcceptanceTest } from 'ember-mocha';
+import { module, test } from 'qunit';
+import { visit, currentURL, fillIn, click } from '@ember/test-helpers';
+import { setupApplicationTest } from 'ember-qunit';
 
-const Application = App.extend({ rootElement: '#ember-testing' });
-/* eslint-disable no-undef */
+module('Acceptance | login', function(hooks) {
+    setupApplicationTest(hooks);
 
-describe('Acceptance | Signin', function() {
-
-    setupAcceptanceTest({ Application });
-
-    it('can visit /signin', async function() {
+    test('visiting /signin', async function(assert) {
         await visit('/signin');
-
-        andThen(() => {
-            expect(currentURL()).to.equal('/signin');
-        });
+        assert.equal(currentURL(), '/signin');
     });
 
-    it('can login with correct credentials', async function(done) {
-        this.timeout(10000);
-        setTimeout(done, 8000);
-
+    test('can login with correct credentials', async function(assert) {
         await visit('/signin');
         await fillIn('input#username','hammad');
         await fillIn('input#password','hammad');
@@ -29,17 +18,13 @@ describe('Acceptance | Signin', function() {
         assert.equal(currentURL(), '/app');
     });
 
-    it('cannot login with incorrect credentials', async function(done) {
-        this.timeout(10000);
-        setTimeout(done, 8000);
-
+    test('cannot login with incorrect credentials', async function(assert) {
         await visit('/signin');
         await fillIn('input#username','hammad');
         await fillIn('input#password','hamma');
         await click('button[type="submit"]');
-        assert.equal(currentURL(), '/signijn');
+        assert.equal(currentURL(), '/signin');
     });
 
 });
-
 /* eslint-enable no-undef */

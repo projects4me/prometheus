@@ -1,16 +1,8 @@
-import resolver from './helpers/resolver';
-import { setResolver } from 'ember-mocha';
-//import { before } from 'mocha';
+import Application from '../app';
+import config from '../config/environment';
+import { setApplication } from '@ember/test-helpers';
+import { start } from 'ember-qunit';
 
-setResolver(resolver);
-/*
-before(function() {
-    const originalPauseTestHelper = Ember.Test._helpers.pauseTest.method;
+setApplication(Application.create(config.APP));
 
-    Ember.Test.registerAsyncHelper('pauseMochaTest', (app, context) => {
-        context.timeout(0);
-
-        return originalPauseTestHelper();
-    });
-});
-*/
+start();
