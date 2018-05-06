@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import M2T from "../../../utils/data/modeltotree";
-import App from '../../app';
+import App from "prometheus/routes/app";
+import M2T from "prometheus/utils/data/modeltotree";
 import { set } from '@ember/object';
 
 //import { translationMacro as t } from "ember-i18n";

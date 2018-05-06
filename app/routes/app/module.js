@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import App from "../app";
-import MD from "../../utils/metadata/metadata";
+import App from "prometheus/routes/app";
+import MD from "prometheus/utils/metadata/metadata";
 import ENV from "../../config/environment";
 import { inject } from '@ember/service';
 import { capitalize} from '@ember/string';

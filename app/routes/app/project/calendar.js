@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import App from '../../app';
+import App from "prometheus/routes/app";
 
 /**
  * This is the route to load the conversations for a project
@@ -78,10 +78,10 @@ export default App.extend({
      */
     loadIssues:function(projectId){
         Logger.debug("AppProjectCalendarRoute::loadIssues("+projectId+")");
-        var self = this;
-        var module = "issue";
+        let _self = this;
+        let module = "issue";
 
-        var options = {
+        let options = {
             fields: "Issue.id,Issue.subject,Issue.issueNumber,Issue.status,Issue.startDate,Issue.endDate,Issue.priority",
             query: "(Issue.projectId : "+projectId+")",
             rels: "assignedTo",
@@ -91,11 +91,11 @@ export default App.extend({
             limit:-1,
         };
 
-        this.data = this.store.query(module,options).then(function(data){
-            var issuesList = [];
-            var issuesCount = data.get('length');
-            var issue = null;
-            for (var i=0; i<issuesCount;i++)
+        this.store.query(module,options).then(function(data){
+            let issuesList = [];
+            let issuesCount = data.get('length');
+            let issue = null;
+            for (let i=0; i<issuesCount;i++)
             {
                 issue = data.objectAt(i);
                 issuesList[i] = {
@@ -107,15 +107,14 @@ export default App.extend({
                     end:issue.get('endDate')+'T18:00:00',
                     number:issue.get('issueNumber'),
                     className:issue.get('status'),
-                    url:"/app/"+projectId+"/issues/"+issue.get('id'),
+                    url:"/app/project/"+projectId+"/issue/"+issue.get('issueNumber'),
                     editable:false,
                     startEditable:false,
                     durationEditable:false,
 
                 };
             }
-            Logger.debug(issuesList);
-            self.get('controller').set('events',issuesList);
+            _self.get('controller').set('events',issuesList);
         });
 
     },

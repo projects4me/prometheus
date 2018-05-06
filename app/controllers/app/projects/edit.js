@@ -30,6 +30,17 @@ export default Create.extend({
     layoutName:'edit',
 
     /**
+     * This function sets the short code for the project.
+     *
+     * @method beforeValidate
+     * @param model
+     * @protected
+     */
+    beforeValidate(model){
+        model.set('shortCode',this.get('shortCode'));
+    },
+
+    /**
      * This function checks if a field has changed
      *
      * @method _save

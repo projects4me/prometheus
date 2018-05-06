@@ -38,17 +38,6 @@ export default IssueCreate.extend({
     },
 
     /**
-     * This function checks if a field has changed
-     *
-     * @method _save
-     * @param model
-     * @protected
-     */
-    hasChanged(model){
-        return (_.size(model.changedAttributes()) > 0);
-    },
-
-    /**
      * This function navigates a use to the issue page
      *
      * @method afterCancel

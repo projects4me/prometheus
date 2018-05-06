@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import App from "../../../app";
+import App from "prometheus/routes/app";
 import { inject } from '@ember/service';
 
 /**
@@ -21,26 +21,6 @@ import { inject } from '@ember/service';
 export default App.extend({
 
     /**
-     * The data for the current route
-     *
-     * @property data
-     * @type Object
-     * @for Create
-     * @private
-     */
-    data: null,
-
-    /**
-     * The current project
-     *
-     * @property project
-     * @type Object
-     * @for Create
-     * @private
-     */
-    project: {},
-
-    /**
      * The current user service
      *
      * @property currentUser
@@ -49,9 +29,6 @@ export default App.extend({
      * @public
      */
     currentUser: inject(),
-
-
-
 
     /**
      * The setup controller function that will be called every time the user visits the module route,
@@ -62,18 +39,9 @@ export default App.extend({
      * @private
      */
     setupController:function(controller){
-        let self = this;
-
-        this.module = 'Wiki';
-
-        Logger.debug('AppProjectWikiCreateRoute::setupController');
-        Logger.debug(this);
+        let _self = this;
 
         let params = this.getParams();
-        Logger.debug('The parameters are as follows');
-        Logger.debug(params);
-
-        //this.project = this.store.findRecord('project',params.projectId,{rels:'none'});
 
         this.data = this.store.createRecord('wiki',{
             status:'published',
@@ -81,11 +49,8 @@ export default App.extend({
             upvotes:1,
             projectId:params.projectId,
         });
-        Logger.debug(this.data);
 
         controller.set('model',this.data);
-        //controller.set('project',this.project);
-        controller.set('module',this.module);
     },
 
     /**

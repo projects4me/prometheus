@@ -14,7 +14,8 @@ import { validator, buildValidations } from 'ember-cp-validations';
 const Validations = buildValidations({
     name: validator('presence', true),
     shortCode: validator('presence', true),
-    type: validator('presence', true)
+    type: validator('presence', true),
+    hasIssuetypes: validator('presence', true)
 });
 
 /**
@@ -301,5 +302,15 @@ export default DS.Model.extend(Validations, {
      * @private
      */
     issuetypes:DS.hasMany('issuetype'),
+
+    /**
+     * The issue types for this project
+     *
+     * @property issuetypes
+     * @type Relationship
+     * @for Project
+     * @private
+     */
+    hasIssuetypes:DS.attr('string',{defaultValue:function(){return true;}}),
 
 });

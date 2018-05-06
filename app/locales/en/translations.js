@@ -348,7 +348,7 @@ export default {
                 "updated" : "Project <strong>{{name}}</strong> has been updated successfully",
                 "fields" : {
                     "name" : "Name",
-                    "shortcode" : "Short Code",
+                    "shortCode" : "Short Code",
                     "description" : "Project Summary",
                     "type" : "Type",
                     "assignee" : "Owner",
@@ -358,6 +358,7 @@ export default {
                     "startdate" : "Start Date",
                     "enddate" : "End Date",
                     "issuetypes" : "Issue Types",
+                    "hasIssuetypes" : "Issue Types"
                 },
                 "detail" : {
                     "status." : "Loading ..",
@@ -550,6 +551,10 @@ export default {
                 "nohome" : "No wiki page found by the name of <strong>Home</strong>, please create one by clicking on the button below",
                 "notfound" : "Not found",
                 "list":"Wiki List",
+                "fields":{
+                    "name" : "Page Name",
+                    "markUp" : "Wiki",
+                },
                 "create":{
                     "page" : "Create Page",
                     "new" : "Create New Page",
@@ -762,6 +767,12 @@ export default {
                         "done" : "Done",
                         "wont_fix" : "Wont't Fix",
                     },
+                },
+            },
+
+            "tag" : {
+                "fields" : {
+                    "tag" : "Tag Name"
                 },
             },
 

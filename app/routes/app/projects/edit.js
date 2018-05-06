@@ -37,6 +37,7 @@ export default App.extend({
     setupController:function(controller)
     {
         Logger.debug('AppProjectIndexRoute::setupController');
+        let _self = this;
 
         let params = this.paramsFor('app.projects.edit');
         let options = {

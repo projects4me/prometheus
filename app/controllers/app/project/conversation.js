@@ -100,6 +100,9 @@ export default Prometheus.extend(Evented,{
          */
         save(relatedId,contents){
             Logger.debug('AppProjectConversationController::save()');
+            if (contents == undefined){
+                return false;
+            }
             let _self = this;
 
             let comment = this.get('store').createRecord('comment', {

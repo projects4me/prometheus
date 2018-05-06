@@ -5,43 +5,54 @@
   </div>
   {{!-- /.box-header --}}
   <div class="box-body">
+
     <div class="form-group">
-      {{input value=model.name placeholder=(t "views.app.wiki.create.name") key-up="changed" class="form-control"}}
-    </div>
-    <div class="form-group">
-      {{#power-select
-          class="form-control"
-          options=(readonly wikiList)
-          selected=(find-by "value" parentId wikiList)
-          placeholder=(t "views.app.wiki.create.parent")
-          searchField="label"
-          onchange=(action "wikiChanged")
-      as |wiki|}}
-        {{wiki.label}}
-      {{/power-select}}
-    </div>
-    <div class="form-group">
-      {{summer-note
-          usersList=usersList
-          issuesList=issuesList
-          onContentChange=(action 'onContentChange')
+      {{field-text
+          placeholder=(t "views.app.wiki.create.name")
+          label=(t "views.app.wiki.create.name")
+          value=model.name
+          mask="alphanumeric"
+          data-field="wiki.name"
+          focus-out=(action (mut showNameError) true)
+          v-focus=showNameError
+          v-model=model
+          v-field='name'
+          v-output='message'
       }}
     </div>
 
-    {{!--div class="form-group">
-      <div class="btn btn-default btn-file">
-        <i class="fa fa-paperclip"></i> Attachment
-        <input type="file" name="attachment">
-      </div>
-      <p class="help-block">Max. 32MB</p>
-    </div--}}
+    <div class="form-group">
+      {{field-relate
+          placeholder=(t "views.app.wiki.create.parent")
+          label=(t "views.app.wiki.create.parent")
+          value=model.parentId
+          options=wikiList
+          selected=(find-by "value" model.parentId wikiList)
+          searchField="label"
+          onchange=(action "selectRelated" model 'parentId')
+          relateType="relate-simple"
+          data-field="wiki.parent"
+          focus-out=(action (mut showParentError) true)
+          v-focus=showParentError
+          v-model=model
+          v-field='parentId'
+          v-output='message'
+      }}
+    </div>
+
+    <div class="form-group">
+      {{summer-note
+          usersList=membersList
+          issuesList=issuesList
+          contents=(readonly model.markUp)
+          onContentChange=(action "selectStatic" model 'markUp')
+      }}
+    </div>
 
   </div>
 
-  {{!-- /.box-body --}}
-
   <div class="box-footer">
-    <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+    <button type="button" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
     <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
   </div>
 </div>

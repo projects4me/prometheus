@@ -455,6 +455,10 @@ export default Prometheus.extend(Evented,{
         saveComment:function (issue, comment) {
             Logger.debug('Prometheus.Controller.App.Project.Issue.Page::saveComment');
 
+            if (comment == undefined){
+                return false;
+            }
+
             let _self = this;
             Logger.debug(issue);
             Logger.debug(comment);

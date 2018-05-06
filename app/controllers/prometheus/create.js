@@ -253,6 +253,7 @@ export default Prometheus.extend({
      */
     _showError(validations) {
         let _self = this;
+        Logger.debug(_self.get('module'));
         let messages = _self._buildMessages(validations,_self.get('module'));
 
         new Messenger().post({
@@ -268,10 +269,11 @@ export default Prometheus.extend({
      * controllers.
      *
      * @method hasChanged
+     * @param model
      * @protected
      */
-    hasChanged(){
-        return false;
+    hasChanged(model){
+        return (_.size(model.changedAttributes()) > 0);
     },
 
     /**

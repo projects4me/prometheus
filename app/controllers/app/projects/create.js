@@ -97,12 +97,18 @@ export default Create.extend({
     /**
      * This function sets the short code for the project.
      *
-     * @method beforevalidate
+     * @method beforeValidate
      * @param model
      * @protected
      */
     beforeValidate(model){
         model.set('shortCode',this.get('shortCode'));
+        if(!(this.get('selectedIssuetypes') != undefined &&
+                this.get('selectedIssuetypes').length > 0)) {
+            model.set('hasIssuetypes','');
+        } else {
+            model.set('hasIssuetypes',true);
+        }
     },
 
     /**

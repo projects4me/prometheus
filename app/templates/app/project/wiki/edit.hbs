@@ -1,50 +1,58 @@
 <div class="wiki-detail box box-primary">
   {{#if model}}
-    {{#each model as |wiki|}}
-
-      {{#if (eq wiki.locked "0")}}
+      {{#if (eq model.locked "0")}}
         <div class="box-header with-border">
-          <h3 class="box-title">{{t "views.app.wiki.page.edit" page=wiki.name}}</h3>
+          <h3 class="box-title">{{t "views.app.wiki.page.edit" page=model.name}}</h3>
         </div>
         {{!-- /.box-header --}}
         <div class="box-body">
           <div class="form-group">
-            {{input value=wiki.name placeholder=(t "views.app.wiki.create.name") key-up="changed" class="form-control"}}
-          </div>
-          <div class="form-group">
-            {{#power-select
-                options=wikiList
-                selected=(find-by "value" parentId wikiList)
-                placeholder=(t "views.app.wiki.create.parent")
-                searchField="label"
-                onchange=(action "wikiChanged")
-            as |wiki|}}
-              {{wiki.label}}
-            {{/power-select}}
-          </div>
-          <div class="form-group">
-            {{summer-note
-                usersList=usersList
-                issuesList=issuesList
-                contents=(readonly wiki.markUp)
-                onContentChange=(action 'onContentChange')
+            {{field-text
+                placeholder=(t "views.app.wiki.create.name")
+                label=(t "views.app.wiki.create.name")
+                value=model.name
+                mask="alphanumeric"
+                data-field="wiki.name"
+                focus-out=(action (mut showNameError) true)
+                v-focus=showNameError
+                v-model=model
+                v-field='name'
+                v-output='message'
             }}
           </div>
 
-          {{!--div class="form-group">
-            <div class="btn btn-default btn-file">
-              <i class="fa fa-paperclip"></i> Attachment
-              <input type="file" name="attachment">
-            </div>
-            <p class="help-block">Max. 32MB</p>
-          </div--}}
+          <div class="form-group">
+            {{field-relate
+                placeholder=(t "views.app.wiki.create.parent")
+                label=(t "views.app.wiki.create.parent")
+                value=model.parentId
+                options=wikiList
+                selected=(find-by "value" model.parentId wikiList)
+                searchField="label"
+                onchange=(action "selectRelated" model 'parentId')
+                relateType="relate-simple"
+                data-field="wiki.parent"
+                focus-out=(action (mut showParentError) true)
+                v-focus=showParentError
+                v-model=model
+                v-field='parentId'
+                v-output='message'
+            }}
+          </div>
+
+          <div class="form-group">
+            {{summer-note
+                usersList=membersList
+                issuesList=issuesList
+                contents=(readonly model.markUp)
+                onContentChange=(action "selectStatic" model 'markUp')
+            }}
+          </div>
 
         </div>
 
-        {{!-- /.box-body --}}
-
         <div class="box-footer">
-          <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+          <button type="button" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
           <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
 
           <div class="pull-right wiki-tags">
@@ -68,12 +76,20 @@
                   closeLabel="global.form.cancel"
                   confirm=(action "addTag")
                   close="removeModal"}}
-                <form {{action 'addTag' on='submit'}}>
                   <div class="form-group">
-                    <label>{{t "views.app.wiki.edit.name"}}</label>
-                    {{input class="form-control" autofocus=true value=tagName onChange=(action (mut tagName))}}
+                    {{field-text
+                        placeholder=(t "views.app.wiki.edit.name")
+                        label=(t "views.app.wiki.edit.name")
+                        value=newTag.tag
+                        mask="alphanumeric"
+                        data-field="tag.tag"
+                        focus-out=(action (mut showTagNameError) true)
+                        v-focus=showTagNameError
+                        v-model=newTag
+                        v-field='tag'
+                        v-output='message'
+                    }}
                   </div>
-                </form>
               {{/bootstrap-modal}}
             {{/if}}
           </div>
@@ -88,7 +104,6 @@
           </div>
         </div>
       {{/if}}
-    {{/each}}
   {{else}}
     <div class="wiki-page-empty">
 
