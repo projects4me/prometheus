@@ -79,7 +79,7 @@
                 placeholder="Enter the issue name .."
                 label="End Date"
                 value=(readonly model.endDate)
-                update=(action "selectStatic" model 'startDate')
+                update=(action "selectStatic" model 'endDate')
                 data-field="issue.endDate"
                 focus-out=(action (mut showEndDateError) true)
                 v-focus=showEndDateError
