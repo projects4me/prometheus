@@ -1,4 +1,7 @@
 module.exports = {
+  globals: {
+    server: true,
+  },
     root: true,
     parserOptions: {
         ecmaVersion: 2017,
@@ -9,7 +12,7 @@ module.exports = {
     ],
     extends: [
         'eslint:recommended',
-       'plugin:ember/recommended'
+        'plugin:ember/recommended'
     ],
     env: {
         browser: true
@@ -40,6 +43,7 @@ module.exports = {
         }
     ],
     globals: {
+    server: true,
         "moment": true,
         "Prometheus": true,
         "document": true,

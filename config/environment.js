@@ -57,6 +57,10 @@ module.exports = function(environment) {
         APP: {
             // Here you can pass flags/options to your application instance
             // when it is created
+        },
+
+        'ember-cli-mirage': {
+            enabled: false
         }
     };
 
@@ -68,6 +72,8 @@ module.exports = function(environment) {
         // ENV.APP.LOG_VIEW_LOOKUPS = true;
     }
 
+    console.log('The env is');
+    console.log(environment);
     if (environment === 'test') {
         // Testem prefers this...
         ENV.locationType = 'none';
@@ -78,6 +84,11 @@ module.exports = function(environment) {
 
         ENV.APP.rootElement = '#ember-testing';
         ENV.APP.autoboot = false;
+
+        console.log('Enabling Ember Mirage');
+        ENV['ember-cli-mirage'] = {
+            enabled: true
+        };
     }
 
     // if (environment === 'production') {

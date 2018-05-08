@@ -70,12 +70,14 @@ export default Component.extend({
         _self.appPrefix = ENV.api.prefix;
         _self.serverURI = ENV.chat.protocol+'://'+ENV.chat.host+':'+ENV.chat.port+'/?id=1';
         Logger.debug(_self.get('websockets'));
-        const socket = _self.get('websockets').socketFor(this.serverURI);
-        socket.on('connect', _self.onConnect, _self);
-        socket.on('message', _self.onMessage, _self);
-        socket.on('userList', _self.onUserList, _self);
-        socket.on('userJoined', _self.onUserJoined, _self);
-        socket.on('userLeft', _self.onUserLeft, _self);
+        if (ENV.environment === 'production') {
+            const socket = _self.get('websockets').socketFor(this.serverURI);
+            socket.on('connect', _self.onConnect, _self);
+            socket.on('message', _self.onMessage, _self);
+            socket.on('userList', _self.onUserList, _self);
+            socket.on('userJoined', _self.onUserJoined, _self);
+            socket.on('userLeft', _self.onUserLeft, _self);
+        }
     },
 
 

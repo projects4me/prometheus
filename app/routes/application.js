@@ -12,7 +12,7 @@ import { inject } from '@ember/service';
  *
  * @class Application
  * @namespace Prometheus.Routes
- * @extends Ember.Route
+ * @extend Route
  * @uses ApplicationRouteMixin
  * @author Hammad Hassan <gollomer@gmail.com>
  */
