@@ -58,9 +58,7 @@ export default App.extend({
             issues: _self.store.query('issue',issuesOptions),
             project: _self.store.query('project',projectOptions)
         }).then(function(results){
-            _self.set('issues',{});
             _self.set('issues',results.issues);
-            _self.set('members',{});
             if (results.project.objectAt(0) != undefined &&
                 results.project.objectAt(0).get('members') != undefined) {
                 _self.set('members', results.project.objectAt(0).get('members'));
