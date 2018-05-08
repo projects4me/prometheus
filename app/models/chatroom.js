@@ -98,6 +98,16 @@ export default DS.Model.extend(Validations, {
     modifiedUserName: DS.attr('string'),
 
     /**
+     * Has this model been deleted
+     *
+     * @property deleted
+     * @type String
+     * @for Chatroom
+     * @private
+     */
+    deleted: DS.attr('string'),
+
+    /**
      * Status of the chat room
      *
      * @property status

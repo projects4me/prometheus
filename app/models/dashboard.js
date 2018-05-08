@@ -80,4 +80,14 @@ export default DS.Model.extend(Validations, {
      * @private
      */
     widgets: DS.attr('string'),
+
+    /**
+     * Has this model been deleted
+     *
+     * @property deleted
+     * @type String
+     * @for Dashboard
+     * @private
+     */
+    deleted: DS.attr('string')
 });

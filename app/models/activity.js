@@ -90,6 +90,16 @@ export default DS.Model.extend(Validations, {
     type: DS.attr('string'),
 
     /**
+     * Has this record been deleted?
+     *
+     * @property deleted
+     * @type String
+     * @for Activity
+     * @private
+     */
+    deleted: DS.attr('string'),
+
+    /**
      * The name of the user who created the activity
      *
      * @property createdUserName

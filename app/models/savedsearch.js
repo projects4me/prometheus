@@ -67,6 +67,16 @@ export default DS.Model.extend(Validations, {
     createdUserName: DS.attr('string'),
 
     /**
+     * Has this model been deleted
+     *
+     * @property deleted
+     * @type String
+     * @for Savedsearch
+     * @private
+     */
+    deleted: DS.attr('string'),
+
+    /**
      * The flag that indicates whether this search is available publicly
      *
      * @property public
