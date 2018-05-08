@@ -72,8 +72,6 @@ module.exports = function(environment) {
         // ENV.APP.LOG_VIEW_LOOKUPS = true;
     }
 
-    console.log('The env is');
-    console.log(environment);
     if (environment === 'test') {
         // Testem prefers this...
         ENV.locationType = 'none';
@@ -85,7 +83,6 @@ module.exports = function(environment) {
         ENV.APP.rootElement = '#ember-testing';
         ENV.APP.autoboot = false;
 
-        console.log('Enabling Ember Mirage');
         ENV['ember-cli-mirage'] = {
             enabled: true
         };

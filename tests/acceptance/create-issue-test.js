@@ -18,7 +18,6 @@ module('Acceptance | create issue', function(hooks) {
         server.createList('milestone', 1);
         server.createList('membership', 1);
         server.createList('issuetype', 1);
-        //server.createList('issue', 1);
 
         await visit('/signin');
         await fillIn('input#username','hammad');
@@ -42,6 +41,7 @@ module('Acceptance | create issue', function(hooks) {
         await sleep(2000);
 
         assert.equal($('.issue-details .issueSubject').html(), name);
+
     });
 
 });
