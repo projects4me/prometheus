@@ -13,12 +13,15 @@
   position:relative;
   margin: 3rem;
 
+
   .data-input{
-    font-size:1.8rem;
+    font-size:1.4rem;
     padding:1rem 1rem 1rem 1rem;
     display:block;
-      border:none;
+    border:none;
     border-bottom:0.1rem solid #999;
+    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-weight: 400;
   }
 
   .data-input:focus{ outline:none;border-color:$highlightColor}
