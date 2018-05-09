@@ -145,6 +145,7 @@ export default {
         },
         "noentry": "No entry found..",
         "blank": "<span class='disabled-text'>-- blank --</em>",
+        "oops": "Oops! Something went wrong, please contact the system administrator",
         "ago" : "ago",
         "outof" : "out of",
         "module" : {

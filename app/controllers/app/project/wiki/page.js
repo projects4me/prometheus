@@ -79,30 +79,19 @@ export default Prometheus.extend({
         let upload = this.store.createRecord('upload', {});
 
         try {
-
+            let { access_token } = _self.get('session.data.authenticated');
             let options = {
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'wiki',
                     relatedId: _self.get('model').get('id')
                 },
-                headers: upload.store.adapterFor('upload').headersForRequest()
+                headers: {'Authorization': `Bearer ${access_token}`}
             };
 
             let response = yield file.upload(options);
 
             let data = JSON.parse(response.body);
-            /**
-             *
-             *
-             *
-             *
-             *  @todo check for errors
-             *
-             *
-             *
-             *
-             */
             set(upload, 'id',data.data.id);
             set(upload, 'name',data.data.attributes.name);
             set(upload, 'fileSize',data.data.attributes.fileSize);
@@ -113,6 +102,11 @@ export default Prometheus.extend({
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
             _self.get('model').get('files').pushObject(upload);
         } catch (e) {
+            new Messenger().post({
+                message: _self.get('i18n').t("global.oops"),
+                type: 'error',
+                showCloseButton: true
+            });
             //upload.rollback();
         }
     }).maxConcurrency(3).enqueue(),

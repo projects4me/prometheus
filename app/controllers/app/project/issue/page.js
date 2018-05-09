@@ -125,6 +125,7 @@ export default Prometheus.extend(Evented,{
      * @public
      */
     comment:null,
+
     /**
      * This is a task to handle file uploading
      *
@@ -138,14 +139,14 @@ export default Prometheus.extend(Evented,{
         let upload = this.store.createRecord('upload', {});
 
         try {
-
+            let { access_token } = _self.get('session.data.authenticated');
             let options = {
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'issue',
                     relatedId: _self.get('model').objectAt(0).get('id')
                 },
-                headers: upload.store.adapterFor('upload').headersForRequest()
+                headers: {'Authorization': `Bearer ${access_token}`}
             };
 
             let response = yield file.upload(options);
@@ -164,6 +165,11 @@ export default Prometheus.extend(Evented,{
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
             _self.get('model').objectAt(0).get('files').pushObject(upload);
         } catch (e) {
+            new Messenger().post({
+                message: _self.get('i18n').t("global.oops"),
+                type: 'error',
+                showCloseButton: true
+            });
             //upload.rollback();
         }
     }).maxConcurrency(3).enqueue(),
@@ -250,6 +256,7 @@ export default Prometheus.extend(Evented,{
          * @param file
          */
         uploadFile:function(file){
+            Logger.debug("Uploading a file");
             get(this, 'handleUpload').perform(file);
         },
 
