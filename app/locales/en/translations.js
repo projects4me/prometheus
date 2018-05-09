@@ -679,6 +679,7 @@ export default {
                     "files" : "Files",
                     "conversation" : "Conversation",
                     "hierarchy" : "Issue Hierarchy",
+                    "estimates" : "Estimates",
                     "selectfile" : "select a file to upload",
                     "issueactivities" : "Issue Activities",
                     "file" : {
@@ -692,19 +693,26 @@ export default {
                     "timelogs" : "Time Logs",
                     "timelog" : {
                         "log" : "Log Time",
+                        "estimate" : "Estimate the issue",
                         "inputspenton" : "Which date was the time spent on",
                         "spenton" : "Spent On",
                         "inputdescription" : "What was the time spent on",
                         "description" : "Description",
                         "added" : "Time logged",
-                        "missing" : "Both time and spent date are required to log the time",
+                        "estimated" : "Estimate added",
+                        "missing" : "Both time and spent date is required to log the time",
+                        "estmissing" : "Both time and description is required to log the time",
                         "on" : " logged time on ",
                         "noentry" : "No time logged against this issue",
+                        "noestimates" : "No time estimated for this issue",
+                        "estimatedon" : " estimated on ",
                         "d" : "d",
                         "h" : "h",
                         "m" : "m",
                         "edited" : "Time log has been updated",
-                        "edit" : "Edit time log"
+                        "edit" : "Edit time log",
+                        "delete" : "Delete time log",
+                        "estimates" : "Estimates",
                     }
                 },
                 "edit" : {
@@ -738,7 +746,8 @@ export default {
                     "selectassignee" : "Select an assignee",
                     "reportedBy" : "Reported User",
                     "parent" : "Parent",
-                    "people" : "People"
+                    "people" : "People",
+                    "estimates" : "Estimates"
                 },
                 "filter" : {
                     "issueNumber" : "Issue Number",

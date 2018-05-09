@@ -7,7 +7,9 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 import format from "prometheus/utils/data/format";
+import { hash } from 'rsvp';
 import _ from "lodash";
+import $ from "jquery";
 
 /**
  * This is the controller for issue create page
@@ -64,6 +66,7 @@ export default Create.extend(ProjectRelated, {
     typeList: computed('types', function(){
         return format.getSelectList(this.get('types'));
     }),
+
     /**
      * This is a computed property in which gets the list of user
      * associated in the system fetched by the app controller
@@ -76,6 +79,16 @@ export default Create.extend(ProjectRelated, {
     usersList: computed('appController.usersList', function(){
         return this.get('appController').get('usersList');
     }),
+
+    /**
+     * This estimates for this issue
+     *
+     * @property estimates
+     * @type Array
+     * @for Create
+     * @private
+     */
+    estimates:[],
 
     /**
      * This function sets the model properties before saving it
@@ -137,6 +150,78 @@ export default Create.extend(ProjectRelated, {
     afterCancel(){
         let projectId = this.target.currentState.routerJs.state.params["app.project"].project_id;
         this.transitionToRoute('app.project.issue', {project_id:projectId});
+    },
+
+    /**
+     * This function associates the selected issue type with the project
+     *
+     * @method afterSave
+     * @param model
+     */
+    afterSave(model){
+        let estimates = model.get('estimated');
+        let Promises = {};
+        let count = 0;
+
+        estimates.forEach(function(estimate){
+            estimate.set('context','est');
+            estimate.set('issueId',model.get('id'));
+            Promises[count++] = estimate.save();
+        });
+        return hash(Promises);
+    },
+
+    /**
+     * The action handlers for the issue detail page
+     *
+     * @property action
+     * @for Issue
+     * @type Object
+     * @public
+     */
+    actions: {
+
+
+
+        /**
+         * This function is used to edit the logged time
+         * against the issue
+         *
+         * @method editLog
+         * @public
+         */
+        deleteLog(log){
+            Logger.debug('Prometheus.Controllers.App.Project.Issue.Create::deleteLog');
+            let _self = this;
+            let estimates = _self.get('model.estimated');
+
+            estimates.removeObject(log);
+
+            Logger.debug('-Prometheus.Controllers.App.Project.Issue.Create::deleteLog');
+        },
+
+
+        /**
+         * This function is used to show the time log modal dialog box
+         *
+         * @method showLogTimeDialog
+         * @public
+         */
+        showLogTimeDialog()
+        {
+            this.set('logTimeDialog',true);
+        },
+
+        /**
+         * This function is used to hide the log time modal
+         *
+         * @method removeLogTimeModal
+         * @public
+         */
+        removeLogTimeModal(){
+            this.set('logTimeDialog',false);
+            $('.modal').modal('hide');
+        },
     }
 
 });

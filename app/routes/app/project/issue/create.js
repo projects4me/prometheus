@@ -79,9 +79,9 @@ export default App.extend({
 
         this.set('breadCrumb',{title:'#'+params.issue_number,record:true});
 
-        controller.set('model',_self.get('issue'));
-        controller.set('project',_self.get('project'));
-        controller.set('types',_self.get('types'));
+        controller.set('model', _self.get('issue'));
+        controller.set('project', _self.get('project'));
+        controller.set('types', _self.get('types'));
 
         let priority = format.getList('views.app.issue.lists.priority',_self.get('i18n.locale'));
         let status = format.getList('views.app.issue.lists.status',_self.get('i18n.locale'));

@@ -45,6 +45,17 @@ export default Prometheus.extend(Evented,{
     logTimeDialog: false,
 
     /**
+     * This flag is used to show or hide the modal dialog box
+     * for estimates
+     *
+     * @property estimateTimeDialog
+     * @type boolean
+     * @for Page
+     * @private
+     */
+    estimateTimeDialog: false,
+
+    /**
      * This is the container object for a new time log entry
      *
      * @property newLogTime
@@ -135,18 +146,19 @@ export default Prometheus.extend(Evented,{
      */
     handleUpload: task(function * (file) {
         let _self = this;
+        Logger.debug('Trying to upload a file');
 
         let upload = this.store.createRecord('upload', {});
 
         try {
-            let { access_token } = _self.get('session.data.authenticated');
+
             let options = {
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'issue',
                     relatedId: _self.get('model').objectAt(0).get('id')
                 },
-                headers: {'Authorization': `Bearer ${access_token}`}
+                headers: upload.store.adapterFor('upload').headersForRequest()
             };
 
             let response = yield file.upload(options);
@@ -165,11 +177,8 @@ export default Prometheus.extend(Evented,{
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
             _self.get('model').objectAt(0).get('files').pushObject(upload);
         } catch (e) {
-            new Messenger().post({
-                message: _self.get('i18n').t("global.oops"),
-                type: 'error',
-                showCloseButton: true
-            });
+            Logger.debug("Something has gone wrong");
+            Logger.debug
             //upload.rollback();
         }
     }).maxConcurrency(3).enqueue(),
@@ -223,6 +232,34 @@ export default Prometheus.extend(Evented,{
         } else if (timeLog.get('spentOn') === undefined || timeLog.get('spentOn') === '') {
             return false;
         }
+        return true;
+    },
+
+    /**
+     * This function is used to validate the time log
+     *
+     * @param timeLog
+     * @private
+     */
+    _validateEstimate:function(timeLog){
+        if (timeLog.get('days') === undefined) {
+            timeLog.set('days',0);
+        }
+
+        if (timeLog.get('hours') === undefined) {
+            timeLog.set('hours',0);
+        }
+
+        if (timeLog.get('minutes') === undefined) {
+            timeLog.set('minutes',0);
+        }
+
+        if (((timeLog.get('days')*8) + (timeLog.get('hours')*60) + timeLog.get('minutes')) === 0 ) {
+            return false;
+        } else if (timeLog.get('description') == undefined) {
+            return false;
+        }
+
         return true;
     },
 
@@ -421,6 +458,50 @@ export default Prometheus.extend(Evented,{
         },
 
         /**
+         * This function is used to log time against the issue
+         *
+         * @method addEstimate
+         * @public
+         */
+        addEstimate(){
+            Logger.debug('Prometheus.App.Project.Issue.Page::addEstimate');
+            let _self = this;
+            let newLog = _self.get('newTimeLog');
+
+            // Validate the time log and spentOn
+            if (_self._validateEstimate(newLog)) {
+                newLog.set('issueId',_self.get('model').objectAt(0).get('id'));
+                newLog.set('context','est');
+
+                newLog.save().then(function () {
+
+                    let timelog = _self.get('store').createRecord('timelog');
+                    _self.set('newTimeLog',timelog);
+                    _self.get('model').objectAt(0).get('estimated').pushObject(newLog);
+
+                    new Messenger().post({
+                        message: _self.get('i18n').t("views.app.issue.detail.timelog.estimated"),
+                        type: 'success',
+                        showCloseButton: true
+                    });
+
+                    //_self.send('reload');
+
+                });
+
+            } else {
+                new Messenger().post({
+                    message: _self.get('i18n').t("views.app.issue.detail.timelog.estmissing"),
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+
+            _self.send('removeEstimateTimeModal');
+            Logger.debug('-Prometheus.App.Project.Issue.Pagw::addEstimate');
+        },
+
+        /**
          * This function is used to edit the logged time
          * against the issue
          *
@@ -500,7 +581,7 @@ export default Prometheus.extend(Evented,{
          * @method showEditLogDialog
          * @public
          */
-        showEditLogDialog:function(log)
+        showEditLogDialog(log)
         {
             this.set('editingLog',log);
             this.set('editLogDialog',true);
@@ -512,18 +593,28 @@ export default Prometheus.extend(Evented,{
          * @method showLogTimeDialog
          * @public
          */
-        showLogTimeDialog:function()
+        showLogTimeDialog()
         {
             this.set('logTimeDialog',true);
         },
 
+        /**
+         * This function is used to show the time log modal dialog box
+         *
+         * @method showLogTimeDialog
+         * @public
+         */
+        showEstimateTimeDialog()
+        {
+            this.set('estimateTimeDialog',true);
+        },
         /**
          * This function is used to show the add modal dialog box
          *
          * @method showDialog
          * @public
          */
-        showDialog:function()
+        showDialog()
         {
             this.set('filePreviewDialog',true);
         },
@@ -534,7 +625,7 @@ export default Prometheus.extend(Evented,{
          * @method removeModal
          * @public
          */
-        removeModal:function(){
+        removeModal(){
             this.set('filePreviewDialog',false);
             $('.modal').modal('hide');
         },
@@ -545,8 +636,19 @@ export default Prometheus.extend(Evented,{
          * @method removeLogTimeModal
          * @public
          */
-        removeLogTimeModal:function(){
+        removeLogTimeModal(){
             this.set('logTimeDialog',false);
+            $('.modal').modal('hide');
+        },
+
+        /**
+         * This function is used to hide the log time modal
+         *
+         * @method removeLogTimeModal
+         * @public
+         */
+        removeEstimateTimeModal(){
+            this.set('estimateTimeDialog',false);
             $('.modal').modal('hide');
         },
 
@@ -556,7 +658,7 @@ export default Prometheus.extend(Evented,{
          * @method removeEditLogModal
          * @public
          */
-        removeEditLogModal:function(){
+        removeEditLogModal(){
             this.set('editingLog',null);
             this.set('editLogDialog',false);
             $('.modal').modal('hide');

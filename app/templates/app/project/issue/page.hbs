@@ -260,6 +260,72 @@
         </div>
         {{!-- Issue Files --}}
 
+        <div class="box box-succes issues-details">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.issue.detail.estimates"}}</h3>
+          </div>
+          {{!-- /.box-header --}}
+          <div class="box-body no-padding" style="display: block;">
+            <ul class="time-log time-log-in-box products-list product-list-in-box">
+              {{#if (gt issue.estimated.length 0)}}
+                {{#each issue.estimated as |timelog|}}
+                  <li class="item">
+                    <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
+                      <img class="img-circle" src="http://projects4me/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
+                    </div>
+                    <div class="log-info">
+                      <a href="javascript:void(0);" class="user-title">{{timelog.createdUserName}}</a>
+                      <span>{{t "views.app.issue.detail.timelog.estimatedon"}}<strong>{{moment-format timelog.dateCreated 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
+                      <span class="log-edit pull-right" data-toggle="tooltip" title="{{t "global.form.edit"}}">
+                        <a href="javascript:void(0);" {{action "deleteLog" timelog}}><i class="fa fa-trash-o"></i></a>
+                      </span>
+                      <span class="log-entry pull-right">
+                        {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}
+                        {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "views.app.issue.detail.timelog.h"}}{{/if}}
+                        {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
+                      </span>
+                      <span class="log-description">
+                      <strong>{{timelog.description}}</strong>
+                    </span>
+                    </div>
+                  </li>
+                {{/each}}
+              {{else}}
+                <li class="no-entry">{{t "views.app.issue.detail.timelog.noestimates"}}</li>
+              {{/if}}
+            </ul>
+
+            {{#if estimateTimeDialog}}
+              {{#bootstrap-modal
+                  title="views.app.issue.detail.timelog.estimate"
+                  closeLabel="global.form.close"
+                  confirmLabel="global.form.save"
+                  close="removeEstimateTimeModal"
+                  confirm=(action "addEstimate")}}
+
+                {{interval-selector
+                    days=newTimeLog.days
+                    hours=newTimeLog.hours
+                    minutes=newTimeLog.minutes}}
+
+                {{field-textarea
+                    placeholder=(t "views.app.issue.detail.timelog.iputdescription")
+                    label=(t "views.app.issue.detail.timelog.description")
+                    value=newTimeLog.description
+                }}
+
+              {{/bootstrap-modal}}
+            {{/if}}
+
+          </div>
+
+          <div class="box-footer text-center" style="display: block;">
+            <span>
+              <a href="javascript:void();" {{action "showEstimateTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
+            </span>
+          </div>
+        </div>
+
 
         {{!-- Issue Timelogs --}}
         <div class="box box-danger">
