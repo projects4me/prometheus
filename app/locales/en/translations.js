@@ -109,8 +109,10 @@ export default {
             "signin" : "Sign In",
             "signout" : "Sign Out",
             "signup" : "Sign Up",
+            "deleted" : "The record has been deleted.",
             "modified" : "Modified by <strong>{{user}}</strong> on <strong>{{date}}<strong>",
             "cancelcicked" : "You have made changes, canceling will discard them. Are you sure?",
+            "deletecicked" : "You are you about to delete this record, the record cannot be recovered. Are you sure?",
             "confirmcancel" : "Yes",
             "onsecondthought" : "Take me back",
             "upload" : {
@@ -691,6 +693,15 @@ export default {
                         'preview' : "Preview File",
                     },
                     "timelogs" : "Time Logs",
+                    "estimate" : {
+                        "edit" : "Edit estimate"
+                    },
+                    "est" : {
+                        "edited" : "Time estimated has been updated",
+                    },
+                    "spent" : {
+                        "edited" : "Time log has been updated",
+                    },
                     "timelog" : {
                         "log" : "Log Time",
                         "estimate" : "Estimate the issue",
@@ -709,7 +720,6 @@ export default {
                         "d" : "d",
                         "h" : "h",
                         "m" : "m",
-                        "edited" : "Time log has been updated",
                         "edit" : "Edit time log",
                         "delete" : "Delete time log",
                         "estimates" : "Estimates",

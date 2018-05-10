@@ -260,7 +260,7 @@
         </div>
         {{!-- Issue Files --}}
 
-        <div class="box box-succes issues-details">
+        <div class="box box-success issues-details">
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.issue.detail.estimates"}}</h3>
           </div>
@@ -276,8 +276,9 @@
                     <div class="log-info">
                       <a href="javascript:void(0);" class="user-title">{{timelog.createdUserName}}</a>
                       <span>{{t "views.app.issue.detail.timelog.estimatedon"}}<strong>{{moment-format timelog.dateCreated 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
-                      <span class="log-edit pull-right" data-toggle="tooltip" title="{{t "global.form.edit"}}">
-                        <a href="javascript:void(0);" {{action "deleteLog" timelog}}><i class="fa fa-trash-o"></i></a>
+                      <span class="log-edit pull-right">
+                        <a href="javascript:void(0);" {{action "showEditEstimateDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
+                        <a href="javascript:void(0);" {{action "deleteLog" timelog}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
                       </span>
                       <span class="log-entry pull-right">
                         {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}
@@ -294,6 +295,28 @@
                 <li class="no-entry">{{t "views.app.issue.detail.timelog.noestimates"}}</li>
               {{/if}}
             </ul>
+
+            {{#if editEstimateDialog}}
+              {{#bootstrap-modal
+                  title="views.app.issue.detail.estimate.edit"
+                  closeLabel="global.form.close"
+                  confirmLabel="global.form.save"
+                  close="removeEditEstimateModal"
+                  confirm=(action "editLog")}}
+
+                {{interval-selector
+                    days=editingLog.days
+                    hours=editingLog.hours
+                    minutes=editingLog.minutes}}
+
+                {{field-textarea
+                    placeholder=(t "views.app.issue.detail.timelog.iputdescription")
+                    label=(t "views.app.issue.detail.timelog.description")
+                    value=editingLog.description
+                }}
+
+              {{/bootstrap-modal}}
+            {{/if}}
 
             {{#if estimateTimeDialog}}
               {{#bootstrap-modal
@@ -344,8 +367,9 @@
                     <div class="log-info">
                       <a href="javascript:void(0);" class="user-title">{{timelog.createdUserName}}</a>
                       <span>{{t "views.app.issue.detail.timelog.on"}}<strong>{{moment-format timelog.spentOn 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
-                      <span class="log-edit pull-right" data-toggle="tooltip" title="{{t "global.form.edit"}}">
-                        <a href="javascript:void(0);" {{action "showEditLogDialog" timelog}}><i class="fa fa-pencil"></i></a>
+                      <span class="log-edit pull-right">
+                        <a href="javascript:void(0);" {{action "showEditLogDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
+                        <a href="javascript:void(0);" {{action "deleteLog" timelog}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
                       </span>
                       <span class="log-entry pull-right">
                         {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}

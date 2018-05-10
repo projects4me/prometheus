@@ -501,6 +501,49 @@ export default Prometheus.extend(Evented,{
             Logger.debug('-Prometheus.App.Project.Issue.Pagw::addEstimate');
         },
 
+
+        /**
+         * This function is used to delete logged or estimated time
+         *
+         * @method deleteLog
+         * @public
+         */
+        deleteLog(log){
+            Logger.debug('Prometheus.Controllers.App.Project.Issue.Create::deleteLog');
+            let _self = this;
+            let i18n = _self.get('i18n');
+
+            let message = new Messenger().post({
+                message: i18n.t("global.form.deletecicked").toString(),
+                type: 'warning',
+                showCloseButton: true,
+                actions: {
+                    confirm: {
+                        label: i18n.t("global.form.confirmcancel").toString(),
+                        action: function() {
+                            log.deleteRecord();
+                            log.save().then(function(){
+                                message.cancel();
+                                new Messenger().post({
+                                    message: _self.get('i18n').t("global.form.deleted"),
+                                    type: 'success',
+                                    showCloseButton: true
+                                });
+                            });
+                        }
+                    },
+                    cancel: {
+                        label: i18n.t("global.form.onsecondthought").toString(),
+                        action: function() {
+                            message.cancel();
+                        }
+                    },
+
+                }
+            });
+            Logger.debug('-Prometheus.Controllers.App.Project.Issue.Create::deleteLog');
+        },
+
         /**
          * This function is used to edit the logged time
          * against the issue
@@ -508,18 +551,26 @@ export default Prometheus.extend(Evented,{
          * @method editLog
          * @public
          */
-        editLog:function(){
+        editLog(){
             Logger.debug('App.Project.Issue.PageController->editLog');
             let _self = this;
             Logger.debug(_self);
             let log = _self.get('editingLog');
+            let context = log.get('context');
+
+            let isValid = false;
+            if (context === "est") {
+                isValid = _self._validateEstimate(log);
+            } else {
+                isValid = _self._validateLog(log);
+            }
 
             // Validate the time log and spentOn
-            if (_self._validateLog(log)) {
+            if (isValid) {
                 log.save().then(function () {
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("views.app.issue.detail.timelog.edited"),
+                        message: _self.get('i18n').t("views.app.issue.detail."+context+".edited"),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -528,7 +579,7 @@ export default Prometheus.extend(Evented,{
                 });
             } else {
                 new Messenger().post({
-                    message: _self.get('i18n').t("views.app.issue.detail.timelog.missing"),
+                    message: _self.get('i18n').t("views.app.issue.detail."+context+".missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -536,11 +587,12 @@ export default Prometheus.extend(Evented,{
 
             _self.set('editingLog',null);
             _self.send('removeEditLogModal');
+            _self.send('removeEditEstimateModal');
 
             Logger.debug('-App.Project.Issue.PageController->logTime');
         },
 
-        saveComment:function (issue, comment) {
+        saveComment(issue, comment) {
             Logger.debug('Prometheus.Controller.App.Project.Issue.Page::saveComment');
 
             if (comment == undefined){
@@ -585,6 +637,18 @@ export default Prometheus.extend(Evented,{
         {
             this.set('editingLog',log);
             this.set('editLogDialog',true);
+        },
+
+        /**
+         * This function is used to show the time log modal dialog box
+         *
+         * @method showEditLogDialog
+         * @public
+         */
+        showEditEstimateDialog(log)
+        {
+            this.set('editingLog',log);
+            this.set('editEstimateDialog',true);
         },
 
         /**
@@ -661,6 +725,18 @@ export default Prometheus.extend(Evented,{
         removeEditLogModal(){
             this.set('editingLog',null);
             this.set('editLogDialog',false);
+            $('.modal').modal('hide');
+        },
+
+        /**
+         * This function is used to hide the edit log time modal
+         *
+         * @method removeEditLogModal
+         * @public
+         */
+        removeEditEstimateModal(){
+            this.set('editingLog',null);
+            this.set('editEstimateDialog',false);
             $('.modal').modal('hide');
         },
     }
