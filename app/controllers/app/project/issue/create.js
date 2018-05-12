@@ -148,6 +148,27 @@ export default Create.extend(ProjectRelated, {
     afterCancel(){
         let projectId = this.target.currentState.routerJs.state.params["app.project"].project_id;
         this.transitionToRoute('app.project.issue', {project_id:projectId});
+    },
+
+    /**
+     * These are the actions supported by this controller
+     *
+     * @property actions
+     * @for Object
+     * @public
+     */
+    actions:{
+
+        /**
+         * This function is used to set the parent for the issue
+         *
+         * @param model
+         * @param field
+         * @param target
+         */
+        changedParent(model, field, target){
+            model.set(field, target.id);
+        }
     }
 
 });

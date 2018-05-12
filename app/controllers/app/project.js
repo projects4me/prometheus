@@ -47,14 +47,22 @@ export default Prometheus.extend({
      * @public
      */
     issuesList: computed('projectId', 'issues', function(){
-        let map ={
+        let map = {
             id:'id',
             name:'subject',
             number:'issueNumber',
             status:'status',
             projectId:'projectId'
         };
-        return format.getSelectList(this.get('issues'),map);
+        let issueList = format.getSelectList(this.get('issues'), map);
+        issueList.unshift({
+            id:'',
+            name:this.get('i18n').t('global.blank'),
+            number:'',
+            status:'',
+            projectId:''
+        });
+        return issueList;
     }),
 
     /**

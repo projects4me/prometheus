@@ -193,6 +193,33 @@
         </div>
       </div>
 
+      <div class="box box-info issues-details">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{t "views.app.issue.create.parent"}}</h3>
+        </div>
+        {{!-- /.box-header --}}
+        <div class="box-body no-padding" style="display: block;">
+
+          {{field-relate
+              placeholder=(t "views.app.issue.create.selectparent")
+              label=(t "views.app.issue.create.parentId")
+              value=model.parentId
+              options=issuesList
+              selected=(find-by "id" model.parentId issuesList)
+              searchField="number"
+              onchange=(action "changedParent" model 'parentId')
+              relateType="relate-issue"
+              data-field="issue.parentId"
+              focus-out=(action (mut showParentError) true)
+              v-focus=showParentError
+              v-model=model
+              v-field='parentId'
+              v-output='message'
+          }}
+
+        </div>
+      </div>
+
     </div>
 
     <div class="col-sm-12">

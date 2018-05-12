@@ -65,9 +65,13 @@
 
               <div class="col-xs-6 col-md-4">
                 <h4>{{t "views.app.issue.detail.parent"}}</h4>
-                <p>
-                  {{issue.parentissue.issueNumber}} - {{issue.parentissue.subject}}
-                </p>
+                {{#if issue.parentId}}
+                  <a href="#" {{action "navigateToParent" issue}}>
+                    #{{issue.parentissue.issueNumber}} - {{issue.parentissue.subject}}
+                  </a>
+                {{else}}
+                  <p>-</p>
+                {{/if}}
               </div>
 
             </div>
@@ -286,8 +290,8 @@
                         {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
                       </span>
                       <span class="log-description">
-                      <strong>{{timelog.description}}</strong>
-                    </span>
+                        <strong>{{timelog.description}}</strong>
+                      </span>
                     </div>
                   </li>
                 {{/each}}

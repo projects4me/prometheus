@@ -755,7 +755,9 @@ export default {
                     "assignee" : "Assignee",
                     "selectassignee" : "Select an assignee",
                     "reportedBy" : "Reported User",
+                    "parentId" : "Parent Issue",
                     "parent" : "Parent",
+                    "selectparent" : "Select the issue parent",
                     "people" : "People",
                     "estimates" : "Estimates"
                 },

@@ -628,6 +628,18 @@ export default Prometheus.extend(Evented,{
         },
 
         /**
+         * This function navigates a user to the parent issue
+         *
+         * @param issue
+         */
+        navigateToParent(issue){
+            this.transitionToRoute('app.project.issue.page',{
+                issue_number:issue.get('parentissue.issueNumber'),
+                project_id:issue.get('projectId')
+            });
+        },
+
+        /**
          * This function is used to show the time log modal dialog box
          *
          * @method showEditLogDialog

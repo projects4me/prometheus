@@ -33,7 +33,7 @@ export default {
      * @param {Prometheus.Models.Object} model The model that needs to be converted
      * @return {Array} list The array list of name and values
      */
-    getSelectList:function(model = {} ,map,blank){
+    getSelectList:function(model = {} , map, blank){
         if (_.keys(model).length === 0) {
             return [];
         }
