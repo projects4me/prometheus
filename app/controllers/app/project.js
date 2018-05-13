@@ -3,7 +3,7 @@
  */
 
 import Prometheus from "prometheus/controllers/prometheus";
-import format from "../../utils/data/format";
+import format from "prometheus/utils/data/format";
 import { computed } from '@ember/object';
 
 /**

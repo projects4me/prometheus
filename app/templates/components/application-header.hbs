@@ -12,6 +12,20 @@
   <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
     <span class="sr-only">{{t "views.app.togglenav"}}</span>
   </a>
+  <div class="global-search">
+    {{#power-select
+        options=searchPromise
+        placeholder="Search ... "
+        loadingMessage="Waiting for the server...."
+        selected=selected
+        searchField='name'
+        oninput=(action "search")
+        onchange=(action (mut selected))
+    as |issue|
+    }}
+      {{issue.name}}
+    {{/power-select}}
+  </div>
   {{!-- Navbar Right Menu --}}
   <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
