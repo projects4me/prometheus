@@ -6,7 +6,6 @@ import Component from '@ember/component';
 import { get } from '@ember/object';
 import { inject } from '@ember/service';
 import RSVP from 'rsvp';
-import $ from "jquery";
 import format from "prometheus/utils/data/format";
 
 /**
@@ -80,9 +79,7 @@ export default Component.extend({
             };
 
             _self.loadIssue(query).then(function(data){
-                Logger.debug(data);
                 let searchRes = format.getSelectList(data, map);
-                Logger.debug(_.clone(searchRes));
                 _self.set('searchPromise', searchRes);
             });
             // this.set('searchPromise', this.loadIssue(query));
