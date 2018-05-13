@@ -31,7 +31,6 @@ $color_allports_approx: rgba(0, 120, 150,1);
 $color_mischka_approx: #d2d6de;
 $color_jumbo_approx: rgba(127, 127, 135,1);
 
-
 @mixin gradient-border-top($startColor,$endColor) {
   content: '';
   width: 100%;

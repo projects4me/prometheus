@@ -630,12 +630,13 @@ export default Prometheus.extend(Evented,{
         /**
          * This function navigates a user to the parent issue
          *
-         * @param issue
+         * @param issueNumber
+         * @param projectId
          */
-        navigateToParent(issue){
+        navigateToIssue(issueNumber, projectId){
             this.transitionToRoute('app.project.issue.page',{
-                issue_number:issue.get('parentissue.issueNumber'),
-                project_id:issue.get('projectId')
+                issue_number:issueNumber,
+                project_id:projectId
             });
         },
 

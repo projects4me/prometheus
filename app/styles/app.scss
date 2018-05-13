@@ -36,15 +36,15 @@
 @import 'vendor/DataTables/datatables.min.scss';
 
 /*
-  Include the application variables
+  Include the application wide styles
 */
 
 @import "variables.scss";
 @import 'modules/document.scss';
-
+@import 'pace.scss';
 
 /*
-  Inclde all the module related Scss files
+  Include all the module related SCSS files
 */
 
 @import "modules/header.scss";

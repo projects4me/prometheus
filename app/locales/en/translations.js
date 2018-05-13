@@ -692,6 +692,9 @@ export default {
                         "deleted" : "File has been deleted",
                         'preview' : "Preview File",
                     },
+                    "childissues" : {
+                        "noentry" : "No child issue found for this issue"
+                    },
                     "timelogs" : "Time Logs",
                     "estimate" : {
                         "edit" : "Edit estimate"

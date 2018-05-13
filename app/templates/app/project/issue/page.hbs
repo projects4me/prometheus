@@ -66,7 +66,7 @@
               <div class="col-xs-6 col-md-4">
                 <h4>{{t "views.app.issue.detail.parent"}}</h4>
                 {{#if issue.parentId}}
-                  <a href="#" {{action "navigateToParent" issue}}>
+                  <a href="#" {{action "navigateToIssue" issue.parentissue.issueNumber issue.projectId}}>
                     #{{issue.parentissue.issueNumber}} - {{issue.parentissue.subject}}
                   </a>
                 {{else}}
@@ -348,7 +348,7 @@
 
           <div class="box-footer text-center" style="display: block;">
             <span>
-              <a href="javascript:void();" {{action "showEstimateTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
+              <a href="javascript:void(0);" {{action "showEstimateTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
             </span>
           </div>
         </div>
@@ -459,12 +459,39 @@
           {{!-- /.box-footer --}}
         </div>
 
-        {{!-- This is the project summary --}}
-        <div class="box box-info">
+        <div class="box box-info issue-hierarchy">
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.issue.detail.hierarchy"}}</h3>
           </div>
+
           <div class="box-body no-padding" style="display: block;">
+
+            <div class="table-responsive">
+              {{#if issue.childissues}}
+                <table class="table no-margin">
+                  <thead>
+                    <tr>
+                      <th>{{t "views.app.issue.detail.issueNumber"}}</th>
+                      <th>{{t "views.app.issue.detail.subject"}}</th>
+                      <th>{{t "views.app.issue.detail.status"}}</th>
+                      <th>{{t "views.app.issue.detail.priority"}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each issue.childissues as |child|}}
+                      <tr>
+                        <td><a href="#" {{action "navigateToIssue" child.issueNumber child.projectId}}>#{{child.issueNumber}}</a></td>
+                        <td>{{child.subject}}</td>
+                        <td><span class="badge {{child.status}}">{{t (concat "views.app.issue.lists.status." child.status)}}</span></td>
+                        <td>{{priority-icon priority=(readonly child.priority)}} {{t (concat "views.app.issue.lists.priority." child.priority)}}</td>
+                      </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              {{else}}
+                <div class="no-entry">{{t "views.app.issue.detail.childissues.noentry"}}</div>
+              {{/if}}
+            </div>
 
           </div>
         </div>
