@@ -14,12 +14,11 @@
   </a>
   <div class="global-search">
     {{#power-select
-        options=searchPromise
-        placeholder="Search ... "
-        loadingMessage="Waiting for the server...."
+        placeholder=(t "global.form.searchPlaceholder")
+        loadingMessage=(t "global.form.loading")
+        allowClear=true
         selected=selected
-        searchField='name'
-        oninput=(action "search")
+        search=(perform search)
         onchange=(action (mut selected))
     as |issue|
     }}

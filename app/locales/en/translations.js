@@ -98,6 +98,8 @@ export default {
             "close" : "Close",
             "delete" : "Delete",
             "search" : "Search",
+            "searchPlaceholder" : "Search ...",
+            "loading" : "Loading ...",
             "clear" : "Clear",
             "more" : "More",
             "image" : "Image",

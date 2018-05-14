@@ -7,6 +7,7 @@ import { get } from '@ember/object';
 import { inject } from '@ember/service';
 import RSVP from 'rsvp';
 import format from "prometheus/utils/data/format";
+import { task, timeout } from 'ember-concurrency';
 
 /**
  * This component is used to render the application header
@@ -38,13 +39,33 @@ export default Component.extend({
      */
     classNames: ["main-header"],
 
+    /**
+     * We are using the store service to retrieve data for global search
+     *
+     * @property store
+     * @type Service
+     * @for ApplicationHeader
+     * @private
+     */
     store:inject(),
 
-    searchPromise: null,
-    page: 0,
-    query:null,
+    /**
+     * We are using the store service to retrieve data for global search
+     *
+     * @property page
+     * @type Integer
+     * @for ApplicationHeader
+     * @private
+     */
+    page:0,
 
-    loadIssue(query){
+    /**
+     * This function loads the search data
+     *
+     * @param query
+     * @return {RSVP.Promise|Test.Promise|*}
+     */
+    loadSearchData(query){
         let _self = this;
         let options = {
             query: query,
@@ -53,11 +74,34 @@ export default Component.extend({
             page: this.get('page'),
         };
 
-        //(Issue.subject starts a)
         return new RSVP.Promise((resolve) => {
             resolve(_self.get('store').query('issue',options));
         });
     },
+
+    /**
+     * This is the task that is used to perform the search.
+     *
+     * @property search
+     * @type task
+     * @for ApplicationHeader
+     * @public
+     */
+    search: task(function* (query) {
+        yield timeout(500);
+        let _self = this;
+        let map = {
+            id:'id',
+            name:'subject',
+            number:'issueNumber',
+            status:'status',
+            projectId:'projectId'
+        };
+
+        return _self.loadSearchData(query).then(function(data){
+            return format.getSelectList(data, map);
+        });
+    }),
 
     /**
      * These are the actions that are supported by this component
@@ -68,22 +112,6 @@ export default Component.extend({
      * @public
      */
     actions:{
-        search(query) {
-            let _self = this;
-            let map = {
-                id:'id',
-                name:'subject',
-                number:'issueNumber',
-                status:'status',
-                projectId:'projectId'
-            };
-
-            _self.loadIssue(query).then(function(data){
-                let searchRes = format.getSelectList(data, map);
-                _self.set('searchPromise', searchRes);
-            });
-            // this.set('searchPromise', this.loadIssue(query));
-        },
 
         /**
          * This function is used to forward the signOut function
