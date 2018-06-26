@@ -151,6 +151,19 @@ export default Create.extend(ProjectRelated, {
     },
 
     /**
+     * This function is used to allow search on both the issues name and
+     * the issue number
+     *
+     * @method parentMatcher
+     * @param issue
+     * @param term
+     * @return {Number}
+     */
+    parentMatcher(issue, term) {
+        return `#${issue.number} - ${issue.name}`.toLowerCase().indexOf(term);
+    },
+
+    /**
      * These are the actions supported by this controller
      *
      * @property actions
