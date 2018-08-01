@@ -99,6 +99,21 @@ export default Prometheus.extend({
         },
 
         /**
+         * This function is used to take a user to a searched item
+         *
+         * @method itemSearched
+         * @public
+         */
+        itemSearched(selected) {
+            Logger.debug('+Prometheus.Controllers.App::itemSearched');
+            let _self = this;
+
+            _self.transitionToRoute('app.project',{project_id: selected.projectId});
+            _self.transitionToRoute('app.project.issue.page',{issue_number:selected.number});
+            Logger.debug('-Prometheus.Controllers.App::itemSearched');
+        },
+
+        /**
          * This function is used to start a private chat with another user
          *
          * @method startChat

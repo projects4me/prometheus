@@ -68,9 +68,9 @@ export default Component.extend({
     loadSearchData(query){
         let _self = this;
         let options = {
-            query: query,
+            query: '((Issue.issueNumber CONTAINS '+query+') OR (Issue.subject CONTAINS '+query+') OR (Issue.description CONTAINS '+query+'))',
             rels: 'ownedBy,assignedTo,milestone,project,createdBy,modifiedBy,reportedBy,issuetype',
-            limit: 10,
+            limit: 5,
             page: this.get('page'),
         };
 
@@ -112,6 +112,23 @@ export default Component.extend({
      * @public
      */
     actions:{
+
+        /**
+         * This function is used to select a searched item
+         *
+         * @method itemSelected
+         * @for ApplicationHeader
+         * @public
+         */
+        itemSelected(item){
+            let _self = this;
+            _self.set('selected', item);
+            if (item !== null && typeof this.searchedItem === 'function')
+            {
+                get(this, 'searchedItem')(item);
+            }
+
+        },
 
         /**
          * This function is used to forward the signOut function

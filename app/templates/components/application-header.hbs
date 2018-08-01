@@ -19,10 +19,10 @@
         allowClear=true
         selected=selected
         search=(perform search)
-        onchange=(action (mut selected))
+        onchange=(action "itemSelected")
     as |issue|
     }}
-      {{issue.name}}
+      <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
     {{/power-select}}
   </div>
   {{!-- Navbar Right Menu --}}
