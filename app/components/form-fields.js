@@ -233,7 +233,7 @@ export default Component.extend({
     }).volatile(),
 
     /**
-     * During the initialize ohase of the field we are need to evaluate if the
+     * During the initialize phase of the field we need to evaluate if the
      * field is empty, if so then set the isEmpty flag to true otherwise false
      *
      * @method didReceiveAttrs
@@ -258,7 +258,7 @@ export default Component.extend({
 
         if (this.get('oldValue') === null) {
             if (value === undefined) {
-                this.set('value','');
+                //this.set('value','');
                 this.set('oldValue','');
             }
             else {
