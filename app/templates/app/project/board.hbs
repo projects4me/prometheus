@@ -32,8 +32,12 @@
                         {{#if (eq issue.status status)}}
 
                           <div class="item" style={{laneitem-color issue.issuetype.name}}>
-                            <h4>#{{issue.issueNumber}} - {{issue.subject}}</h4>
-                            <p>{{issue.description}}</p>
+                            <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action "openIssue" issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
+                            <p>{{safe-html issue.description}}</p>
+                            <p>
+                              <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+                              <span><img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
+                            </p>
                           </div>
 
                         {{/if}}

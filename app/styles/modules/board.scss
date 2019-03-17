@@ -15,14 +15,66 @@
     .box-body{
 
       min-height:45rem;
+      padding:0rem;
 
       .item{
         cursor: move;
-        margin: 0 0 2rem 0;
-        padding: 1.5rem 3rem 1.5rem 1.5rem;
+        margin: 0 0 0.5rem 0;
+        padding: 0.1rem 0.5rem 0.1rem 1rem;
         border: 0.1rem solid #eee;
         border-left: 0.5rem solid #eee;
         background-color: #FFF;
+        border-right: 0.1rem solid #CCC;
+        border-top: 0.1rem solid #CCC;
+        border-bottom: 0.1rem solid #CCC;
+
+        img {
+          width:4rem;
+          right:0;
+          position: absolute;
+          margin:-1.5rem 1rem;
+        }
+
+        .fa-ban{
+          color: #d33724;
+        }
+        .fa-angle-double-up{
+          color: #d33724;
+          font-weight: bold;
+        }
+        .fa-arrow-up{
+          color: #e98a7e;
+        }
+        .fa-dot-circle-o{
+          color: $primaryColor;
+        }
+        .fa-arrow-down{
+          color: #5ac594;
+        }
+        .fa-angle-double-down{
+          color: #00a65a;
+          font-weight: bold;
+        }
+
+        .done,.complete{
+          background-color: #5AC594 !important;
+        }
+
+        .closed{
+          background-color: #e98a7e;
+        }
+
+        .deferred,.pending,.feedback{
+          background-color: #f7bf65;
+        }
+
+        .new{
+          background-color: #80b5d3;
+        }
+
+        .in_progress{
+          background-color: $primaryColor;
+        }
       }
 
     .item-closed{

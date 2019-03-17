@@ -49,4 +49,28 @@ export default Prometheus.extend({
         deferred : ''
     },
 
+    /**
+     * These are the actions supported by the Project Board View
+     *
+     * @property actions
+     * @type Object
+     * @for Board
+     * @public
+     */
+    actions:{
+
+        /**
+         * This action is used to help navigate a user to the detail view of an issue
+         *
+         * @method openIssue
+         * @param App.Model.Issue issue The issue the user wants to navigate to
+         * @public void
+         */
+        openIssue(issue){
+            Logger.debug("AppProjectBoardController::openIssue");
+            this.transitionToRoute('app.project.issue.page',{issue_number:issue.get('issueNumber')});
+            Logger.debug("-AppProjectBoardController::openIssue");
+        }
+    }
+
 });
