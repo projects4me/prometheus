@@ -1,6 +1,6 @@
 <section class="content">
   <div class="board row">
-    {{#task-lanes}}
+    {{#task-lanes update=(action "updateIssue")}}
       {{!-- Display the active milestones --}}
       {{#each milestones as |milestone|}}
         {{#if (or (eq milestone.status 'in_progress') (eq milestone.status 'planned'))}}
@@ -22,7 +22,7 @@
                 <div class="lane col-md-2">
                   <div class="box {{get-prop statusClass status}}">
 
-                    <div class="box-header with-border">
+                    <div class="box-header with-border" data-field-status="{{status}}">
                       {{t (concat "views.app.issue.lists.status." status)}}
                     </div>
 
@@ -31,7 +31,7 @@
                       {{#each milestone.issues as |issue|}}
                         {{#if (eq issue.status status)}}
 
-                          <div class="item" style={{laneitem-color issue.issuetype.name}}>
+                          <div class="item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}" >
                             <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action "openIssue" issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
                             <p>{{safe-html issue.description}}</p>
                             <p>

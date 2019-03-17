@@ -70,7 +70,34 @@ export default Prometheus.extend({
             Logger.debug("AppProjectBoardController::openIssue");
             this.transitionToRoute('app.project.issue.page',{issue_number:issue.get('issueNumber')});
             Logger.debug("-AppProjectBoardController::openIssue");
+        },
+
+        /**
+         * This function is responsible for updating the status of an issue
+         *
+         * @method updateIssue
+         * @param {string} issueId The issue that needs to be updated
+         * @param {string} status The new status
+         * @param {string} milestoneId The milestone of the issue
+         * @public
+         */
+        updateIssue(issueId, status,milestoneId) {
+            let self = this;
+            Logger.debug('App.Controller.Project.Board.updateIssue');
+            Logger.debug(self);
+            Logger.debug(issueId);
+            Logger.debug(status);
+            Logger.debug(milestoneId);
+            let issue = self.get('milestones').findBy('id',milestoneId).get('issues').findBy('id',issueId);
+            if (issue !== undefined)
+            {
+                issue.set('status',status);
+                issue.save();
+            }
+            Logger.debug(issue);
+            Logger.debug('-App.Controller.Project.Board.updateIssue');
         }
+
     }
 
 });
