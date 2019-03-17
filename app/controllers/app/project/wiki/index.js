@@ -35,7 +35,7 @@ export default Prometheus.extend({
          * @public
          */
         create:function(){
-            let projectId = this.target.currentState.routerJs.state.params["app.project"].project_id;
+            let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
             this.transitionToRoute('app.project.wiki.create', {project_id:projectId});
         }
 

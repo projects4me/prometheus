@@ -34,7 +34,7 @@ export default IssueCreate.extend({
      * @protected
      */
     beforeSave(model){
-        model.set('projectId', this.target.currentState.routerJs.state.params["app.project"].project_id);
+        model.set('projectId', this.target.currentState.routerJsState.params["app.project"].project_id);
     },
 
     /**
@@ -46,7 +46,7 @@ export default IssueCreate.extend({
      * @protected
      */
     afterCancel(model){
-        let projectId = this.target.currentState.routerJs.state.params["app.project"].project_id;
+        let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
         this.transitionToRoute('app.project.issue.page', {
             project_id:projectId,
             issue_number:model.get('issueNumber')

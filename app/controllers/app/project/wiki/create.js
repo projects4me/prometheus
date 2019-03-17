@@ -99,7 +99,7 @@ export default Create.extend(ProjectRelated, {
      * @protected
      */
     afterCancel(){
-        let projectId = this.target.currentState.routerJs.state.params["app.project"].project_id;
+        let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
         this.transitionToRoute('app.project.wiki', {project_id:projectId});
     }
 

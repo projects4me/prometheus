@@ -209,7 +209,7 @@ export default CreateWiki.extend(ProjectRelated, {
      * @protected
      */
     afterCancel(model){
-        let projectId = this.target.currentState.routerJs.state.params["app.project"].project_id;
+        let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
         model.rollbackAttributes();
         this.transitionToRoute('app.project.wiki.page', {
             project_id:projectId,
