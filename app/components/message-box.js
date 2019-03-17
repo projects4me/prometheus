@@ -358,7 +358,7 @@ export default Component.extend({
         let self = this;
 
         // Add a listener for clearing the contents
-        self.get('_targetObject').on('clearContents', $.proxy(self.clearContents, self));
+        self.get('_target').on('clearContents', $.proxy(self.clearContents, self));
 
         // Setup the message box to load listen to the keyword @, # and :
         $('#'+this.elementId)

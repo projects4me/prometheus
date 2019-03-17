@@ -95,7 +95,7 @@ export default Create.extend(ProjectRelated, {
      * @param model
      */
     beforeSave(model){
-        model.set('projectId', this.target.currentState.routerJs.state.params["app.project"].project_id);
+        model.set('projectId', this.target.currentState.routerJsState.params["app.project"].project_id);
         model.set('reportedUser',this.get('currentUser.user.id'));
         model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
         model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
