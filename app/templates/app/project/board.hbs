@@ -1,5 +1,63 @@
 <section class="content">
   <div class="board row">
+
+    {{#each milestones as |milestone|}}
+      {{#if (or (eq milestone.status 'in_progress') (eq milestone.status 'planned'))}}
+        <div class="box">
+          <div class="box-header with-border">
+            <strong>{{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}</strong>
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </div>
+
+
+          <div class="box-body">
+
+            {{#each statuses as |status|}}
+
+              {{#draggable-object-target action=(action 'updateIssues') }}
+
+                <div class="lane col-md-2">
+                  <div class="box {{get-prop statusClass status}}">
+
+                    <div class="box-header with-border" data-field-status="{{status}}">
+                      {{t (concat "views.app.issue.lists.status." status)}}
+                    </div>
+
+                    <div class="box-body">
+
+                      {{#each milestone.issues as |issue|}}
+                        {{#if (eq issue.status status)}}
+                          {{#draggable-object content=issue}}
+                            <div class="item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}" >
+                              <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action "openIssue" issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
+                              <p>{{safe-html issue.description}}</p>
+                              <p>
+                                <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+                                <span><img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
+                              </p>
+                            </div>
+                          {{/draggable-object}}
+                        {{/if}}
+                      {{/each}}
+
+                    </div>
+                  </div>
+                </div>
+
+              {{/draggable-object-target}}
+            {{/each}}
+
+          </div>
+
+        </div>
+      {{/if}}
+
+    {{/each}}
+
     {{#task-lanes update=(action "updateIssue")}}
       {{!-- Display the active milestones --}}
       {{#each milestones as |milestone|}}

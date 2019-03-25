@@ -82,20 +82,28 @@ export default Prometheus.extend({
          * @public
          */
         updateIssue(issueId, status,milestoneId) {
-            let self = this;
+            let _self = this;
             Logger.debug('App.Controller.Project.Board.updateIssue');
-            Logger.debug(self);
+            Logger.debug(_self);
             Logger.debug(issueId);
             Logger.debug(status);
             Logger.debug(milestoneId);
-            let issue = self.get('milestones').findBy('id',milestoneId).get('issues').findBy('id',issueId);
+            let issues = _self.get('milestones').findBy('id',milestoneId).get('issues');
+            Logger.debug(issues);
+            let issue = issues.findBy('id',issueId);
             if (issue !== undefined)
             {
                 issue.set('status',status);
-                issue.save();
+                //issue.save();
             }
             Logger.debug(issue);
             Logger.debug('-App.Controller.Project.Board.updateIssue');
+        },
+        updateIssues(obj,ops){
+            Logger.debug(obj);
+            Logger.debug(ops);
+            let status = ops.event.target.parentElement.children[0].getAttribute('data-field-status');
+            obj.set('status',status);
         }
 
     }

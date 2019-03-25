@@ -23,18 +23,19 @@ export default Component.extend({
      * @protected
      */
     didInsertElement(){
-        let self = this;
+        let _self = this;
 
-        $('.board .lane .box-body').sortable({
-            placeholder         : 'sort-highlight',
-            connectWith         : '.board .lane .box-body',
-            //handle              : '.item',
-            forcePlaceholderSize: true,
-            zIndex              : 999999,
-            update: function(event,ui) {
-                self._update(event,ui);
-            }
-        });
+        // $('.board .lane .box-body').sortable({
+        //     placeholder         : 'sort-highlight',
+        //     connectWith         : '.board .lane .box-body',
+        //     //handle              : '.item',
+        //     forcePlaceholderSize: true,
+        //     zIndex              : 999999,
+        //     update: function(event,ui) {
+        //         _self._update(event,ui);
+        //         //$(ui.sender).sortable( "option", "revert", false );
+        //     }
+        // });
        // Ember.$('.board .lane .box-body .item').css('cursor', 'move');
     },
 
