@@ -54,7 +54,8 @@ export default App.extend({
                     milestone.get('status') === 'planned') {
                     let __issueOptions = {
                         query: '((Issue.milestoneId : '+milestone.get('id')+') AND (Issue.projectId : '+projectId+'))',
-                        rels: 'issuetype,assignedTo'
+                        rels: 'issuetype,assignedTo',
+                        limit: -1
                     };
 
                     Promises['milestone'+count] = _self.store.query('issue',__issueOptions);
@@ -64,7 +65,8 @@ export default App.extend({
 
             let _backlogOptions = {
                 query: '((Issue.projectId : '+projectId+') AND ((Issue.milestoneId EMPTY) OR (Issue.milestoneId NULL)))',
-                rels: 'issuetype,assignedTo'
+                rels: 'issuetype,assignedTo',
+                limit: -1
             };
 
             Promises['backlog'] = _self.store.query('issue',_backlogOptions);

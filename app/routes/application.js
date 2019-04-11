@@ -5,6 +5,7 @@
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
+import _ from 'lodash';
 
 /**
  * This is the application route, in EmberJs the application route is the main
@@ -66,9 +67,53 @@ export default Route.extend(ApplicationRouteMixin,{
     afterModel: function() {
         Logger.debug('ApplicationRoute::afterModel() -- setting the language to '+lang);
 
-        var lang = 'en';
+        let lang = 'en';
         this.set('i18n.locale',lang);
         this.get('session').set('data.locale', lang);
     },
+
+    /**
+     * Merge all params into one param.
+     *
+     * @param params
+     * @return {*}
+     * @private
+     */
+    _mergeParams(params) {
+        return _.merge({}, _.values(params));
+    },
+
+    /**
+     * These are the actions handled by the application route
+     *
+     * @property actions
+     * @type Object
+     * @for Application
+     * @public
+     */
+    actions: {
+
+        /**
+         * This is the function that is called whenever the application
+         * @param transition
+         */
+        willTransition(transition) {
+            transition.then(() => {
+                let params = this._mergeParams(transition.params);
+                let url;
+
+                // generate doesn't like empty params.
+                if (_.isEmpty(params)) {
+                    url = transition.router.generate(transition.targetName);
+                } else {
+                    url = transition.router.generate(transition.targetName, params);
+                }
+                // Do not save the url of the transition to login route.
+                if (!url.includes('login')) {
+                    this.set('session.previousRouteName', url);
+                }
+            });
+        }
+    }
 
 });

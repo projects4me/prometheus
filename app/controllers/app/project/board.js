@@ -76,34 +76,27 @@ export default Prometheus.extend({
          * This function is responsible for updating the status of an issue
          *
          * @method updateIssue
-         * @param {string} issueId The issue that needs to be updated
-         * @param {string} status The new status
-         * @param {string} milestoneId The milestone of the issue
+         * @param {string} issue The issue that needs to be updated
+         * @param {string} el The element
          * @public
          */
-        updateIssue(issueId, status,milestoneId) {
+        updateIssue(issue,el){
+            Logger.debug("AppProjectBoardController::updateIssue");
             let _self = this;
-            Logger.debug('App.Controller.Project.Board.updateIssue');
-            Logger.debug(_self);
-            Logger.debug(issueId);
-            Logger.debug(status);
-            Logger.debug(milestoneId);
-            let issues = _self.get('milestones').findBy('id',milestoneId).get('issues');
-            Logger.debug(issues);
-            let issue = issues.findBy('id',issueId);
-            if (issue !== undefined)
-            {
-                issue.set('status',status);
-                //issue.save();
-            }
-            Logger.debug(issue);
-            Logger.debug('-App.Controller.Project.Board.updateIssue');
-        },
-        updateIssues(obj,ops){
-            Logger.debug(obj);
-            Logger.debug(ops);
-            let status = ops.event.target.parentElement.children[0].getAttribute('data-field-status');
-            obj.set('status',status);
+
+            Logger.debug('The issue received is', issue);
+            Logger.debug('The element that was dragged is',el);
+
+            // Update the status in the card
+            let status = el.event.target.parentElement.children[0].getAttribute('data-field-status');
+            issue.set('status',status);
+
+            // We have to save the milestones which contains the card we are updaing for some weird reason
+            let milestones = _self.get('milestones');
+            issue.save();
+            milestones.save();
+
+            Logger.debug("AppProjectBoardController::updateIssue");
         }
 
     }

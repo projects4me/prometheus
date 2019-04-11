@@ -215,7 +215,6 @@ export default Component.extend({
      */
     layoutName: computed('type', 'model', function() {
         let type = this.get('type');
-        //var edit = this.get('edit');
 
         let template = 'components/form-fields/'+type;
         let container;

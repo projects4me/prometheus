@@ -78,7 +78,7 @@ export default Route.extend(AuthenticatedRouteMixin,{
     },
 
     /**
-     * This function catchs any issue thrown by the _loadCurrentUser function and
+     * This function catches any issue thrown by the _loadCurrentUser function and
      * invalidates the session
      *
      * @method sessionAuthenticated
@@ -87,6 +87,11 @@ export default Route.extend(AuthenticatedRouteMixin,{
     sessionAuthenticated() {
         this._super(...arguments);
         this.loadCurrentUser().catch(() => this.get('session').invalidate());
+        if (this.get('session.previousRouteName')) {
+            this.transitionTo(this.get('session.previousRouteName'));
+        } else {
+            this._super(...arguments);
+        }
     },
 
 
