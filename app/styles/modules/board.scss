@@ -28,7 +28,12 @@
         border-top: 0.1rem solid #CCC;
         border-bottom: 0.1rem solid #CCC;
 
-        img {
+        p > img {
+          width: 10rem !important;
+          height: 10rem !important;
+        }
+
+        .img-circle {
           width:4rem;
           right:0;
           position: absolute;
