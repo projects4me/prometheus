@@ -6,6 +6,7 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
 import { hash } from 'rsvp';
+import ResetScrollPositionMixin from 'prometheus/mixins/reset-scroll-position';
 
 /**
  * This is the app route, the app route is used
@@ -16,7 +17,7 @@ import { hash } from 'rsvp';
  * @uses AuthenticatedRouteMixin
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Route.extend(AuthenticatedRouteMixin,{
+export default Route.extend(AuthenticatedRouteMixin,ResetScrollPositionMixin, {
 
     /**
      * The i18n library service that is used in order to get the translations
@@ -236,5 +237,7 @@ export default Route.extend(AuthenticatedRouteMixin,{
         controller.set('users',users);
 
         Logger.debug('-Prometheus.App.Route->loadUsers');
-    }
+    },
+
+
 });
