@@ -28,6 +28,11 @@
         border-top: 0.1rem solid #CCC;
         border-bottom: 0.1rem solid #CCC;
 
+        .description {
+          word-wrap: break-word;
+          margin-bottom: 2rem;
+        }
+
         p > img {
           width: 10rem !important;
           height: 10rem !important;
