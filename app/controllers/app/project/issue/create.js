@@ -50,7 +50,7 @@ export default Create.extend(ProjectRelated, {
      * @public
      */
     milestoneList: computed('project', function(){
-        return format.getSelectList(this.get('project.milestones'));
+        return milestoneList = format.getSelectList(this.get('project.milestones'), false, this.get('i18n').t('global.blank'));
     }),
 
     /**
