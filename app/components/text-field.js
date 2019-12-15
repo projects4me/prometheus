@@ -31,4 +31,14 @@ export default TextField.extend({
      */
     classNames:['form-control','input-sm','data-input'],
 
+    /**
+     * We are allowing certain attributes across the board
+     *
+     * @property attributeBindings
+     * @type Array
+     * @for TextField
+     * @private
+     */
+    attributeBindings:['data-input']
+    
 });

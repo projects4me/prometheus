@@ -6,14 +6,16 @@
         <div class="box">
           <div class="box-header with-border">
             <strong>{{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}</strong>
-            <div class="box-tools pull-right">
+            <div class="box-tools pull-right filters">
               {{text-field
                   key-up="filterIssues"
                   insert-newline="filterIssues"
                   value=query
-                  data-input=milestone.status
+                  data-input=milestone.id
                   name="query"
                   placeholder=(concat (t "global.form.search") " " (t "global.module.plural.issue") " ..")}}
+            </div>
+            <div class="box-tools pull-right">
               <button type="button" class="btn btn-box-tool" data-widget="collapse">
                 <i class="fa fa-minus"></i>
               </button>
