@@ -19,6 +19,7 @@ import ResetScrollPositionMixin from 'prometheus/mixins/reset-scroll-position';
  */
 export default Route.extend(AuthenticatedRouteMixin,ResetScrollPositionMixin, {
 
+    authenticationRoute: 'signin',
     /**
      * The i18n library service that is used in order to get the translations
      *
@@ -88,11 +89,6 @@ export default Route.extend(AuthenticatedRouteMixin,ResetScrollPositionMixin, {
     sessionAuthenticated() {
         this._super(...arguments);
         this.loadCurrentUser().catch(() => this.get('session').invalidate());
-        if (this.get('session.previousRouteName')) {
-            this.transitionTo(this.get('session.previousRouteName'));
-        } else {
-            this._super(...arguments);
-        }
     },
 
 

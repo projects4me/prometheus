@@ -18,7 +18,8 @@ import _ from 'lodash';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default Route.extend(ApplicationRouteMixin,{
-
+    
+    routeAfterAuthentication: 'app',
     /**
      * The i18n library service that is used in order to get the translations
      *
@@ -70,50 +71,5 @@ export default Route.extend(ApplicationRouteMixin,{
         let lang = 'en';
         this.set('i18n.locale',lang);
         this.get('session').set('data.locale', lang);
-    },
-
-    /**
-     * Merge all params into one param.
-     *
-     * @param params
-     * @return {*}
-     * @private
-     */
-    _mergeParams(params) {
-        return _.merge({}, _.values(params));
-    },
-
-    /**
-     * These are the actions handled by the application route
-     *
-     * @property actions
-     * @type Object
-     * @for Application
-     * @public
-     */
-    actions: {
-
-        /**
-         * This is the function that is called whenever the application
-         * @param transition
-         */
-        willTransition(transition) {
-            transition.then(() => {
-                let params = this._mergeParams(transition.params);
-                let url;
-
-                // generate doesn't like empty params.
-                if (_.isEmpty(params)) {
-                    url = transition.router.generate(transition.targetName);
-                } else {
-                    url = transition.router.generate(transition.targetName, params);
-                }
-                // Do not save the url of the transition to login route.
-                if (!url.includes('login')) {
-                    this.set('session.previousRouteName', url);
-                }
-            });
-        }
     }
-
 });

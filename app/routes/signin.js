@@ -15,4 +15,6 @@ import Route from '@ember/routing/route';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default Route.extend(UnauthenticatedRouteMixin,{
+
+    routeIfAlreadyAuthenticated: 'app'
 });

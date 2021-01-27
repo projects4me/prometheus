@@ -92,12 +92,6 @@ module.exports = function(environment) {
     //
     // }
 
-    ENV['ember-simple-auth'] = {
-        authenticationRoute: 'signin',
-        routeAfterAuthentication: 'app',
-        routeIfAlreadyAuthenticated: 'app'
-    };
-
     ENV.i18n = {
         defaultLocale: 'en'
     };
