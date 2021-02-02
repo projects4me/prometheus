@@ -44,7 +44,7 @@ export default IssueCreate.extend({
      * @param model
      */
     getSuccessMessage(model){
-        return this.get('i18n').t('views.app.issue.updated',{
+        return this.i18n.t('views.app.issue.updated',{
             name:model.get('subject'),
             issue_number:model.get('issueNumber')
         });

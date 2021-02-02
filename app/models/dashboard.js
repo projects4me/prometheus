@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -24,7 +24,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * The identifier of the user to whom this dashboard
@@ -35,7 +35,7 @@ export default DS.Model.extend(Validations, {
      * @for Dashboard
      * @private
      */
-    userId: DS.attr('string'),
+    userId: attr('string'),
 
     /**
      * The identifier of the user to whom this dashboard
@@ -46,7 +46,7 @@ export default DS.Model.extend(Validations, {
      * @for Dashboard
      * @private
      */
-    name: DS.attr('string'),
+    name: attr('string'),
 
     /**
      * The identifier of the user to whom this dashboard
@@ -57,7 +57,7 @@ export default DS.Model.extend(Validations, {
      * @for Dashboard
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * The identifier of the user to whom this dashboard
@@ -68,7 +68,7 @@ export default DS.Model.extend(Validations, {
      * @for Dashboard
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * The identifier of the user to whom this dashboard
@@ -79,7 +79,7 @@ export default DS.Model.extend(Validations, {
      * @for Dashboard
      * @private
      */
-    widgets: DS.attr('string'),
+    widgets: attr('string'),
 
     /**
      * Has this model been deleted
@@ -89,5 +89,5 @@ export default DS.Model.extend(Validations, {
      * @for Dashboard
      * @private
      */
-    deleted: DS.attr('string')
+    deleted: attr('string')
 });

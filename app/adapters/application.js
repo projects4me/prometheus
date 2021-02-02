@@ -2,12 +2,11 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import JSONAPIAdapter from '@ember-data/adapter/json-api';
 import ENV from "prometheus/config/environment";
-import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 import { singularize } from 'ember-inflector';
 import { inject as service } from '@ember/service';
-import { computed } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 /**
  * This is the application adapter that fetches the information from the API.
@@ -20,12 +19,21 @@ import { computed } from '@ember/object';
  * @todo retrieve the host name from the configurations.
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class ApplicationAdapter extends DS.JSONAPIAdapter.extend(DataAdapterMixin) {
-    namespace='api/v'+ENV.api.version;
-    host= ENV.api.host;
+export default class ApplicationAdapter extends JSONAPIAdapter {
+    @tracked namespace='api/v'+ENV.api.version;
+    @tracked host= ENV.api.host;
+
+  /**
+   * The session service which is offered by ember-simple-auth that will be used
+   * in order to verify whether the used is authenticated
+   *
+   * @property session
+   * @type Object
+   * @for Application
+   * @public
+   */
     @service session;
 
-    @computed('session.data.authenticated.access_token')
     get headers() {
       const headers = {};
       if (this.session.isAuthenticated) {

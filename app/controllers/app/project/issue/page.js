@@ -5,7 +5,6 @@
 import Prometheus from "prometheus/controllers/prometheus";
 import { task } from 'ember-concurrency';
 import { inject as injectController } from '@ember/controller';
-import { get } from '@ember/object';
 import { set } from '@ember/object';
 import $ from 'jquery';
 import { computed } from '@ember/object';
@@ -111,7 +110,7 @@ export default Prometheus.extend(Evented,{
      * @private
      */
     usersList: computed(function(){
-        return this.get('projectController').get('usersList');
+        return this.projectController.get('usersList');
     }),
 
     /**
@@ -124,7 +123,7 @@ export default Prometheus.extend(Evented,{
      * @private
      */
     issuesList: computed('projectController.issuesList', function(){
-        return this.get('projectController').get('issuesList');
+        return this.projectController.get('issuesList');
     }),
 
     /**
@@ -294,7 +293,7 @@ export default Prometheus.extend(Evented,{
          */
         uploadFile:function(file){
             Logger.debug("Uploading a file");
-            get(this, 'handleUpload').perform(file);
+            this.handleUpload.perform(file);
         },
 
         /**
@@ -362,7 +361,7 @@ export default Prometheus.extend(Evented,{
                 download: true
             };
             Logger.debug('Retrieving upload with options '+options);
-            this.get('store').query('upload',options).then(function(data){
+            this.store.query('upload',options).then(function(data){
                 let downloadLink = data.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 

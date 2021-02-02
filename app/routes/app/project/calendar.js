@@ -60,7 +60,7 @@ export default App.extend({
 
         self.loadIssues(params.project_id);
 
-        let i18n = this.get('i18n');
+        let i18n = this.i18n;
 
         // Set the values in the controller
         controller.set('i18n',i18n);

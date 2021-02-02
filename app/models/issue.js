@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr,belongsTo,hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -29,7 +29,7 @@ const Validations = buildValidations({
  * @module Issue
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * Subject of the issue
@@ -39,7 +39,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    subject: DS.attr('string'),
+    subject: attr('string'),
 
     /**
      * Date on which the issue was created
@@ -49,7 +49,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * Date on which the issue was last modified
@@ -59,7 +59,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * Soft deletion flag
@@ -69,7 +69,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    deleted: DS.attr('string'),
+    deleted: attr('string'),
 
     /**
      * Description of the issue
@@ -79,7 +79,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    description: DS.attr('string'),
+    description: attr('string'),
 
     /**
      * Identifier of the create who created the issue
@@ -89,7 +89,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The identifier of the user who is designated as the owner of the issue
@@ -99,7 +99,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    owner: DS.attr('string'),
+    owner: attr('string'),
 
     /**
      * The identifier of the user who is currently the assignee of the issue
@@ -109,7 +109,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    assignee: DS.attr('string'),
+    assignee: attr('string'),
 
     /**
      * The identifier of the user who reported the issue
@@ -119,7 +119,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    reportedUser: DS.attr('string'),
+    reportedUser: attr('string'),
 
     /**
      * The identifier of the user who last modified the issue
@@ -129,7 +129,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     /**
      * The number of the issue
@@ -139,7 +139,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    issueNumber: DS.attr('string'),
+    issueNumber: attr('string'),
 
     /**
      * The end data set for the issue
@@ -149,7 +149,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    endDate: DS.attr('string'),
+    endDate: attr('string'),
 
     /**
      * The date on which the issue is set to start
@@ -159,7 +159,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    startDate: DS.attr('string'),
+    startDate: attr('string'),
 
     /**
      * Status of the issue
@@ -169,7 +169,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    status: DS.attr('string', { defaultValue: 'new' }),
+    status: attr('string', { defaultValue: 'new' }),
 
     /**
      * Priority of the issue
@@ -179,7 +179,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    priority: DS.attr('string', { defaultValue: 'medium' }),
+    priority: attr('string', { defaultValue: 'medium' }),
 
     /**
      * The identifier of the project the issue belongs to
@@ -189,7 +189,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    projectId: DS.attr('string'),
+    projectId: attr('string'),
 
     /**
      * The identifier of the conversation room for this issue
@@ -199,7 +199,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    conversationRoomId: DS.attr('string'),
+    conversationRoomId: attr('string'),
 
     /**
      * The identifier of the milestone this issue is set for
@@ -209,7 +209,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    milestoneId: DS.attr('string'),
+    milestoneId: attr('string'),
 
     /**
      * The identifier of the parent of the issue
@@ -219,7 +219,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    parentId: DS.attr('string'),
+    parentId: attr('string'),
 
     /**
      * The identifier of the type this issue belongs to
@@ -229,7 +229,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    typeId: DS.attr('string'),
+    typeId: attr('string'),
 
     /**
      * The user to whom this issue is currently assigned to
@@ -239,7 +239,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    assignedTo: DS.belongsTo('user'),
+    assignedTo: belongsTo('user'),
 
     /**
      * The user who created this issue
@@ -249,7 +249,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    createdBy: DS.belongsTo('user'),
+    createdBy: belongsTo('user'),
 
     /**
      * The user who last modified this issue
@@ -259,7 +259,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    modifiedBy: DS.belongsTo('user'),
+    modifiedBy: belongsTo('user'),
 
     /**
      * The user who is responsible for this issue
@@ -269,7 +269,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    ownedBy: DS.belongsTo('user'),
+    ownedBy: belongsTo('user'),
 
     /**
      * The user who reported this issue
@@ -279,7 +279,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    reportedBy: DS.belongsTo('user'),
+    reportedBy: belongsTo('user'),
 
     /**
      * The project which this issues belongs to
@@ -289,7 +289,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    project: DS.belongsTo('project'),
+    project: belongsTo('project'),
 
     /**
      * The milestone which this issue belongs to
@@ -299,7 +299,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    milestone: DS.belongsTo('milestone'),
+    milestone: belongsTo('milestone'),
 
     /**
      * The parent issue of this issue
@@ -309,7 +309,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    parentissue: DS.belongsTo('issue',{inverse:null}),
+    parentissue: belongsTo('issue',{inverse:null}),
 
     /**
      * The type of the issue
@@ -319,7 +319,7 @@ export default DS.Model.extend(Validations, {
      * @for IssueModel
      * @private
      */
-    issuetype: DS.belongsTo('issuetype'),
+    issuetype: belongsTo('issuetype'),
 
     /**
      * The estimated time on the issue
@@ -329,7 +329,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    estimated: DS.hasMany('timelog'),
+    estimated: hasMany('timelog'),
 
     /**
      * The spent time on the issue
@@ -339,7 +339,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    spent: DS.hasMany('timelog'),
+    spent: hasMany('timelog'),
 
     /**
      * The child issues of this issue
@@ -349,7 +349,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    childissues: DS.hasMany('issue',{inverse:null}),
+    childissues: hasMany('issue',{inverse:null}),
 
     /**
      * The comments made on this issue
@@ -359,7 +359,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    comments: DS.hasMany('comment'),
+    comments: hasMany('comment'),
 
     /**
      * The child issues of this issue
@@ -369,7 +369,7 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    activities: DS.hasMany('activity'),
+    activities: hasMany('activity'),
 
     /**
      * The files uploaded against the issue
@@ -379,5 +379,5 @@ export default DS.Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    files: DS.hasMany('upload'),
+    files: hasMany('upload'),
 });

@@ -35,7 +35,7 @@ export default Page.extend({
 
     setupController(controller){
         this._super(controller);
-        let newTag = this.get('store').createRecord('tag',{});
+        let newTag = this.store.createRecord('tag',{});
         controller.set('newTag', newTag);
     },
 

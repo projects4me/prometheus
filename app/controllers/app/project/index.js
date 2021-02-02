@@ -83,7 +83,7 @@ export default Prometheus.extend({
      * @private
      */
     rolesList: computed(function(){
-        return this.get('appController.rolesList');
+        return this.appController.rolesList;
     }),
 
     /**
@@ -142,7 +142,7 @@ export default Prometheus.extend({
          */
         navigateToProjectPage(entity,query){
             Logger.debug("AppProjectIndexController::navigateToProjectPage("+entity+","+query+")");
-            this.transitionToRoute('app.project.'+entity,{project_id:this.get('projectId')});
+            this.transitionToRoute('app.project.'+entity,{project_id:this.projectId});
         },
 
         /**
@@ -156,7 +156,7 @@ export default Prometheus.extend({
          */
         navigateToIssuePage(issueNumber){
             Logger.debug("AppProjectIndexController::navigateToIssuePage("+issueNumber+")");
-            this.transitionToRoute('app.project.issue.page',{project_id:this.get('projectId'), issue_number:issueNumber});
+            this.transitionToRoute('app.project.issue.page',{project_id:this.projectId, issue_number:issueNumber});
         },
 
         /**
@@ -287,8 +287,8 @@ export default Prometheus.extend({
          */
         milestoneStartDateChanged(date) {
             Logger.debug('Prometheus.Controllers.Project.Index::startDateChanged('+date+')');
-            if (this.get('newMilestone') !== undefined) {
-                this.get('newMilestone').set('startDate', date);
+            if (this.newMilestone !== undefined) {
+                this.newMilestone.set('startDate', date);
             }
             Logger.debug('Prometheus.Controllers.Project.Index::startDateChanged');
         },
@@ -302,8 +302,8 @@ export default Prometheus.extend({
          */
         milestoneEndDateChanged(date) {
             Logger.debug('Prometheus.Controllers.Projects.Index::endDateChanged('+date+')');
-            if (this.get('newMilestone') !== undefined) {
-                this.get('newMilestone').set('endDate', date);
+            if (this.newMilestone !== undefined) {
+                this.newMilestone.set('endDate', date);
             }
             Logger.debug('Prometheus.Controllers.Projects.Index::endDateChanged');
         },

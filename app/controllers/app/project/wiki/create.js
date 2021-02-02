@@ -52,7 +52,7 @@ export default Create.extend(ProjectRelated, {
      * @private
      */
     usersList: computed('appController.usersList', function(){
-        return this.get('appController').get('usersList');
+        return this.appController.get('usersList');
     }),
 
     /**
@@ -62,7 +62,7 @@ export default Create.extend(ProjectRelated, {
      * @param model
      */
     getSuccessMessage(model){
-        return this.get('i18n').t('views.app.wiki.created',{
+        return this.get.i18n.t('views.app.wiki.created',{
             name:model.get('name')
         });
     },

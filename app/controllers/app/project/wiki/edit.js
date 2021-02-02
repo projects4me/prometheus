@@ -61,7 +61,7 @@ export default CreateWiki.extend(ProjectRelated, {
             let _self = this;
 
             // If a tag was removed then remove it
-            let removedTag = _.difference(this.get('selectedTags'),e);
+            let removedTag = _.difference(this.selectedTags,e);
 
             if (removedTag[0] !== undefined)
             {
@@ -69,7 +69,7 @@ export default CreateWiki.extend(ProjectRelated, {
             }
 
             // If a tag was selected then associate it with the wiki
-            let selectedTag = _.difference(e,this.get('selectedTags'));
+            let selectedTag = _.difference(e,this.selectedTags);
             if (selectedTag[0] !== undefined)
             {
                 // Save the relationship and then show the message to the user
@@ -99,7 +99,7 @@ export default CreateWiki.extend(ProjectRelated, {
             Logger.debug('AppProjectWikiEditController:addTag');
 
             let _self = this;
-            let selectedTags = this.get('selectedTags');
+            let selectedTags = this.selectedTags;
 
             // Initialize the tag record
             let newTag = _self.get('newTag');

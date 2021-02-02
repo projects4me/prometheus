@@ -38,18 +38,23 @@ export default Controller.extend({
 
         /**
          * This function invalidates the session which effectively logs the user out
-         * of the application
+         * of the application and if user is authenticated then we'll route user to
+         * "app" route
          *
          * @method authenticate
          * @public
          */
-        authenticate() {
+        async authenticate() {
             let { username, password } = this.getProperties('username', 'password');
-            this.get('session').authenticate('authenticator:oauth2', username, password).catch((reason) => {
-                this.set('errorMessage', reason.error || reason);
+            let _self = this;
+            
+            await this.session.authenticate('authenticator:oauth2', username, password).then(() => {
+                if(_self.session.isAuthenticated) {
+                    _self.session.handleAuthentication('app');
+                }
             });
         }
-
+ 
     }
 
 });

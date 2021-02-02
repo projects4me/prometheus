@@ -78,7 +78,7 @@ export default App.extend({
             controller.set('model',data.toArray());
         });
 
-        let newConversation = this.get('store').createRecord('conversationroom',{});
+        let newConversation = this.store.createRecord('conversationroom',{});
         controller.set('newConversation',newConversation);
 
         // Set the data in the controller so that any data bound in the view can get re-rendered

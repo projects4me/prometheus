@@ -29,7 +29,7 @@ export default Component.extend({
         this.metaData = MD.create().getViewMeta('Navigation','items');
         Logger.debug(this.metaData);
         this.appPrefix = ENV.api.prefix;
-        this.pathname = this.get('router.location.location.pathname');
+        this.pathname = this.router.location.location.pathname;
     },
 
     /**
@@ -84,10 +84,10 @@ export default Component.extend({
             }
             this.set('pathname','/'+this.appPrefix+'/'+anchorRoute);
             if (routeParams !== undefined && routeParams !== null && routeParams !== ''){
-                this.get('router').transitionTo(route,routeParams);
+                this.router.transitionTo(route,routeParams);
             }
             else {
-                this.get('router').transitionTo(route);
+                this.router.transitionTo(route);
             }
         },
 
@@ -101,7 +101,7 @@ export default Component.extend({
         projectChanged:function(project){
             this.set('projectId',project.value);
             if (project.value !== undefined && project.value !== null && project.value !== ''){
-                this.get('router').transitionTo('app.project',{project_id:project.value});
+                this.router.transitionTo('app.project',{project_id:project.value});
             }
         }
     }

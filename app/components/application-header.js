@@ -3,7 +3,6 @@
  */
 
 import Component from '@ember/component';
-import { get } from '@ember/object';
 import { inject } from '@ember/service';
 import RSVP from 'rsvp';
 import format from "prometheus/utils/data/format";
@@ -71,7 +70,7 @@ export default Component.extend({
             query: '((Issue.issueNumber CONTAINS '+query+') OR (Issue.subject CONTAINS '+query+') OR (Issue.description CONTAINS '+query+'))',
             rels: 'ownedBy,assignedTo,milestone,project,createdBy,modifiedBy,reportedBy,issuetype',
             limit: 5,
-            page: this.get('page'),
+            page: this.page,
         };
 
         return new RSVP.Promise((resolve) => {
@@ -125,7 +124,7 @@ export default Component.extend({
             _self.set('selected', item);
             if (item !== null && typeof this.searchedItem === 'function')
             {
-                get(this, 'searchedItem')(item);
+                this.searchedItem(item);
             }
 
         },
@@ -141,7 +140,7 @@ export default Component.extend({
 
             if (typeof this.invalidateSession === 'function')
             {
-                get(this, 'invalidateSession')();
+                this.invalidateSession();
             }
 
         },
@@ -157,7 +156,7 @@ export default Component.extend({
 
             if (typeof this.userProfile === 'function')
             {
-                get(this, 'userProfile')();
+                this.userProfile();
             }
 
         },

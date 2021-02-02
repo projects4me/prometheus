@@ -2,11 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
 import { hash } from 'rsvp';
-import ResetScrollPositionMixin from 'prometheus/mixins/reset-scroll-position';
 
 /**
  * This is the app route, the app route is used
@@ -17,8 +15,19 @@ import ResetScrollPositionMixin from 'prometheus/mixins/reset-scroll-position';
  * @uses AuthenticatedRouteMixin
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Route.extend(AuthenticatedRouteMixin,ResetScrollPositionMixin, {
+export default Route.extend({
 
+    /**
+     * The session service which is offered by ember-simple-auth that will be used
+     * in order to verify whether the used is authenticated
+     *
+     * @property session
+     * @type Object
+     * @for Application
+     * @public
+     */
+    session: inject(),
+    
     authenticationRoute: 'signin',
     /**
      * The i18n library service that is used in order to get the translations
@@ -46,7 +55,8 @@ export default Route.extend(AuthenticatedRouteMixin,ResetScrollPositionMixin, {
      * @method beforeModel
      * @public
      */
-    beforeModel() {
+    beforeModel(transition) {
+        this.session.requireAuthentication(transition, this.authenticationRoute);
         return this.loadCurrentUser();
     },
 
@@ -88,7 +98,7 @@ export default Route.extend(AuthenticatedRouteMixin,ResetScrollPositionMixin, {
      */
     sessionAuthenticated() {
         this._super(...arguments);
-        this.loadCurrentUser().catch(() => this.get('session').invalidate());
+        this.loadCurrentUser().catch(() => this.session.invalidate());
     },
 
 
@@ -101,7 +111,7 @@ export default Route.extend(AuthenticatedRouteMixin,ResetScrollPositionMixin, {
      * @private
      */
     loadCurrentUser() {
-        return this.get('currentUser').loadUser();
+        return this.currentUser.loadUser();
     },
 
     /**
@@ -118,8 +128,8 @@ export default Route.extend(AuthenticatedRouteMixin,ResetScrollPositionMixin, {
 
         let _self = this;
 
-        controller.set('roles',this.get('roles'));
-        controller.set('users',this.get('users'));
+        controller.set('roles',this.roles);
+        controller.set('users',this.users);
 
         // Load the required data
         _self._loadProjects(controller);

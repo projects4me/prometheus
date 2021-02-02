@@ -36,7 +36,7 @@ export default Component.extend({
     classNames: ['attachment-icon'],
 
     attachmentIcon: computed(function() {
-        let mime =this.get('mime');
+        let mime =this.mime;
         let mime_parts = mime.split('/');
 
         let HTML = '';

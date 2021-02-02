@@ -37,7 +37,7 @@ export default Mixin.create({
      * @private
      */
     issuesList: computed('projectController.issuesList', function(){
-        return this.get('projectController').get('issuesList');
+        return this.projectController.get('issuesList');
     }),
 
     /**
@@ -50,7 +50,7 @@ export default Mixin.create({
      * @private
      */
     membersList: computed('projectController.membersList', function(){
-        return this.get('projectController').get('membersList');
+        return this.projectController.get('membersList');
     }),
 
 });

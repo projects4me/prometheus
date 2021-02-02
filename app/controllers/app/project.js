@@ -54,10 +54,10 @@ export default Prometheus.extend({
             status:'status',
             projectId:'projectId'
         };
-        let issueList = format.getSelectList(this.get('issues'), map);
+        let issueList = format.getSelectList(this.issues, map);
         issueList.unshift({
             id:'',
-            name:this.get('i18n').t('global.blank'),
+            name:this.i18n.t('global.blank'),
             number:'',
             status:'',
             projectId:''
@@ -74,7 +74,7 @@ export default Prometheus.extend({
      * @public
      */
     membersList: computed('projectId', 'members', function(){
-        return format.getSelectList(this.get('members'));
+        return format.getSelectList(this.members);
     }),
 
     /**

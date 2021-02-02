@@ -53,7 +53,7 @@ export default Component.extend({
      * @private
      */
     getClassNames: computed('priority', function() {
-        let priority =this.get('priority');
+        let priority =this.priority;
         let className = '';
 
         switch (priority) {

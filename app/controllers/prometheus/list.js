@@ -127,7 +127,7 @@ export default Prometheus.extend({
      * @public
      */
     projectId : computed('appProjectController.projectId', function () {
-        return this.get('appProjectController.projectId');
+        return this.appProjectController.projectId;
     }),
 
     /**
@@ -164,8 +164,8 @@ export default Prometheus.extend({
             Logger.debug('Prometheus.Controllers.List::sortData('+field+')');
 
             // If the current field is being sorted then toggle it
-            if (field === this.get('sort')) {
-                if (this.get('order') === 'desc') {
+            if (field === this.sort) {
+                if (this.order === 'desc') {
                     this.set('order','asc');
                 } else {
                     this.set('order','desc');
@@ -193,7 +193,7 @@ export default Prometheus.extend({
          */
         reloadPage(){
             Logger.debug('Prometheus.Controllers.List::reloadPage');
-            this.set('query',this.get('query')+' ');
+            this.set('query',this.query+' ');
             Logger.debug('-Prometheus.Controllers.List::reloadPage');
         },
 

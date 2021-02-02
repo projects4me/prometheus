@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr,belongsTo } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -26,7 +26,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * The date on which the activity was created
@@ -36,7 +36,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    dateCreated: DS.attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}),
+    dateCreated: attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}),
 
     /**
      * The description of the activity
@@ -46,7 +46,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    description: DS.attr('string'),
+    description: attr('string'),
 
     /**
      * The identifier of the user who created the activity
@@ -56,7 +56,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The name of the entity the activity is related to
@@ -66,7 +66,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    relatedTo: DS.attr('string'),
+    relatedTo: attr('string'),
 
     /**
      * The identifier of the activity
@@ -76,7 +76,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    relatedId: DS.attr('string'),
+    relatedId: attr('string'),
 
     /**
      * The type of the activity, the type is used to determine the layout of the
@@ -87,7 +87,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    type: DS.attr('string'),
+    type: attr('string'),
 
     /**
      * Has this record been deleted?
@@ -97,7 +97,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    deleted: DS.attr('string'),
+    deleted: attr('string'),
 
     /**
      * The name of the user who created the activity
@@ -107,7 +107,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    createdUserName: DS.attr('string'),
+    createdUserName: attr('string'),
 
     /**
      * If the type of activity is related when this field tells us the type of
@@ -118,7 +118,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    relatedActivity: DS.attr('string'),
+    relatedActivity: attr('string'),
 
     /**
      * The identifier of related entity that created the activity
@@ -128,7 +128,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    relatedActivityId: DS.attr('string'),
+    relatedActivityId: attr('string'),
 
     /**
      * If the type of activity is related when this field tells us the type of
@@ -139,7 +139,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    relatedActivityModule: DS.attr('string'),
+    relatedActivityModule: attr('string'),
 
     /**
      * The object of the user who created te activity
@@ -149,7 +149,7 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    createdBy : DS.belongsTo('user'),
+    createdBy : belongsTo('user'),
 
     /**
      * The project the activity is related to
@@ -159,6 +159,6 @@ export default DS.Model.extend(Validations, {
      * @for Activity
      * @private
      */
-    project : DS.belongsTo('project'),
+    project : belongsTo('project'),
 
 });

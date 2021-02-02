@@ -105,7 +105,7 @@ export default Prometheus.extend(Evented,{
             }
             let _self = this;
 
-            let comment = this.get('store').createRecord('comment', {
+            let comment = this.store.createRecord('comment', {
                 relatedId: relatedId,
                 relatedTo: 'conversationrooms',
                 comment: contents,
@@ -143,7 +143,7 @@ export default Prometheus.extend(Evented,{
             }
 
             let _self = this;
-            let comment = this.get('store').createRecord('comment', {
+            let comment = this.store.createRecord('comment', {
                 relatedId: relatedId,
                 relatedTo: 'conversationrooms',
                 comment: vote,
@@ -176,7 +176,7 @@ export default Prometheus.extend(Evented,{
             Logger.debug("AppProjectConversationController:upvote("+conversationId+")");
 
             let _self = this;
-            let vote = this.get('store').createRecord('vote',{
+            let vote = this.store.createRecord('vote',{
                 vote: 1,
                 relatedTo:'conversationrooms',
                 relatedId:conversationId
@@ -207,7 +207,7 @@ export default Prometheus.extend(Evented,{
 
             let _self = this;
 
-            let newConversation = this.get('newConversation');
+            let newConversation = this.newConversation;
             newConversation.set('projectId',_self.get('projectId'));
 
             newConversation.validate()
@@ -254,7 +254,7 @@ export default Prometheus.extend(Evented,{
         selectNewType(target)
         {
             Logger.debug('App.Project.Conversation.Create:selectNewType');
-            let newConversation = this.get('newConversation');
+            let newConversation = this.newConversation;
             newConversation.set('roomType',target.value);
             Logger.debug('-App.Project.Conversation.Create:selectNewType');
         },

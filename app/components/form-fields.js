@@ -120,9 +120,9 @@ export default Component.extend({
      * @private
      */
     isChanged: computed('value', 'oldValue', function() {
-        Logger.debug(this.get('value'));
-        Logger.debug(this.get('oldValue'));
-        return (this.get('value') !== this.get('oldValue'));
+        Logger.debug(this.value);
+        Logger.debug(this.oldValue);
+        return (this.value !== this.oldValue);
     }),
 
     /**
@@ -214,7 +214,7 @@ export default Component.extend({
      * @private
      */
     layoutName: computed('type', 'model', function() {
-        let type = this.get('type');
+        let type = this.type;
 
         let template = 'components/form-fields/'+type;
         let container;
@@ -253,9 +253,9 @@ export default Component.extend({
      */
     setEmpty(){
         let isEmpty = false;
-        const value = this.get('value');
+        const value = this.value;
 
-        if (this.get('oldValue') === null) {
+        if (this.oldValue === null) {
             if (value === undefined) {
                 //this.set('value','');
                 this.set('oldValue','');
@@ -290,8 +290,8 @@ export default Component.extend({
      */
     didInsertElement(){
 
-        const mask = this.getMask(this.get('mask'));
-        const tagName = this.getTag(this.get('type'));
+        const mask = this.getMask(this.mask);
+        const tagName = this.getTag(this.type);
 
         if (mask !== undefined && mask !== '' && tagName !== undefined && tagName !== '') {
             $('#'+this.elementId+' '+tagName).mask(mask.mask,{translation:mask.maskTranslation});
@@ -387,7 +387,7 @@ export default Component.extend({
      * @public
      */
     keyDown(){
-        if (this.get('isTyping') === false) {
+        if (this.isTyping === false) {
             this.set('isTyping',true);
         }
     },

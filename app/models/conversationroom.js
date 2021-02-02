@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr,belongsTo,hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -26,7 +26,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * Subject of the conversation room
@@ -36,7 +36,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    subject: DS.attr('string'),
+    subject: attr('string'),
 
     /**
      * Date on which the conversation room was created on
@@ -46,7 +46,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * Date on which the conversation room was last modified
@@ -56,7 +56,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * Soft deletion flag
@@ -66,7 +66,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    deleted: DS.attr('string'),
+    deleted: attr('string'),
 
     /**
      * Description of the conversation room
@@ -76,7 +76,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    description: DS.attr('string'),
+    description: attr('string'),
 
     /**
      * The identifier of the user who created the room
@@ -86,7 +86,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The name of the user who created the room
@@ -96,7 +96,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    createdUserName: DS.attr('string'),
+    createdUserName: attr('string'),
 
     /**
      * The name of the user who last modified the room
@@ -106,7 +106,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    modifiedUserName: DS.attr('string'),
+    modifiedUserName: attr('string'),
 
     /**
      * The identifier of the user who last modified the room
@@ -116,7 +116,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     /**
      * Type of conversation room e.g. vote, discussion
@@ -126,7 +126,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    roomType: DS.attr('string'),
+    roomType: attr('string'),
 
     /**
      * The identifier of the project that this room belongs to
@@ -136,7 +136,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    projectId: DS.attr('string'),
+    projectId: attr('string'),
 
     /**
      * The identifier of the issue that this room belongs to
@@ -146,7 +146,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    issueId: DS.attr('string'),
+    issueId: attr('string'),
 
     /**
      * The user who created the room
@@ -156,7 +156,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    createdBy:DS.belongsTo('user'),
+    createdBy: belongsTo('user'),
 
     /**
      * The user who modified the room
@@ -166,7 +166,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    modifiedBy:DS.belongsTo('user'),
+    modifiedBy: belongsTo('user'),
 
     /**
      * The project this room belongs to
@@ -176,7 +176,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    project:DS.belongsTo('project'),
+    project: belongsTo('project'),
 
     /**
      * Comments made on this conversation room
@@ -186,7 +186,7 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    comments: DS.hasMany('comment'),
+    comments: hasMany('comment'),
 
     /**
      * Votes made on this conversation room
@@ -196,6 +196,6 @@ export default DS.Model.extend(Validations, {
      * @for Conversationroom
      * @private
      */
-    votes: DS.hasMany('vote')
+    votes: hasMany('vote')
 
 });

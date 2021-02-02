@@ -95,14 +95,14 @@ export default Component.extend({
     onUserJoined(data){
         Logger.debug('A user has joined');
         Logger.debug(data);
-        const socket = this.get('websockets').socketFor(this.serverURI);
+        const socket = this.websockets.socketFor(this.serverURI);
         socket.emit('list');
     },
 
     onUserLeft(data){
         Logger.debug('A user has left');
         Logger.debug(data);
-        const socket = this.get('websockets').socketFor(this.serverURI);
+        const socket = this.websockets.socketFor(this.serverURI);
         socket.emit('list');
     },
 

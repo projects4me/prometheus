@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr } from '@ember-data/model';
 
 /**
  * The token model
@@ -12,7 +12,7 @@ import DS from "ember-data";
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend({
+export default Model.extend({
 
     /**
      * Access Token
@@ -22,7 +22,7 @@ export default DS.Model.extend({
      * @for Token
      * @private
      */
-    access_token: DS.attr('string'),
+    access_token: attr('string'),
 
     /**
      * Expires In
@@ -32,7 +32,7 @@ export default DS.Model.extend({
      * @for Token
      * @private
      */
-    expires_in: DS.attr('date'),
+    expires_in: attr('date'),
 
     /**
      * Token Type
@@ -42,7 +42,7 @@ export default DS.Model.extend({
      * @for Token
      * @private
      */
-    token_type: DS.attr('string'),
+    token_type: attr('string'),
 
     /**
      * Scope
@@ -52,7 +52,7 @@ export default DS.Model.extend({
      * @for Token
      * @private
      */
-    scope: DS.attr('string'),
+    scope: attr('string'),
 
     /**
      * Refresh Token
@@ -62,7 +62,7 @@ export default DS.Model.extend({
      * @for Token
      * @private
      */
-    refresh_token: DS.attr('string'),
+    refresh_token: attr('string'),
 
     /**
      * Grent Type
@@ -72,7 +72,7 @@ export default DS.Model.extend({
      * @for Token
      * @private
      */
-    grant_type:DS.attr('string'),
+    grant_type:attr('string'),
 
     /**
      * Client Id
@@ -82,7 +82,7 @@ export default DS.Model.extend({
      * @for Token
      * @private
      */
-    client_id:DS.attr('string'),
+    client_id:attr('string'),
 
     /**
      * Client Secret
@@ -92,6 +92,6 @@ export default DS.Model.extend({
      * @for Token
      * @private
      */
-    client_secret:DS.attr('string')
+    client_secret:attr('string')
 
 });

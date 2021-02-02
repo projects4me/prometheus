@@ -5,7 +5,6 @@
 import Prometheus from "prometheus/controllers/prometheus";
 import { task } from 'ember-concurrency';
 import { inject } from '@ember/service';
-import { get } from '@ember/object';
 import { set } from '@ember/object';
 import $ from 'jquery';
 
@@ -129,7 +128,7 @@ export default Prometheus.extend({
          * @todo Trigger the notificaiton
          */
         edit() {
-            let model = this.get('model');
+            let model = this.model;
             this.transitionToRoute('app.project.wiki.edit', {project_id:model.get('projectId'),wiki_name:model.get('name')});
         },
 
@@ -151,8 +150,8 @@ export default Prometheus.extend({
          */
         create() {
             Logger.debug('Create a page for ');
-            Logger.debug(this.get('projectId'));
-            this.transitionToRoute('app.project.wiki.create', {project_id:this.get('projectId')});
+            Logger.debug(this.projectId);
+            this.transitionToRoute('app.project.wiki.create', {project_id:this.projectId});
         },
 
         /**
@@ -180,7 +179,7 @@ export default Prometheus.extend({
             Logger.debug("AppProjectWikiPageController:upvote("+wikiId+")");
 
             let _self = this;
-            let vote = this.get('store').createRecord('vote',{
+            let vote = this.store.createRecord('vote',{
                 vote: 1,
                 relatedTo:'wiki',
                 relatedId:wikiId
@@ -210,7 +209,7 @@ export default Prometheus.extend({
          */
         lockWiki(action) {
             let _self = this;
-            let model = this.get('model');
+            let model = this.model;
             if (action === 'unlock')
             {
                 set(model,'locked',"1");
@@ -248,7 +247,7 @@ export default Prometheus.extend({
          * @param file
          */
         uploadFile(file) {
-            get(this, 'handleUpload').perform(file);
+            this.handleUpload.perform(file);
         },
 
         /**
@@ -315,7 +314,7 @@ export default Prometheus.extend({
                 download: true
             };
             Logger.debug('Retrieving upload with options '+options);
-            this.get('store').query('upload',options).then(function(data){
+            this.store.query('upload',options).then(function(data){
                 let downloadLink = data.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 

@@ -50,7 +50,7 @@ export default Create.extend(ProjectRelated, {
      * @public
      */
     milestoneList: computed('project', function(){
-        return format.getSelectList(this.get('project.milestones'), false, this.get('i18n').t('global.blank'));
+        return format.getSelectList(this.project.milestones, false, this.i18n.t('global.blank'));
     }),
 
     /**
@@ -62,7 +62,7 @@ export default Create.extend(ProjectRelated, {
      * @public
      */
     typeList: computed('types', function(){
-        return format.getSelectList(this.get('types'));
+        return format.getSelectList(this.types);
     }),
 
     /**
@@ -75,7 +75,7 @@ export default Create.extend(ProjectRelated, {
      * @private
      */
     usersList: computed('appController.usersList', function(){
-        return this.get('appController').get('usersList');
+        return this.appController.get('usersList');
     }),
 
     /**
@@ -96,7 +96,7 @@ export default Create.extend(ProjectRelated, {
      */
     beforeSave(model){
         model.set('projectId', this.target.currentState.routerJsState.params["app.project"].project_id);
-        model.set('reportedUser',this.get('currentUser.user.id'));
+        model.set('reportedUser',this.currentUser.user.id);
         model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
         model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
     },
@@ -108,7 +108,7 @@ export default Create.extend(ProjectRelated, {
      * @param model
      */
     getSuccessMessage(model){
-        return this.get('i18n').t('views.app.issue.created',{
+        return this.i18n.t('views.app.issue.created',{
             name:model.get('subject'),
             issue_number:model.get('issueNumber')
         });

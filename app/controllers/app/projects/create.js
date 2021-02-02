@@ -57,7 +57,7 @@ export default Create.extend({
      * @private
      */
     usersList: computed('appController.usersList', function(){
-        return this.get('appController').get('usersList');
+        return this.appController.get('usersList');
     }),
 
     /**
@@ -72,8 +72,8 @@ export default Create.extend({
      */
     shortCode: computed('model.name', function(){
         let name = '';
-        if (this.get('model.name') !== undefined) {
-            name = this.get('model.name');
+        if (this.model.name !== undefined) {
+            name = this.model.name;
         }
         let shortCode = name.replace(/[^a-zA-Z]+/g,'');
         shortCode = shortCode.slice(0,5).toUpperCase();
@@ -91,7 +91,7 @@ export default Create.extend({
      * @private
      */
     issuetypeList: computed('issuetypes', function(){
-        return format.getSelectList(this.get('issuetypes'));
+        return format.getSelectList(this.issuetypes);
     }),
 
     /**
@@ -102,9 +102,9 @@ export default Create.extend({
      * @protected
      */
     beforeValidate(model){
-        model.set('shortCode',this.get('shortCode'));
-        if(!(this.get('selectedIssuetypes') != undefined &&
-                this.get('selectedIssuetypes').length > 0)) {
+        model.set('shortCode',this.shortCode);
+        if(!(this.selectedIssuetypes != undefined &&
+                this.selectedIssuetypes.length > 0)) {
             model.set('hasIssuetypes','');
         } else {
             model.set('hasIssuetypes',true);
@@ -154,7 +154,7 @@ export default Create.extend({
      * @param model
      */
     getSuccessMessage(model){
-        return this.get('i18n').t('views.app.project.created',{
+        return this.i18n.t('views.app.project.created',{
             name:model.get('name')
         });
     },

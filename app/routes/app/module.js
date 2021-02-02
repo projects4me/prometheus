@@ -85,7 +85,7 @@ export default App.extend({
         // Set the data in the current instance of the object, this is required. Unless this is done the route will display the same data every time
         this.module = capitalize(params.module);
         //var metaData = MD.create();
-        var i18n = this.get('i18n');
+        var i18n = this.i18n;
         controller.set('i18n',i18n);
         this.metaData = MD.create().getViewMeta(this.module,'list',i18n);
         var options = {

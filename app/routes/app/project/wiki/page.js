@@ -42,7 +42,7 @@ export default App.extend({
         Logger.debug("Prometheus.Routes.App.Project.Wiki.Page::setupController");
 
         let params = this.getParams();
-        let i18n = this.get('i18n');
+        let i18n = this.i18n;
         controller.set('i18n',i18n);
 
         this.project = this.store.findRecord('project',params.projectId,{rels:'none'});

@@ -147,13 +147,13 @@ export default App.extend({
         let options = {
             query: query,
             rels: 'owner',
-            sort: this.get('sort'),
-            order: this.get('order'),
-            page: this.get('page'),
+            sort: this.sort,
+            order: this.order,
+            page: this.page,
         };
 
         // Retrieve the data
-        let data = this.get('store').query('project',options);
+        let data = this.store.query('project',options);
         Logger.debug('-Prometheus.App.Routes.Projects::model()');
         return data;
     },
@@ -208,13 +208,13 @@ export default App.extend({
         Logger.debug('Prometheus.App.Routes.Projects::setupController()');
         let savedSearch = this.store.createRecord('savedsearch');
         controller.set('newSavedsearch',savedSearch);
-        controller.set('savedsearches',this.get('savedsearches'));
-        controller.set('publicsearches',this.get('publicsearches'));
+        controller.set('savedsearches',this.savedsearches);
+        controller.set('publicsearches',this.publicsearches);
         controller.set('model',model);
-        controller.set('query',this.get('query'));
-        controller.set('sort',this.get('sort'));
-        controller.set('order',this.get('order'));
-        controller.set('page',this.get('page'));
+        controller.set('query',this.query);
+        controller.set('sort',this.sort);
+        controller.set('order',this.order);
+        controller.set('page',this.page);
         Logger.debug('Prometheus.App.Routes.Projects::setupController()');
     },
 

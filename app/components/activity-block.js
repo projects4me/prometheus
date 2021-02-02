@@ -52,7 +52,7 @@ export default Component.extend({
      * @private
      */
     layoutName: computed('activity','model', function() {
-        let activity = this.get('activity');
+        let activity = this.activity;
         let template = null;
 
         if (activity.get('type') === 'related'){
@@ -83,7 +83,7 @@ export default Component.extend({
      * @public
      */
     didInsertElement(){
-        let activity = this.get('activity');
+        let activity = this.activity;
         let createdSince = moment.duration(moment(new Date()).diff(moment(activity.get('dateCreated')))).humanize();
         set(activity,"createdSince",createdSince);
     }

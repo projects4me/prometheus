@@ -76,7 +76,7 @@ export default Component.extend({
      */
     didRender(){
         let self = this;
-        let issues = this.get('issues');
+        let issues = this.issues;
         let chartel = self.get('estimatedspent');
         if (chartel !== undefined) {
             chartel.destroy();
@@ -104,14 +104,14 @@ export default Component.extend({
         let data = {
             labels:[],
             datasets:[{
-                label: this.get('i18n').t("views.app.project.detail.charts.estimatedspent"),
+                label: this.i18n.t("views.app.project.detail.charts.estimatedspent"),
                 data:[],
                 backgroundColor: [],
                 type: 'bar',
                 borderWidth: 0
             },
                 {
-                    label: this.get('i18n').t("views.app.project.detail.charts.efficiency"),
+                    label: this.i18n.t("views.app.project.detail.charts.efficiency"),
                     type: "line",
                     data:[],
                     backgroundColor: "rgba(220,220,220,0)",
@@ -175,8 +175,8 @@ export default Component.extend({
      */
     willDestroyElement(){
         Logger.debug('ChartEstimatedspentComponent::willDestroyElement()');
-        if (this.get('estimatedspent') !== undefined) {
-            this.get('estimatedspent').destroy();
+        if (this.estimatedspent !== undefined) {
+            this.estimatedspent.destroy();
         }
     },
 
@@ -188,8 +188,8 @@ export default Component.extend({
      */
     willClearRender(){
         Logger.debug('ChartEstimatedspentComponent::willDestroyElement()');
-        if (this.get('estimatedspent') !== undefined) {
-            this.get('estimatedspent').destroy();
+        if (this.estimatedspent !== undefined) {
+            this.estimatedspent.destroy();
         }
     },
 

@@ -43,9 +43,9 @@ export default Service.extend({
      * @public
      */
     loadUser:function(){
-        if (this.get('session.isAuthenticated')) {
+        if (this.session.isAuthenticated) {
             // Retrieve the current user's object from the API
-            return this.get('store').find('user', 'me').then((user) => {
+            return this.store.find('user', 'me').then((user) => {
                 // Set the retrieved user in the current object
                 this.set('user', user);
             });

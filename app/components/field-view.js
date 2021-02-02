@@ -29,8 +29,8 @@ export default Component.extend({
      * @private
      */
     layoutName: computed('view', 'definition', 'model', function() {
-        let type = this.get('definition').type;
-        let view = this.get('view');
+        let type = this.definition.type;
+        let view = this.view;
 
         let template = 'components/field/'+type+'/'+view;
         if (Prometheus.__container__.lookup('template:'+template) === undefined) {
@@ -60,7 +60,7 @@ export default Component.extend({
      * @public
      */
     fieldSize: computed('definition', function() {
-        return this.get('definition').size;
+        return this.definition.size;
     }).volatile(),
 
     /**
@@ -71,7 +71,7 @@ export default Component.extend({
      * @todo perhaps delegate the did render per type
      */
     didRender() {
-        let definition = this.get('definition');
+        let definition = this.definition;
 
         // Apply input mask
         if (definition.mask !== undefined && definition.mask !== '' && definition.tagName !== undefined && definition.tagName !== '') {
@@ -139,7 +139,7 @@ export default Component.extend({
     blinkError: function(){
         Logger.debug('blink called');
         // Add class to hightlight the border of the field
-        $('#'+this.elementId+' [name='+(this.get('definition').fieldName+']')).addClass('highlight-error');
+        $('#'+this.elementId+' [name='+(this.definition.fieldName+']')).addClass('highlight-error');
 
         // Remove the hidden class from the error message in order to display the error message
         $('#'+this.elementId+' .field-error').removeClass('hidden');
@@ -182,7 +182,7 @@ export default Component.extend({
             Logger.debug('Value changed to '+value);
             let result = true;
             let validationFailure = false;
-            let filter = this.get('definition.filter');
+            let filter = this.definition.filter;
             // If the valu entered is not empty then validate the data type
             if (value !== null && value !== '') {
                 if (filter !== null && filter !== '' && filter !== undefined)
@@ -191,7 +191,7 @@ export default Component.extend({
                 }
                 if (result === true)
                 {
-                    return this.set('model.'+(this.get('definition').fieldName),value);
+                    return this.set('model.'+(this.definition.fieldName),value);
                 }
                 else
                 {
@@ -206,7 +206,7 @@ export default Component.extend({
                 }
             } // check if the field is required if so then display error
             else {
-                let required = this.get('definition.required');
+                let required = this.definition.required;
                 if (required === true){
                     validationFailure = true;
                 }

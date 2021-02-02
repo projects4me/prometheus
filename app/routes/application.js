@@ -2,7 +2,6 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
 import _ from 'lodash';
@@ -17,7 +16,7 @@ import _ from 'lodash';
  * @uses ApplicationRouteMixin
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Route.extend(ApplicationRouteMixin,{
+export default Route.extend({
     
     routeAfterAuthentication: 'app',
     /**
@@ -51,7 +50,7 @@ export default Route.extend(ApplicationRouteMixin,{
      */
     beforeModel:function(){
         this._super(...arguments);
-        if(!this.get('session.isAuthenticated'))
+        if(!this.session.isAuthenticated)
         {
             this.transitionTo('signin');
         }
@@ -70,6 +69,6 @@ export default Route.extend(ApplicationRouteMixin,{
 
         let lang = 'en';
         this.set('i18n.locale',lang);
-        this.get('session').set('data.locale', lang);
+        this.session.set('data.locale', lang);
     }
 });

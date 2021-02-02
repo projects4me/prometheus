@@ -45,7 +45,7 @@ export default App.extend({
             rels: 'none'
         };
 
-        this.get('store').query('project',options).then(function(data){
+        this.store.query('project',options).then(function(data){
             let project = data.objectAt(0);
             controller.set('model',project);
         });

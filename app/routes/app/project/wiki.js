@@ -60,7 +60,7 @@ export default App.extend({
         Logger.debug(params);
 
         Logger.debug('Inside the setup controller for the wiki project');
-        let i18n = this.get('i18n');
+        let i18n = this.i18n;
         controller.set('i18n',i18n);
 
         self.loadTags();
@@ -184,8 +184,8 @@ export default App.extend({
             Logger.debug('The updated model is ');
             Logger.debug(model);
             Logger.debug('The tree is');
-            Logger.debug(this.get('tree'));
-            let tree = this.get('tree');
+            Logger.debug(this.tree);
+            let tree = this.tree;
             let node = M2T.findNode(model.get('id'),tree);
             if (node)
             {

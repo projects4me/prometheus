@@ -37,7 +37,7 @@ export default Create.extend({
      * @protected
      */
     beforeValidate(model){
-        model.set('shortCode',this.get('shortCode'));
+        model.set('shortCode',this.shortCode);
     },
 
     /**

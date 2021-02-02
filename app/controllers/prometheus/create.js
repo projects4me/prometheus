@@ -60,7 +60,7 @@ export default Prometheus.extend({
      * @private
      */
     usersList: computed('appController.usersList', function(){
-        return this.get('appController').get('usersList');
+        return this.appController.get('usersList');
     }),
 
     /**
@@ -84,7 +84,7 @@ export default Prometheus.extend({
          */
         save:function() {
             let _self = this;
-            let model = this.get('model');
+            let model = this.model;
 
             if (typeof model.validate === 'function') {
                 _self.beforeValidate(model);
