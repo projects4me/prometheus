@@ -10,12 +10,11 @@
   }}
 
   {{!-- Left side column. contains the logo and sidebar --}}
-  {{application-sidebar
-      projectList=projectList
-      projectId=projectId
-      currentUser=currentUser
-  }}
-
+  <AppLayouts::ApplicationSidebar
+      @projectList={{projectList}}
+      @projectId={{projectId}}
+      @currentUser={{currentUser}}
+  />
   {{!-- Content Wrapper. Contains page content --}}
   <div class="content-wrapper">
     {{outlet}}
@@ -23,7 +22,7 @@
   {{!-- /.content-wrapper --}}
 
   {{!-- Main Footer --}}
-  {{application-footer}}
+  <AppLayouts::ApplicationFooter />
 
   {{!-- Control Sidebar --}}
   {{application-controlbar

@@ -226,7 +226,7 @@
                         <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
                       </span>
                     {{else}}
-                      {{attachment-icon mime=(readonly file.fileMime)}}
+                      <AppUi::AttachmentIcon @mime={{file.fileMime}}/>
                     {{/if}}
                     <div class="attachment-info">
                       <div class="attachment-name clearfix">

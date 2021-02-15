@@ -179,6 +179,7 @@ export default Route.extend({
                 projectList[i] = {label:temp.get('name'), value:temp.get('id')};
             }
             controller.set('projectList',projectList);
+            alert(projectId);
 
             // if it was a sub route then setup the projectName and id
             if (projectId !== null && projectId !== undefined)

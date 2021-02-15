@@ -150,18 +150,16 @@ export default Prometheus.extend(Evented,{
         let upload = this.store.createRecord('upload', {});
 
         try {
-
             let options = {
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'issue',
                     relatedId: _self.get('model').objectAt(0).get('id')
                 },
-                headers: upload.store.adapterFor('upload').headersForRequest()
+                headers: upload.store.adapterFor('upload').headers
             };
 
             let response = yield file.upload(options);
-
             let data = JSON.parse(response.body);
             /**
              *  @todo check for errors
@@ -177,7 +175,7 @@ export default Prometheus.extend(Evented,{
             _self.get('model').objectAt(0).get('files').pushObject(upload);
         } catch (e) {
             Logger.debug("Something has gone wrong");
-            Logger.debug
+            Logger.debug(e);
             //upload.rollback();
         }
     }).maxConcurrency(3).enqueue(),

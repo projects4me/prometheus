@@ -28,12 +28,13 @@ export default App.extend({
      * @return Prometheus.Issue
      * @private
      */
-    afterModel(model, transition){
+    afterModel(model){
         Logger.debug('Prometheus.Routes.App.Project.Issue.Create::afterModel()');
+        debugger;
         let _self = this;
-        let params = transition.params;
+        // let params = transition.params;
 
-        let projectId = params['app.project'].project_id;
+        let projectId = model.project_id;
 
         let projectOptions = {
             query: "(Project.id : "+projectId+")",
