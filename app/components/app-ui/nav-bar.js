@@ -8,10 +8,11 @@ import ENV from "prometheus/config/environment";
 import { action } from '@ember/object';
 import Logger from "js-logger";
 import { inject as service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 
 export default class NavBarComponent extends Component {
     @service router;
-
+    @tracked projectId;
     /**
      * This function fetches the navigation metaData and makes it available for display
      *
@@ -35,13 +36,6 @@ export default class NavBarComponent extends Component {
         return this.args.currentUser ?? '';
     }
     
-    get projectId() {
-        return this.args.projectId1 ?? this.projectId1;
-    }
-
-    set projectId(projectId) {
-        this.projectId1 = projectId;
-    }
     /**
      * The actions for the navigation bar, primarily used fo route transition
      *
@@ -86,8 +80,6 @@ export default class NavBarComponent extends Component {
      * @public
      */
     @action projectChanged(project) {
-        console.log(project);
-        debugger;
         this.projectId = project.value;
         if (project.value !== undefined && project.value !== null && project.value !== '') {
             this.router.transitionTo('app.project', { project_id: project.value });

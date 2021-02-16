@@ -14,16 +14,16 @@
 {{!-- search form (Optional) --}}
 <div class="sidebar-form">
   <div class="input-group">
-    {{#power-select
+    <PowerSelect
         class="form-control"
-        options=projectList
-        selected=(find-by "value" projectId projectList)
-        placeholder=(t "views.nav.selectproject")
+        @options={{this.projectList}}
+        @selected={{find-by "value" projectId projectList}}
+        @placeholder={{t "views.nav.selectproject"}}
         searchField="label"
-        onChange=(action "projectChanged")
-    as |project|}}
-      {{project.label}}
-    {{/power-select}}
+        @onChange={{this.projectChanged}}
+        as |project|>
+        {{project.label}}
+    </PowerSelect>
   </div>
 </div>
 {{!-- /.search form --}}

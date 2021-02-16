@@ -5,10 +5,6 @@ export default class ApplicationSidebarComponent extends Component {
         return this.args.projectList ?? '';
     }
 
-    get projectId() {
-        return this.args.projectId ?? '';
-    }
-
     get currentUser() {
         return this.args.currentUser ?? '';
     }
