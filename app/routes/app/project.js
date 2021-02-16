@@ -4,6 +4,7 @@
 
 import App from "prometheus/routes/app";
 import { hash } from 'rsvp';
+import { inject } from '@ember/service';
 
 /**
  * The wiki route
@@ -15,7 +16,15 @@ import { hash } from 'rsvp';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default App.extend({
-
+    /**
+     * The trackedProject service provides id of the selected project.
+     *
+     * @property trackedProject
+     * @type Object
+     * @for Project
+     * @private
+     */
+    trackedProject: inject(),
     /**
      * The project Id
      *
@@ -81,6 +90,8 @@ export default App.extend({
 
         // If the user navigated directly to the wiki project or page then lets setup the project id
         let projectId = this.paramsFor('app.project').project_id;
+        //setting up "projectId" property of "trackedProject" service in order to use that projectId in other parts of application
+        this.trackedProject.projectId=projectId;
         let projectName = null;
 
         let options = {

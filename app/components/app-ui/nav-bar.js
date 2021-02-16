@@ -13,6 +13,7 @@ import { tracked } from '@glimmer/tracking';
 export default class NavBarComponent extends Component {
     @service router;
     @tracked projectId;
+    @service trackedProject;
     /**
      * This function fetches the navigation metaData and makes it available for display
      *
@@ -26,6 +27,7 @@ export default class NavBarComponent extends Component {
         Logger.debug(this.metaData);
         this.appPrefix = ENV.api.prefix;
         this.pathname = this.router.location.location.pathname;
+        this.projectId = this.trackedProject.projectId;
     }
 
     get projectList() {

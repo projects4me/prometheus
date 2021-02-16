@@ -30,7 +30,6 @@ export default App.extend({
      */
     afterModel(model){
         Logger.debug('Prometheus.Routes.App.Project.Issue.Create::afterModel()');
-        debugger;
         let _self = this;
         // let params = transition.params;
 

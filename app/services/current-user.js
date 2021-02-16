@@ -37,7 +37,7 @@ export default Service.extend({
     store: inject(),
 
     /**
-     * Tis function is called to load the currentUser
+     * This function is called to load the currentUser
      *
      * @method loadUser
      * @public
