@@ -39,15 +39,57 @@ export default class ApplicationHeaderComponent extends Component {
      */
     page = 0;
 
+    /**
+     * The current user of the application
+     *
+     * @property currentUser
+     * @type Ember.Service
+     * @for ApplicationHeader
+     */
     @service currentUser;
 
+    /**
+     * This function returns session object
+     *
+     * @method get
+     * @public
+     */
     get session() {
         return this.args.session;
     }
 
+    /**
+     * This function returns 'invalidateSession' property coming from parent(app.js) as an argument in order to
+     * invalidate the session and signout user from app
+     *
+     * @method get
+     * @public
+     */
     get invalidateSession() {
         return this.args.invalidateSession;
     }
+
+    /**
+     * This function returns user profile
+     *
+     * @method get
+     * @public
+     */
+    get userProfile() {
+        return this.args.userProfile;
+    }
+
+    /**
+     * This function returns item searched by user
+     *
+     * @method get
+     * @public
+     */
+    get searchedItem() {
+        return this.args.searchedItem;
+    }
+
+    
 
     /**
      * This function loads the search data

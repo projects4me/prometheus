@@ -11,13 +11,41 @@ import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
 export default class NavBarComponent extends Component {
+
+    /**
+     * The router service provides access to route
+     *
+     * @property projectId
+     * @type String
+     * @for NavBar
+     * @private
+     */
     @service router;
+
+    /**
+     * The projectId property is used in order to track it when project id get updated
+     *
+     * @property projectId
+     * @type String
+     * @for NavBar
+     * @private
+     */
     @tracked projectId;
+
+    /**
+     * The trackedProject service provides id of the selected project
+     *
+     * @property trackedProject
+     * @type Object
+     * @for NavBar
+     * @private
+     */
     @service trackedProject;
+
     /**
      * This function fetches the navigation metaData and makes it available for display
      *
-     * @method init
+     * @method constructor
      * @public
      */
     constructor() {
@@ -30,22 +58,25 @@ export default class NavBarComponent extends Component {
         this.projectId = this.trackedProject.projectId;
     }
 
+    /**
+     * This function returns list of projects
+     *
+     * @method get
+     * @public
+     */
     get projectList() {
         return this.args.projectList ?? '';
     }
 
+    /**
+     * This function returns current user
+     *
+     * @method get
+     * @public
+     */
     get currentUser() {
         return this.args.currentUser ?? '';
     }
-    
-    /**
-     * The actions for the navigation bar, primarily used fo route transition
-     *
-     * @property actions
-     * @type Object
-     * @for NavBar
-     * @public
-     */
 
     /**
      * This function is used in order to handle navigation to our desired route
