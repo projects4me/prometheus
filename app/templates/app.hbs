@@ -1,18 +1,17 @@
 {{#application-wrapper}}
 
   {{!-- Main Header --}}
-  {{application-header
-      currentUser=currentUser
-      session=session
-      invalidateSession=(action "invalidateSession")
-      userProfile=(action "userProfile")
-      searchedItem=(action "itemSearched")
-  }}
+  <AppLayouts::ApplicationHeader
+      @currentUser={{currentUser}}
+      @session={{session}}
+      @invalidateSession={{action "invalidateSession"}}
+      userProfile={{action "userProfile"}}
+      searchedItem={{action "itemSearched"}}
+  />
 
   {{!-- Left side column. contains the logo and sidebar --}}
   <AppLayouts::ApplicationSidebar
       @projectList={{projectList}}
-      @projectId={{projectId}}
       @currentUser={{currentUser}}
   />
   {{!-- Content Wrapper. Contains page content --}}
