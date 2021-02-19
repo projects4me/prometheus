@@ -24,7 +24,7 @@ export default Component.extend({
      * @type Ember.Service
      * @for ApplicationControlbar
      */
-    websockets: inject('socket-io'),
+    // websockets: inject('socket-io'),
 
     /**
      * The current user of the application
@@ -67,17 +67,17 @@ export default Component.extend({
         this._super(...arguments);
         let _self = this;
         _self.users = [];
-        _self.appPrefix = ENV.api.prefix;
-        _self.serverURI = ENV.chat.protocol+'://'+ENV.chat.host+':'+ENV.chat.port+'/?id=1';
-        Logger.debug(_self.get('websockets'));
-        if (ENV.environment === 'production') {
-            const socket = _self.get('websockets').socketFor(this.serverURI);
-            socket.on('connect', _self.onConnect, _self);
-            socket.on('message', _self.onMessage, _self);
-            socket.on('userList', _self.onUserList, _self);
-            socket.on('userJoined', _self.onUserJoined, _self);
-            socket.on('userLeft', _self.onUserLeft, _self);
-        }
+        // _self.appPrefix = ENV.api.prefix;
+        // _self.serverURI = ENV.chat.protocol+'://'+ENV.chat.host+':'+ENV.chat.port+'/?id=1';
+        // Logger.debug(_self.get('websockets'));
+        // if (ENV.environment === 'production') {
+        //     const socket = _self.get('websockets').socketFor(this.serverURI);
+        //     socket.on('connect', _self.onConnect, _self);
+        //     socket.on('message', _self.onMessage, _self);
+        //     socket.on('userList', _self.onUserList, _self);
+        //     socket.on('userJoined', _self.onUserJoined, _self);
+        //     socket.on('userLeft', _self.onUserLeft, _self);
+        // }
     },
 
 
@@ -123,16 +123,16 @@ export default Component.extend({
         Logger.debug(data);
     },
 
-    willDestroyElement() {
-        let _self = this;
-        const socket = _self.get('websockets').socketFor(_self.serverURI);
+    // willDestroyElement() {
+    //     let _self = this;
+    //     const socket = _self.get('websockets').socketFor(_self.serverURI);
 
-        socket.off('connect', _self.onConnect);
-        socket.off('message', _self.onMessage);
-        socket.off('userList', _self.onUserList);
-        socket.off('userJoin', _self.onUserJoined);
-        socket.off('userLeft', _self.onUserLeft);
-    },
+    //     socket.off('connect', _self.onConnect);
+    //     socket.off('message', _self.onMessage);
+    //     socket.off('userList', _self.onUserList);
+    //     socket.off('userJoin', _self.onUserJoined);
+    //     socket.off('userLeft', _self.onUserLeft);
+    // },
 
     /**
      * These are the actions handled by this controller

@@ -103,11 +103,11 @@ export default class ApplicationHeaderComponent extends Component {
             query: '((Issue.issueNumber CONTAINS ' + query + ') OR (Issue.subject CONTAINS ' + query + ') OR (Issue.description CONTAINS ' + query + '))',
             rels: 'ownedBy,assignedTo,milestone,project,createdBy,modifiedBy,reportedBy,issuetype',
             limit: 5,
-            page: this.get('page'),
+            page: this.page,
         };
 
         return new RSVP.Promise((resolve) => {
-            resolve(_self.get('store').query('issue', options));
+            resolve(_self.store.query('issue', options));
         });
     }
 

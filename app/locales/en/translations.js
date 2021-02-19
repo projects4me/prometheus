@@ -318,7 +318,8 @@ export default {
             "remember": "Remember Me",
             "or": "- OR -",
             "forgot": "I forgot my password",
-            "title" : "<b>Projects</b>4<b>Me</b>"
+            "title" : "<b>Projects</b>4<b>Me</b>",
+            "error" : "Invalid username or password"
         },
 
         /*

@@ -3,7 +3,7 @@
  */
 
 import { inject } from '@ember/service';
-import Controller from '@ember/controller';
+import Prometheus from "prometheus/controllers/prometheus";
 
 /**
  * This the signin controller.
@@ -13,7 +13,7 @@ import Controller from '@ember/controller';
  * @extends Ember.Controller
  * @author Hammad Hassan gollmer@gmail.com
  */
-export default Controller.extend({
+export default Prometheus.extend({
 
     /**
      * The session service which is offered by ember-simple-auth that will be used
@@ -47,14 +47,23 @@ export default Controller.extend({
         async authenticate() {
             let { username, password } = this.getProperties('username', 'password');
             let _self = this;
-            
-            await this.session.authenticate('authenticator:oauth2', username, password).then(() => {
-                if(_self.session.isAuthenticated) {
-                    _self.session.handleAuthentication('app');
+
+            await this.session.authenticate('authenticator:oauth2', username, password).then(
+                () => {
+                    if (_self.session.isAuthenticated) {
+                        _self.session.handleAuthentication('app');
+                    }
+                },
+                () => {
+                    new Messenger().post({
+                        message: _self.get('i18n').t("views.signin.error"),
+                        type: 'error',
+                        showCloseButton: true
+                    });
                 }
-            });
+            );
         }
- 
+
     }
 
 });

@@ -54,7 +54,6 @@ export default class NavBarComponent extends Component {
         this.metaData = MD.create().getViewMeta('Navigation', 'items');
         Logger.debug(this.metaData);
         this.appPrefix = ENV.api.prefix;
-        this.pathname = this.router.location.location.pathname;
         this.projectId = this.trackedProject.projectId;
     }
 
@@ -96,7 +95,6 @@ export default class NavBarComponent extends Component {
             }
             routeParams['project_id'] = projectId;
         }
-        this.pathname = `/  ${this.appPrefix} / + ${anchorRoute}`;
         if (routeParams !== undefined && routeParams !== null && routeParams !== '') {
             this.router.transitionTo(route, routeParams);
         }

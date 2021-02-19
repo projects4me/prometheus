@@ -1,4 +1,5 @@
-import { Factory, faker } from 'ember-cli-mirage';
+import { Factory } from 'ember-cli-mirage';
+import faker from 'faker';
 
 export default Factory.extend({
     subject(i) {
@@ -20,9 +21,9 @@ export default Factory.extend({
     },
     "endDate": "2016-09-29",
     "startDate": "2016-07-15",
-    "status": faker.list.random("new","in_progress","pending","done","wont_fix"),
+    "status": faker.random.arrayElement(["new","in_progress","pending","done","wont_fix"]),
     "typeId": "1",
-    "priority": faker.list.random("medium","high","low","critical","blocker"),
+    "priority": faker.random.arrayElement(["medium","high","low","critical","blocker"]),
     "projectId": "1",
     "milestoneId": "1",
     "parentId": "",
