@@ -85,13 +85,12 @@ export default App.extend({
      */
     setupController:function(controller){
         Logger.debug('AppProjectRoute::setupController');
-
         let _self = this;
 
         // If the user navigated directly to the wiki project or page then lets setup the project id
         let projectId = this.paramsFor('app.project').project_id;
         //setting up "projectId" property of "trackedProject" service in order to use that projectId in other parts of application
-        this.trackedProject.projectId=projectId;
+        this.trackedProject.setProjectId(projectId);
         let projectName = null;
 
         let options = {

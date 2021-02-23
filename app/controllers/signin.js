@@ -3,7 +3,7 @@
  */
 
 import { inject } from '@ember/service';
-import Prometheus from "prometheus/controllers/prometheus";
+import Controller from '@ember/controller';
 
 /**
  * This the signin controller.
@@ -13,7 +13,17 @@ import Prometheus from "prometheus/controllers/prometheus";
  * @extends Ember.Controller
  * @author Hammad Hassan gollmer@gmail.com
  */
-export default Prometheus.extend({
+export default Controller.extend({
+
+    /**
+     * The i18n library service that is used in order to get the translations
+     *
+     * @property i18n
+     * @type Ember.Service
+     * @for Prometheus.Controllers.Prometheus
+     * @public
+     */
+    i18n: inject(),
 
     /**
      * The session service which is offered by ember-simple-auth that will be used
@@ -51,6 +61,7 @@ export default Prometheus.extend({
             await this.session.authenticate('authenticator:oauth2', username, password).then(
                 () => {
                     if (_self.session.isAuthenticated) {
+                        localStorage.removeItem('projectId');
                         _self.session.handleAuthentication('app');
                     }
                 },

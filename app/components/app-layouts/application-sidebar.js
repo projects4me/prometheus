@@ -16,13 +16,4 @@ export default class ApplicationSidebarComponent extends Component {
         return this.args.projectList ?? '';
     }
 
-    /**
-     * This function returns current user
-     *
-     * @method get
-     * @public
-     */
-    get currentUser() {
-        return this.args.currentUser ?? '';
-    }
 }

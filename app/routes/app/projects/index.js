@@ -112,6 +112,7 @@ export default App.extend({
      * @private
      */
     currentUser: inject(),
+    trackedProject: inject(),
     /**
      * The model for this route
      *
@@ -169,7 +170,6 @@ export default App.extend({
      */
     afterModel(){
         let _self = this;
-
         let savedSearchesOption = {
             query: '((Savedsearch.relatedTo : project) AND (Savedsearch.createdUser : '+_self.get('currentUser.user.id')+'))',
             limit: -1

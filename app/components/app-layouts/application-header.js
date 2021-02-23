@@ -2,13 +2,13 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Component from '@glimmer/component';
 import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import format from "prometheus/utils/data/format";
 import { task, timeout } from 'ember-concurrency';
 import { action } from '@ember/object';
+import AppComponent from '../app';
 
 /**
  * This component is used to render the application header
@@ -18,7 +18,7 @@ import { action } from '@ember/object';
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class ApplicationHeaderComponent extends Component {
+export default class ApplicationHeaderComponent extends AppComponent {
     /**
      * We are using the store service to retrieve data for global search
      *
@@ -38,15 +38,6 @@ export default class ApplicationHeaderComponent extends Component {
      * @private
      */
     page = 0;
-
-    /**
-     * The current user of the application
-     *
-     * @property currentUser
-     * @type Ember.Service
-     * @for ApplicationHeader
-     */
-    @service currentUser;
 
     /**
      * This function returns session object
@@ -88,8 +79,6 @@ export default class ApplicationHeaderComponent extends Component {
     get searchedItem() {
         return this.args.searchedItem;
     }
-
-    
 
     /**
      * This function loads the search data
@@ -160,6 +149,7 @@ export default class ApplicationHeaderComponent extends Component {
     @action signOut() {
         if (typeof this.invalidateSession === 'function') {
             get(this, 'invalidateSession')();
+            sessionStorage.removeItem('projectId');
         }
     }
 

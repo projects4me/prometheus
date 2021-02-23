@@ -28,7 +28,6 @@ module('Acceptance | Signin', function(hooks) {
         await click('button[type="submit"]');
         await new Promise(resolve => setTimeout(resolve, 2000));
         assert.equal(currentURL(), '/app');
-        await visit('/app');
 
     });
 

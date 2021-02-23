@@ -28,12 +28,11 @@ export default App.extend({
      * @return Prometheus.Issue
      * @private
      */
-    afterModel(model){
+    afterModel(){
         Logger.debug('Prometheus.Routes.App.Project.Issue.Create::afterModel()');
         let _self = this;
-        // let params = transition.params;
 
-        let projectId = model.project_id;
+        let projectId = _self.paramsFor('app.project').project_id;
 
         let projectOptions = {
             query: "(Project.id : "+projectId+")",
@@ -52,7 +51,7 @@ export default App.extend({
         }).then(function(results){
             _self.set('issue',results.issue);
             _self.set('project',results.project.objectAt(0));
-            _self.set('types',results.project.objectAt(0).get('issuetypes'));
+            _self.set('types',results.project.firstObject.issuetypes);
         });
     },
 

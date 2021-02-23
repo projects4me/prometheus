@@ -2,23 +2,25 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 
 module('Integration | Component | application-header', function(hooks) {
   setupRenderingTest(hooks);
+  setupMirage(hooks);
 
   test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<ApplicationHeader />`);
+    let session = {
+      isAuthenticated:true
+    }
 
-    assert.equal(this.element.textContent.trim(), '');
+    this.set('session',session);
 
     // Template block usage:
     await render(hbs`
-      <ApplicationHeader>
-        template block text
-      </ApplicationHeader>
+      <AppLayouts::ApplicationHeader
+      @session = {{this.session}}
+      />
     `);
 
     assert.equal(this.element.textContent.trim(), 'template block text');

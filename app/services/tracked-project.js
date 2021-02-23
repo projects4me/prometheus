@@ -23,7 +23,7 @@ export default class TrackedProjectService extends Service {
      * @for TrackedProject
      * @private
      */
-    projectId = null;
+    // projectId = null;
 
     /**
      * This function returns projectId
@@ -31,8 +31,9 @@ export default class TrackedProjectService extends Service {
      * @method get
      * @public
      */
-    get projectId() {
-        return this.projectId;
+    getProjectId() {
+        // return this.projectId;
+        return sessionStorage.getItem('projectId');
     }
 
     /**
@@ -41,7 +42,8 @@ export default class TrackedProjectService extends Service {
      * @method set
      * @public
      */
-    set(projectId) {
-        this.projectId = projectId;
+    setProjectId(projectId) {
+        //this.set('projectId',projectId);
+        sessionStorage.setItem('projectId',projectId);
     }
 }

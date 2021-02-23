@@ -1,8 +1,6 @@
-{{#application-wrapper}}
-
+<AppLayouts::ApplicationWrapper>
   {{!-- Main Header --}}
   <AppLayouts::ApplicationHeader
-      @currentUser={{currentUser}}
       @session={{session}}
       @invalidateSession={{action "invalidateSession"}}
       @userProfile={{action "userProfile"}}
@@ -12,7 +10,6 @@
   {{!-- Left side column. contains the logo and sidebar --}}
   <AppLayouts::ApplicationSidebar
       @projectList={{projectList}}
-      @currentUser={{currentUser}}
   />
   {{!-- Content Wrapper. Contains page content --}}
   <div class="content-wrapper">
@@ -33,7 +30,7 @@
   {{!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar --}}
   <div class="control-sidebar-bg"></div>
-{{/application-wrapper}}
+</AppLayouts::ApplicationWrapper>
 {{#each chatrooms as |chatroom|}}
   {{chat-box
       chatroom=chatroom
