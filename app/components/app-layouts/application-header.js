@@ -9,7 +9,7 @@ import format from "prometheus/utils/data/format";
 import { task, timeout } from 'ember-concurrency';
 import { action } from '@ember/object';
 import AppComponent from '../app';
-
+import {tracked} from'@glimmer/tracking';
 /**
  * This component is used to render the application header
  *
@@ -19,6 +19,7 @@ import AppComponent from '../app';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class ApplicationHeaderComponent extends AppComponent {
+
     /**
      * We are using the store service to retrieve data for global search
      *
@@ -29,6 +30,16 @@ export default class ApplicationHeaderComponent extends AppComponent {
      */
     @service store;
 
+    /**
+     * This property is used to keep track the selected issue
+     *
+     * @property selected
+     * @type String
+     * @for ApplicationHeader
+     * @private
+     */
+    @tracked selected;
+    
     /**
      * We are using the store service to retrieve data for global search
      *
@@ -108,7 +119,7 @@ export default class ApplicationHeaderComponent extends AppComponent {
      * @for ApplicationHeader
      * @public
      */
-    @task *search(query) {
+    @(task(function* (query) {
         yield timeout(500);
         let _self = this;
         let map = {
@@ -118,11 +129,10 @@ export default class ApplicationHeaderComponent extends AppComponent {
             status: 'status',
             projectId: 'projectId'
         };
-
         return _self.loadSearchData(query).then(function (data) {
             return format.getSelectList(data, map);
         });
-    }
+    })) search
 
     /**
      * This function is used to select a searched item
@@ -132,8 +142,7 @@ export default class ApplicationHeaderComponent extends AppComponent {
      * @public
      */
     @action itemSelected(item) {
-        let _self = this;
-        _self.set('selected', item);
+        this.selected = item;
         if (item !== null && typeof this.searchedItem === 'function') {
             get(this, 'searchedItem')(item);
         }
