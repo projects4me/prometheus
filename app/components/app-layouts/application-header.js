@@ -105,7 +105,6 @@ export default class ApplicationHeaderComponent extends AppComponent {
             limit: 5,
             page: this.page,
         };
-
         return new RSVP.Promise((resolve) => {
             resolve(_self.store.query('issue', options));
         });
