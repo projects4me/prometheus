@@ -19,19 +19,18 @@
 
           <div class="form-group">
 
-            {{field-text
-                placeholder="Enter the issue subject .."
-                label="Issue Subject"
-                value=model.subject
-                mask="alphanumeric"
-                data-field="issue.subject"
-                focus-out=(action (mut showSubjectError) true)
-                v-focus=showSubjectError
-                v-model=model
-                v-field='subject'
-                v-output='message'
-            }}
-
+            <FormFields::FieldText
+                @placeholder="Enter the issue subject .."
+                @label="Issue Subject"
+                @value={{this.model.subject}}
+                @mask="alphanumeric"
+                @data-field="issue.subject"
+                @focus-out={{action (mut showSubjectError) true}}
+                @vFocus={{showSubjectError}}
+                @v-model={{this.model}}
+                @v-field='subject'
+                @v-output='message'
+            />
             <div data-field="issue.description" class="form-field ember-view">
               {{summer-note
                   usersList=membersList

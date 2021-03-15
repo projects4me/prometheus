@@ -2,8 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Component from '@ember/component';
-import { computed } from '@ember/object';
+import Component from '@glimmer/component';
 import { cancel } from '@ember/runloop';
 import { later } from '@ember/runloop';
 import $ from 'jquery';
@@ -27,7 +26,7 @@ import $ from 'jquery';
  * @extends Ember.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Component.extend({
+export default class FormFieldsComponent extends Component {
 
     /**
      * The type of the current field, the default type is text. If the field type
@@ -38,7 +37,7 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    type : 'text',
+    type = 'text';
 
     /**
      * This flag is used to check whether the field is editable or not. The default
@@ -49,7 +48,7 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    isEditable: true,
+    isEditable = true;
 
     /**
      * This flag is used to specify the state of the field's contents, whether they
@@ -60,7 +59,7 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    isEmpty: true,
+    isEmpty = true;
 
     /**
      * This flag is used to specify the state of the field's contents, whether they
@@ -73,7 +72,7 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    isValid: true,
+    isValid = true;
 
     /**
      * Some fields may required us to fetch the information from an API, which would
@@ -86,7 +85,7 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    isLoading: true,
+    isLoading = true;
 
     /**
      * This flag is used to specify the state of the field, whether the user is
@@ -97,7 +96,7 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    isTyping: false,
+    isTyping = false;
 
     /**
      * Some fields may not be viewable at all, This checks supersedes the checks
@@ -108,7 +107,20 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    isViewable: true,
+    isViewable = true;
+
+    /**
+     * During the initialize phase of the field we need to evaluate if the
+     * field is empty, if so then set the isEmpty flag to true otherwise false
+     *
+     * @method constructor
+     * @public
+     * @todo check for Array and support EmptyObject, EmberModel, etc.
+     */
+    constructor() {
+        super(...arguments);
+        this.setEmpty();
+    }
 
     /**
      * This flag is used to maintain the state of the field, whether it has been
@@ -119,11 +131,11 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    isChanged: computed('value', 'oldValue', function() {
+    get isChanged() {
         Logger.debug(this.get('value'));
         Logger.debug(this.get('oldValue'));
         return (this.get('value') !== this.get('oldValue'));
-    }),
+    }
 
     /**
      * Some fields are dependant on other fields or rules. This flag is used to
@@ -134,7 +146,7 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    isDependant: false,
+    isDependant = false;
 
     /**
      * This flag is used to maintain whether the field is required or not. The
@@ -145,7 +157,7 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    isRequired: false,
+    isRequired = false;
 
     /**
      * This flag is used specify whether we need to load the field in an editable
@@ -158,29 +170,8 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    edit: true,
+    edit = true;
 
-    /**
-     * Class name bindings are used to add a class name in all the rendered
-     * blocks of the form-field instance. They are used so that we can control the
-     * way the field is rendered
-     *
-     * @property classNameBindings
-     * @type Array
-     * @for FormFields
-     * @private
-     */
-    classNames: ['form-field'],
-
-    /**
-     * These are the attributes that are permitted to be attached with a field
-     *
-     * @property attributeBinding
-     * @type Array
-     * @for FormFields
-     * @private
-     */
-    attributeBindings: ['data-field'],
     /**
      * This is the property that is used to set the set the scheduled events e.g.
      * isTyping under check
@@ -190,7 +181,7 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    scheduler: null,
+    scheduler = null;
 
     /**
      * This field stores the old value for audit purposed.
@@ -200,49 +191,7 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
-    oldValue: null,
-
-    /**
-     * All the fields will have their own display needs so instead of handling
-     * them all in template, which would be very very unwise as we are talking
-     * about handlebars, we would wish to load a different template based on the
-     * field type being requested.
-     *
-     * @property layoutName
-     * @type function
-     * @return template {String} The template name that will be rendered
-     * @private
-     */
-    layoutName: computed('type', 'model', function() {
-        let type = this.get('type');
-
-        let template = 'components/form-fields/'+type;
-        let container;
-        if (Prometheus.__container__ === undefined) {
-            container = Prometheus._applicationInstances[0].__container__;
-        } else {
-            container = Prometheus.__container__;
-        }
-
-        if (container.lookup('template:'+template) === undefined) {
-            template = 'components/form-fields/text';
-        }
-
-        return template;
-    }).volatile(),
-
-    /**
-     * During the initialize phase of the field we need to evaluate if the
-     * field is empty, if so then set the isEmpty flag to true otherwise false
-     *
-     * @method didReceiveAttrs
-     * @public
-     * @todo check for Array and support EmptyObject, EmberModel, etc.
-     */
-    didReceiveAttrs() {
-        this._super(...arguments);
-        this.setEmpty();
-    },
+    oldValue = null;
 
     /**
      * This function is used to set the empty flag, this is isolated so that it
@@ -253,15 +202,15 @@ export default Component.extend({
      */
     setEmpty(){
         let isEmpty = false;
-        const value = this.get('value');
+        const value = this.value;
 
-        if (this.get('oldValue') === null) {
+        if (this.oldValue === null) {
             if (value === undefined) {
                 //this.set('value','');
-                this.set('oldValue','');
+                this.oldValue = '';
             }
             else {
-                this.set('oldValue',value);
+                this.oldValue = value;
             }
         }
 
@@ -276,8 +225,8 @@ export default Component.extend({
                 isEmpty = true;
             }
         }
-        this.set('isEmpty',isEmpty);
-    },
+        this.isEmpty=isEmpty;
+    }
 
     /**
      * This function is called when the view has been rendered, we should ideally
@@ -288,7 +237,7 @@ export default Component.extend({
      * @method didInsertElement
      * @private
      */
-    didInsertElement(){
+    insertElement(){
 
         const mask = this.getMask(this.get('mask'));
         const tagName = this.getTag(this.get('type'));
@@ -327,7 +276,7 @@ export default Component.extend({
             });
         }
 
-    },
+    }
 
     /**
      * This function is used retrive the mask options
@@ -360,7 +309,7 @@ export default Component.extend({
 
         };
         return masks[mask];
-    },
+    }
 
     /**
      * This function is used to retrive the tag that is to be used for the selection
@@ -377,7 +326,7 @@ export default Component.extend({
             'date' : 'input',
         };
         return tagNames[type];
-    },
+    }
 
     /**
      * This function is fired when a user presses a key on the keybord. We capture
@@ -390,7 +339,7 @@ export default Component.extend({
         if (this.get('isTyping') === false) {
             this.set('isTyping',true);
         }
-    },
+    }
 
     /**
      * This function if fired when a user releases a key on the keyborad. We are
@@ -415,4 +364,4 @@ export default Component.extend({
         }),1500);
     }
 
-});
+}

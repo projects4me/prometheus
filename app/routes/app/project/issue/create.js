@@ -91,4 +91,12 @@ export default App.extend({
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::setupController');
     },
 
+    resetController(controller, isExiting, transition) {
+        if (isExiting && transition.targetName !== 'error') {
+            if(!controller.model.id) {
+                controller.model.destroyRecord();
+            }
+        }
+    }
+
 });

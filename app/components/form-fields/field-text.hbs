@@ -1,0 +1,14 @@
+{{!-- This should be loaded later via the field view ideally --}}
+<div data-field={{@data-field}} class="form-field ember-view">
+  <Input @placeholder={{@placeholder}} @type="text" @class="form-control input-sm data-input" @value={{@value}}
+    @maxlength={{length}} @focus-out={{@focus-out}} {{on 'focusout' this.focusOut}} {{apply-mask @mask}} />
+  <span class="highlight"></span>
+  <span class="bar"></span>
+  <label class="floating-label">{{@label}}</label>
+  <span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
+  {{#if this.showValidation}}
+  <span class="error text-red">
+    {{v-get @v-model @v-field @v-output}}
+  </span>
+  {{/if}}
+</div>
