@@ -26,6 +26,15 @@ export default class FieldTextComponent extends FormFieldsComponent {
      */
     type = "text";
 
+    /**
+     * This property is used as a flag show error to user for required fields. Basically
+     * when we focus out from input field and if that field is empty then this property
+     * will be set to true. Initially its value is false.
+     * @property
+     * @type Bool
+     * @for FieldText
+     * @private
+     */
     @tracked showValidation = false;
 
     /**
@@ -39,6 +48,13 @@ export default class FieldTextComponent extends FormFieldsComponent {
     get charLength() {
         return this.value;
     }
+
+    /**
+     * This function is used to set 'showValidation' property to true.
+     *
+     * @method focusOut
+     * @public
+     */
 
     @action focusOut() {
         this.showValidation = true;

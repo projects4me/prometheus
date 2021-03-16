@@ -31,7 +31,6 @@ export default App.extend({
     afterModel(){
         Logger.debug('Prometheus.Routes.App.Project.Issue.Create::afterModel()');
         let _self = this;
-
         let projectId = _self.paramsFor('app.project').project_id;
 
         let projectOptions = {
@@ -42,6 +41,7 @@ export default App.extend({
         };
 
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::afterModel()');
+
         return hash({
             issue: _self.store.createRecord('issue',{
                 assignee : _self.get('currentUser').user.id,
@@ -49,6 +49,7 @@ export default App.extend({
             }),
             project: _self.store.query('project',projectOptions)
         }).then(function(results){
+            console.log(results);
             _self.set('issue',results.issue);
             _self.set('project',results.project.objectAt(0));
             _self.set('types',results.project.firstObject.issuetypes);
@@ -77,7 +78,6 @@ export default App.extend({
         let params = this.paramsFor('app.project.issue.edit');
 
         this.set('breadCrumb',{title:'#'+params.issue_number,record:true});
-
         controller.set('model', _self.get('issue'));
         controller.set('project', _self.get('project'));
         controller.set('types', _self.get('types'));
@@ -91,6 +91,15 @@ export default App.extend({
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::setupController');
     },
 
+    /**
+     * This function is trigged on route exit. So on route exit we're destroying empty model of issue.
+     *
+     * @method resetController
+     * @param {Prometheus.Controllers.Issue} controller The controller object for the issues
+     * @param {boolean} isExiting It returns boolean value telling that route is exiting or not.
+     * @param {object} transition It gives us transition object in order to get current route name.
+     * @private
+     */
     resetController(controller, isExiting, transition) {
         if (isExiting && transition.targetName !== 'error') {
             if(!controller.model.id) {
