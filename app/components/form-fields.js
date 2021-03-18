@@ -218,8 +218,10 @@ export default Component.extend({
 
         let template = 'components/form-fields/'+type;
         let container;
-        if (Prometheus.__container__ === undefined) {
+        if (Prometheus.__container__ === undefined && Prometheus._applicationInstances[0] != undefined) {
             container = Prometheus._applicationInstances[0].__container__;
+        } else if (Prometheus._applicationInstances[0] === undefined) {
+            container = Prometheus._applicationInstances.entries().next().value[0].__container__;
         } else {
             container = Prometheus.__container__;
         }

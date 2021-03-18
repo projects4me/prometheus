@@ -20,14 +20,13 @@
           <div class="form-group">
 
             <FormFields::FieldText
-                @placeholder="Enter the issue subject .."
-                @label="Issue Subject"
+                @placeholder={{t "views.app.issue.create.placeholder.subject"}}
+                @label={{t "views.app.issue.create.subject"}}
                 @value={{this.model.subject}}
                 @mask="alphanumeric"
                 @data-field="issue.subject"
-                @focus-out={{action (mut showSubjectError) true}}
-                @vFocus={{showSubjectError}}
                 @v-model={{this.model}}
+                @length="55"
                 @v-field='subject'
                 @v-output='message'
             />

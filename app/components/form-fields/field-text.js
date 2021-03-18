@@ -3,8 +3,7 @@
  */
 
 import FormFieldsComponent from "./form-fields";
-import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+
 /**
  * This is the checkbox field component.
  *
@@ -27,18 +26,7 @@ export default class FieldTextComponent extends FormFieldsComponent {
     type = "text";
 
     /**
-     * This property is used as a flag show error to user for required fields. Basically
-     * when we focus out from input field and if that field is empty then this property
-     * will be set to true. Initially its value is false.
-     * @property
-     * @type Bool
-     * @for FieldText
-     * @private
-     */
-    @tracked showValidation = false;
-
-    /**
-     * The char length
+     * This function calculate the length of input field's value
      *
      * @property
      * @type String
@@ -46,17 +34,20 @@ export default class FieldTextComponent extends FormFieldsComponent {
      * @protected
      */
     get charLength() {
-        return this.value;
+        let length = 0;
+        if (this.value != undefined) {
+            length = this.value.length;
+        }
+        return length;
     }
-
+    
     /**
-     * This function is used to set 'showValidation' property to true.
+     * This function returns value
      *
-     * @method focusOut
+     * @method get
      * @public
      */
-
-    @action focusOut() {
-        this.showValidation = true;
+    get value() {
+        return this.args.value;
     }
 }

@@ -5,7 +5,8 @@
 import Component from '@glimmer/component';
 import { cancel } from '@ember/runloop';
 import { later } from '@ember/runloop';
-import $ from 'jquery';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 /**
  * This component is used to serve as a container for the fields that we intend to
@@ -194,6 +195,17 @@ export default class FormFieldsComponent extends Component {
     oldValue = null;
 
     /**
+     * This property is used as a flag show error to user for required fields.
+     * When we focus out from a field, let say input field, and if that field is empty then this property
+     * will be set to true. Initially its value is false.
+     * @property shouldValidate
+     * @type Bool
+     * @for FieldText
+     * @private
+     */
+    @tracked shouldValidate = false;
+
+    /**
      * This function is used to set the empty flag, this is isolated so that it
      * can be overridden by the form components whenever required.
      *
@@ -226,106 +238,6 @@ export default class FormFieldsComponent extends Component {
             }
         }
         this.isEmpty=isEmpty;
-    }
-
-    /**
-     * This function is called when the view has been rendered, we should ideally
-     * use didRender but it was getting called every time the value was changed
-     * which would mean that we have to add a mask every time a value is changed
-     * that would not be good.
-     *
-     * @method didInsertElement
-     * @private
-     */
-    insertElement(){
-
-        const mask = this.getMask(this.get('mask'));
-        const tagName = this.getTag(this.get('type'));
-
-        if (mask !== undefined && mask !== '' && tagName !== undefined && tagName !== '') {
-            $('#'+this.elementId+' '+tagName).mask(mask.mask,{translation:mask.maskTranslation});
-        }
-
-        if (this.type === 'enum' || this.type === 'multienum') {
-            $('#'+this.elementId+' select').selectpicker();
-        }
-        else if (this.type === 'date') {
-            $('#'+this.elementId+' input').daterangepicker({
-                singleDatePicker: true,
-                showDropdowns: true,
-               locale: {
-                   format: 'YYYY-MM-DD'
-               }
-            });
-        }
-        else if (this.type === 'datetime') {
-            $('#'+this.elementId+' input').daterangepicker({
-                singleDatePicker: true,
-                timePicker: true,
-                showDropdowns: true,
-                locale: {
-                    format: 'MMMM D, YYYY  h:mm A'
-                }
-            });
-        }
-        else if (this.type === 'email') {
-            $('#'+this.elementId+' input').mask("A", {
-                translation: {
-                    "A": { pattern: /[\w@\-.+]/, recursive: true }
-                }
-            });
-        }
-
-    }
-
-    /**
-     * This function is used retrive the mask options
-     *
-     * @method getMask
-     * @param mask {String} The mask required e.g. alpha, alphanumeric, email, etc.
-     * @return maskOptions {Object} The settings required for masking the data
-     * @todo possibly store the masks and options somewhere else to allow customizations
-     */
-    getMask(mask){
-        const masks = {
-            'alpha' : {
-                'mask' : "C",
-                'maskTranslation': {
-                    "C": { pattern: /^[a-zA-Z\s]+$/, recursive: true }
-                }
-            },
-            'alphanumeric' : {
-                'mask' : "C",
-                'maskTranslation': {
-                    "C": { pattern: /^[a-zA-Z0-9\s]+$/, recursive: true }
-                }
-            },
-            'email' : {
-                'mask' : "C",
-                'maskTranslation': {
-                    "C": { pattern: /[\w@\-.+]/, recursive: true }
-                }
-            }
-
-        };
-        return masks[mask];
-    }
-
-    /**
-     * This function is used to retrive the tag that is to be used for the selection
-     * for a type
-     *
-     * @method getTag
-     * @param type {String} The type of field requried
-     * @return tagname {String} The tag name for the field type
-     */
-    getTag(type){
-        const tagNames = {
-            'text' : 'input',
-            'textarea' : 'textarea',
-            'date' : 'input',
-        };
-        return tagNames[type];
     }
 
     /**
@@ -363,5 +275,4 @@ export default class FormFieldsComponent extends Component {
             self.set('isTyping',false);
         }),1500);
     }
-
 }

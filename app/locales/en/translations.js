@@ -743,6 +743,10 @@ export default {
                     "description" : "Description",
                     "status" : "Status",
                     "type" : "Type",
+                    "placeholder" : {
+                        "subject" : "Enter the issue subject .."
+                    },
+                    "textlabel" : "Issue Subject",
                     "typeId" : "Type",
                     "priority" : "Priority",
                     "milestone" : "Milestone",
