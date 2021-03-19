@@ -26,6 +26,16 @@ export default class FieldTextComponent extends FormFieldsComponent {
     type = "text";
 
     /**
+     * This property store length of input field's value
+     *
+     * @property
+     * @type Integer
+     * @for FieldText
+     * @protected
+     */
+    length = 0;
+
+    /**
      * This function calculate the length of input field's value
      *
      * @property
