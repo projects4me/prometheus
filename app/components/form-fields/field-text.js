@@ -13,18 +13,7 @@ import FormFieldsComponent from "./form-fields";
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class FieldTextComponent extends FormFieldsComponent {
-
-    /**
-     * The type of the field, this is added here so that we can have major
-     * functionality in the form-fields component and only extend what is required
-     *
-     * @property
-     * @type String
-     * @for FieldText
-     * @protected
-     */
-    type = "text";
-
+    
     /**
      * This property store length of input field's value
      *
