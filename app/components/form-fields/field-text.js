@@ -44,11 +44,10 @@ export default class FieldTextComponent extends FormFieldsComponent {
      * @protected
      */
     get charLength() {
-        let length = 0;
         if (this.value != undefined) {
-            length = this.value.length;
+            this.length = this.value.length;
         }
-        return length;
+        return this.length;
     }
     
     /**

@@ -196,7 +196,7 @@ export default class FormFieldsComponent extends Component {
 
     /**
      * This property is used as a flag show error to user for required fields.
-     * When we focus out from a field, let say input field, and if that field is empty then this property
+     * When we focus out from a field and if that field is empty then this property
      * will be set to true. Initially its value is false.
      * @property shouldValidate
      * @type Bool
