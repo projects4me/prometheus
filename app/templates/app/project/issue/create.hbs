@@ -62,23 +62,17 @@
             }}
 
             <FormFields::FieldDate
-                @label="Start Date"
-                @value={{readonly this.model.startDate}}
+                @label={{t "views.app.issue.create.startDate"}}
+                @value="{{readonly this.model.startDate}}"
                 @update={{action "selectStatic" this.model 'startDate'}}
                 @data-field="issue.startDate"
-                @v-model={{this.model}}
-                @v-field='startDate'
-                @v-output='message'
             />
 
             <FormFields::FieldDate
-                @label="End Date"
+                @label={{t "views.app.issue.create.endDate"}}
                 @value={{readonly this.model.endDate}}
                 @update={{action "selectStatic" this.model 'endDate'}}
                 @data-field="issue.endDate"
-                @v-model={{this.model}}
-                @v-field='endDate'
-                @v-output='message'
             />
 
             {{field-relate

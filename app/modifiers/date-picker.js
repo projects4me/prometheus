@@ -5,7 +5,7 @@
 import { modifier } from 'ember-modifier';
 import $ from 'jquery';
 
-export default modifier(function datePicker(element, classReference) {
+export default modifier(function datePicker(element, update) {
 
     //applying daterangepicker on given element
     $(element).daterangepicker({
@@ -19,6 +19,6 @@ export default modifier(function datePicker(element, classReference) {
     /*Calling update function, which is actually 'selectStatic' function in prometheus.js, and giving it
     selected value of date using daterangepicker in order to set that selected date to model.*/
     $(element).on('apply.daterangepicker', function (ev, picker) {
-        classReference[0].update(picker.startDate.format('YYYY-MM-DD'));
+        update[0](picker.startDate.format('YYYY-MM-DD'));
     });
 });
