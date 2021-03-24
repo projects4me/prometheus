@@ -61,31 +61,25 @@
                 v-output='message'
             }}
 
-            {{field-date
-                placeholder="Enter the issue name .."
-                label="Start Date"
-                value=(readonly model.startDate)
-                update=(action "selectStatic" model 'startDate')
-                data-field="issue.startDate"
-                focus-out=(action (mut showStartDateError) true)
-                v-focus=showStartDateError
-                v-model=model
-                v-field='startDate'
-                v-output='message'
-            }}
+            <FormFields::FieldDate
+                @label="Start Date"
+                @value={{readonly this.model.startDate}}
+                @update={{action "selectStatic" this.model 'startDate'}}
+                @data-field="issue.startDate"
+                @v-model={{this.model}}
+                @v-field='startDate'
+                @v-output='message'
+            />
 
-            {{field-date
-                placeholder="Enter the issue name .."
-                label="End Date"
-                value=(readonly model.endDate)
-                update=(action "selectStatic" model 'endDate')
-                data-field="issue.endDate"
-                focus-out=(action (mut showEndDateError) true)
-                v-focus=showEndDateError
-                v-model=model
-                v-field='endDate'
-                v-output='message'
-            }}
+            <FormFields::FieldDate
+                @label="End Date"
+                @value={{readonly this.model.endDate}}
+                @update={{action "selectStatic" this.model 'endDate'}}
+                @data-field="issue.endDate"
+                @v-model={{this.model}}
+                @v-field='endDate'
+                @v-output='message'
+            />
 
             {{field-relate
                 placeholder=(t "views.app.issue.create.status")
