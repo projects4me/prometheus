@@ -1,8 +1,15 @@
 {{!-- This should be loaded later via the field view ideally --}}
 <div data-field={{@data-field}} class="form-field ember-view">
   <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}}
-    aria-invalid="true" aria-describedBy={{@data-field}} {{date-picker this.update}} />
+    aria-invalid="true" aria-describedBy={{@data-field}} autocomplete="off"
+    @focus-out={{action (mut this.shouldValidate) true}}
+    {{date-picker @update @format @singleDatePicker @showDropdowns @positionX @positionY @timePicker @timePickerIncrement @startDate @endDate @minDate @maxDate @maxSpan @minYear @maxYear @autoApply}} />
   <span class="highlight"></span>
   <span class="bar"></span>
   <label class="floating-label">{{@label}}</label>
+  {{#if this.shouldValidate}}
+  <span class="error text-red" id={{@data-field}}>
+    {{v-get @v-model @v-field @v-output}}
+  </span>
+  {{/if}}
 </div>

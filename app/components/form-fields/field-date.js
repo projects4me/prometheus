@@ -14,13 +14,4 @@ import FormFieldsComponent from "./form-fields";
  */
 export default class FieldDateComponent extends FormFieldsComponent {
 
-    /**
-     * This function returns update property which has 'selectStatic' function inside it.
-     *
-     * @method get
-     * @public
-     */
-    get update() {
-        return this.args.update;
-    }
 }

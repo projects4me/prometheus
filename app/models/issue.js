@@ -17,7 +17,9 @@ const Validations = buildValidations({
     assignee: validator('presence', true),
     owner: validator('presence', true),
     status: validator('presence', true),
-    priority: validator('presence', true)
+    priority: validator('presence', true),
+    startDate: validator('presence', true),
+    endDate: validator('presence', true)
 });
 
 /**
