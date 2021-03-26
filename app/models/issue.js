@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr,belongsTo,hasMany } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
+import EmberResolver from 'ember-resolver';
 
 /**
  * These are the validation that are applied on the model
@@ -19,7 +20,13 @@ const Validations = buildValidations({
     status: validator('presence', true),
     priority: validator('presence', true),
     startDate: validator('presence', true),
-    endDate: validator('presence', true)
+    endDate: [
+        validator('presence', true),
+        validator('date', {
+            after: Ember.computed.readOnly('model.startDate'),
+            message: "End date should be greater then start date"
+        })
+    ]
 });
 
 /**
@@ -311,7 +318,7 @@ export default Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    parentissue: belongsTo('issue',{inverse:null}),
+    parentissue: belongsTo('issue', { inverse: null }),
 
     /**
      * The type of the issue
@@ -351,7 +358,7 @@ export default Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    childissues: hasMany('issue',{inverse:null}),
+    childissues: hasMany('issue', { inverse: null }),
 
     /**
      * The comments made on this issue
