@@ -47,7 +47,7 @@
   }
 
   /* active state */
-  .data-input:focus ~ .floating-label, .data-input:valid ~ .floating-label, .select-input ~ .floating-label, .multiselect-input ~ .floating-label, .focused-field{
+  .data-input:focus ~ .floating-label, .data-input:valid ~ .floating-label, .select-input ~ .floating-label, .multiselect-input ~ .floating-label, .focused-field, .form-control[readonly] ~ .floating-label{
     top:-2rem;
     font-size:1.4rem;
     color: $primaryColor;
@@ -279,4 +279,8 @@
     margin-top: 3rem;
     margin-left:2rem
   }
+}
+
+.field-date input:read-only {
+  background-color: transparent;
 }

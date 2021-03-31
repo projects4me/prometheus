@@ -744,7 +744,9 @@ export default {
                     "status" : "Status",
                     "type" : "Type",
                     "placeholder" : {
-                        "subject" : "Enter the issue subject .."
+                        "subject" : "Enter the issue subject ..",
+                        "startDate" : "Select start date",
+                        "endDate" : "Select end date"
                     },
                     "textlabel" : "Issue Subject",
                     "typeId" : "Type",

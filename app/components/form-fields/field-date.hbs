@@ -1,6 +1,6 @@
 {{!-- This should be loaded later via the field view ideally --}}
-<div data-field={{@data-field}} class="form-field ember-view">
-  <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}}
+<div data-field={{@data-field}} class="form-field ember-view field-date">
+  <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}} readonly={{true}}
     aria-invalid="true" aria-describedBy={{@data-field}} autocomplete="off"
     @focus-out={{action (mut this.shouldValidate) true}}
     {{date-picker @update @format @singleDatePicker @showDropdowns @positionX @positionY @timePicker @timePickerIncrement @startDate @endDate @minDate @maxDate @maxSpan @minYear @maxYear @autoApply}} />

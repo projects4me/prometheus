@@ -81,7 +81,7 @@
     "@ember/jquery": "^1.1.0",
     "at.js": "^1.5.4",
     "awesome-bootstrap-checkbox": "^0.3.7",
-    "bootstrap-daterangepicker": "^2.1.27",
+    "bootstrap-daterangepicker": "^3.1.0",
     "bootstrap-select": "^1.13.18",
     "chart.js": "^2.9.4",
     "color-hash": "^1.0.3",

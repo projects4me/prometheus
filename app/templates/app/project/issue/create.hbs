@@ -62,6 +62,7 @@
             }}
 
             <FormFields::FieldDate
+                @placeholder={{t "views.app.issue.create.placeholder.startDate"}}
                 @label={{t "views.app.issue.create.startDate"}}
                 @value="{{readonly this.model.startDate}}"
                 @update={{action "selectStatic" this.model 'startDate'}}
@@ -74,10 +75,14 @@
                 @data-field="issue.startDate"
                 @v-model={{this.model}}
                 @v-field='startDate'
-                @v-output='message'                 
+                @v-output='message'
+                @autoApply={{true}}
+                @minDate='1990'
+                @maxDate='2023'                 
             />
 
             <FormFields::FieldDate
+                @placeholder={{t "views.app.issue.create.placeholder.endDate"}}
                 @label={{t "views.app.issue.create.endDate"}}
                 @value={{readonly this.model.endDate}}
                 @update={{action "selectStatic" this.model 'endDate'}}
@@ -90,7 +95,10 @@
                 @data-field="issue.endDate"
                 @v-model={{this.model}}
                 @v-field='endDate'
-                @v-output='message'                                                           
+                @v-output='message'
+                @autoApply={{true}}
+                @minDate='1990'
+                @maxDate='2023'                                                           
             />
 
             {{field-relate
