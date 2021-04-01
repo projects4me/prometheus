@@ -8,7 +8,7 @@ import $ from 'jquery';
 export default modifier(function datePicker(element, [update,format,singleDatePicker,showDropdowns, positionX, positionY, timePicker, timePickerIncrement, startDate, endDate, minDate, maxDate, maxSpan, minYear, maxYear, autoApply]) {
     //applying daterangepicker on given element
     $(element).daterangepicker({
-        singleDatePicker: singleDatePicker,
+        singleDatePicker: false,
         showDropdowns: showDropdowns,
         autoUpdateInput: false,
         opens: positionX,
@@ -19,7 +19,9 @@ export default modifier(function datePicker(element, [update,format,singleDatePi
         endDate: endDate,
         minDate: minDate,
         maxDate: maxDate,
-        maxSpan: maxSpan,
+        maxSpan: {
+            days: maxSpan
+        },
         minYear: minYear,
         maxYear: maxYear,
         autoApply: autoApply,
