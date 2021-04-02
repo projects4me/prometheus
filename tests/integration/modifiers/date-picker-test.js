@@ -37,26 +37,31 @@ module('Integration | Modifier | date-picker', function (hooks) {
   });
 
   test('Multi Date Picker', async function (assert) {
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    this.set('update', (date) => {
+      assert.equal(moment(date, 'YYYY-MM-DD,true').isValid(), true, 'Update function and date format validation');
+    });
+    await new Promise(resolve => setTimeout(resolve, 1000));
     await render(hbs`
       <Input
       id="test"
       style="margin-top:20%"
       placeholder="Select end date"
       label="End Date"                                                 
-      {{date-picker @update 'YYYY-MM-DD' false true '' '' '' '' '2021-03-01' '' '1990-02-13' '2022-11-30' '7' '' '' true}}
+      {{date-picker this.update 'YYYY-MM-DD' false true '' '' '' '' '2021-03-01' '' '1990-02-13' '2022-11-30' '7' '' '' true}}
       />
     `);
 
     await focus('input#test');
     await click(document.querySelector('tbody > tr:nth-child(1) > td:nth-child(2)'));
+
     assert.equal(document.querySelector('div.show-calendar').getAttribute('class'), 'daterangepicker ltr auto-apply show-calendar opens', 'Multi date picker');
     assert.equal(document.querySelector('td.start-date').innerHTML, '1', 'Start Date');
     assert.equal(document.querySelector('tbody > tr:nth-child(2) > td:nth-child(3)').getAttribute('class'), 'off disabled', 'Max Span');
     assert.equal(document.querySelector('select.yearselect > option').getAttribute('value'), '1990', 'Min year');
     assert.equal(document.querySelector('select.yearselect > option:last-child').getAttribute('value'), '2022', 'Max year');
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-
+    await click(document.querySelector('tbody > tr:nth-child(2) > td:nth-child(2)'));
     await render(hbs`
     <div id='clickOutside'> 
     </div>

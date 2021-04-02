@@ -5,10 +5,10 @@
 import { modifier } from 'ember-modifier';
 import $ from 'jquery';
 
-export default modifier(function datePicker(element, [update,format,singleDatePicker,showDropdowns, positionX, positionY, timePicker, timePickerIncrement, startDate, endDate, minDate, maxDate, maxSpan, minYear, maxYear, autoApply]) {
+export default modifier(function datePicker(element, [update, format, singleDatePicker, showDropdowns, positionX, positionY, timePicker, timePickerIncrement, startDate, endDate, minDate, maxDate, maxSpan, minYear, maxYear, autoApply]) {
     //applying daterangepicker on given element
     $(element).daterangepicker({
-        singleDatePicker: false,
+        singleDatePicker: singleDatePicker,
         showDropdowns: showDropdowns,
         autoUpdateInput: false,
         opens: positionX,
@@ -32,7 +32,16 @@ export default modifier(function datePicker(element, [update,format,singleDatePi
 
     /*Calling update function, which is actually 'selectStatic' function in prometheus.js, and giving it
     selected value of date using daterangepicker in order to set that selected date to model.*/
-    $(element).on('apply.daterangepicker', function (ev, picker) {
-        update(picker.startDate.format('YYYY-MM-DD'));
-    });
+    if (singleDatePicker) {
+        $(element).on('apply.daterangepicker', function (ev, picker) {
+            update(picker.startDate.format('YYYY-MM-DD'));
+        });
+    } else {
+        $(element).on('apply.daterangepicker', function (ev, picker) {
+            update(picker.startDate.format('YYYY-MM-DD'));
+        });
+        $(element).on('apply.daterangepicker', function (ev, picker) {
+            update(picker.endDate.format('YYYY-MM-DD'));
+        });
+    }
 });
