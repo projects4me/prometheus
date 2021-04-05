@@ -31,5 +31,6 @@ module('Integration | Component | field-date', function (hooks) {
     `);
     await click('div#clickOutside');
     assert.equal(window.getComputedStyle(document.querySelector('div.show-calendar')).getPropertyValue('display'),'none');
+    document.querySelector('div.show-calendar').remove();
   });
 });
