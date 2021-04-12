@@ -152,7 +152,10 @@
                 v-output='message'
             }}
 
-            <ToastUi/>
+            <ToastUi
+              @usersList={{membersList}}
+              @issuesList={{issuesList}}
+            />
 
           </div>
 
