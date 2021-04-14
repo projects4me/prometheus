@@ -194,7 +194,7 @@ $color_jumbo_approx: rgba(127, 127, 135,1);
     }
 }
 
-span[data-atwho-at-query*="@"]{
+span[id="@"]{
   border-radius: 0.3rem;
 
   a{
@@ -208,7 +208,7 @@ span[data-atwho-at-query*="@"]{
   }
 }
 
-span[data-atwho-at-query*="#"]{
+span[id="#"]{
   color: $backgroundColor;
   border-radius: 0.3rem;
 

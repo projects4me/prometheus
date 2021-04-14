@@ -5,9 +5,11 @@
 import { modifier } from 'ember-modifier';
 import Editor from '@toast-ui/editor';
 import Tribute from "tributejs";
+import format from "prometheus/utils/data/format";
 
 //This function initialize toastui editor's object.
-export default modifier(function initializeToastui(element,[usersList, issuesList]) {
+export default modifier(function initializeToastui(element,[usersList, issueSearch]) {
+  
   // Initializing tribute object
   let tribute = new Tribute({
     collection: [{
@@ -26,18 +28,20 @@ export default modifier(function initializeToastui(element,[usersList, issuesLis
       //template appears on selection of an list item
       selectTemplate: function (item) {
         return (
-          '<span contenteditable="false"><a href="/app/user/' +
+          '<span id="@"><a class="badge" href="/app/user/' +
           item.original.value +
-          '">' +
+          '">@' +
           item.original.label +
           "</a></span>"
         );
       },
       //if we want to match multiple trigger keys, this attribute should be false
-      autocompleteMode: false
+      autocompleteMode: false,
     }, {
       trigger: '#',
-      values: issuesList,
+      values: function (text,cb) {
+        remoteSearch(text,cb);
+      },
       menuItemTemplate: function (item) {
         return (
           '<a href="/app/user/' +
@@ -49,20 +53,19 @@ export default modifier(function initializeToastui(element,[usersList, issuesLis
       },
       selectTemplate: function (item) {
         return (
-          '<span contenteditable="false"><a href="/app/' +
-          item.original.projectId + '/issues/'+ item.original.number+
-          '">' +
-          item.original.number + '-' + item.original.name +
+          '<span id="#"><a class="'+item.original.status+' badge"href="/app/project/' +
+          item.original.projectId + '/issue/'+ item.original.number+
+          '">#' +
+          item.original.number + ' - ' + item.original.name +
           "</a></span>"
         );
       },
       lookup: 'number',
       autocompleteMode: false,
-      menuItemLimit: 5
     }
     ]
   });
-  
+
   //Creating Editor object of toastui 
   const editor = new Editor({
     el: element,
@@ -70,6 +73,19 @@ export default modifier(function initializeToastui(element,[usersList, issuesLis
     previewStyle: 'vertical'
   });
 
+  function remoteSearch(text,cb) {
+    var result = issueSearch(text);
+    let map = {
+      id:'id',
+      name:'subject',
+      number:'issueNumber',
+      status:'status',
+      projectId:'projectId'
+  };
+    result.then(function(data){
+      cb(format.getSelectList(data, map));
+    });
+  }
   //Getting element in order to attach tribute to it
   let targetElement = document.querySelector('div.tui-editor-contents.tui-editor-contents-placeholder');
   tribute.attach(targetElement);

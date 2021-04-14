@@ -8,6 +8,8 @@ import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 import format from "prometheus/utils/data/format";
 import _ from "lodash";
+import { task, timeout } from 'ember-concurrency';
+import RSVP from 'rsvp';
 
 /**
  * This is the controller for issue create page
@@ -49,7 +51,7 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @public
      */
-    milestoneList: computed('project', function(){
+    milestoneList: computed('project', function () {
         return format.getSelectList(this.project.milestones, false, this.i18n.t('global.blank'));
     }),
 
@@ -61,7 +63,7 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @public
      */
-    typeList: computed('types', function(){
+    typeList: computed('types', function () {
         return format.getSelectList(this.types);
     }),
 
@@ -74,7 +76,7 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @private
      */
-    usersList: computed('appController.usersList', function(){
+    usersList: computed('appController.usersList', function () {
         return this.appController.get('usersList');
     }),
 
@@ -86,7 +88,7 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @private
      */
-    estimates:[],
+    estimates: [],
 
     /**
      * This function sets the model properties before saving it
@@ -94,11 +96,11 @@ export default Create.extend(ProjectRelated, {
      * @method beforeSave
      * @param model
      */
-    beforeSave(model){
+    beforeSave(model) {
         model.set('projectId', this.target.currentState.routerJsState.params["app.project"].project_id);
-        model.set('reportedUser',this.currentUser.user.id);
-        model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
-        model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
+        model.set('reportedUser', this.currentUser.user.id);
+        model.set('startDate', moment(model.get('startDate')).format("YYYY-MM-DD"));
+        model.set('endDate', moment(model.get('endDate')).format("YYYY-MM-DD"));
     },
 
     /**
@@ -107,10 +109,10 @@ export default Create.extend(ProjectRelated, {
      * @method getSuccessMessage
      * @param model
      */
-    getSuccessMessage(model){
-        return this.i18n.t('views.app.issue.created',{
-            name:model.get('subject'),
-            issue_number:model.get('issueNumber')
+    getSuccessMessage(model) {
+        return this.i18n.t('views.app.issue.created', {
+            name: model.get('subject'),
+            issue_number: model.get('issueNumber')
         });
     },
 
@@ -120,10 +122,10 @@ export default Create.extend(ProjectRelated, {
      * @method navigateToSuccess
      * @param model
      */
-    navigateToSuccess(model){
+    navigateToSuccess(model) {
         this.transitionToRoute('app.project.issue.page', {
-            project_id:model.get('projectId'),
-            issue_number:model.get('issueNumber')
+            project_id: model.get('projectId'),
+            issue_number: model.get('issueNumber')
         });
     },
 
@@ -134,7 +136,7 @@ export default Create.extend(ProjectRelated, {
      * @param model
      * @protected
      */
-    hasChanged(model){
+    hasChanged(model) {
         return (_.size(model.changedAttributes()) > 2);
     },
 
@@ -145,9 +147,9 @@ export default Create.extend(ProjectRelated, {
      * @param projectId
      * @protected
      */
-    afterCancel(){
+    afterCancel() {
         let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
-        this.transitionToRoute('app.project.issue', {project_id:projectId});
+        this.transitionToRoute('app.project.issue', { project_id: projectId });
     },
 
     /**
@@ -170,7 +172,7 @@ export default Create.extend(ProjectRelated, {
      * @for Object
      * @public
      */
-    actions:{
+    actions: {
 
         /**
          * This function is used to set the parent for the issue
@@ -179,9 +181,42 @@ export default Create.extend(ProjectRelated, {
          * @param field
          * @param target
          */
-        changedParent(model, field, target){
+        changedParent(model, field, target) {
             model.set(field, target.id);
-        }
-    }
-
+        },
+        // search(query) {
+        //     console.log(query);
+        // }
+    },
+    /**
+     * This function loads the search data
+     *
+     * @param query
+     * @return {RSVP.Promise|Test.Promise|*}
+     */
+     loadSearchData(query) {
+        let _self = this;
+        let options = {
+            fields: 'Issue.id,Issue.issueNumber,Issue.subject,Issue.status,Issue.priority',
+            query: '((Issue.issueNumber CONTAINS ' + query +') AND (Issue.projectId : '+ this.target.currentState.routerJsState.params["app.project"].project_id +'))',
+            rels: 'none',
+            limit: 5,
+            sort:'Issue.issueNumber',
+            order: 'DESC'
+        };
+        return new RSVP.Promise((resolve) => {
+            resolve(_self.get('store').query('issue', options));
+        });
+    },
+    /**
+     * This is the task that is used to perform the search.
+     *
+     * @property search
+     * @type task
+     * @public
+     */
+    search: task(function* (query) {
+        yield timeout(500);
+       return this.loadSearchData(query);
+    })
 });
