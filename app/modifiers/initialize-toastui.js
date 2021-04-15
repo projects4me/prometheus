@@ -9,7 +9,7 @@ import format from "prometheus/utils/data/format";
 
 //This function initialize toastui editor's object.
 export default modifier(function initializeToastui(element,[usersList, issueSearch]) {
-  
+  console.log(usersList);
   // Initializing tribute object
   let tribute = new Tribute({
     collection: [{
@@ -28,7 +28,7 @@ export default modifier(function initializeToastui(element,[usersList, issueSear
       //template appears on selection of an list item
       selectTemplate: function (item) {
         return (
-          '<span id="@"><a class="badge" href="/app/user/' +
+          '<span contenteditable="false" id="@"><a class="badge" href="/app/user/' +
           item.original.value +
           '">@' +
           item.original.label +
@@ -53,7 +53,7 @@ export default modifier(function initializeToastui(element,[usersList, issueSear
       },
       selectTemplate: function (item) {
         return (
-          '<span id="#"><a class="'+item.original.status+' badge"href="/app/project/' +
+          '<span contenteditable="false" id="#"><a class="'+item.original.status+' badge"href="/app/project/' +
           item.original.projectId + '/issue/'+ item.original.number+
           '">#' +
           item.original.number + ' - ' + item.original.name +
