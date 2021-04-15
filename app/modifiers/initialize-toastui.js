@@ -9,7 +9,7 @@ import format from "prometheus/utils/data/format";
 
 //This function initialize toastui editor's object.
 export default modifier(function initializeToastui(element,[usersList, issueSearch]) {
-  console.log(usersList);
+
   // Initializing tribute object
   let tribute = new Tribute({
     collection: [{
@@ -44,8 +44,8 @@ export default modifier(function initializeToastui(element,[usersList, issueSear
       },
       menuItemTemplate: function (item) {
         return (
-          '<a href="/app/user/' +
-          item.original.number +
+          '<a href="/app/project/' +
+          item.original.projectId + '/issue/'+ item.original.number+
           '">' +
           item.original.number + '-' + item.original.name +
           "</a>"
@@ -53,6 +53,7 @@ export default modifier(function initializeToastui(element,[usersList, issueSear
       },
       selectTemplate: function (item) {
         return (
+          '{{priority-icon priority=(readonly '+ item.original.priority+')}}'+
           '<span contenteditable="false" id="#"><a class="'+item.original.status+' badge"href="/app/project/' +
           item.original.projectId + '/issue/'+ item.original.number+
           '">#' +
@@ -80,7 +81,8 @@ export default modifier(function initializeToastui(element,[usersList, issueSear
       name:'subject',
       number:'issueNumber',
       status:'status',
-      projectId:'projectId'
+      projectId:'projectId',
+      priority:'priority'
   };
     result.then(function(data){
       cb(format.getSelectList(data, map));

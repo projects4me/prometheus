@@ -201,6 +201,7 @@ span[id="@"]{
     background: $primaryColor !important;
     color: $backgroundColor;
     padding: 0rem 0.3rem;
+    text-decoration: none;
   }
   a:hover{
     background: $highlightColor !important;
@@ -210,7 +211,10 @@ span[id="@"]{
 
 span[id="#"]{
   border-radius: 0.3rem;
-
+  
+  a {
+    text-decoration: none;
+  }
   a.done,a.complete{
     background-color: #5AC594 !important;
     padding: 0rem 0.3rem;

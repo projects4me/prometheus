@@ -197,7 +197,7 @@ export default Create.extend(ProjectRelated, {
      loadSearchData(query) {
         let _self = this;
         let options = {
-            fields: 'Issue.id,Issue.issueNumber,Issue.subject,Issue.status,Issue.priority',
+            fields: 'Issue.id,Issue.issueNumber,Issue.subject,Issue.status,Issue.priority,Issue.projectId',
             query: '((Issue.issueNumber CONTAINS ' + query +') AND (Issue.projectId : '+ this.target.currentState.routerJsState.params["app.project"].project_id +'))',
             rels: 'none',
             limit: 5,
