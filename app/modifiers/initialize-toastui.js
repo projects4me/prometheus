@@ -6,9 +6,10 @@ import { modifier } from 'ember-modifier';
 import Editor from '@toast-ui/editor';
 import Tribute from "tributejs";
 import format from "prometheus/utils/data/format";
+import Icon from "prometheus/utils/ui/priority-icon";
 
 //This function initialize toastui editor's object.
-export default modifier(function initializeToastui(element,[usersList, issueSearch]) {
+export default modifier(function initializeToastui(element,[usersList, issueSearch, emojiList]) {
 
   // Initializing tribute object
   let tribute = new Tribute({
@@ -36,7 +37,6 @@ export default modifier(function initializeToastui(element,[usersList, issueSear
         );
       },
       //if we want to match multiple trigger keys, this attribute should be false
-      autocompleteMode: false,
     }, {
       trigger: '#',
       values: function (text,cb) {
@@ -52,17 +52,32 @@ export default modifier(function initializeToastui(element,[usersList, issueSear
         );
       },
       selectTemplate: function (item) {
+        let icon = new Icon();
+        let iconClass=  icon.getClass(item.original.priority);
         return (
-          '{{priority-icon priority=(readonly '+ item.original.priority+')}}'+
-          '<span contenteditable="false" id="#"><a class="'+item.original.status+' badge"href="/app/project/' +
+          '<span class="issue" contenteditable="false" id="#"><a class="'+item.original.status+' badge"href="/app/project/' +
           item.original.projectId + '/issue/'+ item.original.number+
-          '">#' +
+          '"><i class="fa '+iconClass+'"></i> #' +
           item.original.number + ' - ' + item.original.name +
           "</a></span>"
         );
       },
       lookup: 'number',
-      autocompleteMode: false,
+    }, {
+      trigger: ':',
+      values: emojiList,
+      menuItemTemplate: function (item) {
+        return (
+          '<a style="cursor:pointer"><i class="twa twa-'+item.original.name+'"></i>'+item.original.name +"</a>"
+        );
+      },
+      selectTemplate: function (item) {
+        return (
+          '<i class="twa twa-'+item.original.name+'"></i>'
+        );
+      },
+      menuItemLimit: 5,
+      lookup:'name',
     }
     ]
   });
