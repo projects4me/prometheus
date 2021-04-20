@@ -256,6 +256,9 @@ span[id="#"]{
     padding: 0rem 0.3rem;
     color: $backgroundColor;
   }
+  a.in_progress > i:first-child {
+    color: white;
+  }
   a.in_progress:hover{
     background-color: $highlightColor !important;
   }
