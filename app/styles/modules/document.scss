@@ -410,3 +410,7 @@ span[id="#"]{
     display: inline-block;
   }
 }
+
+.test::before {
+  content: '\1F600';
+}
