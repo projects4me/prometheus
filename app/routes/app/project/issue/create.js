@@ -51,6 +51,8 @@ export default App.extend({
         }).then(function(results){
             console.log(results);
             _self.set('issue',results.issue);
+            const issueDescription = _.clone(results.issue.description);
+            _self.set('issueDescription',issueDescription);
             _self.set('project',results.project.objectAt(0));
             _self.set('types',results.project.firstObject.issuetypes);
         });
@@ -81,7 +83,7 @@ export default App.extend({
         controller.set('model', _self.get('issue'));
         controller.set('project', _self.get('project'));
         controller.set('types', _self.get('types'));
-
+        controller.set('issueDescription',_self.get('issueDescription'));
         let priority = format.getList('views.app.issue.lists.priority',_self.get('i18n.locale'));
         let status = format.getList('views.app.issue.lists.status',_self.get('i18n.locale'));
 

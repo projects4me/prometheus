@@ -155,6 +155,8 @@
             <AppUi::ToastUi
               @usersList={{membersList}}
               @issueSearch={{perform this.search}}
+              @contents={{readonly issueDescription}}
+              @onContentChange={{action "selectStatic" model 'description'}}              
             />
 
           </div>
