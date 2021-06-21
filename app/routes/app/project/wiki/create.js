@@ -51,6 +51,7 @@ export default App.extend({
         });
 
         controller.set('model',wiki);
+        controller.set('markUp', _.clone(wiki.markUp));
     },
 
     /**

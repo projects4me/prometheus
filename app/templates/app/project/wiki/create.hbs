@@ -41,12 +41,14 @@
     </div>
 
     <div class="form-group">
-      {{summer-note
-          usersList=membersList
-          issuesList=issuesList
-          contents=(readonly model.markUp)
-          onContentChange=(action "selectStatic" model 'markUp')
-      }}
+      <AppUi::ToastUi
+          @usersList={{membersList}}
+          @issueSearch={{perform this.search}}
+          @contents={{readonly markUp}}
+          @editType= 'markdown'
+          @hide={{array 'footer'}}
+          @onContentChange={{action "selectStatic" model 'markUp'}}              
+      />
     </div>
 
   </div>
