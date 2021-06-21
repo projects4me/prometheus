@@ -32,12 +32,12 @@
                 @v-output='message'
             />
             <div data-field="issue.description" class="form-field ember-view">
-              {{summer-note
-                  usersList=membersList
-                  issuesList=issuesList
-                  contents=(readonly model.description)
-                  onContentChange=(action "selectStatic" model 'description')
-              }}
+              <AppUi::ToastUi
+                @usersList={{membersList}}
+                @issueSearch={{perform this.search}}
+                @contents={{readonly issueDescription}}
+                @onContentChange={{action "selectStatic" model 'description'}}              
+              />
               <span class="highlight"></span>
               <span class="bar"></span>
               <label class="floating-label focused-field">{{t "views.app.issue.create.description"}}</label>
@@ -151,13 +151,6 @@
                 v-field='milestoneId'
                 v-output='message'
             }}
-
-            <AppUi::ToastUi
-              @usersList={{membersList}}
-              @issueSearch={{perform this.search}}
-              @contents={{readonly issueDescription}}
-              @onContentChange={{action "selectStatic" model 'description'}}              
-            />
 
           </div>
 
