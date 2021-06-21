@@ -8,8 +8,6 @@ import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 import format from "prometheus/utils/data/format";
 import _ from "lodash";
-import { task, timeout } from 'ember-concurrency';
-import RSVP from 'rsvp';
 
 /**
  * This is the controller for issue create page
@@ -188,35 +186,4 @@ export default Create.extend(ProjectRelated, {
         //     console.log(query);
         // }
     },
-    /**
-     * This function loads the search data
-     *
-     * @param query
-     * @return {RSVP.Promise|Test.Promise|*}
-     */
-     loadSearchData(query) {
-        let _self = this;
-        let options = {
-            fields: 'Issue.id,Issue.issueNumber,Issue.subject,Issue.status,Issue.priority,Issue.projectId',
-            query: '((Issue.issueNumber CONTAINS ' + query +') AND (Issue.projectId : '+ this.target.currentState.routerJsState.params["app.project"].project_id +'))',
-            rels: 'none',
-            limit: 5,
-            sort:'Issue.issueNumber',
-            order: 'DESC'
-        };
-        return new RSVP.Promise((resolve) => {
-            resolve(_self.get('store').query('issue', options));
-        });
-    },
-    /**
-     * This is the task that is used to perform the search.
-     *
-     * @property search
-     * @type task
-     * @public
-     */
-    search: task(function* (query) {
-        yield timeout(500);
-       return this.loadSearchData(query);
-    })
 });
