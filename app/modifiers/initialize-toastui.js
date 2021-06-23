@@ -9,7 +9,7 @@ import format from "prometheus/utils/data/format";
 import Icon from "prometheus/utils/ui/priority-icon";
 
 //This function initialize toastui editor's object.
-export default modifier(function initializeToastui(element, [usersList, issueSearch, translatedEmojis, contents, onContentChange, editType, editorHeight, hide]) {
+export default modifier(function initializeToastui(element, [usersList, issueSearch, translatedEmojis, contents, onContentChange, editType, hide]) {
   let emojiList = {
     'grinning': '&#128516;',
     'joy': '&#128514;',
@@ -197,7 +197,6 @@ export default modifier(function initializeToastui(element, [usersList, issueSea
   //Creating Editor object of toastui 
   const editor = new Editor({
     el: element,
-    height: editorHeight,
     previewStyle: 'vertical',
     initialEditType: editType,
     events: {
