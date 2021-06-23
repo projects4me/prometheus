@@ -3,6 +3,7 @@
  */
 
 import Prometheus from "prometheus/controllers/prometheus";
+import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import Evented from '@ember/object/evented';
 import $ from "jquery";
 
@@ -15,7 +16,7 @@ import $ from "jquery";
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Prometheus.extend(Evented,{
+export default Prometheus.extend(Evented, ProjectRelated, {
 
     /**
      * This is the flag which is used to
