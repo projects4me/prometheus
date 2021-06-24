@@ -227,7 +227,7 @@ export default modifier(function initializeToastui(element, [usersList, issueSea
     });
   }
   //Getting element in order to attach tribute to it
-  let targetElement = document.querySelector('div.tui-editor-contents.tui-editor-contents-placeholder');
+  let targetElement = element.querySelector('div.tui-editor-contents.tui-editor-contents-placeholder');
   tribute.attach(targetElement);
 
   //Adding an event on opening of menu and after that appyling style and class on 'ul'
