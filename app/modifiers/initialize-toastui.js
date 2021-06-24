@@ -232,9 +232,11 @@ export default modifier(function initializeToastui(element, [usersList, issueSea
 
   //Adding an event on opening of menu and after that appyling style and class on 'ul'
   targetElement.addEventListener("tribute-active-true", function (e) {
-    let listElement = document.querySelector('div.tribute-container > ul');
-    listElement.style.display = "block";
-    listElement.classList.add('dropdown-menu');
+    let listElement = document.querySelectorAll('div.tribute-container > ul');
+    listElement.forEach((list) => {
+      list.style.display = "block";
+      list.classList.add('dropdown-menu');
+    })
   });
   element.value = contents;
   //Removing tribute from element
