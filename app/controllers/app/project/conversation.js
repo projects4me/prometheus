@@ -6,7 +6,7 @@ import Prometheus from "prometheus/controllers/prometheus";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import Evented from '@ember/object/evented';
 import $ from "jquery";
-
+import { inject } from '@ember/service';
 /**
  * This is the controller for the conversation controller route
  *
@@ -57,6 +57,8 @@ export default Prometheus.extend(Evented, ProjectRelated, {
      * @private
      */
     addConversationDialog: false,
+
+    pubSub: inject(),
 
     /**
      * Available room types
@@ -120,7 +122,7 @@ export default Prometheus.extend(Evented, ProjectRelated, {
                     if(_self.model.objectAt(count).get('id') === relatedId)
                     {
                         _self.model.objectAt(count).get('comments').pushObject(comment);
-                        _self.trigger('clearContents');
+                        _self.pubSub.trigger('clearContents');
                         break;
                     }
                 }
