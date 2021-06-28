@@ -1,0 +1,10 @@
+<AppUi::ToastUi
+    @usersList={{@usersList}}
+    @issueSearch={{@issueSearch}}
+    @editType= 'wysiwyg'
+    @hide={{array 'toolbar' 'footer'}}
+    @onContentChange={{this.setContent}}
+/>
+<div class="pull-right">
+  <button type="button" class="btn btn-primary" {{action @save @entityId this.comment}}>{{t "views.app.conversation.post"}}</button>
+</div>
