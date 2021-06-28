@@ -10,6 +10,7 @@ import { task, timeout } from 'ember-concurrency';
 import { action } from '@ember/object';
 import AppComponent from '../app';
 import {tracked} from'@glimmer/tracking';
+
 /**
  * This component is used to render the application header
  *

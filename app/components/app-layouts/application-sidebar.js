@@ -4,6 +4,14 @@
 
 import Component from '@glimmer/component';
 
+/**
+ * This component is used to render the application sidebar
+ *
+ * @class ApplicationSidebar
+ * @namespace Prometheus.Components
+ * @extends Ember.Component
+ * @author Rana Nouman <ranamnouman@yahoo.com>
+ */
 export default class ApplicationSidebarComponent extends Component {
 
     /**

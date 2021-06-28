@@ -20,7 +20,7 @@ export default App.extend({
      * The trackedProject service provides id of the selected project.
      *
      * @property trackedProject
-     * @type Object
+     * @type Ember.Service
      * @for Project
      * @private
      */

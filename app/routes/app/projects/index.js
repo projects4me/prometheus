@@ -112,7 +112,17 @@ export default App.extend({
      * @private
      */
     currentUser: inject(),
+
+    /**
+     * The trackedProject service provides id of the selected project.
+     *
+     * @property trackedProject
+     * @type Ember.Service
+     * @for Index
+     * @private
+     */
     trackedProject: inject(),
+
     /**
      * The model for this route
      *

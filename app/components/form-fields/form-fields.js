@@ -5,7 +5,6 @@
 import Component from '@glimmer/component';
 import { cancel } from '@ember/runloop';
 import { later } from '@ember/runloop';
-import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 /**

@@ -5,13 +5,22 @@
 import Component from '@glimmer/component';
 import { htmlSafe } from '@ember/string';
 
+/**
+ * This component is used to render the application header
+ *
+ * @class AttachmentIcon
+ * @namespace Prometheus.Components
+ * @extends Ember.Component
+ * @author Hammad Hassan <gollomer@gmail.com>
+ */
 export default class AttachmentIconComponent extends Component {
 
     /**
      * The is the mime value based on which a different icon will be displayed.
      * Some possilbe values are text/document, application/powerpoint, etc.
      * 
-     * @type String
+     * @method get
+     * @returns String
      */
     get mime() {
         return this.args.mime ?? '';
@@ -20,7 +29,8 @@ export default class AttachmentIconComponent extends Component {
     /**
      * HTML which can render the attachment icon based on the mime provided.
      * 
-     * @type String
+     * @method get
+     * @returns String
      */
     get attachmentIcon() {
         let mime = this.mime;

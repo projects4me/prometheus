@@ -5,6 +5,12 @@
 import { modifier } from 'ember-modifier';
 import $ from 'jquery';
 
+/**
+ * This modifier will be called on the creation of input field to apply masking on it
+ *
+ * @namespace Prometheus.Modifiers
+ * @author Rana Nouman <ranamnouman@yahoo.com>
+ */
 export default modifier((element, element_mask) => {
     /**
      * This function is used in order to do masking on input field depending upon there type e.g numeric, alphanumeric etc
@@ -41,6 +47,7 @@ export default modifier((element, element_mask) => {
     //getting element through JQuery '$' and then applying mask to that element.  
     $(element).mask(mask.mask, { translation: mask.maskTranslation });
 
+    //unmasking the element when it is destroying
     return () => {
         $(element).unmask();
     };

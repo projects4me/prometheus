@@ -9,6 +9,14 @@ import Logger from "js-logger";
 import { tracked } from '@glimmer/tracking';
 import AppComponent from '../app';
 
+/**
+ * This component is used to render the navbar
+ *
+ * @class NavBar
+ * @namespace Prometheus.Components
+ * @extends AppComponent
+ * @author Hammad Hassan <gollomer@gmail.com>
+ */
 export default class NavBarComponent extends AppComponent {
 
     /**

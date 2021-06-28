@@ -5,6 +5,13 @@
 import { modifier } from 'ember-modifier';
 import $ from 'jquery';
 
+/**
+ * This modifier will be called on the initialization of side bar component to attach slim scroll
+ * to it and activate AdminLTE's sidebar push menu
+ *
+ * @namespace Prometheus.Modifiers
+ * @author Rana Nouman <ranamnouman@yahoo.com>
+ */
 export default modifier(function initializeSidebar() {
     let o = $.AdminLTE.options;
     $.AdminLTE.tree('.sidebar');

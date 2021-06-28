@@ -9,39 +9,108 @@ import format from "prometheus/utils/data/format";
 import Icon from "prometheus/utils/ui/priority-icon";
 import { inject as service } from "@ember/service";
 
-//This function initialize toastui editor's object.
+/**
+ * This modifier will be called on the initialization of toast ui component to
+ * create toast editor and attach tribute to it.
+ *
+ * @class ToastEditor
+ * @namespace Prometheus.Modifiers
+ * @extends Modifier
+ * @author Rana Nouman <ranamnouman@yahoo.com>
+ */
 export default class ToastEditor extends Modifier {
 
+  /**
+   * PubSub service is used to provide DDAD 
+   *
+   * @property pubSub
+   * @type Ember.Service
+   * @private
+   */
   @service pubSub;
 
+  /**
+   * This function returns list of users 
+   *
+   * @method get
+   * @returns Array
+   * @public
+   */
   get usersList() {
     return this.args.positional[0];
   }
 
+  /**
+   * This function returns issue search function. This function is controlled
+   * by the controller (DDAU)
+   *
+   * @method get
+   * @returns Function
+   * @public
+   */
   get issueSearch() {
     return this.args.positional[1];
   }
 
+  /**
+   * This function returns list of translatedEmojis
+   *
+   * @method get
+   * @returns Array
+   * @public
+   */
   get translatedEmojis() {
     return this.args.positional[2];
   }
 
+  /**
+   * This function returns content
+   *
+   * @method get
+   * @returns String
+   * @public
+   */
   get contents() {
     return this.args.positional[3];
   }
 
+  /**
+   * This function returns onContentChange function which will be triggered on
+   * when user's content will be changed
+   *
+   * @method get
+   * @returns Function
+   * @public
+   */
   get onContentChange() {
     return this.args.positional[4];
   }
 
+  /**
+   * This function returns editType property which contains
+   * user's edit type. Either user want to use WYSIWYG or Markdown
+   *
+   * @method get
+   * @returns String
+   * @public
+   */
   get editType() {
     return this.args.positional[5];
   }
 
+  /**
+   * This function returns hide array which contains the thing the user
+   * want to hide from editor
+   *
+   * @method get
+   * @returns Array
+   * @public
+   */
   get hide() {
     return this.args.positional[6];
   }
 
+  //Called when the modifier is installed on the DOM element
   didInstall() {
     let emojiList = {
       'grinning': '&#128516;',
@@ -277,9 +346,9 @@ export default class ToastEditor extends Modifier {
       })
     });
     this.element.value = this.contents;
-    //Removing tribute from element
   }
 
+  //Removing tribute from element
   willDestroy() {
     this.tribute.detach(this.targetElement);
   }

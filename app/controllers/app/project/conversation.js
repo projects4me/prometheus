@@ -58,6 +58,14 @@ export default Prometheus.extend(Evented, ProjectRelated, {
      */
     addConversationDialog: false,
 
+    /**
+     * PubSub service is used to provide DDAD 
+     *
+     * @property pubSub
+     * @type Ember.Service
+     * @for Conversation
+     * @private
+     */
     pubSub: inject(),
 
     /**

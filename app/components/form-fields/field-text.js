@@ -10,7 +10,7 @@ import FormFieldsComponent from "./form-fields";
  * @class FieldText
  * @namespace Prometheus.Components
  * @extends FormField
- * @author Hammad Hassan <gollomer@gmail.com>
+ * @author Rana Nouman <ranamnouman@yahoo.com>
  */
 export default class FieldTextComponent extends FormFieldsComponent {
     

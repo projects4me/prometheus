@@ -1,16 +1,28 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
 import Component from '@glimmer/component';
-import $ from 'jquery';
 import { inject as service } from '@ember/service';
 
-export default class ToastUiComponent extends Component {
-    /**
- * This is the list of emojis that we support
+/**
+ * This component is used to render the toast editor
  *
- * @property emojiList
- * @type Array
- * @for Prometheus.Components.SummerNote
- * @private
+ * @class ToastUi
+ * @namespace Prometheus.Components
+ * @extends Ember.Component
+ * @author Rana Nouman <ranamnouman@yahoo.com>
  */
+export default class ToastUiComponent extends Component {
+
+    /**
+     * This is the list of emojis that we support
+     *
+     * @property emojiList
+     * @type Array
+     * @for Prometheus.Components.ToastUi
+     * @private
+     */
     emojiList = [
         'grinning',
         'joy',
@@ -120,10 +132,32 @@ export default class ToastUiComponent extends Component {
         '100',
     ]
 
+    /**
+     * List of translated emojis using will go inside this
+     *
+     * @property translatedEmojis
+     * @type Array
+     * @for Prometheus.Components.ToastUi
+     * @private
+     */
     translatedEmojis = [];
 
+    /**
+     * The i18n library service that is used in order to get the translations
+     *
+     * @property i18n
+     * @type Ember.Service
+     * @for Prometheus.Components.ToastUi
+     * @public
+     */
     @service i18n;
 
+    /**
+     * This function translate emojis using i18n service
+     *
+     * @method constructor
+     * @public
+     */
     constructor() {
         super(...arguments);
         let self = this;
