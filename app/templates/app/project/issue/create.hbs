@@ -46,22 +46,22 @@
               <span class="count pull-right"></span>
             </div>
 
-            {{field-relate
-                placeholder=(t "views.app.issue.create.type")
-                label=(t "views.app.issue.create.type")
-                value=model.typeId
-                options=typeList
-                selected=(find-by "value" model.typeId typeList)
-                searchField="label"
-                onchange=(action "selectRelated" model 'typeId')
-                relateType="relate-simple"
-                data-field="issue.type"
-                focus-out=(action (mut showTypeError) true)
-                v-focus=showTypeError
-                v-model=model
-                v-field='typeId'
-                v-output='message'
-            }}
+            <FormFields::FieldRelate
+                @placeholder={{t "views.app.issue.create.type"}}
+                @label={{t "views.app.issue.create.type"}}
+                @value={{this.model.typeId}}
+                @options={{this.typeList}}
+                @selected={{find-by "value" this.model.typeId this.typeList}}
+                @searchField="label"
+                @onchange={{action "selectRelated" model 'typeId'}}
+                @relateType="relate-simple"
+                @data-field="issue.type"
+                @focus-out={{action (mut showTypeError) true}}
+                @v-focus={{showTypeError}}
+                @v-model={{this.model}}
+                @v-field='typeId'
+                @v-output='message'
+            />
 
             <FormFields::FieldDate
                 @placeholder={{t "views.app.issue.create.placeholder.startDate"}}
