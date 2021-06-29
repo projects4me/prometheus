@@ -1,16 +1,16 @@
 <div class="input-group select-input">
-  {{#power-select
-      class="form-control"
-      options=options
-      placeholder=placeholder
-      selected=selected
-      searchField=searchField
-      onChange=@onchange
-      matcher=matcher
-      onblur=focus-out
-  as |data|}}
+  <PowerSelect
+      @class="form-control"
+      @options={{@options}}
+      @placeholder={{@placeholder}}
+      @selected={{@selected}}
+      @searchField={{@searchField}}
+      @onChange={{onchange}}
+      @matcher={{@matcher}}
+      @onblur={{@focus-out}}
+  as |data|>
     {{component relateType data=data}}
-  {{/power-select}}
+  </PowerSelect>
 </div>
 <span class="highlight"></span>
 <span class="bar"></span>
