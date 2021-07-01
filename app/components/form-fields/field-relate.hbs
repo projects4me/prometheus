@@ -1,5 +1,5 @@
 <div data-field={{@data-field}} class="form-field ember-view">
-    <div class="input-group select-input">
+  <div class="input-group select-input">
     <PowerSelect
         @class="form-control"
         @options={{@options}}
@@ -12,7 +12,7 @@
         @onblur={{@focus-out}} as |data|>
         {{component @relateType data=data}}
     </PowerSelect>
-    </div>
+  </div>
     <span class="highlight"></span>
     <span class="bar"></span>
     <label class="floating-label">{{@label}}</label>
