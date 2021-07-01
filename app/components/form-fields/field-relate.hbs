@@ -1,23 +1,24 @@
-<div class="input-group select-input">
-  <PowerSelect
-      @class="form-control"
-      @options={{@options}}
-      @placeholder={{@placeholder}}
-      @selected={{@selected}}
-      @searchField={{@searchField}}
-      @onChange={{onchange}}
-      @matcher={{@matcher}}
-      @onblur={{@focus-out}}
-  as |data|>
-    {{component relateType data=data}}
-  </PowerSelect>
+<div data-field={{@data-field}} class="form-field ember-view">
+    <div class="input-group select-input">
+    <PowerSelect
+        @class="form-control"
+        @options={{@options}}
+        @placeholder={{@placeholder}}
+        @selected={{@selected}}
+        @searchField={{@searchField}}
+        @onChange={{@onchange}}
+        @matcher={{@matcher}}
+        @onFocus={{action (mut this.shouldValidate) true}}
+        @onblur={{@focus-out}} as |data|>
+        {{component @relateType data=data}}
+    </PowerSelect>
+    </div>
+    <span class="highlight"></span>
+    <span class="bar"></span>
+    <label class="floating-label">{{@label}}</label>
+    {{#if this.shouldValidate}}
+    <span class="error text-red">
+        {{v-get @v-model @v-field @v-output}}
+    </span>
+    {{/if}}
 </div>
-<span class="highlight"></span>
-<span class="bar"></span>
-<label class="floating-label">{{label}}</label>
-<span class="count pull-right">{{#if length}}{{value.length}}/{{length}}{{/if}}</span>
-{{#if v-focus}}
-  <span class="error text-red">
-    {{v-get v-model v-field v-output}}
-  </span>
-{{/if}}
