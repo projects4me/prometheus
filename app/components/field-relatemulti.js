@@ -34,7 +34,7 @@ export default FormField.extend({
      * @protected
      */
     charLength: computed('value', function() {
-        return (this.get('value'));
+        return (this.value);
     }),
 
 });

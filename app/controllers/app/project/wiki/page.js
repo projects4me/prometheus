@@ -5,7 +5,6 @@
 import Prometheus from "prometheus/controllers/prometheus";
 import { task } from 'ember-concurrency';
 import { inject } from '@ember/service';
-import { get } from '@ember/object';
 import { set } from '@ember/object';
 import $ from 'jquery';
 
@@ -79,30 +78,19 @@ export default Prometheus.extend({
         let upload = this.store.createRecord('upload', {});
 
         try {
-
+            let { access_token } = _self.get('session.data.authenticated');
             let options = {
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'wiki',
-                    relatedId: _self.get('model').objectAt(0).get('id')
+                    relatedId: _self.get('model').get('id')
                 },
-                headers: upload.store.adapterFor('upload').headersForRequest()
+                headers: {'Authorization': `Bearer ${access_token}`}
             };
 
             let response = yield file.upload(options);
 
             let data = JSON.parse(response.body);
-            /**
-             *
-             *
-             *
-             *
-             *  @todo check for errors
-             *
-             *
-             *
-             *
-             */
             set(upload, 'id',data.data.id);
             set(upload, 'name',data.data.attributes.name);
             set(upload, 'fileSize',data.data.attributes.fileSize);
@@ -111,8 +99,13 @@ export default Prometheus.extend({
             set(upload, 'relatedTo',data.data.attributes.relatedTo);
             set(upload, 'relatedId',data.data.attributes.relatedId);
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
-            _self.get('model').objectAt(0).get('files').pushObject(upload);
+            _self.get('model').get('files').pushObject(upload);
         } catch (e) {
+            new Messenger().post({
+                message: _self.get('i18n').t("global.oops"),
+                type: 'error',
+                showCloseButton: true
+            });
             //upload.rollback();
         }
     }).maxConcurrency(3).enqueue(),
@@ -135,7 +128,7 @@ export default Prometheus.extend({
          * @todo Trigger the notificaiton
          */
         edit() {
-            let model = this.get('model').objectAt(0);
+            let model = this.model;
             this.transitionToRoute('app.project.wiki.edit', {project_id:model.get('projectId'),wiki_name:model.get('name')});
         },
 
@@ -157,8 +150,8 @@ export default Prometheus.extend({
          */
         create() {
             Logger.debug('Create a page for ');
-            Logger.debug(this.get('projectId'));
-            this.transitionToRoute('app.project.wiki.create', {project_id:this.get('projectId')});
+            Logger.debug(this.projectId);
+            this.transitionToRoute('app.project.wiki.create', {project_id:this.projectId});
         },
 
         /**
@@ -186,7 +179,7 @@ export default Prometheus.extend({
             Logger.debug("AppProjectWikiPageController:upvote("+wikiId+")");
 
             let _self = this;
-            let vote = this.get('store').createRecord('vote',{
+            let vote = this.store.createRecord('vote',{
                 vote: 1,
                 relatedTo:'wiki',
                 relatedId:wikiId
@@ -201,7 +194,7 @@ export default Prometheus.extend({
                         tpye: 'success',
                         showCloseButton: true
                     });
-                    _self.get('model').objectAt(0).get('vote').addObject(data);
+                    _self.get('model').get('vote').addObject(data);
                     _self.set('iVoted',1);
                 }
             });
@@ -216,7 +209,7 @@ export default Prometheus.extend({
          */
         lockWiki(action) {
             let _self = this;
-            let model = this.get('model').objectAt(0);
+            let model = this.model;
             if (action === 'unlock')
             {
                 set(model,'locked',"1");
@@ -254,7 +247,7 @@ export default Prometheus.extend({
          * @param file
          */
         uploadFile(file) {
-            get(this, 'handleUpload').perform(file);
+            this.handleUpload.perform(file);
         },
 
         /**
@@ -265,7 +258,6 @@ export default Prometheus.extend({
         deleteFile(file) {
             Logger.debug('App.Project.Wiki.PageController->deleteFile');
             let _self = this;
-            Logger.debug(_self);
 
             let deleting = new Messenger().post({
                 message: _self.get('i18n').t("views.app.wiki.page.file.delete",{name:file.get('name')}).toString(),
@@ -279,7 +271,7 @@ export default Prometheus.extend({
                             // destroy the upload
                             file.destroyRecord().then(function(){
                                 // remove from the view by updating the model
-                                _self.get('model').objectAt(0).get('files').removeObject(file);
+                                _self.get('model').get('files').removeObject(file);
 
                                 return deleting.update({
                                     message: _self.get('i18n').t("views.app.wiki.page.file.deleted"),
@@ -322,7 +314,7 @@ export default Prometheus.extend({
                 download: true
             };
             Logger.debug('Retrieving upload with options '+options);
-            this.get('store').query('upload',options).then(function(data){
+            this.store.query('upload',options).then(function(data){
                 let downloadLink = data.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 

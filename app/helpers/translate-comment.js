@@ -25,55 +25,7 @@ export function translateComment(params) {
     {
         data = '';
     }
-
-    /*
-     // Find {{}}
-     var str = data;
-     var rex = new RegExp("{{.*?}}", "g"); // "g" for global
-     var matchesArray = str.match(rex);
-     var $link = '';
-     for (var idx in matchesArray) {
-     if (matchesArray.hasOwnProperty(idx)) {
-     $link = matchesArray[idx];
-     $link = JSON.parse($link.replace('{{','{').replace('}}','}'));
-
-     // Create User link
-     // @todo get module name from a registry
-     if ($link.user !== undefined)
-     {
-     $link = '<a href="#/app/user/'+$link.id+'">'+$link.user+'</a>';
-     }
-     else {
-     $link = '';
-     }
-     data = data.replace(matchesArray[idx],$link);
-     }
-     }
-
-     // Handle list
-     // $todo be able to handle mutiple list groups
-     str = data;
-     rex = new RegExp(">\..*?\n", "g"); // "g" for global
-     matchesArray = str.match(rex);
-     var $list = '';
-     var $listGroup = '';
-     if (matchesArray !== null)
-     {
-     for (idx in matchesArray) {
-     if (matchesArray.hasOwnProperty(idx)) {
-     $list = matchesArray[idx];
-     $list = $list.replace('>. ','<li>').replace("\n","</li>");
-     $listGroup += $list;
-     data = data.replace(matchesArray[idx],$list);
-     }
-     }
-     data = data.replace($listGroup,'<ul>'+$listGroup+'</ul>');
-     }
-     */
-
-    // Handle end lines
-    data = data.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br />' + '$2');
-
+    
     return htmlSafe(data);
 }
 

@@ -35,9 +35,8 @@ export default Prometheus.extend({
          * @public
          */
         create:function(){
-            Logger.debug('AppProjectWikiController::setupController');
-            Logger.debug(this.get('model.projectId'));
-            this.transitionToRoute('app.project.wiki.create', {project_id:this.get('model.projectId')});
+            let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
+            this.transitionToRoute('app.project.wiki.create', {project_id:projectId});
         }
 
     }

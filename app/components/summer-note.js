@@ -165,7 +165,7 @@ export default Component.extend({
     init:function(){
         this._super(...arguments);
         let self = this;
-        let emojiList = $.map(this.get('emojiList'), function(emoji) {
+        let emojiList = $.map(this.emojiList, function(emoji) {
             return {'id':emoji, 'name':self.get('i18n').t('emoji.'+emoji)};
         });
         self.set('translatedEmojis',emojiList);
@@ -252,7 +252,7 @@ export default Component.extend({
             lang:'en-US',
         }); // End Summernote init
 
-        let contents = this.get('contents');
+        let contents = this.contents;
         self.$(self.element).summernote('code', contents);
     },
 

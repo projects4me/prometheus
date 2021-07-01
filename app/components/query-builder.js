@@ -105,7 +105,7 @@ export default Component.extend({
      * @private
      */
     _setRules(filters){
-        let rules = queryParser.getRules(this.get('query'),filters);
+        let rules = queryParser.getRules(this.query,filters);
 
         if (rules !== undefined && rules !== '') {
             queryBuilder.setRules(rules);

@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr,belongsTo,hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -26,7 +26,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * The name of the milestone
@@ -36,7 +36,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    name: DS.attr('string'),
+    name: attr('string'),
 
     /**
      * The date on which the milestone was created
@@ -46,7 +46,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * The date on which the milestone was created
@@ -56,7 +56,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * The description of the milestone
@@ -66,7 +66,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    description: DS.attr('string'),
+    description: attr('string'),
 
     /**
      * The identifier of the user who created the milestone
@@ -76,7 +76,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The identifier of the user who laste modified the milestone
@@ -86,7 +86,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     /**
      * The type of the milestone
@@ -96,7 +96,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    milestoneType: DS.attr('string'),
+    milestoneType: attr('string'),
 
     /**
      * The status of the milestone
@@ -106,7 +106,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    status: DS.attr('string'),
+    status: attr('string'),
 
     /**
      * The start date set for the milestone
@@ -116,7 +116,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    startDate: DS.attr('string'),
+    startDate: attr('string'),
 
     /**
      * The end date set for the milestone
@@ -126,7 +126,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    endDate: DS.attr('string'),
+    endDate: attr('string'),
 
     /**
      * The identifier of the project to which this milestone belongs to
@@ -136,7 +136,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    projectId: DS.attr('string'),
+    projectId: attr('string'),
 
     /**
      * The soft deletion flag of the milestone
@@ -146,7 +146,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    deleted: DS.attr('string'),
+    deleted: attr('string'),
 
     /**
      * The project the milestone is related to
@@ -156,7 +156,7 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    project : DS.belongsTo('project'),
+    project : belongsTo('project'),
 
     /**
      * The issues that belongs to this milestone
@@ -166,6 +166,6 @@ export default DS.Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    issues : DS.hasMany('issue'),
+    issues : hasMany('issue'),
 
 });

@@ -10,7 +10,7 @@
           <h2 class="box-title">{{model.name}} - ({{model.shortCode}})</h2>
 
           <div class="box-tools pull-right">
-            <span class="project-status"><span class="badge {{model.status}}">{{t (concat "views.app.project.detail.lists.status." model.status)}}</span></span>
+            <span class="project-status"><span class="badge {{model.status}}">{{t (concat "views.app.project.lists.status." model.status)}}</span></span>
             <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editProject" model.id}}><i class="fa fa-pencil"></i></button>
             <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
           </div>
@@ -49,7 +49,7 @@
             <div class="col-xs-6 col-md-4">
               <h4>{{t "views.app.project.detail.type"}}</h4>
               <p>
-                {{t (concat "views.app.project.detail.lists.type." model.type)}}
+                {{t (concat "views.app.project.lists.type." model.type)}}
               </p>
             </div>
 

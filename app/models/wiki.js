@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr,hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -25,7 +25,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * Name of the wiki page
@@ -35,7 +35,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    name: DS.attr('string'),
+    name: attr('string'),
 
     /**
      * Date on which the wiki page was created
@@ -45,7 +45,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * Date on which the wiki page was last modified
@@ -55,7 +55,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * The identifier of the user who created the wiki page
@@ -65,7 +65,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The name of the use who created the wiki page
@@ -75,7 +75,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    createdUserName: DS.attr('string'),
+    createdUserName: attr('string'),
 
     /**
      * The identifier of the user who last modified the wiki page
@@ -85,7 +85,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     /**
      * The name of the user who last modified the wiki page
@@ -95,7 +95,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    modifiedUserName: DS.attr('string'),
+    modifiedUserName: attr('string'),
 
     /**
      * The soft deletion flag of the wiki page
@@ -105,7 +105,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    deleted: DS.attr('string'),
+    deleted: attr('string'),
 
     /**
      * The status of the wiki page
@@ -115,7 +115,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    status: DS.attr('string'),
+    status: attr('string'),
 
     /**
      * The lock flag of the wiki page
@@ -125,7 +125,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    locked: DS.attr('string'),
+    locked: attr('string'),
 
     /**
      * The upvotes given to the project
@@ -135,7 +135,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    upvotes: DS.attr('string'),
+    upvotes: attr('string'),
 
     /**
      * The identifier of the project that the wiki page is linked to
@@ -145,7 +145,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    projectId: DS.attr('string'),
+    projectId: attr('string'),
 
     /**
      * The mark up of the wiki page
@@ -155,7 +155,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    markUp: DS.attr('string'),
+    markUp: attr('string'),
 
     /**
      * The identifier of the parent wiki page
@@ -165,7 +165,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    parentId: DS.attr('string'),
+    parentId: attr('string'),
 
     /**
      * The tags for the wiki page
@@ -175,7 +175,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    tag: DS.hasMany('tag'),
+    tag: hasMany('tag'),
 
     /**
      * These are the tag relationship entries
@@ -185,7 +185,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    tagged: DS.hasMany('tagged'),
+    tagged: hasMany('tagged'),
 
     /**
      * The votes for this wiki page
@@ -195,7 +195,7 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    vote: DS.hasMany('vote'),
+    vote: hasMany('vote'),
 
     /**
      * The file associated with this wiki
@@ -205,6 +205,6 @@ export default DS.Model.extend(Validations, {
      * @for Wiki
      * @private
      */
-    files: DS.hasMany('upload')
+    files: hasMany('upload')
 
 });

@@ -3,7 +3,6 @@
  */
 
 import Checkbox from '@ember/component/checkbox';
-import { get } from '@ember/object';
 
 /**
  * This object is used to modify the default TextField of EmberJs in order to
@@ -41,7 +40,7 @@ export default Checkbox.extend({
     init(){
         this._super(...arguments);
 
-        let action = this.get('action');
+        let action = this.action;
         if(action){
             this.on('change', this, this.changeEvent);
         }
@@ -54,7 +53,7 @@ export default Checkbox.extend({
      * @public
      */
     changeEvent(){
-        get(this, 'action')(this.$().prop('checked'));
+         this.action(this.$().prop('checked'));
         //this.sendAction('action',  );
     },
 

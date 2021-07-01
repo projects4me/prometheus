@@ -227,7 +227,7 @@ export default Component.extend({
      * @private
      */
     contenteditable: computed('editable', function() {
-        let editable = this.get('editable');
+        let editable = this.editable;
 
         return editable ? 'true' : undefined;
     }),
@@ -242,7 +242,7 @@ export default Component.extend({
      * @private
      */
     spellcheck: ('checkSpelling', function() {
-        let spelling = this.get('checkSpelling');
+        let spelling = this.checkSpelling;
 
         return spelling ? 'true' : 'false';
     }),
@@ -270,7 +270,7 @@ export default Component.extend({
         this._super(...arguments);
         let self = this;
 
-        let emojiList = $.map(this.get('emojiList'), function(emoji) {
+        let emojiList = $.map(this.emojiList, function(emoji) {
             return {'id':emoji, 'name':self.get('i18n').t('emoji.'+emoji)};
         });
 
@@ -285,7 +285,7 @@ export default Component.extend({
      * @public
      */
     processValue() {
-        if (!this.get('isUserTyping') && this.get('value')) {
+        if (!this.isUserTyping && this.value) {
             return this.setContents();
         }
     },
@@ -333,7 +333,7 @@ export default Component.extend({
      * @public
      */
     setContents() {
-        return this.get('value');
+        return this.value;
     },
 
     /**
@@ -358,7 +358,7 @@ export default Component.extend({
         let self = this;
 
         // Add a listener for clearing the contents
-        self.get('_targetObject').on('clearContents', $.proxy(self.clearContents, self));
+        self.get('_target').on('clearContents', $.proxy(self.clearContents, self));
 
         // Setup the message box to load listen to the keyword @, # and :
         $('#'+this.elementId)

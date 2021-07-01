@@ -44,8 +44,6 @@ export default Component.extend({
      */
     classNames: ['fa'],
 
-    classNameBindings: ['getClassNames'],
-
     /**
      * These are the class names to be associated with this component
      *
@@ -55,7 +53,7 @@ export default Component.extend({
      * @private
      */
     getClassNames: computed('priority', function() {
-        let priority =this.get('priority');
+        let priority =this.priority;
         let className = '';
 
         switch (priority) {

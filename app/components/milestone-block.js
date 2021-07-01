@@ -41,7 +41,7 @@ export default Component.extend({
      * @private
      */
     layoutName: computed('milestone', 'model', function() {
-        let milestone = this.get('milestone');
+        let milestone = this.milestone;
         let status = milestone.get('status');
         let progress = 0;
         let template;

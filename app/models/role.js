@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -23,7 +23,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * Name of the role
@@ -33,7 +33,7 @@ export default DS.Model.extend(Validations, {
      * @for Role
      * @private
      */
-    name: DS.attr('string'),
+    name: attr('string'),
 
     /**
      * The date on which the role was created
@@ -43,7 +43,7 @@ export default DS.Model.extend(Validations, {
      * @for Role
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * The date on which the role was last modified
@@ -53,7 +53,7 @@ export default DS.Model.extend(Validations, {
      * @for Role
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * The soft deletion flag of the role
@@ -63,7 +63,7 @@ export default DS.Model.extend(Validations, {
      * @for Role
      * @private
      */
-    deleted: DS.attr('string'),
+    deleted: attr('string'),
 
     /**
      * The description of the role
@@ -73,7 +73,7 @@ export default DS.Model.extend(Validations, {
      * @for Role
      * @private
      */
-    description: DS.attr('string'),
+    description: attr('string'),
 
     /**
      * The identifier of the user who created the role
@@ -83,7 +83,7 @@ export default DS.Model.extend(Validations, {
      * @for Role
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The identifier of the user who last modified the role
@@ -93,7 +93,7 @@ export default DS.Model.extend(Validations, {
      * @for Role
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     // Add the relationships here
 });

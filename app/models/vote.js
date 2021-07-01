@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -25,7 +25,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * Date on which the vote was created
@@ -35,7 +35,7 @@ export default DS.Model.extend(Validations, {
      * @for Vote
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * Date on which the vote was last modified
@@ -45,7 +45,7 @@ export default DS.Model.extend(Validations, {
      * @for Vote
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * The identifier of the user who created the vote
@@ -55,7 +55,7 @@ export default DS.Model.extend(Validations, {
      * @for Vote
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The name of the use who created the vote
@@ -65,7 +65,7 @@ export default DS.Model.extend(Validations, {
      * @for Vote
      * @private
      */
-    createdUserName: DS.attr('string'),
+    createdUserName: attr('string'),
 
     /**
      * The identifier of the user who last modified the vote
@@ -75,7 +75,7 @@ export default DS.Model.extend(Validations, {
      * @for Vote
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     /**
      * The name of the user who last modified the vote
@@ -85,7 +85,7 @@ export default DS.Model.extend(Validations, {
      * @for Vote
      * @private
      */
-    modifiedUserName: DS.attr('string'),
+    modifiedUserName: attr('string'),
 
     /**
      * The vote flag
@@ -95,7 +95,7 @@ export default DS.Model.extend(Validations, {
      * @for Vote
      * @private
      */
-    vote: DS.attr('string'),
+    vote: attr('string'),
 
     /**
      * The identifier of the record this vote is related to
@@ -105,7 +105,7 @@ export default DS.Model.extend(Validations, {
      * @for Vote
      * @private
      */
-    relatedId: DS.attr('string'),
+    relatedId: attr('string'),
 
     /**
      * The model this vote is related to
@@ -115,6 +115,6 @@ export default DS.Model.extend(Validations, {
      * @for Vote
      * @private
      */
-    relatedTo: DS.attr('string'),
+    relatedTo: attr('string'),
 
 });

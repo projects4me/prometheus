@@ -2,160 +2,112 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import App from "../../../app";
+import App from "prometheus/routes/app";
+import { hash } from 'rsvp';
+import format from "prometheus/utils/data/format";
 
 /**
- *  This is the route that will handle the creation of new issues
+ * This is the route that will handle the creation of new issues
  *
- *  @class Create
- *  @namespace Prometheus.Routes
- *  @module App.Project.Issue
- *  @extends App
- *  @author Hammad Hassan <gollomer@gamil.com>
+ * @class Create
+ * @namespace Prometheus.Routes
+ * @module App.Project.Issue
+ * @extends App
+ * @author Hammad Hassan <gollomer@gamil.com>
  */
 export default App.extend({
 
     /**
-     * This is the model for this route
+     * We are using dynamic segments and since model is not called
+     * again for a route that is using dynamic segment we are relying
+     * on the afterModel hook so that the controller waits since we
+     * return a Promise.
      *
-     * @property model
-     * @type function
-     * @for Create
-     * @protected
+     * @method model
+     * @param {Object} params
+     * @return Prometheus.Issue
+     * @private
      */
-    model:function()
-    {
-        let self = this;
-        return self.get('store').createRecord('issue',{
-            assignee : self.get('currentUser').user.id,
-            owner : self.get('currentUser').user.id
-        });
-    },
+    afterModel(){
+        Logger.debug('Prometheus.Routes.App.Project.Issue.Create::afterModel()');
+        let _self = this;
+        let projectId = _self.paramsFor('app.project').project_id;
 
-
-    /**
-     * This function is called every time the controller is being setup
-     *
-     * @method setupController
-     * @param {Prometheus.Controllers.Issue} controller
-     * @param {Prometheus.Models.Issue} model
-     * @protected
-     */
-    setupController:function(controller,model)
-    {
-
-        Logger.debug('AppProjectIndexRoute::setupController');
-
-        let i18n = this.get('i18n');
-
-        // If the user navigated directly to the wiki project or page then lets setup the project id
-        let projectId = this.paramsFor('app.project').project_id;
-
-        Logger.debug(projectId);
-
-        let options = {
+        let projectOptions = {
             query: "(Project.id : "+projectId+")",
             rels : 'members,milestones,issuetypes',
             sort: "members.name",
             limit: -1
         };
 
-        Logger.debug('Retreiving the project with options ');
-        Logger.debug(options);
+        Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::afterModel()');
 
-        this.data = this.store.query('project',options).then(function(data){
-
-            let memberCount = data.objectAt(0).get('members.length');
-            let memberList = [];
-            let temp = null;
-            memberList[0] = {label:i18n.t("global.blank"), value:null};
-            for (let i=1;i<=memberCount;i++)
-            {
-                temp = data.objectAt(0).get('members').objectAt(i-1);
-                memberList[i] = {label:temp.get('name'), value:temp.get('id')};
-            }
-
-            let milestoneCount = data.objectAt(0).get('milestones.length');
-            let milestoneList = [];
-            temp = null;
-            milestoneList[0] = {label:i18n.t("global.blank"), value:null};
-            for (let i=1;i<=milestoneCount;i++)
-            {
-                temp = data.objectAt(0).get('milestones').objectAt(i-1);
-                milestoneList[i] = {label:temp.get('name'), value:temp.get('id')};
-            }
-
-            let typeCount = data.objectAt(0).get('issuetypes.length');
-            let typeList = [];
-            temp = null;
-            for (let i=0;i<typeCount;i++)
-            {
-                temp = data.objectAt(0).get('issuetypes').objectAt(i);
-                typeList[i] = {label:temp.get('name'), value:temp.get('id')};
-            }
-
-            let priority = [
-                {
-                    "label":"Medium",
-                    "value":"medium"
-                },
-                {
-                    "label":"High",
-                    "value":"high"
-                },
-                {
-                    "label":"Low",
-                    "value":"low"
-                },
-                {
-                    "label":"Critical",
-                    "value":"critical"
-                },
-                {
-                    "label":"Bloker",
-                    "value":"blocker"
-                }
-            ];
-
-            let status = [
-                {
-                    "label":"New",
-                    "value":"new"
-                },
-                {
-                    "label":"In Progress",
-                    "value":"in_progress"
-                },
-                {
-                    "label":"Pending",
-                    "value":"pending"
-                },
-                {
-                    "label":"Done",
-                    "value":"done"
-                },
-                {
-                    "label":"Wont't Fix",
-                    "value":"wont_fix"
-                }
-            ];
-
-
-            Logger.debug('Data to be given');
-            Logger.debug(memberList);
-            Logger.debug(milestoneList);
-            Logger.debug(typeList);
-            controller.set('memberList',memberList);
-            controller.set('milestoneList',milestoneList);
-            controller.set('type',typeList);
-            controller.set('status',status);
-            controller.set('priority',priority);
-
+        return hash({
+            issue: _self.store.createRecord('issue',{
+                assignee : _self.get('currentUser').user.id,
+                owner : _self.get('currentUser').user.id
+            }),
+            project: _self.store.query('project',projectOptions)
+        }).then(function(results){
+            console.log(results);
+            _self.set('issue',results.issue);
+            const issueDescription = _.clone(results.issue.description);
+            _self.set('issueDescription',issueDescription);
+            _self.set('project',results.project.objectAt(0));
+            _self.set('types',results.project.firstObject.issuetypes);
         });
-
-        controller.set('model',model);
-        Logger.debug('Model');
-        Logger.debug(model);
     },
+
+    /**
+     * This function is called by the route when it has created the controller and
+     * the controller is ready to be setup with any data that we may need. We are
+     * using this function in order to bind the model of the route to the model
+     * of the controller.
+     *
+     * The setup controller is only called once and if the model is changed Ember
+     * reflects the change in the controller as well.
+     *
+     * @method setupController
+     * @param {Prometheus.Controllers.Issue} controller The controller object for the issues
+     * @param {Prometheus.Models.Issue} model The model that is created by this route
+     * @private
+     */
+    setupController:function(controller){
+        Logger.debug('Prometheus.Routes.App.Project.Issue.Create::setupController');
+
+        let _self = this;
+
+        let params = this.paramsFor('app.project.issue.edit');
+
+        this.set('breadCrumb',{title:'#'+params.issue_number,record:true});
+        controller.set('model', _self.get('issue'));
+        controller.set('project', _self.get('project'));
+        controller.set('types', _self.get('types'));
+        controller.set('issueDescription',_self.get('issueDescription'));
+        let priority = format.getList('views.app.issue.lists.priority',_self.get('i18n.locale'));
+        let status = format.getList('views.app.issue.lists.status',_self.get('i18n.locale'));
+
+        controller.set('status',status);
+        controller.set('priority',priority);
+
+        Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::setupController');
+    },
+
+    /**
+     * This function is trigged on route exit. So on route exit we're destroying empty model of issue.
+     *
+     * @method resetController
+     * @param {Prometheus.Controllers.Issue} controller The controller object for the issues
+     * @param {boolean} isExiting It returns boolean value telling that route is exiting or not.
+     * @param {object} transition It gives us transition object in order to get current route name.
+     * @private
+     */
+    resetController(controller, isExiting, transition) {
+        if (isExiting && transition.targetName !== 'error') {
+            if(!controller.model.id) {
+                controller.model.destroyRecord();
+            }
+        }
+    }
 
 });

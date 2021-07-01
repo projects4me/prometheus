@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import App from "../app";
+import App from "prometheus/routes/app";
 import { hash } from 'rsvp';
+import { inject } from '@ember/service';
 
 /**
  * The wiki route
@@ -15,7 +16,15 @@ import { hash } from 'rsvp';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default App.extend({
-
+    /**
+     * The trackedProject service provides id of the selected project.
+     *
+     * @property trackedProject
+     * @type Ember.Service
+     * @for Project
+     * @private
+     */
+    trackedProject: inject(),
     /**
      * The project Id
      *
@@ -45,11 +54,24 @@ export default App.extend({
             limit:-1,
         };
 
+        let projectOptions = {
+            query: "(Project.id : "+projectId+")",
+            rels: "members",
+            sort: "members.name",
+            order: "ASC",
+            page: 0,
+            limit:-1,
+        };
+
         return hash({
-            issues: _self.store.query('issue',issuesOptions)
+            issues: _self.store.query('issue',issuesOptions),
+            project: _self.store.query('project',projectOptions)
         }).then(function(results){
-            _self.set('issues',{});
             _self.set('issues',results.issues);
+            if (results.project.objectAt(0) != undefined &&
+                results.project.objectAt(0).get('members') != undefined) {
+                _self.set('members', results.project.objectAt(0).get('members'));
+            }
         });
     },
 
@@ -63,18 +85,13 @@ export default App.extend({
      */
     setupController:function(controller){
         Logger.debug('AppProjectRoute::setupController');
-
         let _self = this;
 
         // If the user navigated directly to the wiki project or page then lets setup the project id
         let projectId = this.paramsFor('app.project').project_id;
+        //setting up "projectId" property of "trackedProject" service in order to use that projectId in other parts of application
+        this.trackedProject.setProjectId(projectId);
         let projectName = null;
-
-        // self.loadIssues(projectId);
-        // self.loadUsers();
-
-        Logger.debug(projectId);
-        Logger.debug(projectName);
 
         let options = {
             fields: "Project.id,Project.name",
@@ -84,11 +101,7 @@ export default App.extend({
             limit: 1
         };
 
-        Logger.debug('Retreiving the project with options ');
-        Logger.debug(options);
-
         _self.store.query('project',options).then(function(data){
-            Logger.debug(data);
             if (projectId !== null)
             {
                 projectName = data.findBy('id',projectId).get('name');
@@ -97,90 +110,9 @@ export default App.extend({
             }
             controller.set('model',data.objectAt(0));
         });
+
         controller.set('issues',_self.get('issues'));
+        controller.set('members',_self.get('members'));
     },
-
-
-    /**
-     * This function is used to load the Issues List. This list is used in the
-     * message-box to allow users to mention issues in the project.
-     *
-     * @method loadIssues
-     * @param {String} projectId
-     * @private
-     */
-    loadIssues:function(projectId){
-        Logger.debug("AppProjectRoute::loadIssues("+projectId+")");
-        let self = this;
-        let module = "issue";
-
-        let options = {
-            fields: "Issue.id,Issue.subject,Issue.issueNumber,Issue.status,Issue.projectId",
-            query: "(Issue.projectId : "+projectId+")",
-            rels: "none",
-            sort: "Issue.issueNumber",
-            order: "ASC",
-            page: 0,
-            limit:-1,
-        };
-
-        this.store.query(module,options).then(function(data){
-            let issuesList = [];
-            let issuesCount = data.get('length');
-
-            for (let i=0; i<issuesCount;i++)
-            {
-                issuesList[i] = {
-                    id:data.objectAt(i).get('id'),
-                    name:data.objectAt(i).get('subject'),
-                    number:data.objectAt(i).get('issueNumber'),
-                    status:data.objectAt(i).get('status'),
-                    projectId:data.objectAt(i).get('projectId')
-                };
-            }
-            Logger.debug(issuesList);
-            self.get('controller').set('issuesList',issuesList);
-        });
-        Logger.debug("-AppProjectRoute::loadIssues("+projectId+")");
-    },
-
-    /**
-     * This function is used to load the User List. This list is used in the
-     * message-box to allow users to mention the users in the system
-     *
-     * @method loadIssues
-     * @private
-     */
-    loadUsers:function(){
-        Logger.debug("AppProjectRoute::loadUsers()");
-        let self = this;
-        let module = "user";
-
-        let options = {
-            fields: "User.id,User.name",
-            rels: "none",
-            sort: "User.name",
-            order: "ASC",
-            page: 0,
-            limit:-1,
-        };
-
-        this.store.query(module,options).then(function(data){
-            let usersList = [];
-            let usersCount = data.get('length');
-
-            for (let i=0; i<usersCount;i++)
-            {
-                usersList[i] = {
-                    id:data.objectAt(i).get('id'),
-                    name:data.objectAt(i).get('name'),
-                };
-            }
-            Logger.debug(usersList);
-            self.get('controller').set('usersList',usersList);
-        });
-        Logger.debug("-AppProjectRoute::loadUsers()");
-    },
-
 
 });

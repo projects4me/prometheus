@@ -34,9 +34,9 @@ export default FormField.extend({
      */
     setEmpty(){
         let isEmpty = false;
-        const value = this.get('value');
+        const value = this.value;
 
-        if (this.get('oldValue') === null) {
+        if (this.oldValue === null) {
             if (value === undefined) {
                 this.set('value',false);
                 this.set('oldValue',false);

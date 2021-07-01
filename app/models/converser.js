@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr } from '@ember-data/model';
 
 /**
  * The Converser model
@@ -12,7 +12,7 @@ import DS from "ember-data";
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend({
+export default Model.extend({
 
     /**
      * The identifier of the user who is involved in this chat
@@ -22,7 +22,7 @@ export default DS.Model.extend({
      * @for Converser
      * @private
      */
-    userId: DS.attr('string'),
+    userId: attr('string'),
 
     /**
      * The identifier of the chatroom to whom this user belongs
@@ -33,6 +33,6 @@ export default DS.Model.extend({
      * @for Converser
      * @private
      */
-    chatRoomId: DS.attr('string')
+    chatRoomId: attr('string')
 
 });

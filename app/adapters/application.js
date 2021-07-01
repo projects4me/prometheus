@@ -2,10 +2,11 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import JSONAPIAdapter from '@ember-data/adapter/json-api';
 import ENV from "prometheus/config/environment";
-import DataAdapterMixin from 'ember-simple-auth/mixins/data-adapter-mixin';
 import { singularize } from 'ember-inflector';
+import { inject as service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 
 /**
  * This is the application adapter that fetches the information from the API.
@@ -14,81 +15,34 @@ import { singularize } from 'ember-inflector';
  *
  * @class Application
  * @namespace Prometheus.Adapter
- * @extends DS.JSONAPIAdapter
  * @uses DataAdapterMixin
  * @todo retrieve the host name from the configurations.
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.JSONAPIAdapter.extend(DataAdapterMixin,{
+export default class ApplicationAdapter extends JSONAPIAdapter {
+    @tracked namespace='api/v'+ENV.api.version;
+    @tracked host= ENV.api.host;
 
-    /**
-     * The namespace of the api.
-     *
-     * @property namespace
-     * @type String
-     * @for ApplicationAdapter
-     * @private
-     */
-    namespace:'api/v'+ENV.api.version,
+  /**
+   * The session service which is offered by ember-simple-auth that will be used
+   * in order to verify whether the used is authenticated
+   *
+   * @property session
+   * @type Object
+   * @for Application
+   * @public
+   */
+    @service session;
 
-    /**
-     * Set the authorizer so that the authorization headers are included in all the
-     * outgoing calls to the API server
-     *
-     * @property authorizer
-     * @type String
-     * @for ApplicationAdapter
-     * @private
-     */
-    authorizer: 'authorizer:oauth2',
+    get headers() {
+      const headers = {};
+      if (this.session.isAuthenticated) {
+        headers['Authorization'] = `Bearer ${this.session.data.authenticated.access_token}`;
+      }
+      return headers;
+    }
 
-    /**
-     * The host name of the server where the API is hosted.
-     *
-     * @property host
-     * @type String
-     * @for ApplicationAdapter
-     * @private
-     * @todo Load from the configurations
-     */
-    host: ENV.api.host,
-
-    // headers: Ember.computed(function() {
-    //     return {
-    //         "Authorization": "Bearer a670f281c8f01c5aa5dc279f534faa9515594ff4"
-    //     };
-    // }).volatile(),
-
-
-    /**
-     * Set the modelName to singular as that is what our server listens to
-     *
-     * @method pathForType
-     * @param {String} modelName The model name that is being fetched
-     * @return {String} modelName The singularized modelName
-     * @for ApplicationAdapter
-     * @private
-     */
-    pathForType: function(modelName) {
-        return singularize(modelName);
-    },
-
-    /**
-     * This function is called whenever an error message is returned by the server
-     *
-     * @property normalizeErrorResponse
-     * @param {String} status The status code returned by the API
-     * @for ApplicationAdapter
-     * @private
-     * @todo If the user is not authorized then take him to the singin page
-     * @todo Take care of the refresh token
-     */
-    normalizeErrorResponse: function (status) {
-        if (status === 401)
-        {
-            //Foundation.oAuth.clear();
-            //Foundation.oAuth.route.transitionTo('signin');
-            return false;
-        }
-    },
-});
+    pathForType(modelname) {
+        return singularize(modelname);
+    }
+}

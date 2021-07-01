@@ -97,7 +97,7 @@ export default Component.extend({
      * @public
      */
     contenteditable: computed('editable' ,function() {
-        let editable = this.get('editable');
+        let editable = this.editable;
 
         return editable ? 'true' : undefined;
     }),
@@ -111,7 +111,7 @@ export default Component.extend({
      * @public
      */
     spellcheck: computed('checkSpelling', function() {
-        let spelling = this.get('checkSpelling');
+        let spelling = this.checkSpelling;
 
         return spelling ? 'true' : 'false';
     }),
@@ -136,7 +136,7 @@ export default Component.extend({
      * @public
      */
     processValue() {
-        if (!this.get('isUserTyping') && this.get('value')) {
+        if (!this.isUserTyping && this.value) {
             return this.setContent();
         }
     },
@@ -197,6 +197,6 @@ export default Component.extend({
      */
     setContent() {
         //return this.$().html(Ember.Handlebars.Utils.escapeExpression(this.get('value')));
-        return this.get('value');
+        return this.value;
     }
 });

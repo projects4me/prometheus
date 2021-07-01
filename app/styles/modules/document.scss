@@ -31,7 +31,6 @@ $color_allports_approx: rgba(0, 120, 150,1);
 $color_mischka_approx: #d2d6de;
 $color_jumbo_approx: rgba(127, 127, 135,1);
 
-
 @mixin gradient-border-top($startColor,$endColor) {
   content: '';
   width: 100%;
@@ -195,13 +194,14 @@ $color_jumbo_approx: rgba(127, 127, 135,1);
     }
 }
 
-span[data-atwho-at-query*="@"]{
+span[id="@"]{
   border-radius: 0.3rem;
 
   a{
     background: $primaryColor !important;
     color: $backgroundColor;
     padding: 0rem 0.3rem;
+    text-decoration: none;
   }
   a:hover{
     background: $highlightColor !important;
@@ -209,10 +209,12 @@ span[data-atwho-at-query*="@"]{
   }
 }
 
-span[data-atwho-at-query*="#"]{
-  color: $backgroundColor;
+span[id="#"]{
   border-radius: 0.3rem;
-
+  
+  a {
+    text-decoration: none;
+  }
   a.done,a.complete{
     background-color: #5AC594 !important;
     padding: 0rem 0.3rem;
@@ -253,6 +255,9 @@ span[data-atwho-at-query*="#"]{
     background-color: $primaryColor;
     padding: 0rem 0.3rem;
     color: $backgroundColor;
+  }
+  a.in_progress > i:first-child {
+    color: white;
   }
   a.in_progress:hover{
     background-color: $highlightColor !important;
@@ -384,5 +389,24 @@ span[data-atwho-at-query*="#"]{
   }
   table, th, td{
     border: 1px solid $borderColor !important;
+  }
+}
+
+.global-search{
+  display: inline-block;
+  padding:1.2rem;
+  width: 40rem;
+
+  .ember-power-select-trigger {
+    height: 2.4rem;
+    overflow: hidden;
+  }
+
+  .ember-power-select-selected-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 315px;
+    display: inline-block;
   }
 }

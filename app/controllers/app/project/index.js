@@ -7,6 +7,7 @@ import format from "../../../utils/data/format";
 import _ from "lodash";
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
+import $ from "jquery";
 
 /**
  * This is the index page of the project, index page for the project is
@@ -82,7 +83,7 @@ export default Prometheus.extend({
      * @private
      */
     rolesList: computed(function(){
-        return this.get('appController.rolesList');
+        return this.appController.rolesList;
     }),
 
     /**
@@ -141,7 +142,7 @@ export default Prometheus.extend({
          */
         navigateToProjectPage(entity,query){
             Logger.debug("AppProjectIndexController::navigateToProjectPage("+entity+","+query+")");
-            this.transitionToRoute('app.project.'+entity,{project_id:this.get('projectId')});
+            this.transitionToRoute('app.project.'+entity,{project_id:this.projectId});
         },
 
         /**
@@ -155,7 +156,7 @@ export default Prometheus.extend({
          */
         navigateToIssuePage(issueNumber){
             Logger.debug("AppProjectIndexController::navigateToIssuePage("+issueNumber+")");
-            this.transitionToRoute('app.project.issue.page',{project_id:this.get('projectId'), issue_number:issueNumber});
+            this.transitionToRoute('app.project.issue.page',{project_id:this.projectId, issue_number:issueNumber});
         },
 
         /**
@@ -205,7 +206,6 @@ export default Prometheus.extend({
         addMember(){
             Logger.debug('AppProjectIndexController:addMember');
             let _self = this;
-            Logger.debug(_self);
 
             let _selectedRole = _self.get('selectedRole');
             let _selectedUser = _self.get('selectedUser');
@@ -287,8 +287,8 @@ export default Prometheus.extend({
          */
         milestoneStartDateChanged(date) {
             Logger.debug('Prometheus.Controllers.Project.Index::startDateChanged('+date+')');
-            if (this.get('newMilestone') !== undefined) {
-                this.get('newMilestone').set('startDate', date);
+            if (this.newMilestone !== undefined) {
+                this.newMilestone.set('startDate', date);
             }
             Logger.debug('Prometheus.Controllers.Project.Index::startDateChanged');
         },
@@ -302,8 +302,8 @@ export default Prometheus.extend({
          */
         milestoneEndDateChanged(date) {
             Logger.debug('Prometheus.Controllers.Projects.Index::endDateChanged('+date+')');
-            if (this.get('newMilestone') !== undefined) {
-                this.get('newMilestone').set('endDate', date);
+            if (this.newMilestone !== undefined) {
+                this.newMilestone.set('endDate', date);
             }
             Logger.debug('Prometheus.Controllers.Projects.Index::endDateChanged');
         },
@@ -320,8 +320,7 @@ export default Prometheus.extend({
             Logger.debug('Prometheus.Controllers.Project.Index::saveMilestone');
             let _self = this;
             let newMilestone = _self.get('newMilestone');
-            Logger.debug(_self);
-            Logger.debug(newMilestone.get('id'));
+
             let isUpdate = (newMilestone.get('id') != undefined);
 
             if (newMilestone.get('name') !== null
@@ -334,8 +333,6 @@ export default Prometheus.extend({
 
                 // Add milestone to the system
                 newMilestone.save().then(function (data) {
-                    console.log(newMilestone.get('id'));
-
                     if (!isUpdate) {
                         _self.get('milestones').pushObject(data);
                     }
@@ -390,6 +387,7 @@ export default Prometheus.extend({
          */
         removeAddMemberModal(){
             this.set('addMemberDialog',false);
+            $('.modal').modal('hide');
         },
 
         /**
@@ -420,6 +418,7 @@ export default Prometheus.extend({
 
             _self.send('resetNewMilestone');
             _self.set('milestoneDialog',false);
+            $('.modal').modal('hide');
         },
 
         /**

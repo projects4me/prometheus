@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr } from '@ember-data/model';
 
 /**
  * The upload model
@@ -12,7 +12,7 @@ import DS from "ember-data";
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend({
+export default Model.extend({
 
     /**
      * File name
@@ -22,7 +22,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    name: DS.attr('string'),
+    name: attr('string'),
 
     /**
      * The timestamp on which the file was uploaded
@@ -32,7 +32,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * The date on which the upload was modified
@@ -42,7 +42,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * The identifier of the user who uploaded this file
@@ -52,7 +52,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The identifier of the user who last modified this file
@@ -62,7 +62,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     /**
      * The status of the upload
@@ -72,7 +72,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    status: DS.attr('string'),
+    status: attr('string'),
 
     /**
      * The identifier of the record this file is uploaded against
@@ -82,7 +82,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    relatedId: DS.attr('string'),
+    relatedId: attr('string'),
 
     /**
      * The type of the file
@@ -92,7 +92,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    fileType: DS.attr('string'),
+    fileType: attr('string'),
     /**
      * The size of the file uploaded
      *
@@ -101,7 +101,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    fileSize: DS.attr('string'),
+    fileSize: attr('string'),
 
     /**
      * The MIME of the file uploaded
@@ -111,7 +111,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    fileMime: DS.attr('string'),
+    fileMime: attr('string'),
 
     /**
      * The local path on which the file is stored
@@ -121,7 +121,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    filePath: DS.attr('string'),
+    filePath: attr('string'),
 
     /**
      * Does this file have a thumbnail
@@ -131,7 +131,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    fileThumbnail: DS.attr('string'),
+    fileThumbnail: attr('string'),
 
     /**
      * Where is this file stored.
@@ -141,7 +141,7 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    fileDestination: DS.attr('string'),
+    fileDestination: attr('string'),
 
     /**
      * This is the download token to be used for download
@@ -151,6 +151,6 @@ export default DS.Model.extend({
      * @for Upload
      * @private
      */
-    downloadLink: DS.attr('string')
+    downloadLink: attr('string')
 
 });
