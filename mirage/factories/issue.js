@@ -9,23 +9,30 @@ export default Factory.extend({
     "dateModified": "2016-05-03 00:39:50",
     "deleted": "0",
     description: faker.lorem.sentence(),
-    "createdUser": "1",
-    "createdUserName": "Hammad Hassan",
-    "owner": "1",
-    "assignee": "1",
-    "reportedUser": "1",
-    "modifiedUser": "1",
-    "modifiedUserName": "Hammad Hassan",
+    createdUser() {
+        return (_.random(1, 10)).toString();
+    },
+    owner() {
+        return (_.random(1, 10)).toString();
+    },
+    assignee() {
+        return (_.random(1, 10)).toString();
+    },
+    reportedUser() {
+        return (_.random(1, 10)).toString();
+    },
+    modifiedUser() {
+        return (_.random(1, 10)).toString();
+    },
     issueNumber(i) {
         return `${i}`;
     },
     "endDate": "2016-09-29",
     "startDate": "2016-07-15",
-    "status": faker.random.arrayElement(["new","in_progress","pending","done","wont_fix"]),
-    "typeId": "1",
-    "priority": faker.random.arrayElement(["medium","high","low","critical","blocker"]),
-    "projectId": "1",
-    "milestoneId": "1",
-    "parentId": "",
-    "conversationRoomId": ""
+    status() {
+        return faker.random.arrayElement(["new", "in_progress", "pending", "done", "wont_fix"]);
+    },
+    priority() {
+        return faker.random.arrayElement(["medium", "high", "low", "critical", "blocker"]);
+    },
 });

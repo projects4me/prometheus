@@ -334,103 +334,103 @@ export default function() {
         return model;
     });
 
-    this.get('/project', (schema) => {
+    this.get('/project', (schema, request) => {
         let data =  schema.projects.all();
-        let count = 1;
-        let model =  { data: []};
-        _.each(data.models,function(obj){
-            model.data.push({
-                type: 'project',
-                id: count++,
-                attributes: obj.attrs
-            });
-        });
-        return model;
+        debugger;
+        if(_.has(server, 'customDataProject')){
+            data = server.customDataProject(schema,request)
+        };
+        return data;
     });
 
     this.get('/project/:id', (schema, request) => {
         let id = request.params.id;
-
-        let data = {
-            data: {
-                type: 'project',
-                id: id,
-                attributes: schema.projects.find(id).attrs,
-                relationships: {
-                    members: {
-                        data: [
-                            {
-                                type: "user",
-                                id: id
-                            }
-                        ]
-                    },
-                    memberships: {
-                        data: [
-                            {
-                                type: "membership",
-                                id: id
-                            }
-                        ]
-                    },
-                    milestones: {
-                        data: [
-                            {
-                                type: "milestone",
-                                id: id
-                            }
-                        ]
-                    },
-                    issuetypes: {
-                        data: [
-                            {
-                                type: "issuetype",
-                                id: id
-                            }
-                        ]
-                    },
-                    roles: {
-                        data: [
-                            {
-                                type: "role",
-                                id: id
-                            }
-                        ]
-                    }
-                }
-            },
-            included:[
-                {
-                    type: 'user',
-                    id: id,
-                    attributes: schema.users.find(id).attrs,
-                },
-                {
-                    type: 'membership',
-                    id: id,
-                    attributes: schema.memberships.find(id).attrs,
-                },
-                {
-                    type: 'milestone',
-                    id: id,
-                    attributes: schema.milestones.find(id).attrs,
-                },
-                {
-                    type: 'issuetype',
-                    id: id,
-                    attributes: schema.issuetypes.find(id).attrs,
-                },
-                {
-                    type: 'role',
-                    id: id,
-                    attributes: schema.roles.find(id).attrs,
-                },
-            ]
-        };
-
-        return data;
+        // debugger;
+        // let data = {
+        //     data: {
+        //         type: 'project',
+        //         id: id,
+        //         attributes: schema.projects.find(id).attrs,
+        //         relationships: {
+        //             members: {
+        //                 data: [
+        //                     {
+        //                         type: "user",
+        //                         id: id
+        //                     }
+        //                 ]
+        //             },
+        //             memberships: {
+        //                 data: [
+        //                     {
+        //                         type: "membership",
+        //                         id: id
+        //                     }
+        //                 ]
+        //             },
+        //             milestones: {
+        //                 data: [
+        //                     {
+        //                         type: "milestone",
+        //                         id: id
+        //                     }
+        //                 ]
+        //             },
+        //             issuetypes: {
+        //                 data: [
+        //                     {
+        //                         type: "issuetype",
+        //                         id: id
+        //                     }
+        //                 ]
+        //             },
+        //             roles: {
+        //                 data: [
+        //                     {
+        //                         type: "role",
+        //                         id: id
+        //                     }
+        //                 ]
+        //             }
+        //         }
+        //     },
+        //     included:[
+        //         {
+        //             type: 'user',
+        //             id: id,
+        //             attributes: schema.users.find(id).attrs,
+        //         },
+        //         {
+        //             type: 'membership',
+        //             id: id,
+        //             attributes: schema.memberships.find(id).attrs,
+        //         },
+        //         {
+        //             type: 'milestone',
+        //             id: id,
+        //             attributes: schema.milestones.find(id).attrs,
+        //         },
+        //         {
+        //             type: 'issuetype',
+        //             id: id,
+        //             attributes: schema.issuetypes.find(id).attrs,
+        //         },
+        //         {
+        //             type: 'role',
+        //             id: id,
+        //             attributes: schema.roles.find(id).attrs,
+        //         },
+        //     ]
+        // };
+        // debugger
+        // return data;
+        debugger;
+        return schema.projects.find(id)
     });
-
+    this.get('/issuetype/:id', (schema, request) => {
+        let id = request.params.id;
+        return schema.issuetypes.find(id)
+    })
     this.post('/token', (schema, request) => {
         let req = _.chain(request.requestBody).split('&').map(_.partial(_.split, _, '=', 2)).fromPairs().value();
 
