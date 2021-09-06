@@ -1,8 +1,11 @@
 import { Factory } from 'ember-cli-mirage';
 import faker from 'faker';
+import * as date from '../helpers/getDate';
 
 export default Factory.extend({
-    "dateCreated": "2017-07-01 16:56:07",
+    dateCreated() {
+        return date.createdDate(10, 20);
+    },
     description() {
         return faker.lorem.sentence();
     },
@@ -17,14 +20,14 @@ export default Factory.extend({
         return faker.random.arrayElement(["updated", "created", "related", "mentioned", "deleted", "closed"])
     },
     "deleted": "0",
-    relatedActivity() {
-        return faker.random.arrayElement(["created", "updated", "attached", "deleted"]);
-    },
-    relatedActivityId() {
-        return (_.random(1, 5)).toString();
-    },
-    "relatedActivityModule": "milestone",
     afterCreate(activity) {
+        if (activity.type == "related") {
+            activity.update({
+                "relatedActivity": faker.random.arrayElement(["created", "updated", "attached", "deleted"]),
+                "relatedActivityId": (_.random(1, 5)).toString(),
+                "relatedActivityModule": "milestone"
+            })
+        }
         activity.update({
             "createdUserName": `User_${activity.createdUser}`,
         })

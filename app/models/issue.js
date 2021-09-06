@@ -319,6 +319,16 @@ export default Model.extend(Validations, {
      * @private
      */
     parentissue: belongsTo('issue', { inverse: null }),
+    
+    /**
+     * The conversation room this issue is associated with
+     *
+     * @property conversationroom
+     * @type ConversationRoomModel
+     * @for Issue
+     * @private
+     */
+    conversationroom: belongsTo('conversationroom'),
 
     /**
      * The type of the issue
@@ -338,7 +348,7 @@ export default Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    estimated: hasMany('timelog'),
+    estimated: hasMany('timelog', { inverse: null }),
 
     /**
      * The spent time on the issue
@@ -348,7 +358,7 @@ export default Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    spent: hasMany('timelog'),
+    spent: hasMany('timelog', { inverse: null }),
 
     /**
      * The child issues of this issue
@@ -388,5 +398,6 @@ export default Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    files: hasMany('upload'),
+    files: hasMany('upload')
+    
 });

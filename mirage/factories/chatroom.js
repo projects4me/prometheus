@@ -1,12 +1,17 @@
 import { Factory } from 'ember-cli-mirage';
 import faker from 'faker';
+import * as date from '../helpers/getDate';
 
 export default Factory.extend({
     subject(i) {
         return `chatroom test ${i}`;
     },
-    "dateCreated": "2020-07-01 16:56:07",
-    "dateModified": "2020-08-01 13:56:07",
+    dateCreated() {
+        return date.createdDate(20, 30);
+    },
+    dateModified() {
+        return date.modifiedDate(1, 10);
+    },
     createdUser() {
         return (_.random(1, 10)).toString();
     },

@@ -131,20 +131,50 @@ export default Model.extend(Validations, {
      * The user who created the comment
      *
      * @property createdby
-     * @type Relationship
+     * @type UserModel
      * @for Comment
      * @private
      */
     createdby: belongsTo('user'),
 
     /**
-     * The conversation room the comment is associated with
+     * The user who last modified the comment
      *
-     * @property conversationroom
-     * @type Relationship
+     * @property modifiedBy
+     * @type UserModel
      * @for Comment
      * @private
      */
-    conversationroom: belongsTo('conversationroom')
+    modifiedBy: belongsTo('user'),
 
+    /**
+     * The conversation room the comment is associated with
+     *
+     * @property conversationroom
+     * @type ConversationRoomModel
+     * @for Comment
+     * @private
+     */
+    conversationroom: belongsTo('conversationroom'),
+    
+    /**
+     * The chat room the comment is associated with
+     *
+     * @property chatRoom
+     * @type ChatRoomModel
+     * @for Comment
+     * @private
+     */
+    chatRoom: belongsTo('chatroom'),
+
+    /**
+     * The issue the comment is associated with
+     *
+     * @property issue
+     * @type IssueModel
+     * @for Comment
+     * @private
+     */
+    issue: belongsTo('issue')
+    
 });

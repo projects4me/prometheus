@@ -131,7 +131,7 @@ export default Model.extend(Validations, {
      * The conversers in this chat room
      *
      * @property conversers
-     * @type Relationship
+     * @type UserModel
      * @for Chatroom
      * @private
      */
@@ -141,7 +141,7 @@ export default Model.extend(Validations, {
      * The owner of this chat room
      *
      * @property ownedBy
-     * @type Relationship
+     * @type UserModel
      * @for Chatroom
      * @private
      */
@@ -151,7 +151,7 @@ export default Model.extend(Validations, {
      * Comments made on this conversation room
      *
      * @property comments
-     * @type Relationship
+     * @type CommentModel
      * @for Chatroom
      * @private
      */

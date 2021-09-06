@@ -1,12 +1,17 @@
 import { Factory } from 'ember-cli-mirage';
 import faker from 'faker';
+import * as date from '../helpers/getDate';
 
 export default Factory.extend({
     name() {
         return faker.random.arrayElement(['Admin', 'Developer', 'Project Manager']);
     },
-    "dateCreated": "2016-09-21 01:15:32",
-    "dateModified": "2016-09-21 01:15:32",
+    dateCreated() {
+        return date.createdDate(10, 20);
+    },
+    dateModified() {
+        return date.modifiedDate(1, 5);
+    },
     "deleted": "0",
     description() {
         return faker.lorem.sentence();

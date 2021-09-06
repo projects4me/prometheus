@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
+import { has } from 'lodash';
 
 /**
  * These are the validation that are applied on the model
@@ -104,5 +105,55 @@ export default Model.extend(Validations, {
      * @private
      */
     "modifiedUserName": attr('string'),
+
+    /**
+     * The user who created the tag
+     *
+     * @property createdBy
+     * @type UserModel
+     * @for Savedsearch
+     * @private
+     */
+    createdBy: belongsTo('user', { inverse: null }),
+
+    /**
+     * The user last modified the tag
+     *
+     * @property modifiedBy
+     * @type UserModel
+     * @for Savedsearch
+     * @private
+     */
+    modifiedBy: belongsTo('user', { inverse: null }),
+
+    /**
+     * The wiki this tag is associated with
+     *
+     * @property wiki
+     * @type WikiModel
+     * @for Savedsearch
+     * @private
+     */
+    wiki: hasMany('wiki'),
+
+    /**
+     * The issue this tag is associated with
+     *
+     * @property issue
+     * @type IssueModel
+     * @for Savedsearch
+     * @private
+     */
+    issue: hasMany('issue'),
+
+    /**
+     * The project this tag is associated with
+     *
+     * @property project
+     * @type ProjectModel
+     * @for Savedsearch
+     * @private
+     */
+    project: hasMany('project')
 
 });

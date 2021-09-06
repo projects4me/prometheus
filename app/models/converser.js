@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 
 /**
  * The Converser model
@@ -33,6 +33,36 @@ export default Model.extend({
      * @for Converser
      * @private
      */
-    chatRoomId: attr('string')
+    chatRoomId: attr('string'),
 
+    /**
+     * The chatroom the converser is associated with
+     *
+     * @property chatroom
+     * @type ChatRoomModel
+     * @for Converser
+     * @private
+     */
+    chatroom: belongsTo('chatroom'),
+
+    /**
+     * The chatroom the converser is associated with
+     *
+     * @property chatroom
+     * @type ChatRoomModel
+     * @for Converser
+     * @private
+     */
+    chatroom: belongsTo('chatroom'),
+
+    /**
+     * The users who are conversing
+     *
+     * @property users
+     * @type UserModel
+     * @for Converser
+     * @private
+     */
+    users: hasMany('user')
+    
 });

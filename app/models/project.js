@@ -242,7 +242,7 @@ export default Model.extend(Validations, {
      * The conversations that are happening on this project
      *
      * @property conversations
-     * @type Relationship
+     * @type ConversationRoomModel
      * @for Project
      * @private
      */
@@ -254,7 +254,7 @@ export default Model.extend(Validations, {
      * are not retrieve via the same query as the other project information
      *
      * @property issues
-     * @type Relationship
+     * @type IssueModel
      * @for Project
      * @private
      */
@@ -267,7 +267,7 @@ export default Model.extend(Validations, {
      * user to the role via the code.
      *
      * @property roles
-     * @type Relationship
+     * @type RoleModel
      * @for Project
      * @private
      */
@@ -277,7 +277,7 @@ export default Model.extend(Validations, {
      * The membership rules for this project.
      *
      * @property memberships
-     * @type Relationship
+     * @type MembershipModel
      * @for Project
      * @private
      */
@@ -287,7 +287,7 @@ export default Model.extend(Validations, {
      * The milestones for this project
      *
      * @property milestones
-     * @type Relationship
+     * @type MilestoneModel
      * @for Project
      * @private
      */
@@ -297,17 +297,27 @@ export default Model.extend(Validations, {
      * The issue types for this project
      *
      * @property issuetypes
-     * @type Relationship
+     * @type IssueTypeModel
      * @for Project
      * @private
      */
     issuetypes:hasMany('issuetype'),
 
     /**
+     * The activities for this project
+     *
+     * @property activities
+     * @type ActivityModel
+     * @for Project
+     * @private
+     */
+    activities:hasMany('activity'),
+
+    /**
      * The issue types for this project
      *
      * @property issuetypes
-     * @type Relationship
+     * @type IssueTypeModel
      * @for Project
      * @private
      */

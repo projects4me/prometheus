@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -116,5 +116,55 @@ export default Model.extend(Validations, {
      * @private
      */
     relatedTo: attr('string'),
+
+    /**
+     * The user who created the vote
+     *
+     * @property createdBy
+     * @type UserModel
+     * @for Vote
+     * @private
+     */
+    createdBy: belongsTo('user'),
+
+    /**
+     * The user who last modified the vote
+     *
+     * @property modifiedBy
+     * @type UserModel
+     * @for Vote
+     * @private
+     */
+    modifiedBy: belongsTo('user'),
+
+    /**
+     * The user who last modified the vote
+     *
+     * @property wiki
+     * @type WikiModel
+     * @for Vote
+     * @private
+     */
+    wiki: hasMany('wiki'),
+
+    /**
+     * The user who last modified the vote
+     *
+     * @property comment
+     * @type CommentModel
+     * @for Vote
+     * @private
+     */
+    comment: hasMany('comment'),
+
+    /**
+     * The user who last modified the vote
+     *
+     * @property conversationroom
+     * @type ConversationRoomModel
+     * @for Vote
+     * @private
+     */
+    conversationroom: hasMany('conversationroom'),
 
 });

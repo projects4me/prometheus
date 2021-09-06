@@ -171,6 +171,16 @@ export default Model.extend(Validations, {
     "spentOn": attr('string'),
 
     /**
+     * The issue this timelog is associated with
+     *
+     * @property issue
+     * @type IssueModel
+     * @for Timelog
+     * @private
+     */
+    issue: belongsTo('issue'),
+
+    /**
      * The user who created this timelog
      *
      * @property createdBy
@@ -188,5 +198,6 @@ export default Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    modifiedBy: belongsTo('user'),
+    modifiedBy: belongsTo('user')
+
 });

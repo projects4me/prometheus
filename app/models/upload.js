@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr } from '@ember-data/model';
+import Model, { attr, belongsTo } from '@ember-data/model';
 
 /**
  * The upload model
@@ -151,6 +151,26 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    downloadLink: attr('string')
+    downloadLink: attr('string'),
+    
+    /**
+     * The user who uploaded this file
+     *
+     * @property createdBy
+     * @type UserModel
+     * @for Upload
+     * @private
+     */
+    createdBy: belongsTo('user'),
+
+    /**
+     * The user who last modified this uploaded file
+     *
+     * @property modifiedBy
+     * @type UserModel
+     * @for Upload
+     * @private
+     */
+    modifiedBy: belongsTo('user')
 
 });

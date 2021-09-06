@@ -108,5 +108,4 @@ export default Model.extend(Validations, {
      */
     modifiedUser: attr('string'),
 
-    // Add the relationships here
 });

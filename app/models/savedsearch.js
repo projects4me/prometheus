@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr } from '@ember-data/model';
+import Model, { attr, belongsTo } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -114,6 +114,16 @@ export default Model.extend(Validations, {
      * @for Savedsearch
      * @private
      */
-    projectId: attr('string')
+    projectId: attr('string'),
+
+    /**
+     * The user who saved this search
+     *
+     * @property createdBy
+     * @type UserModel
+     * @for Savedsearch
+     * @private
+     */
+    createdBy: belongsTo('user')
 
 });

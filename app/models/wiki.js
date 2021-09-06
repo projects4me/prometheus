@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr,hasMany } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -168,10 +168,30 @@ export default Model.extend(Validations, {
     parentId: attr('string'),
 
     /**
+     * The user who created the wiki
+     *
+     * @property createdBy
+     * @type UserModel
+     * @for Wiki
+     * @private
+     */
+    createdBy: belongsTo('user'),
+
+    /**
+     * The user who last modified the wiki
+     *
+     * @property modifiedBy
+     * @type UserModel
+     * @for Wiki
+     * @private
+     */
+    modifiedBy: belongsTo('user'),
+
+    /**
      * The tags for the wiki page
      *
      * @property tags
-     * @type Relationship
+     * @type TagModel
      * @for Wiki
      * @private
      */
@@ -181,7 +201,7 @@ export default Model.extend(Validations, {
      * These are the tag relationship entries
      *
      * @property tagged
-     * @type Relationship
+     * @type TaggedModel
      * @for Wiki
      * @private
      */
@@ -191,7 +211,7 @@ export default Model.extend(Validations, {
      * The votes for this wiki page
      *
      * @property vote
-     * @type Relationship
+     * @type VoteModel
      * @for Wiki
      * @private
      */
@@ -201,7 +221,7 @@ export default Model.extend(Validations, {
      * The file associated with this wiki
      *
      * @property files
-     * @type Relationship
+     * @type UploadModel
      * @for Wiki
      * @private
      */

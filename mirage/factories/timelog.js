@@ -1,9 +1,14 @@
 import { Factory } from 'ember-cli-mirage';
 import faker from 'faker';
+import * as date from '../helpers/getDate';
 
 export default Factory.extend({
-    "dateCreated": "2018-04-09 18:15:09",
-    "dateModified": "2018-04-09 18:15:09",
+    dateCreated() {
+        return date.createdDate(10, 20);
+    },
+    dateModified() {
+        return date.modifiedDate(3, 5);
+    },
     "deleted": "0",
     createdUser() {
         return (_.random(1, 10)).toString();
@@ -15,13 +20,13 @@ export default Factory.extend({
         return (_.random(1, 10)).toString();
     },
     minutes() {
-        return (_.random(0,60)).toString();
+        return (_.random(0, 60)).toString();
     },
     hours() {
-        return (_.random(1,12)).toString();
+        return (_.random(1, 12)).toString();
     },
     days() {
-        return (_.random(0,30)).toString();
+        return (_.random(0, 30)).toString();
     },
     context() {
         return faker.random.arrayElement(["spent", "est"]);

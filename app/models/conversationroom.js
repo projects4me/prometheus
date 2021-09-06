@@ -172,17 +172,27 @@ export default Model.extend(Validations, {
      * The project this room belongs to
      *
      * @property project
-     * @type Relationship
+     * @type ProjectModel
      * @for Conversationroom
      * @private
      */
     project: belongsTo('project'),
 
     /**
+     * The issue this room belongs to
+     *
+     * @property issue
+     * @type IssueModel
+     * @for Conversationroom
+     * @private
+     */
+    issue: belongsTo('issue'),
+
+    /**
      * Comments made on this conversation room
      *
      * @property comments
-     * @type Relationship
+     * @type CommentModel
      * @for Conversationroom
      * @private
      */

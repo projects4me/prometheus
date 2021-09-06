@@ -1,20 +1,27 @@
 import { Factory } from 'ember-cli-mirage';
 import faker from 'faker';
+import * as date from '../helpers/getDate';
 
 export default Factory.extend({
-    "dateCreated": "2020-07-01 16:56:07",
-    "dateModified": "2020-07-01 16:56:07",
-    "deleted": "0",
-    comment() {
-        return faker.lorem.sentence();
+    dateCreated() {
+        return date.createdDate(10, 20);
     },
+    dateModified() {
+        return date.modifiedDate(1, 5);
+    },
+    "deleted": "0",
+    // comment() {
+    //     return faker.lorem.sentence();
+    // },
     createdUser() {
         return (_.random(1, 10)).toString();
     },
     modifiedUser() {
         return (_.random(1, 10)).toString();
     },
-    "relatedTo": "conversationroom",
+    relatedTo() {
+        return faker.random.arrayElement(["conversationroom", "chatroom"]);
+    },
     relatedId() {
         return (_.random(1, 5)).toString();
     },
@@ -23,5 +30,14 @@ export default Factory.extend({
             "createdUserName": `User_${comment.createdUser}`,
             "modifiedUserName": `User_${comment.modifiedUser}`,
         })
+        if (comment.id <= 5) {
+            comment.update({
+                "comment": faker.random.arrayElement(["0", "1"])
+            })
+        } else {
+            comment.update({
+                "comment": faker.lorem.sentence()
+            })
+        }
     }
 });

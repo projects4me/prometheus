@@ -1,8 +1,13 @@
 import { Factory } from 'ember-cli-mirage';
+import * as date from '../helpers/getDate';
 
 export default Factory.extend({
-    "dateCreated": "2018-04-09 11:15:31",
-    "dateModified": "2018-04-09 11:15:31",
+    dateCreated() {
+        return date.createdDate(10, 20);
+    },
+    dateModified() {
+        return date.modifiedDate(1, 5);
+    },
     createdUser() {
         return (_.random(1, 10)).toString();
     },

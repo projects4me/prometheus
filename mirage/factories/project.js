@@ -1,12 +1,17 @@
 import { Factory } from 'ember-cli-mirage';
 import faker from 'faker';
+import * as date from '../helpers/getDate';
 
 export default Factory.extend({
     name() {
-        return faker.lorem.word();
+        return faker.company.companyName(0);
     },
-    "dateCreated": "2018-04-09 11:15:09",
-    "dateModified": "2018-04-09 11:15:09",
+    dateCreated() {
+        return date.createdDate(20, 30);
+    },
+    dateModified() {
+        return date.modifiedDate(1, 6);
+    },
     createdUser() {
         return (_.random(1, 10)).toString();
     },
@@ -20,9 +25,12 @@ export default Factory.extend({
     description() {
         return faker.lorem.sentence();
     },
-    "startDate": "2015-03-19",
-    "endDate": "2028-03-19",
-    "shortCode": "APROM",
+    endDate() {
+        return date.endDate(10, 20);
+    },
+    startDate() {
+        return date.startDate(10, 20);
+    },
     status() {
         return faker.random.arrayElement(["new", "in_progress", "pending", "done", "wont_fix"]);
     },
@@ -40,7 +48,8 @@ export default Factory.extend({
     afterCreate(project) {
         project.update({
             "createdUserName": `User_${project.createdUser}`,
-            "modifiedUserName": `User_${project.modifiedUser}`
+            "modifiedUserName": `User_${project.modifiedUser}`,
+            "shortCode": (project.name.split(' '))[0].toUpperCase()
         })
     }
 });

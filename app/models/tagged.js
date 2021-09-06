@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr } from '@ember-data/model';
+import Model, { attr, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -56,6 +56,46 @@ export default Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "tagId": attr('string')
+    "tagId": attr('string'),
 
+    /**
+     * The tag this tagged is associated with
+     *
+     * @property tag
+     * @type TagModel
+     * @for Tagged
+     * @private
+     */
+    tag: hasMany('tag'),
+    
+    /**
+     * The project this tagged is associated with
+     *
+     * @property project
+     * @type ProjectModel
+     * @for Tagged
+     * @Tagged
+     */
+    project: hasMany('project'),
+
+    /**
+     * The issue this tagged is associated with
+     *
+     * @property issue
+     * @type IssueModel
+     * @for Tagged
+     * @private
+     */
+    issue: hasMany('issue'),
+
+    /**
+     * The wiki this tagged is associated with
+     *
+     * @property wiki
+     * @type WikiModel
+     * @for Tagged
+     * @private
+     */
+    wiki: hasMany('wiki')
+    
 });

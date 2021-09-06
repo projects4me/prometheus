@@ -1,12 +1,17 @@
 import { Factory } from 'ember-cli-mirage';
 import faker from 'faker';
+import * as date from '../helpers/getDate';
 
 export default Factory.extend({
     subject(i) {
         return `conversationroom test ${i}`;
     },
-    "dateCreated": "2020-07-01 16:56:07",
-    "dateModified": "2020-07-01 16:56:07",
+    dateCreated() {
+        return date.createdDate(5, 10);
+    },
+    dateModified() {
+        return date.modifiedDate(1, 2);
+    },
     "deleted": "0",
     description() {
         return faker.lorem.sentence();
@@ -19,9 +24,6 @@ export default Factory.extend({
     },
     roomType() {
         return faker.random.arrayElement(["vote", "discussion"])
-    },
-    issueId() {
-        return (_.random(1, 10)).toString();
     },
     afterCreate(conversationroom) {
         conversationroom.update({

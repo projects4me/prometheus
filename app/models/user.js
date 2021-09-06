@@ -161,7 +161,7 @@ export default Model.extend(Validations, {
      * The users's dashboard
      *
      * @property dashboard
-     * @type Prometheus.Models.Dashboard
+     * @type DashboardModel
      * @for User
      * @private
      */
@@ -171,7 +171,7 @@ export default Model.extend(Validations, {
      * The skills for a user
      *
      * @property skills
-     * @type Relationship
+     * @type TagModel
      * @for User
      * @private
      */
@@ -181,7 +181,7 @@ export default Model.extend(Validations, {
      * These are the tag relationship entries
      *
      * @property tagged
-     * @type Relationship
+     * @type TaggedModel
      * @for User
      * @private
      */

@@ -149,6 +149,26 @@ export default Model.extend(Validations, {
     deleted: attr('string'),
 
     /**
+     * The user who created the milestone
+     *
+     * @property createdBy
+     * @type ProjectModel
+     * @for Milestone
+     * @private
+     */
+    createdBy : belongsTo('user'),
+
+    /**
+     * The user who last modified the milestone
+     *
+     * @property modifiedBy
+     * @type ProjectModel
+     * @for Milestone
+     * @private
+     */
+    modifiedBy : belongsTo('user'),
+
+    /**
      * The project the milestone is related to
      *
      * @property project

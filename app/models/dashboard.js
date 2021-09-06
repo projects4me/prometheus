@@ -90,4 +90,5 @@ export default Model.extend(Validations, {
      * @private
      */
     deleted: attr('string')
+    
 });
