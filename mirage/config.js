@@ -20,6 +20,7 @@ export default function() {
     });
 
     this.get('/user/:id', (schema, request) => {
+        // debugger;
         let id = request.params.id;
         if (id === "me"){
             id = 1;
@@ -46,6 +47,9 @@ export default function() {
                     attributes: schema.dashboards.find(id).attrs,
                 }
             ]
+        };
+        if(_.has(server, 'customUser')){
+            data = server.customUser(schema,request)
         };
         return data;
     });
@@ -335,15 +339,24 @@ export default function() {
     });
 
     this.get('/project', (schema, request) => {
-        let data =  schema.projects.all();
         debugger;
+        let model =  schema.projects.all();
+        let queryParams = request.queryParams.query;
         if(_.has(server, 'customDataProject')){
             data = server.customDataProject(schema,request)
-        };
-        return data;
+        }
+        if (queryParams == "(Project.id : 3)") {
+            let projectId = queryParams.replace(/\)/g, "").replace(/^\D+/g, "");
+            model = { data : []};
+            let data = schema.projects.find(projectId);
+            model.data.push({data , type: "project", id: "3"});
+            return model;
+        }
+        return model;
     });
 
     this.get('/project/:id', (schema, request) => {
+        debugger;
         let id = request.params.id;
         // debugger;
         // let data = {
@@ -424,13 +437,25 @@ export default function() {
         // };
         // debugger
         // return data;
-        debugger;
+        // debugger;
         return schema.projects.find(id)
     });
+
     this.get('/issuetype/:id', (schema, request) => {
         let id = request.params.id;
         return schema.issuetypes.find(id)
-    })
+    });
+
+    this.get('/activity', (schema, request) => {
+        // debugger;
+        return schema.activities.all();
+    });
+
+    this.get('/dashboard/:id', (schema, request) => {
+        let id = request.params.id;
+        return schema.dashboards.find(id);
+    });
+
     this.post('/token', (schema, request) => {
         let req = _.chain(request.requestBody).split('&').map(_.partial(_.split, _, '=', 2)).fromPairs().value();
 
