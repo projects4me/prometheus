@@ -16,7 +16,6 @@ export default function (assert) {
     debugger;
     for (var i = 0; i < modules.length; i++) {
         var curr_module = modules[i];
-        // debugger;
         var givenArray = (typeof curr_module.given === 'function') ? curr_module.given() : '';
         var whenArray = (typeof curr_module.when === 'function') ? curr_module.when() : '';
         var thenArray = (typeof curr_module.then === 'function') ? curr_module.then() : '';
@@ -25,21 +24,18 @@ export default function (assert) {
             let givenKey = Object.keys(given)[j];
             let givenFunc = given[givenKey];
             yaddaa.given(givenKey, givenFunc(assertion));
-            // debugger;
         }
         for (let j = 0; j < whenArray.length; j++) {
             let when = whenArray[j];
             let whenKey = Object.keys(when)[0];
             let whenFunc = when[whenKey];
             yaddaa.when(whenKey, whenFunc(assertion));
-            // debugger;
         }
         for (let j = 0; j < thenArray.length; j++) {
             let then = thenArray[j];
             let thenKey = Object.keys(then)[0];
             let thenFunc = then[thenKey];
             yaddaa.then(thenKey, thenFunc(assertion));
-            // debugger;
         }
 
     }
