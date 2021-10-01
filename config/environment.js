@@ -21,7 +21,7 @@ module.exports = function(environment) {
             clientId: 'projects4me',
             clientSecret: '06110fb83488715ca69057f4a7cedf93',
             prefix: 'app',
-            host: "http://projects4me",
+            host: "http://api.projects4.me",
         },
         app:{
             list:{
