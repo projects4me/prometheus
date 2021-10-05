@@ -27,7 +27,7 @@
 
             {{#each statuses as |status|}}
 
-              {{#draggable-object-target action=(action 'updateIssue') }}
+              <DraggableObjectTarget @action={{fn this.updateIssue}}>
 
                 <div class="lane col-md-2">
                   <div class="box {{get-prop statusClass status}}">
@@ -38,10 +38,10 @@
 
                     <div class="box-body">
 
-                      {{#sortable-objects sortableObjectList=milestone.issues sortingScope='a' useSwap=true inPlace=false }}
+                      <SortableObjects @sortableObjectList={{this.milestone.issues}} @sortingScope={{"a"}} @useSwap={{true}} @inPlace={{false}}>
                         {{#each milestone.issues as |issue|}}
                           {{#if (eq issue.status status)}}
-                            {{#draggable-object content=issue isSortable=true sortingScope='a'}}
+                            <DraggableObject @content={{this.issue}} @isSortable={{true}} @sortingScope={{"a"}}>
                               <div class="item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}" >
                                 <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action "openIssue" issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
                                 <p class="description">{{safe-html issue.description}}</p>
@@ -50,16 +50,16 @@
                                   <span><img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
                                 </p>
                               </div>
-                            {{/draggable-object}}
+                            </DraggableObject>
                           {{/if}}
                         {{/each}}
-                      {{/sortable-objects}}
+                      </SortableObjects>
 
                     </div>
                   </div>
                 </div>
 
-              {{/draggable-object-target}}
+              </DraggableObjectTarget>
             {{/each}}
 
           </div>
@@ -85,7 +85,7 @@
 
         {{#each statuses as |status|}}
 
-          {{#draggable-object-target action=(action 'updateIssue') }}
+          <DraggableObjectTarget @action={{fn this.updateIssue}}>
 
             <div class="lane col-md-2">
               <div class="box {{get-prop statusClass status}}">
@@ -96,10 +96,10 @@
 
                 <div class="box-body">
 
-                {{#sortable-objects sortableObjectList=backlog sortingScope='b' useSwap=true inPlace=false }}
+                <SortableObjects @sortableObjectList={{this.backlog}} @sortingScope={{"b"}} @useSwap={{true}} @inPlace={{false}}>
                   {{#each backlog as |issue|}}
                     {{#if (eq issue.status status)}}
-                      {{#draggable-object content=issue isSortable=true sortingScope='a'}}
+                      <DraggableObject @content={{issue}} @isSortable={{true}} @sortingScope={{"a"}}>
                         <div class="item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}" >
                           <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action "openIssue" issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
                           <p class="description">{{safe-html issue.description}}</p>
@@ -108,16 +108,16 @@
                             <span><img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
                           </p>
                         </div>
-                      {{/draggable-object}}
+                      </DraggableObject>
                     {{/if}}
                   {{/each}}
-                {{/sortable-objects}}
+                </SortableObjects>
 
                 </div>
               </div>
             </div>
 
-          {{/draggable-object-target}}
+          </DraggableObjectTarget>
         {{/each}}
 
       </div>
