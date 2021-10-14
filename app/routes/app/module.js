@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import App from "../app";
-import MD from "../../utils/metadata/metadata";
+import App from "prometheus/routes/app";
+import MD from "prometheus/utils/metadata/metadata";
 import ENV from "../../config/environment";
 import { inject } from '@ember/service';
 import { capitalize} from '@ember/string';
@@ -85,7 +85,7 @@ export default App.extend({
         // Set the data in the current instance of the object, this is required. Unless this is done the route will display the same data every time
         this.module = capitalize(params.module);
         //var metaData = MD.create();
-        var i18n = this.get('i18n');
+        var i18n = this.i18n;
         controller.set('i18n',i18n);
         this.metaData = MD.create().getViewMeta(this.module,'list',i18n);
         var options = {

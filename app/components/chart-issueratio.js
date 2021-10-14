@@ -66,7 +66,7 @@ export default Component.extend({
      */
     didRender:function() {
         var self = this;
-        var issues = this.get('issues');
+        var issues = this.issues;
 
         var chartel = self.get('issueratio');
         if (chartel !== undefined) {
@@ -129,8 +129,8 @@ export default Component.extend({
      * @private
      */
     willDestroyElement:function() {
-        if (this.get('issueratio') !== undefined) {
-            this.get('issueratio').destroy();
+        if (this.issueratio !== undefined) {
+            this.issueratio.destroy();
         }
     }
 

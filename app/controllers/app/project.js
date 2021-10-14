@@ -3,7 +3,7 @@
  */
 
 import Prometheus from "prometheus/controllers/prometheus";
-import format from "../../utils/data/format";
+import format from "prometheus/utils/data/format";
 import { computed } from '@ember/object';
 
 /**
@@ -19,7 +19,7 @@ import { computed } from '@ember/object';
 export default Prometheus.extend({
 
     /**
-     * These are the users in the system
+     * These are the issues for the current project
      *
      * @property issues
      * @type Prometheus.Model.Issue
@@ -27,6 +27,16 @@ export default Prometheus.extend({
      * @public
      */
     issues: {},
+
+    /**
+     * These are the members for the current project
+     *
+     * @property members
+     * @type Prometheus.Model.User
+     * @for Project
+     * @public
+     */
+    members: {},
 
     /**
      * This is the list of users that has been extracted
@@ -37,14 +47,34 @@ export default Prometheus.extend({
      * @public
      */
     issuesList: computed('projectId', 'issues', function(){
-        let map ={
+        let map = {
             id:'id',
             name:'subject',
             number:'issueNumber',
             status:'status',
             projectId:'projectId'
         };
-        return format.getSelectList(this.get('issues'),map);
+        let issueList = format.getSelectList(this.issues, map);
+        issueList.unshift({
+            id:'',
+            name:this.i18n.t('global.blank'),
+            number:'',
+            status:'',
+            projectId:''
+        });
+        return issueList;
+    }),
+
+    /**
+     * This is the list of users that has been extracted
+     *
+     * @property membersList
+     * @type Ember.computed
+     * @returns array
+     * @public
+     */
+    membersList: computed('projectId', 'members', function(){
+        return format.getSelectList(this.members);
     }),
 
     /**
@@ -64,6 +94,7 @@ export default Prometheus.extend({
          * @public
          */
         navigateToProject(projectId){
+            alert(projectId);
             this.transitionToRoute('app.project', {project_id:projectId});
         }
     }

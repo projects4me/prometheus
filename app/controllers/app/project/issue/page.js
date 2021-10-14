@@ -5,7 +5,6 @@
 import Prometheus from "prometheus/controllers/prometheus";
 import { task } from 'ember-concurrency';
 import { inject as injectController } from '@ember/controller';
-import { get } from '@ember/object';
 import { set } from '@ember/object';
 import $ from 'jquery';
 import { computed } from '@ember/object';
@@ -43,6 +42,17 @@ export default Prometheus.extend(Evented,{
      * @private
      */
     logTimeDialog: false,
+
+    /**
+     * This flag is used to show or hide the modal dialog box
+     * for estimates
+     *
+     * @property estimateTimeDialog
+     * @type boolean
+     * @for Page
+     * @private
+     */
+    estimateTimeDialog: false,
 
     /**
      * This is the container object for a new time log entry
@@ -100,7 +110,7 @@ export default Prometheus.extend(Evented,{
      * @private
      */
     usersList: computed(function(){
-        return this.get('projectController').get('usersList');
+        return this.projectController.get('usersList');
     }),
 
     /**
@@ -113,7 +123,7 @@ export default Prometheus.extend(Evented,{
      * @private
      */
     issuesList: computed('projectController.issuesList', function(){
-        return this.get('projectController').get('issuesList');
+        return this.projectController.get('issuesList');
     }),
 
     /**
@@ -125,6 +135,7 @@ export default Prometheus.extend(Evented,{
      * @public
      */
     comment:null,
+
     /**
      * This is a task to handle file uploading
      *
@@ -134,22 +145,21 @@ export default Prometheus.extend(Evented,{
      */
     handleUpload: task(function * (file) {
         let _self = this;
+        Logger.debug('Trying to upload a file');
 
         let upload = this.store.createRecord('upload', {});
 
         try {
-
             let options = {
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'issue',
                     relatedId: _self.get('model').objectAt(0).get('id')
                 },
-                headers: upload.store.adapterFor('upload').headersForRequest()
+                headers: upload.store.adapterFor('upload').headers
             };
 
             let response = yield file.upload(options);
-
             let data = JSON.parse(response.body);
             /**
              *  @todo check for errors
@@ -164,6 +174,8 @@ export default Prometheus.extend(Evented,{
             set(upload, 'fileThumbnail',data.data.attributes.fileThumbnail);
             _self.get('model').objectAt(0).get('files').pushObject(upload);
         } catch (e) {
+            Logger.debug("Something has gone wrong");
+            Logger.debug(e);
             //upload.rollback();
         }
     }).maxConcurrency(3).enqueue(),
@@ -221,6 +233,34 @@ export default Prometheus.extend(Evented,{
     },
 
     /**
+     * This function is used to validate the time log
+     *
+     * @param timeLog
+     * @private
+     */
+    _validateEstimate:function(timeLog){
+        if (timeLog.get('days') === undefined) {
+            timeLog.set('days',0);
+        }
+
+        if (timeLog.get('hours') === undefined) {
+            timeLog.set('hours',0);
+        }
+
+        if (timeLog.get('minutes') === undefined) {
+            timeLog.set('minutes',0);
+        }
+
+        if (((timeLog.get('days')*8) + (timeLog.get('hours')*60) + timeLog.get('minutes')) === 0 ) {
+            return false;
+        } else if (timeLog.get('description') == undefined) {
+            return false;
+        }
+
+        return true;
+    },
+
+    /**
      * The action handlers for the issue detail page
      *
      * @property action
@@ -250,7 +290,8 @@ export default Prometheus.extend(Evented,{
          * @param file
          */
         uploadFile:function(file){
-            get(this, 'handleUpload').perform(file);
+            Logger.debug("Uploading a file");
+            this.handleUpload.perform(file);
         },
 
         /**
@@ -318,7 +359,7 @@ export default Prometheus.extend(Evented,{
                 download: true
             };
             Logger.debug('Retrieving upload with options '+options);
-            this.get('store').query('upload',options).then(function(data){
+            this.store.query('upload',options).then(function(data){
                 let downloadLink = data.objectAt(0).get('downloadLink');
                 Logger.debug('Download link found : '+downloadLink);
 
@@ -385,7 +426,7 @@ export default Prometheus.extend(Evented,{
                 newLog.set('issueId',_self.get('model').objectAt(0).get('id'));
                 newLog.set('context','spent');
 
-                newLog.save().then(function (data) {
+                newLog.save().then(function () {
 
                     let timelog = _self.get('store').createRecord('timelog');
                     _self.set('newTimeLog',timelog);
@@ -414,24 +455,119 @@ export default Prometheus.extend(Evented,{
         },
 
         /**
+         * This function is used to log time against the issue
+         *
+         * @method addEstimate
+         * @public
+         */
+        addEstimate(){
+            Logger.debug('Prometheus.App.Project.Issue.Page::addEstimate');
+            let _self = this;
+            let newLog = _self.get('newTimeLog');
+
+            // Validate the time log and spentOn
+            if (_self._validateEstimate(newLog)) {
+                newLog.set('issueId',_self.get('model').objectAt(0).get('id'));
+                newLog.set('context','est');
+
+                newLog.save().then(function () {
+
+                    let timelog = _self.get('store').createRecord('timelog');
+                    _self.set('newTimeLog',timelog);
+                    _self.get('model').objectAt(0).get('estimated').pushObject(newLog);
+
+                    new Messenger().post({
+                        message: _self.get('i18n').t("views.app.issue.detail.timelog.estimated"),
+                        type: 'success',
+                        showCloseButton: true
+                    });
+
+                    //_self.send('reload');
+
+                });
+
+            } else {
+                new Messenger().post({
+                    message: _self.get('i18n').t("views.app.issue.detail.timelog.estmissing"),
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+
+            _self.send('removeEstimateTimeModal');
+            Logger.debug('-Prometheus.App.Project.Issue.Pagw::addEstimate');
+        },
+
+
+        /**
+         * This function is used to delete logged or estimated time
+         *
+         * @method deleteLog
+         * @public
+         */
+        deleteLog(log){
+            Logger.debug('Prometheus.Controllers.App.Project.Issue.Create::deleteLog');
+            let _self = this;
+            let i18n = _self.get('i18n');
+
+            let message = new Messenger().post({
+                message: i18n.t("global.form.deletecicked").toString(),
+                type: 'warning',
+                showCloseButton: true,
+                actions: {
+                    confirm: {
+                        label: i18n.t("global.form.confirmcancel").toString(),
+                        action: function() {
+                            log.deleteRecord();
+                            log.save().then(function(){
+                                message.cancel();
+                                new Messenger().post({
+                                    message: _self.get('i18n').t("global.form.deleted"),
+                                    type: 'success',
+                                    showCloseButton: true
+                                });
+                            });
+                        }
+                    },
+                    cancel: {
+                        label: i18n.t("global.form.onsecondthought").toString(),
+                        action: function() {
+                            message.cancel();
+                        }
+                    },
+
+                }
+            });
+            Logger.debug('-Prometheus.Controllers.App.Project.Issue.Create::deleteLog');
+        },
+
+        /**
          * This function is used to edit the logged time
          * against the issue
          *
          * @method editLog
          * @public
          */
-        editLog:function(){
+        editLog(){
             Logger.debug('App.Project.Issue.PageController->editLog');
             let _self = this;
             Logger.debug(_self);
             let log = _self.get('editingLog');
+            let context = log.get('context');
+
+            let isValid = false;
+            if (context === "est") {
+                isValid = _self._validateEstimate(log);
+            } else {
+                isValid = _self._validateLog(log);
+            }
 
             // Validate the time log and spentOn
-            if (_self._validateLog(log)) {
+            if (isValid) {
                 log.save().then(function () {
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("views.app.issue.detail.timelog.edited"),
+                        message: _self.get('i18n').t("views.app.issue.detail."+context+".edited"),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -440,7 +576,7 @@ export default Prometheus.extend(Evented,{
                 });
             } else {
                 new Messenger().post({
-                    message: _self.get('i18n').t("views.app.issue.detail.timelog.missing"),
+                    message: _self.get('i18n').t("views.app.issue.detail."+context+".missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -448,12 +584,17 @@ export default Prometheus.extend(Evented,{
 
             _self.set('editingLog',null);
             _self.send('removeEditLogModal');
+            _self.send('removeEditEstimateModal');
 
             Logger.debug('-App.Project.Issue.PageController->logTime');
         },
 
-        saveComment:function (issue, comment) {
+        saveComment(issue, comment) {
             Logger.debug('Prometheus.Controller.App.Project.Issue.Page::saveComment');
+
+            if (comment == undefined){
+                return false;
+            }
 
             let _self = this;
             Logger.debug(issue);
@@ -484,12 +625,25 @@ export default Prometheus.extend(Evented,{
         },
 
         /**
+         * This function navigates a user to the parent issue
+         *
+         * @param issueNumber
+         * @param projectId
+         */
+        navigateToIssue(issueNumber, projectId){
+            this.transitionToRoute('app.project.issue.page',{
+                issue_number:issueNumber,
+                project_id:projectId
+            });
+        },
+
+        /**
          * This function is used to show the time log modal dialog box
          *
          * @method showEditLogDialog
          * @public
          */
-        showEditLogDialog:function(log)
+        showEditLogDialog(log)
         {
             this.set('editingLog',log);
             this.set('editLogDialog',true);
@@ -498,21 +652,43 @@ export default Prometheus.extend(Evented,{
         /**
          * This function is used to show the time log modal dialog box
          *
+         * @method showEditLogDialog
+         * @public
+         */
+        showEditEstimateDialog(log)
+        {
+            this.set('editingLog',log);
+            this.set('editEstimateDialog',true);
+        },
+
+        /**
+         * This function is used to show the time log modal dialog box
+         *
          * @method showLogTimeDialog
          * @public
          */
-        showLogTimeDialog:function()
+        showLogTimeDialog()
         {
             this.set('logTimeDialog',true);
         },
 
+        /**
+         * This function is used to show the time log modal dialog box
+         *
+         * @method showLogTimeDialog
+         * @public
+         */
+        showEstimateTimeDialog()
+        {
+            this.set('estimateTimeDialog',true);
+        },
         /**
          * This function is used to show the add modal dialog box
          *
          * @method showDialog
          * @public
          */
-        showDialog:function()
+        showDialog()
         {
             this.set('filePreviewDialog',true);
         },
@@ -523,7 +699,7 @@ export default Prometheus.extend(Evented,{
          * @method removeModal
          * @public
          */
-        removeModal:function(){
+        removeModal(){
             this.set('filePreviewDialog',false);
             $('.modal').modal('hide');
         },
@@ -534,8 +710,19 @@ export default Prometheus.extend(Evented,{
          * @method removeLogTimeModal
          * @public
          */
-        removeLogTimeModal:function(){
+        removeLogTimeModal(){
             this.set('logTimeDialog',false);
+            $('.modal').modal('hide');
+        },
+
+        /**
+         * This function is used to hide the log time modal
+         *
+         * @method removeLogTimeModal
+         * @public
+         */
+        removeEstimateTimeModal(){
+            this.set('estimateTimeDialog',false);
             $('.modal').modal('hide');
         },
 
@@ -545,9 +732,21 @@ export default Prometheus.extend(Evented,{
          * @method removeEditLogModal
          * @public
          */
-        removeEditLogModal:function(){
+        removeEditLogModal(){
             this.set('editingLog',null);
             this.set('editLogDialog',false);
+            $('.modal').modal('hide');
+        },
+
+        /**
+         * This function is used to hide the edit log time modal
+         *
+         * @method removeEditLogModal
+         * @public
+         */
+        removeEditEstimateModal(){
+            this.set('editingLog',null);
+            this.set('editEstimateDialog',false);
             $('.modal').modal('hide');
         },
     }

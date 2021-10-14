@@ -7,6 +7,9 @@
 */
 .issue, .issues-today{
 
+  .fa {
+    font-style: normal;
+  }
   .fa-ban{
     color: #d33724;
   }
@@ -203,4 +206,21 @@
     }
 
   }
+}
+
+.issue-hierarchy{
+  .no-entry{
+    padding:1.4rem;
+    text-align: center;
+  }
+}
+
+.create-issue {
+  .form-group {
+    div[data-field="issue.description"] {
+      > #editor {
+      height: 600px !important;
+    }
+   }
+ }
 }

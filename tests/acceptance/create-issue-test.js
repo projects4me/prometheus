@@ -1,45 +1,43 @@
-import { describe, it, beforeEach, afterEach } from 'mocha';
-import { expect } from 'chai';
-import startApp from 'prometheus/tests/helpers/start-app';
-import destroyApp from 'prometheus/tests/helpers/destroy-app';
-import { selectChoose } from 'ember-power-select/test-support/helpers';
+import { module, test } from 'qunit';
+import { visit, currentURL, fillIn, click } from '@ember/test-helpers';
+import { setupApplicationTest } from 'ember-qunit';
+import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import defaultScenario from '../../mirage/scenarios/default';
+import { registerAsyncHelper } from '@ember/test';
 
-/* eslint-disable no-undef */
-describe('Acceptance | create issue', function() {
-    let application;
+module('Acceptance | create issue', function (hooks) {
+  setupApplicationTest(hooks);
+  setupMirage(hooks);
 
-    beforeEach(function() {
-        application = startApp();
-    });
+  test('visiting /create-issue', async function (assert) {
+    defaultScenario(server);
+    signInUser();
+    // debugger;
+    // await visit('/signin');
+    // await fillIn('input#username', 'hammad');
+    // await fillIn('input#password', 'hammad');
+    // await new Promise(resolve => setTimeout(resolve, 1000));
 
-    afterEach(function() {
-        destroyApp(application);
-    });
-
-    it('Create Issue', async function(done) {
-        this.timeout(20000);
-        setTimeout(done, 18000);
-
-        await visit('/signin');
-        await fillIn('input#username','hammad');
-        await fillIn('input#password','hammad');
-        await click('button[type="submit"]');
-
-        // Required for some odd reason
-        await visit('/');
-        await visit('/app/project/f2e540135a9d-e6e3-2423-ac1ef75cd869/issue/create');
-        let name = 'Issue Test :: ' + (Math.floor(Math.random()*20000));
-        await fillIn("div[data-field='issue.subject'] input",name);
-        await fillIn("div[data-field='issue.description'] textarea",'Testing via test runner');
-        await selectChoose("div[data-field='issue.type'] .ember-power-select-trigger", 'Epic');
-        await selectChoose("div[data-field='issue.status'] .ember-power-select-trigger", 'In Progress');
-        await selectChoose("div[data-field='issue.priority'] .ember-power-select-trigger", 'High');
-        await selectChoose("div[data-field='issue.assignee'] .ember-power-select-trigger", 'Hammad Hassan');
-        await selectChoose("div[data-field='issue.owner'] .ember-power-select-trigger", 'Hammad Hassan');
-        await fillIn("div[data-field='issue.startDate'] input",'2015-13-19');
-        await click('.create-issue button.btn.btn-primary');
-
-        expect(this.$('.issue-details .issueSubject').html().trim()).to.equal(name);
-    });
+    // await click('button[type="submit"]');
+    // await new Promise(resolve => setTimeout(resolve, 1500));
+    // await new Promise(resolve => setTimeout(resolve, 800));
+    // debugger;
+    // server["customDataProject"] = (schema) => {
+    //   debugger;
+    //   let model = { data: [] }
+    //   let data = schema.projects.find(3);
+    //   model.data.push({
+    //     type: 'project',
+    //     attributes: data,
+    //     id: 3
+    //   });
+    //   return model;
+    // }
+    // await visit('/app/project/3/issue/create');
+    // await new Promise(resolve => setTimeout(resolve, 100000));
+    // debugger;
+    // console.log(currentURL());
+    // // await new Promise(resolve => setTimeout(resolve, 80000));
+    // assert.equal(currentURL(), '/app/project/3/issue/create');
+  });
 });
-/* eslint-enable no-undef */

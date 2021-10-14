@@ -38,7 +38,16 @@
     .message-box{
       display: inline-flex;
       width: 100%;
-
+    
+      > #editor {
+        height: 100px !important;
+        width: 500px !important;
+      }
+      
+      > #editor div.tui-editor-contents {
+        min-height: 0px !important;
+        padding: 3px 4px !important;
+      }
       .btn{
         height: 8rem;
         margin-left: 1rem;

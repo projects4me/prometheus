@@ -20,7 +20,7 @@
         selected=(find-by "value" projectId projectList)
         placeholder=(t "views.nav.selectproject")
         searchField="label"
-        onchange=(action "projectChanged")
+        onChange=(action "projectChanged")
     as |project|}}
       {{project.label}}
     {{/power-select}}

@@ -2,8 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-//import Ember from "ember";
-import Page from "../wiki/page";
+import Page from "prometheus/routes/app/project/wiki/page";
 
 /**
  * The wiki's edit page route. This route retrieves the information and displays
@@ -32,6 +31,12 @@ export default Page.extend({
         params['projectId'] = this.paramsFor('app.project').project_id;
         params['wikiName'] = this.paramsFor('app.project.wiki.edit').wiki_name;
         return params;
+    },
+
+    setupController(controller){
+        this._super(controller);
+        let newTag = this.store.createRecord('tag',{});
+        controller.set('newTag', newTag);
     },
 
     /**

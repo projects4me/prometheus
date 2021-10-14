@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import App from "../../../app";
+import App from "prometheus/routes/app";
 
 /**
  * The module route, it is loaded when a user tried to navigate to the route
@@ -15,26 +15,6 @@ import App from "../../../app";
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default App.extend({
-
-    /**
-     * The data for the current route
-     *
-     * @property data
-     * @type Object
-     * @for Page
-     * @private
-     */
-    data: null,
-
-    /**
-     * The current project
-     *
-     * @property data
-     * @type Object
-     * @for Page
-     * @private
-     */
-    project: {},
 
     /**
      * The wiki list, this list is retrieved by the app.wiki.project route but
@@ -59,20 +39,13 @@ export default App.extend({
      * @private
      */
     setupController:function(controller){
-
-        Logger.debug('Wiki Route');
-        Logger.debug(this);
+        Logger.debug("Prometheus.Routes.App.Project.Wiki.Page::setupController");
 
         let params = this.getParams();
-        Logger.debug('The parameters are as follows');
-        Logger.debug(params);
-
-        Logger.debug('Inside the setup controller for the wiki page');
-        let i18n = this.get('i18n');
+        let i18n = this.i18n;
         controller.set('i18n',i18n);
 
         this.project = this.store.findRecord('project',params.projectId,{rels:'none'});
-
         controller.set('projectId',params.projectId);
 
         let options = {
@@ -82,13 +55,10 @@ export default App.extend({
             limit: -1
         };
 
-        Logger.debug('Retreiving wiki list with options '+options);
         this.data = this.store.query('wiki',options).then(function(data){
-            controller.set('model',data);
             let model = data.objectAt(0);
+            controller.set('model',model);
             if (model !== undefined){
-                let markUp = model.get('markUp');
-
 
                 let tags = model.get('tag');
                 let tagCount = tags.get('length');
@@ -98,7 +68,6 @@ export default App.extend({
                     selectedTags[i] = {label:tags.objectAt(i).get('tag'),value:tags.objectAt(i).get('id')};
                 }
                 controller.set('iVoted',model.get('vote').filterBy('createdUser',"1").length);
-                controller.set('markUp',markUp);
                 controller.set('selectedTags',selectedTags);
                 controller.set('parentId',model.get('parentId'));
             }

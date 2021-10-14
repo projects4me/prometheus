@@ -45,7 +45,7 @@ export default Prometheus.extend({
          * @public
          */
         save() {
-            let model = this.get('model').objectAt(0);
+            let model = this.model.objectAt(0);
             model.save();
         },
 
@@ -57,8 +57,8 @@ export default Prometheus.extend({
          */
         create(){
             Logger.debug('Create a page for ');
-            Logger.debug(this.get('projectId'));
-            this.transitionToRoute('app.project.wiki.create', {project_id:this.get('projectId')});
+            Logger.debug(this.projectId);
+            this.transitionToRoute('app.project.wiki.create', {project_id:this.projectId});
         }
     }
 

@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -23,7 +23,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * Name of the issue type
@@ -33,7 +33,7 @@ export default DS.Model.extend(Validations, {
      * @for Issuetype
      * @private
      */
-    name: DS.attr('string'),
+    name: attr('string'),
 
     /**
      * Date on which the issue type was created
@@ -43,7 +43,7 @@ export default DS.Model.extend(Validations, {
      * @for Issuetype
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * Date on which the issue type was last modified
@@ -53,7 +53,7 @@ export default DS.Model.extend(Validations, {
      * @for Issuetype
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * Soft deletion flag
@@ -63,7 +63,7 @@ export default DS.Model.extend(Validations, {
      * @for Issuetype
      * @private
      */
-    deleted: DS.attr('string'),
+    deleted: attr('string'),
 
     /**
      * Description of the issue type
@@ -73,7 +73,7 @@ export default DS.Model.extend(Validations, {
      * @for Issuetype
      * @private
      */
-    description: DS.attr('string'),
+    description: attr('string'),
 
     /**
      * Identifier of the create who created the issue type
@@ -83,7 +83,7 @@ export default DS.Model.extend(Validations, {
      * @for Issuetype
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The identifier of the user who last modified the issue type
@@ -93,7 +93,7 @@ export default DS.Model.extend(Validations, {
      * @for Issuetype
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     /**
      * The identifier of the project the issue type belongs to
@@ -103,7 +103,7 @@ export default DS.Model.extend(Validations, {
      * @for Issuetype
      * @private
      */
-    projectId: DS.attr('string'),
+    projectId: attr('string'),
 
     /**
      * The system flag, the issue types with system flag cannot be deleted and are
@@ -114,6 +114,6 @@ export default DS.Model.extend(Validations, {
      * @for Issuetype
      * @private
      */
-    system: DS.attr('string'),
+    system: attr('string'),
 
 });

@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import App from "../../../app";
+import App from "prometheus/routes/app";
 import { inject } from '@ember/service';
 import { hash } from 'rsvp';
 
@@ -170,13 +170,13 @@ export default App.extend({
         let options = {
             query: query,
             rels: 'ownedBy,assignedTo,milestone,project,createdBy,modifiedBy,reportedBy,issuetype',
-            sort: this.get('sort'),
-            order: this.get('order'),
-            page: this.get('page'),
+            sort: this.sort,
+            order: this.order,
+            page: this.page,
         };
 
         // Retrieve the data
-        let data = this.get('store').query('issue',options);
+        let data = this.store.query('issue',options);
         return data;
     },
 
@@ -234,14 +234,13 @@ export default App.extend({
     setupController:function(controller,model){
         let savedSearch = this.store.createRecord('savedsearch');
         controller.set('newSavedsearch',savedSearch);
-        controller.set('savedsearches',this.get('savedsearches'));
-        controller.set('publicsearches',this.get('publicsearches'));
+        controller.set('savedsearches',this.savedsearches);
+        controller.set('publicsearches',this.publicsearches);
         controller.set('model',model);
-        console.log(this.get('query'));
-        controller.set('query',this.get('query'));
-        controller.set('sort',this.get('sort'));
-        controller.set('order',this.get('order'));
-        controller.set('page',this.get('page'));
+        controller.set('query',this.query);
+        controller.set('sort',this.sort);
+        controller.set('order',this.order);
+        controller.set('page',this.page);
     },
 
 });

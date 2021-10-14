@@ -2,9 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
+import _ from 'lodash';
 
 /**
  * This is the application route, in EmberJs the application route is the main
@@ -12,12 +12,13 @@ import { inject } from '@ember/service';
  *
  * @class Application
  * @namespace Prometheus.Routes
- * @extends Ember.Route
+ * @extend Route
  * @uses ApplicationRouteMixin
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Route.extend(ApplicationRouteMixin,{
-
+export default Route.extend({
+    
+    routeAfterAuthentication: 'app',
     /**
      * The i18n library service that is used in order to get the translations
      *
@@ -49,7 +50,7 @@ export default Route.extend(ApplicationRouteMixin,{
      */
     beforeModel:function(){
         this._super(...arguments);
-        if(!this.get('session.isAuthenticated'))
+        if(!this.session.isAuthenticated)
         {
             this.transitionTo('signin');
         }
@@ -66,9 +67,8 @@ export default Route.extend(ApplicationRouteMixin,{
     afterModel: function() {
         Logger.debug('ApplicationRoute::afterModel() -- setting the language to '+lang);
 
-        var lang = 'en';
+        let lang = 'en';
         this.set('i18n.locale',lang);
-        this.get('session').set('data.locale', lang);
-    },
-
+        this.session.set('data.locale', lang);
+    }
 });

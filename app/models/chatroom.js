@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr,hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -25,7 +25,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * Subject of the chat room
@@ -35,7 +35,7 @@ export default DS.Model.extend(Validations, {
      * @for Chatroom
      * @private
      */
-    subject: DS.attr('string'),
+    subject: attr('string'),
 
     /**
      * The date on which the chatroom was created
@@ -45,7 +45,7 @@ export default DS.Model.extend(Validations, {
      * @for Chatroom
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * The date on which the chatroom was last modified on
@@ -55,7 +55,7 @@ export default DS.Model.extend(Validations, {
      * @for Chatroom
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * The identifier of the user who created the chat room
@@ -65,7 +65,7 @@ export default DS.Model.extend(Validations, {
      * @for Chatroom
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The identifier of the user who last modified the chat room
@@ -75,7 +75,7 @@ export default DS.Model.extend(Validations, {
      * @for Chatroom
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     /**
      * Name of the user who created the chat room
@@ -85,7 +85,7 @@ export default DS.Model.extend(Validations, {
      * @for Chatroom
      * @private
      */
-    createdUserName: DS.attr('string'),
+    createdUserName: attr('string'),
 
     /**
      * The name of the user who last modified the chat room
@@ -95,7 +95,17 @@ export default DS.Model.extend(Validations, {
      * @for Chatroom
      * @private
      */
-    modifiedUserName: DS.attr('string'),
+    modifiedUserName: attr('string'),
+
+    /**
+     * Has this model been deleted
+     *
+     * @property deleted
+     * @type String
+     * @for Chatroom
+     * @private
+     */
+    deleted: attr('string'),
 
     /**
      * Status of the chat room
@@ -105,7 +115,7 @@ export default DS.Model.extend(Validations, {
      * @for Chatroom
      * @private
      */
-    status: DS.attr('string'),
+    status: attr('string'),
 
     /**
      * The type of chat room, group or private
@@ -115,36 +125,36 @@ export default DS.Model.extend(Validations, {
      * @for Chatroom
      * @private
      */
-    type: DS.attr('string'),
+    type: attr('string'),
 
     /**
      * The conversers in this chat room
      *
      * @property conversers
-     * @type Relationship
+     * @type UserModel
      * @for Chatroom
      * @private
      */
-    conversers: DS.hasMany('user'),
+    conversers: hasMany('user'),
 
     /**
      * The owner of this chat room
      *
      * @property ownedBy
-     * @type Relationship
+     * @type UserModel
      * @for Chatroom
      * @private
      */
-    ownedBy: DS.hasMany('user'),
+    ownedBy: hasMany('user'),
 
     /**
      * Comments made on this conversation room
      *
      * @property comments
-     * @type Relationship
+     * @type CommentModel
      * @for Chatroom
      * @private
      */
-    comments: DS.hasMany('comment'),
+    comments: hasMany('comment'),
 
 });

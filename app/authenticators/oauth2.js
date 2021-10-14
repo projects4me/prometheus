@@ -63,10 +63,11 @@ export default OAuth2PasswordGrant.extend({
      * @public
      */
     authenticate(identification, password, scope = [], headers = {}) {
+        console.log('in session authentication');
         return new RSVP.Promise((resolve, reject) => {
             const data                = { 'grant_type': 'password', username: identification, password,'client_id':this.apiClientId,'client_secret':this.apiClientSecret };
-            const serverTokenEndpoint = this.get('serverTokenEndpoint');
-            const useResponse = this.get('rejectWithResponse');
+            const serverTokenEndpoint = this.serverTokenEndpoint;
+            const useResponse = this.rejectWithResponse;
             const scopesString = makeArray(scope).join(' ');
             if (!isEmpty(scopesString)) {
                 data.scope = scopesString;

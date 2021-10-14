@@ -5,11 +5,11 @@
 import TextField from '@ember/component/text-field';
 
 /**
- * This object is used to modify the default TextFeild of emberjs in order to
- * allow run time binding of fields based on metadata. By default emberjs
+ * This object is used to modify the default TextField of EmberJS in order to
+ * allow run time binding of fields based on metadata. By default EmberJS
  * does not allow valueBinding with dynamic field names.
  *
- * This code is a slightly modifed version of code implemented by Jason Porritt
+ * This code is a slightly modified version of code implemented by Jason Porritt
  * which can be found here
  * https://gist.github.com/jasonporritt/5473506#file-dynamic_bound_text_field-coffee
  * Thank you Jason for sharing :), I have been at this problem for some time now.
@@ -30,5 +30,15 @@ export default TextField.extend({
      * @private
      */
     classNames:['form-control','input-sm','data-input'],
+
+    /**
+     * We are allowing certain attributes across the board
+     *
+     * @property attributeBindings
+     * @type Array
+     * @for TextField
+     * @private
+     */
+    attributeBindings:['data-input']
 
 });

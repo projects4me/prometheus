@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr,belongsTo } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -26,7 +26,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * The date on which the time log entry was made
@@ -36,7 +36,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "dateCreated": DS.attr('string'),
+    "dateCreated": attr('string'),
 
     /**
      * The date on which the time log entry was last modified
@@ -46,7 +46,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "dateModified": DS.attr('string'),
+    "dateModified": attr('string'),
 
     /**
      * The soft deletion flag of the time log entry
@@ -56,7 +56,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "deleted": DS.attr('string'),
+    "deleted": attr('string'),
 
     /**
      * The identifier of the user who created the time log entry
@@ -66,7 +66,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "createdUser": DS.attr('string'),
+    "createdUser": attr('string'),
 
     /**
      * The name of the user who created the time log entry
@@ -76,7 +76,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "createdUserName": DS.attr('string'),
+    "createdUserName": attr('string'),
 
     /**
      * The identifier of the user who last modifed the time log entry
@@ -86,7 +86,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "modifiedUser": DS.attr('string'),
+    "modifiedUser": attr('string'),
 
     /**
      * The name of the user who last modified the time log entry
@@ -96,7 +96,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "modifiedUserName": DS.attr('string'),
+    "modifiedUserName": attr('string'),
 
     /**
      * The identifier of the issue for which the time log entry was made
@@ -106,7 +106,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "issueId": DS.attr('string'),
+    "issueId": attr('string'),
 
     /**
      * The minutes part of the time log entry
@@ -116,7 +116,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "minutes": DS.attr('string'),
+    "minutes": attr('string'),
 
     /**
      * The hours part of the time log entry
@@ -126,7 +126,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "hours": DS.attr('string'),
+    "hours": attr('string'),
 
     /**
      * The days part of the time log entry
@@ -136,7 +136,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "days": DS.attr('string'),
+    "days": attr('string'),
 
     /**
      * The context in which the time log entry was made, currently we are supporting
@@ -148,7 +148,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "context": DS.attr('string'),
+    "context": attr('string'),
 
     /**
      * The description of the task
@@ -158,7 +158,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "description": DS.attr('string'),
+    "description": attr('string'),
 
     /**
      * The date the time was spent on
@@ -168,7 +168,17 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    "spentOn": DS.attr('string'),
+    "spentOn": attr('string'),
+
+    /**
+     * The issue this timelog is associated with
+     *
+     * @property issue
+     * @type IssueModel
+     * @for Timelog
+     * @private
+     */
+    issue: belongsTo('issue'),
 
     /**
      * The user who created this timelog
@@ -178,7 +188,7 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    createdBy: DS.belongsTo('user'),
+    createdBy: belongsTo('user'),
 
     /**
      * The user who last modified this timelog
@@ -188,5 +198,6 @@ export default DS.Model.extend(Validations, {
      * @for Timelog
      * @private
      */
-    modifiedBy: DS.belongsTo('user'),
+    modifiedBy: belongsTo('user')
+
 });

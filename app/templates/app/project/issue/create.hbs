@@ -5,150 +5,150 @@
 
       <div class="box box-primary issues-details">
         <div class="box-header with-border">
-          <h3 class="box-title">{{t "views.app.issue.create.title"}}</h3>
-
-          <div class="box-tools pull-right">
-
-          </div>
+          <h3 class="box-title">
+            {{#if (eq layoutName 'edit')}}
+              {{t "views.app.issue.edit.page" issueNumber=model.issueNumber name=model.subject}}
+            {{else}}
+              {{t "views.app.issue.create.title"}}
+            {{/if}}
+          </h3>
 
         </div>
         {{!-- /.box-header --}}
         <div class="box-body no-padding" style="display: block;">
 
-          <form {{action 'addIssue' on='submit'}}>
-            <div class="form-group">
+          <div class="form-group">
 
-              {{field-text
-                  placeholder="Enter the issue subject .."
-                  label="Issue Subject"
-                  value=model.subject
-                  mask="alphanumeric"
-                  data-field="issue.subject"
-                  focus-out=(action (mut showSubjectError) true)
-                  v-focus=showSubjectError
-                  v-model=model
-                  v-field='subject'
-                  v-output='message'
-              }}
-
-              <div data-field="issue.description" class="form-field ember-view">
-                {{summer-note
-                    usersList=usersList
-                    issuesList=issuesList
-                    onContentChange=(action "selectStatic" model 'description')
-                }}
-                <span class="highlight"></span>
-                <span class="bar"></span>
-                <label class="floating-label focused-field">{{t "views.app.issue.create.description"}}</label>
-                <span class="count pull-right"></span>
-              </div>
-
-
-              {{field-relate
-                  placeholder=(t "views.app.issue.create.type")
-                  label=(t "views.app.issue.create.type")
-                  value=model.typeId
-                  options=type
-                  selected=(find-by "value" model.typeId type)
-                  searchField="label"
-                  onchange=(action "selectRelated" model 'typeId')
-                  relateType="relate-simple"
-                  data-field="issue.type"
-                  focus-out=(action (mut showTypeError) true)
-                  v-focus=showTypeError
-                  v-model=model
-                  v-field='typeId'
-                  v-output='message'
-              }}
-
-              {{field-date
-                  placeholder="Enter the issue name .."
-                  label="Start Date"
-                  value=(readonly model.startDate)
-                  update=(action "selectStatic" model 'startDate')
-                  mask="alphanumeric"
-                  data-field="issue.startDate"
-                  focus-out=(action (mut showStartDateError) true)
-                  v-focus=showStartDateError
-                  v-model=model
-                  v-field='startDate'
-                  v-output='message'
-              }}
-
-              {{field-date
-                  placeholder="Enter the issue name .."
-                  label="End Date"
-                  value=(readonly model.endDate)
-                  update=(action "selectStatic" model 'startDate')
-                  mask="alphanumeric"
-                  data-field="issue.endDate"
-                  focus-out=(action (mut showEndDateError) true)
-                  v-focus=showEndDateError
-                  v-model=model
-                  v-field='endDate'
-                  v-output='message'
-              }}
-
-              {{field-relate
-                  placeholder=(t "views.app.issue.create.status")
-                  label=(t "views.app.issue.create.status")
-                  value=model.status
-                  options=status
-                  selected=(find-by "value" model.status status)
-                  searchField="label"
-                  onchange=(action "selectRelated" model 'status')
-                  relateType="relate-simple"
-                  data-field="issue.status"
-                  focus-out=(action (mut showStatusError) true)
-                  v-focus=showStatusError
-                  v-model=model
-                  v-field='status'
-                  v-output='message'
-              }}
-
-              {{field-relate
-                  placeholder=(t "views.app.issue.create.priority")
-                  label=(t "views.app.issue.create.priority")
-                  value=model.priority
-                  options=priority
-                  selected=(find-by "value" model.priority priority)
-                  searchField="label"
-                  onchange=(action "selectRelated" model 'priority')
-                  relateType="relate-issuepriority"
-                  data-field="issue.priority"
-                  focus-out=(action (mut showPriorityError) true)
-                  v-focus=showPriorityError
-                  v-model=model
-                  v-field='priority'
-                  v-output='message'
-              }}
-
-              {{field-relate
-                  placeholder=(t "views.app.issue.create.selectmilestone")
-                  label=(t "views.app.issue.create.milestone")
-                  value=model.milestoneId
-                  options=milestoneList
-                  selected=(find-by "value" model.milestoneId milestoneList)
-                  searchField="label"
-                  onchange=(action "selectRelated" model 'milestoneId')
-                  relateType="relate-simple"
-                  data-field="issue.milestone"
-                  focus-out=(action (mut showMilestonError) true)
-                  v-focus=showMilestonError
-                  v-model=model
-                  v-field='milestoneId'
-                  v-output='message'
-              }}
-
+            <FormFields::FieldText
+                @placeholder={{t "views.app.issue.create.placeholder.subject"}}
+                @label={{t "views.app.issue.create.subject"}}
+                @type="text"
+                @value={{this.model.subject}}
+                @mask="alphanumeric"
+                @data-field="issue.subject"
+                @v-model={{this.model}}
+                @length="255"
+                @v-field='subject'
+                @v-output='message'
+            />
+            <div data-field="issue.description" class="form-field ember-view">
+              <AppUi::ToastUi
+                @usersList={{membersList}}
+                @issueSearch={{perform this.search}}
+                @contents={{readonly issueDescription}}
+                @editType='wysiwyg'
+                @hide = {{array 'footer'}}
+                @onContentChange={{action "selectStatic" model 'description'}}              
+              />
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <label class="floating-label focused-field">{{t "views.app.issue.create.description"}}</label>
+              <span class="count pull-right"></span>
             </div>
-          </form>
+
+            <FormFields::FieldRelate
+                @placeholder={{t "views.app.issue.create.type"}}
+                @label={{t "views.app.issue.create.type"}}
+                @value={{model.typeId}}
+                @options={{typeList}}
+                @selected={{find-by "value" model.typeId typeList}}
+                @searchField="label"
+                @onchange={{action "selectRelated" model 'typeId'}}
+                @relateType="related-fields/relate-simple"
+                @data-field="issue.type"
+                @v-model={{model}}
+                @v-field='typeId'
+                @v-output='message'
+            />
+
+            <FormFields::FieldDate
+                @placeholder={{t "views.app.issue.create.placeholder.startDate"}}
+                @label={{t "views.app.issue.create.startDate"}}
+                @value="{{readonly this.model.startDate}}"
+                @update={{action "selectStatic" this.model 'startDate'}}
+                @data-field="issue.startDate"
+                @format="YYYY-MM-DD"
+                @singleDatePicker={{true}}
+                @showDropdowns={{true}}
+                @positionX="right"
+                @positionY="down"
+                @data-field="issue.startDate"
+                @v-model={{this.model}}
+                @v-field='startDate'
+                @v-output='message'
+                @autoApply={{true}}
+                @minDate='1990'
+                @maxDate='2023'                 
+            />
+
+            <FormFields::FieldDate
+                @placeholder={{t "views.app.issue.create.placeholder.endDate"}}
+                @label={{t "views.app.issue.create.endDate"}}
+                @value={{readonly this.model.endDate}}
+                @update={{action "selectStatic" this.model 'endDate'}}
+                @data-field="issue.endDate"
+                @format="YYYY-MM-DD"
+                @singleDatePicker={{true}}
+                @showDropdowns={{true}}
+                @positionX="right"
+                @positionY="down"
+                @data-field="issue.endDate"
+                @v-model={{this.model}}
+                @v-field='endDate'
+                @v-output='message'
+                @autoApply={{true}}
+                @minDate='1990'
+                @maxDate='2023'                                                           
+            />
+
+            <FormFields::FieldRelate
+                @placeholder={{t "views.app.issue.create.status"}}
+                @label={{t "views.app.issue.create.status"}}
+                @value={{model.status}}
+                @options={{status}}
+                @selected={{find-by "value" model.status status}}
+                @searchField="label"
+                @onchange={{action "selectRelated" model 'status'}}
+                @relateType="related-fields/relate-simple"
+                @data-field="issue.status"
+                @v-model={{model}}
+                @v-field='status'
+                @v-output='message'
+            />
+
+            <FormFields::FieldRelate
+                @placeholder={{t "views.app.issue.create.priority"}}
+                @label={{t "views.app.issue.create.priority"}}
+                @value={{model.priority}}
+                @options={{priority}}
+                @selected={{find-by "value" model.priority priority}}
+                @searchField="label"
+                @onchange={{action "selectRelated" model 'priority'}}
+                @relateType="related-fields/relate-issuepriority"
+                @data-field="issue.priority"
+                @v-model={{model}}
+                @v-field='priority'
+                @v-output='message'
+            />
+
+            <FormFields::FieldRelate
+                @placeholder={{t "views.app.issue.create.selectmilestone"}}
+                @label={{t "views.app.issue.create.milestone"}}
+                @value={{model.milestoneId}}
+                @options={{milestoneList}}
+                @selected={{find-by "value" model.milestoneId milestoneList}}
+                @searchField="label"
+                @onchange={{action "selectRelated" model 'milestoneId'}}
+                @relateType="related-fields/relate-simple"
+                @data-field="issue.milestone"
+                @v-model={{model}}
+                @v-field='milestoneId'
+                @v-output='message'
+            />
+
+          </div>
 
         </div>
-        {{!-- /.box-body --}}
-        <div class="box-footer text-center" style="display: block;">
-
-        </div>
-        {{!-- /.box-footer --}}
       </div>
 
     </div>
@@ -159,58 +159,67 @@
       <div class="box box-warning issues-details">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "views.app.issue.create.people"}}</h3>
-
-          <div class="box-tools pull-right">
-
-          </div>
-
         </div>
         {{!-- /.box-header --}}
         <div class="box-body no-padding" style="display: block;">
 
+          <FormFields::FieldRelate
+              @placeholder={{t "views.app.issue.create.selectassignee"}}
+              @label={{t "views.app.issue.create.assignedTo"}}
+              @value={{model.assignee}}
+              @options={{membersList}}
+              @selected={{find-by "value" model.assignee membersList}}
+              @searchField="label"
+              @onchange={{action "selectRelated" model 'assignee'}}
+              @relateType="related-fields/relate-user"
+              @data-field="issue.assignee"
+              @v-model={{model}}
+              @v-field='assignee'
+              @v-output='message'
+          />
 
-          {{field-relate
-              placeholder=(t "views.app.issue.create.selectassignee")
-              label=(t "views.app.issue.create.assignedTo")
-              value=model.assignee
-              options=memberList
-              selected=(find-by "value" model.assignee memberList)
-              searchField="label"
-              onchange=(action "selectRelated" model 'assignee')
-              relateType="relate-user"
-              data-field="issue.assignee"
-              focus-out=(action (mut showAssigneeError) true)
-              v-focus=showAssigneeError
-              v-model=model
-              v-field='assignee'
-              v-output='message'
-          }}
-
-
-          {{field-relate
-              placeholder=(t "views.app.issue.create.selectowner")
-              label=(t "views.app.issue.create.ownedBy")
-              value=model.owner
-              options=memberList
-              selected=(find-by "value" model.owner memberList)
-              searchField="label"
-              onchange=(action "selectRelated" model 'owner')
-              relateType="relate-user"
-              data-field="issue.owner"
-              focus-out=(action (mut showOwnerError) true)
-              v-focus=showOwnerError
-              v-model=model
-              v-field='owner'
-              v-output='message'
-          }}
-
+          <FormFields::FieldRelate
+              @placeholder={{t "views.app.issue.create.selectowner"}}
+              @label={{t "views.app.issue.create.ownedBy"}}
+              @value={{model.owner}}
+              @options={{membersList}}
+              @selected={{find-by "value" model.owner membersList}}
+              @searchField="label"
+              @onchange={{action "selectRelated" model 'owner'}}
+              @relateType="related-fields/relate-user"
+              @data-field="issue.owner"
+              @v-model={{model}}
+              @v-field='owner'
+              @v-output='message'
+          />
 
         </div>
-        {{!-- /.box-body --}}
-        <div class="box-footer text-center" style="display: block;">
+      </div>
+
+      <div class="box box-info issues-details">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{t "views.app.issue.create.parent"}}</h3>
+        </div>
+        {{!-- /.box-header --}}
+        <div class="box-body no-padding" style="display: block;">
+
+          <FormFields::FieldRelate
+              @placeholder={{t "views.app.issue.create.selectparent"}}
+              @label={{t "views.app.issue.create.parentId"}}
+              @value={{model.parentId}}
+              @options={{issuesList}}
+              @matcher={{parentMatcher}}
+              @selected={{find-by "id" model.parentId issuesList}}
+              @searchField="number"
+              @onchange={{action "changedParent" model 'parentId'}}
+              @relateType="related-fields/relate-issue"
+              @data-field="issue.parentId"
+              @v-model={{model}}
+              @v-field='parentId'
+              @v-output='message'
+          />
 
         </div>
-        {{!-- /.box-footer --}}
       </div>
 
     </div>

@@ -21,7 +21,7 @@ module.exports = function(environment) {
             clientId: 'projects4me',
             clientSecret: '06110fb83488715ca69057f4a7cedf93',
             prefix: 'app',
-            host: "http://projects4me",
+            host: "http://api.projects4.me",
         },
         app:{
             list:{
@@ -57,6 +57,10 @@ module.exports = function(environment) {
         APP: {
             // Here you can pass flags/options to your application instance
             // when it is created
+        },
+
+        'ember-cli-mirage': {
+            enabled: false
         }
     };
 
@@ -77,17 +81,16 @@ module.exports = function(environment) {
         ENV.APP.LOG_VIEW_LOOKUPS = false;
 
         ENV.APP.rootElement = '#ember-testing';
+        ENV.APP.autoboot = false;
+
+        ENV['ember-cli-mirage'] = {
+            enabled: true
+        };
     }
 
     // if (environment === 'production') {
     //
     // }
-
-    ENV['ember-simple-auth'] = {
-        authenticationRoute: 'signin',
-        routeAfterAuthentication: 'app',
-        routeIfAlreadyAuthenticated: 'app'
-    };
 
     ENV.i18n = {
         defaultLocale: 'en'

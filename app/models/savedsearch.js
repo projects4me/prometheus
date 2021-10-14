@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr, belongsTo } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -24,7 +24,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * Name of the saved search
@@ -34,7 +34,7 @@ export default DS.Model.extend(Validations, {
      * @for Savedsearch
      * @private
      */
-    name: DS.attr('string'),
+    name: attr('string'),
 
     /**
      * The date on which the saved search was created
@@ -44,7 +44,7 @@ export default DS.Model.extend(Validations, {
      * @for Savedsearch
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * The identifier of the user who saved the search
@@ -54,7 +54,7 @@ export default DS.Model.extend(Validations, {
      * @for Savedsearch
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * Name of the user who saved this search
@@ -64,7 +64,17 @@ export default DS.Model.extend(Validations, {
      * @for Savedsearch
      * @private
      */
-    createdUserName: DS.attr('string'),
+    createdUserName: attr('string'),
+
+    /**
+     * Has this model been deleted
+     *
+     * @property deleted
+     * @type String
+     * @for Savedsearch
+     * @private
+     */
+    deleted: attr('string'),
 
     /**
      * The flag that indicates whether this search is available publicly
@@ -74,7 +84,7 @@ export default DS.Model.extend(Validations, {
      * @for Savedsearch
      * @private
      */
-    public: DS.attr('bool'),
+    public: attr('bool'),
 
     /**
      * The query string for the search
@@ -84,7 +94,7 @@ export default DS.Model.extend(Validations, {
      * @for Savedsearch
      * @private
      */
-    searchquery: DS.attr('string'),
+    searchquery: attr('string'),
 
     /**
      * The module for which this saved search was created
@@ -94,7 +104,7 @@ export default DS.Model.extend(Validations, {
      * @for Savedsearch
      * @private
      */
-    relatedTo: DS.attr('string'),
+    relatedTo: attr('string'),
 
     /**
      * The project for which this search was created
@@ -104,6 +114,16 @@ export default DS.Model.extend(Validations, {
      * @for Savedsearch
      * @private
      */
-    projectId: DS.attr('string')
+    projectId: attr('string'),
+
+    /**
+     * The user who saved this search
+     *
+     * @property createdBy
+     * @type UserModel
+     * @for Savedsearch
+     * @private
+     */
+    createdBy: belongsTo('user')
 
 });

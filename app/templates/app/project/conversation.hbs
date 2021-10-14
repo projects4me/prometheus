@@ -109,17 +109,12 @@
                         {{!-- .img-push is used to add margin to elements next to floating images --}}
                         <div class="img-push">
                           <div class="message-box">
-                            {{message-box
-                                issuesList=issuesList
-                                usersList=usersList
-                                spellcheck=false
-                                entity=entity
-                                placeholder=(t "views.app.conversation.messagebox")
-                                value=comment
-                            }}
-                            <div class="pull-right">
-                              <button type="button" class="btn btn-primary" {{action "save" entity.id comment}}>{{t "views.app.conversation.post"}}</button>
-                            </div>
+                            <ConversationUi::MessageBox
+                              @usersList={{membersList}}
+                              @issueSearch={{perform this.search}}
+                              @save={{action "save"}}
+                              @entityId={{entity.id}}
+                            />
                           </div>
                         </div>
 
@@ -205,50 +200,50 @@
       closeLabel="global.form.cancel"
       confirm=(action "addConversation")
       close="removeModal"}}
-        <div class="box-body">
-          {{field-text
-              placeholder=(t "views.app.conversation.new.subject")
-              label=(t "views.app.conversation.new.subject")
-              value=newConversation.subject
-              mask="alphanumeric"
-              data-field="newConversation.subject"
-              focus-out=(action (mut showSubjectError) true)
-              v-focus=showSubjectError
-              v-model=newConversation
-              v-field='subject'
-              v-output='message'
-          }}
+      <div class="box-body">
+        {{field-text
+            placeholder=(t "views.app.conversation.new.subject")
+            label=(t "views.app.conversation.new.subject")
+            value=newConversation.subject
+            mask="alphanumeric"
+            data-field="newConversation.subject"
+            focus-out=(action (mut showSubjectError) true)
+            v-focus=showSubjectError
+            v-model=newConversation
+            v-field='subject'
+            v-output='message'
+        }}
 
-          {{field-textarea
-              placeholder=(t "views.app.conversation.new.description")
-              label=(t "views.app.conversation.new.description")
-              value=newConversation.description
-              data-field="newConversation.description"
-              focus-out=(action (mut showDescriptionError) true)
-              v-focus=showDescriptionError
-              v-model=newConversation
-              v-field='description'
-              v-output='message'
-          }}
+        {{field-textarea
+            placeholder=(t "views.app.conversation.new.description")
+            label=(t "views.app.conversation.new.description")
+            value=newConversation.description
+            data-field="newConversation.description"
+            focus-out=(action (mut showDescriptionError) true)
+            v-focus=showDescriptionError
+            v-model=newConversation
+            v-field='description'
+            v-output='message'
+        }}
 
-          {{field-relate
-              placeholder=(t "views.app.conversation.new.type")
-              label=(t "views.app.conversation.new.type")
-              value=newConversation.roomType
-              options=roomTypes
-              selected=(find-by "value" newConversation.roomType roomTypes)
-              searchField="label"
-              onchange=(action "selectNewType")
-              relateType="relate-simple"
-              data-field="newConversation.roomType"
-              focus-out=(action (mut showTypeError) true)
-              v-focus=showTypeError
-              v-model=newConversation
-              v-field='roomType'
-              v-output='message'
-          }}
+        {{field-relate
+            placeholder=(t "views.app.conversation.new.type")
+            label=(t "views.app.conversation.new.type")
+            value=newConversation.roomType
+            options=roomTypes
+            selected=(find-by "value" newConversation.roomType roomTypes)
+            searchField="label"
+            onchange=(action "selectNewType")
+            relateType="relate-simple"
+            data-field="newConversation.roomType"
+            focus-out=(action (mut showTypeError) true)
+            v-focus=showTypeError
+            v-model=newConversation
+            v-field='roomType'
+            v-output='message'
+        }}
 
-        </div>
+      </div>
     {{/bootstrap-modal}}
 
   {{/if}}

@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -25,7 +25,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * The identifier of the project for which this membership rule is defined
@@ -35,7 +35,7 @@ export default DS.Model.extend(Validations, {
      * @for Membership
      * @private
      */
-    projectId: DS.attr('string'),
+    projectId: attr('string'),
 
     /**
      * The identifier of the for whom this membership rule is defined
@@ -45,7 +45,7 @@ export default DS.Model.extend(Validations, {
      * @for Membership
      * @private
      */
-    userId: DS.attr('string'),
+    userId: attr('string'),
 
     /**
      * The identifier of the role which is assigned to the user under the projectId
@@ -56,7 +56,7 @@ export default DS.Model.extend(Validations, {
      * @for Membership
      * @private
      */
-    roleId: DS.attr('string'),
+    roleId: attr('string'),
 
     /**
      * The soft deletion flag for the membership
@@ -66,7 +66,7 @@ export default DS.Model.extend(Validations, {
      * @for Membership
      * @private
      */
-    deleted: DS.attr('string'),
+    deleted: attr('string'),
 
     /**
      * The date on which this membership rule was created
@@ -76,7 +76,7 @@ export default DS.Model.extend(Validations, {
      * @for Membership
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * The date on which this membership rule was last modified
@@ -86,7 +86,7 @@ export default DS.Model.extend(Validations, {
      * @for Membership
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * The identifier of the user who created the membership rule
@@ -96,7 +96,7 @@ export default DS.Model.extend(Validations, {
      * @for Membership
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The identifier of the user who last modified the membership rule
@@ -106,7 +106,6 @@ export default DS.Model.extend(Validations, {
      * @for Membership
      *@private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
-    // Add the relationships here
 });

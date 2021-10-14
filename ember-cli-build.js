@@ -5,10 +5,14 @@
 /*jshint node:true*/
 /* global require, module */
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
+var sass = require('sass');
 
 module.exports = function(defaults) {
     let app = new EmberApp(defaults, {
         // Add options here
+        sassOptions: {
+            implementation: sass
+        }
     });
 
     // Use `app.import` to add additional libraries to the generated
@@ -29,12 +33,11 @@ module.exports = function(defaults) {
     app.import('node_modules/js-logger/src/logger.min.js');
     app.import('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js');
     app.import("bower_components/lodash/dist/lodash.min.js");
-    app.import("node_modules/bootstrap-select/dist/js/bootstrap-select.min.js");
     app.import("node_modules/moment/moment.js");
     app.import("node_modules/bootstrap-daterangepicker/daterangepicker.js");
     app.import("node_modules/jquery-mask-plugin/dist/jquery.mask.min.js");
     app.import("node_modules/dot/doT.min.js");
-    app.import("node_modules/jquery-extendext/jQuery.extendext.min.js");
+    app.import("node_modules/jquery-extendext/jquery-extendext.js");
     app.import("node_modules/jQuery-QueryBuilder/dist/js/query-builder.js");
     app.import("node_modules/jquery-slimscroll/jquery.slimscroll.min.js");
     app.import("node_modules/highlightjs/highlight.pack.min.js");

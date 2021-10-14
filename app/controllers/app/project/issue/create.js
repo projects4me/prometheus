@@ -2,10 +2,11 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Prometheus from "prometheus/controllers/prometheus";
-import { inject } from '@ember/service';
+import Create from "prometheus/controllers/prometheus/create";
+import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
+import format from "prometheus/utils/data/format";
 import _ from "lodash";
 
 /**
@@ -17,31 +18,17 @@ import _ from "lodash";
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Prometheus.extend({
+export default Create.extend(ProjectRelated, {
 
     /**
-     * This is the controller of the project, we are injecting it in order to
-     * gain access to the data that is fetched by this controller
+     * This is the module for which we are trying to create
      *
-     * @property projectController
-     * @type Prometheus.Controllers.App.Project
+     * @property module
+     * @type String
      * @for Create
-     * @public
+     * @protected
      */
-    projectController: injectController('app.project'),
-
-    /**
-     * This is a computed property in which gets the list of issues
-     * associated with a project loaded by the project controller
-     *
-     * @property issuesList
-     * @type Array
-     * @for Create
-     * @private
-     */
-    issuesList: computed('projectController.issuesList', function(){
-        return this.get('projectController').get('issuesList');
-    }),
+    module: 'issue',
 
     /**
      * This is the controller for the app, we are injecting it in order to
@@ -55,6 +42,30 @@ export default Prometheus.extend({
     appController: injectController('app'),
 
     /**
+     * This milestones available for this project
+     *
+     * @property milestoneList
+     * @type Array
+     * @for Create
+     * @public
+     */
+    milestoneList: computed('project', function () {
+        return format.getSelectList(this.project.milestones, false, this.i18n.t('global.blank'));
+    }),
+
+    /**
+     * This issue types available for the project
+     *
+     * @property typeList
+     * @type Array
+     * @for Create
+     * @public
+     */
+    typeList: computed('types', function () {
+        return format.getSelectList(this.types);
+    }),
+
+    /**
      * This is a computed property in which gets the list of user
      * associated in the system fetched by the app controller
      *
@@ -63,99 +74,116 @@ export default Prometheus.extend({
      * @for Create
      * @private
      */
-    usersList: computed('appController.usersList', function(){
-        return this.get('appController').get('usersList');
+    usersList: computed('appController.usersList', function () {
+        return this.appController.get('usersList');
     }),
 
     /**
-     * These are the events that this controller handles
+     * This estimates for this issue
+     *
+     * @property estimates
+     * @type Array
+     * @for Create
+     * @private
+     */
+    estimates: [],
+
+    /**
+     * This function sets the model properties before saving it
+     *
+     * @method beforeSave
+     * @param model
+     */
+    beforeSave(model) {
+        model.set('projectId', this.target.currentState.routerJsState.params["app.project"].project_id);
+        model.set('reportedUser', this.currentUser.user.id);
+        model.set('startDate', moment(model.get('startDate')).format("YYYY-MM-DD"));
+        model.set('endDate', moment(model.get('endDate')).format("YYYY-MM-DD"));
+    },
+
+    /**
+     * This function returns the success message
+     *
+     * @method getSuccessMessage
+     * @param model
+     */
+    getSuccessMessage(model) {
+        return this.i18n.t('views.app.issue.created', {
+            name: model.get('subject'),
+            issue_number: model.get('issueNumber')
+        });
+    },
+
+    /**
+     * This function navigate a user to the issue detail page
+     *
+     * @method navigateToSuccess
+     * @param model
+     */
+    navigateToSuccess(model) {
+        this.transitionToRoute('app.project.issue.page', {
+            project_id: model.get('projectId'),
+            issue_number: model.get('issueNumber')
+        });
+    },
+
+    /**
+     * This function checks if a field has changed
+     *
+     * @method _save
+     * @param model
+     * @protected
+     */
+    hasChanged(model) {
+        return (_.size(model.changedAttributes()) > 2);
+    },
+
+    /**
+     * This function navigates a use to the issue list view.
+     *
+     * @method afterCancel
+     * @param projectId
+     * @protected
+     */
+    afterCancel() {
+        let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
+        this.transitionToRoute('app.project.issue', { project_id: projectId });
+    },
+
+    /**
+     * This function is used to allow search on both the issues name and
+     * the issue number
+     *
+     * @method parentMatcher
+     * @param issue
+     * @param term
+     * @return {Number}
+     */
+    parentMatcher(issue, term) {
+        return `#${issue.number} - ${issue.name}`.toLowerCase().indexOf(term);
+    },
+
+    /**
+     * These are the actions supported by this controller
      *
      * @property actions
-     * @type Object
-     * @for Create
+     * @for Object
      * @public
      */
-    actions:{
+    actions: {
 
         /**
-         * This function is responsible for saving the model. After successfully
-         * saving the function takes the user to the saved page.
+         * This function is used to set the parent for the issue
          *
-         * @method save
-         * @public
-         * @todo Trigger the notificaiton
+         * @param model
+         * @param field
+         * @param target
          */
-        save:function() {
-            let _self = this;
-            let model = this.get('model');
-
-            model.validate().then(({ validations }) => {
-
-                if (validations.get('isValid')) {
-                    model.set('projectId',this.target.currentState.routerJs.state.params["app.project"].project_id);
-                    model.set('reportedUser',_self.get('currentUser.user.id'));
-
-                    model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
-                    model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
-
-                    model.save().then(function(data){
-                        new Messenger().post({
-                            message: _self.get('i18n').t('views.app.issue.created',{name:data.get('subject'),issue_number:data.get('issueNumber')}),
-                            type: 'success',
-                            showCloseButton: true
-                        });
-
-                        _self.transitionToRoute('app.project.issue.page', {project_id:data.get('projectId'),issue_number:data.get('issueNumber')});
-                    });
-                } else {
-                    let messages = _self._buildMessages(validations,'issue');
-
-                    new Messenger().post({
-                        message: messages,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
+        changedParent(model, field, target) {
+            model.set(field, target.id);
         },
-
-        /**
-         * This function lets a user traverse to the issue list view of the project
-         *
-         * @method cancel
-         * @public
-         * @todo Trigger the notificaiton
-         */
-        cancel:function(){
-            let _self = this;
-            let projectId = _self.target.currentState.routerJs.state.params["app.project"].project_id;
-            let model = _self.get('model');
-
-            if (_.size(model.changedAttributes()) > 2) {
-                let message = new Messenger().post({
-                    message: _self.get('i18n').t("views.app.issue.create.cancelcicked").toString(),
-                    type: 'warning',
-                    showCloseButton: true,
-                    actions: {
-                        confirm: {
-                            label: _self.get('i18n').t("views.app.issue.create.confirmcancel").toString(),
-                            action: function() {
-                                message.cancel();
-                                _self.transitionToRoute('app.project.issue', {project_id:projectId});
-                            }
-                        },
-                        cancel: {
-                            label: _self.get('i18n').t("views.app.issue.create.onsecondthought").toString(),
-                            action: function() {
-                                message.cancel();
-                            }
-                        },
-
-                    }
-                });
-            } else {
-                _self.transitionToRoute('app.project.issue', {project_id:projectId});
-            }
-        },
-    }
+        // search(query) {
+        //     console.log(query);
+        // }
+    },
 });

@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
+import { has } from 'lodash';
 
 /**
  * These are the validation that are applied on the model
@@ -23,7 +24,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * The tag
@@ -33,7 +34,7 @@ export default DS.Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "tag": DS.attr('string'),
+    "tag": attr('string'),
 
     /**
      * The date on which the tag was created
@@ -43,7 +44,7 @@ export default DS.Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "dateCreated": DS.attr('string'),
+    "dateCreated": attr('string'),
 
     /**
      * The date on which the tag was last mofidied
@@ -53,7 +54,7 @@ export default DS.Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "dateModified": DS.attr('string'),
+    "dateModified": attr('string'),
 
     /**
      * The soft deletion flag of the tag
@@ -63,7 +64,7 @@ export default DS.Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "deleted": DS.attr('string'),
+    "deleted": attr('string'),
 
     /**
      * The identifier of the user who last created the tag
@@ -73,7 +74,7 @@ export default DS.Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "createdUser": DS.attr('string'),
+    "createdUser": attr('string'),
 
     /**
      * The name of the user who created the tag
@@ -83,7 +84,7 @@ export default DS.Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "createdUserName": DS.attr('string'),
+    "createdUserName": attr('string'),
 
     /**
      * The identifier of the user who last modified the tag
@@ -93,7 +94,7 @@ export default DS.Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "modifiedUser": DS.attr('string'),
+    "modifiedUser": attr('string'),
 
     /**
      * The name of the user who last modified the tag
@@ -103,6 +104,56 @@ export default DS.Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "modifiedUserName": DS.attr('string'),
+    "modifiedUserName": attr('string'),
+
+    /**
+     * The user who created the tag
+     *
+     * @property createdBy
+     * @type UserModel
+     * @for Savedsearch
+     * @private
+     */
+    createdBy: belongsTo('user', { inverse: null }),
+
+    /**
+     * The user last modified the tag
+     *
+     * @property modifiedBy
+     * @type UserModel
+     * @for Savedsearch
+     * @private
+     */
+    modifiedBy: belongsTo('user', { inverse: null }),
+
+    /**
+     * The wiki this tag is associated with
+     *
+     * @property wiki
+     * @type WikiModel
+     * @for Savedsearch
+     * @private
+     */
+    wiki: hasMany('wiki'),
+
+    /**
+     * The issue this tag is associated with
+     *
+     * @property issue
+     * @type IssueModel
+     * @for Savedsearch
+     * @private
+     */
+    issue: hasMany('issue'),
+
+    /**
+     * The project this tag is associated with
+     *
+     * @property project
+     * @type ProjectModel
+     * @for Savedsearch
+     * @private
+     */
+    project: hasMany('project')
 
 });

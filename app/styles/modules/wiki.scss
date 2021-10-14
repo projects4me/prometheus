@@ -157,3 +157,13 @@
     display: none;
   }
 }
+
+.wiki-detail {
+  .form-group{
+    div[data-field="wiki.description"] {
+      > #editor {
+      height: 600px !important;
+    }
+   }
+  }
+}

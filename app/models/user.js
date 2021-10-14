@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr,belongsTo,hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -25,7 +25,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * Username
@@ -35,7 +35,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    username: DS.attr('string'),
+    username: attr('string'),
 
     /**
      * Email Address
@@ -45,7 +45,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    email: DS.attr('string'),
+    email: attr('string'),
 
     /**
      * Status
@@ -55,7 +55,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    status: DS.attr('string'),
+    status: attr('string'),
 
     /**
      * Name
@@ -65,7 +65,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    name: DS.attr('string'),
+    name: attr('string'),
 
     /**
      * Date on which the user was created
@@ -75,7 +75,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * Date on which the user was last modified
@@ -85,7 +85,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * Soft deletion flag
@@ -95,7 +95,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    deleted: DS.attr('string'),
+    deleted: attr('string'),
 
     /**
      * Description
@@ -105,7 +105,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    description: DS.attr('string'),
+    description: attr('string'),
 
     /**
      * User who created this user
@@ -115,7 +115,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * User who modified this user
@@ -125,7 +125,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     /**
      * Title of the user
@@ -135,7 +135,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    title: DS.attr('string'),
+    title: attr('string'),
 
     /**
      * Phone number of the user
@@ -145,7 +145,7 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    phone: DS.attr('string'),
+    phone: attr('string'),
 
     /**
      * A user's education
@@ -155,35 +155,35 @@ export default DS.Model.extend(Validations, {
      * @for User
      * @private
      */
-    education: DS.attr('string'),
+    education: attr('string'),
 
     /**
      * The users's dashboard
      *
      * @property dashboard
-     * @type Prometheus.Models.Dashboard
+     * @type DashboardModel
      * @for User
      * @private
      */
-    dashboard: DS.belongsTo('dashboard'),
+    dashboard: belongsTo('dashboard'),
 
     /**
      * The skills for a user
      *
      * @property skills
-     * @type Relationship
+     * @type TagModel
      * @for User
      * @private
      */
-    skills: DS.hasMany('tag'),
+    skills: hasMany('tag'),
 
     /**
      * These are the tag relationship entries
      *
      * @property tagged
-     * @type Relationship
+     * @type TaggedModel
      * @for User
      * @private
      */
-    tagged: DS.hasMany('tagged'),
+    tagged: hasMany('tagged'),
 });

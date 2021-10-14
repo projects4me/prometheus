@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr,belongsTo } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -25,7 +25,7 @@ const Validations = buildValidations({
  * @extend DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * The date on which the comment was created
@@ -35,7 +35,7 @@ export default DS.Model.extend(Validations, {
      * @for Comment
      * @private
      */
-    dateCreated: DS.attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}),
+    dateCreated: attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}),
 
     /**
      * The date on which the comment was last modified
@@ -45,7 +45,7 @@ export default DS.Model.extend(Validations, {
      * @for Comment
      * @private
      */
-    dateModified: DS.attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}),
+    dateModified: attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}),
 
     /**
      * The soft deletion flag of the comment
@@ -55,7 +55,7 @@ export default DS.Model.extend(Validations, {
      * @for Comment
      * @private
      */
-    deleted: DS.attr('string'),
+    deleted: attr('string'),
 
     /**
      * The comment
@@ -65,7 +65,7 @@ export default DS.Model.extend(Validations, {
      * @for CommentModel
      * @private
      */
-    comment: DS.attr('string'),
+    comment: attr('string'),
 
     /**
      * The identifier of the user who created the comment
@@ -75,7 +75,7 @@ export default DS.Model.extend(Validations, {
      * @for Comment
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The name of the user who created the comment
@@ -85,7 +85,7 @@ export default DS.Model.extend(Validations, {
      * @for Comment
      * @private
      */
-    createdUserName: DS.attr('string'),
+    createdUserName: attr('string'),
 
     /**
      * The identifier of the user who last modified the comment
@@ -95,7 +95,7 @@ export default DS.Model.extend(Validations, {
      * @for Comment
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     /**
      * The name of the user who last modified the comment
@@ -105,7 +105,7 @@ export default DS.Model.extend(Validations, {
      * @for Comment
      * @private
      */
-    modifiedUserName: DS.attr('string'),
+    modifiedUserName: attr('string'),
 
     /**
      * The entity the comment is related to
@@ -115,7 +115,7 @@ export default DS.Model.extend(Validations, {
      * @for Comment
      * @private
      */
-    relatedTo: DS.attr('string'),
+    relatedTo: attr('string'),
 
     /**
      * The identifier of the record the comment is related to
@@ -125,26 +125,56 @@ export default DS.Model.extend(Validations, {
      * @for Comment
      * @private
      */
-    relatedId: DS.attr('string'),
+    relatedId: attr('string'),
 
     /**
      * The user who created the comment
      *
      * @property createdby
-     * @type Relationship
+     * @type UserModel
      * @for Comment
      * @private
      */
-    createdby: DS.belongsTo('user'),
+    createdby: belongsTo('user'),
+
+    /**
+     * The user who last modified the comment
+     *
+     * @property modifiedBy
+     * @type UserModel
+     * @for Comment
+     * @private
+     */
+    modifiedBy: belongsTo('user'),
 
     /**
      * The conversation room the comment is associated with
      *
      * @property conversationroom
-     * @type Relationship
+     * @type ConversationRoomModel
      * @for Comment
      * @private
      */
-    conversationroom: DS.belongsTo('conversationroom')
+    conversationroom: belongsTo('conversationroom'),
+    
+    /**
+     * The chat room the comment is associated with
+     *
+     * @property chatRoom
+     * @type ChatRoomModel
+     * @for Comment
+     * @private
+     */
+    chatRoom: belongsTo('chatroom'),
 
+    /**
+     * The issue the comment is associated with
+     *
+     * @property issue
+     * @type IssueModel
+     * @for Comment
+     * @private
+     */
+    issue: belongsTo('issue')
+    
 });

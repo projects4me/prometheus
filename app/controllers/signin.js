@@ -16,6 +16,16 @@ import Controller from '@ember/controller';
 export default Controller.extend({
 
     /**
+     * The i18n library service that is used in order to get the translations
+     *
+     * @property i18n
+     * @type Ember.Service
+     * @for Prometheus.Controllers.Prometheus
+     * @public
+     */
+    i18n: inject(),
+
+    /**
      * The session service which is offered by ember-simple-auth that will be used
      * in order to verfy whether the used is authenticated
      *
@@ -38,16 +48,31 @@ export default Controller.extend({
 
         /**
          * This function invalidates the session which effectively logs the user out
-         * of the application
+         * of the application and if user is authenticated then we'll route user to
+         * "app" route
          *
          * @method authenticate
          * @public
          */
-        authenticate() {
+        async authenticate() {
             let { username, password } = this.getProperties('username', 'password');
-            this.get('session').authenticate('authenticator:oauth2', username, password).catch((reason) => {
-                this.set('errorMessage', reason.error || reason);
-            });
+            let _self = this;
+
+            await this.session.authenticate('authenticator:oauth2', username, password).then(
+                () => {
+                    if (_self.session.isAuthenticated) {
+                        localStorage.removeItem('projectId');
+                        _self.session.handleAuthentication('app');
+                    }
+                },
+                () => {
+                    new Messenger().post({
+                        message: _self.get('i18n').t("views.signin.error"),
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            );
         }
 
     }

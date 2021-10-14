@@ -35,7 +35,7 @@ export default FormField.extend({
      * @protected
      */
     charLength: computed('value', function() {
-        return (this.get('value'));
+        return (this.value);
     }),
 
     /**
@@ -49,8 +49,8 @@ export default FormField.extend({
      */
     didInsertElement:function(){
         let _self = this;
-        const mask = _self.getMask(this.get('mask'));
-        const tagName = _self.getTag(this.get('type'));
+        const mask = _self.getMask(this.mask);
+        const tagName = _self.getTag(this.type);
 
         if (mask !== undefined && mask !== '' && tagName !== undefined && tagName !== '') {
             $('#'+_self.elementId+' '+tagName).mask(mask.mask,{translation:mask.maskTranslation});

@@ -1,44 +1,40 @@
-import { expect } from 'chai';
-import { describe, it } from 'mocha';
-import { setupComponentTest } from 'ember-mocha';
-import hbs from 'htmlbars-inline-precompile';
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
+import { hbs } from 'ember-cli-htmlbars';
 
-describe('Integration | Component | attachment-icon', function() {
-  setupComponentTest('attachment-icon', {
-    integration: true
-  });
-
+module('Integration | Component | attachment-icon', function (hooks) {
+  setupRenderingTest(hooks);
   let scenarios = [
-      ['text/presentation', '<i class="fa fa-file-powerpoint-o"></i>'],
-      ['text/powerpoint', '<i class="fa fa-file-powerpoint-o"></i>'],
-      ['text/document', '<i class="fa fa-file-word-o"></i>'],
-      ['text/word', '<i class="fa fa-file-word-o"></i>'],
-      ['text/excel', '<i class="fa fa-file-excel-o"></i>'],
-      ['text/spreadsheet', '<i class="fa fa-file-excel-o"></i>'],
-      ['text/pdf', '<i class="fa fa-file-pdf-o"></i>'],
-      ['archive/zip', '<i class="fa fa-file-archive-o"></i>'],
-      ['archive/tar', '<i class="fa fa-file-archive-o"></i>'],
-      ['archive/rar', '<i class="fa fa-file-archive-o"></i>'],
-      ['archive/compress', '<i class="fa fa-file-archive-o"></i>'],
-      ['audio/mp3', '<i class="fa fa-file-audio-o"></i>'],
-      ['application/php', '<i class="fa fa-file-code-o"></i>'],
-      ['image/jpeg', '<i class="fa fa-file-image-o"></i>'],
-      ['text/html', '<i class="fa fa-file-text-o"></i>'],
-      ['video/mpeg', '<i class="fa fa-file-video-o"></i>'],
-      ['font/ttf', '<i class="fa fa-font"></i>'],
-      ['something/else', '<i class="fa fa-file-o"></i>'],
-      ['code/file', '<i class="fa fa-file-o"></i>'],
-      ['invalid', ''],
-      ['', '']
+    ['text/presentation', 'fa fa-file-powerpoint-o'],
+    ['text/powerpoint', 'fa fa-file-powerpoint-o'],
+    ['text/document', 'fa fa-file-word-o'],
+    ['text/word', 'fa fa-file-word-o'],
+    ['text/excel', 'fa fa-file-excel-o'],
+    ['text/spreadsheet', 'fa fa-file-excel-o'],
+    ['text/pdf', 'fa fa-file-pdf-o'],
+    ['archive/zip', 'fa fa-file-archive-o'],
+    ['archive/tar', 'fa fa-file-archive-o'],
+    ['archive/rar', 'fa fa-file-archive-o'],
+    ['archive/compress', 'fa fa-file-archive-o'],
+    ['audio/mp3', 'fa fa-file-audio-o'],
+    ['application/php', 'fa fa-file-code-o'],
+    ['image/jpeg', 'fa fa-file-image-o'],
+    ['text/html', 'fa fa-file-text-o'],
+    ['video/mpeg', 'fa fa-file-video-o'],
+    ['font/ttf', 'fa fa-font'],
+    ['something/else', 'fa fa-file-o'],
+    ['code/file', 'fa fa-file-o']
   ];
-
-  scenarios.forEach(function (scenario) {
-      it('renders '+scenario[0], function() {
-          this.set('inputValue', scenario[0]);
-          this.render(hbs`{{attachment-icon mime=inputValue}}`);
-          expect(this.$('.attachment-icon').html().trim()).to.equal(scenario[1]);
-      });
+  
+  test('it renders', async function (assert) {
+    for (var i = 0; i < scenarios.length; i++) {
+      this.set('inputValue', scenarios[i][0]);
+      await render(hbs`
+    <AppUi::AttachmentIcon @mime={{this.inputValue}}/>
+    `);
+      // Accessing 'i' tag inside span element and assertion is done on the basis of class name. 
+      assert.equal(this.element.querySelector('span i').getAttribute('class'), `${scenarios[i][1]}`);
+    }
   });
-
 });
-

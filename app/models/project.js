@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr,belongsTo,hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -14,7 +14,8 @@ import { validator, buildValidations } from 'ember-cp-validations';
 const Validations = buildValidations({
     name: validator('presence', true),
     shortCode: validator('presence', true),
-    type: validator('presence', true)
+    type: validator('presence', true),
+    hasIssuetypes: validator('presence', true)
 });
 
 /**
@@ -25,7 +26,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * Name of project
@@ -35,7 +36,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    name: DS.attr('string'),
+    name: attr('string'),
 
     /**
      * Short Code of project
@@ -45,7 +46,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    shortCode: DS.attr('string'),
+    shortCode: attr('string'),
 
     /**
      * Date on which the project was created
@@ -55,7 +56,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    dateCreated: DS.attr('string'),
+    dateCreated: attr('string'),
 
     /**
      * Date on which the project was last modified
@@ -65,7 +66,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    dateModified: DS.attr('string'),
+    dateModified: attr('string'),
 
     /**
      * The start date of the project
@@ -75,7 +76,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    startDate: DS.attr('string'),
+    startDate: attr('string'),
 
     /**
      * The end date of the project
@@ -85,7 +86,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    endDate: DS.attr('string'),
+    endDate: attr('string'),
 
     /**
      * Type of the project
@@ -95,7 +96,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    type: DS.attr('string'),
+    type: attr('string'),
 
     /**
      * User who last modified the project
@@ -105,7 +106,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    modifiedUser: DS.attr('string'),
+    modifiedUser: attr('string'),
 
     /**
      * The project owner ot assignee
@@ -115,7 +116,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    assignee: DS.attr('string'),
+    assignee: attr('string'),
 
     /**
      * Soft deletion flag of the project
@@ -125,7 +126,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    deleted: DS.attr('string'),
+    deleted: attr('string'),
 
     /**
      * Description of the project
@@ -135,7 +136,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    description: DS.attr('string'),
+    description: attr('string'),
 
     /**
      * Status of the project
@@ -145,7 +146,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    status: DS.attr('string'),
+    status: attr('string'),
 
     /**
      * Scope of the project
@@ -155,7 +156,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    scope: DS.attr('string'),
+    scope: attr('string'),
 
     /**
      * Product Vision
@@ -165,7 +166,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    vision: DS.attr('string'),
+    vision: attr('string'),
 
     /**
      * User who created the project
@@ -175,7 +176,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    createdUser: DS.attr('string'),
+    createdUser: attr('string'),
 
     /**
      * The estimated budget of the project
@@ -185,7 +186,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    estimatedBudget: DS.attr('string'),
+    estimatedBudget: attr('string'),
 
     /**
      * The amount of budget spent on the project
@@ -195,7 +196,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    spentBudget: DS.attr('string'),
+    spentBudget: attr('string'),
 
     /**
      * Project owner
@@ -205,7 +206,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    owner:DS.belongsTo('user'),
+    owner:belongsTo('user'),
 
     /**
      * User who created the project
@@ -215,7 +216,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    createdBy:DS.belongsTo('user'),
+    createdBy:belongsTo('user'),
 
     /**
      * User who modified the project
@@ -225,7 +226,7 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    modifiedBy:DS.belongsTo('user'),
+    modifiedBy:belongsTo('user'),
 
     /**
      * The members of this project
@@ -235,17 +236,17 @@ export default DS.Model.extend(Validations, {
      * @for Project
      * @private
      */
-    members:DS.hasMany('user'),
+    members:hasMany('user'),
 
     /**
      * The conversations that are happening on this project
      *
      * @property conversations
-     * @type Relationship
+     * @type ConversationRoomModel
      * @for Project
      * @private
      */
-    conversations:DS.hasMany('conversationroom'),
+    conversations:hasMany('conversationroom'),
 
     /**
      * These are the issues that are related to the project, since the number of
@@ -253,11 +254,11 @@ export default DS.Model.extend(Validations, {
      * are not retrieve via the same query as the other project information
      *
      * @property issues
-     * @type Relationship
+     * @type IssueModel
      * @for Project
      * @private
      */
-    issues:DS.hasMany('issue'),
+    issues:hasMany('issue'),
 
     /**
      * The roles related to the members of this project, please note that these
@@ -266,40 +267,60 @@ export default DS.Model.extend(Validations, {
      * user to the role via the code.
      *
      * @property roles
-     * @type Relationship
+     * @type RoleModel
      * @for Project
      * @private
      */
-    roles:DS.hasMany('role'),
+    roles:hasMany('role'),
 
     /**
      * The membership rules for this project.
      *
      * @property memberships
-     * @type Relationship
+     * @type MembershipModel
      * @for Project
      * @private
      */
-    memberships:DS.hasMany('membership'),
+    memberships:hasMany('membership'),
 
     /**
      * The milestones for this project
      *
      * @property milestones
-     * @type Relationship
+     * @type MilestoneModel
      * @for Project
      * @private
      */
-    milestones:DS.hasMany('milestone'),
+    milestones:hasMany('milestone'),
 
     /**
      * The issue types for this project
      *
      * @property issuetypes
-     * @type Relationship
+     * @type IssueTypeModel
      * @for Project
      * @private
      */
-    issuetypes:DS.hasMany('issuetype'),
+    issuetypes:hasMany('issuetype'),
+
+    /**
+     * The activities for this project
+     *
+     * @property activities
+     * @type ActivityModel
+     * @for Project
+     * @private
+     */
+    activities:hasMany('activity'),
+
+    /**
+     * The issue types for this project
+     *
+     * @property issuetypes
+     * @type IssueTypeModel
+     * @for Project
+     * @private
+     */
+    hasIssuetypes:attr('string',{defaultValue:function(){return true;}}),
 
 });

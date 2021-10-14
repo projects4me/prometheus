@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Model, { attr, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -26,7 +26,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Model.extend(Validations, {
+export default Model.extend(Validations, {
 
     /**
      * The identifier of the entity the tag is related to
@@ -36,7 +36,7 @@ export default DS.Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "relatedId": DS.attr('string'),
+    "relatedId": attr('string'),
 
     /**
      * The entity the tag is related to
@@ -46,7 +46,7 @@ export default DS.Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "relatedTo": DS.attr('string'),
+    "relatedTo": attr('string'),
 
     /**
      * The identifier of the tag
@@ -56,6 +56,46 @@ export default DS.Model.extend(Validations, {
      * @for Tagged
      * @private
      */
-    "tagId": DS.attr('string')
+    "tagId": attr('string'),
 
+    /**
+     * The tag this tagged is associated with
+     *
+     * @property tag
+     * @type TagModel
+     * @for Tagged
+     * @private
+     */
+    tag: hasMany('tag'),
+    
+    /**
+     * The project this tagged is associated with
+     *
+     * @property project
+     * @type ProjectModel
+     * @for Tagged
+     * @Tagged
+     */
+    project: hasMany('project'),
+
+    /**
+     * The issue this tagged is associated with
+     *
+     * @property issue
+     * @type IssueModel
+     * @for Tagged
+     * @private
+     */
+    issue: hasMany('issue'),
+
+    /**
+     * The wiki this tagged is associated with
+     *
+     * @property wiki
+     * @type WikiModel
+     * @for Tagged
+     * @private
+     */
+    wiki: hasMany('wiki')
+    
 });

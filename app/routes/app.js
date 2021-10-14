@@ -2,7 +2,6 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
 import { hash } from 'rsvp';
@@ -16,8 +15,20 @@ import { hash } from 'rsvp';
  * @uses AuthenticatedRouteMixin
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Route.extend(AuthenticatedRouteMixin,{
+export default Route.extend({
 
+    /**
+     * The session service which is offered by ember-simple-auth that will be used
+     * in order to verify whether the used is authenticated
+     *
+     * @property session
+     * @type Object
+     * @for Application
+     * @public
+     */
+    session: inject(),
+    
+    authenticationRoute: 'signin',
     /**
      * The i18n library service that is used in order to get the translations
      *
@@ -44,7 +55,8 @@ export default Route.extend(AuthenticatedRouteMixin,{
      * @method beforeModel
      * @public
      */
-    beforeModel() {
+    beforeModel(transition) {
+        this.session.requireAuthentication(transition, this.authenticationRoute);
         return this.loadCurrentUser();
     },
 
@@ -78,7 +90,7 @@ export default Route.extend(AuthenticatedRouteMixin,{
     },
 
     /**
-     * This function catchs any issue thrown by the _loadCurrentUser function and
+     * This function catches any issue thrown by the _loadCurrentUser function and
      * invalidates the session
      *
      * @method sessionAuthenticated
@@ -86,7 +98,7 @@ export default Route.extend(AuthenticatedRouteMixin,{
      */
     sessionAuthenticated() {
         this._super(...arguments);
-        this.loadCurrentUser().catch(() => this.get('session').invalidate());
+        this.loadCurrentUser().catch(() => this.session.invalidate());
     },
 
 
@@ -99,7 +111,7 @@ export default Route.extend(AuthenticatedRouteMixin,{
      * @private
      */
     loadCurrentUser() {
-        return this.get('currentUser').loadUser();
+        return this.currentUser.loadUser();
     },
 
     /**
@@ -116,8 +128,8 @@ export default Route.extend(AuthenticatedRouteMixin,{
 
         let _self = this;
 
-        controller.set('roles',this.get('roles'));
-        controller.set('users',this.get('users'));
+        controller.set('roles',this.roles);
+        controller.set('users',this.users);
 
         // Load the required data
         _self._loadProjects(controller);
@@ -143,7 +155,6 @@ export default Route.extend(AuthenticatedRouteMixin,{
         let projectName = null;
 
         _self.set('breadCrumb', {title: 'Dashboard'});
-
         Logger.debug(projectId);
         Logger.debug(projectName);
 
@@ -231,5 +242,7 @@ export default Route.extend(AuthenticatedRouteMixin,{
         controller.set('users',users);
 
         Logger.debug('-Prometheus.App.Route->loadUsers');
-    }
+    },
+
+
 });

@@ -2,9 +2,8 @@
 'use strict';
 
 module.exports = {
-  extends: 'recommended',
-
+  // extends: 'recommended',
   rules: {
-    'bare-strings': true
+    'no-bare-strings': true
   }
 };
