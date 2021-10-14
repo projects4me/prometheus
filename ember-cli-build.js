@@ -33,7 +33,6 @@ module.exports = function(defaults) {
     app.import('node_modules/js-logger/src/logger.min.js');
     app.import('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js');
     app.import("bower_components/lodash/dist/lodash.min.js");
-    app.import("node_modules/bootstrap-select/dist/js/bootstrap-select.min.js");
     app.import("node_modules/moment/moment.js");
     app.import("node_modules/bootstrap-daterangepicker/daterangepicker.js");
     app.import("node_modules/jquery-mask-plugin/dist/jquery.mask.min.js");
