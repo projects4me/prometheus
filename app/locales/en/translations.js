@@ -803,6 +803,8 @@ export default {
                         "pending" : "Pending",
                         "done" : "Done",
                         "wont_fix" : "Wont't Fix",
+                        "feedback" : "Feedback",
+                        "deferred" : "Deferred"
                     },
                 },
             },
