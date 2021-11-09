@@ -8,128 +8,165 @@
   This contains the CSS related to the entire document
 */
 
-.board{
+.board {
+  .box {
+    .box-body {
+      .lane {
+        height: 100%;
 
-  .lane{
+        .box {
+          height: 100%;
+          box-shadow: none;
+          
+          .box-body {
+            min-height: 45rem;
+            padding: 0rem;
+            border: 2px solid #fff;
 
-    .box-body{
+            .item {
+              cursor: move;
+              margin: 0.3rem;
+              padding: 0.1rem 0.5rem 0.1rem 1rem;
+              border: 0.1rem solid #eee;
+              border-left: 0.5rem solid #eee;
+              background-color: #fff;
+              border-right: 0.1rem solid #ccc;
+              border-top: 0.1rem solid #ccc;
+              border-bottom: 0.1rem solid #ccc;
 
-      min-height:45rem;
-      padding:0rem;
+              .description {
+                word-wrap: break-word;
+                margin-bottom: 2rem;
+              }
 
-      .item{
-        cursor: move;
-        margin: 0 0 0.5rem 0;
-        padding: 0.1rem 0.5rem 0.1rem 1rem;
-        border: 0.1rem solid #eee;
-        border-left: 0.5rem solid #eee;
-        background-color: #FFF;
-        border-right: 0.1rem solid #CCC;
-        border-top: 0.1rem solid #CCC;
-        border-bottom: 0.1rem solid #CCC;
+              p > img {
+                width: 10rem !important;
+                height: 10rem !important;
+              }
 
-        .description {
-          word-wrap: break-word;
-          margin-bottom: 2rem;
-        }
+              .img-circle {
+                width: 4rem;
+                right: 0;
+                position: absolute;
+                margin: -1.5rem 1rem;
+              }
 
-        p > img {
-          width: 10rem !important;
-          height: 10rem !important;
-        }
+              .fa-ban {
+                color: #d33724;
+              }
 
-        .img-circle {
-          width:4rem;
-          right:0;
-          position: absolute;
-          margin:-1.5rem 1rem;
-        }
+              .fa-angle-double-up {
+                color: #d33724;
+                font-weight: bold;
+              }
 
-        .fa-ban{
-          color: #d33724;
-        }
-        .fa-angle-double-up{
-          color: #d33724;
-          font-weight: bold;
-        }
-        .fa-arrow-up{
-          color: #e98a7e;
-        }
-        .fa-dot-circle-o{
-          color: $primaryColor;
-        }
-        .fa-arrow-down{
-          color: #5ac594;
-        }
-        .fa-angle-double-down{
-          color: #00a65a;
-          font-weight: bold;
-        }
+              .fa-arrow-up {
+                color: #e98a7e;
+              }
 
-        .done,.complete{
-          background-color: #5AC594 !important;
-        }
+              .fa-dot-circle-o {
+                color: $primaryColor;
+              }
 
-        .closed{
-          background-color: #e98a7e;
-        }
+              .fa-arrow-down {
+                color: #5ac594;
+              }
 
-        .deferred,.pending,.feedback{
-          background-color: #f7bf65;
-        }
+              .fa-angle-double-down {
+                color: #00a65a;
+                font-weight: bold;
+              }
 
-        .new{
-          background-color: #80b5d3;
-        }
+              .done,
+              .complete {
+                background-color: #5ac594 !important;
+              }
 
-        .in_progress{
-          background-color: $primaryColor;
+              .closed {
+                background-color: #e98a7e;
+              }
+
+              .deferred,
+              .pending,
+              .feedback {
+                background-color: #f7bf65;
+              }
+
+              .new {
+                background-color: #80b5d3;
+              }
+
+              .in_progress {
+                background-color: $primaryColor;
+              }
+            }
+
+            .item-closed {
+              border-left-color: $darkColor;
+            }
+
+            .item-complete {
+              border-left-color: $successColor;
+            }
+
+            .item-deferred {
+              border-left-color: $infoColor;
+            }
+
+            .item-done {
+              border-left-color: $successColor;
+            }
+
+            .item-feedback {
+              border-left-color: $warningColor;
+            }
+
+            .item-in-progress {
+              border-left-color: $primaryColor;
+            }
+
+            .item-new {
+              border-left-color: $lightColor;
+            }
+
+            .item-pending {
+              border-left-color: $dangerColor;
+            }
+
+            .items-body {
+              height: 100%;
+            }
+
+            .curr-item {
+              border-top: 1px dashed $primaryColor;
+              border-bottom: 1px dashed $primaryColor;
+              border-right: 1px dashed $primaryColor;
+            }
+          }
+
+          .box-body-border {
+            border: 2px dashed #000;
+          }
+
+          .box-body-color {
+            border-color: $primaryColor;
+          }
+
+          .curr-lane {
+            border-color: #fff !important;
+          }
+
         }
       }
-
-    .item-closed{
-        border-left-color: $darkColor;
-      }
-
-      .item-complete{
-        border-left-color: $successColor;
-      }
-
-      .item-deferred{
-        border-left-color: $infoColor;
-      }
-
-      .item-done{
-        border-left-color: $successColor;
-      }
-
-      .item-feedback{
-        border-left-color: $warningColor;
-      }
-
-      .item-in-progress {
-        border-left-color: $primaryColor;
-      }
-
-      .item-new{
-        border-left-color: $lightColor;
-      }
-
-      .item-pending{
-        border-left-color: $dangerColor;
-      }
-
     }
-
   }
 
-  .box-header{
-    .filters{
-      input{
-        margin-right:3rem;
-        width:30rem;
+  .box-header {
+    .filters {
+      input {
+        margin-right: 3rem;
+        width: 30rem;
       }
     }
   }
-
 }
