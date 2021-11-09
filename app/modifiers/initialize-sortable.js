@@ -129,15 +129,6 @@ export default class InitializeSortable extends Modifier {
     }
 
     /**
-     * This property is used to keep in track that whether element is dragging or not.
-     *
-     * @property isDragging
-     * @type boolean
-     * @private
-     */
-    isDragging = false;
-
-    /**
      * This property contains array of sortable objects.
      *
      * @property sortableList
@@ -172,13 +163,11 @@ export default class InitializeSortable extends Modifier {
                 dragClass: _self.dragClass,
                 chosenClass: _self.chosenClass,
                 onStart: (evt) => {
-                    _self.isDragging = true;
                     _self.selectDropzones(evt);
                 },
                 onEnd: (evt) => {
                     _self.unSelectDropzones(evt);
                     _self.setParentHeight();
-                    _self.isDragging = false;
                     _self.oldLane = null;
                 },
                 onMove: (evt) => {
