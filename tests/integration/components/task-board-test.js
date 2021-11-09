@@ -90,9 +90,8 @@ module('Integration | Component | task-board', function (hooks) {
         assert.equal(item.getAttribute('data-field-issue-status'), `${milestones[1].issues[0].status}`, 'issue status'); //status --> new
 
         //backlog
-        item = boardSections[2].querySelector('div.lane.box-body').children[2];
-        assert.equal(item.querySelector('h4 > a').innerText, `#${backlog[0].issueNumber} -`, 'issue number'); //issue number --> 2221
-        assert.equal(item.getAttribute('data-field-issue-status'), `${backlog[0].status}`, 'issue status'); //status --> done
-        await new Promise(resolve => setTimeout(resolve, 100000));
+        item = boardSections[2].querySelector('div.lane.box-body').children[0];
+        assert.equal(item.querySelector('h4 > a').innerText, `#${backlog[1].issueNumber} -`, 'issue number'); //issue number --> 2221
+        assert.equal(item.getAttribute('data-field-issue-status'), `${backlog[1].status}`, 'issue status'); //status --> done
     });
 });
