@@ -1,129 +1,21 @@
 <section class="content">
   <div class="board row">
 
-    {{#each milestones as |milestone|}}
-      {{#if (or (eq milestone.status 'in_progress') (eq milestone.status 'planned'))}}
-        <div class="box">
-          <div class="box-header with-border">
-            <strong>{{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}</strong>
-            <div class="box-tools pull-right filters">
-              {{text-field
-                  key-up="filterIssues"
-                  insert-newline="filterIssues"
-                  value=query
-                  data-input=milestone.id
-                  name="query"
-                  placeholder=(concat (t "global.form.search") " " (t "global.module.plural.issue") " ..")}}
-            </div>
-            <div class="box-tools pull-right">
-              <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-              </button>
-            </div>
-          </div>
-
-
-          <div class="box-body">
-
-            {{#each statuses as |status|}}
-
-              <DraggableObjectTarget @action={{fn this.updateIssue}}>
-
-                <div class="lane col-md-2">
-                  <div class="box {{get-prop statusClass status}}">
-
-                    <div class="box-header with-border" data-field-status="{{status}}">
-                      {{t (concat "views.app.issue.lists.status." status)}}
-                    </div>
-
-                    <div class="box-body">
-
-                      <SortableObjects @sortableObjectList={{milestone.issues}} @sortingScope={{"a"}} @useSwap={{true}} @inPlace={{false}}>
-                        {{#each milestone.issues as |issue|}}
-                          {{#if (eq issue.status status)}}
-                            <DraggableObject @content={{issue}} @isSortable={{true}} @sortingScope={{"a"}}>
-                              <div class="item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}" >
-                                <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action "openIssue" issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
-                                <p class="description">{{safe-html issue.description}}</p>
-                                <p>
-                                  <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
-                                  <span><img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
-                                </p>
-                              </div>
-                            </DraggableObject>
-                          {{/if}}
-                        {{/each}}
-                      </SortableObjects>
-
-                    </div>
-                  </div>
-                </div>
-
-              </DraggableObjectTarget>
-            {{/each}}
-
-          </div>
-
-        </div>
-      {{/if}}
-
-    {{/each}}
-
-    {{!-- Display the backlog--}}
-    <div class="box ">
-      <div class="box-header with-border">
-        <strong>{{t "views.app.board.backlog"}}</strong>
-        <div class="box-tools pull-right">
-          <button type="button" class="btn btn-box-tool" data-widget="collapse">
-            <i class="fa fa-minus"></i>
-          </button>
-        </div>
-      </div>
-
-
-      <div class="box-body">
-
-        {{#each statuses as |status|}}
-
-          <DraggableObjectTarget @action={{fn this.updateIssue}}>
-
-            <div class="lane col-md-2">
-              <div class="box {{get-prop statusClass status}}">
-
-                <div class="box-header with-border">
-                  {{t (concat "views.app.issue.lists.status." status)}}
-                </div>
-
-                <div class="box-body">
-
-                <SortableObjects @sortableObjectList={{this.backlog}} @sortingScope={{"b"}} @useSwap={{true}} @inPlace={{false}}>
-                  {{#each backlog as |issue|}}
-                    {{#if (eq issue.status status)}}
-                      <DraggableObject @content={{issue}} @isSortable={{true}} @sortingScope={{"a"}}>
-                        <div class="item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}" >
-                          <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action "openIssue" issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
-                          <p class="description">{{safe-html issue.description}}</p>
-                          <p>
-                            <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
-                            <span><img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
-                          </p>
-                        </div>
-                      </DraggableObject>
-                    {{/if}}
-                  {{/each}}
-                </SortableObjects>
-
-                </div>
-              </div>
-            </div>
-
-          </DraggableObjectTarget>
-        {{/each}}
-
-      </div>
-
-    </div>
-
+    <AppUi::TaskBoard
+      @milestones={{milestones}}
+      @statuses={{statuses}}
+      @statusClass={{statusClass}}
+      @backlog={{this.backlog}}
+      @group="milestones"
+      @scroll={{true}}
+      @scrollSensitivity={{200}}
+      @scrollSpeed = {{10}}
+      @sort={{true}}
+      @forceFallback={{true}}
+      @disableSortable={{false}}
+      @dragClass="curr-item"
+      @chosenClass="curr-item"
+    />
 
   </div>
 </section>
