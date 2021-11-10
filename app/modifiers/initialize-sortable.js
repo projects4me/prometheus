@@ -207,7 +207,7 @@ export default class InitializeSortable extends Modifier {
      * @method selectDropzones
      * @param {Object} evt 
      */
-    @action selectDropzones(evt) {
+    selectDropzones(evt) {
         let _self = this;
         evt.from.classList.add('curr-lane');
         let droppableSections = document.querySelectorAll(`div.lane.box-body`);
@@ -223,7 +223,7 @@ export default class InitializeSortable extends Modifier {
      * @param {Object} evt 
      * @param {HTMLElement} el 
      */
-    @action unSelectDropzones(evt) {
+    unSelectDropzones(evt) {
         let _self = this;
         evt.from.classList.remove('curr-lane');
         let droppableSections = document.querySelectorAll(`div.lane.box-body`);
