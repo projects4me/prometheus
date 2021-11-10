@@ -65,16 +65,16 @@ module('Integration | Component | task-board', function (hooks) {
         this.set('backlog', backlog);
 
         await render(hbs`
-      <AppUi::TaskBoard
-        @milestones = {{milestones}}
-        @statuses = {{statuses}}
-        @statusClass = {{statusClass}}
-        @backlog = {{backlog}}
-      />
-    `);
+          <AppUi::TaskBoard
+            @milestones = {{milestones}}
+            @statuses = {{statuses}}
+            @statusClass = {{statusClass}}
+            @backlog = {{backlog}}
+          />
+        `);
 
         //Board sections checking
-        let boardSections = document.querySelectorAll('div.board-container > div.box');
+        let boardSections = document.querySelectorAll('div.milestone.box');
         assert.equal(boardSections[0].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.1', "Milestone v0.1");
         assert.equal(boardSections[1].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.2', "Milestone v0.2");
 

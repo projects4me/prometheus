@@ -14,11 +14,11 @@
       .lane {
         height: 100%;
 
-        .box {
+        .milestone, .box {
           height: 100%;
           box-shadow: none;
           
-          .box-body {
+          .milestone, .box-body {
             min-height: 45rem;
             padding: 0rem;
             border: 0.25rem solid $backgroundColor;

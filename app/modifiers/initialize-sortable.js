@@ -240,7 +240,7 @@ export default class InitializeSortable extends Modifier {
      * @method setParentHeight
      */
     setParentHeight() {
-        let parentElArray = document.querySelectorAll('div.board.row > div > div.box > div.box-body');
+        let parentElArray = document.querySelectorAll('div.milestone.box-body');
         parentElArray.forEach((parentElement) => {
             let lanes = [...parentElement.children];
             let heightArray = [];
