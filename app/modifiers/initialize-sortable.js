@@ -1,6 +1,5 @@
 import Modifier from 'ember-modifier';
 import Sortable from 'sortablejs';
-import { action } from '@ember/object';
 
 /**
  * This modifier is called on the initialization of taskboard component and SortableJS
@@ -163,12 +162,10 @@ export default class InitializeSortable extends Modifier {
                 dragClass: _self.dragClass,
                 chosenClass: _self.chosenClass,
                 onStart: (evt) => {
-                    _self.selectDropzones(evt);
+                    _self._onStart(evt);
                 },
                 onEnd: (evt) => {
-                    _self.unSelectDropzones(evt);
-                    _self.setParentHeight();
-                    _self.oldLane = null;
+                    _self._onEnd(evt);
                 },
                 onMove: (evt) => {
                     evt.to.classList.add('box-body-color');
@@ -178,6 +175,30 @@ export default class InitializeSortable extends Modifier {
             }));    
         });
         _self.setParentHeight();
+    }
+
+    /**
+     * This function is bind with onStart function of the sortablejs. This function
+     * will be triggered when user will start the dragging of an item from taskboard.
+     * @method _onStart
+     * @param {Object} evt 
+     */
+    _onStart(evt) {
+        let _self = this;
+        _self.selectDropzones(evt);
+    }
+
+    /**
+     * This function is bind with onEnd function of the sortablejs. This function
+     * will be triggered when dragging of an item is stopped by user.
+     * @method _onEnd
+     * @param {Object} evt 
+     */
+     _onEnd(evt) {
+        let _self = this;
+        _self.unSelectDropzones(evt);
+        _self.setParentHeight();
+        _self.oldLane = null;
     }
 
     /**
