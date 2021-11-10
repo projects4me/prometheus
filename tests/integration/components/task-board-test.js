@@ -1,7 +1,8 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, triggerEvent, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import triggerKeyEvent from '@ember/test-helpers/dom/trigger-key-event';
 
 module('Integration | Component | task-board', function (hooks) {
     setupRenderingTest(hooks);
@@ -77,6 +78,10 @@ module('Integration | Component | task-board', function (hooks) {
         let boardSections = document.querySelectorAll('div.milestone.box');
         assert.equal(boardSections[0].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.1', "Milestone v0.1");
         assert.equal(boardSections[1].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.2', "Milestone v0.2");
+        
+        //Sortable checking
+        let lane = document.querySelector('div.lane.box-body');
+        assert.ok(_.some(_.keys(lane), _.method('includes','Sortable')), 'Sortable attached');
 
         //issues checking on behalf of there status
         //milestone v0.1
@@ -93,5 +98,6 @@ module('Integration | Component | task-board', function (hooks) {
         item = boardSections[2].querySelector('div.lane.box-body').children[0];
         assert.equal(item.querySelector('h4 > a').innerText, `#${backlog[1].issueNumber} -`, 'issue number'); //issue number --> 2221
         assert.equal(item.getAttribute('data-field-issue-status'), `${backlog[1].status}`, 'issue status'); //status --> done
+        
     });
 });
