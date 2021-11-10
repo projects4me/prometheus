@@ -21,7 +21,7 @@
           .box-body {
             min-height: 45rem;
             padding: 0rem;
-            border: 2px solid $backgroundColor;
+            border: 0.25rem solid $backgroundColor;
 
             .item {
               cursor: move;
@@ -138,14 +138,14 @@
             }
 
             .curr-item {
-              border-top: 1px dashed $primaryColor;
-              border-bottom: 1px dashed $primaryColor;
-              border-right: 1px dashed $primaryColor;
+              border-top: 0.06rem dashed $primaryColor;
+              border-bottom: 0.06rem dashed $primaryColor;
+              border-right: 0.06rem dashed $primaryColor;
             }
           }
 
           .box-body-border {
-            border: 2px dashed $blackColor;
+            border: 0.25rem dashed $blackColor;
           }
 
           .box-body-color {
