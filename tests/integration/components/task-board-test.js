@@ -86,18 +86,18 @@ module('Integration | Component | task-board', function (hooks) {
         //issues checking on behalf of there status
         //milestone v0.1
         let item = boardSections[0].querySelector('div.lane.box-body').children[0];
-        assert.equal(item.querySelector('h4 > a').innerText, `#${milestones[0].issues[0].issueNumber} -`, 'issue number'); //issue number --> 123
-        assert.equal(item.getAttribute('data-field-issue-status'), `${milestones[0].issues[0].status}`, 'issue status'); //status --> new
+        assert.equal(item.querySelector('h4 > a').innerText, `#${milestones[0].issues[0].issueNumber} -`, `${milestones[0].name} issue number`); //issue number --> 123
+        assert.equal(item.getAttribute('data-field-issue-status'), `${milestones[0].issues[0].status}`, `${milestones[0].name} issue status`); //status --> new
 
         //milestone v0.2
         item = boardSections[1].querySelector('div.lane.box-body').children[0];
-        assert.equal(item.querySelector('h4 > a').innerText, `#${milestones[1].issues[0].issueNumber} -`, 'issue number'); //issue number --> 789
-        assert.equal(item.getAttribute('data-field-issue-status'), `${milestones[1].issues[0].status}`, 'issue status'); //status --> new
+        assert.equal(item.querySelector('h4 > a').innerText, `#${milestones[1].issues[0].issueNumber} -`, `${milestones[1].name} issue number`); //issue number --> 789
+        assert.equal(item.getAttribute('data-field-issue-status'), `${milestones[1].issues[0].status}`, `${milestones[1].name} issue status`); //status --> new
 
         //backlog
         item = boardSections[2].querySelector('div.lane.box-body').children[0];
-        assert.equal(item.querySelector('h4 > a').innerText, `#${backlog[1].issueNumber} -`, 'issue number'); //issue number --> 2221
-        assert.equal(item.getAttribute('data-field-issue-status'), `${backlog[1].status}`, 'issue status'); //status --> done
+        assert.equal(item.querySelector('h4 > a').innerText, `#${backlog[1].issueNumber} -`, 'backlog issue number'); //issue number --> 2221
+        assert.equal(item.getAttribute('data-field-issue-status'), `${backlog[1].status}`, 'backlog issue status'); //status --> done
         
     });
 });
