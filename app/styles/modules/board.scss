@@ -21,7 +21,7 @@
           .box-body {
             min-height: 45rem;
             padding: 0rem;
-            border: 2px solid #fff;
+            border: 2px solid $backgroundColor;
 
             .item {
               cursor: move;
@@ -29,7 +29,7 @@
               padding: 0.1rem 0.5rem 0.1rem 1rem;
               border: 0.1rem solid #eee;
               border-left: 0.5rem solid #eee;
-              background-color: #fff;
+              background-color: $backgroundColor;
               border-right: 0.1rem solid #ccc;
               border-top: 0.1rem solid #ccc;
               border-bottom: 0.1rem solid #ccc;
@@ -145,7 +145,7 @@
           }
 
           .box-body-border {
-            border: 2px dashed #000;
+            border: 2px dashed $blackColor;
           }
 
           .box-body-color {
@@ -153,7 +153,7 @@
           }
 
           .curr-lane {
-            border-color: #fff !important;
+            border-color: $backgroundColor !important;
           }
 
         }
