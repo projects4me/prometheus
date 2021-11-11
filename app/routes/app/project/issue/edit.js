@@ -37,12 +37,11 @@ export default Create.extend({
      * @return Prometheus.Issue
      * @private
      */
-    afterModel(model, transition){
+    afterModel(model){
         Logger.debug('Prometheus.Routes.App.Project.Issue.Edit::afterModel()');
         let _self = this;
-        let params = transition.params;
 
-        let projectId = params['app.project'].project_id;
+        let projectId = _self.paramsFor('app.project').project_id;
         let issueNumber = model.issue_number;
 
         let projectOptions = {
