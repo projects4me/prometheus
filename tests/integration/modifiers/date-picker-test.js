@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, focus, click, pauseTest, blur } from '@ember/test-helpers';
+import { render, focus, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Modifier | date-picker', function (hooks) {
@@ -41,6 +41,7 @@ module('Integration | Modifier | date-picker', function (hooks) {
 
     this.set('hide', () => {
       this.set('isHide',false);
+      /* eslint-disable no-undef */ 
       $('input#test').on('hide.daterangepicker', () => {
         this.isHide= true;
         assert.equal(this.isHide,true,'Hide event');

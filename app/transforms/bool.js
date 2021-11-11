@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import Transform from '@ember-data/serializer/transform';
 import { isNone } from '@ember/utils';
 
 /**
@@ -15,7 +15,7 @@ import { isNone } from '@ember/utils';
  * @extends DS.Transform
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default DS.Transform.extend({
+export default Transform.extend({
 
     /**
      * This function receives a 0 or 1 from the JSON object

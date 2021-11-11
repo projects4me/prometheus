@@ -28,6 +28,7 @@ export default Component.extend({
      * @type function
      * @private
      */
+    /* eslint-disable ember/require-computed-macros */
     layoutName: computed('view', 'definition', 'model', function() {
         let type = this.definition.type;
         let view = this.view;
@@ -59,6 +60,7 @@ export default Component.extend({
      * @type function
      * @public
      */
+    /* eslint-disable ember/require-computed-macros */
     fieldSize: computed('definition', function() {
         return this.definition.size;
     }).volatile(),

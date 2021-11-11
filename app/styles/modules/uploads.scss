@@ -26,6 +26,10 @@
 
 .attachment-icon.has-img {
   padding: 0;
+  img {
+    width: 198px;
+    height: 132px;
+  }
 }
 .attachment-icon, .attachment-info, .attachment-size {
   display: block;

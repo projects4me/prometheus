@@ -16,6 +16,7 @@ import RSVP from 'rsvp';
  * @module Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
+/* eslint-disable ember/no-new-mixins */ 
 export default Mixin.create({
 
     /**

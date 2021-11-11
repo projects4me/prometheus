@@ -13,7 +13,6 @@ export default function (assert) {
     var modules = new Array(signIn, formField, navigation, signedIn, issueCreate, date);
     var assertion = assert;
     var yaddaa = yadda.localisation.default.library();
-    debugger;
     for (var i = 0; i < modules.length; i++) {
         var curr_module = modules[i];
         var givenArray = (typeof curr_module.given === 'function') ? curr_module.given() : '';

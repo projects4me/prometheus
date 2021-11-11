@@ -4,6 +4,7 @@
 
 import App from "prometheus/routes/app";
 import { inject } from '@ember/service';
+import _ from 'lodash';
 
 /**
  * This is the create route for the wiki pages section

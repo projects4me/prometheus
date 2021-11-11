@@ -1,5 +1,4 @@
-import { click, currentURL, fillIn, visit } from '@ember/test-helpers';
-import _ from 'lodash';
+import { visit } from '@ember/test-helpers';
 import steps from './steps';
 import { currentSession, authenticateSession } from 'ember-simple-auth/test-support';
 

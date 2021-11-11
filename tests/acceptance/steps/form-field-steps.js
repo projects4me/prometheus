@@ -1,4 +1,4 @@
-import { click, currentURL, fillIn, visit } from '@ember/test-helpers';
+import { fillIn } from '@ember/test-helpers';
 import steps from './steps';
 
 export const when = function () {

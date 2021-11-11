@@ -2,7 +2,6 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import { get } from '@ember/object';
 import { inject as service } from '@ember/service';
 import RSVP from 'rsvp';
 import format from "prometheus/utils/data/format";
@@ -144,9 +143,10 @@ export default class ApplicationHeaderComponent extends AppComponent {
     @action itemSelected(item) {
         this.selected = item;
         if (item !== null && typeof this.searchedItem === 'function') {
-            get(this, 'searchedItem')(item);
+            this.searchedItem(item);
         }
     }
+
 
     /**
      * This function is used to forward the signOut function
@@ -157,7 +157,7 @@ export default class ApplicationHeaderComponent extends AppComponent {
      */
     @action signOut() {
         if (typeof this.invalidateSession === 'function') {
-            get(this, 'invalidateSession')();
+            this.invalidateSession();
             sessionStorage.removeItem('projectId');
         }
     }
@@ -171,7 +171,7 @@ export default class ApplicationHeaderComponent extends AppComponent {
      */
     @action viewProfile() {
         if (typeof this.userProfile === 'function') {
-            get(this, 'userProfile')();
+            this.userProfile();
         }
     }
 

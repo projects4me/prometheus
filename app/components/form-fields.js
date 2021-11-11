@@ -119,6 +119,7 @@ export default Component.extend({
      * @for FormFields
      * @private
      */
+    /* eslint-disable ember/no-get */
     isChanged: computed('value', 'oldValue', function() {
         Logger.debug(this.get('value'));
         Logger.debug(this.get('oldValue'));
@@ -213,6 +214,7 @@ export default Component.extend({
      * @return template {String} The template name that will be rendered
      * @private
      */
+    /* eslint-disable ember/no-get */
     layoutName: computed('type', 'model', function() {
         let type = this.get('type');
 
@@ -253,6 +255,7 @@ export default Component.extend({
      * @method setEmpty
      * @protected
      */
+    /* eslint-disable ember/no-get */
     setEmpty(){
         let isEmpty = false;
         const value = this.get('value');
@@ -290,6 +293,7 @@ export default Component.extend({
      * @method didInsertElement
      * @private
      */
+    /* eslint-disable ember/no-get */
     didInsertElement(){
 
         const mask = this.getMask(this.get('mask'));

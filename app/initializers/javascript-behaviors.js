@@ -48,11 +48,11 @@ export default {
             //     Pace.restart();
             // }.on('willTransition'),
 
-            willTransition() {
+            routeWillChange() {
                 Pace.restart();
             },
 
-            didTransition() {
+            routeDidChange() {
                 this._super(...arguments);
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();

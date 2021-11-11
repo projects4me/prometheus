@@ -3,7 +3,7 @@
  */
 
 import Component from '@ember/component';
-import ENV from "prometheus/config/environment";
+//import ENV from "prometheus/config/environment";
 import { inject } from '@ember/service';
 import $ from 'jquery';
 

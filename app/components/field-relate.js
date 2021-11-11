@@ -34,6 +34,7 @@ export default FormField.extend({
      * @for FieldDate
      * @protected
      */
+    /* eslint-disable ember/require-computed-macros */ 
     charLength: computed('value', function() {
         return (this.value);
     }),

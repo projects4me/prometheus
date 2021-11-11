@@ -6,7 +6,6 @@ import steps from './steps';
 export const given = function () {
   return [{
     "User is not logged in": (assert) => async function () {
-      debugger;
       await visit('/signin');
       assert.equal(currentURL(), '/signin', "User is not logged in");
     }

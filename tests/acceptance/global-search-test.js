@@ -10,7 +10,7 @@ module('Acceptance | global search', function(hooks) {
 
   test('visiting /global-search', async function(assert) {
     defaultScenario(server);
-    debugger;
+
     await visit('/signin');
     await fillIn('input#username','hammad');
     await fillIn('input#password','hammad');
@@ -24,7 +24,6 @@ module('Acceptance | global search', function(hooks) {
     await fillIn('div.ember-power-select-search > input','3');
     await new Promise(resolve => setTimeout(resolve, 2000));
     await click('div.ember-power-select-dropdown > ul > li:nth-child(4)');
-    console.log(`Current URL is--> ${currentURL()}`);
     await new Promise(resolve => setTimeout(resolve, 2000));
     assert.equal(currentURL(),'/app/project/1/issue/3');
   });

@@ -2,6 +2,6 @@
 <label>{{t definition.label}}</label>
 {{#if definition.required}}<span class="required">*</span>{{/if}}
 {{#if definition.help}}<i data-toggle="tooltip" data-placement="top" title="{{t definition.help}}" class="fa fa-question-circle"></i>{{/if}}
-<div style="clear:both" />
+<div class="clearfix" />
 <textarea placeholder="{{t definition.label}}" rows="3"></textarea>
 <span class="hidden error">{{t definition.errorMsg}}</span>

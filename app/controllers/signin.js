@@ -55,10 +55,11 @@ export default Controller.extend({
          * @public
          */
         async authenticate() {
-            let { username, password } = this.getProperties('username', 'password');
             let _self = this;
+            let username =_self.username;
+            let password =_self.password;
 
-            await this.session.authenticate('authenticator:oauth2', username, password).then(
+            await _self.session.authenticate('authenticator:oauth2', username, password).then(
                 () => {
                     if (_self.session.isAuthenticated) {
                         localStorage.removeItem('projectId');

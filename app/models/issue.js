@@ -4,7 +4,7 @@
 
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
-import EmberResolver from 'ember-resolver';
+import { readOnly } from '@ember/object/computed';
 
 /**
  * These are the validation that are applied on the model
@@ -23,7 +23,7 @@ const Validations = buildValidations({
     endDate: [
         validator('presence', true),
         validator('date', {
-            after: Ember.computed.readOnly('model.startDate'),
+            after: readOnly('model.startDate'),
             message: "End date should be greater then start date"
         })
     ]

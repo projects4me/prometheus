@@ -83,7 +83,7 @@
 
     </div>
 
-    <div class="box-body no-padding" style="display: block;">
+    <div class="box-body no-padding">
 
       <div class="box-footer">
         <ul class="attachments clearfix">
@@ -91,7 +91,7 @@
             <li>
               {{#if (not-eq file.fileThumbnail '0')}}
                 <span class="attachment-icon has-img">
-                  <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
+                  <img src="{{file.fileThumbnail}}" alt="{{file.name}}"s>
                 </span>
               {{else}}
                 <AppLayouts::AttachmentIcon @mime={{file.fileMime}}/>
@@ -117,7 +117,7 @@
                 title="views.app.wiki.page.file.preview"
                 closeLabel="global.form.close"
                 close="removeModal"}}
-              <iframe id="file_preview"></iframe>
+              <iframe title="{{t "views.app.wiki.page.file.preview"}}" id="file_preview"></iframe>
             {{/bootstrap-modal}}
           {{/if}}
         </div>
