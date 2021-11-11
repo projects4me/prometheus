@@ -62,7 +62,7 @@ export default class InitializeSortable extends Modifier {
      * @return integer
      * @public
      */
-     get scrollSpeed() {
+    get scrollSpeed() {
         return this.args.named.scrollSpeed;
     }
 
@@ -144,7 +144,7 @@ export default class InitializeSortable extends Modifier {
      * @type Array
      * @private
      */
-     sortableList = [];
+    sortableList = [];
 
     /**
      * This property is used to keep in track the old highlighted lane.
@@ -153,7 +153,7 @@ export default class InitializeSortable extends Modifier {
      * @type Object
      * @private
      */
-     oldLane = null;
+    oldLane = null;
 
     //Called when the modifier is installed on the DOM element
     didInstall() {
@@ -182,7 +182,7 @@ export default class InitializeSortable extends Modifier {
                     (_self.oldLane) && _self.oldLane.classList.remove('box-body-color');
                     _self.oldLane = evt.to;
                 }
-            }));    
+            }));
         });
         _self.setParentHeight();
     }
@@ -206,7 +206,7 @@ export default class InitializeSortable extends Modifier {
      * @method _onEnd
      * @param {Object} evt 
      */
-     _onEnd(evt) {
+    _onEnd(evt) {
         let _self = this;
         _self.unSelectDropzones(evt);
         _self.setParentHeight();
@@ -230,7 +230,7 @@ export default class InitializeSortable extends Modifier {
             (node.getAttribute('data-field-lane-group') === _self.groupName) && node.classList.add('box-body-border');
         })
     }
-    
+
     /**
      * This function removes highlighted dropzones related to current selected item. It is called on 'onEnd'
      * function of the sortablejs and that function is called when user just stops the dragging of an
@@ -241,7 +241,6 @@ export default class InitializeSortable extends Modifier {
      * @param {HTMLElement} el 
      */
     unSelectDropzones(evt) {
-        let _self = this;
         evt.from.classList.remove('curr-lane');
         let droppableSections = document.querySelectorAll(`div.lane.box-body`);
         droppableSections.forEach((node) => {
@@ -261,6 +260,7 @@ export default class InitializeSortable extends Modifier {
     setParentHeight() {
         let parentElArray = document.querySelectorAll('div.milestone.box-body');
         parentElArray.forEach((parentElement) => {
+            let parentHeaderHeight = parentElement.parentNode.querySelector('div.box-header').getBoundingClientRect().height;
             let lanes = [...parentElement.children];
             let heightArray = [];
             lanes.forEach((lane) => {
@@ -268,22 +268,23 @@ export default class InitializeSortable extends Modifier {
                 let items = [...laneBody.children];
                 let sum = 0;
                 items.forEach((item) => {
-                    let padding = 3.2;
-                    sum += item.getBoundingClientRect().height + padding;
+                    let itemCSS = getComputedStyle(item);
+                    sum += item.getBoundingClientRect().height + parseFloat(itemCSS.marginTop);
                 })
                 heightArray.push(sum);
             });
-            let max = (Math.max(...heightArray) + 85);
-
-            //set height of lane dropzones
+            let max = (Math.max(...heightArray) + (parentHeaderHeight * 2));
+            let minHeight = 0;
+            //set height of lanes
             lanes.forEach((lane) => {
                 let headerHeight = lane.querySelector('div.box-header').getBoundingClientRect().height;
-                let dropzone = lane.querySelector('div.lane.box-body');
-                let height = max - headerHeight - 20;
-                (height < 100) && (height = 450);
-                dropzone.style.height = `${height}px`;
+                let laneBody = lane.querySelector('div.lane.box-body');
+                minHeight = parseFloat(getComputedStyle(laneBody).minHeight);
+                let height = max - (headerHeight + parentHeaderHeight);
+                (height < minHeight) && (height = minHeight);
+                laneBody.style.height = `${height}px`;
             });
-            (max < 450) && (max = 510);
+            (max < minHeight) && (max = minHeight + 60);
             parentElement.style.height = `${max}px`;
         })
     }
