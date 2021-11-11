@@ -84,10 +84,10 @@
         </div>
         {{!-- /.end project details --}}
 
-        {{!-- This div contains the project conversations and milestones --}}
+        {{!-- This div contains the issue conversations and milestones --}}
         <div class="row">
 
-          {{!-- This is the project conversations --}}
+          {{!-- This is the issue conversations --}}
           <div class="col-md-12">
             <div class="box box-info conversations issue-conversation-section">
               <div class="box-header with-border">
@@ -96,7 +96,7 @@
                 </div>
               </div>
               {{!-- /.box-header --}}
-              <div class="box-body no-padding" class="box-footer box-comments" style="display: block;">
+              <div class="box-body no-padding box-footer box-comments">
 
                 {{#each issue.comments as |comment|}}
                   <div class="box-comment">
@@ -148,7 +148,7 @@
               <div class="box-header with-border">
                 <h3 class="box-title">{{t "views.app.issue.detail.issueactivities"}}</h3>
               </div>
-              <div class="box-body no-padding" style="display: block;">
+              <div class="box-body no-padding">
                 <div class="issue-activities">
                   {{time-line activities=activities}}
                 </div>
@@ -173,7 +173,7 @@
             </div>
           </div>
           {{!-- /.box-header --}}
-          <div class="box-body no-padding" style="display: block;">
+          <div class="box-body no-padding">
             <ul class="users-list clearfix">
               <li>
                 <img src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
@@ -215,7 +215,7 @@
 
           </div>
 
-          <div class="box-body no-padding" style="display: block;">
+          <div class="box-body no-padding">
 
             <div class="box-footer">
               <ul class="attachments clearfix">
@@ -223,7 +223,7 @@
                   <li>
                     {{#if (not-eq file.fileThumbnail '0')}}
                       <span class="attachment-icon has-img">
-                        <img src="{{file.fileThumbnail}}" alt="{{file.name}}" style="width: 198px; height: 132px;">
+                        <img src="{{file.fileThumbnail}}" alt="{{file.name}}">
                       </span>
                     {{else}}
                       <AppUi::AttachmentIcon @mime={{file.fileMime}}/>
@@ -249,7 +249,7 @@
                       title="views.app.issue.detail.file.preview"
                       closeLabel="global.form.close"
                       close="removeModal"}}
-                    <iframe id="file_preview"></iframe>
+                    <iframe title="{{t "views.app.issue.detail.file.preview"}}" id="file_preview"></iframe>
                   {{/bootstrap-modal}}
                 {{/if}}
               </div>
@@ -269,7 +269,7 @@
             <h3 class="box-title">{{t "views.app.issue.detail.estimates"}}</h3>
           </div>
           {{!-- /.box-header --}}
-          <div class="box-body no-padding" style="display: block;">
+          <div class="box-body no-padding">
             <ul class="time-log time-log-in-box products-list product-list-in-box">
               {{#if (gt issue.estimated.length 0)}}
                 {{#each issue.estimated as |timelog|}}
@@ -346,7 +346,7 @@
 
           </div>
 
-          <div class="box-footer text-center" style="display: block;">
+          <div class="box-footer text-center">
             <span>
               <a href="javascript:void(0);" {{action "showEstimateTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
             </span>
@@ -359,7 +359,7 @@
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.issue.detail.timelogs"}}</h3>
           </div>
-          <div class="box-body no-padding" style="display: block;">
+          <div class="box-body no-padding">
 
             <ul class="time-log time-log-in-box products-list product-list-in-box">
               {{#if (gt issue.spent.length 0)}}
@@ -451,7 +451,7 @@
             {{/if}}
           </div>
 
-          <div class="box-footer text-center" style="display: block;">
+          <div class="box-footer text-center">
             <span>
               <a href="javascript:void();" {{action "showLogTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.log"}}</a>
             </span>
@@ -464,7 +464,7 @@
             <h3 class="box-title">{{t "views.app.issue.detail.hierarchy"}}</h3>
           </div>
 
-          <div class="box-body no-padding" style="display: block;">
+          <div class="box-body no-padding">
 
             <div class="table-responsive">
               {{#if issue.childissues}}

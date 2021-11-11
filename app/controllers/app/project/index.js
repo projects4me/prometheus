@@ -7,6 +7,7 @@ import format from "../../../utils/data/format";
 import _ from "lodash";
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import $ from "jquery";
 
 /**
@@ -82,9 +83,7 @@ export default Prometheus.extend({
      * @for Index
      * @private
      */
-    rolesList: computed(function(){
-        return this.appController.rolesList;
-    }),
+    rolesList: reads('appController.rolesList'),
 
     /**
      * This is the list of users fetched by the app controller

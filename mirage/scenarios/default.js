@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default function (server) {
     server.createList('activity', 5);
     server.createList('chatroom', 5);

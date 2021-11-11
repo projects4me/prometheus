@@ -8,6 +8,7 @@ import Tribute from "tributejs";
 import format from "prometheus/utils/data/format";
 import Icon from "prometheus/utils/ui/priority-icon";
 import { inject as service } from "@ember/service";
+import $ from 'jquery';
 
 /**
  * This modifier will be called on the initialization of toast ui component to
@@ -338,7 +339,7 @@ export default class ToastEditor extends Modifier {
     this.tribute.attach(this.targetElement);
 
     //Adding an event on opening of menu and after that appyling style and class on 'ul'
-    this.targetElement.addEventListener("tribute-active-true", function (e) {
+    this.targetElement.addEventListener("tribute-active-true", function () {
       let listElement = document.querySelectorAll('div.tribute-container > ul');
       listElement.forEach((list) => {
         list.style.display = "block";

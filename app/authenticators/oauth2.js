@@ -9,6 +9,7 @@ import { isEmpty } from '@ember/utils';
 import { run } from '@ember/runloop';
 import { makeArray } from '@ember/array';
 import { assign } from '@ember/polyfills';
+import Logger from 'js-logger';
 
 /**
  * This class allows the application to authenticate with using a password grant
@@ -63,7 +64,7 @@ export default OAuth2PasswordGrant.extend({
      * @public
      */
     authenticate(identification, password, scope = [], headers = {}) {
-        console.log('in session authentication');
+        Logger.debug('in session authentication');
         return new RSVP.Promise((resolve, reject) => {
             const data                = { 'grant_type': 'password', username: identification, password,'client_id':this.apiClientId,'client_secret':this.apiClientSecret };
             const serverTokenEndpoint = this.serverTokenEndpoint;

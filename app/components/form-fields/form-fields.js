@@ -6,6 +6,7 @@ import Component from '@glimmer/component';
 import { cancel } from '@ember/runloop';
 import { later } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
+import Logger from 'js-logger';
 
 /**
  * This component is used to serve as a container for the fields that we intend to
@@ -132,9 +133,19 @@ export default class FormFieldsComponent extends Component {
      * @private
      */
     get isChanged() {
-        Logger.debug(this.get('value'));
-        Logger.debug(this.get('oldValue'));
-        return (this.get('value') !== this.get('oldValue'));
+        Logger.debug('Value : ' + this.value);
+        Logger.debug('Old Value : ' + this.oldValue);
+        if (this.value == undefined)
+            return false;
+        return (this.value !== this.oldValue);
+    }
+
+    get typing(){
+        return this.isTyping;
+    }
+
+    set typing(value){
+        this.isTyping = value;
     }
 
     /**
@@ -247,8 +258,8 @@ export default class FormFieldsComponent extends Component {
      * @public
      */
     keyDown(){
-        if (this.get('isTyping') === false) {
-            this.set('isTyping',true);
+        if (this.isTyping === false) {
+            this.typing = true;
         }
     }
 

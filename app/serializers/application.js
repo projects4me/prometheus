@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import DS from "ember-data";
+import JSONAPISerializer from '@ember-data/serializer/json-api';
 import { camelize } from '@ember/string';
 
 /**
@@ -14,7 +14,7 @@ import { camelize } from '@ember/string';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 
-export default DS.JSONAPISerializer.extend({
+export default JSONAPISerializer.extend({
 
     /**
      * Setting the primary key as the field id

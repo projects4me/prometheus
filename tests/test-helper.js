@@ -15,7 +15,6 @@ registerAsyncHelper('signInUser', async function () {
     await click('button[type="submit"]');
     await new Promise(resolve => setTimeout(resolve, 1500));
     server["customDataProject"] = (schema) => {
-        debugger;
         let model = { data: [] }
         let data = schema.projects.find(3);
         model.data.push({
@@ -27,9 +26,8 @@ registerAsyncHelper('signInUser', async function () {
     }
     await visit('/app/project/3/issue/create');
     await new Promise(resolve => setTimeout(resolve, 100000));
-    debugger;
-    console.log(currentURL());
     // await new Promise(resolve => setTimeout(resolve, 80000));
+    /* eslint-disable no-undef */ 
     assert.equal(currentURL(), '/app/project/3/issue/create');
 
 })

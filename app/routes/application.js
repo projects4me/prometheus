@@ -4,7 +4,6 @@
 
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
-import _ from 'lodash';
 
 /**
  * This is the application route, in EmberJs the application route is the main

@@ -98,7 +98,7 @@
 
             </div>
             {{!-- /.box-header --}}
-            <div class="box-body no-padding" style="display: block;">
+            <div class="box-body no-padding">
               <ul class="project-conversations show-5">
                 {{#each model.conversations as |conversation|}}
                   <li>
@@ -113,7 +113,7 @@
               {{!-- /.users-list --}}
             </div>
             {{!-- /.box-body --}}
-            <div class="box-footer text-center" style="display: block;">
+            <div class="box-footer text-center">
               <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "conversation"}}>{{t "views.app.project.detail.viewallconversations"}}</a>
             </div>
             {{!-- /.box-footer --}}
@@ -133,7 +133,7 @@
 
             </div>
             {{!-- /.box-header --}}
-            <div class="box-body no-padding" style="display: block;">
+            <div class="box-body no-padding">
               <ul class="open-issues show-5 clearfix">
                 {{#each issuetime as |issue|}}
                   <li>
@@ -151,7 +151,7 @@
               {{!-- /.users-list --}}
             </div>
             {{!-- /.box-body --}}
-            <div class="box-footer text-center" style="display: block;">
+            <div class="box-footer text-center">
               <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "issue"}}>{{t "views.app.project.detail.viewallissues"}}</a>
             </div>
             {{!-- /.box-footer --}}
@@ -172,7 +172,7 @@
 
             </div>
             {{!-- /.box-header --}}
-            <div class="box-body no-padding" style="display: block;">
+            <div class="box-body no-padding">
               <ul class="project-estimated-spent">
                 {{chart-estimatedspent
                     issues=issuetime
@@ -182,7 +182,7 @@
               {{!-- /.users-list --}}
             </div>
             {{!-- /.box-body --}}
-            <div class="box-footer text-center" style="display: block;">
+            <div class="box-footer text-center">
               <a href="javascript:void(0)" class="uppercase">{{t "views.app.project.detail.viewallconversations"}}</a>
             </div>
             {{!-- /.box-footer --}}
@@ -201,7 +201,7 @@
             <div class="box-header with-border">
               <h3 class="box-title">{{t "views.app.project.detail.projectactivities"}}</h3>
             </div>
-            <div class="box-body no-padding" style="display: block;">
+            <div class="box-body no-padding">
               <div class="project-activities">
                 {{time-line activities=activities}}
               </div>
@@ -227,7 +227,7 @@
           </div>
         </div>
         {{!-- /.box-header --}}
-        <div class="box-body no-padding" style="display: block;">
+        <div class="box-body no-padding">
           <ul class="users-list clearfix">
             {{#each model.members as |member|}}
               <li>
@@ -290,7 +290,7 @@
           <h3 class="box-title">{{t "views.app.project.detail.milestones"}}</h3>
         </div>
 
-        <div class="box-body no-padding" style="display: block;">
+        <div class="box-body no-padding">
           {{#if (eq milestones.length 0)}}
             <div class="no-entry">{{t "views.app.project.detail.milestone.noentry"}}</div>
           {{else}}
@@ -377,7 +377,7 @@
           {{/bootstrap-modal}}
         {{/if}}
 
-        <div class="box-footer text-center" style="display: block;">
+        <div class="box-footer text-center">
           <span><a href="javascript:void();" {{action "showMilestoneDialog"}}><i class="fa fa-flag-checkered "></i> {{t "views.app.project.detail.milestone.add"}}</a></span>
         </div>
 
@@ -390,7 +390,7 @@
         <div class="box-header with-border">
           <h3 class="box-title">{{t "views.app.project.detail.issueratio"}}</h3>
         </div>
-        <div class="box-body no-padding" style="display: block;">
+        <div class="box-body no-padding">
           <ul class="users-list clearfix">
             {{chart-issueratio issues=issuetime}}
           </ul>
@@ -402,7 +402,7 @@
         <div class="box-header with-border">
           <h3 class="box-title">{{t "views.app.project.detail.summary"}}</h3>
         </div>
-        <div class="box-body no-padding" style="display: block;">
+        <div class="box-body no-padding">
 
           <div class="info-box">
             <span class="info-box-icon bg-aqua"><i class="fa fa-users"></i></span>

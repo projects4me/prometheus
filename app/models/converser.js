@@ -46,16 +46,6 @@ export default Model.extend({
     chatroom: belongsTo('chatroom'),
 
     /**
-     * The chatroom the converser is associated with
-     *
-     * @property chatroom
-     * @type ChatRoomModel
-     * @for Converser
-     * @private
-     */
-    chatroom: belongsTo('chatroom'),
-
-    /**
      * The users who are conversing
      *
      * @property users

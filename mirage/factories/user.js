@@ -1,6 +1,7 @@
 import { Factory } from 'ember-cli-mirage';
 import faker from 'faker';
 import * as date from '../helpers/getDate';
+import _ from 'lodash';
 
 export default Factory.extend({
     dateCreated() {

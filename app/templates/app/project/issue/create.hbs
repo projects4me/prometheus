@@ -15,7 +15,7 @@
 
         </div>
         {{!-- /.box-header --}}
-        <div class="box-body no-padding" style="display: block;">
+        <div class="box-body no-padding">
 
           <div class="form-group">
 
@@ -72,7 +72,6 @@
                 @showDropdowns={{true}}
                 @positionX="right"
                 @positionY="down"
-                @data-field="issue.startDate"
                 @v-model={{this.model}}
                 @v-field='startDate'
                 @v-output='message'
@@ -92,7 +91,6 @@
                 @showDropdowns={{true}}
                 @positionX="right"
                 @positionY="down"
-                @data-field="issue.endDate"
                 @v-model={{this.model}}
                 @v-field='endDate'
                 @v-output='message'
@@ -161,7 +159,7 @@
           <h3 class="box-title">{{t "views.app.issue.create.people"}}</h3>
         </div>
         {{!-- /.box-header --}}
-        <div class="box-body no-padding" style="display: block;">
+        <div class="box-body no-padding">
 
           <FormFields::FieldRelate
               @placeholder={{t "views.app.issue.create.selectassignee"}}
@@ -201,7 +199,7 @@
           <h3 class="box-title">{{t "views.app.issue.create.parent"}}</h3>
         </div>
         {{!-- /.box-header --}}
-        <div class="box-body no-padding" style="display: block;">
+        <div class="box-body no-padding">
 
           <FormFields::FieldRelate
               @placeholder={{t "views.app.issue.create.selectparent"}}

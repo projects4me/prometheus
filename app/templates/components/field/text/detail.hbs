@@ -1,7 +1,7 @@
 {{!-- Detail template for text input field--}}
 <label>{{t definition.label}}:</label>
 {{#if definition.help}}<i data-toggle="tooltip" data-placement="top" title="{{t definition.help}}" class="fa fa-question-circle"></i>{{/if}}
-<div style="clear:both"></div>
+<div class="clearfix"></div>
 <div class="fieldValue">
   {{get-prop model definition.fieldName}}
 </div>

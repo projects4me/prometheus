@@ -3,9 +3,9 @@
 {{#if definition.required}}<span class="required">*</span>{{/if}}
 {{#if definition.help}}<i data-toggle="tooltip" data-placement="top" title="{{t definition.help}}" class="fa fa-question-circle"></i>{{/if}}
 <span class="hidden field-error">{{t definition.errorMsg}}</span>
-<div style="clear:both" />
+<div class="clearfix" />
 <select name="{{definition.fieldName}}" onchange={{action "changed" value="target.value"}} multiple>
-  {{#each definition.options as |option|}}
-    <option value={{option.value}}>{{option.label}}</option>
+  {{#each definition.options as |selection|}}
+    <option value={{selection.value}}>{{selection.label}}</option>
   {{/each}}
 </select>

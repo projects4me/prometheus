@@ -8,7 +8,7 @@ import queryBuilder from "prometheus/utils/query/builder";
 import queryParser from "prometheus/utils/query/parser";
 import $ from 'jquery';
 import { inject as injectController } from '@ember/controller';
-import { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 
 /**
  * This controller provides the base
@@ -126,9 +126,7 @@ export default Prometheus.extend({
      * @type Prometheus.Controllers.App.Project
      * @public
      */
-    projectId : computed('appProjectController.projectId', function () {
-        return this.appProjectController.projectId;
-    }),
+    projectId : reads('appProjectController.projectId'),
 
     /**
      * The action handlers for the list view

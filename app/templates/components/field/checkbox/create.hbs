@@ -3,7 +3,7 @@
 {{#if definition.required}}<span class="required">*</span>{{/if}}
 {{#if definition.help}}<i data-toggle="tooltip" data-placement="top" title="{{t definition.help}}" class="fa fa-question-circle"></i>{{/if}}
 <span class="hidden field-error">{{t definition.errorMsg}}</span>
-<div style="clear:both"></div>
+<div class="clearfix"></div>
 <span class="btn-group">
   {{checkbox-field action=(action "changed") type="checkbox" readonly=definition.readonly name=definition.fieldName value=definition.fieldName}} {{t definition.label}}
 </span>

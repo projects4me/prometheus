@@ -50,7 +50,7 @@ export default function() {
         };
         if(_.has(server, 'customUser')){
             data = server.customUser(schema,request)
-        };
+        }
         return data;
     });
 
@@ -339,11 +339,11 @@ export default function() {
     });
 
     this.get('/project', (schema, request) => {
-        debugger;
         let model =  schema.projects.all();
         let queryParams = request.queryParams.query;
+        
         if(_.has(server, 'customDataProject')){
-            data = server.customDataProject(schema,request)
+            server.customDataProject(schema,request)
         }
         if (queryParams == "(Project.id : 3)") {
             let projectId = queryParams.replace(/\)/g, "").replace(/^\D+/g, "");
@@ -356,7 +356,6 @@ export default function() {
     });
 
     this.get('/project/:id', (schema, request) => {
-        debugger;
         let id = request.params.id;
         // debugger;
         // let data = {
@@ -446,8 +445,7 @@ export default function() {
         return schema.issuetypes.find(id)
     });
 
-    this.get('/activity', (schema, request) => {
-        // debugger;
+    this.get('/activity', (schema) => {
         return schema.activities.all();
     });
 

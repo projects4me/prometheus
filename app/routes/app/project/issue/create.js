@@ -5,6 +5,8 @@
 import App from "prometheus/routes/app";
 import { hash } from 'rsvp';
 import format from "prometheus/utils/data/format";
+import Logger from "js-logger";
+import _ from 'lodash';
 
 /**
  * This is the route that will handle the creation of new issues
@@ -49,7 +51,7 @@ export default App.extend({
             }),
             project: _self.store.query('project',projectOptions)
         }).then(function(results){
-            console.log(results);
+            Logger.debug(results);
             _self.set('issue',results.issue);
             const issueDescription = _.clone(results.issue.description);
             _self.set('issueDescription',issueDescription);
