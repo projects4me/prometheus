@@ -33,9 +33,7 @@ export default App.extend({
         Logger.debug('AppProjectIssuePageRoute::setupController');
 
         let _self = this;
-        let i18n = _self.get('i18n');
-        controller.set('i18n',i18n);
-
+    
         let params = _self.paramsFor('app.project.issue.page');
 
         _self.set('breadCrumb',{title:'#'+params.issue_number,record:true});

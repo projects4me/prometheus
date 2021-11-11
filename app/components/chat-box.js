@@ -17,14 +17,14 @@ import $ from 'jquery';
 export default Component.extend({
 
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for ChatBox
      * @private
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
      * These are the classes the must be registered with the component

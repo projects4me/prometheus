@@ -260,8 +260,8 @@ export default Prometheus.extend({
          * @private
          */
         setupQuery:function(){
-            let i18n = this.i18n;
-            let filters = MD.create().getViewMeta(this.module,'filters',i18n).enabledFilters;
+            let intl = this.intl;
+            let filters = MD.create().getViewMeta(this.module,'filters',intl).enabledFilters;
             let rules = queryParser.getRules(this.query,filters);
             queryBuilder.init('#builder',filters);
             if (rules !== undefined && rules !== '') {

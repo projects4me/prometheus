@@ -9,6 +9,7 @@ import { set } from '@ember/object';
 import $ from 'jquery';
 import { computed } from '@ember/object';
 import Evented from '@ember/object/evented';
+import { htmlSafe } from "@ember/template";
 
 /**
  * This controller is used to manage the issues detail/page view
@@ -305,12 +306,12 @@ export default Prometheus.extend(Evented,{
             Logger.debug(self);
 
             let deleting = new Messenger().post({
-                message: _self.get('i18n').t("views.app.issue.detail.file.delete",{name:file.get('name')}).toString(),
+                message: htmlSafe(_self.intl.t("views.app.issue.detail.file.delete",{name:file.get('name')})),
                 type: 'warning',
                 showCloseButton: true,
                 actions: {
                     confirm: {
-                        label: _self.get('i18n').t("views.app.issue.detail.file.confirmdelete").toString(),
+                        label: htmlSafe(_self.intl.t("views.app.issue.detail.file.confirmdelete")),
                         action: function() {
 
                             // destroy the upload
@@ -319,7 +320,7 @@ export default Prometheus.extend(Evented,{
                                 _self.get('model').objectAt(0).get('files').removeObject(file);
 
                                 return deleting.update({
-                                    message: _self.get('i18n').t("views.app.issue.detail.file.deleted"),
+                                    message: _self.intl.t("views.app.issue.detail.file.deleted"),
                                     type: 'success',
                                     actions: false
                                 });
@@ -327,10 +328,10 @@ export default Prometheus.extend(Evented,{
                         }
                     },
                     cancel: {
-                        label: _self.get('i18n').t("views.app.issue.detail.file.onsecondthought").toString(),
+                        label: _self.intl.t("views.app.issue.detail.file.onsecondthought").toString(),
                         action: function() {
                             return deleting.update({
-                                message: _self.get('i18n').t("views.app.issue.detail.file.deletecancel"),
+                                message: _self.intl.t("views.app.issue.detail.file.deletecancel"),
                                 type: 'success',
                                 actions: false
                             });
@@ -433,7 +434,7 @@ export default Prometheus.extend(Evented,{
                     _self.get('model').objectAt(0).get('spent').pushObject(newLog);
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("views.app.issue.detail.timelog.added"),
+                        message: _self.intl.t("views.app.issue.detail.timelog.added"),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -443,7 +444,7 @@ export default Prometheus.extend(Evented,{
                 });
             } else {
                 new Messenger().post({
-                    message: _self.get('i18n').t("views.app.issue.detail.timelog.missing"),
+                    message: _self.intl.t("views.app.issue.detail.timelog.missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -477,7 +478,7 @@ export default Prometheus.extend(Evented,{
                     _self.get('model').objectAt(0).get('estimated').pushObject(newLog);
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("views.app.issue.detail.timelog.estimated"),
+                        message: _self.intl.t("views.app.issue.detail.timelog.estimated"),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -488,7 +489,7 @@ export default Prometheus.extend(Evented,{
 
             } else {
                 new Messenger().post({
-                    message: _self.get('i18n').t("views.app.issue.detail.timelog.estmissing"),
+                    message: _self.intl.t("views.app.issue.detail.timelog.estmissing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -508,21 +509,21 @@ export default Prometheus.extend(Evented,{
         deleteLog(log){
             Logger.debug('Prometheus.Controllers.App.Project.Issue.Create::deleteLog');
             let _self = this;
-            let i18n = _self.get('i18n');
+            let intl = _self.intl;
 
             let message = new Messenger().post({
-                message: i18n.t("global.form.deletecicked").toString(),
+                message: intl.t("global.form.deletecicked").toString(),
                 type: 'warning',
                 showCloseButton: true,
                 actions: {
                     confirm: {
-                        label: i18n.t("global.form.confirmcancel").toString(),
+                        label: intl.t("global.form.confirmcancel").toString(),
                         action: function() {
                             log.deleteRecord();
                             log.save().then(function(){
                                 message.cancel();
                                 new Messenger().post({
-                                    message: _self.get('i18n').t("global.form.deleted"),
+                                    message: intl.t("global.form.deleted"),
                                     type: 'success',
                                     showCloseButton: true
                                 });
@@ -530,7 +531,7 @@ export default Prometheus.extend(Evented,{
                         }
                     },
                     cancel: {
-                        label: i18n.t("global.form.onsecondthought").toString(),
+                        label: intl.t("global.form.onsecondthought").toString(),
                         action: function() {
                             message.cancel();
                         }
@@ -567,7 +568,7 @@ export default Prometheus.extend(Evented,{
                 log.save().then(function () {
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("views.app.issue.detail."+context+".edited"),
+                        message: _self.intl.t("views.app.issue.detail."+context+".edited"),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -576,7 +577,7 @@ export default Prometheus.extend(Evented,{
                 });
             } else {
                 new Messenger().post({
-                    message: _self.get('i18n').t("views.app.issue.detail."+context+".missing"),
+                    message: _self.intl.t("views.app.issue.detail."+context+".missing"),
                     type: 'error',
                     showCloseButton: true
                 });

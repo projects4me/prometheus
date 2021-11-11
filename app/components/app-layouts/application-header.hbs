@@ -4,7 +4,7 @@
   {{!-- mini logo for sidebar mini 50x50 pixels --}}
   <span class="logo-mini"><img alt="{{t "application"}}" src="/img/app/logo-256.png"></span>
   {{!-- logo for regular state and mobile devices --}}
-  <span class="logo-lg"><img alt="{{t "application"}}" src="/img/app/logo-256.png">{{t "views.app.application.header.title"}}</span>
+  <span class="logo-lg"><img alt="{{t "application"}}" src="/img/app/logo-256.png">{{safe-html (t "views.app.application.header.title")}}</span>
 </a>
 
 {{!-- He ader Navbar --}}
@@ -148,7 +148,7 @@
           <li class="user-body">
             <div class="row">
               <div class="col-xs-4 text-center">
-                <a href="#">{{t "views.app.activity"}}</a>
+                <a href="#">{{t "views.app.activity.title"}}</a>
               </div>
               <div class="col-xs-4 text-center">
                 <a href="#">{{t "views.app.today"}}</a>

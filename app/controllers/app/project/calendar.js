@@ -91,7 +91,7 @@ export default Prometheus.extend({
          * @public
          */
         eventRender(event,eventElement){
-            let self = this;
+            let _self = this;
             if (event.priority)
             {
                 eventElement.find('div.fc-content').prepend(this.getPriorityHTML(event.priority));
@@ -99,9 +99,9 @@ export default Prometheus.extend({
             }
             if (event.className)
             {
-                let tooltip = self.get('i18n').t("views.app.issue.lists.priority."+event.priority);
-                tooltip += ' '+self.get('i18n').t("views.app.issue.priority");
-                tooltip += ' - '+self.get('i18n').t("views.app.issue.lists.status."+event.className);
+                let tooltip = _self.intl.t("views.app.issue.lists.priority."+event.priority);
+                tooltip += ' '+_self.intl.t("views.app.issue.priority");
+                tooltip += ' - '+_self.intl.t("views.app.issue.lists.status."+event.className);
                 eventElement.find('div.fc-content').attr('data-toggle','tooltip');
                 eventElement.find('div.fc-content').attr('title',tooltip);
                 //eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));

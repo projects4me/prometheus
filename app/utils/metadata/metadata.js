@@ -628,17 +628,17 @@ export default Object.extend({
      * @method getViewMeta
      * @param {String} module  The module for which we have to retrieve the meta
      * @param {String} view The view of the module whose meta is required
-     * @param {Object} i18n The object for the internationalization library
+     * @param {Object} intl The object for the internationalization library
      * @return {Object} metadata The requested metadata
      */
-    getViewMeta:function(module,view,i18n){
+    getViewMeta:function(module,view,intl){
         if (this.views[module] !== undefined && this.views[module][view] !== undefined)
         {
             let meta = this.views[module][view];
             if (view === 'filters')
             {
                 _.forEach(meta.enabledFilters,function(value){
-                    let label = i18n.t(value.label);
+                    let label = intl.t(value.label);
                     if (label.string !== undefined){
                         value.label = label.string;
                     }

@@ -20,20 +20,20 @@ import $ from 'jquery';
 export default Widget.extend({
 
     /**
-     * The i18n Service
+     * The intl Service
      *
-     * @property i18n
-     * @type Prometheus.Services.i18n
+     * @property intl
+     * @type Prometheus.Services.intl
      * @for IssuesToday
      * @private
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
-     * The i18n Service
+     * The router Service
      *
      * @property router
-     * @type Prometheus.Services.i18n
+     * @type Prometheus.Services.Router
      * @for IssuesToday
      * @private
      */
@@ -52,13 +52,13 @@ export default Widget.extend({
         let _self = this;
         let data = _self.get('data');
         let dataSet = [];
-        let i18n = _self.get('i18n');
+        let intl = this.intl;
 
         data.forEach(function(issue){
             dataSet.push([
                 '<a href="javascript:void(0);">'+issue.get('issueNumber')+'</a>',
                 '<a href="javascript:void(0);">'+issue.get('subject')+'</a>',
-                '<span class="badge '+issue.get('status')+'">'+i18n.t("views.app.issue.lists.status."+issue.get('status'))+'</span>',
+                '<span class="badge '+issue.get('status')+'">'+intl.t("views.app.issue.lists.status."+issue.get('status'))+'</span>',
                 moment(issue.get('startDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 moment(issue.get('endDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 issue.get('project.name'),

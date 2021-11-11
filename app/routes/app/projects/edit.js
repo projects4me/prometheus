@@ -50,8 +50,8 @@ export default App.extend({
             controller.set('model',project);
         });
 
-        let type = format.getList('views.app.project.lists.type',_self.get('i18n.locale'));
-        let status = format.getList('views.app.project.lists.status',_self.get('i18n.locale'));
+        let type = format.getList('views.app.project.lists.type',_self.intl.locale);
+        let status = format.getList('views.app.project.lists.status',_self.intl.locale);
 
         controller.set('status',status);
         controller.set('type',type);

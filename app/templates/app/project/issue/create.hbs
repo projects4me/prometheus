@@ -7,7 +7,7 @@
         <div class="box-header with-border">
           <h3 class="box-title">
             {{#if (eq layoutName 'edit')}}
-              {{t "views.app.issue.edit.page" issueNumber=model.issueNumber name=model.subject}}
+              {{safe-html (t "views.app.issue.edit.page" issueNumber=model.issueNumber name=model.subject)}}
             {{else}}
               {{t "views.app.issue.create.title"}}
             {{/if}}

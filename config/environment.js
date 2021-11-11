@@ -91,9 +91,5 @@ module.exports = function(environment) {
     // if (environment === 'production') {
     //
     // }
-
-    ENV.i18n = {
-        defaultLocale: 'en'
-    };
     return ENV;
 };

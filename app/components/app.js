@@ -11,14 +11,14 @@ import { inject as service } from '@ember/service';
  */
 export default class AppComponent extends Component {
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for App
      * @public
      */
-    @service i18n;
+    @service intl;
 
     /**
      * The trackedProject service provides id of the selected project

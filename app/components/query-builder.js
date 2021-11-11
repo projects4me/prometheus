@@ -21,14 +21,14 @@ import { inject } from '@ember/service';
 export default Component.extend({
 
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for QueryBuilder
      * @private
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
      * These are the classes the must be registered with the component
@@ -89,8 +89,8 @@ export default Component.extend({
      */
     didInsertElement(){
         let _self = this;
-        let i18n = _self.get('i18n');
-        let filters = MD.create().getViewMeta(_self.get('module'),'filters',i18n).enabledFilters;
+        let intl = _self.intl;
+        let filters = MD.create().getViewMeta(_self.get('module'),'filters',intl).enabledFilters;
         _self.set('filters',filters);
 
         queryBuilder.init('#'+this.elementId,filters);

@@ -60,10 +60,10 @@ export default App.extend({
 
         self.loadIssues(params.project_id);
 
-        let i18n = this.i18n;
+        let intl = this.intl;
 
         // Set the values in the controller
-        controller.set('i18n',i18n);
+        controller.set('intl',intl);
         controller.set('projectId',params.project_id);
         controller.set('module',this.module);
     },

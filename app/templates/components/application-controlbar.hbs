@@ -7,7 +7,7 @@
 <div class="tab-content">
   {{!-- Home tab content --}}
   <div class="tab-pane active" id="control-sidebar-home-tab">
-    <h3 class="control-sidebar-heading">{{t "views.app.application.controlBar.onlineUsers"}}</h3>
+    <h3 class="control-sidebar-heading">{{t "views.app.application.controlBar.onlineUser"}}</h3>
     <ul class="control-sidebar-menu">
       {{#each users as |user|}}
         {{#if (not-eq user.id currentUser.user.id)}}

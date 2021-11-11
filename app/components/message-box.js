@@ -31,14 +31,14 @@ export default Component.extend({
     comment: null,
 
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for MessageBox
      * @private
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
      * This is the list of emojis that we support
@@ -268,13 +268,13 @@ export default Component.extend({
      */
     init(){
         this._super(...arguments);
-        let self = this;
+        let _self = this;
 
         let emojiList = $.map(this.emojiList, function(emoji) {
-            return {'id':emoji, 'name':self.get('i18n').t('emoji.'+emoji)};
+            return {'id':emoji, 'name':_self.intl.t('emoji.'+emoji)};
         });
 
-        self.set('translatedEmojis',emojiList);
+        _self.set('translatedEmojis',emojiList);
     },
 
     /**
