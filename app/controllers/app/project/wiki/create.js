@@ -7,6 +7,7 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 import _ from "lodash";
+import { htmlSafe } from '@ember/template';
 
 /**
  * The controller for the wiki create route, it is loaded when a user clicks on
@@ -62,9 +63,9 @@ export default Create.extend(ProjectRelated, {
      * @param model
      */
     getSuccessMessage(model){
-        return this.get.i18n.t('views.app.wiki.created',{
+        return htmlSafe(this.intl.t('views.app.wiki.created',{
             name:model.get('name')
-        });
+        }));
     },
 
     /**

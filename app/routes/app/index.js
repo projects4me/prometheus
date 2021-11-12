@@ -109,8 +109,8 @@ export default App.extend({
     _getWidgetSettings(){
         Logger.debug('_getWidgetSettings');
         let _self = this;
-        let i18n = _self.get('i18n');
-        let widgetSettings = MD.create().getViewMeta('Dashboard','widgets',i18n);
+        let intl = _self.intl;
+        let widgetSettings = MD.create().getViewMeta('Dashboard','widgets',intl);
 
         _.forEach(widgetSettings,function(widgetSetting,idx){
             let query = widgetSettings[idx].options.query;

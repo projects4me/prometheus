@@ -3,6 +3,7 @@
  */
 
 import IssueCreate from "prometheus/controllers/app/project/issue/create";
+import { htmlSafe } from '@ember/template';
 
 /**
  * This is the controller for issue create page
@@ -44,10 +45,10 @@ export default IssueCreate.extend({
      * @param model
      */
     getSuccessMessage(model){
-        return this.i18n.t('views.app.issue.updated',{
+        return htmlSafe(this.intl.t('views.app.issue.updated',{
             name:model.get('subject'),
             issue_number:model.get('issueNumber')
-        });
+        }));
     },
 
     /**

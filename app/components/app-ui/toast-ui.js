@@ -143,27 +143,27 @@ export default class ToastUiComponent extends Component {
     translatedEmojis = [];
 
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for Prometheus.Components.ToastUi
      * @public
      */
-    @service i18n;
+    @service intl;
 
     /**
-     * This function translate emojis using i18n service
+     * This function translate emojis using intl service
      *
      * @method constructor
      * @public
      */
     constructor() {
         super(...arguments);
-        let self = this;
+        let _self = this;
         let emojiList = this.emojiList.map(emoji => {
-            return {'id':emoji, 'name':String(self.i18n.t('emoji.'+emoji))};
+            return {'id':emoji, 'name':String(_self.intl.t('emoji.'+emoji))};
         });
-        self.translatedEmojis = emojiList;
+        _self.translatedEmojis = emojiList;
     }
 }

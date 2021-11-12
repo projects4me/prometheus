@@ -30,14 +30,14 @@ export default Route.extend({
     
     authenticationRoute: 'signin',
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for App
      * @private
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
      * The current user service

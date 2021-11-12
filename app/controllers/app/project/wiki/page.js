@@ -7,6 +7,7 @@ import { task } from 'ember-concurrency';
 import { inject } from '@ember/service';
 import { set } from '@ember/object';
 import $ from 'jquery';
+import { htmlSafe } from '@ember/template';
 
 /**
  * The controller for the wiki page route, it is loaded when a user tried to
@@ -102,7 +103,7 @@ export default Prometheus.extend({
             _self.get('model').get('files').pushObject(upload);
         } catch (e) {
             new Messenger().post({
-                message: _self.get('i18n').t("global.oops"),
+                message: _self.intl.t("global.oops"),
                 type: 'error',
                 showCloseButton: true
             });
@@ -190,7 +191,7 @@ export default Prometheus.extend({
                 if (data.get('id') !== undefined)
                 {
                     new Messenger().post({
-                        message: _self.get('i18n').t("views.app.wiki.voted"),
+                        message: _self.intl.t("views.app.wiki.voted"),
                         tpye: 'success',
                         showCloseButton: true
                     });
@@ -223,15 +224,15 @@ export default Prometheus.extend({
                 let message = '';
                 if (action === 'unlock')
                 {
-                    message = _self.get('i18n').t("views.app.wiki.page.unlocked");
+                    message = _self.intl.t("views.app.wiki.page.unlocked");
                 }
                 else if (action === 'lock')
                 {
-                    message = _self.get('i18n').t("views.app.wiki.page.locked");
+                    message = _self.intl.t("views.app.wiki.page.locked");
                 }
 
                 new Messenger().post({
-                    message: _self.get('i18n').t("views.app.wiki.page.lock",{action:message}),
+                    message: _self.intl.t("views.app.wiki.page.lock",{action:message}),
                     tpye: 'success',
                     showCloseButton: true
                 });
@@ -260,12 +261,12 @@ export default Prometheus.extend({
             let _self = this;
 
             let deleting = new Messenger().post({
-                message: _self.get('i18n').t("views.app.wiki.page.file.delete",{name:file.get('name')}).toString(),
+                message: htmlSafe(_self.intl.t("views.app.wiki.page.file.delete",{name:file.get('name')})),
                 type: 'warning',
                 showCloseButton: true,
                 actions: {
                     confirm: {
-                        label: _self.get('i18n').t("views.app.wiki.page.file.confirmdelete").toString(),
+                        label: htmlSafe(_self.intl.t("views.app.wiki.page.file.confirmdelete")),
                         action: function() {
 
                             // destroy the upload
@@ -274,7 +275,7 @@ export default Prometheus.extend({
                                 _self.get('model').get('files').removeObject(file);
 
                                 return deleting.update({
-                                    message: _self.get('i18n').t("views.app.wiki.page.file.deleted"),
+                                    message: _self.intl.t("views.app.wiki.page.file.deleted"),
                                     type: 'success',
                                     actions: false
                                 });
@@ -282,10 +283,10 @@ export default Prometheus.extend({
                         }
                     },
                     cancel: {
-                        label: _self.get('i18n').t("views.app.wiki.page.file.onsecondthought").toString(),
+                        label: _self.intl.t("views.app.wiki.page.file.onsecondthought"),
                         action: function() {
                             return deleting.update({
-                                message: _self.get('i18n').t("views.app.wiki.page.file.deletecancel"),
+                                message: _self.intl.t("views.app.wiki.page.file.deletecancel"),
                                 type: 'success',
                                 actions: false
                             });

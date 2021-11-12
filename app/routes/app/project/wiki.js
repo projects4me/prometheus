@@ -5,8 +5,7 @@
 import App from "prometheus/routes/app";
 import M2T from "prometheus/utils/data/modeltotree";
 import { set } from '@ember/object';
-
-//import { translationMacro as t } from "ember-i18n";
+import { htmlSafe } from '@ember/template';
 
 /**
  * The project wiki page route, it is loaded when a user tried to navigate to
@@ -60,8 +59,7 @@ export default App.extend({
         Logger.debug(params);
 
         Logger.debug('Inside the setup controller for the wiki project');
-        let i18n = this.i18n;
-        controller.set('i18n',i18n);
+        let intl = this.intl;
 
         self.loadTags();
 
@@ -89,7 +87,7 @@ export default App.extend({
             let wikiList = [];
             let temp = null;
 
-            wikiList[0] = {label:i18n.t("global.blank"), value:null};
+            wikiList[0] = {label:htmlSafe(intl.t("global.blank")), value:null};
             for (let i=1;i<=wikiCount;i++)
             {
                 temp = data.objectAt(i-1);

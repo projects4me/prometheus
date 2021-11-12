@@ -86,8 +86,8 @@ export default App.extend({
         controller.set('project', _self.get('project'));
         controller.set('types', _self.get('types'));
         controller.set('issueDescription',_self.get('issueDescription'));
-        let priority = format.getList('views.app.issue.lists.priority',_self.get('i18n.locale'));
-        let status = format.getList('views.app.issue.lists.status',_self.get('i18n.locale'));
+        let priority = format.getList('views.app.issue.lists.priority',_self.get('intl.locale'));
+        let status = format.getList('views.app.issue.lists.status',_self.get('intl.locale'));
 
         controller.set('status',status);
         controller.set('priority',priority);

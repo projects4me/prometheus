@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import { inject } from '@ember/service';
+
 /* global require */
 
 /**
@@ -17,14 +18,14 @@ import { inject } from '@ember/service';
 export default {
 
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for Prometheus.Controllers.Prometheus
      * @public
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
      * This function converts model to tree

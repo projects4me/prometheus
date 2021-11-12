@@ -112,23 +112,23 @@ export default Prometheus.extend({
         cancel:function(){
             let _self = this;
             let model = _self.get('model');
-            let i18n = _self.get('i18n');
+            let intl = _self.intl;
 
             if (_self.hasChanged(model)) {
                 let message = new Messenger().post({
-                    message: i18n.t("global.form.cancelcicked").toString(),
+                    message: intl.t("global.form.cancelcicked").toString(),
                     type: 'warning',
                     showCloseButton: true,
                     actions: {
                         confirm: {
-                            label: i18n.t("global.form.confirmcancel").toString(),
+                            label: intl.t("global.form.confirmcancel").toString(),
                             action: function() {
                                 message.cancel();
                                 _self.afterCancel(model);
                             }
                         },
                         cancel: {
-                            label: i18n.t("global.form.onsecondthought").toString(),
+                            label: intl.t("global.form.onsecondthought").toString(),
                             action: function() {
                                 message.cancel();
                             }

@@ -8,6 +8,7 @@ import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 import format from "prometheus/utils/data/format";
 import _ from "lodash";
+import { htmlSafe } from '@ember/template';
 
 /**
  * This is the controller for issue create page
@@ -50,7 +51,7 @@ export default Create.extend(ProjectRelated, {
      * @public
      */
     milestoneList: computed('project', function () {
-        return format.getSelectList(this.project.milestones, false, this.i18n.t('global.blank'));
+        return format.getSelectList(this.project.milestones, false, htmlSafe(this.intl.t('global.blank')).toHTML());
     }),
 
     /**
@@ -108,10 +109,10 @@ export default Create.extend(ProjectRelated, {
      * @param model
      */
     getSuccessMessage(model) {
-        return this.i18n.t('views.app.issue.created', {
+        return htmlSafe(this.intl.t('views.app.issue.created', {
             name: model.get('subject'),
             issue_number: model.get('issueNumber')
-        });
+        }));
     },
 
     /**

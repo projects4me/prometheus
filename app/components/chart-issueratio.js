@@ -17,14 +17,14 @@ import { inject } from '@ember/service';
 export default Component.extend({
 
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for ChartIssueratio
      * @private
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
      * These are the classes the must be registered with the component
@@ -95,8 +95,9 @@ export default Component.extend({
      * @private
      */
     getDatasets:function(issues) {
-        var self = this;
-        var data = {
+        let _self = this;
+        let intl = _self.intl;
+        let data = {
             labels:[],
             datasets:[{
                 data:[],
@@ -105,12 +106,12 @@ export default Component.extend({
                 borderWidth: 1
             }]
         };
-        var statuses = _.uniqBy(issues.getEach('status'));
-        var count = 0;
-        var ch = new ColorHash();
+        let statuses = _.uniqBy(issues.getEach('status'));
+        let count = 0;
+        let ch = new ColorHash();
 
         _.forEach(statuses,function(status) {
-            data.labels[count] = self.get('i18n').t("views.app.issue.lists.status."+status).string;
+            data.labels[count] = intl.t("views.app.issue.lists.status."+status);
             data.datasets[0].data[count] = issues.filterBy('status',status).length;
 
             var color = ch.rgb(data.labels[count]);

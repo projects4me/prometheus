@@ -19,14 +19,14 @@ export default Route.extend({
     
     routeAfterAuthentication: 'app',
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for Application
      * @public
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
      * The session service which is offered by ember-simple-auth that will be used
@@ -49,25 +49,10 @@ export default Route.extend({
      */
     beforeModel:function(){
         this._super(...arguments);
+        this.intl.setLocale(['en-us']);
         if(!this.session.isAuthenticated)
         {
             this.transitionTo('signin');
         }
     },
-
-    /**
-     * This function get triggered right after a model fetch is called, this is
-     * called every time and we are setting up the default language in the i18n
-     * service
-     *
-     * @method afterModel
-     * @private
-     */
-    afterModel: function() {
-        Logger.debug('ApplicationRoute::afterModel() -- setting the language to '+lang);
-
-        let lang = 'en';
-        this.set('i18n.locale',lang);
-        this.session.set('data.locale', lang);
-    }
 });

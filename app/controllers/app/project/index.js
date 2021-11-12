@@ -9,6 +9,8 @@ import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import $ from "jquery";
+import { htmlSafe } from "@ember/template";
+
 
 /**
  * This is the index page of the project, index page for the project is
@@ -230,14 +232,14 @@ export default Prometheus.extend({
 
                     _self.set('selectedUser', null);
                     new Messenger().post({
-                        message: _self.get('i18n').t("views.app.project.detail.membership.added",{role:role.get('name'),user:user.get('name')}),
+                        message: htmlSafe(_self.intl.t("views.app.project.detail.membership.added",{role:role.get('name'),user:user.get('name')})),
                         type: 'success',
                         showCloseButton: true
                     });
                 });
             } else  {
                 new Messenger().post({
-                    message: _self.get('i18n').t("views.app.project.detail.membership.missing"),
+                    message: _self.intl.t("views.app.project.detail.membership.missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -337,14 +339,14 @@ export default Prometheus.extend({
                     }
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("views.app.project.detail.milestone.added",{name:data.get('name')}),
+                        message: htmlSafe(_self.intl.t("views.app.project.detail.milestone.added",{name:data.get('name')})),
                         type: 'success',
                         showCloseButton: true
                     });
                 });
             } else  {
                 new Messenger().post({
-                    message: _self.get('i18n').t("views.app.project.detail.milestone.missing"),
+                    message: _self.intl.t("views.app.project.detail.milestone.missing"),
                     type: 'error',
                     showCloseButton: true
                 });

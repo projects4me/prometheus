@@ -38,14 +38,14 @@ export default Controller.extend({
     currentUser: inject('current-user'),
 
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for Prometheus.Controllers.Prometheus
      * @public
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
      * These are the events that this controller handles
@@ -93,12 +93,12 @@ export default Controller.extend({
      */
     _buildMessages(validations, module){
         let _self = this;
-        let i18n = _self.get('i18n');
+        let intl = _self.intl;
         let messages = [];
 
         if (module != undefined) {
             _.each(validations.errors,function(error){
-                messages.push(i18n.t('views.app.'+module+'.fields.'+error.attribute)+' : '+error.message);
+                messages.push(intl.t('views.app.'+module+'.fields.'+error.attribute)+' : '+error.message);
             });
         }
         return _.join(messages,"<br\\>");

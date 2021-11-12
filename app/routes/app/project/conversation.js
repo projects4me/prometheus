@@ -55,11 +55,8 @@ export default App.extend({
     setupController:function(controller){
         Logger.debug('AppProjectConversationRoute::setupController');
 
-        let _self = this;
         let params = this.paramsFor('app.project');
 
-        let i18n = _self.get('i18n');
-        controller.set('i18n',i18n);
         controller.set('projectId',params.project_id);
 
         let options = {

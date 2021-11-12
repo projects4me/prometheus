@@ -6,6 +6,7 @@ import CreateWiki from "prometheus/controllers/app/project/wiki/create";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import _ from "lodash";
 import $ from 'jquery';
+import { htmlSafe } from '@ember/template';
 
 /**
  * The controller for the wiki edit route, it is loaded when a user clicks on the
@@ -80,7 +81,7 @@ export default CreateWiki.extend(ProjectRelated, {
                 }).save().then(function(tagRel){
                     _self.get('model.tagged').pushObject(tagRel);
                     new Messenger().post({
-                        message: _self.get('i18n').t("views.app.wiki.tag.associated",{name:selectedTag[0].label}),
+                        message: htmlSafe(_self.intl.t("views.app.wiki.tag.associated",{name:selectedTag[0].label})),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -119,7 +120,7 @@ export default CreateWiki.extend(ProjectRelated, {
                         tagged.save().then(function(tagRel){
                             // After it has been saved then show the message to the user
                             new Messenger().post({
-                                message: _self.get('i18n').t("views.app.wiki.tag.created",{name:tag.get('tag')}),
+                                message: htmlSafe(_self.intl.t("views.app.wiki.tag.created",{name:tag.get('tag')})),
                                 type: 'success',
                                 showCloseButton: true
                             });
@@ -167,7 +168,7 @@ export default CreateWiki.extend(ProjectRelated, {
 
                 // Display the message
                 new Messenger().post({
-                    message: _self.get('i18n').t("views.app.wiki.tag.removed",{name:tag.label}),
+                    message: htmlSafe(_self.intl.t("views.app.wiki.tag.removed",{name:tag.label})),
                     type: 'success',
                     showCloseButton: true
                 });

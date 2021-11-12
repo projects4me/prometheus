@@ -8,6 +8,7 @@ import { inject as injectController } from '@ember/controller';
 import { computed } from '@ember/object';
 import { hash } from 'rsvp';
 import _ from 'lodash';
+import { htmlSafe } from '@ember/template';
 
 /**
  * This is empty controller, normally we do not create them. However
@@ -154,9 +155,9 @@ export default Create.extend({
      * @param model
      */
     getSuccessMessage(model){
-        return this.i18n.t('views.app.project.created',{
+        return htmlSafe(this.intl.t('views.app.project.created',{
             name:model.get('name')
-        });
+        }));
     },
 
     /**

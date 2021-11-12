@@ -16,14 +16,14 @@ import Controller from '@ember/controller';
 export default Controller.extend({
 
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for Prometheus.Controllers.Prometheus
      * @public
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
      * The session service which is offered by ember-simple-auth that will be used
@@ -68,7 +68,7 @@ export default Controller.extend({
                 },
                 () => {
                     new Messenger().post({
-                        message: _self.get('i18n').t("views.signin.error"),
+                        message: _self.intl.t("views.signin.error"),
                         type: 'error',
                         showCloseButton: true
                     });

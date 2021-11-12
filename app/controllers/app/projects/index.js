@@ -3,6 +3,7 @@
  */
 
 import List from "prometheus/controllers/prometheus/list";
+import { htmlSafe } from '@ember/template';
 
 /**
  * This controller is used for the project list
@@ -83,7 +84,7 @@ export default List.extend({
                     _self.set('newSavedsearch',{});
 
                     new Messenger().post({
-                        message: _self.get('i18n').t("views.app.project.list.savedsearch.added",{name:data.get('name')}),
+                        message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.added",{name:data.get('name')})),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -92,7 +93,7 @@ export default List.extend({
             } else  {
 
                 new Messenger().post({
-                    message: _self.get('i18n').t("views.app.project.list.savedsearch.missing"),
+                    message: _self.intl.t("views.app.project.list.savedsearch.missing"),
                     type: 'error',
                     showCloseButton: true
                 });
@@ -126,7 +127,7 @@ export default List.extend({
                 _self.set('newSavedsearch',newSavedSearch);
 
                 new Messenger().post({
-                    message: _self.get('i18n').t("views.app.project.list.savedsearch.copied",{name:data.get('name')}),
+                    message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.copied",{name:data.get('name')})),
                     type: 'success',
                     showCloseButton: true
                 });
@@ -148,12 +149,12 @@ export default List.extend({
             let toBeDeleted = _self.get('savedsearches').findBy('id',search.get('id'));
 
             let deleting = new Messenger().post({
-                message: _self.get('i18n').t("views.app.project.list.savedsearch.delete",{name:search.get('name')}).toString(),
+                message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.delete",{name:search.get('name')})),
                 type: 'warning',
                 showCloseButton: true,
                 actions: {
                     confirm: {
-                        label: _self.get('i18n').t("views.app.project.list.savedsearch.confirmdelete").toString(),
+                        label: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.confirmdelete")),
                         action: function() {
 
                             // destroy the saved search
@@ -162,7 +163,7 @@ export default List.extend({
                                 _self.get('savedsearches').removeObject(toBeDeleted);
 
                                 return deleting.update({
-                                    message: _self.get('i18n').t("views.app.project.list.savedsearch.deleted",{name:search.get('name')}),
+                                    message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.deleted",{name:search.get('name')})),
                                     type: 'success',
                                     actions: false
                                 });
@@ -170,10 +171,10 @@ export default List.extend({
                         }
                     },
                     cancel: {
-                        label: _self.get('i18n').t("views.app.project.list.savedsearch.onsecondthought").toString(),
+                        label: _self.intl.t("views.app.project.list.savedsearch.onsecondthought").toString(),
                         action: function() {
                             return deleting.update({
-                                message: _self.get('i18n').t("views.app.project.list.savedsearch.deletecancel"),
+                                message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.deletecancel")),
                                 type: 'success',
                                 actions: false
                             });

@@ -17,14 +17,14 @@ import { inject } from '@ember/service';
 export default Component.extend({
 
     /**
-     * The i18n library service that is used in order to get the translations
+     * The intl library service that is used in order to get the translations
      *
-     * @property i18n
+     * @property intl
      * @type Ember.Service
      * @for ChartIssueratio
      * @private
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
      * These are the classes the must be registered with the component
@@ -104,14 +104,14 @@ export default Component.extend({
         let data = {
             labels:[],
             datasets:[{
-                label: this.i18n.t("views.app.project.detail.charts.estimatedspent"),
+                label: this.intl.t("views.app.project.detail.charts.estimatedspent"),
                 data:[],
                 backgroundColor: [],
                 type: 'bar',
                 borderWidth: 0
             },
                 {
-                    label: this.i18n.t("views.app.project.detail.charts.efficiency"),
+                    label: this.intl.t("views.app.project.detail.charts.efficiency"),
                     type: "line",
                     data:[],
                     backgroundColor: "rgba(220,220,220,0)",

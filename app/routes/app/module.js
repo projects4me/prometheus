@@ -62,12 +62,12 @@ export default App.extend({
     /**
      * The internationalization service
      *
-     * @property i18n
+     * @property intl
      * @type Service
      * @for Module
      * @private
      */
-    i18n: inject(),
+    intl: inject(),
 
     /**
      * The setup controller function that will be called every time the user visits
@@ -80,14 +80,14 @@ export default App.extend({
      */
     setupController:function(controller){
         // Get the parameters for the current route every time as they might change from one record to another
-        var params = this.paramsFor('app.module');
+        let params = this.paramsFor('app.module');
 
         // Set the data in the current instance of the object, this is required. Unless this is done the route will display the same data every time
         this.module = capitalize(params.module);
         //var metaData = MD.create();
-        var i18n = this.i18n;
-        controller.set('i18n',i18n);
-        this.metaData = MD.create().getViewMeta(this.module,'list',i18n);
+        let intl = this.intl;
+        controller.set('intl',intl);
+        this.metaData = MD.create().getViewMeta(this.module,'list',intl);
         var options = {
             limit: ENV.app.list.pagelimit
         };
