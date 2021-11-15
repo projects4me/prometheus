@@ -184,6 +184,16 @@ export default class InitializeSortable extends Modifier {
                 }
             }));
         });
+
+        //Applying slim scroll on overflow of item's descrition
+        let items = document.querySelectorAll('p.description');
+        items.forEach((el) => {
+            $(el).slimScroll({
+                height: el.getBoundingClientRect().height,
+                size: 3,
+            })
+        });
+
         _self.setParentHeight();
     }
 
@@ -275,16 +285,21 @@ export default class InitializeSortable extends Modifier {
             });
             let max = (Math.max(...heightArray) + (parentHeaderHeight * 2));
             let minHeight = 0;
+            let minHeightApplied = false;
+
             //set height of lanes
             lanes.forEach((lane) => {
                 let headerHeight = lane.querySelector('div.box-header').getBoundingClientRect().height;
                 let laneBody = lane.querySelector('div.lane.box-body');
                 minHeight = parseFloat(getComputedStyle(laneBody).minHeight);
                 let height = max - (headerHeight + parentHeaderHeight);
-                (height < minHeight) && (height = minHeight);
+                if (height < minHeight) {
+                    height = minHeight;
+                    minHeightApplied = true;
+                }
                 laneBody.style.height = `${height}px`;
             });
-            (max < minHeight) && (max = minHeight + 60);
+            (minHeightApplied) && (max = minHeight + 60);
             parentElement.style.height = `${max}px`;
         })
     }
