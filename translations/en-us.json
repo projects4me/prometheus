@@ -751,7 +751,9 @@
             "in_progress": "In Progress",
             "pending": "Pending",
             "done": "Done",
-            "wont_fix": "Wont't Fix"
+            "wont_fix": "Wont't Fix",
+            "deferred": "Deferred ",
+            "feedback": "feedback"
           }
         }
       },
