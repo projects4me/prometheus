@@ -37,6 +37,8 @@
               .description {
                 word-wrap: break-word;
                 margin-bottom: 2rem;
+                height: 10rem;
+                overflow: auto;
               }
 
               p > img {
