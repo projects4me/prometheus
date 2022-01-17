@@ -814,7 +814,8 @@
             "sprint": "Sprint",
             "patch": "Patch",
             "release": "Release",
-            "milestone": "Milestone"
+            "milestone": "Milestone",
+            "backlog": "Backlog"
           }
         }
       },
