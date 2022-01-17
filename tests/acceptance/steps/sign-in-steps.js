@@ -1,4 +1,3 @@
-import { visit } from '@ember/test-helpers';
 import steps from './steps';
 import { currentSession, authenticateSession } from 'ember-simple-auth/test-support';
 
@@ -15,7 +14,6 @@ export const given = function () {
                     authToken: '12345',
                 });
             }
-            await visit('/app');
             assert.ok(true, "User is logged in");
         }
     }]
