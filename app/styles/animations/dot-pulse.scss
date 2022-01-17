@@ -1,0 +1,82 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS of dot pulse animation
+*/
+
+ .dot-pulse {
+    position: relative;
+    left: -9999px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: $primaryColor;
+    color: $primaryColor;
+    box-shadow: 9999px 0 0 -5px $primaryColor;
+    animation: dotPulse 1.5s infinite linear;
+    animation-delay: .25s;
+  }
+  
+  .dot-pulse::before, .dot-pulse::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: $primaryColor;
+    color: $primaryColor;
+  }
+  
+  .dot-pulse::before {
+    box-shadow: 9984px 0 0 -5px $primaryColor;
+    animation: dotPulseBefore 1.5s infinite linear;
+    animation-delay: 0s;
+  }
+  
+  .dot-pulse::after {
+    box-shadow: 10014px 0 0 -5px $primaryColor;
+    animation: dotPulseAfter 1.5s infinite linear;
+    animation-delay: .5s;
+  }
+  
+  @keyframes dotPulseBefore {
+    0% {
+      box-shadow: 9984px 0 0 -5px $primaryColor;
+    }
+    30% {
+      box-shadow: 9984px 0 0 2px $primaryColor;
+    }
+    100% {
+      box-shadow: 9984px 0 0 -5px $primaryColor;
+    }
+  }
+  
+  @keyframes dotPulse {
+    0% {
+      box-shadow: 9999px 0 0 -5px $primaryColor;
+    }
+    30% {
+      box-shadow: 9999px 0 0 2px $primaryColor;
+    }
+    100% {
+      box-shadow: 9999px 0 0 -5px $primaryColor;
+    }
+  }
+  
+  @keyframes dotPulseAfter {
+    0% {
+      box-shadow: 10014px 0 0 -5px $primaryColor;
+    }
+    30% {
+      box-shadow: 10014px 0 0 2px $primaryColor;
+    }
+    100% {
+      box-shadow: 10014px 0 0 -5px $primaryColor;
+    }
+  }       
