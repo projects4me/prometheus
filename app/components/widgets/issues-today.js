@@ -53,7 +53,6 @@ export default Widget.extend({
         let data = _self.get('data');
         let dataSet = [];
         let intl = this.intl;
-
         data.forEach(function(issue){
             dataSet.push([
                 '<a href="javascript:void(0);">'+issue.get('issueNumber')+'</a>',
@@ -62,7 +61,7 @@ export default Widget.extend({
                 moment(issue.get('startDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 moment(issue.get('endDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 issue.get('project.name'),
-                issue.get('projectId')
+                issue.get('project.id')
             ])
         });
 
