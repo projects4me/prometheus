@@ -1,3 +1,7 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
 import Modifier from 'ember-modifier';
 import Sortable from 'sortablejs';
 
@@ -136,6 +140,29 @@ export default class InitializeSortable extends Modifier {
     }
 
     /**
+     * This function returns ""updateIssue" method which is used to update the issue when user drop
+     * an "issue item" to some other lane of task board.
+     *
+     * @method get
+     * @return String
+     * @public
+     */
+    get updateIssue() {
+        return this.args.named.updateIssue;
+    }
+
+    /**
+     * This function returns array of milestones which is displayed in the task board.
+     *
+     * @method get
+     * @return String
+     * @public
+     */
+    get milestones() {
+        return this.args.named.milestones;
+    }
+
+    /**
      * This property contains array of sortable objects. This is used to store sortable
      * objects that are attached to each lane. This property is used when this page will 
      * destroy in order to remove sortable from each lane.
@@ -154,6 +181,15 @@ export default class InitializeSortable extends Modifier {
      * @private
      */
     oldLane = null;
+
+    /**
+     * This property is used to keep in track the item dragged by user.
+     *
+     * @property draggedItem
+     * @type Object
+     * @private
+     */
+     draggedItem = null;
 
     //Called when the modifier is installed on the DOM element
     didInstall() {
@@ -181,20 +217,38 @@ export default class InitializeSortable extends Modifier {
                     evt.to.classList.add('box-body-color');
                     (_self.oldLane) && _self.oldLane.classList.remove('box-body-color');
                     _self.oldLane = evt.to;
-                }
+                    _self.draggedItem = (evt.to != evt.from) ? evt.dragged : null;
+                },
+                store: {
+                    set: () => {
+                        (_self.draggedItem) && (_self.draggedItem.remove());
+                    }
+                },
             }));
         });
 
         //Applying slim scroll on overflow of item's descrition
-        let items = document.querySelectorAll('p.description');
+        let items = document.querySelectorAll('div.item');
         items.forEach((el) => {
-            $(el).slimScroll({
-                height: el.getBoundingClientRect().height,
-                size: 3,
-            })
+            _self._applySlimScroll(el);
         });
 
         _self.setParentHeight();
+    }
+
+    /**
+     * This function apply slim scroll to element.
+     * 
+     * @method _applySlimScroll
+     * @param {HTMLElement} el
+     * @private
+     */
+    _applySlimScroll(el) {
+        let p = el.querySelector('p.description');
+        $(p).slimScroll({
+            height: p.getBoundingClientRect().height,
+            size: 3,
+        })
     }
 
     /**
@@ -202,11 +256,13 @@ export default class InitializeSortable extends Modifier {
      * will be triggered when user will start the dragging of an item from taskboard.
      * 
      * @method _onStart
-     * @param {Object} evt 
+     * @param {Object} evt
+     * @private
      */
     _onStart(evt) {
         let _self = this;
         _self.selectDropzones(evt);
+        _self.draggedItem = null;
     }
 
     /**
@@ -214,10 +270,14 @@ export default class InitializeSortable extends Modifier {
      * will be triggered when dragging of an item is stopped by user.
      * 
      * @method _onEnd
-     * @param {Object} evt 
+     * @param {Object} evt
+     * @private
      */
     _onEnd(evt) {
         let _self = this;
+        if (evt.to !== evt.from) {
+            _self.updateIssue(evt.item, evt.to, _self.setParentHeight, _self._applySlimScroll);
+        }
         _self.unSelectDropzones(evt);
         _self.setParentHeight();
         _self.oldLane = null;
