@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 export default Factory.extend({
     subject(i) {
-        return `Issue Test ${i}`;
+        return `Issue Test ${++i}`;
     },
     dateCreated() {
         return date.createdDate(10, 30);
@@ -33,7 +33,7 @@ export default Factory.extend({
         return (_.random(1, 10)).toString();
     },
     issueNumber(i) {
-        return `${i}`;
+        return `${++i}`;
     },
     endDate() {
         return date.endDate(1, 5);
@@ -42,7 +42,7 @@ export default Factory.extend({
         return date.startDate(10, 30);
     },
     status() {
-        return faker.random.arrayElement(["new", "in_progress", "pending", "done", "wont_fix"]);
+        return faker.random.arrayElement(["new", "in_progress", "done", "feedback", "pending", "deferred"]);
     },
     priority() {
         return faker.random.arrayElement(["medium", "high", "low", "critical", "blocker"]);

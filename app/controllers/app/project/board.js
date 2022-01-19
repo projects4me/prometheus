@@ -90,25 +90,34 @@ export default class Board extends Prometheus {
      * @method updateIssue
      * @param {string} issue The issue that needs to be updated
      * @param {string} el The element
+     * @param {Function} setHeightCb Function used to set the height of the lane's container when issue is updated.
+     * @param {Function} applySlimScroll Function used to apply slimscroll when issue is updated
      * @public
      */
-    @action updateIssue(issue, el) {
-        debugger;
+    @action updateIssue(issueEl, el, setHeightCb, applySlimScroll) {
         Logger.debug("AppProjectBoardController::updateIssue");
-        let _self = this;
-        this.dragFinishText = el.target.resultText;
-        Logger.debug('The issue received is', issue);
-        Logger.debug('The element that was dragged is', el);
+        Logger.debug('The element that was dragged is', issueEl);
 
-        // Update the status in the card
-        let status = el.event.target.parentElement.children[0].getAttribute('data-field-status');
+        // get the status of the card
+        let laneMilestoneId = el.getAttribute('data-field-milestone-id');
+        let status = el.parentElement.children[0].getAttribute('data-field-status');
+        let issueId = issueEl.getAttribute('data-field-issue-id');
+        let issueMilestoneId = issueEl.getAttribute('data-field-issue-milestone');
+
+        (issueMilestoneId == "") && (issueMilestoneId = null);
+        let milestone = this.milestones.findBy('id', issueMilestoneId);
+        let issue = milestone.issues.findBy('id', issueId);
+        let targetMilestone = this.milestones.findBy('id', laneMilestoneId);
+        targetMilestone.issues.pushObject(issue);
+
         issue.set('status', status);
-
-        // We have to save the milestones which contains the card we are updaing for some weird reason
-        let milestones = _self.get('milestones');
-        issue.save();
-        milestones.save();
-
+        issue.set('milestoneId', laneMilestoneId);
+        issue.save().then(() => {
+            setHeightCb();
+            let item = document.querySelector(`[data-field-issue-id="${issueId}"]`);
+            item.style.pointerEvents = "auto";
+            applySlimScroll(item);
+        });
         Logger.debug("AppProjectBoardController::updateIssue");
     }
 

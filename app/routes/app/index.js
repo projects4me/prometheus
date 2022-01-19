@@ -44,7 +44,7 @@ export default App.extend({
      * loaded, we are using this function to return promises
      * for the data for each of the widgets to be displayed
      *
-     * @method afterMode;
+     * @method afterModel;
      * @protected
      */
     afterModel()

@@ -9,8 +9,8 @@ export const when = function () {
         },
     },{
         "User navigates to $page": (assert) => async function (page) {
-            await visit(`/${page}`);
-            assert.equal(currentURL(), `/${page}`, `User navigates to ${page}`);
+            await visit(`/app/project/10/${page}`); //this thing should be changed in next PR
+            assert.equal(currentURL(), `/app/project/10/${page}`, `User navigates to ${page}`);
         }
     }]
 }

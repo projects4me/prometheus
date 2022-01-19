@@ -1,4 +1,4 @@
-<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass}}>
+<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue}}>
 
   {{#each @milestones as |milestone|}}
     {{#if (or (eq milestone.status 'in_progress') (eq milestone.status 'planned'))}}
@@ -32,16 +32,24 @@
                     {{t (concat "views.app.issue.lists.status." status)}}
                   </div>
 
-                  <div class="lane box-body" data-field-lane-group={{@group}}>
+                  <div class="lane box-body" data-field-lane-group={{@group}} data-field-milestone-id={{milestone.id}} data-field-status="{{status}}">
                     {{#each milestone.issues as |issue|}}
                       {{#if (eq issue.status status)}}
-                        <div class="item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}">
-                          <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action "openIssue"issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
+                        <div class="item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestone.id}}">
+                          
+                          <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action "openIssue" issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
                           <p class="description">{{safe-html issue.description}}</p>
                           <p>
                             <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
                             <span><img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
                           </p>
+                          
+                          {{#if issue.isSaving}}
+                          <div class="item-overlay" {{lock-item}}>
+                            <div class="dot-pulse"></div>
+                          </div>
+                          {{/if}}
+
                         </div>
                       {{/if}}
                     {{/each}}
@@ -56,49 +64,5 @@
       </div>
     {{/if}}
   {{/each}}
-
-{{!-- Display the backlog--}}
-  <div class="milestone box ">
-    
-    <div class="box-header with-border">
-      <strong>{{t "views.app.board.backlog"}}</strong>
-      <div class="box-tools pull-right">
-        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-          <i class="fa fa-minus"></i>
-        </button>
-      </div>
-    </div>
-
-    <div class="milestone box-body">
-      {{#each @statuses as |status|}}
-          <div class="lane col-md-2">
-
-            <div class="box {{get-prop @statusClass status}}">
-
-              <div class="box-header with-border">
-                {{t (concat "views.app.issue.lists.status." status)}}
-              </div>
-
-              <div class="lane box-body" data-field-lane-group={{@group}}>
-                {{#each @backlog as |issue|}}
-                  {{#if (eq issue.status status)}}
-                      <div class="item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}" >
-                        <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action "openIssue" issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
-                        <p class="description">{{safe-html issue.description}}</p>
-                        <p>
-                          <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
-                          <span><img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
-                        </p>
-                      </div>
-                  {{/if}}
-                {{/each}}
-              </div>
-              
-            </div>
-
-          </div>
-      {{/each}}
-    </div>
-  </div>
 
 </div>

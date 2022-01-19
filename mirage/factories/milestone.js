@@ -30,7 +30,7 @@ export default Factory.extend({
         return date.startDate(30, 40);
     },
     status() {
-        return faker.random.arrayElement(["completed", "closed", "in_progess", "planned", "complete", "overdue", "deferred", "failed"]);
+        return faker.random.arrayElement(["in_progress", "planned"]);
     },
     milestoneType() {
         return faker.random.arrayElement(["milestone", "version", "patch", "release", "sprint"]);

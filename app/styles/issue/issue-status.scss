@@ -1,0 +1,22 @@
+.done,
+.complete {
+    background-color: #5ac594 !important;
+}
+
+.closed {
+    background-color: #e98a7e;
+}
+
+.deferred,
+.pending,
+.feedback {
+    background-color: #f7bf65;
+}
+
+.new {
+    background-color: #80b5d3;
+}
+
+.in_progress {
+    background-color: $primaryColor;
+}

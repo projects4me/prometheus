@@ -5,7 +5,7 @@
 /* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
 
 /**
-  This contains the CSS related to the entire document
+  This contains the CSS related to the board page in the application.
 */
 
 .board {
@@ -24,6 +24,7 @@
             border: 0.25rem solid $backgroundColor;
 
             .item {
+              position: relative;
               cursor: move;
               margin: 0.3rem;
               padding: 0.1rem 0.5rem 0.1rem 1rem;
@@ -33,6 +34,7 @@
               border-right: 0.1rem solid #ccc;
               border-top: 0.1rem solid #ccc;
               border-bottom: 0.1rem solid #ccc;
+              user-select: none;
 
               .description {
                 word-wrap: break-word;
@@ -79,28 +81,23 @@
                 font-weight: bold;
               }
 
-              .done,
-              .complete {
-                background-color: #5ac594 !important;
+              .item-overlay {
+                background-color: inherit;
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                width: 100%;
+                top: 0%;
+                left: 0%;
+                bottom: 0%;
+                right: 0%;
               }
 
-              .closed {
-                background-color: #e98a7e;
-              }
-
-              .deferred,
-              .pending,
-              .feedback {
-                background-color: #f7bf65;
-              }
-
-              .new {
-                background-color: #80b5d3;
-              }
-
-              .in_progress {
-                background-color: $primaryColor;
-              }
+              @import '../issue/issue-status.scss';         
+              
+              @import '../animations/dot-pulse.scss';
             }
 
             .item-closed {
