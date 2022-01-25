@@ -111,7 +111,7 @@ export default Create.extend(ProjectRelated, {
     getSuccessMessage(model) {
         return htmlSafe(this.intl.t('views.app.issue.created', {
             name: model.get('subject'),
-            issue_number: model.get('issueNumber')
+            issueNumber: model.get('issueNumber')
         }));
     },
 
