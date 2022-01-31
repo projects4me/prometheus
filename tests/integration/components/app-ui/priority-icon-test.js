@@ -1,26 +1,36 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Component | app-ui/priority-icon', function(hooks) {
-  setupRenderingTest(hooks);
+module('Integration | Component | app-ui/priority-icon', function (hooks) {
+    setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
+    test('Priority Icon Renders', async function (assert) {
 
-    await render(hbs`<AppUi::PriorityIcon />`);
+        let priorties = [
+            ["blocker", "fa-ban"],
+            ["critical", "fa-angle-double-up"],
+            ["high", "fa-arrow-up"],
+            ["medium", "fa-dot-circle-o"],
+            ["low", "fa-arrow-down"],
+            ["lowest", "fa-angle-double-down"]
+        ];
 
-    assert.equal(this.element.textContent.trim(), '');
+        for (let i = 0; i < priorties.length; i++) {
+            this.set('priority', priorties[i][0]);
 
-    // Template block usage:
-    await render(hbs`
-      <AppUi::PriorityIcon>
-        template block text
-      </AppUi::PriorityIcon>
-    `);
+            await render(hbs`
+            <AppUi::PriorityIcon 
+                @priority = {{this.priority}}
+            />`);
 
-    assert.equal(this.element.textContent.trim(), 'template block text');
-  });
+            assert.equal(this.element.querySelector('i').className, `fa ${priorties[i][1]}`);
+        }
+
+    });
 });

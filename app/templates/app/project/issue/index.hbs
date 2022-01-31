@@ -175,7 +175,7 @@
                   <td class="issue-subject"><a href="#" {{action "openDetail" issue}}>{{issue.subject}}</a></td>
                   <td class="issue-type">{{issue.issuetype.name}}</td>
                   <td class="issue-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></td>
-                  <td class="issue-priority">{{priority-icon priority=(readonly issue.priority)}} {{t (concat "views.app.issue.lists.priority." issue.priority)}}</td>
+                  <td class="issue-priority"><AppUi::PriorityIcon @priority = {{readonly issue.priority}}/> {{t (concat "views.app.issue.lists.priority." issue.priority)}}</td>
                   <td class="issue-milestone"><a href="#">{{issue.milestone.name}}</a></td>
                   <td class="issue-start">{{moment-format issue.startDate 'DD/MMM/YY'}}</td>
                   <td class="issue-end">{{moment-format issue.endDate 'DD/MMM/YY'}}</td>
