@@ -1,9 +1,11 @@
 import _ from "lodash";
+import Context from './yadda-context/context';
 
 export default function () {
     this.urlPrefix = 'http://projects4me';
     this.namespace = '/api/v1';
     this.timing = 0;
+    let ctx = new Context();
 
     this.get('/user', (schema) => {
         let data = schema.users.all();
@@ -246,27 +248,13 @@ export default function () {
         return model;
     });
 
-    this.get('/milestone', (schema, request) => {
+    this.get('/milestone', (schema) => {
         let model = schema.milestones.all();
-        // let queryParams = request.queryParams.query;
-        // if(queryParams == '(Milestone.projectId : 3 )') {
-        //     model = schema.projects.find(3).milestones;
-        // }
         return model;
     });
 
-    this.get('/project', (schema, request) => {
+    this.get('/project', (schema) => {
         let model = schema.projects.all();
-        let queryParams = request.queryParams.query;
-        // if(_.has(server, 'customDataProject')){
-        //     server.customDataProject(schema,request)
-        // }
-        // if (queryParams == "(Project.id : 3)") {
-        //     let projectId = queryParams.replace(/\)/g, "").replace(/^\D+/g, "");
-        //     model = { data : []};
-        //     let data = schema.projects.find(projectId);
-        //     model.data.push({data , type: "project", id: "3"});
-        // }
         return model;
     });
 
@@ -306,6 +294,18 @@ export default function () {
                 "error_description": "Invalid username and password combination"
             }
         }
+    });
+    
+    this.post('/issue', (schema, request) => {
+        let requestData = JSON.parse(request.requestBody).data;
+        let issue = server.create('issue');
+        requestData.attributes["issueNumber"] = issue.issueNumber;
+        issue.update(requestData.attributes);
+        issue.update({
+            issuetype: schema.issuetypes.find(requestData.attributes.typeId)
+        });
+        ctx.set('latestCreatedIssue', issue);
+        return issue;
     });
 
     this.patch('/issue/:id', (schema, request) => {
