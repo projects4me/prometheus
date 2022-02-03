@@ -4,6 +4,7 @@
 
 import Modifier from 'ember-modifier';
 import Sortable from 'sortablejs';
+import $ from 'jquery';
 
 /**
  * This modifier is called on the initialization of taskboard component and SortableJS
@@ -189,7 +190,7 @@ export default class InitializeSortable extends Modifier {
      * @type Object
      * @private
      */
-     draggedItem = null;
+    draggedItem = null;
 
     //Called when the modifier is installed on the DOM element
     didInstall() {
