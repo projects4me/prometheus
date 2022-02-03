@@ -3,7 +3,6 @@
  */
 
 import App from "prometheus/routes/app";
-import _ from 'lodash';
 
 /**
  * This is the route to load the task board for a project
