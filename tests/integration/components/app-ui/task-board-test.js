@@ -1,11 +1,17 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, triggerEvent, click } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import triggerKeyEvent from '@ember/test-helpers/dom/trigger-key-event';
+import _ from 'lodash';
+import { setupIntl } from 'ember-intl/test-support';
 
 module('Integration | Component | task-board', function (hooks) {
     setupRenderingTest(hooks);
+    setupIntl(hooks, 'en-us');
 
     test('it renders', async function (assert) {
         let milestones = [
@@ -37,7 +43,7 @@ module('Integration | Component | task-board', function (hooks) {
                     }
                 ]
             }
-        ]
+        ];
 
         let statuses = ["new", "in_progress", "done", "feedback", "pending"];
 
@@ -49,7 +55,7 @@ module('Integration | Component | task-board', function (hooks) {
             pending: 'box-danger'
         };
 
-        let backlog = [
+        let backlogIssues = [
             {
                 issueNumber: '2221',
                 status: 'done'
@@ -57,31 +63,37 @@ module('Integration | Component | task-board', function (hooks) {
                 issueNumber: '2222',
                 status: 'new'
             }
+        ];
 
-        ]
+        let backlog = {
+            id: null,
+            milestoneType: 'backlog',
+            status: 'planned',
+            issues: backlogIssues
+        };
+
+        milestones.pushObject(backlog);
 
         this.set('milestones', milestones);
         this.set('statuses', statuses);
         this.set('statusClass', statusClass);
-        this.set('backlog', backlog);
 
         await render(hbs`
-          <AppUi::TaskBoard
-            @milestones = {{milestones}}
-            @statuses = {{statuses}}
-            @statusClass = {{statusClass}}
-            @backlog = {{backlog}}
-          />
+            <AppUi::TaskBoard
+                @milestones={{this.milestones}}
+                @statuses={{this.statuses}}
+                @statusClass={{this.statusClass}}
+            />
         `);
 
-        //Board sections checking
+        // Board sections checking
         let boardSections = document.querySelectorAll('div.milestone.box');
         assert.equal(boardSections[0].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.1', "Milestone v0.1");
         assert.equal(boardSections[1].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.2', "Milestone v0.2");
-        
+
         //Sortable checking
         let lane = document.querySelector('div.lane.box-body');
-        assert.ok(_.some(_.keys(lane), _.method('includes','Sortable')), 'Sortable attached');
+        assert.ok(_.some(_.keys(lane), _.method('includes', 'Sortable')), 'Sortable attached');
 
         //issues checking on behalf of there status
         //milestone v0.1
@@ -96,8 +108,7 @@ module('Integration | Component | task-board', function (hooks) {
 
         //backlog
         item = boardSections[2].querySelector('div.lane.box-body').children[0];
-        assert.equal(item.querySelector('h4 > a').innerText, `#${backlog[1].issueNumber} -`, 'backlog issue number'); //issue number --> 2221
-        assert.equal(item.getAttribute('data-field-issue-status'), `${backlog[1].status}`, 'backlog issue status'); //status --> done
-        
+        assert.equal(item.querySelector('h4 > a').innerText, `#${backlogIssues[1].issueNumber} -`, 'backlog issue number'); //issue number --> 2221
+        assert.equal(item.getAttribute('data-field-issue-status'), `${backlogIssues[1].status}`, 'backlog issue status'); //status --> done
     });
 });

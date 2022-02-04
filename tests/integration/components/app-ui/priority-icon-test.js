@@ -12,7 +12,7 @@ module('Integration | Component | app-ui/priority-icon', function (hooks) {
     setupRenderingTest(hooks);
     setupIntl(hooks, 'en-us');
 
-    test('Priority Icon Renders', async function (assert) {
+    test('it renders', async function (assert) {
 
         let priorties = [
             ["blocker", "fa-ban"],
@@ -27,11 +27,12 @@ module('Integration | Component | app-ui/priority-icon', function (hooks) {
             this.set('priority', priorties[i][0]);
 
             await render(hbs`
-            <AppUi::PriorityIcon 
-                @priority = {{this.priority}}
-            />`);
+                <AppUi::PriorityIcon 
+                    @priority={{this.priority}}
+                />
+            `);
 
-            assert.equal(this.element.querySelector('i').className, `fa ${priorties[i][1]}`);
+            assert.dom('i').hasClass(`${priorties[i][1]}`);
         }
 
     });
