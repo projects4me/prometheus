@@ -1,24 +1,24 @@
 import yadda from 'yadda';
-import defaultScenario from '../../../mirage/scenarios/default';
-import Context from './yadda-context/context';
-import * as signIn from './sign-in-feature-steps';
+import Context from '../../../mirage/yadda-context/context';
+import * as signIn from './sign-in-steps';
 import * as formField from './form-field-steps';
 import * as navigation from './navigation-steps';
-import * as signedIn from './sign-in-steps';
 import * as issueCreate from './issue-create-steps';
 import * as date from './date-steps';
 import * as updateIssueStatus from './update-issue-status-steps';
+import * as mirageServerConfig from './mirage-server-config-steps';
+import * as signout from './sign-out-steps';
+import * as globalSearch from './global-search-steps';
 
 export default function (assert) {
-    defaultScenario(server);
-    let modules = new Array(signIn, formField, navigation, signedIn, issueCreate, date, updateIssueStatus);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, signout, globalSearch);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()
         .define('num', /(\d+)/, yadda.converters.integer)
         .define('list', /([^\u0000]*)/, yadda.converters.list)
         .define('table', /([^\u0000]*)/, yadda.converters.table);
-        
+
     let yaddaa = yadda.localisation.default.library(dictionary);
     for (let i = 0; i < modules.length; i++) {
         let curr_module = modules[i];
