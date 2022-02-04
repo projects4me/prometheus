@@ -58,12 +58,12 @@ export default function () {
     this.get('/issue', (schema, request) => {
         let model = schema.issues.all();
         let queryParams = request.queryParams.query;
-        if (queryParams == '(((Issue.milestoneId NULL) OR (Issue.milestoneId EMPTY)) AND (Issue.projectId : 10))') {
-            if (_.has(server, 'customDataIssue')) {
-                model = server.customDataIssue(schema);
-            }
+        let issueNumberRegex = /\(Issue.issueNumber : (\d+)\)/;
+        if (issueNumberRegex.test(queryParams)) {
+            let issueNumber = queryParams.replace(/\)/g, "").replace(/^\D+/g, "");
+            model.models.length = 0;
+            model.models.pushObject(schema.issues.find(issueNumber));
         }
-
         return model;
     });
 
@@ -150,88 +150,16 @@ export default function () {
         };
     });
 
-    this.post('/issue', (schema) => {
-        Logger.debug("Create Issue");
-        let id = 1;
-        return {
-            data: {
-                type: 'issue',
-                id: id,
-                attributes: schema.issues.find(id),
-                relationships: {
-                    assignedTo: {
-                        data: {
-                            type: "user",
-                            id: id
-                        }
-                    },
-                    createdBy: {
-                        data: {
-                            type: "user",
-                            id: id
-                        }
-                    },
-                    modifiedBy: {
-                        data: {
-                            type: "user",
-                            id: id
-                        }
-                    },
-                    ownedBy: {
-                        data: {
-                            type: "user",
-                            id: id
-                        }
-                    },
-                    reportedBy: {
-                        data: {
-                            type: "user",
-                            id: id
-                        }
-                    },
-                    project: {
-                        data: {
-                            type: "project",
-                            id: id
-                        }
-                    },
-                    milestone: {
-                        data: {
-                            type: "milestone",
-                            id: id
-                        }
-                    },
-                    issuetype: {
-                        data: {
-                            type: "issuetype",
-                            id: id
-                        }
-                    }
-                }
-            },
-            included: [
-                {
-                    type: 'user',
-                    id: id,
-                    attributes: schema.users.find(id).attrs,
-                },
-                {
-                    type: 'project',
-                    id: id,
-                    attributes: schema.projects.find(id).attrs,
-                },
-                {
-                    type: 'milestone',
-                    id: id,
-                    attributes: schema.milestones.find(id).attrs,
-                },
-                {
-                    type: 'issuetype',
-                    id: id,
-                    attributes: schema.issuetypes.find(id).attrs,
-                }
-            ]
-        };
+    this.post('/issue', (schema, request) => {
+        let requestData = JSON.parse(request.requestBody).data;
+        let issue = server.create('issue');
+        requestData.attributes["issueNumber"] = issue.issueNumber;
+        issue.update(requestData.attributes);
+        issue.update({
+            issuetype: schema.issuetypes.find(requestData.attributes.typeId)
+        });
+        ctx.set('latestCreatedIssue', issue);
+        return issue;
     });
 
     this.get('/role', (schema) => {
@@ -294,18 +222,6 @@ export default function () {
                 "error_description": "Invalid username and password combination"
             }
         }
-    });
-    
-    this.post('/issue', (schema, request) => {
-        let requestData = JSON.parse(request.requestBody).data;
-        let issue = server.create('issue');
-        requestData.attributes["issueNumber"] = issue.issueNumber;
-        issue.update(requestData.attributes);
-        issue.update({
-            issuetype: schema.issuetypes.find(requestData.attributes.typeId)
-        });
-        ctx.set('latestCreatedIssue', issue);
-        return issue;
     });
 
     this.patch('/issue/:id', (schema, request) => {
