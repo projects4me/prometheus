@@ -37,7 +37,7 @@
                 @issueSearch={{perform this.search}}
                 @contents={{readonly issueDescription}}
                 @editType='wysiwyg'
-                @hide = {{array 'footer'}}
+                @hide={{array 'footer'}}
                 @onContentChange={{action "selectStatic" model 'description'}}              
               />
               <span class="highlight"></span>
@@ -223,8 +223,8 @@
     </div>
 
     <div class="col-sm-12">
-      <button type="button" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
-      <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+      <button type="button" id="btn-save" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
+      <button type="button" id="btn-cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
     </div>
 
   </div>

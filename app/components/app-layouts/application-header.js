@@ -126,7 +126,7 @@ export default class ApplicationHeaderComponent extends AppComponent {
             name: 'subject',
             number: 'issueNumber',
             status: 'status',
-            projectId: 'projectId'
+            project: 'project'
         };
         return _self.loadSearchData(query).then(function (data) {
             return format.getSelectList(data, map);

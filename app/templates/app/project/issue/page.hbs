@@ -5,7 +5,7 @@
       <div class="col-md-8">
 
         {{!-- This are the issue details --}}
-        <div class="box box-primary issue-details">
+        <div class="box box-primary issue-details" data-field="issue.subject">
           <div class="box-header with-border">
             <h2 class="box-title">{{issue.issuetype.name}} - #{{issue.issueNumber}} | <span class="issueSubject">{{issue.subject}}</span></h2>
             <div class="box-tools pull-right">
@@ -18,14 +18,14 @@
           <div class="box-body">
 
             <div class="row">
-              <div class="col-xs-3 col-md-2">
+              <div class="col-xs-3 col-md-2" data-field="issue.assignee">
                 <div class="project-owner">
                   <img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
                   <a class="users-list-name" href="#">{{issue.assignedTo.name}}</a>
                   <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
                 </div>
               </div>
-              <div class="col-xs-9 col-md-10">
+              <div class="col-xs-9 col-md-10"  data-field="issue.description">
                 <h4>{{t "views.app.issue.detail.description"}}</h4>
                 <p>
                   {{safe-html issue.description}}
@@ -35,35 +35,35 @@
 
             <div class="row">
 
-              <div class="col-xs-6 col-md-4">
+              <div class="col-xs-6 col-md-4" data-field="issue.priority">
                 <h4>{{t "views.app.issue.detail.priority"}}</h4>
                 <p>
-                  {{priority-icon priority=(readonly issue.priority)}} {{t (concat "views.app.issue.lists.priority." issue.priority)}}
+                  <AppUi::PriorityIcon @priority={{issue.priority}}/> {{t (concat "views.app.issue.lists.priority." issue.priority)}}
                 </p>
               </div>
 
-              <div class="col-xs-6 col-md-4">
+              <div class="col-xs-6 col-md-4" data-field="issue.startDate">
                 <h4>{{t "views.app.issue.detail.duration"}}</h4>
                 <p>
                   {{moment-format issue.startDate 'Do MMM \'YY'}} - {{moment-format issue.endDate 'DD MMM \'YY'}}
                 </p>
               </div>
 
-              <div class="col-xs-6 col-md-4">
+              <div class="col-xs-6 col-md-4" data-field="issue.issuetype">
                 <h4>{{t "views.app.issue.detail.type"}}</h4>
                 <p>
                   {{issue.issuetype.name}}
                 </p>
               </div>
 
-              <div class="col-xs-6 col-md-4">
+              <div class="col-xs-6 col-md-4" data-field="issue.milestone">
                 <h4>{{t "views.app.issue.detail.milestone"}}</h4>
                 <p>
                   {{issue.milestone.name}}
                 </p>
               </div>
 
-              <div class="col-xs-6 col-md-4">
+              <div class="col-xs-6 col-md-4" data-field="issue.parentissue">
                 <h4>{{t "views.app.issue.detail.parent"}}</h4>
                 {{#if issue.parentId}}
                   <a href="#" {{action "navigateToIssue" issue.parentissue.issueNumber issue.projectId}}>
@@ -483,7 +483,7 @@
                         <td><a href="#" {{action "navigateToIssue" child.issueNumber child.projectId}}>#{{child.issueNumber}}</a></td>
                         <td>{{child.subject}}</td>
                         <td><span class="badge {{child.status}}">{{t (concat "views.app.issue.lists.status." child.status)}}</span></td>
-                        <td>{{priority-icon priority=(readonly child.priority)}} {{t (concat "views.app.issue.lists.priority." child.priority)}}</td>
+                        <td><AppUi::PriorityIcon @priority={{child.priority}}/> {{t (concat "views.app.issue.lists.priority." child.priority)}}</td>
                       </tr>
                     {{/each}}
                   </tbody>

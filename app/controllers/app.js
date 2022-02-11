@@ -99,7 +99,7 @@ export default class App extends Prometheus {
         Logger.debug('+Prometheus.Controllers.App::itemSearched');
         let _self = this;
 
-        _self.transitionToRoute('app.project',{project_id: selected.projectId});
+        _self.transitionToRoute('app.project',{project_id: selected.project.get('id')});
         _self.transitionToRoute('app.project.issue.page',{issue_number:selected.number});
         Logger.debug('-Prometheus.Controllers.App::itemSearched');
     }

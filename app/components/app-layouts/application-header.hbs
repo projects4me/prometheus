@@ -131,7 +131,7 @@
           {{!-- The user image in the navbar--}}
           <img src="http://projects4me/userimage/get/{{currentUser.user.id}}" class="user-image" alt="{{currentUser.user.name}}">
           {{!-- hidden-xs hides the username on small devices so only the image appears. --}}
-          <span class="hidden-xs">{{currentUser.user.name}}</span>
+          <span id="user-name" class="hidden-xs">{{currentUser.user.name}}</span>
 
         </a>
         <ul class="dropdown-menu">
@@ -166,9 +166,13 @@
             </div>
             <div class="pull-right">
               {{#if session.isAuthenticated}}
-                <a class="btn btn-default btn-flat" href="javascript:void(0);" {{action 'signOut'}}>{{t "global.form.signout"}}</a>
+                <div id="btn-signout">
+                  <a class="btn btn-default btn-flat" href="javascript:void(0);" {{action 'signOut'}}>{{t "global.form.signout"}}</a>
+                </div>
               {{else}}
-                <a class="btn btn-default btn-flat" href="javascript:void(0)" {{action 'signIn'}}>{{t "global.form.signin"}}</a>
+                <div id="btn-signin">
+                  <a class="btn btn-default btn-flat" href="javascript:void(0)" {{action 'signIn'}}>{{t "global.form.signin"}}</a>
+                </div>
               {{/if}}
             </div>
           </li>

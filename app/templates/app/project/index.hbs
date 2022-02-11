@@ -138,7 +138,7 @@
                 {{#each issuetime as |issue|}}
                   <li>
                     <div class="issue-block">
-                      <div class="priority">{{priority-icon priority=issue.priority}}</div>
+                      <div class="priority"><AppUi::PriorityIcon @priority={{issue.priority}}/></div>
                       <div class="data-block">
                         <span class="subject"><a href="javascript:void(0);" {{action "navigateToIssuePage" issue.issueNumber}}>{{issue.issueNumber}}</a> - {{issue.subject}}</span>
                         <span class="description">{{translate-comment issue.description}}</span>

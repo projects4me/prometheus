@@ -7,17 +7,14 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Modifier | initialize-toastui', function (hooks) {
+module('Integration | Component | application-wrapper', function (hooks) {
     setupRenderingTest(hooks);
 
     test('it renders', async function (assert) {
-        let onContentChange = () => true;
-        this.set('onContentChange', onContentChange);
-
         await render(hbs`
-            <div {{initialize-toastui onContentChange=this.onContentChange}}> </div>
+            <AppLayouts::ApplicationWrapper />
         `);
-
-        assert.ok(true);
+        
+        assert.dom('div.wrapper').exists('component rendered');
     });
 });

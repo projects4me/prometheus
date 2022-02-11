@@ -5,7 +5,6 @@
 import Prometheus from "prometheus/controllers/prometheus";
 import _ from 'lodash';
 import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
 
 /**
  * This is the controller for the board controller
@@ -17,7 +16,6 @@ import { tracked } from '@glimmer/tracking';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class Board extends Prometheus {
-    @tracked dragFinishText = false;
     /**
      * These are the issues statues
      *
