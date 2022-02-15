@@ -86,19 +86,18 @@ export default class Board extends Prometheus {
      * This function is responsible for updating the status of an issue
      *
      * @method updateIssue
-     * @param {string} issue The issue that needs to be updated
-     * @param {string} el The element
-     * @param {Function} setHeightCb Function used to set the height of the lane's container when issue is updated.
-     * @param {Function} applySlimScroll Function used to apply slimscroll when issue is updated
+     * @param {HTMLElement} issueEl The issue element that is dragged
+     * @param {HTMLElement} elTo Lane from which issue is dragged
+     * @param {HTMLElement} elFrom Lane on which issue is dropped
+     * @param {Function} reRenderViewCb
      * @public
      */
-    @action updateIssue(issueEl, el, setHeightCb, applySlimScroll) {
+    @action updateIssue(issueEl, elTo, elFrom, reRenderViewCb) {
         Logger.debug("AppProjectBoardController::updateIssue");
         Logger.debug('The element that was dragged is', issueEl);
-
-        // get the status of the card
-        let laneMilestoneId = el.getAttribute('data-field-milestone-id');
-        let status = el.parentElement.children[0].getAttribute('data-field-status');
+        let _self = this;
+        let laneMilestoneId = elTo.getAttribute('data-field-milestone-id');
+        let status = elTo.parentElement.children[0].getAttribute('data-field-status');
         let issueId = issueEl.getAttribute('data-field-issue-id');
         let issueMilestoneId = issueEl.getAttribute('data-field-issue-milestone');
 
@@ -111,46 +110,36 @@ export default class Board extends Prometheus {
         issue.set('status', status);
         issue.set('milestoneId', laneMilestoneId);
         issue.save().then(() => {
-            setHeightCb();
-            let item = document.querySelector(`[data-field-issue-id="${issueId}"]`);
-            item.style.pointerEvents = "auto";
-            applySlimScroll(item);
+            _self.postUpdateProcessing(issueId, elTo, elFrom, reRenderViewCb);
         });
-        Logger.debug("AppProjectBoardController::updateIssue");
+        Logger.debug("-AppProjectBoardController::updateIssue");
     }
 
     /**
-     * This function is responsible for filtering the issues based on description and subject
-     *
-     * @method filterIssues
+     * This function is used in order to check whether the two milestone containers, from which our issue
+     * item is dragged and dropped, are same or not. If these two milestone containers are same,
+     * then we should have to only adjust the height of one parent container only. And if
+     * they are not same, meaning that the item is dragged from one milestone box
+     * and dropped into some other milestone box, then we should have to adjust/recalculate the height
+     * of both milestone containers. After that applying slim scroll to updated issue item. All of the re adjusting
+     * of heights and applying slimscroll is done by the callback 'reRenderViewCb'.
+     * @method postUpdateProcessing
+     * @param {String} issueId Id of updated issue
+     * @param {HTMLElement} elTo Lane from which issue is dragged
+     * @param {HTMLElement} elFrom Lane on which issue is dropped
+     * @param {Function} reRenderViewCb 
      * @public
-     */
-    @action filterIssues(query, el) {
-        Logger.debug("AppProjectBoardController::filterIssues");
-        let _self = this;
-        let milestoneId = el.target.dataset.input;
-
-        if (_self.originalIssues == null) {
-            _self.originalIssues = _.clone(_self.get('milestones').findBy('id', milestoneId).get('issues')._objects);
-        }
-
-        let issues = _self.originalIssues.filter(function (issue) {
-            let subject = issue.get('subject');
-            let description = issue.get('description');
-            let issueNumber = issue.get('issueNumber');
-
-            if ((subject != null && subject.includes(query)) ||
-                (description != null && description.includes(query)) ||
-                (issueNumber != null && issueNumber.includes(query))
-            ) {
-                return true;
-            }
-        });
-
-        _self.get('milestones').findBy('id', milestoneId).set('issues', issues);
-
-        Logger.debug("AppProjectBoardController::filterIssues");
+     */    
+    postUpdateProcessing(issueId, elTo, elFrom, reRenderViewCb) {
+        Logger.debug("AppProjectBoardController::postUpdateProcessing");
+        let milestoneEls = [];
+        let milestoneEl1 = elTo.closest('div.milestone.box-body');
+        let milestoneEl2 = elFrom.closest('div.milestone.box-body');
+        let item = document.querySelector(`[data-field-issue-id="${issueId}"]`);
+        item.style.pointerEvents = "auto";
+        (milestoneEl1 !== milestoneEl2) && (milestoneEls.pushObject(milestoneEl1));
+        milestoneEls.pushObject(milestoneEl2);
+        reRenderViewCb(milestoneEls, [item]);
+        Logger.debug("-AppProjectBoardController::postUpdateProcessing");
     }
-
-
 }
