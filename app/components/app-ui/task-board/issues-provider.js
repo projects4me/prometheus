@@ -24,7 +24,18 @@ export default class TaskBoardIssuesProviderComponent extends Component {
     get results() {
         let { issues, query } = this.args;
         if (query) {
-            issues = issues.filter((issue) => issue.subject.includes(query));
+            issues = issues.filter((issue) => {
+                let subject = issue.subject;
+                let description = issue.description;
+                let issueNumber = issue.issueNumber;
+
+                if ((subject != null && subject.includes(query)) ||
+                    (description != null && description.includes(query)) ||
+                    (issueNumber != null && issueNumber.includes(query))
+                ) {
+                    return true;
+                }
+            });
         }
         return issues;
     }
