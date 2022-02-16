@@ -4,7 +4,7 @@
 
 import Modifier from 'ember-modifier';
 import Sortable from 'sortablejs';
-import $ from 'jquery';
+import { action } from '@ember/object';
 
 /**
  * This modifier is called on the initialization of taskboard component and SortableJS
@@ -164,6 +164,17 @@ export default class InitializeSortable extends Modifier {
     }
 
     /**
+     * This function returns the milestone container element on which user is currently 
+     * filtering the issues.
+     *
+     * @method get
+     * @return String
+     * @public
+     */
+    get currentFilteredMilestone() {
+        return this.args.named.currentFilteredMilestone;
+    }
+    /**
      * This property contains array of sortable objects. This is used to store sortable
      * objects that are attached to each lane. This property is used when this page will 
      * destroy in order to remove sortable from each lane.
@@ -228,13 +239,38 @@ export default class InitializeSortable extends Modifier {
             }));
         });
 
-        //Applying slim scroll on overflow of item's descrition
         let items = document.querySelectorAll('div.item');
-        items.forEach((el) => {
-            _self._applySlimScroll(el);
+        let milestoneEls = document.querySelectorAll('div.milestone.box-body');
+        _self.reRenderView(milestoneEls, items);
+    }
+
+    //Called when the arguments provided to modifier are updated
+    didUpdateArguments() {
+        let _self = this;
+        let items = _self.currentFilteredMilestone.querySelectorAll('div.item');
+        let milestoneEls = [];
+        milestoneEls.pushObject(_self.currentFilteredMilestone);
+        _self.reRenderView(milestoneEls, items);
+    }
+
+    /**
+     * This function is used to re-render the view by adjusting the heights of 
+     * milestone container elements and applying slim scroll to issue items.
+     * 
+     * @method reRenderView
+     * @param {HTMLCollection} milestoneEls List of milestone container elements
+     * @param {HTMLCollection} items List of issue items
+     * @private
+     */
+    @action reRenderView(milestoneEls, items) {
+        let _self = this;
+        items.forEach((item) => {
+            _self._applySlimScroll(item);
         });
 
-        _self.setParentHeight();
+        milestoneEls.forEach((milestoneEl) => {
+            _self.setMilestoneBoxHeight(milestoneEl);
+        });
     }
 
     /**
@@ -249,7 +285,7 @@ export default class InitializeSortable extends Modifier {
         $(p).slimScroll({
             height: p.getBoundingClientRect().height,
             size: 3,
-        })
+        });
     }
 
     /**
@@ -276,11 +312,8 @@ export default class InitializeSortable extends Modifier {
      */
     _onEnd(evt) {
         let _self = this;
-        if (evt.to !== evt.from) {
-            _self.updateIssue(evt.item, evt.to, _self.setParentHeight, _self._applySlimScroll);
-        }
+        (evt.to !== evt.from) && (_self.updateIssue(evt.item, evt.to, evt.from, _self.reRenderView));
         _self.unSelectDropzones(evt);
-        _self.setParentHeight();
         _self.oldLane = null;
     }
 
@@ -299,7 +332,7 @@ export default class InitializeSortable extends Modifier {
         let droppableSections = document.querySelectorAll(`div.lane.box-body`);
         droppableSections.forEach((node) => {
             (node.getAttribute('data-field-lane-group') === _self.groupName) && node.classList.add('box-body-border');
-        })
+        });
     }
 
     /**
@@ -309,7 +342,6 @@ export default class InitializeSortable extends Modifier {
      * 
      * @method unSelectDropzones
      * @param {Object} evt 
-     * @param {HTMLElement} el 
      */
     unSelectDropzones(evt) {
         evt.from.classList.remove('curr-lane');
@@ -317,52 +349,51 @@ export default class InitializeSortable extends Modifier {
         droppableSections.forEach((node) => {
             node.classList.remove('box-body-border');
             node.classList.remove('box-body-color');
-        })
+        });
     }
 
     /**
-     * This function is called when an item of one lane is shifted to another lane (onEnd function of sortablejs)
+     * This function is called when an item is shifted from one lane to another lane (its status is updated)
      * and is used to set the height of parent element by getting max size of a lane and that max is set it to its
      * parent element. Parent element is a section which contain lanes. Firstly this function will be called on the 
-     * initialization of this modifier (on didInstall function) to set the every sections of milestone.
+     * initialization of this modifier (on reRender function) to set the every sections of milestone.
      * 
-     * @method setParentHeight
+     * @method setMilestoneBoxHeight
+     * @param {HTMLElement} parentElement it contains milestone container element
      */
-    setParentHeight() {
-        let parentElArray = document.querySelectorAll('div.milestone.box-body');
-        parentElArray.forEach((parentElement) => {
-            let parentHeaderHeight = parentElement.parentNode.querySelector('div.box-header').getBoundingClientRect().height;
-            let lanes = [...parentElement.children];
-            let heightArray = [];
-            lanes.forEach((lane) => {
-                let laneBody = lane.querySelector('div.lane.box-body');
-                let items = [...laneBody.children];
-                let sum = 0;
-                items.forEach((item) => {
-                    let itemCSS = getComputedStyle(item);
-                    sum += item.getBoundingClientRect().height + parseFloat(itemCSS.marginTop);
-                })
-                heightArray.push(sum);
-            });
-            let max = (Math.max(...heightArray) + (parentHeaderHeight * 2));
-            let minHeight = 0;
-            let minHeightApplied = false;
+    setMilestoneBoxHeight(parentElement) {
+        let parentHeaderHeight = parentElement.parentNode.querySelector('div.box-header').getBoundingClientRect().height;
+        let lanes = [...parentElement.children];
+        let heightArray = [];
+        lanes.forEach((lane) => {
+            let laneBody = lane.querySelector('div.lane.box-body');
+            let items = [...laneBody.children];
+            let sum = 0;
+            items.forEach((item) => {
+                let itemCSS = getComputedStyle(item);
+                sum += item.getBoundingClientRect().height + parseFloat(itemCSS.marginTop);
+            })
+            heightArray.push(sum);
+        });
+        let max = (Math.max(...heightArray) + (parentHeaderHeight * 2));
+        let minHeight = 0;
+        let minHeightApplied = false;
 
-            //set height of lanes
-            lanes.forEach((lane) => {
-                let headerHeight = lane.querySelector('div.box-header').getBoundingClientRect().height;
-                let laneBody = lane.querySelector('div.lane.box-body');
-                minHeight = parseFloat(getComputedStyle(laneBody).minHeight);
-                let height = max - (headerHeight + parentHeaderHeight);
-                if (height < minHeight) {
-                    height = minHeight;
-                    minHeightApplied = true;
-                }
-                laneBody.style.height = `${height}px`;
-            });
-            (minHeightApplied) && (max = minHeight + 60);
-            parentElement.style.height = `${max}px`;
-        })
+        //set height of lanes
+        lanes.forEach((lane) => {
+            let headerHeight = lane.querySelector('div.box-header').getBoundingClientRect().height;
+            let laneBody = lane.querySelector('div.lane.box-body');
+            minHeight = parseFloat(getComputedStyle(laneBody).minHeight);
+            let height = max - (headerHeight + parentHeaderHeight);
+            if (height < minHeight) {
+                height = minHeight;
+                minHeightApplied = true;
+            }
+            laneBody.style.height = `${height}px`;
+        });
+        (minHeightApplied) && (max = minHeight + 60);
+        parentElement.style.height = `${max}px`;
+
     }
 
     //Removing sortable from each items of task board.

@@ -4,7 +4,7 @@ Feature: update issue status
   Scenario: the one where I type ember g feature
 
     Given User_4 is logged in
-    Given Projectt 10 has 4 milestones
+    Given Project 10 has 4 milestones
     Given Each milestone has 4 issues and there status are
     ------------------------------------------------------------
     | new | in_progress | done | feedback | pending | deferred |

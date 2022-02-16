@@ -8,10 +8,10 @@ import Collection from 'ember-cli-mirage/orm/collection';
 export const given = function () {
     return [
         {
-            "Projectt $projectId has $milestoneCount milestones": (assert, ctx) => async function (projectId, milestoneCount) {
+            "Project $projectId has $milestoneCount milestones": (assert, ctx) => async function (projectId, milestoneCount) {
                 let project = server.create('project');
                 project.id = projectId;
-                let milestones = server.createList('milestone', 4);
+                let milestones = server.createList('milestone', parseInt(milestoneCount));
                 ctx.set('milestones', milestones);
                 ctx.set('project', project);
                 project.update({
