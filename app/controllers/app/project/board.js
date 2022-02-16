@@ -3,7 +3,6 @@
  */
 
 import Prometheus from "prometheus/controllers/prometheus";
-import _ from 'lodash';
 import { action } from '@ember/object';
 
 /**
