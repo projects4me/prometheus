@@ -37,16 +37,12 @@ export default class TaskBoardMilestonesComponent extends Component {
     }
 
     /**
-     * This function will be triggered when we collapse one of the milestone box and is
-     * used to disable the input helper, So that user will not be able to search/filter 
-     * issues from that milestone when it is collapsed.
+     * This property is used to toggle the disabled value of input helper.
      *
-     * @method toggleInput
-     * @param {MouseEvent} evt
-     * @public
+     * @property toggleInput
+     * @type Boolean
+     * @for TaskBoardMilestones
+     * @protected
      */
-    toggleInput(evt) {
-        let input = evt.currentTarget.closest('div.box-header').querySelector('input[placeholder="Search Issues .."]');
-        input.disabled = (input.disabled) ? false : true;
-    }
+    @tracked toggleInput = false;
 }

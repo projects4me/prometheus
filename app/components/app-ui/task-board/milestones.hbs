@@ -11,10 +11,11 @@
             name="query"
             autocomplete="off"
             placeholder={{concat (t "global.form.search") " " (t "global.module.plural.issue") " .."}}
+            disabled={{this.toggleInput}}
           />
         </div>
         <div class="box-tools pull-right">
-          <button {{on "click" this.toggleInput}} type="button" class="btn btn-box-tool" data-widget="collapse">
+          <button {{action (toggle "toggleInput" this)}} type="button" class="btn btn-box-tool" data-widget="collapse">
             <i class="fa fa-minus"></i>
           </button>
         </div>
