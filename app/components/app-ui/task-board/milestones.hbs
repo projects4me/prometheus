@@ -7,7 +7,7 @@
           <Input
             @value={{this.query}}
             @key-up={{@reRenderView}}
-            data-input={{milestone.id}}
+            data-input-milestone-id={{milestone.id}}
             name="query"
             autocomplete="off"
             placeholder={{concat (t "global.form.search") " " (t "global.module.plural.issue") " .."}}
@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <div class="milestone box-body">
+      <div class="milestone box-body" data-field-milestone-id={{milestone.id}}>
         {{#each @statuses as |status|}}
           <div class="lane col-md-2">
             
