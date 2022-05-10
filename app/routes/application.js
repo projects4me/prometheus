@@ -16,7 +16,7 @@ import { inject } from '@ember/service';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default Route.extend({
-    
+
     routeAfterAuthentication: 'app',
     /**
      * The intl library service that is used in order to get the translations
@@ -27,6 +27,16 @@ export default Route.extend({
      * @public
      */
     intl: inject(),
+
+    /**
+     * The router service is used in order to redirect to other route
+     *
+     * @property intl
+     * @type Ember.Service
+     * @for Application
+     * @public
+     */
+    router: inject(),
 
     /**
      * The session service which is offered by ember-simple-auth that will be used
@@ -47,12 +57,10 @@ export default Route.extend({
      * @method afterModel
      * @private
      */
-    beforeModel:function(){
+    beforeModel: function () {
         this._super(...arguments);
         this.intl.setLocale(['en-us']);
-        if(!this.session.isAuthenticated)
-        {
-            this.transitionTo('signin');
-        }
+        let route = (this.session.isAuthenticated) ? 'app' : 'signin';
+        this.router.transitionTo(route);
     },
 });
