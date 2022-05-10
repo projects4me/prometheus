@@ -60,7 +60,16 @@ export default Route.extend({
     beforeModel: function () {
         this._super(...arguments);
         this.intl.setLocale(['en-us']);
-        let route = (this.session.isAuthenticated) ? 'app' : 'signin';
+        let route = '';
+        if (this.session.isAuthenticated) {
+            route = 'app';
+            let currentUrl = this.router.url;
+            if(currentUrl != '/') {
+                route = currentUrl;
+            }
+        } else if (!this.session.isAuthenticated) {
+            route = 'signin';
+        }
         this.router.transitionTo(route);
     },
 });
