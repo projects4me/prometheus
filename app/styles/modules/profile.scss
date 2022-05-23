@@ -1,0 +1,68 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the user profile page of the application.
+*/
+
+.user-profile-img{
+    width: 14rem;
+    height: 14rem;
+    border-radius: 50%;
+    border: 3px solid #d2d6de;
+}
+
+.img-responsive{
+    display: inline
+}
+
+.user-info{
+    height: 5.7rem;
+
+    .user-name{
+        margin-bottom: 0;
+    }
+
+    .user-designation{
+        font-style: italic;
+        margin-bottom: 0px;
+        margin-top: -1px;
+        color: #999;
+    }
+}
+
+.user-social-links{
+
+    .fa{
+        width: 2.5rem;
+    }
+
+    a{
+        color: $blackColor;
+        text-decoration: none;
+    }
+
+    a:hover{
+        color: $primaryColor;
+        cursor: pointer; 
+    }
+
+    .fa-skype{
+        color:#00aff0;
+    }
+
+    .fa-linkedin{
+        color:#146ebe;
+    }
+
+    div[data-social-name="slack"]{
+        
+        a{
+            font-weight: 600;
+        }
+    }
+    
+}
