@@ -1,0 +1,38 @@
+<div class="user-social-links">
+
+  {{#if user.githubUrl}}
+    <div data-social-name="github">
+      <i class="fa fa-github fa-lg"></i>
+      <a {{action "redirect" user.githubUrl}}>{{get-username 'github' user.githubUrl}}</a>
+    </div>
+  {{/if}}
+
+  {{#if user.gitlabUrl}}
+    <div data-social-name="gitlab">
+      <i class="fa fa-gitlab" aria-hidden="true"></i>
+      <a {{action "redirect" user.gitlabUrl}}>{{get-username 'gitlab' user.gitlabUrl}}</a>
+    </div>
+  {{/if}}
+
+  {{#if user.skypeUrl}}
+    <div data-social-name="skype">
+      <i class="fa fa-skype fa-lg"></i>
+      <a {{action "redirect" (concat "skype:" user.skypeUrl "?chat") }} >{{get-username 'skype' user.skypeUrl}}</a>
+    </div>
+  {{/if}}
+
+  {{#if user.linkedinUrl}}
+    <div data-social-name="linkedin">
+      <i class="fa fa-linkedin fa-lg"></i>
+      <a {{action "redirect" user.linkedinUrl}}>{{get-username 'linkedin' user.linkedinUrl}}</a>
+    </div>
+  {{/if}}
+
+  {{#if user.slackUrl}}
+    <div data-social-name="slack">
+      <i class="fa fa-slack fa-lg"></i>
+      <a {{action "redirect" (concat "https://slack.com/app_redirect?channel=" user.slackUrl)}} >@slack</a>
+    </div>
+  {{/if}}
+  
+</div>
