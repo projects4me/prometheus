@@ -30,7 +30,6 @@ export default class UserProfileSocialLinksComponent extends Component {
      * @public
      */
     get redirect() {
-        debugger;
         return this.args.redirect;
     }
 }
