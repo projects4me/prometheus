@@ -10,7 +10,7 @@ export default function () {
     this.get('/user', (schema, request) => {
         let model = schema.users.all();
         let queryParams = request.queryParams.query;
-        let id = getIdFromQuery(queryParams);
+        let id = getValueFromQuery(`User.id`, queryParams);
         if (id) {
             model.models.length = 0;
             model.models.pushObject(schema.users.find(id));
@@ -30,9 +30,8 @@ export default function () {
     this.get('/issue', (schema, request) => {
         let model = schema.issues.all();
         let queryParams = request.queryParams.query;
-        let issueNumberRegex = /\(Issue.issueNumber : (\d+)\)/;
-        if (issueNumberRegex.test(queryParams)) {
-            let issueNumber = queryParams.replace(/\)/g, "").replace(/^\D+/g, "");
+        let issueNumber = getValueFromQuery('Issue.issueNumber', queryParams);
+        if (issueNumber) {
             model.models.length = 0;
             model.models.pushObject(schema.issues.find(issueNumber));
         }
@@ -207,10 +206,21 @@ export default function () {
     });
 }
 
-let getIdFromQuery = (query) => {
+/**
+ * This function is used to extract the value of specific field
+ * from query params.
+ * 
+ * @param {String} field 
+ * @param {String} query 
+ * @returns String
+ */
+let getValueFromQuery = (field, query) => {
     if (query != undefined) {
-        let regex = /(^:)|[\d]/;
-        let id = regex.exec(query);
-        return id[0];
+        let matchQueryField = new RegExp(`(${field} : (\\d+))`);
+        if (matchQueryField.exec(query)) {
+            let regex = /(^:)|[\d]/;
+            let val = regex.exec(query);
+            return val[0];
+        }
     }
 }
