@@ -42,7 +42,12 @@ export default Factory.extend({
         user.update({
             "name": `User_${user.id}`,
             "createdUserName": `User_${user.createdUser}`,
-            "modifiedUserName": `User_${user.modifiedUser}`
-        })
+            "modifiedUserName": `User_${user.modifiedUser}`,
+            "githubUrl": `github.com/${user.id}`,
+            "gitlabUrl": `gitlab.com/${user.id}`,
+            "skypeUrl" : `${user.id}`,
+            "linkedinUrl" : `linkedin.com/in/${user.id}`,
+            "slackUrl": `${user.id}`
+        });
     }
 });
