@@ -85,7 +85,7 @@ export default class App extends Prometheus {
         let self = this;
         let user_id = self.get('currentUser').user.id;
 
-        self.transitionToRoute('app.user.page',{user_id: user_id});
+        self.transitionToRoute('app.user.page', user_id);
         Logger.debug('-Prometheus.Controllers.App::userProfile');
     }
 
