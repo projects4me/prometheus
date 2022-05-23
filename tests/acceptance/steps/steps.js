@@ -10,9 +10,10 @@ import * as mirageServerConfig from './mirage-server-config-steps';
 import * as signout from './sign-out-steps';
 import * as globalSearch from './global-search-steps';
 import * as filterIssuesBoard from './filter-issues-board-steps';
+import * as redirectToSocialLinks from './redirect-to-user-social-links-steps';
 
 export default function (assert) {
-    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, signout, globalSearch, filterIssuesBoard);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()
