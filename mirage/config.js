@@ -7,60 +7,31 @@ export default function () {
     this.timing = 0;
     let ctx = new Context();
 
-    this.get('/user', (schema) => {
-        let data = schema.users.all();
-        let count = 1;
-        let model = { data: [] };
-        _.each(data.models, function (obj) {
-            model.data.push({
-                type: 'User',
-                id: count++,
-                attributes: obj.attrs
-            });
-        });
+    this.get('/user', (schema, request) => {
+        let model = schema.users.all();
+        let queryParams = request.queryParams.query;
+        let id = getValueFromQuery(`User.id`, queryParams);
+        if (id) {
+            model.models.length = 0;
+            model.models.pushObject(schema.users.find(id));
+        }
         return model;
     });
 
     this.get('/user/:id', (schema, request) => {
         let id = request.params.id;
         if (id === "me") {
-            id = 1;
+            id = ctx.get('currentUser').id
         }
-
-        let data = {
-            data: {
-                type: 'User',
-                id: id,
-                attributes: schema.users.find(id).attrs,
-                relationships: {
-                    dashboard: {
-                        data: {
-                            type: "dashboard",
-                            id: id
-                        }
-                    }
-                }
-            },
-            included: [
-                {
-                    type: 'dashboard',
-                    id: id,
-                    attributes: schema.dashboards.find(id).attrs,
-                }
-            ]
-        };
-        if (_.has(server, 'customUser')) {
-            data = server.customUser(schema, request)
-        }
-        return data;
+        let model = schema.users.find(id);
+        return model;
     });
 
     this.get('/issue', (schema, request) => {
         let model = schema.issues.all();
         let queryParams = request.queryParams.query;
-        let issueNumberRegex = /\(Issue.issueNumber : (\d+)\)/;
-        if (issueNumberRegex.test(queryParams)) {
-            let issueNumber = queryParams.replace(/\)/g, "").replace(/^\D+/g, "");
+        let issueNumber = getValueFromQuery('Issue.issueNumber', queryParams);
+        if (issueNumber) {
             model.models.length = 0;
             model.models.pushObject(schema.issues.find(issueNumber));
         }
@@ -233,4 +204,23 @@ export default function () {
         });
         return issue;
     });
+}
+
+/**
+ * This function is used to extract the value of specific field
+ * from query params.
+ * 
+ * @param {String} field 
+ * @param {String} query 
+ * @returns String
+ */
+let getValueFromQuery = (field, query) => {
+    if (query != undefined) {
+        let matchQueryField = new RegExp(`(${field} : (\\d+))`);
+        if (matchQueryField.exec(query)) {
+            let regex = /(^:)|[\d]/;
+            let val = regex.exec(query);
+            return val[0];
+        }
+    }
 }

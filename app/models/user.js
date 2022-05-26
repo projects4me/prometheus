@@ -186,4 +186,50 @@ export default Model.extend(Validations, {
      * @private
      */
     tagged: hasMany('tagged'),
+    /**
+     * Github url of the User
+     *
+     * @property githubUrl
+     * @type String
+     * @for User
+     * @private
+     */
+    githubUrl: attr('string'),
+    /**
+     * Skype url of the User
+     *
+     * @property skypeUrl
+     * @type String
+     * @for User
+     * @private
+     */
+    skypeUrl: attr('string'),
+    /**
+     * Linkedin url of the User
+     *
+     * @property linkedinUrl
+     * @type String
+     * @for User
+     * @private
+     */
+    linkedinUrl: attr('string'),
+    /**
+     * Gitlab url of the User
+     *
+     * @property gitlabUrl
+     * @type String
+     * @for User
+     * @private
+     */
+    gitlabUrl: attr('string'),
+    /**
+     * Slack url of the User
+     *
+     * @property gitlabUrl
+     * @type String
+     * @for User
+     * @private
+     */
+    slackUrl: attr('string')
+    
 });

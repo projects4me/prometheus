@@ -17,33 +17,29 @@
     <div class="row">
       <div class="col-md-3">
 
+      {{!-- User profile info section starts--}}
         <div class="box box-primary">
           <div class="box-body box-profile">
-            <img class="profile-user-img img-responsive img-circle" src="http://projects4me/userimage/get/{{model.id}}" alt="{{model.name}}">
+            <img class="user-profile-img img-responsive" src="http://projects4me/userimage/get/{{model.id}}" alt="{{model.name}}">
 
-            <h3 class="profile-username text-center">{{model.name}}</h3>
+            <div class="user-info">
+                <h3 class="user-name">{{model.name}}</h3>
+                <span class="user-designation">{{model.title}}</span>
+            </div>
 
-            <p class="text-muted text-center">{{model.title}}</p>
+            <UserProfile::SocialLinks
+              @user={{model}}
+              @redirect={{fn this.redirectToSocialLink}}
+            />
 
-            <ul class="list-group list-group-unbordered">
-              <li class="list-group-item">
-
-              </li>
-              <li class="list-group-item">
-
-              </li>
-              <li class="list-group-item">
-
-              </li>
-            </ul>
-
-            <a href="#" class="btn btn-primary btn-block"></a>
           </div>
         </div>
-
+      {{!-- User profile info section ends--}}
+ 
+        {{!-- User Skills section --}}
         <div class="box box-primary">
           <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.user.page.aboutme"}}</h3>
+            <h3 class="box-title">{{t "views.app.user.page.skills"}}</h3>
           </div>
 
           <div class="box-body">

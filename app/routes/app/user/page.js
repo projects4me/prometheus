@@ -14,7 +14,17 @@ import App from "prometheus/routes/app";
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default App.extend({
+    model(params) {
+        Logger.debug('+Prometheus.Routes.App.User::afterModel()');
+        let _self = this;
+        let _userOptions = {
+            query: `(User.id : ${params.user_id})`
+        }
+        let model = _self.store.query('user', _userOptions);
 
+        Logger.debug('-Prometheus.Routes.App.User::afterModel()');
+        return model;
+    },
     /**
      * The setupController hook.
      *
@@ -22,16 +32,12 @@ export default App.extend({
      * @param {Prometheus.Controllers.User} controller The controller object for this route
      * @private
      */
-    setupController:function(controller){
+    setupController: function (controller, model) {
         Logger.debug('+Prometheus.Routes.App.User::setupController()');
 
-        let self = this;
-        let params = self.paramsFor('app.user.page');
-
-        let model = self.get('store').findRecord('user',params.user_id);
-        controller.set('model',model);
+        controller.set('model', model.objectAt(0));
 
         Logger.debug('-Prometheus.Routes.App.User::setupController()');
-    },
+    }
 
 });

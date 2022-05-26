@@ -2,6 +2,7 @@ import ENV from '../../config/environment';
 import { skip } from 'qunit';
 import { setupApplicationTest, setupRenderingTest, setupTest } from 'ember-qunit';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import { setupWindowMock } from 'ember-window-mock/test-support';
 
 // this logic could be anything, but in this case...
 // if @ignore, then return skip (for backwards compatibility)
@@ -65,6 +66,7 @@ function setupYaddaTest(annotations) {
     return function(hooks) {
         setupApplicationTest(hooks);
         setupMirage(hooks);
+        setupWindowMock(hooks);
     };
   }
   if (annotations.setuprenderingtest) {
