@@ -20,8 +20,7 @@ module.exports = function(environment) {
             version: '1',
             clientId: 'projects4me',
             clientSecret: '06110fb83488715ca69057f4a7cedf93',
-            prefix: 'app',
-            host: "http://api.projects4.me",
+            prefix: 'app'
         },
         app:{
             list:{
@@ -65,11 +64,7 @@ module.exports = function(environment) {
     };
 
     if (environment === 'development') {
-        // ENV.APP.LOG_RESOLVER = true;
-        // ENV.APP.LOG_ACTIVE_GENERATION = true;
-        // ENV.APP.LOG_TRANSITIONS = true;
-        // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
-        // ENV.APP.LOG_VIEW_LOOKUPS = true;
+        ENV.api.host = "http://projects4me";
     }
 
     if (environment === 'test') {
@@ -88,8 +83,8 @@ module.exports = function(environment) {
         };
     }
 
-    // if (environment === 'production') {
-    //
-    // }
+    if (environment === 'production') {
+        ENV.api.host = "http://api.projects4.me";
+    }
     return ENV;
 };
