@@ -46,6 +46,16 @@ export default Controller.extend({
      * @public
      */
     intl: inject(),
+    
+    /**
+     * The store service that is used to interact ember data APIs.
+     *
+     * @property store
+     * @type Ember.Service
+     * @for Prometheus.Controllers.Prometheus
+     * @public
+     */
+    store: inject(),
 
     /**
      * These are the events that this controller handles

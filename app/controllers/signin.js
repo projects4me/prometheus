@@ -4,6 +4,7 @@
 
 import { inject } from '@ember/service';
 import Controller from '@ember/controller';
+import { t } from 'ember-intl';
 
 /**
  * This the signin controller.
@@ -37,6 +38,37 @@ export default Controller.extend({
     session: inject(),
 
     /**
+     * This property is used to store user's name.
+     *
+     * @property username
+     * @type String
+     * @for Signin
+     * @public
+     */
+    username: "",
+
+    /**
+     * The property is used to store user's password.
+     *
+     * @property password
+     * @type String
+     * @for Signin
+     * @public
+     */
+    password: "",
+
+    /**
+     * This property is used to store error message generated while user is signing in
+     * to the application, if something went wrong.
+     *
+     * @property errorMessage
+     * @type String
+     * @for Signin
+     * @public
+     */
+    errorMessage: "",
+
+    /**
      * The events that this controller is listing to
      *
      * @property actions
@@ -56,8 +88,8 @@ export default Controller.extend({
          */
         async authenticate() {
             let _self = this;
-            let username =_self.username;
-            let password =_self.password;
+            let username = _self.username;
+            let password = _self.password;
 
             await _self.session.authenticate('authenticator:oauth2', username, password).then(
                 () => {

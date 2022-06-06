@@ -37,6 +37,16 @@ export default class App extends Prometheus {
      * @public
      */
     @tracked users = {};
+    
+    /**
+     * These are the chatrooms of users in the system
+     *
+     * @property chatrooms
+     * @type Prometheus.Model.User
+     * @for App
+     * @public
+     */
+    @tracked chatrooms= [];
 
     /**
      * This is the list of roles that has been extracted

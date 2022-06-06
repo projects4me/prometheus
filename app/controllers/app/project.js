@@ -95,7 +95,6 @@ export default Prometheus.extend({
          * @public
          */
         navigateToProject(projectId){
-            alert(projectId);
             this.transitionToRoute('app.project', {project_id:projectId});
         }
     }
