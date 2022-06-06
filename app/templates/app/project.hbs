@@ -1,8 +1,8 @@
 <section class="content-header">
-  {{#if projectId}}
+  {{#if this.projectId}}
     <h1>
       {{t "views.app.project.label"}}
-      <small><a href="#" {{action "navigateToProject" model.id}}>{{model.name}}</a></small>
+      <small><a href="#" {{action "navigateToProject" this.model.id}}>{{this.model.name}}</a></small>
     </h1>
   {{else}}
     <div class="callout callout-warning no-project-selected">
@@ -16,7 +16,7 @@
     </div>
   {{/if}}
 
-  {{#bread-crumbs tagName="ol" linkable=true as |component module|}}
+  {{!-- {{#bread-crumbs tagName="ol" linkable=true as |component module|}}
     {{#bread-crumb route=module breadCrumbs=component}}
       <i class="fa fa-{{nav-icon module.title}}"></i>
       {{#if module.record}}
@@ -25,12 +25,12 @@
         {{t (concat "views.nav.menu." (camelize module.title) ".label")}}
       {{/if}}
     {{/bread-crumb}}
-  {{/bread-crumbs}}
+  {{/bread-crumbs}} --}}
 
 </section>
 
 <section class="content">
-  {{#if projectId}}
+  {{#if this.projectId}}
     {{outlet}}
   {{/if}}
 </section>

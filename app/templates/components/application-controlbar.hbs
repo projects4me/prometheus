@@ -9,7 +9,7 @@
   <div class="tab-pane active" id="control-sidebar-home-tab">
     <h3 class="control-sidebar-heading">{{t "views.app.application.controlBar.onlineUser"}}</h3>
     <ul class="control-sidebar-menu">
-      {{#each users as |user|}}
+      {{#each this.users as |user|}}
         {{#if (not-eq user.id currentUser.user.id)}}
           <li>
             <img class="contacts-list-img" src="http://projects4me/userimage/get/{{user.id}}" alt="{{t "global.form.image"}}">
