@@ -50,6 +50,16 @@ export default Route.extend({
     currentUser: inject(),
 
     /**
+     * The store service that is used to interact ember data APIs.
+     *
+     * @property store
+     * @type Ember.Service
+     * @for App
+     * @public
+     */
+    store: inject(),
+
+    /**
      * This function is called by EmberJs before it retrieves the model
      *
      * @method beforeModel
