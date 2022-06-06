@@ -2,10 +2,10 @@
 {{!-- Sidebar user panel (optional) --}}
 <div class="user-panel" {{initialize-sidebar}}>
   <div class="pull-left image">
-    <img src="http://projects4me/userimage/get/{{currentUser.user.id}}" class="img-circle" alt="{{currentUser.user.name}}">
+    <img src="http://projects4me/userimage/get/{{this.currentUser.user.id}}" class="img-circle" alt="{{this.currentUser.user.name}}">
   </div>
   <div class="pull-left info">
-    <p id="user-name">{{currentUser.user.name}}</p>
+    <p id="user-name">{{this.currentUser.user.name}}</p>
     {{!-- Status --}}
     <a href="#"><i class="fa fa-circle text-success"></i>{{t "views.app.online"}}</a>
   </div>
@@ -17,7 +17,7 @@
     <PowerSelect
         class="form-control"
         @options={{this.projectList}}
-        @selected={{find-by "value" this.projectId projectList}}
+        @selected={{find-by "value" this.projectId this.projectList}}
         @placeholder={{t "views.nav.selectproject"}}
         searchField="label"
         @onChange={{this.projectChanged}}
@@ -32,12 +32,12 @@
 <ul class="sidebar-menu">
   <li class="header">{{t "views.nav.mainnav"}}</li>
 
-  {{#each-in metaData as |module definition|}}
+  {{#each-in this.metaData as |module definition|}}
     {{#if definition.actions}}
 
       <li class="treeview">
         {{#if definition.projectRelated}}
-          <a href="/{{appPrefix}}/{{projectId}}/{{definition.anchorRoute}}">
+          <a href="/{{this.appPrefix}}/{{this.projectId}}/{{definition.anchorRoute}}">
             <i class="fa fa-{{definition.icon}}"></i>
             <span>{{t definition.label}}</span>
             <span class="pull-right-container">
@@ -45,7 +45,7 @@
             </span>
           </a>
         {{else}}
-          <a href="/{{appPrefix}}/{{definition.anchorRoute}}">
+          <a href="/{{this.appPrefix}}/{{definition.anchorRoute}}">
             <i class="fa fa-{{definition.icon}}"></i>
             <span>{{t definition.label}}</span>
             <span class="pull-right-container">
@@ -58,11 +58,11 @@
             {{#each-in menu as |entity item|}}
               <li>
                 {{#if definition.projectRelated}}
-                  <a href="/{{appPrefix}}/{{projectId}}/{{item.anchorRoute}}" {{action "navigate" item.route  item.routeParams item.anchorRoute projectId}}>
+                  <a href="/{{this.appPrefix}}/{{this.projectId}}/{{item.anchorRoute}}" {{action "navigate" item.route  item.routeParams item.anchorRoute this.projectId}}>
                     <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
                   </a>
                 {{else}}
-                  <a href="/{{appPrefix}}/{{item.anchorRoute}}" {{action "navigate" item.route  item.routeParams item.anchorRoute}}>
+                  <a href="/{{this.appPrefix}}/{{item.anchorRoute}}" {{action "navigate" item.route  item.routeParams item.anchorRoute}}>
                     <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
                   </a>
                 {{/if}}
@@ -77,12 +77,12 @@
     {{else}}
       <li class="treeview">
         {{#if definition.projectRelated}}
-          <a href="/{{appPrefix}}/{{projectId}}/{{definition.anchorRoute}}" {{action "navigate" definition.route definition.routeParams definition.anchorRoute projectId}}>
+          <a href="/{{this.appPrefix}}/{{this.projectId}}/{{definition.anchorRoute}}" {{action "navigate" definition.route definition.routeParams definition.anchorRoute this.projectId}}>
             <i class="fa fa-{{definition.icon}}"></i>
             <span>{{t definition.label}}</span>
           </a>
         {{else}}
-          <a href="/{{appPrefix}}/{{definition.anchorRoute}}" {{action "navigate" definition.route definition.routeParams definition.anchorRoute}}>
+          <a href="/{{this.appPrefix}}/{{definition.anchorRoute}}" {{action "navigate" definition.route definition.routeParams definition.anchorRoute}}>
             <i class="fa fa-{{definition.icon}}"></i>
             <span>{{t definition.label}}</span>
           </a>

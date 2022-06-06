@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import TextField from '@ember/component/text-field';
+import { TextField } from '@ember/legacy-built-in-components';
 
 /**
  * This object is used to modify the default TextField of EmberJS in order to
@@ -29,7 +29,7 @@ export default TextField.extend({
      * @for TextField
      * @private
      */
-    classNames:['form-control','input-sm','data-input'],
+    classNames: ['form-control', 'input-sm', 'data-input'],
 
     /**
      * We are allowing certain attributes across the board
@@ -39,6 +39,6 @@ export default TextField.extend({
      * @for TextField
      * @private
      */
-    attributeBindings:['data-input']
+    attributeBindings: ['data-input']
 
 });

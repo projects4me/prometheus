@@ -1,8 +1,8 @@
 {{!-- This should be loaded later via the field view ideally --}}
 <div data-field={{@data-field}} class="form-field ember-view">
   <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}}
-    maxlength={{@length}} aria-invalid="true" aria-describedBy={{@data-field}} {{apply-mask @mask}}
-    @focus-out={{action (mut this.shouldValidate) true}} />
+    maxlength={{@length}} aria-invalid="true" aria-describedBy={{@data-field}} {{apply-mask @mask}} @focusIn={{@focus-in}}
+    readonly={{@readonly}} @focus-out={{action (mut this.shouldValidate) true}} />
   <span class="highlight"></span>
   <span class="bar"></span>
   <label class="floating-label">{{@label}}</label>

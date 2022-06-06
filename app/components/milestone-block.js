@@ -75,9 +75,8 @@ export default Component.extend({
         if (Prometheus.__container__.lookup('template:'+template) === undefined) {
             template = 'components/milestone-blocks/index';
         }
-
         return template;
-    }).volatile(),
+    }),
 
     /**
      * This function is called by Ember after it has rendered the HTML elements in the view, we

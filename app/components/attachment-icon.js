@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import { htmlSafe } from '@ember/string';
+import { htmlSafe } from '@ember/template';
 import Logger from 'js-logger';
 
 export default class AttachmentIconComponent extends Component {
