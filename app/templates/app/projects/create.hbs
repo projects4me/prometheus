@@ -1,10 +1,10 @@
 <section class="content-header">
   <h1>
-    {{t (concat "views.app.project." layoutName ".header")}}
-    <small>{{model.name}}</small>
+    {{t (concat "views.app.project." this.layoutName ".header")}}
+    <small>{{this.model.name}}</small>
   </h1>
 
-  {{#bread-crumbs tagName="ol" linkable=true as |component module|}}
+  {{!-- {{#bread-crumbs tagName="ol" linkable=true as |component module|}}
     {{#bread-crumb route=module breadCrumbs=component}}
       <i class="fa fa-{{nav-icon module.title}}"></i>
       {{#if module.record}}
@@ -13,7 +13,7 @@
         {{t (concat "views.nav.menu." (camelize module.title) ".label")}}
       {{/if}}
     {{/bread-crumb}}
-  {{/bread-crumbs}}
+  {{/bread-crumbs}} --}}
 
 </section>
 
@@ -31,109 +31,123 @@
 
             <div class="form-group">
               <div class="field-group">
-                {{field-text
-                    placeholder=(t "views.app.project.create.nameplaceholder")
-                    label=(t "views.app.project.create.name")
-                    value=model.name
-                    mask="alphanumeric"
-                    data-field="project.name"
-                    focus-out=(action (mut showNameError) true)
-                    v-focus=showNameError
-                    v-model=model
-                    v-field='name'
-                    v-output='message'
-                }}
+                <FormFields::FieldText
+                  @placeholder={{t "views.app.project.create.nameplaceholder"}}
+                  @label={{t "views.app.project.create.name"}}
+                  @value={{this.model.name}}
+                  @mask="alphanumeric"
+                  @data-field="project.name"
+                  @focus-out={{action (mut this.showNameError) true}}
+                  @v-focus={{this.showNameError}}
+                  @v-model={{this.model}}
+                  @v-field='name'
+                  @v-output='message'
+                />
 
                 <div class="form-field form-field-static ember-view">
-                  <span class="ember-text-field form-control input-sm data-input ember-view">{{shortCode}}</span>
+                  <span class="ember-text-field form-control input-sm data-input ember-view">{{this.shortCode}}</span>
                   <span class="highlight"></span>
                   <span class="bar"></span>
                   <label class="floating-label active">{{t "views.app.project.create.shortcode"}}</label>
                 </div>
               </div>
 
-              {{field-textarea
-                  placeholder=(t "views.app.project.create.descriptionplaceholder")
-                  label=(t "views.app.project.create.description")
-                  value=model.description
-                  data-field="project.description"
-              }}
+              <FormFields::FieldTextArea
+                @placeholder={{t "views.app.project.create.descriptionplaceholder"}}
+                @label={{t "views.app.project.create.description"}}
+                @value={{this.model.description}}
+                @data-field="project.description"
+              />
 
-              {{field-date
-                  placeholder=(t "views.app.project.create.startdateplaceholder")
-                  label=(t "views.app.project.create.startdate")
-                  value=(readonly model.startDate)
-                  mask="alphanumeric"
-                  update=(action "selectStatic" model 'startDate')
-                  data-field="project.startDate"
-                  focus-out=(action (mut showStartDateError) true)
-                  v-focus=showStartDateError
-                  v-model=model
-                  v-field='startDate'
-                  v-output='message'
-              }}
+              <FormFields::FieldDate
+                @placeholder={{t "views.app.project.create.startdateplaceholder"}}
+                @label={{t "views.app.project.create.startdate"}}
+                @value={{readonly this.model.startDate}}
+                @mask="alphanumeric"
+                @update={{action "selectStatic" this.model 'startDate'}}
+                @data-field="project.startDate"
+                @focus-out={{action (mut this.showStartDateError) true}}
+                @v-focus={{this.showStartDateError}}
+                @v-model={{this.model}}
+                @v-field='startDate'
+                @v-output='message'
+                @positionX="right"
+                @positionY="down"
+                @autoApply={{true}}
+                @minDate='1990'
+                @maxDate='2023'
+                @singleDatePicker={{true}}
+                @showDropdowns={{true}}                                                
+              />
 
-              {{field-date
-                  placeholder=(t "views.app.project.create.enddateplaceholder")
-                  label=(t "views.app.project.create.enddate")
-                  value=(readonly model.endDate)
-                  mask="alphanumeric"
-                  update=(action "selectStatic" model 'endDate')
-                  data-field="project.endDate"
-                  focus-out=(action (mut showEndDateError) true)
-                  v-focus=showEndDateError
-                  v-model=model
-                  v-field='endDate'
-                  v-output='message'
-              }}
+              <FormFields::FieldDate
+                @placeholder={{t "views.app.project.create.enddateplaceholder"}}
+                @label={{t "views.app.project.create.enddate"}}
+                @value={{readonly this.model.endDate}}
+                @mask="alphanumeric"
+                @update={{action "selectStatic" this.model 'endDate'}}
+                @data-field="project.endDate"
+                @focus-out={{action (mut this.showEndDateError) true}}
+                @v-focus={{this.showEndDateError}}
+                @v-model={{this.model}}
+                @v-field='endDate'
+                @v-output='message'
+                @positionX="right"
+                @positionY="down"
+                @autoApply={{true}}
+                @minDate='1990'
+                @maxDate='2023'
+                @singleDatePicker={{true}}
+                @showDropdowns={{true}}                  
+              />
 
-              {{field-relate
-                  placeholder=(t "views.app.project.create.typeplaceholder")
-                  label=(t "views.app.project.create.type")
-                  value=model.type
-                  options=type
-                  selected=(find-by "value" model.type type)
-                  searchField="label"
-                  onchange=(action "selectRelated" model 'type')
-                  relateType="relate-simple"
-                  data-field="project.type"
-                  focus-out=(action (mut showTypeError) true)
-                  v-focus=showTypeError
-                  v-model=model
-                  v-field='type'
-                  v-output='message'
-              }}
+              <FormFields::FieldRelate
+                @placeholder={{t "views.app.project.create.typeplaceholder"}}
+                @label={{t "views.app.project.create.type"}}
+                @value={{this.model.type}}
+                @options={{this.type}}
+                @selected={{find-by "value" this.model.type this.type}}
+                @searchField="label"
+                @onchange={{action "selectRelated" this.model 'type'}}
+                @relateType="relate-simple"
+                @data-field="project.type"
+                @focus-out={{action (mut this.showTypeError) true}}
+                @v-focus={{this.showTypeError}}
+                @v-model={{this.model}}
+                @v-field='type'
+                @v-output='message'
+              />
 
-              {{field-relate
-                  placeholder=(t "views.app.project.create.statusplaceholder")
-                  label=(t "views.app.project.create.status")
-                  value=model.status
-                  options=status
-                  selected=(find-by "value" model.status status)
-                  searchField="label"
-                  onchange=(action "selectRelated" model 'status')
-                  relateType="relate-simple"
-                  data-field="project.status"
-                  focus-out=(action (mut showStatusError) true)
-                  v-focus=showStatusError
-                  v-model=model
-                  v-field='status'
-                  v-output='message'
-              }}
+              <FormFields::FieldRelate
+                @placeholder={{t "views.app.project.create.statusplaceholder"}}
+                @label={{t "views.app.project.create.status"}}
+                @value={{this.model.status}}
+                @options={{this.status}}
+                @selected={{find-by "value" this.model.status this.status}}
+                @searchField="label"
+                @onchange={{action "selectRelated" this.model 'status'}}
+                @relateType="relate-simple"
+                @data-field="project.status"
+                @focus-out={{action (mut this.showStatusError) true}}
+                @v-focus={{this.showStatusError}}
+                @v-model={{this.model}}
+                @v-field='status'
+                @v-output='message'
+              />
 
-              {{field-textarea
-                  placeholder=(t "views.app.project.create.visionplaceholder")
-                  label=(t "views.app.project.create.vision")
-                  value=model.vision
-                  data-field="project.vision"
-              }}
+              <FormFields::FieldTextArea
+                @placeholder={{t "views.app.project.create.visionplaceholder"}}
+                @label={{t "views.app.project.create.vision"}}
+                @value={{this.model.vision}}
+                @data-field="project.vision"
+              />
 
-              {{field-textarea
-                  placeholder=(t "views.app.project.create.scopeplaceholder")
-                  label=(t "views.app.project.create.scope")
-                  value=model.scope
-                  data-field="project.scope"
-              }}
+              <FormFields::FieldTextArea            
+                @placeholder={{t "views.app.project.create.scopeplaceholder"}}
+                @label={{t "views.app.project.create.scope"}}
+                @value={{this.model.scope}}
+                @data-field="project.scope"
+              />
 
             </div>
 
@@ -151,27 +165,27 @@
 
           <div class="box-body no-padding">
 
-            {{field-relate
-                placeholder=(t "views.app.project.create.selectassignee")
-                label=(t "views.app.project.create.assignee")
-                value=model.assignee
-                options=usersList
-                selected=(find-by "value" model.assignee usersList)
-                searchField="label"
-                onchange=(action "selectRelated" model 'assignee')
-                relateType="relate-user"
-                data-field="project.assignee"
-                focus-out=(action (mut showAssigneeError) true)
-                v-focus=showAssigneeError
-                v-model=model
-                v-field='assignee'
-                v-output='message'
-            }}
+              <FormFields::FieldRelate
+                @placeholder={{t "views.app.project.create.selectassignee"}}
+                @label={{t "views.app.project.create.assignee"}}
+                @value={{this.model.assignee}}
+                @options={{this.usersList}}
+                @selected={{find-by "value" this.model.assignee this.usersList}}
+                @searchField="label"
+                @onchange={{action "selectRelated" this.model 'assignee'}}
+                @relateType="relate-user"
+                @data-field="project.assignee"
+                @focus-out={{action (mut this.showAssigneeError) true}}
+                @v-focus={{this.showAssigneeError}}
+                @v-model={{this.model}}
+                @v-field='assignee'
+                @v-output='message'
+            />
 
           </div>
         </div>
 
-        {{#if (eq layoutName "create")}}
+        {{#if (eq this.layoutName "create")}}
           <div class="box box-danger project-issue-types">
             <div class="box-header with-border">
               <h3 class="box-title">{{t "views.app.project.create.issuetypes"}}</h3>
@@ -179,22 +193,22 @@
 
             <div class="box-body no-padding">
 
-              {{field-relatemulti
-                  placeholder=(t "views.app.project.create.selectissuetypes")
-                  label=(t "views.app.project.create.selectissuetypes")
-                  value=model.issuetypes
-                  options=issuetypeList
-                  selected=selectedIssuetypes
-                  searchField="label"
-                  onchange=(action "selectStatic" this 'selectedIssuetypes')
-                  relateType="relate-simple"
-                  data-field="project.issuetypes"
-                  focus-out=(action (mut showIssueTypeError) true)
-                  v-focus=showIssueTypeError
-                  v-model=model
-                  v-field='selectedIssuetypes'
-                  v-output='message'
-              }}
+              <FormFields::FieldRelateMulti
+                @placeholder={{t "views.app.project.create.selectissuetypes"}}
+                @label={{t "views.app.project.create.selectissuetypes"}}
+                @value={{this.model.issuetypes}}
+                @options={{this.issuetypeList}}
+                @selected={{this.selectedIssuetypes}}
+                @searchField="label"
+                @onchange={{action "selectStatic" this 'selectedIssuetypes'}}
+                @relateType="relate-simple"
+                @data-field="project.issuetypes"
+                @focus-out={{action (mut this.showIssueTypeError) true}}
+                @v-focus={{this.showIssueTypeError}}
+                @v-model={{this.model}}
+                @v-field='selectedIssuetypes'
+                @v-output='message'
+              />
 
             </div>
           </div>
@@ -203,7 +217,7 @@
       </div>
 
       <div class="col-sm-12">
-        <button type="button" class="btn btn-primary" disabled="{{saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
+        <button type="button" class="btn btn-primary" disabled="{{this.saveDisabled}}" {{action "save"}}>{{t "global.form.save"}}</button>
         <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
       </div>
 

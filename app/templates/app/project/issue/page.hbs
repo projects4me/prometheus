@@ -1,6 +1,6 @@
 <div class="issue">
   <div class="row">
-    {{#each model as |issue|}}
+    {{#each this.model as |issue|}}
       {{!-- The first Column that contains the issue details,etc --}}
       <div class="col-md-8">
 
@@ -114,20 +114,20 @@
 
                 <div class="box-footer box-comments">
                   <form action="#" method="post">
-                    <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="{{currentUser.user.name}}">
+                    <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
                     {{!-- .img-push is used to add margin to elements next to floating images --}}
                     <div class="img-push">
                       <div class="message-box">
                         {{message-box
-                            issuesList=issuesList
-                            usersList=usersList
+                            issuesList=this.issuesList
+                            usersList=this.usersList
                             spellcheck=false
                             entity=issue
                             placeholder=(t "views.app.conversation.messagebox")
-                            value=comment
+                            value=this.comment
                         }}
                         <div class="pull-right">
-                          <button type="button" class="btn btn-primary" {{action "saveComment" issue comment}}>{{t "views.app.conversation.post"}}</button>
+                          <button type="button" class="btn btn-primary" {{action "saveComment" issue this.comment}}>{{t "views.app.conversation.post"}}</button>
                         </div>
                       </div>
                     </div>
@@ -150,7 +150,7 @@
               </div>
               <div class="box-body no-padding">
                 <div class="issue-activities">
-                  {{time-line activities=activities}}
+                  {{time-line activities=this.activities}}
                 </div>
               </div>
             </div>
@@ -244,7 +244,7 @@
                 {{/each}}
               </ul>
               <div class="filePreviewModal">
-                {{#if filePreviewDialog}}
+                {{#if this.filePreviewDialog}}
                   {{#bootstrap-modal
                       title="views.app.issue.detail.file.preview"
                       closeLabel="global.form.close"
@@ -300,7 +300,7 @@
               {{/if}}
             </ul>
 
-            {{#if editEstimateDialog}}
+            {{#if this.editEstimateDialog}}
               {{#bootstrap-modal
                   title="views.app.issue.detail.estimate.edit"
                   closeLabel="global.form.close"
@@ -322,7 +322,7 @@
               {{/bootstrap-modal}}
             {{/if}}
 
-            {{#if estimateTimeDialog}}
+            {{#if this.estimateTimeDialog}}
               {{#bootstrap-modal
                   title="views.app.issue.detail.timelog.estimate"
                   closeLabel="global.form.close"
@@ -391,7 +391,7 @@
               {{/if}}
             </ul>
 
-            {{#if editLogDialog}}
+            {{#if this.editLogDialog}}
               {{#bootstrap-modal
                   title="views.app.issue.detail.timelog.edit"
                   closeLabel="global.form.close"
@@ -421,7 +421,7 @@
             {{/if}}
 
 
-            {{#if logTimeDialog}}
+            {{#if this.logTimeDialog}}
               {{#bootstrap-modal
                   title="views.app.issue.detail.timelog.log"
                   closeLabel="global.form.close"

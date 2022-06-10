@@ -20,15 +20,15 @@
       {{!-- User profile info section starts--}}
         <div class="box box-primary">
           <div class="box-body box-profile">
-            <img class="user-profile-img img-responsive" src="http://projects4me/userimage/get/{{model.id}}" alt="{{model.name}}">
+            <img class="user-profile-img img-responsive" src="http://projects4me/userimage/get/{{this.model.id}}" alt="{{this.model.name}}">
 
             <div class="user-info">
-                <h3 class="user-name">{{model.name}}</h3>
-                <span class="user-designation">{{model.title}}</span>
+                <h3 class="user-name">{{this.model.name}}</h3>
+                <span class="user-designation">{{this.model.title}}</span>
             </div>
 
             <UserProfile::SocialLinks
-              @user={{model}}
+              @user={{this.model}}
               @redirect={{fn this.redirectToSocialLink}}
             />
 
@@ -46,7 +46,7 @@
             <strong><i class="fa fa-book margin-r-5"></i> {{t "views.app.user.page.education"}}</strong>
 
             <p class="text-muted">
-              {{model.education}}
+              {{this.model.education}}
             </p>
 
             <hr>
@@ -54,7 +54,7 @@
             <strong><i class="fa fa-pencil margin-r-5"></i> {{t "views.app.user.page.skills"}}</strong>
 
             <p>
-              {{#each model.skills as |skills|}}
+              {{#each this.model.skills as |skills|}}
                 <span class="label label-danger">{{skills.tag}}</span>
               {{/each}}
 
@@ -64,7 +64,7 @@
 
             <strong><i class="fa fa-file-text-o margin-r-5"></i> {{t "views.app.user.page.notes"}}</strong>
 
-            <p>{{model.description}}</p>
+            <p>{{this.model.description}}</p>
           </div>
         </div>
       </div>

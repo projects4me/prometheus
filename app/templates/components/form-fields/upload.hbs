@@ -1,5 +1,5 @@
 <div class="dropzone-field">
-  {{#file-dropzone name="file" as |dropzone queue|}}
+  <FileDropzone name="file" as |dropzone queue|>
     {{#if dropzone.active}}
       <p class="dropzone-active">
         {{#if dropzone.valid}}
@@ -25,5 +25,5 @@
         {{/file-upload}}
       </p>
     {{/if}}
-  {{/file-dropzone}}
+  </FileDropzone>
 </div>

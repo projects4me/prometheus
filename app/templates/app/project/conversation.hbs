@@ -11,7 +11,7 @@
             <div class="box box-widget">
 
               <div class="box-start">
-                <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="{{currentUser.user.name}}">
+                <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
                 {{!-- .img-push is used to add margin to elements next to floating images --}}
                 <div class="img-push">
                   <a href="javascript:void(0);" {{action "showDialog"}}>
@@ -28,7 +28,7 @@
             </div>
           </div>
 
-          {{#each model as |entity|}}
+          {{#each this.model as |entity|}}
 
             <div class="masonry-item">
 
@@ -46,7 +46,7 @@
                     <span class="upvotes">
                       {{entity.votes.length}}
                       {{#if entity.votes}}
-                        {{#if (user-created entity.votes currentUser.user.id)}}
+                        {{#if (user-created entity.votes this.currentUser.user.id)}}
                           <i class="fa fa-heart"></i>
                         {{else}}
                           <i class="fa fa-heart-o"></i>
@@ -69,7 +69,7 @@
                   {{!-- /.attachment-block --}}
 
                   {{!-- Social sharing buttons --}}
-                  {{#if (user-created entity.votes currentUser.user.id)}}
+                  {{#if (user-created entity.votes this.currentUser.user.id)}}
                     {{t "views.app.conversation.you"}} <i class="fa fa-heart"></i>
                   {{else}}
                     <button type="button" class="btn btn-default btn-xs" {{action "upvote" entity.id}}>
@@ -105,12 +105,12 @@
 
                     <div class="box-footer">
                       <form action="#" method="post">
-                        <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{currentUser.user.id}}" alt="{{currentUser.user.name}}">
+                        <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
                         {{!-- .img-push is used to add margin to elements next to floating images --}}
                         <div class="img-push">
                           <div class="message-box">
                             <ConversationUi::MessageBox
-                              @usersList={{membersList}}
+                              @usersList={{this.membersList}}
                               @issueSearch={{perform this.search}}
                               @save={{action "save"}}
                               @entityId={{entity.id}}
@@ -127,7 +127,7 @@
                       <div class="vote">
                         <div class="agree">
                           <div class="info-box">
-                            {{#if (user-created entity.comments currentUser.user.id)}}
+                            {{#if (user-created entity.comments this.currentUser.user.id)}}
                               <span class="info-box-icon bg-green" data-toggle="tooltip" title="{{t "views.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-up"></i></span>
                             {{else}}
                               <a href="javascript:void(0);" {{action "vote" "I agree" entity.id}}>
@@ -152,7 +152,7 @@
                         <div class="disagree">
 
                           <div class="info-box">
-                            {{#if (user-created entity.comments currentUser.user.id)}}
+                            {{#if (user-created entity.comments this.currentUser.user.id)}}
                               <span class="info-box-icon bg-red pull-right" data-toggle="tooltip" title="{{t "views.app.conversation.vote.voted"}}"><i class="fa fa-thumbs-down"></i></span>
                             {{else}}
                               <a href="javascript:void(0);" {{action "vote" "I disagree" entity.id}}>
@@ -193,55 +193,55 @@
 
   </div>
 
-  {{#if addConversationDialog}}
+  {{#if this.addConversationDialog}}
     {{#bootstrap-modal
       title="views.app.conversation.create"
       confirmLabel="global.form.save"
       closeLabel="global.form.cancel"
       confirm=(action "addConversation")
-      close="removeModal"}}
+      close=(action "removeModal")}}
       <div class="box-body">
-        {{field-text
-            placeholder=(t "views.app.conversation.new.subject")
-            label=(t "views.app.conversation.new.subject")
-            value=newConversation.subject
-            mask="alphanumeric"
-            data-field="newConversation.subject"
-            focus-out=(action (mut showSubjectError) true)
-            v-focus=showSubjectError
-            v-model=newConversation
-            v-field='subject'
-            v-output='message'
-        }}
+        <FormFields::FieldText
+            @placeholder={{t "views.app.conversation.new.subject"}}
+            @label={{t "views.app.conversation.new.subject"}}
+            @value={{this.newConversation.subject}}
+            @mask="alphanumeric"
+            @data-field="newConversation.subject"
+            @focus-out={{action (mut this.showSubjectError) true}}
+            @v-focus={{this.showSubjectError}}
+            @v-model={{this.newConversation}}
+            @v-field='subject'
+            @v-output='message'
+        />
 
-        {{field-textarea
-            placeholder=(t "views.app.conversation.new.description")
-            label=(t "views.app.conversation.new.description")
-            value=newConversation.description
-            data-field="newConversation.description"
-            focus-out=(action (mut showDescriptionError) true)
-            v-focus=showDescriptionError
-            v-model=newConversation
-            v-field='description'
-            v-output='message'
-        }}
+        <FormFields::FieldTextArea
+            @placeholder={{t "views.app.conversation.new.description"}}
+            @label={{t "views.app.conversation.new.description"}}
+            @value={{this.newConversation.description}}
+            @data-field="newConversation.description"
+            @focus-out={{action (mut this.showDescriptionError) true}}
+            @v-focus={{this.showDescriptionError}}
+            @v-model={{this.newConversation}}
+            @v-field='description'
+            @v-output='message'
+        />
 
-        {{field-relate
-            placeholder=(t "views.app.conversation.new.type")
-            label=(t "views.app.conversation.new.type")
-            value=newConversation.roomType
-            options=roomTypes
-            selected=(find-by "value" newConversation.roomType roomTypes)
-            searchField="label"
-            onchange=(action "selectNewType")
-            relateType="relate-simple"
-            data-field="newConversation.roomType"
-            focus-out=(action (mut showTypeError) true)
-            v-focus=showTypeError
-            v-model=newConversation
-            v-field='roomType'
-            v-output='message'
-        }}
+        <FormFields::FieldRelate
+            @placeholder={{t "views.app.conversation.new.type"}}
+            @label={{t "views.app.conversation.new.type"}}
+            @value={{this.newConversation.roomType}}
+            @options={{this.roomTypes}}
+            @selected={{find-by "value" this.newConversation.roomType this.roomTypes}}
+            @searchField="label"
+            @onchange={{action "selectNewType"}}
+            @relateType="relate-simple"
+            @data-field="newConversation.roomType"
+            @focus-out={{action (mut this.showTypeError) true}}
+            @v-focus={{this.showTypeError}}
+            @v-model={{this.newConversation}}
+            @v-field='roomType'
+            @v-output='message'
+        />
 
       </div>
     {{/bootstrap-modal}}

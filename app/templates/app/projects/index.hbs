@@ -91,12 +91,13 @@
             </span>
             <div class="has-feedback">
               <FormFields::FieldText
-                @focus-in={{fn this.openFilters}}
+                @focusIn={{fn this.openFilters}}
                 @insert-newline={{this.filter}}
                 @value={{this.query}}
                 @name="query"
                 @readonly="readonly"
-                @placeholder={{concat (t "global.form.search") " " (t "global.module.plural.project") " .."}}/>
+                @placeholder={{concat (t "global.form.search") " " (t "global.module.plural.project") " .."}}
+              />
               <span class="glyphicon glyphicon-search form-control-feedback"></span>
             </div>
             <button type="button" class="btn btn-primary" {{action "searchByRules"}}>{{t "global.form.search"}}</button>
@@ -118,17 +119,17 @@
                   <span>{{this.query}}</span>
                 </div>
 
-                {{field-text
-                    placeholder=(t "views.app.project.list.savedsearch.inputname")
-                    label=(t "views.app.project.list.savedsearch.name")
-                    value=newSavedsearch.name
-                }}
+                <FormFields::FieldText
+                  @placeholder={{t "views.app.project.list.savedsearch.inputname"}}
+                  @label={{t "views.app.project.list.savedsearch.name"}}
+                  @value={{this.newSavedsearch.name}}
+                />
 
-                {{field-checkbox
+                {{!-- {{field-checkbox
                     placeholder=(t "views.app.project.list.savedsearch.selectpublic")
                     label=(t "views.app.project.list.savedsearch.public")
                     value=newSavedsearch.public
-                }}
+                }} --}}
 
               {{/bootstrap-modal}}
             {{/if}}
