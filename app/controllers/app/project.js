@@ -2,9 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Prometheus from "prometheus/controllers/prometheus";
+import PrometheusController from "prometheus/controllers/prometheus";
 import format from "prometheus/utils/data/format";
-import { computed } from '@ember/object';
+import { computed, action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 
 /**
@@ -15,9 +15,9 @@ import { htmlSafe } from '@ember/template';
  * @namespace Prometheus.Controllers
  * @module App
  * @extends Prometheus
- * @author Hammad Hassan gollmer@gmail.com
+ * @author Hammad Hassan <gollmer@gmail.com>
  */
-export default Prometheus.extend({
+export default class AppProjectController extends PrometheusController {
 
     /**
      * These are the issues for the current project
@@ -27,7 +27,7 @@ export default Prometheus.extend({
      * @for Project
      * @public
      */
-    issues: {},
+    issues = {};
 
     /**
      * These are the members for the current project
@@ -37,7 +37,7 @@ export default Prometheus.extend({
      * @for Project
      * @public
      */
-    members: {},
+    members = {};
 
     /**
      * This is the list of users that has been extracted
@@ -47,24 +47,25 @@ export default Prometheus.extend({
      * @returns array
      * @public
      */
-    issuesList: computed('projectId', 'issues', function(){
+    @computed('projectId', 'issues')
+    get issuesList() {
         let map = {
-            id:'id',
-            name:'subject',
-            number:'issueNumber',
-            status:'status',
-            projectId:'projectId'
+            id: 'id',
+            name: 'subject',
+            number: 'issueNumber',
+            status: 'status',
+            projectId: 'projectId'
         };
         let issueList = format.getSelectList(this.issues, map);
         issueList.unshift({
-            id:'',
-            name:htmlSafe(this.intl.t('global.blank')).toHTML(),
-            number:'',
-            status:'',
-            projectId:''
+            id: '',
+            name: htmlSafe(this.intl.t('global.blank')).toHTML(),
+            number: '',
+            status: '',
+            projectId: ''
         });
         return issueList;
-    }),
+    }
 
     /**
      * This is the list of users that has been extracted
@@ -74,29 +75,18 @@ export default Prometheus.extend({
      * @returns array
      * @public
      */
-    membersList: computed('projectId', 'members', function(){
+    @computed('projectId', 'members')
+    get membersList() {
         return format.getSelectList(this.members);
-    }),
-
-    /**
-     * These are the actions supported by this controller
-     *
-     * @property actions
-     * @type Object
-     * @for Project
-     * @public
-     */
-    actions:{
-
-        /**
-         * This function navigates a user to the project page
-         *
-         * @method navigateToProject
-         * @public
-         */
-        navigateToProject(projectId){
-            this.transitionToRoute('app.project', {project_id:projectId});
-        }
     }
 
-});
+    /**
+     * This function navigates a user to the project page
+     *
+     * @method navigateToProject
+     * @public
+     */
+    @action navigateToProject(projectId) {
+        this.transitionToRoute('app.project', { project_id: projectId });
+    }
+}

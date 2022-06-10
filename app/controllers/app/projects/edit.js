@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Create from "prometheus/controllers/app/projects/create";
+import ProjectsCreateController from "prometheus/controllers/app/projects/create";
 import _ from "lodash";
+
 /**
  * This is empty controller, normally we do not create them. However
  * Ember's inject in the child controllers was failing on reload
@@ -16,7 +17,7 @@ import _ from "lodash";
  * @extends Create
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Create.extend({
+export default class ProjectsEditController extends ProjectsCreateController {
 
     /**
      * This is the layout name that is used to figure out what to
@@ -27,7 +28,7 @@ export default Create.extend({
      * @type String
      * @private
      */
-    layoutName:'edit',
+    layoutName = 'edit';
 
     /**
      * This function sets the short code for the project.
@@ -36,9 +37,9 @@ export default Create.extend({
      * @param model
      * @protected
      */
-    beforeValidate(model){
-        model.set('shortCode',this.shortCode);
-    },
+    beforeValidate(model) {
+        model.set('shortCode', this.shortCode);
+    }
 
     /**
      * This function checks if a field has changed
@@ -47,9 +48,9 @@ export default Create.extend({
      * @param model
      * @protected
      */
-    hasChanged(model){
+    hasChanged(model) {
         return (_.size(model.changedAttributes()) > 0);
-    },
+    }
 
     /**
      * This function navigates a use to the issue page
@@ -59,10 +60,10 @@ export default Create.extend({
      * @param projectId
      * @protected
      */
-    afterCancel(model){
+    afterCancel(model) {
         this.transitionToRoute('app.project', {
-            project_id:model.get('id'),
+            project_id: model.get('id'),
         });
         model.rollbackAttributes();
     }
-});
+}

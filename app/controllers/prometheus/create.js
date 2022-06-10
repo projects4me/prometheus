@@ -2,11 +2,13 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Prometheus from "prometheus/controllers/prometheus";
-import { inject as injectController } from '@ember/controller';
-import { computed } from '@ember/object';
+import PrometheusController from "prometheus/controllers/prometheus";
+import { inject as controller } from '@ember/controller';
+import { computed, action } from '@ember/object';
 import { hash } from 'rsvp';
 import _ from "lodash";
+import { controllers } from "chart.js";
+import { tracked } from '@glimmer/tracking';
 
 /**
  * This is the controller for issue create page
@@ -16,7 +18,7 @@ import _ from "lodash";
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Prometheus.extend({
+export default class PrometheusCreateController extends PrometheusController {
 
     /**
      * This is the layout name that is used to figure out what to
@@ -27,7 +29,7 @@ export default Prometheus.extend({
      * @type String
      * @private
      */
-    layoutName:'create',
+    @tracked layoutName = 'create';
 
     /**
      * This is the module for which we are trying to create
@@ -37,7 +39,7 @@ export default Prometheus.extend({
      * @for Create
      * @protected
      */
-    module: '',
+    module = '';
 
     /**
      * This is the controller for the app, we are injecting it in order to
@@ -48,7 +50,7 @@ export default Prometheus.extend({
      * @for Create
      * @public
      */
-    appController: injectController('app'),
+    @controller('app') appController;
 
     /**
      * This is a computed property in which gets the list of user
@@ -59,89 +61,78 @@ export default Prometheus.extend({
      * @for Create
      * @private
      */
-    usersList: computed('appController.usersList', function(){
+    @computed('appController.usersList')
+    get usersList() {
         return this.appController.get('usersList');
-    }),
+    }
 
     /**
-     * These are the events that this controller handles
+     * This function is responsible for saving the model.
+     * After successfully saving the function takes the user to
+     * the saved page.
      *
-     * @property actions
-     * @type Object
-     * @for Create
+     * @method save
      * @public
+     * @todo Handle the situation where we are not using validations
      */
-    actions:{
+    @action save() {
+        let _self = this;
+        let model = this.model;
 
-        /**
-         * This function is responsible for saving the model.
-         * After successfully saving the function takes the user to
-         * the saved page.
-         *
-         * @method save
-         * @public
-         * @todo Handle the situation where we are not using validations
-         */
-        save:function() {
-            let _self = this;
-            let model = this.model;
+        if (typeof model.validate === 'function') {
+            _self.beforeValidate(model);
+            model.validate().then(({ validations }) => {
+                _self.afterValidate(model, validations);
+                if (validations.get('isValid')) {
+                    _self.beforeSave(model);
+                    _self._save(model);
+                } else {
+                    _self._showError(validations);
+                }
+            });
+        } else {
+            _self._save(model);
+        }
+    }
 
-            if (typeof model.validate === 'function') {
-                _self.beforeValidate(model);
-                model.validate().then(({ validations }) => {
-                    _self.afterValidate(model, validations);
-                    if (validations.get('isValid')) {
-                        _self.beforeSave(model);
-                        _self._save(model);
-                    } else {
-                        _self._showError(validations);
-                    }
-                });
-            } else {
-                _self._save(model);
-            }
-        },
+    /**
+     * This function lets a user traverse to the issue list view of the project
+     *
+     * @method cancel
+     * @public
+     * @todo move cancel to create controller
+     */
+    @action cancel() {
+        let _self = this;
+        let model = _self.get('model');
+        let intl = _self.intl;
 
-        /**
-         * This function lets a user traverse to the issue list view of the project
-         *
-         * @method cancel
-         * @public
-         * @todo move cancel to create controller
-         */
-        cancel:function(){
-            let _self = this;
-            let model = _self.get('model');
-            let intl = _self.intl;
+        if (_self.hasChanged(model)) {
+            let message = new Messenger().post({
+                message: intl.t("global.form.cancelcicked").toString(),
+                type: 'warning',
+                showCloseButton: true,
+                actions: {
+                    confirm: {
+                        label: intl.t("global.form.confirmcancel").toString(),
+                        action: function () {
+                            message.cancel();
+                            _self.afterCancel(model);
+                        }
+                    },
+                    cancel: {
+                        label: intl.t("global.form.onsecondthought").toString(),
+                        action: function () {
+                            message.cancel();
+                        }
+                    },
 
-            if (_self.hasChanged(model)) {
-                let message = new Messenger().post({
-                    message: intl.t("global.form.cancelcicked").toString(),
-                    type: 'warning',
-                    showCloseButton: true,
-                    actions: {
-                        confirm: {
-                            label: intl.t("global.form.confirmcancel").toString(),
-                            action: function() {
-                                message.cancel();
-                                _self.afterCancel(model);
-                            }
-                        },
-                        cancel: {
-                            label: intl.t("global.form.onsecondthought").toString(),
-                            action: function() {
-                                message.cancel();
-                            }
-                        },
-
-                    }
-                });
-            } else {
-                _self.afterCancel(model);
-            }
-        },
-
-    },
+                }
+            });
+        } else {
+            _self.afterCancel(model);
+        }
+    }
 
     /**
      * This function is used to actually save the model
@@ -150,15 +141,15 @@ export default Prometheus.extend({
      * @param model
      * @private
      */
-    _save(model){
+    _save(model) {
         let _self = this;
-        model.save().then(function(data){
-            _self.afterSave(data).then(function(){
+        model.save().then(function (data) {
+            _self.afterSave(data).then(function () {
                 _self.showSuccess(data);
                 _self.navigateToSuccess(data);
             });
         });
-    },
+    }
 
     /**
      * This a placeholder function that is called before we call
@@ -168,8 +159,8 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    beforeSave(){
-    },
+    beforeSave() {
+    }
 
     /**
      * This a placeholder function that is called after we call
@@ -179,9 +170,9 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    afterSave(){
+    afterSave() {
         return hash({});
-    },
+    }
 
     /**
      * This a placeholder function that is called before we call
@@ -191,8 +182,8 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    beforeValidate(){
-    },
+    beforeValidate() {
+    }
 
     /**
      * This a placeholder function that is called after we call
@@ -202,8 +193,8 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    afterValidate(){
-    },
+    afterValidate() {
+    }
 
     /**
      * This function is called when we need to show a success
@@ -213,14 +204,14 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    showSuccess(model){
+    showSuccess(model) {
         let _self = this;
         new Messenger().post({
             message: _self.getSuccessMessage(model),
             type: 'success',
             showCloseButton: true
         });
-    },
+    }
 
     /**
      * This is a placeholder function that is called to get the
@@ -229,9 +220,9 @@ export default Prometheus.extend({
      * @method getSuccessMessage
      * @protected
      */
-    getSuccessMessage(){
+    getSuccessMessage() {
         return '';
-    },
+    }
 
     /**
      * This is a placeholder function that is called to navigate
@@ -241,8 +232,8 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    navigateToSuccess(){
-    },
+    navigateToSuccess() {
+    }
 
     /**
      * This function is called when we need to show an error
@@ -255,14 +246,14 @@ export default Prometheus.extend({
     _showError(validations) {
         let _self = this;
         Logger.debug(_self.get('module'));
-        let messages = _self._buildMessages(validations,_self.get('module'));
+        let messages = _self._buildMessages(validations, _self.get('module'));
 
         new Messenger().post({
             message: messages,
             type: 'error',
             showCloseButton: true
         });
-    },
+    }
 
     /**
      * This is the placeholder function to find out if the model has
@@ -273,9 +264,9 @@ export default Prometheus.extend({
      * @param model
      * @protected
      */
-    hasChanged(model){
+    hasChanged(model) {
         return (_.size(model.changedAttributes()) > 0);
-    },
+    }
 
     /**
      * This is a placeholder function that is called after the cancel
@@ -284,8 +275,6 @@ export default Prometheus.extend({
      * @method afterCancel
      * @protected
      */
-    afterCancel(){
+    afterCancel() {
     }
-
-
-});
+}

@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Prometheus from "prometheus/controllers/prometheus";
+import PrometheusController from "prometheus/controllers/prometheus";
 import format from "../utils/data/format";
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
@@ -14,9 +14,9 @@ import { action } from '@ember/object';
  * @class App
  * @namespace Prometheus.Controllers
  * @extends Prometheus
- * @author Hammad Hassan gollmer@gmail.com
+ * @author Hammad Hassan <gollmer@gmail.com>
  */
-export default class App extends Prometheus {
+export default class AppController extends PrometheusController {
 
     /**
      * These are the roles in the system
@@ -37,7 +37,7 @@ export default class App extends Prometheus {
      * @public
      */
     @tracked users = {};
-    
+
     /**
      * These are the chatrooms of users in the system
      *
@@ -46,7 +46,7 @@ export default class App extends Prometheus {
      * @for App
      * @public
      */
-    @tracked chatrooms= [];
+    @tracked chatrooms = [];
 
     /**
      * This is the list of roles that has been extracted
@@ -56,7 +56,7 @@ export default class App extends Prometheus {
      * @returns array
      * @public
      */
-    get rolesList() { 
+    get rolesList() {
         return format.getSelectList(this.roles);
     }
 
@@ -68,7 +68,7 @@ export default class App extends Prometheus {
      * @returns array
      * @public
      */
-    get usersList(){
+    get usersList() {
         Logger.debug(this.users);
         return format.getSelectList(this.users);
     }
@@ -109,8 +109,8 @@ export default class App extends Prometheus {
         Logger.debug('+Prometheus.Controllers.App::itemSearched');
         let _self = this;
 
-        _self.transitionToRoute('app.project',{project_id: selected.project.get('id')});
-        _self.transitionToRoute('app.project.issue.page',{issue_number:selected.number});
+        _self.transitionToRoute('app.project', { project_id: selected.project.get('id') });
+        _self.transitionToRoute('app.project.issue.page', { issue_number: selected.number });
         Logger.debug('-Prometheus.Controllers.App::itemSearched');
     }
 
@@ -120,27 +120,27 @@ export default class App extends Prometheus {
      * @method startChat
      * @param Prometheus.Models.User user
      */
-    @action startChat(user){
+    @action startChat(user) {
         Logger.debug('Prometheus.Controllers.App::startChat');
         let _self = this;
         Logger.debug(user);
         Logger.debug(_self);
 
         let options = {
-            query:'((Chatroom.type : private) AND (((ownedby.id : '+_self.get('currentUser.user.id')+') AND (conversers.id : '+user.id+')) OR ((ownedby.id : '+user.id+') AND (conversers.id : '+_self.get('currentUser.user.id')+'))))'
+            query: '((Chatroom.type : private) AND (((ownedby.id : ' + _self.get('currentUser.user.id') + ') AND (conversers.id : ' + user.id + ')) OR ((ownedby.id : ' + user.id + ') AND (conversers.id : ' + _self.get('currentUser.user.id') + '))))'
         };
 
-        _self.get('store').query('chatroom',options).then(function(data){
+        _self.get('store').query('chatroom', options).then(function (data) {
             Logger.debug(data);
             let chatrooms = _self.get('chatrooms');
             Logger.debug(chatrooms);
             if (chatrooms === undefined) {
                 Logger.debug('Initing chatrooms');
-                _self.set('chatrooms',data);
+                _self.set('chatrooms', data);
             } else {
                 Logger.debug('Adding room');
                 chatrooms.pushObject(data.get('firstObject'));
-                _self.set('chatrooms',chatrooms);
+                _self.set('chatrooms', chatrooms);
             }
         });
         // If no chatroom was found then create one
@@ -155,10 +155,9 @@ export default class App extends Prometheus {
      * @method newMessage
      * @param message
      */
-    @action newMessage(message){
+    @action newMessage(message) {
         Logger.debug('Prometheus.Controllers.App::newMessage');
         Logger.debug(message);
         Logger.debug('-Prometheus.Controllers.App::newMessage');
     }
-
 }

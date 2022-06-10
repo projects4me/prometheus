@@ -2,9 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Create from "prometheus/controllers/prometheus/create";
+import PrometheusCreateController from "prometheus/controllers/prometheus/create";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
-import { inject as injectController } from '@ember/controller';
+import { inject as controller } from '@ember/controller';
 import { computed } from '@ember/object';
 import _ from "lodash";
 import { htmlSafe } from '@ember/template';
@@ -20,7 +20,7 @@ import { htmlSafe } from '@ember/template';
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Create.extend(ProjectRelated, {
+export default class WikiCreateController extends PrometheusCreateController.extend(ProjectRelated) {
 
     /**
      * This is the module for which we are trying to create
@@ -30,7 +30,7 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @protected
      */
-    module: 'wiki',
+    module = 'wiki';
 
     /**
      * This is the controller for the app, we are injecting it in order to
@@ -41,7 +41,7 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @public
      */
-    appController: injectController('app'),
+    @controller('app') appController;
 
     /**
      * This is a computed property in which gets the list of user
@@ -52,9 +52,10 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @private
      */
-    usersList: computed('appController.usersList', function(){
+    @computed('appController.usersList')
+    get usersList() {
         return this.appController.get('usersList');
-    }),
+    }
 
     /**
      * This function returns the success message
@@ -62,11 +63,11 @@ export default Create.extend(ProjectRelated, {
      * @method getSuccessMessage
      * @param model
      */
-    getSuccessMessage(model){
-        return htmlSafe(this.intl.t('views.app.wiki.created',{
-            name:model.get('name')
+    getSuccessMessage(model) {
+        return htmlSafe(this.intl.t('views.app.wiki.created', {
+            name: model.get('name')
         }));
-    },
+    }
 
     /**
      * This function navigate a user to the issue detail page
@@ -74,12 +75,12 @@ export default Create.extend(ProjectRelated, {
      * @method navigateToSuccess
      * @param model
      */
-    navigateToSuccess(model){
+    navigateToSuccess(model) {
         this.transitionToRoute('app.project.wiki.page', {
-            project_id:model.get('projectId'),
-            wiki_name:model.get('name')
+            project_id: model.get('projectId'),
+            wiki_name: model.get('name')
         });
-    },
+    }
 
     /**
      * This function checks if a field has changed
@@ -88,9 +89,9 @@ export default Create.extend(ProjectRelated, {
      * @param model
      * @protected
      */
-    hasChanged(model){
+    hasChanged(model) {
         return (_.size(model.changedAttributes()) > 4);
-    },
+    }
 
     /**
      * This function navigates a use to the issue list view.
@@ -99,10 +100,8 @@ export default Create.extend(ProjectRelated, {
      * @param projectId
      * @protected
      */
-    afterCancel(){
+    afterCancel() {
         let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
-        this.transitionToRoute('app.project.wiki', {project_id:projectId});
+        this.transitionToRoute('app.project.wiki', { project_id: projectId });
     }
-
-
-});
+}

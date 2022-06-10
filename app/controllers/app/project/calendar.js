@@ -2,7 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Prometheus from "prometheus/controllers/prometheus";
+import PrometheusController from "prometheus/controllers/prometheus";
+import { action } from '@ember/object';
 
 /**
  * This is the controller for the calendar controller route
@@ -13,7 +14,8 @@ import Prometheus from "prometheus/controllers/prometheus";
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Prometheus.extend({
+export default class ProjectCalendarController extends PrometheusController {
+
 
     /**
      * Locale value, the default is en
@@ -23,7 +25,7 @@ export default Prometheus.extend({
      * @for Calendar
      * @private
      */
-    localeCode: 'en',
+    localeCode = 'en';
 
     /**
      * These are the header option for the calendar
@@ -33,11 +35,11 @@ export default Prometheus.extend({
      * @for Calendar
      * @public
      */
-    header: {
+    header = {
         left: 'prev,next today',
         center: 'title',
         right: 'month,agendaWeek,agendaDay,listWeek'
-    },
+    };
 
     /**
      * The events
@@ -47,69 +49,54 @@ export default Prometheus.extend({
      * @for Calendar
      * @public
      */
-    events: null,
+    events = null;
 
     /**
-     * These are the actions that are handled by this controller
+     * This is the function that handled the click event
      *
-     * @property actions
-     * @type Object
-     * @for Calendar
+     * @method clicked
+     * @param {Object} event
      * @public
      */
-    actions: {
+    @action clicked(event) {
+        this.showModal(event);
+    }
 
-        /**
-         * This is the function that handled the click event
-         *
-         * @method clicked
-         * @param {Object} event
-         * @public
-         */
-        clicked(event){
-            this.showModal(event);
-        },
+    /**
+     * This function handles the event where the drag is started
+     *
+     * @method eventDragStart
+     * @param {Object} event
+     * @public
+     */
+    @action eventDragStart(event) {
+        Logger.debug("AppProjectCalendarController::eventDragStart()");
+        Logger.debug(event);
+    }
 
-        /**
-         * This function handles the event where the drag is started
-         *
-         * @method eventDragStart
-         * @param {Object} event
-         * @public
-         */
-        eventDragStart(event){
-            Logger.debug("AppProjectCalendarController::eventDragStart()");
-            Logger.debug(event);
-        },
-
-        /**
-         * This function handles the action when the view has been rendered
-         *
-         * @method eventRender
-         * @param {Object} event
-         * @param {Object} eventElement
-         * @public
-         */
-        eventRender(event,eventElement){
-            let _self = this;
-            if (event.priority)
-            {
-                eventElement.find('div.fc-content').prepend(this.getPriorityHTML(event.priority));
-                eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));
-            }
-            if (event.className)
-            {
-                let tooltip = _self.intl.t("views.app.issue.lists.priority."+event.priority);
-                tooltip += ' '+_self.intl.t("views.app.issue.priority");
-                tooltip += ' - '+_self.intl.t("views.app.issue.lists.status."+event.className);
-                eventElement.find('div.fc-content').attr('data-toggle','tooltip');
-                eventElement.find('div.fc-content').attr('title',tooltip);
-                //eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));
-            }
-        },
-
-    }, // end definition actions
-
+    /**
+     * This function handles the action when the view has been rendered
+     *
+     * @method eventRender
+     * @param {Object} event
+     * @param {Object} eventElement
+     * @public
+     */
+    @action eventRender(event, eventElement) {
+        let _self = this;
+        if (event.priority) {
+            eventElement.find('div.fc-content').prepend(this.getPriorityHTML(event.priority));
+            eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));
+        }
+        if (event.className) {
+            let tooltip = _self.intl.t("views.app.issue.lists.priority." + event.priority);
+            tooltip += ' ' + _self.intl.t("views.app.issue.priority");
+            tooltip += ' - ' + _self.intl.t("views.app.issue.lists.status." + event.className);
+            eventElement.find('div.fc-content').attr('data-toggle', 'tooltip');
+            eventElement.find('div.fc-content').attr('title', tooltip);
+            //eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));
+        }
+    }
 
     /**
      * This function used to retrieve HTML tag for a priority
@@ -119,7 +106,7 @@ export default Prometheus.extend({
      * @return {string}
      * @public
      */
-    getPriorityHTML:function(priority){
+    getPriorityHTML(priority) {
         let HTML = '';
         switch (priority) {
             case 'blocker':
@@ -145,5 +132,4 @@ export default Prometheus.extend({
         }
         return HTML;
     }
-
-});
+}

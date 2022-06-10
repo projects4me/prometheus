@@ -2,9 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import { inject } from '@ember/service';
 import Controller from '@ember/controller';
-import { t } from 'ember-intl';
+import { service } from '@ember/service';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 /**
  * This the signin controller.
@@ -14,7 +15,7 @@ import { t } from 'ember-intl';
  * @extends Ember.Controller
  * @author Hammad Hassan gollmer@gmail.com
  */
-export default Controller.extend({
+export default class SignInController extends Controller {
 
     /**
      * The intl library service that is used in order to get the translations
@@ -24,7 +25,7 @@ export default Controller.extend({
      * @for Prometheus.Controllers.Prometheus
      * @public
      */
-    intl: inject(),
+    @service('intl') intl;
 
     /**
      * The session service which is offered by ember-simple-auth that will be used
@@ -35,7 +36,7 @@ export default Controller.extend({
      * @for Signin
      * @public
      */
-    session: inject(),
+    @service('session') session;
 
     /**
      * This property is used to store user's name.
@@ -45,7 +46,7 @@ export default Controller.extend({
      * @for Signin
      * @public
      */
-    username: "",
+    @tracked username = "";
 
     /**
      * The property is used to store user's password.
@@ -55,7 +56,7 @@ export default Controller.extend({
      * @for Signin
      * @public
      */
-    password: "",
+    @tracked password = "";
 
     /**
      * This property is used to store error message generated while user is signing in
@@ -66,48 +67,35 @@ export default Controller.extend({
      * @for Signin
      * @public
      */
-    errorMessage: "",
+    @tracked errorMessage = "";
 
     /**
-     * The events that this controller is listing to
+     * This function invalidates the session which effectively logs the user out
+     * of the application and if user is authenticated then we'll route user to
+     * "app" route
      *
-     * @property actions
-     * @type Object
-     * @for Signin
+     * @method authenticate
      * @public
      */
-    actions: {
+    @action async authenticate() {
+        let _self = this;
+        let username = _self.username;
+        let password = _self.password;
 
-        /**
-         * This function invalidates the session which effectively logs the user out
-         * of the application and if user is authenticated then we'll route user to
-         * "app" route
-         *
-         * @method authenticate
-         * @public
-         */
-        async authenticate() {
-            let _self = this;
-            let username = _self.username;
-            let password = _self.password;
-
-            await _self.session.authenticate('authenticator:oauth2', username, password).then(
-                () => {
-                    if (_self.session.isAuthenticated) {
-                        localStorage.removeItem('projectId');
-                        _self.session.handleAuthentication('app');
-                    }
-                },
-                () => {
-                    new Messenger().post({
-                        message: _self.intl.t("views.signin.error"),
-                        type: 'error',
-                        showCloseButton: true
-                    });
+        await _self.session.authenticate('authenticator:oauth2', username, password).then(
+            () => {
+                if (_self.session.isAuthenticated) {
+                    localStorage.removeItem('projectId');
+                    _self.session.handleAuthentication('app');
                 }
-            );
-        }
-
+            },
+            () => {
+                new Messenger().post({
+                    message: _self.intl.t("views.signin.error"),
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }
+        );
     }
-
-});
+}

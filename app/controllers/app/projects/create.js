@@ -2,13 +2,14 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Create from "prometheus/controllers/prometheus/create";
-import  format from "../../../utils/data/format";
-import { inject as injectController } from '@ember/controller';
+import PrometheusCreateController from "prometheus/controllers/prometheus/create";
+import format from "../../../utils/data/format";
+import { inject as controller } from '@ember/controller';
 import { computed } from '@ember/object';
 import { hash } from 'rsvp';
 import _ from 'lodash';
 import { htmlSafe } from '@ember/template';
+import { tracked } from '@glimmer/tracking';
 
 /**
  * This is empty controller, normally we do not create them. However
@@ -22,7 +23,7 @@ import { htmlSafe } from '@ember/template';
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Create.extend({
+export default class ProjectsCreateController extends PrometheusCreateController {
 
     /**
      * This is the module for which we are trying to create
@@ -32,7 +33,7 @@ export default Create.extend({
      * @for Create
      * @protected
      */
-    module: 'project',
+    module = 'project';
 
     /**
      * We are pre-loading the project issues and the users in the
@@ -46,7 +47,7 @@ export default Create.extend({
      * @for Create
      * @private
      */
-    appController: injectController('app'),
+    @controller('app') appController;
 
     /**
      * This is a computed property in which gets the list of users
@@ -57,9 +58,10 @@ export default Create.extend({
      * @for Create
      * @private
      */
-    usersList: computed('appController.usersList', function(){
+    @computed('appController.usersList')
+    get usersList() {
         return this.appController.get('usersList');
-    }),
+    }
 
     /**
      * This is a computed property that generated the project short
@@ -71,16 +73,17 @@ export default Create.extend({
      * @public
      * @todo optimize the short code generation algorithm to reduce conflicts
      */
-    shortCode: computed('model.name', function(){
+    @computed('model.name')
+    get shortCode() {
         let name = '';
         if (this.model.name !== undefined) {
             name = this.model.name;
         }
-        let shortCode = name.replace(/[^a-zA-Z]+/g,'');
-        shortCode = shortCode.slice(0,5).toUpperCase();
+        let shortCode = name.replace(/[^a-zA-Z]+/g, '');
+        shortCode = shortCode.slice(0, 5).toUpperCase();
 
         return shortCode;
-    }),
+    }
 
     /**
      * This is a computed property in which gets the list of issue
@@ -91,9 +94,10 @@ export default Create.extend({
      * @for Create
      * @private
      */
-    issuetypeList: computed('issuetypes', function(){
+    @computed('issuetypes')
+    get issuetypeList() {
         return format.getSelectList(this.issuetypes);
-    }),
+    }
 
     /**
      * This function sets the short code for the project.
@@ -102,15 +106,15 @@ export default Create.extend({
      * @param model
      * @protected
      */
-    beforeValidate(model){
-        model.set('shortCode',this.shortCode);
-        if(!(this.selectedIssuetypes != undefined &&
-                this.selectedIssuetypes.length > 0)) {
-            model.set('hasIssuetypes','');
+    beforeValidate(model) {
+        model.set('shortCode', this.shortCode);
+        if (!(this.selectedIssuetypes != undefined &&
+            this.selectedIssuetypes.length > 0)) {
+            model.set('hasIssuetypes', '');
         } else {
-            model.set('hasIssuetypes',true);
+            model.set('hasIssuetypes', true);
         }
-    },
+    }
 
     /**
      * This function sets the model properties before saving it
@@ -118,11 +122,11 @@ export default Create.extend({
      * @method beforeSave
      * @param model
      */
-    beforeSave(model){
-        model.set('deleted','0');
-        model.set('startDate',moment(model.get('startDate')).format("YYYY-MM-DD"));
-        model.set('endDate',moment(model.get('endDate')).format("YYYY-MM-DD"));
-    },
+    beforeSave(model) {
+        model.set('deleted', '0');
+        model.set('startDate', moment(model.get('startDate')).format("YYYY-MM-DD"));
+        model.set('endDate', moment(model.get('endDate')).format("YYYY-MM-DD"));
+    }
 
     /**
      * This function associates the selected issue type with the project
@@ -130,13 +134,13 @@ export default Create.extend({
      * @method afterSave
      * @param model
      */
-    afterSave(model){
+    afterSave(model) {
         let _self = this;
         let selectedIssuetypes = _self.get('selectedIssuetypes');
         let Promises = {};
 
-        _.forEach(selectedIssuetypes,function(issueType){
-            let newIssueType = _self.get('store').createRecord('issuetype',{
+        _.forEach(selectedIssuetypes, function (issueType) {
+            let newIssueType = _self.get('store').createRecord('issuetype', {
                 name: issueType.label,
                 deleted: 0,
                 description: issueType.label,
@@ -146,7 +150,7 @@ export default Create.extend({
             Promises[issueType.label] = newIssueType.save();
         });
         return hash(Promises);
-    },
+    }
 
     /**
      * This function returns the success message
@@ -154,11 +158,11 @@ export default Create.extend({
      * @method getSuccessMessage
      * @param model
      */
-    getSuccessMessage(model){
-        return htmlSafe(this.intl.t('views.app.project.created',{
-            name:model.get('name')
+    getSuccessMessage(model) {
+        return htmlSafe(this.intl.t('views.app.project.created', {
+            name: model.get('name')
         }));
-    },
+    }
 
     /**
      * This function navigate a user to the issue detail page
@@ -166,11 +170,11 @@ export default Create.extend({
      * @method navigateToSuccess
      * @param model
      */
-    navigateToSuccess(model){
+    navigateToSuccess(model) {
         this.transitionToRoute('app.project', {
-            project_id:model.get('id'),
+            project_id: model.get('id'),
         });
-    },
+    }
 
     /**
      * This function checks if a field has changed
@@ -179,9 +183,9 @@ export default Create.extend({
      * @param model
      * @protected
      */
-    hasChanged(model){
+    hasChanged(model) {
         return (_.size(model.changedAttributes()) > 1);
-    },
+    }
 
     /**
      * This function navigates a use to the issue list view.
@@ -190,7 +194,7 @@ export default Create.extend({
      * @param projectId
      * @protected
      */
-    afterCancel(){
+    afterCancel() {
         this.transitionToRoute('app.projects');
     }
-});
+}

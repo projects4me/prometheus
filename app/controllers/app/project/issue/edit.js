@@ -2,19 +2,19 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import IssueCreate from "prometheus/controllers/app/project/issue/create";
+import IssueCreateController from "prometheus/controllers/app/project/issue/create";
 import { htmlSafe } from '@ember/template';
 
 /**
  * This is the controller for issue create page
  *
- * @class Edit
+ * @class IssueEditController
  * @namespace Prometheus.Controllers
  * @module App.Project.Issue
- * @extends Prometheus
+ * @extends IssueCreateController
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default IssueCreate.extend({
+export default class IssueEditController extends IssueCreateController {
 
     /**
      * This is the layout name that is used to figure out what to
@@ -25,7 +25,7 @@ export default IssueCreate.extend({
      * @type String
      * @private
      */
-    layoutName:'edit',
+    layoutName = 'edit';
 
     /**
      * This function sets the model properties before saving it
@@ -34,9 +34,9 @@ export default IssueCreate.extend({
      * @param model
      * @protected
      */
-    beforeSave(model){
+    beforeSave(model) {
         model.set('projectId', this.target.currentState.routerJsState.params["app.project"].project_id);
-    },
+    }
 
     /**
      * This function returns the success message
@@ -44,12 +44,12 @@ export default IssueCreate.extend({
      * @method getSuccessMessage
      * @param model
      */
-    getSuccessMessage(model){
-        return htmlSafe(this.intl.t('views.app.issue.updated',{
-            name:model.get('subject'),
-            issue_number:model.get('issueNumber')
+    getSuccessMessage(model) {
+        return htmlSafe(this.intl.t('views.app.issue.updated', {
+            name: model.get('subject'),
+            issue_number: model.get('issueNumber')
         }));
-    },
+    }
 
     /**
      * This function navigates a use to the issue page
@@ -59,12 +59,12 @@ export default IssueCreate.extend({
      * @param projectId
      * @protected
      */
-    afterCancel(model){
+    afterCancel(model) {
         let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
         this.transitionToRoute('app.project.issue.page', {
-            project_id:projectId,
-            issue_number:model.get('issueNumber')
+            project_id: projectId,
+            issue_number: model.get('issueNumber')
         });
         model.rollbackAttributes();
     }
-});
+}
