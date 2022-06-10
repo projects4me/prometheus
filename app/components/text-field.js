@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import { TextField } from '@ember/legacy-built-in-components';
+import { TextField } from '@ember/component/text-field';
 
 /**
  * This object is used to modify the default TextField of EmberJS in order to

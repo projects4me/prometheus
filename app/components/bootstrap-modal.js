@@ -3,6 +3,7 @@
  */
 
 import Component from '@ember/component';
+import jQuery from 'jquery'
 
 /**
  * This component is used used for the control the bootstrap modal
@@ -22,9 +23,9 @@ export default Component.extend({
      */
     didRender() {
         let _self = this;
-        _self.$('.modal').modal().on('hidden.bs.modal', function() {
-            _self.sendAction('close');
-        }.bind(this));
+        jQuery('.modal').modal().on('hidden.bs.modal', () => {
+            _self.close();
+        });
     },
 
     /**
@@ -46,8 +47,8 @@ export default Component.extend({
          */
         confirm: function() {
             let _self = this;
-            if (_self.sendAction('confirm')) {
-                _self.$('.modal').modal('hide');
+            if (_self.confirm()) {
+                jQuery('.modal').modal('hide');
             }
         }
     },

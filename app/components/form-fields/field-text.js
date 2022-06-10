@@ -48,4 +48,9 @@ export default class FieldTextComponent extends FormFieldsComponent {
     get value() {
         return this.args.value;
     }
+
+    get focusIn() {
+        let emptyFunction = () => {};
+        return this.args.focusIn ?? emptyFunction;
+    }
 }
