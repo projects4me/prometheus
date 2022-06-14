@@ -162,7 +162,7 @@ export default class IssuePageController extends PrometheusController.extend(Eve
             };
 
             let response = yield file.upload(options);
-            let data = JSON.parse(response.body);
+            let data = yield response.json();
             /**
              *  @todo check for errors
              */
@@ -174,7 +174,8 @@ export default class IssuePageController extends PrometheusController.extend(Eve
             set(upload, 'relatedTo', data.data.attributes.relatedTo);
             set(upload, 'relatedId', data.data.attributes.relatedId);
             set(upload, 'fileThumbnail', data.data.attributes.fileThumbnail);
-            _self.get('model').objectAt(0).get('files').pushObject(upload);
+
+            _self.model.objectAt(0).reload();
         } catch (e) {
             Logger.debug("Something has gone wrong");
             Logger.debug(e);
@@ -304,12 +305,8 @@ export default class IssuePageController extends PrometheusController.extend(Eve
                 confirm: {
                     label: htmlSafe(_self.intl.t("views.app.issue.detail.file.confirmdelete")),
                     action: function () {
-
                         // destroy the upload
-                        file.destroyRecord().then(function () {
-                            // remove from the view by updating the model
-                            _self.get('model').objectAt(0).get('files').removeObject(file);
-
+                        file.destroyRecord().then(function (e) {
                             return deleting.update({
                                 message: _self.intl.t("views.app.issue.detail.file.deleted"),
                                 type: 'success',

@@ -7,7 +7,7 @@ import format from "../../../utils/data/format";
 import _ from "lodash";
 import { inject as controller } from '@ember/controller';
 import { computed, action } from '@ember/object';
-import { reads } from '@ember/object/computed';
+import { tracked } from '@glimmer/tracking';
 import $ from "jquery";
 import { htmlSafe } from "@ember/template";
 
@@ -74,7 +74,7 @@ export default class ProjectIndexController extends PrometheusController {
      * @for Index
      * @private
      */
-    @controller app;
+    @controller('app') appController;
 
     /**
      * This is the list of roles fetched by the app controller
@@ -84,7 +84,7 @@ export default class ProjectIndexController extends PrometheusController {
      * @for Index
      * @private
      */
-    rolesList = reads('appController.rolesList');
+    @tracked rolesList = this.appController.rolesList;
 
     /**
      * This is the list of users fetched by the app controller
@@ -99,7 +99,6 @@ export default class ProjectIndexController extends PrometheusController {
         let _self = this;
         let currentMembers = format.getSelectList(_self.get('model.members'));
         let usersList = _self.get('appController.usersList');
-
         return (_.differenceWith(usersList, currentMembers, _.isEqual));
     }
 
