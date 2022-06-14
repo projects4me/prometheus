@@ -1,29 +1,26 @@
 <div class="dropzone-field">
-  <FileDropzone name="file" as |dropzone queue|>
-    {{#if dropzone.active}}
-      <p class="dropzone-active">
-        {{#if dropzone.valid}}
-          {{t "global.form.upload.dash"}}
-          {{t "global.form.upload.drop"}}
+    {{#let (file-queue name="photos" onFileAdded=this.uploadFile) as |queue|}}
+    <FileDropzone @queue={{queue}} as |dropzone|>
+        {{#if dropzone.active}}
+        <p class="dropzone-active">
+            
+            {{t "global.form.upload.dash"}}
+            {{t "global.form.upload.drop"}}
+            
+            
+        </p>
+        {{else if queue.files.length}}
+        <p class="dropzone-uploading">
+            {{t "global.form.upload.uploading" length=queue.files.length progress=queue.progress}}
+        </p>
         {{else}}
-          {{t "global.form.upload.invalid"}}
+        <p class="dropzone-ready">
+            {{#if dropzone.supported}}
+            {{t "global.form.upload.drag"}}
+            {{/if}}
+
+        </p>
         {{/if}}
-      </p>
-    {{else if queue.files.length}}
-      <p class="dropzone-uploading">
-        {{t "global.form.upload.uploading" length=queue.files.length progress=queue.progress}}
-      </p>
-    {{else}}
-      <p class="dropzone-ready">
-        {{#if dropzone.supported}}
-          {{t "global.form.upload.drag"}}
-        {{/if}}
-        {{#file-upload name="file"
-                       multiple=true
-                       onfileadd=uploadFile}}
-          <a href="javascript:void(0);" id="upload-image" tabindex="0">{{label}}</a>
-        {{/file-upload}}
-      </p>
-    {{/if}}
-  </FileDropzone>
+    </FileDropzone>
+    {{/let}}
 </div>

@@ -250,30 +250,30 @@
                 confirmLabel="global.form.save"
                 closeLabel="global.form.cancel"
                 confirm=(action "addMember")
-                close="removeAddMemberModal"}}
+                close=(action "removeAddMemberModal")}}
               <form {{action 'addMember' on='submit'}}>
                 <div class="form-group">
-                  {{field-relate
-                      placeholder=(t "views.app.project.detail.membership.selectuser")
-                      label=(t "views.app.project.detail.membership.user")
-                      value=selectedUser
-                      options=usersList
-                      selected=(find-by "value" selectedUser usersList)
-                      searchField="label"
-                      onchange=(action "selectUser")
-                      relateType="relate-user"
-                  }}
+                    <FormFields::FieldRelate
+                        @placeholder={{t "views.app.project.detail.membership.selectuser"}}
+                        @label={{t "views.app.project.detail.membership.user"}}
+                        @value={{this.selectedUser}}
+                        @options={{this.usersList}}
+                        @selected={{find-by "value" this.selectedUser this.usersList}}
+                        @searchField="label"
+                        @onchange={{action "selectUser"}}
+                        @relateType="relate-user"
+                    />
 
-                  {{field-relate
-                      placeholder=(t "views.app.project.detail.membership.selectrole")
-                      label=(t "views.app.project.detail.membership.role")
-                      value=selectedRole
-                      options=rolesList
-                      selected=(find-by "value" selectedRole rolesList)
-                      searchField="label"
-                      onchange=(action "selectRole")
-                      relateType="relate-simple"
-                  }}
+                  <FormFields::FieldRelate
+                      @placeholder={{t "views.app.project.detail.membership.selectrole"}}
+                      @label={{t "views.app.project.detail.membership.role"}}
+                      @value={{this.selectedRole}}
+                      @options={{this.rolesList}}
+                      @selected={{find-by "value" this.selectedRole this.rolesList}}
+                      @searchField="label"
+                      @onchange={{action "selectRole"}}
+                      @relateType="relate-simple"
+                  />
                 </div>
               </form>
             {{/bootstrap-modal}}
@@ -321,58 +321,76 @@
               title="views.app.project.detail.milestone.manage"
               closeLabel="global.form.close"
               confirmLabel="global.form.save"
-              close="removeMilestoneDialog"
+              close=(action "removeMilestoneDialog")
               confirm=(action "saveMilestone")}}
 
-            {{field-text
-                placeholder=(t "views.app.project.detail.milestone.inputname")
-                label=(t "views.app.project.detail.milestone.name")
-                value=newMilestone.name
-            }}
+            <FormFields::FieldText
+                @placeholder={{t "views.app.project.detail.milestone.inputname"}}
+                @label={{t "views.app.project.detail.milestone.name"}}
+                @value={{this.newMilestone.name}}
+            />
 
-            {{field-date
-                placeholder=(t "views.app.project.detail.milestone.inputstartdate")
-                label=(t "views.app.project.detail.milestone.startdate")
-                value=(readonly newMilestone.startDate)
-                update=(action "milestoneStartDateChanged")
-                mask="alphanumeric"
-            }}
+            <FormFields::FieldDate
+                @placeholder={{t "views.app.project.detail.milestone.inputstartdate"}}
+                @label={{t "views.app.project.detail.milestone.startdate"}}
+                @value={{readonly this.newMilestone.startDate}}
+                @update={{action "milestoneStartDateChanged"}}
+                @mask="alphanumeric"
+                @data-field="project.milestone.startDate"
+                @format="YYYY-MM-DD"
+                @singleDatePicker={{true}}
+                @showDropdowns={{true}}
+                @positionX="right"
+                @positionY="down"
+                @autoApply={{true}}
+                @minDate='1990'
+                @maxDate='2023'    
+            />
 
-            {{field-date
-                placeholder=(t "views.app.project.detail.milestone.inputenddate")
-                label=(t "views.app.project.detail.milestone.enddate")
-                value=(readonly newMilestone.endDate)
-                update=(action "milestoneEndDateChanged")
-                mask="alphanumeric"
-            }}
+            <FormFields::FieldDate
+                @placeholder={{t "views.app.project.detail.milestone.inputenddate"}}
+                @label={{t "views.app.project.detail.milestone.enddate"}}
+                @value={{readonly this.newMilestone.endDate}}
+                @update={{action "milestoneEndDateChanged"}}
+                @mask="alphanumeric"
+                @data-field="project.milestone.endDate"
+                @format="YYYY-MM-DD"
+                @singleDatePicker={{true}}
+                @showDropdowns={{true}}
+                @positionX="right"
+                @positionY="down"
+                @autoApply={{true}}
+                @minDate='1990'
+                @maxDate='2023'                
+            />
 
-            {{field-relate
-                placeholder=(t "views.app.project.detail.milestone.inputtype")
-                label=(t "views.app.project.detail.milestone.type")
-                value=newMilestone.milestoneType
-                options=milestoneTypes
-                selected=(find-by "value" newMilestone.milestoneType milestoneTypes)
-                searchField="label"
-                onchange=(action "selectMilestoneType")
-                relateType="relate-simple"
-            }}
+            <FormFields::FieldRelate
+                @placeholder={{t "views.app.project.detail.milestone.inputtype"}}
+                @label={{t "views.app.project.detail.milestone.type"}}
+                @value={{this.newMilestone.milestoneType}}
+                @options={{this.milestoneTypes}}
+                @selected={{find-by "value" this.newMilestone.milestoneType this.milestoneTypes}}
+                @searchField="label"
+                @onchange={{action "selectMilestoneType"}}
+                @relateType="relate-simple"
+            />
 
-            {{field-relate
-                placeholder=(t "views.app.project.detail.milestone.inputstatus")
-                label=(t "views.app.project.detail.milestone.status")
-                value=newMilestone.status
-                options=milestoneStatuses
-                selected=(find-by "value" newMilestone.status milestoneStatuses)
-                searchField="label"
-                onchange=(action "selectMilestoneStatus")
-                relateType="relate-simple"
-            }}
+            <FormFields::FieldRelate
+                @placeholder={{t "views.app.project.detail.milestone.inputstatus"}}
+                @label={{t "views.app.project.detail.milestone.status"}}
+                @value={{this.newMilestone.status}}
+                @options={{this.milestoneStatuses}}
+                @selected={{find-by "value" this.newMilestone.status this.milestoneStatuses}}
+                @searchField="label"
+                @onchange={{action "selectMilestoneStatus"}}
+                @relateType="relate-simple"
+            />
 
-            {{field-textarea
-                placeholder=(t "views.app.project.detail.milestone.iputdescription")
-                label=(t "views.app.project.detail.milestone.description")
-                value=newMilestone.description
-            }}
+            <FormFields::FieldTextArea
+                @placeholder={{t "views.app.project.detail.milestone.iputdescription"}}
+                @label={{t "views.app.project.detail.milestone.description"}}
+                @value={{this.newMilestone.description}}
+            />
 
           {{/bootstrap-modal}}
         {{/if}}

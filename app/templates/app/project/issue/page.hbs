@@ -305,19 +305,19 @@
                   title="views.app.issue.detail.estimate.edit"
                   closeLabel="global.form.close"
                   confirmLabel="global.form.save"
-                  close="removeEditEstimateModal"
+                  close=(action "removeEditEstimateModal")
                   confirm=(action "editLog")}}
 
                 {{interval-selector
-                    days=editingLog.days
-                    hours=editingLog.hours
-                    minutes=editingLog.minutes}}
+                    days=this.editingLog.days
+                    hours=this.editingLog.hours
+                    minutes=this.editingLog.minutes}}
 
-                {{field-textarea
-                    placeholder=(t "views.app.issue.detail.timelog.iputdescription")
-                    label=(t "views.app.issue.detail.timelog.description")
-                    value=editingLog.description
-                }}
+                <FormFields::FieldTextArea
+                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @label={{t "views.app.issue.detail.timelog.description"}}
+                    @value={{this.editingLog.description}}
+                />
 
               {{/bootstrap-modal}}
             {{/if}}
@@ -327,19 +327,19 @@
                   title="views.app.issue.detail.timelog.estimate"
                   closeLabel="global.form.close"
                   confirmLabel="global.form.save"
-                  close="removeEstimateTimeModal"
+                  close=(action "removeEstimateTimeModal")
                   confirm=(action "addEstimate")}}
 
                 {{interval-selector
-                    days=newTimeLog.days
-                    hours=newTimeLog.hours
-                    minutes=newTimeLog.minutes}}
+                    days=this.newTimeLog.days
+                    hours=this.newTimeLog.hours
+                    minutes=this.newTimeLog.minutes}}
 
-                {{field-textarea
-                    placeholder=(t "views.app.issue.detail.timelog.iputdescription")
-                    label=(t "views.app.issue.detail.timelog.description")
-                    value=newTimeLog.description
-                }}
+                <FormFields::FieldTextArea
+                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @label={{t "views.app.issue.detail.timelog.description"}}
+                    @value={{this.newTimeLog.description}}
+                />
 
               {{/bootstrap-modal}}
             {{/if}}
@@ -396,26 +396,35 @@
                   title="views.app.issue.detail.timelog.edit"
                   closeLabel="global.form.close"
                   confirmLabel="global.form.save"
-                  close="removeEditLogModal"
+                  close=(action "removeEditLogModal")
                   confirm=(action "editLog")}}
 
                 {{interval-selector
-                    days=editingLog.days
-                    hours=editingLog.hours
-                    minutes=editingLog.minutes}}
+                    days=this.editingLog.days
+                    hours=this.editingLog.hours
+                    minutes=this.editingLog.minutes}}
 
-                {{field-date
-                    placeholder=(t "views.app.issue.detail.timelog.iputspenton")
-                    label=(t "views.app.issue.detail.timelog.spenton")
-                    value=editingLog.spentOn
-                    mask="alphanumeric"
-                }}
+                <FormFields::FieldDate
+                    @placeholder={{t "views.app.issue.detail.timelog.iputspenton"}}
+                    @label={{t "views.app.issue.detail.timelog.spenton"}}
+                    @value={{this.editingLog.spentOn}}
+                    @mask="alphanumeric"
+                    @data-field="issue.detail.timelog.edit"
+                    @format="YYYY-MM-DD"
+                    @singleDatePicker={{true}}
+                    @showDropdowns={{true}}
+                    @positionX="right"
+                    @positionY="down"
+                    @autoApply={{true}}
+                    @minDate='1990'
+                    @maxDate='2023'                        
+                />
 
-                {{field-textarea
-                    placeholder=(t "views.app.issue.detail.timelog.iputdescription")
-                    label=(t "views.app.issue.detail.timelog.description")
-                    value=editingLog.description
-                }}
+                <FormFields::FieldTextArea
+                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @label={{t "views.app.issue.detail.timelog.description"}}
+                    @value={{this.editingLog.description}}
+                />
 
               {{/bootstrap-modal}}
             {{/if}}
@@ -426,26 +435,35 @@
                   title="views.app.issue.detail.timelog.log"
                   closeLabel="global.form.close"
                   confirmLabel="global.form.save"
-                  close="removeLogTimeModal"
+                  close=(action "removeLogTimeModal")
                   confirm=(action "logTime")}}
 
                 {{interval-selector
-                    days=newTimeLog.days
-                    hours=newTimeLog.hours
-                    minutes=newTimeLog.minutes}}
+                    days=this.newTimeLog.days
+                    hours=this.newTimeLog.hours
+                    minutes=this.newTimeLog.minutes}}
 
-                {{field-date
-                    placeholder=(t "views.app.issue.detail.timelog.iputspenton")
-                    label=(t "views.app.issue.detail.timelog.spenton")
-                    value=newTimeLog.spentOn
-                    mask="alphanumeric"
-                }}
+                <FormFields::FieldDate
+                    @placeholder={{t "views.app.issue.detail.timelog.iputspenton"}}
+                    @label={{t "views.app.issue.detail.timelog.spenton"}}
+                    @value={{this.newTimeLog.spentOn}}
+                    @mask="alphanumeric"
+                    @data-field="issue.detail.timelog.spenton"
+                    @format="YYYY-MM-DD"
+                    @singleDatePicker={{true}}
+                    @showDropdowns={{true}}
+                    @positionX="right"
+                    @positionY="down"
+                    @autoApply={{true}}
+                    @minDate='1990'
+                    @maxDate='2023'                        
+                />
 
-                {{field-textarea
-                    placeholder=(t "views.app.issue.detail.timelog.iputdescription")
-                    label=(t "views.app.issue.detail.timelog.description")
-                    value=newTimeLog.description
-                }}
+                <FormFields::FieldTextArea
+                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @label={{t "views.app.issue.detail.timelog.description"}}
+                    @value={{this.newTimeLog.description}}
+                />
 
               {{/bootstrap-modal}}
             {{/if}}
