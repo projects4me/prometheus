@@ -186,6 +186,7 @@ export default Model.extend(Validations, {
      * @private
      */
     tagged: hasMany('tagged'),
+
     /**
      * Github url of the User
      *
@@ -195,6 +196,7 @@ export default Model.extend(Validations, {
      * @private
      */
     githubUrl: attr('string'),
+
     /**
      * Skype url of the User
      *
@@ -204,6 +206,7 @@ export default Model.extend(Validations, {
      * @private
      */
     skypeUrl: attr('string'),
+
     /**
      * Linkedin url of the User
      *
@@ -213,6 +216,7 @@ export default Model.extend(Validations, {
      * @private
      */
     linkedinUrl: attr('string'),
+
     /**
      * Gitlab url of the User
      *
@@ -222,14 +226,25 @@ export default Model.extend(Validations, {
      * @private
      */
     gitlabUrl: attr('string'),
+
     /**
      * Slack url of the User
      *
-     * @property gitlabUrl
+     * @property slackUrl
      * @type String
      * @for User
      * @private
      */
-    slackUrl: attr('string')
+    slackUrl: attr('string'),
+    
+    /**
+    * Skills of the User
+    *
+    * @property skills
+    * @type String
+    * @for User
+    * @private
+    */
+   skills: attr('string')
     
 });
