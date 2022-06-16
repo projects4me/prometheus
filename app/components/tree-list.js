@@ -3,6 +3,7 @@
  */
 
 import Component from '@ember/component';
+import { inject as service } from '@ember/service';
 
 /**
  * This component is used to help the event handling of route request in the
@@ -14,6 +15,16 @@ import Component from '@ember/component';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default Component.extend({
+    
+    /**
+     * The router Service
+     *
+     * @property router
+     * @type Prometheus.Services.Router
+     * @for TreeList
+     * @private
+     */
+    router: service(),
 
     /**
      * These are the evet handlers for the component.

@@ -233,7 +233,7 @@ export default Component.extend({
         }
 
         return template;
-    }).volatile(),
+    }),
 
     /**
      * During the initialize phase of the field we need to evaluate if the

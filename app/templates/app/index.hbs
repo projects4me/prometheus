@@ -3,7 +3,7 @@
 
 <section class="content">
   <div class="row">
-    {{#each widgets as |value|}}
+    {{#each this.widgets as |value|}}
       <div class="col-md-6 col-sm-12 widgets connectedSortable ui-sortable">
         {{component (concat 'widgets/' (dasherize value)) data=(get-prop this value)}}
       </div>

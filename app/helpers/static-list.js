@@ -3,7 +3,7 @@
  */
 
 import { helper } from '@ember/component/helper';
-import { htmlSafe} from '@ember/string';
+import { htmlSafe } from '@ember/template';
 
 /**
  * This helper is used to get related list

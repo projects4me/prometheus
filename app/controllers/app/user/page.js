@@ -2,19 +2,20 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Prometheus from "prometheus/controllers/prometheus";
+import PrometheusController from "prometheus/controllers/prometheus";
 import window from 'ember-window-mock';
+import { action } from '@ember/object';
 
 /**
  * This controller is used to manage the user detail/page view
  *
- * @class Page
+ * @class AppUserPageController
  * @namespace Prometheus.Controllers
  * @module App.Users
  * @extends Prometheus
  * @author Rana Nouman <ranamnouman@yahoo.com>
  */
-export default Prometheus.extend({
+export default class AppUserPageController extends PrometheusController {
 
     /**
      * This function is triggered when user clicks on one of their social
@@ -29,10 +30,9 @@ export default Prometheus.extend({
      * @return void
      * @public
      */
-    redirectToSocialLink(url) {
+    @action redirectToSocialLink(url) {
         Logger.debug('+Prometheus.Controllers.App.User.Page::redirectToSocialLink');
         window.open(url, '_blank');
         Logger.debug('-Prometheus.Controllers.App.User.Page::redirectToSocialLink');
     }
-
-});
+}

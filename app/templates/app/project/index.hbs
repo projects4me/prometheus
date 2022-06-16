@@ -7,11 +7,11 @@
       {{!-- This are the project details --}}
       <div class="box box-primary project-details">
         <div class="box-header with-border">
-          <h2 class="box-title">{{model.name}} - ({{model.shortCode}})</h2>
+          <h2 class="box-title">{{this.model.name}} - ({{this.model.shortCode}})</h2>
 
           <div class="box-tools pull-right">
-            <span class="project-status"><span class="badge {{model.status}}">{{t (concat "views.app.project.lists.status." model.status)}}</span></span>
-            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editProject" model.id}}><i class="fa fa-pencil"></i></button>
+            <span class="project-status"><span class="badge {{this.model.status}}">{{t (concat "views.app.project.lists.status." this.model.status)}}</span></span>
+            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editProject" this.model.id}}><i class="fa fa-pencil"></i></button>
             <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
           </div>
           {{!-- /.box-tools --}}
@@ -23,8 +23,8 @@
 
             <div class="col-xs-3 col-md-2">
               <div class="project-owner">
-                <img class="img-circle" src="http://projects4me/userimage/get/{{model.owner.id}}" alt="{{model.owner.name}}">
-                <a class="users-list-name" href="#">{{model.owner.name}}</a>
+                <img class="img-circle" src="http://projects4me/userimage/get/{{this.model.owner.id}}" alt="{{this.model.owner.name}}">
+                <a class="users-list-name" href="#">{{this.model.owner.name}}</a>
                 <span class="users-list-date">{{t "views.app.project.detail.owner"}}</span>
               </div>
             </div>
@@ -32,7 +32,7 @@
             <div class="col-xs-9 col-md-10">
               <h4>{{t "views.app.project.detail.description"}}</h4>
               <p>
-                {{model.description}}
+                {{this.model.description}}
               </p>
             </div>
           </div>
@@ -42,35 +42,35 @@
             <div class="col-xs-6 col-md-4">
               <h4>{{t "views.app.project.detail.duration"}}</h4>
               <p>
-                {{moment-format model.startDate 'Do MMM \'YY'}} - {{moment-format model.endDate 'DD MMM \'YY'}}
+                {{moment-format this.model.startDate 'Do MMM \'YY'}} - {{moment-format this.model.endDate 'DD MMM \'YY'}}
               </p>
             </div>
 
             <div class="col-xs-6 col-md-4">
               <h4>{{t "views.app.project.detail.type"}}</h4>
               <p>
-                {{t (concat "views.app.project.lists.type." model.type)}}
+                {{t (concat "views.app.project.lists.type." this.model.type)}}
               </p>
             </div>
 
             <div class="col-xs-6 col-md-4">
               <h4>{{t "views.app.project.detail.vision"}}</h4>
               <p>
-                {{model.vision}}
+                {{this.model.vision}}
               </p>
             </div>
 
             <div class="col-xs-6 col-md-4">
               <h4>{{t "views.app.project.detail.estimatedBudget"}}</h4>
               <p>
-                {{format-money model.estimatedBudget symbol='$' format="%s%v"}}
+                {{!-- {{format-money this.model.estimatedBudget symbol='$' format="%s%v"}} --}}
               </p>
             </div>
 
             <div class="col-xs-6 col-md-4">
               <h4>{{t "views.app.project.detail.spentBudget"}}</h4>
               <p>
-                {{format-money model.spentBudget symbol='$' format="%s%v"}}
+                {{!-- {{format-money this.model.spentBudget symbol='$' format="%s%v"}} --}}
               </p>
             </div>
 
@@ -100,7 +100,7 @@
             {{!-- /.box-header --}}
             <div class="box-body no-padding">
               <ul class="project-conversations show-5">
-                {{#each model.conversations as |conversation|}}
+                {{#each this.model.conversations as |conversation|}}
                   <li>
                     <div class="user-block">
                       <img class="img-circle" src="http://projects4me/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
@@ -135,7 +135,7 @@
             {{!-- /.box-header --}}
             <div class="box-body no-padding">
               <ul class="open-issues show-5 clearfix">
-                {{#each issuetime as |issue|}}
+                {{#each this.issuetime as |issue|}}
                   <li>
                     <div class="issue-block">
                       <div class="priority"><AppUi::PriorityIcon @priority={{issue.priority}}/></div>
@@ -175,7 +175,7 @@
             <div class="box-body no-padding">
               <ul class="project-estimated-spent">
                 {{chart-estimatedspent
-                    issues=issuetime
+                    issues=this.issuetime
                     height="100"
                 }}
               </ul>
@@ -203,7 +203,7 @@
             </div>
             <div class="box-body no-padding">
               <div class="project-activities">
-                {{time-line activities=activities}}
+                {{time-line activities=this.activities}}
               </div>
             </div>
           </div>
@@ -229,11 +229,11 @@
         {{!-- /.box-header --}}
         <div class="box-body no-padding">
           <ul class="users-list clearfix">
-            {{#each model.members as |member|}}
+            {{#each this.model.members as |member|}}
               <li>
                 <img src="http://projects4me/userimage/get/{{member.id}}" alt="{{member.name}}">
                 <a class="users-list-name" href="#">{{member.name}}</a>
-                <span class="users-list-date">{{get-role member.id model.roles model.memberships}}</span>
+                <span class="users-list-date">{{get-role member.id this.model.roles this.model.memberships}}</span>
               </li>
             {{/each}}
             <li>
@@ -244,36 +244,36 @@
               </a>
             </li>
           </ul>
-          {{#if addMemberDialog}}
+          {{#if this.addMemberDialog}}
             {{#bootstrap-modal
                 title="views.app.project.detail.membership.add"
                 confirmLabel="global.form.save"
                 closeLabel="global.form.cancel"
                 confirm=(action "addMember")
-                close="removeAddMemberModal"}}
+                close=(action "removeAddMemberModal")}}
               <form {{action 'addMember' on='submit'}}>
                 <div class="form-group">
-                  {{field-relate
-                      placeholder=(t "views.app.project.detail.membership.selectuser")
-                      label=(t "views.app.project.detail.membership.user")
-                      value=selectedUser
-                      options=usersList
-                      selected=(find-by "value" selectedUser usersList)
-                      searchField="label"
-                      onchange=(action "selectUser")
-                      relateType="relate-user"
-                  }}
+                    <FormFields::FieldRelate
+                        @placeholder={{t "views.app.project.detail.membership.selectuser"}}
+                        @label={{t "views.app.project.detail.membership.user"}}
+                        @value={{this.selectedUser}}
+                        @options={{this.usersList}}
+                        @selected={{find-by "value" this.selectedUser this.usersList}}
+                        @searchField="label"
+                        @onchange={{action "selectUser"}}
+                        @relateType="relate-user"
+                    />
 
-                  {{field-relate
-                      placeholder=(t "views.app.project.detail.membership.selectrole")
-                      label=(t "views.app.project.detail.membership.role")
-                      value=selectedRole
-                      options=rolesList
-                      selected=(find-by "value" selectedRole rolesList)
-                      searchField="label"
-                      onchange=(action "selectRole")
-                      relateType="relate-simple"
-                  }}
+                  <FormFields::FieldRelate
+                      @placeholder={{t "views.app.project.detail.membership.selectrole"}}
+                      @label={{t "views.app.project.detail.membership.role"}}
+                      @value={{this.selectedRole}}
+                      @options={{this.rolesList}}
+                      @selected={{find-by "value" this.selectedRole this.rolesList}}
+                      @searchField="label"
+                      @onchange={{action "selectRole"}}
+                      @relateType="relate-simple"
+                  />
                 </div>
               </form>
             {{/bootstrap-modal}}
@@ -291,10 +291,10 @@
         </div>
 
         <div class="box-body no-padding">
-          {{#if (eq milestones.length 0)}}
+          {{#if (eq this.milestones.length 0)}}
             <div class="no-entry">{{t "views.app.project.detail.milestone.noentry"}}</div>
           {{else}}
-            {{#each milestones as |milestone|}}
+            {{#each this.milestones as |milestone|}}
               {{#milestone-block milestone=milestone}}
                 <a href="javascript:void(0);" {{action "editMilestone" milestone}}>
                   <i class="fa fa-pencil edit-milestone" data-toggle="tooltip" title="{{t "global.form.edit"}}"></i>
@@ -316,63 +316,81 @@
           {{/if}}
         </div>
 
-        {{#if milestoneDialog}}
+        {{#if this.milestoneDialog}}
           {{#bootstrap-modal
               title="views.app.project.detail.milestone.manage"
               closeLabel="global.form.close"
               confirmLabel="global.form.save"
-              close="removeMilestoneDialog"
+              close=(action "removeMilestoneDialog")
               confirm=(action "saveMilestone")}}
 
-            {{field-text
-                placeholder=(t "views.app.project.detail.milestone.inputname")
-                label=(t "views.app.project.detail.milestone.name")
-                value=newMilestone.name
-            }}
+            <FormFields::FieldText
+                @placeholder={{t "views.app.project.detail.milestone.inputname"}}
+                @label={{t "views.app.project.detail.milestone.name"}}
+                @value={{this.newMilestone.name}}
+            />
 
-            {{field-date
-                placeholder=(t "views.app.project.detail.milestone.inputstartdate")
-                label=(t "views.app.project.detail.milestone.startdate")
-                value=(readonly newMilestone.startDate)
-                update=(action "milestoneStartDateChanged")
-                mask="alphanumeric"
-            }}
+            <FormFields::FieldDate
+                @placeholder={{t "views.app.project.detail.milestone.inputstartdate"}}
+                @label={{t "views.app.project.detail.milestone.startdate"}}
+                @value={{readonly this.newMilestone.startDate}}
+                @update={{action "milestoneStartDateChanged"}}
+                @mask="alphanumeric"
+                @data-field="project.milestone.startDate"
+                @format="YYYY-MM-DD"
+                @singleDatePicker={{true}}
+                @showDropdowns={{true}}
+                @positionX="right"
+                @positionY="down"
+                @autoApply={{true}}
+                @minDate='1990'
+                @maxDate='2023'    
+            />
 
-            {{field-date
-                placeholder=(t "views.app.project.detail.milestone.inputenddate")
-                label=(t "views.app.project.detail.milestone.enddate")
-                value=(readonly newMilestone.endDate)
-                update=(action "milestoneEndDateChanged")
-                mask="alphanumeric"
-            }}
+            <FormFields::FieldDate
+                @placeholder={{t "views.app.project.detail.milestone.inputenddate"}}
+                @label={{t "views.app.project.detail.milestone.enddate"}}
+                @value={{readonly this.newMilestone.endDate}}
+                @update={{action "milestoneEndDateChanged"}}
+                @mask="alphanumeric"
+                @data-field="project.milestone.endDate"
+                @format="YYYY-MM-DD"
+                @singleDatePicker={{true}}
+                @showDropdowns={{true}}
+                @positionX="right"
+                @positionY="down"
+                @autoApply={{true}}
+                @minDate='1990'
+                @maxDate='2023'                
+            />
 
-            {{field-relate
-                placeholder=(t "views.app.project.detail.milestone.inputtype")
-                label=(t "views.app.project.detail.milestone.type")
-                value=newMilestone.milestoneType
-                options=milestoneTypes
-                selected=(find-by "value" newMilestone.milestoneType milestoneTypes)
-                searchField="label"
-                onchange=(action "selectMilestoneType")
-                relateType="relate-simple"
-            }}
+            <FormFields::FieldRelate
+                @placeholder={{t "views.app.project.detail.milestone.inputtype"}}
+                @label={{t "views.app.project.detail.milestone.type"}}
+                @value={{this.newMilestone.milestoneType}}
+                @options={{this.milestoneTypes}}
+                @selected={{find-by "value" this.newMilestone.milestoneType this.milestoneTypes}}
+                @searchField="label"
+                @onchange={{action "selectMilestoneType"}}
+                @relateType="relate-simple"
+            />
 
-            {{field-relate
-                placeholder=(t "views.app.project.detail.milestone.inputstatus")
-                label=(t "views.app.project.detail.milestone.status")
-                value=newMilestone.status
-                options=milestoneStatuses
-                selected=(find-by "value" newMilestone.status milestoneStatuses)
-                searchField="label"
-                onchange=(action "selectMilestoneStatus")
-                relateType="relate-simple"
-            }}
+            <FormFields::FieldRelate
+                @placeholder={{t "views.app.project.detail.milestone.inputstatus"}}
+                @label={{t "views.app.project.detail.milestone.status"}}
+                @value={{this.newMilestone.status}}
+                @options={{this.milestoneStatuses}}
+                @selected={{find-by "value" this.newMilestone.status this.milestoneStatuses}}
+                @searchField="label"
+                @onchange={{action "selectMilestoneStatus"}}
+                @relateType="relate-simple"
+            />
 
-            {{field-textarea
-                placeholder=(t "views.app.project.detail.milestone.iputdescription")
-                label=(t "views.app.project.detail.milestone.description")
-                value=newMilestone.description
-            }}
+            <FormFields::FieldTextArea
+                @placeholder={{t "views.app.project.detail.milestone.iputdescription"}}
+                @label={{t "views.app.project.detail.milestone.description"}}
+                @value={{this.newMilestone.description}}
+            />
 
           {{/bootstrap-modal}}
         {{/if}}
@@ -392,7 +410,7 @@
         </div>
         <div class="box-body no-padding">
           <ul class="users-list clearfix">
-            {{chart-issueratio issues=issuetime}}
+            {{chart-issueratio issues=this.issuetime}}
           </ul>
         </div>
       </div>
@@ -408,7 +426,7 @@
             <span class="info-box-icon bg-aqua"><i class="fa fa-users"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "views.app.project.detail.teamsize"}}</span>
-              <span class="info-box-number">{{model.members.length}}</span>
+              <span class="info-box-number">{{this.model.members.length}}</span>
             </div>
           </div>
 
@@ -416,7 +434,7 @@
             <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "views.app.project.detail.openissues"}}</span>
-              <span class="info-box-number">{{get-issuecount issuetime "open"}}</span>
+              <span class="info-box-number">{{get-issuecount this.issuetime "open"}}</span>
             </div>
           </div>
 
@@ -424,7 +442,7 @@
             <span class="info-box-icon bg-aqua"><i class="fa fa-tasks"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "views.app.project.detail.closedissues"}}</span>
-              <span class="info-box-number">{{get-issuecount issuetime "closed"}}</span>
+              <span class="info-box-number">{{get-issuecount this.issuetime "closed"}}</span>
             </div>
           </div>
 
@@ -432,7 +450,7 @@
             <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer-outline"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "views.app.project.detail.estimatedtime"}}</span>
-              <span class="info-box-number">{{get-timelog issuetime "estimated"}}</span>
+              <span class="info-box-number">{{get-timelog this.issuetime "estimated"}}</span>
             </div>
           </div>
 
@@ -440,7 +458,7 @@
             <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "views.app.project.detail.spenttime"}}</span>
-              <span class="info-box-number">{{get-timelog issuetime "spent"}}</span>
+              <span class="info-box-number">{{get-timelog this.issuetime "spent"}}</span>
             </div>
           </div>
 

@@ -37,7 +37,6 @@ export default App.extend({
     setupController:function(controller){
         Logger.debug('AppProjectIndexRoute::setupController');
         let _self = this;
-
         // If the user navigated directly to the wiki project or page then lets setup the project id
         let projectId = _self.paramsFor('app.project').project_id;
         let projectName = null;

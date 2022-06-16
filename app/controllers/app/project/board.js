@@ -2,19 +2,19 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Prometheus from "prometheus/controllers/prometheus";
+import PrometheusController from "prometheus/controllers/prometheus";
 import { action } from '@ember/object';
 
 /**
  * This is the controller for the board controller
  *
- * @class Board
+ * @class AppProjectBoardController
  * @namespace Prometheus.Controllers
  * @module App.Project
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class Board extends Prometheus {
+export default class AppProjectBoardController extends PrometheusController {
     /**
      * These are the issues statues
      *
@@ -128,7 +128,7 @@ export default class Board extends Prometheus {
      * @param {HTMLElement} elFrom Lane on which issue is dropped
      * @param {Function} reRenderViewCb 
      * @public
-     */    
+     */
     postUpdateProcessing(issueId, elTo, elFrom, reRenderViewCb) {
         Logger.debug("AppProjectBoardController::postUpdateProcessing");
         let milestoneEls = [];

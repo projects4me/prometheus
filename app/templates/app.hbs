@@ -1,7 +1,7 @@
 <AppLayouts::ApplicationWrapper>
   {{!-- Main Header --}}
   <AppLayouts::ApplicationHeader
-      @session={{session}}
+      @session={{this.session}}
       @invalidateSession={{action "invalidateSession"}}
       @userProfile={{action "userProfile"}}
       @searchedItem={{action "itemSearched"}}
@@ -9,7 +9,7 @@
 
   {{!-- Left side column. contains the logo and sidebar --}}
   <AppLayouts::ApplicationSidebar
-      @projectList={{projectList}}
+      @projectList={{this.projectList}}
   />
   {{!-- Content Wrapper. Contains page content --}}
   <div class="content-wrapper">
@@ -31,8 +31,8 @@
        immediately after the control sidebar --}}
   <div class="control-sidebar-bg"></div>
 </AppLayouts::ApplicationWrapper>
-{{#each chatrooms as |chatroom|}}
+{{#each this.chatrooms as |chatroom|}}
   {{chat-box
       chatroom=chatroom
-      currentUser=currentUser}}
+      currentUser=this.currentUser}}
 {{/each}}

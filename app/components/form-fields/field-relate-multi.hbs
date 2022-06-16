@@ -1,6 +1,6 @@
 <div data-field={{@data-field}} class="form-field ember-view">
-  <div class="input-group select-input">
-    <PowerSelect
+  <div class="input-group multiselect-input">
+    <PowerSelectMultiple
       @class="form-control"
       @options={{@options}}
       @placeholder={{@placeholder}}
@@ -11,7 +11,7 @@
       @onFocus={{action (mut this.shouldValidate) true}}
       @onblur={{@focus-out}} as |data|>
       {{component (concat 'related-fields/'@relateType) data=data}}
-    </PowerSelect>
+    </PowerSelectMultiple>
   </div>
     <span class="highlight"></span>
     <span class="bar"></span>

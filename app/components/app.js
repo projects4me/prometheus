@@ -23,7 +23,7 @@ export default class AppComponent extends Component {
     /**
      * The trackedProject service provides id of the selected project
      *
-     * @property trackedProject`
+     * @property trackedProject
      * @type Ember.Service
      * @for App
      * @private
@@ -33,7 +33,7 @@ export default class AppComponent extends Component {
     /**
      * The router service provides access to route
      *
-     * @property projectId
+     * @property router
      * @type String
      * @for App
      * @private

@@ -2,9 +2,9 @@
   <div class="board row">
 
     <AppUi::TaskBoard
-      @milestones={{milestones}}
-      @statuses={{statuses}}
-      @statusClass={{statusClass}}
+      @milestones={{this.milestones}}
+      @statuses={{this.statuses}}
+      @statusClass={{this.statusClass}}
       @backlog={{this.backlog}}
       @group="milestones"
       @scroll={{true}}
@@ -15,7 +15,7 @@
       @disableSortable={{false}}
       @dragClass="curr-item"
       @chosenClass="curr-item"
-      @updateIssue={{fn updateIssue}}
+      @updateIssue={{fn this.updateIssue}}
     />
 
   </div>

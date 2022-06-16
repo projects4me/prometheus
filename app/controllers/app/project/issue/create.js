@@ -2,10 +2,10 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Create from "prometheus/controllers/prometheus/create";
+import PrometheusCreateController from "prometheus/controllers/prometheus/create";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
-import { inject as injectController } from '@ember/controller';
-import { computed } from '@ember/object';
+import { inject as controller } from '@ember/controller';
+import { computed, action } from '@ember/object';
 import format from "prometheus/utils/data/format";
 import _ from "lodash";
 import { htmlSafe } from '@ember/template';
@@ -13,13 +13,13 @@ import { htmlSafe } from '@ember/template';
 /**
  * This is the controller for issue create page
  *
- * @class Create
+ * @class AppProjectIssueCreateController
  * @namespace Prometheus.Controllers
  * @module App.Project.Issue
- * @extends Prometheus
+ * @extends PrometheusCreateController
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Create.extend(ProjectRelated, {
+export default class AppProjectIssueCreateController extends PrometheusCreateController.extend(ProjectRelated) {
 
     /**
      * This is the module for which we are trying to create
@@ -29,7 +29,7 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @protected
      */
-    module: 'issue',
+    module = 'issue';
 
     /**
      * This is the controller for the app, we are injecting it in order to
@@ -40,7 +40,7 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @public
      */
-    appController: injectController('app'),
+    @controller('app') appController;
 
     /**
      * This milestones available for this project
@@ -50,9 +50,10 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @public
      */
-    milestoneList: computed('project', function () {
+    @computed('project')
+    get milestoneList() {
         return format.getSelectList(this.project.milestones, false, htmlSafe(this.intl.t('global.blank')).toHTML());
-    }),
+    }
 
     /**
      * This issue types available for the project
@@ -62,9 +63,10 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @public
      */
-    typeList: computed('types', function () {
+    @computed('types')
+    get typeList() {
         return format.getSelectList(this.types);
-    }),
+    }
 
     /**
      * This is a computed property in which gets the list of user
@@ -75,9 +77,10 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @private
      */
-    usersList: computed('appController.usersList', function () {
+    @computed('appController.usersList')
+    get usersList() {
         return this.appController.get('usersList');
-    }),
+    }
 
     /**
      * This estimates for this issue
@@ -87,7 +90,7 @@ export default Create.extend(ProjectRelated, {
      * @for Create
      * @private
      */
-    estimates: [],
+    estimates = [];
 
     /**
      * This function sets the model properties before saving it
@@ -100,7 +103,7 @@ export default Create.extend(ProjectRelated, {
         model.set('reportedUser', this.currentUser.user.id);
         model.set('startDate', moment(model.get('startDate')).format("YYYY-MM-DD"));
         model.set('endDate', moment(model.get('endDate')).format("YYYY-MM-DD"));
-    },
+    }
 
     /**
      * This function returns the success message
@@ -113,7 +116,7 @@ export default Create.extend(ProjectRelated, {
             name: model.get('subject'),
             issueNumber: model.get('issueNumber')
         }));
-    },
+    }
 
     /**
      * This function navigate a user to the issue detail page
@@ -126,7 +129,7 @@ export default Create.extend(ProjectRelated, {
             project_id: model.get('projectId'),
             issue_number: model.get('issueNumber')
         });
-    },
+    }
 
     /**
      * This function checks if a field has changed
@@ -137,7 +140,7 @@ export default Create.extend(ProjectRelated, {
      */
     hasChanged(model) {
         return (_.size(model.changedAttributes()) > 2);
-    },
+    }
 
     /**
      * This function navigates a use to the issue list view.
@@ -149,7 +152,7 @@ export default Create.extend(ProjectRelated, {
     afterCancel() {
         let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
         this.transitionToRoute('app.project.issue', { project_id: projectId });
-    },
+    }
 
     /**
      * This function is used to allow search on both the issues name and
@@ -162,29 +165,16 @@ export default Create.extend(ProjectRelated, {
      */
     parentMatcher(issue, term) {
         return `#${issue.number} - ${issue.name}`.toLowerCase().indexOf(term);
-    },
+    }
 
     /**
-     * These are the actions supported by this controller
+     * This function is used to set the parent for the issue
      *
-     * @property actions
-     * @for Object
-     * @public
+     * @param model
+     * @param field
+     * @param target
      */
-    actions: {
-
-        /**
-         * This function is used to set the parent for the issue
-         *
-         * @param model
-         * @param field
-         * @param target
-         */
-        changedParent(model, field, target) {
-            model.set(field, target.id);
-        },
-        // search(query) {
-        //     console.log(query);
-        // }
-    },
-});
+    @action changedParent(model, field, target) {
+        model.set(field, target.id);
+    }
+}

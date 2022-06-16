@@ -6,8 +6,8 @@
       <div class="box box-primary issues-details">
         <div class="box-header with-border">
           <h3 class="box-title">
-            {{#if (eq layoutName 'edit')}}
-              {{safe-html (t "views.app.issue.edit.page" issueNumber=model.issueNumber name=model.subject)}}
+            {{#if (eq this.layoutName 'edit')}}
+              {{safe-html (t "views.app.issue.edit.page" issueNumber=this.model.issueNumber name=this.model.subject)}}
             {{else}}
               {{t "views.app.issue.create.title"}}
             {{/if}}
@@ -20,7 +20,7 @@
           <div class="form-group">
 
             <FormFields::FieldText
-                @placeholder={{t "views.app.issue.create.placeholder.subject"}}
+                @placeholder={{t  "views.app.issue.create.placeholder.subject"}}
                 @label={{t "views.app.issue.create.subject"}}
                 @type="text"
                 @value={{this.model.subject}}
@@ -33,12 +33,12 @@
             />
             <div data-field="issue.description" class="form-field ember-view">
               <AppUi::ToastUi
-                @usersList={{membersList}}
-                @issueSearch={{perform this.search}}
-                @contents={{readonly issueDescription}}
-                @editType='wysiwyg'
-                @hide={{array 'footer'}}
-                @onContentChange={{action "selectStatic" model 'description'}}              
+                  @usersList={{this.membersList}}
+                  @issueSearch={{perform this.search}}
+                  @contents={{readonly this.issueDescription}}
+                  @editType='wysiwyg'
+                  @hide={{array 'footer'}}
+                  @onContentChange={{action "selectStatic" this.model 'description'}}              
               />
               <span class="highlight"></span>
               <span class="bar"></span>
@@ -49,14 +49,14 @@
             <FormFields::FieldRelate
                 @placeholder={{t "views.app.issue.create.type"}}
                 @label={{t "views.app.issue.create.type"}}
-                @value={{model.typeId}}
-                @options={{typeList}}
-                @selected={{find-by "value" model.typeId typeList}}
+                @value={{this.model.typeId}}
+                @options={{this.typeList}}
+                @selected={{find-by "value" this.model.typeId this.typeList}}
                 @searchField="label"
-                @onchange={{action "selectRelated" model 'typeId'}}
-                @relateType="related-fields/relate-simple"
+                @onchange={{action "selectRelated" this.model 'typeId'}}
+                @relateType="relate-simple"
                 @data-field="issue.type"
-                @v-model={{model}}
+                @v-model={{this.model}}
                 @v-field='typeId'
                 @v-output='message'
             />
@@ -102,14 +102,14 @@
             <FormFields::FieldRelate
                 @placeholder={{t "views.app.issue.create.status"}}
                 @label={{t "views.app.issue.create.status"}}
-                @value={{model.status}}
-                @options={{status}}
-                @selected={{find-by "value" model.status status}}
+                @value={{this.model.status}}
+                @options={{this.status}}
+                @selected={{find-by "value" this.model.status this.status}}
                 @searchField="label"
-                @onchange={{action "selectRelated" model 'status'}}
-                @relateType="related-fields/relate-simple"
+                @onchange={{action "selectRelated" this.model 'status'}}
+                @relateType="relate-simple"
                 @data-field="issue.status"
-                @v-model={{model}}
+                @v-model={{this.model}}
                 @v-field='status'
                 @v-output='message'
             />
@@ -117,14 +117,14 @@
             <FormFields::FieldRelate
                 @placeholder={{t "views.app.issue.create.priority"}}
                 @label={{t "views.app.issue.create.priority"}}
-                @value={{model.priority}}
-                @options={{priority}}
-                @selected={{find-by "value" model.priority priority}}
+                @value={{this.model.priority}}
+                @options={{this.priority}}
+                @selected={{find-by "value" this.model.priority this.priority}}
                 @searchField="label"
-                @onchange={{action "selectRelated" model 'priority'}}
-                @relateType="related-fields/relate-issuepriority"
+                @onchange={{action "selectRelated" this.model 'priority'}}
+                @relateType="relate-issuepriority"
                 @data-field="issue.priority"
-                @v-model={{model}}
+                @v-model={{this.model}}
                 @v-field='priority'
                 @v-output='message'
             />
@@ -132,14 +132,14 @@
             <FormFields::FieldRelate
                 @placeholder={{t "views.app.issue.create.selectmilestone"}}
                 @label={{t "views.app.issue.create.milestone"}}
-                @value={{model.milestoneId}}
-                @options={{milestoneList}}
-                @selected={{find-by "value" model.milestoneId milestoneList}}
+                @value={{this.model.milestoneId}}
+                @options={{this.milestoneList}}
+                @selected={{find-by "value" this.model.milestoneId this.milestoneList}}
                 @searchField="label"
-                @onchange={{action "selectRelated" model 'milestoneId'}}
-                @relateType="related-fields/relate-simple"
+                @onchange={{action "selectRelated" this.model 'milestoneId'}}
+                @relateType="relate-simple"
                 @data-field="issue.milestone"
-                @v-model={{model}}
+                @v-model={{this.model}}
                 @v-field='milestoneId'
                 @v-output='message'
             />
@@ -164,14 +164,14 @@
           <FormFields::FieldRelate
               @placeholder={{t "views.app.issue.create.selectassignee"}}
               @label={{t "views.app.issue.create.assignedTo"}}
-              @value={{model.assignee}}
-              @options={{membersList}}
-              @selected={{find-by "value" model.assignee membersList}}
+              @value={{this.model.assignee}}
+              @options={{this.membersList}}
+              @selected={{find-by "value" this.model.assignee this.membersList}}
               @searchField="label"
-              @onchange={{action "selectRelated" model 'assignee'}}
-              @relateType="related-fields/relate-user"
+              @onchange={{action "selectRelated" this.model 'assignee'}}
+              @relateType="relate-user"
               @data-field="issue.assignee"
-              @v-model={{model}}
+              @v-model={{this.model}}
               @v-field='assignee'
               @v-output='message'
           />
@@ -179,14 +179,14 @@
           <FormFields::FieldRelate
               @placeholder={{t "views.app.issue.create.selectowner"}}
               @label={{t "views.app.issue.create.ownedBy"}}
-              @value={{model.owner}}
-              @options={{membersList}}
-              @selected={{find-by "value" model.owner membersList}}
+              @value={{this.model.owner}}
+              @options={{this.membersList}}
+              @selected={{find-by "value" this.model.owner this.membersList}}
               @searchField="label"
-              @onchange={{action "selectRelated" model 'owner'}}
-              @relateType="related-fields/relate-user"
+              @onchange={{action "selectRelated" this.model 'owner'}}
+              @relateType="relate-user"
               @data-field="issue.owner"
-              @v-model={{model}}
+              @v-model={{this.model}}
               @v-field='owner'
               @v-output='message'
           />
@@ -204,15 +204,15 @@
           <FormFields::FieldRelate
               @placeholder={{t "views.app.issue.create.selectparent"}}
               @label={{t "views.app.issue.create.parentId"}}
-              @value={{model.parentId}}
-              @options={{issuesList}}
-              @matcher={{parentMatcher}}
-              @selected={{find-by "id" model.parentId issuesList}}
+              @value={{this.model.parentId}}
+              @options={{this.issuesList}}
+              @matcher={{this.parentMatcher}}
+              @selected={{find-by "id" this.model.parentId this.issuesList}}
               @searchField="number"
-              @onchange={{action "changedParent" model 'parentId'}}
-              @relateType="related-fields/relate-issue"
+              @onchange={{action "changedParent" this.model 'parentId'}}
+              @relateType="relate-issue"
               @data-field="issue.parentId"
-              @v-model={{model}}
+              @v-model={{this.model}}
               @v-field='parentId'
               @v-output='message'
           />

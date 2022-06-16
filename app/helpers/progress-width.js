@@ -3,7 +3,7 @@
  */
 
 import { helper } from '@ember/component/helper';
-import { htmlSafe } from '@ember/string';
+import { htmlSafe } from '@ember/template';
 
 /**
  * This helper return the width in percentage for progress bar

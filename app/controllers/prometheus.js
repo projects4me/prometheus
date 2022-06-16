@@ -3,7 +3,8 @@
  */
 
 import Controller from '@ember/controller';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
+import { action } from '@ember/object';
 import _ from "lodash";
 
 /**
@@ -15,7 +16,7 @@ import _ from "lodash";
  * @extends Ember.Controller
  * @author Hammad Hassan gollmer@gmail.com
  */
-export default Controller.extend({
+export default class PrometheusController extends Controller {
 
     /**
      * The session service which is offered by ember-simple-auth
@@ -25,7 +26,7 @@ export default Controller.extend({
      * @for Prometheus.Controllers.Prometheus
      * @public
      */
-    session: inject(),
+    @service('session') session;
 
     /**
      * The service that we use to maintain the currentUser
@@ -35,7 +36,7 @@ export default Controller.extend({
      * @for Prometheus.Controllers.Prometheus
      * @public
      */
-    currentUser: inject('current-user'),
+    @service('current-user') currentUser;
 
     /**
      * The intl library service that is used in order to get the translations
@@ -45,42 +46,41 @@ export default Controller.extend({
      * @for Prometheus.Controllers.Prometheus
      * @public
      */
-    intl: inject(),
+    @service('intl') intl;
 
     /**
-     * These are the events that this controller handles
+     * The store service that is used to interact ember data APIs.
      *
-     * @property actions
-     * @type Object
-     * @for Create
+     * @property store
+     * @type Ember.Service
+     * @for Prometheus.Controllers.Prometheus
      * @public
      */
-    actions: {
+    @service('store') store;
 
-        /**
-         * This action helps us set a related fields
-         *
-         * @param {Prometheus.Models} model
-         * @param {String} field
-         * @param {Object} target
-         * @public
-         */
-        selectRelated(model, field, target) {
-            model.set(field, target.value);
-        },
+    /**
+     * This action helps us set a related fields
+     *
+     * @param {Prometheus.Models} model
+     * @param {String} field
+     * @param {Object} target
+     * @public
+     */
+    @action selectRelated(model, field, target) {
+        model.set(field, target.value);
+    }
 
-        /**
-         * This action helps us set a related fields
-         *
-         * @param {Object} obj
-         * @param {String} field
-         * @param {Object} target
-         * @public
-         */
-        selectStatic(obj, field, target) {
-            obj.set(field, target);
-        },
-    },
+    /**
+     * This action helps us set a related fields
+     *
+     * @param {Object} obj
+     * @param {String} field
+     * @param {Object} target
+     * @public
+     */
+    @action selectStatic(obj, field, target) {
+        obj.set(field, target);
+    }
 
     /**
      * This function builds human readable error messages.
@@ -91,17 +91,16 @@ export default Controller.extend({
      * @for Prometheus.Controllers.Prometheus
      * @private
      */
-    _buildMessages(validations, module){
+    @action _buildMessages(validations, module) {
         let _self = this;
         let intl = _self.intl;
         let messages = [];
 
         if (module != undefined) {
-            _.each(validations.errors,function(error){
-                messages.push(intl.t('views.app.'+module+'.fields.'+error.attribute)+' : '+error.message);
+            _.each(validations.errors, function (error) {
+                messages.push(intl.t('views.app.' + module + '.fields.' + error.attribute) + ' : ' + error.message);
             });
         }
-        return _.join(messages,"<br\\>");
+        return _.join(messages, "<br\\>");
     }
-
-});
+}
