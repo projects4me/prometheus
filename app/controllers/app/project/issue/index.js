@@ -11,13 +11,13 @@ import { htmlSafe } from '@ember/template';
  * the route. The basic features that this controller provide are pagination,
  * sorting and filtering the data.
  *
- * @class AppIssueIndexController
+ * @class AppProjectIssueIndexController
  * @namespace Prometheus.Controllers
  * @module App.Project.Issue
  * @extends PrometheusListController
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class AppIssueIndexController extends PrometheusListController {
+export default class AppProjectIssueIndexController extends PrometheusListController {
 
     /**
      * This property stores the field on which the page if currently sored on

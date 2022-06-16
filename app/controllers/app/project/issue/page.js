@@ -14,13 +14,13 @@ import { htmlSafe } from "@ember/template";
 /**
  * This controller is used to manage the issues detail/page view
  *
- * @class AppIssuePageController
+ * @class AppProjectIssuePageController
  * @namespace Prometheus.Controllers
  * @module App.Project.Issue
  * @extends PrometheusController
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class AppIssuePageController extends PrometheusController.extend(Evented) {
+export default class AppProjectIssuePageController extends PrometheusController.extend(Evented) {
 
     /**
      * This flag is used to show or hide the modal dialog box

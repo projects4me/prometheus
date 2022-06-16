@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import AppWikiCreateController from "prometheus/controllers/app/project/wiki/create";
+import AppProjectWikiCreateController from "prometheus/controllers/app/project/wiki/create";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import _ from "lodash";
 import $ from 'jquery';
@@ -14,12 +14,12 @@ import { action } from '@ember/object';
  * edit button on the wiki page
  * e.g. acme.projects4.me/app/1/wiki/edit/Home
  *
- * @class AppWikiEditController
+ * @class AppProjectWikiEditController
  * @namespace Prometheus.Controllers
  * @module App.Project.Wiki
  * @extends Prometheus
  */
-export default class AppWikiEditController extends AppWikiCreateController.extend(ProjectRelated) {
+export default class AppProjectWikiEditController extends AppProjectWikiCreateController.extend(ProjectRelated) {
 
     /**
      * This is the layout name that is used to figure out what to
