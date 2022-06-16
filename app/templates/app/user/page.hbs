@@ -36,37 +36,26 @@
         </div>
       {{!-- User profile info section ends--}}
  
-        {{!-- User Skills section --}}
+        {{!-- User Skills section starts --}}
         <div class="box box-primary">
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.user.page.skills"}}</h3>
           </div>
 
           <div class="box-body">
-            <strong><i class="fa fa-book margin-r-5"></i> {{t "views.app.user.page.education"}}</strong>
-
-            <p class="text-muted">
-              {{this.model.education}}
-            </p>
-
-            <hr>
-
-            <strong><i class="fa fa-pencil margin-r-5"></i> {{t "views.app.user.page.skills"}}</strong>
-
-            <p>
-              {{#each this.model.skills as |skills|}}
-                <span class="label label-danger">{{skills.tag}}</span>
+              
+            <div class="user-skills">
+              {{#each (get-user-skills skillsString=this.model.skills) as |skill|}}
+                <span class="label label-primary skill-item">
+                  {{skill}}
+                </span>                
               {{/each}}
+            </div>
 
-            </p>
-
-            <hr>
-
-            <strong><i class="fa fa-file-text-o margin-r-5"></i> {{t "views.app.user.page.notes"}}</strong>
-
-            <p>{{this.model.description}}</p>
           </div>
         </div>
+        {{!-- User Skills section ends --}}
+        
       </div>
 
       <div class="col-md-9">
