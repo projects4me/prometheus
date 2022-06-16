@@ -14,7 +14,7 @@ import { helper } from '@ember/component/helper';
  * @private
  */
 function getUserSkills([], { skillsString }) {
-    if (skillsString !== undefined) {
+    if (skillsString) {
         return skillsString.split(',');
     }
 }
