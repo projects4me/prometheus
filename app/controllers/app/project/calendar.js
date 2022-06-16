@@ -8,13 +8,13 @@ import { action } from '@ember/object';
 /**
  * This is the controller for the calendar controller route
  *
- * @class Calendar
+ * @class AppProjectCalendarController
  * @namespace Prometheus.Controllers
  * @module App.Project
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class ProjectCalendarController extends PrometheusController {
+export default class AppProjectCalendarController extends PrometheusController {
 
 
     /**

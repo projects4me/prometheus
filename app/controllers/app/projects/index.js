@@ -9,13 +9,13 @@ import { action } from '@ember/object';
 /**
  * This controller is used for the project list
  *
- * @class Index
+ * @class AppProjectsIndexController
  * @namespace Prometheus.Controllers
  * @module App.Projects
  * @extends List
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class ProjectsIndexController extends PrometheusListController {
+export default class AppProjectsIndexController extends PrometheusListController {
 
     /**
      * This property stores the field on which the page if currently sored on

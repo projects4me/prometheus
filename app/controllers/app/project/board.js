@@ -8,13 +8,13 @@ import { action } from '@ember/object';
 /**
  * This is the controller for the board controller
  *
- * @class Board
+ * @class AppProjectBoardController
  * @namespace Prometheus.Controllers
  * @module App.Project
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class ProjectBoardController extends PrometheusController {
+export default class AppProjectBoardController extends PrometheusController {
     /**
      * These are the issues statues
      *

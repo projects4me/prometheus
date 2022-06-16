@@ -13,13 +13,13 @@ import { htmlSafe } from '@ember/template';
 /**
  * This is the controller for issue create page
  *
- * @class IssueCreateController
+ * @class AppIssueCreateController
  * @namespace Prometheus.Controllers
  * @module App.Project.Issue
  * @extends PrometheusCreateController
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class IssueCreateController extends PrometheusCreateController.extend(ProjectRelated) {
+export default class AppIssueCreateController extends PrometheusCreateController.extend(ProjectRelated) {
 
     /**
      * This is the module for which we are trying to create

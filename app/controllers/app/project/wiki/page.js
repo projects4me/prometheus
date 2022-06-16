@@ -17,13 +17,13 @@ import { action } from '@ember/object';
  * e.g. acme.projects4.me/app/1/wiki/Home
  * By default this controller is configured to load the project selection
  *
- * @class Page
+ * @class AppWikiPageController
  * @namespace Prometheus.Controllers
  * @module App.Project.Wiki
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class WikiPageController extends PrometheusController {
+export default class AppWikiPageController extends PrometheusController {
 
     /**
      * These are the tags that the user has selected.

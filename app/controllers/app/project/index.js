@@ -15,13 +15,13 @@ import { htmlSafe } from "@ember/template";
  * This is the index page of the project, index page for the project is
  * basically the detail page for it.
  *
- * @class Index
+ * @class AppProjectIndexController
  * @namespace Prometheus.Controllers
  * @module App.Project
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class ProjectIndexController extends PrometheusController {
+export default class AppProjectIndexController extends PrometheusController {
 
     /**
      * This flag is used to show or hide the modal dialog box

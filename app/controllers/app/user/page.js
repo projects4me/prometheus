@@ -9,13 +9,13 @@ import { action } from '@ember/object';
 /**
  * This controller is used to manage the user detail/page view
  *
- * @class Page
+ * @class AppUserPageController
  * @namespace Prometheus.Controllers
  * @module App.Users
  * @extends Prometheus
  * @author Rana Nouman <ranamnouman@yahoo.com>
  */
-export default class UserPageController extends PrometheusController {
+export default class AppUserPageController extends PrometheusController {
 
     /**
      * This function is triggered when user clicks on one of their social

@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import ProjectsCreateController from "prometheus/controllers/app/projects/create";
+import AppProjectsCreateController from "prometheus/controllers/app/projects/create";
 import _ from "lodash";
 
 /**
@@ -11,13 +11,13 @@ import _ from "lodash";
  * when this controller did not exist. Apparently Ember.inject.controller
  * does not work on run time generated controllers in case of page reload
  *
- * @class Edit
+ * @class AppProjectsEditController
  * @namespace Prometheus.Controllers
  * @module App.Projects
  * @extends Create
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class ProjectsEditController extends ProjectsCreateController {
+export default class AppProjectsEditController extends AppProjectsCreateController {
 
     /**
      * This is the layout name that is used to figure out what to

@@ -11,13 +11,13 @@ import { action } from '@ember/object';
  * e.g. acme.projects4.me/app/1/wiki
  * By default this controller is configured to load the project selection
  *
- * @class Wiki
+ * @class AppProjectWikiController
  * @namespace Prometheus.Controllers
  * @module App.Project
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class ProjectWikiController extends PrometheusController {
+export default class AppProjectWikiController extends PrometheusController {
 
     /**
      * This is the tree that we use in order to maintain the list of wiki pages for a particular project

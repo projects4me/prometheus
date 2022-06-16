@@ -14,13 +14,13 @@ import { htmlSafe } from '@ember/template';
  * create button
  * e.g. acme.projects4.me/app/1/wiki/create
  *
- * @class Create
+ * @class AppWikiCreateController
  * @namespace Prometheus.Controllers
  * @module App.Project.Wiki
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class WikiCreateController extends PrometheusCreateController.extend(ProjectRelated) {
+export default class AppWikiCreateController extends PrometheusCreateController.extend(ProjectRelated) {
 
     /**
      * This is the module for which we are trying to create

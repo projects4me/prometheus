@@ -9,7 +9,6 @@ import { computed } from '@ember/object';
 import { hash } from 'rsvp';
 import _ from 'lodash';
 import { htmlSafe } from '@ember/template';
-import { tracked } from '@glimmer/tracking';
 
 /**
  * This is empty controller, normally we do not create them. However
@@ -17,13 +16,13 @@ import { tracked } from '@glimmer/tracking';
  * when this controller did not exist. Apparently Ember.inject.controller
  * does not work on run time generated controllers in case of page reload
  *
- * @class Create
+ * @class AppProjectsCreateController
  * @namespace Prometheus.Controllers
  * @module App.Projects
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class ProjectsCreateController extends PrometheusCreateController {
+export default class AppProjectsCreateController extends PrometheusCreateController {
 
     /**
      * This is the module for which we are trying to create

@@ -2,19 +2,19 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import IssueCreateController from "prometheus/controllers/app/project/issue/create";
+import AppIssueCreateController from "prometheus/controllers/app/project/issue/create";
 import { htmlSafe } from '@ember/template';
 
 /**
  * This is the controller for issue create page
  *
- * @class IssueEditController
+ * @class AppIssueEditController
  * @namespace Prometheus.Controllers
  * @module App.Project.Issue
  * @extends IssueCreateController
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class IssueEditController extends IssueCreateController {
+export default class AppIssueEditController extends AppIssueCreateController {
 
     /**
      * This is the layout name that is used to figure out what to

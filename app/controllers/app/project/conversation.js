@@ -12,13 +12,13 @@ import { action } from '@ember/object';
 /**
  * This is the controller for the conversation controller route
  *
- * @class Conversation
+ * @class AppProjectConversationController
  * @namespace Prometheus.Controllers
  * @module App.Project
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class ProjectConversationController extends PrometheusController.extend(ProjectRelated, Evented) {
+export default class AppProjectConversationController extends PrometheusController.extend(ProjectRelated, Evented) {
 
     /**
      * This is the flag which is used to
