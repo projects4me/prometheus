@@ -3,6 +3,7 @@
  */
 
 import App from "prometheus/routes/app";
+import { hash } from 'rsvp';
 
 /**
  * The user page
@@ -18,12 +19,20 @@ export default App.extend({
         Logger.debug('+Prometheus.Routes.App.User::afterModel()');
         let _self = this;
         let _userOptions = {
-            query: `(User.id : ${params.user_id})`
+            query: `(User.id : ${params.user_id})`,
+            rels: 'none'
         }
-        let model = _self.store.query('user', _userOptions);
+
+        let _scoreBoardOptions = {
+            query: `(Scoreboard.userId : ${params.user_id})`,
+            rels: 'userBadgeLevel,userBadge'
+        }
 
         Logger.debug('-Prometheus.Routes.App.User::afterModel()');
-        return model;
+        return hash({
+            user: _self.store.query('user', _userOptions),
+            scoreboard: _self.store.query('scoreboard', _scoreBoardOptions)
+        });
     },
     /**
      * The setupController hook.
@@ -34,8 +43,8 @@ export default App.extend({
      */
     setupController: function (controller, model) {
         Logger.debug('+Prometheus.Routes.App.User::setupController()');
-
-        controller.set('model', model.objectAt(0));
+        controller.set('model', model.user.objectAt(0));
+        controller.set('scoreboard', model.scoreboard);
 
         Logger.debug('-Prometheus.Routes.App.User::setupController()');
     }
