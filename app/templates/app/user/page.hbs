@@ -71,7 +71,26 @@
 
           </div>
         {{!-- User Education Section ends --}}
-        
+
+        {{!-- User Badges Section starts --}}
+          <div data-user-section="badges" class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title"> {{t "views.app.user.page.badges"}} </h3>
+            </div>
+
+            <div class="box-body">
+              <div class="user-badges">
+                {{#each this.scoreboard as |scoreboard|}}
+                  <span class="badge-img" data-toggle="tooltip" title="{{scoreboard.userBadge.name}}[{{scoreboard.userBadgeLevel.name}}]">
+                    <img src="http://projects4me/badgeimage/get/{{scoreboard.userBadgeLevel.id}}" alt="{{scoreboard.userBadge.name}}">
+                  </span>
+                {{/each}}        
+              </div>
+            </div>
+
+          </div>
+        {{!-- User Badges Section ends --}}
+
       </div>
 
       <div class="col-md-9">

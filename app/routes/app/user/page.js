@@ -44,7 +44,7 @@ export default App.extend({
     setupController: function (controller, model) {
         Logger.debug('+Prometheus.Routes.App.User::setupController()');
         controller.set('model', model.user.objectAt(0));
-        controller.set('scoreboard', model.scoreboard);
+        controller.set('scoreboards', model.scoreboard);
 
         Logger.debug('-Prometheus.Routes.App.User::setupController()');
     }
