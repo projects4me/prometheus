@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr } from '@ember-data/model';
+import Model, { attr, belongsTo } from '@ember-data/model';
 
 /**
  * The Badge model
@@ -94,4 +94,13 @@ export default class BadgeModel extends Model {
      */
     @attr('string') modifiedUserName;
 
+    /**
+     * The user who earned that badge.
+     *
+     * @property modifiedUserName
+     * @type String
+     * @for Badge
+     * @private
+     */
+    @belongsTo('user') user;
 }
