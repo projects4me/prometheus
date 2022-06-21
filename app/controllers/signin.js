@@ -86,7 +86,11 @@ export default class SignInController extends Controller {
             () => {
                 if (_self.session.isAuthenticated) {
                     localStorage.removeItem('projectId');
-                    _self.session.handleAuthentication('app');
+                    //getting requested url when user was unauthenticated
+                    let oldRequestedUrl = _self.session.oldRequestedUrl;
+                    //if requested url is present then route to that url otherwise route user to /app
+                    let urlToRoute = (oldRequestedUrl && oldRequestedUrl != '/') ? oldRequestedUrl : 'app';
+                    _self.session.handleAuthentication(urlToRoute);
                 }
             },
             () => {
