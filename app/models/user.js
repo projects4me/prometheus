@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr,belongsTo,hasMany } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
+import { computed } from '@ember/object';
 
 /**
  * These are the validation that are applied on the model
@@ -158,36 +159,6 @@ export default Model.extend(Validations, {
     education: attr('string'),
 
     /**
-     * The users's dashboard
-     *
-     * @property dashboard
-     * @type DashboardModel
-     * @for User
-     * @private
-     */
-    dashboard: belongsTo('dashboard'),
-
-    /**
-     * The skills for a user
-     *
-     * @property skills
-     * @type TagModel
-     * @for User
-     * @private
-     */
-    skills: hasMany('tag'),
-
-    /**
-     * These are the tag relationship entries
-     *
-     * @property tagged
-     * @type TaggedModel
-     * @for User
-     * @private
-     */
-    tagged: hasMany('tagged'),
-
-    /**
      * Github url of the User
      *
      * @property githubUrl
@@ -236,7 +207,7 @@ export default Model.extend(Validations, {
      * @private
      */
     slackUrl: attr('string'),
-    
+
     /**
     * Skills of the User
     *
@@ -245,6 +216,70 @@ export default Model.extend(Validations, {
     * @for User
     * @private
     */
-   skills: attr('string')
-    
+    skills: attr('string'),
+
+    /**
+     * The users's dashboard
+     *
+     * @property dashboard
+     * @type DashboardModel
+     * @for User
+     * @private
+     */
+    dashboard: belongsTo('dashboard'),
+
+    /**
+     * These are the tag relationship entries
+     *
+     * @property tagged
+     * @type TaggedModel
+     * @for User
+     * @private
+     */
+    tagged: hasMany('tagged'),
+
+    /**
+     * These are the badges earned by user.
+     *
+     * @property badges
+     * @type BadgeModel
+     * @for User
+     * @private
+     */
+    badges: hasMany('badge'),
+
+    /**
+     * These are the level of each badge, earned by user.
+     *
+     * @property badgeLevels
+     * @type BadgelevelModel
+     * @for User
+     * @private
+     */
+    badgeLevels: hasMany('badgelevel'),
+
+    /**
+     * This computed property is used in order to prepare an array of 
+     * objects containing the badge on behalf of its badge level. So it's
+     * easier for us to render the badge information in the user profile 
+     * template.
+     *
+     * @property badgeDetails
+     * @type Array
+     * @for User
+     * @private
+     */
+    badgeDetails: computed('badges', 'badgeLevels', function () {
+        let array = [];
+        this.badges.forEach((badge) => {
+            let badgeLevel = this.badgeLevels.findBy('badgeId', badge.id);
+            let badgeInfo = {
+                'badge': badge,
+                'badgeLevel': badgeLevel
+            }
+            array.pushObject(badgeInfo);
+        });
+        return array;
+    })
+
 });
