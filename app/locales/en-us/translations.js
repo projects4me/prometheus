@@ -820,7 +820,8 @@ export default {
               "page" : {
                   "aboutme" : "About Me",
                   "education" : "Education",
-                  "skills" : "Skills"
+                  "skills" : "Skills",
+                  "badges" : "Badges"
               },
             },
 

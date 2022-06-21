@@ -18,12 +18,12 @@ export default App.extend({
         Logger.debug('+Prometheus.Routes.App.User::afterModel()');
         let _self = this;
         let _userOptions = {
-            query: `(User.id : ${params.user_id})`
+            query: `(User.id : ${params.user_id})`,
+            rels: 'badgeLevels,badges'
         }
-        let model = _self.store.query('user', _userOptions);
 
         Logger.debug('-Prometheus.Routes.App.User::afterModel()');
-        return model;
+        return _self.store.query('user', _userOptions);
     },
     /**
      * The setupController hook.
@@ -34,9 +34,8 @@ export default App.extend({
      */
     setupController: function (controller, model) {
         Logger.debug('+Prometheus.Routes.App.User::setupController()');
-
         controller.set('model', model.objectAt(0));
-
+        
         Logger.debug('-Prometheus.Routes.App.User::setupController()');
     }
 

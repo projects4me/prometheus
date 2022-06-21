@@ -42,10 +42,10 @@ export default Service.extend({
      * @method loadUser
      * @public
      */
-    loadUser:function(){
+    loadUser: function () {
         if (this.session.isAuthenticated) {
             // Retrieve the current user's object from the API
-            return this.store.find('user', 'me').then((user) => {
+            return this.store.findRecord('user', 'me', { include: 'dashboard' }).then((user) => {
                 // Set the retrieved user in the current object
                 this.set('user', user);
             });
