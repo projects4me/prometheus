@@ -80,9 +80,9 @@
 
             <div class="box-body">
               <div class="user-badges">
-                {{#each this.scoreboard as |scoreboard|}}
-                  <span class="badge-img" data-toggle="tooltip" title="{{scoreboard.userBadge.name}}[{{scoreboard.userBadgeLevel.name}}]">
-                    <img src="http://projects4me/badgeimage/get/{{scoreboard.userBadgeLevel.id}}" alt="{{scoreboard.userBadge.name}}">
+                {{#each this.model.badgeDetails as |badgeDetail|}}
+                  <span class="badge-img" data-toggle="tooltip" title="{{badgeDetail.badge.name}}[{{badgeDetail.badgeLevel.name}}]">
+                    <img src="http://projects4me/badgeimage/get/{{badgeDetail.badgeLevel.id}}" alt="{{badgeDetail.badge.name}}">
                   </span>
                 {{/each}}        
               </div>
