@@ -61,13 +61,11 @@ export default Route.extend({
         this._super(...arguments);
         this.intl.setLocale(['en-us']);
         let route = '';
+        let currentUrl = this.router.location.concreteImplementation.location.pathname;
         if (this.session.isAuthenticated) {
-            route = 'app';
-            let currentUrl = this.router.url;
-            if(currentUrl != '/') {
-                route = currentUrl;
-            }
+            route = (currentUrl != '/') ? currentUrl : 'app';
         } else if (!this.session.isAuthenticated) {
+            this.session['oldRequestedUrl'] = currentUrl;
             route = 'signin';
         }
         this.router.transitionTo(route);
