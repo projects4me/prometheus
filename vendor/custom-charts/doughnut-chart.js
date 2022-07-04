@@ -68,7 +68,7 @@ class DoughnutChart extends Chart.DoughnutController {
     }
 }
 
-DoughnutChart.id = 'customizedDougnut';
+DoughnutChart.id = 'customizedDoughnut';
 DoughnutChart.defaults = Chart.DoughnutController.defaults;
 
 // Stores the controller so that the chart initialization routine can look it up
