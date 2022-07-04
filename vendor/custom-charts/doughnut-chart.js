@@ -54,13 +54,14 @@ class DoughnutChart extends Chart.DoughnutController {
                 ctx.beginPath();
                 ctx.moveTo(x, y);
                 ctx.lineTo(lineX, lineY);
+                ctx.font = "12px Source Sans Pro";
                 if (arcSection.startAngle >= 1.57 || (arcSection.startAngle >= -0.5 && arcSection.endAngle >= 1.57)) {
                     ctx.lineTo(lineX - 10, lineY);
-                    ctx.fillText(text, lineX - ctx.measureText(text).width - 12, lineY + 2);
+                    ctx.fillText(text, lineX - ctx.measureText(text).width - 12, lineY + 4);
 
                 } else {
                     ctx.lineTo(lineX + 10, lineY);
-                    ctx.fillText(text, lineX + 12, lineY + 2);
+                    ctx.fillText(text, lineX + 12, lineY + 4);
                 }
                 ctx.stroke();
             }
