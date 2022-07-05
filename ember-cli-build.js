@@ -46,7 +46,7 @@ module.exports = function(defaults) {
     app.import("vendor/quill/dist/quill.min.js");
     app.import("vendor/messenger/build/js/messenger.min.js");
     // app.import("node_modules/fullcalendar/dist/locale-all.js");
-    app.import("node_modules/chart.js/dist/chart.js");
+    app.import("node_modules/chart.js/dist/chart.min.js");
     app.import("node_modules/color-hash/dist/color-hash.js");
 //    app.import("bower_components/summernote/dist/summernote.js");
     app.import("vendor/summernote/summernote.js");
