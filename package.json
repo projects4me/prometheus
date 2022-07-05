@@ -81,7 +81,7 @@
     "at.js": "^1.5.4",
     "awesome-bootstrap-checkbox": "^0.3.7",
     "bootstrap-daterangepicker": "^3.1.0",
-    "chart.js": "^2.9.4",
+    "chart.js": "^3.8.0",
     "color-hash": "^1.0.3",
     "dropzone": "^5.7.2",
     "ember-ajax": "^5.0.0",
