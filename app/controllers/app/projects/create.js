@@ -99,6 +99,20 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
     }
 
     /**
+     * This is a computed property in which gets the list of issue
+     * statuses in the system
+     *
+     * @property issueStatusList
+     * @type Array
+     * @for Create
+     * @private
+     */
+     @computed('issueStatuses')
+     get issueStatusList() {
+         return format.getTranslatedSelectList(this.issueStatuses, 'views.app.issue.lists.status', this.intl.locale);
+     }
+
+    /**
      * This function sets the short code for the project.
      *
      * @method beforeValidate

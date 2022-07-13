@@ -34,7 +34,7 @@ export default {
      * @param {Prometheus.Models.Object} model The model that needs to be converted
      * @return {Array} list The array list of name and values
      */
-    getSelectList:function(model = {} , map, blank){
+    getSelectList: function (model = {}, map, blank) {
         if (_.keys(model).length === 0) {
             return [];
         }
@@ -42,23 +42,21 @@ export default {
         let list = [];
         let temp = null;
 
-        for (let i=0;i<count;i++)
-        {
+        for (let i = 0; i < count; i++) {
             temp = model.objectAt(i);
-            if (map)
-            {
-                list[i] = _.mapValues(map,function(o){return temp.get(o)});
+            debugger;
+            if (map) {
+                list[i] = _.mapValues(map, function (o) { return temp.get(o) });
             } else {
-                list[i] = {label:temp.get('name'), value:temp.get('id')};
+                list[i] = { label: temp.get('name'), value: temp.get('id') };
             }
 
         }
 
-        if (blank)
-        {
-            list.unshift({label:blank, value:''});
+        if (blank) {
+            list.unshift({ label: blank, value: '' });
         }
-
+        debugger;
         return list;
     },
 
@@ -70,14 +68,36 @@ export default {
      * @param locale
      * @return {Array}
      */
-    getList(list,locale){
-        const translations = require("prometheus/locales/"+locale+"/translations").default;
-        let listTranslation = _.head(_.at(translations,list));
+    getList(list, locale) {
+        const translations = require("prometheus/locales/" + locale + "/translations").default;
+        debugger;
+        let listTranslation = _.head(_.at(translations, list));
         let l = [];
-        _.mapKeys(listTranslation,function(label, value){
-            l.push({"label":label,"value":value});
+        _.mapKeys(listTranslation, function (label, value) {
+            l.push({ "label": label, "value": value });
         });
         return l;
 
+    },
+    /**
+     * This function firstly get required list from translations and make change in model by
+     * passing the model name as key to the list in order to get translated value of model (if present in
+     * list, returned by the translation). Then it pass that model to getSelectList function to prepare
+     * select list that will be shared to Form Field.
+     *
+     * @method getTranslatedSelectList
+     * @param model
+     * @param listPath
+     * @param locale
+     * @return {Array}
+     */
+    getTranslatedSelectList(model, listPath, locale) {
+        const translations = require(`prometheus/locales/${locale}/translations`).default;
+        let listTranslation = _.head(_.at(translations, listPath));
+        model.forEach((model) => {
+            model.name = listTranslation[model.name];
+        });
+
+        return this.getSelectList(model);
     }
 };
