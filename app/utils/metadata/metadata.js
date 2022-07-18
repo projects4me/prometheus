@@ -505,7 +505,7 @@ export default Object.extend({
                         operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null','contains']
                     },
                     {
-                        id: 'Issue.status',
+                        id: 'Issue.statusId',
                         label: "views.app.issue.filter.status",
                         type: 'integer',
                         input: 'select',
@@ -582,8 +582,8 @@ export default Object.extend({
                     model: 'issue',
                     options: {
 //                        query: "((Issue.dateModified BETWEEN ```TODAY_START``` AND ```TODAY_END```) AND (Issue.assignee : ```ME```))",
-                        query: "((Issue.assignee : ```ME```) AND ((Issue.startDate BETWEEN ```TODAY_START``` AND ```TODAY_END``` ) OR (Issue.status : in_progress)))",
-                        rels : 'createdBy,modifiedBy,project',
+                        query: "((Issue.assignee : ```ME```) AND ((Issue.startDate BETWEEN ```TODAY_START``` AND ```TODAY_END``` ) OR (issuestatus.name : in_progress)))",
+                        rels : 'createdBy,modifiedBy,project,issuestatus',
                         sort: "Issue.dateModified",
                         order: 'ASC',
                         limit: -1
