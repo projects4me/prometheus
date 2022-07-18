@@ -59,7 +59,6 @@ export default Route.extend({
      */
     beforeModel: function () {
         this._super(...arguments);
-        this.intl.setLocale(['en-us']);
         let route = '';
         let currentUrl = this.router.location.concreteImplementation.location.pathname;
         if (this.session.isAuthenticated) {
