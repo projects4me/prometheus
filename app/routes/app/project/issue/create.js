@@ -37,7 +37,7 @@ export default App.extend({
 
         let projectOptions = {
             query: "(Project.id : "+projectId+")",
-            rels : 'members,milestones,issuetypes',
+            rels : 'members,milestones,issuetypes,issuestatuses',
             sort: "members.name",
             limit: -1
         };
@@ -57,6 +57,7 @@ export default App.extend({
             _self.set('issueDescription',issueDescription);
             _self.set('project',results.project.objectAt(0));
             _self.set('types',results.project.firstObject.issuetypes);
+            _self.set('statuses',results.project.firstObject.issuestatuses);
         });
     },
 
@@ -85,11 +86,10 @@ export default App.extend({
         controller.set('model', _self.get('issue'));
         controller.set('project', _self.get('project'));
         controller.set('types', _self.get('types'));
+        controller.set('statuses', _self.get('statuses'));
         controller.set('issueDescription',_self.get('issueDescription'));
-        let priority = format.getList('views.app.issue.lists.priority',_self.get('intl.locale'));
-        let status = format.getList('views.app.issue.lists.status',_self.get('intl.locale'));
 
-        controller.set('status',status);
+        let priority = (new format(this)).getList('views.app.issue.lists.priority');
         controller.set('priority',priority);
 
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::setupController');

@@ -97,7 +97,7 @@ export default class AppProjectIndexController extends PrometheusController {
     @computed('model', 'model.members')
     get usersList() {
         let _self = this;
-        let currentMembers = format.getSelectList(_self.get('model.members'));
+        let currentMembers = (new format(this)).getSelectList(_self.get('model.members'));
         let usersList = _self.get('appController.usersList');
         return (_.differenceWith(usersList, currentMembers, _.isEqual));
     }

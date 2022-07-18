@@ -57,7 +57,7 @@ export default class AppController extends PrometheusController {
      * @public
      */
     get rolesList() {
-        return format.getSelectList(this.roles);
+        return (new format(this)).getSelectList(this.roles);
     }
 
     /**
@@ -70,7 +70,7 @@ export default class AppController extends PrometheusController {
      */
     get usersList() {
         Logger.debug(this.users);
-        return format.getSelectList(this.users);
+        return (new format(this)).getSelectList(this.users);
     }
 
     /**

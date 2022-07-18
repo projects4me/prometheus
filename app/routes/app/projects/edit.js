@@ -3,7 +3,7 @@
  */
 
 import App from "prometheus/routes/app/projects/create";
-import format from "prometheus/utils/data/format";
+import Format from "prometheus/utils/data/format";
 
 /**
  *  This is the route that will handle the edit of a project
@@ -50,8 +50,9 @@ export default App.extend({
             controller.set('model',project);
         });
 
-        let type = format.getList('views.app.project.lists.type',_self.intl.locale);
-        let status = format.getList('views.app.project.lists.status',_self.intl.locale);
+        let format = new Format(this);
+        let type = format.getList('views.app.project.lists.type');
+        let status = format.getList('views.app.project.lists.status');
 
         controller.set('status',status);
         controller.set('type',type);

@@ -17,7 +17,7 @@ const Validations = buildValidations({
     typeId: validator('presence', true),
     assignee: validator('presence', true),
     owner: validator('presence', true),
-    status: validator('presence', true),
+    statusId: validator('presence', true),
     priority: validator('presence', true),
     startDate: validator('presence', true),
     endDate: [
@@ -171,16 +171,6 @@ export default Model.extend(Validations, {
     startDate: attr('string'),
 
     /**
-     * Status of the issue
-     *
-     * @property status
-     * @type String
-     * @for Issue
-     * @private
-     */
-    status: attr('string', { defaultValue: 'new' }),
-
-    /**
      * Priority of the issue
      *
      * @property priority
@@ -239,6 +229,16 @@ export default Model.extend(Validations, {
      * @private
      */
     typeId: attr('string'),
+
+    /**
+     * The identifier of the status this issue belongs to
+     *
+     * @property statusId
+     * @type String
+     * @for Issue
+     * @private
+     */
+     statusId: attr('string'),
 
     /**
      * The user to whom this issue is currently assigned to
@@ -339,6 +339,16 @@ export default Model.extend(Validations, {
      * @private
      */
     issuetype: belongsTo('issuetype'),
+
+    /**
+     * The status of the issue
+     *
+     * @property issuestatus
+     * @type IssuestatusModel
+     * @for IssueModel
+     * @private
+     */
+     issuestatus: belongsTo('issuestatus'),    
 
     /**
      * The estimated time on the issue

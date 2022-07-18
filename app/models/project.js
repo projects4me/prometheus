@@ -304,6 +304,16 @@ export default Model.extend(Validations, {
     issuetypes:hasMany('issuetype'),
 
     /**
+     * The issue statuses for this project
+     *
+     * @property issuestatuses
+     * @type IssuestatusModel
+     * @for Project
+     * @private
+     */
+     issuestatuses:hasMany('issuestatus'),
+
+    /**
      * The activities for this project
      *
      * @property activities

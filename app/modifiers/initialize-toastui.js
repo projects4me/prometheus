@@ -330,7 +330,7 @@ export default class ToastEditor extends Modifier {
                 priority: 'priority'
             };
             result.then(function (data) {
-                cb(format.getSelectList(data, map));
+                cb((new format(_self)).getSelectList(data, map));
             });
         }
         _self.pubSub.on('clearContents', () => {

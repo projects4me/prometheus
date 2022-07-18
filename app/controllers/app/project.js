@@ -56,7 +56,7 @@ export default class AppProjectController extends PrometheusController {
             status: 'status',
             projectId: 'projectId'
         };
-        let issueList = format.getSelectList(this.issues, map);
+        let issueList = (new format(this)).getSelectList(this.issues, map);
         issueList.unshift({
             id: '',
             name: htmlSafe(this.intl.t('global.blank')).toHTML(),
@@ -77,7 +77,7 @@ export default class AppProjectController extends PrometheusController {
      */
     @computed('projectId', 'members')
     get membersList() {
-        return format.getSelectList(this.members);
+        return (new format(this)).getSelectList(this.members);
     }
 
     /**
