@@ -102,15 +102,15 @@
             <FormFields::FieldRelate
                 @placeholder={{t "views.app.issue.create.status"}}
                 @label={{t "views.app.issue.create.status"}}
-                @value={{this.model.status}}
-                @options={{this.status}}
-                @selected={{find-by "value" this.model.status this.status}}
+                @value={{this.model.statusId}}
+                @options={{this.issueStatusList}}
+                @selected={{find-by "value" this.model.statusId this.issueStatusList}}
                 @searchField="label"
-                @onchange={{action "selectRelated" this.model 'status'}}
+                @onchange={{action "selectRelated" this.model 'statusId'}}
                 @relateType="relate-simple"
                 @data-field="issue.status"
                 @v-model={{this.model}}
-                @v-field='status'
+                @v-field='statusId'
                 @v-output='message'
             />
 
