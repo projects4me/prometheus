@@ -38,7 +38,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get usersList() {
-        return this.args.positional[0];
+        return this.args.named.usersList;
     }
 
     /**
@@ -50,7 +50,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get issueSearch() {
-        return this.args.positional[1];
+        return this.args.named.issueSearch;
     }
 
     /**
@@ -61,7 +61,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get translatedEmojis() {
-        return this.args.positional[2];
+        return this.args.named.translatedEmojis;
     }
 
     /**
@@ -72,7 +72,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get contents() {
-        return this.args.positional[3];
+        return this.args.named.contents;
     }
 
     /**
@@ -84,7 +84,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get onContentChange() {
-        return this.args.positional[4];
+        return this.args.named.onContentChange;
     }
 
     /**
@@ -96,7 +96,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get editType() {
-        return this.args.positional[5];
+        return this.args.named.editType;
     }
 
     /**
@@ -108,7 +108,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get hide() {
-        return this.args.positional[6];
+        return this.args.named.hide;
     }
 
     //Called when the modifier is installed on the DOM element

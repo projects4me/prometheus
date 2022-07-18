@@ -92,7 +92,7 @@ module('Integration | Component | field-relate', function (hooks) {
             this.set('options', relatedField.options);
             this.set('onchange', () => true);
             this.set('selected', relatedField.selected);
-            this.set('relateType', `related-fields/relate-${relatedField.name}`);
+            this.set('relateType', `relate-${relatedField.name}`);
 
             await render(hbs`
                 <FormFields::FieldRelate
@@ -101,8 +101,8 @@ module('Integration | Component | field-relate', function (hooks) {
                     @selected={{this.selected}}
                     @relateType={{this.relateType}}
                 />
-            `);            
-            
+            `);
+
             assert.dom(`span.ember-power-select-selected-item > ${relatedField.selector}`).hasText(`${relatedField.expectedValue}`)
 
         });

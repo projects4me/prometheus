@@ -6,12 +6,10 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import { setupIntl } from 'ember-intl/test-support';
 import CurrentUserStub from '../../stub-services/current-user-stub';
 
 module('Integration | Component | application-header', function (hooks) {
     setupRenderingTest(hooks);
-    setupIntl(hooks, 'en-us');
 
     test('it renders component with the sign out button', async function (assert) {
         let session = {
@@ -49,7 +47,6 @@ module('Integration | Component | application-header', function (hooks) {
         await render(hbs`
             <AppLayouts::ApplicationHeader />
         `);
-
         assert.dom('header li.dropdown.user.user-menu span#user-name').hasText('Rana Nouman', 'current username matched');
         assert.dom('li.user-header p > small').hasText('Member since Feb 2022', 'date created matched');
     });
