@@ -10,7 +10,7 @@ import { hbs } from 'ember-cli-htmlbars';
 module('Integration | Component | field-text', function (hooks) {
     setupRenderingTest(hooks);
 
-    test('Text field Renders', async function (assert) {
+    test('it renders field text component', async function (assert) {
 
         await render(hbs`
             <FormFields::FieldText

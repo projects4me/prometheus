@@ -53,7 +53,7 @@ module('Integration | Component | user-profile/social-links', function (hooks) {
         expectedAnswers.forEach((answer) => {
             let anchorTagSelector = `div[data-social-name='${answer.socialMediaName}'] > a`;
             let iTagSelector = `div[data-social-name='${answer.socialMediaName}'] > i`;
-            
+
             assert.dom(anchorTagSelector).hasText(`${answer.userName}`);
 
             assert.dom(iTagSelector).hasClass(`fa-${answer.socialMediaName}`);
