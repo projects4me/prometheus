@@ -52,7 +52,7 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
      */
     @computed('project')
     get milestoneList() {
-        return format.getSelectList(this.project.milestones, false, htmlSafe(this.intl.t('global.blank')).toHTML());
+        return (new format(this)).getSelectList(this.project.milestones, false, htmlSafe(this.intl.t('global.blank')).toHTML());
     }
 
     /**
@@ -65,7 +65,20 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
      */
     @computed('types')
     get typeList() {
-        return format.getSelectList(this.types);
+        return (new format(this)).getSelectList(this.types);
+    }
+
+    /**
+     * This issue statuses available for the project
+     *
+     * @property issueStatusList
+     * @type Array
+     * @for Create
+     * @public
+     */
+    @computed('statuses')
+    get issueStatusList() {
+        return (new format(this)).getTranslatedModelList(this.statuses, 'views.app.issue.lists.status');
     }
 
     /**
