@@ -95,7 +95,7 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
      */
     @computed('issuetypes')
     get issuetypeList() {
-        return format.getSelectList(this.issuetypes);
+        return (new format(this)).getSelectList(this.issuetypes);
     }
 
     /**
@@ -109,7 +109,7 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
      */
      @computed('issueStatuses')
      get issueStatusList() {
-         return format.getTranslatedSelectList(this.issueStatuses, 'views.app.issue.lists.status', this.intl.locale);
+         return (new format(this)).getTranslatedModelList(this.issueStatuses, 'views.app.issue.lists.status');
      }
 
     /**

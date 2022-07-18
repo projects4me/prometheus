@@ -129,7 +129,7 @@ export default class ApplicationHeaderComponent extends AppComponent {
             project: 'project'
         };
         return _self.loadSearchData(query).then(function (data) {
-            return format.getSelectList(data, map);
+            return (new format(_self)).getSelectList(data, map);
         });
     })) search
 
