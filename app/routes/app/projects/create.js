@@ -4,7 +4,7 @@
 
 import App from "prometheus/routes/app";
 import { hash } from 'rsvp';
-import format from "prometheus/utils/data/format";
+import Format from "prometheus/utils/data/format";
 
 /**
  *  This is the route that will handle the creation of new issues
@@ -32,14 +32,21 @@ export default App.extend({
             limit: -1
         };
 
+        let issueStatusOptions= {
+            query : '(Issuestatus.system : 1)',
+            limit: -1
+        }
+
         return hash({
             project: _self.get('store').createRecord('project',{
                 assignee: _self.get('currentUser').user.id
             }),
             issuetypes: _self.store.query('issuetype',issuetypeOptions),
+            issueStatuses: _self.store.query('issuestatus', issueStatusOptions)
         }).then(function(results){
             _self.set('project',results.project);
             _self.set('issuetypes',results.issuetypes.toArray());
+            _self.set('issueStatuses',results.issueStatuses);
         });
 
     },
@@ -59,12 +66,14 @@ export default App.extend({
 
         controller.set('model',_self.get('project'));
         controller.set('issuetypes',_self.get('issuetypes'));
+        controller.set('issueStatuses', _self.issueStatuses);
 
-        let type = format.getList('views.app.project.lists.type',_self.intl.locale);
-        let status = format.getList('views.app.project.lists.status',_self.intl.locale);
-
-        controller.set('status',status);
+        let format = new Format(this);
+        let type = format.getList('views.app.project.lists.type');
+        let status = format.getList('views.app.project.lists.status');
+        
         controller.set('type',type);
+        controller.set('status', status);
     },
 
 });
