@@ -1,5 +1,6 @@
 import { fillIn, currentURL, visit, click } from '@ember/test-helpers';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
+import { pluralize } from 'ember-inflector';
 import steps from './steps';
 
 export const given = function () {
@@ -119,7 +120,7 @@ export default function (assert) {
 function _setProject(projectDetails, project) {
     for (const [module, count] of Object.entries(projectDetails)) {
         let rels = server.createList(module, parseInt(count));
-        let relName = `${module}s`;
+        let relName = pluralize(module);
         project.update({
             [relName]: rels
         });
