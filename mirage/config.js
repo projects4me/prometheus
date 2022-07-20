@@ -2,7 +2,7 @@ import _ from "lodash";
 import Context from './yadda-context/context';
 
 export default function () {
-    this.urlPrefix = 'http://projects4me';
+    this.urlPrefix = 'http://test.projects4me';
     this.namespace = '/api/v1';
     this.timing = 0;
     let ctx = new Context();
