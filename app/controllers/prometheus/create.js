@@ -7,7 +7,6 @@ import { inject as controller } from '@ember/controller';
 import { computed, action } from '@ember/object';
 import { hash } from 'rsvp';
 import _ from "lodash";
-import { controllers } from "chart.js";
 import { tracked } from '@glimmer/tracking';
 
 /**
