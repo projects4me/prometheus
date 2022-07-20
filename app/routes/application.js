@@ -4,6 +4,7 @@
 
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
+import ENV from "prometheus/config/environment";
 
 /**
  * This is the application route, in EmberJs the application route is the main
@@ -60,7 +61,8 @@ export default Route.extend({
     beforeModel: function () {
         this._super(...arguments);
         let route = '';
-        let currentUrl = this.router.location.concreteImplementation.location.pathname;
+        let currentUrl = (ENV.environment == 'test') ? this.router.location.path : this.router.location.concreteImplementation.location.pathname;
+
         if (this.session.isAuthenticated) {
             route = (currentUrl != '/') ? currentUrl : 'app';
         } else if (!this.session.isAuthenticated) {
