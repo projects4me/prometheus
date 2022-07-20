@@ -231,6 +231,16 @@ export default Model.extend(Validations, {
     typeId: attr('string'),
 
     /**
+     * The status of the issue
+     *
+     * @property status
+     * @type String
+     * @for Issue
+     * @private
+     */
+    status: attr('string'),
+
+    /**
      * The identifier of the status this issue belongs to
      *
      * @property statusId
