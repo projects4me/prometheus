@@ -1,9 +1,10 @@
 import _ from "lodash";
 import Context from './yadda-context/context';
+import ENV from "prometheus/config/environment";
 
 export default function () {
-    this.urlPrefix = 'http://projects4me';
-    this.namespace = '/api/v1';
+    this.urlPrefix = ENV.api.host;
+    this.namespace = 'api/v'+ENV.api.version;
     this.timing = 0;
     let ctx = new Context();
 
@@ -174,6 +175,11 @@ export default function () {
     this.get('/dashboard/:id', (schema, request) => {
         let id = request.params.id;
         return schema.dashboards.find(id);
+    });
+
+    this.get('/issuestatus/:id', (schema, request) => {
+        let id = request.params.id;
+        return schema.issuestatuses.find(id);
     });
 
     this.post('/token', (schema, request) => {

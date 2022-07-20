@@ -18,10 +18,10 @@ Feature: issue create
     Given User_4 is logged in
     Given User_4 selects Project 2
     Given Project 2 has following details
-    -------------------------
-    | milestone | issuetype | 
-    | 4         | 4         |
-    -------------------------
+    ---------------------------------------
+    | milestone | issuetype | issuestatus |
+    | 4         | 4         | 4           |
+    ---------------------------------------
     When User navigates to issue create page
     When User enters test subject in subject
     When User enters test description in description

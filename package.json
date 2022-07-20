@@ -85,6 +85,7 @@
     "color-hash": "^1.0.3",
     "dropzone": "^5.7.2",
     "ember-ajax": "^5.0.0",
+    "ember-cli-yadda": "^0.7.0",
     "ember-composable-helpers": "^4.4.1",
     "ember-cp-validations": "https://github.com/qonto/ember-cp-validations",
     "ember-fetch": "^8.1.1",

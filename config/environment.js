@@ -69,6 +69,7 @@ module.exports = function(environment) {
 
     if (environment === 'test') {
         // Testem prefers this...
+        ENV.api.host = "http://test.projects4me";
         ENV.locationType = 'none';
 
         // keep test console output quieter
