@@ -248,7 +248,7 @@ export default Model.extend(Validations, {
      * @for Issue
      * @private
      */
-     statusId: attr('string'),
+    statusId: attr('string'),
 
     /**
      * The user to whom this issue is currently assigned to
@@ -329,7 +329,7 @@ export default Model.extend(Validations, {
      * @private
      */
     parentissue: belongsTo('issue', { inverse: null }),
-    
+
     /**
      * The conversation room this issue is associated with
      *
@@ -358,7 +358,7 @@ export default Model.extend(Validations, {
      * @for IssueModel
      * @private
      */
-     issuestatus: belongsTo('issuestatus'),    
+    issuestatus: belongsTo('issuestatus'),
 
     /**
      * The estimated time on the issue
@@ -419,5 +419,5 @@ export default Model.extend(Validations, {
      * @private
      */
     files: hasMany('upload')
-    
+
 });
