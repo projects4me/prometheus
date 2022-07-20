@@ -172,9 +172,7 @@ export default function (server) {
     const user = server.schema.users.all();
     user.models.forEach((model) => {
         model.update({
-            dashboard: server.schema.dashboards.find(_.random(1, 10)),
-            skills: server.schema.tags.all(),
-            tagged: server.schema.taggeds.all()
+            dashboard: server.schema.dashboards.find(_.random(1, 10))
         })
     });
 
