@@ -1,9 +1,10 @@
 import _ from "lodash";
 import Context from './yadda-context/context';
+import ENV from "prometheus/config/environment";
 
 export default function () {
-    this.urlPrefix = 'http://test.projects4me';
-    this.namespace = '/api/v1';
+    this.urlPrefix = ENV.api.host;
+    this.namespace = 'api/v'+ENV.api.version;
     this.timing = 0;
     let ctx = new Context();
 
