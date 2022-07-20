@@ -44,6 +44,9 @@ export default Factory.extend({
     status() {
         return faker.random.arrayElement(["new", "in_progress", "done", "feedback", "pending", "deferred"]);
     },
+    statusId(){
+        return (_.random(1, 10)).toString();
+    },
     priority() {
         return faker.random.arrayElement(["medium", "high", "low", "critical", "blocker"]);
     },
