@@ -176,6 +176,11 @@ export default function () {
         return schema.dashboards.find(id);
     });
 
+    this.get('/issuestatus/:id', (schema, request) => {
+        let id = request.params.id;
+        return schema.issuestatuses.find(id);
+    });
+
     this.post('/token', (schema, request) => {
         let req = _.chain(request.requestBody).split('&').map(_.partial(_.split, _, '=', 2)).fromPairs().value();
 
