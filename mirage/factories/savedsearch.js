@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 export default Factory.extend({
     name() {
-        return faker.lorem.text();
+        return faker.lorem.word();
     },
     dateCreated() {
         return date.createdDate(1, 5);
@@ -17,8 +17,8 @@ export default Factory.extend({
     public() {
         return faker.random.arrayElement(["0", "1"]);
     },
-    "searchquery": "",
-    "relatedTo": "project",
+    "searchquery": "savedsearch",
+    "relatedTo": "",
     projectId() {
         return (_.random(1, 10)).toString();
     },

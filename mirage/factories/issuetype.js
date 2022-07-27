@@ -23,7 +23,7 @@ export default Factory.extend({
     modifiedUser() {
         return (_.random(1, 10)).toString();
     },
-    "system": "0",
+    "system": "1",
     afterCreate(issuetype) {
         issuetype.update({
             "createdUserName": `User_${issuetype.createdUser}`,

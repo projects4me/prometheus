@@ -4,17 +4,16 @@ import ENV from "prometheus/config/environment";
 
 export default function () {
     this.urlPrefix = ENV.api.host;
-    this.namespace = 'api/v'+ENV.api.version;
+    this.namespace = 'api/v' + ENV.api.version;
     this.timing = 0;
     let ctx = new Context();
 
     this.get('/user', (schema, request) => {
         let model = schema.users.all();
-        let queryParams = request.queryParams.query;
-        let id = getValueFromQuery(`User.id`, queryParams);
+        let userQuery = request.queryParams.query;
+        let id = getValueFromQuery(`User.id`, userQuery);
         if (id) {
-            model.models.length = 0;
-            model.models.pushObject(schema.users.find(id));
+            _pushObjectInModel(model, schema.users.find(id));
         }
         return model;
     });
@@ -29,12 +28,15 @@ export default function () {
     });
 
     this.get('/issue', (schema, request) => {
+        debugger;
         let model = schema.issues.all();
-        let queryParams = request.queryParams.query;
-        let issueNumber = getValueFromQuery('Issue.issueNumber', queryParams);
+        let issueQuery = request.queryParams.query;
+        let issueNumber = getValueFromQuery('Issue.issueNumber', issueQuery);
+
         if (issueNumber) {
-            model.models.length = 0;
-            model.models.pushObject(schema.issues.find(issueNumber));
+            _pushObjectInModel(model, schema.issues.find(issueNumber));
+        } else if (issueQuery.indexOf("savedsearch") >= 0) {
+            _pushObjectInModel(model, schema.issues.find(1));
         }
         return model;
     });
@@ -153,19 +155,44 @@ export default function () {
         return model;
     });
 
-    this.get('/project', (schema) => {
+    this.get('/project', (schema, request) => {
         let model = schema.projects.all();
+
+        //check if queryParams have a query object or not
+        let projectQuery = request.queryParams.query;
+
+        //if user has requested a saved search then return one project
+        if (projectQuery.indexOf("savedsearch") >= 0) {
+            _pushObjectInModel(model, schema.projects.find(1));
+        }
+
         return model;
+    });
+
+    this.post('/project', (schema, request) => {
+        let requestData = JSON.parse(request.requestBody).data;
+        let project = server.create('project');
+        project.update(requestData.attributes);
+        ctx.set('latestCreatedProject', project);
+        return project;
     });
 
     this.get('/project/:id', (schema, request) => {
         let id = request.params.id;
-        return schema.projects.find(id)
+        return schema.projects.find(id);
+    });
+
+    this.get('/issuetype', (schema, request) => {
+        return schema.issuetypes.all();
     });
 
     this.get('/issuetype/:id', (schema, request) => {
         let id = request.params.id;
-        return schema.issuetypes.find(id)
+        return schema.issuetypes.find(id);
+    });
+
+    this.post('/issuetype', (schema, request) => {
+        return server.schema.issuetypes.all();
     });
 
     this.get('/activity', (schema) => {
@@ -177,10 +204,20 @@ export default function () {
         return schema.dashboards.find(id);
     });
 
+    this.get('/issuestatus', (schema, request) => {
+        return schema.issuestatuses.all();
+    });
+
     this.get('/issuestatus/:id', (schema, request) => {
         let id = request.params.id;
         return schema.issuestatuses.find(id);
     });
+
+    this.get('/savedsearch', (schema) => {
+        return schema.savedsearches.all();
+    });
+
+
 
     this.post('/token', (schema, request) => {
         let req = _.chain(request.requestBody).split('&').map(_.partial(_.split, _, '=', 2)).fromPairs().value();
@@ -220,7 +257,7 @@ export default function () {
  * @param {String} query 
  * @returns String
  */
-let getValueFromQuery = (field, query) => {
+function getValueFromQuery(field, query) {
     if (query != undefined) {
         let matchQueryField = new RegExp(`(${field} : (\\d+))`);
         if (matchQueryField.exec(query)) {
@@ -229,4 +266,9 @@ let getValueFromQuery = (field, query) => {
             return val[0];
         }
     }
+}
+
+function _pushObjectInModel(model, object) {
+    model.models.length = 0;
+    model.models.pushObject(object);
 }
