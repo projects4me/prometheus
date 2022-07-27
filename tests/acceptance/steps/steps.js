@@ -3,17 +3,29 @@ import Context from '../../../mirage/yadda-context/context';
 import * as signIn from './sign-in-steps';
 import * as formField from './form-field-steps';
 import * as navigation from './navigation-steps';
-import * as issueCreate from './issue-create-steps';
+import * as issueCreate from './issue/create-issue-steps';
 import * as date from './date-steps';
 import * as updateIssueStatus from './update-issue-status-steps';
-import * as mirageServerConfig from './mirage-server-config-steps';
+import * as mirageServerConfig from './mirage/mirage-server-config-steps';
+import * as createListOfFactory from './mirage/create-list-of-factory-steps';
 import * as signout from './sign-out-steps';
 import * as globalSearch from './global-search-steps';
-import * as filterIssuesBoard from './filter-issues-board-steps';
+import * as filterIssuesBoard from './taskboard/filter-issues-steps';
+import * as toggleMilestoneBox from './taskboard/toggle-milestone-box-steps';
 import * as redirectToSocialLinks from './redirect-to-user-social-links-steps';
+import * as checkIssuesListIssueToday from './dashboard/issue-today/check-list-of-issue-steps';
+import * as searchIssueFromIssueToday from './dashboard/issue-today/search-issue-from-list-steps';
+import * as selectIssueFromIssueToday from './dashboard/issue-today/select-and-navigate-to-issue-steps';
+import * as renderListOfProjects from './project/render-list-of-projects-steps';
+import * as renderListOfIssues from './issue/render-list-of-issues-steps';
+import * as projectCreate from './project/create-project-steps';
+import * as projectSearchFromList from './project/search-project-from-list-steps';
+import * as issueSearchFromList from './issue/search-issue-from-list-steps';
+import * as selectAndNavigateToProject from './project/select-and-navigate-to-project-steps';
+import * as selectAndNavigateToIssue from './issue/select-and-navigate-to-issue-steps';
 
 export default function (assert) {
-    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()

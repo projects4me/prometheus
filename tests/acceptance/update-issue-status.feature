@@ -15,6 +15,3 @@ Feature: update issue status
     | new | in_progress | done | feedback | pending | deferred |
     | 1   | 0           | 0    |  1       | 0       | 0        |
     ------------------------------------------------------------
-    When User navigates to board
-    When User change status of issue 2 to pending
-    # Then Issue status will be pending

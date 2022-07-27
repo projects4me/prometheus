@@ -1,5 +1,5 @@
 @setupApplicationTest
-Feature: sign out
+Feature: App | sign out
 
   Scenario: Signing out from application
 

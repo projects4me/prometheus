@@ -12,7 +12,7 @@ export const when = function () {
         {
             "User navigates to $page": (assert) => async function (page) {
                 await visit(`/${page}`);
-                assert.equal(currentURL(), `/${page}`, `User navigates to ${page}`);
+                assert.equal(currentURL(), `/${page}`, `User navigates to /${page}`);
             }
         }
     ];
@@ -22,7 +22,7 @@ export const then = function () {
     return [
         {
             "User should be in $pageName page": (assert) => async function (pageName) {
-                assert.equal(currentURL(), `/${pageName}`, `User should be in a ${pageName} page`);
+                assert.equal(currentURL(), `/${pageName}`, `User should be in a /${pageName} page`);
             }
         }
     ];

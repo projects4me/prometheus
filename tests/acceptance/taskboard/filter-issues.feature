@@ -1,5 +1,5 @@
 @setupApplicationTest
-Feature: filter issues board
+Feature: Taskboard | filter issues board
 
   Scenario: filter issues from task board
 

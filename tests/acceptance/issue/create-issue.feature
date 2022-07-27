@@ -1,5 +1,5 @@
 @setupApplicationTest
-Feature: issue create
+Feature: Issue | issue create
 
   Scenario: Checking pre-filled fields
 
@@ -11,7 +11,7 @@ Feature: issue create
     Then User_4 should be assignee
     Then User_4 should be owner
 
-  Scenario: Creating issue with simple values
+  Scenario: Creating issue with correct values
 
     Given There is no pre-existing data
     Given default scenario is loaded
@@ -25,10 +25,10 @@ Feature: issue create
     When User navigates to issue create page
     When User enters test subject in subject
     When User enters test description in description
-    When User selects option 3 from type
-    When User selects start date
-    When User selects end date
-    When User selects status
+    When User selects option 3 of issue type
+    When User selects start date of issue
+    When User selects end date of issue
+    When User selects option 4 of issue status
     When User selects option 3 from milestone
     When User clicks on save button
     Then User is navigated to issue detail view

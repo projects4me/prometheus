@@ -1,5 +1,5 @@
 @setupApplicationTest
-Feature: global search
+Feature: Application | global search
 
   Scenario: Searching the issue globally
 

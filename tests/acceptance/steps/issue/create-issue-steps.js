@@ -1,7 +1,7 @@
 import { fillIn, currentURL, visit, click } from '@ember/test-helpers';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import { pluralize } from 'ember-inflector';
-import steps from './steps';
+import steps from '../steps';
 
 export const given = function () {
     return [
@@ -10,11 +10,13 @@ export const given = function () {
                 let project = server.create('project');
                 let oldProjectId = project.id;
                 let users = server.schema.users.all().models;
-                project.update({
-                    id: projectId,
-                    members: users
-                });
-                server.db.projects.remove(oldProjectId);
+                if (projectId !== '1') {
+                    project.update({
+                        id: projectId,
+                        members: users
+                    });
+                    server.db.projects.remove(oldProjectId);
+                }
                 ctx.set('currentProject', project);
                 assert.equal(project.id, projectId);
             }
@@ -52,17 +54,10 @@ export const when = function () {
             }
         },
         {
-            "User selects option $id from type": (assert) => async function (id) {
-                await clickTrigger('div[data-field="issue.type"] > div.input-group.select-input');
-                await selectChoose('div[data-field="issue.type"] > div.input-group.select-input > div', '.ember-power-select-option', id - 1);
+            "User selects option $id of $module $field": (assert) => async function (id, module, field) {
+                let selectEl = document.querySelector(`div[data-field="${module}.${field}"] > div.input-group`);
+                await selectChoose(selectEl.querySelector('div'), '.ember-power-select-option', id - 1);
                 assert.ok(true, "User selects type");
-            }
-        },
-        {
-            "User selects status": (assert) => async function () {
-                await clickTrigger('div[data-field="issue.status"] > div.input-group.select-input');
-                await selectChoose('div[data-field="issue.status"] > div.input-group.select-input > div', '.ember-power-select-option', 1);
-                assert.ok(true, "User selects status");
             }
         },
         {

@@ -1,5 +1,5 @@
 @setupApplicationTest
-Feature: sign in
+Feature: App | sign in
 
   Scenario: Signing in to application
 

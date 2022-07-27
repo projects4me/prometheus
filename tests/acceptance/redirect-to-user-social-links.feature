@@ -1,5 +1,5 @@
 @setupApplicationTest
-Feature: redirect to user social links
+Feature: User Profile | redirect to user social links
 
   Scenario: Redirecting users to their social links
 
