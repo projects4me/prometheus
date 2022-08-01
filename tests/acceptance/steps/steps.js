@@ -1,5 +1,6 @@
 import yadda from 'yadda';
 import Context from '../../../mirage/yadda-context/context';
+import * as setModel from './common-steps/set-model-steps';
 import * as signIn from './sign-in-steps';
 import * as formField from './form-field-steps';
 import * as navigation from './navigation-steps';
@@ -26,9 +27,10 @@ import * as selectAndNavigateToIssue from './issue/select-and-navigate-to-issue-
 import * as commentOnIssue from './issue/comment-on-issue-steps';
 import * as createConversation from './conversation/create-conversation-steps';
 import * as addCommentOnConversation from './conversation/add-comment-on-conversation-steps';
+import * as navigateToUserProfile from './profile/navigate-to-user-profile-steps';
 
 export default function (assert) {
-    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()
