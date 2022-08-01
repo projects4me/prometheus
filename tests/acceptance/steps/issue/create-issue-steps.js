@@ -126,9 +126,10 @@ function _setProject(projectDetails, project) {
 function getRelatedModelName(module) {
     let relName = '';
     let relatedModelName = '';
+    let regex = /\([^)]*\)/g;
 
     //check if user has given relationship name as input or not
-    if (module.includes('(')) {
+    if (regex.test(module)) {
         let splittedString = module.split('(');
         relName = splittedString[0];
         relatedModelName = splittedString[1].slice(0, -1);
