@@ -9,9 +9,9 @@
         {{yield}}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{t this.closeLabel}}</button>
+        <button type="button" data-btn="cancel" class="btn btn-default" data-dismiss="modal">{{t this.closeLabel}}</button>
         {{#if this.confirmLabel}}
-          <button type="button" class="btn btn-primary" {{action 'confirm'}}>{{t this.confirmLabel}}</button>
+          <button type="button" data-btn="save" class="btn btn-primary" {{action 'confirm'}}>{{t this.confirmLabel}}</button>
         {{/if}}
       </div>
     </div>
