@@ -23,7 +23,7 @@ export const then = function () {
             }
         },
         {
-            "Issue have a comment of $commentDescription": (assert) => async function (commentDescription) {
+            "Comment having description $commentDescription is created": (assert) => async function (commentDescription) {
                 assert.dom(document.querySelector('div.comment-text p')).hasText(commentDescription)
             }
         },

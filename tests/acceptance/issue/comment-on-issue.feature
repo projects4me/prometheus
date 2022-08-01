@@ -15,4 +15,4 @@ Feature: Issue | comment on issue
     When User navigates to app/project/3/issue/4
     When User add a comment having description testComment
     Then User_1 has created a comment
-    Then Issue have a comment of testComment
+    Then Comment having description testComment is created
