@@ -6,7 +6,7 @@ Feature: Issue | render list of issues
     Given There is no pre-existing data
     Given default scenario is loaded
     Given User_1 is logged in
-    Given User_4 selects Project 5
+    Given User_1 selects Project 5
     Given Project 5 has following details
     ---------
     | issue |
