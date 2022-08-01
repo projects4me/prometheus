@@ -7,7 +7,7 @@ Feature: Issue | comment on issue
     Given default scenario is loaded
     Given User_1 is logged in
     Given User_1 selects Project 3
-    Given Project 3 has following details
+    Given Project has following details
     ---------
     | issue |
     | 5     |

@@ -7,7 +7,7 @@ Feature: Dashboard - Issue Today | search issue from list
     Given default scenario is loaded
     Given User_1 is logged in
     Given User_1 selects Project 2
-    Given Project 2 has following details
+    Given Project has following details
     --------------
     | issue      |
     | 10         |
@@ -23,7 +23,7 @@ Feature: Dashboard - Issue Today | search issue from list
     Given default scenario is loaded
     Given User_1 is logged in
     Given User_1 selects Project 2
-    Given Project 2 has following details
+    Given Project has following details
     --------------
     | issue      |
     | 10         |

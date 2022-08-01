@@ -7,7 +7,7 @@ Feature: Issue | render list of issues
     Given default scenario is loaded
     Given User_1 is logged in
     Given User_1 selects Project 5
-    Given Project 5 has following details
+    Given Project has following details
     ---------
     | issue |
     | 10    |

@@ -7,7 +7,7 @@ Feature: Dashboard - Issue Today | select and navigate to issue
     Given default scenario is loaded
     Given User_1 is logged in
     Given User_1 selects Project 1
-    Given Project 1 has following details
+    Given Project has following details
     -------------
     | issue     |
     | 5         |

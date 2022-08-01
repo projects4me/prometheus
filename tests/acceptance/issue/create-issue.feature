@@ -17,7 +17,7 @@ Feature: Issue | issue create
     Given default scenario is loaded
     Given User_4 is logged in
     Given User_4 selects Project 2
-    Given Project 2 has following details
+    Given Project has following details
     ---------------------------------------
     | milestone | issuetype | issuestatus |
     | 4         | 4         | 4           |
