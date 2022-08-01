@@ -11,7 +11,7 @@ export default function () {
     this.get('/user', (schema, request) => {
         let model = schema.users.all();
         let userQuery = request.queryParams.query;
-        let id = getValueFromQuery(`User.id`, userQuery);
+        let id = _getValueFromQuery(`User.id`, userQuery);
         if (id) {
             _pushObjectInModel(model, schema.users.find(id));
         }
@@ -28,10 +28,9 @@ export default function () {
     });
 
     this.get('/issue', (schema, request) => {
-        debugger;
         let model = schema.issues.all();
         let issueQuery = request.queryParams.query;
-        let issueNumber = getValueFromQuery('Issue.issueNumber', issueQuery);
+        let issueNumber = _getValueFromQuery('Issue.issueNumber', issueQuery);
 
         if (issueNumber) {
             _pushObjectInModel(model, schema.issues.find(issueNumber));
@@ -124,18 +123,6 @@ export default function () {
         };
     });
 
-    this.post('/issue', (schema, request) => {
-        let requestData = JSON.parse(request.requestBody).data;
-        let issue = server.create('issue');
-        requestData.attributes["issueNumber"] = issue.issueNumber;
-        issue.update(requestData.attributes);
-        issue.update({
-            issuetype: schema.issuetypes.find(requestData.attributes.typeId)
-        });
-        ctx.set('latestCreatedIssue', issue);
-        return issue;
-    });
-
     this.get('/role', (schema) => {
         let data = schema.roles.all();
         let count = 1;
@@ -169,14 +156,6 @@ export default function () {
         return model;
     });
 
-    this.post('/project', (schema, request) => {
-        let requestData = JSON.parse(request.requestBody).data;
-        let project = server.create('project');
-        project.update(requestData.attributes);
-        ctx.set('latestCreatedProject', project);
-        return project;
-    });
-
     this.get('/project/:id', (schema, request) => {
         let id = request.params.id;
         return schema.projects.find(id);
@@ -189,10 +168,6 @@ export default function () {
     this.get('/issuetype/:id', (schema, request) => {
         let id = request.params.id;
         return schema.issuetypes.find(id);
-    });
-
-    this.post('/issuetype', (schema, request) => {
-        return server.schema.issuetypes.all();
     });
 
     this.get('/activity', (schema) => {
@@ -217,7 +192,67 @@ export default function () {
         return schema.savedsearches.all();
     });
 
+    this.get('conversationroom', (schema, request) => {
+        return schema.conversationrooms.all();
+    });
 
+    this.patch('/issue/:id', (schema, request) => {
+        let requestData = _getRequestData(request);
+        let issue = schema.issues.find(requestData.id);
+        issue.update({
+            status: requestData.attributes.status,
+            milestoneId: requestData.attributes.milestoneId
+        });
+        return issue;
+    });
+
+    //post requests
+    this.post('/issue', (schema, request) => {
+        let requestData = JSON.parse(request.requestBody).data;
+        let issue = server.create('issue');
+
+        /*updating issue twicely because of first getting default issueNumber
+        * and setting it to requested attributes and then updating the
+        * issue again
+        */
+        requestData.attributes["issueNumber"] = issue.issueNumber;
+        issue.update(requestData.attributes);
+        issue.update({
+            issuetype: schema.issuetypes.find(requestData.attributes.typeId),
+            status: schema.issuestatuses.find(issue.statusId).name
+        });
+        ctx.set('latestCreatedIssue', issue);
+        return issue;
+    });
+
+    this.post('/project', (schema, request) => {
+        let requestData = _getRequestData(request);
+        let project = server.create('project', requestData.attributes);
+        ctx.set('latestCreatedProject', project);
+        return project;
+    });
+
+    this.post('/issuetype', (schema, request) => {
+        return server.schema.issuetypes.all();
+    });
+
+    this.post('conversationroom', (schema, request) => {
+        let requestData = _getRequestData(request);
+        let conversationRoom = server.create('conversationroom', requestData.attributes);
+        return conversationRoom;
+    });
+
+    this.post('comment', (schema, request) => {
+        let requestData = _getRequestData(request);
+        let comment = server.create('comment', requestData.attributes);
+        let currentUser = ctx.get('currentUser');
+
+        comment.update({
+            createdUser: currentUser.id,
+            createdUserName : currentUser.name
+        });
+        return comment;
+    });
 
     this.post('/token', (schema, request) => {
         let req = _.chain(request.requestBody).split('&').map(_.partial(_.split, _, '=', 2)).fromPairs().value();
@@ -237,16 +272,6 @@ export default function () {
             }
         }
     });
-
-    this.patch('/issue/:id', (schema, request) => {
-        let requestData = JSON.parse(request.requestBody).data;
-        let issue = schema.issues.find(requestData.id);
-        issue.update({
-            status: requestData.attributes.status,
-            milestoneId: requestData.attributes.milestoneId
-        });
-        return issue;
-    });
 }
 
 /**
@@ -257,7 +282,7 @@ export default function () {
  * @param {String} query 
  * @returns String
  */
-function getValueFromQuery(field, query) {
+function _getValueFromQuery(field, query) {
     if (query != undefined) {
         let matchQueryField = new RegExp(`(${field} : (\\d+))`);
         if (matchQueryField.exec(query)) {
@@ -268,7 +293,25 @@ function getValueFromQuery(field, query) {
     }
 }
 
+/**
+ * This function push object into model.
+ * 
+ * @param {Object} model 
+ * @param {Object} object
+ * @returns object
+ */
 function _pushObjectInModel(model, object) {
     model.models.length = 0;
     model.models.pushObject(object);
+}
+
+
+/**
+ * This function returns data that User has posted.
+ * 
+ * @param {Object} request 
+ * @returns Object
+ */
+function _getRequestData(request) {
+    return JSON.parse(request.requestBody).data;
 }

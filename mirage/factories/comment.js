@@ -11,9 +11,9 @@ export default Factory.extend({
         return date.modifiedDate(1, 5);
     },
     "deleted": "0",
-    // comment() {
-    //     return faker.lorem.sentence();
-    // },
+    comment() {
+        return faker.lorem.sentence();
+    },
     createdUser() {
         return (_.random(1, 10)).toString();
     },
@@ -30,15 +30,6 @@ export default Factory.extend({
         comment.update({
             "createdUserName": `User_${comment.createdUser}`,
             "modifiedUserName": `User_${comment.modifiedUser}`,
-        })
-        if (comment.id <= 5) {
-            comment.update({
-                "comment": faker.random.arrayElement(["0", "1"])
-            })
-        } else {
-            comment.update({
-                "comment": faker.lorem.sentence()
-            })
-        }
+        });
     }
 });
