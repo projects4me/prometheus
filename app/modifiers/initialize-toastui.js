@@ -111,6 +111,17 @@ export default class ToastEditor extends Modifier {
         return this.args.named.hide;
     }
 
+    /**
+     * This function returns the placeholder for editor.
+     *
+     * @method get
+     * @returns String
+     * @public
+     */
+    get placeholder() {
+        return this.args.named.placeholder;
+    }
+
     //Called when the modifier is installed on the DOM element
     didInstall() {
         let emojiList = {
@@ -304,6 +315,7 @@ export default class ToastEditor extends Modifier {
             previewStyle: 'vertical',
             initialEditType: _self.editType,
             useDefaultHTMLSanitizer: true,
+            placeholder: _self.placeholder,
             events: {
                 change: () => {
                     _self.onContentChange(editor.getHtml());
