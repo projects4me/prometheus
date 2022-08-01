@@ -114,10 +114,28 @@ export default function (assert) {
 
 function _setProject(projectDetails, project) {
     for (const [module, count] of Object.entries(projectDetails)) {
-        let rels = server.createList(module, parseInt(count));
-        let relName = pluralize(module);
+        let [relName, relatedModelName] = getRelatedModelName(module);
+        let relatedModel = server.createList(relatedModelName, parseInt(count));
+
         project.update({
-            [relName]: rels
+            [relName]: relatedModel
         });
     }
+}
+
+function getRelatedModelName(module) {
+    let relName = '';
+    let relatedModelName = '';
+
+    //check if user has given relationship name as input or not
+    if (module.includes('(')) {
+        let splittedString = module.split('(');
+        relName = splittedString[0];
+        relatedModelName = splittedString[1].slice(0, -1);
+    } else {
+        relatedModelName = module;
+        relName = pluralize(module);
+    }
+
+    return [relName, relatedModelName];
 }
