@@ -1,6 +1,5 @@
 import { fillIn, currentURL, visit, click } from '@ember/test-helpers';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
-import { pluralize } from 'ember-inflector';
 import steps from '../steps';
 
 export const given = function () {
@@ -19,12 +18,6 @@ export const given = function () {
                 }
                 ctx.set('currentProject', project);
                 assert.equal(project.id, projectId);
-            }
-        },
-        {
-            "Project $projectId has following details\n$table": (assert, ctx) => async function (projectId, table) {
-                let project = ctx.get('currentProject');
-                _setProject(table[0], project);
             }
         }
     ];
@@ -110,33 +103,4 @@ export const then = function () {
 
 export default function (assert) {
     return steps(assert);
-}
-
-function _setProject(projectDetails, project) {
-    for (const [module, count] of Object.entries(projectDetails)) {
-        let [relName, relatedModelName] = getRelatedModelName(module);
-        let relatedModel = server.createList(relatedModelName, parseInt(count));
-
-        project.update({
-            [relName]: relatedModel
-        });
-    }
-}
-
-function getRelatedModelName(module) {
-    let relName = '';
-    let relatedModelName = '';
-    let regex = /\([^)]*\)/g;
-
-    //check if user has given relationship name as input or not
-    if (regex.test(module)) {
-        let splittedString = module.split('(');
-        relName = splittedString[0];
-        relatedModelName = splittedString[1].slice(0, -1);
-    } else {
-        relatedModelName = module;
-        relName = pluralize(module);
-    }
-
-    return [relName, relatedModelName];
 }
