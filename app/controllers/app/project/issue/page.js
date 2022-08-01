@@ -10,6 +10,7 @@ import $ from 'jquery';
 import { computed, action } from '@ember/object';
 import Evented from '@ember/object/evented';
 import { htmlSafe } from "@ember/template";
+import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 
 /**
  * This controller is used to manage the issues detail/page view
@@ -20,7 +21,7 @@ import { htmlSafe } from "@ember/template";
  * @extends PrometheusController
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class AppProjectIssuePageController extends PrometheusController.extend(Evented) {
+export default class AppProjectIssuePageController extends PrometheusController.extend(Evented, ProjectRelated) {
 
     /**
      * This flag is used to show or hide the modal dialog box
