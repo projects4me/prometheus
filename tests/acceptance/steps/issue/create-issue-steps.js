@@ -69,7 +69,7 @@ export const when = function () {
         },
         {
             "User clicks on save button": (assert) => async function () {
-                let btn = document.querySelector('button#btn-save');
+                let btn = document.querySelector('button[data-btn="save"]');
                 await click(btn);
                 assert.ok(true, "User clicks on save button");
             }
