@@ -23,9 +23,11 @@ import * as projectSearchFromList from './project/search-project-from-list-steps
 import * as issueSearchFromList from './issue/search-issue-from-list-steps';
 import * as selectAndNavigateToProject from './project/select-and-navigate-to-project-steps';
 import * as selectAndNavigateToIssue from './issue/select-and-navigate-to-issue-steps';
+import * as commentOnIssue from './issue/comment-on-issue-steps';
+import * as createConversation from './conversation/create-conversation-steps';
 
 export default function (assert) {
-    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()
