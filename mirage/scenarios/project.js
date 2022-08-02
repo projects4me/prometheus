@@ -7,8 +7,8 @@ export default function (server) {
     server.createList('user', 10);
 
     //setting up relationship for user
-    const user = server.schema.users.all();
-    user.models.forEach((model) => {
+    const USER = server.schema.users.all();
+    USER.models.forEach((model) => {
         model.update({
             dashboard: server.schema.dashboards.find(_.random(1, 10))
         })
