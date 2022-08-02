@@ -13,5 +13,5 @@ export default JSONAPISerializer.extend({
     keyForRelationship(key) {
         return camelize(key);
     },
-    include: ["milestones","members","issuetypes","dashboard", "project"]
+    include: ["milestones","members","issuetypes","dashboard", "project", "memberships"]
 });
