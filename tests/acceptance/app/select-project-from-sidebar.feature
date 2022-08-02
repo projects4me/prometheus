@@ -6,7 +6,7 @@ Feature: App | select project from sidebar
     Given There is no pre-existing data
     Given default scenario is loaded
     Given User_1 is logged in
-    Given Create 10 projects
+    Given There are 10 projects in system
     Given tracked project service has id null
     When User navigates to app
     When User selects project 10 from sidebar
