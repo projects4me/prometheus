@@ -372,6 +372,7 @@ export default class AppProjectIndexController extends PrometheusController {
      * @public
      */
     @action removeAddMemberModal() {
+        if (this.isDestroyed || this.isDestroying) return;
         this.set('addMemberDialog', false);
         $('.modal').modal('hide');
     }
