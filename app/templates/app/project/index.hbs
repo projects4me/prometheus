@@ -261,6 +261,7 @@
                         @placeholder={{t "views.app.project.detail.membership.selectuser"}}
                         @label={{t "views.app.project.detail.membership.user"}}
                         @value={{this.selectedUser}}
+                        @data-field="select-member"
                         @options={{this.usersList}}
                         @selected={{find-by "value" this.selectedUser this.usersList}}
                         @searchField="label"
@@ -272,6 +273,7 @@
                       @placeholder={{t "views.app.project.detail.membership.selectrole"}}
                       @label={{t "views.app.project.detail.membership.role"}}
                       @value={{this.selectedRole}}
+                      @data-field="select-role"
                       @options={{this.rolesList}}
                       @selected={{find-by "value" this.selectedRole this.rolesList}}
                       @searchField="label"
