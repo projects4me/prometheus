@@ -253,7 +253,7 @@ export default function () {
 
         comment.update({
             createdUser: currentUser.id,
-            createdUserName : currentUser.name
+            createdUserName: currentUser.name
         });
         return comment;
     });
@@ -275,6 +275,12 @@ export default function () {
                 "error_description": "Invalid username and password combination"
             }
         }
+    });
+
+    this.post('membership', (schema, request) => {
+        let requestData = _getRequestData(request);
+        let membership = server.create('membership', requestData.attributes);
+        return membership
     });
 }
 
