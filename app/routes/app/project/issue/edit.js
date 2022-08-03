@@ -46,7 +46,7 @@ export default Create.extend({
 
         let projectOptions = {
             query: "(Project.id : "+projectId+")",
-            rels : 'members,milestones,issuetypes',
+            rels : 'members,milestones,issuetypes,issuestatuses',
             sort: "members.name",
             limit: -1
         };
@@ -67,6 +67,7 @@ export default Create.extend({
             _self.set('issue',results.issue.objectAt(0));
             _self.set('project',results.project.objectAt(0));
             _self.set('types',results.project.objectAt(0).get('issuetypes'));
+            _self.set('statuses',results.project.objectAt(0).get('issuestatuses'));
         });
     },
 
