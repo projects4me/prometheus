@@ -200,6 +200,11 @@ export default function () {
         return schema.conversationrooms.all();
     });
 
+    this.get('/milestone/:id', (schema, request) => {
+        let id = request.params.id;
+        return schema.milestones.find(id);
+    });
+
     this.patch('/issue/:id', (schema, request) => {
         let requestData = _getRequestData(request);
         let issue = schema.issues.find(requestData.id);
