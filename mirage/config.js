@@ -211,10 +211,7 @@ export default function () {
     this.patch('/issue/:id', (schema, request) => {
         let requestData = _getRequestData(request);
         let issue = schema.issues.find(requestData.id);
-        issue.update({
-            status: requestData.attributes.status,
-            milestoneId: requestData.attributes.milestoneId
-        });
+        issue.update(requestData.attributes);
         return issue;
     });
 
