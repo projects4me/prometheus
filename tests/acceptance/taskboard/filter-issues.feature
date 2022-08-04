@@ -12,6 +12,11 @@ Feature: Taskboard | filter issues board
     | new | in_progress | done | feedback | pending | deferred |
     | 1   | 1           | 2    |  0       | 0       | 0        |
     ------------------------------------------------------------
+    Given backlog has 2 issues
+    ------------------------------------------------------------
+    | new | in_progress | done | feedback | pending | deferred |
+    | 1   | 0           | 0    |  1       | 0       | 0        |
+    ------------------------------------------------------------
     When User navigates to app/project/10/board
     When User search Issue Test 4 from milestone 1
     Then There should be only issue 4 present inside milestone 1

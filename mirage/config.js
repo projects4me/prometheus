@@ -31,11 +31,14 @@ export default function () {
         let model = schema.issues.all();
         let issueQuery = request.queryParams.query;
         let issueNumber = _getValueFromQuery('Issue.issueNumber', issueQuery);
+        let customIssues = server['customIssues'];
 
         if (issueNumber) {
             _pushObjectInModel(model, schema.issues.find(issueNumber));
         } else if (issueQuery.indexOf("savedsearch") >= 0) {
             _pushObjectInModel(model, schema.issues.find(1));
+        } else if (customIssues) {
+            model = customIssues();
         }
         return model;
     });

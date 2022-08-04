@@ -40,7 +40,7 @@ export const given = function () {
         {
             "backlog has $issuesCount issues\n$table": (assert, ctx) => async function (issuesCount, table) {
                 let statuses = _getStatuses(table[0]);
-                server["customDataIssue"] = () => {
+                server["customIssues"] = () => {
                     let issueCollection = new Collection('issue');
                     let issues = _getIssues(issuesCount, statuses, ctx.get('project'), null)
                     issueCollection.models = issues;
@@ -85,7 +85,6 @@ function _getIssues(issuesCount, statuses, project, milestone) {
         issue.update({
             project: project,
             status: statuses[i],
-            milestone: milestone
         });
         i++;
     });
