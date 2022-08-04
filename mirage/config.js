@@ -208,11 +208,19 @@ export default function () {
         return schema.milestones.find(id);
     });
 
+    // patch requests
     this.patch('/issue/:id', (schema, request) => {
         let requestData = _getRequestData(request);
         let issue = schema.issues.find(requestData.id);
         issue.update(requestData.attributes);
         return issue;
+    });
+
+    this.patch('/project/:id', (schema, request) => {
+        let requestData = _getRequestData(request);
+        let project = schema.projects.find(requestData.id);
+        project.update(requestData.attributes);
+        return project;
     });
 
     //post requests
