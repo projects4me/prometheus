@@ -15,7 +15,9 @@ export default JSONAPISerializer.extend({
     },
     include: function (request) {
         let rels = request.queryParams.rels;
-        rels = (rels !== "none" && rels !== undefined) ? rels.split(',') : [];
-        return rels;
+        let relatedModelKeys = [];
+        (rels !== 'none') &&
+            (relatedModelKeys = (rels === undefined) ? Object.keys(this.schema.associationsFor(this.type)) : rels.split(','));
+        return relatedModelKeys;
     }
 });
