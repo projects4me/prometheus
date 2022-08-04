@@ -15,7 +15,7 @@
 
           <div class="box-tools pull-right">
             <span class="project-status"><span class="badge {{this.model.status}}">{{t (concat "views.app.project.lists.status." this.model.status)}}</span></span>
-            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editProject" this.model.id}}><i class="fa fa-pencil"></i></button>
+            <button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editProject" this.model.id}}><i class="fa fa-pencil"></i></button>
             <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
           </div>
           {{!-- /.box-tools --}}
