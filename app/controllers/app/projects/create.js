@@ -75,7 +75,8 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
     @computed('model.name')
     get shortCode() {
         let name = '';
-        if (this.model.name !== undefined) {
+        if (this.model !== undefined 
+            && this.model.name !== undefined) {
             name = this.model.name;
         }
         let shortCode = name.replace(/[^a-zA-Z]+/g, '');
