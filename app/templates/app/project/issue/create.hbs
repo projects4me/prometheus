@@ -36,6 +36,7 @@
                   @usersList={{this.membersList}}
                   @issueSearch={{perform this.search}}
                   @contents={{readonly this.issueDescription}}
+                  @initialValue={{this.issueDescription}}
                   @editType='wysiwyg'
                   @hide={{array 'footer'}}
                   @onContentChange={{action "selectStatic" this.model 'description'}}              

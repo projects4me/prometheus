@@ -65,6 +65,8 @@ export default Create.extend({
             project: _self.store.query('project',projectOptions)
         }).then(function(results){
             _self.set('issue',results.issue.objectAt(0));
+            const issueDescription = _.clone(_self.issue.description);
+            _self.set('issueDescription',issueDescription);
             _self.set('project',results.project.objectAt(0));
             _self.set('types',results.project.objectAt(0).get('issuetypes'));
             _self.set('statuses',results.project.objectAt(0).get('issuestatuses'));
