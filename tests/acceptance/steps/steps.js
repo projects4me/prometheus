@@ -5,8 +5,9 @@ import * as signIn from './sign-in-steps';
 import * as formField from './form-field-steps';
 import * as navigation from './navigation-steps';
 import * as issueCreate from './issue/create-issue-steps';
+import * as editIssue from './issue/edit-issue-steps';
 import * as date from './date-steps';
-import * as updateIssueStatus from './update-issue-status-steps';
+import * as updateIssueStatus from './taskboard/update-issue-status-steps';
 import * as mirageServerConfig from './mirage/mirage-server-config-steps';
 import * as createListOfFactory from './mirage/create-list-of-factory-steps';
 import * as signout from './sign-out-steps';
@@ -30,9 +31,10 @@ import * as addCommentOnConversation from './conversation/add-comment-on-convers
 import * as navigateToUserProfile from './profile/navigate-to-user-profile-steps';
 import * as selectProjectFromSidebar from './app/select-project-from-sidebar-steps';
 import * as addAProjectMember from './project/add-a-project-member-steps';
+import * as setMilestoneIssues from './common-steps/set-milestone-issues-steps';
 
 export default function (assert) {
-    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()
