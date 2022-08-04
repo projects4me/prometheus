@@ -60,7 +60,7 @@ export default App.extend({
             page: 0,
             limit:-1,
         };
-        debugger;
+
         return hash({
             issues: _self.store.query('issue',issuesOptions),
             project: _self.store.query('project',projectOptions)
@@ -108,7 +108,7 @@ export default App.extend({
             }
             controller.set('model',data.objectAt(0));
         });
-        debugger;
+
         controller.set('issues',_self.get('issues'));
         controller.set('members',_self.get('members'));
     },
