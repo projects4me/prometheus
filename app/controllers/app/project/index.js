@@ -158,7 +158,7 @@ export default class AppProjectIndexController extends PrometheusController {
      */
     @action editProject(projectId) {
         Logger.debug('Prometheus.App.Projects.Edit::editProject(' + projectId + ')');
-        this.transitionToRoute('app.projects.edit', { project_id: projectId });
+        this.transitionToRoute('app.projects.edit', projectId);
         Logger.debug('-Prometheus.App.Projects.Edit::editProject');
     }
 

@@ -27,6 +27,21 @@ export default App.extend({
     templateName: 'app/projects/create',
 
     /**
+     * The model for this route
+     *
+     * @method model
+     * @param params
+     * @private
+     */
+    model(params) {
+        let projectOptions = {
+            query: '(Project.id : ' + params.project_id + ')',
+            rels: 'none'
+        };
+        return this.store.query('project', projectOptions);
+    },
+
+    /**
      * This function is called every time the controller is being setup
      *
      * @method setupController
@@ -34,28 +49,16 @@ export default App.extend({
      * @param {Prometheus.Models.Issue} model
      * @protected
      */
-    setupController:function(controller)
-    {
+    setupController: function (controller, model) {
         Logger.debug('AppProjectIndexRoute::setupController');
-        let _self = this;
-
-        let params = this.paramsFor('app.projects.edit');
-        let options = {
-            query: '(Project.id : '+params.project_id+')',
-            rels: 'none'
-        };
-
-        this.store.query('project',options).then(function(data){
-            let project = data.objectAt(0);
-            controller.set('model',project);
-        });
 
         let format = new Format(this);
         let type = format.getList('views.app.project.lists.type');
         let status = format.getList('views.app.project.lists.status');
 
-        controller.set('status',status);
-        controller.set('type',type);
+        controller.set('status', status);
+        controller.set('type', type);
+        controller.set('model', model.objectAt(0));
     },
 
 });
