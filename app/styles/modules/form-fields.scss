@@ -255,6 +255,15 @@
   .dropzone-active {
     border-color: $primaryColor;
   }
+
+  .dropzone-ready {
+    label{
+        cursor: pointer;
+    }
+    input{
+        display: none;
+    }
+  }
 }
 
 .interval-selector{
