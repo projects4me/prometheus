@@ -13,7 +13,6 @@ export const when = function () {
         },
         {
             "User enters $subject in subject of conversation": (assert) => async function (subject) {
-                await new Promise(resolve => setTimeout(resolve, 1000));
                 let subjectInputEl = document.querySelector('div[data-field="newConversation.subject"] input');
                 await fillIn(subjectInputEl, subject);
                 assert.ok(true, `User enters ${subject} in subject of conversation`)
