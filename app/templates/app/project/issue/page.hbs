@@ -315,6 +315,7 @@
                     @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.editingLog.description}}
+                    @data-field="issue.editEstimateTime"
                 />
 
               {{/bootstrap-modal}}
@@ -337,6 +338,7 @@
                     @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.newTimeLog.description}}
+                    @data-field="issue.estimateTime"
                 />
 
               {{/bootstrap-modal}}
@@ -346,7 +348,7 @@
 
           <div class="box-footer text-center">
             <span>
-              <a href="javascript:void(0);" {{action "showEstimateTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
+              <a href="javascript:void(0);" id="addEstimateTime" {{action "showEstimateTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
             </span>
           </div>
         </div>
@@ -423,6 +425,7 @@
                     @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.editingLog.description}}
+                    @data-field="issue.editTimelog"
                 />
 
               {{/bootstrap-modal}}
@@ -463,6 +466,7 @@
                     @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.newTimeLog.description}}
+                    @data-field="issue.timelog"
                 />
 
               {{/bootstrap-modal}}
