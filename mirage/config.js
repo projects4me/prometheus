@@ -1,6 +1,7 @@
 import _ from "lodash";
 import Context from './yadda-context/context';
 import ENV from "prometheus/config/environment";
+import Collection from 'ember-cli-mirage/orm/collection';
 
 export default function () {
     this.urlPrefix = ENV.api.host;
@@ -295,6 +296,13 @@ export default function () {
         let membership = server.create('membership', requestData.attributes);
         return membership
     });
+
+    this.post('timelog', (schema, request) => {
+        let requestData = _getRequestData(request);
+        let timelog = server.create('timelog', requestData.attributes);
+        _setIssueTimeLog(timelog);
+        return timelog;
+    });
 }
 
 /**
@@ -337,4 +345,20 @@ function _pushObjectInModel(model, object) {
  */
 function _getRequestData(request) {
     return JSON.parse(request.requestBody).data;
+}
+
+/**
+ * This function set timelog relationship on issue.
+ * 
+ * @param timelog 
+ */
+function _setIssueTimeLog(timelog) {
+    let timelogs = new Collection('timelog');
+    timelogs.models.pushObject(timelog);
+    let issue = server.schema.issues.find(timelog.issueId);
+    let relName = (timelog.context === "spent") ? "spent" : "estimated"
+
+    issue.update({
+        [relName]: timelogs
+    });
 }
