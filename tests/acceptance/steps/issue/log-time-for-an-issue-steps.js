@@ -6,7 +6,7 @@ export const when = function () {
         {
             "User clicks on log time": (assert) => async function () {
                 await click('a#addLogTime');
-                assert.ok(true, 'Edit log time dialog opened');
+                assert.ok(true, 'Time log dialog opened');
             }
         },
         {
@@ -18,8 +18,8 @@ export const when = function () {
             }
         },
         {
-            "User enter $description in description": (assert) => async function (description) {
-                await fillIn('textarea', description);
+            "User enter $description in description for time log": (assert) => async function (description) {
+                await fillIn('div[data-field="issue.timelog"] textarea', description);
                 assert.ok(true, "description for issue time log added");
             }
         },

@@ -20,6 +20,6 @@ Feature: Issue | log time for an issue
     | 5     | 8    | 45       |
     ---------------------------
     When User selects spentOn date
-    When User enter test Description in description
+    When User enter test Description in description for time log
     When User clicks on save button
     Then Issue log is 6d 45m
