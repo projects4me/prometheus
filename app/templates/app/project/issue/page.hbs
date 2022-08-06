@@ -312,7 +312,7 @@
                     minutes=this.editingLog.minutes}}
 
                 <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.editingLog.description}}
                 />
@@ -334,7 +334,7 @@
                     minutes=this.newTimeLog.minutes}}
 
                 <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.newTimeLog.description}}
                 />
@@ -403,9 +403,10 @@
                     minutes=this.editingLog.minutes}}
 
                 <FormFields::FieldDate
-                    @placeholder={{t "views.app.issue.detail.timelog.iputspenton"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputspenton"}}
                     @label={{t "views.app.issue.detail.timelog.spenton"}}
-                    @value={{this.editingLog.spentOn}}
+                    @value={{readonly this.editingLog.spentOn}}
+                    @update={{action "selectStatic" this.editingLog 'spentOn'}}
                     @mask="alphanumeric"
                     @data-field="issue.detail.timelog.edit"
                     @format="YYYY-MM-DD"
@@ -419,7 +420,7 @@
                 />
 
                 <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.editingLog.description}}
                 />
@@ -442,9 +443,10 @@
                     minutes=this.newTimeLog.minutes}}
 
                 <FormFields::FieldDate
-                    @placeholder={{t "views.app.issue.detail.timelog.iputspenton"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputspenton"}}
                     @label={{t "views.app.issue.detail.timelog.spenton"}}
-                    @value={{this.newTimeLog.spentOn}}
+                    @value={{readonly this.newTimeLog.spentOn}}
+                    @update={{action "selectStatic" this.newTimeLog 'spentOn'}}
                     @mask="alphanumeric"
                     @data-field="issue.detail.timelog.spenton"
                     @format="YYYY-MM-DD"
@@ -458,7 +460,7 @@
                 />
 
                 <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.newTimeLog.description}}
                 />
@@ -469,7 +471,7 @@
 
           <div class="box-footer text-center">
             <span>
-              <a href="javascript:void();" {{action "showLogTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.log"}}</a>
+              <a href="javascript:void();" id="addLogTime" {{action "showLogTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.log"}}</a>
             </span>
           </div>
           {{!-- /.box-footer --}}
