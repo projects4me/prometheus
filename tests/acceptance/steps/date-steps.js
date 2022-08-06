@@ -19,6 +19,14 @@ export const when = function () {
                 await click(endDateEl);
                 assert.ok(true, "User selects end date");
             }
+        },
+        {
+            "User selects spentOn date": (assert) => async function () {
+                await click(`div[data-field="issue.detail.timelog.spenton"] > input.ember-text-field`);
+                let dateEl = document.querySelector('div.daterangepicker[style*="display: block"] > div.drp-calendar > div.calendar-table > table.table-condensed > tbody > tr td.today.active').parentElement.nextSibling.firstElementChild;
+                await click(dateEl);
+                assert.ok(true, "User selects spentOn date");
+            }
         }
     ];
 }
