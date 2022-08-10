@@ -10,7 +10,7 @@
             <h2 class="box-title">{{issue.issuetype.name}} - #{{issue.issueNumber}} | <span class="issueSubject">{{issue.subject}}</span></h2>
             <div class="box-tools pull-right">
               <span class="project-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></span>
-              <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" {{action 'editIssue' issue.issueNumber}}><i class="fa fa-pencil"></i></button>
+              <button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" {{action 'editIssue' issue.issueNumber}}><i class="fa fa-pencil"></i></button>
               <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
             </div>
           </div>
@@ -59,7 +59,7 @@
               <div class="col-xs-6 col-md-4" data-field="issue.milestone">
                 <h4>{{t "views.app.issue.detail.milestone"}}</h4>
                 <p>
-                  {{issue.milestone.name}}
+                  {{issue.issuemilestone.name}}
                 </p>
               </div>
 
@@ -118,17 +118,15 @@
                     {{!-- .img-push is used to add margin to elements next to floating images --}}
                     <div class="img-push">
                       <div class="message-box">
-                        {{message-box
-                            issuesList=this.issuesList
-                            usersList=this.usersList
-                            spellcheck=false
-                            entity=issue
-                            placeholder=(t "views.app.conversation.messagebox")
-                            value=this.comment
-                        }}
-                        <div class="pull-right">
-                          <button type="button" class="btn btn-primary" {{action "saveComment" issue this.comment}}>{{t "views.app.conversation.post"}}</button>
-                        </div>
+                        <ConversationUi::MessageBox
+                          @issueSearch={{perform this.search}}
+                          @usersList={{this.usersList}}
+                          @spellcheck={{false}}
+                          @entity={{issue}}
+                          @placeholder={{t "views.app.conversation.messagebox"}}
+                          @value={{this.comment}}
+                          @save={{this.saveComment}}
+                        />
                       </div>
                     </div>
 
@@ -314,9 +312,10 @@
                     minutes=this.editingLog.minutes}}
 
                 <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.editingLog.description}}
+                    @data-field="issue.editEstimateTime"
                 />
 
               {{/bootstrap-modal}}
@@ -336,9 +335,10 @@
                     minutes=this.newTimeLog.minutes}}
 
                 <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.newTimeLog.description}}
+                    @data-field="issue.estimateTime"
                 />
 
               {{/bootstrap-modal}}
@@ -348,7 +348,7 @@
 
           <div class="box-footer text-center">
             <span>
-              <a href="javascript:void(0);" {{action "showEstimateTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
+              <a href="javascript:void(0);" id="addEstimateTime" {{action "showEstimateTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
             </span>
           </div>
         </div>
@@ -405,9 +405,10 @@
                     minutes=this.editingLog.minutes}}
 
                 <FormFields::FieldDate
-                    @placeholder={{t "views.app.issue.detail.timelog.iputspenton"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputspenton"}}
                     @label={{t "views.app.issue.detail.timelog.spenton"}}
-                    @value={{this.editingLog.spentOn}}
+                    @value={{readonly this.editingLog.spentOn}}
+                    @update={{action "selectStatic" this.editingLog 'spentOn'}}
                     @mask="alphanumeric"
                     @data-field="issue.detail.timelog.edit"
                     @format="YYYY-MM-DD"
@@ -421,9 +422,10 @@
                 />
 
                 <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.editingLog.description}}
+                    @data-field="issue.editTimelog"
                 />
 
               {{/bootstrap-modal}}
@@ -444,9 +446,10 @@
                     minutes=this.newTimeLog.minutes}}
 
                 <FormFields::FieldDate
-                    @placeholder={{t "views.app.issue.detail.timelog.iputspenton"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputspenton"}}
                     @label={{t "views.app.issue.detail.timelog.spenton"}}
-                    @value={{this.newTimeLog.spentOn}}
+                    @value={{readonly this.newTimeLog.spentOn}}
+                    @update={{action "selectStatic" this.newTimeLog 'spentOn'}}
                     @mask="alphanumeric"
                     @data-field="issue.detail.timelog.spenton"
                     @format="YYYY-MM-DD"
@@ -460,9 +463,10 @@
                 />
 
                 <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.iputdescription"}}
+                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.newTimeLog.description}}
+                    @data-field="issue.timelog"
                 />
 
               {{/bootstrap-modal}}
@@ -471,7 +475,7 @@
 
           <div class="box-footer text-center">
             <span>
-              <a href="javascript:void();" {{action "showLogTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.log"}}</a>
+              <a href="javascript:void();" id="addLogTime" {{action "showLogTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.log"}}</a>
             </span>
           </div>
           {{!-- /.box-footer --}}

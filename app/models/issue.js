@@ -318,7 +318,7 @@ export default Model.extend(Validations, {
      * @for Issue
      * @private
      */
-    milestone: belongsTo('milestone'),
+    issuemilestone: belongsTo('milestone'),
 
     /**
      * The parent issue of this issue

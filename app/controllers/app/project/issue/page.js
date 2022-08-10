@@ -10,6 +10,7 @@ import $ from 'jquery';
 import { computed, action } from '@ember/object';
 import Evented from '@ember/object/evented';
 import { htmlSafe } from "@ember/template";
+import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 
 /**
  * This controller is used to manage the issues detail/page view
@@ -20,7 +21,7 @@ import { htmlSafe } from "@ember/template";
  * @extends PrometheusController
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class AppProjectIssuePageController extends PrometheusController.extend(Evented) {
+export default class AppProjectIssuePageController extends PrometheusController.extend(Evented, ProjectRelated) {
 
     /**
      * This flag is used to show or hide the modal dialog box
@@ -683,6 +684,7 @@ export default class AppProjectIssuePageController extends PrometheusController.
      * @public
      */
     @action removeModal() {
+        if (this.isDestroyed || this.isDestroying) return;
         this.set('filePreviewDialog', false);
         $('.modal').modal('hide');
     }
@@ -694,6 +696,7 @@ export default class AppProjectIssuePageController extends PrometheusController.
      * @public
      */
     @action removeLogTimeModal() {
+        if (this.isDestroyed || this.isDestroying) return;
         this.set('logTimeDialog', false);
         $('.modal').modal('hide');
     }
@@ -705,6 +708,7 @@ export default class AppProjectIssuePageController extends PrometheusController.
      * @public
      */
     @action removeEstimateTimeModal() {
+        if (this.isDestroyed || this.isDestroying) return;        
         this.set('estimateTimeDialog', false);
         $('.modal').modal('hide');
     }
@@ -716,6 +720,7 @@ export default class AppProjectIssuePageController extends PrometheusController.
      * @public
      */
     @action removeEditLogModal() {
+        if (this.isDestroyed || this.isDestroying) return;        
         this.set('editingLog', null);
         this.set('editLogDialog', false);
         $('.modal').modal('hide');
@@ -728,6 +733,7 @@ export default class AppProjectIssuePageController extends PrometheusController.
      * @public
      */
     @action removeEditEstimateModal() {
+        if (this.isDestroyed || this.isDestroying) return;
         this.set('editingLog', null);
         this.set('editEstimateDialog', false);
         $('.modal').modal('hide');

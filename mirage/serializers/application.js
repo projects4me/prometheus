@@ -4,7 +4,7 @@ import { camelize } from '@ember/string';
 
 export default JSONAPISerializer.extend({
     typeKeyForModel(model) {
-        return singularize(model.modelName);  
+        return singularize(model.modelName);
     },
     alwaysIncludeLinkageData: true,
     keyForAttribute(key) {
@@ -13,5 +13,11 @@ export default JSONAPISerializer.extend({
     keyForRelationship(key) {
         return camelize(key);
     },
-    include: ["milestones","members","issuetypes","dashboard", "project"]
+    include: function (request) {
+        let rels = request.queryParams.rels;
+        let relatedModelKeys = [];
+        (rels !== 'none') &&
+            (relatedModelKeys = (rels === undefined) ? Object.keys(this.schema.associationsFor(this.type)) : rels.split(','));
+        return relatedModelKeys;
+    }
 });

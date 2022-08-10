@@ -17,7 +17,7 @@
                   <a href="javascript:void(0);" {{action "showDialog"}}>
                     <span class="disabled-text new-conversation">
                       {{t "views.app.conversation.create"}}
-                      <div class="pull-right">
+                      <div class="pull-right" data-btn="addConversation">
                         <i class="fa fa-plus btn"></i>
                       </div>
                     </span>
@@ -113,7 +113,7 @@
                               @usersList={{this.membersList}}
                               @issueSearch={{perform this.search}}
                               @save={{action "save"}}
-                              @entityId={{entity.id}}
+                              @entity={{entity.id}}
                             />
                           </div>
                         </div>

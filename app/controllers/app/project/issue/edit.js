@@ -47,7 +47,7 @@ export default class AppProjectIssueEditController extends AppProjectIssueCreate
     getSuccessMessage(model) {
         return htmlSafe(this.intl.t('views.app.issue.updated', {
             name: model.get('subject'),
-            issue_number: model.get('issueNumber')
+            issueNumber: model.get('issueNumber')
         }));
     }
 

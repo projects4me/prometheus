@@ -36,6 +36,7 @@
                   @usersList={{this.membersList}}
                   @issueSearch={{perform this.search}}
                   @contents={{readonly this.issueDescription}}
+                  @initialValue={{this.issueDescription}}
                   @editType='wysiwyg'
                   @hide={{array 'footer'}}
                   @onContentChange={{action "selectStatic" this.model 'description'}}              
@@ -223,8 +224,8 @@
     </div>
 
     <div class="col-sm-12">
-      <button type="button" id="btn-save" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
-      <button type="button" id="btn-cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+      <button type="button" data-btn="save" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
+      <button type="button" data-btn="cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
     </div>
 
   </div>

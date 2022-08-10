@@ -273,6 +273,7 @@ export default class AppProjectConversationController extends PrometheusControll
      * @public
      */
     @action removeModal() {
+        if (this.isDestroyed || this.isDestroying) return;
         this.set('addConversationDialog', false);
         $('.modal').modal('hide');
     }

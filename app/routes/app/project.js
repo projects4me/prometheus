@@ -38,10 +38,8 @@ export default App.extend({
     afterModel() {
         let _self = this;
         let projectId = _self.paramsFor('app.project').project_id;
-        if (projectId === undefined && _self.context !== undefined) {
-            if (_self.context.project_id !== undefined) {
-                projectId = _self.context.project_id;
-            }
+        if (projectId === undefined) {
+            projectId = _self.trackedProject.getProjectId();
         }
 
         let issuesOptions = {

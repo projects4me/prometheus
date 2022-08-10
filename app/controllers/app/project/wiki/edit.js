@@ -186,6 +186,7 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
      * @public
      */
     @action removeModal() {
+        if (this.isDestroyed || this.isDestroying) return;
         this.set('addTagDialog', false);
         $('.modal').modal('hide');
     }

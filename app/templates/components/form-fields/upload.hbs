@@ -18,7 +18,10 @@
             {{#if dropzone.supported}}
             {{t "global.form.upload.drag"}}
             {{/if}}
-            <a href="javascript:void(0);" id="upload-image" tabindex="0">{{this.label}}</a>
+            <a href="javascript:void(0);" tabindex="0">
+                <label for="file-upload">{{this.label}}</label>
+                <input type="file" id="file-upload" {{queue.selectFile}}>
+            </a>
         </p>
         {{/if}}
     </FileDropzone>

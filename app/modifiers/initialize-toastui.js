@@ -111,6 +111,28 @@ export default class ToastEditor extends Modifier {
         return this.args.named.hide;
     }
 
+    /**
+     * This function returns the placeholder for editor.
+     *
+     * @method get
+     * @returns String
+     * @public
+     */
+    get placeholder() {
+        return this.args.named.placeholder;
+    }
+
+    /**
+     * This function returns the initial value of issue description.
+     *
+     * @method get
+     * @returns String
+     * @public
+     */
+    get initialValue() {
+        return this.args.named.initialValue;
+    }
+
     //Called when the modifier is installed on the DOM element
     didInstall() {
         let emojiList = {
@@ -302,14 +324,16 @@ export default class ToastEditor extends Modifier {
         const editor = new Editor({
             el: _self.element,
             previewStyle: 'vertical',
+            initialValue: _self.initialValue,
             initialEditType: _self.editType,
             useDefaultHTMLSanitizer: true,
+            placeholder: _self.placeholder,
             events: {
                 change: () => {
                     _self.onContentChange(editor.getHtml());
                 },
                 load: () => {
-                    if(this.hide) {
+                    if (this.hide) {
                         this.hide.forEach((element) => {
                             let selector = elementSelectors[element];
                             $(selector).css('display', 'none');
@@ -337,7 +361,7 @@ export default class ToastEditor extends Modifier {
             editor.reset();
         })
         //Getting element in order to attach tribute to it
-        this.targetElement = this.element.querySelector('div.tui-editor-contents.tui-editor-contents-placeholder');
+        this.targetElement = this.element.querySelector('div.tui-editor-contents[contenteditable="true"]');
         this.tribute.attach(this.targetElement);
 
         //Adding an event on opening of menu and after that appyling style and class on 'ul'
