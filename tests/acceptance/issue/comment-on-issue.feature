@@ -4,15 +4,15 @@ Feature: Issue | comment on issue
   Scenario: Commenting on an issue
 
     Given There is no pre-existing data
-    Given default scenario is loaded
-    Given User_1 is logged in
-    Given User_1 selects Project 3
-    Given Project has following details
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 selects Project 3
+    And Project has following details
     ---------
     | issue |
     | 5     |
     ---------
     When User navigates to app/project/3/issue/4
-    When User add a comment having description testComment
+    And User add a comment having description testComment
     Then User_1 has created a comment
-    Then Comment having description testComment is created
+    And Comment having description testComment is created

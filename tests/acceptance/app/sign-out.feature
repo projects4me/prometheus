@@ -4,10 +4,10 @@ Feature: App | sign out
   Scenario: Signing out from application
 
     Given There is no pre-existing data
-    Given default scenario is loaded
-    Given User_4 is logged in
+    And default scenario is loaded
+    And User_4 is logged in
     When User navigates to app
-    When User clicks on user menu in navbar
-    When User clicks on signout button
-    When User navigates to authenticated route
+    And User clicks on user menu in navbar
+    And User clicks on signout button
+    And User navigates to authenticated route
     Then User is redirected to signin route

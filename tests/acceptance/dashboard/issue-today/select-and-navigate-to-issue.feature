@@ -4,17 +4,17 @@ Feature: Dashboard - Issue Today | select and navigate to issue
   Scenario: Select an issue and navigate to that selected issue
 
     Given There is no pre-existing data
-    Given default scenario is loaded
-    Given User_1 is logged in
-    Given User_1 selects Project 1
-    Given Project has following details
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 selects Project 1
+    And Project has following details
     -------------
     | issue     |
     | 5         |
     -------------
-    Given Issue 3 has subject UniqueIssue
+    And Issue 3 has subject UniqueIssue
     When User navigates to app
-    When User searches for UniqueIssue inside Issue Today box
-    When User clicks on UniqueIssue
+    And User searches for UniqueIssue inside Issue Today box
+    And User clicks on UniqueIssue
     Then User should be in app/project/1/issue/3 page
-    Then Issue subject is UniqueIssue
+    And Issue subject is UniqueIssue

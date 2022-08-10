@@ -4,10 +4,10 @@ Feature: Issue | render list of issues
   Scenario: Check the rendering of list of issues in list issue view
 
     Given There is no pre-existing data
-    Given default scenario is loaded
-    Given User_1 is logged in
-    Given User_1 selects Project 5
-    Given Project has following details
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 selects Project 5
+    And Project has following details
     ---------
     | issue |
     | 10    |

@@ -1,4 +1,4 @@
-import steps from './steps';
+import steps from '../steps';
 import { selectChoose, selectSearch, clickTrigger } from 'ember-power-select/test-support/helpers'
 import { currentURL } from '@ember/test-helpers';
 

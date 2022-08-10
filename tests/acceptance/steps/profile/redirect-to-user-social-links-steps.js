@@ -1,6 +1,6 @@
 import { click } from '@ember/test-helpers';
 import window from 'ember-window-mock';
-import steps from './steps';
+import steps from '../steps';
 
 export const when = function () {
     return [

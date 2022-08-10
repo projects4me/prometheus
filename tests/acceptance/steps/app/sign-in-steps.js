@@ -1,4 +1,4 @@
-import steps from './steps';
+import steps from '../steps';
 import { currentSession, authenticateSession } from 'ember-simple-auth/test-support';
 import { currentURL, visit } from '@ember/test-helpers';
 

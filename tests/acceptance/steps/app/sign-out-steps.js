@@ -1,5 +1,5 @@
 import { click, currentURL, visit } from '@ember/test-helpers';
-import steps from './steps';
+import steps from '../steps';
 
 export const when = function () {
     return [

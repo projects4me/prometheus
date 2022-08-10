@@ -25,12 +25,6 @@ export const given = function () {
 
                 assert.ok(true, `Project membership is given ${userCount} users`);
             }
-        },
-        {
-            "User clicks on add button to add a member": (assert, ctx) => async function () {
-                await click('div.membership-add');
-                assert.ok(true, 'User clicked on add button');
-            }
         }
     ];
 }
