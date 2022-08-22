@@ -1,0 +1,8 @@
+<div class="time-spent-card">
+  {{#each this.time as |time|}}
+  <div class="time-container" data-time-format={{time.key}}>
+    <div class="time-value">{{time.value}}</div>
+    <span>{{time.key}}</span>
+  </div>
+  {{/each}}
+</div>
