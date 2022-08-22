@@ -4,7 +4,7 @@
 
 import PrometheusController from "prometheus/controllers/prometheus";
 import window from 'ember-window-mock';
-import { action } from '@ember/object';
+import { computed, action } from '@ember/object';
 
 /**
  * This controller is used to manage the user detail/page view
@@ -35,4 +35,56 @@ export default class AppUserPageController extends PrometheusController {
         window.open(url, '_blank');
         Logger.debug('-Prometheus.Controllers.App.User.Page::redirectToSocialLink');
     }
+
+    /**
+    * Open Projects of the user.
+    *
+    * @property openProjects
+    * @type ProjectModel
+    * @for User
+    * @private
+    */
+    @computed('model.projects')
+    get openProjects() {
+        return (this.model.projects.filter((project) => (project.done === "0"))).length;
+    }
+
+    /**
+    * Closed Projects of the user.
+    *
+    * @property closedProjects
+    * @type ProjectModel
+    * @for User
+    * @private
+    */
+    @computed('model.projects')
+    get closedProjects() {
+        return (this.model.projects.filter((project) => (project.done === "1"))).length;
+    }
+
+    /**
+    * Open Issues of the user.
+    *
+    * @property openIssues
+    * @type ProjectModel
+    * @for User
+    * @private
+    */
+     @computed('issues')
+     get openIssues() {
+         return (this.issues.filter((issue) => (issue.issuestatus.get('done') === "0"))).length;
+     }
+
+    /**
+    * Closed Projects of the user.
+    *
+    * @property closedIssues
+    * @type ProjectModel
+    * @for User
+    * @private
+    */
+     @computed('issues')
+     get closedIssues() {
+         return (this.issues.filter((issue) => (issue.issuestatus.get('done') === "1"))).length;
+     }     
 }
