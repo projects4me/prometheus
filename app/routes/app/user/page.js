@@ -3,6 +3,7 @@
  */
 
 import App from "prometheus/routes/app";
+import { hash } from 'rsvp';
 
 /**
  * The user page
@@ -19,11 +20,27 @@ export default App.extend({
         let _self = this;
         let _userOptions = {
             query: `(User.id : ${params.user_id})`,
-            rels: 'badgeLevels,badges'
+            rels: 'badgeLevels,badges,projects'
+        }
+
+        let _issueOptions = {
+            query: `(Issue.assignee : ${params.user_id})`,
+            rels: 'issuestatus,spent'
+        }
+
+        let currentDate = moment().format('YYYY-MM-DD');
+        let _commentOptions = {
+            query: `(Comment.createdUser : ${params.user_id}) AND (Comment.dateCreated CONTAINS ${currentDate})`,
+            rels: 'none',
+            limit: -1
         }
 
         Logger.debug('-Prometheus.Routes.App.User::afterModel()');
-        return _self.store.query('user', _userOptions);
+        return hash({
+            issues: _self.store.query('issue', _issueOptions),
+            user: _self.store.query('user', _userOptions),
+            comments: _self.store.query('comment', _commentOptions)
+        });
     },
     /**
      * The setupController hook.
@@ -34,9 +51,9 @@ export default App.extend({
      */
     setupController: function (controller, model) {
         Logger.debug('+Prometheus.Routes.App.User::setupController()');
-        controller.set('model', model.objectAt(0));
-        
+        controller.set('model', model.user.objectAt(0));
+        controller.set('issues', model.issues);
+        controller.set('comments', model.comments);
         Logger.debug('-Prometheus.Routes.App.User::setupController()');
     }
-
 });
