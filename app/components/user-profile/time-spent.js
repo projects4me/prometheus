@@ -4,6 +4,7 @@
 
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
+import { computed } from '@ember/object';
 
 /**
  * This component is used to render time spent by user on issues.
@@ -71,18 +72,6 @@ export default class UserProfileTimeSpentComponent extends Component {
     years = 0;
 
     /**
-     * This function is called on the initialization of component. In this 
-     * function we're calling calculateTime function in order to calculate
-     * the time that user has spent on issues.
-     * @method constructor
-     * @public
-     */
-    constructor() {
-        super(...arguments);
-        this.calculateTime();
-    }
-
-    /**
      * This function returns total issues of user.
      * @method get
      * @public
@@ -102,6 +91,7 @@ export default class UserProfileTimeSpentComponent extends Component {
      */
     calculateTime() {
         let _self = this;
+        _self._clearState();
         /**time according to 8 hours a day */
         const TOTAL_MINUTES_IN_YEAR = 175200;
         const TOTAL_MINUTES_IN_DAY = 480;
@@ -159,6 +149,7 @@ export default class UserProfileTimeSpentComponent extends Component {
     getTimeInMinutes() {
         return (this.minutes + (this.hours * 60) + (this.days * 8 * 60) + (this.years * 365 * 8 * 60));
     }
+    
     /**
      * This function push object inside 'time' array, that is used inside template
      * to render time spent by user on issues.
@@ -171,5 +162,32 @@ export default class UserProfileTimeSpentComponent extends Component {
             key: `views.app.user.page.stats.timespent.${key}`,
             value: ('0' + value).slice(-2)
         })
+    }
+
+    /**
+     * This function is used to call calculateTime function and return updated time.
+     * 
+     * @method get
+     * @public
+     */
+    get getTime() {
+        this.calculateTime();
+        return this.time;
+    }
+    
+    /**
+     * This function is called to clear the state of the component. As getTime getter
+     * is called twice so we have to call that function inside calculateTime in order
+     * to clear the state.
+     * @method clearState
+     * @public
+     */
+    _clearState() {
+        let _self = this;
+        _self.time = [];
+        _self.minutes = 0;
+        _self.hours = 0;
+        _self.days = 0;
+        _self.years = 0;
     }
 }
