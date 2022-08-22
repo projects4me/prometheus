@@ -239,6 +239,16 @@ export default Model.extend(Validations, {
     tagged: hasMany('tagged'),
 
     /**
+     * These are the user projects
+     *
+     * @property projects
+     * @type ProjectModel
+     * @for User
+     * @private
+     */
+    projects: hasMany('project'),
+
+    /**
      * These are the badges earned by user.
      *
      * @property badges
