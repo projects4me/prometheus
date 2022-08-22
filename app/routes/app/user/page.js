@@ -4,6 +4,7 @@
 
 import App from "prometheus/routes/app";
 import { hash } from 'rsvp';
+import ENV from "prometheus/config/environment";
 
 /**
  * The user page
@@ -28,7 +29,7 @@ export default App.extend({
             rels: 'issuestatus,spent'
         }
 
-        let currentDate = moment().format('YYYY-MM-DD');
+        let currentDate = moment().format(ENV.app.dateFormat);
         let _commentOptions = {
             query: `(Comment.createdUser : ${params.user_id}) AND (Comment.dateCreated CONTAINS ${currentDate})`,
             rels: 'none',
