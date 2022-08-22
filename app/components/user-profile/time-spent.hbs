@@ -1,8 +1,8 @@
 <div class="time-spent-card">
   {{#each this.time as |time|}}
   <div class="time-container">
-    <div class="time-value" data-time-format={{time.key}}>{{time.value}}</div>
-    <span>{{time.key}}</span>
+    <div class="time-value" data-time-format={{t time.key}}>{{time.value}}</div>
+    <span>{{t time.key}}</span>
   </div>
   {{/each}}
 </div>

@@ -102,9 +102,9 @@ export default class UserProfileTimeSpentComponent extends Component {
      */
     calculateTime() {
         let _self = this;
-        let showHourAndMin = false;
-        let showDayAndHour = false;
-        let showYearAndDay = false;
+        /**time according to 8 hours a day */
+        const TOTAL_MINUTES_IN_YEAR = 175200;
+        const TOTAL_MINUTES_IN_DAY = 480;
 
         this.issues.forEach((issue) => {
             issue.spent.forEach((timeSpent) => {
@@ -118,7 +118,6 @@ export default class UserProfileTimeSpentComponent extends Component {
         if (_self.minutes >= 60) {
             _self.hours += Math.round(_self.minutes / 60);
             _self.minutes = _self.minutes % 60;
-            showHourAndMin = true;
         }
 
         /**set hour and days */
@@ -130,33 +129,36 @@ export default class UserProfileTimeSpentComponent extends Component {
                 _self.days += Math.floor(_self.hours / 8);
                 _self.hours = _self.hours % 8;
             }
-            showHourAndMin = false;
-            showDayAndHour = true;
         }
 
         /** set days and years */
         if (_self.days >= 365) {
             _self.years = Math.round(_self.days / 365);
             _self.days = _self.days % 365;
-            showDayAndHour = false;
-            showYearAndDay = true;
         }
 
-        if (showDayAndHour) {
-            _self.timeToDisplay('Days', _self.days);
-            _self.timeToDisplay('Hours', _self.hours);
-        } else if (showHourAndMin) {
-            _self.timeToDisplay('Hours', _self.hours);
-            _self.timeToDisplay('Minutes', _self.minutes);
-        } else if (showYearAndDay) {
-            _self.timeToDisplay('Years', _self.years);
-            _self.timeToDisplay('Days', _self.days);
-        } else {
-            _self.timeToDisplay('Hours', _self.hours);
-            _self.timeToDisplay('Minutes', _self.minutes);
+        let timeSpentInMinutes = _self.getTimeInMinutes();
+        if (timeSpentInMinutes >= TOTAL_MINUTES_IN_DAY && timeSpentInMinutes < TOTAL_MINUTES_IN_YEAR) {
+            _self.timeToDisplay('days', _self.days);
+            _self.timeToDisplay('hours', _self.hours);
+        } else if (timeSpentInMinutes < TOTAL_MINUTES_IN_DAY) {
+            _self.timeToDisplay('hours', _self.hours);
+            _self.timeToDisplay('minutes', _self.minutes);
+        } else if (timeSpentInMinutes >= TOTAL_MINUTES_IN_YEAR) {
+            _self.timeToDisplay('years', _self.years);
+            _self.timeToDisplay('days', _self.days);
         }
     }
 
+    /**
+     * This function returns total time in minutes.
+     * 
+     * @method getTimeInMinutes
+     * @public
+     */
+    getTimeInMinutes() {
+        return (this.minutes + (this.hours * 60) + (this.days * 8 * 60) + (this.years * 365 * 8 * 60));
+    }
     /**
      * This function push object inside 'time' array, that is used inside template
      * to render time spent by user on issues.
@@ -166,7 +168,7 @@ export default class UserProfileTimeSpentComponent extends Component {
      */
     timeToDisplay(key, value) {
         this.time.push({
-            key: key,
+            key: `views.app.user.page.stats.timespent.${key}`,
             value: ('0' + value).slice(-2)
         })
     }

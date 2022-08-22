@@ -774,7 +774,11 @@
             "issues": "Issues",
             "timespent": {
                 "label": "Time Spent",
-                "sublabel": "issues"
+                "sublabel": "issues",
+                "minutes": "Minutes",
+                "hours": "Hours",
+                "days": "Days",
+                "years": "Years"
             },
             "collaboration": "Collaboration"
           }
