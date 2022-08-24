@@ -26,7 +26,8 @@ export default App.extend({
 
         let _issueOptions = {
             query: `(Issue.assignee : ${params.user_id})`,
-            rels: 'issuestatus,spent'
+            rels: 'issuestatus',
+            limit: -1
         }
 
         let currentDate = moment().format(ENV.app.dateFormat);
