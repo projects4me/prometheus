@@ -219,6 +219,16 @@ export default Model.extend(Validations, {
     skills: attr('string'),
 
     /**
+    * Total time logged by user on issues.
+    *
+    * @property skills
+    * @type String
+    * @for User
+    * @private
+    */
+     timeSpent: attr('string'),
+
+    /**
      * The users's dashboard
      *
      * @property dashboard
@@ -237,6 +247,16 @@ export default Model.extend(Validations, {
      * @private
      */
     tagged: hasMany('tagged'),
+
+    /**
+     * These are the user projects
+     *
+     * @property projects
+     * @type ProjectModel
+     * @for User
+     * @private
+     */
+    projects: hasMany('project'),
 
     /**
      * These are the badges earned by user.

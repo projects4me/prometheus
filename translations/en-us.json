@@ -767,7 +767,21 @@
           "aboutme": "About Me",
           "education": "Education",
           "skills": "Skills",
-          "badges": "Badges"
+          "badges": "Badges",
+          "title": "Profile",
+          "stats": {
+            "projects": "Projects",
+            "issues": "Issues",
+            "timespent": {
+                "label": "Time Spent",
+                "sublabel": "issues",
+                "minutes": "Minutes",
+                "hours": "Hours",
+                "days": "Days",
+                "years": "Years"
+            },
+            "collaboration": "Collaboration"
+          }
         }
       },
       "chat": {
@@ -775,7 +789,7 @@
         "send": "Send"
       },
       "activity": {
-        "title" : "Activity",
+        "title": "Activity",
         "performedActivity": " performed an activity",
         "created": "created the",
         "closed": "closed the",

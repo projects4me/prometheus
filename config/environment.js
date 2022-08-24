@@ -29,7 +29,8 @@ module.exports = function(environment) {
             logger:{
                 level:'DEBUG',
                 default:true
-            }
+            },
+            dateFormat: "YYYY-MM-DD"
         },
         chat:{
             host:'localhost',

@@ -1,0 +1,12 @@
+<div class="collaboration-card">
+  <div class="shape">
+    {{#if (gt this.userCollaboration 50)}}
+      <i class="fa fa-caret-up up" aria-hidden="true"></i>
+      {{else}}
+        <i class="fa fa-caret-down down" aria-hidden="true"></i>
+    {{/if}}
+  </div>
+  <div data-user-collaboration="value" class="value">
+    {{this.userCollaboration}}%
+  </div>
+</div>

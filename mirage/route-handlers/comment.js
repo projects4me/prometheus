@@ -12,4 +12,8 @@ export function register(server, ctx) {
         });
         return comment;
     });
+
+    server.get('/comment', (schema, request) => {
+        return schema.comments.all();
+    });
 }

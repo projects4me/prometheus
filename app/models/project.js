@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr,belongsTo,hasMany } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 /**
@@ -199,14 +199,26 @@ export default Model.extend(Validations, {
     spentBudget: attr('string'),
 
     /**
-     * Project owner
+     * This flag tells us that whether the status is in the done category or not. For example
+     * when we have a issue of 'in progress' status then we know that it's not done yet so we
+     * feed the value of done to 0 in that case. 
      *
-     * @property owner
-     * @type Relationship
-     * @for Project
+     * @property done
+     * @type String
+     * @for Issuestatus
      * @private
      */
-    owner:belongsTo('user'),
+    done: attr('string'),
+
+    /**
+    * Project owner
+    *
+    * @property owner
+    * @type Relationship
+    * @for Project
+    * @private
+    */
+    owner: belongsTo('user', { inverse: null }),
 
     /**
      * User who created the project
@@ -216,7 +228,7 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    createdBy:belongsTo('user'),
+    createdBy: belongsTo('user', { inverse: null }),
 
     /**
      * User who modified the project
@@ -226,7 +238,7 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    modifiedBy:belongsTo('user'),
+    modifiedBy: belongsTo('user', { inverse: null }),
 
     /**
      * The members of this project
@@ -236,7 +248,7 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    members:hasMany('user'),
+    members: hasMany('user', { inverse: null }),
 
     /**
      * The conversations that are happening on this project
@@ -246,7 +258,7 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    conversations:hasMany('conversationroom'),
+    conversations: hasMany('conversationroom'),
 
     /**
      * These are the issues that are related to the project, since the number of
@@ -258,7 +270,7 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    issues:hasMany('issue'),
+    issues: hasMany('issue'),
 
     /**
      * The roles related to the members of this project, please note that these
@@ -271,7 +283,7 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    roles:hasMany('role'),
+    roles: hasMany('role'),
 
     /**
      * The membership rules for this project.
@@ -281,7 +293,7 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    memberships:hasMany('membership'),
+    memberships: hasMany('membership'),
 
     /**
      * The milestones for this project
@@ -291,7 +303,7 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    milestones:hasMany('milestone'),
+    milestones: hasMany('milestone'),
 
     /**
      * The issue types for this project
@@ -301,7 +313,7 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    issuetypes:hasMany('issuetype'),
+    issuetypes: hasMany('issuetype'),
 
     /**
      * The issue statuses for this project
@@ -311,7 +323,7 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-     issuestatuses:hasMany('issuestatus'),
+    issuestatuses: hasMany('issuestatus'),
 
     /**
      * The activities for this project
@@ -321,7 +333,7 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    activities:hasMany('activity'),
+    activities: hasMany('activity'),
 
     /**
      * The issue types for this project
@@ -331,6 +343,6 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    hasIssuetypes:attr('string',{defaultValue:function(){return true;}}),
-
+    hasIssuetypes: attr('string', { defaultValue: function () { return true; } })
+    
 });

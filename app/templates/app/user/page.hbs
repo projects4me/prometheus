@@ -15,7 +15,7 @@
   <section class="content">
 
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-3 col-sm-3">
 
       {{!-- User profile info section starts--}}
         <div class="box box-primary">
@@ -97,24 +97,63 @@
         <div class="box box-primary">
           <div class="box-body">
             <div class="col-md-12">
-              <div class="col-md-3">
-                <div style="height:150px;background-color: #F7F7F7; border:1px solid #BEBEBE; border-radius:10px">
-                  Projects
-                </div>                                              
+              <div class="col-md-3 col-sm-3">
+                <div class="user-stats-card">
+
+                  <div class="stats-label"> 
+                     {{t "views.app.user.page.stats.projects"}}
+                  </div>
+
+                  <Charts::OpenClosedChart
+                    @closedCount={{this.closedProjects}}
+                    @openCount={{this.openProjects}}
+                    @for="projects"
+                  />
+
+                </div>            
               </div>
-              <div class="col-md-3">
-                <div style="height:150px;background-color: #F7F7F7; border:1px solid #BEBEBE;border-radius:10px">
-                  Issues
-                </div>                                              
+              <div class="col-md-3 col-sm-3">
+                <div class="user-stats-card">
+
+                  <div class="stats-label">
+                    {{t "views.app.user.page.stats.issues"}} 
+                  </div>
+
+                  <Charts::OpenClosedChart
+                    @closedCount={{this.closedIssues}}
+                    @openCount={{this.openIssues}}
+                    @for="issues"
+                  />          
+
+                </div>            
               </div>
-              <div class="col-md-3">
-                <div style="height:150px;background-color: #F7F7F7; border:1px solid #BEBEBE;border-radius:10px">
-                  123
-                </div>                                              
+              <div class="col-md-3 col-sm-3">
+                <div class="user-stats-card">
+                  
+                  <div class="stats-label">
+                    {{t "views.app.user.page.stats.timespent.label"}}
+                    <span class="time-spent-sub-label">
+                      ({{t "views.app.user.page.stats.timespent.sublabel"}})
+                    </span>
+                  </div>
+
+                  <UserProfile::TimeSpent
+                    @timeSpent={{this.model.timeSpent}}
+                  />
+
+                </div>
               </div>
-              <div class="col-md-3">
-                <div style="height:150px;background-color: #F7F7F7; border:1px solid #BEBEBE;border-radius:10px">
-                  123
+              <div class="col-md-3 col-sm-3">
+                <div class="user-stats-card">
+
+                  <div class="stats-label">
+                    {{t "views.app.user.page.stats.collaboration"}} 
+                  </div>
+
+                  <UserProfile::Collaboration
+                    @numberOfComments={{this.comments.length}}
+                  />
+
                 </div>                                              
               </div>                                          
             </div>
