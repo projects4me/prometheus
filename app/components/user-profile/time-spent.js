@@ -72,12 +72,12 @@ export default class UserProfileTimeSpentComponent extends Component {
     years = 0;
 
     /**
-     * This function returns total issues of user.
+     * This function returns total time logged by user on issues.
      * @method get
      * @public
      */
-    get issues() {
-        return this.args.issues;
+    get timeSpent() {
+        return this.args.timeSpent;
     }
 
     /**
@@ -91,18 +91,11 @@ export default class UserProfileTimeSpentComponent extends Component {
      */
     calculateTime() {
         let _self = this;
-        _self._clearState();
+        _self.minutes = _self.timeSpent;
+
         /**time according to 8 hours a day */
         const TOTAL_MINUTES_IN_YEAR = 175200;
         const TOTAL_MINUTES_IN_DAY = 480;
-
-        this.issues.forEach((issue) => {
-            issue.spent.forEach((timeSpent) => {
-                _self.minutes += Number(timeSpent.minutes);
-                _self.hours += Number(timeSpent.hours);
-                _self.days += Number(timeSpent.days);
-            });
-        });
 
         /**set minutes and hours */
         if (_self.minutes >= 60) {
@@ -127,29 +120,18 @@ export default class UserProfileTimeSpentComponent extends Component {
             _self.days = _self.days % 365;
         }
 
-        let timeSpentInMinutes = _self.getTimeInMinutes();
-        if (timeSpentInMinutes >= TOTAL_MINUTES_IN_DAY && timeSpentInMinutes < TOTAL_MINUTES_IN_YEAR) {
+        if (_self.timeSpent >= TOTAL_MINUTES_IN_DAY && _self.timeSpent < TOTAL_MINUTES_IN_YEAR) {
             _self.timeToDisplay('days', _self.days);
             _self.timeToDisplay('hours', _self.hours);
-        } else if (timeSpentInMinutes < TOTAL_MINUTES_IN_DAY) {
+        } else if (_self.timeSpent < TOTAL_MINUTES_IN_DAY) {
             _self.timeToDisplay('hours', _self.hours);
             _self.timeToDisplay('minutes', _self.minutes);
-        } else if (timeSpentInMinutes >= TOTAL_MINUTES_IN_YEAR) {
+        } else if (_self.timeSpent >= TOTAL_MINUTES_IN_YEAR) {
             _self.timeToDisplay('years', _self.years);
             _self.timeToDisplay('days', _self.days);
         }
     }
 
-    /**
-     * This function returns total time in minutes.
-     * 
-     * @method getTimeInMinutes
-     * @public
-     */
-    getTimeInMinutes() {
-        return (this.minutes + (this.hours * 60) + (this.days * 8 * 60) + (this.years * 365 * 8 * 60));
-    }
-    
     /**
      * This function push object inside 'time' array, that is used inside template
      * to render time spent by user on issues.
@@ -173,21 +155,5 @@ export default class UserProfileTimeSpentComponent extends Component {
     get getTime() {
         this.calculateTime();
         return this.time;
-    }
-    
-    /**
-     * This function is called to clear the state of the component. As getTime getter
-     * is called twice so we have to call that function inside calculateTime in order
-     * to clear the state.
-     * @method clearState
-     * @public
-     */
-    _clearState() {
-        let _self = this;
-        _self.time = [];
-        _self.minutes = 0;
-        _self.hours = 0;
-        _self.days = 0;
-        _self.years = 0;
     }
 }
