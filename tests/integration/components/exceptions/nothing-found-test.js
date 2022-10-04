@@ -7,15 +7,18 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Component | charts/open-closed-chart', function (hooks) {
+module('Integration | Component | exceptions/nothing-found', function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders open closed component', async function (assert) {
+    test('it renders component', async function (assert) {
+
         await render(hbs`
-            <Charts::OpenClosedChart 
+            <Exceptions::NothingFound
+                @description="Project not found"
             />
         `);
 
-        assert.dom('canvas').exists();
+        assert.dom('i.fa.fa-info-circle').exists();
+        assert.dom('div.description').hasText('Project not found');
     });
 });

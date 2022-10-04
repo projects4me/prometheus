@@ -7,16 +7,17 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Modifier | initialize-doughnut-chart', function (hooks) {
+module('Integration | Modifier | initialize-slimscroll', function (hooks) {
     setupRenderingTest(hooks);
 
     // Replace this with your real tests.
-    test('it attach doughnut chart with canvas', async function (assert) {
+    test('it renders element by attaching slim scroll to it', async function (assert) {
         await render(hbs`
-            <canvas {{initialize-doughnut-chart}}></canvas>
+            <div style="height:300px;width:300px" {{initialize-slimscroll }}>
+                Slim scroll test
+            </div>
         `);
-
-        let modifierAttachedOrNot = (this.element.querySelector('canvas').$chartjs);
-        assert.equal("object", (typeof modifierAttachedOrNot));
+        
+        assert.dom('div.slimScrollDiv').exists();
     });
 });

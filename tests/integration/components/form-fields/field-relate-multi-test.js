@@ -1,3 +1,7 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
@@ -42,13 +46,13 @@ module('Integration | Component | form-fields/field-relate-multi', function (hoo
                 @selected={{this.selectedOptions}}
             />
         `);
-        
+
         //checking selected options
-        let selectedOptionEls= this.element.querySelectorAll('span.relate-simple');
-        selectedOptionEls.forEach((el, i) =>{
+        let selectedOptionEls = this.element.querySelectorAll('span.relate-simple');
+        selectedOptionEls.forEach((el, i) => {
             assert.dom(el).hasText(selectedOptions[i].label);
         });
-        
+
     });
 
     test('it renders the component by given placeholder and label', async function (assert) {

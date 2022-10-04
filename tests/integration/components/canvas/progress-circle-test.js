@@ -7,12 +7,15 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Component | charts/open-closed-chart', function (hooks) {
+module('Integration | Component | canvas/progress-circle', function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it renders open closed component', async function (assert) {
+    test('it renders progress circle component', async function (assert) {
+
         await render(hbs`
-            <Charts::OpenClosedChart 
+            <Canvas::ProgressCircle
+                @moduleName="project"
+                @completionPercentage="14"
             />
         `);
 
