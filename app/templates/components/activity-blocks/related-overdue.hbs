@@ -1,14 +1,14 @@
 <i class="fa fa-exclamation-triangle bg-red"></i>
 
 <div class="timeline-item">
-  <span class="time"><i class="fa fa-clock-o"></i> {{activity.createdSince}} {{t "global.ago"}}</span>
+  <span class="time"><i class="fa fa-clock-o"></i> {{this.activity.createdSince}} {{t "global.ago"}}</span>
   <h3 class="timeline-header">
-    <a href="javascript:void(0);" {{action "openMilestone" activity.relatedActivityId}}>
-      {{t (concat "global.module.singular." activity.relatedActivityModule)}}
+    <a href="javascript:void(0);" {{action "openMilestone" this.activity.relatedActivityId}}>
+      {{t (concat "global.module.singular." this.activity.relatedActivityModule)}}
     </a>
-    {{t (concat "views.app.activity.related." activity.relatedActivity)}}
+    {{t (concat "views.app.activity.related." this.activity.relatedActivity)}}
   </h3>
   <div class="timeline-body">
-    {{safe-html activity.description}}
+    {{safe-html this.activity.description}}
   </div>
 </div>
