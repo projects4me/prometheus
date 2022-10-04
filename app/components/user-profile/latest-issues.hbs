@@ -1,0 +1,40 @@
+<div class='latest-modules' data-user-module="latest-issues" {{initialize-slimscroll model='1' }}>
+{{#if @issues.length}}
+
+  {{#each @issues as |issue|}}
+  <div class="issue-container" data-issue={{issue.subject}}>
+    <div class="issue-item">
+      <span class='issueNumber' data-latest-issue-field='issueNumber'>
+        #{{issue.issueNumber}}
+      </span>
+
+      <span class="separation">
+        |
+      </span>
+
+      <span data-latest-issue-field='subject'>
+        <LinkTo @route='app.project.issue.page' @models={{array issue.projectId issue.issueNumber}} target="_blank">{{issue.subject}}</LinkTo>
+      </span>
+
+      <span class="shortcode" data-latest-issue-field='projectShortCode'>
+        ({{issue.projectShortCode}})
+      </span>
+
+      <span class="label label-primary" data-latest-issue-field='status'>
+        {{t (concat "views.app.issue.lists.status." issue.status)}}
+      </span>
+
+      <div class="date" data-latest-issue-field="dateCreated">
+        created on {{get-humanized-date issue.dateCreated}}
+      </div>
+    </div>
+  </div>
+  {{/each}}
+
+{{else}}
+  <Exceptions::NothingFound
+    @description={{t "views.app.user.page.latestIssues.noIssues"}}
+  />
+{{/if}}
+
+</div>

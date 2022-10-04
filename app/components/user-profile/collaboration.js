@@ -15,16 +15,12 @@ import Component from '@glimmer/component';
 export default class UserProfileCollaborationComponent extends Component {
 
     /**
-     * This function calculates and return the user collaboration value. 
+     * This function returns user collaboration value.
      *
      * @method get
      * @public
      */
     get userCollaboration() {
-        let numberOfComments = this.args.numberOfComments;
-        const c = 13;
-        let collaboratedValue = Math.floor(Math.pow(numberOfComments, 0.5) * c);
-        (collaboratedValue >= 100) && (collaboratedValue = 100);
-        return collaboratedValue;
+        return (this.args.collaboration === undefined) ? 0 : this.args.collaboration;
     }
 }

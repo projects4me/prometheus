@@ -1,0 +1,37 @@
+<div class='latest-modules' data-user-module="latest-projects" {{initialize-slimscroll model=@projects.length}}>
+{{#if @projects.length}}
+    
+  {{#each @projects as |project|}}
+  <div class="project-container" data-project-name={{project.name}}>
+    <div class="project-item">
+      <span data-latest-project-field='name'>
+        <LinkTo @route='app.project' @model={{project.id}} target="_blank">{{project.name}}</LinkTo>
+      </span>
+
+      <span class='shortcode' data-latest-project-field='shortCode'>
+        ({{project.shortCode}})
+      </span>
+
+      <span class="label label-primary" data-latest-project-field="status">
+        {{t (concat "views.app.project.lists.status." project.status)}}
+      </span>
+
+      <div class="description" data-latest-project-field="description">
+        {{project.description}}
+      </div>
+    </div>
+
+    <Canvas::ProgressCircle 
+      @moduleName={{project.name}}
+      @completionPercentage={{project.completionPercentage}}
+    />
+  </div>
+  {{/each}}
+
+{{else}}
+  <Exceptions::NothingFound
+    @description={{t "views.app.user.page.latestProjects.noProject"}}
+  />
+{{/if}}
+
+</div>
