@@ -1,0 +1,13 @@
+<i class="fa fa-pencil bg-orange"></i>
+
+<div class="timeline-item">
+  <span class="time" data-activity="dateCreated"><i class="fa fa-clock-o"></i> {{@activity.createdSince}} {{t "global.ago"}}</span>
+  <h3 class="timeline-header" data-activity="activityInfo">
+    <LinkTo @route="app.user.page" data-activity="userName" @model={{@activity.createdUser}}>{{@activity.createdUserName}}</LinkTo>
+    {{t (concat "views.app.activity." @activity.type)}}
+    {{t (concat "global.module.singular." @activity.relatedTo)}}
+  </h3>
+  <div class="timeline-body" data-activity="description">
+    {{@activity.description}}
+  </div>
+</div>
