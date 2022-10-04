@@ -25,7 +25,6 @@ export default class CanvasProgressCircleComponent extends Component {
      */
     @action setCircleProgress() {
         let selector = `canvas[data-progress-of='${this.args.moduleName}']`;
-        debugger;
         const canvas = document.querySelector(selector);
         const context = canvas.getContext('2d');
         const centerX = canvas.width / 2;
