@@ -219,16 +219,6 @@ export default Model.extend(Validations, {
     skills: attr('string'),
 
     /**
-    * Total time logged by user on issues.
-    *
-    * @property skills
-    * @type String
-    * @for User
-    * @private
-    */
-     timeSpent: attr('string'),
-
-    /**
      * The users's dashboard
      *
      * @property dashboard
@@ -237,6 +227,86 @@ export default Model.extend(Validations, {
      * @private
      */
     dashboard: belongsTo('dashboard'),
+
+    /**
+     * Open closed projects of user.
+     *
+     * @property openClosedProject
+     * @type Useropenclosedproject
+     * @for User
+     * @private
+     */
+    openClosedProject: belongsTo('useropenclosedproject'),
+
+    /**
+     * Open closed issues of user.
+     *
+     * @property openClosedIssue
+     * @type Useropenclosedissue
+     * @for User
+     * @private
+     */
+    openClosedIssue: belongsTo('useropenclosedissue'),
+
+    /**
+      * Total time spent by user on issues.
+      *
+      * @property timeSpent
+      * @type Usertimespent
+      * @for User
+      * @private
+      */
+    timeSpent: belongsTo('usertimespent'),
+
+    /**
+     * Daily collaboration of user in application.
+     *
+     * @property collaboration
+     * @type Usercollaboration
+     * @for User
+     * @private
+     */
+    collaboration: belongsTo('usercollaboration'),
+
+    /**
+     * These are the latest projects of user.
+     *
+     * @property latestProjects
+     * @type Userlatestproject
+     * @for User
+     * @private
+     */
+    latestProjects: hasMany('userlatestproject'),
+
+    /**
+     * These are the latest issues of user.
+     *
+     * @property latestIssues
+     * @type Userlatestissue
+     * @for User
+     * @private
+     */
+    latestIssues: hasMany('userlatestissue'),
+
+    /**
+     * These are the members whom worked most with the user.
+     *
+     * @property mostWorkedMembers
+     * @type Userworkmostwith
+     * @for User
+     * @private
+     */
+    mostWorkedMembers: hasMany('userworkmostwith'),
+
+    /**
+     * These are the recent activities of the user.
+     *
+     * @property recentActivities
+     * @type Userecentactivity
+     * @for User
+     * @private
+     */
+    recentActivities: hasMany('userecentactivity'),
 
     /**
      * These are the tag relationship entries
