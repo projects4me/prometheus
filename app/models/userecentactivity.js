@@ -24,6 +24,16 @@ export default class UserecentactivityModel extends Model {
      */
      @attr('string') userId;
 
+    /**
+     * Name of user who created activity.
+     * 
+     * @property createdUserName
+     * @type String
+     * @for Userecentactivity
+     * @private
+     */
+     @attr('string') createdUserName;
+
      /**
       * The name of the entity the activity is related to.
       * 
