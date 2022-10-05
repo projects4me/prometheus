@@ -53,6 +53,16 @@ export default class UserecentactivityModel extends Model {
       * @private
       */
      @attr('string') dateCreated;
+
+     /**
+      * Type of activity.
+      * 
+      * @property type
+      * @type String
+      * @for Userecentactivity
+      * @private
+      */
+      @attr('string') type;     
      
     /**
      * Type of activity performed on related entity.
