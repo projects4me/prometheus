@@ -447,7 +447,9 @@
             "completed": "Complete",
             "closed": "Closed",
             "pending": "Pending",
-            "deferred": "Deferred"
+            "deferred": "Deferred",
+            "done": "Done",
+            "wont_fix": "Wont't Fix"
           },
           "type.": "Loading ..",
           "type": {
