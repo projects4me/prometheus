@@ -51,7 +51,7 @@ module('Integration | Component | user-profile/latest-projects', function (hooks
 
         expectedAnswers.forEach((project) => {
             for (const [key, value] of Object.entries(project)) {
-                assert.dom(`div[data-project-name="${project.name}"] [data-latest-project-field="${key}"]`).hasText(value);
+                assert.dom(`div[data-project="${project.name}"] [data-latest-project-field="${key}"]`).hasText(value);
             }
         });
         
