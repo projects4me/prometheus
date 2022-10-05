@@ -2,10 +2,10 @@
 {{#if @projects.length}}
     
   {{#each @projects as |project|}}
-  <div class="project-container" data-project-name={{project.name}}>
+  <div class="project-container" data-project={{project.name}}>
     <div class="project-item">
       <span data-latest-project-field='name'>
-        <LinkTo @route='app.project' @model={{project.id}} target="_blank">{{project.name}}</LinkTo>
+        <LinkTo @route='app.project' @model={{project.id}}>{{project.name}}</LinkTo>
       </span>
 
       <span class='shortcode' data-latest-project-field='shortCode'>
