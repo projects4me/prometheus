@@ -4,7 +4,6 @@
 
 import App from "prometheus/routes/app";
 import { hash } from 'rsvp';
-import ENV from "prometheus/config/environment";
 
 /**
  * The user page
@@ -21,27 +20,12 @@ export default App.extend({
         let _self = this;
         let _userOptions = {
             query: `(User.id : ${params.user_id})`,
-            rels: 'badgeLevels,badges,projects'
-        }
-
-        let _issueOptions = {
-            query: `(Issue.assignee : ${params.user_id})`,
-            rels: 'issuestatus',
-            limit: -1
-        }
-
-        let currentDate = moment().format(ENV.app.dateFormat);
-        let _commentOptions = {
-            query: `(Comment.createdUser : ${params.user_id}) AND (Comment.dateCreated CONTAINS ${currentDate})`,
-            rels: 'none',
-            limit: -1
+            rels: 'badgeLevels,badges,timeSpent,projects,openClosedProject,openClosedIssue,collaboration,latestProjects,latestIssues,mostWorkedMembers,recentActivities'
         }
 
         Logger.debug('-Prometheus.Routes.App.User::afterModel()');
         return hash({
-            issues: _self.store.query('issue', _issueOptions),
-            user: _self.store.query('user', _userOptions),
-            comments: _self.store.query('comment', _commentOptions)
+            user: _self.store.query('user', _userOptions)
         });
     },
     /**
@@ -54,8 +38,6 @@ export default App.extend({
     setupController: function (controller, model) {
         Logger.debug('+Prometheus.Routes.App.User::setupController()');
         controller.set('model', model.user.objectAt(0));
-        controller.set('issues', model.issues);
-        controller.set('comments', model.comments);
         Logger.debug('-Prometheus.Routes.App.User::setupController()');
     }
 });
