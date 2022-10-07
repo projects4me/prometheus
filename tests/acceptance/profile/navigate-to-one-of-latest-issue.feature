@@ -19,3 +19,4 @@ Feature: Profile | navigate to one of latest issue
     ---------------------------------------
     When User navigates to app/user/1
     When User clicks on latest issue 5
+    Then User should be in app/project/2/issue/5 page
