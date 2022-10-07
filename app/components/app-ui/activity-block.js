@@ -16,6 +16,16 @@ import { set } from '@ember/object';
 export default class AppUiActivityBlockComponent extends Component {
 
     /**
+     * This property contains the name of modules that are related to activity.
+     *
+     * @property type
+     * @type String
+     * @for relatedToList
+     * @private
+     */
+    relatedToList = ["project", "issue"];
+
+    /**
      * This function returns the type of activity block to render.
      *
      * @method get
@@ -25,7 +35,7 @@ export default class AppUiActivityBlockComponent extends Component {
         let activity = this.args.activity;
         this.setActivityTime(activity);
         let componentName = (activity.type == 'related') ? (`related-${activity.relatedActivity}`) :
-            ((activity.relatedTo == 'issue' || activity.relatedTo == 'project') ? `${activity.relatedTo}/${activity.type}` : 'index');
+            (this.relatedToList.includes(activity.relatedTo) ? `${activity.relatedTo}/${activity.type}` : 'index');
         return componentName;
     }
 
