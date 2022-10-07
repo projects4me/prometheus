@@ -24,16 +24,20 @@ module('Integration | Component | user-profile/latest-issues', function (hooks) 
             }
         ]
 
+        let currentDate = moment().format('DD MMMM YYYY');
+
         let expectedAnswers = [
             {
                 subject: "issue A",
                 projectShortCode: "(PROA)",
                 status: "In Progress",
+                dateCreated: `created on ${currentDate}`
             },
             {
                 subject: "issue B",
                 projectShortCode: "(PROB)",
                 status: "New",
+                dateCreated: `created on ${currentDate}`
             }
         ]
 
