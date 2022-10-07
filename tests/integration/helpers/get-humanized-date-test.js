@@ -7,14 +7,14 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
-module('Integration | Helper | get-humanized-date', function(hooks) {
-  setupRenderingTest(hooks);
+module('Integration | Helper | get-humanized-date', function (hooks) {
+    setupRenderingTest(hooks);
 
-  test('it renders', async function(assert) {
-    this.set('date', '2015-11-20 22:03:22.0');
+    test('it renders', async function (assert) {
+        this.set('date', '2015-11-20 22:03:22.0');
 
-    await render(hbs`{{get-humanized-date this.date}}`);
+        await render(hbs`{{get-humanized-date this.date}}`);
 
-    assert.dom(this.element).hasText('20 November 2015');
-  });
+        assert.dom(this.element).hasText('20 November 2015');
+    });
 });
