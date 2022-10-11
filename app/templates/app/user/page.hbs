@@ -94,6 +94,8 @@
       </div>
 
       <div class="col-md-9">
+
+        {{!-- User Stats Section starts --}}
         <div class="box box-primary">
           <div class="box-body">
             <div class="col-md-12">
@@ -105,8 +107,8 @@
                   </div>
 
                   <Charts::OpenClosedChart
-                    @closedCount={{this.closedProjects}}
-                    @openCount={{this.openProjects}}
+                    @openCount={{this.model.openClosedProject.openProjects}}
+                    @closedCount={{this.model.openClosedProject.closedProjects}}
                     @for="projects"
                   />
 
@@ -120,8 +122,8 @@
                   </div>
 
                   <Charts::OpenClosedChart
-                    @closedCount={{this.closedIssues}}
-                    @openCount={{this.openIssues}}
+                    @openCount={{this.model.openClosedIssue.openIssues}}
+                    @closedCount={{this.model.openClosedIssue.closedIssues}}
                     @for="issues"
                   />          
 
@@ -138,7 +140,7 @@
                   </div>
 
                   <UserProfile::TimeSpent
-                    @timeSpent={{this.model.timeSpent}}
+                    @timeSpent={{this.model.timeSpent.totalMinutes}}
                   />
 
                 </div>
@@ -151,13 +153,79 @@
                   </div>
 
                   <UserProfile::Collaboration
-                    @numberOfComments={{this.comments.length}}
+                    @collaboration={{this.model.collaboration.collaboration}}
                   />
 
                 </div>                                              
               </div>                                          
             </div>
           </div>
+        </div>
+        {{!-- User Stats Section ends --}}
+
+      {{!-- User Latest Modules Sections --}}
+        <div class="row">        
+          {{!-- User latest Projects Section starts --}}
+          <div class="col-md-6">
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title"> {{t "views.app.user.page.latestProjects.title"}} </h3>               
+              </div>
+
+              <div class="box-body">
+                <UserProfile::LatestProjects
+                  @projects={{this.model.latestProjects}}
+                />
+              </div>
+            </div>
+          </div>
+          {{!-- User latest Projects Section ends --}}
+
+          {{!-- User latest Issues Section starts --}}
+          <div class="col-md-6">
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title"> {{t "views.app.user.page.latestIssues.title"}} </h3>              
+              </div>
+              <div class="box-body">
+                <UserProfile::LatestIssues
+                  @issues={{this.model.latestIssues}}
+                />
+              </div>
+            </div>
+          </div>
+          {{!-- User latest Issues Section ends --}}
+
+          {{!-- User Recent Activities Section starts --}}
+          <div class="col-md-8">
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title"> {{t "views.app.user.page.recentActivities.title"}} </h3>              
+              </div>
+              <div class="box-body">
+                <UserProfile::RecentActivities
+                  @activities={{this.model.recentActivities}}
+                />
+              </div>
+            </div>
+          </div>
+          {{!-- User Recent Activities Section ends --}}    
+          
+          {{!-- User Works most With Section starts --}}
+          <div class="col-md-4">
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title"> {{t "views.app.user.page.worksMostWith"}} </h3>              
+              </div>
+              <div class="box-body">
+                <UserProfile::CloseMembers
+                  @users={{this.model.mostWorkedMembers}}
+                />
+              </div>
+            </div>
+          </div>
+          {{!-- User Works most With Section ends --}}                  
+
         </div>
 
       </div>

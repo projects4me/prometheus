@@ -1,0 +1,15 @@
+.no-content {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    i {
+        color: $primaryColor;
+        margin-right: 0.5rem;
+    }
+
+    .description {
+        font-weight: 300;
+    }
+}

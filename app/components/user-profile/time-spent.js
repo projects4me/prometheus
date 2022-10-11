@@ -4,7 +4,6 @@
 
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { computed } from '@ember/object';
 
 /**
  * This component is used to render time spent by user on issues.
@@ -28,50 +27,6 @@ export default class UserProfileTimeSpentComponent extends Component {
     @tracked time = [];
 
     /**
-     * This property is used to keep track total minutes that 
-     * user spent on issues.
-     *
-     * @property minutes
-     * @type Number
-     * @for UserProfileTimeSpentComponent
-     * @private
-     */
-    minutes = 0;
-
-    /**
-     * This property is used to keep track total hours that 
-     * user spent on issues.
-     *
-     * @property hours
-     * @type Number
-     * @for UserProfileTimeSpentComponent
-     * @private
-     */
-    hours = 0;
-
-    /**
-     * This property is used to keep track total days that 
-     * user spent on issues.
-     *
-     * @property days
-     * @type Number
-     * @for UserProfileTimeSpentComponent
-     * @private
-     */
-    days = 0;
-
-    /**
-     * This property is used to keep track total years that 
-     * user spent on issues.
-     *
-     * @property years
-     * @type Number
-     * @for UserProfileTimeSpentComponent
-     * @private
-     */
-    years = 0;
-
-    /**
      * This function returns total time logged by user on issues.
      * @method get
      * @public
@@ -91,44 +46,47 @@ export default class UserProfileTimeSpentComponent extends Component {
      */
     calculateTime() {
         let _self = this;
-        _self.minutes = _self.timeSpent;
+        _self.time = [];
+        let minutes, hours, days, years;
+        minutes = hours = days = years = 0;
 
+        minutes = _self.timeSpent;
         /**time according to 8 hours a day */
         const TOTAL_MINUTES_IN_YEAR = 175200;
         const TOTAL_MINUTES_IN_DAY = 480;
 
         /**set minutes and hours */
-        if (_self.minutes >= 60) {
-            _self.hours += Math.round(_self.minutes / 60);
-            _self.minutes = _self.minutes % 60;
+        if (minutes >= 60) {
+            hours += Math.round(minutes / 60);
+            minutes = minutes % 60;
         }
 
         /**set hour and days */
-        if (_self.hours >= 8 || _self.days >= 1) {
+        if (hours >= 8 || days >= 1) {
             /** suppose we have 5 days and 5 hours.
              * So that value should be shown exactly same*/
 
-            if (_self.hours >= 8) {
-                _self.days += Math.floor(_self.hours / 8);
-                _self.hours = _self.hours % 8;
+            if (hours >= 8) {
+                days += Math.floor(hours / 8);
+                hours = hours % 8;
             }
         }
 
         /** set days and years */
-        if (_self.days >= 365) {
-            _self.years = Math.round(_self.days / 365);
-            _self.days = _self.days % 365;
+        if (days >= 365) {
+            years = Math.round(days / 365);
+            days = days % 365;
         }
 
         if (_self.timeSpent >= TOTAL_MINUTES_IN_DAY && _self.timeSpent < TOTAL_MINUTES_IN_YEAR) {
-            _self.timeToDisplay('days', _self.days);
-            _self.timeToDisplay('hours', _self.hours);
+            _self.timeToDisplay('days', days);
+            _self.timeToDisplay('hours', hours);
         } else if (_self.timeSpent < TOTAL_MINUTES_IN_DAY) {
-            _self.timeToDisplay('hours', _self.hours);
-            _self.timeToDisplay('minutes', _self.minutes);
+            _self.timeToDisplay('hours', hours);
+            _self.timeToDisplay('minutes', minutes);
         } else if (_self.timeSpent >= TOTAL_MINUTES_IN_YEAR) {
-            _self.timeToDisplay('years', _self.years);
-            _self.timeToDisplay('days', _self.days);
+            _self.timeToDisplay('years', years);
+            _self.timeToDisplay('days', days);
         }
     }
 

@@ -447,7 +447,9 @@
             "completed": "Complete",
             "closed": "Closed",
             "pending": "Pending",
-            "deferred": "Deferred"
+            "deferred": "Deferred",
+            "done": "Done",
+            "wont_fix": "Wont't Fix"
           },
           "type.": "Loading ..",
           "type": {
@@ -781,7 +783,20 @@
                 "years": "Years"
             },
             "collaboration": "Collaboration"
-          }
+          },
+          "latestProjects": {
+              "title": "Latest Projects",
+              "noProject": "No Projects found"
+          },
+          "latestIssues": {
+            "title": "Latest Issues",
+            "noIssues": "No Issues found"
+        },
+          "recentActivities": {
+              "title": "Recent Activities",
+              "noActivity": "No Activity Recorded"
+          },
+          "worksMostWith": "Works Most With"
         }
       },
       "chat": {
@@ -794,6 +809,7 @@
         "created": "created the",
         "closed": "closed the",
         "updated": "updated the",
+        "deleted": "deleted the",
         "related": {
           "created": "created a",
           "updated": "updated a",

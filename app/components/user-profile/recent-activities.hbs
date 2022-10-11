@@ -1,0 +1,22 @@
+<div class="recent-activities" {{initialize-slimscroll model='1'}}>
+{{#if @activities.length}}
+
+  <ul class="timeline">
+    {{#each @activities as |activity|}}
+      <AppUi::ActivityBlock
+        @activity={{activity}}
+      />
+    {{/each}}
+
+    <li>
+      <i class="fa fa-clock-o bg-gray"></i>
+    </li>
+
+  </ul>
+
+{{else}}
+  <Exceptions::NothingFound
+    @description={{t "views.app.user.page.recentActivities.noActivity"}}
+  />
+{{/if}}
+</div>

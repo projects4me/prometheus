@@ -1,0 +1,14 @@
+<i class="fa fa-exclamation-triangle bg-red"></i>
+
+<div class="timeline-item">
+  <span class="time" data-activity="dateCreated"><i class="fa fa-clock-o"></i> {{@activity.createdSince}} {{t "global.ago"}}</span>
+  <h3 class="timeline-header" data-activity="activityInfo">
+    <a href="javascript:void(0);" {{action "openMilestone" @activity.relatedActivityId}}>
+      {{t (concat "global.module.singular." @activity.relatedActivityModule)}}
+    </a>
+    {{t (concat "views.app.activity.related." @activity.relatedActivity)}}
+  </h3>
+  <div class="timeline-body" data-activity="description">
+    {{safe-html @activity.description}}
+  </div>
+</div>

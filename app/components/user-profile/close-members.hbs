@@ -1,0 +1,13 @@
+<div class="close-members" data-user-module="close-members">
+  {{#each @users as |user|}}
+  <div class="user-info" data-user={{user.name}}>
+    <img class="user-img" src="http://projects4me/userimage/get/{{user.id}}" alt="user-img">
+    <div class="user-details">
+      <LinkTo data-close-member="profileLink" @route="app.user.page" @model={{user.id}}> 
+        <div data-close-member="name">{{user.name}}</div> 
+      </LinkTo>
+      <div class="title" data-close-member="title">{{user.title}}</div>
+    </div>
+  </div>
+  {{/each}}
+</div>

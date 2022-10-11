@@ -34,9 +34,15 @@ import * as addAProjectMember from './project/add-a-project-member-steps';
 import * as setMilestoneIssues from './common-steps/set-milestone-issues-steps';
 import * as logTimeForIssue from './issue/log-time-for-an-issue-steps';
 import * as estimateTimeForIssue from './issue/add-estimate-time-for-issue-steps';
+import * as verifyLatestProjects from './profile/verify-list-of-latest-projects-steps';
+import * as verifyLatestIssues from './profile/verify-list-of-latest-issues-steps';
+import * as navigateToLatestProject from './profile/navigate-to-one-of-latest-project-steps';
+import * as navigateToLatestIssue from './profile/navigate-to-one-of-latest-issue-steps';
+import * as navigateToMostWorkedMember from './profile/navigate-to-one-of-most-worked-member-steps';
+import * as verifyRecentActivities from './profile/verify-list-of-recent-activities-steps';
 
 export default function (assert) {
-    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()

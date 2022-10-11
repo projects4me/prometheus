@@ -14,7 +14,6 @@ export function register(server, ctx) {
 
     server.get('/user/:id', (schema, request) => {
         let id = request.params.id;
-        let s = server;
         if (id === "me") {
             id = ctx.get('currentUser').id
         }

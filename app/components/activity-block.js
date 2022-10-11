@@ -74,7 +74,7 @@ export default Component.extend({
         }
 
         return template;
-    }).volatile(),
+    }),
 
     /**
      * This function is used to set the date since the activity was created
