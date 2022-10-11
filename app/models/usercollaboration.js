@@ -19,7 +19,7 @@ export default class UsercollaborationModel extends Model {
      * 
      * @property userId
      * @type String
-     * @for Useropenclosedissue
+     * @for Usercollaboration
      * @private
      */
     @attr('string') userId;
@@ -29,7 +29,7 @@ export default class UsercollaborationModel extends Model {
      * 
      * @property openIssues
      * @type String
-     * @for Useropenclosedissue
+     * @for Usercollaboration
      * @private
      */
     @attr('string') collaboration;

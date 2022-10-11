@@ -21,15 +21,15 @@ export default class UsertimespentModel extends Model {
      * @for Usertimespent
      * @private
      */
-     @attr('string') userId;
+    @attr('string') userId;
 
-     /**
-      * Total time spent by user on issues.
-      * 
-      * @property totalMinutes
-      * @type String
-      * @for Usertimespent
-      * @private
-      */
-     @attr('string') totalMinutes;
+    /**
+     * Total time spent by user on issues.
+     * 
+     * @property totalMinutes
+     * @type String
+     * @for Usertimespent
+     * @private
+     */
+    @attr('string') totalMinutes;
 }
