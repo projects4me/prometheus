@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - ci/cd
+  pull_request: {}
+
+jobs:
+  build:
+    name: "Ember Build"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14.19.3
+          cache: npm
+      - name: Install Dependencies
+        run: npm i -g ember-cli
+        run: npm install
+        run: ember build
+
+  test:
+    name: "Ember Test"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Tests
+        run: ember test
