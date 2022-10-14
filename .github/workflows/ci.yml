@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: "Ember Build"
+    name: "Ember Build and Test"
     runs-on: ubuntu-latest
 
     steps:
@@ -22,12 +22,4 @@ jobs:
       - run: npm i -g ember-cli
       - run: npm install
       - run: ember build
-
-  test:
-    name: "Ember Test"
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run Tests
       - run: ember test
