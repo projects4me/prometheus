@@ -39,5 +39,6 @@ jobs:
         host: ${{secrets.DOHOST}}
         key: ${{secrets.DOKEY}}
         username: ${{secrets.DOUSER}}
-
-    - run: mkdir test-deployment
+        script: |
+          whoami
+          ls -al
