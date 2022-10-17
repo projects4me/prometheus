@@ -43,14 +43,12 @@ jobs:
         key: ${{secrets.DOKEY}}
         username: ${{secrets.DOUSER}}
         script: |
+          export NVM_DIR=~/.nvm
+          source ~/.nvm/nvm.sh
           cd /home/web/
           rm -rf prometheus
           git clone https://github.com/projects4me/prometheus
           cd prometheus/
           git checkout dev
-          npm i -g ember-cli@4.1.1
-          npm install -g bower
-          npm install
-          bower install
           ember -v
           ember build --prod
