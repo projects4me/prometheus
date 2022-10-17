@@ -52,4 +52,5 @@ jobs:
           cd prometheus/
           git checkout dev
           npm install
+          bower install
           ember b --prod
