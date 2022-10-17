@@ -48,5 +48,9 @@ jobs:
           git clone https://github.com/projects4me/prometheus
           cd prometheus/
           git checkout dev
-          ls
+          npm i -g ember-cli@4.1.1
+          npm install -g bower
+          npm install
+          bower install
           ember -v
+          ember build --prod
