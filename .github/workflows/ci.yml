@@ -18,12 +18,13 @@ jobs:
 #         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
     - name: Use Node.js 14
-      uses: actions/setup-node@v3
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
         node-version: 14.19.3
-        
+        cache: 'npm'
+
     - run: npm i -g ember-cli@4.1.1
     - run: npm install -g bower
     - run: npm install
