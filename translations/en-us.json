@@ -790,7 +790,7 @@
           },
           "latestIssues": {
             "title": "Latest Issues",
-            "createdOn": "created o",
+            "createdOn": "created on",
             "noIssues": "No Issues found"
         },
           "recentActivities": {
