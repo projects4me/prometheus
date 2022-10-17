@@ -26,5 +26,6 @@ jobs:
         
     - run: npm i -g ember-cli
     - run: npm install
+    - run: bower install
     - run: ember build
     - run: ember test
