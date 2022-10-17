@@ -40,5 +40,5 @@ jobs:
         key: ${{secrets.DOKEY}}
         username: ${{secrets.DOUSER}}
         script: |
-          whoami
           ls -al
+          mkdir tests
