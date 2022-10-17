@@ -24,6 +24,7 @@ jobs:
       with:
         node-version: 14.19.3
         cache: 'npm'
+        cache-dependency-path: "./prometheus/package-lock.json"
     - run: npm i -g ember-cli
     - run: npm install
     - run: ember build
