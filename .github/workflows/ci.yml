@@ -25,6 +25,7 @@ jobs:
         node-version: 14.19.3
         
     - run: npm i -g ember-cli
+    - run: npm install -g bower
     - run: npm install
     - run: bower install
     - run: ember build
