@@ -50,5 +50,5 @@ jobs:
           git clone https://github.com/projects4me/prometheus
           cd prometheus/
           git checkout dev
+          nvm use 14
           ember -v
-          ember build --prod
