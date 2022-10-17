@@ -23,6 +23,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 14.19.3
+        cache: 'npm'
 
     - run: npm i -g ember-cli@4.1.1
     - run: npm install -g bower
