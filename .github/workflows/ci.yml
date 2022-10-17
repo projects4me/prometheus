@@ -8,7 +8,7 @@ on:
     branches: [ "ci/cd" ]
 
 jobs:
-  build:
+  Build-and-Test:
 
     runs-on: ubuntu-latest
 
@@ -17,21 +17,24 @@ jobs:
 #         node-version: [12.x, 14.x, 16.x]
 #         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    # steps:
-    # - uses: actions/checkout@v3
-    # - name: Use Node.js 14
-    #   uses: actions/setup-node@v3
-    #   with:
-    #     node-version: 14.19.3
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js 14
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14.19.3
         
-    # - run: npm i -g ember-cli@4.1.1
-    # - run: npm install -g bower
-    # - run: npm install
-    # - run: bower install
-    # - run: ember -v
-    # - run: ember build --prod
-    # - run: ember test
+    - run: npm i -g ember-cli@4.1.1
+    - run: npm install -g bower
+    - run: npm install
+    - run: bower install
+    - run: ember -v
+    - run: ember build --prod
+    - run: ember test
 
+  Deploy-to-Server:
+
+    runs-on: ubuntu-latest    
     steps:
     - name: Deployment
       uses: appleboy/ssh-action@v0.1.2
@@ -40,5 +43,8 @@ jobs:
         key: ${{secrets.DOKEY}}
         username: ${{secrets.DOUSER}}
         script: |
-          ls -al
-          mkdir tests
+          cd /home/web/
+          rm -rf prometheus
+          git clone https://github.com/projects4me/prometheus
+          cd prometheus/
+          ember b --prod
