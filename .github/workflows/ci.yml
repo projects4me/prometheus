@@ -8,29 +8,29 @@ on:
     branches: [ "ci/cd" ]
 
 jobs:
-  Build-and-Test:
+#   Build-and-Test:
 
-    runs-on: ubuntu-latest
+#     runs-on: ubuntu-latest
 
-#     strategy:
-#       matrix:
-#         node-version: [12.x, 14.x, 16.x]
-#         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+# #     strategy:
+# #       matrix:
+# #         node-version: [12.x, 14.x, 16.x]
+# #         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js 14
-      uses: actions/setup-node@v3
-      with:
-        node-version: 14.19.3
+#     steps:
+#     - uses: actions/checkout@v3
+#     - name: Use Node.js 14
+#       uses: actions/setup-node@v3
+#       with:
+#         node-version: 14.19.3
         
-    - run: npm i -g ember-cli@4.1.1
-    - run: npm install -g bower
-    - run: npm install
-    - run: bower install
-    - run: ember -v
-    - run: ember build --prod
-    - run: ember test
+#     - run: npm i -g ember-cli@4.1.1
+#     - run: npm install -g bower
+#     - run: npm install
+#     - run: bower install
+#     - run: ember -v
+#     - run: ember build --prod
+#     - run: ember test
 
   Deploy-to-Server:
 
@@ -48,5 +48,5 @@ jobs:
           git clone https://github.com/projects4me/prometheus
           cd prometheus/
           git checkout dev
-          nvm use 14
-          ember b --prod
+          ls
+          ember -v
