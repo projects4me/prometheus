@@ -6,6 +6,6 @@ COPY . /prometheus/
 
 RUN \
     cd /prometheus \
-    npm install
+    ls
 
 CMD ["ember", "test"]
