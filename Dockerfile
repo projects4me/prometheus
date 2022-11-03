@@ -5,7 +5,7 @@ WORKDIR /prometheus
 COPY . /prometheus/
 
 RUN \
-    cd /prometheus  &&\
+    cd /prometheus
 
 CMD ["npm", "install"]
 CMD ["bower", "install"]
