@@ -2,7 +2,7 @@ name: Run Ember tests
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened]
 
 jobs:
   Build-and-Test:
@@ -12,9 +12,5 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
-      # uses: actions/setup-node@v3
-      # with:
-      #   node-version: 14.19.3
-      #   cache: 'npm'
 
     - run: docker compose up
