@@ -5,7 +5,7 @@ WORKDIR /prometheus
 COPY . /prometheus/
 
 RUN \
-    cd /prometheus \
+    cd /prometheus  &&\
     ls
 
 CMD ["ember", "test"]
