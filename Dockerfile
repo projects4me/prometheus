@@ -4,4 +4,8 @@ WORKDIR /prometheus
 
 COPY . /prometheus/
 
+RUN \
+    cd /prometheus
+    npm install
+
 CMD ["ember", "test"]
