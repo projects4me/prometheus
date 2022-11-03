@@ -6,7 +6,7 @@ COPY . /prometheus/
 
 RUN \
     cd /prometheus  &&\
-    npm install &&\
-    bower install
 
+CMD ["npm", "install"]
+CMD ["bower", "install"]
 CMD ["ember", "test"]
