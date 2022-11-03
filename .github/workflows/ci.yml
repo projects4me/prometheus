@@ -12,14 +12,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 14.19.3
-        cache: 'npm'
+      # uses: actions/setup-node@v3
+      # with:
+      #   node-version: 14.19.3
+      #   cache: 'npm'
 
-    - run: npm i -g ember-cli@4.1.1
-    - run: npm install -g bower
-    - run: npm install
-    - run: bower install
-    - run: ember -v
-    - run: ember test
+    - run: docker compose up
