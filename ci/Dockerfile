@@ -8,7 +8,7 @@ RUN \
     cd .. &&\
     ls &&\
     cd prometheus &&\
-    echo "into prometheus"
+    echo "into prometheus" &&\
     ls
     # npm install -g bower &&\
     # bower install &&\
