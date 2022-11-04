@@ -1,5 +1,5 @@
 version: "3.9"
 services:
   prometheus:
-    build: ./
+    build: /
     image: prometheus:1.0.0
