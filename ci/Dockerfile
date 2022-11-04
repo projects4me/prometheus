@@ -6,8 +6,9 @@ COPY . /prometheus/
 
 RUN \
     cd .. &&\
-    cd ls &&\
-    cd prometheus 
+    ls &&\
+    cd prometheus &&\
+    ls
     # npm install -g bower &&\
     # bower install &&\
     # npm install
