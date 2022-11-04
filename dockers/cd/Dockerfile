@@ -11,7 +11,8 @@ RUN \
     cd /prometheus &&\
     npm install -g bower &&\
     bower install &&\
-    npm install
+    npm install &&\
+    ember build --environment=${ENVIRONMENT}
 
 
-CMD ["ember", "build", "--environment=${ENVIRONMENT}"]
+CMD ["ember", "-v"]
