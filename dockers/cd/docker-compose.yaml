@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  prometheus:
+    build:
+      context: ../../
+      dockerfile: ./dockers/cd/Dockerfile
+    image: prometheus:1.0.0
