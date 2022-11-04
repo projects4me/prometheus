@@ -1,7 +1,5 @@
 FROM danlynn/ember-cli:4.1.1-node_16.13
 
-RUN ls
-
 WORKDIR /prometheus
 
 COPY . /prometheus
