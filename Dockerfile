@@ -4,7 +4,7 @@ RUN ls
 
 WORKDIR /prometheus
 
-COPY / /prometheus
+COPY . /prometheus
 
 RUN \
     ls &&\
