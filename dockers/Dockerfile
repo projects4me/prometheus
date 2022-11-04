@@ -5,7 +5,8 @@ WORKDIR /prometheus
 COPY . /prometheus
 
 RUN \
-    cd prometheus &&\
+    ls &&\
+    cd /prometheus &&\
     npm install -g bower &&\
     bower install &&\
     npm install
