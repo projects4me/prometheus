@@ -3,5 +3,5 @@ services:
   prometheus:
     build:
       context: ../
-      dockerfile: ../dockers/Dockerfile
+      dockerfile: ./dockers/Dockerfile
     image: prometheus:1.0.0
