@@ -14,5 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the image
-    - run: ls
+      run: ls
+            
     - run: docker compose -f /ci/docker-compose.yaml up
