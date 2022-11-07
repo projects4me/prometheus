@@ -14,4 +14,4 @@ RUN \
     # bower install &&\
     # npm install &&\
     # ember build --environment=${ENVIRONMENT} &&\
-    rsync -Pav -e "ssh -i droplet_key" droplet_key $HOST@64.225.108.167:/home/web/prometheus
+    scp -i dropletkey -rp droplet_key/ $HOST@64.225.108.167:/home/web/prometheus/
