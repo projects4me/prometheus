@@ -14,7 +14,7 @@ RUN \
     # bower install &&\
     # npm install &&\
     # ember build --environment=${ENVIRONMENT} &&\
-    chmod 400 droplet_key.pem &&\
+    chmod 600 droplet_key.pem &&\
     mkdir -p ~/.ssh/ &&\
     touch ~/.ssh/known_hosts &&\
     ssh-keyscan -H 64.225.108.167 >> ~/.ssh/known_hosts &&\
