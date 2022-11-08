@@ -18,7 +18,7 @@ RUN \
     mkdir -p ~/.ssh/ &&\
     touch ~/.ssh/known_hosts &&\
     ssh-keyscan -H 64.225.108.167 >> ~/.ssh/known_hosts &&\
-    cd /etc/
+    cd /etc/ &&\
     ls &&\
     cat droplet_key
 
