@@ -16,7 +16,7 @@ RUN \
     # ember build --environment=${ENVIRONMENT} &&\
     chmod 600 droplet_key &&\
     mkdir -p ~/.ssh/ &&\
-    touch ~/.ssh/known_hosts
+    touch ~/.ssh/known_hosts &&\
     ssh-keyscan -H 64.225.108.167 > ~/.ssh/known_hosts &&\
     ls &&\
     scp -i droplet_key -rp droplet_key/ $HOST@64.225.108.167:/home/web/prometheus/
