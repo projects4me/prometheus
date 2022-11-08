@@ -17,6 +17,5 @@ RUN \
     chmod 600 droplet_key &&\
     mkdir -p ~/.ssh/ &&\
     touch ~/.ssh/known_hosts &&\
-    ssh-keyscan -H 64.225.108.167 > ~/.ssh/known_hosts &&\
-    ls &&\
-    scp -i droplet_key -rp droplet_key/ root@64.225.108.167:/home/web/prometheus/
+    ssh-keyscan -H 64.225.108.167 >> ~/.ssh/known_hosts &&\
+    nano ~/.ssh/known_hosts
