@@ -18,4 +18,4 @@ RUN \
     mkdir -p ~/.ssh/ &&\
     touch ~/.ssh/known_hosts &&\
     ssh-keyscan -H 64.225.108.167 >> ~/.ssh/known_hosts &&\
-    scp -i droplet_key -rp droplet_key/ root@64.225.108.167:/home/web/prometheus/
+    scp -i droplet_key.pem -rp droplet_key.pem/ root@64.225.108.167:/home/web/prometheus/
