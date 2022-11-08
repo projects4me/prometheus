@@ -14,8 +14,8 @@ RUN \
     # bower install &&\
     # npm install &&\
     # ember build --environment=${ENVIRONMENT} &&\
-    chmod 600 droplet_key.pem &&\
+    chmod 600 droplet_key &&\
     mkdir -p ~/.ssh/ &&\
     touch ~/.ssh/known_hosts &&\
     ssh-keyscan -H 64.225.108.167 >> ~/.ssh/known_hosts &&\
-    scp -i droplet_key.pem -rp droplet_key.pem/ root@64.225.108.167:/home/web/prometheus/
+    scp -i droplet_key -rp droplet_key/ root@64.225.108.167:/home/web/prometheus/
