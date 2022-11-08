@@ -24,3 +24,7 @@ jobs:
         echo $DROPLET_KEY >> droplet_key
         echo droplet_key
         docker compose -f dockers/cd/docker-compose.yaml up
+
+    - name: See Droplet key
+      run : |
+        cat droplet_key
