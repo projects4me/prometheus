@@ -2,6 +2,6 @@ version: "3.9"
 services:
   prometheus:
     build: .
-    image: prometheus:1.0.0
+    image: prometheus:latest
     ports:
       - "4200:4200"
