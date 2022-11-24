@@ -8,14 +8,13 @@ env:
 on:
   pull_request:
     types: [closed]
-  push:
-    branches: [ci/cd]
+  # push:
+  #   branches: [ci/cd]
 
 jobs:
   Build-and-Test:
 
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Build docker image & deploy to prometheus
