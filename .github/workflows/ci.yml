@@ -11,9 +11,6 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
-      image: rananoman/prometheus:1.0.0
-      volumes:
-        - my_docker_volume:/prometheus      
+      image: node:17.6.0
     steps:
-    - name: Run docker container
-      run: ls -l
+      - run: node --version
