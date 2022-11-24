@@ -14,3 +14,4 @@ jobs:
       image: rananoman/prometheus:1.0.0
     steps:
       - run: cd /prometheus
+      - run: ls
