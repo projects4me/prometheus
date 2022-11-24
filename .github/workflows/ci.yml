@@ -13,4 +13,4 @@ jobs:
     container:
       image: rananoman/prometheus:1.0.0
     steps:
-      - run: ls
+      - run: cd /prometheus
