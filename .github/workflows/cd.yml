@@ -17,10 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: rananoman/prometheus:1.0.0
-      env:
-        DROPLET_KEY: ${{ secrets.DOKEY }}
-        HOST: ${{ secrets.DOHOST }}
-        USER: ${{ secrets.DOUSER }}
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
