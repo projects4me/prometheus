@@ -10,8 +10,8 @@ jobs:
   Deploy:
 
     runs-on: ubuntu-latest
-    # container:
-    #   image: rananoman/prometheus:1.0.0
+    container:
+      image: rananoman/prometheus:1.0.0
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
@@ -19,9 +19,9 @@ jobs:
       run: |
         touch droplet_key
         echo "$DROPLET_KEY" > droplet_key
-        # npm install
-        # bower install
-        # ember build --environment=${ENVIRONMENT}
+        npm install
+        bower install
+        ember build --environment=${ENVIRONMENT}
         mkdir -p ~/.ssh/
         touch ~/.ssh/known_hosts
         ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
