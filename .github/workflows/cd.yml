@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: rananoman/prometheus:1.0.0
+      env:
+        DROPLET_KEY: ${{ secrets.DOKEY }}
+        HOST: ${{ secrets.DOHOST }}
+        USER: ${{ secrets.DOUSER }}
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
@@ -33,7 +37,7 @@ jobs:
         cat $HOME/.ssh/known_hosts
         chmod 600 droplet_key
         scp -i droplet_key UserKnownHostsFile=/github/home/.ssh/known_hosts -rp droplet_key root@64.225.108.167:/home/web/prometheus/
-    env:
-      DROPLET_KEY: ${{ secrets.DOKEY }}
-      HOST: ${{ secrets.DOHOST }}
-      USER: ${{ secrets.DOUSER }}    
+    # env:
+    #   DROPLET_KEY: ${{ secrets.DOKEY }}
+    #   HOST: ${{ secrets.DOHOST }}
+    #   USER: ${{ secrets.DOUSER }}    
