@@ -15,8 +15,8 @@ jobs:
   Deploy:
 
     runs-on: ubuntu-latest
-    container:
-      image: rananoman/prometheus:1.0.0
+    # container:
+    #   image: rananoman/prometheus:1.0.0
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
