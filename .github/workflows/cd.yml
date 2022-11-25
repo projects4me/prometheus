@@ -1,5 +1,10 @@
 name: Deploy prometheus
 
+env:
+  DROPLET_KEY: ${{ secrets.DOKEY }}
+  HOST: ${{ secrets.DOHOST }}
+  USER: ${{ secrets.DOUSER }}
+
 on:
   pull_request:
     types: [closed]
