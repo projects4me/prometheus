@@ -24,7 +24,6 @@ jobs:
       run: |
         touch droplet_key
         echo "$DROPLET_KEY" > droplet_key
-        ls
         # npm install
         # bower install
         # ember build --environment=${ENVIRONMENT}
