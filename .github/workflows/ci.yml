@@ -16,4 +16,6 @@ jobs:
     - name: Checkout to Repo
       uses: actions/checkout@v3
     - name: Run docker container
-      run: ember test
+      run: |
+        npm install
+        ember test
