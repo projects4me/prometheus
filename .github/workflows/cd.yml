@@ -1,10 +1,5 @@
 name: Deploy prometheus
 
-env:
-  DROPLET_KEY: ${{ secrets.DOKEY }}
-  HOST: ${{ secrets.DOHOST }}
-  USER: ${{ secrets.DOUSER }}
-
 on:
   pull_request:
     types: [closed]
@@ -29,6 +24,11 @@ jobs:
         # ember build --environment=${ENVIRONMENT}
         mkdir -p ~/.ssh/
         touch ~/.ssh/known_hosts
-        ssh-keyscan -H 64.225.108.167 >> ~/.ssh/known_hosts
+        echo "$HOST" > ~/.ssh/known_hosts
+        # ssh-keyscan -H 64.225.108.167 >> ~/.ssh/known_hosts
         chmod 600 droplet_key
         scp -i droplet_key -rp droplet_key root@64.225.108.167:/home/web/prometheus/
+    env:
+      DROPLET_KEY: ${{ secrets.DOKEY }}
+      HOST: ${{ secrets.DOHOST }}
+      USER: ${{ secrets.DOUSER }}    
