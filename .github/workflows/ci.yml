@@ -18,4 +18,5 @@ jobs:
     - name: Run docker container
       run: |
         npm install
+        bower install
         ember test
