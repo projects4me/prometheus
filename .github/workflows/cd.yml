@@ -23,10 +23,6 @@ jobs:
         # bower install
         # ember build --environment=${ENVIRONMENT}
         mkdir -p ~/.ssh/
-        touch ~/.ssh/known_hosts
-        # echo "$HOST" > ~/.ssh/known_hosts
-        ssh-keyscan -H 64.225.108.167 >> ~/.ssh/known_hosts
-        # ssh-keygen -F 64.225.108.167
         chmod 600 droplet_key
         scp -i droplet_key -rp droplet_key root@64.225.108.167:/home/web/prometheus/
     env:
