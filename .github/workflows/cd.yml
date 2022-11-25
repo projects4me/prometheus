@@ -26,7 +26,8 @@ jobs:
         touch ~/.ssh/known_hosts
         ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
         chmod 600 droplet_key
-        scp -i droplet_key UserKnownHostsFile=~/.ssh/known_hosts -rp droplet_key root@64.225.108.167:/home/web/prometheus/
+        cat /root/.ssh/known_hosts
+        scp -i droplet_key UserKnownHostsFile=/root/.ssh/known_hosts -rp droplet_key root@64.225.108.167:/home/web/prometheus/
     env:
       DROPLET_KEY: ${{ secrets.DOKEY }}
       HOST: ${{ secrets.DOHOST }}
