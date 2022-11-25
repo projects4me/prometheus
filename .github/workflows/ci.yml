@@ -3,8 +3,8 @@ name: Run Ember tests
 on:
   pull_request:
     types: [opened]
-  push:
-    branches: [ci/cd]
+  # push:
+  #   branches: [ci/cd]
 
 jobs:
   Build-and-Test:
@@ -13,9 +13,9 @@ jobs:
     container:
       image: rananoman/prometheus:1.0.0
     steps:
-    - name: Checkout to Repo
+    - name: Checkout to Repository
       uses: actions/checkout@v3
-    - name: Run docker container
+    - name: Run Ember test in Docker Container
       run: |
         npm install
         bower install
