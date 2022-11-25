@@ -28,6 +28,6 @@ jobs:
         ember build --environment=${ENVIRONMENT}
         mkdir -p ~/.ssh/
         touch ~/.ssh/known_hosts
-        ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+        ssh-keyscan -H 64.225.108.167 >> ~/.ssh/known_hosts
         chmod 600 droplet_key
-        scp -i droplet_key -rp dist/ $USER@$HOST:/home/web/prometheus/
+        scp -i droplet_key -rp dist/ root@64.225.108.167:/home/web/prometheus/
