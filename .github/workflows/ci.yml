@@ -13,7 +13,7 @@ jobs:
     container:
       image: rananoman/prometheus:1.0.0
     steps:
-      - run: cd /prometheus
-      - run: ls
-      - run: ember -v
-      - run: ember build
+    - name: Checkout to Repo
+      uses: actions/checkout@v3
+    - name: Run docker container
+      run: ember test
