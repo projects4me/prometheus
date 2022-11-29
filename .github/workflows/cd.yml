@@ -5,7 +5,7 @@ on:
     types: [closed]
 
   push:
-  branches: [ci/cd]
+    branches: [ci/cd]
 
 jobs:
   Deploy:
