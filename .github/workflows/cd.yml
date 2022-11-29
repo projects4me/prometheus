@@ -30,8 +30,8 @@ jobs:
         # touch ~/.ssh/known_hosts
         # ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
         # ----
-        mkdir $HOME/.ssh/
-        touch $HOME/.ssh/known_hosts
+        # mkdir $HOME/.ssh/
+        # touch $HOME/.ssh/known_hosts
         # ssh-keyscan -H api.projects4.me >> $HOME/.ssh/known_hosts
         # echo $HOME
         # cat /github/home/.ssh/known_hosts
