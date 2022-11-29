@@ -32,7 +32,6 @@ jobs:
         # ----
         # mkdir -p $HOME/.ssh/
         # touch $HOME/.ssh/known_hosts
-        cd ~
         ls -l
         # ssh-keyscan -H 64.225.108.167 >> $HOME/.ssh/known_hosts
         # ls
