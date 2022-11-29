@@ -31,12 +31,13 @@ jobs:
         # ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
         mkdir -p $HOME/.ssh/
         touch $HOME/.ssh/known_hosts
-        ssh-keyscan -H "$HOST" >> $HOME/.ssh/known_hosts
+        ssh-keyscan -H $HOST >> $HOME/.ssh/known_hosts
         ls
         echo $HOME
         cat $HOME/.ssh/known_hosts
         chmod 600 droplet_key
-        scp -i droplet_key -o StrictHostKeyChecking=no -rp dist/ root@64.225.108.167:/home/web/prometheus/
+        ssh -v
+        # scp -i droplet_key UserKnownHostsFile=/github/home/.ssh/known_hosts -rp droplet_key root@64.225.108.167:/home/web/prometheus/
     # env:
     #   DROPLET_KEY: ${{ secrets.DOKEY }}
     #   HOST: ${{ secrets.DOHOST }}
