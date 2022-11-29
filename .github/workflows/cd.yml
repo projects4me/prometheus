@@ -16,6 +16,7 @@ jobs:
         DROPLET_KEY: ${{ secrets.DOKEY }}
         HOST: ${{ secrets.DOHOST }}
         USER: ${{ secrets.DOUSER }}
+        KNOWN_HOST: ${{ secrets.KNOWN_HOST }}
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
@@ -28,7 +29,8 @@ jobs:
         # ember build --environment=${ENVIRONMENT}
         mkdir ~/.ssh/
         touch ~/.ssh/known_hosts
-        ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
+        echo "$KNOWN_HOST" > ~/.ssh/known_hosts
+        cat ~/.ssh/known_hosts
         chmod 600 droplet_key
         # scp -i droplet_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -rp dist/ "$USER"@"$HOST":/home/web/prometheus/
         scp -i droplet_key -o UserKnownHostsFile=~/.ssh/known_hosts -rp droplet_key "$USER"@"$HOST":/home/web/prometheus/
