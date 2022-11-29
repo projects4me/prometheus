@@ -34,7 +34,7 @@ jobs:
         touch $HOME/.ssh/known_hosts
         cd $HOME/.ssh/
         ssh-keyscan -H 64.225.108.167 >> $HOME/.ssh/known_hosts
-        # ls
+        ls
         # echo $HOME
         # cat $HOME/.ssh/known_hosts
         # chmod 600 droplet_key
