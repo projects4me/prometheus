@@ -38,7 +38,7 @@ jobs:
         chmod 600 droplet_key
         ssh -V
         scp -i droplet_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -rp droplet_key root@api.projects4.me:/home/web/prometheus/
-        ls ~/.ssh/ -l
+        find / -name known_hosts
     # env:
     #   DROPLET_KEY: ${{ secrets.DOKEY }}
     #   HOST: ${{ secrets.DOHOST }}
