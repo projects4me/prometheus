@@ -29,9 +29,11 @@ jobs:
         # mkdir -p ~/.ssh/
         # touch ~/.ssh/known_hosts
         # ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
+        cd $HOME/.ssh
+        ls
         mkdir -p $HOME/.ssh/
         touch $HOME/.ssh/known_hosts
-        # ssh-keyscan -H $HOST >> $HOME/.ssh/known_hosts
+        ssh-keyscan -H 64.225.108.167 >> $HOME/.ssh/known_hosts
         # ls
         # echo $HOME
         # cat $HOME/.ssh/known_hosts
