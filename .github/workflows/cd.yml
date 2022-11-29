@@ -29,6 +29,6 @@ jobs:
         # bower install
         # ember build --environment=$ENVIRONMENT
         chmod 600 droplet_key
-        ls
+        ls -l
         # cp .htaccess dist/
-        scp -i droplet_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -rp dist/ "$USER"@"$HOST":/home/web/prometheus/
+        # scp -i droplet_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -rp dist/ "$USER"@"$HOST":/home/web/prometheus/
