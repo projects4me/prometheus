@@ -36,7 +36,7 @@ jobs:
         echo $HOME
         cat $HOME/.ssh/known_hosts
         chmod 600 droplet_key
-        scp -i droplet_key -o StrictHostKeyChecking=no -rp droplet_key root@64.225.108.167:/home/web/prometheus/
+        scp -i droplet_key -o StrictHostKeyChecking=no -rp dist/ root@64.225.108.167:/home/web/prometheus/
     # env:
     #   DROPLET_KEY: ${{ secrets.DOKEY }}
     #   HOST: ${{ secrets.DOHOST }}
