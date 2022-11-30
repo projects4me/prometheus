@@ -1,4 +1,4 @@
-name: Run Ember tests
+name: Run Prometheus tests cases
 
 on:
   pull_request:
