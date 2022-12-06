@@ -18,7 +18,8 @@ jobs:
     - name: Checkout to Repository
       uses: actions/checkout@v3
     - name: Run test cases
-      # run: |
+      run: |
+      ls -l
       #   npm install
       #   bower install
       #   COVERAGE=true ember test
