@@ -35,6 +35,9 @@ jobs:
     steps:
       - name: Checkout to Repository
         uses: actions/checkout@v3
+      - name: check repo
+        run: |
+          ls -l
       - name: reuse workflow
         uses: ./.github/workflows/build.yml
       - name: check
