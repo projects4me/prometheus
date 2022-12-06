@@ -26,7 +26,7 @@ jobs:
       id: cache-npm
       uses: actions/cache@v3
       with:
-        path: ~/prometheus/node_modules
+        path: $HOME/prometheus/node_modules
         key: ${{ runner.os }}-npm
     - if: ${{steps.cache-npm.outputs.cache-hit != 'true'}}
       run: npm install        
@@ -35,7 +35,9 @@ jobs:
       run: |
         cd ~
         ls -al
-        cd /root/prometheus/
+        cd /root/.npm
+        ls -al
+        cd $HOME/prometheus/
         ls -al
     # - name: Upload code coverage report
     #   uses: actions/upload-artifact@v3
