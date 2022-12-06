@@ -35,6 +35,7 @@ jobs:
     steps:
       - name: reuse workflow
         uses: ./.github/workflows/build.yml
+      - name: check
         run: |
           ls -l
 
