@@ -23,10 +23,13 @@ jobs:
     #     bower install
     #     COVERAGE=true ember test
     - name: Cache Npm packages
+      id: cache-npm
       uses: actions/cache@v3
       with:
-        path: /prometheus/package.json
+        path: /prometheus/node_modules
         key: ${{ runner.os }}-npm
+      - if: ${{steps.cache-npm.outputs.cache-hit != 'true'}}
+        run: npm install        
     # - name: Upload code coverage report
     #   uses: actions/upload-artifact@v3
     #   with:
