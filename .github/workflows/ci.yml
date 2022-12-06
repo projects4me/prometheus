@@ -43,7 +43,7 @@ jobs:
       with:
           files: "package.json"
 
-    - if: ${{steps.cache-package-json.outputs.cache-hit != 'true'}}
+    - if: ${{steps.changed-files.outputs.any_changed == 'true'}}
       run: npm install
 
     - name: run ember test
