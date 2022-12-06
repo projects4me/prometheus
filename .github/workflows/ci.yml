@@ -19,13 +19,13 @@ jobs:
       uses: actions/checkout@v3
     - name: Run test cases
       run: |
-      #   npm install
-      #   bower install
-      #   COVERAGE=true ember test
         cd ~
         ls -al
         cd prometheus/
         ls -al
+      #   npm install
+      #   bower install
+      #   COVERAGE=true ember test
     # - name: Cache Npm packages
     #   id: cache-npm
     #   uses: actions/cache@v3
