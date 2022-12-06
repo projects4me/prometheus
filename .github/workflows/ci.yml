@@ -8,33 +8,27 @@ on:
     branches: 
       - ci/cd
 
-# jobs:
-#   Build-and-Test:
-
-#     runs-on: ubuntu-latest
-#     container:
-#       image: rananoman/prometheus:1.0.0
-#     steps:
-#     - name: Checkout to Repository
-#       uses: actions/checkout@v3
-#     - name: Run test cases
-#       run: |
-#         npm install
-#         bower install
-#         COVERAGE=true ember test
-#     - name: Upload code coverage report
-#       uses: actions/upload-artifact@v3
-#       with:
-#         name: code-coverage-report
-#         path: coverage/
-
 jobs:
-  call-workflow-build:
-      uses: ./.github/workflows/build.yml
+  Build-and-Test:
 
-  job2:
     runs-on: ubuntu-latest
-    needs: call-workflow-build
+    container:
+      image: rananoman/prometheus:1.0.0
     steps:
-      - run: ember -v
-      - run: echo ${{needs.call-workflow-build.package.json}}
+    - name: Checkout to Repository
+      uses: actions/checkout@v3
+    # - name: Run test cases
+    #   run: |
+    #     npm install
+    #     bower install
+    #     COVERAGE=true ember test
+    - name: Cache Npm packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.prometheus/package.json
+        key: ${{ runner.os }}-primes
+    # - name: Upload code coverage report
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: code-coverage-report
+    #     path: coverage/
