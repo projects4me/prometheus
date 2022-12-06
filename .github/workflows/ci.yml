@@ -30,7 +30,7 @@ on:
 
 jobs:
   call-workflow-build:
-    uses: nouman-rt/prometheus/.github/workflows/build.yml
+    uses: nouman-rt/prometheus/.github/workflows/build.yml@ci/cd
 
   job2:
     runs-on: ubuntu-latest
