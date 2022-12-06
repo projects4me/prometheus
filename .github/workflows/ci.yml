@@ -30,7 +30,6 @@ on:
 
 jobs:
   call-workflow-build:
-    - name: reusing workflow
       uses: ./.github/workflows/build.yml
     - name: check ls
       run: |
