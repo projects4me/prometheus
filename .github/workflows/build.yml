@@ -2,7 +2,14 @@ name: Install dependencies
 
 on:
   workflow_call:
-  
+    inputs:
+      config-path:
+        required: true
+        type: string
+    secrets:
+      token:
+        required: true
+
   push:
     branches: 
       - ci/cd
