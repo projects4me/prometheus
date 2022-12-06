@@ -3,9 +3,9 @@ name: Install dependencies
 on:
   workflow_call:
 
-  push:
-    branches: 
-      - ci/cd
+  # push:
+  #   branches: 
+  #     - ci/cd
 
 jobs:
   Build-and-Test:

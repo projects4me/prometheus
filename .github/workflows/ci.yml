@@ -17,16 +17,16 @@ jobs:
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
-    # - name: Run test cases
-    #   run: |
-    #     npm install
+    - name: Run test cases
+      run: |
+        npm install
     #     bower install
     #     COVERAGE=true ember test
     - name: Cache Npm packages
       uses: actions/cache@v3
       with:
-        path: ~/.prometheus/package.json
-        key: ${{ runner.os }}-primes
+        path: prometheus/node-modules/
+        key: ${{ runner.os }}-npm
     # - name: Upload code coverage report
     #   uses: actions/upload-artifact@v3
     #   with:
