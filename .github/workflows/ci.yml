@@ -33,7 +33,7 @@ jobs:
 
     - name: run ember test
       run: |
-        ember test
+        ls -l
     # - name: Upload code coverage report
     #   uses: actions/upload-artifact@v3
     #   with:
