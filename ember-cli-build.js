@@ -7,11 +7,18 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var sass = require('sass');
 
-module.exports = function(defaults) {
+module.exports = function (defaults) {
     let app = new EmberApp(defaults, {
         // Add options here
         sassOptions: {
             implementation: sass
+        },
+        babel: {
+            sourceMaps: 'inline'
+        },
+        sourcemaps: {
+            enabled: true,
+            extensions: ['js']
         }
     });
 
@@ -48,7 +55,7 @@ module.exports = function(defaults) {
     // app.import("node_modules/fullcalendar/dist/locale-all.js");
     app.import("node_modules/chart.js/dist/chart.min.js");
     app.import("node_modules/color-hash/dist/color-hash.js");
-//    app.import("bower_components/summernote/dist/summernote.js");
+    //    app.import("bower_components/summernote/dist/summernote.js");
     app.import("vendor/summernote/summernote.js");
     app.import("vendor/DataTables/datatables.min.js");
     app.import("vendor/custom-charts/doughnut-chart.js");
