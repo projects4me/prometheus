@@ -28,8 +28,8 @@ jobs:
       with:
         path: /prometheus/node_modules
         key: ${{ runner.os }}-npm
-      - if: ${{steps.cache-npm.outputs.cache-hit != 'true'}}
-        run: npm install        
+    - if: ${{steps.cache-npm.outputs.cache-hit != 'true'}}
+      run: npm install        
     # - name: Upload code coverage report
     #   uses: actions/upload-artifact@v3
     #   with:
