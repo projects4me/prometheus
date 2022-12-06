@@ -35,6 +35,7 @@ jobs:
     - name: run ember test
       run: |
         ls -al
+        bower install
         ember test
     # - name: Upload code coverage report
     #   uses: actions/upload-artifact@v3
