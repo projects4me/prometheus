@@ -39,7 +39,7 @@ jobs:
         run: |
           ls -l
       - name: reuse workflow
-        uses: .github/workflows/build.yml
+        uses: /.github/workflows/build.yml
       - name: check
         run: |
           ls -l
