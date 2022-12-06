@@ -37,7 +37,7 @@ jobs:
         path: /__w/prometheus/prometheus/package.json
         key: ${{ runner.os }}-npm        
         
-    - if: ${{steps.cache-npm.outputs.cache-hit != 'true'}}
+    - if: ${{steps.cache-package-json.outputs.cache-hit != 'true'}}
       run: npm install
 
     - name: run ember test
