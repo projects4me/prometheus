@@ -31,9 +31,6 @@ on:
 jobs:
   call-workflow-build:
       uses: ./.github/workflows/build.yml
-    - name: check ls
-      run: |
-        ls -l
 
   # job2:
   #   runs-on: ubuntu-latest
