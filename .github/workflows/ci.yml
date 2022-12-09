@@ -17,19 +17,12 @@ jobs:
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
-    - name: Cache Npm packages
-      id: cache-npm
+    - name: Cache Node packages
+      id: node-packages
       uses: actions/cache@v3
       with:
         path: /__w/prometheus/prometheus/node_modules
         key: npm-cache
-
-    - name: Cache package.json
-      id: cache-package-json
-      uses: actions/cache@v3
-      with:
-        path: /__w/prometheus/prometheus/package.json
-        key: npm-cache        
 
     - name: Watch change in package.json
       id: watch-package.json-file
@@ -39,20 +32,17 @@ jobs:
 
     - if: |
         steps.watch-package.json-file.outputs.any_changed == 'true'
-        || steps.cache-package-json.outputs.cache-hit != 'true'
+        || steps.node-packages.outputs.cache-hit != 'true'
       run: |
         rm -rf node_modules/
         npm install
 
     - name: run ember test
       run: |
-        echo ${{steps.changed-files.outputs.any_changed}}
-        # ${{ steps.cache-package-json.outputs.cache-hit != 'true' }}
-        bower install
         ember test
         
-    - name: Upload code coverage report
-      uses: actions/upload-artifact@v3
-      with:
-        name: code-coverage-report
-        path: coverage/
+    # - name: Upload code coverage report
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: code-coverage-report
+    #     path: coverage/

@@ -48,7 +48,6 @@ module.exports = function (defaults) {
     app.import("node_modules/jQuery-QueryBuilder/dist/js/query-builder.js");
     app.import("node_modules/jquery-slimscroll/jquery.slimscroll.min.js");
     app.import("node_modules/highlightjs/highlight.pack.min.js");
-    app.import("bower_components/Caret.js/dist/jquery.caret.min.js");
     app.import("node_modules/at.js/dist/js/jquery.atwho.min.js");
     app.import("vendor/quill/dist/quill.min.js");
     app.import("vendor/messenger/build/js/messenger.min.js");
