@@ -28,7 +28,7 @@ jobs:
 
     - name: test step
       run: |
-        echo $USER
+        whoami
         mkdir test
         cd /test
         touch test.txt
