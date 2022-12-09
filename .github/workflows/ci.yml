@@ -29,10 +29,6 @@ jobs:
     - name: test step
       run: |
         whoami
-        mkdir test
-        cd /test
-        touch test.txt
-        ls -l
         npm install
 
     # - name: Watch change in package.json
