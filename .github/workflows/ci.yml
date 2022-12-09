@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened]
   
+  push:
+    branches: 
+      - ci/cd
+
 jobs:
   Build-and-Test:
 
@@ -44,3 +48,11 @@ jobs:
       with:
         name: code-coverage-report
         path: coverage/
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: javascript
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2      
