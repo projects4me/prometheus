@@ -25,7 +25,7 @@ jobs:
         key: npm-cache
 
     - name: Watch change in package.json
-      id: watch-package.json-file
+      id: watch-package-json-file
       uses: tj-actions/changed-files@v32
       with:
           files: "package.json"
