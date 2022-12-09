@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   prometheus:
+    container_name: prometheus_dev
     build: .
     image: prometheus:latest
     volumes: 
