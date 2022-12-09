@@ -33,7 +33,7 @@ jobs:
 
     - name: Install Node modules
       if: |
-        steps.watch-package.json.outputs.any_changed == 'true'
+        steps.watch-package-json.outputs.any_changed == 'true'
         || steps.node-packages.outputs.cache-hit != 'true'
       run: |
         rm -rf node_modules/
