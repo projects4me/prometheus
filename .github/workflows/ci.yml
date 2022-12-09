@@ -17,11 +17,6 @@ jobs:
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
-    - name: Run test cases
-      run: |
-      #   npm install
-      #   bower install
-      #   COVERAGE=true ember test
     - name: Cache Npm packages
       id: cache-npm
       uses: actions/cache@v3
@@ -36,13 +31,15 @@ jobs:
         path: /__w/prometheus/prometheus/package.json
         key: npm-cache        
 
-    - name: Get changed files using defaults
-      id: changed-files
+    - name: Watch change in package.json
+      id: watch-package.json-file
       uses: tj-actions/changed-files@v32
       with:
           files: "package.json"
 
-    - if: ${{steps.changed-files.outputs.any_changed == 'true'}}
+    - if: |
+        steps.watch-package.json-file.outputs.any_changed == 'true'
+        || steps.cache-package-json.outputs.cache-hit != 'true'
       run: |
         rm -rf node_modules/
         npm install
