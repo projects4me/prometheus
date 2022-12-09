@@ -27,7 +27,11 @@ jobs:
 
     - name: test step
       run: |
-        chown -R 1001:123 /__w/prometheus/prometheus/node_modules
+        echo $USER
+        mkdir test
+        cd /test
+        touch test.txt
+        ls -l
         npm install
 
     # - name: Watch change in package.json
