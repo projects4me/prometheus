@@ -19,7 +19,8 @@ jobs:
       uses: actions/checkout@v3
     - name: Run test cases
       run: |
-        echo "$PWD"
+        ls -l
+        echo $USER
       #   npm install
       #   bower install
       #   COVERAGE=true ember test
@@ -49,7 +50,6 @@ jobs:
 
     - name: run ember test
       run: |
-        ls -al
         echo ${{steps.changed-files.outputs.any_changed}}
         # ${{ steps.cache-package-json.outputs.cache-hit != 'true' }}
         bower install
