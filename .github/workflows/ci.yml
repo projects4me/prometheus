@@ -3,10 +3,6 @@ name: Run Prometheus tests cases
 on:
   pull_request:
     types: [opened]
-  
-  push:
-    branches: 
-      - ci/cd
 
 jobs:
   Build-and-Test:

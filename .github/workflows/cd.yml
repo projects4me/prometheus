@@ -14,18 +14,29 @@ jobs:
         DROPLET_KEY: ${{ secrets.DOKEY }}
         HOST: ${{ secrets.DOHOST }}
         USER: ${{ secrets.DOUSER }}
-        PATH: ${{ secrets.PROM_PATH }}
+        PROMETHEUS_PATH: ${{ secrets.PROM_PATH }}
         ENVIRONMENT: production
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
-    - name: Deploy to digital ocean droplet
+
+    - name: Cache Node packages
+      id: node-packages
+      uses: actions/cache@v3
+      with:
+        path: /__w/prometheus/prometheus/node_modules
+        key: npm-cache
+
+    - name: Create a file with Private Key
       run: |
         touch droplet_key
         echo "$DROPLET_KEY" > droplet_key
-        npm install
-        bower install
-        ember build --environment=$ENVIRONMENT
+
+    - name: Build Prometheus
+      run: ember build --environment=$ENVIRONMENT
+
+    - name: Deploy to Digital Ocean Droplet
+      run: |
         chmod 600 droplet_key
         cp ci-cd/.htaccess dist/
-        scp -i droplet_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -rp dist/ "$USER"@"$HOST":"$PATH"
+        scp -i droplet_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -rp dist/ "$USER"@"$HOST":"$PROMETHEUS_PATH"
