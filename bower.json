@@ -1,7 +1,0 @@
-{
-  "name": "prometheus",
-  "dependencies": {
-    "Caret.js": "caret.js#^0.2.2",
-    "lodash": "4.17.5"
-  }
-}

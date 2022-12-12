@@ -1,0 +1,31 @@
+name: Deploy Prometheus Dev
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  Deploy:
+
+    runs-on: ubuntu-latest
+    container:
+      image: rananoman/prometheus:1.0.0
+      env:
+        DROPLET_KEY: ${{ secrets.DOKEY }}
+        HOST: ${{ secrets.DOHOST }}
+        USER: ${{ secrets.DOUSER }}
+        PATH: ${{ secrets.PROM_PATH }}
+        ENVIRONMENT: production
+    steps:
+    - name: Checkout to Repository
+      uses: actions/checkout@v3
+    - name: Deploy to digital ocean droplet
+      run: |
+        touch droplet_key
+        echo "$DROPLET_KEY" > droplet_key
+        npm install
+        bower install
+        ember build --environment=$ENVIRONMENT
+        chmod 600 droplet_key
+        cp ci-cd/.htaccess dist/
+        scp -i droplet_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -rp dist/ "$USER"@"$HOST":"$PATH"

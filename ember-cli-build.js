@@ -7,11 +7,18 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var sass = require('sass');
 
-module.exports = function(defaults) {
+module.exports = function (defaults) {
     let app = new EmberApp(defaults, {
         // Add options here
         sassOptions: {
             implementation: sass
+        },
+        babel: {
+            sourceMaps: 'inline'
+        },
+        sourcemaps: {
+            enabled: true,
+            extensions: ['js']
         }
     });
 
@@ -32,7 +39,6 @@ module.exports = function(defaults) {
     app.import("vendor/jquery-ui/jquery-ui.min.js");
     app.import('node_modules/js-logger/src/logger.min.js');
     app.import('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js');
-    app.import("bower_components/lodash/dist/lodash.min.js");
     app.import("node_modules/moment/moment.js");
     app.import("node_modules/bootstrap-daterangepicker/daterangepicker.js");
     app.import("node_modules/jquery-mask-plugin/dist/jquery.mask.min.js");
@@ -41,14 +47,13 @@ module.exports = function(defaults) {
     app.import("node_modules/jQuery-QueryBuilder/dist/js/query-builder.js");
     app.import("node_modules/jquery-slimscroll/jquery.slimscroll.min.js");
     app.import("node_modules/highlightjs/highlight.pack.min.js");
-    app.import("bower_components/Caret.js/dist/jquery.caret.min.js");
     app.import("node_modules/at.js/dist/js/jquery.atwho.min.js");
     app.import("vendor/quill/dist/quill.min.js");
     app.import("vendor/messenger/build/js/messenger.min.js");
     // app.import("node_modules/fullcalendar/dist/locale-all.js");
     app.import("node_modules/chart.js/dist/chart.min.js");
     app.import("node_modules/color-hash/dist/color-hash.js");
-//    app.import("bower_components/summernote/dist/summernote.js");
+    //    app.import("bower_components/summernote/dist/summernote.js");
     app.import("vendor/summernote/summernote.js");
     app.import("vendor/DataTables/datatables.min.js");
     app.import("vendor/custom-charts/doughnut-chart.js");
