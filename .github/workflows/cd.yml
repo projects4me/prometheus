@@ -18,11 +18,19 @@ jobs:
         DROPLET_KEY: ${{ secrets.DOKEY }}
         HOST: ${{ secrets.DOHOST }}
         USER: ${{ secrets.DOUSER }}
-        PATH: ${{ secrets.PROM_PATH }}
+        PATH: /home/web/prometheus
         ENVIRONMENT: production
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
+
+    - name: Cache Node packages
+      id: node-packages
+      uses: actions/cache@v3
+      with:
+        path: /__w/prometheus/prometheus/node_modules
+        key: npm-cache
+
     - name: Deploy to digital ocean droplet
       run: |
         touch droplet_key
