@@ -18,7 +18,6 @@ jobs:
         DROPLET_KEY: ${{ secrets.DOKEY }}
         HOST: ${{ secrets.DOHOST }}
         USER: ${{ secrets.DOUSER }}
-        PATH: ${{ secrets.PROM_PATH }}
         ENVIRONMENT: production
     steps:
     - name: Checkout to Repository
