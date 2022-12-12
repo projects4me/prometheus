@@ -18,7 +18,7 @@ jobs:
         DROPLET_KEY: ${{ secrets.DOKEY }}
         HOST: ${{ secrets.DOHOST }}
         USER: ${{ secrets.DOUSER }}
-        PATH: /home/web/prometheus
+        DROP_PATH: /home/web/prometheus
         ENVIRONMENT: production
     steps:
     - name: Checkout to Repository
@@ -40,4 +40,4 @@ jobs:
         ember build --environment=$ENVIRONMENT
         chmod 600 droplet_key
         cp ci-cd/.htaccess dist/
-        scp -i droplet_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -rp dist/ "$USER"@"$HOST":"$PATH"
+        scp -i droplet_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -rp dist/ "$USER"@"$HOST":"$DROP_PATH"
