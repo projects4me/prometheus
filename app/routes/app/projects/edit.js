@@ -36,7 +36,6 @@ export default App.extend({
     model(params) {
         let projectOptions = {
             query: '(Project.id : ' + params.project_id + ')',
-            rels: 'none'
         };
         return this.store.query('project', projectOptions);
     },

@@ -75,14 +75,12 @@ export default Route.extend({
 
         let usersOptions = {
             fields : 'User.id,User.name',
-            rels : 'none',
             sort : 'User.name',
             order: 'ASC',
             limit: -1
         };
 
         let rolesOptions = {
-            rels : 'none',
             sort : 'Role.name',
             order: 'ASC',
             limit: -1
@@ -171,7 +169,6 @@ export default Route.extend({
         let options = {
             fields: "Project.id,Project.name",
             query: "((Project.name STARTS A) OR (Project.name STARTS P))",
-            rels : 'none',
             sort : 'Project.name',
             order: 'ASC',
             limit: 200
@@ -216,7 +213,6 @@ export default Route.extend({
         let _self = this;
 
         let rolesOptions = {
-            rels : 'none',
             sort : 'Role.name',
             order: 'ASC',
             limit: -1
@@ -242,7 +238,6 @@ export default Route.extend({
 
         let options = {
             fields : 'User.id,User.name',
-            rels : 'none',
             sort : 'User.name',
             order: 'ASC',
             limit: -1

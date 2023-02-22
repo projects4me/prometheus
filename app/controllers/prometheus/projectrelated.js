@@ -67,7 +67,6 @@ export default Mixin.create({
         let options = {
             fields: 'Issue.id,Issue.issueNumber,Issue.subject,Issue.status,Issue.priority,Issue.projectId',
             query: '((Issue.issueNumber CONTAINS ' + query +') AND (Issue.projectId : '+ this.target.currentState.routerJsState.params["app.project"].project_id +'))',
-            rels: 'none',
             limit: 5,
             sort:'Issue.issueNumber',
             order: 'DESC'

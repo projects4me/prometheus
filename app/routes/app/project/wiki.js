@@ -66,7 +66,6 @@ export default App.extend({
         let options = {
             query: '(Wiki.projectId : '+params.project_id+')',
             sort : 'Wiki.name',
-            rels: 'none',
             order: 'ASC',
             limit: -1
         };
@@ -127,7 +126,6 @@ export default App.extend({
         let options = {
             fields: 'Tag.tag,Tag.id',
             sort : 'Tag.tag',
-            rels: 'none',
             order: 'ASC',
             limit: -1
         };
