@@ -98,7 +98,6 @@ export default App.extend({
         let options = {
             fields: "Issue.id,Issue.subject,Issue.issueNumber,Issue.status,Issue.projectId",
             query: "(Issue.projectId : "+projectId+")",
-            rels: "none",
             sort: "Issue.issueNumber",
             order: "ASC",
             page: 0,
@@ -138,7 +137,6 @@ export default App.extend({
 
         let options = {
             fields: "User.id,User.name",
-            rels: "none",
             sort: "User.name",
             order: "ASC",
             page: 0,

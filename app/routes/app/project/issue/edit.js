@@ -56,7 +56,6 @@ export default Create.extend({
             sort : 'Issue.issueNumber',
             order: 'ASC',
             limit: -1,
-            //rels: 'none'
         };
 
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Edit::afterModel()');

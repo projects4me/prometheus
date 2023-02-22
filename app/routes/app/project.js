@@ -45,7 +45,6 @@ export default App.extend({
         let issuesOptions = {
             fields: "Issue.id,Issue.subject,Issue.issueNumber,Issue.statusId,Issue.projectId",
             query: "(Issue.projectId : "+projectId+")",
-            rels: "none",
             sort: "Issue.issueNumber",
             order: "ASC",
             page: 0,
@@ -94,7 +93,6 @@ export default App.extend({
         let options = {
             fields: "Project.id,Project.name",
             query: "(Project.id : "+projectId+")",
-            rels : 'none',
             order: 'ASC',
             limit: 1
         };

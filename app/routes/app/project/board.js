@@ -34,7 +34,6 @@ export default App.extend({
         };
         let _issueOptions = {
             query: `(((Issue.milestoneId NULL) OR (Issue.milestoneId EMPTY)) AND (Issue.projectId : ${projectId}))`,
-            rels: 'none',
             limit: -1
         }
         let milestones = await _self.store.query('milestone', _milestoneOptions);

@@ -113,7 +113,6 @@ export default App.extend({
                 query: "(Milestone.projectId : "+projectId+")",
                 sort: "Milestone.startDate",
                 order: 'DESC',
-                rels:'none',
                 limit: -1
             };
             _self.store.query('milestone',options).then(function(milestones){
