@@ -5,7 +5,7 @@ services:
     build: .
     image: prometheus:latest
     volumes: 
-      - prometheus:/prometheus
+      - ./:/prometheus
     ports:
       - "4200:4200"
 
