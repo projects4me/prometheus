@@ -3,7 +3,7 @@
   <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}} readonly={{true}}
     aria-invalid="true" aria-describedBy={{@data-field}} autocomplete="off"
     {{on "focusout" (action (mut this.shouldValidate) true) }}
-    {{date-picker @update @format @singleDatePicker @showDropdowns @positionX @positionY @timePicker @timePickerIncrement @startDate @endDate @minDate @maxDate @maxSpan @minYear @maxYear @autoApply}} />
+    {{date-picker @update @format @singleDatePicker @showDropdowns @positionX @positionY @timePicker @timePickerIncrement @startDate @endDate @minDate this.maxDate @maxSpan @minYear @maxYear @autoApply}} />
   <span class="highlight"></span>
   <span class="bar"></span>
   <label class="floating-label">{{@label}}</label>

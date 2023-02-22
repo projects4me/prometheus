@@ -14,4 +14,15 @@ import FormFieldsComponent from "./form-fields";
  */
 export default class FieldDateComponent extends FormFieldsComponent {
 
+    /**
+     * This function calculate and returns max date.
+     * 
+     * @method get
+     * @public
+     */
+    get maxDate() {
+        let currentYear = moment().year();
+        return currentYear + 30;
+    }
+
 }
