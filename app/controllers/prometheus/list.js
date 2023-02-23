@@ -120,16 +120,6 @@ export default class PrometheusListController extends PrometheusController {
     @controller('app.project') appProjectController;
 
     /**
-     * The project controller
-     *
-     * @property appProjectController
-     * @for List
-     * @type Prometheus.Controllers.App.Project
-     * @public
-     */
-    @reads('app.project.projectId') projectId;
-
-    /**
      * This action allows us to more from one page to the other
      *
      * @method paginate
