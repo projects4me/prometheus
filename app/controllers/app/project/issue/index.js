@@ -59,7 +59,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
             let _savedSearch = _self.get('newSavedsearch');
             _savedSearch.set('relatedTo', 'issue');
             _savedSearch.set('searchquery', query);
-            _savedSearch.set('projectId', _self.get('projectId'));
+            _savedSearch.set('projectId', _self.appProjectController.projectId);
 
             _savedSearch.save().then(function (data) {
                 _self.get('savedsearches').pushObject(data);
@@ -101,7 +101,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
         let _savedSearch = _self.get('newSavedsearch');
         _savedSearch.set('relatedTo', 'issue');
         _savedSearch.set('searchquery', search.get('searchquery'));
-        _savedSearch.set('projectId', _self.get('projectId'));
+        _savedSearch.set('projectId', _self.appProjectController.projectId);
         _savedSearch.set('name', search.get('name'));
         _savedSearch.set('public', 0);
 
