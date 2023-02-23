@@ -20,7 +20,8 @@ export default App.extend({
         let _self = this;
         let _userOptions = {
             query: `(User.id : ${params.user_id})`,
-            rels: 'badgeLevels,badges,timeSpent,projects,openClosedProject,openClosedIssue,collaboration,latestProjects,latestIssues,mostWorkedMembers,recentActivities'
+            rels: 'badgeLevels,badges,timeSpent,projects,openClosedProject,openClosedIssue,collaboration,latestProjects,latestIssues,mostWorkedMembers,recentActivities',
+            limit: -1
         }
 
         Logger.debug('-Prometheus.Routes.App.User::afterModel()');

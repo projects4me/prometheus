@@ -59,6 +59,7 @@ export default App.extend({
             query: '(Issue.issueNumber : '+params.issue_number+')',
             sort : 'Issue.issueNumber,comments.dateCreated',
             order: 'ASC',
+            rels: 'comments,activities,parentissue,assignedTo,ownedBy,modifiedBy,reportedBy,issuetype,files,spent,estimated',
             limit: -1,
         };
 
