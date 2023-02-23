@@ -587,6 +587,7 @@
           "create": "Create New",
           "savedsearch": {
             "name": "Name of the search",
+            "inputname": "Please specify name of the search",
             "public": "Public",
             "missing": "Information missing",
             "label": "Saved Searches",
