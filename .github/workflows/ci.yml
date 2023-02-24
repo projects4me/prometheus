@@ -14,14 +14,20 @@ jobs:
     - name: Checkout to Repository
       uses: actions/checkout@v3
       
-    - name: Cache Node packages
-      id: node-packages
-      uses: actions/cache@v3
+    - name: Restore Cache npm
+      id: restore-cache
+      uses: actions/restore@v3
       with:
         path: /__w/prometheus/prometheus/node_modules
         key: npm-cache
-        restore-keys: |
-          npm-cache
+
+    - name: Save if no cache is found
+      uses: actions/cache/save@v3
+      with:
+        path: |
+          path/to/dependencies
+          some/other/dependencies
+        key: ${{ steps.restore-cache.outputs.cache-primary-key }}
 
     - name: Watch change in package.json
       id: watch-package-json
