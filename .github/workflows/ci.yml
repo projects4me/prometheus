@@ -26,9 +26,7 @@ jobs:
     - name: Save if no cache is found
       uses: actions/cache/save@v3
       with:
-        path: |
-          path/to/dependencies
-          some/other/dependencies
+        path: /__w/prometheus/prometheus/node_modules
         key: ${{ steps.restore-cache.outputs.cache-primary-key }}
 
     - name: Watch change in package.json
