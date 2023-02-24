@@ -18,7 +18,7 @@ jobs:
       
     - name: Restore Cache npm
       id: restore-cache
-      uses: actions/restore@v3
+      uses: actions/cache/restore@v3
       with:
         path: /__w/prometheus/prometheus/node_modules
         key: npm-cache
