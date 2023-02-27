@@ -3,7 +3,7 @@ name: Run Prometheus tests cases
 on:
   pull_request:
     types: [opened]
-  # push:
+  push:
 
 jobs:
   Build-and-Test:
