@@ -21,16 +21,15 @@ jobs:
     - name: Checkout to Repository
       uses: actions/checkout@v3
 
+    - name: Get npm cache path
+      run : npm config get cache
+
     - name: Cache Node packages
       id: node-packages
       uses: actions/cache@v3
       with:
         path: ~/.npm
         key: npm-cache
-
-    - name: Check if list of npm packages
-      if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-      run: npm list
 
     - name: Create a file with Private Key
       run: |
