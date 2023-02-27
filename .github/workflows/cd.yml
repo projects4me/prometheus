@@ -3,6 +3,7 @@ name: Deploy Prometheus Dev
 on:
   pull_request:
     types: [closed]
+  push:
 
 jobs:
   Deploy:
@@ -20,20 +21,11 @@ jobs:
     - name: Checkout to Repository
       uses: actions/checkout@v3
 
-    # - name: Cache Node packages
-    #   id: node-packages
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: /__w/prometheus/prometheus/node_modules
-    #     key: npm-cache
-    #     restore-keys: |
-    #       npm-cache
-
-    - name: Test
-      uses: actions/cache/restore@v3
-      id: cache
+    - name: Cache Node packages
+      id: node-packages
+      uses: actions/cache@v3
       with:
-        path: /__w/prometheus/prometheus/node_modules
+        path: ~/.npm
         key: npm-cache
 
     - name: Create a file with Private Key
