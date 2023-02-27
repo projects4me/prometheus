@@ -21,6 +21,11 @@ jobs:
     - name: Checkout to Repository
       uses: actions/checkout@v3
 
+    - name: Check cache path
+      run: |
+        cd ~
+        ls -al
+
     - name: Cache Node packages
       id: node-packages
       uses: actions/cache@v3

@@ -22,9 +22,10 @@ jobs:
     #     path: /__w/prometheus/prometheus/node_modules
     #     key: npm-cache
 
-    - name: Check check path
+    - name: Check cache path
       run: |
-        pwd -P
+        cd ~
+        ls -al
 
     - name: Cache Node packages
       id: node-packages
