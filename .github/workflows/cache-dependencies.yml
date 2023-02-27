@@ -1,11 +1,12 @@
-name: Run Prometheus tests cases
+name: Caching npm packages
 
 on:
-  pull_request:
-    types: [opened]
+  push:
+    branches:
+      - 'dev'
 
 jobs:
-  Build-and-Test:
+  Install and cache npm packages:
 
     runs-on: ubuntu-latest
     container:
@@ -18,7 +19,7 @@ jobs:
       id: node-packages
       uses: actions/cache@v3
       with:
-        path: /__w/prometheus/prometheus/node_modules
+        path: node_modules
         key: npm-cache
 
     - name: Watch change in package.json
@@ -34,13 +35,3 @@ jobs:
       run: |
         rm -rf node_modules/
         npm install
-
-    - name: Run Ember test
-      run: |
-        COVERAGE=true ember test
-        
-    - name: Upload Code coverage report
-      uses: actions/upload-artifact@v3
-      with:
-        name: code-coverage-report
-        path: coverage/
