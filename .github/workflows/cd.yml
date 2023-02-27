@@ -41,7 +41,6 @@ jobs:
         echo "$DROPLET_KEY" > droplet_key
 
     - name: Install Node modules
-      if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       run: |
         npm install  
 
