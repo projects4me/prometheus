@@ -3,7 +3,7 @@ name: Run Prometheus tests cases
 on:
   pull_request:
     types: [opened]
-  # push:
+  push:
 
 jobs:
   Build-and-Test:
@@ -21,12 +21,6 @@ jobs:
       with:
         path: node_modules
         key: npm-cache
-
-    - name: Watch change in package.json
-      id: watch-package-json
-      uses: tj-actions/changed-files@v32
-      with:
-          files: "package.json"
 
     - name: Install Node modules
       if: |

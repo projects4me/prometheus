@@ -3,7 +3,7 @@ name: Deploy Prometheus Dev
 on:
   pull_request:
     types: [closed,reopened]
-  push:
+  # push:
 
 jobs:
   Deploy:
