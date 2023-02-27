@@ -35,8 +35,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
 
-    - name: Space taken by npm modules
-      run: du -d 0 -h ~/.npm      
+    # - name: Space taken by npm modules
+    #   run: du -d 0 -h ~/.npm      
 
     - name: Create a file with Private Key
       run: |
