@@ -21,6 +21,9 @@ jobs:
     - name: Checkout to Repository
       uses: actions/checkout@v3
 
+    - name: Space taken by npm modules
+      run: du -d 0 -h ~/.npm      
+
     - name: Get npm cache directory
       id: npm-cache-dir
       shell: bash
