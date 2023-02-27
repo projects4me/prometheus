@@ -30,7 +30,7 @@ jobs:
 
     - name: Check if list of npm packages
       if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        run: npm list
+      run: npm list
 
     - name: Create a file with Private Key
       run: |
