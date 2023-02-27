@@ -3,6 +3,7 @@ name: Run Prometheus tests cases
 on:
   pull_request:
     types: [opened]
+  push:
 
 jobs:
   Build-and-Test:
@@ -14,12 +15,24 @@ jobs:
     - name: Checkout to Repository
       uses: actions/checkout@v3
       
+    # - name: Cache Node packages
+    #   id: node-packages
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: /__w/prometheus/prometheus/node_modules
+    #     key: npm-cache
+
+    - name: Check check path
+      run: |
+        pwd -P
+
     - name: Cache Node packages
       id: node-packages
       uses: actions/cache@v3
       with:
-        path: /__w/prometheus/prometheus/node_modules
+        path: ~/.npm
         key: npm-cache
+  
 
     - name: Watch change in package.json
       id: watch-package-json
