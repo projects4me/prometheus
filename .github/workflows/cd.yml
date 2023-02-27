@@ -25,10 +25,8 @@ jobs:
       uses: actions/cache@v3
       id: cache
       with:
-        path: /__w/prometheus/prometheus/node_modules
-        key: npm-cache
-        restore-keys: |
-          npm-cache
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
     - name: Create a file with Private Key
       run: |
