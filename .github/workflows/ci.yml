@@ -3,7 +3,7 @@ name: Run Prometheus tests cases
 on:
   pull_request:
     types: [opened]
-  # push:
+  push:
 
 jobs:
   Build-and-Test:
@@ -15,16 +15,16 @@ jobs:
     - name: Checkout to Repository
       uses: actions/checkout@v3
 
-    - name: Get npm cache directory
-      id: npm-cache-dir
-      shell: bash
-      run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+    # - name: Get npm cache directory
+    #   id: npm-cache-dir
+    #   shell: bash
+    #   run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
 
     - name: Cache Node packages
       id: node-packages
       uses: actions/cache@v3
       with:
-        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        path: node_modules
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
