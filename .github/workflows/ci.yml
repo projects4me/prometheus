@@ -3,8 +3,8 @@ name: Run Prometheus tests cases
 on:
   pull_request:
     types: [opened]
-  push:
-  
+  # push:
+
 jobs:
   Build-and-Test:
 
@@ -20,7 +20,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: node_modules
-        key: npm-cache
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
     - name: Watch change in package.json
       id: watch-package-json
