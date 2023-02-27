@@ -6,7 +6,7 @@ on:
       - 'dev'
 
 jobs:
-  Install and cache npm packages:
+  Install-and-cache-npm-packages:
 
     runs-on: ubuntu-latest
     container:
