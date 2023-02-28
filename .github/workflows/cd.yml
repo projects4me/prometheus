@@ -2,7 +2,7 @@ name: Deploy Prometheus Dev
 
 on:
   pull_request:
-    types: [closed,reopened]
+    types: [closed]
 
 jobs:
   Deploy:
@@ -26,6 +26,12 @@ jobs:
       with:
         path: node_modules
         key: npm-cache
+    
+    - name: Install Node modules
+      if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      run: |
+        rm -rf node_modules/
+        npm install
 
     - name: Create a file with Private Key
       run: |
