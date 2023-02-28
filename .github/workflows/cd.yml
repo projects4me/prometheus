@@ -3,6 +3,10 @@ name: Deploy Prometheus Dev
 on:
   pull_request:
     types: [closed]
+  workflow_run:
+    workflows: ["Run Prometheus test cases"]
+    types: 
+      - completed
 
 jobs:
   Deploy:

@@ -1,4 +1,4 @@
-name: Run Prometheus tests cases
+name: Run Prometheus test cases
 
 on:
   pull_request:
