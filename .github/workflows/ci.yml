@@ -1,8 +1,8 @@
-name: Run Prometheus tests cases
+name: Run Prometheus test cases
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened,reopened]
 
 jobs:
   Build-and-Test:
@@ -13,24 +13,16 @@ jobs:
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
-      
+
     - name: Cache Node packages
-      id: node-packages
+      id: cache
       uses: actions/cache@v3
       with:
-        path: /__w/prometheus/prometheus/node_modules
+        path: node_modules
         key: npm-cache
 
-    - name: Watch change in package.json
-      id: watch-package-json
-      uses: tj-actions/changed-files@v32
-      with:
-          files: "package.json"
-
     - name: Install Node modules
-      if: |
-        steps.watch-package-json.outputs.any_changed == 'true'
-        || steps.node-packages.outputs.cache-hit != 'true'
+      if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       run: |
         rm -rf node_modules/
         npm install
