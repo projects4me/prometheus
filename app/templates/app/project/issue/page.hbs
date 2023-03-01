@@ -148,7 +148,9 @@
               </div>
               <div class="box-body no-padding">
                 <div class="issue-activities">
-                  {{time-line activities=this.activities}}
+                  <AppUi::Timeline
+                    @activities={{this.activities}}
+                  />
                 </div>
               </div>
             </div>

@@ -1,0 +1,38 @@
+<ul class="timeline">
+  {{!--
+
+    The timeline supports the following use cases
+
+    01. Project created
+    02. Project updated
+    03. Project closed
+    04. Project completed
+    05. Related created
+    06. Related updated
+    07. Related overdue
+    08. Related attached
+    09. Related completed
+    // Others to be added here
+  --}}
+  {{@activities.length}}
+  {{#each-in @activities as |dateCreated activityCont|}}
+    {{!-- Group the time label --}}
+    <li class="time-label">
+      <span class="bg-primary">
+        {{moment-format dateCreated "Do MMM. YYYY"}}
+      </span>
+    </li>
+    {{activityCont.data.length}}
+    {{#each-in activityCont.data as |index activity|}}
+      {{activity}}
+      <AppUi::ActivityBlock 
+        @activity={{activity}}
+      />
+    {{/each-in}}
+
+  {{/each-in}}
+
+  <li>
+    <i class="fa fa-clock-o bg-gray"></i>
+  </li>
+</ul>

@@ -13,12 +13,14 @@ export default Factory.extend({
     createdUser() {
         return (_.random(1, 10)).toString();
     },
-    "relatedTo": "project",
+    relatedTo() {
+        return faker.random.arrayElement(["issue", "project"])
+    },
     relatedId() {
         return (_.random(1, 5)).toString();
     },
     type() {
-        return faker.random.arrayElement(["updated", "created", "related", "mentioned", "deleted", "closed"])
+        return faker.random.arrayElement(["updated", "created", "related", "deleted", "closed"])
     },
     "deleted": "0",
     afterCreate(activity) {
