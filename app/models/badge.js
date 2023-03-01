@@ -10,7 +10,7 @@ import Model, { attr, belongsTo } from '@ember-data/model';
  * @class BadgeModel
  * @namespace Prometheus.Models
  * @extends DS.Model
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class BadgeModel extends Model {
 

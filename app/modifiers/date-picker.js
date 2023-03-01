@@ -10,7 +10,7 @@ import $ from 'jquery';
  * attach date range picker
  *
  * @namespace Prometheus.Modifiers
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default modifier(function datePicker(element, [update, format, singleDatePicker, showDropdowns, positionX, positionY, timePicker, timePickerIncrement, startDate, endDate, minDate, maxDate, maxSpan, minYear, maxYear, autoApply]) {
     //applying daterangepicker on given element

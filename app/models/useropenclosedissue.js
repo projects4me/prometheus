@@ -10,7 +10,7 @@ import Model, { attr } from '@ember-data/model';
  * @class UseropenclosedissueModel
  * @namespace Prometheus.Model
  * @extends DS.Model
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class UseropenclosedissueModel extends Model {
     /**

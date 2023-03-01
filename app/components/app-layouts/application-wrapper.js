@@ -12,7 +12,7 @@ import $ from'jquery';
  * @class ApplicationHeader
  * @namespace Prometheus.Components
  * @extends Ember.Component
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class ApplicationWrapperComponent extends Component {
     @action activateAdminLTE(){

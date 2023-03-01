@@ -10,7 +10,7 @@ import Component from '@glimmer/component';
  * @class Timeline
  * @namespace Prometheus.Components
  * @extends Ember.Component
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppUiTimelineComponent extends Component {
 }

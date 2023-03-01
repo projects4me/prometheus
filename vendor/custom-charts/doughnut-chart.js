@@ -10,7 +10,7 @@
  * @class DoughnutChart
  * @namespace Vendor
  * @extends Chart.DoughnutController
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 class DoughnutChart extends Chart.DoughnutController {
 

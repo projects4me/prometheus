@@ -7,7 +7,7 @@ import { inject as service } from '@ember/service';
  * @class App
  * @namespace Prometheus.Components
  * @extends Ember.Component
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppComponent extends Component {
     /**

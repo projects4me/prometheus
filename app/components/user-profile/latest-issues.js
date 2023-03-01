@@ -11,7 +11,7 @@ import { action } from '@ember/object';
  * @class UserProfileLatestIssuesComponent
  * @namespace Prometheus.Components
  * @extends Ember.Component
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class UserProfileLatestIssuesComponent extends Component {
 

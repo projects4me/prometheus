@@ -13,7 +13,7 @@ import { computed, action } from '@ember/object';
  * @namespace Prometheus.Controllers
  * @module App.Users
  * @extends Prometheus
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppUserPageController extends PrometheusController {
 

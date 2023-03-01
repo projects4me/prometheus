@@ -12,7 +12,7 @@ import { tracked } from '@glimmer/tracking';
  * @class MessageBox
  * @namespace Prometheus.Components
  * @extends Ember.Component
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class MessageBoxComponent extends Component{
 

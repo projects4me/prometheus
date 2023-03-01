@@ -65,7 +65,7 @@ module.exports = function(environment) {
     };
 
     if (environment === 'development') {
-        ENV.api.host = "http://projects4me";
+        ENV.api.host = "http://localhost:8080";
     }
 
     if (environment === 'test') {

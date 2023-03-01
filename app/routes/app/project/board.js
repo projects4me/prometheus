@@ -11,7 +11,7 @@ import App from "prometheus/routes/app";
  * @namespace Prometheus.Routes
  * @module App.Project
  * @extends AppRoute
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default App.extend({
 
