@@ -301,7 +301,8 @@
             <div class="no-entry">{{t "views.app.project.detail.milestone.noentry"}}</div>
           {{else}}
             {{#each this.milestones as |milestone|}}
-              {{#milestone-block milestone=milestone}}
+
+              <AppUi::MilestoneBlock @milestone={{milestone}}>
                 <a href="javascript:void(0);" {{action "editMilestone" milestone}}>
                   <i class="fa fa-pencil edit-milestone" data-toggle="tooltip" title="{{t "global.form.edit"}}"></i>
                 </a>
@@ -316,8 +317,9 @@
                 <span class="progress-description">
                   {{moment-format milestone.startDate 'Do MMM. YYYY'}} - {{moment-format milestone.endDate 'Do MMM. YYYY'}}
                   <span class="pull-right">({{get-issuecount milestone.issues 'closed'}}/{{milestone.issues.length}} {{t "global.module.plural.issue"}})</span>
-                </span>
-              {{/milestone-block}}
+                </span>                
+              </AppUi::MilestoneBlock>
+              
             {{/each}}
           {{/if}}
         </div>
