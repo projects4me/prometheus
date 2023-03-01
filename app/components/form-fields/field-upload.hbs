@@ -1,0 +1,33 @@
+<div class="form-field ember-view">
+
+  <div class="dropzone-field">
+    {{#let (file-queue name="photos" onFileAdded=@uploadFile) as |queue|}}
+    <FileDropzone @queue={{queue}} as |dropzone|>
+      {{#if dropzone.active}}
+      <p class="dropzone-active">
+
+        {{t "global.form.upload.dash"}}
+        {{t "global.form.upload.drop"}}
+
+
+      </p>
+      {{else if queue.files.length}}
+      <p class="dropzone-uploading">
+        {{t "global.form.upload.uploading" length=queue.files.length progress=queue.progress}}
+      </p>
+      {{else}}
+      <p class="dropzone-ready">
+        {{#if dropzone.supported}}
+        {{t "global.form.upload.drag"}}
+        {{/if}}
+        <a href="javascript:void(0);" tabindex="0">
+          <label for="file-upload">{{@label}}</label>
+          <input type="file" id="file-upload" {{queue.selectFile}}>
+        </a>
+      </p>
+      {{/if}}
+    </FileDropzone>
+    {{/let}}
+  </div>
+  
+</div>
