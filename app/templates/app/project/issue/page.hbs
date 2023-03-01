@@ -255,10 +255,10 @@
               </div>
 
             </div>
-            {{field-upload
-                label=(t "views.app.issue.detail.selectfile")
-                uploadFile=(action "uploadFile")
-            }}
+            <FormFields::FieldUpload
+                @label={{t "views.app.issue.detail.selectfile"}}
+                @uploadFile={{action "uploadFile"}}
+            />
 
           </div>
         </div>
