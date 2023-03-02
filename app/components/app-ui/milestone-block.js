@@ -4,6 +4,7 @@
 
 import Component from '@glimmer/component';
 import { ensureSafeComponent } from '@embroider/util';
+import { set } from '@ember/object';
 
 /**
  * This component is used to render milestone block.
@@ -38,7 +39,7 @@ export default class AppUiMilestoneBlockComponent extends Component {
         }
 
         // Set the milestone progress
-        this.milestone.set('progress', progress);
+        set(milestone, "progress", progress);
     }
 
     /**
