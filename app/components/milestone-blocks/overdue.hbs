@@ -1,7 +1,7 @@
-<div class="info-box bg-red">
+<div class="info-box bg-red" data-milestone={{concat @milestone.name " | " @milestone.startDate}}>
   <span class="info-box-icon"><i class="fa fa-exclamation-triangle"></i></span>
 
-  <div class="info-box-content">
+  <div class="info-box-content" data-milestone-status={{@milestone.status}}>
     <span class="info-box-text">{{t (concat "views.app.milestone.lists.status." @milestone.status)}} - ({{t "views.app.project.detail.milestone.overdue"}})</span>
     {{yield}}
   </div>
