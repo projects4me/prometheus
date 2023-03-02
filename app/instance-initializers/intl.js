@@ -20,7 +20,7 @@ export function initialize(appInstance) {
  * This is the instance initializer for the intl service.
  @class Intl
  @namespace Prometheus.InstanceInitializers
- @author Rana Nouman <ranamnouman@yahoo.com>
+ @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default {
     initialize

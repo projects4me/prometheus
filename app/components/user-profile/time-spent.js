@@ -11,7 +11,7 @@ import { tracked } from '@glimmer/tracking';
  * @class UserProfileTimeSpentComponent
  * @namespace Prometheus.Components
  * @extends Ember.Component
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class UserProfileTimeSpentComponent extends Component {
 

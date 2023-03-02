@@ -15,7 +15,7 @@ import $ from 'jquery';
  * @class InitializeSlimscrollModifier
  * @namespace Prometheus.Modifiers
  * @extends Modifier
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class InitializeSlimscrollModifier extends Modifier {
 

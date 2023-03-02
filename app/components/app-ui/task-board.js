@@ -12,7 +12,7 @@ import { action } from '@ember/object';
  * @class TaskBoard
  * @namespace Prometheus.Components
  * @extends Ember.Component
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class TaskBoardComponent extends Component {
 

@@ -17,7 +17,7 @@ import $ from 'jquery';
  * @class ToastEditor
  * @namespace Prometheus.Modifiers
  * @extends Modifier
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class ToastEditor extends Modifier {
 

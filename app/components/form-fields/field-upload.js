@@ -10,7 +10,7 @@ import Component from '@glimmer/component';
  * @class FieldUpload
  * @namespace Prometheus.Components
  * @extends FormField
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class FormFieldsFieldUploadComponent extends Component {
 }

@@ -25,6 +25,6 @@ function getUserSkills([], { skillsString }) {
  * @class GetUserSkills
  * @namespace Prometheus.Helpers
  * @extends Ember.Helper.helper
- * @author Rana Nouman <ranamnouman@yahoo.com>
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default helper(getUserSkills);

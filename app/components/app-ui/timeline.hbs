@@ -14,7 +14,7 @@
     09. Related completed
     // Others to be added here
   --}}
-  {{@activities.length}}
+
   {{#each-in @activities as |dateCreated activityCont|}}
     {{!-- Group the time label --}}
     <li class="time-label">
@@ -22,9 +22,8 @@
         {{moment-format dateCreated "Do MMM. YYYY"}}
       </span>
     </li>
-    {{activityCont.data.length}}
+
     {{#each-in activityCont.data as |index activity|}}
-      {{activity}}
       <AppUi::ActivityBlock 
         @activity={{activity}}
       />
