@@ -1,0 +1,26 @@
+<AppUi::MilestoneBlock @milestone={{@milestone}}>
+  <a href="javascript:void(0);" {{action @editMilestone @milestone}} data-milestone-action="edit">
+    <i class="fa fa-pencil edit-milestone" data-toggle="tooltip" title="{{t "global.form.edit"}}"></i>
+  </a>
+
+  <span class="pull-right" data-milestone="progress">
+    {{@milestone.progress}}%
+  </span>
+
+  <span class="info-box-number" data-trigger="hover" data-toggle="popover" title="{{t (concat "views.app.milestone.lists.type." @milestone.milestoneType)}} {{@milestone.name}}" data-placement="top" data-content="{{@milestone.description}}" data-milestone="details"> {{@milestone.name}} - {{@milestone.issues.length}} {{t "global.module.plural.issue"}} </span>
+
+  <div class="progress">
+    <div class="progress-bar" style={{progress-width @milestone.progress}} data-toggle='tooltip' title='{{t "views.app.project.detail.milestone.progress" closed=(get-issuecount @milestone.issues 'closed') total=@milestone.issues.length}}'></div>
+  </div>
+
+  <span class="progress-description">
+    <span data-milestone="dates">
+      {{moment-format @milestone.startDate 'Do MMM. YYYY'}} - {{moment-format @milestone.endDate 'Do MMM. YYYY'}}
+    </span>
+
+    <span class="pull-right">
+      ({{get-issuecount @milestone.issues 'closed'}}/{{@milestone.issues.length}} {{t "global.module.plural.issue"}})
+    </span>
+  </span>                
+  
+</AppUi::MilestoneBlock>
