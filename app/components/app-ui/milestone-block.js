@@ -71,6 +71,10 @@ export default class AppUiMilestoneBlockComponent extends Component {
             }
         }
 
+        if (status == undefined) {
+            status = 'index';
+        }
+
         return ensureSafeComponent(`milestone-blocks/${status}`, this);
     }
 }
