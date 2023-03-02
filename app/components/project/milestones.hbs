@@ -7,9 +7,7 @@
     {{@milestone.progress}}%
   </span>
 
-  <span class="info-box-number" data-trigger="hover" data-toggle="popover" title="{{t (concat "views.app.milestone.lists.type." @milestone.milestoneType)}} {{@milestone.name}}" data-placement="top" data-milestone="details">
-    {{@milestone.name}} - {{@milestone.issues.length}} {{t "global.module.plural.issue"}}
-  </span>
+  <span class="info-box-number" data-trigger="hover" data-toggle="popover" title="{{t (concat "views.app.milestone.lists.type." @milestone.milestoneType)}} {{@milestone.name}}" data-placement="top" data-content="{{@milestone.description}}" data-milestone="details"> {{@milestone.name}} - {{@milestone.issues.length}} {{t "global.module.plural.issue"}} </span>
 
   <div class="progress">
     <div class="progress-bar" style={{progress-width @milestone.progress}} data-toggle='tooltip' title='{{t "views.app.project.detail.milestone.progress" closed=(get-issuecount @milestone.issues 'closed') total=@milestone.issues.length}}'></div>

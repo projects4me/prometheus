@@ -5,12 +5,12 @@
 import Component from '@glimmer/component';
 
 /**
- * This component is used to render milestones, related to an issue.
+ * This component is used to render milestones, related to a project.
  *
- * @class IssueMilestones
+ * @class ProjectMilestones
  * @namespace Prometheus.Components
  * @extends Ember.Component
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default class IssueMilestonesComponent extends Component {
+export default class ProjectMilestonesComponent extends Component {
 }
