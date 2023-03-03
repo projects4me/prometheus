@@ -20,7 +20,13 @@ const Validations = buildValidations({
     statusId: validator('presence', true),
     priority: validator('presence', true),
     startDate: validator('presence', true),
-    endDate: validator('presence', true)
+    endDate: [
+        validator('presence', true),
+        validator('date', {
+            onOrAfter: readOnly('model.startDate'),
+            message: "End date should be equal or greater then start date"
+        })
+    ]
 });
 
 /**
