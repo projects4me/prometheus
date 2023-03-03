@@ -68,10 +68,14 @@ export default App.extend({
             options.query = params.query;
         }
 
-        options.order = 'DESC';
-        options.sort = 'comments.dateModified, Conversationroom.dateModified';
-        options.query = "(Conversationroom.projectId : "+params.project_id+")";
-        this.store.query(this.module,options).then(function(data){
+        let _conversationOptions = {
+            rels: "comments",
+            order: "DESC",
+            sort: "comments.dateModified, Conversationroom.dateModified",
+            query: "(Conversationroom.projectId : "+params.project_id+")"
+        }
+
+        this.store.query(this.module, _conversationOptions).then(function(data){
             controller.set('model',data.toArray());
         });
 
