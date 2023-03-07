@@ -77,9 +77,10 @@ export default class AppUiMilestoneBlockComponent extends Component {
         }
 
         let componentName = `milestone-blocks/${status}`;
+        let defaultComponentName = 'milestone-blocks/index'; 
         let component = getOwner(this).lookup(`template:components/${componentName}`);
 
-        componentName = component ? componentName : 'milestone-blocks/index';
+        componentName = component ? componentName : defaultComponentName;
 
         return ensureSafeComponent(componentName, this);
     }
