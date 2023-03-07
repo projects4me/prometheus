@@ -3,6 +3,7 @@
  */
 
 import Component from '@glimmer/component';
+import { getOwner } from '@ember/application';
 import { ensureSafeComponent } from '@embroider/util';
 import { set } from '@ember/object';
 
@@ -65,16 +66,22 @@ export default class AppUiMilestoneBlockComponent extends Component {
         let milestone = this.milestone;
         let status = milestone.status;
 
+        /**
+         * Check if milestone having status "in progress" or "planned" crossed there end date. 
+         * If end date crossed then render a milestone block having "overdue" status.
+         */
         if (status === 'in_progress' || status === 'planned') {
             if (moment().isSameOrAfter(milestone.endDate)) {
                 status = 'overdue';
             }
         }
 
-        if (status == undefined) {
-            status = 'index';
-        }
+        let componentName = `milestone-blocks/${status}`;
+        let defaultComponentName = 'milestone-blocks/index'; 
+        let component = getOwner(this).lookup(`template:components/${componentName}`);
 
-        return ensureSafeComponent(`milestone-blocks/${status}`, this);
+        componentName = component ? componentName : defaultComponentName;
+
+        return ensureSafeComponent(componentName, this);
     }
 }
