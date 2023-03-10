@@ -6,7 +6,7 @@
         <div class="box-tools pull-right filters">
           <Input
             @value={{this.query}}
-            @key-up={{@reRenderView}}
+            {{on "keyup" @reRenderView}}
             data-input-milestone-id={{this.milestone.id}}
             name="query"
             autocomplete="off"
