@@ -203,7 +203,9 @@
         <div class="box-footer no-padding">
           <div class="list-controls">
 
-            {{!-- <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">{{checkbox-field action=(action "selectAll") type="checkbox" data-select="all"}}</span> --}}
+            <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
+              <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all"/>
+            </span>
             <div class="btn-group">
               <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></button>
               <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></button>
