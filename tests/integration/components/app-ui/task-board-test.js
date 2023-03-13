@@ -70,17 +70,24 @@ module('Integration | Component | task-board', function (hooks) {
             issues: backlogIssues
         };
 
+        let updateIssue, openIssue;        
+        updateIssue = openIssue  = () => true;
+
         milestones.pushObject(backlog);
 
         this.set('milestones', milestones);
         this.set('statuses', statuses);
         this.set('statusClass', statusClass);
+        this.set('updateIssue', updateIssue);
+        this.set('openIssue', openIssue);
 
         await render(hbs`
             <AppUi::TaskBoard
                 @milestones={{this.milestones}}
                 @statuses={{this.statuses}}
                 @statusClass={{this.statusClass}}
+                @updateIssue={{this.updateIssue}}
+                @openIssue={{this.openIssue}}
             />
         `);
 
