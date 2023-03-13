@@ -13,6 +13,9 @@
   position:relative;
   margin: 3rem;
 
+  &.readonly {
+    margin: 0 1rem 1rem 1rem;
+  }
 
   .data-input{
     font-size:1.4rem;
