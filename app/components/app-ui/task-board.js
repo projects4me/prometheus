@@ -34,11 +34,10 @@ export default class TaskBoardComponent extends Component {
      * to re-render the view.
      *
      * @method reRenderView
-     * @param {String} query Stores user's input
      * @param {KeyboardEvent} evt
      * @public
      */
-    @action reRenderView(query, evt) {
+    @action reRenderView(evt) {
         let parentEl = evt.currentTarget.closest('div.milestone.box').querySelector('div.milestone.box-body');
         this.currentFilteredMilestone = parentEl;
     }
