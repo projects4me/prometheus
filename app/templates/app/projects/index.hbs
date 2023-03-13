@@ -134,7 +134,9 @@
         <div class="box-body no-padding">
           <div class="list-controls">
             {{!-- Check all button --}}
-            <span class="btn btn-default btn-sm checkbox-toggle"><FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all"/></span>
+            <span class="btn btn-default btn-sm checkbox-toggle">
+              <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all"/>
+            </span>
             <div class="btn-group">
               <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></button>
               <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></button>
@@ -180,7 +182,9 @@
               <tbody>
                 {{#each this.model as |project|}}
                   <tr>
-                    <td><FormFields::FieldCheckbox @select={{action this.select}} @data-select={{project.id}}/></td>
+                    <td>
+                      <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{project.id}}/>
+                    </td>
                     <td class="project-name"><a href="#" {{action "openDetail" project}}>{{project.name}}</a></td>
                     <td class="project-type">{{t (concat "views.app.project.detail.lists.type." project.type)}}</td>
                     <td class="project-owner"><a href="#">{{project.owner.name}}</a></td>
