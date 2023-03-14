@@ -43,7 +43,24 @@ module('Integration | Component | task-board', function (hooks) {
             }
         ];
 
-        let statuses = ["new", "in_progress", "done", "feedback", "pending"];
+        let statuses = [
+            {
+                name: "new",
+                id: '1'
+            },
+            {
+                name: "in_progress",
+                id: '2'
+            },
+            {
+                name: "done",
+                id: '3'
+            },
+            {
+                name: "feedback",
+                id: '4'
+            },
+        ];
 
         let statusClass = {
             new: 'box-info',
