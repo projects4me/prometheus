@@ -5,7 +5,8 @@ import _ from 'lodash';
 
 export default Factory.extend({
     name(i) {
-        return `Issue Status ${++i}`;
+        let statuses = ["new", "in_progress", "done", "feedback", "pending", "deferred"];
+        return statuses[i++];
     },
     dateCreated() {
         return date.createdDate(10, 30);

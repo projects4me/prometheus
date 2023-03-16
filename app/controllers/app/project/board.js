@@ -23,23 +23,6 @@ export default class AppProjectBoardController extends PrometheusController {
      * @for Board
      * @public
      */
-    statuses = [
-        'new',
-        'in_progress',
-        'done',
-        'feedback',
-        'pending',
-        'deferred'
-    ];
-
-    /**
-     * These are the issues statues
-     *
-     * @property statuses
-     * @type Array
-     * @for Board
-     * @public
-     */
     statusClass = {
         new: 'box-info',
         in_progress: 'box-primary',
@@ -140,5 +123,40 @@ export default class AppProjectBoardController extends PrometheusController {
         milestoneEls.pushObject(milestoneEl2);
         reRenderViewCb(milestoneEls, [item]);
         Logger.debug("-AppProjectBoardController::postUpdateProcessing");
+    }
+
+    /**
+     * This is the list of issue statuses related to the current project.
+     *
+     * @property statuses
+     * @returns array
+     * @method get
+     * @public
+     */
+    get statuses() {
+        let statusList = [
+            'new',
+            'in_progress',
+            'done',
+            'feedback',
+            'pending',
+            'deferred'
+        ];
+
+        let _self = this;
+
+        statusList.forEach((status, i) => {
+            let issueStatusModel = _self.issueStatuses.findBy('name', status);
+
+            //create new object of issueStatus with its id and name.
+            let issueStatus = {
+                name: status,
+                id: issueStatusModel.id
+            }
+
+            statusList[i] = issueStatus;
+        });
+
+        return statusList;
     }
 }
