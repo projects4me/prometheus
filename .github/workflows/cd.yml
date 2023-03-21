@@ -51,6 +51,7 @@ jobs:
     #     set +a
 
     - name: Build Prometheus
+      shell: bash
       run: |
         set -a
         source prometheus-docker.env
