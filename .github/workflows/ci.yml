@@ -23,11 +23,11 @@ jobs:
         path: node_modules
         key: npm-cache
 
-    - name: Install Node modules
-      if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-      run: |
-        rm -rf node_modules/
-        npm install
+    # - name: Install Node modules
+    #   if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+    #   run: |
+    #     rm -rf node_modules/
+    #     npm install
     
     - name: List repo files
       run: ls -l
