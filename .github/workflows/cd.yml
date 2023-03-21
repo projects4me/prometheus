@@ -3,7 +3,6 @@ name: Deploy Prometheus Dev
 on:
   pull_request:
     types: [closed]
-  push:
   workflow_run:
     workflows: ["Run Prometheus test cases"]
     types: 
@@ -43,14 +42,12 @@ jobs:
         touch droplet_key
         echo "$DROPLET_KEY" > droplet_key
 
-    - name: Build Prometheus
+    - name: Create Env variables and Build Prometheus
       shell: bash
       run: |
         set -a
         source prometheus-docker.env
         set +a
-        echo $API_HOST_PRODUCTION
-        node -e "console.log(process.env)"
         ember build --environment=$ENVIRONMENT
 
     - name: Deploy to Digital Ocean Droplet
