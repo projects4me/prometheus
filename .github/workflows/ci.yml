@@ -29,8 +29,10 @@ jobs:
     #     rm -rf node_modules/
     #     npm install
     
-    - name: List repo files
-      run: ls -l
+    - name: Create env vars using .env file
+      run: |
+        . prometheus-docker.env
+        echo $API_HOST_PRODUCTION
     # - name: Run Ember test
     #   run: |
     #     COVERAGE=true ember test
