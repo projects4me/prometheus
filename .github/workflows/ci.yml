@@ -22,6 +22,7 @@ jobs:
         source prometheus-docker.env
         set +a
         echo $API_HOST_PRODUCTION
+        node -e "console.log(process.env)"
 
     # - name: Cache Node packages
     #   id: cache
