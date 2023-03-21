@@ -257,20 +257,21 @@ export default class PrometheusListController extends PrometheusController {
      * visible in the list-view
      *
      * @method selectAll
-     * @param {Boolean} value whether the selectAll checkbox was selected of not
+     * @param {Event} evt
      * @return void
      * @todo allow the retention of the checkboxes across the multiple pages
      * @public
      */
-    @action selectAll(value) {
+    @action selectAll(evt) {
+        let isChecked = evt.target.checked;
         Logger.debug('Prometheus.Controllers.List::selectAll');
         // Select all the checkboxes in the list view
         _.each($('.list-view input[type=checkbox]').not('[data-select=all]'), function (element) {
-            element.checked = value;
+            element.checked = isChecked;
         });
 
         _.each($('.list-view [data-select=all]'), function (element) {
-            element.checked = value;
+            element.checked = isChecked;
         });
 
         this.set('selectedCount', $('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
@@ -281,19 +282,20 @@ export default class PrometheusListController extends PrometheusController {
      * This function is triggered when an item in the list is selected
      *
      * @method select
-     * @param value {Boolean} whether the checkbox was selected of not
+     * @param {Event} evt
      * @return void
      * @todo allow the retention of the checkboxes across the multiple pages
      * @todo convert to a component
      *@public
      */
-    @action select(value) {
+    @action select(evt) {
+        let isChecked = evt.target.checked
         Logger.debug('Prometheus.Controllers.List::select');
         // Select/Deselect one checkboxes in the list view
         this.set('selectedCount', $('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
 
         // uncheck the select all checkbox, if an item was deselected and the select all checkbox was checked
-        if (!value) {
+        if (!isChecked) {
             let selectAll = $('[data-select=all]').prop('checked');
             if (selectAll) {
                 $('[data-select=all]').prop('checked', false);
