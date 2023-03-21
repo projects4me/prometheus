@@ -42,15 +42,13 @@ jobs:
         touch droplet_key
         echo "$DROPLET_KEY" > droplet_key
 
-    - name: Create environment variables
+    - name: Create Env variables and Build Prometheus
       shell: bash
       run: |
         set -a
         source prometheus-docker.env
         set +a
-
-    - name: Build Prometheus
-      run: ember build --environment=$ENVIRONMENT
+        ember build --environment=$ENVIRONMENT
 
     - name: Deploy to Digital Ocean Droplet
       run: |
