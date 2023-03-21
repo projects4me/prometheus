@@ -45,7 +45,7 @@ jobs:
     - name: Create environment variables
       run: |
         set -a
-        source prometheus-docker.env
+        . prometheus-docker.env
         set +a
 
     - name: Build Prometheus
