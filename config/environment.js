@@ -86,9 +86,7 @@ module.exports = function(environment) {
     }
 
     if (environment === 'production') {
-        console.log('*****************API_HOST*********************');
-        console.log(process);
-        ENV.api.host = process.env;
+        ENV.api.host = process.env.API_HOST_PRODUCTION;;
     }
     return ENV;
 };
