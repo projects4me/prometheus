@@ -4,8 +4,6 @@ on:
   pull_request:
     types: [opened,reopened]
 
-  push:
-
 jobs:
   Build-and-Test:
 
@@ -23,23 +21,18 @@ jobs:
         path: node_modules
         key: npm-cache
 
-    # - name: Install Node modules
-    #   if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-    #   run: |
-    #     rm -rf node_modules/
-    #     npm install
-    
-    - name: Create env vars using .env file
-      shell: bash
+    - name: Install Node modules
+      if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       run: |
-        source prometheus-docker.env
-        echo $API_HOST_PRODUCTION
-    # - name: Run Ember test
-    #   run: |
-    #     COVERAGE=true ember test
+        rm -rf node_modules/
+        npm install
+
+    - name: Run Ember test
+      run: |
+        COVERAGE=true ember test
         
-    # - name: Upload Code coverage report
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: code-coverage-report
-    #     path: coverage/
+    - name: Upload Code coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-coverage-report
+        path: coverage/
