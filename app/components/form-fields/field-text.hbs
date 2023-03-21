@@ -2,7 +2,7 @@
 <div data-field={{@data-field}} class="form-field ember-view">
   <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}}
     maxlength={{@length}} aria-invalid="true" aria-describedBy={{@data-field}} {{apply-mask @mask}} {{on "focusin" this.focusIn}}
-    readonly={{@readonly}} {{on "focusout" (action (mut this.shouldValidate) true) }} {{autofocus shouldFocus=@focus}} />
+    readonly={{@readonly}} {{on "focusout" (action (mut this.shouldValidate) true) }} ...attributes/>
   <span class="highlight"></span>
   <span class="bar"></span>
   <label class="floating-label">{{@label}}</label>
