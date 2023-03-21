@@ -3,6 +3,7 @@ name: Deploy Prometheus Dev
 on:
   pull_request:
     types: [closed]
+  push:
   workflow_run:
     workflows: ["Run Prometheus test cases"]
     types: 
@@ -48,6 +49,8 @@ jobs:
         set -a
         source prometheus-docker.env
         set +a
+        echo $API_HOST_PRODUCTION
+        node -e "console.log(process.env)"
 
     - name: Build Prometheus
       run: ember build --environment=$ENVIRONMENT
