@@ -43,9 +43,10 @@ jobs:
         echo "$DROPLET_KEY" > droplet_key
 
     - name: Create environment variables
+      shell: bash
       run: |
         set -a
-        . prometheus-docker.env
+        source prometheus-docker.env
         set +a
 
     - name: Build Prometheus
