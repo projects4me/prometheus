@@ -183,7 +183,7 @@
                 {{#each this.model as |project|}}
                   <tr>
                     <td>
-                      <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{project.id}}/>
+                      <FormFields::FieldCheckboxx @select={{action this.select}} @data-select={{project.id}}/>
                     </td>
                     <td class="project-name"><a href="#" {{action "openDetail" project}}>{{project.name}}</a></td>
                     <td class="project-type">{{t (concat "views.app.project.detail.lists.type." project.type)}}</td>
