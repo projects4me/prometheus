@@ -24,13 +24,12 @@
                 @label={{t "views.app.issue.create.subject"}}
                 @type="text"
                 @value={{this.model.subject}}
-                @mask="alphanumeric"
                 @data-field="issue.subject"
                 @v-model={{this.model}}
                 @length="255"
                 @v-field='subject'
                 @v-output='message'
-                @focus="true"
+                {{autofocus}}
             />
             <div data-field="issue.description" class="form-field ember-view">
               <AppUi::ToastUi

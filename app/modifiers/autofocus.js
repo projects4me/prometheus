@@ -16,11 +16,10 @@ export default class AutofocusModifier extends Modifier {
      * This function is called when element is rendered in DOM.
      * 
      * @param {Element} element 
-     * @param {Array} positionalArguments This contains arry of positional arguments. 
+     * @param {Array} positionalArguments This contains array of positional arguments. 
      * @param {Array} namedArguments This contains array of named arguments.
      */
-    modify(element, [positionalArguments], { shouldFocus }) {
-        let focus = shouldFocus;
-        if (focus) { element.focus(); }
+    modify(element, [...positionalArguments], { ...namedArugments }) {
+        element.focus();
     }
 }

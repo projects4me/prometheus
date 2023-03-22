@@ -4,25 +4,12 @@ import Collection from 'ember-cli-mirage/orm/collection';
 export const given = function () {
     return [
         {
-            "Project $projectId has $milestoneCount milestones": (assert, ctx) => async function (projectId, milestoneCount) {
-                let project = server.create('project');
-                project.id = projectId;
-                let milestones = server.createList('milestone', parseInt(milestoneCount));
-                ctx.set('milestones', milestones);
-                ctx.set('project', project);
-                project.update({
-                    milestones: milestones
-                })
-                assert.equal(project.milestoneIds.length, milestoneCount, `Project ${projectId} has ${milestoneCount} milestones`);
-            }
-        },
-        {
             "Each milestone has $issuesCount issues and there status are\n$table": (assert, ctx) => async function (issuesCount, table) {
                 let statuses = _getStatuses(table[0]);
-                let milestones = ctx.get('milestones');
+                let milestones = ctx.get('currentProject').milestones;
 
-                milestones.forEach((milestone) => {
-                    let issues = _getIssues(issuesCount, statuses, ctx.get('project'), milestone)
+                milestones.models.forEach((milestone) => {
+                    let issues = _getIssues(issuesCount, statuses, ctx.get('currentProject'), milestone)
 
                     /** Linking milestone with issues */
                     milestone.update({

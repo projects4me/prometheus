@@ -65,7 +65,7 @@ module.exports = function(environment) {
     };
 
     if (environment === 'development') {
-        ENV.api.host = "http://localhost:8080";
+        ENV.api.host = process.env.API_HOST_DEV;
     }
 
     if (environment === 'test') {
@@ -86,7 +86,7 @@ module.exports = function(environment) {
     }
 
     if (environment === 'production') {
-        ENV.api.host = "http://api.projects4.me";
+        ENV.api.host = process.env.API_HOST_PRODUCTION;;
     }
     return ENV;
 };
