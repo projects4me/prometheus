@@ -12,5 +12,5 @@ import AppComponent from '../app';
  * @extends Ember.Component
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default class UserProfileCloseMembersComponent extends AppComponent {
+export default class RelatedUserComponent extends AppComponent {
 }

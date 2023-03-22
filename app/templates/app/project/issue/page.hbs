@@ -20,7 +20,7 @@
             <div class="row">
               <div class="col-xs-3 col-md-2" data-field="issue.assignee">
                 <div class="project-owner">
-                  <img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
+                  <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
                   <a class="users-list-name" href="#">{{issue.assignedTo.name}}</a>
                   <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
                 </div>
@@ -100,7 +100,7 @@
 
                 {{#each issue.comments as |comment|}}
                   <div class="box-comment">
-                    <img class="img-circle img-sm" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
+                    <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
 
                     <div class="comment-text">
                       <span class="username">
@@ -114,7 +114,7 @@
 
                 <div class="box-footer box-comments">
                   <form action="#" method="post">
-                    <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
+                    <img class="img-responsive img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
                     {{!-- .img-push is used to add margin to elements next to floating images --}}
                     <div class="img-push">
                       <div class="message-box">
@@ -176,22 +176,22 @@
           <div class="box-body no-padding">
             <ul class="users-list clearfix">
               <li>
-                <img src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
+                <img src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
                 <a class="users-list-name" href="#">{{issue.assignedTo.name}}</a>
                 <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
               </li>
               <li>
-                <img src="http://projects4me/userimage/get/{{issue.ownedBy.id}}" alt="{{issue.ownedBy.name}}">
+                <img src="{{this.apiHost}}/userimage/get/{{issue.ownedBy.id}}" alt="{{issue.ownedBy.name}}">
                 <a class="users-list-name" href="#">{{issue.ownedBy.name}}</a>
                 <span class="users-list-date">{{t "views.app.issue.detail.ownedBy"}}</span>
               </li>
               <li>
-                <img src="http://projects4me/userimage/get/{{issue.modifiedBy.id}}" alt="{{issue.modifiedBy.name}}">
+                <img src="{{this.apiHost}}/userimage/get/{{issue.modifiedBy.id}}" alt="{{issue.modifiedBy.name}}">
                 <a class="users-list-name" href="#">{{issue.modifiedBy.name}}</a>
                 <span class="users-list-date">{{t "views.app.issue.detail.modifiedBy"}}</span>
               </li>
               <li>
-                <img src="http://projects4me/userimage/get/{{issue.reportedBy.id}}" alt="{{issue.reportedBy.name}}">
+                <img src="{{this.apiHost}}/userimage/get/{{issue.reportedBy.id}}" alt="{{issue.reportedBy.name}}">
                 <a class="users-list-name" href="#">{{issue.reportedBy.name}}</a>
                 <span class="users-list-date">{{t "views.app.issue.detail.reportedBy"}}</span>
               </li>
@@ -275,7 +275,7 @@
                 {{#each issue.estimated as |timelog|}}
                   <li class="item">
                     <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
-                      <img class="img-circle" src="http://projects4me/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
+                      <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
                     </div>
                     <div class="log-info">
                       <a href="javascript:void(0);" class="user-title">{{timelog.createdUserName}}</a>
@@ -368,7 +368,7 @@
                 {{#each issue.spent as |timelog|}}
                   <li class="item">
                     <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
-                      <img class="img-circle" src="http://projects4me/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
+                      <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
                     </div>
                     <div class="log-info">
                       <a href="javascript:void(0);" class="user-title">{{timelog.createdUserName}}</a>

@@ -11,7 +11,7 @@
             <div class="box box-widget">
 
               <div class="box-start">
-                <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
+                <img class="img-responsive img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
                 {{!-- .img-push is used to add margin to elements next to floating images --}}
                 <div class="img-push">
                   <a href="javascript:void(0);" {{action "showDialog"}}>
@@ -36,7 +36,7 @@
               <div class="box box-widget">
                 <div class="box-header with-border">
                   <div class="user-block">
-                    <img class="img-circle" src="http://projects4me/userimage/get/{{entity.createdUser}}" alt="{{t "global.form.image"}}">
+                    <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{entity.createdUser}}" alt="{{t "global.form.image"}}">
                     <span class="subject"><a href="#">{{entity.subject}}</a></span>
                     <span class="description"><a href="/app/user/{{entity.createdBy.id}}">{{entity.createdBy.name}}</a> - {{get-date entity "dateModified" "MMM Do 'YY, h:mm a"}}</span>
                   </div>
@@ -91,7 +91,7 @@
                   {{#if (eq entity.roomType "discussion")}}
                     {{#each entity.comments as |comment|}}
                       <div class="box-comment">
-                        <img class="img-circle img-sm" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
+                        <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
 
                         <div class="comment-text">
                           <span class="username">
@@ -105,7 +105,7 @@
 
                     <div class="box-footer">
                       <form action="#" method="post">
-                        <img class="img-responsive img-circle img-sm" src="http://projects4me/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
+                        <img class="img-responsive img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
                         {{!-- .img-push is used to add margin to elements next to floating images --}}
                         <div class="img-push">
                           <div class="message-box">

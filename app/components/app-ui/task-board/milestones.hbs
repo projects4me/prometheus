@@ -42,7 +42,7 @@
                         <p class="description">{{safe-html issue.description}}</p>
                         <p>
                           <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
-                          <span><img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
+                          <span><img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
                         </p>
                         
                         {{#if issue.isSaving}}
