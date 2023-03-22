@@ -12,7 +12,6 @@ module('Integration | Component | milestone-blocks/index', function (hooks) {
         }
 
         this.set('milestone', milestone);
-        debugger;
         await render(hbs`
             <MilestoneBlocks::Index
                 @milestone={{this.milestone}}
