@@ -169,8 +169,8 @@
                   <td class="select-box">
                     <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{issue.id}}/>
                   </td>
-                  <td class="issue-number"><a href="#" {{action "openDetail" issue}}>{{issue.issueNumber}}</a></td>
-                  <td class="issue-subject"><a href="#" {{action "openDetail" issue}}>{{issue.subject}}</a></td>
+                  <td class="issue-number"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.issueNumber}}</LinkTo></td>
+                  <td class="issue-subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.subject}}</LinkTo></td>
                   <td class="issue-type">{{issue.issuetype.name}}</td>
                   <td class="issue-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></td>
                   <td class="issue-priority"><AppUi::PriorityIcon @priority = {{readonly issue.priority}}/> {{t (concat "views.app.issue.lists.priority." issue.priority)}}</td>
