@@ -20,16 +20,8 @@
             <div class="row">
               <div class="col-xs-3 col-md-2" data-field="issue.assignee">
                 <div class="project-owner">
-<<<<<<< HEAD
                   <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
-                  <a class="users-list-name" href="#">{{issue.assignedTo.name}}</a>
-||||||| d9d40d4
-                  <img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
-                  <a class="users-list-name" href="#">{{issue.assignedTo.name}}</a>
-=======
-                  <img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
                   <LinkTo @route="app.user.page" @model={{issue.assignedTo.id}} class="users-list-name">{{issue.assignedTo.name}}</LinkTo>
->>>>>>> 13ae9d361d181e554fe4c318b387cba761405fc9
                   <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
                 </div>
               </div>
@@ -184,55 +176,23 @@
           <div class="box-body no-padding">
             <ul class="users-list clearfix">
               <li>
-<<<<<<< HEAD
                 <img src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
-                <a class="users-list-name" href="#">{{issue.assignedTo.name}}</a>
-||||||| d9d40d4
-                <img src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
-                <a class="users-list-name" href="#">{{issue.assignedTo.name}}</a>
-=======
-                <img src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
                 <LinkTo @route="app.user.page" @model={{issue.assignedTo.id}} class="users-list-name">{{issue.assignedTo.name}}</LinkTo>
->>>>>>> 13ae9d361d181e554fe4c318b387cba761405fc9
                 <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
               </li>
               <li>
-<<<<<<< HEAD
                 <img src="{{this.apiHost}}/userimage/get/{{issue.ownedBy.id}}" alt="{{issue.ownedBy.name}}">
-                <a class="users-list-name" href="#">{{issue.ownedBy.name}}</a>
-||||||| d9d40d4
-                <img src="http://projects4me/userimage/get/{{issue.ownedBy.id}}" alt="{{issue.ownedBy.name}}">
-                <a class="users-list-name" href="#">{{issue.ownedBy.name}}</a>
-=======
-                <img src="http://projects4me/userimage/get/{{issue.ownedBy.id}}" alt="{{issue.ownedBy.name}}">
                 <LinkTo @route="app.user.page" @model={{issue.ownedBy.id}} class="users-list-name">{{issue.ownedBy.name}}</LinkTo>
->>>>>>> 13ae9d361d181e554fe4c318b387cba761405fc9
                 <span class="users-list-date">{{t "views.app.issue.detail.ownedBy"}}</span>
               </li>
               <li>
-<<<<<<< HEAD
                 <img src="{{this.apiHost}}/userimage/get/{{issue.modifiedBy.id}}" alt="{{issue.modifiedBy.name}}">
-                <a class="users-list-name" href="#">{{issue.modifiedBy.name}}</a>
-||||||| d9d40d4
-                <img src="http://projects4me/userimage/get/{{issue.modifiedBy.id}}" alt="{{issue.modifiedBy.name}}">
-                <a class="users-list-name" href="#">{{issue.modifiedBy.name}}</a>
-=======
-                <img src="http://projects4me/userimage/get/{{issue.modifiedBy.id}}" alt="{{issue.modifiedBy.name}}">
                 <LinkTo @route="app.user.page" @model={{issue.modifiedBy.id}} class="users-list-name">{{issue.modifiedBy.name}}</LinkTo>
->>>>>>> 13ae9d361d181e554fe4c318b387cba761405fc9
                 <span class="users-list-date">{{t "views.app.issue.detail.modifiedBy"}}</span>
               </li>
               <li>
-<<<<<<< HEAD
                 <img src="{{this.apiHost}}/userimage/get/{{issue.reportedBy.id}}" alt="{{issue.reportedBy.name}}">
-                <a class="users-list-name" href="#">{{issue.reportedBy.name}}</a>
-||||||| d9d40d4
-                <img src="http://projects4me/userimage/get/{{issue.reportedBy.id}}" alt="{{issue.reportedBy.name}}">
-                <a class="users-list-name" href="#">{{issue.reportedBy.name}}</a>
-=======
-                <img src="http://projects4me/userimage/get/{{issue.reportedBy.id}}" alt="{{issue.reportedBy.name}}">
                 <LinkTo @route="app.user.page" @model={{issue.reportedBy.id}} class="users-list-name">{{issue.reportedBy.name}}</LinkTo>
->>>>>>> 13ae9d361d181e554fe4c318b387cba761405fc9
                 <span class="users-list-date">{{t "views.app.issue.detail.reportedBy"}}</span>
               </li>
             </ul>
