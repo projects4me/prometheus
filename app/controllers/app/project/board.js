@@ -3,7 +3,7 @@
  */
 
 import PrometheusController from "prometheus/controllers/prometheus";
-import { action } from '@ember/object';
+import { computed, action } from '@ember/object';
 
 /**
  * This is the controller for the board controller
@@ -160,5 +160,62 @@ export default class AppProjectBoardController extends PrometheusController {
         });
 
         return statusList;
+    }
+
+    /**
+     * This function firstly filter issues based on statuses. Then those filtered issues are sorted based on there priorities, higher
+     * priority issue will be on start and low will be on last. After sorting, issues are pushed into there respective milestones.
+     *
+     * @property milestoneList
+     * @returns array
+     * @method get
+     * @public
+     */
+    @computed('milestones.issues')
+    get milestoneList() {
+        let statusList = [
+            'new',
+            'in_progress',
+            'done',
+            'feedback',
+            'pending',
+            'deferred'
+        ];
+
+        let priorities = {
+            low: 1,
+            medium: 2,
+            high: 3,
+            critical: 4,
+            blocker: 5
+        }
+
+        this.milestones.forEach((milestone) => {
+            //clone milestone issue
+            let issues = _.clone(milestone.issues);
+            
+            /**
+             * clear all milestone issues in order to set new sorted issues.
+             * https://api.emberjs.com/ember/4.11/classes/MutableArray/methods/clear?anchor=clear
+             */
+            milestone.issues.clear();
+
+            statusList.forEach(status => {
+                //filter issues based on status
+                let issuesByStatus = issues.filter(issue => issue.status == status);
+
+                //first add a priority by number to an issue
+                issuesByStatus.forEach(issue => {
+                    issue['priorityNumber'] = priorities[issue['priority']];
+                });
+
+                //now sort issues of each status based on priorities
+                issuesByStatus.sort((a, b) => b.priorityNumber - a.priorityNumber);
+
+                //push new sorted issues
+                milestone.issues.pushObjects(issuesByStatus);
+            });
+        });
+        return this.milestones;
     }
 }
