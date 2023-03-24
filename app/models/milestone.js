@@ -186,6 +186,6 @@ export default Model.extend(Validations, {
      * @for Milestone
      * @private
      */
-    issues : hasMany('issue'),
+    issues : hasMany('issue', {async : false}),
 
 });
