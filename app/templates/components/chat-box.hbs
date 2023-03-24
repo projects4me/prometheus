@@ -26,7 +26,7 @@
                 <span class="direct-chat-timestamp pull-right">{{moment-from-now comment.dateCreated}}</span>
               </div>
 
-              <img class="direct-chat-img" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
+              <img class="direct-chat-img" src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
               <div class="direct-chat-text">
                 {{comment.comment}}
               </div>
@@ -38,7 +38,7 @@
                 <span class="direct-chat-timestamp pull-left">{{moment-from-now comment.dateCreated}}</span>
               </div>
               {{!-- /.direct-chat-info --}}
-              <img class="direct-chat-img" src="http://projects4me/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
+              <img class="direct-chat-img" src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
               <div class="direct-chat-text">
                 {{comment.comment}}
               </div>

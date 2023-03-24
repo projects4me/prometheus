@@ -25,24 +25,24 @@
         {{#each @statuses as |status|}}
           <div class="lane col-md-2">
             
-            <div class="box {{get-prop @statusClass status}}">
+            <div class="box {{get-prop @statusClass status.name}}">
 
-              <div class="box-header with-border" data-field-status="{{status}}">
-                {{t (concat "views.app.issue.lists.status." status)}}
+              <div class="box-header with-border" data-field-status="{{status.name}}">
+                {{t (concat "views.app.issue.lists.status." status.name)}}
               </div>
 
-              <div class="lane box-body" data-field-lane-group={{@group}} data-field-milestone-id={{this.milestone.id}} data-field-status="{{status}}">
+              <div class="lane box-body" data-field-lane-group={{@group}} data-field-milestone-id={{this.milestone.id}} data-field-status="{{status.name}}" data-issue-status-id={{status.id}}>
 
                 <AppUi::TaskBoard::IssuesProvider @issues={{this.milestone.issues}} @query={{this.query}} as |issues|>
                   {{#each issues as |issue|}}
-                    {{#if (eq issue.status status)}}
+                    {{#if (eq issue.status status.name)}}
                       <div class="item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}">
                       
-                        <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action @openIssue issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
+                        <h4>{{priority-icon priority=(readonly issue.priority)}} <LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action @openIssue issue}}>#{{issue.issueNumber}} - {{issue.subject}}</LinkTo></h4>
                         <p class="description">{{safe-html issue.description}}</p>
                         <p>
                           <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
-                          <span><img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
+                          <span><img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
                         </p>
                         
                         {{#if issue.isSaving}}

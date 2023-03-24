@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import ENV from 'prometheus/config/environment';
 import { inject as service } from '@ember/service';
 
 /**
@@ -48,4 +49,13 @@ export default class AppComponent extends Component {
      * @for App
      */
     @service currentUser;
+
+    /**
+     * API's host.
+     * 
+     * @property apiHost
+     * @type String
+     * @for App
+     */
+    apiHost = ENV.api.host;
 }

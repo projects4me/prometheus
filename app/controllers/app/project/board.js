@@ -23,23 +23,6 @@ export default class AppProjectBoardController extends PrometheusController {
      * @for Board
      * @public
      */
-    statuses = [
-        'new',
-        'in_progress',
-        'done',
-        'feedback',
-        'pending',
-        'deferred'
-    ];
-
-    /**
-     * These are the issues statues
-     *
-     * @property statuses
-     * @type Array
-     * @for Board
-     * @public
-     */
     statusClass = {
         new: 'box-info',
         in_progress: 'box-primary',
@@ -97,6 +80,7 @@ export default class AppProjectBoardController extends PrometheusController {
         let _self = this;
         let laneMilestoneId = elTo.getAttribute('data-field-milestone-id');
         let status = elTo.parentElement.children[0].getAttribute('data-field-status');
+        let newStatusId = elTo.getAttribute('data-issue-status-id');
         let issueId = issueEl.getAttribute('data-field-issue-id');
         let issueMilestoneId = issueEl.getAttribute('data-field-issue-milestone');
 
@@ -108,6 +92,7 @@ export default class AppProjectBoardController extends PrometheusController {
 
         issue.set('status', status);
         issue.set('milestoneId', laneMilestoneId);
+        issue.set('statusId', newStatusId);
         issue.save().then(() => {
             _self.postUpdateProcessing(issueId, elTo, elFrom, reRenderViewCb);
         });
@@ -140,5 +125,40 @@ export default class AppProjectBoardController extends PrometheusController {
         milestoneEls.pushObject(milestoneEl2);
         reRenderViewCb(milestoneEls, [item]);
         Logger.debug("-AppProjectBoardController::postUpdateProcessing");
+    }
+
+    /**
+     * This is the list of issue statuses related to the current project.
+     *
+     * @property statuses
+     * @returns array
+     * @method get
+     * @public
+     */
+    get statuses() {
+        let statusList = [
+            'new',
+            'in_progress',
+            'done',
+            'feedback',
+            'pending',
+            'deferred'
+        ];
+
+        let _self = this;
+
+        statusList.forEach((status, i) => {
+            let issueStatusModel = _self.issueStatuses.findBy('name', status);
+
+            //create new object of issueStatus with its id and name.
+            let issueStatus = {
+                name: status,
+                id: issueStatusModel.id
+            }
+
+            statusList[i] = issueStatus;
+        });
+
+        return statusList;
     }
 }

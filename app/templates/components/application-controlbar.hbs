@@ -12,7 +12,7 @@
       {{#each this.users as |user|}}
         {{#if (not-eq user.id currentUser.user.id)}}
           <li>
-            <img class="contacts-list-img" src="http://projects4me/userimage/get/{{user.id}}" alt="{{t "global.form.image"}}">
+            <img class="contacts-list-img" src="{{this.apiHost}}/userimage/get/{{user.id}}" alt="{{t "global.form.image"}}">
             <div class="contacts-list-info">
               <span class="contacts-list-name">
                 <a href="javascript:void(0);" {{action 'startchat' user}}>{{user.name}}</a>

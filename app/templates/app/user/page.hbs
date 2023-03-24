@@ -20,7 +20,7 @@
       {{!-- User profile info section starts--}}
         <div class="box box-primary">
           <div class="box-body box-profile">
-            <img class="user-profile-img img-responsive" src="http://projects4me/userimage/get/{{this.model.id}}" alt="{{this.model.name}}">
+            <img class="user-profile-img img-responsive" src="{{this.apiHost}}/userimage/get/{{this.model.id}}" alt="{{this.model.name}}">
 
             <div class="user-info">
                 <h3 class="user-name">{{this.model.name}}</h3>
@@ -82,7 +82,7 @@
               <div class="user-badges">
                 {{#each this.model.badgeDetails as |badgeDetail|}}
                   <span class="badge-img" data-toggle="tooltip" title="{{badgeDetail.badge.name}}[{{badgeDetail.badgeLevel.name}}]">
-                    <img src="http://projects4me/image/get/{{badgeDetail.badgeLevel.id}}" alt="{{badgeDetail.badge.name}}">
+                    <img src="{{this.apiHost}}/image/get/{{badgeDetail.badgeLevel.id}}" alt="{{badgeDetail.badge.name}}">
                   </span>
                 {{/each}}        
               </div>

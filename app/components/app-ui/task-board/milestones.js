@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
+import AppComponent from '../../app';
 
 /**
  * This component is used to render milestones of selected project.
@@ -13,7 +13,7 @@ import { tracked } from '@glimmer/tracking';
  * @extends Ember.Component
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default class TaskBoardMilestonesComponent extends Component {
+export default class TaskBoardMilestonesComponent extends AppComponent {
 
     /**
      * This property is used to keep track the query, which is provided by the user, for 

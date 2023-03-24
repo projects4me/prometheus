@@ -97,6 +97,7 @@
     "ember-simple-auth": "^4.2.2",
     "ember-truth-helpers": "^3.0.0",
     "ember-websockets": "^8.0.0",
+    "ember-cli-accounting": "^2.1.0",
     "font-awesome": "^4.7.0",
     "fullcalendar": "^3.10.0",
     "fullcalendar-scheduler": "^1.9.4",
