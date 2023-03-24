@@ -5,6 +5,7 @@
 import Controller from '@ember/controller';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
+import ENV from 'prometheus/config/environment';
 import _ from "lodash";
 
 /**
@@ -57,6 +58,15 @@ export default class PrometheusController extends Controller {
      * @public
      */
     @service('store') store;
+
+    /**
+     * API's host.
+     * 
+     * @property apiHost
+     * @type String
+     * @for Prometheus.Controllers.Prometheus
+     */
+     apiHost = ENV.api.host;
 
     /**
      * This action helps us set a related fields

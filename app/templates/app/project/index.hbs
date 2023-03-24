@@ -27,7 +27,7 @@
 
             <div class="col-xs-3 col-md-2">
               <div class="project-owner">
-                <img class="img-circle" src="http://projects4me/userimage/get/{{this.model.owner.id}}" alt="{{this.model.owner.name}}">
+                <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{this.model.owner.id}}" alt="{{this.model.owner.name}}">
                 <LinkTo @route="app.user.page" @model={{this.model.owner.id}} class="users-list-name" >{{this.model.owner.name}}</LinkTo>
                 <span class="users-list-date">{{t "views.app.project.detail.owner"}}</span>
               </div>
@@ -107,7 +107,7 @@
                 {{#each this.model.conversations as |conversation|}}
                   <li>
                     <div class="user-block">
-                      <img class="img-circle" src="http://projects4me/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
+                      <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
                       <span class="subject">{{conversation.subject}}</span>
                       <span class="description">{{translate-comment conversation.description}}</span>
                     </div>
@@ -235,7 +235,7 @@
           <ul class="users-list clearfix">
             {{#each this.model.members as |member|}}
               <li>
-                <img src="http://projects4me/userimage/get/{{member.id}}" alt="{{member.name}}">
+                <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
                 <LinkTo @route="app.user.page" @model={{member.id}} class="users-list-name">{{member.name}}</LinkTo>
                 <span class="users-list-date">{{get-role member.id this.model.roles this.model.memberships}}</span>
               </li>
