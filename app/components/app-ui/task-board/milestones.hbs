@@ -38,11 +38,11 @@
                     {{#if (eq issue.status status.name)}}
                       <div class="item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}">
                       
-                        <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{action @openIssue issue}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
+                        <h4>{{priority-icon priority=(readonly issue.priority)}} <LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action @openIssue issue}}>#{{issue.issueNumber}} - {{issue.subject}}</LinkTo></h4>
                         <p class="description">{{safe-html issue.description}}</p>
                         <p>
                           <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
-                          <span><img class="img-circle" src="http://projects4me/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
+                          <span><img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
                         </p>
                         
                         {{#if issue.isSaving}}

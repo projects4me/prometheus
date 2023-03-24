@@ -184,9 +184,9 @@
                     <td>
                       <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{project.id}}/>
                     </td>
-                    <td class="project-name"><a href="#" {{action "openDetail" project}}>{{project.name}}</a></td>
+                    <td class="project-name"><LinkTo @route="app.project" @model={{project.id}} {{action "openDetail" project}}>{{project.name}}</LinkTo></td>
                     <td class="project-type">{{t (concat "views.app.project.detail.lists.type." project.type)}}</td>
-                    <td class="project-owner"><a href="#">{{project.owner.name}}</a></td>
+                    <td class="project-owner"><LinkTo @route="app.user.page" @model={{project.owner.id}}>{{project.owner.name}}</LinkTo></td>
                     <td class="project-description">{{project.description}}</td>
                     <td class="project-status"><span class="badge {{project.status}}">{{t (concat "views.app.project.lists.status." project.status)}}</span></td>
                     <td class="project-date">{{project.dateModified}}</td>
