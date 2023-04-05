@@ -40,10 +40,11 @@ Router.map(function() {
           });
       });
       this.route('user',function(){
-          this.route('index',{path:'/'});
-          this.route('create');
-          this.route('page',{path:'/:user_id'});
-          this.route('edit',{path:'/edit/:user_id'});
+        this.route('index',{path:'/'});
+        this.route('create');
+        this.route('page',{path:'/:user_id'});
+        this.route('edit',{path:'/edit/:user_id'});
+        this.route('management');
       });
       this.route('admin',function(){
           this.route('index',{path:'/'});
