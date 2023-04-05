@@ -29,6 +29,9 @@ export default Factory.extend({
     status() {
         return faker.random.arrayElement(["active", "pending", "in_progress", "completed", "new"]);
     },
+    accountStatus() {
+        return faker.random.arrayElement(["active", "inactive", "disabled"]);
+    },
     title() {
         return faker.name.jobTitle();
     },
