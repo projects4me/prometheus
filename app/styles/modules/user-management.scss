@@ -1,0 +1,41 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the user profile page of the application.
+*/
+
+.users {
+
+  min-height: 400;
+
+    .user-profile {
+      display: flex;
+
+      .title {
+          font-size: 1.1rem;
+          font-style: italic;
+          font-weight: 300;
+      }
+      
+      .user-img {
+        margin-right: 1rem;
+      }
+    }
+
+    .active{
+      color: $successColor;
+    }
+
+    .inactive{
+      color: $dangerColor;
+    }
+
+    .disabled{
+      color: $lightColor;
+    }
+  
+}

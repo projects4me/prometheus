@@ -59,6 +59,16 @@ export default Model.extend(Validations, {
     status: attr('string'),
 
     /**
+     * Account Status of user.
+     *
+     * @property accountStatus
+     * @type String
+     * @for User
+     * @private
+     */
+     accountStatus: attr('string'),
+
+    /**
      * Name
      *
      * @property name

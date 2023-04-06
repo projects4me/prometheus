@@ -798,6 +798,17 @@
               "noActivity": "No Activity Recorded"
           },
           "worksMostWith": "Works Most With"
+        },
+        "management": "User Management",
+        "list": {
+          "profile": "Profile",
+          "accountStatus": "Status",
+          "emailaddress": "Email Address"
+        },
+        "accountStatus": {
+          "inactive": "Inactive",
+          "active": "Active",
+          "disabled": "Disabled"
         }
       },
       "chat": {
