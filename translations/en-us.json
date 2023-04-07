@@ -799,7 +799,10 @@
           },
           "worksMostWith": "Works Most With"
         },
-        "management": "User Management",
+        "management": {
+          "title": "User Management",
+          "search": "Search User.."
+        },
         "list": {
           "profile": "Profile",
           "accountStatus": "Status",
