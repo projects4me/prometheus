@@ -7,7 +7,7 @@ import { debounce } from '@ember/runloop';
 import { action } from '@ember/object';
 
 /**
- * This component renders search bar.
+ * This component renders search box.
  *
  * @class FieldSearch
  * @namespace Prometheus.Components
