@@ -20,7 +20,7 @@ import * as searchIssueFromIssueToday from './dashboard/issue-today/search-issue
 import * as selectIssueFromIssueToday from './dashboard/issue-today/select-and-navigate-to-issue-steps';
 import * as renderListOfProjects from './project/render-list-of-projects-steps';
 import * as renderListOfIssues from './issue/render-list-of-issues-steps';
-import * as renderListOfUsers from './user/render-list-of-users-steps';
+import * as renderListOfUsers from './user-management/render-list-of-users-steps';
 import * as projectCreate from './project/create-project-steps';
 import * as projectSearchFromList from './project/search-project-from-list-steps';
 import * as issueSearchFromList from './issue/search-issue-from-list-steps';
