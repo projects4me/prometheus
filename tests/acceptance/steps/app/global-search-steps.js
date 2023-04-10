@@ -26,15 +26,17 @@ export const given = function () {
 export const when = function () {
     return [
         {
-            "User clicks on global serach": (assert) => async function () {
+            "User clicks on global search": (assert) => async function () {
                 await clickTrigger('div.global-search');
                 assert.ok(true, 'drop down opens up');
             }
         },
         {
-            "User search for $issue": (assert) => async function (issue) {
+            "User search for $issue": (assert, ctx) => async function (issue) {
+                ctx.set('fieldSearched', 'Issue.issueSubject');
                 await selectSearch('div.global-search', `${issue}`);
                 assert.ok(true, `User searched for ${issue}`);
+                ctx.set('fieldSearched', null);
             }
         },
         {
