@@ -11,11 +11,11 @@ export function register(server, ctx) {
 
         let value = getValueFromQuery(field, userQuery);
 
-        if (field == 'User.id' && value) {
+        if (value && field == 'User.id') {
             pushObjectInModel(model, schema.users.find(value));
-        } else {
+        } else if (value) {
             field = field.replace('User.', '');
-            model = schema.users.where({ field: value });
+            model = schema.users.where({ [field]: value });
         }
 
         return model;
