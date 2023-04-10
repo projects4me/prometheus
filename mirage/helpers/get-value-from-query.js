@@ -6,13 +6,13 @@
  * @param {String} query 
  * @returns String
  */
- export default function getValueFromQuery(field, query) {
+export default function getValueFromQuery(field, query) {
     if (query != undefined) {
-        let matchQueryField = new RegExp(`(${field} : (\\d+))`);
-        if (matchQueryField.exec(query)) {
-            let regex = /(^:)|[\d]/;
-            let val = regex.exec(query);
-            return val[0];
+        let operators = "(AND|OR|BETWEEN|:|<|>|<:|>:|CONTAINS|STARTS|ENDS|NULL|EMPTY)"
+        const regex = new RegExp(`\\((${field}\\s+${operators})\\s+([^)]+)\\)`);
+        const match = query.match(regex);
+        if (match) {
+            return match[3];
         }
     }
 }
