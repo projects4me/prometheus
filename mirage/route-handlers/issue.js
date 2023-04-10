@@ -6,16 +6,25 @@ export function register(server, ctx) {
     server.get('/issue', (schema, request) => {
         let model = schema.issues.all();
         let issueQuery = request.queryParams.query;
-        let issueNumber = getValueFromQuery('Issue.issueNumber', issueQuery);
+        let field = ctx.get('fieldSearched');
+        field = field ? field : 'Issue.issueNumber';
+        let value = getValueFromQuery(field, issueQuery);
         let customIssues = server['customIssues'];
 
-        if (issueNumber) {
-            pushObjectInModel(model, schema.issues.find(issueNumber));
+        /**
+         * First IF will work for global search where user searched an issue using field "subject"
+         * instead of issueNumber. e.g "Issue.subject CONTAINS VALUE".
+         */
+        if (isNaN(value) && value !== undefined && field == 'Issue.issueSubject') {
+            model = schema.issues.where({subject: value});
+        } else if(value) {
+            pushObjectInModel(model, schema.issues.find(value));
         } else if (issueQuery.indexOf("savedsearch") >= 0) {
             pushObjectInModel(model, schema.issues.find(1));
         } else if (customIssues) {
             model = customIssues();
         }
+
         return model;
     });
 
