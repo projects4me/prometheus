@@ -41,9 +41,10 @@ import * as navigateToLatestProject from './profile/navigate-to-one-of-latest-pr
 import * as navigateToLatestIssue from './profile/navigate-to-one-of-latest-issue-steps';
 import * as navigateToMostWorkedMember from './profile/navigate-to-one-of-most-worked-member-steps';
 import * as verifyRecentActivities from './profile/verify-list-of-recent-activities-steps';
+import * as searchUserFromList from './user-management/search-user-from-list-steps';
 
 export default function (assert) {
-    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()
