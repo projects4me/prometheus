@@ -5,10 +5,19 @@ export function register(server, ctx) {
     server.get('/user', (schema, request) => {
         let model = schema.users.all();
         let userQuery = request.queryParams.query;
-        let id = getValueFromQuery(`User.id`, userQuery);
-        if (id) {
-            pushObjectInModel(model, schema.users.find(id));
+
+        let field = ctx.get('fieldSearched');
+        field = field ? field : 'User.id';
+
+        let value = getValueFromQuery(field, userQuery);
+
+        if (field == 'User.id' && value) {
+            pushObjectInModel(model, schema.users.find(value));
+        } else {
+            field = field.replace('User.', '');
+            model = schema.users.where({ field: value });
         }
+
         return model;
     });
 
