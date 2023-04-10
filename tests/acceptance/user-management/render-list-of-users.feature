@@ -1,5 +1,5 @@
 @setupApplicationTest
-Feature: Project | render list of projects
+Feature: User Management | render list of user
 
   Scenario: Verify the rendering of list of users in user management route
 
