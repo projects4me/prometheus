@@ -29,4 +29,12 @@ export function register(server, ctx) {
         let model = schema.users.find(id);
         return model;
     });
+
+    server.delete('/user/:id', (schema, request) => {
+        let id = request.params.id;
+        let model = schema.users.find(id);
+        schema.users.find(id).destroy();
+        debugger;
+        return model;
+    });
 }
