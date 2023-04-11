@@ -34,7 +34,6 @@ export function register(server, ctx) {
         let id = request.params.id;
         let model = schema.users.find(id);
         schema.users.find(id).destroy();
-        debugger;
         return model;
     });
 }
