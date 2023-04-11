@@ -16,18 +16,37 @@ import App from "prometheus/routes/app";
 export default class AppUserManagementRoute extends App {
 
     /**
+     * We need to reload the model as the values related ot the page's data are
+     * changed so we are relying on the queryParams provided by Ember to reload
+     * the model as the following parameter are changed.
+     *
+     * @property queryParams
+     * @type Object
+     * @for AppUserManagementRoute
+     * @public
+     */
+    queryParams = {
+        query: {
+            refreshModel: true,
+        }
+    }
+
+    /**
      * The model hook for this route. In this function we fetch and return the list 
      * of users.
      *
      * @method model;
      * @public
      */
-    model() {
+    model(params) {
         Logger.debug('+Prometheus.Routes.App.User.Management::model()');
+
+        let query = params.query ? params.query : null;
 
         let _userOptions = {
             limit: -1,
-            fields: "name,title,email,accountStatus"
+            fields: "name,title,email,accountStatus",
+            query: query
         };
 
         Logger.debug('-Prometheus.Routes.App.User.Management::model()');

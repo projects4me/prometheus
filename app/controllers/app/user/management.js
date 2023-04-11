@@ -3,6 +3,7 @@
  */
 
 import PrometheusListController from "prometheus/controllers/prometheus/list";
+import { action } from '@ember/object';
 
 /**
  * The controller for user management page.
@@ -14,4 +15,18 @@ import PrometheusListController from "prometheus/controllers/prometheus/list";
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppUserManagementController extends PrometheusListController {
+
+    /**
+     * This function is used to search the user by its name.
+     *
+     * @method searchUserByName
+     * @public
+     */
+    @action searchUserByName(query) {
+        let updatedQuery = `((User.name CONTAINS ${query}))`;
+
+        //this.query is present inside PrometheusList controller
+        this.set('query', updatedQuery);
+    }
+
 }

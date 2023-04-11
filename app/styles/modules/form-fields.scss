@@ -296,3 +296,37 @@
 .field-date input:read-only {
   background-color: transparent;
 }
+
+//++++++SEARCH FIELD+++++++++++++++
+#search-field {
+  position: relative;
+
+  input[type="text"] {
+    width: 40rem;
+    max-width: 40rem;
+    padding: 0.5rem;
+    border-radius: 14px;
+  }
+
+  input[type="text"]:focus{
+    outline: none;
+  }
+
+  i {
+    position: absolute;
+    top:1rem;
+    right: 1rem;
+  }
+
+}
+
+@media only screen 
+and (max-width: 600px) {
+
+  #search-field {
+    input[type="text"] {
+    width: 30rem;
+    max-width: 30rem;
+  }
+}
+}
