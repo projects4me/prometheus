@@ -38,6 +38,22 @@
       .disabled {
         color: $lightColor;
       }
+
+      [data-user-field="email"],
+      [data-user-field="account-status"] {
+        line-height: 4rem;
+      }
+
+      .icons {
+        i {
+          font-size: 2rem;
+          margin-right: 1rem;
+        }
+
+        i:hover {
+          cursor: pointer;
+        }
+      }
     }
   }
 
