@@ -35,18 +35,18 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>{{t "views.app.user.list.profile"}}</th>
-                    <th>{{t "views.app.user.list.emailaddress"}}</th>
-                    <th>{{t "views.app.user.list.accountStatus"}}</th>
+                    <th>{{t "views.app.user.management.list.profile"}}</th>
+                    <th>{{t "views.app.user.management.list.emailaddress"}}</th>
+                    <th>{{t "views.app.user.management.list.accountStatus"}}</th>
                   </tr>
                 </thead>
 
                 <tbody>
                 {{#each this.users as |user|}}
-                    <tr>
+                    <tr data-user-id={{user.id}}>
                       
                     <td>
-                      <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{user.id}}/>
+                      <FormFields::FieldCheckbox @select={{action this.select user.id}} @data-select={{user.id}}/>
                     </td>
 
                       <td class="user-profile">
@@ -60,8 +60,15 @@
                         </div>                      
                       </td>
 
-                      <td>{{user.email}}</td>
-                      <td class={{user.accountStatus}}>{{t (concat "views.app.user.accountStatus." user.accountStatus)}}</td>
+                      <td data-user-field="email">{{user.email}}</td>
+                      <td data-user-field="account-status" class={{user.accountStatus}}>{{t (concat "views.app.user.accountStatus." user.accountStatus)}}</td>
+
+                      <td class="pull-right icons">
+                        <button data-btn="delete" type="button" class="btn btn-box-tool" data-toggle="tooltip" {{action this.deleteUser user}}>
+                          <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                      </td>
+
                     </tr>
                     
                 {{/each}}
