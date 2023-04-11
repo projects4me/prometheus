@@ -9,44 +9,40 @@
 */
 
 .user-management {
-
   .content {
     .users {
       min-height: 30rem;
 
-        .user-profile {
-          display: flex;
+      .user-profile {
+        display: flex;
 
-          .title {
-              font-size: 1.1rem;
-              font-style: italic;
-              font-weight: 300;
-          }
-          
-          .user-img {
-            margin-right: 1rem;
-          }
+        .title {
+          font-size: 1.1rem;
+          font-style: italic;
+          font-weight: 300;
         }
 
-        .active{
-          color: $successColor;
+        .user-img {
+          margin-right: 1rem;
         }
+      }
 
-        .inactive{
-          color: $dangerColor;
-        }
+      .active {
+        color: $successColor;
+      }
 
-        .disabled{
-          color: $lightColor;
-        }
-      
+      .inactive {
+        color: $dangerColor;
+      }
+
+      .disabled {
+        color: $lightColor;
+      }
     }
   }
 
-  .header { 
+  .header {
     display: flex;
     justify-content: space-between;
-
   }
-  
 }
