@@ -50,8 +50,12 @@
           margin-right: 1rem;
         }
 
-        i:hover {
-          cursor: pointer;
+        button {
+          outline: none;
+
+          i {
+            color: black;
+          }
         }
       }
     }
