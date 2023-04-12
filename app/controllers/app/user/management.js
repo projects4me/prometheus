@@ -76,12 +76,12 @@ export default class AppUserManagementController extends PrometheusListControlle
     }
 
     /**
-     * This function is used to change the account status of a user.
+     * This function is used to update the account status of a user.
      *
-     * @method changeUserStatus
+     * @method updateUserStatus
      * @public
      */    
-    @action changeUserStatus(user, evt) {
+    @action updateUserStatus(user, evt) {
         let accountStatus = (evt.target.checked) ? 'active' : 'inactive';
         user.set('accountStatus', accountStatus);
         user.save();
