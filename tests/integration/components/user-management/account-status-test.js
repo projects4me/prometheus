@@ -18,7 +18,7 @@ module('Integration | Component | user-management/account-status', function (hoo
         await render(hbs
             `<UserManagement::AccountStatus 
                 @user={{this.user}}
-                @updateUserStatus={{this.testFunction}}
+                @changeUserStatus={{this.testFunction}}
             />`
             );
 
@@ -38,7 +38,7 @@ module('Integration | Component | user-management/account-status', function (hoo
         await render(hbs
             `<UserManagement::AccountStatus 
                 @user={{this.user}}
-                @updateUserStatus={{this.testFunction}}
+                @changeUserStatus={{this.testFunction}}
             />`
             );
 
