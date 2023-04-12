@@ -17,6 +17,6 @@ import { action } from '@ember/object';
 export default class FormFieldsFieldSearchComponent extends Component {
     @action onInput(event) {
         this.query = event.target.value;
-        debounce(this, this.args.searchFunction, this.query, 400);
+        debounce(this, this.args.searchFunction, this.query, 200);
     }
 }
