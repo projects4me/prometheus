@@ -28,27 +28,39 @@ export default App.extend({
         let _self = this;
         let projectId = this.paramsFor('app.project').project_id;
 
+        //Fetch milestones of current project
         let _milestoneOptions = {
             query: `(Milestone.projectId : ${projectId} )`,
             order: 'Milestone.endDate',
-            rels: 'issues',
             limit: -1
         };
+        let milestones = await _self.store.query('milestone', _milestoneOptions);
 
+        //Fetch backlog issues
         let _issueOptions = {
             query: `(((Issue.milestoneId NULL) OR (Issue.milestoneId EMPTY)) AND (Issue.projectId : ${projectId}))`,
+            rels: 'assignedTo',
             limit: -1
         }
+        let backlogIssues = await _self.store.query('issue', _issueOptions);
 
+        //Fetch issue statuses of project
         let _issueStatusOptions = {
             query: `(Issuestatus.projectId : ${projectId})`,
             limit: -1
         };
-
-        let milestones = await _self.store.query('milestone', _milestoneOptions);
-        let backlogIssues = await _self.store.query('issue', _issueOptions);
         let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions);
 
+        //Fetch issues of each milestone
+        milestones.forEach(async (milestone) => {
+            let issues = await _self.store.query('issue', {
+                query: `(Issue.milestoneId : ${milestone.id} )`,
+                rels: 'assignedTo'
+            });
+            milestone.issues = issues;
+        });
+
+        //Create a milestone of type backlog
         let backlog = _self.store.createRecord('milestone', {
             id: null,
             milestoneType: "backlog",
