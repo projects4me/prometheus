@@ -82,7 +82,7 @@ export default App.extend({
         let _self = this;
 
         //if there are no issue statuses for a project then fetch system level statuses
-        if (model.issueStatuses.length == 0) {
+        if (model.issueStatuses.length === 0) {
             let _issueStatusOptions = {
                 query: `(Issuestatus.system : 1)`,
                 limit: -1
