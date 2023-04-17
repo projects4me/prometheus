@@ -1,5 +1,6 @@
 import pushObjectInModel from '../helpers/push-object-in-model';
 import getValueFromQuery from '../helpers/get-value-from-query';
+import getRequestData from "../helpers/parse-request";
 
 export function register(server, ctx) {
     server.get('/user', (schema, request) => {
@@ -28,6 +29,16 @@ export function register(server, ctx) {
         }
         let model = schema.users.find(id);
         return model;
+    });
+
+    server.patch('/user/:id', (schema, request) => {
+        let id = request.params.id;
+        let requestData = getRequestData(request);
+        let user = schema.users.find(id);
+
+        user.update(requestData.attributes);
+
+        return user;
     });
 
     server.delete('/user/:id', (schema, request) => {

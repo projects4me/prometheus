@@ -35,9 +35,9 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>{{t "views.app.user.management.list.profile"}}</th>
-                    <th>{{t "views.app.user.management.list.emailaddress"}}</th>
-                    <th>{{t "views.app.user.management.list.accountStatus"}}</th>
+                    <th data-table-heading="user-profile">{{t "views.app.user.management.list.profile"}}</th>
+                    <th data-table-heading="user-emailaddress">{{t "views.app.user.management.list.emailaddress"}}</th>
+                    <th data-table-heading="user-accountStatus">{{t "views.app.user.management.list.accountStatus"}}</th>
                   </tr>
                 </thead>
 
@@ -63,10 +63,16 @@
                       <td data-user-field="email">{{user.email}}</td>
                       <td data-user-field="account-status" class={{user.accountStatus}}>{{t (concat "views.app.user.accountStatus." user.accountStatus)}}</td>
 
-                      <td class="pull-right icons">
-                        <button data-btn="delete" type="button" class="btn btn-box-tool" data-toggle="tooltip" {{action this.deleteUser user}}>
+                      {{!-- actions --}}
+                      <td class="pull-right actions">
+                        <button data-btn="delete" type="button" class="btn btn-box-tool" {{action this.deleteUser user}}>
                           <i class="fa fa-trash" aria-hidden="true"></i>
                         </button>
+
+                      <UserManagement::AccountStatus
+                        @user={{user}}
+                        @changeUserStatus={{this.changeUserStatus}}
+                      />
                       </td>
 
                     </tr>

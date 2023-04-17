@@ -853,6 +853,7 @@
           "status": {
             "complete": "Complete",
             "closed": "Closed",
+            "completed": "Completed",
             "in_progress": "In Progress",
             "planned": "Planned",
             "overdue": "Overdue",
