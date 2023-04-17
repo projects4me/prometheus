@@ -30,7 +30,7 @@ export default Factory.extend({
         return faker.random.arrayElement(["active", "pending", "in_progress", "completed", "new"]);
     },
     accountStatus() {
-        return faker.random.arrayElement(["active", "inactive", "disabled"]);
+        return faker.random.arrayElement(["active", "inactive"]);
     },
     title() {
         return faker.name.jobTitle();

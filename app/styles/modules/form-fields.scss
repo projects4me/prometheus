@@ -8,28 +8,31 @@
   This file contains the CSS related to the form-field of the application.
 */
 
-
-.form-field{
-  position:relative;
+.form-field {
+  position: relative;
   margin: 3rem;
 
   &.readonly {
     margin: 0 1rem 1rem 1rem;
   }
 
-  .data-input{
-    font-size:1.4rem;
-    padding:1rem 1rem 1rem 1rem;
-    display:block;
-    border:none;
-    border-bottom:0.1rem solid #999;
-    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+  .data-input {
+    font-size: 1.4rem;
+    padding: 1rem 1rem 1rem 1rem;
+    display: block;
+    border: none;
+    border-bottom: 0.1rem solid #999;
+    font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 400;
   }
 
-  .data-input:focus{ outline:none;border-color:$highlightColor}
+  .data-input:focus {
+    outline: none;
+    border-color: $highlightColor;
+  }
 
-  .count, .error{
+  .count,
+  .error {
     font-size: 1rem;
     color: $primaryColor;
   }
@@ -37,30 +40,36 @@
   /* LABEL ======================================= */
 
   .floating-label {
-    color:#999;
-    font-size:1.4rem;
-    font-weight:normal;
-    position:absolute;
-    pointer-events:none;
-    left:0.5rem;
-    top:0.5rem;
-    transition:0.2s ease all;
-    -moz-transition:0.2s ease all;
-    -webkit-transition:0.2s ease all;
+    color: #999;
+    font-size: 1.4rem;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 0.5rem;
+    top: 0.5rem;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
   }
 
   /* active state */
-  .data-input:focus ~ .floating-label, .data-input:valid ~ .floating-label, .select-input ~ .floating-label, .multiselect-input ~ .floating-label, .focused-field, .form-control[readonly] ~ .floating-label{
-    top:-2rem;
-    font-size:1.4rem;
+  .data-input:focus ~ .floating-label,
+  .data-input:valid ~ .floating-label,
+  .select-input ~ .floating-label,
+  .multiselect-input ~ .floating-label,
+  .focused-field,
+  .form-control[readonly] ~ .floating-label {
+    top: -2rem;
+    font-size: 1.4rem;
     color: $primaryColor;
   }
 
-  .select-input,.multiselect-input{
-    width:100%;
+  .select-input,
+  .multiselect-input {
+    width: 100%;
   }
 
-  .multiselect-input{
+  .multiselect-input {
     .form-control {
       display: block;
       width: 100%;
@@ -80,96 +89,96 @@
       transition: none;
     }
 
-    .ember-power-select-multiple-option{
+    .ember-power-select-multiple-option {
       background-color: $primaryColor;
-      color: #FFF;
+      color: #fff;
       border-color: $primaryColor;
       border-radius: 0.2rem;
     }
   }
 
   /* BOTTOM BARS ================================= */
-  .bar 	{ position:relative; display:block; }
-  .bar:before, .bar:after 	{
-    content:'';
-    height:0.1rem;
-    width:0;
-    bottom:0.1rem;
-    position:absolute;
+  .bar {
+    position: relative;
+    display: block;
+  }
+  .bar:before,
+  .bar:after {
+    content: "";
+    height: 0.1rem;
+    width: 0;
+    bottom: 0.1rem;
+    position: absolute;
     background: $highlightColor;
-    transition:opacity 2s ease-in;
-    -moz-transition:opacity 2s ease-in;
-    -webkit-transition:opacity 2s ease-in;
+    transition: opacity 2s ease-in;
+    -moz-transition: opacity 2s ease-in;
+    -webkit-transition: opacity 2s ease-in;
   }
   .bar:before {
-    left:50%;
+    left: 50%;
   }
   .bar:after {
-    right:50%;
+    right: 50%;
   }
 
   /* active state */
-  .data-input:focus ~ .bar:before, .data-input:focus ~ .bar:after {
-    width:50%;
+  .data-input:focus ~ .bar:before,
+  .data-input:focus ~ .bar:after {
+    width: 50%;
   }
-
 
   /* active state */
   .data-input:focus ~ .highlight {
-    -webkit-animation:inputHighlighter 0.3s ease;
-    -moz-animation:inputHighlighter 0.3s ease;
-    animation:inputHighlighter 0.3s ease;
+    -webkit-animation: inputHighlighter 0.3s ease;
+    -moz-animation: inputHighlighter 0.3s ease;
+    animation: inputHighlighter 0.3s ease;
   }
 
-
-  .checkbox-primary input[type="checkbox"]:checked + label::before, .checkbox-primary input[type="radio"]:checked + label::before{
+  .checkbox-primary input[type="checkbox"]:checked + label::before,
+  .checkbox-primary input[type="radio"]:checked + label::before {
     background-color: $primaryColor;
     border-color: $primaryColor;
   }
 
-  .radio-primary input[type="radio"]:checked + label::before{
+  .radio-primary input[type="radio"]:checked + label::before {
     border-color: $primaryColor;
   }
 
-  .radio-primary input[type="radio"]:checked + label::after{
+  .radio-primary input[type="radio"]:checked + label::after {
     background-color: $primaryColor;
   }
-
 }
 
-.field-group{
+.field-group {
   display: inline-flex;
-  width:100%;
-  margin-bottom:-3rem;
+  width: 100%;
+  margin-bottom: -3rem;
 
-  >.form-field{
-    width:100%;
+  > .form-field {
+    width: 100%;
   }
 
-  .form-field-static{
-    width:20rem;
+  .form-field-static {
+    width: 20rem;
 
     .data-input {
-      padding-top:0rem;
+      padding-top: 0rem;
     }
 
     .floating-label {
-      top:-2rem;
-      font-size:1.4rem;
+      top: -2rem;
+      font-size: 1.4rem;
       color: $primaryColor;
     }
-
   }
-
 }
-
 
 .calendar-table {
   box-shadow: 1rem 1rem 1rem $borderColor;
 }
 
-.calendar-table:after{
-  content: '';
+.calendar-table:after {
+  content: "";
   width: 100%;
   position: absolute;
   left: 0;
@@ -180,79 +189,95 @@
   filter: progid:dximagetransform.microsoft.gradient(startcolorstr=$color_maroon_flush_approx, endcolorstr=$color_pompadour_approx, gradienttype=1 );
 }
 
-.user-relate-icon{
+.user-relate-icon {
   width: 2.5rem;
   height: 2.5rem;
   margin: 0.2rem 0rem;
   border-radius: 2rem;
 }
 
-.ember-power-select-option, .select-input{
-  .fa{
-    margin-right:0.5rem;
+.ember-power-select-option,
+.select-input {
+  .fa {
+    margin-right: 0.5rem;
   }
-  .fa-ban{
+  .fa-ban {
     color: #d33724;
   }
-  .fa-angle-double-up{
+  .fa-angle-double-up {
     color: #d33724;
     font-weight: bold;
   }
-  .fa-arrow-up{
+  .fa-arrow-up {
     color: #e98a7e;
   }
-  .fa-dot-circle-o{
+  .fa-dot-circle-o {
     color: $primaryColor;
   }
-  .fa-arrow-down{
+  .fa-arrow-down {
     color: #5ac594;
   }
-  .fa-angle-double-down{
+  .fa-angle-double-down {
     color: #00a65a;
     font-weight: bold;
   }
 }
 
-.ember-power-select-trigger, .btn{
+.ember-power-select-trigger,
+.btn {
   border-radius: 0rem;
 }
 
 /* ANIMATIONS ================ */
 @-webkit-keyframes inputHighlighter {
-	from { background:$primaryColor; }
-  to 	{ width:0; background:transparent; }
+  from {
+    background: $primaryColor;
+  }
+  to {
+    width: 0;
+    background: transparent;
+  }
 }
 @-moz-keyframes inputHighlighter {
-	from { background:$primaryColor; }
-  to 	{ width:0; background:transparent; }
+  from {
+    background: $primaryColor;
+  }
+  to {
+    width: 0;
+    background: transparent;
+  }
 }
 @keyframes inputHighlighter {
-	from { background:$primaryColor; }
-  to 	{ width:0; background:transparent; }
+  from {
+    background: $primaryColor;
+  }
+  to {
+    width: 0;
+    background: transparent;
+  }
 }
 
-.calendar-table .active
-{
-    border: 0.1rem solid $primaryColor;
-    border-radius: 0.3rem;
-    outline: none;
-    box-shadow: 0 0 1rem $primaryColor;
+.calendar-table .active {
+  border: 0.1rem solid $primaryColor;
+  border-radius: 0.3rem;
+  outline: none;
+  box-shadow: 0 0 1rem $primaryColor;
 }
 
-.calendar-table .table-condensed .available:hover{
-  font-weight:bold;
+.calendar-table .table-condensed .available:hover {
+  font-weight: bold;
 }
 
-.dropzone-field{
-  p{
+.dropzone-field {
+  p {
     border: 0.3rem dashed $borderColor;
     text-align: center;
-    margin:0rem;
+    margin: 0rem;
     padding: 2rem;
   }
 
   .dropzone-uploading {
-    color:$primaryColor;
+    color: $primaryColor;
   }
 
   .dropzone-active {
@@ -260,36 +285,35 @@
   }
 
   .dropzone-ready {
-    label{
-        cursor: pointer;
+    label {
+      cursor: pointer;
     }
-    input{
-        display: none;
+    input {
+      display: none;
     }
   }
 }
 
-.interval-selector{
+.interval-selector {
   text-align: center;
   margin: 0px auto;
 
-  div{
+  div {
     display: inline-table;
     width: 10.4rem;
   }
 
-  label{
+  label {
     position: absolute;
     font-size: 2rem;
     width: 6rem;
-
   }
   input[type="number"] {
     font-size: 3.8rem;
     width: 6.4rem;
     border: none;
     margin-top: 3rem;
-    margin-left:2rem
+    margin-left: 2rem;
   }
 }
 
@@ -308,25 +332,83 @@
     border-radius: 14px;
   }
 
-  input[type="text"]:focus{
+  input[type="text"]:focus {
     outline: none;
   }
 
   i {
     position: absolute;
-    top:1rem;
+    top: 1rem;
     right: 1rem;
   }
-
 }
 
-@media only screen 
-and (max-width: 600px) {
-
+@media only screen and (max-width: 600px) {
   #search-field {
     input[type="text"] {
-    width: 30rem;
-    max-width: 30rem;
+      width: 30rem;
+      max-width: 30rem;
+    }
   }
 }
+
+//++++++SWITCH CONTROL+++++++
+$toggle-width: 30px;
+$toggle-height: 15px;
+$toggle-gutter: 1px;
+$toggle-radius: 50%;
+$toggle-control-speed: .15s;
+$toggle-control-ease: ease-in;
+
+
+$toggle-radius: $toggle-height / 2;
+$toggle-control-size: $toggle-height - ($toggle-gutter * 3);
+
+.switch-control {
+  display: block;
+  position: relative;
+  padding-left: $toggle-width;
+  padding-bottom: 0;
+  cursor: pointer;
+  top: 0.8rem;
+  user-select: none;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  input:checked ~ .control {
+    background-color: $secondaryColor;
+    
+    &:after {
+      left: $toggle-width - $toggle-control-size - $toggle-gutter;
+    }
+  }
+
+  .control {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: $toggle-height;
+    width: $toggle-width;
+    border-radius: $toggle-radius;
+    background-color: $mediumColor;
+    transition: background-color $toggle-control-speed $toggle-control-ease;
+
+    &:after {
+      content: "";
+      position: absolute;
+      left: $toggle-gutter;
+      top: $toggle-gutter;
+      width: $toggle-control-size;
+      height: $toggle-control-size;
+      border-radius: $toggle-radius;
+      background: $backgroundColor;
+      transition: left $toggle-control-speed $toggle-control-ease;
+    }
+  }
 }
