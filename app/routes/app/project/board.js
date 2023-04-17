@@ -72,6 +72,29 @@ export default App.extend({
     },
 
     /**
+     * This function get triggered after model() hook. In this function we're fetching
+     * system level issue statuses for a project that doesn't have list of issue statuses. 
+     * 
+     * @method afterModel
+     * @private
+     */
+    async afterModel(model) {
+        let _self = this;
+
+        //if there are no issue statuses for a project then fetch system level statuses
+        if (model.issueStatuses.length === 0) {
+            let _issueStatusOptions = {
+                query: `(Issuestatus.system : 1)`,
+                limit: -1
+            };
+
+            let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions);
+            model.issueStatuses = issueStatuses;
+        }
+        return model;
+    },
+
+    /**
      * This function is used to setup the controller for this
      * route
      *
