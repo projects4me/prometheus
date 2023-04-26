@@ -1,0 +1,14 @@
+{{#if @message}}
+
+  {{#if @isSuccessful}}
+    <FormFields::ValidationMessages::Success
+      @message={{@message}}
+    />
+
+  {{else}}
+    <FormFields::ValidationMessages::Failure
+      @message={{@message}}
+    />
+  {{/if}}
+
+{{/if}}
