@@ -2,9 +2,28 @@
     .form {
         display: flex;
         flex-wrap: wrap;
-        
+        min-width: 30rem;
+
         div {
             flex-basis: 44%;
+        }
+
+        [data-field="user.dateOfBirth"] {
+            .daterangepicker {
+                .yearselect,
+                .next.available,
+                .prev.available {
+                    display: none;
+                }
+
+                th:not([class]){
+                    display: none;
+                }
+
+                .monthselect {
+                    float: left;
+                }
+            }
         }
     }
 }
