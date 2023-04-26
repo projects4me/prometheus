@@ -12,7 +12,7 @@ import $ from 'jquery';
  * @namespace Prometheus.Modifiers
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default modifier(function datePicker(element, [update, format, singleDatePicker, showDropdowns, positionX, positionY, timePicker, timePickerIncrement, startDate, endDate, minDate, maxDate, maxSpan, minYear, maxYear, autoApply]) {
+export default modifier(function datePicker(element, [update, format, singleDatePicker, showDropdowns, positionX, positionY, timePicker, timePickerIncrement, startDate, endDate, minDate, maxDate, maxSpan, minYear, maxYear, autoApply, parentEl]) {
     //applying daterangepicker on given element
     $(element).daterangepicker({
         singleDatePicker: singleDatePicker,
@@ -26,6 +26,7 @@ export default modifier(function datePicker(element, [update, format, singleDate
         endDate: endDate,
         minDate: minDate,
         maxDate: maxDate,
+        parentEl: parentEl,
         maxSpan: {
             days: maxSpan
         },
@@ -41,14 +42,14 @@ export default modifier(function datePicker(element, [update, format, singleDate
     selected value of date using daterangepicker in order to set that selected date to model.*/
     if (singleDatePicker) {
         $(element).on('apply.daterangepicker', function (ev, picker) {
-            update(picker.startDate.format('YYYY-MM-DD'));
+            update(picker.startDate.format(picker.locale.format));
         });
     } else {
         $(element).on('apply.daterangepicker', function (ev, picker) {
-            update(picker.startDate.format('YYYY-MM-DD'));
+            update(picker.startDate.format(picker.locale.format));
         });
         $(element).on('apply.daterangepicker', function (ev, picker) {
-            update(picker.endDate.format('YYYY-MM-DD'));
+            update(picker.endDate.format(picker.locale.format));
         });
     }
 });
