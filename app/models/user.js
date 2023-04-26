@@ -149,6 +149,16 @@ export default Model.extend(Validations, {
     title: attr('string'),
 
     /**
+     * Date of birth of the user.
+     *
+     * @property dateOfBirth
+     * @type String
+     * @for User
+     * @private
+     */
+    dateOfBirth: attr('string'),
+
+    /**
      * Phone number of the user
      *
      * @property phone
