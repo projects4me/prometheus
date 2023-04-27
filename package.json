@@ -20,6 +20,7 @@
     "test": "COVERAGE=true ember test"
   },
   "devDependencies": {
+    "@ember-intl/cp-validations": "^5.0.0",
     "@ember/optional-features": "^2.0.0",
     "@ember/test-helpers": "^2.6.0",
     "@glimmer/component": "^1.0.4",
