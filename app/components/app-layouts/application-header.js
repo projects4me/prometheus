@@ -101,7 +101,7 @@ export default class ApplicationHeaderComponent extends AppComponent {
         let _self = this;
         let options = {
             query: '((Issue.issueNumber CONTAINS ' + query + ') OR (Issue.subject CONTAINS ' + query + ') OR (Issue.description CONTAINS ' + query + '))',
-            rels: 'ownedBy,assignedTo,milestone,project,createdBy,modifiedBy,reportedBy,issuetype',
+            rels: 'ownedBy,assignedTo,issuemilestone,project,createdBy,modifiedBy,reportedBy,issuetype',
             limit: 5,
             page: this.page,
         };
