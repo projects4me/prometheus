@@ -505,7 +505,7 @@ export default Object.extend({
                         operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null','contains']
                     },
                     {
-                        id: 'Issue.statusId',
+                        id: 'Issue.status',
                         label: "views.app.issue.filter.status",
                         type: 'integer',
                         input: 'select',
