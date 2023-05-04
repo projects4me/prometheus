@@ -814,6 +814,43 @@
             "userDeleted": "User has been deleted"
           }
         },
+        "create": {
+          "title": "Create User",
+          "userInfo": "User Information",
+          "name": "Full Name",
+          "username": "Username",
+          "email": "Email Address",
+          "password": "Password",
+          "dateofbirth": "Date Of Birth",
+          "language": "Language",
+          "timezone": "Timezone",
+          "confirmpassword": "Confirm Password",          
+          "nameplaceholder": "Enter full name",
+          "usernameplaceholder": "Enter username",
+          "emailplaceholder": "Enter email address",
+          "dobplaceholder": "Select your date of birth",
+          "passwordplaceholder": "Enter password",
+          "confirmpasswordplaceholder": "Confirm password",
+          "languageplaceholder": "Select Language",
+          "languagelabel": "Select your preferred language",
+          "timezoneplaceholder": "Select time zone",
+          "timezonelabel": "Select your preferred time zone",
+          "validation": {
+            "usernameTaken": "Username already taken!",
+            "usernameAvailable": "Username available"
+          }
+        },
+        "created": "User {name} is created successfully!",
+        "fields": {
+          "name": "Full Name",
+          "username": "Username",
+          "email": "Email Address",
+          "password": "Password",
+          "dateOfBirth": "Date Of Birth",
+          "language": "Language",
+          "timezone": "Timezone",
+          "passwordConfirmation": "Confirm Password"
+        },
         "accountStatus": {
           "inactive": "Inactive",
           "active": "Active",
