@@ -415,10 +415,10 @@ export default class AppProjectIndexController extends PrometheusController {
      */
     @action resetNewMilestone() {
         let _self = this;
-
+        luxon.DateTime.now().toFormat('yyyy-MM-dd')
         let newMilestone = _self.get('store').createRecord('milestone', {
-            startDate: moment().format('YYYY-MM-DD'),
-            endDate: moment().format('YYYY-MM-DD'),
+            startDate: luxon.DateTime.now().toFormat('yyyy-MM-dd'),
+            endDate: luxon.DateTime.now().toFormat('yyyy-MM-dd'),
         });
 
         _self.set('newMilestone', newMilestone);

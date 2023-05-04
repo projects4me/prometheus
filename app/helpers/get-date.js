@@ -17,17 +17,18 @@ import { helper } from '@ember/component/helper';
 export function getDate(params) {
     let data = params[0];
     let index = params[1];
-    let format = "MMMM Do YYYY, h:mm:ss a";
+    let format = "MMM d yyyy, h:mm:ss a";
+
     if (params[2] !== undefined)
     {
         format = params[2];
     }
 
-    if (data !== undefined)
+    if (data.get(index))
     {
-        return moment(data.get(index)).format(format);
+        return luxon.DateTime.fromFormat(data.get(index), 'yyyy-LL-dd hh:mm:ss').toFormat(format);
     }
-    return false;
+    return '';
 }
 
 /**

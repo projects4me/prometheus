@@ -87,7 +87,7 @@ export default {
      */
     evalRule:function(rule){
         if (rule.type == 'date'){
-            rule.value = moment(rule.value,'MM/DD/YYYY').format('YYYY-MM-DD');
+            rule.value = luxon.DateTime.fromFormat(rule.value, 'MM/dd/yyyy').toFormat('yyyy-MM-dd');
         }
 
         return '('+rule.field+' '+(this.queryOperators[rule.operator])+' '+rule.value+')';
@@ -206,7 +206,7 @@ export default {
 
                 /* If these statements grow then they must isolated in objects and functions */
                 if (metaData[metaDataIndex]['type'] == 'date') {
-                    value = moment(value,'YYYY-MM-DD').format('MM/DD/YYYY');
+                    value = luxon.DateTime.fromFormat(value, 'yyyy-MM-dd').toFormat('MM/dd/yyyy');
                 }
 
                 // create the statement objects

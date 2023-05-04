@@ -15,7 +15,7 @@
 
   <span class="progress-description">
     <span data-milestone="dates">
-      {{moment-format @milestone.startDate 'Do MMM. YYYY'}} - {{moment-format @milestone.endDate 'Do MMM. YYYY'}}
+      {{format-date @milestone.startDate actualFormat='yyyy-MM-dd' expectedFormat='MMM d, yyyy'}} - {{format-date @milestone.endDate actualFormat='yyyy-MM-dd' expectedFormat='MMM d, yyyy'}}
     </span>
 
     <span class="pull-right">

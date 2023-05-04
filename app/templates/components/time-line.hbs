@@ -19,7 +19,7 @@
     {{!-- Group the time label --}}
     <li class="time-label">
       <span class="bg-primary">
-        {{moment-format dateCreated "Do MMM. YYYY"}}
+        {{format-date dateCreated actualFormat='yyyy-MM-dd' expectedFormat="MMM d, yyyy"}}
       </span>
     </li>
 

@@ -45,7 +45,7 @@
               <div class="col-xs-6 col-md-4" data-field="issue.startDate">
                 <h4>{{t "views.app.issue.detail.duration"}}</h4>
                 <p>
-                  {{moment-format issue.startDate 'Do MMM \'YY'}} - {{moment-format issue.endDate 'DD MMM \'YY'}}
+                  {{format-date issue.startDate actualFormat='yyyy-MM-dd' expectedFormat='MMM d, yyyy'}} - {{format-date issue.endDate actualFormat='yyyy-MM-dd' expectedFormat='MMM d, yyyy'}}
                 </p>
               </div>
 
@@ -105,7 +105,7 @@
                     <div class="comment-text">
                       <span class="username">
                         <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
-                        <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
+                        <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM d, yy h:mm a"}}</span>
                       </span>
                       {{translate-comment comment.comment}}
                     </div>
@@ -279,7 +279,7 @@
                     </div>
                     <div class="log-info">
                       <LinkTo @route="app.user.page" @model={{timelog.createdUser}} class="user-title">{{timelog.createdUserName}}</LinkTo>
-                      <span>{{t "views.app.issue.detail.timelog.estimatedon"}}<strong>{{moment-format timelog.dateCreated 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
+                      <span>{{t "views.app.issue.detail.timelog.estimatedon"}}<strong>{{format-date timelog.dateCreated actualFormat='yyyy-MM-dd hh:mm:ss' expectedFormat='MMM d, yyyy yyyy-MM-dd 00:00:00'}}</strong></span>
                       <span class="log-edit pull-right">
                         <a href="javascript:void(0);" {{action "showEditEstimateDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
                         <a href="javascript:void(0);" {{action "deleteLog" timelog}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
@@ -372,7 +372,7 @@
                     </div>
                     <div class="log-info">
                       <LinkTo @route="app.user.page" @model={{timelog.createdUser}} class="user-title">{{timelog.createdUserName}}</LinkTo>
-                      <span>{{t "views.app.issue.detail.timelog.on"}}<strong>{{moment-format timelog.spentOn 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
+                      <span>{{t "views.app.issue.detail.timelog.on"}}<strong>{{format-date timelog.spentOn actualFormat='yyyy-MM-dd' expectedFormat='MMM d, yyyy yyyy-MM-dd 00:00:00'}}</strong></span>
                       <span class="log-edit pull-right">
                         <a href="javascript:void(0);" {{action "showEditLogDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
                         <a href="javascript:void(0);" {{action "deleteLog" timelog}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>

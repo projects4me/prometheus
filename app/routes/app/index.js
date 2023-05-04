@@ -111,21 +111,20 @@ export default App.extend({
         let _self = this;
         let intl = _self.intl;
         let widgetSettings = MD.create().getViewMeta('Dashboard','widgets',intl);
-
         _.forEach(widgetSettings,function(widgetSetting,idx){
             let query = widgetSettings[idx].options.query;
             query = _.replace(query,'```ME```',_self.get('currentUser.user.id'));
-            query = _.replace(query,'```TODAY_START```',moment.utc().startOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```TODAY_END```',moment.utc().endOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```WEEK_START```',moment.utc().startOf('week').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```WEEK_END```',moment.utc().endOf('week').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```YEAR_START```',moment.utc().startOf('year').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```YEAR_END```',moment.utc().endOf('year').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```YESTERDAY_START```',moment.utc().add(-1,'days').startOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```YESTERDAY_END```',moment.utc().add(-1,'days').endOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```TOMORROW_START```',moment.utc().add(1,'days').startOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```TOMORROW_END```',moment.utc().add(1,'days').endOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```NOW```',moment.utc().format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```TODAY_START```',luxon.DateTime.utc().startOf('day').toFormat('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```TODAY_END```',luxon.DateTime.utc().endOf('day').toFormat('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```WEEK_START```',luxon.DateTime.utc().startOf('week').toFormat('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```WEEK_END```',luxon.DateTime.utc().endOf('week').toFormat('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```YEAR_START```',luxon.DateTime.utc().startOf('year').toFormat('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```YEAR_END```',luxon.DateTime.utc().endOf('year').toFormat('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```YESTERDAY_START```',luxon.DateTime.utc().plus(-1,'days').startOf('day').toFormat('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```YESTERDAY_END```',luxon.DateTime.utc().plus(-1,'days').endOf('day').toFormat('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```TOMORROW_START```',luxon.DateTime.utc().plus(1,'days').startOf('day').toFormat('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```TOMORROW_END```',luxon.DateTime.utc().plus(1,'days').endOf('day').toFormat('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```NOW```',luxon.DateTime.utc().toFormat('YYYY-MM-DD HH:mm:ss'));
             widgetSettings[idx].options.query = query;
             Logger.debug(query);
         });

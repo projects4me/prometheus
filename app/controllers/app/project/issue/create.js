@@ -114,8 +114,8 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
     beforeSave(model) {
         model.set('projectId', this.target.currentState.routerJsState.params["app.project"].project_id);
         model.set('reportedUser', this.currentUser.user.id);
-        model.set('startDate', moment(model.get('startDate')).format("YYYY-MM-DD"));
-        model.set('endDate', moment(model.get('endDate')).format("YYYY-MM-DD"));
+        model.set('startDate', luxon.DateTime.fromFormat(model.get('startDate'), 'yyyy-MM-dd').toFormat("yyyy-MM-dd"));
+        model.set('endDate', luxon.DateTime.fromFormat(model.get('endDate'), 'yyyy-MM-dd').toFormat("yyyy-MM-dd"));
     }
 
     /**

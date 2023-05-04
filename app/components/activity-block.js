@@ -6,6 +6,7 @@ import Component from '@ember/component';
 import { inject } from '@ember/service';
 import { set } from '@ember/object';
 import { computed } from '@ember/object';
+import humanizeDuration  from "humanize-duration";
 
 /**
  * This component is used to render different activity blocks for the system
@@ -84,8 +85,14 @@ export default Component.extend({
      */
     didInsertElement(){
         let activity = this.activity;
-        let createdSince = moment.duration(moment(new Date()).diff(moment(activity.get('dateCreated')))).humanize();
-        set(activity,"createdSince",createdSince);
+        let createdSince = luxon.DateTime.now().diff(luxon.DateTime.fromFormat(activity.dateCreated, "yyyy-LL-dd hh:mm:ss")).toMillis();
+        let humanizedDate = humanizeDuration(createdSince, {
+            round: true,
+            conjunction: "and",
+            serialComma: false,
+            largest: 2
+        });
+        set(activity, "createdSince", humanizedDate);
     }
 
 });

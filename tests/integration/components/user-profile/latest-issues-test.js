@@ -24,7 +24,7 @@ module('Integration | Component | user-profile/latest-issues', function (hooks) 
             }
         ]
 
-        let currentDate = moment().format('DD MMMM YYYY');
+        let currentDate = luxon.DateTime.now().toFormat('dd MMMM yyyy');
 
         let expectedAnswers = [
             {

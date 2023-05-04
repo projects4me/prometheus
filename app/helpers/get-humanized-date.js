@@ -13,6 +13,6 @@ import { helper } from '@ember/component/helper';
  * @private
  */
 export default helper(function getHumanizedDate(positional/*, named*/) {
-    let date = (new moment(positional[0])).format('DD MMMM YYYY');
+    let date = luxon.DateTime.fromFormat(positional[0], 'yyyy-MM-dd hh:mm:ss').toFormat('dd MMMM yyyy');
     return date;
 });

@@ -4,6 +4,7 @@
 
 import Component from '@glimmer/component';
 import { set } from '@ember/object';
+import humanizeDuration  from "humanize-duration";
 
 /**
  * This component is used to render activity block.
@@ -27,7 +28,7 @@ export default class AppUiActivityBlockComponent extends Component {
 
     /**
      * This function returns the type of activity block to render.
-     *
+     *humanizeDuration
      * @method get
      * @public
      */
@@ -47,7 +48,13 @@ export default class AppUiActivityBlockComponent extends Component {
      * @public
      */
     setActivityTime(activity) {
-        let createdSince = moment.duration(moment(new Date()).diff(moment(activity.dateCreated))).humanize();
-        set(activity, "createdSince", createdSince);
+        let createdSince = luxon.DateTime.now().diff(luxon.DateTime.fromFormat(activity.dateCreated, "yyyy-LL-dd hh:mm:ss")).toMillis();
+        let humanizedDate = humanizeDuration(createdSince, {
+            round: true,
+            conjunction: " and ",
+            serialComma: false,
+            largest: 2
+        });
+        set(activity, "createdSince", humanizedDate);
     }
 }

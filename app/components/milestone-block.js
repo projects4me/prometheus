@@ -63,7 +63,9 @@ export default Component.extend({
         // Check if milestone is overdue
         if (status === 'in_progress' || status === 'planned')
         {
-            if (moment().isSameOrAfter(milestone.get('endDate')))
+            let currentDate = luxon.DateTime.now();
+            let milestoneEndDate = luxon.DateTime.fromFormat(milestone.get('endDate'), 'yyyy-MM-dd');
+            if (currentDate >= milestoneEndDate)
             {
                 status = 'overdue';
             }

@@ -47,6 +47,7 @@ module('Integration | Component | application-header', function (hooks) {
         await render(hbs`
             <AppLayouts::ApplicationHeader />
         `);
+
         assert.dom('header li.dropdown.user.user-menu span#user-name').hasText('Rana Nouman', 'current username matched');
         assert.dom('li.user-header p > small').hasText('Member since Feb 2022', 'date created matched');
     });

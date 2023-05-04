@@ -53,13 +53,17 @@ export default Widget.extend({
         let data = _self.get('data');
         let dataSet = [];
         let intl = this.intl;
+
         data.forEach(function(issue){
+            let issuestartDate = issue.get('startDate') ?? '';
+            let issueendDate = issue.get('endDate') ?? '';
+            
             dataSet.push([
                 '<a href="javascript:void(0);">'+issue.get('issueNumber')+'</a>',
                 '<a href="javascript:void(0);">'+issue.get('subject')+'</a>',
                 '<span class="badge '+issue.get('status')+'">'+intl.t("views.app.issue.lists.status."+issue.get('status'))+'</span>',
-                moment(issue.get('startDate') ,'YYYY-MM-DD').format('MMM Do YY'),
-                moment(issue.get('endDate') ,'YYYY-MM-DD').format('MMM Do YY'),
+                luxon.DateTime.fromFormat(issuestartDate, 'yyyy-MM-dd').toFormat('MMM dd, yyyy'),
+                luxon.DateTime.fromFormat(issueendDate, 'yyyy-MM-dd').toFormat('MMM dd, yyyy'),
                 issue.get('project.name'),
                 issue.get('project.id')
             ])

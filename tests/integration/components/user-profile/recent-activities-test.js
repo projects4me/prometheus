@@ -6,6 +6,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import humanizeDuration  from "humanize-duration";
 
 module('Integration | Component | user-profile/recent-activities', function (hooks) {
     setupRenderingTest(hooks);
@@ -53,11 +54,18 @@ module('Integration | Component | user-profile/recent-activities', function (hoo
         `);
 
         expectedAnswers.forEach((activity, i) => {
-            let createdSince = moment.duration(moment(new Date()).diff(moment(activities[i].dateCreated))).humanize();
+            let createdSince = luxon.DateTime.now().diff(luxon.DateTime.fromFormat(activities[i].dateCreated, "yyyy-LL-dd hh:mm:ss")).toMillis();
+            let humanizedDate = humanizeDuration(createdSince, {
+                round: true,
+                conjunction: "and",
+                serialComma: false,
+                largest: 2
+            });
+            
             let activityBlockSelector = `[data-activity-block-type="${activity.activityBlockType}"]`;
             assert.dom(activityBlockSelector).exists();
             assert.dom(`${activityBlockSelector} i`).hasClass(`${activity.iconClass}`);
-            assert.dom(`${activityBlockSelector} [data-activity="dateCreated"]`).hasText(`${createdSince} ago`);
+            assert.dom(`${activityBlockSelector} [data-activity="dateCreated"]`).hasText(`${humanizedDate} ago`);
         });
 
     });

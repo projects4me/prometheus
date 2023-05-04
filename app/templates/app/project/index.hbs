@@ -46,7 +46,7 @@
             <div class="col-xs-6 col-md-4">
               <h4>{{t "views.app.project.detail.duration"}}</h4>
               <p class="project-duration">
-                {{moment-format this.model.startDate 'Do MMM \'YY'}} - {{moment-format this.model.endDate 'DD MMM \'YY'}}
+                {{format-date model=this.model.startDate actualFormat='yyyy-MM-dd' expectedFormat='MMM d, yy'}} - {{format-date this.model.endDate actualFormat='yyyy-MM-dd' expectedFormat='dd MMM yy'}}
               </p>
             </div>
 

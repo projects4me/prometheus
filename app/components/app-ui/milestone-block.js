@@ -71,13 +71,15 @@ export default class AppUiMilestoneBlockComponent extends Component {
          * If end date crossed then render a milestone block having "overdue" status.
          */
         if (status === 'in_progress' || status === 'planned') {
-            if (moment().isSameOrAfter(milestone.endDate)) {
+            let currentDate = luxon.DateTime.now();
+            let milestoneEndDate = luxon.DateTime.fromFormat(milestone.get('endDate'), 'yyyy-MM-dd');
+            if (currentDate >= milestoneEndDate) {
                 status = 'overdue';
             }
         }
 
         let componentName = `milestone-blocks/${status}`;
-        let defaultComponentName = 'milestone-blocks/index'; 
+        let defaultComponentName = 'milestone-blocks/index';
         let component = getOwner(this).lookup(`template:components/${componentName}`);
 
         componentName = component ? componentName : defaultComponentName;
