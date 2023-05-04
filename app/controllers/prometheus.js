@@ -60,6 +60,16 @@ export default class PrometheusController extends Controller {
     @service('store') store;
 
     /**
+     * The router service provides access to route
+     *
+     * @property router
+     * @type Ember.Service
+     * @for Prometheus.Controllers.Prometheus
+     * @public
+     */
+     @service('router') router; 
+
+    /**
      * API's host.
      * 
      * @property apiHost
