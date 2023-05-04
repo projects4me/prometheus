@@ -12,8 +12,8 @@ import { htmlSafe } from '@ember/template';
  * @class AppUserCreateController
  * @namespace Prometheus.Routes
  * @module App.User
- * @extends App
- * @author Hammad Hassan <gollomer@gmail.com>
+ * @extends PrometheusCreateController
+ * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppUserCreateController extends PrometheusCreateController {
 
