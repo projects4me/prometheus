@@ -13,9 +13,32 @@ import { computed } from '@ember/object';
  * @module User
  */
 const Validations = buildValidations({
-    username: validator('presence', true),
-    email: validator('presence', true),
-    name: validator('presence', true)
+    username: validator('presence', {
+        presence: true
+    }),
+    email: {
+        validators: [
+            validator('presence', true),
+            validator('format', {
+                type: 'email',
+            })
+        ]
+    },
+    password: validator('presence', true),
+    passwordConfirmation: {
+        validators: [
+            validator('presence', true),
+            validator('confirmation', {
+                attribute: "Passwords",
+                on: 'password',
+                debounce: 200
+            })
+        ]
+    },
+    name: validator('presence', true),
+    dateOfBirth: validator('presence', true),
+    language: validator('presence', true),
+    timezone: validator('presence', true)
 });
 
 /**
@@ -66,7 +89,27 @@ export default Model.extend(Validations, {
      * @for User
      * @private
      */
-     accountStatus: attr('string'),
+    accountStatus: attr('string'),
+
+    /**
+     * User preferred language.
+     *
+     * @property language
+     * @type String
+     * @for User
+     * @private
+     */
+    language: attr('string'),
+
+    /**
+     * User's timezone.
+     *
+     * @property timezone
+     * @type String
+     * @for User
+     * @private
+     */
+    timezone: attr('string'),
 
     /**
      * Name
@@ -147,6 +190,16 @@ export default Model.extend(Validations, {
      * @private
      */
     title: attr('string'),
+
+    /**
+     * Password of the user.
+     *
+     * @property password
+     * @type String
+     * @for User
+     * @private
+     */
+    password: attr('string'),
 
     /**
      * Date of birth of the user.
