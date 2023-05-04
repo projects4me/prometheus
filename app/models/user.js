@@ -99,7 +99,7 @@ export default Model.extend(Validations, {
      * @for User
      * @private
      */
-    language: attr('string'),
+    language: attr('string', { defaultValue: "en" }),
 
     /**
      * User's timezone.
@@ -109,7 +109,11 @@ export default Model.extend(Validations, {
      * @for User
      * @private
      */
-    timezone: attr('string'),
+    timezone: attr('string', {
+        defaultValue: () => {
+            return moment.tz.guess();
+        }
+    }),
 
     /**
      * Name

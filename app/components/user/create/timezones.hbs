@@ -2,6 +2,7 @@
   <FormFields::FieldRelate
     @placeholder={{t "views.app.user.create.timezoneplaceholder"}}
     @label={{t "views.app.user.create.timezonelabel"}}
+    @selected={{find-by "value" @value this.timezonesList}}
     @value={{@value}}
     @options={{this.timezonesList}}
     @data-field="select-timezone"
