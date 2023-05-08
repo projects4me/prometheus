@@ -1,0 +1,15 @@
+<FormFields::FieldRelate
+  @placeholder={{@placeholder}}
+  @label={{@label}}
+  @value={{@value}}
+  @options={{this.language.languagesList}}
+  @data-field="select-language"
+  @searchField="label"
+  @selected={{find-by "value" @value this.language.languagesList}}
+  @onchange={{@onchange}}
+  @relateType="relate-simple"
+  @data-field={{@data-field}}
+  @v-model={{@model}}
+  @v-field='language'
+  @v-output='message'
+/>
