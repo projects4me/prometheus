@@ -44,8 +44,19 @@
               @mask="email" 
             />
 
-            <User::Create::Username
-              @model={{this.model}}
+            <FormFields::FieldText 
+              @placeholder={{t "views.app.user.create.usernameplaceholder"}}
+              @label={{t "views.app.user.create.username"}} 
+              @type="text" 
+              @value={{@model.username}}
+              @data-field="user.username" 
+              @v-model={{@model}} 
+              @v-field='username' 
+              @v-output='message'
+              @lengthRequired={{false}}
+              @onInput={{this.onInput}}
+              @validationMessage={{this.validationMessage}}
+              @isSuccessful={{this.isSuccessful}}
             />
 
             <FormFields::FieldDate 
