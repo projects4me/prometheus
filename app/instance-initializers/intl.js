@@ -13,10 +13,7 @@
  */
 export function initialize(appInstance) {
     const intl = appInstance.lookup('service:intl');
-    const languageService = appInstance.lookup('service:language');
-
     intl.setLocale('en-us');
-    languageService.setLanguage('en-us');
 }
 
 /**
