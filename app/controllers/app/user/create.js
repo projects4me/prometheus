@@ -3,7 +3,6 @@
 */
 
 import PrometheusCreateController from "prometheus/controllers/prometheus/create";
-import { tracked } from "@glimmer/tracking";
 import { htmlSafe } from '@ember/template';
 
 /**
@@ -26,51 +25,6 @@ export default class AppUserCreateController extends PrometheusCreateController 
      * @protected
      */
     module = 'user';
-
-    /**
-     * The language selected by user.
-     *
-     * @property selectedLanguage
-     * @for AppUserCreateController
-     * @type String
-     * @protected
-     */
-    @tracked selectedLanguage = null;
-
-    /**
-     * The list of language that will be used to show a dropdown of different languages.
-     *
-     * @property languagesList
-     * @for AppUserCreateController
-     * @type Array
-     * @protected
-     */
-    languagesList = [
-        {
-            label: "English",
-            value: "en"
-        },
-        {
-            label: "German",
-            value: "de"
-        },
-        {
-            label: "Chinese",
-            value: "zh"
-        },
-        {
-            label: "Dutch",
-            value: "dl"
-        },
-        {
-            label: "French",
-            value: "fr"
-        },
-        {
-            label: "Urdu",
-            value: "ur"
-        }
-    ]
 
     /**
      * This function returns the success message

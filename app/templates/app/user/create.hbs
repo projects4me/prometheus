@@ -105,21 +105,14 @@
             </h3>
 
             <div class="box-body">
-              <FormFields::FieldRelate
+              <AppUi::Language
                 @placeholder={{t "views.app.user.create.languageplaceholder"}}
                 @label={{t "views.app.user.create.languagelabel"}}
                 @value={{this.model.language}}
-                @options={{this.languagesList}}
-                @data-field="select-language"
-                @searchField="label"
-                @selected={{find-by "value" this.model.language this.languagesList}}
                 @onchange={{action "selectRelated" this.model 'language'}}
-                @relateType="relate-simple"
+                @model={{this.model}}
                 @data-field="user.language"
-                @v-model={{this.model}}
-                @v-field='language'
-                @v-output='message'                 
-              />  
+              />
             </div>
           </div>
         </div>
