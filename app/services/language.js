@@ -3,7 +3,6 @@
  */
 
 import Service from '@ember/service';
-import { action } from '@ember/object';
 /**
  * This is a service that provides all information related to languages. This service can be injected
  * anywhere in the application
@@ -69,7 +68,7 @@ export default class LanguageService extends Service {
      * @for LanguageService
      * @public
      */
-    @action setLanguage(language) {
+    setLanguage(language) {
         this.selectedLanguage = language;
     }
 }
