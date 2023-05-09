@@ -13,7 +13,7 @@ import FormFieldsComponent from "./form-fields";
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class FieldTextComponent extends FormFieldsComponent {
-    
+
     /**
      * This property store length of input field's value
      *
@@ -38,7 +38,7 @@ export default class FieldTextComponent extends FormFieldsComponent {
         }
         return this.length;
     }
-    
+
     /**
      * This function returns value
      *
@@ -49,8 +49,21 @@ export default class FieldTextComponent extends FormFieldsComponent {
         return this.args.value;
     }
 
+    /**
+     * This method returns focusIn function.
+     * 
+     * @method get
+     */
     get focusIn() {
-        let emptyFunction = () => {};
-        return this.args.focusIn ?? emptyFunction;
+        return this.args.focusIn ?? (() => true);
+    }
+
+    /**
+     * This method returns onInput function.
+     * 
+     * @method get
+     */
+    get onInput() {
+        return this.args.onInput ?? (() => true);
     }
 }

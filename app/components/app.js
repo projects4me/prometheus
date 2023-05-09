@@ -35,11 +35,21 @@ export default class AppComponent extends Component {
      * The router service provides access to route
      *
      * @property router
-     * @type String
+     * @type Ember.Service
      * @for App
      * @private
      */
     @service router;
+
+    /**
+     * This is the store service which is used to interact with the data API.
+     *
+     * @property store
+     * @type Ember.Service
+     * @for App
+     * @protected
+     */    
+    @service store;
 
     /**
      * The current user of the application

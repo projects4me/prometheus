@@ -26,6 +26,18 @@ export default Factory.extend({
     email() {
         return faker.internet.email();
     },
+    dateOfBirth() {
+        return moment().format('DD-MM');
+    },
+    language() {
+        return faker.locales[faker.random.arrayElement(["en", "de", "az", "fr"])].title;
+    },
+    password() {
+        return faker.internet.password();
+    },
+    timezone() {
+        return moment.tz.guess();
+    },
     status() {
         return faker.random.arrayElement(["active", "pending", "in_progress", "completed", "new"]);
     },
@@ -48,8 +60,8 @@ export default Factory.extend({
             "modifiedUserName": `User_${user.modifiedUser}`,
             "githubUrl": `github.com/${user.id}`,
             "gitlabUrl": `gitlab.com/${user.id}`,
-            "skypeUrl" : `${user.id}`,
-            "linkedinUrl" : `linkedin.com/in/${user.id}`,
+            "skypeUrl": `${user.id}`,
+            "linkedinUrl": `linkedin.com/in/${user.id}`,
             "slackUrl": `${user.id}`
         });
     }

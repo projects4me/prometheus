@@ -47,4 +47,13 @@ export function register(server, ctx) {
         schema.users.find(id).destroy();
         return model;
     });
+
+    server.post('/user', (schema, request) => {
+        let requestData = JSON.parse(request.requestBody).data;
+        let user = server.create('user');
+
+        user.update(requestData.attributes);
+        ctx.set('latestCreatedUser', user);
+        return user;
+    });
 }

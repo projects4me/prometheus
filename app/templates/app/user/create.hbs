@@ -1,0 +1,155 @@
+<div class="user-create">
+  <section class="content-header">
+    <h1>
+      {{t "views.app.user.create.title"}}
+    </h1>
+  </section>
+
+  <section class="content">
+
+    <div class="row">
+      <div class="col-md-8">
+
+        <div class="box box-primary">
+          <div class="box-header with-border">
+            <h3 class="box-title">
+              {{t "views.app.user.create.userInfo" }}
+            </h3>
+          </div>
+
+          <div class="form box-body no-padding">
+            <FormFields::FieldText 
+              @placeholder={{t "views.app.user.create.nameplaceholder" }}
+              @label={{t "views.app.user.create.name" }} 
+              @type="text" 
+              @value={{this.model.name}} 
+              @data-field="user.name"
+              @v-model={{this.model}} 
+              @v-field='name' 
+              @v-output='message' 
+              @lengthRequired={{false}} 
+              {{autofocus}} 
+            />
+
+            <FormFields::FieldText 
+              @placeholder={{t "views.app.user.create.emailplaceholder" }}
+              @label={{t "views.app.user.create.email" }}
+              @type="text" 
+              @value={{this.model.email}}
+              @data-field="user.email" 
+              @v-model={{this.model}} 
+              @v-field='email' 
+              @v-output='message'
+              @lengthRequired={{false}} 
+              @mask="email" 
+            />
+
+            <FormFields::FieldText 
+              @placeholder={{t "views.app.user.create.usernameplaceholder"}}
+              @label={{t "views.app.user.create.username"}} 
+              @type="text" 
+              @value={{@model.username}}
+              @data-field="user.username" 
+              @v-model={{@model}} 
+              @v-field='username' 
+              @v-output='message'
+              @lengthRequired={{false}}
+              @onInput={{this.onInput}}
+              @validationMessage={{this.validationMessage}}
+              @isSuccessful={{this.isSuccessful}}
+            />
+
+            <FormFields::FieldDate 
+              @placeholder={{t "views.app.user.create.dobplaceholder" }}
+              @label={{t "views.app.user.create.dateofbirth" }} 
+              @value="{{readonly this.model.dateOfBirth}}"
+              @update={{action "selectStatic" this.model 'dateOfBirth' }} 
+              @mask="alphanumeric"
+              @data-field="user.dateOfBirth" 
+              @format="DD-MM" 
+              @singleDatePicker={{true}}
+              @showDropdowns={{true}} 
+              @positionX="right" 
+              @positionY="down" 
+              @autoApply={{true}} 
+              @minDate="01-01"
+              @startDate="01-01"
+              @parentEl='[data-field="user.dateOfBirth"]'
+              @endDate="31-12"
+              @maxDate="31-12"
+            />
+
+            <FormFields::FieldText 
+              @placeholder={{t "views.app.user.create.passwordplaceholder" }}
+              @label={{t "views.app.user.create.password" }}
+              @type="password" 
+              @value={{this.model.password}}
+              @data-field="user.password" 
+              @v-model={{this.model}} 
+              @v-field='password' 
+              @v-output='message'
+              @lengthRequired={{false}} 
+            />
+
+            <FormFields::FieldText 
+              @placeholder={{t "views.app.user.create.confirmpasswordplaceholder" }}
+              @label={{t "views.app.user.create.confirmpassword" }}
+              @type="password" 
+              @value={{this.model.passwordConfirmation}}
+              @data-field="user.confirmPassword" 
+              @v-model={{this.model}} 
+              @v-field='passwordConfirmation' 
+              @v-output='message'
+              @lengthRequired={{false}} 
+            />                        
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-md-4">
+        <div class="box box-primary">
+          <div class="box-header with-border">
+            <h3 class="box-title">
+              {{t "views.app.user.create.language"}}
+            </h3>
+
+            <div class="box-body">
+              <AppUi::Language
+                @placeholder={{t "views.app.user.create.languageplaceholder"}}
+                @label={{t "views.app.user.create.languagelabel"}}
+                @value={{this.model.language}}
+                @onchange={{action "selectRelated" this.model 'language'}}
+                @model={{this.model}}
+                @data-field="user.language"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="box box-primary">
+          <div class="box-header with-border">
+            <h3 class="box-title">
+              {{t "views.app.user.create.timezone"}}
+            </h3>
+
+          <User::Create::Timezones
+            @value={{this.model.timezone}}
+            @model={{this.model}}
+            @selectRelated={{this.selectRelated}}
+          />
+          </div>
+          
+        </div>
+      </div>
+
+    <div class="col-sm-12">
+      <button type="button" data-btn="save" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
+      <button type="button" data-btn="cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+    </div>
+        
+    </div>
+
+  </section>
+</div>
