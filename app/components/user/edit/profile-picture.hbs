@@ -1,6 +1,6 @@
 {{#let (file-queue name="photos" onFileAdded=(action @uploadImage "user-profile-img")) as |queue|}}
 
-  <div class="profile-picture">
+  <div class="profile-picture" data-field="user.image">
 
       <a href="#" {{action this.selectImage}}>
         <img class="user-profile-img img-responsive" src="{{this.apiHost}}/userimage/get/{{@model.id}}" alt="{{@model.name}}">
