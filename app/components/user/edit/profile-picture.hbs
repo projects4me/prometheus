@@ -1,0 +1,14 @@
+{{#let (file-queue name="photos" onFileAdded=(action @uploadImage "user-profile-img")) as |queue|}}
+
+  <div class="profile-picture">
+
+      <a href="#" {{action this.selectImage}}>
+        <img class="user-profile-img img-responsive" src="{{this.apiHost}}/userimage/get/{{@model.id}}" alt="{{@model.name}}">
+        <i class="fa fa-edit"></i>
+      </a>
+    
+    <input id="upload-img" type="file" class="hidden" accept="image/*" {{queue.selectFile}}>
+
+  </div>
+
+{{/let}}
