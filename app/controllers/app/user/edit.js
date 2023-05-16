@@ -5,6 +5,7 @@
 import AppUserCreateController from "prometheus/controllers/app/user/create";
 import { action } from '@ember/object';
 import { task } from 'ember-concurrency';
+import { htmlSafe } from '@ember/template';
 
 /**
  * The controller for user edit page.
@@ -69,6 +70,18 @@ export default class AppUserEditController extends AppUserCreateController {
             this.validationMessage = '';
         }
     })) checkUsernameAvailabilityTask
+
+    /**
+     * This function returns the success message
+     *
+     * @method getSuccessMessage
+     * @param model
+     */
+     getSuccessMessage(model) {
+        return htmlSafe(this.intl.t('views.app.user.updated', {
+            name: model.get('name')
+        }));
+    }
 
     /**
      * This is a placeholder function that is called after the cancel
