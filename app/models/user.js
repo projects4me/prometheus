@@ -13,9 +13,7 @@ import { computed } from '@ember/object';
  * @module User
  */
 const Validations = buildValidations({
-    username: validator('presence', {
-        presence: true
-    }),
+    username: validator('presence', true),
     email: {
         validators: [
             validator('presence', true),
