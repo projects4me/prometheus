@@ -59,9 +59,6 @@ export default class AppUserEditController extends AppUserCreateController {
             let users = yield this.store.query('user', _userOptions);
             let isUsernameAvailable = (users.length === 0);
 
-            //Check if username is availabe and also check whether the entered username is 
-            //already used by current user or not.
-            debugger;
             this.validationMessage =
                 (isUsernameAvailable)
                     ? this.intl.t("views.app.user.create.validation.usernameAvailable")
