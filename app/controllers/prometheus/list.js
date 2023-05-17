@@ -8,7 +8,6 @@ import queryBuilder from "prometheus/utils/query/builder";
 import queryParser from "prometheus/utils/query/parser";
 import $ from 'jquery';
 import { inject as controller } from '@ember/controller';
-import { reads } from '@ember/object/computed';
 import { action } from '@ember/object';
 
 /**
