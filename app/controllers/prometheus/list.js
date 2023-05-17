@@ -266,7 +266,7 @@ export default class PrometheusListController extends PrometheusController {
         let isChecked = evt.target.checked;
         Logger.debug('Prometheus.Controllers.List::selectAll');
         // Select all the checkboxes in the list view
-        _.each($('.list-view input[type=checkbox]').not('[data-select=all]').not('[data-field=user.accountStatus]'), function (element) {
+        _.each($('.list-view input[type=checkbox]').not('[data-select=all], [data-field="user.accountStatus"]'), function (element) {
             element.checked = isChecked;
         });
 
@@ -274,7 +274,7 @@ export default class PrometheusListController extends PrometheusController {
             element.checked = isChecked;
         });
 
-        this.set('selectedCount', $('.list-view input[type=checkbox]:checked').not('[data-select=all]').not('[data-field=user.accountStatus]').length);
+        this.set('selectedCount', $('.list-view input[type=checkbox]:checked').not('[data-select=all]').not('[data-field="user.accountStatus"]').length);
         Logger.debug('-Prometheus.Controllers.List::selectAll');
     }
 
