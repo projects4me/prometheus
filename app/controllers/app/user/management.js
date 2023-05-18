@@ -108,9 +108,10 @@ export default class AppUserManagementController extends PrometheusListControlle
             }, []);
 
         users.forEach(user => {
-            user.set('accountStatus', accountStatus);
+            if (user.accountStatus !== accountStatus) {
+                user.set('accountStatus', accountStatus)
+                user.save();
+            }
         });
-
-        users.save();
     }
 }
