@@ -89,7 +89,7 @@
 
                       <UserManagement::AccountStatus
                         @user={{user}}
-                        @changeUserStatus={{this.changeUserStatus}}
+                        @changeUserStatus={{action this.changeUserStatus user}}
                       />
                       {{!-- actions --}}
                       </td>
