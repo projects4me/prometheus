@@ -1,11 +1,8 @@
-.user-create {
+.user-create,
+.user-edit {
     .form {
         display: flex;
-        flex-wrap: wrap;
-
-        div {
-            flex-basis: 44%;
-        }
+        flex-direction: column;
 
         [data-field="user.dateOfBirth"] {
             .daterangepicker {
@@ -15,13 +12,44 @@
                     display: none;
                 }
 
-                th:not([class]){
+                th:not([class]) {
                     display: none;
                 }
 
                 .monthselect {
                     float: left;
                 }
+            }
+        }
+    }
+
+    .profile-picture {
+        a {
+            position: relative;
+            img {
+                transition: 0.5s ease;
+            }
+        }
+
+        i {
+            left: 50%;
+            top: 50%;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            position: absolute;
+            color: grey;
+            font-size: 2rem;
+        }
+
+        a:hover {
+            cursor: pointer;
+            
+            img {
+                opacity: 0.3;
+            }
+
+            i {
+                opacity: 1;
             }
         }
     }
