@@ -79,12 +79,37 @@ export default class AppUserManagementController extends PrometheusListControlle
      * This function is used to update the account status of a user.
      *
      * @method changeUserStatus
+     * @param {Event} evt
      * @public
-     */    
-    @action changeUserStatus(user, evt) {
+     */
+    @action changeUserStatus(evt) {
         let accountStatus = (evt.target.checked) ? 'active' : 'inactive';
         user.set('accountStatus', accountStatus);
         user.save();
     }
 
+    /**
+     * This function is used to update the account status of multiple users.
+     *
+     * @method changeMultipleUserStatus
+     * @param {Event} evt
+     * @public
+     */
+    @action changeMultipleUserStatus(evt) {
+        let accountStatus = (evt.target.checked) ? 'active' : 'inactive';
+        let _self = this;
+
+        let users = $.makeArray(($('.list-view input[type=checkbox]:checked').not('[data-select=all], [data-input-type=switch]')))
+            .reduce((users, userEl) => {
+                let userId = $(userEl).data('select');
+                users.push(_self.store.peekRecord('user', userId));
+                return users;
+            }, []);
+
+        users.forEach(user => {
+            user.set('accountStatus', accountStatus);
+        });
+
+        users.save();
+    }
 }
