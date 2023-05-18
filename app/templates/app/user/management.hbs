@@ -28,16 +28,21 @@
               {{!--Search box--}}
             <hr>
             
-            {{!++MASS Selection buttons++}}
-            <div class="list-controls">
+            {{!++MASS Actions++}}
+            <div class="user-mass-actions">
 
-              <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-                <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all"/>
-              </span>
-              <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" {{action "reloadPage"}}><i class="fa fa-refresh"></i></button>
+              <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all"/>
+              
+              <FormFields::FieldSwitch
+                @callBack={{this.changeMultipleUserStatus}}
+              />
+
+              <button data-btn="delete" type="button" class="btn btn-box-tool">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+              </button>
 
             </div>
-            {{!--MASS Selection buttons--}}
+            {{!--MASS Actions--}}
 
             <hr>
 
@@ -59,7 +64,7 @@
                     <tr data-user-id={{user.id}}>
                       
                     <td>
-                      <FormFields::FieldCheckbox @select={{action this.select user.id}} @data-select={{user.id}}/>
+                      <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{user.id}}/>
                     </td>
 
                       <td class="user-profile" data-user-field="profile">
@@ -85,7 +90,6 @@
                       <UserManagement::AccountStatus
                         @user={{user}}
                         @changeUserStatus={{this.changeUserStatus}}
-                        @data-field="user.accountStatus"
                       />
                       {{!-- actions --}}
                       </td>
