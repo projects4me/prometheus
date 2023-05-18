@@ -265,7 +265,7 @@ export default class PrometheusListController extends PrometheusController {
         let isChecked = evt.target.checked;
         Logger.debug('Prometheus.Controllers.List::selectAll');
         // Select all the checkboxes in the list view
-        _.each($('.list-view input[type=checkbox]').not('[data-select=all], [data-field="user.accountStatus"]'), function (element) {
+        _.each($('.list-view input[type=checkbox]').not('[data-select=all], [data-input-type=switch]'), function (element) {
             element.checked = isChecked;
         });
 
@@ -273,7 +273,7 @@ export default class PrometheusListController extends PrometheusController {
             element.checked = isChecked;
         });
 
-        this.set('selectedCount', $('.list-view input[type=checkbox]:checked').not('[data-select=all]').not('[data-field="user.accountStatus"]').length);
+        this.set('selectedCount', $('.list-view input[type=checkbox]:checked').not('[data-select=all], [data-input-type=switch]').length);
         Logger.debug('-Prometheus.Controllers.List::selectAll');
     }
 
@@ -303,7 +303,7 @@ export default class PrometheusListController extends PrometheusController {
         // If all the items in the list were selected then check the select all checkbox as well
         else {
             // if checked boxes are equal to total boxes then enable check all box
-            if ($('.list-view input[type=checkbox]:checked').not('[data-select=all]').length === $('.list-view input[type=checkbox]').not('[data-select=all]').length) {
+            if ($('.list-view input[type=checkbox]:checked').not('[data-select=all], [data-input-type=switch]').length === $('.list-view input[type=checkbox]').not('[data-select=all], [data-input-type=switch]').length) {
                 $('[data-select=all]').prop('checked', true);
             }
         }
