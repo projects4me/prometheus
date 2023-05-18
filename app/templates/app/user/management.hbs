@@ -13,11 +13,11 @@
 
       <div class="col-md-12">
         
-        <div class="box box-primary">
+        <div class="box box-primary list-view">
           <div class="box-body">
 
             <div class="header">
-                
+              {{!++Search box++}}
               <FormFields::FieldSearch
                 @placeholder={{t "views.app.user.management.search"}}
                 @data-module="user-management"
@@ -25,8 +25,26 @@
               />
 
             </div>     
+              {{!--Search box--}}
+            <hr>
+            
+            {{!++MASS Actions++}}
+            <div class="user-mass-actions">
 
-            <hr>       
+              <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all"/>
+              
+              <FormFields::FieldSwitch
+                @callBack={{this.changeMultipleUserStatus}}
+              />
+
+              <button data-btn="delete" type="button" class="btn btn-box-tool">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+              </button>
+
+            </div>
+            {{!--MASS Actions--}}
+
+            <hr>
 
             {{! +User List Container }}
             <div class="table-responsive users">
@@ -46,7 +64,7 @@
                     <tr data-user-id={{user.id}}>
                       
                     <td>
-                      <FormFields::FieldCheckbox @select={{action this.select user.id}} @data-select={{user.id}}/>
+                      <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{user.id}}/>
                     </td>
 
                       <td class="user-profile" data-user-field="profile">
@@ -63,7 +81,7 @@
                       <td data-user-field="email">{{user.email}}</td>
                       <td data-user-field="account-status" class={{user.accountStatus}}>{{t (concat "views.app.user.accountStatus." user.accountStatus)}}</td>
 
-                      {{!-- actions --}}
+                      {{!++ actions ++}}
                       <td class="pull-right actions">
                         <button data-btn="delete" type="button" class="btn btn-box-tool" {{action this.deleteUser user}}>
                           <i class="fa fa-trash" aria-hidden="true"></i>
@@ -71,8 +89,9 @@
 
                       <UserManagement::AccountStatus
                         @user={{user}}
-                        @changeUserStatus={{this.changeUserStatus}}
+                        @changeUserStatus={{action this.changeUserStatus user}}
                       />
+                      {{!-- actions --}}
                       </td>
 
                     </tr>
