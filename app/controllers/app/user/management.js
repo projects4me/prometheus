@@ -85,6 +85,7 @@ export default class AppUserManagementController extends PrometheusListControlle
      */
     @action changeUserStatus(user, evt) {
         let accountStatus = (evt.target.checked) ? 'active' : 'inactive';
+        let _self = this;
         user.set('accountStatus', accountStatus);
         user.save();
     }
@@ -98,6 +99,58 @@ export default class AppUserManagementController extends PrometheusListControlle
      */
     @action changeMultipleUserStatus(evt) {
         let accountStatus = (evt.target.checked) ? 'active' : 'inactive';
+
+        this.getSelectedUsers().forEach(user => {
+            if (user.accountStatus !== accountStatus) {
+                user.set('accountStatus', accountStatus)
+                user.save();
+            }
+        });
+    }
+
+    /**
+     * This function is overridden and is used to call toggleMassSwitch() function which is used 
+     * to toggle the mass switch control button on selection of single user.
+     * @param {Event} evt 
+     */
+    @action select(evt) {
+        super.select(evt);
+        this.toggleMassSwitch(evt);
+    }
+
+    /**
+     * This function is overridden and is used to call toggleMassSwitch() function which is used
+     * to toggle the mass switch control button on selection of multiple users.
+     * @param {Event} evt 
+     */
+    @action selectAll(evt) {
+        super.selectAll(evt);
+        this.toggleMassSwitch(evt);
+    }
+
+    /**
+     * This function is used to toggle mass switch control button. It only make that switch to checked when
+     * all of the users are active and switch is checked. Otherwise it will make the switch to unchecked.
+     * @param {Event} evt 
+     */
+    toggleMassSwitch(evt) {
+        let users = this.getSelectedUsers();
+        let allUsersActive = users.every((user) => {
+            return user.accountStatus === 'active';
+        });
+
+        if (allUsersActive && evt.target.checked) {
+            $('.user-mass-actions [data-input-type=switch]').prop('checked', true);
+        } else {
+            $('.user-mass-actions [data-input-type=switch]').prop('checked', false);
+        }
+    }
+
+    /**
+     * This function returns list of users that are selected.
+     * @returns Array
+     */
+    getSelectedUsers() {
         let _self = this;
 
         let users = $.makeArray(($('.list-view input[type=checkbox]:checked').not('[data-select=all], [data-input-type=switch]')))
@@ -107,11 +160,6 @@ export default class AppUserManagementController extends PrometheusListControlle
                 return users;
             }, []);
 
-        users.forEach(user => {
-            if (user.accountStatus !== accountStatus) {
-                user.set('accountStatus', accountStatus)
-                user.save();
-            }
-        });
+        return users;
     }
 }
