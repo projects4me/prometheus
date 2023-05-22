@@ -18,7 +18,7 @@
       }
 
       .user-profile {
-        display: flex;
+        @include flexbox;
 
         .title {
           font-size: 1.1rem;
@@ -50,39 +50,39 @@
       }
 
       .actions {
-        display: flex;
+        @include flexbox;
 
         button {
           margin-right: 1rem;
+          @include button-no-style;
+        }
+
+        i {
+          @include custom-i(black, 2rem);
         }
       }
     }
   }
 
-  button {
-    outline: none !important;
-    border: none !important;
-
-    i {
-      font-size: 2rem;
-      color: black;
-    }
-  }
-
   .user-mass-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    @include flexbox($display: inline-flex, $justifyContent: space-between, $alignItems: baseline);
     margin-left: 0.5rem;
     width: 8.5rem;
 
     .switch-control {
       top: -1.4rem;
     }
+
+    button {
+      @include button-no-style;
+    }
+
+    i {
+      @include custom-i(black, 2rem);
+    }
   }
 
   .header {
-    display: flex;
-    justify-content: space-between;
+    @include flexbox($justifyContent: space-between);
   }
 }

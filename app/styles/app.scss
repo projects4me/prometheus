@@ -12,6 +12,11 @@
 */
 
 
+/**
+  Import global mixin file.
+*/
+@import 'mixins.scss';
+
 /*
   Including the dependencies, this is where you would include any third party
   Sass file. The reason is simple, basically we would want to retain the

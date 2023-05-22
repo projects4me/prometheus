@@ -1,0 +1,30 @@
+@mixin flexbox(
+    $display: flex,
+    $direction: row,
+    $alignContent: null,
+    $justifyContent: null,
+    $alignItems: null,
+    $justifyItems: null
+) {
+    display: $display;
+    flex-direction: $direction;
+    align-content: $alignContent;
+    justify-content: $justifyContent;
+    align-items: $alignItems;
+    justify-items: $justifyItems;
+}
+
+@mixin button-no-style {
+    outline: none !important;
+    border: none !important;
+}
+
+@mixin custom-i($color, $fontSize) {
+    color: $color;
+    font-size: $fontSize;
+}
+
+@mixin flex($display, $justifyContent) {
+    display: $display;
+    justify-content: $justifyContent;
+}
