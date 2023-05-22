@@ -57,7 +57,7 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
      * @returns 
      */
     updateRecord(store, schema, snapshot) {
-        var data = {};
+        let data = {};
         const type = snapshot.modelName;
         const serializer = store.serializerFor(type);
 
