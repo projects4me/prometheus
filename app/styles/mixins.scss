@@ -23,8 +23,3 @@
     color: $color;
     font-size: $fontSize;
 }
-
-@mixin flex($display, $justifyContent) {
-    display: $display;
-    justify-content: $justifyContent;
-}
