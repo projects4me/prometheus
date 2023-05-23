@@ -76,9 +76,9 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th data-table-heading="user-profile">{{t "views.app.user.management.list.profile"}}</th>
-                    <th data-table-heading="user-emailaddress">{{t "views.app.user.management.list.emailaddress"}}</th>
-                    <th data-table-heading="user-accountStatus">{{t "views.app.user.management.list.accountStatus"}}</th>
+                    <th class="{{sortable-class "User.name" this.sort this.order}}" data-sort="User.name"><a href="javascript:void(0);" {{action "sortData" 'User.name'}}>{{t "views.app.user.management.list.profile"}}</a></th>
+                    <th class="{{sortable-class "User.email" this.sort this.order}}" data-sort="User.email"><a href="javascript:void(0);" {{action "sortData" 'User.email'}}>{{t "views.app.user.management.list.emailaddress"}}</a></th>
+                    <th class="{{sortable-class "User.accountStatus" this.sort this.order}}" data-sort="User.accountStatus"><a href="javascript:void(0);" {{action "sortData" 'User.accountStatus'}}>{{t "views.app.user.management.list.accountStatus"}}</a></th>
                   </tr>
                 </thead>
 
