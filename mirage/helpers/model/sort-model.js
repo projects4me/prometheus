@@ -13,8 +13,8 @@ export default function sortModel(sort, order = 'asc', model, sortDataType) {
         order = order.toLowerCase();
         let sortStringCb = (a, b) => {
             return (order === 'desc')
-                ? a[attribute].localeCompare(b[attribute])
-                : b[attribute].localeCompare(a[attribute])
+                ? b[attribute].localeCompare(a[attribute])
+                : a[attribute].localeCompare(b[attribute])
         };
 
         let sortNumberCb = (a, b) => {
