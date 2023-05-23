@@ -29,13 +29,11 @@ export default function sortModel(sort, order = 'asc', model, sortDataType) {
                 : (Number(a[attribute].match(/(\d+)/g)[0]) - Number((b[attribute].match(/(\d+)/g)[0])))
         }
 
-
         if (sortDataType === 'string') {
             return model.sort(sortStringCb);
         } else if (sortDataType === 'number') {
             return model.sort(sortNumberCb)
         } else if (sortDataType === 'stringWithNumber') {
-            debugger;
             return model.sort(sortStringWithNumberCb);
         }
 
