@@ -35,7 +35,6 @@ export default function sortModel(sort, order = 'asc', model, sortDataType) {
         } else if (sortDataType === 'number') {
             return model.sort(sortNumberCb)
         } else if (sortDataType === 'stringWithNumber') {
-            debugger;
             return model.sort(sortStringWithNumberCb);
         }
 
