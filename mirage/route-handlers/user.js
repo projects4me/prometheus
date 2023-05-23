@@ -2,13 +2,18 @@ import pushObjectInModel from '../helpers/push-object-in-model';
 import getValueFromQuery from '../helpers/get-value-from-query';
 import getRequestData from "../helpers/parse-request";
 import limitModel from "../helpers/limit-model";
+import sortModel from '../helpers/model/sort-model';
 
 export function register(server, ctx) {
     server.get('/user', (schema, request) => {
         let model = schema.users.all();
 
+        //sort model ~ if applied
+        model = sortModel(request.queryParams.sort, request.queryParams.order, model, ctx.get('sortDataType'));
+
+        //limit model ~ if applied
         model = limitModel(request.queryParams.limit, model, request.queryParams.page);
-        
+
         let userQuery = request.queryParams.query;
 
         let field = ctx.get('fieldSearched');

@@ -31,6 +31,12 @@ export default class AppUserManagementRoute extends App {
         },
         page: {
             refreshModel: true
+        },
+        sort: {
+            refreshModel: true
+        },
+        order: {
+            refreshModel: true
         }
     }
 
@@ -46,12 +52,16 @@ export default class AppUserManagementRoute extends App {
 
         let query = params.query ? params.query : null;
         let page = params.page ? params.page : null;
+        let sort = params.sort ? params.sort: null;
+        let order = params.order ? params.order: null;
 
         let _userOptions = {
             limit: 20,
             fields: "name,title,email,accountStatus,username",
             query: query,
-            page: page
+            page: page,
+            sort: sort,
+            order: order
         };
 
         Logger.debug('-Prometheus.Routes.App.User.Management::model()');
