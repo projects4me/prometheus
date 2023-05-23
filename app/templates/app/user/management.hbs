@@ -28,21 +28,44 @@
               {{!--Search box--}}
             <hr>
             
-            {{!++MASS Actions++}}
-            <div class="user-mass-actions">
+            <div class="list-controls">
 
-              <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all"/>
-              
-              <FormFields::FieldSwitch
-                @callBack={{this.changeMultipleUserStatus}}
-              />
+              {{!++MASS Actions++}}
+              <div class="user-mass-actions">
 
-              <button data-btn="delete" type="button" class="btn btn-box-tool">
-                <i class="fa fa-trash" aria-hidden="true"></i>
-              </button>
+                <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all"/>
+                
+                <FormFields::FieldSwitch
+                  @callBack={{this.changeMultipleUserStatus}}
+                />
 
+                <button data-btn="delete" type="button" class="btn btn-box-tool">
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </button>       
+              </div>
+              {{!--MASS Actions--}}
+
+              {{!++Paginate++}}
+              <div class="pull-right">
+                <span class="list-view-count">{{t "views.app.issue.list.selectedCount" count=this.selectedCount}}</span>
+                {{add (mult (sub this.page 1) 20) 1}}-{{add (mult (sub this.page 1) 20) this.users.length}} / {{add (mult (sub this.page 1) 20) this.users.length}}
+                {{#if this.users.meta.links.next}}+{{/if}}
+                <div class="btn-group">
+                  {{#if this.users.meta.links.prev}}
+                    <button data-btn="prev-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" {{action "paginate" (get-page this.users.meta.links.prev.href)}}><i class="fa fa-chevron-left"></i></button>
+                  {{else}}
+                    <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}} "><i class="fa fa-chevron-left"></i></button>
+                  {{/if}}
+                  {{#if this.users.meta.links.next}}
+                    <button data-btn="next-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" {{action "paginate" (get-page this.users.meta.links.next.href)}}><i class="fa fa-chevron-right"></i></button>
+                  {{else}}
+                    <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></button>
+                  {{/if}}
+                </div>
+
+              </div>
+              {{!--Paginate--}}
             </div>
-            {{!--MASS Actions--}}
 
             <hr>
 

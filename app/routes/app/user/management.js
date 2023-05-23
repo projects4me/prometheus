@@ -28,6 +28,9 @@ export default class AppUserManagementRoute extends App {
     queryParams = {
         query: {
             refreshModel: true,
+        },
+        page: {
+            refreshModel: true
         }
     }
 
@@ -42,11 +45,13 @@ export default class AppUserManagementRoute extends App {
         Logger.debug('+Prometheus.Routes.App.User.Management::model()');
 
         let query = params.query ? params.query : null;
+        let page = params.page ? params.page : null;
 
         let _userOptions = {
-            limit: -1,
+            limit: 20,
             fields: "name,title,email,accountStatus,username",
-            query: query
+            query: query,
+            page: page
         };
 
         Logger.debug('-Prometheus.Routes.App.User.Management::model()');

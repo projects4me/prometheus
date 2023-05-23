@@ -1,10 +1,14 @@
 import pushObjectInModel from '../helpers/push-object-in-model';
 import getValueFromQuery from '../helpers/get-value-from-query';
 import getRequestData from "../helpers/parse-request";
+import limitModel from "../helpers/limit-model";
 
 export function register(server, ctx) {
     server.get('/user', (schema, request) => {
         let model = schema.users.all();
+
+        model = limitModel(request.queryParams.limit, model, request.queryParams.page);
+        
         let userQuery = request.queryParams.query;
 
         let field = ctx.get('fieldSearched');
