@@ -83,10 +83,19 @@ export default class AppUserManagementController extends PrometheusListControlle
      * @param {Prometheus.Models.User} user
      * @public
      */
-    @action changeUserStatus(user, evt) {
+    @action
+    async changeUserStatus(user, evt) {
         let accountStatus = (evt.target.checked) ? 'active' : 'inactive';
+
+        //disable switch element until the model is updated
+        evt.target.disabled = true;
+        this.toggleCursorStyle(evt.target.nextElementSibling, 'wait', 'wait');
+
         user.set('accountStatus', accountStatus);
-        user.save();
+        await user.save();
+
+        evt.target.disabled = false;
+        this.toggleCursorStyle(evt.target.nextElementSibling, 'pointer', 'auto');
     }
 
     /**
@@ -98,13 +107,27 @@ export default class AppUserManagementController extends PrometheusListControlle
      */
     @action changeMultipleUserStatus(evt) {
         let accountStatus = (evt.target.checked) ? 'active' : 'inactive';
+        let _self = this;
+        let selectedUsers = _self.getSelectedUsers();
 
-        this.getSelectedUsers().forEach(user => {
-            if (user.accountStatus !== accountStatus) {
-                user.set('accountStatus', accountStatus)
-                user.save();
-            }
-        });
+        if (selectedUsers) {
+            let switchEl = evt.target;
+            //disable switch element until the models are updated 
+            switchEl.disabled = true;
+            _self.toggleCursorStyle(evt.target.nextElementSibling, 'wait', 'wait');
+
+            selectedUsers.forEach(async (user, index) => {
+                if (user.accountStatus !== accountStatus) {
+                    user.set('accountStatus', accountStatus)
+                    await user.save();
+
+                    if (selectedUsers.length - 1 === index) {
+                        switchEl.disabled = false;
+                        _self.toggleCursorStyle(evt.target.nextElementSibling, 'pointer', 'auto');
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -160,5 +183,18 @@ export default class AppUserManagementController extends PrometheusListControlle
             }, []);
 
         return users;
+    }
+
+    /**
+     * This function is used to change style of the cursor of input element and document body 
+     * depending upon the state of the model.
+     * 
+     * @param {Element} el
+     * @param {String} elCursorStyle
+     * @param {String} bodyCursorStyle
+     */
+    toggleCursorStyle(el, elCursorStyle, bodyCursorStyle) {
+        el.style.cursor = elCursorStyle;
+        document.body.style.cursor = bodyCursorStyle;
     }
 }
