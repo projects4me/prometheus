@@ -8,10 +8,10 @@ Feature: User | edit a user
     And User_1 is logged in
     When User navigates to app/user/edit/1
     And User enters following details for a user
-    ------------------------------------------------------------------------------
-    |name        | email                 | password | confirmPassword | username |
-    |Rana Nouman | ranamnouman@gmail.com | test     | test            | rana     |
-    ------------------------------------------------------------------------------
+    -------------------------------------------------
+    |name        | email                 | username |
+    |Rana Nouman | ranamnouman@gmail.com | rana     |
+    -------------------------------------------------
     And User selects date of birth
     And User clicks on save button
     Then User should be in app/user/1 page
