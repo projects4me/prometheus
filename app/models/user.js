@@ -5,6 +5,7 @@
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { computed } from '@ember/object';
+import disableValidation from '../utils/model/validation';
 
 /**
  * These are the validation that are applied on the model
@@ -22,14 +23,21 @@ const Validations = buildValidations({
             })
         ]
     },
-    password: validator('presence', true),
+    password: validator('presence', {
+        presence: true,
+        disabled: computed('model.saveAttempted', disableValidation)
+    }),
     passwordConfirmation: {
         validators: [
-            validator('presence', true),
+            validator('presence', {
+                presence: true,
+                disabled: computed('model.saveAttempted', disableValidation)
+            }),
             validator('confirmation', {
                 attribute: "Passwords",
                 on: 'password',
-                debounce: 200
+                debounce: 200,
+                disabled: computed('model.saveAttempted', disableValidation)
             })
         ]
     },
