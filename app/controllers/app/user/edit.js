@@ -77,7 +77,7 @@ export default class AppUserEditController extends AppUserCreateController {
      * @method getSuccessMessage
      * @param model
      */
-     getSuccessMessage(model) {
+    getSuccessMessage(model) {
         return htmlSafe(this.intl.t('views.app.user.updated', {
             name: model.get('name')
         }));
@@ -93,5 +93,16 @@ export default class AppUserEditController extends AppUserCreateController {
     afterCancel() {
         let userId = this.currentUser.user.id;
         this.router.transitionTo('app.user.page', userId);
+    }
+
+    /**
+     * This function is called before the validations is applied on the model. 
+     * In this function we're adding list of attributes on which we want to disable
+     * the applied validations.
+     * 
+     * @param {*} model
+     */
+    beforeValidate(model) {
+        model['disableValidations'] = ['password', 'passwordConfirmation'];
     }
 }
