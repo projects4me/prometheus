@@ -5,7 +5,7 @@
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { computed } from '@ember/object';
-import disableValidation from '../utils/model/validation';
+import { disableValidation } from '../utils/model/validation';
 
 /**
  * These are the validation that are applied on the model

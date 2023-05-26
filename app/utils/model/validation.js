@@ -5,7 +5,7 @@
  * @method disableValidation
  * @returns boolean
  */
-export default function disableValidation() {
+export function disableValidation() {
     let disabledAttributes = this.get('model')['disableValidations'];
     return disabledAttributes
         ? disabledAttributes.includes(this.attribute)
