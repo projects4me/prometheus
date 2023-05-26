@@ -81,30 +81,6 @@
               @v-model={{this.model}}
               @v-field="dateOfBirth"
               @v-output="message"
-            />
-
-            <FormFields::FieldText 
-              @placeholder={{t "views.app.user.edit.passwordplaceholder" }}
-              @label={{t "views.app.user.edit.password" }}
-              @type="password" 
-              @value={{this.model.password}}
-              @data-field="user.password" 
-              @v-model={{this.model}} 
-              @v-field='password' 
-              @v-output='message'
-              @lengthRequired={{false}} 
-            />
-
-            <FormFields::FieldText 
-              @placeholder={{t "views.app.user.edit.confirmpasswordplaceholder" }}
-              @label={{t "views.app.user.edit.confirmpassword" }}
-              @type="password" 
-              @value={{this.model.passwordConfirmation}}
-              @data-field="user.confirmPassword" 
-              @v-model={{this.model}} 
-              @v-field='passwordConfirmation' 
-              @v-output='message'
-              @lengthRequired={{false}} 
             />                        
 
           </div>
