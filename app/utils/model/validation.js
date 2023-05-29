@@ -6,7 +6,7 @@
  * @returns boolean
  */
 export function disableValidation() {
-    let disabledAttributes = this.get('model')['disableValidations'];
+    let disabledAttributes = this.model['disableValidations'];
     return disabledAttributes
         ? disabledAttributes.includes(this.attribute)
         : false
