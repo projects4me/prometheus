@@ -105,4 +105,14 @@ export default class AppUserEditController extends AppUserCreateController {
     beforeValidate(model) {
         model['disableValidations'] = ['password', 'passwordConfirmation'];
     }
+
+    /**
+     * This function is called after the validations is applied on the model. 
+     * In this function we're removing disableValidations object.
+     * 
+     * @param {*} model
+     */
+    afterValidate(model) {
+        delete model['disableValidations'];
+    }
 }
