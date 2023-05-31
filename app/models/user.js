@@ -23,21 +23,14 @@ const Validations = buildValidations({
             })
         ]
     },
-    password: validator('presence', {
-        presence: true,
-        disabled: computed('model.saveAttempted', disableValidation)
-    }),
+    password: validator('presence', true),
     passwordConfirmation: {
         validators: [
-            validator('presence', {
-                presence: true,
-                disabled: computed('model.saveAttempted', disableValidation)
-            }),
+            validator('presence', true),
             validator('confirmation', {
                 attribute: "Passwords",
                 on: 'password',
                 debounce: 200,
-                disabled: computed('model.saveAttempted', disableValidation)
             })
         ]
     },
@@ -45,6 +38,8 @@ const Validations = buildValidations({
     dateOfBirth: validator('presence', true),
     language: validator('presence', true),
     timezone: validator('presence', true)
+}, {
+    disabled: computed('model.saveAttempted', disableValidation)
 });
 
 /**
