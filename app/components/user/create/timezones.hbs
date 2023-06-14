@@ -11,8 +11,7 @@
     @onchange={{action @selectRelated @model 'timezone'}}
     @relateType="relate-simple"
     @data-field="user.timezone"
-    @v-model={{@model}}
-    @v-field='timezone'
-    @v-output='message'                 
+    @validate={{@validate}}
+    @message={{@message}}
   />  
 </div>
