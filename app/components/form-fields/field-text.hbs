@@ -2,7 +2,7 @@
 <div data-field={{@data-field}} class={{concat "form-field ember-view " @readonly}}>
   <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}}
     maxlength={{@length}} aria-invalid="true" aria-describedBy={{@data-field}} {{apply-mask @mask}} {{on "focusin" this.focusIn}}
-    readonly={{@readonly}} {{on "focusout" (action (mut this.shouldValidate) true) }} {{on "input" this.onInput}} ...attributes/>
+    readonly={{@readonly}} {{on "focusout" (action (mut this.shouldValidate) true) }} {{on "input" this.onInput}} {{on "blur" (fn this.validate @dependentField)}} ...attributes/>
   <span class="highlight"></span>
   <span class="bar"></span>
   <label class="floating-label">{{@label}}</label>
@@ -11,9 +11,9 @@
     <span class="count pull-right">{{this.charLength}}/{{@length}}</span>
   {{/if}}
 
-  {{#if (and this.shouldValidate (not @validationMessage))}}
+  {{#if (and @message this.shouldValidate)}}
     <span class="error text-red" id={{@data-field}}>
-      {{v-get @v-model @v-field @v-output}}
+      {{@message}}
     </span>
   {{/if}}
 

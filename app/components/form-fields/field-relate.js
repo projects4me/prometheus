@@ -13,7 +13,7 @@ import FormFieldsComponent from "./form-fields";
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class FieldRelateComponent extends FormFieldsComponent {
-    
+
     /**
      * This property store length of input field's value
      *
@@ -38,7 +38,7 @@ export default class FieldRelateComponent extends FormFieldsComponent {
         }
         return this.length;
     }
-    
+
     /**
      * This function returns value
      *
