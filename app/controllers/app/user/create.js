@@ -86,7 +86,7 @@ export default class AppUserCreateController extends PrometheusCreateController 
                 custom: [
                     {
                         action: "checkUsernameAvailabilityTask"
-                    }                    
+                    }
                 ]
             }
         },
