@@ -18,6 +18,15 @@ import { tracked } from '@glimmer/tracking';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class PrometheusCreateController extends PrometheusController {
+    /**
+     * This contains all of the validation messages of each field.
+     * 
+     * @property message
+     * @type Object
+     * @for PrometheusCreateController
+     * @protected
+     */
+    @tracked message = {};
 
     /**
      * This is the layout name that is used to figure out what to
@@ -74,26 +83,100 @@ export default class PrometheusCreateController extends PrometheusController {
      * @public
      * @todo Handle the situation where we are not using validations
      */
-    @action save() {
-        let _self = this;
+    @action save(schemaName) {
         let model = this.model;
 
-        if (typeof model.validate === 'function') {
-            _self.beforeValidate(model);
-            model.validate().then(({ validations }) => {
-                _self.afterValidate(model, validations);
-                if (validations.get('isValid')) {
-                    _self.beforeSave(model);
-                    _self._save(model);
-                } else {
-                    _self._showError(validations);
-                }
-            });
-        } else {
-            _self._save(model);
+        try {
+            this.beforeValidate(model);
+            this[schemaName].validateSync(model, { abortEarly: false });
+
+            this.beforeSave(model);
+            this._save(model);
+        } catch (e) {
+            this._showError(e);
         }
     }
 
+    /**
+     * This function is used to validate a field of the given schema.
+     *
+     * @method validateField
+     * @param {String} schemaName 
+     * @param {Object} actualField
+     * @param {Object} dependentField
+     * @param {Event} event 
+     * @protected
+     */
+    @action validateField(schemaName, actualField, dependentField, event) {
+        //Validate field if it exists on schema object
+        if (this[schemaName].fields[actualField.name]) {
+            try {
+                this[schemaName].validateSyncAt(actualField.name, this.model);
+
+                //If validation is passed then remove previous message of actual field (if exists)
+                this.message[actualField.name] = '';
+                this.message = { ...this.message };
+
+                (dependentField) && (this.validateDependentField(schemaName, actualField, dependentField));
+
+            } catch (e) {
+                debugger;
+                this.setValidationMessages(e, actualField, dependentField);
+            }
+        }
+    }
+
+    /**
+     * This function is used to validates the dependent field. Let say there are two fields, Password and
+     * Confirm Password, and we want to validate the confirm password field when user give some input in password 
+     * field. So this function will apply validation on confirm password (dependent field) and will show appropriate
+     * message on that field.
+     *
+     * @method validateDependentField
+     * @param {String} schemaName 
+     * @param {Object} actualField
+     * @param {Object} dependentField
+     * @protected
+     */
+    validateDependentField(schemaName, actualField, dependentField) {
+        /**
+        * Check if validateDependent flag is true and  value of the actual and dependent field are equal, then
+        * remove the error message of dependent field.
+        */
+        if (actualField.validateDependent && actualField.value === dependentField.value) {
+            this.message[dependentField.name] = '';
+        }
+
+        //If validateDependent flag is true then validate it.
+        if (actualField.validateDependent) {
+            //Mutate name of actual field to dependent field in order to show appropriate message to the dependent field.
+            actualField.name = dependentField.name;
+
+            //validate dependent field
+            this[schemaName].validateSyncAt(dependentField.name, this.model);
+        }
+    }
+
+    /**
+     * This function is used to set validation messages against each field.
+     * 
+     * @method setValidationMessages
+     * @param {Error} e 
+     * @param {Object} actualField 
+     * @param {Object} dependentField 
+     * @protected
+     */
+    setValidationMessages(error, actualField, dependentField) {
+        switch (error.type) {
+            case 'oneOf':
+                this.message[actualField.name] = this.intl.t(`errors.${error.type}`, { dependentField: dependentField.t });
+                break;
+            default:
+                this.message[actualField.name] = this.intl.t(`errors.${error.type}`);
+        }
+
+        this.message = { ...this.message };
+    }
     /**
      * This function lets a user traverse to the issue list view of the project
      *
@@ -142,6 +225,7 @@ export default class PrometheusCreateController extends PrometheusController {
      */
     _save(model) {
         let _self = this;
+        debugger;
         model.save().then(function (data) {
             _self.afterSave(data).then(function () {
                 _self.showSuccess(data);
@@ -239,13 +323,13 @@ export default class PrometheusCreateController extends PrometheusController {
      * message
      *
      * @method showSuccess
-     * @param validations
+     * @param {Error} validationError
      * @private
      */
-    _showError(validations) {
+    _showError(validationError) {
         let _self = this;
         Logger.debug(_self.get('module'));
-        let messages = _self._buildMessages(validations, _self.get('module'));
+        let messages = _self._buildMessages(validationError, _self.get('module'));
 
         new Messenger().post({
             message: messages,

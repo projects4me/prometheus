@@ -8,6 +8,7 @@ import { inject as controller } from '@ember/controller';
 import { computed } from '@ember/object';
 import _ from "lodash";
 import { htmlSafe } from '@ember/template';
+import { string, object } from 'yup';
 
 /**
  * The controller for the wiki create route, it is loaded when a user clicks on
@@ -21,6 +22,17 @@ import { htmlSafe } from '@ember/template';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class AppProjectWikiCreateController extends PrometheusCreateController.extend(ProjectRelated) {
+
+    /**
+     * This is the schema for wiki model.
+     * 
+     * @property wikiSchema
+     * @for AppProjectWikiCreateController
+     * @protected
+     */
+    wikiSchema = object().shape({
+        name: string().required()
+    });
 
     /**
      * This is the module for which we are trying to create

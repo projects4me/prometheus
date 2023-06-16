@@ -9,6 +9,17 @@ import { computed } from '@ember/object';
 import { hash } from 'rsvp';
 import _ from 'lodash';
 import { htmlSafe } from '@ember/template';
+import { string, object, array, addMethod } from 'yup';
+
+addMethod(array, "relationship", function () {
+    return this.transform((value, originalValue, context) => {
+        debugger;
+        originalValue.then((originalValue) => {
+            console.log(originalValue.length);
+            debugger;
+        });
+    });
+});
 
 /**
  * This is empty controller, normally we do not create them. However
@@ -23,6 +34,21 @@ import { htmlSafe } from '@ember/template';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class AppProjectsCreateController extends PrometheusCreateController {
+
+    /**
+     * This is the schema for project model.
+     * 
+     * @property projectSchema
+     * @for AppProjectsCreateController
+     * @protected
+     */
+    projectSchema = object().shape({
+        name: string().required(),
+        shortCode: string().required(),
+        type: string().required(),
+        status: string().required(),
+        issuetypes: array().relationship()
+    });
 
     /**
      * This is the module for which we are trying to create
@@ -75,7 +101,7 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
     @computed('model.name')
     get shortCode() {
         let name = '';
-        if (this.model !== undefined 
+        if (this.model !== undefined
             && this.model.name !== undefined) {
             name = this.model.name;
         }
@@ -108,10 +134,10 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
      * @for Create
      * @private
      */
-     @computed('issueStatuses')
-     get issueStatusList() {
-         return (new format(this)).getTranslatedModelList(this.issueStatuses, 'views.app.issue.lists.status');
-     }
+    @computed('issueStatuses')
+    get issueStatusList() {
+        return (new format(this)).getTranslatedModelList(this.issueStatuses, 'views.app.issue.lists.status');
+    }
 
     /**
      * This function sets the short code for the project.

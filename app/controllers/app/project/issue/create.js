@@ -9,6 +9,7 @@ import { computed, action } from '@ember/object';
 import format from "prometheus/utils/data/format";
 import _ from "lodash";
 import { htmlSafe } from '@ember/template';
+import { string, object } from 'yup';
 
 /**
  * This is the controller for issue create page
@@ -20,6 +21,25 @@ import { htmlSafe } from '@ember/template';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class AppProjectIssueCreateController extends PrometheusCreateController.extend(ProjectRelated) {
+
+    /**
+     * This is the schema for issue model.
+     * 
+     * @property issueSchema
+     * @for AppProjectIssueCreateController
+     * @protected
+     */
+    issueSchema = object().shape({
+        subject: string().required(),
+        typeId: string().required(),
+        startDate: string().required(),
+        endDate: string().required(),
+        statusId: string().required(),
+        priority: string().required(),
+        assignee: string().required(),
+        milestoneId: string().required(),
+        owner: string().required(),
+    });
 
     /**
      * This is the module for which we are trying to create
