@@ -25,10 +25,9 @@
                 @type="text"
                 @value={{this.model.subject}}
                 @data-field="issue.subject"
-                @v-model={{this.model}}
                 @length="255"
-                @v-field='subject'
-                @v-output='message'
+                @validate={{action this.validateField "issueSchema" (hash name="subject" value=this.model.subject)}}
+                @message={{this.message.subject}}
                 {{autofocus}}
             />
             <div data-field="issue.description" class="form-field ember-view">
@@ -57,9 +56,8 @@
                 @onchange={{action "selectRelated" this.model 'typeId'}}
                 @relateType="relate-simple"
                 @data-field="issue.type"
-                @v-model={{this.model}}
-                @v-field='typeId'
-                @v-output='message'
+                @validate={{action this.validateField "issueSchema" (hash name="typeId" value=this.model.typeId)}}
+                @message={{this.message.typeId}}
             />
 
             <FormFields::FieldDate
@@ -73,11 +71,10 @@
                 @showDropdowns={{true}}
                 @positionX="right"
                 @positionY="down"
-                @v-model={{this.model}}
-                @v-field='startDate'
-                @v-output='message'
                 @autoApply={{true}}
                 @minDate='1990'
+                @validate={{action this.validateField "issueSchema" (hash name="startDate" value=this.model.startDate)}}                
+                @message={{this.message.startDate}}
             />
 
             <FormFields::FieldDate
@@ -91,11 +88,10 @@
                 @showDropdowns={{true}}
                 @positionX="right"
                 @positionY="down"
-                @v-model={{this.model}}
-                @v-field='endDate'
-                @v-output='message'
                 @autoApply={{true}}
                 @minDate='1990'
+                @validate={{action this.validateField "issueSchema" (hash name="endDate" value=this.model.endDate)}}                
+                @message={{this.message.endDate}}
             />
 
             <FormFields::FieldRelate
@@ -108,9 +104,8 @@
                 @onchange={{action "selectRelated" this.model 'statusId'}}
                 @relateType="relate-simple"
                 @data-field="issue.status"
-                @v-model={{this.model}}
-                @v-field='statusId'
-                @v-output='message'
+                @validate={{action this.validateField "issueSchema" (hash name="statusId" value=this.model.statusId)}}                
+                @message={{this.message.statusId}}
             />
 
             <FormFields::FieldRelate
@@ -123,9 +118,8 @@
                 @onchange={{action "selectRelated" this.model 'priority'}}
                 @relateType="relate-issuepriority"
                 @data-field="issue.priority"
-                @v-model={{this.model}}
-                @v-field='priority'
-                @v-output='message'
+                @validate={{action this.validateField "issueSchema" (hash name="priority" value=this.model.priority)}}
+                @message={{this.message.priority}}
             />
 
             <FormFields::FieldRelate
@@ -138,9 +132,8 @@
                 @onchange={{action "selectRelated" this.model 'milestoneId'}}
                 @relateType="relate-simple"
                 @data-field="issue.milestone"
-                @v-model={{this.model}}
-                @v-field='milestoneId'
-                @v-output='message'
+                @validate={{action this.validateField "issueSchema" (hash name="milestoneId" value=this.model.milestoneId)}}
+                @message={{this.message.milestoneId}}
             />
 
           </div>
@@ -170,9 +163,8 @@
               @onchange={{action "selectRelated" this.model 'assignee'}}
               @relateType="relate-user"
               @data-field="issue.assignee"
-              @v-model={{this.model}}
-              @v-field='assignee'
-              @v-output='message'
+              @validate={{action this.validateField "issueSchema" (hash name="assignee" value=this.model.assignee)}}
+              @message={{this.message.assignee}}
           />
 
           <FormFields::FieldRelate
@@ -185,9 +177,8 @@
               @onchange={{action "selectRelated" this.model 'owner'}}
               @relateType="relate-user"
               @data-field="issue.owner"
-              @v-model={{this.model}}
-              @v-field='owner'
-              @v-output='message'
+              @validate={{action this.validateField "issueSchema" (hash name="owner" value=this.model.owner)}}
+              @message={{this.message.owner}}
           />
 
         </div>
@@ -211,9 +202,8 @@
               @onchange={{action "changedParent" this.model 'parentId'}}
               @relateType="relate-issue"
               @data-field="issue.parentId"
-              @v-model={{this.model}}
-              @v-field='parentId'
-              @v-output='message'
+              @validate={{action this.validateField "issueSchema" (hash name="parentId" value=this.model.parentId)}}
+              @message={{this.message.parentId}}
           />
 
         </div>
@@ -222,7 +212,7 @@
     </div>
 
     <div class="col-sm-12">
-      <button type="button" data-btn="save" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
+      <button type="button" data-btn="save" class="btn btn-primary" {{action "save" "issueSchema"}}>{{t "global.form.save"}}</button>
       <button type="button" data-btn="cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
     </div>
 
