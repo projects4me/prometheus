@@ -19,6 +19,175 @@ import { debounce } from '@ember/runloop';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppUserCreateController extends PrometheusCreateController {
+    /**
+     * This object holds all of the information that we need to create our schema and also need to 
+     * render the template (in future).
+     * @property metadata
+     * @type Object
+     * @for AppUserCreateController
+     * @private
+     */
+    metadata = {
+        name: {
+            field: "name",
+            component: "FormFields::FieldText",
+            placeholder: "views.app.user.create.nameplaceholder",
+            label: "views.app.user.create.name",
+            type: "text",
+            value: "value",
+            lengthRequired: true,
+            modifiers: [],
+            dataAttributes: [],
+            actions: [],
+            events: [],
+            validations: {
+                default: {
+                    type: "string",
+                    required: true
+                }
+            }
+        },
+        email: {
+            field: "email",
+            component: "FormFields::FieldText",
+            placeholder: "views.app.user.create.emailplaceholder",
+            label: "views.app.user.create.email",
+            type: "text",
+            value: "value",
+            lengthRequired: true,
+            modifiers: [],
+            dataAttributes: [],
+            actions: [],
+            events: [],
+            validations: {
+                default: {
+                    type: "string",
+                    required: true
+                }
+            }
+        },
+        username: {
+            field: "username",
+            component: "FormFields::FieldText",
+            placeholder: "views.app.user.create.usernameplaceholder",
+            label: "views.app.user.create.username",
+            type: "text",
+            value: "value",
+            lengthRequired: true,
+            modifiers: [],
+            dataAttributes: [],
+            actions: [],
+            events: [],
+            validations: {
+                default: {
+                    type: "string",
+                    required: true
+                },
+                custom: [
+                    {
+                        action: "checkUsernameAvailabilityTask"
+                    }                    
+                ]
+            }
+        },
+        dateofbirth: {
+            field: "dateofbirth",
+            component: "FormFields::FieldDate",
+            placeholder: "views.app.user.create.dobplaceholder",
+            label: "views.app.user.create.dateofbirth",
+            value: "value",
+            mask: "alphanumeric",
+            format: "DD-MM",
+            lengthRequired: true,
+            modifiers: [],
+            dataAttributes: [],
+            actions: [],
+            events: [],
+            validations: {
+                default: {
+                    type: "string",
+                    required: true
+                }
+            }
+        },
+        password: {
+            field: "password",
+            component: "FormFields::FieldText",
+            placeholder: "views.app.user.create.passwordplaceholder",
+            label: "views.app.user.create.name",
+            type: "text",
+            value: "value",
+            lengthRequired: true,
+            modifiers: [],
+            dataAttributes: [],
+            actions: [],
+            events: [],
+            validations: {
+                default: {
+                    type: "string",
+                    required: true
+                }
+            }
+        },
+        confirmpassword: {
+            field: "confirmpassword",
+            component: "FormFields::FieldText",
+            placeholder: "views.app.user.create.confirmpasswordplaceholder",
+            label: "views.app.user.create.confirmpassword",
+            type: "text",
+            value: "passwordConfirmation",
+            lengthRequired: true,
+            modifiers: [],
+            dataAttributes: [],
+            actions: [],
+            events: [],
+            validations: {
+                default: {
+                    type: "string",
+                    required: true,
+                    dependentField: "password"
+                }
+            }
+        },
+        language: {
+            field: "language",
+            component: "AppUi::Language",
+            placeholder: "views.app.user.create.languageplaceholder",
+            label: "views.app.user.create.language",
+            type: "text",
+            value: "value",
+            lengthRequired: true,
+            modifiers: [],
+            dataAttributes: [],
+            actions: [],
+            events: [],
+            validations: {
+                default: {
+                    type: "string",
+                    required: true
+                }
+            }
+        },
+        timezone: {
+            field: "timezone",
+            component: "User::Create::Timezones",
+            placeholder: "views.app.user.create.timezoneplaceholder",
+            label: "views.app.user.create.timezone",
+            type: "text",
+            value: "value",
+            lengthRequired: true,
+            modifiers: [],
+            dataAttributes: [],
+            actions: [],
+            events: [],
+            validations: {
+                default: {
+                    type: "string",
+                    required: true
+                }
+            }
+        }
+    }
 
     /**
      * This property is used to keep track validation message in order to show the user that whether the 
@@ -29,17 +198,17 @@ export default class AppUserCreateController extends PrometheusCreateController 
      * @for AppUserCreateController
      * @protected
      */
-     @tracked validationMessage = "";
+    @tracked validationMessage = "";
 
-     /**
-      * This property is used to keep track that whether validation is successful or not.
-      *
-      * @property isSuccessful
-      * @type boolean
-      * @for AppUserCreateController
-      * @protected
-      */
-     @tracked isSuccessful;
+    /**
+     * This property is used to keep track that whether validation is successful or not.
+     *
+     * @property isSuccessful
+     * @type boolean
+     * @for AppUserCreateController
+     * @protected
+     */
+    @tracked isSuccessful;
 
     /**
      * This is the module for which we are trying to create.
@@ -82,7 +251,7 @@ export default class AppUserCreateController extends PrometheusCreateController 
      * @for AppUserCreateController
      * @public
      */
-     @(task(function* (username) {
+    @(task(function* (username) {
         let _userOptions = {
             query: `((User.username : ${username} ))`
         };
@@ -109,9 +278,9 @@ export default class AppUserCreateController extends PrometheusCreateController 
      * @for AppUserCreateController
      * @public
      */
-     @action
-     async onInput(event) {
-         let query = event.target.value;
-         debounce(this, this.checkUsernameAvailabilityTask.perform, query, 200);
-     }    
+    @action
+    async onInput(event) {
+        let query = event.target.value;
+        debounce(this, this.checkUsernameAvailabilityTask.perform, query, 200);
+    }
 }
