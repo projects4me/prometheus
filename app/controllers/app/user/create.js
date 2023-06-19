@@ -28,7 +28,7 @@ export default class AppUserCreateController extends PrometheusCreateController 
      * @private
      */
     metadata = {
-        section: [
+        sections: [
             {
                 name: "User Create",
                 fields: {
