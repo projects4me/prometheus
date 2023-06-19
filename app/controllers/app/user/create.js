@@ -28,165 +28,172 @@ export default class AppUserCreateController extends PrometheusCreateController 
      * @private
      */
     metadata = {
-        name: {
-            field: "name",
-            component: "FormFields::FieldText",
-            placeholder: "views.app.user.create.nameplaceholder",
-            label: "views.app.user.create.name",
-            type: "text",
-            value: "value",
-            lengthRequired: true,
-            modifiers: [],
-            dataAttributes: [],
-            actions: [],
-            events: [],
-            validations: {
-                default: {
-                    type: "string",
-                    required: true
-                }
-            }
-        },
-        email: {
-            field: "email",
-            component: "FormFields::FieldText",
-            placeholder: "views.app.user.create.emailplaceholder",
-            label: "views.app.user.create.email",
-            type: "text",
-            value: "value",
-            lengthRequired: true,
-            modifiers: [],
-            dataAttributes: [],
-            actions: [],
-            events: [],
-            validations: {
-                default: {
-                    type: "string",
-                    required: true
-                }
-            }
-        },
-        username: {
-            field: "username",
-            component: "FormFields::FieldText",
-            placeholder: "views.app.user.create.usernameplaceholder",
-            label: "views.app.user.create.username",
-            type: "text",
-            value: "value",
-            lengthRequired: true,
-            modifiers: [],
-            dataAttributes: [],
-            actions: [],
-            events: [],
-            validations: {
-                default: {
-                    type: "string",
-                    required: true
-                },
-                custom: [
-                    {
-                        action: "checkUsernameAvailabilityTask"
+        section: [
+            {
+                name: "User Create",
+                fields: {
+                    name: {
+                        field: "name",
+                        component: "FormFields::FieldText",
+                        placeholder: "views.app.user.create.nameplaceholder",
+                        label: "views.app.user.create.name",
+                        type: "text",
+                        value: "value",
+                        lengthRequired: true,
+                        modifiers: [],
+                        dataAttributes: [],
+                        actions: [],
+                        events: [],
+                        validations: {
+                            default: {
+                                type: "string",
+                                required: true
+                            }
+                        }
+                    },
+                    email: {
+                        field: "email",
+                        component: "FormFields::FieldText",
+                        placeholder: "views.app.user.create.emailplaceholder",
+                        label: "views.app.user.create.email",
+                        type: "text",
+                        value: "value",
+                        lengthRequired: true,
+                        modifiers: [],
+                        dataAttributes: [],
+                        actions: [],
+                        events: [],
+                        validations: {
+                            default: {
+                                type: "string",
+                                required: true
+                            }
+                        }
+                    },
+                    username: {
+                        field: "username",
+                        component: "FormFields::FieldText",
+                        placeholder: "views.app.user.create.usernameplaceholder",
+                        label: "views.app.user.create.username",
+                        type: "text",
+                        value: "value",
+                        lengthRequired: true,
+                        modifiers: [],
+                        dataAttributes: [],
+                        actions: [],
+                        events: [],
+                        validations: {
+                            default: {
+                                type: "string",
+                                required: true
+                            },
+                            custom: [
+                                {
+                                    action: "checkUsernameAvailabilityTask"
+                                }
+                            ]
+                        }
+                    },
+                    dateofbirth: {
+                        field: "dateofbirth",
+                        component: "FormFields::FieldDate",
+                        placeholder: "views.app.user.create.dobplaceholder",
+                        label: "views.app.user.create.dateofbirth",
+                        value: "value",
+                        mask: "alphanumeric",
+                        format: "DD-MM",
+                        lengthRequired: true,
+                        modifiers: [],
+                        dataAttributes: [],
+                        actions: [],
+                        events: [],
+                        validations: {
+                            default: {
+                                type: "string",
+                                required: true
+                            }
+                        }
+                    },
+                    password: {
+                        field: "password",
+                        component: "FormFields::FieldText",
+                        placeholder: "views.app.user.create.passwordplaceholder",
+                        label: "views.app.user.create.name",
+                        type: "text",
+                        value: "value",
+                        lengthRequired: true,
+                        modifiers: [],
+                        dataAttributes: [],
+                        actions: [],
+                        events: [],
+                        validations: {
+                            default: {
+                                type: "string",
+                                required: true
+                            }
+                        }
+                    },
+                    confirmpassword: {
+                        field: "confirmpassword",
+                        component: "FormFields::FieldText",
+                        placeholder: "views.app.user.create.confirmpasswordplaceholder",
+                        label: "views.app.user.create.confirmpassword",
+                        type: "text",
+                        value: "passwordConfirmation",
+                        lengthRequired: true,
+                        modifiers: [],
+                        dataAttributes: [],
+                        actions: [],
+                        events: [],
+                        validations: {
+                            default: {
+                                type: "string",
+                                required: true,
+                                dependentField: "password"
+                            }
+                        }
+                    },
+                    language: {
+                        field: "language",
+                        component: "AppUi::Language",
+                        placeholder: "views.app.user.create.languageplaceholder",
+                        label: "views.app.user.create.language",
+                        type: "text",
+                        value: "value",
+                        lengthRequired: true,
+                        modifiers: [],
+                        dataAttributes: [],
+                        actions: [],
+                        events: [],
+                        validations: {
+                            default: {
+                                type: "string",
+                                required: true
+                            }
+                        }
+                    },
+                    timezone: {
+                        field: "timezone",
+                        component: "User::Create::Timezones",
+                        placeholder: "views.app.user.create.timezoneplaceholder",
+                        label: "views.app.user.create.timezone",
+                        type: "text",
+                        value: "value",
+                        lengthRequired: true,
+                        modifiers: [],
+                        dataAttributes: [],
+                        actions: [],
+                        events: [],
+                        validations: {
+                            default: {
+                                type: "string",
+                                required: true
+                            }
+                        }
                     }
-                ]
-            }
-        },
-        dateofbirth: {
-            field: "dateofbirth",
-            component: "FormFields::FieldDate",
-            placeholder: "views.app.user.create.dobplaceholder",
-            label: "views.app.user.create.dateofbirth",
-            value: "value",
-            mask: "alphanumeric",
-            format: "DD-MM",
-            lengthRequired: true,
-            modifiers: [],
-            dataAttributes: [],
-            actions: [],
-            events: [],
-            validations: {
-                default: {
-                    type: "string",
-                    required: true
                 }
             }
-        },
-        password: {
-            field: "password",
-            component: "FormFields::FieldText",
-            placeholder: "views.app.user.create.passwordplaceholder",
-            label: "views.app.user.create.name",
-            type: "text",
-            value: "value",
-            lengthRequired: true,
-            modifiers: [],
-            dataAttributes: [],
-            actions: [],
-            events: [],
-            validations: {
-                default: {
-                    type: "string",
-                    required: true
-                }
-            }
-        },
-        confirmpassword: {
-            field: "confirmpassword",
-            component: "FormFields::FieldText",
-            placeholder: "views.app.user.create.confirmpasswordplaceholder",
-            label: "views.app.user.create.confirmpassword",
-            type: "text",
-            value: "passwordConfirmation",
-            lengthRequired: true,
-            modifiers: [],
-            dataAttributes: [],
-            actions: [],
-            events: [],
-            validations: {
-                default: {
-                    type: "string",
-                    required: true,
-                    dependentField: "password"
-                }
-            }
-        },
-        language: {
-            field: "language",
-            component: "AppUi::Language",
-            placeholder: "views.app.user.create.languageplaceholder",
-            label: "views.app.user.create.language",
-            type: "text",
-            value: "value",
-            lengthRequired: true,
-            modifiers: [],
-            dataAttributes: [],
-            actions: [],
-            events: [],
-            validations: {
-                default: {
-                    type: "string",
-                    required: true
-                }
-            }
-        },
-        timezone: {
-            field: "timezone",
-            component: "User::Create::Timezones",
-            placeholder: "views.app.user.create.timezoneplaceholder",
-            label: "views.app.user.create.timezone",
-            type: "text",
-            value: "value",
-            lengthRequired: true,
-            modifiers: [],
-            dataAttributes: [],
-            actions: [],
-            events: [],
-            validations: {
-                default: {
-                    type: "string",
-                    required: true
-                }
-            }
-        }
+        ]
     }
 
     /**
