@@ -8,6 +8,7 @@ import { computed, action } from '@ember/object';
 import { hash } from 'rsvp';
 import _ from "lodash";
 import { tracked } from '@glimmer/tracking';
+import generateSchemaFromMeta from "prometheus/utils/yup/generate-schema";
 
 /**
  * This is the controller for issue create page
@@ -275,5 +276,29 @@ export default class PrometheusCreateController extends PrometheusController {
      * @protected
      */
     afterCancel() {
+    }
+
+    /**
+     * This function is used to call generateSchemaFromMeta() utility function in order to generate schema
+     * by passing controller's metadata and then pass that array of schemas to setSchemas() method in order 
+     * to set each schema in the respective class object.
+     * 
+     * @method setupSchema
+     * @protected
+     */
+    setupSchema() {
+        let schemas = generateSchemaFromMeta(this.metadata);
+        this.setSchemas(schemas);
+    }
+
+    /**
+     * This function is used to set schema for each section of metadata inside the class object.
+     * 
+     * @param {Array} schemas 
+     */
+    setSchemas(schemas) {
+        Object.entries(schemas).forEach(([key, value]) => {
+            this[key] = value;
+        })
     }
 }
