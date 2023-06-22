@@ -8,7 +8,7 @@ import { task } from 'ember-concurrency';
 import { tracked } from "@glimmer/tracking";
 import { action } from '@ember/object';
 import { debounce } from '@ember/runloop';
-
+import { ref } from 'yup';
 /**
  * The controller for user create page.
  *
@@ -30,10 +30,10 @@ export default class AppUserCreateController extends PrometheusCreateController 
     metadata = {
         sections: [
             {
-                name: "User Create",
-                fields: {
-                    name: {
-                        field: "name",
+                name: "userCreate",
+                fields: [
+                    {
+                        name: "name",
                         component: "FormFields::FieldText",
                         placeholder: "views.app.user.create.nameplaceholder",
                         label: "views.app.user.create.name",
@@ -47,12 +47,16 @@ export default class AppUserCreateController extends PrometheusCreateController 
                         validations: {
                             default: {
                                 type: "string",
-                                required: true
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
                             }
                         }
                     },
-                    email: {
-                        field: "email",
+                    {
+                        name: "email",
                         component: "FormFields::FieldText",
                         placeholder: "views.app.user.create.emailplaceholder",
                         label: "views.app.user.create.email",
@@ -66,12 +70,19 @@ export default class AppUserCreateController extends PrometheusCreateController 
                         validations: {
                             default: {
                                 type: "string",
-                                required: true
+                                rules: [
+                                    {
+                                        name: "required"
+                                    },
+                                    {
+                                        name: "email"
+                                    }
+                                ]
                             }
                         }
                     },
-                    username: {
-                        field: "username",
+                    {
+                        name: "username",
                         component: "FormFields::FieldText",
                         placeholder: "views.app.user.create.usernameplaceholder",
                         label: "views.app.user.create.username",
@@ -85,7 +96,11 @@ export default class AppUserCreateController extends PrometheusCreateController 
                         validations: {
                             default: {
                                 type: "string",
-                                required: true
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
                             },
                             custom: [
                                 {
@@ -94,8 +109,8 @@ export default class AppUserCreateController extends PrometheusCreateController 
                             ]
                         }
                     },
-                    dateofbirth: {
-                        field: "dateofbirth",
+                    {
+                        name: "dateofbirth",
                         component: "FormFields::FieldDate",
                         placeholder: "views.app.user.create.dobplaceholder",
                         label: "views.app.user.create.dateofbirth",
@@ -110,12 +125,16 @@ export default class AppUserCreateController extends PrometheusCreateController 
                         validations: {
                             default: {
                                 type: "string",
-                                required: true
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
                             }
                         }
                     },
-                    password: {
-                        field: "password",
+                    {
+                        name: "password",
                         component: "FormFields::FieldText",
                         placeholder: "views.app.user.create.passwordplaceholder",
                         label: "views.app.user.create.name",
@@ -129,12 +148,16 @@ export default class AppUserCreateController extends PrometheusCreateController 
                         validations: {
                             default: {
                                 type: "string",
-                                required: true
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
                             }
                         }
                     },
-                    confirmpassword: {
-                        field: "confirmpassword",
+                    {
+                        name: "passwordConfirmation",
                         component: "FormFields::FieldText",
                         placeholder: "views.app.user.create.confirmpasswordplaceholder",
                         label: "views.app.user.create.confirmpassword",
@@ -148,13 +171,20 @@ export default class AppUserCreateController extends PrometheusCreateController 
                         validations: {
                             default: {
                                 type: "string",
-                                required: true,
-                                dependentField: "password"
+                                rules: [
+                                    {
+                                        name: "required"
+                                    },
+                                    {
+                                        name: 'oneOf',
+                                        value: [ref('password')]
+                                    }
+                                ]
                             }
                         }
                     },
-                    language: {
-                        field: "language",
+                    {
+                        name: "language",
                         component: "AppUi::Language",
                         placeholder: "views.app.user.create.languageplaceholder",
                         label: "views.app.user.create.language",
@@ -168,12 +198,16 @@ export default class AppUserCreateController extends PrometheusCreateController 
                         validations: {
                             default: {
                                 type: "string",
-                                required: true
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
                             }
                         }
                     },
-                    timezone: {
-                        field: "timezone",
+                    {
+                        name: "timezone",
                         component: "User::Create::Timezones",
                         placeholder: "views.app.user.create.timezoneplaceholder",
                         label: "views.app.user.create.timezone",
@@ -187,13 +221,23 @@ export default class AppUserCreateController extends PrometheusCreateController 
                         validations: {
                             default: {
                                 type: "string",
-                                required: true
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
                             }
                         }
                     }
-                }
+
+                ]
             }
         ]
+    }
+
+    constructor() {
+        super(...arguments);
+        this.setupSchema();
     }
 
     /**
