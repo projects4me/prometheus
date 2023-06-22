@@ -20,50 +20,6 @@ import { string, object, ref } from 'yup';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppUserCreateController extends PrometheusCreateController {
-    templateMetadata = {
-        user: {
-            create: {
-                fields: {
-                    name: {
-                        field: "name",
-                        type: "string",
-                        render: "FormFields::FieldText",
-                        label: "views.app.user.create.name",
-                        required: true
-                    },
-                    email: {
-                        field: "email",
-                        type: "string",
-                        render: "FormFields::FieldText",
-                        label: "views.app.user.create.email",
-                        required: true
-                    },
-                    password: {
-                        field: "password",
-                        type: "string",
-                        render: "FormFields::FieldText",
-                        label: "views.app.user.create.password",
-                        required: true
-                    },
-                    passwordConfirmation: {
-                        field: "passwordConfirmation",
-                        type: "string",
-                        render: "FormFields::FieldText",
-                        label: "views.app.user.create.passwordConfirmation",
-                        required: true,
-                        dependsOn: "password"
-                    },
-                    language: {
-                        field: "language",
-                        type: "string",
-                        render: "AppUi::Language",
-                        label: "views.app.user.create.language",
-                        required: true,
-                    },
-                }
-            }
-        }
-    }
     /**
      * This is the schema for user model.
      * 
