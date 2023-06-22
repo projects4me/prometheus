@@ -7,6 +7,7 @@ import { service } from '@ember/service';
 import { action } from '@ember/object';
 import ENV from 'prometheus/config/environment';
 import _ from "lodash";
+import generateSchemaFromMeta from "prometheus/utils/yup/generate-schema";
 
 /**
  * This is the core application controller that contains the basic login
@@ -123,4 +124,28 @@ export default class PrometheusController extends Controller {
         }
         return _.join(messages, "<br\\>");
     }
+
+    /**
+     * This function is used to call generateSchemaFromMeta() utility function in order to generate schema
+     * by passing controller's metadata and then pass that array of schemas to setSchemas() method in order 
+     * to set each schema in the respective class object.
+     * 
+     * @method setupSchema
+     * @protected
+     */
+     setupSchema() {
+        let schemas = generateSchemaFromMeta(this.metadata);
+        this.setSchemas(schemas);
+    }
+
+    /**
+     * This function is used to set schema for each section of metadata inside the class object.
+     * 
+     * @param {Array} schemas 
+     */
+    setSchemas(schemas) {
+        Object.entries(schemas).forEach(([key, value]) => {
+            this[key] = value;
+        })
+    }      
 }
