@@ -23,6 +23,68 @@ import { htmlSafe } from '@ember/template';
 export default class AppProjectWikiCreateController extends PrometheusCreateController.extend(ProjectRelated) {
 
     /**
+     * This object holds all of the information that we need to create our schema and also need to 
+     * render the template (in future).
+     * @property metadata
+     * @type Object
+     * @for AppProjectWikiCreateController
+     * @private
+     */
+     metadata = {
+        sections: [
+            {
+                name: "wikiCreate",
+                fields: [
+                    {
+                        name: "name",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "projectId",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "markUp",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+
+    constructor() {
+        super(...arguments);
+        this.setupSchema();
+    }
+
+    /**
      * This is the module for which we are trying to create
      *
      * @property module

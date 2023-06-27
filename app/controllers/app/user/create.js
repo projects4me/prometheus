@@ -19,6 +19,7 @@ import { ref } from 'yup';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppUserCreateController extends PrometheusCreateController {
+    
     /**
      * This object holds all of the information that we need to create our schema and also need to 
      * render the template (in future).

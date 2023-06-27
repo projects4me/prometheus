@@ -25,6 +25,76 @@ import { htmlSafe } from '@ember/template';
 export default class AppProjectsCreateController extends PrometheusCreateController {
 
     /**
+     * This object holds all of the information that we need to create our schema and also need to 
+     * render the template (in future).
+     * @property metadata
+     * @type Object
+     * @for AppProjectsCreateController
+     * @private
+     */
+    metadata = {
+        sections: [
+            {
+                name: "projectCreate",
+                fields: [
+                    {
+                        name: "name",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "shortCode",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "type",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "hasIssuetypes",
+                        validations: {
+                            default: {
+                                type: "boolean"
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+
+    constructor() {
+        super(...arguments);
+        this.setupSchema();
+    }
+
+    /**
      * This is the module for which we are trying to create
      *
      * @property module
@@ -75,7 +145,7 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
     @computed('model.name')
     get shortCode() {
         let name = '';
-        if (this.model !== undefined 
+        if (this.model !== undefined
             && this.model.name !== undefined) {
             name = this.model.name;
         }
@@ -108,10 +178,10 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
      * @for Create
      * @private
      */
-     @computed('issueStatuses')
-     get issueStatusList() {
-         return (new format(this)).getTranslatedModelList(this.issueStatuses, 'views.app.issue.lists.status');
-     }
+    @computed('issueStatuses')
+    get issueStatusList() {
+        return (new format(this)).getTranslatedModelList(this.issueStatuses, 'views.app.issue.lists.status');
+    }
 
     /**
      * This function sets the short code for the project.
