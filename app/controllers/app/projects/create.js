@@ -80,7 +80,12 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
                         name: "hasIssuetypes",
                         validations: {
                             default: {
-                                type: "boolean"
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
                             }
                         }
                     }
