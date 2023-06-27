@@ -343,6 +343,6 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    hasIssuetypes: attr('string', { defaultValue: function () { return true; } })
+    hasIssuetypes: attr('string')
     
 });
