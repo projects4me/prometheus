@@ -79,6 +79,14 @@ export default class AppProjectWikiCreateController extends PrometheusCreateCont
         ]
     }
 
+    /**
+     * This function is called on the initialization of the controller. In this function
+     * we're calling setupSchema method in order to generate schema, by analyzing metadata
+     * defined in the controller, that will be used to validate the form of the template.
+     *
+     * @method constructor
+     * @public
+     */    
     constructor() {
         super(...arguments);
         this.setupSchema();

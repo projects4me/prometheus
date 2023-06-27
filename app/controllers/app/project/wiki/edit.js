@@ -42,7 +42,6 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
      */
     addTagDialog = false;
 
-
     /**
      * This function is used to select the tags from the system
      *
