@@ -111,7 +111,7 @@ export default class AppUserCreateController extends PrometheusCreateController 
                         }
                     },
                     {
-                        name: "dateofbirth",
+                        name: "dateOfBirth",
                         component: "FormFields::FieldDate",
                         placeholder: "views.app.user.create.dobplaceholder",
                         label: "views.app.user.create.dateofbirth",
