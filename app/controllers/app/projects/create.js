@@ -30,7 +30,7 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
      * @property metadata
      * @type Object
      * @for AppProjectsCreateController
-     * @private
+     * @protected
      */
     metadata = {
         sections: [

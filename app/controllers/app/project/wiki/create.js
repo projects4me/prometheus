@@ -28,7 +28,7 @@ export default class AppProjectWikiCreateController extends PrometheusCreateCont
      * @property metadata
      * @type Object
      * @for AppProjectWikiCreateController
-     * @private
+     * @protected
      */
      metadata = {
         sections: [

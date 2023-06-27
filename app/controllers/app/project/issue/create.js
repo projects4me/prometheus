@@ -27,7 +27,7 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
      * @property metadata
      * @type Object
      * @for AppProjectIssueCreateController
-     * @private
+     * @protected
      */
     metadata = {
         sections: [
