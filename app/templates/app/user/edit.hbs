@@ -25,10 +25,9 @@
               @type="text" 
               @value={{this.model.name}} 
               @data-field="user.name"
-              @v-model={{this.model}} 
-              @v-field='name' 
-              @v-output='message' 
-              @lengthRequired={{false}} 
+              @lengthRequired={{false}}
+              @validate={{action this.validateField "userEdit" (hash name="name" value=this.model.name)}}
+              @message={{this.message.userEdit.name}}              
               {{autofocus}} 
             />
 
@@ -38,11 +37,10 @@
               @type="text" 
               @value={{this.model.email}}
               @data-field="user.email" 
-              @v-model={{this.model}} 
-              @v-field='email' 
-              @v-output='message'
               @lengthRequired={{false}} 
-              @mask="email" 
+              @mask="email"
+              @validate={{action this.validateField "userEdit" (hash name="email" value=this.model.email)}}
+              @message={{this.message.userEdit.email}}                 
             />
 
             <FormFields::FieldText 
@@ -51,13 +49,12 @@
               @type="text" 
               @value={{this.model.username}}
               @data-field="user.username" 
-              @v-model={{this.model}} 
-              @v-field='username' 
-              @v-output='message'
               @lengthRequired={{false}}
               @onInput={{this.onInput}}
               @validationMessage={{this.validationMessage}}
               @isSuccessful={{this.isSuccessful}}
+              @validate={{action this.validateField "userEdit" (hash name="username" value=this.model.username)}}
+              @message={{this.message.userEdit.username}}                 
             />
 
             <FormFields::FieldDate 
@@ -78,9 +75,8 @@
               @parentEl='[data-field="user.dateOfBirth"]'
               @endDate="31-12"
               @maxDate="31-12"
-              @v-model={{this.model}}
-              @v-field="dateOfBirth"
-              @v-output="message"
+              @validate={{action this.validateField "userEdit" (hash name="dateOfBirth" value=this.model.dateOfBirth)}}
+              @message={{this.message.userEdit.dateOfBirth}}
             />                        
 
           </div>
@@ -119,6 +115,8 @@
                 @onchange={{action "selectRelated" this.model 'language'}}
                 @model={{this.model}}
                 @data-field="user.language"
+                @validate={{action this.validateField "userEdit" (hash name="language" value=this.model.language)}}
+                @message={{this.message.userEdit.language}}                   
               />
             </div>
           </div>
@@ -134,6 +132,8 @@
             @value={{this.model.timezone}}
             @model={{this.model}}
             @selectRelated={{this.selectRelated}}
+            @validate={{action this.validateField "userEdit" (hash name="timezone" value=this.model.timezone)}}
+            @message={{this.message.userEdit.timezone}}               
           />
           </div>
           
@@ -141,7 +141,7 @@
       </div>
 
     <div class="col-sm-12">
-      <button type="button" data-btn="save" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
+      <button type="button" data-btn="save" class="btn btn-primary" {{action "save" "userEdit"}}>{{t "global.form.save"}}</button>
       <button type="button" data-btn="cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
     </div>
         
