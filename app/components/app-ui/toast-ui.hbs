@@ -1,4 +1,10 @@
 <div id="editor" {{initialize-toastui usersList=@usersList issueSearch=@issueSearch
-    translatedEmojis=this.translatedEmojis contents=@contents onContentChange=@onContentChange editType=@editType
-    hide=@hide placeholder=@placeholder initialValue=@initialValue}}>
+    translatedEmojis=this.translatedEmojis contents=@contents onContentChange=@onContentChange onBlur=@onBlur editType=@editType
+    hide=@hide placeholder=@placeholder initialValue=@initialValue}} ...attributes>
 </div>
+
+{{#if (and @message)}}
+  <span class="error text-red" id={{@data-field}}>
+    {{@message}}
+  </span>
+{{/if}}
