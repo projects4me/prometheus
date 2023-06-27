@@ -140,11 +140,11 @@ export default class FormFieldsComponent extends Component {
         return (this.value !== this.oldValue);
     }
 
-    get typing(){
+    get typing() {
         return this.isTyping;
     }
 
-    set typing(value){
+    set typing(value) {
         this.isTyping = value;
     }
 
@@ -222,7 +222,7 @@ export default class FormFieldsComponent extends Component {
      * @method setEmpty
      * @protected
      */
-    setEmpty(){
+    setEmpty() {
         let isEmpty = false;
         const value = this.value;
 
@@ -247,7 +247,7 @@ export default class FormFieldsComponent extends Component {
                 isEmpty = true;
             }
         }
-        this.isEmpty=isEmpty;
+        this.isEmpty = isEmpty;
     }
 
     /**
@@ -257,7 +257,7 @@ export default class FormFieldsComponent extends Component {
      * @method keyDown
      * @public
      */
-    keyDown(){
+    keyDown() {
         if (this.isTyping === false) {
             this.typing = true;
         }
@@ -274,15 +274,25 @@ export default class FormFieldsComponent extends Component {
      * @todo Maybe we can calculate the average typing speed at run time based on the user who is typing.
      * @todo Should clear the data on focus-out as well.
      */
-    keyUp(){
+    keyUp() {
         const self = this;
-        if (self.scheduler !== null)
-        {
+        if (self.scheduler !== null) {
             cancel(self.scheduler);
         }
 
-        self.scheduler = later((function(){
-            self.set('isTyping',false);
-        }),1500);
+        self.scheduler = later((function () {
+            self.set('isTyping', false);
+        }), 1500);
+    }
+
+    /**
+     * This method returns function that is passed to the component in order to validate
+     * the field.
+     * 
+     * @method get
+     * @protected
+     */
+    get validate() {
+        return this.args.validate ?? (() => true);
     }
 }

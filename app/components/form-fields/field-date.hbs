@@ -3,13 +3,14 @@
   <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}} readonly={{true}}
     aria-invalid="true" aria-describedBy={{@data-field}} autocomplete="off"
     {{on "focusout" (action (mut this.shouldValidate) true) }}
+    {{on "blur" (fn this.validate)}}
     {{date-picker @update @format @singleDatePicker @showDropdowns @positionX @positionY @timePicker @timePickerIncrement @startDate @endDate @minDate this.maxDate @maxSpan @minYear @maxYear @autoApply @parentEl}} />
   <span class="highlight"></span>
   <span class="bar"></span>
   <label class="floating-label">{{@label}}</label>
-  {{#if this.shouldValidate}}
-  <span class="error text-red" id={{@data-field}}>
-    {{v-get @v-model @v-field @v-output}}
-  </span>
+  {{#if (and @message this.shouldValidate)}}
+    <span class="error text-red" id={{@data-field}}>
+      {{@message}}
+    </span>
   {{/if}}
 </div>

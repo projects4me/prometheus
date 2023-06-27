@@ -1,4 +1,4 @@
-import Component from '@glimmer/component';
+import FormFieldsComponent from "./form-fields";
 
-export default class FormFieldsFieldTextAreaComponent extends Component {
+export default class FormFieldsFieldTextAreaComponent extends FormFieldsComponent {
 }
