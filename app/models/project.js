@@ -329,6 +329,6 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    hasIssuetypes: attr('string')
-    
+    hasIssuetypes: attr('string', { defaultValue: true })
+
 });
