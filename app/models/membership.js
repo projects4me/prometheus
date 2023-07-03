@@ -3,19 +3,6 @@
  */
 
 import Model, { attr } from '@ember-data/model';
-import { validator, buildValidations } from 'ember-cp-validations';
-
-/**
- * These are the validation that are applied on the model
- *
- * @property Validations
- * @module Membership
- */
-const Validations = buildValidations({
-    projectId: validator('presence', true),
-    userId: validator('presence', true),
-    roleId: validator('presence', true)
-});
 
 /**
  * The membership model
@@ -25,7 +12,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend(Validations, {
+export default Model.extend({
 
     /**
      * The identifier of the project for which this membership rule is defined

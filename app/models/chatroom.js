@@ -3,19 +3,6 @@
  */
 
 import Model, { attr,hasMany } from '@ember-data/model';
-import { validator, buildValidations } from 'ember-cp-validations';
-
-/**
- * These are the validation that are applied on the model
- *
- * @property Validations
- * @module Chatroom
- */
-const Validations = buildValidations({
-    subject: validator('presence', true),
-    type: validator('presence', true),
-    status: validator('presence', true)
-});
 
 /**
  * The chat room model
@@ -25,7 +12,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend(Validations, {
+export default Model.extend({
 
     /**
      * Subject of the chat room

@@ -3,44 +3,7 @@
  */
 
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
-import { validator, buildValidations } from 'ember-cp-validations';
 import { computed } from '@ember/object';
-import { disableValidation } from '../utils/model/validation';
-
-/**
- * These are the validation that are applied on the model
- *
- * @property Validations
- * @module User
- */
-const Validations = buildValidations({
-    username: validator('presence', true),
-    email: {
-        validators: [
-            validator('presence', true),
-            validator('format', {
-                type: 'email',
-            })
-        ]
-    },
-    password: validator('presence', true),
-    passwordConfirmation: {
-        validators: [
-            validator('presence', true),
-            validator('confirmation', {
-                attribute: "Passwords",
-                on: 'password',
-                debounce: 200,
-            })
-        ]
-    },
-    name: validator('presence', true),
-    dateOfBirth: validator('presence', true),
-    language: validator('presence', true),
-    timezone: validator('presence', true)
-}, {
-    disabled: computed('model.saveAttempted', disableValidation)
-});
 
 /**
  * The user model
@@ -50,7 +13,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend(Validations, {
+export default Model.extend({
 
     /**
      * Username

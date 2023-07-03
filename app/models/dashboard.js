@@ -3,18 +3,6 @@
  */
 
 import Model, { attr } from '@ember-data/model';
-import { validator, buildValidations } from 'ember-cp-validations';
-
-/**
- * These are the validation that are applied on the model
- *
- * @property Validations
- * @module Dashboard
- */
-const Validations = buildValidations({
-    userId: validator('presence', true),
-    name: validator('presence', true)
-});
 
 /**
  * The dashboard model
@@ -24,7 +12,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend(Validations, {
+export default Model.extend({
 
     /**
      * The identifier of the user to whom this dashboard
