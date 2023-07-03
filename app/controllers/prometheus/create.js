@@ -87,15 +87,14 @@ export default class PrometheusCreateController extends PrometheusController {
     @action save(schemaName) {
         let model = this.model;
 
-        try {
-            this.beforeValidate(model);
-            this[schemaName].validateSync(model, { abortEarly: false });
-
-            this.beforeSave(model);
-            this._save(model);
-        } catch (e) {
-            this._showError(e);
-        }
+        this.validate(model, schemaName).then((validation) => {
+            if (validation.isValid) {
+                this.beforeSave(model);
+                this._save(model);
+            } else {
+                this._showError(validation.errors);
+            }
+        });
     }
 
     /**
@@ -257,6 +256,34 @@ export default class PrometheusCreateController extends PrometheusController {
      */
     afterSave() {
         return hash({});
+    }
+
+    /**
+     * This function is used to validate the given model. If validations are passed then
+     * save the model.
+     * 
+     * @method validate
+     * @param model
+     * @param schemaName
+     * @protected
+     */
+    validate(model, schemaName) {
+        return new Promise((resolve) => {
+            try {
+                this.beforeValidate(model);
+                this[schemaName].validateSync(model, { abortEarly: false });
+
+                resolve({
+                    isValid: true
+                });
+
+            } catch (e) {
+                resolve({
+                    isValid: false,
+                    errors: e
+                });
+            }
+        });
     }
 
     /**
