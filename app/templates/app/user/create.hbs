@@ -24,10 +24,9 @@
               @type="text" 
               @value={{this.model.name}} 
               @data-field="user.name"
-              @v-model={{this.model}} 
-              @v-field='name' 
-              @v-output='message' 
-              @lengthRequired={{false}} 
+              @lengthRequired={{false}}
+              @validate={{action this.validateField "userCreate" (hash name="name" value=this.model.name)}}
+              @message={{this.message.userCreate.name}}
               {{autofocus}} 
             />
 
@@ -37,11 +36,10 @@
               @type="text" 
               @value={{this.model.email}}
               @data-field="user.email" 
-              @v-model={{this.model}} 
-              @v-field='email' 
-              @v-output='message'
               @lengthRequired={{false}} 
-              @mask="email" 
+              @mask="email"
+              @validate={{action this.validateField "userCreate" (hash name="email" value=this.model.email)}}
+              @message={{this.message.userCreate.email}}              
             />
 
             <FormFields::FieldText 
@@ -50,13 +48,12 @@
               @type="text" 
               @value={{@model.username}}
               @data-field="user.username" 
-              @v-model={{@model}} 
-              @v-field='username' 
-              @v-output='message'
               @lengthRequired={{false}}
               @onInput={{this.onInput}}
               @validationMessage={{this.validationMessage}}
               @isSuccessful={{this.isSuccessful}}
+              @validate={{action this.validateField "userCreate" (hash name="username" value=this.model.username)}}
+              @message={{this.message.userCreate.username}}              
             />
 
             <FormFields::FieldDate 
@@ -77,6 +74,8 @@
               @parentEl='[data-field="user.dateOfBirth"]'
               @endDate="31-12"
               @maxDate="31-12"
+              @validate={{action this.validateField "userCreate" (hash name="dateOfBirth" value=this.model.dateOfBirth)}}
+              @message={{this.message.userCreate.dateOfBirth}}              
             />
 
             <FormFields::FieldText 
@@ -85,10 +84,10 @@
               @type="password" 
               @value={{this.model.password}}
               @data-field="user.password" 
-              @v-model={{this.model}} 
-              @v-field='password' 
-              @v-output='message'
-              @lengthRequired={{false}} 
+              @lengthRequired={{false}}
+              @validate={{action this.validateField "userCreate" (hash name="password" value=this.model.password validateDependent="true")}}
+              @message={{this.message.userCreate.password}}
+              @dependentField={{hash name="passwordConfirmation" t=(t "views.app.user.create.password") oneOf="true" value=this.model.passwordConfirmation}}       
             />
 
             <FormFields::FieldText 
@@ -97,10 +96,10 @@
               @type="password" 
               @value={{this.model.passwordConfirmation}}
               @data-field="user.confirmPassword" 
-              @v-model={{this.model}} 
-              @v-field='passwordConfirmation' 
-              @v-output='message'
               @lengthRequired={{false}} 
+              @validate={{action this.validateField "userCreate" (hash name="passwordConfirmation" value=this.model.passwordConfirmation)}}
+              @message={{this.message.userCreate.passwordConfirmation}}
+              @dependentField={{hash name="password" t=(t "views.app.user.create.password" value=this.model.password)}}              
             />                        
 
           </div>
@@ -123,6 +122,8 @@
                 @onchange={{action "selectRelated" this.model 'language'}}
                 @model={{this.model}}
                 @data-field="user.language"
+                @validate={{action this.validateField "userSchema" (hash name="language" value=this.model.language)}}
+                @message={{this.message.language}}            
               />
             </div>
           </div>
@@ -138,6 +139,8 @@
             @value={{this.model.timezone}}
             @model={{this.model}}
             @selectRelated={{this.selectRelated}}
+            @validate={{action this.validateField "userSchema" (hash name="timezone" value=this.model.timezone)}}
+            @message={{this.message.timezone}}           
           />
           </div>
           
@@ -145,7 +148,7 @@
       </div>
 
     <div class="col-sm-12">
-      <button type="button" data-btn="save" class="btn btn-primary" {{action "save"}}>{{t "global.form.save"}}</button>
+      <button type="button" data-btn="save" class="btn btn-primary" {{action "save" "userCreate"}}>{{t "global.form.save"}}</button>
       <button type="button" data-btn="cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
     </div>
         

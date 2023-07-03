@@ -68,7 +68,7 @@ export default class PrometheusController extends Controller {
      * @for Prometheus.Controllers.Prometheus
      * @public
      */
-     @service('router') router; 
+    @service('router') router;
 
     /**
      * API's host.
@@ -77,7 +77,7 @@ export default class PrometheusController extends Controller {
      * @type String
      * @for Prometheus.Controllers.Prometheus
      */
-     apiHost = ENV.api.host;
+    apiHost = ENV.api.host;
 
     /**
      * This action helps us set a related fields
@@ -107,19 +107,37 @@ export default class PrometheusController extends Controller {
      * This function builds human readable error messages.
      *
      * @method _buildMessages
-     * @param validations
+     * @param validationError
      * @param module
      * @for Prometheus.Controllers.Prometheus
      * @private
      */
-    @action _buildMessages(validations, module) {
+    @action _buildMessages(validationError, module) {
         let _self = this;
         let intl = _self.intl;
         let messages = [];
 
         if (module != undefined) {
-            _.each(validations.errors, function (error) {
-                messages.push(intl.t('views.app.' + module + '.fields.' + error.attribute) + ' : ' + error.message);
+            _.each(validationError.inner, function (error, i) {
+                let translatedLabel = intl.t('views.app.' + module + '.fields.' + error.path)
+                let _translationOptions = {};
+
+                if (error.type === 'oneOf') {
+                    let dependentField = error.params.values;
+                    dependentField = dependentField.substring(dependentField.indexOf('(') + 1, dependentField.length - 1)
+
+                    let translatedDependentField = intl.t('views.app.' + module + '.fields.' + dependentField);
+                    _translationOptions = {
+                        dependentField: translatedDependentField
+                    }
+                }
+                
+                let translatedMessage = intl.t(`errors.${error.type}`, _translationOptions);
+                let message = `<b>${translatedLabel}:</b> ${translatedMessage}`;
+
+                //add "|" pipe symbol in the end of message
+                (i < (validationError.inner.length - 1)) && (message += ' | ');
+                messages.push(message);
             });
         }
         return _.join(messages, "<br\\>");
@@ -133,7 +151,7 @@ export default class PrometheusController extends Controller {
      * @method setupSchema
      * @protected
      */
-     setupSchema() {
+    setupSchema() {
         let schemas = generateSchemaFromMeta(this.metadata);
         this.setSchemas(schemas);
     }
@@ -147,5 +165,5 @@ export default class PrometheusController extends Controller {
         Object.entries(schemas).forEach(([key, value]) => {
             this[key] = value;
         })
-    }      
+    }
 }

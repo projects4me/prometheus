@@ -23,6 +23,76 @@ import { htmlSafe } from '@ember/template';
 export default class AppProjectWikiCreateController extends PrometheusCreateController.extend(ProjectRelated) {
 
     /**
+     * This object holds all of the information that we need to create our schema and also need to 
+     * render the template (in future).
+     * @property metadata
+     * @type Object
+     * @for AppProjectWikiCreateController
+     * @protected
+     */
+     metadata = {
+        sections: [
+            {
+                name: "wikiCreate",
+                fields: [
+                    {
+                        name: "name",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "projectId",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "markUp",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+
+    /**
+     * This function is called on the initialization of the controller. In this function
+     * we're calling setupSchema method in order to generate schema, by analyzing metadata
+     * defined in the controller, that will be used to validate the form of the template.
+     *
+     * @method constructor
+     * @public
+     */    
+    constructor() {
+        super(...arguments);
+        this.setupSchema();
+    }
+
+    /**
      * This is the module for which we are trying to create
      *
      * @property module

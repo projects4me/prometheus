@@ -88,6 +88,17 @@ export default class ToastEditor extends Modifier {
     }
 
     /**
+     * This function returns onBlur function.
+     *
+     * @method get
+     * @returns Function
+     * @public
+     */
+     get onBlur() {
+        return this.args.named.onBlur;
+    }    
+
+    /**
      * This function returns editType property which contains
      * user's edit type. Either user want to use WYSIWYG or Markdown
      *
@@ -339,6 +350,9 @@ export default class ToastEditor extends Modifier {
                             $(selector).css('display', 'none');
                         });
                     }
+                },
+                blur: () => {
+                    _self.onBlur();
                 }
             }
         });

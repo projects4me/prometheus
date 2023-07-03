@@ -19,6 +19,124 @@ import { htmlSafe } from '@ember/template';
 export default class AppUserEditController extends AppUserCreateController {
 
     /**
+     * This object holds all of the information that we need to create our schema and also need to 
+     * render the template (in future).
+     * @property metadata
+     * @type Object
+     * @for AppUserEditController
+     * @private
+     */
+     metadata = {
+        sections: [
+            {
+                name: "userEdit",
+                fields: [
+                    {
+                        name: "name",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "email",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    },
+                                    {
+                                        name: "email"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "username",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            },
+                            custom: [
+                                {
+                                    action: "checkUsernameAvailabilityTask"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        name: "dateOfBirth",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "language",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "timezone",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+
+                ]
+            }
+        ]
+    }
+
+    /**
+     * This function is called on the initialization of the controller. In this function
+     * we're calling setupSchema method in order to generate schema, by analyzing metadata
+     * defined in the controller, that will be used to validate the form of the template.
+     *
+     * @method constructor
+     * @public
+     */
+    constructor() {
+        super(...arguments);
+        this.setupSchema();
+    }
+
+    /**
      * This function is used to upload the user's profile image.
      * 
      * @param {String} imageElementClass 
@@ -95,24 +213,4 @@ export default class AppUserEditController extends AppUserCreateController {
         this.router.transitionTo('app.user.page', userId);
     }
 
-    /**
-     * This function is called before the validations is applied on the model. 
-     * In this function we're adding list of attributes on which we want to disable
-     * the applied validations.
-     * 
-     * @param {*} model
-     */
-    beforeValidate(model) {
-        model['disableValidations'] = ['password', 'passwordConfirmation'];
-    }
-
-    /**
-     * This function is called after the validations is applied on the model. 
-     * In this function we're removing disableValidations object.
-     * 
-     * @param {*} model
-     */
-    afterValidate(model) {
-        delete model['disableValidations'];
-    }
 }

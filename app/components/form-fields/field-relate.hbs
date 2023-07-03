@@ -9,16 +9,17 @@
       @onChange={{@onchange}}
       @matcher={{@matcher}}
       @onFocus={{action (mut this.shouldValidate) true}}
-      @onblur={{@focus-out}} as |data|>
+      @onBlur={{action this.validate}}
+      @onClose={{action this.validate}} as |data|>
       {{component (concat 'related-fields/'@relateType) data=data}}
     </PowerSelect>
   </div>
     <span class="highlight"></span>
     <span class="bar"></span>
     <label class="floating-label">{{@label}}</label>
-    {{#if this.shouldValidate}}
-    <span class="error text-red">
-      {{v-get @v-model @v-field @v-output}}
-    </span>
+    {{#if (and @message this.shouldValidate)}}
+      <span class="error text-red" id={{@data-field}}>
+        {{@message}}
+      </span>
     {{/if}}
 </div>

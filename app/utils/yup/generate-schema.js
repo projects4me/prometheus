@@ -18,7 +18,7 @@ export default function generateSchemaFromMeta(metadata) {
 
             innerSchema[field.name] = Yup[validationType]();
 
-            validationRules.forEach((rule) => {
+            validationRules?.forEach((rule) => {
                 innerSchema[field.name] = innerSchema[field.name][rule.name](rule.value);
             });
 
