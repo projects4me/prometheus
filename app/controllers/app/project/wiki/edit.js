@@ -22,6 +22,50 @@ import { action } from '@ember/object';
 export default class AppProjectWikiEditController extends AppProjectWikiCreateController.extend(ProjectRelated) {
 
     /**
+     * This object holds all of the information that we need to create our schema and also need to 
+     * render the template (in future).
+     * @property metadata
+     * @type Object
+     * @for AppProjectWikiEditController
+     * @private
+     */
+    metadata = {
+        sections: [
+            {
+                name: "tagCreate",
+                fields: [
+                    {
+                        name: "tag",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+
+    /**
+     * This function is called on the initialization of the controller. In this function
+     * we're calling setupSchema method in order to generate schema, by analyzing metadata
+     * defined in the controller, that will be used to validate the form of the template.
+     *
+     * @method constructor
+     * @public
+     */
+    constructor() {
+        super(...arguments);
+        this.setupSchema();
+    }
+
+    /**
      * This is the layout name that is used to figure out what to
      * display
      *
@@ -93,9 +137,10 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
 
         // Initialize the tag record
         let newTag = _self.get('newTag');
-        newTag.validate().then(({ validations }) => {
+        debugger;
+        this.validate(newTag, 'tagCreate').then((validation) => {
 
-            if (validations.get('isValid')) {
+            if (validation.isValid) {
                 // Save it
                 newTag.save().then(function (tag) {
 
@@ -127,7 +172,7 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
                 });
 
             } else {
-                let messages = _self._buildMessages(validations, 'tag');
+                let messages = _self._buildMessages(validation.errors, 'tag');
 
                 new Messenger().post({
                     message: messages,

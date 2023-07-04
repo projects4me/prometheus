@@ -3,19 +3,6 @@
  */
 
 import Model, { attr,belongsTo } from '@ember-data/model';
-import { validator, buildValidations } from 'ember-cp-validations';
-
-/**
- * These are the validation that are applied on the model
- *
- * @property Validations
- * @module Comment
- */
-const Validations = buildValidations({
-    comment: validator('presence', true),
-    relatedId: validator('presence', true),
-    relatedTo: validator('presence', true)
-});
 
 /**
  * The comment model
@@ -25,7 +12,7 @@ const Validations = buildValidations({
  * @extend DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend(Validations, {
+export default Model.extend({
 
     /**
      * The date on which the comment was created

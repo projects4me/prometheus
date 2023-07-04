@@ -17,6 +17,7 @@ module('Integration | Component | field-text', function (hooks) {
                 @placeholder="Enter the issue subject .."
                 @label="Subject"
                 @mask="alpha"
+                @message="This field is required"
             />
         `);
 

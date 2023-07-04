@@ -3,20 +3,6 @@
  */
 
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
-import { validator, buildValidations } from 'ember-cp-validations';
-
-/**
- * These are the validation that are applied on the model
- *
- * @property Validations
- * @module Project
- */
-const Validations = buildValidations({
-    name: validator('presence', true),
-    shortCode: validator('presence', true),
-    type: validator('presence', true),
-    hasIssuetypes: validator('presence', true)
-});
 
 /**
  * The project model
@@ -26,7 +12,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend(Validations, {
+export default Model.extend({
 
     /**
      * Name of project
@@ -343,6 +329,6 @@ export default Model.extend(Validations, {
      * @for Project
      * @private
      */
-    hasIssuetypes: attr('string')
-    
+    hasIssuetypes: attr('string', { defaultValue: true })
+
 });

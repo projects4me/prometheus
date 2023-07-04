@@ -3,31 +3,6 @@
  */
 
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
-import { validator, buildValidations } from 'ember-cp-validations';
-import { readOnly } from '@ember/object/computed';
-
-/**
- * These are the validation that are applied on the model
- *
- * @property Validations
- * @module Issue
- */
-const Validations = buildValidations({
-    subject: validator('presence', true),
-    typeId: validator('presence', true),
-    assignee: validator('presence', true),
-    owner: validator('presence', true),
-    statusId: validator('presence', true),
-    priority: validator('presence', true),
-    startDate: validator('presence', true),
-    endDate: [
-        validator('presence', true),
-        validator('date', {
-            onOrAfter: readOnly('model.startDate'),
-            message: "End date should be equal or greater then start date"
-        })
-    ]
-});
 
 /**
  * The issue model
@@ -38,7 +13,7 @@ const Validations = buildValidations({
  * @module Issue
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend(Validations, {
+export default Model.extend({
 
     /**
      * Subject of the issue

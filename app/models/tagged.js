@@ -3,19 +3,6 @@
  */
 
 import Model, { attr, hasMany } from '@ember-data/model';
-import { validator, buildValidations } from 'ember-cp-validations';
-
-/**
- * These are the validation that are applied on the model
- *
- * @property Validations
- * @module Tagged
- */
-const Validations = buildValidations({
-    relatedTo: validator('presence', true),
-    relatedId: validator('presence', true),
-    tagId: validator('presence', true)
-});
 
 /**
  * The tagged model. This model is used to maint the relationship between tags
@@ -26,7 +13,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend(Validations, {
+export default Model.extend({
 
     /**
      * The identifier of the entity the tag is related to

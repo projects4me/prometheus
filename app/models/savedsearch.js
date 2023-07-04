@@ -3,18 +3,6 @@
  */
 
 import Model, { attr, belongsTo } from '@ember-data/model';
-import { validator, buildValidations } from 'ember-cp-validations';
-
-/**
- * These are the validation that are applied on the model
- *
- * @property Validations
- * @module Savedsearch
- */
-const Validations = buildValidations({
-    name: validator('presence', true),
-    searchquery: validator('presence', true)
-});
 
 /**
  * The saved searches model
@@ -24,7 +12,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend(Validations, {
+export default Model.extend({
 
     /**
      * Name of the saved search

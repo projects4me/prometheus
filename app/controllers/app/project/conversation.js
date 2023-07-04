@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import PrometheusController from "prometheus/controllers/prometheus";
+import PrometheusCreateController from "prometheus/controllers/prometheus/create";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import Evented from '@ember/object/evented';
 import $ from "jquery";
@@ -18,7 +18,90 @@ import { action } from '@ember/object';
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class AppProjectConversationController extends PrometheusController.extend(ProjectRelated, Evented) {
+export default class AppProjectConversationController extends PrometheusCreateController.extend(ProjectRelated, Evented) {
+
+    /**
+     * This object holds all of the information that we need to create our schema and also need to 
+     * render the template (in future).
+     * @property metadata
+     * @type Object
+     * @for AppProjectConversationController
+     * @private
+     */
+    metadata = {
+        sections: [
+            {
+                name: "conversationCreate",
+                fields: [
+                    {
+                        name: "subject",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "description",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "roomType",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "projectId",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+
+    /**
+     * This function is called on the initialization of the controller. In this function
+     * we're calling setupSchema method in order to generate schema, by analyzing metadata
+     * defined in the controller, that will be used to validate the form of the template.
+     *
+     * @method constructor
+     * @public
+     */
+    constructor() {
+        super(...arguments);
+        this.setupSchema();
+    }
 
     /**
      * This is the flag which is used to
@@ -208,10 +291,9 @@ export default class AppProjectConversationController extends PrometheusControll
         let newConversation = this.newConversation;
         newConversation.set('projectId', _self.get('projectId'));
 
-        newConversation.validate()
-            .then(({ validations }) => {
-
-                if (validations.get('isValid')) {
+        this.validate(newConversation, 'conversationCreate')
+            .then((validation) => {
+                if (validation.isValid) {
                     // Save it
                     newConversation.save().then(function (conversation) {
                         Logger.debug('A new conversation has been saved');
@@ -230,7 +312,7 @@ export default class AppProjectConversationController extends PrometheusControll
                     });
 
                 } else {
-                    let messages = _self._buildMessages(validations, 'conversation');
+                    let messages = _self._buildMessages(validation.errors, 'conversation');
 
                     new Messenger().post({
                         message: messages,

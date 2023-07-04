@@ -3,20 +3,6 @@
  */
 
 import Model, { attr,belongsTo } from '@ember-data/model';
-import { validator, buildValidations } from 'ember-cp-validations';
-
-/**
- * These are the validation that are applied on the model
- *
- * @property Validations
- * @module Activity
- */
-const Validations = buildValidations({
-    description: validator('presence', true),
-    type: validator('presence', true),
-    relatedTo: validator('presence', true),
-    relatedId: validator('presence', true)
-});
 
 /**
  * The activity model
@@ -26,7 +12,7 @@ const Validations = buildValidations({
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend(Validations, {
+export default Model.extend({
 
     /**
      * The date on which the activity was created
