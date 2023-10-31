@@ -380,6 +380,16 @@ export default Model.extend({
     badges: hasMany('badge'),
 
     /**
+     * These are the user acl permissions.
+     * 
+     * @property aclPermissions
+     * @type UserpermissionModel
+     * @for User
+     * @private
+     */
+    aclPermissions: hasMany('userpermission'),
+
+    /**
      * These are the level of each badge, earned by user.
      *
      * @property badgeLevels
