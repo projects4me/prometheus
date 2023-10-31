@@ -45,7 +45,7 @@ export default Service.extend({
     loadUser: function () {
         if (this.session.isAuthenticated) {
             // Retrieve the current user's object from the API
-            return this.store.findRecord('user', 'me', { include: 'dashboard' }).then((user) => {
+            return this.store.findRecord('user', 'me', { include: 'dashboard,aclPermissions' }).then((user) => {
                 // Set the retrieved user in the current object
                 this.set('user', user);
             });
