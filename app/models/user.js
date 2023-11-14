@@ -387,7 +387,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    aclPermissions: hasMany('userpermission'),
+    aclPermissions: hasMany('userpermission', {async: false}),
 
     /**
      * These are the level of each badge, earned by user.
