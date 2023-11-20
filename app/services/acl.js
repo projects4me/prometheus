@@ -157,6 +157,6 @@ export default class AclService extends Service {
     hasRouteAccess(routeName) {
         let route = this.routeMaps.find(f => f.name === routeName);
         
-        return this.allowedResources.includes(route.map);
+        return this.allowedResources.includes(route?.map);
     }
 }
