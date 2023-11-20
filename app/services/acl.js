@@ -37,99 +37,99 @@ export default class AclService extends Service {
         },
         {
             name: 'app.projects.index',
-            map: 'Route.Project.List'
+            map: 'App.Project.List'
         },
         {
             name: 'app.projects.create',
-            map: 'Route.Project.Create'
+            map: 'App.Project.Create'
         },
         {
             name: 'app.projects.edit',
-            map: 'Route.Project.Edit'
+            map: 'App.Project.Edit'
         },
         {
             name: 'app.project.index',
-            map: 'Route.Project.Read'
+            map: 'App.Project.Read'
         },
         {
             name: 'app.project.wiki.index',
-            map: 'Route.Wiki.List'
+            map: 'App.Project.Wiki.List'
         },
         {
             name: 'app.project.wiki.create',
-            map: 'Route.Wiki.Create'
+            map: 'App.Project.Wiki.Create'
         },
         {
             name: 'app.project.wiki.page',
-            map: 'Route.Wiki.Read'
+            map: 'App.Project.Wiki.Read'
         },
         {
             name: 'app.project.wiki.edit',
-            map: 'Route.Wiki.Edit'
+            map: 'App.Project.Wiki.Edit'
         },
         {
             name: 'app.project.conversation',
-            map: 'Route.Project.Conversation'
+            map: 'App.Project.Conversation'
         },        
         {
             name: 'app.project.board',
-            map: 'Route.Project.Board'
+            map: 'App.Project.Board'
         },
         {
             name: 'app.project.calendar',
-            map: 'Route.Project.Calendar'
+            map: 'App.Project.Calendar'
         },
         {
             name: 'app.project.issue.index',
-            map: 'Route.Issue.List'
+            map: 'App.Project.Issue.List'
         },
         {
             name: 'app.project.issue.create',
-            map: 'Route.Issue.Create'
+            map: 'App.Project.Issue.Create'
         },
         {
             name: 'app.project.issue.page',
-            map: 'Route.Issue.Read'
+            map: 'App.Project.Issue.Read'
         },
         {
             name: 'app.project.issue.edit',
-            map: 'Route.Issue.Edit'
+            map: 'App.Project.Issue.Edit'
         },
         {
             name: 'app.user.page',
-            map: 'Route.User.Read'
+            map: 'App.User.Read'
         },
         {
             name: 'app.user.create',
-            map: 'Route.User.Create'
+            map: 'App.User.Create'
         },
         {
             name: 'app.user.index',
-            map: 'Route.User.List'
+            map: 'App.User.List'
         },
         {
             name: 'app.user.edit',
-            map: 'Route.User.Edit'
+            map: 'App.User.Edit'
         },
         {
             name: 'app.user.management',
-            map: 'Route.User.Management'
+            map: 'App.User.Management'
         },
         {
             name: 'app.admin.index',
-            map: 'Route.Admin.List'
+            map: 'App.Admin.List'
         },
         {
             name: 'app.admin.create',
-            map: 'Route.Admin.Create'
+            map: 'App.Admin.Create'
         },
         {
             name: 'app.admin.page',
-            map: 'Route.Admin.Read'
+            map: 'App.Admin.Read'
         },
         {
             name: 'app.admin.edit',
-            map: 'Route.Admin.Edit'
+            map: 'App.Admin.Edit'
         }
     ];
 
@@ -147,16 +147,16 @@ export default class AclService extends Service {
     }
 
     /**
-     * This method check the user access on the given route.
+     * This method check the user access on the given App.
      * 
      * @param {string} routeName 
      * @todo For now returning true, but as route maps are added the commented
-     * code will be used to properly check user access on the route.
+     * code will be used to properly check user access on the App.
      * @returns boolen
      */
     hasRouteAccess(routeName) {
         let route = this.routeMaps.find(f => f.name === routeName);
         
-        return this.allowedResources.includes(route.map);
+        return this.allowedResources.includes(App.map);
     }
 }
