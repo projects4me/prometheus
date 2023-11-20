@@ -147,11 +147,9 @@ export default class AclService extends Service {
     }
 
     /**
-     * This method check the user access on the given App.
+     * This method check the user access on the given Route.
      * 
      * @param {string} routeName 
-     * @todo For now returning true, but as route maps are added the commented
-     * code will be used to properly check user access on the App.
      * @returns boolen
      */
     hasRouteAccess(routeName) {
