@@ -70,7 +70,7 @@ export default class AclService extends Service {
         {
             name: 'app.project.conversation',
             map: 'App.Project.Conversation'
-        },        
+        },
         {
             name: 'app.project.board',
             map: 'App.Project.Board'
@@ -154,7 +154,42 @@ export default class AclService extends Service {
      */
     hasRouteAccess(routeName) {
         let route = this.routeMaps.find(f => f.name === routeName);
-        
-        return this.allowedResources.includes(route?.map);
+
+        return this.checkAccess(route?.map);
+    }
+
+    /**
+     * This function is used to user access on the given resource.
+     * 
+     * @param {string} resource
+     * @returns boolean
+     */
+    checkAccess(resource) {
+        let hasAccess = this.allowedResources.includes(resource);
+        return (!hasAccess && resource !== undefined) ? this.checkParentAccess(resource) : hasAccess;
+    }
+
+    /**
+     * If the user doesn't have access then this function will iteratively check the resource's 
+     * parent access also and if user will have access on its parent resource then
+     * access will be given to user on the specific resource.
+     * 
+     * @param {string} childResource 
+     * @returns boolean
+     */
+    checkParentAccess(childResource) {
+        let resources = childResource.includes('.') ? childResource.split('.') : childResource.split('');
+        let hasAccess = false;
+
+        while (resources.length > 1) {
+            resources.pop();
+            let parentResource = (resources.length !== 1) ? resources.join('.') : resources.join('');
+            if (this.allowedResources.includes(parentResource)) {
+                hasAccess = true;
+                break;
+            }
+        }
+
+        return hasAccess;
     }
 }
