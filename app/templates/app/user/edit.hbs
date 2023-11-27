@@ -120,7 +120,8 @@
                 @model={{this.model}}
                 @data-field="user.language"
                 @validate={{action this.validateField "userEdit" (hash name="language" value=this.model.language)}}
-                @message={{this.message.userEdit.language}}                   
+                @message={{this.message.userEdit.language}}
+                @aclContext="App.User.Edit.Language"                   
               />
             </div>
           </div>
@@ -137,7 +138,8 @@
             @model={{this.model}}
             @selectRelated={{this.selectRelated}}
             @validate={{action this.validateField "userEdit" (hash name="timezone" value=this.model.timezone)}}
-            @message={{this.message.userEdit.timezone}}               
+            @message={{this.message.userEdit.timezone}}
+            @aclContext="App.User.Edit.Timezone"               
           />
           </div>
           
