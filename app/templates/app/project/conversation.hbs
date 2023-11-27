@@ -212,6 +212,7 @@
             @v-model={{this.newConversation}}
             @v-field='subject'
             @v-output='message'
+            @aclContext='App.Project.Conversation.Create.Subject'
         />
 
         <FormFields::FieldTextArea
@@ -224,6 +225,7 @@
             @v-model={{this.newConversation}}
             @v-field='description'
             @v-output='message'
+            @aclContext='App.Project.Conversation.Create.Description'
         />
 
         <FormFields::FieldRelate
@@ -241,6 +243,7 @@
             @v-model={{this.newConversation}}
             @v-field='roomType'
             @v-output='message'
+            @aclContext='App.Project.Conversation.Create.Type'
         />
 
       </div>

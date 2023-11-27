@@ -78,6 +78,7 @@
               @name="query"
               @readonly="readonly"
               @placeholder={{concat (t "global.form.search") " " (t "global.module.plural.issue") " .."}}
+              @aclContext="App.Project.Issue.List.SearchIssue"
             />
             <span class="glyphicon glyphicon-search form-control-feedback"></span>
           </div>
@@ -104,6 +105,7 @@
                 @placeholder={{t "views.app.issue.list.savedsearch.inputname"}}
                 @label={{t "views.app.issue.list.savedsearch.name"}}
                 @value={{this.newSavedsearch.name}}
+                @aclContext="App.Project.Issue.List.SavedSearch.Create.Name"
               />
 
             {{/bootstrap-modal}}
@@ -117,7 +119,7 @@
         <div class="list-controls">
 
           <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-            <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all"/>
+            <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="App.Project.Issue.List.SelectAllIssues"/>
           </span>
           <div class="btn-group">
             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></button>
@@ -167,7 +169,7 @@
               {{#each this.model as |issue|}}
                 <tr class="issue">
                   <td class="select-box">
-                    <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{issue.id}}/>
+                    <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{issue.id}} @aclContext="App.Project.Issue.List.SelectIssue"/>
                   </td>
                   <td class="issue-number"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.issueNumber}}</LinkTo></td>
                   <td class="issue-subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.subject}}</LinkTo></td>
@@ -190,7 +192,7 @@
         <div class="list-controls">
 
           <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-            <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all"/>
+            <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="App.Project.Issue.List.SelectAllIssues"/>
           </span>
           <div class="btn-group">
             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></button>

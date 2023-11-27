@@ -27,7 +27,8 @@
               @data-field="user.name"
               @lengthRequired={{false}}
               @validate={{action this.validateField "userEdit" (hash name="name" value=this.model.name)}}
-              @message={{this.message.userEdit.name}}              
+              @message={{this.message.userEdit.name}}
+              @aclContext="App.User.Edit.Name"
               {{autofocus}} 
             />
 
@@ -40,7 +41,8 @@
               @lengthRequired={{false}} 
               @mask="email"
               @validate={{action this.validateField "userEdit" (hash name="email" value=this.model.email)}}
-              @message={{this.message.userEdit.email}}                 
+              @message={{this.message.userEdit.email}}
+              @aclContext="App.User.Edit.Email"
             />
 
             <FormFields::FieldText 
@@ -54,7 +56,8 @@
               @validationMessage={{this.validationMessage}}
               @isSuccessful={{this.isSuccessful}}
               @validate={{action this.validateField "userEdit" (hash name="username" value=this.model.username)}}
-              @message={{this.message.userEdit.username}}                 
+              @message={{this.message.userEdit.username}}
+              @aclContext="App.User.Edit.UserName"             
             />
 
             <FormFields::FieldDate 
@@ -77,6 +80,7 @@
               @maxDate="31-12"
               @validate={{action this.validateField "userEdit" (hash name="dateOfBirth" value=this.model.dateOfBirth)}}
               @message={{this.message.userEdit.dateOfBirth}}
+              @aclContext="App.User.Edit.DateOfBirth"
             />                        
 
           </div>

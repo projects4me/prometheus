@@ -22,6 +22,7 @@
                 @placeholder={{t "views.app.user.management.search"}}
                 @data-module="user-management"
                 @searchFunction={{this.searchUserByName}}
+                @aclContext="App.User.Management.SearchUser"
               />
 
             </div>     
@@ -33,10 +34,11 @@
               {{!++MASS Actions++}}
               <div class="user-mass-actions">
 
-                <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all"/>
+                <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="App.User.Management.SelectAllUsers"/>
                 
                 <FormFields::FieldSwitch
                   @callBack={{this.changeMultipleUserStatus}}
+                  @aclContext="App.User.Management.ChangeUsersStatuses"
                 />
 
                 <button data-btn="delete" type="button" class="btn btn-box-tool">
@@ -87,7 +89,7 @@
                     <tr data-user-id={{user.id}}>
                       
                     <td>
-                      <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{user.id}}/>
+                      <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{user.id}} @aclContext="App.User.Management.SelectUser"/>
                     </td>
 
                       <td class="user-profile" data-user-field="profile">

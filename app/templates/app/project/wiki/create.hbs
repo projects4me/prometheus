@@ -16,6 +16,7 @@
           @data-field="wiki.name"
           @validate={{action this.validateField "wikiCreate" (hash name="name" value=this.model.name)}}
           @message={{this.message.wikiCreate.name}}
+          @aclContext="App.Project.Wiki.Create.Name"
           {{autofocus}}
         />
       </div>
@@ -33,6 +34,7 @@
           @data-field="wiki.parent"
           @validate={{action this.validateField "wikiCreate" (hash name="parentId" value=this.model.parentId)}}
           @message={{this.message.wikiCreate.parentId}}
+          @aclContext="App.Project.Wiki.Create.Parent"
         />
       </div>
 
