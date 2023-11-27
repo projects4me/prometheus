@@ -6,11 +6,14 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import AclStub from '../../stub-services/acl-stub';
 
 module('Integration | Component | form-fields/field-relate-multi', function (hooks) {
     setupRenderingTest(hooks);
 
     test('it renders field-relate-multi component', async function (assert) {
+        this.owner.register('service:acl', AclStub);
+
         let options = [
             {
                 label: "Value1"
@@ -56,6 +59,7 @@ module('Integration | Component | form-fields/field-relate-multi', function (hoo
     });
 
     test('it renders the component by given placeholder and label', async function (assert) {
+        this.owner.register('service:acl', AclStub);
         let onchange = () => true;
         this.set('onchange', onchange);
 

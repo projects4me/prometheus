@@ -258,6 +258,7 @@
             <FormFields::FieldUpload
                 @label={{t "views.app.issue.detail.selectfile"}}
                 @uploadFile={{action "uploadFile"}}
+                @aclContext="App.Project.Issue.Read.UploadFile"
             />
 
           </div>
@@ -318,6 +319,7 @@
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.editingLog.description}}
                     @data-field="issue.editEstimateTime"
+                    @aclContext="App.Project.Issue.Read.Estimate.Edit.Description"
                 />
 
               {{/bootstrap-modal}}
@@ -341,6 +343,7 @@
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.newTimeLog.description}}
                     @data-field="issue.estimateTime"
+                    @aclContext="App.Project.Issue.Read.Estimate.Create.Description"
                 />
 
               {{/bootstrap-modal}}
@@ -420,6 +423,7 @@
                     @positionY="down"
                     @autoApply={{true}}
                     @minDate='1990'
+                    @aclContext="App.Project.Issue.Read.Timelog.Edit.SpentOn"
                 />
 
                 <FormFields::FieldTextArea
@@ -427,6 +431,7 @@
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.editingLog.description}}
                     @data-field="issue.editTimelog"
+                    @aclContext="App.Project.Issue.Read.Timelog.Edit.Description"
                 />
 
               {{/bootstrap-modal}}
@@ -460,6 +465,7 @@
                     @positionY="down"
                     @autoApply={{true}}
                     @minDate='1990'
+                    @aclContext="App.Project.Issue.Read.Timelog.Create.SpentOn"
                 />
 
                 <FormFields::FieldTextArea
@@ -467,6 +473,7 @@
                     @label={{t "views.app.issue.detail.timelog.description"}}
                     @value={{this.newTimeLog.description}}
                     @data-field="issue.timelog"
+                    @aclContext="App.Project.Issue.Read.Timelog.Create.Description"
                 />
 
               {{/bootstrap-modal}}

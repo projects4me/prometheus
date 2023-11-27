@@ -1,5 +1,7 @@
-<Input 
-	@type="checkbox"
-	{{on "input" @select}}
-	data-select={{@data-select}}
-/>
+<AccessControl @aclContext={{@aclContext}}>
+  <Input 
+    @type="checkbox"
+    {{on "input" @select}}
+    data-select={{@data-select}}
+  />
+</AccessControl>

@@ -6,11 +6,13 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { fillIn, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import AclStub from '../stub-services/acl-stub';
 
 module('Integration | Modifier | apply-mask', function (hooks) {
     setupRenderingTest(hooks);
 
     test('it renders', async function (assert) {
+        this.owner.register('service:acl', AclStub);
         await render(hbs`
             <FormFields::FieldText
                 @placeholder="subject"

@@ -267,6 +267,7 @@
                         @searchField="label"
                         @onchange={{action "selectUser"}}
                         @relateType="relate-user"
+                        @aclContext="App.Project.Read.Membership.Create.User"
                     />
 
                   <FormFields::FieldRelate
@@ -279,6 +280,7 @@
                       @searchField="label"
                       @onchange={{action "selectRole"}}
                       @relateType="relate-simple"
+                      @aclContext="App.Project.Read.Membership.Create.Role"
                   />
                 </div>
               </form>
@@ -323,6 +325,7 @@
                 @placeholder={{t "views.app.project.detail.milestone.inputname"}}
                 @label={{t "views.app.project.detail.milestone.name"}}
                 @value={{this.newMilestone.name}}
+                @aclContext="App.Project.Read.Milestone.Create.Name"
             />
 
             <FormFields::FieldDate
@@ -339,6 +342,7 @@
                 @positionY="down"
                 @autoApply={{true}}
                 @minDate='1990'
+                @aclContext="App.Project.Read.Milestone.Create.StartDate"
             />
 
             <FormFields::FieldDate
@@ -355,6 +359,7 @@
                 @positionY="down"
                 @autoApply={{true}}
                 @minDate='1990'
+                @aclContext="App.Project.Read.Milestone.Create.EndDate"
             />
 
             <FormFields::FieldRelate
@@ -366,6 +371,7 @@
                 @searchField="label"
                 @onchange={{action "selectMilestoneType"}}
                 @relateType="relate-simple"
+                @aclContext="App.Project.Read.Milestone.Create.Type"
             />
 
             <FormFields::FieldRelate
@@ -377,12 +383,14 @@
                 @searchField="label"
                 @onchange={{action "selectMilestoneStatus"}}
                 @relateType="relate-simple"
+                @aclContext="App.Project.Read.Milestone.Create.Status"
             />
 
             <FormFields::FieldTextArea
                 @placeholder={{t "views.app.project.detail.milestone.iputdescription"}}
                 @label={{t "views.app.project.detail.milestone.description"}}
                 @value={{this.newMilestone.description}}
+                @aclContext="App.Project.Read.Milestone.Create.Description"
             />
 
           {{/bootstrap-modal}}

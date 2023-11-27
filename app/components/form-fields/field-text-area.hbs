@@ -1,19 +1,21 @@
-<div data-field={{@data-field}} class="form-field ember-view">
-  <Textarea
-    class="form-control data-input"
-    @value={{@value}} 
-    placeholder={{@placeholder}}
-    @label={{@label}}
-    {{on "blur" (fn this.validate @dependentField)}}
-    {{on "focusout" (action (mut this.shouldValidate) true) }}    
-  />
-  <span class="highlight"></span>
-  <span class="bar"></span>
-  <label class="floating-label">{{@label}}</label>
+<AccessControl @aclContext={{@aclContext}}>
+  <div data-field={{@data-field}} class="form-field ember-view">
+    <Textarea
+      class="form-control data-input"
+      @value={{@value}} 
+      placeholder={{@placeholder}}
+      @label={{@label}}
+      {{on "blur" (fn this.validate @dependentField)}}
+      {{on "focusout" (action (mut this.shouldValidate) true) }}    
+    />
+    <span class="highlight"></span>
+    <span class="bar"></span>
+    <label class="floating-label">{{@label}}</label>
 
-  {{#if (and @message this.shouldValidate)}}
-    <span class="error text-red" id={{@data-field}}>
-      {{@message}}
-    </span>
-  {{/if}}   
-</div>
+    {{#if (and @message this.shouldValidate)}}
+      <span class="error text-red" id={{@data-field}}>
+        {{@message}}
+      </span>
+    {{/if}}   
+  </div>
+</AccessControl>

@@ -6,11 +6,14 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, blur, focus, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import AclStub from '../../stub-services/acl-stub';
 
 module('Integration | Component | field-date', function (hooks) {
     setupRenderingTest(hooks);
 
     test('it renders', async function (assert) {
+        this.owner.register('service:acl', AclStub);
+        
         await render(hbs`
             <FormFields::FieldDate
                 @placeholder="Select end date"

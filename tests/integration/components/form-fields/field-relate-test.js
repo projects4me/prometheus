@@ -6,6 +6,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import AclStub from '../../stub-services/acl-stub';
 
 module('Integration | Component | field-relate', function (hooks) {
     setupRenderingTest(hooks);
@@ -89,6 +90,7 @@ module('Integration | Component | field-relate', function (hooks) {
 
     relatedFields.forEach((relatedField) => {
         test(`it renders component of type relate ${relatedField.name}`, async function (assert) {
+            this.owner.register('service:acl', AclStub);
             this.set('options', relatedField.options);
             this.set('onchange', () => true);
             this.set('selected', relatedField.selected);
@@ -109,6 +111,7 @@ module('Integration | Component | field-relate', function (hooks) {
     });
 
     test('it renders the component by given placeholder and label', async function (assert) {
+        this.owner.register('service:acl', AclStub);
         let onchange = () => true;
         this.set('onchange', onchange);
 

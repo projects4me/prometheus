@@ -1,4 +1,6 @@
-<label class="switch-control">
-  <input type="checkbox" checked={{this.checked}} {{on "change" (fn @callBack)}} data-input-type="switch">
-  <span class="control"></span>
-</label>
+<AccessControl @aclContext={{@aclContext}}>
+  <label class="switch-control">
+    <input type="checkbox" checked={{this.checked}} {{on "change" (fn @callBack)}} data-input-type="switch">
+    <span class="control"></span>
+  </label>
+</AccessControl>
