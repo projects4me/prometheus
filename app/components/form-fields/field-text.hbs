@@ -1,26 +1,27 @@
-{{!-- This should be loaded later via the field view ideally --}}
-<div data-field={{@data-field}} class={{concat "form-field ember-view " @readonly}}>
-  <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}}
-    maxlength={{@length}} aria-invalid="true" aria-describedBy={{@data-field}} {{apply-mask @mask}} {{on "focusin" this.focusIn}}
-    readonly={{@readonly}} {{on "focusout" (action (mut this.shouldValidate) true) }} {{on "input" this.onInput}}
-    {{on "blur" (fn this.validate @dependentField)}} ...attributes/>
-  <span class="highlight"></span>
-  <span class="bar"></span>
-  <label class="floating-label">{{@label}}</label>
+<AccessControl @aclContext={{@aclContext}}>
+  <div data-field={{@data-field}} class={{concat "form-field ember-view " @readonly}}>
+    <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}}
+      maxlength={{@length}} aria-invalid="true" aria-describedBy={{@data-field}} {{apply-mask @mask}} {{on "focusin" this.focusIn}}
+      readonly={{@readonly}} {{on "focusout" (action (mut this.shouldValidate) true) }} {{on "input" this.onInput}}
+      {{on "blur" (fn this.validate @dependentField)}} ...attributes/>
+    <span class="highlight"></span>
+    <span class="bar"></span>
+    <label class="floating-label">{{@label}}</label>
 
-  {{#if (and (not @readonly) (@lengthRequired)) }}
-    <span class="count pull-right">{{this.charLength}}/{{@length}}</span>
-  {{/if}}
+    {{#if (and (not @readonly) (@lengthRequired)) }}
+      <span class="count pull-right">{{this.charLength}}/{{@length}}</span>
+    {{/if}}
 
-  {{#if (and @message this.shouldValidate)}}
-    <span class="error text-red" id={{@data-field}}>
-      {{@message}}
-    </span>
-  {{/if}}
+    {{#if (and @message this.shouldValidate)}}
+      <span class="error text-red" id={{@data-field}}>
+        {{@message}}
+      </span>
+    {{/if}}
 
-  <FormFields::ValidationMessages
-    @isSuccessful={{@isSuccessful}}
-    @message={{@validationMessage}}
-  />
+    <FormFields::ValidationMessages
+      @isSuccessful={{@isSuccessful}}
+      @message={{@validationMessage}}
+    />
 
-</div>
+  </div>
+</AccessControl>
