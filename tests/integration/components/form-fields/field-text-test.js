@@ -6,11 +6,13 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, blur, focus } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import AclStub from '../../stub-services/acl-stub';
 
 module('Integration | Component | field-text', function (hooks) {
     setupRenderingTest(hooks);
 
     test('it renders field text component', async function (assert) {
+        this.owner.register('service:acl', AclStub);
 
         await render(hbs`
             <FormFields::FieldText

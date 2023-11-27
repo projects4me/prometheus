@@ -3,12 +3,14 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import LanguageStub from '../../stub-services/language-stub';
+import AclStub from '../../stub-services/acl-stub';
 
 module('Integration | Component | app-ui/language', function (hooks) {
     setupRenderingTest(hooks);
 
     test('it renders', async function (assert) {
         this.owner.register('service:language', LanguageStub);
+        this.owner.register('service:acl', AclStub);
         this.set('onchange', () => true);
 
         await render(hbs`
