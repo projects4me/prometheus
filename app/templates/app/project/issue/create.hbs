@@ -222,8 +222,8 @@
     </div>
 
     <div class="col-sm-12">
-      <button type="button" data-btn="save" class="btn btn-primary" {{action "save" "issueCreate"}}>{{t "global.form.save"}}</button>
-      <button type="button" data-btn="cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+      <AppUi::Button type="button" data-btn="save" class="btn btn-primary" {{action "save" "issueCreate"}} @aclContext="App.Project.Issue.Create">{{t "global.form.save"}}</AppUi::Button>
+      <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</AppUi::Button>
     </div>
 
   </div>

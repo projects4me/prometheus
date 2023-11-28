@@ -55,9 +55,9 @@
                         <i class="fa fa-heart-o"></i>
                       {{/if}}
                     </span>
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <AppUi::Button type="button" class="btn btn-box-tool" data-widget="collapse">
                       <i class="fa fa-minus"></i>
-                    </button>
+                    </AppUi::Button>
                   </div>
                   {{!-- /.box-tools --}}
                 </div>
@@ -72,9 +72,9 @@
                   {{#if (user-created entity.votes this.currentUser.user.id)}}
                     {{t "views.app.conversation.you"}} <i class="fa fa-heart"></i>
                   {{else}}
-                    <button type="button" class="btn btn-default btn-xs" {{action "upvote" entity.id}}>
+                    <AppUi::Button type="button" class="btn btn-default btn-xs" {{action "upvote" entity.id}} @aclContext="App.Project.Conversation.Upvote">
                       <i class="fa fa-heart-o"></i> {{t "views.app.conversation.upvote"}}
-                    </button>
+                    </AppUi::Button>
                   {{/if}}
                   <span class="pull-right text-muted">
                     {{entity.comments.length}}

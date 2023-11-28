@@ -15,8 +15,8 @@
 
           <div class="box-tools pull-right">
             <span class="project-status"><span class="badge {{this.model.status}}">{{t (concat "views.app.project.lists.status." this.model.status)}}</span></span>
-            <button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editProject" this.model.id}}><i class="fa fa-pencil"></i></button>
-            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
+            <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editProject" this.model.id}} @aclContext="App.Project.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></AppUi::Button>
           </div>
           {{!-- /.box-tools --}}
         </div>
@@ -227,7 +227,7 @@
         <div class="box-header with-border">
           <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
           <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "views.app.project.detail.managemembers"}}"><i class="fa fa-gear"></i></button>
+            <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "views.app.project.detail.managemembers"}}"><i class="fa fa-gear"></i></AppUi::Button>
           </div>
         </div>
         {{!-- /.box-header --}}

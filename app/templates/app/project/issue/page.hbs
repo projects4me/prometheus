@@ -10,8 +10,8 @@
             <h2 class="box-title">{{issue.issuetype.name}} - #{{issue.issueNumber}} | <span class="issueSubject">{{issue.subject}}</span></h2>
             <div class="box-tools pull-right">
               <span class="project-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></span>
-              <button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" {{action 'editIssue' issue.issueNumber}}><i class="fa fa-pencil"></i></button>
-              <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></button>
+              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" {{action 'editIssue' issue.issueNumber}} @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
+              <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></AppUi::Button>
             </div>
           </div>
 

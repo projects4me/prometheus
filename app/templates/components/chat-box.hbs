@@ -5,12 +5,12 @@
 
       <div class="box-tools pull-right">
         <span data-toggle="tooltip" title="{{t "views.app.components.chatBox.newMessage" count="3"}}" class="badge">{{t "views.app.components.chatBox.three"}}</span>
-        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+        <AppUi::Button type="button" class="btn btn-box-tool" data-widget="collapse">
           <i class="fa fa-minus"></i>
-        </button>
-        <button type="button" class="btn btn-box-tool" data-widget="remove">
+        </AppUi::Button>
+        <AppUi::Button type="button" class="btn btn-box-tool" data-widget="remove">
           <i class="fa fa-times"></i>
-        </button>
+        </AppUi::Button>
       </div>
     </div>
     {{!-- /.box-header --}}
@@ -57,7 +57,7 @@
             value=comment
         }}
         <span class="input-group-btn">
-          <button type="submit" class="btn btn-primary btn-flat">{{t "views.app.chat.send"}}</button>
+          <AppUi::Button type="submit" class="btn btn-primary btn-flat">{{t "views.app.chat.send"}}</AppUi::Button>
         </span>
       </div>
     </div>
