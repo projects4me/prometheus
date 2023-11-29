@@ -51,8 +51,8 @@
 
     <div class="box-footer">
       {{#if (eq this.model.locked "0")}}
-        <button type="button" class="btn btn-primary" {{action "edit"}}><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</button>
-        <button type="button" class="btn btn-default" {{action "delete"}}><i class="fa fa-trash"></i> {{t "global.form.delete"}}</button>
+        <AppUi::Button type="button" class="btn btn-primary" {{action "edit"}} @aclContext="App.Project.Wiki.Edit"><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</AppUi::Button>
+        <AppUi::Button type="button" class="btn btn-default" {{action "delete"}} @aclContext="App.Project.Wiki.Delete"><i class="fa fa-trash"></i> {{t "global.form.delete"}}</AppUi::Button>
       {{/if}}
 
       <div class="pull-right">

@@ -2,16 +2,16 @@
   <div class="modal-dialog">
     <div class="modal-content box box-primary">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">{{t "views.app.components.modal.times"}}</button>
+        <AppUi::Button type="button" class="close" data-dismiss="modal" aria-hidden="true">{{t "views.app.components.modal.times"}}</AppUi::Button>
         <h4 class="modal-title">{{t this.title}}</h4>
       </div>
       <div class="modal-body">
         {{yield}}
       </div>
       <div class="modal-footer">
-        <button type="button" data-btn="cancel" class="btn btn-default" data-dismiss="modal">{{t this.closeLabel}}</button>
+        <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" data-dismiss="modal">{{t this.closeLabel}}</AppUi::Button>
         {{#if this.confirmLabel}}
-          <button type="button" data-btn="save" class="btn btn-primary" {{action 'confirm'}}>{{t this.confirmLabel}}</button>
+          <AppUi::Button type="button" data-btn="save" class="btn btn-primary" {{action 'confirm'}}>{{t this.confirmLabel}}</AppUi::Button>
         {{/if}}
       </div>
     </div>

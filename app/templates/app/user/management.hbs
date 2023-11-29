@@ -41,9 +41,9 @@
                   @aclContext="App.User.Management.ChangeUsersStatuses"
                 />
 
-                <button data-btn="delete" type="button" class="btn btn-box-tool">
+                <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @aclContext="App.User.Delete">
                   <i class="fa fa-trash" aria-hidden="true"></i>
-                </button>       
+                </AppUi::Button>       
               </div>
               {{!--MASS Actions--}}
 
@@ -54,14 +54,14 @@
                 {{#if this.users.meta.links.next}}+{{/if}}
                 <div class="btn-group">
                   {{#if this.users.meta.links.prev}}
-                    <button data-btn="prev-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" {{action "paginate" (get-page this.users.meta.links.prev.href)}}><i class="fa fa-chevron-left"></i></button>
+                    <AppUi::Button data-btn="prev-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" {{action "paginate" (get-page this.users.meta.links.prev.href)}} @aclContext="App.User.Read"><i class="fa fa-chevron-left"></i></AppUi::Button>
                   {{else}}
-                    <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}} "><i class="fa fa-chevron-left"></i></button>
+                    <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}} "><i class="fa fa-chevron-left"></i></AppUi::Button>
                   {{/if}}
                   {{#if this.users.meta.links.next}}
-                    <button data-btn="next-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" {{action "paginate" (get-page this.users.meta.links.next.href)}}><i class="fa fa-chevron-right"></i></button>
+                    <AppUi::Button data-btn="next-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" {{action "paginate" (get-page this.users.meta.links.next.href)}} @aclContext="App.User.Read"><i class="fa fa-chevron-right"></i></AppUi::Button>
                   {{else}}
-                    <button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></button>
+                    <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></AppUi::Button>
                   {{/if}}
                 </div>
 
@@ -108,9 +108,9 @@
 
                       {{!++ actions ++}}
                       <td class="pull-right actions">
-                        <button data-btn="delete" type="button" class="btn btn-box-tool" {{action this.deleteUser user}}>
+                        <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" {{action this.deleteUser user}} @aclContext="App.User.Delete">
                           <i class="fa fa-trash" aria-hidden="true"></i>
-                        </button>
+                        </AppUi::Button>
 
                       <UserManagement::AccountStatus
                         @user={{user}}

@@ -53,8 +53,8 @@
       </div>
 
       <div class="box-footer">
-        <button type="button" class="btn btn-primary" {{action "save" "wikiCreate"}}>{{t "global.form.save"}}</button>
-        <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+        <AppUi::Button type="button" class="btn btn-primary" {{action "save" "wikiCreate"}} @aclContext="App.Project.Wiki.Edit">{{t "global.form.save"}}</AppUi::Button>
+        <AppUi::Button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</AppUi::Button>
 
         <div class="pull-right wiki-tags">
           {{t "views.app.wiki.tags"}}<span class="colon"></span>
@@ -69,7 +69,7 @@
               @aclContext="App.Project.Wiki.Edit.Tags"
           />
 
-          <button type="button" class="btn btn-primary" {{action "showDialog"}}>{{t "views.app.wiki.tag.add"}}</button>
+          <AppUi::Button type="button" class="btn btn-primary" {{action "showDialog"}} @aclContext="App.Project.Wiki.Edit.Tags.Create">{{t "views.app.wiki.tag.add"}}</AppUi::Button>
           {{#if this.addTagDialog}}
             {{#bootstrap-modal
                 title="views.app.wiki.tag.create"

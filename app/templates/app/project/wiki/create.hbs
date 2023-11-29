@@ -55,7 +55,7 @@
   </div>
 
   <div class="box-footer">
-    <button type="button" class="btn btn-primary" {{action "save" "wikiCreate"}}>{{t "global.form.save"}}</button>
-    <button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</button>
+    <AppUi::Button type="button" class="btn btn-primary" {{action "save" "wikiCreate"}} @aclContext="App.Project.Wiki.Create">{{t "global.form.save"}}</AppUi::Button>
+    <AppUi::Button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</AppUi::Button>
   </div>
 </div>
