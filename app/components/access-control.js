@@ -30,6 +30,7 @@ export default class AccessControlComponent extends Component {
      * given resource and returns the value.
      */
     get hasAccess() {
-        return this.acl.checkAccess(this.args.aclContext);
+        let aclContext = this.args.aclContext;
+        return (aclContext !== undefined) ? this.acl.checkAccess(aclContext) : true;
     }
 }
