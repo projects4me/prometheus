@@ -1,61 +1,63 @@
-<div class="wiki-detail box box-primary">
+<AccessControl @aclContext="App.Project.Wiki.Create">
+  <div class="wiki-detail box box-primary">
 
-  <div class="box-header with-border">
-    <h3 class="box-title">{{t "views.app.wiki.create.new"}}</h3>
-  </div>
-  {{!-- /.box-header --}}
-  <div class="box-body">
-    <div class="form-group">
-      
-      <div class="form-field">
-        <FormFields::FieldText
-          @placeholder={{t "views.app.wiki.create.name"}}
-          @label={{t "views.app.wiki.create.name"}}
-          @value={{this.model.name}}
-          @mask="alphanumeric"
-          @data-field="wiki.name"
-          @validate={{action this.validateField "wikiCreate" (hash name="name" value=this.model.name)}}
-          @message={{this.message.wikiCreate.name}}
-          @aclContext="App.Project.Wiki.Create.Name"
-          {{autofocus}}
-        />
-      </div>
+    <div class="box-header with-border">
+      <h3 class="box-title">{{t "views.app.wiki.create.new"}}</h3>
+    </div>
+    {{!-- /.box-header --}}
+    <div class="box-body">
+      <div class="form-group">
+        
+        <div class="form-field">
+          <FormFields::FieldText
+            @placeholder={{t "views.app.wiki.create.name"}}
+            @label={{t "views.app.wiki.create.name"}}
+            @value={{this.model.name}}
+            @mask="alphanumeric"
+            @data-field="wiki.name"
+            @validate={{action this.validateField "wikiCreate" (hash name="name" value=this.model.name)}}
+            @message={{this.message.wikiCreate.name}}
+            @aclContext="App.Project.Wiki.Create.Name"
+            {{autofocus}}
+          />
+        </div>
 
-      <div class="form-field">
-        <FormFields::FieldRelate
-          @placeholder={{t "views.app.wiki.create.parent"}}
-          @label={{t "views.app.wiki.create.parent"}}
-          @value={{this.model.parentId}}
-          @options={{this.wikiList}}
-          @selected={{find-by "value" this.model.parentId this.wikiList}}
-          @searchField="label"
-          @onchange={{action "selectRelated" this.model 'parentId'}}
-          @relateType="relate-simple"
-          @data-field="wiki.parent"
-          @validate={{action this.validateField "wikiCreate" (hash name="parentId" value=this.model.parentId)}}
-          @message={{this.message.wikiCreate.parentId}}
-          @aclContext="App.Project.Wiki.Create.Parent"
-        />
-      </div>
+        <div class="form-field">
+          <FormFields::FieldRelate
+            @placeholder={{t "views.app.wiki.create.parent"}}
+            @label={{t "views.app.wiki.create.parent"}}
+            @value={{this.model.parentId}}
+            @options={{this.wikiList}}
+            @selected={{find-by "value" this.model.parentId this.wikiList}}
+            @searchField="label"
+            @onchange={{action "selectRelated" this.model 'parentId'}}
+            @relateType="relate-simple"
+            @data-field="wiki.parent"
+            @validate={{action this.validateField "wikiCreate" (hash name="parentId" value=this.model.parentId)}}
+            @message={{this.message.wikiCreate.parentId}}
+            @aclContext="App.Project.Wiki.Create.Parent"
+          />
+        </div>
 
-      <div data-field="wiki.description" class="form-field">
-        <AppUi::ToastUi
-          @usersList={{this.membersList}}
-          @issueSearch={{perform this.search}}
-          @contents={{readonly this.markUp}}
-          @editType= 'wysiwyg'
-          @hide={{array 'footer'}}
-          @onContentChange={{action "selectStatic" this.model 'markUp'}}
-          @onBlur={{action this.validateField "wikiCreate" (hash name="markUp" value=this.markUp)}}
-          @message={{this.message.wikiCreate.markUp}}
-        />
+        <div data-field="wiki.description" class="form-field">
+          <AppUi::ToastUi
+            @usersList={{this.membersList}}
+            @issueSearch={{perform this.search}}
+            @contents={{readonly this.markUp}}
+            @editType= 'wysiwyg'
+            @hide={{array 'footer'}}
+            @onContentChange={{action "selectStatic" this.model 'markUp'}}
+            @onBlur={{action this.validateField "wikiCreate" (hash name="markUp" value=this.markUp)}}
+            @message={{this.message.wikiCreate.markUp}}
+          />
+        </div>
+        
       </div>
-      
+    </div>
+
+    <div class="box-footer">
+      <AppUi::Button type="button" class="btn btn-primary" {{action "save" "wikiCreate"}} @aclContext="App.Project.Wiki.Create">{{t "global.form.save"}}</AppUi::Button>
+      <AppUi::Button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</AppUi::Button>
     </div>
   </div>
-
-  <div class="box-footer">
-    <AppUi::Button type="button" class="btn btn-primary" {{action "save" "wikiCreate"}} @aclContext="App.Project.Wiki.Create">{{t "global.form.save"}}</AppUi::Button>
-    <AppUi::Button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</AppUi::Button>
-  </div>
-</div>
+</AccessControl>

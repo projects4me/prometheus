@@ -1,120 +1,122 @@
-<div class="wiki-detail box box-primary">
-  {{#if this.model}}
-    {{#if (eq this.model.locked "0")}}
-      <div class="box-header with-border">
-        <h3 class="box-title">{{t "views.app.wiki.page.edit" page=this.model.name}}</h3>
-      </div>
-      {{!-- /.box-header --}}
-      <div class="box-body">
-        <div class="form-group">
-          <FormFields::FieldText
-              @placeholder={{t "views.app.wiki.create.name"}}
-              @label={{t "views.app.wiki.create.name"}}
-              @value={{this.model.name}}
-              @mask="alphanumeric"
-              @data-field="wiki.name"
-              @validate={{action this.validateField "wikiCreate" (hash name="name" value=this.model.name)}}
-              @message={{this.message.wikiCreate.name}}
-              @aclContext="App.Project.Wiki.Edit.Name"
-              {{autofocus}}
-          />
+<AccessControl @aclContext="App.Project.Wiki.Edit">
+  <div class="wiki-detail box box-primary">
+    {{#if this.model}}
+      {{#if (eq this.model.locked "0")}}
+        <div class="box-header with-border">
+          <h3 class="box-title">{{t "views.app.wiki.page.edit" page=this.model.name}}</h3>
+        </div>
+        {{!-- /.box-header --}}
+        <div class="box-body">
+          <div class="form-group">
+            <FormFields::FieldText
+                @placeholder={{t "views.app.wiki.create.name"}}
+                @label={{t "views.app.wiki.create.name"}}
+                @value={{this.model.name}}
+                @mask="alphanumeric"
+                @data-field="wiki.name"
+                @validate={{action this.validateField "wikiCreate" (hash name="name" value=this.model.name)}}
+                @message={{this.message.wikiCreate.name}}
+                @aclContext="App.Project.Wiki.Edit.Name"
+                {{autofocus}}
+            />
+          </div>
+
+          <div class="form-group">
+            <FormFields::FieldRelate
+                @placeholder={{t "views.app.wiki.create.parent"}}
+                @label={{t "views.app.wiki.create.parent"}}
+                @value={{this.model.parentId}}
+                @options={{this.wikiList}}
+                @selected={{find-by "value" this.model.parentId this.wikiList}}
+                @searchField="label"
+                @onchange={{action "selectRelated" this.model 'parentId'}}
+                @relateType="relate-simple"
+                @data-field="wiki.parent"
+                @validate={{action this.validateField "wikiCreate" (hash name="parentId" value=this.model.parentId)}}
+                @message={{this.message.wikiCreate.parentId}}
+                @aclContext="App.Project.Wiki.Edit.Parent"
+            />
+          </div>
+
+          <div class="form-field">
+            <AppUi::ToastUi
+                @usersList={{this.membersList}}
+                @issueSearch={{perform this.search}}
+                @contents={{readonly this.markUp}}
+                @editType= 'wysiwyg'
+                @hide={{array 'footer'}}
+                @onContentChange={{action "selectStatic" this.model 'markUp'}}
+                @onBlur={{action this.validateField "wikiCreate" (hash name="markUp" value=this.markUp)}}
+                @message={{this.message.wikiCreate.markUp}}                            
+            />
+          </div>
+
         </div>
 
-        <div class="form-group">
-          <FormFields::FieldRelate
-              @placeholder={{t "views.app.wiki.create.parent"}}
-              @label={{t "views.app.wiki.create.parent"}}
-              @value={{this.model.parentId}}
-              @options={{this.wikiList}}
-              @selected={{find-by "value" this.model.parentId this.wikiList}}
-              @searchField="label"
-              @onchange={{action "selectRelated" this.model 'parentId'}}
-              @relateType="relate-simple"
-              @data-field="wiki.parent"
-              @validate={{action this.validateField "wikiCreate" (hash name="parentId" value=this.model.parentId)}}
-              @message={{this.message.wikiCreate.parentId}}
-              @aclContext="App.Project.Wiki.Edit.Parent"
-          />
+        <div class="box-footer">
+          <AppUi::Button type="button" class="btn btn-primary" {{action "save" "wikiCreate"}} @aclContext="App.Project.Wiki.Edit">{{t "global.form.save"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</AppUi::Button>
+
+          <div class="pull-right wiki-tags">
+            {{t "views.app.wiki.tags"}}<span class="colon"></span>
+
+            <FormFields::FieldRelateMulti
+                @options={{this.tagList}}
+                @selected={{this.selectedTags}}
+                @placeholder={{t "views.app.wiki.selecttags"}}
+                @searchField="label"
+                @onchange={{action "tagSelected"}}
+                @relateType="relate-simple"
+                @aclContext="App.Project.Wiki.Edit.Tags"
+            />
+
+            <AppUi::Button type="button" class="btn btn-primary" {{action "showDialog"}} @aclContext="App.Project.Wiki.Edit.Tags.Create">{{t "views.app.wiki.tag.add"}}</AppUi::Button>
+            {{#if this.addTagDialog}}
+              {{#bootstrap-modal
+                  title="views.app.wiki.tag.create"
+                  confirmLabel="global.form.save"
+                  closeLabel="global.form.cancel"
+                  confirm=(action "addTag")
+                  close=(action "removeModal")}}
+                <div class="form-group">
+                  <FormFields::FieldText
+                      placeholder={{t "views.app.wiki.edit.name"}}
+                      label={{t "views.app.wiki.edit.name"}}
+                      value={{this.newTag.tag}}
+                      mask="alphanumeric"
+                      data-field="tag.tag"
+                      focus-out={{action (mut this.showTagNameError) true}}
+                      v-focus={{this.showTagNameError}}
+                      v-model={{this.newTag}}
+                      v-field='tag'
+                      v-output='message'
+                      @aclContex="App.Project.Wiki.Edit.Tag.Create.Name"
+                  />
+                </div>
+              {{/bootstrap-modal}}
+            {{/if}}
+          </div>
         </div>
-
-        <div class="form-field">
-          <AppUi::ToastUi
-              @usersList={{this.membersList}}
-              @issueSearch={{perform this.search}}
-              @contents={{readonly this.markUp}}
-              @editType= 'wysiwyg'
-              @hide={{array 'footer'}}
-              @onContentChange={{action "selectStatic" this.model 'markUp'}}
-              @onBlur={{action this.validateField "wikiCreate" (hash name="markUp" value=this.markUp)}}
-              @message={{this.message.wikiCreate.markUp}}                            
-          />
+      {{else}}
+        <div class="wiki-page-islocked">
+          <div class="callout callout-danger">
+            <h4>
+              <i class="fa fa-lock"></i> {{t "views.app.wiki.page.lockedhead"}}
+            </h4>
+            {{t "views.app.wiki.page.islocked"}}
+          </div>
         </div>
-
-      </div>
-
-      <div class="box-footer">
-        <AppUi::Button type="button" class="btn btn-primary" {{action "save" "wikiCreate"}} @aclContext="App.Project.Wiki.Edit">{{t "global.form.save"}}</AppUi::Button>
-        <AppUi::Button type="button" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</AppUi::Button>
-
-        <div class="pull-right wiki-tags">
-          {{t "views.app.wiki.tags"}}<span class="colon"></span>
-
-          <FormFields::FieldRelateMulti
-              @options={{this.tagList}}
-              @selected={{this.selectedTags}}
-              @placeholder={{t "views.app.wiki.selecttags"}}
-              @searchField="label"
-              @onchange={{action "tagSelected"}}
-              @relateType="relate-simple"
-              @aclContext="App.Project.Wiki.Edit.Tags"
-          />
-
-          <AppUi::Button type="button" class="btn btn-primary" {{action "showDialog"}} @aclContext="App.Project.Wiki.Edit.Tags.Create">{{t "views.app.wiki.tag.add"}}</AppUi::Button>
-          {{#if this.addTagDialog}}
-            {{#bootstrap-modal
-                title="views.app.wiki.tag.create"
-                confirmLabel="global.form.save"
-                closeLabel="global.form.cancel"
-                confirm=(action "addTag")
-                close=(action "removeModal")}}
-              <div class="form-group">
-                <FormFields::FieldText
-                    placeholder={{t "views.app.wiki.edit.name"}}
-                    label={{t "views.app.wiki.edit.name"}}
-                    value={{this.newTag.tag}}
-                    mask="alphanumeric"
-                    data-field="tag.tag"
-                    focus-out={{action (mut this.showTagNameError) true}}
-                    v-focus={{this.showTagNameError}}
-                    v-model={{this.newTag}}
-                    v-field='tag'
-                    v-output='message'
-                    @aclContex="App.Project.Wiki.Edit.Tag.Create.Name"
-                />
-              </div>
-            {{/bootstrap-modal}}
-          {{/if}}
-        </div>
-      </div>
+      {{/if}}
     {{else}}
-      <div class="wiki-page-islocked">
+      <div class="wiki-page-empty">
+
         <div class="callout callout-danger">
           <h4>
-            <i class="fa fa-lock"></i> {{t "views.app.wiki.page.lockedhead"}}
+            <i class="fa fa-exclamation-triangle"></i> {{t "views.app.wiki.notfound"}}
           </h4>
-          {{t "views.app.wiki.page.islocked"}}
+          {{t "views.app.wiki.page.empty"}}
         </div>
       </div>
     {{/if}}
-  {{else}}
-    <div class="wiki-page-empty">
-
-      <div class="callout callout-danger">
-        <h4>
-          <i class="fa fa-exclamation-triangle"></i> {{t "views.app.wiki.notfound"}}
-        </h4>
-        {{t "views.app.wiki.page.empty"}}
-      </div>
-    </div>
-  {{/if}}
-</div>
+  </div>
+</AccessControl>

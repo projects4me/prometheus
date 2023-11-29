@@ -20,187 +20,193 @@
 <section class="content">
   <div class="create-project">
     <div class="row">
-      <div class="col-md-8">
+      <AccessControl @aclContext="App.Project.Create">
+        <div class="col-md-8">
 
-        <div class="box box-primary issues-details">
-          <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.project.create.project"}}</h3>
-          </div>
-          {{!-- /.box-header --}}
-          <div class="box-body no-padding">
+          <div class="box box-primary issues-details">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "views.app.project.create.project"}}</h3>
+            </div>
+            {{!-- /.box-header --}}
+            <div class="box-body no-padding">
 
-            <div class="form-group">
-              <div class="field-group">
-                <FormFields::FieldText
-                  @placeholder={{t "views.app.project.create.nameplaceholder"}}
-                  @label={{t "views.app.project.create.name"}}
-                  @value={{this.model.name}}
-                  @mask="alphanumeric"
-                  @data-field="project.name"
-                  @validate={{action this.validateField "projectCreate" (hash name="name" value=this.model.name)}}
-                  @message={{this.message.projectCreate.name}}
-                  @aclContext="App.Project.Create.Name"
-                  {{autofocus}}                  
+              <div class="form-group">
+                <div class="field-group">
+                  <FormFields::FieldText
+                    @placeholder={{t "views.app.project.create.nameplaceholder"}}
+                    @label={{t "views.app.project.create.name"}}
+                    @value={{this.model.name}}
+                    @mask="alphanumeric"
+                    @data-field="project.name"
+                    @validate={{action this.validateField "projectCreate" (hash name="name" value=this.model.name)}}
+                    @message={{this.message.projectCreate.name}}
+                    @aclContext="App.Project.Create.Name"
+                    {{autofocus}}                  
+                  />
+
+                  <div class="form-field form-field-static ember-view">
+                    <span class="ember-text-field form-control input-sm data-input ember-view">{{this.shortCode}}</span>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label class="floating-label active">{{t "views.app.project.create.shortcode"}}</label>
+                  </div>
+                </div>
+
+                <FormFields::FieldTextArea
+                  @placeholder={{t "views.app.project.create.descriptionplaceholder"}}
+                  @label={{t "views.app.project.create.description"}}
+                  @value={{this.model.description}}
+                  @data-field="project.description"
+                  @aclContext="App.Project.Create.Description"
                 />
 
-                <div class="form-field form-field-static ember-view">
-                  <span class="ember-text-field form-control input-sm data-input ember-view">{{this.shortCode}}</span>
-                  <span class="highlight"></span>
-                  <span class="bar"></span>
-                  <label class="floating-label active">{{t "views.app.project.create.shortcode"}}</label>
-                </div>
+                <FormFields::FieldDate
+                  @placeholder={{t "views.app.project.create.startdateplaceholder"}}
+                  @label={{t "views.app.project.create.startdate"}}
+                  @value={{readonly this.model.startDate}}
+                  @mask="alphanumeric"
+                  @update={{action "selectStatic" this.model 'startDate'}}
+                  @data-field="project.startDate"
+                  @v-field='startDate'
+                  @positionX="right"
+                  @positionY="down"
+                  @autoApply={{true}}
+                  @minDate='1990'
+                  @singleDatePicker={{true}}
+                  @showDropdowns={{true}}
+                  @validate={{action this.validateField "projectCreate" (hash name="startDate" value=this.model.startDate)}}
+                  @message={{this.message.projectCreate.startDate}}
+                  @aclContext="App.Project.Create.StartDate"
+                />
+
+                <FormFields::FieldDate
+                  @placeholder={{t "views.app.project.create.enddateplaceholder"}}
+                  @label={{t "views.app.project.create.enddate"}}
+                  @value={{readonly this.model.endDate}}
+                  @mask="alphanumeric"
+                  @update={{action "selectStatic" this.model 'endDate'}}
+                  @data-field="project.endDate"
+                  @positionX="right"
+                  @positionY="down"
+                  @autoApply={{true}}
+                  @minDate='1990'
+                  @singleDatePicker={{true}}
+                  @showDropdowns={{true}}
+                  @validate={{action this.validateField "projectCreate" (hash name="endDate" value=this.model.endDate)}}
+                  @message={{this.message.projectCreate.endDate}}
+                  @aclContext="App.Project.Create.EndDate"                            
+                />
+
+                <FormFields::FieldRelate
+                  @placeholder={{t "views.app.project.create.typeplaceholder"}}
+                  @label={{t "views.app.project.create.type"}}
+                  @value={{this.model.type}}
+                  @options={{this.type}}
+                  @selected={{find-by "value" this.model.type this.type}}
+                  @searchField="label"
+                  @onchange={{action "selectRelated" this.model 'type'}}
+                  @relateType="relate-simple"
+                  @data-field="project.type"
+                  @validate={{action this.validateField "projectCreate" (hash name="type" value=this.model.type)}}
+                  @message={{this.message.projectCreate.type}}
+                  @aclContext="App.Project.Create.Type"
+                />
+
+                <FormFields::FieldRelate
+                  @placeholder={{t "views.app.project.create.statusplaceholder"}}
+                  @label={{t "views.app.project.create.status"}}
+                  @value={{this.model.status}}
+                  @options={{this.status}}
+                  @selected={{find-by "value" this.model.status this.status}}
+                  @searchField="label"
+                  @onchange={{action "selectRelated" this.model 'status'}}
+                  @relateType="relate-simple"
+                  @data-field="project.status"
+                  @validate={{action this.validateField "projectCreate" (hash name="status" value=this.model.status)}}
+                  @message={{this.message.projectCreate.status}}
+                  @aclContext="App.Project.Create.Status"
+                />
+
+                <FormFields::FieldTextArea
+                  @placeholder={{t "views.app.project.create.visionplaceholder"}}
+                  @label={{t "views.app.project.create.vision"}}
+                  @value={{this.model.vision}}
+                  @data-field="project.vision"
+                  @aclContext="App.Project.Create.Vision"
+                />
+
+                <FormFields::FieldTextArea            
+                  @placeholder={{t "views.app.project.create.scopeplaceholder"}}
+                  @label={{t "views.app.project.create.scope"}}
+                  @value={{this.model.scope}}
+                  @data-field="project.scope"
+                  @aclContext="App.Project.Create.Scope"
+                />
+
               </div>
 
-              <FormFields::FieldTextArea
-                @placeholder={{t "views.app.project.create.descriptionplaceholder"}}
-                @label={{t "views.app.project.create.description"}}
-                @value={{this.model.description}}
-                @data-field="project.description"
-                @aclContext="App.Project.Create.Description"
-              />
-
-              <FormFields::FieldDate
-                @placeholder={{t "views.app.project.create.startdateplaceholder"}}
-                @label={{t "views.app.project.create.startdate"}}
-                @value={{readonly this.model.startDate}}
-                @mask="alphanumeric"
-                @update={{action "selectStatic" this.model 'startDate'}}
-                @data-field="project.startDate"
-                @v-field='startDate'
-                @positionX="right"
-                @positionY="down"
-                @autoApply={{true}}
-                @minDate='1990'
-                @singleDatePicker={{true}}
-                @showDropdowns={{true}}
-                @validate={{action this.validateField "projectCreate" (hash name="startDate" value=this.model.startDate)}}
-                @message={{this.message.projectCreate.startDate}}
-                @aclContext="App.Project.Create.StartDate"
-              />
-
-              <FormFields::FieldDate
-                @placeholder={{t "views.app.project.create.enddateplaceholder"}}
-                @label={{t "views.app.project.create.enddate"}}
-                @value={{readonly this.model.endDate}}
-                @mask="alphanumeric"
-                @update={{action "selectStatic" this.model 'endDate'}}
-                @data-field="project.endDate"
-                @positionX="right"
-                @positionY="down"
-                @autoApply={{true}}
-                @minDate='1990'
-                @singleDatePicker={{true}}
-                @showDropdowns={{true}}
-                @validate={{action this.validateField "projectCreate" (hash name="endDate" value=this.model.endDate)}}
-                @message={{this.message.projectCreate.endDate}}
-                @aclContext="App.Project.Create.EndDate"                            
-              />
-
-              <FormFields::FieldRelate
-                @placeholder={{t "views.app.project.create.typeplaceholder"}}
-                @label={{t "views.app.project.create.type"}}
-                @value={{this.model.type}}
-                @options={{this.type}}
-                @selected={{find-by "value" this.model.type this.type}}
-                @searchField="label"
-                @onchange={{action "selectRelated" this.model 'type'}}
-                @relateType="relate-simple"
-                @data-field="project.type"
-                @validate={{action this.validateField "projectCreate" (hash name="type" value=this.model.type)}}
-                @message={{this.message.projectCreate.type}}
-                @aclContext="App.Project.Create.Type"
-              />
-
-              <FormFields::FieldRelate
-                @placeholder={{t "views.app.project.create.statusplaceholder"}}
-                @label={{t "views.app.project.create.status"}}
-                @value={{this.model.status}}
-                @options={{this.status}}
-                @selected={{find-by "value" this.model.status this.status}}
-                @searchField="label"
-                @onchange={{action "selectRelated" this.model 'status'}}
-                @relateType="relate-simple"
-                @data-field="project.status"
-                @validate={{action this.validateField "projectCreate" (hash name="status" value=this.model.status)}}
-                @message={{this.message.projectCreate.status}}
-                @aclContext="App.Project.Create.Status"
-              />
-
-              <FormFields::FieldTextArea
-                @placeholder={{t "views.app.project.create.visionplaceholder"}}
-                @label={{t "views.app.project.create.vision"}}
-                @value={{this.model.vision}}
-                @data-field="project.vision"
-                @aclContext="App.Project.Create.Vision"
-              />
-
-              <FormFields::FieldTextArea            
-                @placeholder={{t "views.app.project.create.scopeplaceholder"}}
-                @label={{t "views.app.project.create.scope"}}
-                @value={{this.model.scope}}
-                @data-field="project.scope"
-                @aclContext="App.Project.Create.Scope"
-              />
-
             </div>
-
           </div>
-        </div>
 
-      </div>
+        </div>
+      </AccessControl>
 
       <div class="col-md-4">
 
-        <div class="box box-warning project-people">
-          <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.project.create.people"}}</h3>
-          </div>
-
-          <div class="box-body no-padding">
-
-              <FormFields::FieldRelate
-                @placeholder={{t "views.app.project.create.selectassignee"}}
-                @label={{t "views.app.project.create.assignee"}}
-                @value={{this.model.assignee}}
-                @options={{this.usersList}}
-                @selected={{find-by "value" this.model.assignee this.usersList}}
-                @searchField="label"
-                @onchange={{action "selectRelated" this.model 'assignee'}}
-                @relateType="relate-user"
-                @data-field="project.assignee"
-                @validate={{action this.validateField "projectCreate" (hash name="assignee" value=this.model.assignee)}}
-                @message={{this.message.projectCreate.assignee}}
-                @aclContext="App.Project.Create.Assignee"
-            />
-
-          </div>
-        </div>
-
-        {{#if (eq this.layoutName "create")}}
-          <div class="box box-danger project-issue-types">
+        <AccessControl @aclContext="App.Project.Create.Owner.Create">
+          <div class="box box-warning project-people">
             <div class="box-header with-border">
-              <h3 class="box-title">{{t "views.app.project.create.issuetypes"}}</h3>
+              <h3 class="box-title">{{t "views.app.project.create.people"}}</h3>
             </div>
 
             <div class="box-body no-padding">
 
-              <FormFields::FieldRelateMulti
-                @placeholder={{t "views.app.project.create.selectissuetypes"}}
-                @label={{t "views.app.project.create.selectissuetypes"}}
-                @value={{this.model.issuetypes}}
-                @options={{this.issuetypeList}}
-                @selected={{this.selectedIssuetypes}}
-                @searchField="label"
-                @onchange={{action "selectStatic" this 'selectedIssuetypes'}}
-                @relateType="relate-simple"
-                @data-field="project.issuetypes"
-                @validate={{action this.validateField "projectCreate" (hash name="hasIssuetypes" value=this.model.hasIssuetypes)}}
-                @message={{this.message.projectCreate.hasIssuetypes}}
-                @aclContext="App.Project.Create.IssueTypes"    
+                <FormFields::FieldRelate
+                  @placeholder={{t "views.app.project.create.selectassignee"}}
+                  @label={{t "views.app.project.create.assignee"}}
+                  @value={{this.model.assignee}}
+                  @options={{this.usersList}}
+                  @selected={{find-by "value" this.model.assignee this.usersList}}
+                  @searchField="label"
+                  @onchange={{action "selectRelated" this.model 'assignee'}}
+                  @relateType="relate-user"
+                  @data-field="project.assignee"
+                  @validate={{action this.validateField "projectCreate" (hash name="assignee" value=this.model.assignee)}}
+                  @message={{this.message.projectCreate.assignee}}
+                  @aclContext="App.Project.Create.Assignee"
               />
 
             </div>
           </div>
+        </AccessControl>
+
+        {{#if (eq this.layoutName "create")}}
+          <AccessControl @aclContext="App.Project.Create.IssueTypes.Create">
+            <div class="box box-danger project-issue-types">
+              <div class="box-header with-border">
+                <h3 class="box-title">{{t "views.app.project.create.issuetypes"}}</h3>
+              </div>
+
+              <div class="box-body no-padding">
+
+                <FormFields::FieldRelateMulti
+                  @placeholder={{t "views.app.project.create.selectissuetypes"}}
+                  @label={{t "views.app.project.create.selectissuetypes"}}
+                  @value={{this.model.issuetypes}}
+                  @options={{this.issuetypeList}}
+                  @selected={{this.selectedIssuetypes}}
+                  @searchField="label"
+                  @onchange={{action "selectStatic" this 'selectedIssuetypes'}}
+                  @relateType="relate-simple"
+                  @data-field="project.issuetypes"
+                  @validate={{action this.validateField "projectCreate" (hash name="hasIssuetypes" value=this.model.hasIssuetypes)}}
+                  @message={{this.message.projectCreate.hasIssuetypes}}
+                  @aclContext="App.Project.Create.IssueTypes"    
+                />
+
+              </div>
+            </div>
+          </AccessControl>
         {{/if}}
 
       </div>

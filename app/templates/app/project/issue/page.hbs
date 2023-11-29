@@ -5,156 +5,162 @@
       <div class="col-md-8">
 
         {{!-- This are the issue details --}}
-        <div class="box box-primary issue-details" data-field="issue.subject">
-          <div class="box-header with-border">
-            <h2 class="box-title">{{issue.issuetype.name}} - #{{issue.issueNumber}} | <span class="issueSubject">{{issue.subject}}</span></h2>
-            <div class="box-tools pull-right">
-              <span class="project-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></span>
-              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" {{action 'editIssue' issue.issueNumber}} @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
-              <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></AppUi::Button>
+        <AccessControl @aclContext="App.Project.Issue.Read">
+          <div class="box box-primary issue-details" data-field="issue.subject">
+            <div class="box-header with-border">
+              <h2 class="box-title">{{issue.issuetype.name}} - #{{issue.issueNumber}} | <span class="issueSubject">{{issue.subject}}</span></h2>
+              <div class="box-tools pull-right">
+                <span class="project-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></span>
+                <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" {{action 'editIssue' issue.issueNumber}} @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></AppUi::Button>
+              </div>
             </div>
-          </div>
 
-          <div class="box-body">
+            <div class="box-body">
 
-            <div class="row">
-              <div class="col-xs-3 col-md-2" data-field="issue.assignee">
-                <div class="project-owner">
-                  <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
-                  <LinkTo @route="app.user.page" @model={{issue.assignedTo.id}} class="users-list-name">{{issue.assignedTo.name}}</LinkTo>
-                  <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
+              <div class="row">
+                <div class="col-xs-3 col-md-2" data-field="issue.assignee">
+                  <div class="project-owner">
+                    <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
+                    <LinkTo @route="app.user.page" @model={{issue.assignedTo.id}} class="users-list-name">{{issue.assignedTo.name}}</LinkTo>
+                    <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
+                  </div>
+                </div>
+                <div class="col-xs-9 col-md-10"  data-field="issue.description">
+                  <h4>{{t "views.app.issue.detail.description"}}</h4>
+                  <p>
+                    {{safe-html issue.description}}
+                  </p>
                 </div>
               </div>
-              <div class="col-xs-9 col-md-10"  data-field="issue.description">
-                <h4>{{t "views.app.issue.detail.description"}}</h4>
-                <p>
-                  {{safe-html issue.description}}
-                </p>
-              </div>
-            </div>
 
-            <div class="row">
+              <div class="row">
 
-              <div class="col-xs-6 col-md-4" data-field="issue.priority">
-                <h4>{{t "views.app.issue.detail.priority"}}</h4>
-                <p>
-                  <AppUi::PriorityIcon @priority={{issue.priority}}/> {{t (concat "views.app.issue.lists.priority." issue.priority)}}
-                </p>
-              </div>
+                <div class="col-xs-6 col-md-4" data-field="issue.priority">
+                  <h4>{{t "views.app.issue.detail.priority"}}</h4>
+                  <p>
+                    <AppUi::PriorityIcon @priority={{issue.priority}}/> {{t (concat "views.app.issue.lists.priority." issue.priority)}}
+                  </p>
+                </div>
 
-              <div class="col-xs-6 col-md-4" data-field="issue.startDate">
-                <h4>{{t "views.app.issue.detail.duration"}}</h4>
-                <p>
-                  {{moment-format issue.startDate 'Do MMM \'YY'}} - {{moment-format issue.endDate 'DD MMM \'YY'}}
-                </p>
-              </div>
+                <div class="col-xs-6 col-md-4" data-field="issue.startDate">
+                  <h4>{{t "views.app.issue.detail.duration"}}</h4>
+                  <p>
+                    {{moment-format issue.startDate 'Do MMM \'YY'}} - {{moment-format issue.endDate 'DD MMM \'YY'}}
+                  </p>
+                </div>
 
-              <div class="col-xs-6 col-md-4" data-field="issue.issuetype">
-                <h4>{{t "views.app.issue.detail.type"}}</h4>
-                <p>
-                  {{issue.issuetype.name}}
-                </p>
-              </div>
+                <div class="col-xs-6 col-md-4" data-field="issue.issuetype">
+                  <h4>{{t "views.app.issue.detail.type"}}</h4>
+                  <p>
+                    {{issue.issuetype.name}}
+                  </p>
+                </div>
 
-              <div class="col-xs-6 col-md-4" data-field="issue.milestone">
-                <h4>{{t "views.app.issue.detail.milestone"}}</h4>
-                <p>
-                  {{issue.issuemilestone.name}}
-                </p>
-              </div>
+                <div class="col-xs-6 col-md-4" data-field="issue.milestone">
+                  <h4>{{t "views.app.issue.detail.milestone"}}</h4>
+                  <p>
+                    {{issue.issuemilestone.name}}
+                  </p>
+                </div>
 
-              <div class="col-xs-6 col-md-4" data-field="issue.parentissue">
-                <h4>{{t "views.app.issue.detail.parent"}}</h4>
-                {{#if issue.parentId}}
-                  <LinkTo @route="app.project.issue.page" @model={{issue.parentissue.issueNumber}} {{action "navigateToIssue" issue.parentissue.issueNumber issue.projectId}}>
-                    #{{issue.parentissue.issueNumber}} - {{issue.parentissue.subject}}
-                  </LinkTo>
-                {{else}}
-                  <p>-</p>
-                {{/if}}
+                <div class="col-xs-6 col-md-4" data-field="issue.parentissue">
+                  <h4>{{t "views.app.issue.detail.parent"}}</h4>
+                  {{#if issue.parentId}}
+                    <LinkTo @route="app.project.issue.page" @model={{issue.parentissue.issueNumber}} {{action "navigateToIssue" issue.parentissue.issueNumber issue.projectId}}>
+                      #{{issue.parentissue.issueNumber}} - {{issue.parentissue.subject}}
+                    </LinkTo>
+                  {{else}}
+                    <p>-</p>
+                  {{/if}}
+                </div>
+
               </div>
 
             </div>
+            {{!-- /.box-body --}}
 
+            <div class="box-footer no-padding">
+            </div>
           </div>
-          {{!-- /.box-body --}}
-
-          <div class="box-footer no-padding">
-          </div>
-        </div>
+        </AccessControl>
         {{!-- /.end project details --}}
 
         {{!-- This div contains the issue conversations and milestones --}}
         <div class="row">
 
           {{!-- This is the issue conversations --}}
-          <div class="col-md-12">
-            <div class="box box-info conversations issue-conversation-section">
-              <div class="box-header with-border">
-                <h3 class="box-title">{{t "views.app.issue.detail.conversation"}}</h3>
-                <div class="box-tools pull-right">
-                </div>
-              </div>
-              {{!-- /.box-header --}}
-              <div class="box-body no-padding box-footer box-comments">
-
-                {{#each issue.comments as |comment|}}
-                  <div class="box-comment">
-                    <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
-
-                    <div class="comment-text">
-                      <span class="username">
-                        <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
-                        <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
-                      </span>
-                      {{translate-comment comment.comment}}
-                    </div>
+          <AccessControl @aclContext="App.Project.Issue.Read.ConversationRoom.Read">
+            <div class="col-md-12">
+              <div class="box box-info conversations issue-conversation-section">
+                <div class="box-header with-border">
+                  <h3 class="box-title">{{t "views.app.issue.detail.conversation"}}</h3>
+                  <div class="box-tools pull-right">
                   </div>
-                {{/each}}
+                </div>
+                {{!-- /.box-header --}}
+                <div class="box-body no-padding box-footer box-comments">
 
-                <div class="box-footer box-comments">
-                  <form action="#" method="post">
-                    <img class="img-responsive img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
-                    {{!-- .img-push is used to add margin to elements next to floating images --}}
-                    <div class="img-push">
-                      <div class="message-box">
-                        <ConversationUi::MessageBox
-                          @issueSearch={{perform this.search}}
-                          @usersList={{this.usersList}}
-                          @spellcheck={{false}}
-                          @entity={{issue}}
-                          @placeholder={{t "views.app.conversation.messagebox"}}
-                          @value={{this.comment}}
-                          @save={{this.saveComment}}
-                        />
+                  {{#each issue.comments as |comment|}}
+                    <div class="box-comment">
+                      <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
+
+                      <div class="comment-text">
+                        <span class="username">
+                          <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
+                          <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
+                        </span>
+                        {{translate-comment comment.comment}}
                       </div>
                     </div>
+                  {{/each}}
 
-                  </form>
+                  <div class="box-footer box-comments">
+                    <form action="#" method="post">
+                      <img class="img-responsive img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
+                      {{!-- .img-push is used to add margin to elements next to floating images --}}
+                      <div class="img-push">
+                        <div class="message-box">
+                          <ConversationUi::MessageBox
+                            @issueSearch={{perform this.search}}
+                            @usersList={{this.usersList}}
+                            @spellcheck={{false}}
+                            @entity={{issue}}
+                            @placeholder={{t "views.app.conversation.messagebox"}}
+                            @value={{this.comment}}
+                            @save={{this.saveComment}}
+                          />
+                        </div>
+                      </div>
+
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </AccessControl>
 
         </div>
 
         <div class="row">
 
           {{!-- This is the project activities section --}}
-          <div class="col-md-12">
-            <div class="box box-primary issue-activities-section">
-              <div class="box-header with-border">
-                <h3 class="box-title">{{t "views.app.issue.detail.issueactivities"}}</h3>
-              </div>
-              <div class="box-body no-padding">
-                <div class="issue-activities">
-                  <AppUi::Timeline
-                    @activities={{this.activities}}
-                  />
+          <AccessControl @aclContext="App.Project.Issue.Read.Activities.Read">
+            <div class="col-md-12">
+              <div class="box box-primary issue-activities-section">
+                <div class="box-header with-border">
+                  <h3 class="box-title">{{t "views.app.issue.detail.issueactivities"}}</h3>
+                </div>
+                <div class="box-body no-padding">
+                  <div class="issue-activities">
+                    <AppUi::Timeline
+                      @activities={{this.activities}}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </AccessControl>
           {{!-- ./ end project activities section --}}
 
         </div>
@@ -166,364 +172,372 @@
       <div class="col-md-4">
 
         {{!-- Project Members --}}
-        <div class="box box-warning">
-          <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
-            <div class="box-tools pull-right">
+        <AccessControl @aclContext="App.Project.Issue.Read">
+          <div class="box box-warning">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
+              <div class="box-tools pull-right">
+              </div>
             </div>
+            {{!-- /.box-header --}}
+            <div class="box-body no-padding">
+              <ul class="users-list clearfix">
+                <li>
+                  <img src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
+                  <LinkTo @route="app.user.page" @model={{issue.assignedTo.id}} class="users-list-name">{{issue.assignedTo.name}}</LinkTo>
+                  <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
+                </li>
+                <li>
+                  <img src="{{this.apiHost}}/userimage/get/{{issue.ownedBy.id}}" alt="{{issue.ownedBy.name}}">
+                  <LinkTo @route="app.user.page" @model={{issue.ownedBy.id}} class="users-list-name">{{issue.ownedBy.name}}</LinkTo>
+                  <span class="users-list-date">{{t "views.app.issue.detail.ownedBy"}}</span>
+                </li>
+                <li>
+                  <img src="{{this.apiHost}}/userimage/get/{{issue.modifiedBy.id}}" alt="{{issue.modifiedBy.name}}">
+                  <LinkTo @route="app.user.page" @model={{issue.modifiedBy.id}} class="users-list-name">{{issue.modifiedBy.name}}</LinkTo>
+                  <span class="users-list-date">{{t "views.app.issue.detail.modifiedBy"}}</span>
+                </li>
+                <li>
+                  <img src="{{this.apiHost}}/userimage/get/{{issue.reportedBy.id}}" alt="{{issue.reportedBy.name}}">
+                  <LinkTo @route="app.user.page" @model={{issue.reportedBy.id}} class="users-list-name">{{issue.reportedBy.name}}</LinkTo>
+                  <span class="users-list-date">{{t "views.app.issue.detail.reportedBy"}}</span>
+                </li>
+              </ul>
+              {{!-- /.users-list --}}
+            </div>
+            {{!-- /.box-body --}}
           </div>
-          {{!-- /.box-header --}}
-          <div class="box-body no-padding">
-            <ul class="users-list clearfix">
-              <li>
-                <img src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}">
-                <LinkTo @route="app.user.page" @model={{issue.assignedTo.id}} class="users-list-name">{{issue.assignedTo.name}}</LinkTo>
-                <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
-              </li>
-              <li>
-                <img src="{{this.apiHost}}/userimage/get/{{issue.ownedBy.id}}" alt="{{issue.ownedBy.name}}">
-                <LinkTo @route="app.user.page" @model={{issue.ownedBy.id}} class="users-list-name">{{issue.ownedBy.name}}</LinkTo>
-                <span class="users-list-date">{{t "views.app.issue.detail.ownedBy"}}</span>
-              </li>
-              <li>
-                <img src="{{this.apiHost}}/userimage/get/{{issue.modifiedBy.id}}" alt="{{issue.modifiedBy.name}}">
-                <LinkTo @route="app.user.page" @model={{issue.modifiedBy.id}} class="users-list-name">{{issue.modifiedBy.name}}</LinkTo>
-                <span class="users-list-date">{{t "views.app.issue.detail.modifiedBy"}}</span>
-              </li>
-              <li>
-                <img src="{{this.apiHost}}/userimage/get/{{issue.reportedBy.id}}" alt="{{issue.reportedBy.name}}">
-                <LinkTo @route="app.user.page" @model={{issue.reportedBy.id}} class="users-list-name">{{issue.reportedBy.name}}</LinkTo>
-                <span class="users-list-date">{{t "views.app.issue.detail.reportedBy"}}</span>
-              </li>
-            </ul>
-            {{!-- /.users-list --}}
-          </div>
-          {{!-- /.box-body --}}
-        </div>
+        </AccessControl>
         {{!-- /. Project Members --}}
 
-
+        <AccessControl @aclContext="App.Project.Issue.Read.Files.Read">
         {{!-- Issue Files--}}
-        <div class="box box-info issue-files-section">
+          <div class="box box-info issue-files-section">
 
-          <div class="box-header with-border">
+            <div class="box-header with-border">
 
-            <h3 class="box-title">{{t "views.app.issue.detail.files"}}</h3>
+              <h3 class="box-title">{{t "views.app.issue.detail.files"}}</h3>
 
-            <div class="box-tools pull-right">
+              <div class="box-tools pull-right">
+              </div>
+
             </div>
 
-          </div>
+            <div class="box-body no-padding">
 
-          <div class="box-body no-padding">
-
-            <div class="box-footer">
-              <ul class="attachments clearfix">
-                {{#each issue.files as |file|}}
-                  <li>
-                    {{#if (not-eq file.fileThumbnail '0')}}
-                      <span class="attachment-icon has-img">
-                        <img src="{{file.fileThumbnail}}" alt="{{file.name}}">
-                      </span>
-                    {{else}}
-                      <AppUi::AttachmentIcon @mime={{file.fileMime}}/>
-                    {{/if}}
-                    <div class="attachment-info">
-                      <div class="attachment-name clearfix">
-                        <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
+              <div class="box-footer">
+                <ul class="attachments clearfix">
+                  {{#each issue.files as |file|}}
+                    <li>
+                      {{#if (not-eq file.fileThumbnail '0')}}
+                        <span class="attachment-icon has-img">
+                          <img src="{{file.fileThumbnail}}" alt="{{file.name}}">
+                        </span>
+                      {{else}}
+                        <AppUi::AttachmentIcon @mime={{file.fileMime}}/>
+                      {{/if}}
+                      <div class="attachment-info">
+                        <div class="attachment-name clearfix">
+                          <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
+                        </div>
+                        <div class="attachment-additional">
+                          <span class="attachment-size">
+                            {{file-size file.fileSize}}
+                            <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
+                            <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                          </span>
+                        </div>
                       </div>
-                      <div class="attachment-additional">
-                        <span class="attachment-size">
-                          {{file-size file.fileSize}}
-                          <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
-                          <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                    </li>
+                  {{/each}}
+                </ul>
+                <div class="filePreviewModal">
+                  {{#if this.filePreviewDialog}}
+                    {{#bootstrap-modal
+                        title="views.app.issue.detail.file.preview"
+                        closeLabel="global.form.close"
+                        close="removeModal"}}
+                      <iframe title="{{t "views.app.issue.detail.file.preview"}}" id="file_preview"></iframe>
+                    {{/bootstrap-modal}}
+                  {{/if}}
+                </div>
+
+              </div>
+              <FormFields::FieldUpload
+                  @label={{t "views.app.issue.detail.selectfile"}}
+                  @uploadFile={{action "uploadFile"}}
+                  @aclContext="App.Project.Issue.Read.UploadFile"
+              />
+
+            </div>
+          </div>
+        </AccessControl>
+        {{!-- Issue Files --}}
+
+        <AccessControl @aclContext="App.Project.Issue.Read.Estimated.Read">
+          <div class="box box-success issues-details">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "views.app.issue.detail.estimates"}}</h3>
+            </div>
+            {{!-- /.box-header --}}
+            <div class="box-body no-padding">
+              <ul class="time-log time-log-in-box products-list product-list-in-box">
+                {{#if (gt issue.estimated.length 0)}}
+                  {{#each issue.estimated as |timelog|}}
+                    <li class="item">
+                      <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
+                        <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
+                      </div>
+                      <div class="log-info">
+                        <LinkTo @route="app.user.page" @model={{timelog.createdUser}} class="user-title">{{timelog.createdUserName}}</LinkTo>
+                        <span>{{t "views.app.issue.detail.timelog.estimatedon"}}<strong>{{moment-format timelog.dateCreated 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
+                        <span class="log-edit pull-right">
+                          <a href="javascript:void(0);" {{action "showEditEstimateDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
+                          <a href="javascript:void(0);" {{action "deleteLog" timelog}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
+                        </span>
+                        <span class="log-entry pull-right">
+                          {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}
+                          {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "views.app.issue.detail.timelog.h"}}{{/if}}
+                          {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
+                        </span>
+                        <span class="log-description">
+                          <strong>{{timelog.description}}</strong>
                         </span>
                       </div>
-                    </div>
-                  </li>
-                {{/each}}
+                    </li>
+                  {{/each}}
+                {{else}}
+                  <li class="no-entry">{{t "views.app.issue.detail.timelog.noestimates"}}</li>
+                {{/if}}
               </ul>
-              <div class="filePreviewModal">
-                {{#if this.filePreviewDialog}}
-                  {{#bootstrap-modal
-                      title="views.app.issue.detail.file.preview"
-                      closeLabel="global.form.close"
-                      close="removeModal"}}
-                    <iframe title="{{t "views.app.issue.detail.file.preview"}}" id="file_preview"></iframe>
-                  {{/bootstrap-modal}}
+
+              {{#if this.editEstimateDialog}}
+                {{#bootstrap-modal
+                    title="views.app.issue.detail.estimate.edit"
+                    closeLabel="global.form.close"
+                    confirmLabel="global.form.save"
+                    close=(action "removeEditEstimateModal")
+                    confirm=(action "editLog")}}
+
+                  {{interval-selector
+                      days=this.editingLog.days
+                      hours=this.editingLog.hours
+                      minutes=this.editingLog.minutes}}
+
+                  <FormFields::FieldTextArea
+                      @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
+                      @label={{t "views.app.issue.detail.timelog.description"}}
+                      @value={{this.editingLog.description}}
+                      @data-field="issue.editEstimateTime"
+                      @aclContext="App.Project.Issue.Read.Estimate.Edit.Description"
+                  />
+
+                {{/bootstrap-modal}}
+              {{/if}}
+
+              {{#if this.estimateTimeDialog}}
+                {{#bootstrap-modal
+                    title="views.app.issue.detail.timelog.estimate"
+                    closeLabel="global.form.close"
+                    confirmLabel="global.form.save"
+                    close=(action "removeEstimateTimeModal")
+                    confirm=(action "addEstimate")}}
+
+                  {{interval-selector
+                      days=this.newTimeLog.days
+                      hours=this.newTimeLog.hours
+                      minutes=this.newTimeLog.minutes}}
+
+                  <FormFields::FieldTextArea
+                      @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
+                      @label={{t "views.app.issue.detail.timelog.description"}}
+                      @value={{this.newTimeLog.description}}
+                      @data-field="issue.estimateTime"
+                      @aclContext="App.Project.Issue.Read.Estimate.Create.Description"
+                  />
+
+                {{/bootstrap-modal}}
+              {{/if}}
+
+            </div>
+
+            <div class="box-footer text-center">
+              <span>
+                <a href="javascript:void(0);" id="addEstimateTime" {{action "showEstimateTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
+              </span>
+            </div>
+          </div>
+        </AccessControl>
+
+        <AccessControl @aclContext="App.Project.Issue.Read.Spent.Read">
+        {{!-- Issue Timelogs --}}
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "views.app.issue.detail.timelogs"}}</h3>
+            </div>
+            <div class="box-body no-padding">
+
+              <ul class="time-log time-log-in-box products-list product-list-in-box">
+                {{#if (gt issue.spent.length 0)}}
+                  {{#each issue.spent as |timelog|}}
+                    <li class="item">
+                      <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
+                        <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
+                      </div>
+                      <div class="log-info">
+                        <LinkTo @route="app.user.page" @model={{timelog.createdUser}} class="user-title">{{timelog.createdUserName}}</LinkTo>
+                        <span>{{t "views.app.issue.detail.timelog.on"}}<strong>{{moment-format timelog.spentOn 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
+                        <span class="log-edit pull-right">
+                          <a href="javascript:void(0);" {{action "showEditLogDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
+                          <a href="javascript:void(0);" {{action "deleteLog" timelog}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
+                        </span>
+                        <span class="log-entry pull-right">
+                          {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}
+                          {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "views.app.issue.detail.timelog.h"}}{{/if}}
+                          {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
+                        </span>
+                        <span class="log-description">
+                          {{timelog.description}}
+                        </span>
+                      </div>
+                    </li>
+                  {{/each}}
+                {{else}}
+                  <li class="no-entry">{{t "views.app.issue.detail.timelog.noentry"}}</li>
+                {{/if}}
+              </ul>
+
+              {{#if this.editLogDialog}}
+                {{#bootstrap-modal
+                    title="views.app.issue.detail.timelog.edit"
+                    closeLabel="global.form.close"
+                    confirmLabel="global.form.save"
+                    close=(action "removeEditLogModal")
+                    confirm=(action "editLog")}}
+
+                  {{interval-selector
+                      days=this.editingLog.days
+                      hours=this.editingLog.hours
+                      minutes=this.editingLog.minutes}}
+
+                  <FormFields::FieldDate
+                      @placeholder={{t "views.app.issue.detail.timelog.inputspenton"}}
+                      @label={{t "views.app.issue.detail.timelog.spenton"}}
+                      @value={{readonly this.editingLog.spentOn}}
+                      @update={{action "selectStatic" this.editingLog 'spentOn'}}
+                      @mask="alphanumeric"
+                      @data-field="issue.detail.timelog.edit"
+                      @format="YYYY-MM-DD"
+                      @singleDatePicker={{true}}
+                      @showDropdowns={{true}}
+                      @positionX="right"
+                      @positionY="down"
+                      @autoApply={{true}}
+                      @minDate='1990'
+                      @aclContext="App.Project.Issue.Read.Timelog.Edit.SpentOn"
+                  />
+
+                  <FormFields::FieldTextArea
+                      @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
+                      @label={{t "views.app.issue.detail.timelog.description"}}
+                      @value={{this.editingLog.description}}
+                      @data-field="issue.editTimelog"
+                      @aclContext="App.Project.Issue.Read.Timelog.Edit.Description"
+                  />
+
+                {{/bootstrap-modal}}
+              {{/if}}
+
+
+              {{#if this.logTimeDialog}}
+                {{#bootstrap-modal
+                    title="views.app.issue.detail.timelog.log"
+                    closeLabel="global.form.close"
+                    confirmLabel="global.form.save"
+                    close=(action "removeLogTimeModal")
+                    confirm=(action "logTime")}}
+
+                  {{interval-selector
+                      days=this.newTimeLog.days
+                      hours=this.newTimeLog.hours
+                      minutes=this.newTimeLog.minutes}}
+
+                  <FormFields::FieldDate
+                      @placeholder={{t "views.app.issue.detail.timelog.inputspenton"}}
+                      @label={{t "views.app.issue.detail.timelog.spenton"}}
+                      @value={{readonly this.newTimeLog.spentOn}}
+                      @update={{action "selectStatic" this.newTimeLog 'spentOn'}}
+                      @mask="alphanumeric"
+                      @data-field="issue.detail.timelog.spenton"
+                      @format="YYYY-MM-DD"
+                      @singleDatePicker={{true}}
+                      @showDropdowns={{true}}
+                      @positionX="right"
+                      @positionY="down"
+                      @autoApply={{true}}
+                      @minDate='1990'
+                      @aclContext="App.Project.Issue.Read.Timelog.Create.SpentOn"
+                  />
+
+                  <FormFields::FieldTextArea
+                      @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
+                      @label={{t "views.app.issue.detail.timelog.description"}}
+                      @value={{this.newTimeLog.description}}
+                      @data-field="issue.timelog"
+                      @aclContext="App.Project.Issue.Read.Timelog.Create.Description"
+                  />
+
+                {{/bootstrap-modal}}
+              {{/if}}
+            </div>
+
+            <div class="box-footer text-center">
+              <span>
+                <a href="javascript:void();" id="addLogTime" {{action "showLogTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.log"}}</a>
+              </span>
+            </div>
+            {{!-- /.box-footer --}}
+          </div>
+        </AccessControl>
+
+        <AccessControl @aclContext="App.Project.Issue.Read.ChildIssues.Read">
+          <div class="box box-info issue-hierarchy">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "views.app.issue.detail.hierarchy"}}</h3>
+            </div>
+
+            <div class="box-body no-padding">
+
+              <div class="table-responsive">
+                {{#if issue.childissues}}
+                  <table class="table no-margin">
+                    <thead>
+                      <tr>
+                        <th>{{t "views.app.issue.detail.issueNumber"}}</th>
+                        <th>{{t "views.app.issue.detail.subject"}}</th>
+                        <th>{{t "views.app.issue.detail.status"}}</th>
+                        <th>{{t "views.app.issue.detail.priority"}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each issue.childissues as |child|}}
+                        <tr>
+                          <td><a href="#" {{action "navigateToIssue" child.issueNumber child.projectId}}>#{{child.issueNumber}}</a></td>
+                          <td>{{child.subject}}</td>
+                          <td><span class="badge {{child.status}}">{{t (concat "views.app.issue.lists.status." child.status)}}</span></td>
+                          <td><AppUi::PriorityIcon @priority={{child.priority}}/> {{t (concat "views.app.issue.lists.priority." child.priority)}}</td>
+                        </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                {{else}}
+                  <div class="no-entry">{{t "views.app.issue.detail.childissues.noentry"}}</div>
                 {{/if}}
               </div>
 
             </div>
-            <FormFields::FieldUpload
-                @label={{t "views.app.issue.detail.selectfile"}}
-                @uploadFile={{action "uploadFile"}}
-                @aclContext="App.Project.Issue.Read.UploadFile"
-            />
-
           </div>
-        </div>
-        {{!-- Issue Files --}}
-
-        <div class="box box-success issues-details">
-          <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.issue.detail.estimates"}}</h3>
-          </div>
-          {{!-- /.box-header --}}
-          <div class="box-body no-padding">
-            <ul class="time-log time-log-in-box products-list product-list-in-box">
-              {{#if (gt issue.estimated.length 0)}}
-                {{#each issue.estimated as |timelog|}}
-                  <li class="item">
-                    <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
-                      <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
-                    </div>
-                    <div class="log-info">
-                      <LinkTo @route="app.user.page" @model={{timelog.createdUser}} class="user-title">{{timelog.createdUserName}}</LinkTo>
-                      <span>{{t "views.app.issue.detail.timelog.estimatedon"}}<strong>{{moment-format timelog.dateCreated 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
-                      <span class="log-edit pull-right">
-                        <a href="javascript:void(0);" {{action "showEditEstimateDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
-                        <a href="javascript:void(0);" {{action "deleteLog" timelog}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
-                      </span>
-                      <span class="log-entry pull-right">
-                        {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}
-                        {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "views.app.issue.detail.timelog.h"}}{{/if}}
-                        {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
-                      </span>
-                      <span class="log-description">
-                        <strong>{{timelog.description}}</strong>
-                      </span>
-                    </div>
-                  </li>
-                {{/each}}
-              {{else}}
-                <li class="no-entry">{{t "views.app.issue.detail.timelog.noestimates"}}</li>
-              {{/if}}
-            </ul>
-
-            {{#if this.editEstimateDialog}}
-              {{#bootstrap-modal
-                  title="views.app.issue.detail.estimate.edit"
-                  closeLabel="global.form.close"
-                  confirmLabel="global.form.save"
-                  close=(action "removeEditEstimateModal")
-                  confirm=(action "editLog")}}
-
-                {{interval-selector
-                    days=this.editingLog.days
-                    hours=this.editingLog.hours
-                    minutes=this.editingLog.minutes}}
-
-                <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
-                    @label={{t "views.app.issue.detail.timelog.description"}}
-                    @value={{this.editingLog.description}}
-                    @data-field="issue.editEstimateTime"
-                    @aclContext="App.Project.Issue.Read.Estimate.Edit.Description"
-                />
-
-              {{/bootstrap-modal}}
-            {{/if}}
-
-            {{#if this.estimateTimeDialog}}
-              {{#bootstrap-modal
-                  title="views.app.issue.detail.timelog.estimate"
-                  closeLabel="global.form.close"
-                  confirmLabel="global.form.save"
-                  close=(action "removeEstimateTimeModal")
-                  confirm=(action "addEstimate")}}
-
-                {{interval-selector
-                    days=this.newTimeLog.days
-                    hours=this.newTimeLog.hours
-                    minutes=this.newTimeLog.minutes}}
-
-                <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
-                    @label={{t "views.app.issue.detail.timelog.description"}}
-                    @value={{this.newTimeLog.description}}
-                    @data-field="issue.estimateTime"
-                    @aclContext="App.Project.Issue.Read.Estimate.Create.Description"
-                />
-
-              {{/bootstrap-modal}}
-            {{/if}}
-
-          </div>
-
-          <div class="box-footer text-center">
-            <span>
-              <a href="javascript:void(0);" id="addEstimateTime" {{action "showEstimateTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
-            </span>
-          </div>
-        </div>
-
-
-        {{!-- Issue Timelogs --}}
-        <div class="box box-danger">
-          <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.issue.detail.timelogs"}}</h3>
-          </div>
-          <div class="box-body no-padding">
-
-            <ul class="time-log time-log-in-box products-list product-list-in-box">
-              {{#if (gt issue.spent.length 0)}}
-                {{#each issue.spent as |timelog|}}
-                  <li class="item">
-                    <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
-                      <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
-                    </div>
-                    <div class="log-info">
-                      <LinkTo @route="app.user.page" @model={{timelog.createdUser}} class="user-title">{{timelog.createdUserName}}</LinkTo>
-                      <span>{{t "views.app.issue.detail.timelog.on"}}<strong>{{moment-format timelog.spentOn 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
-                      <span class="log-edit pull-right">
-                        <a href="javascript:void(0);" {{action "showEditLogDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
-                        <a href="javascript:void(0);" {{action "deleteLog" timelog}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
-                      </span>
-                      <span class="log-entry pull-right">
-                        {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}
-                        {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "views.app.issue.detail.timelog.h"}}{{/if}}
-                        {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
-                      </span>
-                      <span class="log-description">
-                        {{timelog.description}}
-                      </span>
-                    </div>
-                  </li>
-                {{/each}}
-              {{else}}
-                <li class="no-entry">{{t "views.app.issue.detail.timelog.noentry"}}</li>
-              {{/if}}
-            </ul>
-
-            {{#if this.editLogDialog}}
-              {{#bootstrap-modal
-                  title="views.app.issue.detail.timelog.edit"
-                  closeLabel="global.form.close"
-                  confirmLabel="global.form.save"
-                  close=(action "removeEditLogModal")
-                  confirm=(action "editLog")}}
-
-                {{interval-selector
-                    days=this.editingLog.days
-                    hours=this.editingLog.hours
-                    minutes=this.editingLog.minutes}}
-
-                <FormFields::FieldDate
-                    @placeholder={{t "views.app.issue.detail.timelog.inputspenton"}}
-                    @label={{t "views.app.issue.detail.timelog.spenton"}}
-                    @value={{readonly this.editingLog.spentOn}}
-                    @update={{action "selectStatic" this.editingLog 'spentOn'}}
-                    @mask="alphanumeric"
-                    @data-field="issue.detail.timelog.edit"
-                    @format="YYYY-MM-DD"
-                    @singleDatePicker={{true}}
-                    @showDropdowns={{true}}
-                    @positionX="right"
-                    @positionY="down"
-                    @autoApply={{true}}
-                    @minDate='1990'
-                    @aclContext="App.Project.Issue.Read.Timelog.Edit.SpentOn"
-                />
-
-                <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
-                    @label={{t "views.app.issue.detail.timelog.description"}}
-                    @value={{this.editingLog.description}}
-                    @data-field="issue.editTimelog"
-                    @aclContext="App.Project.Issue.Read.Timelog.Edit.Description"
-                />
-
-              {{/bootstrap-modal}}
-            {{/if}}
-
-
-            {{#if this.logTimeDialog}}
-              {{#bootstrap-modal
-                  title="views.app.issue.detail.timelog.log"
-                  closeLabel="global.form.close"
-                  confirmLabel="global.form.save"
-                  close=(action "removeLogTimeModal")
-                  confirm=(action "logTime")}}
-
-                {{interval-selector
-                    days=this.newTimeLog.days
-                    hours=this.newTimeLog.hours
-                    minutes=this.newTimeLog.minutes}}
-
-                <FormFields::FieldDate
-                    @placeholder={{t "views.app.issue.detail.timelog.inputspenton"}}
-                    @label={{t "views.app.issue.detail.timelog.spenton"}}
-                    @value={{readonly this.newTimeLog.spentOn}}
-                    @update={{action "selectStatic" this.newTimeLog 'spentOn'}}
-                    @mask="alphanumeric"
-                    @data-field="issue.detail.timelog.spenton"
-                    @format="YYYY-MM-DD"
-                    @singleDatePicker={{true}}
-                    @showDropdowns={{true}}
-                    @positionX="right"
-                    @positionY="down"
-                    @autoApply={{true}}
-                    @minDate='1990'
-                    @aclContext="App.Project.Issue.Read.Timelog.Create.SpentOn"
-                />
-
-                <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
-                    @label={{t "views.app.issue.detail.timelog.description"}}
-                    @value={{this.newTimeLog.description}}
-                    @data-field="issue.timelog"
-                    @aclContext="App.Project.Issue.Read.Timelog.Create.Description"
-                />
-
-              {{/bootstrap-modal}}
-            {{/if}}
-          </div>
-
-          <div class="box-footer text-center">
-            <span>
-              <a href="javascript:void();" id="addLogTime" {{action "showLogTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.log"}}</a>
-            </span>
-          </div>
-          {{!-- /.box-footer --}}
-        </div>
-
-        <div class="box box-info issue-hierarchy">
-          <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.issue.detail.hierarchy"}}</h3>
-          </div>
-
-          <div class="box-body no-padding">
-
-            <div class="table-responsive">
-              {{#if issue.childissues}}
-                <table class="table no-margin">
-                  <thead>
-                    <tr>
-                      <th>{{t "views.app.issue.detail.issueNumber"}}</th>
-                      <th>{{t "views.app.issue.detail.subject"}}</th>
-                      <th>{{t "views.app.issue.detail.status"}}</th>
-                      <th>{{t "views.app.issue.detail.priority"}}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#each issue.childissues as |child|}}
-                      <tr>
-                        <td><a href="#" {{action "navigateToIssue" child.issueNumber child.projectId}}>#{{child.issueNumber}}</a></td>
-                        <td>{{child.subject}}</td>
-                        <td><span class="badge {{child.status}}">{{t (concat "views.app.issue.lists.status." child.status)}}</span></td>
-                        <td><AppUi::PriorityIcon @priority={{child.priority}}/> {{t (concat "views.app.issue.lists.priority." child.priority)}}</td>
-                      </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              {{else}}
-                <div class="no-entry">{{t "views.app.issue.detail.childissues.noentry"}}</div>
-              {{/if}}
-            </div>
-
-          </div>
-        </div>
+        </AccessControl>
         {{!-- Project Summary --}}
 
       </div>
