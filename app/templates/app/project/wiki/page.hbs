@@ -1,135 +1,140 @@
 {{#if this.model}}
-  <div class="wiki-detail box box-primary">
-    <div class="box-header with-border">
-      {{#if (eq this.model.createdUser this.currentUser.user.id)}}
-        {{#if (eq this.model.locked "0")}}
-          <a href="javascript:void(0);" {{action "lockWiki" "unlock"}}>
-            <i class="fa fa-unlock lock" data-toggle="tooltip" title="{{t "views.app.wiki.lock"}}"></i>
-          </a>
+  <AccessControl @aclContext="App.Project.Wiki.Read">
+    <div class="wiki-detail box box-primary">
+      <div class="box-header with-border">
+        {{#if (eq this.model.createdUser this.currentUser.user.id)}}
+          {{#if (eq this.model.locked "0")}}
+            <a href="javascript:void(0);" {{action "lockWiki" "unlock"}}>
+              <i class="fa fa-unlock lock" data-toggle="tooltip" title="{{t "views.app.wiki.lock"}}"></i>
+            </a>
+          {{else}}
+            <a href="javascript:void(0);" {{action "lockWiki" "lock"}}>
+              <i class="fa fa-lock lock" data-toggle="tooltip" title="{{t "views.app.wiki.unlock"}}"></i>
+            </a>
+          {{/if}}
         {{else}}
-          <a href="javascript:void(0);" {{action "lockWiki" "lock"}}>
-            <i class="fa fa-lock lock" data-toggle="tooltip" title="{{t "views.app.wiki.unlock"}}"></i>
-          </a>
+          {{#if (eq this.model.locked "0")}}<i class="fa fa-unlock disabled"></i>{{else}}<i class="fa fa-lock disabled"></i>{{/if}}
         {{/if}}
-      {{else}}
-        {{#if (eq this.model.locked "0")}}<i class="fa fa-unlock disabled"></i>{{else}}<i class="fa fa-lock disabled"></i>{{/if}}
-      {{/if}}
-      <h2 class="box-title">{{this.model.name}} - </h2>
-      {{#if this.model.parentId}}
-        {{#if this.wikiList}}
-          <a href="javascript:void(0);" {{action "loadWiki" this.model.projectId (get-wiki this.model this.wikiList)}}>{{get-wiki this.model this.wikiList}}</a>
+        <h2 class="box-title">{{this.model.name}} - </h2>
+        {{#if this.model.parentId}}
+          {{#if this.wikiList}}
+            <a href="javascript:void(0);" {{action "loadWiki" this.model.projectId (get-wiki this.model this.wikiList)}}>{{get-wiki this.model this.wikiList}}</a>
+          {{/if}}
         {{/if}}
-      {{/if}}
-      <span class="path-seperator"></span> {{this.model.name}}
-      <span class="upvotes">
-        {{this.model.vote.length}}
-        {{#if this.iVoted}}
-          <i class="fa fa-heart" data-toggle="tooltip" title="{{t "views.app.wiki.voted"}}" ></i>
-        {{else}}
-          <a href="javascript:void(0);" {{action "upvote" this.model.id}}>
-            <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "views.app.wiki.upvote"}}"></i>
-          </a>
-        {{/if}}
-      </span>
-      <div class="box-tools pull-right">
-        <span class="modified-by">{{t "global.form.modified" user=this.model.modifiedUserName date=(get-date this.model 'dateModified' 'MMM Do \'YY, h:mm a')}}</span>
+        <span class="path-seperator"></span> {{this.model.name}}
+        <span class="upvotes">
+          {{this.model.vote.length}}
+          {{#if this.iVoted}}
+            <i class="fa fa-heart" data-toggle="tooltip" title="{{t "views.app.wiki.voted"}}" ></i>
+          {{else}}
+            <a href="javascript:void(0);" {{action "upvote" this.model.id}}>
+              <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "views.app.wiki.upvote"}}"></i>
+            </a>
+          {{/if}}
+        </span>
+        <div class="box-tools pull-right">
+          <span class="modified-by">{{t "global.form.modified" user=this.model.modifiedUserName date=(get-date this.model 'dateModified' 'MMM Do \'YY, h:mm a')}}</span>
+        </div>
+
       </div>
+      {{!-- /.box-header --}}
 
-    </div>
-    {{!-- /.box-header --}}
+      <div class="box-body">
 
-    <div class="box-body">
-
-      <div class="wiki-page-contents ql-container ql-snow">
-        <div class="note-editor wiki-default-page">
-          {{safe-html this.model.markUp}}
+        <div class="wiki-page-contents ql-container ql-snow">
+          <div class="note-editor wiki-default-page">
+            {{safe-html this.model.markUp}}
+          </div>
         </div>
       </div>
-    </div>
 
-    {{!-- /.box-body --}}
-
-    <div class="box-footer">
-      {{#if (eq this.model.locked "0")}}
-        <AppUi::Button type="button" class="btn btn-primary" {{action "edit"}} @aclContext="App.Project.Wiki.Edit"><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</AppUi::Button>
-        <AppUi::Button type="button" class="btn btn-default" {{action "delete"}} @aclContext="App.Project.Wiki.Delete"><i class="fa fa-trash"></i> {{t "global.form.delete"}}</AppUi::Button>
-      {{/if}}
-
-      <div class="pull-right">
-        {{t "views.app.wiki.tags"}}<span class="colon"></span>
-        {{#if this.model.tag}}
-          {{#each this.model.tag as |tags|}}
-            <span class="label label-primary"><i class="fa fa-tag"></i> {{tags.tag}}</span>
-          {{/each}}
-        {{else}}
-          <span class="disabled-text">{{t "global.noentry"}}</span>
-        {{/if}}
-      </div>
-
-    </div>
-  </div>
-
-  <div class="clearfix"></div>
-
-  {{!-- Issue Files--}}
-  <div class="box box-info wiki-files-section">
-
-    <div class="box-header with-border">
-
-      <h3 class="box-title">{{t "views.app.wiki.page.files"}}</h3>
-
-      <div class="box-tools pull-right">
-      </div>
-
-    </div>
-
-    <div class="box-body no-padding">
+      {{!-- /.box-body --}}
 
       <div class="box-footer">
-        <ul class="attachments clearfix">
-          {{#each this.model.files as |file|}}
-            <li>
-              {{#if (not-eq file.fileThumbnail '0')}}
-                <span class="attachment-icon has-img">
-                  <img src="{{file.fileThumbnail}}" alt="{{file.name}}"s>
-                </span>
-              {{else}}
-                <AppLayouts::AttachmentIcon @mime={{file.fileMime}}/>
-              {{/if}}
-              <div class="attachment-info">
-                <div class="attachment-name clearfix">
-                  <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
-                </div>
-                <div class="attachment-additional">
-                  <span class="attachment-size">
-                    {{file-size file.fileSize}}
-                    <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
-                    <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
-                  </span>
-                </div>
-              </div>
-            </li>
-          {{/each}}
-        </ul>
-        <div class="filePreviewModal">
-          {{#if this.filePreviewDialog}}
-            {{#bootstrap-modal
-                title="views.app.wiki.page.file.preview"
-                closeLabel="global.form.close"
-                close=(action "removeModal")}}
-              <iframe title="{{t "views.app.wiki.page.file.preview"}}" id="file_preview"></iframe>
-            {{/bootstrap-modal}}
+        {{#if (eq this.model.locked "0")}}
+          <AppUi::Button type="button" class="btn btn-primary" {{action "edit"}} @aclContext="App.Project.Wiki.Edit"><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-default" {{action "delete"}} @aclContext="App.Project.Wiki.Delete"><i class="fa fa-trash"></i> {{t "global.form.delete"}}</AppUi::Button>
+        {{/if}}
+
+        <div class="pull-right">
+          {{t "views.app.wiki.tags"}}<span class="colon"></span>
+          {{#if this.model.tag}}
+            {{#each this.model.tag as |tags|}}
+              <span class="label label-primary"><i class="fa fa-tag"></i> {{tags.tag}}</span>
+            {{/each}}
+          {{else}}
+            <span class="disabled-text">{{t "global.noentry"}}</span>
           {{/if}}
         </div>
 
       </div>
-      {{field-upload
-          label=(t "views.app.wiki.page.selectfile")
-          uploadFile=(action "uploadFile")
-      }}
-
     </div>
-  </div>
+  </AccessControl>
+
+  <div class="clearfix"></div>
+
+  <AccessControl @aclContext="App.Project.Wiki.Read.Files.Read">
+    {{!-- Issue Files--}}
+    <div class="box box-info wiki-files-section">
+
+      <div class="box-header with-border">
+
+        <h3 class="box-title">{{t "views.app.wiki.page.files"}}</h3>
+
+        <div class="box-tools pull-right">
+        </div>
+
+      </div>
+
+      <div class="box-body no-padding">
+
+        <div class="box-footer">
+          <ul class="attachments clearfix">
+            {{#each this.model.files as |file|}}
+              <li>
+                {{#if (not-eq file.fileThumbnail '0')}}
+                  <span class="attachment-icon has-img">
+                    <img src="{{file.fileThumbnail}}" alt="{{file.name}}"s>
+                  </span>
+                {{else}}
+                  <AppLayouts::AttachmentIcon @mime={{file.fileMime}}/>
+                {{/if}}
+                <div class="attachment-info">
+                  <div class="attachment-name clearfix">
+                    <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
+                  </div>
+                  <div class="attachment-additional">
+                    <span class="attachment-size">
+                      {{file-size file.fileSize}}
+                      <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
+                      <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                    </span>
+                  </div>
+                </div>
+              </li>
+            {{/each}}
+          </ul>
+          <div class="filePreviewModal">
+            {{#if this.filePreviewDialog}}
+              {{#bootstrap-modal
+                  title="views.app.wiki.page.file.preview"
+                  closeLabel="global.form.close"
+                  close=(action "removeModal")}}
+                <iframe title="{{t "views.app.wiki.page.file.preview"}}" id="file_preview"></iframe>
+              {{/bootstrap-modal}}
+            {{/if}}
+          </div>
+
+        </div>
+        {{field-upload
+            label=(t "views.app.wiki.page.selectfile")
+            uploadFile=(action "uploadFile")
+        }}
+
+      </div>
+    </div>
+  </AccessControl>
+
 {{else}}
   <div class="wiki-page-empty">
 

@@ -17,214 +17,232 @@
     <div class="row">
       <div class="col-md-3 col-sm-3">
 
-      {{!-- User profile info section starts--}}
-        <div class="box box-primary">
-          <div class="box-body box-profile">
-            <img class="user-profile-img img-responsive" src="{{this.apiHost}}/userimage/get/{{this.model.id}}" alt="{{this.model.name}}">
+        <AccessControl @aclContext="App.User.Read"> 
+          {{!-- User profile info section starts--}}
+          <div class="box box-primary">
+            <div class="box-body box-profile">
+              <img class="user-profile-img img-responsive" src="{{this.apiHost}}/userimage/get/{{this.model.id}}" alt="{{this.model.name}}">
 
-            <div class="user-info">
-                <h3 class="user-name">{{this.model.name}}</h3>
-                <span class="user-designation">{{this.model.title}}</span>
+              <div class="user-info">
+                  <h3 class="user-name">{{this.model.name}}</h3>
+                  <span class="user-designation">{{this.model.title}}</span>
+              </div>
+
+              <UserProfile::SocialLinks
+                @user={{this.model}}
+                @redirect={{fn this.redirectToSocialLink}}
+              />
+
             </div>
-
-            <UserProfile::SocialLinks
-              @user={{this.model}}
-              @redirect={{fn this.redirectToSocialLink}}
-            />
-
           </div>
-        </div>
+        </AccessControl>  
       {{!-- User profile info section ends--}}
- 
-        {{!-- User Skills section starts --}}
-        <div class="box box-primary">
-          <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.user.page.skills"}}</h3>
-          </div>
 
-          <div class="box-body">
-              
-            <div class="user-skills">
-              {{#each (get-user-skills skillsString=this.model.skills) as |skill|}}
-                <span class="label label-primary skill-item">
-                  {{skill}}
-                </span>                
-              {{/each}}
-            </div>
-
-          </div>
-        </div>
-        {{!-- User Skills section ends --}}
-        
-        {{!-- User Education Section starts --}}
+        <AccessControl @aclContext="App.User.Read.Skills">
+          {{!-- User Skills section starts --}}
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title"> {{t "views.app.user.page.education"}} </h3>
+              <h3 class="box-title">{{t "views.app.user.page.skills"}}</h3>
             </div>
 
             <div class="box-body">
-              <div class="user-education">
-                <i class="fa fa-graduation-cap"></i>
-                <span class="education"> {{this.model.education}} </span>
+                
+              <div class="user-skills">
+                {{#each (get-user-skills skillsString=this.model.skills) as |skill|}}
+                  <span class="label label-primary skill-item">
+                    {{skill}}
+                  </span>                
+                {{/each}}
               </div>
-            </div>
 
+            </div>
           </div>
-        {{!-- User Education Section ends --}}
-
-        {{!-- User Badges Section starts --}}
-          <div data-user-section="badges" class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title"> {{t "views.app.user.page.badges"}} </h3>
-            </div>
-
-            <div class="box-body">
-              <div class="user-badges">
-                {{#each this.model.badgeDetails as |badgeDetail|}}
-                  <span class="badge-img" data-toggle="tooltip" title="{{badgeDetail.badge.name}}[{{badgeDetail.badgeLevel.name}}]">
-                    <img src="{{this.apiHost}}/image/get/{{badgeDetail.badgeLevel.id}}" alt="{{badgeDetail.badge.name}}">
-                  </span>
-                {{/each}}        
+          {{!-- User Skills section ends --}}
+        </AccessControl>
+        
+        <AccessControl @aclContext="App.User.Read.Education">
+          {{!-- User Education Section starts --}}
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title"> {{t "views.app.user.page.education"}} </h3>
               </div>
-            </div>
 
-          </div>
-        {{!-- User Badges Section ends --}}
+              <div class="box-body">
+                <div class="user-education">
+                  <i class="fa fa-graduation-cap"></i>
+                  <span class="education"> {{this.model.education}} </span>
+                </div>
+              </div>
+
+            </div>
+          {{!-- User Education Section ends --}}
+        </AccessControl>
+
+        <AccessControl @aclContext="App.User.Read.Badges.Read">
+          {{!-- User Badges Section starts --}}
+            <div data-user-section="badges" class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title"> {{t "views.app.user.page.badges"}} </h3>
+              </div>
+
+              <div class="box-body">
+                <div class="user-badges">
+                  {{#each this.model.badgeDetails as |badgeDetail|}}
+                    <span class="badge-img" data-toggle="tooltip" title="{{badgeDetail.badge.name}}[{{badgeDetail.badgeLevel.name}}]">
+                      <img src="{{this.apiHost}}/image/get/{{badgeDetail.badgeLevel.id}}" alt="{{badgeDetail.badge.name}}">
+                    </span>
+                  {{/each}}        
+                </div>
+              </div>
+
+            </div>
+          {{!-- User Badges Section ends --}}
+        </AccessControl>
 
       </div>
 
       <div class="col-md-9">
 
-        {{!-- User Stats Section starts --}}
-        <div class="box box-primary">
-          <div class="box-body">
-            <div class="col-md-12">
-              <div class="col-md-3 col-sm-3">
-                <div class="user-stats-card">
+        <AccessControl @aclContext="App.User.Read.Statistics.Read">
+          {{!-- User Stats Section starts --}}
+          <div class="box box-primary">
+            <div class="box-body">
+              <div class="col-md-12">
+                <div class="col-md-3 col-sm-3">
+                  <div class="user-stats-card">
 
-                  <div class="stats-label"> 
-                     {{t "views.app.user.page.stats.projects"}}
-                  </div>
+                    <div class="stats-label"> 
+                      {{t "views.app.user.page.stats.projects"}}
+                    </div>
 
-                  <Charts::OpenClosedChart
-                    @openCount={{this.model.openClosedProject.openProjects}}
-                    @closedCount={{this.model.openClosedProject.closedProjects}}
-                    @for="projects"
-                  />
+                    <Charts::OpenClosedChart
+                      @openCount={{this.model.openClosedProject.openProjects}}
+                      @closedCount={{this.model.openClosedProject.closedProjects}}
+                      @for="projects"
+                    />
 
-                </div>            
-              </div>
-              <div class="col-md-3 col-sm-3">
-                <div class="user-stats-card">
-
-                  <div class="stats-label">
-                    {{t "views.app.user.page.stats.issues"}} 
-                  </div>
-
-                  <Charts::OpenClosedChart
-                    @openCount={{this.model.openClosedIssue.openIssues}}
-                    @closedCount={{this.model.openClosedIssue.closedIssues}}
-                    @for="issues"
-                  />          
-
-                </div>            
-              </div>
-              <div class="col-md-3 col-sm-3">
-                <div class="user-stats-card">
-                  
-                  <div class="stats-label">
-                    {{t "views.app.user.page.stats.timespent.label"}}
-                    <span class="time-spent-sub-label">
-                      ({{t "views.app.user.page.stats.timespent.sublabel"}})
-                    </span>
-                  </div>
-
-                  <UserProfile::TimeSpent
-                    @timeSpent={{this.model.timeSpent.totalMinutes}}
-                  />
-
+                  </div>            
                 </div>
-              </div>
-              <div class="col-md-3 col-sm-3">
-                <div class="user-stats-card">
+                <div class="col-md-3 col-sm-3">
+                  <div class="user-stats-card">
 
-                  <div class="stats-label">
-                    {{t "views.app.user.page.stats.collaboration"}} 
+                    <div class="stats-label">
+                      {{t "views.app.user.page.stats.issues"}} 
+                    </div>
+
+                    <Charts::OpenClosedChart
+                      @openCount={{this.model.openClosedIssue.openIssues}}
+                      @closedCount={{this.model.openClosedIssue.closedIssues}}
+                      @for="issues"
+                    />          
+
+                  </div>            
+                </div>
+                <div class="col-md-3 col-sm-3">
+                  <div class="user-stats-card">
+                    
+                    <div class="stats-label">
+                      {{t "views.app.user.page.stats.timespent.label"}}
+                      <span class="time-spent-sub-label">
+                        ({{t "views.app.user.page.stats.timespent.sublabel"}})
+                      </span>
+                    </div>
+
+                    <UserProfile::TimeSpent
+                      @timeSpent={{this.model.timeSpent.totalMinutes}}
+                    />
+
                   </div>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                  <div class="user-stats-card">
 
-                  <UserProfile::Collaboration
-                    @collaboration={{this.model.collaboration.collaboration}}
-                  />
+                    <div class="stats-label">
+                      {{t "views.app.user.page.stats.collaboration"}} 
+                    </div>
 
-                </div>                                              
-              </div>                                          
+                    <UserProfile::Collaboration
+                      @collaboration={{this.model.collaboration.collaboration}}
+                    />
+
+                  </div>                                              
+                </div>                                          
+              </div>
             </div>
           </div>
-        </div>
-        {{!-- User Stats Section ends --}}
+          {{!-- User Stats Section ends --}}
+        </AccessControl>
 
       {{!-- User Latest Modules Sections --}}
-        <div class="row">        
-          {{!-- User latest Projects Section starts --}}
-          <div class="col-md-6">
-            <div class="box box-primary">
-              <div class="box-header with-border">
-                <h3 class="box-title"> {{t "views.app.user.page.latestProjects.title"}} </h3>               
-              </div>
+        <div class="row">       
+          <AccessControl @aclContext="App.User.Read.LatestProjects.Read">
+            {{!-- User latest Projects Section starts --}}
+            <div class="col-md-6">
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title"> {{t "views.app.user.page.latestProjects.title"}} </h3>               
+                </div>
 
-              <div class="box-body">
-                <UserProfile::LatestProjects
-                  @projects={{this.model.latestProjects}}
-                />
+                <div class="box-body">
+                  <UserProfile::LatestProjects
+                    @projects={{this.model.latestProjects}}
+                  />
+                </div>
               </div>
             </div>
-          </div>
           {{!-- User latest Projects Section ends --}}
+          </AccessControl>
 
-          {{!-- User latest Issues Section starts --}}
-          <div class="col-md-6">
-            <div class="box box-primary">
-              <div class="box-header with-border">
-                <h3 class="box-title"> {{t "views.app.user.page.latestIssues.title"}} </h3>              
-              </div>
-              <div class="box-body">
-                <UserProfile::LatestIssues
-                  @issues={{this.model.latestIssues}}
-                />
+          <AccessControl @aclContext="App.User.Read.LatestIssues.Read">
+            {{!-- User latest Issues Section starts --}}
+            <div class="col-md-6">
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title"> {{t "views.app.user.page.latestIssues.title"}} </h3>              
+                </div>
+                <div class="box-body">
+                  <UserProfile::LatestIssues
+                    @issues={{this.model.latestIssues}}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          {{!-- User latest Issues Section ends --}}
+            {{!-- User latest Issues Section ends --}}
+          </AccessControl>
 
-          {{!-- User Recent Activities Section starts --}}
-          <div class="col-md-8">
-            <div class="box box-primary">
-              <div class="box-header with-border">
-                <h3 class="box-title"> {{t "views.app.user.page.recentActivities.title"}} </h3>              
-              </div>
-              <div class="box-body">
-                <UserProfile::RecentActivities
-                  @activities={{this.model.recentActivities}}
-                />
+          <AccessControl @aclContext="App.User.Read.RecentActivities.Read">
+            {{!-- User Recent Activities Section starts --}}
+            <div class="col-md-8">
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title"> {{t "views.app.user.page.recentActivities.title"}} </h3>              
+                </div>
+                <div class="box-body">
+                  <UserProfile::RecentActivities
+                    @activities={{this.model.recentActivities}}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          {{!-- User Recent Activities Section ends --}}    
+            {{!-- User Recent Activities Section ends --}}
+          </AccessControl>
           
-          {{!-- User Works most With Section starts --}}
-          <div class="col-md-4">
-            <div class="box box-primary">
-              <div class="box-header with-border">
-                <h3 class="box-title"> {{t "views.app.user.page.worksMostWith"}} </h3>              
-              </div>
-              <div class="box-body">
-                <UserProfile::CloseMembers
-                  @users={{this.model.mostWorkedMembers}}
-                />
+          <AccessControl @aclContext="App.User.Read.MostWorkedMembers.Read">
+            {{!-- User Works most With Section starts --}}
+            <div class="col-md-4">
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title"> {{t "views.app.user.page.worksMostWith"}} </h3>              
+                </div>
+                <div class="box-body">
+                  <UserProfile::CloseMembers
+                    @users={{this.model.mostWorkedMembers}}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-          {{!-- User Works most With Section ends --}}                  
+            {{!-- User Works most With Section ends --}} 
+          </AccessControl>                 
 
         </div>
 

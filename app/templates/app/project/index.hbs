@@ -5,163 +5,169 @@
     <div class="col-md-8">
 
       {{!-- This are the project details --}}
-      <div class="box box-primary project-details">
-        <div class="box-header with-border">
-          <h2 class="box-title">
-            <span class="project-name">{{this.model.name}}</span> 
-            -
-            <span class="project-shortcode">({{this.model.shortCode}})</span>
-          </h2>
+      <AccessControl @aclContext="App.Project.Read">
+        <div class="box box-primary project-details">
+          <div class="box-header with-border">
+            <h2 class="box-title">
+              <span class="project-name">{{this.model.name}}</span> 
+              -
+              <span class="project-shortcode">({{this.model.shortCode}})</span>
+            </h2>
 
-          <div class="box-tools pull-right">
-            <span class="project-status"><span class="badge {{this.model.status}}">{{t (concat "views.app.project.lists.status." this.model.status)}}</span></span>
-            <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editProject" this.model.id}} @aclContext="App.Project.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
-            <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></AppUi::Button>
+            <div class="box-tools pull-right">
+              <span class="project-status"><span class="badge {{this.model.status}}">{{t (concat "views.app.project.lists.status." this.model.status)}}</span></span>
+              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editProject" this.model.id}} @aclContext="App.Project.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
+              <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></AppUi::Button>
+            </div>
+            {{!-- /.box-tools --}}
           </div>
-          {{!-- /.box-tools --}}
-        </div>
-        {{!-- /.box-header --}}
-        <div class="box-body">
+          {{!-- /.box-header --}}
+          <div class="box-body">
 
-          <div class="row">
+            <div class="row">
 
-            <div class="col-xs-3 col-md-2">
-              <div class="project-owner">
-                <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{this.model.owner.id}}" alt="{{this.model.owner.name}}">
-                <LinkTo @route="app.user.page" @model={{this.model.owner.id}} class="users-list-name" >{{this.model.owner.name}}</LinkTo>
-                <span class="users-list-date">{{t "views.app.project.detail.owner"}}</span>
+              <div class="col-xs-3 col-md-2">
+                <div class="project-owner">
+                  <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{this.model.owner.id}}" alt="{{this.model.owner.name}}">
+                  <LinkTo @route="app.user.page" @model={{this.model.owner.id}} class="users-list-name" >{{this.model.owner.name}}</LinkTo>
+                  <span class="users-list-date">{{t "views.app.project.detail.owner"}}</span>
+                </div>
+              </div>
+
+              <div class="col-xs-9 col-md-10">
+                <h4>{{t "views.app.project.detail.description"}}</h4>
+                <p class="project-description">
+                  {{this.model.description}}
+                </p>
               </div>
             </div>
 
-            <div class="col-xs-9 col-md-10">
-              <h4>{{t "views.app.project.detail.description"}}</h4>
-              <p class="project-description">
-                {{this.model.description}}
-              </p>
-            </div>
-          </div>
+            <div class="row">
 
-          <div class="row">
+              <div class="col-xs-6 col-md-4">
+                <h4>{{t "views.app.project.detail.duration"}}</h4>
+                <p class="project-duration">
+                  {{moment-format this.model.startDate 'Do MMM \'YY'}} - {{moment-format this.model.endDate 'DD MMM \'YY'}}
+                </p>
+              </div>
 
-            <div class="col-xs-6 col-md-4">
-              <h4>{{t "views.app.project.detail.duration"}}</h4>
-              <p class="project-duration">
-                {{moment-format this.model.startDate 'Do MMM \'YY'}} - {{moment-format this.model.endDate 'DD MMM \'YY'}}
-              </p>
-            </div>
+              <div class="col-xs-6 col-md-4">
+                <h4>{{t "views.app.project.detail.type"}}</h4>
+                <p class="project-type">
+                  {{t (concat "views.app.project.lists.type." this.model.type)}}
+                </p>
+              </div>
 
-            <div class="col-xs-6 col-md-4">
-              <h4>{{t "views.app.project.detail.type"}}</h4>
-              <p class="project-type">
-                {{t (concat "views.app.project.lists.type." this.model.type)}}
-              </p>
-            </div>
+              <div class="col-xs-6 col-md-4">
+                <h4>{{t "views.app.project.detail.vision"}}</h4>
+                <p class="project-vision">
+                  {{this.model.vision}}
+                </p>
+              </div>
 
-            <div class="col-xs-6 col-md-4">
-              <h4>{{t "views.app.project.detail.vision"}}</h4>
-              <p class="project-vision">
-                {{this.model.vision}}
-              </p>
-            </div>
+              <div class="col-xs-6 col-md-4">
+                <h4>{{t "views.app.project.detail.estimatedBudget"}}</h4>
+                <p class="project-estimatedBudget">
+                  {{format-money this.model.estimatedBudget symbol='$' format="%s%v"}}
+                </p>
+              </div>
 
-            <div class="col-xs-6 col-md-4">
-              <h4>{{t "views.app.project.detail.estimatedBudget"}}</h4>
-              <p class="project-estimatedBudget">
-                {{format-money this.model.estimatedBudget symbol='$' format="%s%v"}}
-              </p>
-            </div>
+              <div class="col-xs-6 col-md-4">
+                <h4>{{t "views.app.project.detail.spentBudget"}}</h4>
+                <p class="project-spentBudget">
+                  {{format-money this.model.spentBudget symbol='$' format="%s%v"}}
+                </p>
+              </div>
 
-            <div class="col-xs-6 col-md-4">
-              <h4>{{t "views.app.project.detail.spentBudget"}}</h4>
-              <p class="project-spentBudget">
-                {{format-money this.model.spentBudget symbol='$' format="%s%v"}}
-              </p>
             </div>
 
           </div>
+          {{!-- /.box-body --}}
 
+          <div class="box-footer no-padding">
+          </div>
         </div>
-        {{!-- /.box-body --}}
-
-        <div class="box-footer no-padding">
-        </div>
-      </div>
+      </AccessControl>
       {{!-- /.end project details --}}
 
       {{!-- This div contains the project conversations and milestones --}}
       <div class="row">
 
         {{!-- This is the project conversations --}}
-        <div class="col-md-6">
-          <div class="box box-info  project-conversations-section">
-            <div class="box-header with-border">
-              <h3 class="box-title">{{t "views.app.project.detail.conversations"}}</h3>
+        <AccessControl @aclContext="App.Project.Read.Conversations.Read">
+          <div class="col-md-6">
+            <div class="box box-info  project-conversations-section">
+              <div class="box-header with-border">
+                <h3 class="box-title">{{t "views.app.project.detail.conversations"}}</h3>
 
-              <div class="box-tools pull-right">
+                <div class="box-tools pull-right">
+                </div>
+
               </div>
-
+              {{!-- /.box-header --}}
+              <div class="box-body no-padding">
+                <ul class="project-conversations show-5">
+                  {{#each this.model.conversations as |conversation|}}
+                    <li>
+                      <div class="user-block">
+                        <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
+                        <span class="subject">{{conversation.subject}}</span>
+                        <span class="description">{{translate-comment conversation.description}}</span>
+                      </div>
+                    </li>
+                  {{/each}}
+                </ul>
+                {{!-- /.users-list --}}
+              </div>
+              {{!-- /.box-body --}}
+              <div class="box-footer text-center">
+                <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "conversation"}}>{{t "views.app.project.detail.viewallconversations"}}</a>
+              </div>
+              {{!-- /.box-footer --}}
             </div>
-            {{!-- /.box-header --}}
-            <div class="box-body no-padding">
-              <ul class="project-conversations show-5">
-                {{#each this.model.conversations as |conversation|}}
-                  <li>
-                    <div class="user-block">
-                      <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
-                      <span class="subject">{{conversation.subject}}</span>
-                      <span class="description">{{translate-comment conversation.description}}</span>
-                    </div>
-                  </li>
-                {{/each}}
-              </ul>
-              {{!-- /.users-list --}}
-            </div>
-            {{!-- /.box-body --}}
-            <div class="box-footer text-center">
-              <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "conversation"}}>{{t "views.app.project.detail.viewallconversations"}}</a>
-            </div>
-            {{!-- /.box-footer --}}
           </div>
-        </div>
+        </AccessControl>  
         {{!-- end of project conversations --}}
 
         {{!-- These are the lastest 5 open issues in this project --}}
-        <div class="col-md-6">
-          <div class="box box-success open-issues-section">
-            <div class="box-header with-border">
-              <h3 class="box-title">{{t "views.app.project.detail.latestissues"}}</h3>
+        <AccessControl @aclContext="App.Project.Read.Issues.Read">
+          <div class="col-md-6">
+            <div class="box box-success open-issues-section">
+              <div class="box-header with-border">
+                <h3 class="box-title">{{t "views.app.project.detail.latestissues"}}</h3>
 
-              <div class="box-tools pull-right">
+                <div class="box-tools pull-right">
+
+                </div>
 
               </div>
-
-            </div>
-            {{!-- /.box-header --}}
-            <div class="box-body no-padding">
-              <ul class="open-issues show-5 clearfix">
-                {{#each this.issuetime as |issue|}}
-                  <li>
-                    <div class="issue-block">
-                      <div class="priority"><AppUi::PriorityIcon @priority={{issue.priority}}/></div>
-                      <div class="data-block">
-                        <span class="subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "navigateToIssuePage" issue.issueNumber}}>{{issue.issueNumber}}</LinkTo> - {{issue.subject}}</span>
-                        <span class="description">{{translate-comment issue.description}}</span>
-                        <strong>{{t "views.app.issue.status"}}:</strong> <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+              {{!-- /.box-header --}}
+              <div class="box-body no-padding">
+                <ul class="open-issues show-5 clearfix">
+                  {{#each this.issuetime as |issue|}}
+                    <li>
+                      <div class="issue-block">
+                        <div class="priority"><AppUi::PriorityIcon @priority={{issue.priority}}/></div>
+                        <div class="data-block">
+                          <span class="subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "navigateToIssuePage" issue.issueNumber}}>{{issue.issueNumber}}</LinkTo> - {{issue.subject}}</span>
+                          <span class="description">{{translate-comment issue.description}}</span>
+                          <strong>{{t "views.app.issue.status"}}:</strong> <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+                        </div>
                       </div>
-                    </div>
-                  </li>
-                {{/each}}
-              </ul>
-              {{!-- /.users-list --}}
+                    </li>
+                  {{/each}}
+                </ul>
+                {{!-- /.users-list --}}
+              </div>
+              {{!-- /.box-body --}}
+              <div class="box-footer text-center">
+                <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "issue"}}>{{t "views.app.project.detail.viewallissues"}}</a>
+              </div>
+              {{!-- /.box-footer --}}
             </div>
-            {{!-- /.box-body --}}
-            <div class="box-footer text-center">
-              <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "issue"}}>{{t "views.app.project.detail.viewallissues"}}</a>
-            </div>
-            {{!-- /.box-footer --}}
           </div>
-        </div>
-        {{!-- end of last 5 open projects --}}
+        </AccessControl>
+        {{!-- end of last 5 latest issues --}}
 
       </div>
 
@@ -200,18 +206,20 @@
       <div class="row">
 
         {{!-- This is the project activities section --}}
-        <div class="col-md-12">
-          <div class="box box-primary project-activities-section">
-            <div class="box-header with-border">
-              <h3 class="box-title">{{t "views.app.project.detail.projectactivities"}}</h3>
-            </div>
-            <div class="box-body no-padding">
-              <div class="project-activities">
-                {{time-line activities=this.activities}}
+        <AccessControl @aclContext="App.Project.Read.Activities.Read">
+          <div class="col-md-12">
+            <div class="box box-primary project-activities-section">
+              <div class="box-header with-border">
+                <h3 class="box-title">{{t "views.app.project.detail.projectactivities"}}</h3>
+              </div>
+              <div class="box-body no-padding">
+                <div class="project-activities">
+                  {{time-line activities=this.activities}}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </AccessControl>
         {{!-- ./ end project activities section --}}
 
       </div>
@@ -223,184 +231,187 @@
     <div class="col-md-4">
 
       {{!-- Project Members --}}
-      <div class="box box-warning">
-        <div class="box-header with-border">
-          <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
-          <div class="box-tools pull-right">
-            <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "views.app.project.detail.managemembers"}}"><i class="fa fa-gear"></i></AppUi::Button>
+      <AccessControl @aclContext="App.Project.Read.Members.Read">
+        <div class="box box-warning">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
+            <div class="box-tools pull-right">
+              <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "views.app.project.detail.managemembers"}}"><i class="fa fa-gear"></i></AppUi::Button>
+            </div>
           </div>
-        </div>
-        {{!-- /.box-header --}}
-        <div class="box-body no-padding">
-          <ul class="users-list clearfix">
-            {{#each this.model.members as |member|}}
+          {{!-- /.box-header --}}
+          <div class="box-body no-padding">
+            <ul class="users-list clearfix">
+              {{#each this.model.members as |member|}}
+                <li>
+                  <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
+                  <LinkTo @route="app.user.page" @model={{member.id}} class="users-list-name">{{member.name}}</LinkTo>
+                  <span class="users-list-date">{{get-role member.id this.model.roles this.model.memberships}}</span>
+                </li>
+              {{/each}}
               <li>
-                <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
-                <LinkTo @route="app.user.page" @model={{member.id}} class="users-list-name">{{member.name}}</LinkTo>
-                <span class="users-list-date">{{get-role member.id this.model.roles this.model.memberships}}</span>
+                <a href="javascript:void(0);" {{action "showAddMemberDialog"}}>
+                  <div class="membership-add" data-toggle="tooltip" title="{{t "views.app.project.detail.membership.add"}}">
+                    <ion class="ion-md-add"></ion>
+                  </div>
+                </a>
               </li>
-            {{/each}}
-            <li>
-              <a href="javascript:void(0);" {{action "showAddMemberDialog"}}>
-                <div class="membership-add" data-toggle="tooltip" title="{{t "views.app.project.detail.membership.add"}}">
-                  <ion class="ion-md-add"></ion>
-                </div>
-              </a>
-            </li>
-          </ul>
-          {{#if this.addMemberDialog}}
-            {{#bootstrap-modal
-                title="views.app.project.detail.membership.add"
-                confirmLabel="global.form.save"
-                closeLabel="global.form.cancel"
-                confirm=(action "addMember")
-                close=(action "removeAddMemberModal")}}
-              <form {{action 'addMember' on='submit'}}>
-                <div class="form-group">
-                    <FormFields::FieldRelate
-                        @placeholder={{t "views.app.project.detail.membership.selectuser"}}
-                        @label={{t "views.app.project.detail.membership.user"}}
-                        @value={{this.selectedUser}}
-                        @data-field="select-member"
-                        @options={{this.usersList}}
-                        @selected={{find-by "value" this.selectedUser this.usersList}}
-                        @searchField="label"
-                        @onchange={{action "selectUser"}}
-                        @relateType="relate-user"
-                        @aclContext="App.Project.Read.Membership.Create.User"
-                    />
+            </ul>
+            {{#if this.addMemberDialog}}
+              {{#bootstrap-modal
+                  title="views.app.project.detail.membership.add"
+                  confirmLabel="global.form.save"
+                  closeLabel="global.form.cancel"
+                  confirm=(action "addMember")
+                  close=(action "removeAddMemberModal")}}
+                <form {{action 'addMember' on='submit'}}>
+                  <div class="form-group">
+                      <FormFields::FieldRelate
+                          @placeholder={{t "views.app.project.detail.membership.selectuser"}}
+                          @label={{t "views.app.project.detail.membership.user"}}
+                          @value={{this.selectedUser}}
+                          @data-field="select-member"
+                          @options={{this.usersList}}
+                          @selected={{find-by "value" this.selectedUser this.usersList}}
+                          @searchField="label"
+                          @onchange={{action "selectUser"}}
+                          @relateType="relate-user"
+                          @aclContext="App.Project.Read.Membership.Create.User"
+                      />
 
-                  <FormFields::FieldRelate
-                      @placeholder={{t "views.app.project.detail.membership.selectrole"}}
-                      @label={{t "views.app.project.detail.membership.role"}}
-                      @value={{this.selectedRole}}
-                      @data-field="select-role"
-                      @options={{this.rolesList}}
-                      @selected={{find-by "value" this.selectedRole this.rolesList}}
-                      @searchField="label"
-                      @onchange={{action "selectRole"}}
-                      @relateType="relate-simple"
-                      @aclContext="App.Project.Read.Membership.Create.Role"
-                  />
-                </div>
-              </form>
-            {{/bootstrap-modal}}
-          {{/if}}          {{!-- /.users-list --}}
+                    <FormFields::FieldRelate
+                        @placeholder={{t "views.app.project.detail.membership.selectrole"}}
+                        @label={{t "views.app.project.detail.membership.role"}}
+                        @value={{this.selectedRole}}
+                        @data-field="select-role"
+                        @options={{this.rolesList}}
+                        @selected={{find-by "value" this.selectedRole this.rolesList}}
+                        @searchField="label"
+                        @onchange={{action "selectRole"}}
+                        @relateType="relate-simple"
+                        @aclContext="App.Project.Read.Membership.Create.Role"
+                    />
+                  </div>
+                </form>
+              {{/bootstrap-modal}}
+            {{/if}}          {{!-- /.users-list --}}
+          </div>
+          {{!-- /.box-body --}}
         </div>
-        {{!-- /.box-body --}}
-      </div>
+      </AccessControl>
       {{!-- /. Project Members --}}
 
-
       {{!-- Project Milestones --}}
-      <div class="box box-info project-milestones-section">
-        <div class="box-header with-border">
-          <h3 class="box-title">{{t "views.app.project.detail.milestones"}}</h3>
-        </div>
+      <AccessControl @aclContext="App.Project.Read.Milestones.Read">
+        <div class="box box-info project-milestones-section">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.project.detail.milestones"}}</h3>
+          </div>
 
-        <div class="box-body no-padding">
-          {{#if (eq this.milestones.length 0)}}
-            <div class="no-entry">{{t "views.app.project.detail.milestone.noentry"}}</div>
-          {{else}}
-            {{#each this.milestones as |milestone|}}
-              
-              <Project::Milestones
-                @editMilestone={{action "editMilestone"}}
-                @milestone={{milestone}}
+          <div class="box-body no-padding">
+            {{#if (eq this.milestones.length 0)}}
+              <div class="no-entry">{{t "views.app.project.detail.milestone.noentry"}}</div>
+            {{else}}
+              {{#each this.milestones as |milestone|}}
+                
+                <Project::Milestones
+                  @editMilestone={{action "editMilestone"}}
+                  @milestone={{milestone}}
+                />
+
+              {{/each}}
+            {{/if}}
+          </div>
+
+          {{#if this.milestoneDialog}}
+            {{#bootstrap-modal
+                title="views.app.project.detail.milestone.manage"
+                closeLabel="global.form.close"
+                confirmLabel="global.form.save"
+                close=(action "removeMilestoneDialog")
+                confirm=(action "saveMilestone")}}
+
+              <FormFields::FieldText
+                  @placeholder={{t "views.app.project.detail.milestone.inputname"}}
+                  @label={{t "views.app.project.detail.milestone.name"}}
+                  @value={{this.newMilestone.name}}
+                  @aclContext="App.Project.Read.Milestone.Create.Name"
               />
 
-            {{/each}}
+              <FormFields::FieldDate
+                  @placeholder={{t "views.app.project.detail.milestone.inputstartdate"}}
+                  @label={{t "views.app.project.detail.milestone.startdate"}}
+                  @value={{readonly this.newMilestone.startDate}}
+                  @update={{action "milestoneStartDateChanged"}}
+                  @mask="alphanumeric"
+                  @data-field="project.milestone.startDate"
+                  @format="YYYY-MM-DD"
+                  @singleDatePicker={{true}}
+                  @showDropdowns={{true}}
+                  @positionX="right"
+                  @positionY="down"
+                  @autoApply={{true}}
+                  @minDate='1990'
+                  @aclContext="App.Project.Read.Milestone.Create.StartDate"
+              />
+
+              <FormFields::FieldDate
+                  @placeholder={{t "views.app.project.detail.milestone.inputenddate"}}
+                  @label={{t "views.app.project.detail.milestone.enddate"}}
+                  @value={{readonly this.newMilestone.endDate}}
+                  @update={{action "milestoneEndDateChanged"}}
+                  @mask="alphanumeric"
+                  @data-field="project.milestone.endDate"
+                  @format="YYYY-MM-DD"
+                  @singleDatePicker={{true}}
+                  @showDropdowns={{true}}
+                  @positionX="right"
+                  @positionY="down"
+                  @autoApply={{true}}
+                  @minDate='1990'
+                  @aclContext="App.Project.Read.Milestone.Create.EndDate"
+              />
+
+              <FormFields::FieldRelate
+                  @placeholder={{t "views.app.project.detail.milestone.inputtype"}}
+                  @label={{t "views.app.project.detail.milestone.type"}}
+                  @value={{this.newMilestone.milestoneType}}
+                  @options={{this.milestoneTypes}}
+                  @selected={{find-by "value" this.newMilestone.milestoneType this.milestoneTypes}}
+                  @searchField="label"
+                  @onchange={{action "selectMilestoneType"}}
+                  @relateType="relate-simple"
+                  @aclContext="App.Project.Read.Milestone.Create.Type"
+              />
+
+              <FormFields::FieldRelate
+                  @placeholder={{t "views.app.project.detail.milestone.inputstatus"}}
+                  @label={{t "views.app.project.detail.milestone.status"}}
+                  @value={{this.newMilestone.status}}
+                  @options={{this.milestoneStatuses}}
+                  @selected={{find-by "value" this.newMilestone.status this.milestoneStatuses}}
+                  @searchField="label"
+                  @onchange={{action "selectMilestoneStatus"}}
+                  @relateType="relate-simple"
+                  @aclContext="App.Project.Read.Milestone.Create.Status"
+              />
+
+              <FormFields::FieldTextArea
+                  @placeholder={{t "views.app.project.detail.milestone.iputdescription"}}
+                  @label={{t "views.app.project.detail.milestone.description"}}
+                  @value={{this.newMilestone.description}}
+                  @aclContext="App.Project.Read.Milestone.Create.Description"
+              />
+
+            {{/bootstrap-modal}}
           {{/if}}
+
+          <div class="box-footer text-center">
+            <span><a href="javascript:void();" {{action "showMilestoneDialog"}}><i class="fa fa-flag-checkered "></i> {{t "views.app.project.detail.milestone.add"}}</a></span>
+          </div>
+
         </div>
-
-        {{#if this.milestoneDialog}}
-          {{#bootstrap-modal
-              title="views.app.project.detail.milestone.manage"
-              closeLabel="global.form.close"
-              confirmLabel="global.form.save"
-              close=(action "removeMilestoneDialog")
-              confirm=(action "saveMilestone")}}
-
-            <FormFields::FieldText
-                @placeholder={{t "views.app.project.detail.milestone.inputname"}}
-                @label={{t "views.app.project.detail.milestone.name"}}
-                @value={{this.newMilestone.name}}
-                @aclContext="App.Project.Read.Milestone.Create.Name"
-            />
-
-            <FormFields::FieldDate
-                @placeholder={{t "views.app.project.detail.milestone.inputstartdate"}}
-                @label={{t "views.app.project.detail.milestone.startdate"}}
-                @value={{readonly this.newMilestone.startDate}}
-                @update={{action "milestoneStartDateChanged"}}
-                @mask="alphanumeric"
-                @data-field="project.milestone.startDate"
-                @format="YYYY-MM-DD"
-                @singleDatePicker={{true}}
-                @showDropdowns={{true}}
-                @positionX="right"
-                @positionY="down"
-                @autoApply={{true}}
-                @minDate='1990'
-                @aclContext="App.Project.Read.Milestone.Create.StartDate"
-            />
-
-            <FormFields::FieldDate
-                @placeholder={{t "views.app.project.detail.milestone.inputenddate"}}
-                @label={{t "views.app.project.detail.milestone.enddate"}}
-                @value={{readonly this.newMilestone.endDate}}
-                @update={{action "milestoneEndDateChanged"}}
-                @mask="alphanumeric"
-                @data-field="project.milestone.endDate"
-                @format="YYYY-MM-DD"
-                @singleDatePicker={{true}}
-                @showDropdowns={{true}}
-                @positionX="right"
-                @positionY="down"
-                @autoApply={{true}}
-                @minDate='1990'
-                @aclContext="App.Project.Read.Milestone.Create.EndDate"
-            />
-
-            <FormFields::FieldRelate
-                @placeholder={{t "views.app.project.detail.milestone.inputtype"}}
-                @label={{t "views.app.project.detail.milestone.type"}}
-                @value={{this.newMilestone.milestoneType}}
-                @options={{this.milestoneTypes}}
-                @selected={{find-by "value" this.newMilestone.milestoneType this.milestoneTypes}}
-                @searchField="label"
-                @onchange={{action "selectMilestoneType"}}
-                @relateType="relate-simple"
-                @aclContext="App.Project.Read.Milestone.Create.Type"
-            />
-
-            <FormFields::FieldRelate
-                @placeholder={{t "views.app.project.detail.milestone.inputstatus"}}
-                @label={{t "views.app.project.detail.milestone.status"}}
-                @value={{this.newMilestone.status}}
-                @options={{this.milestoneStatuses}}
-                @selected={{find-by "value" this.newMilestone.status this.milestoneStatuses}}
-                @searchField="label"
-                @onchange={{action "selectMilestoneStatus"}}
-                @relateType="relate-simple"
-                @aclContext="App.Project.Read.Milestone.Create.Status"
-            />
-
-            <FormFields::FieldTextArea
-                @placeholder={{t "views.app.project.detail.milestone.iputdescription"}}
-                @label={{t "views.app.project.detail.milestone.description"}}
-                @value={{this.newMilestone.description}}
-                @aclContext="App.Project.Read.Milestone.Create.Description"
-            />
-
-          {{/bootstrap-modal}}
-        {{/if}}
-
-        <div class="box-footer text-center">
-          <span><a href="javascript:void();" {{action "showMilestoneDialog"}}><i class="fa fa-flag-checkered "></i> {{t "views.app.project.detail.milestone.add"}}</a></span>
-        </div>
-
-      </div>
+      </AccessControl>
       {{!-- Project Milestones --}}
 
 
