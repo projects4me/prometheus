@@ -5,6 +5,7 @@ export default function (server) {
     server.createList('issuetype', 5);
     server.createList('issuestatus', 5);
     server.createList('user', 10);
+    server.createList('userpermission', 1);
 
     //setting up relationship for user
     const USER = server.schema.users.all();
