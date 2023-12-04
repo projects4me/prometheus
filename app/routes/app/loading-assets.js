@@ -4,6 +4,7 @@
 
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
+import getCurrentUrl from 'prometheus/utils/location/current-url'
 
 /**
  * The loading assets route.
@@ -59,6 +60,6 @@ export default class AppLoadingAssetsRoute extends Route {
      */
     setupController(controller) {
         controller.set('dataLoaded', true);
-        this.router.transitionTo('/app');
+        this.router.transitionTo(getCurrentUrl(this.router));
     }
 }
