@@ -66,7 +66,7 @@ export default Route.extend({
         if (this.session.isAuthenticated) {
             route = (currentUrl != '/') ? currentUrl : 'app';
         } else if (!this.session.isAuthenticated) {
-            this.session['oldRequestedUrl'] = currentUrl;
+            (currentUrl != '/') && (this.session['oldRequestedUrl'] = currentUrl);
             route = 'signin';
         }
         this.router.transitionTo(route);

@@ -91,7 +91,6 @@ export default class SignInController extends Controller {
                     //if requested url is present then route to that url otherwise route user to /app
                     let urlToRoute = (oldRequestedUrl && oldRequestedUrl != '/') ? oldRequestedUrl : 'app';
                     
-                    delete _self.session['oldRequestedUrl'];
                     _self.session.handleAuthentication(urlToRoute);
                 }
             },
