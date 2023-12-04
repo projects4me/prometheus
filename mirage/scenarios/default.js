@@ -20,6 +20,7 @@ export default function (server) {
     // server.createList('token', 1);
     // server.createList('upload', 5);
     server.createList('user', 10);
+    server.createList('userpermission', 1);
     // server.createList('vote', 5);
     // server.createList('wiki', 5);
 

@@ -28,9 +28,9 @@ module('Integration | Component | access-control', function (hooks) {
 
     test('it will not render the markup inside the component', async function (assert) {
         this.owner.register('service:acl', AclStub2);
-
+ 
         await render(hbs`
-            <AccessControl>
+            <AccessControl @aclContext="Appp">
                 Rendered Markup
             </AccessControl>
         `);

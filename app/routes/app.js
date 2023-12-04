@@ -74,7 +74,7 @@ export default Route.extend({
      * @type Ember.Service
      * @for App
      * @public
-     */    
+     */
     router: inject(),
 
     /**
@@ -95,7 +95,9 @@ export default Route.extend({
      * @method beforeModel
      * @public
      */
-    beforeModel() {
+    beforeModel(transition) {
+        this.session.requireAuthentication(transition, this.authenticationRoute);
+
         let loadingAssetsController = this.controllerFor('app.loading-assets');
 
         if (!loadingAssetsController.get('dataLoaded')) {
@@ -121,10 +123,9 @@ export default Route.extend({
 
         if (!isEventRegistered) {
             _self.router.on(eventName, (transition) => {
-                if(!_self.acl.hasRouteAccess(transition.to.name)) {
+                if (!_self.acl.hasRouteAccess(transition.to.name)) {
                     _self.router.transitionTo('app.access-denied');
                 };
-                
             });
         }
     },
