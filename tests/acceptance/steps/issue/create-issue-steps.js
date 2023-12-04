@@ -29,7 +29,7 @@ export const when = function () {
             "User navigates to issue create page": (assert, ctx) => async function () {
                 let currentProject = ctx.get('currentProject');
                 await visit(`/app/project/${currentProject.id}/issue/create/`);
-                assert.equal(currentURL(), `/app/project/${currentProject.id}/issue/create/`, `User navigates to issue create page`);
+                assert.equal(currentURL(), `/app/project/${currentProject.id}/issue/create`, `User navigates to issue create page`);
             },
         },
         {

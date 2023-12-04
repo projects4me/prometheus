@@ -16,7 +16,18 @@ export const given = function () {
                         authToken: '12345',
                     });
                 }
-                ctx.set('currentUser', server.schema.users.find(id));
+                
+                let user = server.schema.users.find(id);
+                let userPermission = server.schema.userpermissions.find(1);
+                userPermission.update({
+                    userId: id
+                });
+
+                user.update({
+                    aclPermissions: server.schema.userpermissions.all()
+                });
+
+                ctx.set('currentUser', user);
                 assert.ok(true, "User is logged in");
             }
         },
