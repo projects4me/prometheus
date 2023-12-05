@@ -30,14 +30,14 @@ export default App.extend({
      * @return Prometheus.Issue
      * @private
      */
-    afterModel(){
+    afterModel() {
         Logger.debug('Prometheus.Routes.App.Project.Issue.Create::afterModel()');
         let _self = this;
         let projectId = _self.paramsFor('app.project').project_id;
 
         let projectOptions = {
-            query: "(Project.id : "+projectId+")",
-            rels : 'members,milestones,issuetypes,issuestatuses',
+            query: "(Project.id : " + projectId + ")",
+            rels: 'members,milestones,issuetypes,issuestatuses',
             sort: "members.name",
             limit: -1
         };
@@ -45,19 +45,19 @@ export default App.extend({
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::afterModel()');
 
         return hash({
-            issue: _self.store.createRecord('issue',{
-                assignee : _self.get('currentUser').user.id,
-                owner : _self.get('currentUser').user.id
+            issue: _self.store.createRecord('issue', {
+                assignee: _self.get('currentUser').user.id,
+                owner: _self.get('currentUser').user.id
             }),
-            project: _self.store.query('project',projectOptions)
-        }).then(function(results){
+            project: _self.store.query('project', projectOptions)
+        }).then(function (results) {
             Logger.debug(results);
-            _self.set('issue',results.issue);
+            _self.set('issue', results.issue);
             const issueDescription = _.clone(results.issue.description);
-            _self.set('issueDescription',issueDescription);
-            _self.set('project',results.project.objectAt(0));
-            _self.set('types',results.project.firstObject.issuetypes);
-            _self.set('statuses',results.project.firstObject.issuestatuses);
+            _self.set('issueDescription', issueDescription);
+            _self.set('project', results.project.objectAt(0));
+            _self.set('types', results.project.firstObject.issuetypes);
+            _self.set('statuses', results.project.firstObject.issuestatuses);
         });
     },
 
@@ -75,22 +75,22 @@ export default App.extend({
      * @param {Prometheus.Models.Issue} model The model that is created by this route
      * @private
      */
-    setupController:function(controller){
+    setupController: function (controller) {
         Logger.debug('Prometheus.Routes.App.Project.Issue.Create::setupController');
 
         let _self = this;
 
         let params = this.paramsFor('app.project.issue.edit');
 
-        this.set('breadCrumb',{title:'#'+params.issue_number,record:true});
+        this.set('breadCrumb', { title: '#' + params.issue_number, record: true });
         controller.set('model', _self.get('issue'));
         controller.set('project', _self.get('project'));
         controller.set('types', _self.get('types'));
         controller.set('statuses', _self.get('statuses'));
-        controller.set('issueDescription',_self.get('issueDescription'));
+        controller.set('issueDescription', _self.get('issueDescription'));
 
         let priority = (new format(this)).getList('views.app.issue.lists.priority');
-        controller.set('priority',priority);
+        controller.set('priority', priority);
 
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::setupController');
     },
@@ -106,10 +106,27 @@ export default App.extend({
      */
     resetController(controller, isExiting, transition) {
         if (isExiting && transition.targetName !== 'error') {
-            if(!controller.model.id) {
+            if (!controller.model.id) {
                 controller.model.destroyRecord();
             }
         }
+    },
+    actions: {
+        /**
+         * This event is triggered when user attempt to transition to another route. In this we're unloading
+         * issue statuses model from the ember store. Because when user will navigate from this route to
+         * project/board route, where we're again fetching the issue statuses against the same project, then
+         * store will use the loaded issue status models against the same xhr call. The issue status models 
+         * names are translated, that's we can't use these in board. So that's the reason of unloading the issue
+         * status records.
+         * 
+         * @event willTransition
+         * @public
+         */
+        willTransition() {
+            this.controller.statuses.forEach((status) => {
+                status.unloadRecord();
+            });
+        }
     }
-
 });
