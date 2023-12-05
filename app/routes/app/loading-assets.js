@@ -36,6 +36,17 @@ export default class AppLoadingAssetsRoute extends Route {
     @service router;
 
     /**
+     * The session service which is offered by ember-simple-auth that will be used
+     * in order to verify whether the used is authenticated
+     *
+     * @property session
+     * @type Ember.Service
+     * @for AppLoadingAssetsRoute
+     * @public
+     */    
+    @service session;
+
+    /**
      * This method is called by ember when we enter this route and returns
      * resolved promises to the setupController function. In this method we're
      * fetching loggedin user model by using currentUser service. We'll fetch
@@ -60,6 +71,13 @@ export default class AppLoadingAssetsRoute extends Route {
      */
     setupController(controller) {
         controller.set('dataLoaded', true);
-        this.router.transitionTo(getCurrentUrl(this.router));
+        let url = getCurrentUrl(this.router);
+
+        if (this.session.oldRequestedUrl) {
+            url = this.session.oldRequestedUrl;
+            delete this.session['oldRequestedUrl'];
+        }
+
+        this.router.transitionTo(url);
     }
 }
