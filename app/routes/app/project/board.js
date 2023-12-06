@@ -55,7 +55,8 @@ export default App.extend({
         milestones.forEach(async (milestone) => {
             let issues = await _self.store.query('issue', {
                 query: `(Issue.milestoneId : ${milestone.id} )`,
-                rels: 'assignedTo'
+                rels: 'assignedTo',
+                limit: -1
             });
             milestone.issues = issues;
         });
