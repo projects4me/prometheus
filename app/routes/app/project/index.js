@@ -34,7 +34,7 @@ export default App.extend({
      * @private
      * @todo move the loading of related to afterModel
      */
-    setupController:function(controller){
+    setupController: function (controller) {
         Logger.debug('AppProjectIndexRoute::setupController');
         let _self = this;
         // If the user navigated directly to the wiki project or page then lets setup the project id
@@ -44,13 +44,13 @@ export default App.extend({
         Logger.debug(projectId);
         Logger.debug(projectName);
 
-        _self.loadIssuesTime(projectId,controller);
-        _self.loadActivities(projectId,controller);
+        _self.loadIssuesTime(projectId, controller);
+        _self.loadActivities(projectId, controller);
 
         let options = {
-//      fields: "Project.id,Project.name",
-            query: "(Project.id : "+projectId+")",
-            rels : 'members,conversations,createdBy,owner,memberships,roles',
+            //      fields: "Project.id,Project.name",
+            query: "(Project.id : " + projectId + ")",
+            rels: 'members,conversations,createdBy,owner,memberships,roles',
             sort: "conversations.dateModified",
             order: 'ASC',
             limit: -1
@@ -59,14 +59,13 @@ export default App.extend({
         Logger.debug('Retreiving the project with options ');
         Logger.debug(options);
 
-        _self.store.query('project',options).then(function(data){
-            if (projectId !== null)
-            {
-                projectName = data.findBy('id',projectId).get('name');
-                controller.set('projectId',projectId);
-                controller.set('projectName',projectName);
+        _self.store.query('project', options).then(function (data) {
+            if (projectId !== null) {
+                projectName = data.findBy('id', projectId).get('name');
+                controller.set('projectId', projectId);
+                controller.set('projectName', projectName);
             }
-            controller.set('model',data.objectAt(0));
+            controller.set('model', data.objectAt(0));
         });
 
         controller.send('resetNewMilestone');
@@ -93,37 +92,36 @@ export default App.extend({
      * @param {String} projectId The identifier of the project being viewed
      * @todo Explore the possibility of using the url project/:id/:relation as it is supported by the API
      */
-    loadIssuesTime:function(projectId,controller){
+    loadIssuesTime: function (projectId, controller) {
 
         let _self = this;
         let options = {
-            query: "(Issue.projectId : "+projectId+")",
+            query: "(Issue.projectId : " + projectId + ")",
             sort: "Issue.dateModified",
             order: 'DESC',
-            rels:'estimated,spent,project',
+            rels: 'estimated,spent,project',
             limit: -1
         };
 
-        this.store.query('issue',options).then(function(issues){
-            _self.get('controller').set('issuetime',issues);
+        this.store.query('issue', options).then(function (issues) {
+            _self.get('controller').set('issuetime', issues);
 
             // We have to fetch the milestone list separately as there might be a
             // project milestone with no issue associated with it
             let options = {
-                query: "(Milestone.projectId : "+projectId+")",
+                query: "(Milestone.projectId : " + projectId + ")",
                 sort: "Milestone.startDate",
                 order: 'DESC',
                 limit: -1
             };
-            _self.store.query('milestone',options).then(function(milestones){
-                milestones.forEach(function(milestone){
-                    let milestoneIssues = issues.filterBy('milestoneId',milestone.get('id'));
-                    if (milestoneIssues !== undefined)
-                    {
+            _self.store.query('milestone', options).then(function (milestones) {
+                milestones.forEach(function (milestone) {
+                    let milestoneIssues = issues.filterBy('milestoneId', milestone.get('id'));
+                    if (milestoneIssues !== undefined) {
                         milestone.get('issues').pushObjects(milestoneIssues);
                     }
                 });
-                controller.set('milestones',milestones.toArray());
+                controller.set('milestones', milestones.toArray());
             });
         });
     },
@@ -137,33 +135,51 @@ export default App.extend({
      * @param {String} projectId The identifier of the project which is being viewed
      * @todo test performance and load in chunks if required.
      */
-    loadActivities:function(projectId,controller){
+    loadActivities: function (projectId, controller) {
         let _self = this;
         let options = {
             // Retrieving the activities related to a project
-            query: "((Activity.relatedId : "+projectId+") AND (Activity.relatedTo : project))",
+            query: "((Activity.relatedId : " + projectId + ") AND (Activity.relatedTo : project))",
             sort: "Activity.dateCreated",
             order: 'DESC',
             // Get all the activities
             limit: -1
         };
 
-        _self.store.query('activity',options).then(function(data){
+        _self.store.query('activity', options).then(function (data) {
             let activities = {};
             // Group the activities with respect to the dateCreated
-            data.forEach(function(activity){
-                let dateCreated = activity.get('dateCreated').substring(0,10);
-                if (activities[dateCreated] !== undefined)
-                {
+            data.forEach(function (activity) {
+                let dateCreated = activity.get('dateCreated').substring(0, 10);
+                if (activities[dateCreated] !== undefined) {
                     activities[dateCreated]['data'].push(activity);
                 }
                 else {
-                    activities[dateCreated] = {dateCreated:dateCreated,data:[activity]};
+                    activities[dateCreated] = { dateCreated: dateCreated, data: [activity] };
                 }
             });
 
-            controller.set('activities',activities);
+            controller.set('activities', activities);
         });
     },
-
+    actions: {
+        /**
+         * This event is triggered when user attempt to transition to another route. In this we're unloading
+         * array of issue model from the ember store. Because when user will navigate from this route to
+         * project/board route, where we're again fetching the issues against the same project, then store
+         * will use the loaded issue models against the same xhr call and this makes board to render issues
+         * lanes twice.
+         * 
+         * @event willTransition
+         * @public
+         */        
+        willTransition() {
+            this.controller.milestones.forEach((milestone) => {
+                let issues = milestone.issues.toArray();
+                issues.forEach((issue) => {
+                    issue.unloadRecord();
+                });
+            });
+        }
+    }
 });
