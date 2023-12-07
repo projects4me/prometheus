@@ -51,15 +51,14 @@ export default App.extend({
         };
         let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions);
 
-        //Fetch issues of each milestone
-        milestones.forEach(async (milestone) => {
+        await hash(milestones.map(async (milestone) => {
             let issues = await _self.store.query('issue', {
                 query: `(Issue.milestoneId : ${milestone.id} )`,
                 rels: 'assignedTo',
                 limit: -1
             });
             milestone.issues = issues;
-        });
+        }));
 
         //Create a milestone of type backlog
         let backlog = _self.store.createRecord('milestone', {
