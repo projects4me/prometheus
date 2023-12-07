@@ -125,7 +125,7 @@ export default Route.extend({
             _self.router.on(eventName, (transition) => {
                 if (!_self.acl.hasRouteAccess(transition.to.name)) {
                     _self.router.transitionTo('app.access-denied');
-                };
+                }
             });
         }
     },
