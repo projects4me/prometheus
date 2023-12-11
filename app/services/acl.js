@@ -134,6 +134,17 @@ export default class AclService extends Service {
     ];
 
     /**
+     * The list of routes on which acl is not required.
+     * 
+     * @property explicitRoutes
+     * @type array
+     * @public
+     */
+    explicitRoutes = [
+        'signin.index'
+    ];
+
+    /**
      * This method return list of the resources of the application on which 
      * user has access.
      * 
@@ -153,9 +164,18 @@ export default class AclService extends Service {
      * @returns boolen
      */
     hasRouteAccess(routeName) {
-        let route = this.routeMaps.find(f => f.name === routeName);
+        let route = null,
+            hasAccess = null;
 
-        return this.checkAccess(route?.map);
+        route = this.explicitRoutes.find(route => route === routeName)
+        if (!route) {
+            route = this.routeMaps.find(f => f.name === routeName);
+            hasAccess = this.checkAccess(route?.map);
+        } else if (route) {
+            hasAccess = true;
+        }
+
+        return hasAccess;
     }
 
     /**

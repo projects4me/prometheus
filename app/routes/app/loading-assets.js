@@ -43,7 +43,7 @@ export default class AppLoadingAssetsRoute extends Route {
      * @type Ember.Service
      * @for AppLoadingAssetsRoute
      * @public
-     */    
+     */
     @service session;
 
     /**
@@ -78,6 +78,7 @@ export default class AppLoadingAssetsRoute extends Route {
             delete this.session['oldRequestedUrl'];
         }
 
+        (url === '/') && (url = 'app');
         this.router.transitionTo(url);
     }
 }
