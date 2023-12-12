@@ -32,7 +32,12 @@
     "lessThanOrEqualTo": "{description} must be less than or equal to {count}",
     "otherThan": "{description} must be other than {count}",
     "odd": "{description} must be odd",
-    "even": "{description} must be even"
+    "even": "{description} must be even",
+    "api": {
+      "forbidden": "Forbidden",
+      "pageNotFound": "Oops! Page not found",
+      "internalServerError": "Internal Server Error"
+    }
   },
   "global": {
     "file": {
