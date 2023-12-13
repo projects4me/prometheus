@@ -4,6 +4,7 @@
 
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
+import { UnauthorizedError } from '@ember-data/adapter/error';
 import { hash } from 'rsvp';
 
 /**
@@ -125,7 +126,7 @@ export default Route.extend({
             _self.router.on(eventName, (transition) => {
                 if (!_self.acl.hasRouteAccess(transition.to.name)) {
                     _self.router.transitionTo('app.access-denied');
-                };
+                }
             });
         }
     },
@@ -289,5 +290,24 @@ export default Route.extend({
         controller.set('users', users);
 
         Logger.debug('-Prometheus.App.Route->loadUsers');
+    },
+    actions: {
+        /**
+         * This event is triggered when user will get error from one of the model hooks of the ember e.g. afterModel, beforeModel
+         * or model. In this event we're invalidating the session if the error has status code of 401 or type "UnauthorizedError" and
+         * for the other errors having different type of status code e.g. 403 or 404 we're returning true, that will allow Ember to
+         * render the error template. 
+         * 
+         * @param {*} error 
+         * @param {*} transition 
+         * @returns 
+         */
+        error(error, transition) {
+            if (error instanceof UnauthorizedError) {
+                this.session.invalidate();
+            } else {
+                return true;
+            }
+        }
     }
 });
