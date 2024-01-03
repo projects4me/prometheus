@@ -1,19 +1,6 @@
 import steps from '../../steps';
 import { typeIn } from '@ember/test-helpers';
 
-export const given = function () {
-    return [
-        {
-            "Issue $issueId has subject $issueSubject": (assert, ctx) => async function (issueId, issueSubject) {
-                let issue = server.schema.issues.find(parseInt(issueId));
-                issue.update({
-                    subject: issueSubject
-                })
-            }
-        }
-    ];
-}
-
 export const when = function () {
     return [
         {
