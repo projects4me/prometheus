@@ -130,6 +130,10 @@ export default class AclService extends Service {
         {
             name: 'app.admin.edit',
             map: 'App.Admin.Edit'
+        },
+        {
+            name: 'app.role.index',
+            map: 'App.Role.List'
         }
     ];
 
