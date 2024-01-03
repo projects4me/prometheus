@@ -8,14 +8,24 @@
       <div class="col-md-12">
         
         <div class="box box-primary">
-          <div class="box-header">
-            
+          <div class="box-header with-border">
+            <div class="box-tools pull-right filters">
+
+              {{!-- +Search Roles --}}
+              <Input
+                @value={{this.searchQuery}}
+                name="query"
+                autocomplete="off"
+                placeholder={{concat (t "global.form.search") " " (t "global.module.plural.role") " .."}}
+              />
+              {{!-- Search Roles --}}
+            </div>            
           </div>
 
           <div class="box-body">
             <div class="role-cards">
 
-              {{#each this.roles as |role|}}
+              {{#each this.filteredRoles as |role|}}
                 <Role::Card
                   @role={{role}}
                 />
@@ -23,7 +33,7 @@
               
               {{!-- +Role Add Button --}}
               <div class="role-card role-add-card">
-                <div class="role-add" data-toggle="tooltip" title="{{t "views.app.project.detail.membership.add"}}">
+                <div class="role-add" data-toggle="tooltip" title="{{t "views.app.role.list.add"}}">
                   <ion class="ion-md-add"></ion>
                 </div>
               </div>
