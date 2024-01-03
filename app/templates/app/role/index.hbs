@@ -1,0 +1,39 @@
+<div class="roles">
+  <section class="content-header">
+    <h1> {{t "global.module.plural.role"}} </h1>
+  </section>
+
+  <section class="content">
+    <div class="row">
+      <div class="col-md-12">
+        
+        <div class="box box-primary">
+          <div class="box-header">
+            
+          </div>
+
+          <div class="box-body">
+            <div class="role-cards">
+
+              {{#each this.roles as |role|}}
+                <Role::Card
+                  @role={{role}}
+                />
+              {{/each}}
+              
+              {{!-- +Role Add Button --}}
+              <div class="role-card role-add-card">
+                <div class="role-add" data-toggle="tooltip" title="{{t "views.app.project.detail.membership.add"}}">
+                  <ion class="ion-md-add"></ion>
+                </div>
+              </div>
+              {{!-- Role Add Button --}}
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
