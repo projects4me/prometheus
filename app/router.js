@@ -54,6 +54,7 @@ Router.map(function() {
     });
     this.route('loading-assets', {path: '/loading-assets'});
     this.route('access-denied');
+    this.route('role', function() {});
   });
   this.route('signin', function() {});
 });
