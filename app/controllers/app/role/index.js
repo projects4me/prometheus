@@ -21,7 +21,7 @@ export default class AppRoleIndexController extends Controller {
      * @type String
      * @for AppRoleIndexController
      * @private
-     */    
+     */
     @tracked searchQuery = '';
 
     /**
@@ -32,7 +32,8 @@ export default class AppRoleIndexController extends Controller {
      */
     get filteredRoles() {
         return this.roles.filter((role) => {
-            return role.name.toLowerCase().includes(this.searchQuery);
+            return role.name.toLowerCase().includes(this.searchQuery)
+                || role.name.includes(this.searchQuery);
         });
     }
 }
