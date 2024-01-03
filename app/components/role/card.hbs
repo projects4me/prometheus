@@ -2,7 +2,7 @@
   <h5 data-role-field="name"> {{@role.name}} </h5>
 
   <div data-role-field="description" {{initialize-slimscroll model='1'}}>
-    <h5>descipriont is hveredescipriont is hveredescipriont is hveredescipriont is hveredescipriont is hveredescipriont is hveredescipriont is hveredescipriont is hveredescipriont is hveredescipriont is hveredescipriont is hveredescipriont is hvere</h5>
+    <h5>{{@role.description}}</h5>
   </div>
   
   <h5 data-role-field="dateCreated">{{moment-format @role.dateCreated 'Do MMM, YYYY'}}</h5>
