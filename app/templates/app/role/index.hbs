@@ -5,46 +5,53 @@
 
   <section class="content">
     <div class="row">
-      <div class="col-md-12">
-        
-        <div class="box box-primary">
-          <div class="box-header with-border">
-            <div class="box-tools pull-right filters">
+      
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <div class="box-tools pull-right filters">
 
-              {{!-- +Search Roles --}}
-              <Input
-                data-field="search role"
-                @value={{this.searchQuery}}
-                name="query"
-                autocomplete="off"
-                placeholder={{concat (t "global.form.search") " " (t "global.module.plural.role") " .."}}
+            {{!-- +Search Roles --}}
+            <Input
+              data-field="search role"
+              @value={{this.searchQuery}}
+              name="query"
+              autocomplete="off"
+              placeholder={{concat (t "global.form.search") " " (t "global.module.plural.role") " .."}}
+            />
+            {{!-- Search Roles --}}
+          </div>            
+        </div>
+
+        <div class="box-body">
+          <div class="role-cards">
+
+            {{#each this.filteredRoles as |role|}}
+              <Role::Card
+                @role={{role}}
               />
-              {{!-- Search Roles --}}
-            </div>            
-          </div>
+            {{/each}}
 
-          <div class="box-body">
-            <div class="role-cards">
-
-              {{#each this.filteredRoles as |role|}}
-                <Role::Card
-                  @role={{role}}
-                />
-              {{/each}}
-              
-              {{!-- +Role Add Button --}}
+            {{#each this.filteredRoles as |role|}}
+              <Role::Card
+                @role={{role}}
+              />
+            {{/each}}              
+            
+            {{!-- +Role Add Button --}}
+            <div class="role-card-container col-xs-6 col-sm-6 col-lg-2 col-md-3">
               <div class="role-card role-add-card">
                 <div class="role-add" data-toggle="tooltip" title="{{t "views.app.role.list.add"}}">
                   <ion class="ion-md-add"></ion>
                 </div>
               </div>
-              {{!-- Role Add Button --}}
-
             </div>
-          </div>
+            {{!-- Role Add Button --}}
 
+          </div>
         </div>
+
       </div>
+      
     </div>
   </section>
 </div>
