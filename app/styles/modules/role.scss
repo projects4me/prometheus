@@ -8,7 +8,6 @@
 
 
 .roles{
-
   .box {
     .box-header {
       padding-bottom: 2.5rem;
@@ -23,6 +22,7 @@
 
   .role-cards {
     @include flexbox();
+    
     flex-wrap: wrap;
   
     .role-card {

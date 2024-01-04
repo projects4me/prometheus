@@ -7,7 +7,7 @@ export const then = function () {
                 let roles = document.querySelectorAll('.role-card');
 
                 //+1 added to count because there is 1 card for role creation
-                assert.equal(roles.length, parseInt(count) + 1);
+                assert.equal(roles.length, parseInt(count) + 1, 10);
             }
         }
     ];

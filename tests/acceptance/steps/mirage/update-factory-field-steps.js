@@ -6,8 +6,8 @@ export const given = function () {
         {
             "$modelName $id has $fieldName $value": (assert, ctx) => async function (modelName, id, fieldName, value) {
                 modelName = pluralize(modelName.toLowerCase());
-                
-                let model = server.schema[modelName].find(parseInt(id));
+
+                let model = server.schema[modelName].find(parseInt(id, 10));
                 model.update({
                     [fieldName]: value
                 });
