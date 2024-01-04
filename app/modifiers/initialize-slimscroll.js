@@ -43,16 +43,30 @@ export default class InitializeSlimscrollModifier extends Modifier {
     }
 
     /**
+     * This function returns the value that will be used to set the width of the scroll bar.
+     * 
+     * @method get
+     * @retrun String
+     * @public
+     */
+    get width() {
+        return this.args.named.width;
+    }
+
+    /**
      * This function apply slim scroll to element.
      * 
      * @method _attachSlimScroll
      * @private
      */
     _attachSlimScroll() {
+        let defaulWidth = 3, size;
+        size = this.width ?? defaulWidth;
+
         $(this.element).slimScroll({
             height: this.element.clientHeight,
             allowVisible: false,
-            size: 3
+            size: size
         });
     }
 }

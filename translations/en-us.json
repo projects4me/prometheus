@@ -950,6 +950,11 @@
       "board": {
         "backlog": "Backlog"
       },
+      "role": {
+        "list" : {
+          "add": "Add a new role"
+        }
+      },
       "components": {
         "intervalselector": {
           "days": "Days",

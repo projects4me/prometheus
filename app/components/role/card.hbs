@@ -1,9 +1,11 @@
-<div class="role-card">
+<div class="role-card-container col-xs-6 col-sm-4 col-md-2">
+<div class="role-card ">
   <h5 data-role-field="name"> {{@role.name}} </h5>
 
-  <div data-role-field="description" {{initialize-slimscroll model='1'}}>
+  <div data-role-field="description" {{initialize-slimscroll width='2'}}>
     <h5>{{@role.description}}</h5>
   </div>
   
   <h5 data-role-field="dateCreated">{{moment-format @role.dateCreated 'Do MMM, YYYY'}}</h5>
+</div>
 </div>

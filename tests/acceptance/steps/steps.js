@@ -10,6 +10,7 @@ import * as date from './common-steps/date-steps';
 import * as updateIssueStatus from './taskboard/update-issue-status-steps';
 import * as mirageServerConfig from './mirage/mirage-server-config-steps';
 import * as createListOfFactory from './mirage/create-list-of-factory-steps';
+import * as updateFactoryField from './mirage/update-factory-field-steps';
 import * as signout from './app/sign-out-steps';
 import * as globalSearch from './app/global-search-steps';
 import * as filterIssuesBoard from './taskboard/filter-issues-steps';
@@ -50,9 +51,11 @@ import * as createUser from './user/create-a-user-steps';
 import * as editUser from './user/edit-a-user-steps';
 import * as checkPaginationFunctionalityOfUser from './user-management/check-pagination-functionality-steps';
 import * as sortUsers from './user-management/sort-users-steps';
+import * as renderRoles from './role/render-roles-steps';
+import * as searchRole from './role/search-role-steps';
 
 export default function (assert) {
-    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, deleteAUser, navigateToUser, changeUserAccountStatus, createUser, editUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, deleteAUser, navigateToUser, changeUserAccountStatus, createUser, editUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()
