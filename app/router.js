@@ -54,9 +54,13 @@ Router.map(function() {
     });
     this.route('loading-assets', {path: '/loading-assets'});
     this.route('access-denied');
-    this.route('role', function() {});
+    this.route('role', function() {
+      this.route('page', {path: '/:role_id'});
+    });
   });
   this.route('signin', function() {});
+
+  this.route('role', function() {});
 });
 
 export default Router;

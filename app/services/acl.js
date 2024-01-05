@@ -134,6 +134,10 @@ export default class AclService extends Service {
         {
             name: 'app.role.index',
             map: 'App.Role.List'
+        },
+        {
+            name: 'app.role.page',
+            map: 'App.Role.Page'
         }
     ];
 
