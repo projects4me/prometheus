@@ -59,8 +59,6 @@ Router.map(function() {
     });
   });
   this.route('signin', function() {});
-
-  this.route('role', function() {});
 });
 
 export default Router;

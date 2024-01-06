@@ -26,9 +26,11 @@
           <div class="role-cards">
 
             {{#each this.filteredRoles as |role|}}
-              <Role::Card
-                @role={{role}}
-              />
+              <LinkTo @route="app.role.page" @model={{role.id}}>
+                <Role::Card
+                  @role={{role}}
+                />
+              </LinkTo>
             {{/each}}            
             
             {{!-- +Role Add Button --}}
@@ -49,3 +51,5 @@
     </div>
   </section>
 </div>
+
+{{outlet}}

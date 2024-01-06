@@ -8,18 +8,18 @@ import { tracked } from '@glimmer/tracking';
 /**
  * The role list controller.
  *
- * @class AppRoleIndexController
+ * @class AppRoleController
  * @namespace Prometheus.Controller
  * @extends Ember.Controller
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default class AppRoleIndexController extends Controller {
+export default class AppRoleController extends Controller {
     /**
      * This property is used to keep track the query for searching the role.
      *
      * @property searchQuery
      * @type String
-     * @for AppRoleIndexController
+     * @for AppRoleController
      * @private
      */
     @tracked searchQuery = '';
