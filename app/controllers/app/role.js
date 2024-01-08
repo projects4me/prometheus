@@ -114,7 +114,7 @@ export default class AppRoleController extends PrometheusCreateController {
      */
     get rolesClass() {
         return this.isRolePage
-            ? 'col-lg-2 col-md-12'
+            ? 'col-lg-2 col-md-12 col-sm-12 col-xs-12'
             : 'col-md-12';
     }
 
