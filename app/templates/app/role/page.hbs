@@ -1,0 +1,22 @@
+<div class="col-lg-10 col-md-12 col-sm-12 col-xs-12 role-details">
+  <div class="field-group">
+    <FormFields::FieldText
+      @placeholder={{t "views.app.role.create.nameplaceholder"}}
+      @label={{t "views.app.role.create.name"}}
+      @value={{this.model.name}}
+      @data-field="role.name"
+      @validate={{action this.validateField "roleCreate" (hash name="name" value=this.model.name)}}
+      @message={{this.message.roleCreate.name}}
+      {{autofocus}}
+    />
+
+    <FormFields::FieldTextArea
+      @placeholder={{t "views.app.role.create.descriptionplaceholder"}}
+      @label={{t "views.app.role.create.description"}}
+      @value={{this.model.description}}
+      @data-field="role.description"
+      @validate={{action this.validateField "roleCreate" (hash name="description" value=this.model.description)}}
+      @message={{this.message.roleCreate.description}}        
+    />      
+  </div>
+</div>

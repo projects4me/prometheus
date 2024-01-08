@@ -953,6 +953,12 @@
       "role": {
         "list" : {
           "add": "Add a new role"
+        },
+        "create" : {
+          "nameplaceholder": "Enter role name",
+          "descriptionplaceholder": "Enter role desciprition",
+          "name" : "Name",
+          "description": "Description"
         }
       },
       "components": {

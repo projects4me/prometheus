@@ -7,14 +7,13 @@ import App from "prometheus/routes/app";
 /**
  *  This is the route to load the list of roles.
  *
- *  @class AppRoleIndexRoute
+ *  @class AppRoleRoute
  *  @namespace Prometheus.Routes
  *  @module App.Role
  *  @extends App
  *  @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default class AppRoleIndexRoute extends App {
-
+export default class AppRoleRoute extends App {
     /**
      * The model hook for this route. In this function we fetch and return the list of roles.
      *
@@ -22,7 +21,7 @@ export default class AppRoleIndexRoute extends App {
      * @returns Promise
      * @protected
      */
-    model() {
+     model() {
         let rolesOptions = {
             sort: 'Role.name',
             order: 'ASC',
@@ -36,11 +35,11 @@ export default class AppRoleIndexRoute extends App {
      * This function is used to setup the controller for this route.
      *
      * @method setupController
-     * @param {Prometheus.Controllers.App.Role.Index} controller the controller object for this route
+     * @param {Prometheus.Controllers.App.Role} controller the controller object for this route
      * @param Object model
      * @public
      */   
     setupController(controller, model) {
         controller.set('roles', model);
-    }
+    }    
 }

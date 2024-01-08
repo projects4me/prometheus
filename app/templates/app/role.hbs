@@ -1,0 +1,60 @@
+<div class="roles">
+  <section class="content-header">
+    <h1> {{t "global.module.plural.role"}} </h1>
+  </section>
+
+  <section class="content">
+    <div class="row">
+      
+      <div>
+        <div class="box box-primary">
+          <div class="box-header with-border">
+            <div class="box-tools pull-right filters">
+
+              {{!-- +Search Roles --}}
+              <Input
+                data-field="search role"
+                @value={{this.searchQuery}}
+                name="query"
+                autocomplete="off"
+                placeholder={{concat (t "global.form.search") " " (t "global.module.plural.role") " .."}}
+              />
+              {{!-- Search Roles --}}
+            </div>            
+          </div>
+
+          <div class="box-body">
+            <div class="role-cards {{this.rolesClass}}">
+
+              {{#each this.filteredRoles as |role|}}
+                <LinkTo @route="app.role.page" @model={{role.id}}>
+                  <Role::Card
+                    @class={{this.roleCardClass}}
+                    @role={{role}}
+                  />
+                </LinkTo>
+              {{/each}}            
+              
+              {{!-- +Role Add Button --}}
+              <div class="role-card-container {{this.roleCardClass}}">
+                <div class="role-card role-add-card">
+                  <div class="role-add" data-toggle="tooltip" title="{{t "views.app.role.list.add"}}">
+                    <ion class="ion-md-add"></ion>
+                  </div>
+                </div>
+              </div>
+              {{!-- Role Add Button --}}
+
+            </div>
+
+            {{!-- Render app/role/page template here.. --}}
+            {{outlet}}
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
