@@ -3,6 +3,7 @@
  */
 
 import AppRoleController from 'prometheus/controllers/app/role';
+import { action } from '@ember/object';
 
 /**
  * The role page controller.
@@ -13,4 +14,15 @@ import AppRoleController from 'prometheus/controllers/app/role';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppRolePageController extends AppRoleController {
+    /**
+     * This method update the given field's value and save the role model.
+     * 
+     * @param {String} fieldToEdit 
+     * @param {String} value 
+     * @method editRole
+     */
+    @action editRole(fieldToEdit, value) {
+        this.model[fieldToEdit] = value;
+        this.model.save();
+    }
 }
