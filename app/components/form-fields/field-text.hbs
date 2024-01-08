@@ -22,11 +22,11 @@
       {{!-- Save and close buttons used when inline editing is allowed --}}
       {{#if (and @allowInlineEdit (not this.disabled))}}
         <span class="input-group-addon">
-          <AppUi::Button class="btn btn-box-tool" {{on "click" (fn this.saveField 'input')}}> <i class="fa fa-check"></i> </AppUi::Button>
+          <AppUi::Button class="btn btn-box-tool" {{on "click" (fn this.saveInlineField 'input')}}> <i class="fa fa-check"></i> </AppUi::Button>
         </span>
 
         <span class="input-group-addon">
-          <AppUi::Button class="btn btn-box-tool" {{on "click" (fn this.closeField 'input')}}> <i class="fa fa-close"></i> </AppUi::Button>
+          <AppUi::Button class="btn btn-box-tool" {{on "click" (fn this.closeInlineField 'input')}}> <i class="fa fa-close"></i> </AppUi::Button>
         </span>        
       {{/if}}
     </div>
