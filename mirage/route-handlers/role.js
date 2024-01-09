@@ -21,7 +21,6 @@ export function register(server, ctx) {
     });
 
     server.patch('/role/:id', (schema, request) => {
-        debugger;
         let requestData = getRequestData(request);
         let role = schema.roles.find(requestData.id);
         role.update(requestData.attributes);
