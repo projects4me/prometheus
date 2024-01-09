@@ -1,16 +1,40 @@
 <AccessControl @aclContext={{@aclContext}}>
   <div data-field={{@data-field}} class="form-field ember-view">
-    <Textarea
-      class="form-control data-input"
-      @value={{@value}} 
-      placeholder={{@placeholder}}
-      @label={{@label}}
-      {{on "blur" (fn this.validate @dependentField)}}
-      {{on "focusout" (action (mut this.shouldValidate) true) }}    
-    />
-    <span class="highlight"></span>
-    <span class="bar"></span>
-    <label class="floating-label">{{@label}}</label>
+
+    {{!-- check if inline editing is allowed or not --}}
+    <div class="{{if @allowInlineEdit 'input-group'}}">
+      <Textarea
+        class="form-control data-input {{if @allowInlineEdit 'edit-field'}}"
+        @value={{@value}} 
+        placeholder={{@placeholder}}
+        @label={{@label}}
+        {{on "blur" (fn this.validate @dependentField)}}
+        {{on "focusout" (action (mut this.shouldValidate) true) }}
+        ...attributes
+      />
+      <span class="highlight"></span>
+      <span class="bar"></span>
+
+      <label class="floating-label {{if @allowInlineEdit 'edit-label'}}">
+        {{@label}} 
+
+        {{!-- Edit Icon for inline editing --}}
+        {{#if @allowInlineEdit}}
+          <i class="fa fa-pencil edit-pencil" data-btn="edit" {{on "click" (fn this.toggleDisabled 'textarea')}}></i>
+        {{/if}}
+      </label>
+      
+      {{!-- Save and close buttons used when inline editing is allowed --}}
+      {{#if (and @allowInlineEdit (not this.disabled))}}
+        <span class="input-group-addon">
+          <AppUi::Button class="btn btn-box-tool" data-btn="save" {{on "click" (fn this.saveInlineField 'textarea')}}> <i class="fa fa-check"></i> </AppUi::Button>
+        </span>
+
+        <span class="input-group-addon">
+          <AppUi::Button class="btn btn-box-tool" data-btn="close" {{on "click" (fn this.closeInlineField 'textarea')}}> <i class="fa fa-close"></i> </AppUi::Button>
+        </span>        
+      {{/if}}      
+    </div>
 
     {{#if (and @message this.shouldValidate)}}
       <span class="error text-red" id={{@data-field}}>

@@ -24,7 +24,7 @@ module('Integration | Component | field-text', function (hooks) {
         `);
 
         assert.equal(this.element.querySelector('input.form-control').placeholder, 'Enter the issue subject ..');
-        assert.equal(this.element.querySelector('label').innerHTML, 'Subject');
+        assert.equal(this.element.querySelector('label').innerText, 'Subject');
         await focus('input.form-control');
         await blur('input.form-control');
         assert.equal(this.element.querySelector('span.error').getAttribute('class'), 'error text-red');

@@ -70,6 +70,9 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
         let updateAttributes = _.pick(data.data.attributes, Object.keys(snapshot.changedAttributes()));
         data.data.attributes = updateAttributes;
 
+        if(_.isEmpty(updateAttributes)) {
+            return;
+        }
         return this.ajax(url, 'PATCH', { data: data });
     }
 }

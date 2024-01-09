@@ -21,11 +21,7 @@ export default class AppRolePageRoute extends AppRoute {
      * @public
      */
      model(params) {
-        let _roleOptions = {
-            query: `((Role.id : ${params.role_id}))`
-        };
-
-        return this.store.query('role', _roleOptions);
+        return this.store.findRecord('role', params.role_id);
     }
 
     /**
@@ -37,6 +33,6 @@ export default class AppRolePageRoute extends AppRoute {
      * @public
      */   
      setupController(controller, model) {
-        controller.set('model', model.objectAt(0));
+        controller.set('model', model);
     }    
 }

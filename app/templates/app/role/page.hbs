@@ -7,7 +7,10 @@
       @data-field="role.name"
       @validate={{action this.validateField "roleCreate" (hash name="name" value=this.model.name)}}
       @message={{this.message.roleCreate.name}}
+      @allowInlineEdit={{true}}
+      @editCb={{this.editRole}}
       {{autofocus}}
+      disabled
     />
 
     <FormFields::FieldTextArea
@@ -16,7 +19,10 @@
       @value={{this.model.description}}
       @data-field="role.description"
       @validate={{action this.validateField "roleCreate" (hash name="description" value=this.model.description)}}
-      @message={{this.message.roleCreate.description}}        
-    />      
+      @message={{this.message.roleCreate.description}}
+      @allowInlineEdit={{true}}
+      @editCb={{this.editRole}}      
+      disabled  
+    />
   </div>
 </div>

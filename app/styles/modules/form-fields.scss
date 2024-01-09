@@ -26,6 +26,38 @@
     font-weight: 400;
   }
 
+  // ++css applied when inline editing is required
+  .input-group {
+    width: 100%;
+
+    .edit-field {
+      border: 0.1rem solid #999;
+    }
+
+    .form-control {
+      float: none;
+    }
+
+    .edit-label {
+      pointer-events: auto;
+      cursor: pointer;
+
+      i {
+        color: black;
+        margin-left: 0.5rem;
+      }
+    }
+
+    .input-group-addon {
+      padding: 0;
+
+      .btn {
+        padding-bottom: 0;
+      }
+    }
+  }
+  // --css applied when inline editing is required
+
   .data-input:focus {
     outline: none;
     border-color: $highlightColor;
@@ -58,6 +90,7 @@
   /* active state */
   .data-input:focus ~ .floating-label,
   .data-input:valid ~ .floating-label,
+  .data-input:disabled ~ .floating-label,
   .select-input ~ .floating-label,
   .multiselect-input ~ .floating-label,
   .focused-field,
@@ -360,9 +393,8 @@ $toggle-width: 30px;
 $toggle-height: 15px;
 $toggle-gutter: 1px;
 $toggle-radius: 50%;
-$toggle-control-speed: .15s;
+$toggle-control-speed: 0.15s;
 $toggle-control-ease: ease-in;
-
 
 $toggle-radius: $toggle-height / 2;
 $toggle-control-size: $toggle-height - ($toggle-gutter * 3);
@@ -386,7 +418,7 @@ $toggle-control-size: $toggle-height - ($toggle-gutter * 3);
 
   input:checked ~ .control {
     background-color: $secondaryColor;
-    
+
     &:after {
       left: $toggle-width - $toggle-control-size - $toggle-gutter;
     }

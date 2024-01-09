@@ -5,9 +5,9 @@ export const when = function () {
     return [
         {
             "User enters $content in project $fieldName": (assert, ctx) => async function (content, fieldName) {
-                let inputEl = document.querySelector(`div.form-group div[data-field="project.${fieldName}"] > input`);
+                let inputEl = document.querySelector(`div.form-group div[data-field="project.${fieldName}"] input`);
                 if (!inputEl) {
-                    var textareaEl = document.querySelector(`div.form-group div[data-field="project.${fieldName}"] > textarea`);
+                    var textareaEl = document.querySelector(`div.form-group div[data-field="project.${fieldName}"] textarea`);
                 }
 
                 let elementToFill = (textareaEl) ? textareaEl : inputEl;
