@@ -12,4 +12,9 @@ export function register(server, ctx) {
         });
         return model;
     });
+
+    server.get('/role/:id', (schema, request) => {
+        let id = request.params.id;
+        return schema.roles.find(id);
+    });    
 }
