@@ -20,18 +20,18 @@
 
         {{!-- Edit Icon for inline editing --}}
         {{#if @allowInlineEdit}}
-          <i class="fa fa-pencil edit-pencil" {{on "click" (fn this.toggleDisabled 'textarea')}}></i>
+          <i class="fa fa-pencil edit-pencil" data-btn="edit" {{on "click" (fn this.toggleDisabled 'textarea')}}></i>
         {{/if}}
       </label>
       
       {{!-- Save and close buttons used when inline editing is allowed --}}
       {{#if (and @allowInlineEdit (not this.disabled))}}
         <span class="input-group-addon">
-          <AppUi::Button class="btn btn-box-tool" {{on "click" (fn this.saveInlineField 'textarea')}}> <i class="fa fa-check"></i> </AppUi::Button>
+          <AppUi::Button class="btn btn-box-tool" data-btn="save" {{on "click" (fn this.saveInlineField 'textarea')}}> <i class="fa fa-check"></i> </AppUi::Button>
         </span>
 
         <span class="input-group-addon">
-          <AppUi::Button class="btn btn-box-tool" {{on "click" (fn this.closeInlineField 'textarea')}}> <i class="fa fa-close"></i> </AppUi::Button>
+          <AppUi::Button class="btn btn-box-tool" data-btn="close" {{on "click" (fn this.closeInlineField 'textarea')}}> <i class="fa fa-close"></i> </AppUi::Button>
         </span>        
       {{/if}}      
     </div>
