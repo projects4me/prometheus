@@ -33,7 +33,7 @@ export const when = function () {
         {
             "User edit issue $issueFieldToEdit to $content": (assert) => async function (issueFieldToEdit, content) {
                 let selectors = {
-                    subject: 'div[data-field="issue.subject"] > input',
+                    subject: 'div[data-field="issue.subject"] input',
                     description: 'div.tui-editor-contents[contenteditable="true"]'
 
                 }

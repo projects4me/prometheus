@@ -34,7 +34,7 @@ export const when = function () {
         },
         {
             "User enters $content in subject": (assert) => async function (content) {
-                let inputElement = document.querySelector('div.form-group > div[data-field="issue.subject"] > input');
+                let inputElement = document.querySelector('div.form-group > div[data-field="issue.subject"] input');
                 await fillIn(inputElement, content);
                 assert.ok(true, "User enters subject");
             }
