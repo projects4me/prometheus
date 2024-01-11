@@ -137,7 +137,6 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
 
         // Initialize the tag record
         let newTag = _self.get('newTag');
-        debugger;
         this.validate(newTag, 'tagCreate').then((validation) => {
 
             if (validation.isValid) {

@@ -389,4 +389,14 @@ export default class PrometheusCreateController extends PrometheusController {
      */
     afterCancel() {
     }
+
+    /**
+     * This function is used to rollback the attributes of the given model if
+     * there is any change occurred in the model.
+     * 
+     * @param {Prometheus.Models} model 
+     */
+    @action resetModelAttributes(model) {
+        model.rollbackAttributes();
+    }
 }

@@ -8,9 +8,9 @@
       @validate={{action this.validateField "roleCreate" (hash name="name" value=this.model.name)}}
       @message={{this.message.roleCreate.name}}
       @allowInlineEdit={{true}}
-      @editCb={{this.editRole}}
-      {{autofocus}}
-      disabled
+      @onBlur={{fn this.editRole 'name'}}
+      @reset={{fn this.resetModelAttributes this.model}}
+      @save={{fn this.editRole 'name'}}
     />
 
     <FormFields::FieldTextArea
@@ -21,8 +21,9 @@
       @validate={{action this.validateField "roleCreate" (hash name="description" value=this.model.description)}}
       @message={{this.message.roleCreate.description}}
       @allowInlineEdit={{true}}
-      @editCb={{this.editRole}}      
-      disabled  
+      @onBlur={{fn this.editRole 'description'}}
+      @reset={{fn this.resetModelAttributes this.model}}
+      @save={{fn this.editRole 'description'}}      
     />
   </div>
 </div>

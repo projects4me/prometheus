@@ -9,7 +9,6 @@ Feature: Role | edit role fields
     And User_1 is logged in
     When User navigates to app/role
     And User selects role 2
-    And User clicks on edit button to change role name
     And User enters Astronaut in role name input field
     And User clicks on save button to save role name
     Then Role name of type input value is Astronaut
@@ -22,7 +21,6 @@ Feature: Role | edit role fields
     And User_1 is logged in
     When User navigates to app/role
     And User selects role 2
-    And User clicks on edit button to change role description
     And User enters Astronaut description in role description textarea field
     And User clicks on save button to save role description
     Then Role description of type textarea value is Astronaut description

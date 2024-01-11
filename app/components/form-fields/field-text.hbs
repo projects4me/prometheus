@@ -1,35 +1,16 @@
 <AccessControl @aclContext={{@aclContext}}>
-  <div data-field={{@data-field}} class={{concat "form-field ember-view " @readonly}}>
+  <div data-field={{@data-field}} class={{concat "form-field ember-view " @readonly (if @allowInlineEdit 'edit-field')}}>
     
-    {{!-- check if inline editing is allowed or not --}}
-    <div class="{{if @allowInlineEdit 'input-group'}}">
-      <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input {{if @allowInlineEdit 'edit-field'}}" @value={{@value}}
-        maxlength={{@length}} aria-invalid="true" aria-describedBy={{@data-field}} {{apply-mask @mask}} {{on "focusin" this.focusIn}}
-        readonly={{@readonly}} {{on "focusout" (action (mut this.shouldValidate) true) }} {{on "input" this.onInput}}
-        {{on "blur" (fn this.validate @dependentField)}} ...attributes/>
-      <span class="highlight"></span>
-      <span class="bar"></span>
+    <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}}
+      maxlength={{@length}} aria-invalid="true" aria-describedBy={{@data-field}} {{apply-mask @mask}} {{on "focusin" this.focusIn}}
+      readonly={{@readonly}} {{on "focusout" (action (mut this.shouldValidate) true) }} {{on "input" this.onInput}} {{on "blur" this.onBlur}}
+      {{on "blur" (fn this.validate @dependentField)}} ...attributes/>
+    <span class="highlight"></span>
+    <span class="bar"></span>
 
-      <label class="floating-label {{if @allowInlineEdit 'edit-label'}}">
-        {{@label}} 
-        
-        {{!-- Edit Icon for inline editing --}}
-        {{#if @allowInlineEdit}}
-          <i class="fa fa-pencil edit-pencil" data-btn="edit" {{on "click" (fn this.toggleDisabled 'input')}}></i>
-        {{/if}}
-      </label>
-      
-      {{!-- Save and close buttons used when inline editing is allowed --}}
-      {{#if (and @allowInlineEdit (not this.disabled))}}
-        <span class="input-group-addon">
-          <AppUi::Button class="btn btn-box-tool" data-btn="save" {{on "click" (fn this.saveInlineField 'input')}}> <i class="fa fa-check"></i> </AppUi::Button>
-        </span>
-
-        <span class="input-group-addon">
-          <AppUi::Button class="btn btn-box-tool" data-btn="close" {{on "click" (fn this.closeInlineField 'input')}}> <i class="fa fa-close"></i> </AppUi::Button>
-        </span>        
-      {{/if}}
-    </div>
+    <label class="floating-label">
+      {{@label}}
+    </label>
       
     {{#if (and (not @readonly) (@lengthRequired)) }}
       <span class="count pull-right">{{this.charLength}}/{{@length}}</span>
@@ -40,6 +21,19 @@
         {{@message}}
       </span>
     {{/if}}
+
+    {{#if @allowInlineEdit}}
+      <span class="form-control-feedback edit">
+        <i class="fa fa-pencil"></i>
+      </span>
+      <span class="form-control-feedback save">
+        <i class="fa fa-check" data-btn="save" {{on "mousedown" @save}}></i>
+      </span>
+      
+      <span class="form-control-feedback revert">
+        <i class="fa fa-close" data-btn="close" {{on "mousedown" @reset}}></i>
+      </span>
+    {{/if}}    
 
     <FormFields::ValidationMessages
       @isSuccessful={{@isSuccessful}}

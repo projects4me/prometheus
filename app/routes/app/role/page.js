@@ -20,7 +20,7 @@ export default class AppRolePageRoute extends AppRoute {
      * @method model;
      * @public
      */
-     model(params) {
+    model(params) {
         return this.store.findRecord('role', params.role_id);
     }
 
@@ -31,8 +31,8 @@ export default class AppRolePageRoute extends AppRoute {
      * @param {Prometheus.Controllers.App.Role} controller the controller object for this route
      * @param Object model
      * @public
-     */   
-     setupController(controller, model) {
+     */
+    setupController(controller, model) {
         controller.set('model', model);
-    }    
+    }
 }

@@ -7,7 +7,6 @@ import { cancel } from '@ember/runloop';
 import { later } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
 import Logger from 'js-logger';
-import { action } from '@ember/object';
 
 /**
  * This component is used to serve as a container for the fields that we intend to
@@ -110,17 +109,6 @@ export default class FormFieldsComponent extends Component {
      * @private
      */
     isViewable = true;
-
-    /**
-     * This property is used to keep track the disabled value of the input and textarea
-     * elements. This property is used (for now) when inline editing is required.
-     *
-     * @property disabled
-     * @type Boolean
-     * @for FormFields
-     * @protected
-     */
-    @tracked disabled = true;
 
     /**
      * During the initialize phase of the field we need to evaluate if the
@@ -309,57 +297,12 @@ export default class FormFieldsComponent extends Component {
     }
 
     /**
-     * This method toggle the disabled value of given type of html element.
+     * This method returns onBlur function.
      * 
-     * @param {HTMLInputElement|HTMLTextAreaElement} elementType 
-     * @method toggleDisabled
-     * @protected
+     * @property onBlur
+     * @for FormFieldsComponent
      */
-    @action toggleDisabled(elementType) {
-        this.setDisabledValue(elementType, false);
-    }
-
-    /**
-     * This function saves the inline edited field value.
-     * 
-     * @param {HTMLInputElement|HTMLTextAreaElement} elementType
-     * @method saveInlineField
-     * @protected
-     */
-    @action saveInlineField(elementType) {
-        if (!this.args.message) {
-            let disabledEl = this.setDisabledValue(elementType, true);
-            let fieldName = (this.args['data-field']).split('.')[1];
-            this.args.editCb(fieldName, disabledEl.value);
-        }
-    }
-
-    /**
-     * This function set the disabled value of given html element to true.
-     * 
-     * @param {HTMLInputElement|HTMLTextAreaElement} elementType 
-     * @method closeInlineField
-     * @protected
-     */
-    @action closeInlineField(elementType) {
-        if (!this.args.message) {
-            this.setDisabledValue(elementType, true);
-        }
-    }
-
-    /**
-     * This function set the disabled value of given html element according to
-     * the given value.
-     * 
-     * @param {HTMLInputElement|HTMLTextAreaElement} elementType 
-     * @param {Boolean} isDisabled 
-     * @method setDisabledValue
-     * @returns {HTMLInputElement|HTMLTextAreaElement} el
-     */
-    setDisabledValue(elementType, isDisabled) {
-        let fieldName = this.args['data-field'];
-        let el = document.querySelector(`[data-field="${fieldName}"] ${elementType}`);
-        this.disabled = el.disabled = isDisabled;
-        return el;
+    get onBlur() {
+        return this.args.onBlur ?? (() => true);
     }
 }
