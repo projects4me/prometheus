@@ -71,7 +71,7 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
         data.data.attributes = updateAttributes;
 
         if(_.isEmpty(updateAttributes)) {
-            return;
+            return false;
         }
         return this.ajax(url, 'PATCH', { data: data });
     }
