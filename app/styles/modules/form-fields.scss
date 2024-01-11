@@ -429,7 +429,7 @@ $toggle-control-size: $toggle-height - ($toggle-gutter * 3);
     }
   }
 
-  span:not(.edit) {
+  span:not(.edit, .error) {
     visibility: hidden;
     pointer-events: auto;
   }
