@@ -3,7 +3,7 @@
     
     <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}}
       maxlength={{@length}} aria-invalid="true" aria-describedBy={{@data-field}} {{apply-mask @mask}} {{on "focusin" this.focusIn}}
-      readonly={{@readonly}} {{on "focusout" (action (mut this.shouldValidate) true) }} {{on "input" this.onInput}} {{on "blur" this.onBlur}}
+      readonly={{@readonly}} {{on "focusout" (action (mut this.shouldValidate) true) }} {{on "input" this.onInput}} {{on "focusout" this.onBlur}}
       {{on "blur" (fn this.validate @dependentField)}} ...attributes/>
     <span class="highlight"></span>
     <span class="bar"></span>
