@@ -29,11 +29,11 @@
         <i class="fa fa-pencil"></i>
       </span>
       <span class="form-control-feedback save">
-        <i class="fa fa-check" {{on "mousedown" @save}}></i>
+        <i class="fa fa-check" data-btn="save" {{on "mousedown" @save}}></i>
       </span>
       
       <span class="form-control-feedback revert">
-        <i class="fa fa-close" {{on "mousedown" @reset}}></i>
+        <i class="fa fa-close" data-btn="close" {{on "mousedown" @reset}}></i>
       </span>
     {{/if}}    
   </div>
