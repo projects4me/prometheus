@@ -22,7 +22,7 @@ export default class AppRolePageController extends AppRoleController {
      * @method editRole
      */
     @action editRole(fieldToEdit) {
-        if (_.isEmpty(this.message.roleCreate[fieldToEdit])
+        if (_.isEmpty(this.message?.roleCreate?.[fieldToEdit])
             && this.hasChanged(this.model)
             && !this.model.isSaving) {
             this.model.save().then(() => {
