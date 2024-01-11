@@ -21,8 +21,15 @@ export default class AppRolePageController extends AppRoleController {
      * @param {String} value 
      * @method editRole
      */
-    @action editRole(fieldToEdit, value) {
-        this.model[fieldToEdit] = value;
-        this.model.save();
+    @action editRole(fieldToEdit) {
+        if (this.hasChanged(this.model) && !this.model.isSaving) {
+            this.model.save().then(() => {
+                new Messenger().post({
+                    message: `Role ${fieldToEdit} updated`,
+                    type: 'success',
+                    showCloseButton: true
+                });
+            });
+        }
     }
 }
