@@ -26,43 +26,6 @@
     font-weight: 400;
   }
 
-  // ++css applied when inline editing is required
-  .input-group {
-    width: 100%;
-
-    .edit-field {
-      border: 0.1rem solid #999;
-    }
-
-    .form-control {
-      float: none;
-    }
-
-    .edit-label {
-      pointer-events: auto;
-      cursor: pointer;
-
-      i {
-        color: black;
-        margin-left: 0.5rem;
-      }
-    }
-
-    .input-group-addon {
-      padding: 0;
-
-      .btn {
-        padding-bottom: 0;
-      }
-    }
-  }
-  // --css applied when inline editing is required
-
-  .data-input:focus {
-    outline: none;
-    border-color: $highlightColor;
-  }
-
   .count,
   .error {
     font-size: 1rem;
@@ -90,7 +53,6 @@
   /* active state */
   .data-input:focus ~ .floating-label,
   .data-input:valid ~ .floating-label,
-  .data-input:disabled ~ .floating-label,
   .select-input ~ .floating-label,
   .multiselect-input ~ .floating-label,
   .focused-field,
@@ -445,5 +407,35 @@ $toggle-control-size: $toggle-height - ($toggle-gutter * 3);
       background: $backgroundColor;
       transition: left $toggle-control-speed $toggle-control-ease;
     }
+  }
+}
+
+/* Inline Edit Input & Textarea Field ======================================= */
+.form-field.edit-field {
+  input,
+  textarea {
+    border: none;
+
+    &:hover {
+      border-bottom: 0.1rem solid #999;
+    }
+
+    &:focus ~ span.edit {
+      visibility: hidden;
+    }
+
+    &:focus ~ span:not(.edit) {
+      visibility: visible;
+    }
+  }
+
+  span:not(.edit) {
+    visibility: hidden;
+    pointer-events: auto;
+  }
+
+  span.save {
+    margin-right: 2rem;
+    color: green;
   }
 }
