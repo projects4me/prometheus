@@ -26,4 +26,10 @@ export function register(server, ctx) {
         role.update(requestData.attributes);
         return role;
     });
+
+    server.post('/role', (schema, request) => {
+        let requestData = getRequestData(request);
+        let role = server.create('role', requestData.attributes);
+        return role;
+    });
 }

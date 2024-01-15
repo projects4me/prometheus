@@ -15,8 +15,9 @@ export const when = function () {
 export const then = function () {
     return [
         {
-            "There will a role name $role in the template": (assert) => async function (role) {
-                assert.dom('[data-role-field="name"]').hasText(role);
+            "There will a role name $roleName in the template": (assert) => async function (roleName) {
+                let role = server.schema.roles.findBy({name: roleName});
+                assert.dom(`[data-role="${role.id}"] [data-role-field="name"]`).hasText(roleName);
             }
         }
     ];
