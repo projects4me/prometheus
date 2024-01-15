@@ -952,13 +952,19 @@
       },
       "role": {
         "list" : {
-          "add": "Add a new role"
+          "updated": "Role {field} updated"
         },
         "create" : {
+          "title": "Add a new role",
           "nameplaceholder": "Enter role name",
           "descriptionplaceholder": "Enter role desciprition",
           "name" : "Name",
           "description": "Description"
+        },
+        "created": "Role {name} created",
+        "fields": {
+          "name" : "Name",
+          "description" : "Description"
         }
       },
       "components": {

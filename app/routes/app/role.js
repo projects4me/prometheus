@@ -21,7 +21,7 @@ export default class AppRoleRoute extends App {
      * @returns Promise
      * @protected
      */
-     model() {
+    model() {
         let rolesOptions = {
             sort: 'Role.name',
             order: 'ASC',
@@ -38,8 +38,11 @@ export default class AppRoleRoute extends App {
      * @param {Prometheus.Controllers.App.Role} controller the controller object for this route
      * @param Object model
      * @public
-     */   
+     */
     setupController(controller, model) {
-        controller.set('roles', model);
-    }    
+        let newRole = this.store.createRecord('role', {});
+
+        controller.set('roles', model.toArray());
+        controller.set('newRole', newRole);
+    }
 }

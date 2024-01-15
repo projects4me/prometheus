@@ -54,12 +54,13 @@ import * as sortUsers from './user-management/sort-users-steps';
 import * as renderRoles from './role/render-roles-steps';
 import * as searchRole from './role/search-role-steps';
 import * as editRoleFields from './role/edit-role-fields-steps';
+import * as createRole from './role/create-role-steps';
 import * as inlineEditing from './form-fields/inline-editing';
 import * as enterDataIntoDifferentFields from './form-fields/enter-data-into-different-fields';
 import * as checkFieldData from './form-fields/check-field-data';
 
 export default function (assert) {
-    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, deleteAUser, navigateToUser, changeUserAccountStatus, createUser, editUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, deleteAUser, navigateToUser, changeUserAccountStatus, createUser, editUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData, createRole);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()

@@ -4,6 +4,7 @@
 
 import AppRoleController from 'prometheus/controllers/app/role';
 import { action } from '@ember/object';
+import { htmlSafe } from '@ember/template';
 
 /**
  * The role page controller.
@@ -22,12 +23,15 @@ export default class AppRolePageController extends AppRoleController {
      * @method editRole
      */
     @action editRole(fieldToEdit) {
+        let _self = this;
+
         if (_.isEmpty(this.message?.roleCreate?.[fieldToEdit])
-            && this.hasChanged(this.model)
-            && !this.model.isSaving) {
-            this.model.save().then(() => {
+            && _self.hasChanged(this.model)
+            && !_self.model.isSaving) {
+            _self.model.save().then(() => {
+                let successMessage = htmlSafe(_self.intl.t('views.app.role.list.updated', { field: fieldToEdit }));
                 new Messenger().post({
-                    message: `Role ${fieldToEdit} updated`,
+                    message: successMessage,
                     type: 'success',
                     showCloseButton: true
                 });
