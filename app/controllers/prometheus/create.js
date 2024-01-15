@@ -108,11 +108,14 @@ export default class PrometheusCreateController extends PrometheusController {
      * @protected
      */
     @action validateField(schemaName, actualField, dependentField, event) {
+        //use model if passed otherwise use default "this.model"
+        let model = actualField.model ?? this.model;
+
         //Validate field if it exists on schema object
         if (this[schemaName].fields[actualField.name]) {
             try {
-                this.beforeValidate(this.model);
-                this[schemaName].validateSyncAt(actualField.name, this.model);
+                this.beforeValidate(model);
+                this[schemaName].validateSyncAt(actualField.name, model);
 
                 //If validation is passed then remove previous message of actual field (if exists)
                 _.set(this.message, `${schemaName}.${actualField.name}`, '');
