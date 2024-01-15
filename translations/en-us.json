@@ -952,7 +952,8 @@
       },
       "role": {
         "list" : {
-          "add": "Add a new role"
+          "add": "Add a new role",
+          "updated": "Role {field} updated"
         },
         "create" : {
           "nameplaceholder": "Enter role name",
