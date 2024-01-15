@@ -38,12 +38,43 @@
               {{!-- +Role Add Button --}}
               <div class="role-card-container {{this.roleCardClass}}">
                 <div class="role-card role-add-card">
-                  <div class="role-add" data-toggle="tooltip" title="{{t "views.app.role.list.add"}}">
+                  <div class="role-add" data-toggle="tooltip" title="{{t "views.app.role.list.add"}}" {{on "click" this.showAddRoleDialog}} data-btn="role-add">
                     <ion class="ion-md-add"></ion>
                   </div>
                 </div>
               </div>
               {{!-- Role Add Button --}}
+              
+              {{!-- Modal for creating new roles --}}
+              {{#if this.addRoleDialog}}
+                {{#bootstrap-modal
+                  title="views.app.role.create.title"
+                  confirmLabel="global.form.save"
+                  closeLabel="global.form.cancel"
+                  confirm=(action "addRole")
+                  close=(action "removeModal")
+                }}
+                <div class="box-body">
+                  <FormFields::FieldText
+                    @placeholder={{t "views.app.role.create.nameplaceholder"}}
+                    @label={{t "views.app.role.create.name"}}
+                    @value={{this.newRole.name}}
+                    @data-field="role.name"
+                    @validate={{action this.validateField "roleCreate" (hash name="name" value=this.newRole.name model=this.newRole)}}
+                    @message={{this.message.roleCreate.name}}                    
+                  />
+
+                  <FormFields::FieldTextArea
+                    @placeholder={{t "views.app.role.create.descriptionplaceholder"}}
+                    @label={{t "views.app.role.create.description"}}
+                    @value={{this.newRole.description}}
+                    @data-field="role.description"
+                    @validate={{action this.validateField "roleCreate" (hash name="description" value=this.newRole.description model=this.newRole)}}
+                    @message={{this.message.roleCreate.description}}
+                  />                  
+                </div>
+                {{/bootstrap-modal}}
+              {{/if}}
 
             </div>
 
