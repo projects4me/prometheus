@@ -100,7 +100,7 @@ export default class AppRoleController extends PrometheusCreateController {
      * @property filteredRoles
      * @return Array
      */
-    @computed('roles.length')
+    @computed('roles.length', 'searchQuery')
     get filteredRoles() {
         return this.roles.filter((role) => {
             return role.name.toLowerCase().includes(this.searchQuery)
