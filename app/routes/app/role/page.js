@@ -23,7 +23,7 @@ export default class AppRolePageRoute extends AppRoute {
      */
     model(params) {
         let permissionOptions = {
-            query: `((Permission.roleId : ${params.role_id}))`
+            roleId: params.role_id
         }
         return hash({
             role: this.store.findRecord('role', params.role_id),
