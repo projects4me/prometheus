@@ -34,7 +34,7 @@
           <div class="panel-group" id="accordion">
 
             {{#each-in this.permissions as |name permissions|}}
-            <div class="panel panel-default">
+            <div class="panel panel-default" data-permission-module={{name}}>
               <div class="panel-heading">
                 <h4 class="panel-title">
                   <a data-toggle="collapse" data-parent="#accordion" href={{concat "#" name}} {{on "click" (fn
@@ -59,7 +59,7 @@
                     </thead>
                     <tbody>
                       {{#each this.modulePermissions as |permission|}}
-                      <tr>
+                      <tr data-module-resource={{permission.resourceName}}>
                         <td>{{permission.resourceName}}</td>
                         {{#each this.permissionFlags as |flag|}}
                         <td>
