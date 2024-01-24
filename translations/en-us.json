@@ -11,7 +11,7 @@
     "required": "This field is required",
     "optionality": "This field is required",
     "oneOf": "{dependentField} must matches",
-    "email": "Please enter a valid email address",    
+    "email": "Please enter a valid email address",
     "inclusion": "{description} is not included in the list",
     "exclusion": "{description} is reserved",
     "invalid": "{description} is invalid",
@@ -785,27 +785,27 @@
             "projects": "Projects",
             "issues": "Issues",
             "timespent": {
-                "label": "Time Spent",
-                "sublabel": "issues",
-                "minutes": "Minutes",
-                "hours": "Hours",
-                "days": "Days",
-                "years": "Years"
+              "label": "Time Spent",
+              "sublabel": "issues",
+              "minutes": "Minutes",
+              "hours": "Hours",
+              "days": "Days",
+              "years": "Years"
             },
             "collaboration": "Collaboration"
           },
           "latestProjects": {
-              "title": "Latest Projects",
-              "noProject": "No Projects found"
+            "title": "Latest Projects",
+            "noProject": "No Projects found"
           },
           "latestIssues": {
             "title": "Latest Issues",
             "createdOn": "created on",
             "noIssues": "No Issues found"
-        },
+          },
           "recentActivities": {
-              "title": "Recent Activities",
-              "noActivity": "No Activity Recorded"
+            "title": "Recent Activities",
+            "noActivity": "No Activity Recorded"
           },
           "worksMostWith": "Works Most With"
         },
@@ -833,7 +833,7 @@
           "dateofbirth": "Date Of Birth",
           "language": "Language",
           "timezone": "Timezone",
-          "confirmpassword": "Confirm Password",          
+          "confirmpassword": "Confirm Password",
           "nameplaceholder": "Enter full name",
           "usernameplaceholder": "Enter username",
           "emailplaceholder": "Enter email address",
@@ -861,7 +861,7 @@
           "language": "Language",
           "timezone": "Timezone",
           "profilePicture": "Profile Picture",
-          "confirmpassword": "Confirm Password",          
+          "confirmpassword": "Confirm Password",
           "nameplaceholder": "Enter full name",
           "usernameplaceholder": "Enter username",
           "emailplaceholder": "Enter email address",
@@ -951,20 +951,35 @@
         "backlog": "Backlog"
       },
       "role": {
-        "list" : {
+        "list": {
           "updated": "Role {field} updated"
         },
-        "create" : {
+        "tabs": {
+          "permissions": "Permissions",
+          "users": "Users"
+        },
+        "create": {
           "title": "Add a new role",
           "nameplaceholder": "Enter role name",
           "descriptionplaceholder": "Enter role desciprition",
-          "name" : "Name",
+          "name": "Name",
           "description": "Description"
         },
         "created": "Role {name} created",
         "fields": {
-          "name" : "Name",
-          "description" : "Description"
+          "name": "Name",
+          "description": "Description"
+        },
+        "permission": {
+          "flags": {
+            "read": "Read",
+            "create": "Create",
+            "search": "Search",
+            "update": "Update",
+            "delete": "Delete",
+            "import": "Import",
+            "export": "Export"
+          }
         }
       },
       "components": {
