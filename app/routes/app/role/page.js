@@ -3,6 +3,7 @@
  */
 
 import AppRoute from 'prometheus/routes/app';
+import { hash } from 'rsvp';
 
 /**
  *  This is the route to load a role selected by the user.
@@ -21,7 +22,13 @@ export default class AppRolePageRoute extends AppRoute {
      * @public
      */
     model(params) {
-        return this.store.findRecord('role', params.role_id);
+        let permissionOptions = {
+            query: `((Permission.roleId : ${params.role_id}))`
+        }
+        return hash({
+            role: this.store.findRecord('role', params.role_id),
+            permissions: this.store.query('permission', permissionOptions)
+        });
     }
 
     /**
@@ -33,6 +40,7 @@ export default class AppRolePageRoute extends AppRoute {
      * @public
      */
     setupController(controller, model) {
-        controller.set('model', model);
+        controller.set('model', model.role);
+        controller.model.permissions = model.permissions;
     }
 }
