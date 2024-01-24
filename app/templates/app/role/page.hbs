@@ -1,29 +1,89 @@
 <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12 role-details">
   <div class="field-group">
-    <FormFields::FieldText
-      @placeholder={{t "views.app.role.create.nameplaceholder"}}
-      @label={{t "views.app.role.create.name"}}
-      @value={{this.model.name}}
-      @data-field="role.name"
-      @validate={{action this.validateField "roleCreate" (hash name="name" value=this.model.name)}}
-      @message={{this.message.roleCreate.name}}
-      @allowInlineEdit={{true}}
-      @onBlur={{fn this.editRole 'name'}}
-      @reset={{fn this.resetModelAttributes this.model}}
-      @save={{fn this.editRole 'name'}}
-    />
+    <FormFields::FieldText @placeholder={{t "views.app.role.create.nameplaceholder" }}
+      @label={{t "views.app.role.create.name" }} @value={{this.model.name}} @data-field="role.name" @validate={{action
+      this.validateField "roleCreate" (hash name="name" value=this.model.name)}}
+      @message={{this.message.roleCreate.name}} @allowInlineEdit={{true}} @onBlur={{fn this.editRole 'name' }}
+      @reset={{fn this.resetModelAttributes this.model}} @save={{fn this.editRole 'name' }} />
 
-    <FormFields::FieldTextArea
-      @placeholder={{t "views.app.role.create.descriptionplaceholder"}}
-      @label={{t "views.app.role.create.description"}}
-      @value={{this.model.description}}
-      @data-field="role.description"
+    <FormFields::FieldTextArea @placeholder={{t "views.app.role.create.descriptionplaceholder" }}
+      @label={{t "views.app.role.create.description" }} @value={{this.model.description}} @data-field="role.description"
       @validate={{action this.validateField "roleCreate" (hash name="description" value=this.model.description)}}
-      @message={{this.message.roleCreate.description}}
-      @allowInlineEdit={{true}}
-      @onBlur={{fn this.editRole 'description'}}
-      @reset={{fn this.resetModelAttributes this.model}}
-      @save={{fn this.editRole 'description'}}      
-    />
+      @message={{this.message.roleCreate.description}} @allowInlineEdit={{true}} @onBlur={{fn
+      this.editRole 'description' }} @reset={{fn this.resetModelAttributes this.model}} @save={{fn
+      this.editRole 'description' }} />
+  </div>
+
+  {{!-- Permissions and Users tab --}}
+  <div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+      {{!-- Permissions tab --}}
+      <li class="active"><a href="#permissions" data-toggle="tab">{{t "views.app.role.tabs.permissions"}}</a></li>
+
+      {{!-- Users tab --}}
+      <li><a href="#users" data-toggle="tab">Users</a></li>
+    </ul>
+
+    <div class="tab-content">
+
+      {{!-- Role Permissions --}}
+      <div class="tab-pane active" id="permissions">
+
+        {{!-- Accordion --}}
+        <div class="box-body">
+          <div class="panel-group" id="accordion">
+
+            {{#each-in this.permissions as |name permissions|}}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion" href={{concat "#" name}} {{on "click" (fn
+                    this.setPermissions name)}}>{{name}}</a>
+                </h4>
+              </div>
+              <div id={{name}} class="panel-collapse collapse">
+
+                <div class="table-responsive">
+                  <table class="table table-hover table-striped">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>{{t "views.app.role.permission.flags.read"}}</th>
+                        <th>{{t "views.app.role.permission.flags.create"}}</th>
+                        <th>{{t "views.app.role.permission.flags.search"}}</th>
+                        <th>{{t "views.app.role.permission.flags.update"}}</th>
+                        <th>{{t "views.app.role.permission.flags.delete"}}</th>
+                        <th>{{t "views.app.role.permission.flags.import"}}</th>
+                        <th>{{t "views.app.role.permission.flags.export"}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each this.modulePermissions as |permission|}}
+                      <tr>
+                        <td>{{permission.resourceName}}</td>
+                        {{#each this.permissionFlags as |flag|}}
+                        <td>
+                          <Role::PermissionOptions @options={{get-permission-options 'api' }} />
+                        </td>
+                        {{/each}}
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            {{/each-in}}
+
+          </div>
+        </div>
+
+      </div>
+      {{!-- Users to which this role is assigned --}}
+      <div class="tab-pane" id="users">
+        <p>{{t "views.app.role.tabs.users"}}</p>
+      </div>
+
+    </div>
   </div>
 </div>
