@@ -33,7 +33,6 @@ export const then = function () {
     return [
         {
             "There are $permissionCount permissions for that module": (assert) => async function (permissionCount) {
-                debugger;
                 assert.dom('[data-permission-module="Issue"] tbody tr').exists({ count: parseInt(permissionCount) });
             }
         }
