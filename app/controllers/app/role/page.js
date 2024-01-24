@@ -71,8 +71,9 @@ export default class AppRolePageController extends AppRoleController {
         //add childs (fields, relationships) inside the parent.
         modelsList.forEach((modelName) => {
             let modelPermissions = permissions.filter((permission) => {
-                let name = (permission.resourceName.split('.'))[0];
-                if (modelName === name) {
+                let [model, fieldName] = permission.resourceName.split('.');
+                if (modelName === model) {
+                    permission.resourceName = fieldName ?? model;
                     return permission;
                 }
             });
