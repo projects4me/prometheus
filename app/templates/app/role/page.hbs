@@ -63,7 +63,7 @@
                         <td>{{permission.resourceName}}</td>
                         {{#each this.permissionFlags as |flag|}}
                         <td>
-                          <Role::PermissionOptions @options={{get-permission-options 'api' }} />
+                          <Role::PermissionOptions @options={{get-permission-options 'apiOptions' }} />
                         </td>
                         {{/each}}
                       </tr>

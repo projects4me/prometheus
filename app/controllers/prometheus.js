@@ -71,6 +71,16 @@ export default class PrometheusController extends Controller {
     @service('router') router;
 
     /**
+     * The settings service maintains all of the system level configurations.
+     * 
+     * @property settings
+     * @type Ember.Service
+     * @for Prometheus.Controllers.Prometheus
+     * @public
+     */
+    @service settings;
+
+    /**
      * API's host.
      * 
      * @property apiHost
@@ -131,7 +141,7 @@ export default class PrometheusController extends Controller {
                         dependentField: translatedDependentField
                     }
                 }
-                
+
                 let translatedMessage = intl.t(`errors.${error.type}`, _translationOptions);
                 let message = `<b>${translatedLabel}:</b> ${translatedMessage}`;
 
