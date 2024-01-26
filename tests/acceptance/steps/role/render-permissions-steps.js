@@ -5,7 +5,7 @@ export const given = function () {
     return [
         {
             "There are $count permissions for role $roleId": (assert) => async function (count, roleId) {
-                let permissions = server.createList('permission', parseInt(count));
+                let permissions = server.createList('permission', parseInt(count, 10));
                 permissions.forEach((permission) => {
                     permission.update({
                         roleId: roleId
@@ -33,7 +33,7 @@ export const then = function () {
     return [
         {
             "There are $permissionCount permissions for that module": (assert) => async function (permissionCount) {
-                assert.dom('[data-permission-module="Issue"] tbody tr').exists({ count: parseInt(permissionCount) });
+                assert.dom('[data-permission-module="Issue"] tbody tr').exists({ count: parseInt(permissionCount, 10) });
             }
         }
     ];
