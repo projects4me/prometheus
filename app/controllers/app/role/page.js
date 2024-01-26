@@ -90,15 +90,7 @@ export default class AppRolePageController extends AppRoleController {
      * @protected
      */
     get permissionFlags() {
-        return [
-            "readF",
-            "createF",
-            "searchF",
-            "updateF",
-            "deleteF",
-            "importF",
-            "exportF"
-        ];
+        return (this.settings.get('aclSettings')).permissionFlags;
     }
 
     /**

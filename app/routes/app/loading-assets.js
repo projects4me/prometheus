@@ -5,6 +5,7 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import getCurrentUrl from 'prometheus/utils/location/current-url'
+import { hash } from 'rsvp';
 
 /**
  * The loading assets route.
@@ -47,6 +48,16 @@ export default class AppLoadingAssetsRoute extends Route {
     @service session;
 
     /**
+     * The settings service maintains all of the system level configurations.
+     * 
+     * @property settings
+     * @type Ember.Service
+     * @for AppLoadingAssetsRoute
+     * @public
+     */
+    @service settings;
+
+    /**
      * This method is called by ember when we enter this route and returns
      * resolved promises to the setupController function. In this method we're
      * fetching loggedin user model by using currentUser service. We'll fetch
@@ -58,7 +69,10 @@ export default class AppLoadingAssetsRoute extends Route {
      * @protected
      */
     model() {
-        return this.currentUser.loadUser();
+        return hash({
+            "user": this.currentUser.loadUser(),
+            "settings": this.settings.loadSettings()
+        });
     }
 
     /**
