@@ -1,0 +1,5 @@
+<select>
+  {{#each @options as |optionObject|}}
+  <option value={{optionObject.value}} selected={{eq @value optionObject}}>{{optionObject.label}}</option>
+  {{/each}}
+</select>

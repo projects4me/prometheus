@@ -24,6 +24,8 @@ import * as Upload from './route-handlers/upload';
 import * as User from './route-handlers/user';
 import * as Vote from './route-handlers/vote';
 import * as Wiki from './route-handlers/wiki';
+import * as Permission from './route-handlers/permission';
+import * as Systemsetting from './route-handlers/systemsetting';
 
 export function makeServer(config) {
     let finalConfig = {
@@ -64,4 +66,6 @@ function routes() {
     User.register(this, ctx);
     Vote.register(this, ctx);
     Wiki.register(this, ctx);
+    Permission.register(this, ctx);
+    Systemsetting.register(this, ctx);
 }
