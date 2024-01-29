@@ -20,9 +20,19 @@ export default Helper.extend({
      * @property settings
      * @type Ember.Service
      * @for Prometheus.Helpers.GetPermissionOptions
-     * @public
+     * @private
      */
     settings: service(),
+
+    /**
+     * The intl library service that is used in order to get the translations
+     *
+     * @property intl
+     * @type Ember.Service
+     * @for Prometheus.Helpers.GetPermissionOptions
+     * @private
+     */
+    intl: service(),
 
     /**
      * This method returns the permission options of the requested module of the system.
@@ -32,12 +42,15 @@ export default Helper.extend({
      */
     compute([type, ...rest], hash) {
         let options = this.settings.get('aclSettings')[type];
-        let optionsList = [];
+        let optionsList = [{
+            label: this.intl.t("views.app.role.permission.options.notset"),
+            value: ""
+        }];
 
         //format list of options
         for (let [key, value] of Object.entries(options)) {
             optionsList.push({
-                label: key,
+                label: this.intl.t(`views.app.role.permission.options.${key}`),
                 value: value
             })
         }

@@ -1,5 +1,4 @@
 <select>
-  <option value="">not set</option>
   {{#each @options as |optionObject|}}
   <option value={{optionObject.value}} selected={{eq @value optionObject}}>{{optionObject.label}}</option>
   {{/each}}
