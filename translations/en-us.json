@@ -979,6 +979,13 @@
             "delete": "Delete",
             "import": "Import",
             "export": "Export"
+          },
+          "options": {
+            "notset": "not set",
+            "assignment": "assignment",
+            "group": "group",
+            "all": "all",
+            "none": "none"
           }
         }
       },
