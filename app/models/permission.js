@@ -14,14 +14,34 @@ import Model, { attr } from '@ember-data/model';
  */
 export default class PermissionModel extends Model {
     /**
+     * The identifier of the resource on which permission is applied.
+     * 
+     * @property resourceId
+     * @type String
+     * @for PermissionModel
+     * @private
+     */
+    @attr('string') resourceId;
+
+    /**
      * The name of the resource on which permission is applied.
      * 
      * @property resourceName
      * @type String
      * @for PermissionModel
      * @private
-     */    
+     */
     @attr('string') resourceName;
+
+    /**
+     * The identifier of the roleId against which permission is created.
+     * 
+     * @property roleId
+     * @type String
+     * @for PermissionModel
+     * @private
+     */
+    @attr('string') roleId;
 
     /**
      * The value of the read flag.
@@ -30,7 +50,7 @@ export default class PermissionModel extends Model {
      * @type String
      * @for PermissionModel
      * @private
-     */    
+     */
     @attr('string') readF;
 
     /**
@@ -40,7 +60,7 @@ export default class PermissionModel extends Model {
      * @type String
      * @for PermissionModel
      * @private
-     */    
+     */
     @attr('string') searchF;
 
     /**
@@ -50,7 +70,7 @@ export default class PermissionModel extends Model {
      * @type String
      * @for PermissionModel
      * @private
-     */    
+     */
     @attr('string') createF;
 
     /**
@@ -60,7 +80,7 @@ export default class PermissionModel extends Model {
      * @type String
      * @for PermissionModel
      * @private
-     */    
+     */
     @attr('string') updateF;
 
     /**
@@ -70,7 +90,7 @@ export default class PermissionModel extends Model {
      * @type String
      * @for PermissionModel
      * @private
-     */    
+     */
     @attr('string') deleteF;
 
     /**
@@ -80,7 +100,7 @@ export default class PermissionModel extends Model {
      * @type String
      * @for PermissionModel
      * @private
-     */    
+     */
     @attr('string') importF;
 
     /**
@@ -90,9 +110,9 @@ export default class PermissionModel extends Model {
      * @type String
      * @for PermissionModel
      * @private
-     */    
+     */
     @attr('string') exportF;
-    
+
     /**
      * Creation date of permission.
      * 
@@ -110,6 +130,6 @@ export default class PermissionModel extends Model {
      * @type String
      * @for PermissionModel
      * @private
-     */       
+     */
     @attr('string') dateModified;
 }
