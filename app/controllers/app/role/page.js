@@ -104,4 +104,38 @@ export default class AppRolePageController extends AppRoleController {
     @action setPermissions(resourceName) {
         this.modulePermissions = this.permissions[resourceName];
     }
+
+    /**
+     * This action is used to update permission model.
+     * 
+     * @method updatePermission
+     * @param {Prometheus.Models.Permission} permission
+     * @param {string} moduleName
+     * @param {string} flag
+     * @param {string} roleId
+     * @param {Event} evt
+     * @protected
+     */
+    @action updatePermission(permission, moduleName, flag, roleId, evt) {
+        permission[flag] = evt.target.value;
+        let resourceName = (moduleName !== permission.resourceName)
+            ? `${moduleName}.${permission.resourceName}`
+            : moduleName;
+
+        permission.roleId = roleId;
+
+        permission.save(
+            {
+                adapterOptions: {
+                    resourceName: resourceName
+                }
+            }
+        ).catch((error) => {
+            new Messenger().post({
+                message: error.detail.suggestion,
+                type: 'error',
+                showCloseButton: true
+            });
+        });
+    }
 }
