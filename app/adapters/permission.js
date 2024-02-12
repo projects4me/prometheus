@@ -3,7 +3,7 @@
  */
 
 import ApplicationAdapter from './application';
-import PermissionAdapterError from '../errors/permission-adapter-error';
+import PermissionAdapterError from './errors/permission-adapter-error';
 
 /**
  * This is the JSONAPI adapter for permission model.
