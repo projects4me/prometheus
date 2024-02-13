@@ -1,4 +1,4 @@
-<select>
+<select {{on "change" (fn @updatePermission @permission @moduleName @permissionFlag @roleId)}}>
   {{#each @options as |optionObject|}}
   <option value={{optionObject.value}} selected={{eq @value optionObject}}>{{optionObject.label}}</option>
   {{/each}}
