@@ -3,6 +3,7 @@
  */
 
 import Component from '@glimmer/component';
+import { action } from '@ember/object';
 
 /**
  * This component is used to render dropdown containing the list of available options
@@ -14,4 +15,16 @@ import Component from '@glimmer/component';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class RolePermissionOptionsComponent extends Component {
+
+    /**
+     * This function is used to update the access level of permission.
+     * 
+     * @param {*} permission 
+     * @param {*} flag 
+     * @param {*} evt 
+     * @method updateAccessLevel
+     */
+    @action updateAccessLevel(permission, flag, evt) {
+        permission[flag] = evt.target.value;
+    }
 }

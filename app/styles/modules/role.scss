@@ -90,7 +90,7 @@
           cursor: pointer;
           border-top: 3px solid $primaryColor;
         }
-        
+
         li.active {
           border-top: 3px solid $primaryColor;
         }
@@ -103,6 +103,28 @@
           td {
             div.form-field {
               margin: 0;
+            }
+          }
+
+          .light-gray {
+            background-color: lightgray;
+          }
+          
+          [data-module="permission-state"] {
+            display: block;
+            width: 1.5rem;
+            height: 1.5rem;
+
+            i.fa-spinner {
+              color: black;
+            }
+
+            i.fa-check-circle {
+              color: green;
+            }
+
+            i.fa-times-circle {
+              color: red;
             }
           }
         }

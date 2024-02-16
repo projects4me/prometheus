@@ -987,6 +987,9 @@
             "all": "all",
             "none": "none"
           }
+        },
+        "permissions": {
+          "updated": "Permissions updated"
         }
       },
       "components": {

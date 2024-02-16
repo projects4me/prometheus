@@ -60,24 +60,42 @@
                     <tbody>
                       {{#each this.modulePermissions as |permission|}}
                       <tr data-module-resource={{permission.resourceName}}>
-                        <td>{{permission.resourceName}}</td>
+                        <td>{{permission.resourceAlias}}</td>
                         {{#each this.permissionFlags as |flag|}}
                         <td>
                           <Role::PermissionOptions 
-                            @options={{get-permission-options 'apiOptions' }} 
+                            @options={{get-permission-options 'apiOptions' }}
+                            @value={{get permission flag}}
                             @permission={{permission}}
-                            @permissionFlag={{flag}}
-                            @moduleName={{name}}
-                            @roleId={{this.model.id}}
-                            @updatePermission={{this.updatePermission}}
+                            @flag={{flag}}
                           />
                         </td>
                         {{/each}}
+                        
+                        {{!-- Permission Update State --}}
+                        <td>
+                            <span data-module="permission-state">
+                            {{#if (get this.permissionsState (concat permission.resourceName '.isRunning'))}}
+                              <i class="fa fa-spinner fa-spin"></i>
+                            {{/if}}
+
+                            {{#if (get this.permissionsState (concat permission.resourceName '.isSuccessful'))}}
+                              <i class="fa fa-check-circle"></i>
+                            {{/if}}
+
+                            {{#if (get this.permissionsState (concat permission.resourceName '.isErrored'))}}
+                              <i class="fa fa-times-circle"></i>
+                            {{/if}}                                                    
+                          </span>
+                        </td>                        
                       </tr>
                       {{/each}}
                     </tbody>
                   </table>
                 </div>
+
+                <AppUi::Button type="button" data-btn="save" class="btn btn-primary" {{on "click" (fn this.updatePermission.perform name)}}>{{t "global.form.save"}}</AppUi::Button>
+                <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</AppUi::Button>
               </div>
             </div>
             {{/each-in}}
