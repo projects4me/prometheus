@@ -7,6 +7,7 @@ import { action, computed } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import { tracked } from '@glimmer/tracking';
 import { task, timeout } from 'ember-concurrency';
+import $ from 'jquery';
 
 /**
  * The role page controller.
