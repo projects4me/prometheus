@@ -129,14 +129,14 @@ export default class AppRolePageController extends AppRoleController {
      */
     @(task(function* (moduleName) {
         let moduleEl = document.querySelector(`[data-permission-module="${moduleName}"]`);
+        let permissions = this.getChangedPermissions();
 
-        for (let i = 0; i < this.model.permissions.length; i++) {
-            let permission = this.model.permissions.objectAt(i);
+        for (let i = 0; i < permissions.length; i++) {
+            let permission = permissions.objectAt(i);
 
             if (permission.dirtyType === 'updated' || permission.isError) {
                 let permissionEl = moduleEl.querySelector(`[data-module-resource="${permission.resourceName}"]`);
-                let backgroundColor = permissionEl.style.background;
-                permissionEl.style.background = 'lightgray';
+                permissionEl.classList.add("light-gray");
 
                 this.permissionsState[moduleName] = this.permissionsState[moduleName] || {};
                 this.scrollToPermission(permissionEl)
@@ -155,7 +155,7 @@ export default class AppRolePageController extends AppRoleController {
 
                 // To remove success (check) icon.
                 this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
-                permissionEl.style.background = backgroundColor;
+                permissionEl.classList.remove("light-gray");
             }
         }
 
@@ -194,6 +194,22 @@ export default class AppRolePageController extends AppRoleController {
         (_.isBoolean(isError)) && (this.permissionsState[moduleName][resourceAlias].isErrored = isError);
         (_.isBoolean(isSuccessful)) && (this.permissionsState[moduleName][resourceAlias].isSuccessful = isSuccessful);
         this.permissionsState = { ...this.permissionsState };
+    }
+
+    /**
+     * This function is used to return the permissions that are changed by user and to be updated in the next step.
+     * 
+     * @method getChangedPermissions
+     * @returns {Array}
+     */
+    getChangedPermissions() {
+        const permissions = this.model.permissions.reduce((permissions, permission) => {
+            if (permission.dirtyType === 'updated' || permission.isError) {
+                permissions.push(permission);
+            }
+            return permissions;
+        }, []);
+        return permissions;
     }
 
     /**

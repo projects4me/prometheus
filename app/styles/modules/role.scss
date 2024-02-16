@@ -106,6 +106,10 @@
             }
           }
 
+          .light-gray {
+            background-color: lightgray;
+          }
+          
           [data-module="permission-state"] {
             display: block;
             width: 1.5rem;
@@ -118,7 +122,7 @@
             i.fa-check-circle {
               color: green;
             }
-            
+
             i.fa-times-circle {
               color: red;
             }
