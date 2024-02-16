@@ -1,5 +1,5 @@
-<select {{on "change" (fn @updatePermission @permission @moduleName @permissionFlag @roleId)}}>
+<select {{on "change" (fn this.updateAccessLevel @permission @flag)}}>
   {{#each @options as |optionObject|}}
-  <option value={{optionObject.value}} selected={{eq @value optionObject}}>{{optionObject.label}}</option>
+  <option value={{optionObject.value}} selected={{eq @value optionObject.value}}>{{optionObject.label}}</option>
   {{/each}}
 </select>
