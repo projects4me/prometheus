@@ -36,7 +36,6 @@ export default class PermissionAdapter extends ApplicationAdapter {
             adapterMethod = 'updateRecord';
 
         serializer.serializeIntoHash(data, type, snapshot, { includeId: true });
-        data.data.attributes['resourceName'] = snapshot.adapterOptions.resourceName;
         const id = snapshot.id;
 
         if (data.data.attributes.resourceId.includes('new')) {
