@@ -144,17 +144,22 @@ export default class AppRolePageController extends AppRoleController {
 
                 this.updatePermissionState(moduleName, permission.resourceAlias, null, null);
                 yield this.permissionsState[moduleName][permission.resourceAlias];
+
+                // If got an error while updating the permission, update its template state.
                 if (this.permissionsState[moduleName][permission.resourceAlias].isErrored) {
                     this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
                 }
+
+                // On success, check icon will be showed in template for 0.5 sec.
                 yield timeout(500);
+
+                // To remove success (check) icon.
                 this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
                 permissionEl.style.background = backgroundColor;
             }
         }
 
         this.scrollToLatestCancelledPermission(moduleEl, moduleName);
-        yield timeout(500);
         this.showMessages(moduleName);
     })) updatePermission
 
@@ -186,8 +191,8 @@ export default class AppRolePageController extends AppRoleController {
      * @method updatePermissionState
      */
     updatePermissionState(moduleName, resourceAlias, isError = null, isSuccessful = null) {
-        (_.isBoolean(isError)) && (this.permissionsState[moduleName][resourceAlias].isErrored = true);
-        (_.isBoolean(isSuccessful)) && (this.permissionsState[moduleName][resourceAlias].isSuccessful = false);
+        (_.isBoolean(isError)) && (this.permissionsState[moduleName][resourceAlias].isErrored = isError);
+        (_.isBoolean(isSuccessful)) && (this.permissionsState[moduleName][resourceAlias].isSuccessful = isSuccessful);
         this.permissionsState = { ...this.permissionsState };
     }
 
