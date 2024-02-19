@@ -134,29 +134,28 @@ export default class AppRolePageController extends AppRoleController {
         for (let i = 0; i < permissions.length; i++) {
             let permission = permissions.objectAt(i);
 
-            if (permission.dirtyType === 'updated' || permission.isError) {
-                let permissionEl = moduleEl.querySelector(`[data-module-resource="${permission.resourceName}"]`);
-                permissionEl.classList.add("light-gray");
+            let permissionEl = moduleEl.querySelector(`[data-module-resource="${permission.resourceName}"]`);
+            permissionEl.classList.add("light-gray");
 
-                this.permissionsState[moduleName] = this.permissionsState[moduleName] || {};
-                this.scrollToPermission(permissionEl)
-                this.permissionsState[moduleName][permission.resourceAlias] = this.updatePermissionTask.perform(permission, moduleName);
+            this.permissionsState[moduleName] = this.permissionsState[moduleName] || {};
+            this.scrollToPermission(permissionEl)
+            this.permissionsState[moduleName][permission.resourceAlias] = this.updatePermissionTask.perform(permission, moduleName, permissions.length);
 
-                this.updatePermissionState(moduleName, permission.resourceAlias, null, null);
-                yield this.permissionsState[moduleName][permission.resourceAlias];
+            this.updatePermissionState(moduleName, permission.resourceAlias, null, null);
+            yield this.permissionsState[moduleName][permission.resourceAlias];
 
-                // If got an error while updating the permission, update its template state.
-                if (this.permissionsState[moduleName][permission.resourceAlias].isErrored) {
-                    this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
-                }
-
-                // On success, check icon will be showed in template for 0.5 sec.
-                yield timeout(500);
-
-                // To remove success (check) icon.
+            // If got an error while updating the permission, update its template state.
+            if (this.permissionsState[moduleName][permission.resourceAlias].isErrored) {
                 this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
-                permissionEl.classList.remove("light-gray");
             }
+
+            // On success, check icon will be showed in template for 0.5 sec.
+            let delay = this.getDelay(permissions.length)
+            yield timeout(delay);
+
+            // To remove success (check) icon.
+            this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
+            permissionEl.classList.remove("light-gray");
         }
 
         this.scrollToLatestCancelledPermission(moduleEl, moduleName);
@@ -168,15 +167,17 @@ export default class AppRolePageController extends AppRoleController {
      * 
      * @param {Prometheus.Model.Permission} permission
      * @param {string} moduleName
+     * @param {Number} permissionsCount Count of permissions that are to be updated.
      * @method updatePermissionTask
      */
-    @(task(function* (permission, moduleName) {
+    @(task(function* (permission, moduleName, permissionsCount) {
+        let delay = this.getDelay(permissionsCount);
         try {
-            yield timeout(1000);
+            yield timeout(delay);
             yield permission.save();
-            yield timeout(1000);
+            yield timeout(delay);
         } catch (e) {
-            yield timeout(1000);
+            yield timeout(delay);
             this.updatePermissionState(moduleName, permission.resourceAlias, true, false);
         }
     })) updatePermissionTask
@@ -256,6 +257,23 @@ export default class AppRolePageController extends AppRoleController {
                 return;
             }
         }
+    }
+
+    /**
+     * This function is used to calculate the delay time according to the number of permissions being updated. If the
+     * permissions count is closer to threshold e.g. 28, then delay time will be decreased to 0.1 -0.2 sec and if the permissions
+     * count is far away from threshold e.g. 2 then delay time will be around 0.9 - 1 sec.
+     * 
+     * @param {Number} permissionsCount Count of permissions that are to be updated.
+     * @method getDelay
+     * @returns {Number}
+     */
+    getDelay(permissionsCount) {
+        let maxDelay = 1,
+            minDelay = 0.1,
+            thresholdPermissions = 30;
+        let delay = Number((maxDelay - (maxDelay - minDelay) / (thresholdPermissions - 1) * Math.min(permissionsCount, thresholdPermissions - 1)).toFixed(2)) * 1000;
+        return delay;
     }
 
     /**
