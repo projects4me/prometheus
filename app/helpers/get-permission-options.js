@@ -61,7 +61,7 @@ export default Helper.extend({
             modelDependentGroups.forEach((group) => {
                 let apiOptions = this.settings.get('aclSettings')['apiOptions'];
                 group = group.toLowerCase();
-                options[group] = apiOptions['group'][group];
+                options[group] = apiOptions['groups'][group];
             });
         }
 
