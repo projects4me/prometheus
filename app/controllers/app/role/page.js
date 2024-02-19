@@ -173,6 +173,8 @@ export default class AppRolePageController extends AppRoleController {
     @(task(function* (permission, moduleName) {
         try {
             yield timeout(1000);
+            !(permission.roleId)
+                && (permission.roleId = this.model.id);
             yield permission.save();
             yield timeout(1000);
         } catch (e) {
