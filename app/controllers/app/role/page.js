@@ -160,7 +160,7 @@ export default class AppRolePageController extends AppRoleController {
 
         this.scrollToLatestCancelledPermission(moduleEl, moduleName);
         this.showMessages(moduleName);
-    })) updatePermission    
+    })) updatePermission
 
     /**
      * This task is used to update the permission model.
@@ -171,8 +171,8 @@ export default class AppRolePageController extends AppRoleController {
      * @method updatePermissionTask
      */
     @(task(function* (permission, moduleName, permissionsCount) {
+        let delay = this.getDelay(permissionsCount);
         try {
-            let delay = this.getDelay(permissionsCount);
             yield timeout(delay);
             yield permission.save();
             yield timeout(delay);
