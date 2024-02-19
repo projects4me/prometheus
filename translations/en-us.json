@@ -985,7 +985,10 @@
             "assignment": "assignment",
             "group": "group",
             "all": "all",
-            "none": "none"
+            "allow": "allow",
+            "none": "none",
+            "project": "project group",
+            "conversation": "conversation group"
           }
         },
         "permissions": {
