@@ -981,11 +981,14 @@
             "export": "Export"
           },
           "options": {
-            "notset": "not set",
-            "assignment": "assignment",
-            "group": "group",
-            "all": "all",
-            "none": "none"
+            "notset": "Not set",
+            "assignment": "Assignment",
+            "group": "Group",
+            "all": "All",
+            "allow": "Allow",
+            "none": "None",
+            "project": "Project",
+            "conversation": "Conversation"
           }
         },
         "permissions": {

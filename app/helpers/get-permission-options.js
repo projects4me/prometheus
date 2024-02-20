@@ -40,12 +40,30 @@ export default Helper.extend({
      * @param {string} type The name of the module e.g. API, frontend.
      * @returns {Object} List of options
      */
-    compute([type, ...rest], hash) {
-        let options = this.settings.get('aclSettings')[type];
+    compute([type, permission, ...rest], hash) {
+        let resourceType = 'field',
+            modelDependentGroups = [];
+
+        // Default options.
+        let options = {};
+        options = (this.settings.get('aclSettings')[type][resourceType]);
         let optionsList = [{
             label: this.intl.t("views.app.role.permission.options.notset"),
             value: ""
         }];
+
+        // Set options if the resource is model.
+        if (permission.moduleName === permission.resourceName) {
+            resourceType = 'model';
+            modelDependentGroups = this.settings.get('aclSettings')['modelGroups'][permission.resourceName];
+            options = _.clone(this.settings.get('aclSettings')[type][resourceType]);
+
+            modelDependentGroups.forEach((group) => {
+                let apiOptions = this.settings.get('aclSettings')['apiOptions'];
+                group = group.toLowerCase();
+                options[group] = apiOptions['groups'][group];
+            });
+        }
 
         //format list of options
         for (let [key, value] of Object.entries(options)) {
