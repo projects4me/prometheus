@@ -174,6 +174,8 @@ export default class AppRolePageController extends AppRoleController {
         let delay = this.getDelay(permissionsCount);
         try {
             yield timeout(delay);
+            !(permission.roleId)
+                && (permission.roleId = this.model.id);
             yield permission.save();
             yield timeout(delay);
         } catch (e) {
