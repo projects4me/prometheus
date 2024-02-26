@@ -42,15 +42,16 @@ export default class PermissionAdapter extends ApplicationAdapter {
             // For POST CALL
             requestMethod = 'POST';
             adapterMethod = 'createRecord'
-        } else {
-            // For PATCH CALL
-            let updateAttributes = _.pick(data.data.attributes, Object.keys(snapshot.changedAttributes()));
-
-            if (_.isEmpty(updateAttributes)) {
-                return false;
-            }
         }
-
+        
+        let updatedAttributes = _.pick(data.data.attributes, Object.keys(snapshot.changedAttributes()));
+        // Resource id and name is required by server to create or update permission.
+        updatedAttributes['resourceId'] = data.data.attributes.resourceId;
+        updatedAttributes['resourceName'] = data.data.attributes.resourceName;
+        data.data.attributes = updatedAttributes
+        if (_.isEmpty(updatedAttributes)) {
+            return false;
+        }
         const url = this.buildURL(type, id, snapshot, adapterMethod);
         return this.ajax(url, requestMethod, { data: data });
     }
