@@ -6,6 +6,8 @@ Feature: Role | edit role fields
     Given There is no pre-existing data
     And default scenario is loaded
     And There are 10 roles in system
+    And There are 10 projects in system
+    And There are 10 memberships in system
     And User_1 is logged in
     When User navigates to app/role
     And User selects role 2
@@ -18,6 +20,8 @@ Feature: Role | edit role fields
     Given There is no pre-existing data
     And default scenario is loaded
     And There are 10 roles in system
+    And There are 10 projects in system
+    And There are 10 memberships in system
     And User_1 is logged in
     When User navigates to app/role
     And User selects role 2
