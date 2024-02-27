@@ -17,6 +17,22 @@
         }
       }
     }
+
+    .box-body {
+      .tab-content {
+        .tab-pane#users {
+          min-height: 10rem;
+
+          input.ember-text-field {
+            width: 25rem;
+          }
+
+          [data-role="user-memberships"] {
+            margin-top: 3rem;
+          }
+        }
+      }
+    }
   }
 
   .role-cards {
@@ -109,7 +125,7 @@
           .light-gray {
             background-color: lightgray;
           }
-          
+
           [data-module="permission-state"] {
             display: block;
             width: 1.5rem;

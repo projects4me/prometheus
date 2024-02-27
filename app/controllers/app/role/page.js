@@ -28,6 +28,14 @@ export default class AppRolePageController extends AppRoleController {
     @tracked modulePermissions = [];
 
     /**
+     * This maintains the query for searching the user associated with the current role.
+     * 
+     * @property userSearchQuery
+     * @protected
+     */
+    @tracked userSearchQuery = '';
+
+    /**
      * This object maintains all of the permissions state that are updated by the user.
      * 
      * @property permissionsState
@@ -290,5 +298,19 @@ export default class AppRolePageController extends AppRoleController {
         $("html, body").animate({
             scrollTop: position
         }, 500);
+    }
+
+    /**
+     * This property return list of memberships against the query given by the user.
+     * 
+     * @property filteredRoles
+     * @return Array
+     */
+    @computed('memberships.length', 'userSearchQuery')
+    get filteredMemberships() {
+        return this.memberships.filter((membership) => {
+            return membership.user.get('name').toLowerCase().includes(this.userSearchQuery)
+                || membership.user.get('name').includes(this.userSearchQuery);
+        });
     }
 }

@@ -48,7 +48,7 @@ export default Helper.extend({
         let options = {};
         options = (this.settings.get('aclSettings')[type][resourceType]);
         let optionsList = [{
-            label: this.intl.t("views.app.role.permission.options.notset"),
+            label: this.intl.t("views.app.role.tabs.permission.options.notset"),
             value: ""
         }];
 
@@ -68,7 +68,7 @@ export default Helper.extend({
         //format list of options
         for (let [key, value] of Object.entries(options)) {
             optionsList.push({
-                label: this.intl.t(`views.app.role.permission.options.${key}`),
+                label: this.intl.t(`views.app.role.tabs.permission.options.${key}`),
                 value: value
             })
         }

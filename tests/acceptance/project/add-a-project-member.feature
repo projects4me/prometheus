@@ -5,6 +5,7 @@ Feature: Project | add a project member
 
     Given There is no pre-existing data
     And project scenario is loaded
+    And There are 10 projects in system
     And User_1 is logged in
     And User_1 selects Project 3
     And Project has following details

@@ -955,8 +955,39 @@
           "updated": "Role {field} updated"
         },
         "tabs": {
-          "permissions": "Permissions",
-          "users": "Users"
+          "permission": {
+            "title": "Permissions",
+            "flags": {
+              "read": "Read",
+              "create": "Create",
+              "search": "Search",
+              "update": "Update",
+              "delete": "Delete",
+              "import": "Import",
+              "export": "Export"
+            },
+            "options": {
+              "notset": "Not set",
+              "assignment": "Assignment",
+              "group": "Group",
+              "all": "All",
+              "allow": "Allow",
+              "none": "None",
+              "project": "Project",
+              "conversation": "Conversation"
+            },
+            "updated": "Permissions Updated"
+          },
+          "user": {
+            "title": "Users",
+            "search": "Search User..",
+            "name": "Name",
+            "emailaddress": "Email Address",
+            "project": {
+              "title": "Project",
+              "shortcode": "Short Code"
+            }
+          }
         },
         "create": {
           "title": "Add a new role",
@@ -969,30 +1000,6 @@
         "fields": {
           "name": "Name",
           "description": "Description"
-        },
-        "permission": {
-          "flags": {
-            "read": "Read",
-            "create": "Create",
-            "search": "Search",
-            "update": "Update",
-            "delete": "Delete",
-            "import": "Import",
-            "export": "Export"
-          },
-          "options": {
-            "notset": "Not set",
-            "assignment": "Assignment",
-            "group": "Group",
-            "all": "All",
-            "allow": "Allow",
-            "none": "None",
-            "project": "Project",
-            "conversation": "Conversation"
-          }
-        },
-        "permissions": {
-          "updated": "Permissions updated"
         }
       },
       "components": {

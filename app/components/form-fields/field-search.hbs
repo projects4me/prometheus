@@ -1,8 +1,9 @@
 <AccessControl @aclContext={{@aclContext}}>
-  <div id="search-field" data-module="user-management">
+  <div id="search-field" data-module={{@data-module}} data-search={{@data-search}}>
     <Input @type="text" 
       placeholder={{@placeholder}} 
       {{on "input" this.onInput}}
+      @value={{@value}}
     />
     <i class="fa fa-search" aria-hidden="true"></i>
   </div>
