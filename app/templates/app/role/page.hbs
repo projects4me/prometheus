@@ -18,10 +18,10 @@
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
       {{!-- Permissions tab --}}
-      <li class="active"><a href="#permissions" data-toggle="tab">{{t "views.app.role.tabs.permissions"}}</a></li>
+      <li class="active"><a href="#permissions" data-toggle="tab">{{t "views.app.role.tabs.permission.title"}}</a></li>
 
       {{!-- Users tab --}}
-      <li><a href="#users" data-toggle="tab">{{t "views.app.role.tabs.users"}}</a></li>
+      <li><a href="#users" data-toggle="tab">{{t "views.app.role.tabs.user.title"}}</a></li>
     </ul>
 
     <div class="tab-content">
@@ -48,13 +48,13 @@
                     <thead>
                       <tr>
                         <th></th>
-                        <th>{{t "views.app.role.permission.flags.read"}}</th>
-                        <th>{{t "views.app.role.permission.flags.create"}}</th>
-                        <th>{{t "views.app.role.permission.flags.search"}}</th>
-                        <th>{{t "views.app.role.permission.flags.update"}}</th>
-                        <th>{{t "views.app.role.permission.flags.delete"}}</th>
-                        <th>{{t "views.app.role.permission.flags.import"}}</th>
-                        <th>{{t "views.app.role.permission.flags.export"}}</th>
+                        <th>{{t "views.app.role.tabs.permission.flags.read"}}</th>
+                        <th>{{t "views.app.role.tabs.permission.flags.create"}}</th>
+                        <th>{{t "views.app.role.tabs.permission.flags.search"}}</th>
+                        <th>{{t "views.app.role.tabs.permission.flags.update"}}</th>
+                        <th>{{t "views.app.role.tabs.permission.flags.delete"}}</th>
+                        <th>{{t "views.app.role.tabs.permission.flags.import"}}</th>
+                        <th>{{t "views.app.role.tabs.permission.flags.export"}}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -74,7 +74,7 @@
                         
                         {{!-- Permission Update State --}}
                         <td>
-                            <span data-module="permission-state">
+                          <span data-module="permission-state">
 
                             {{!-- If condition in concat required because the permissions states are maintained in object as of the
                             following structure e.g.
@@ -123,7 +123,38 @@
       </div>
       {{!-- Users to which this role is assigned --}}
       <div class="tab-pane" id="users">
-        <p>{{t "views.app.role.tabs.users"}}</p>
+        {{!-- User Search component --}}
+        <FormFields::FieldSearch
+          @placeholder={{t "views.app.role.tabs.user.search"}}
+          @data-module={{concat "role-" this.model.name}}
+          @data-search="user"
+          @aclContext="App.Role.SearchUser"
+          @value={{this.userSearchQuery}}
+        />
+
+        <div data-role="user-memberships">
+          <table class="table table-hover table-striped">
+            <thead>
+              <tr>
+                <th>{{t "views.app.role.tabs.user.name"}}</th>
+                <th>{{t "views.app.role.tabs.user.emailaddress"}}</th>
+                <th>{{t "views.app.role.tabs.user.project.title"}}</th>
+                <th>{{t "views.app.role.tabs.user.project.shortcode"}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each this.filteredMemberships as |membership|}}
+              <tr data-role-membership-id={{membership.id}}>
+                <td>{{membership.user.name}}</td>
+                <td>{{membership.user.email}}</td>
+                <td>{{membership.project.name}}</td>
+                <td>{{membership.project.shortCode}}</td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+
       </div>
 
     </div>
