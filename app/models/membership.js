@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr } from '@ember-data/model';
+import Model, { attr, belongsTo } from '@ember-data/model';
 
 /**
  * The membership model
@@ -91,8 +91,27 @@ export default Model.extend({
      * @property modifiedUser
      * @type String
      * @for Membership
-     *@private
+     * @private
      */
     modifiedUser: attr('string'),
 
+    /**
+     * The project to which this membership belongs.
+     * 
+     * @property project
+     * @type {Prometheus.Model.Project}
+     * @for Membership
+     * @private
+     */
+    project: belongsTo('project'),
+
+    /**
+     * The user to which this membership belongs.
+     * 
+     * @property user
+     * @type {Prometheus.Model.User}
+     * @for Membership
+     * @private
+     */
+    user: belongsTo('user')
 });
