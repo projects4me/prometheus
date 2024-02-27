@@ -25,9 +25,17 @@ export default class AppRolePageRoute extends AppRoute {
         let permissionOptions = {
             roleId: params.role_id
         }
+
+        let membershipOptions = {
+            query: `((roleId : ${params.role_id}))`,
+            rels: 'project,user',
+            limit: -1
+        }
+
         return hash({
             role: this.store.findRecord('role', params.role_id),
-            permissions: this.store.query('permission', permissionOptions)
+            permissions: this.store.query('permission', permissionOptions),
+            memberships: this.store.query('membership', membershipOptions)
         });
     }
 
@@ -41,6 +49,7 @@ export default class AppRolePageRoute extends AppRoute {
      */
     setupController(controller, model) {
         controller.set('model', model.role);
-        controller.model.permissions = model.permissions;
+        controller.set('model.permissions', model.permissions);
+        controller.set('memberships', model.memberships);
     }
 }
