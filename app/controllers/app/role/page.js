@@ -164,6 +164,9 @@ export default class AppRolePageController extends AppRoleController {
             // To remove success (check) icon.
             this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
             permissionEl.classList.remove("light-gray");
+
+            // Destroy resource's permission state
+            _.unset(this.permissionsState[moduleName], permission.resourceAlias);
         }
 
         this.scrollToLatestCancelledPermission(moduleEl, moduleName);
