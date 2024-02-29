@@ -16,8 +16,8 @@
   <div class="input-group">
     {{#power-select
         class="form-control"
-        options=projectList
-        selected=(find-by "value" projectId projectList)
+        options=projectsList
+        selected=(find-by "value" projectId projectsList)
         placeholder=(t "views.nav.selectproject")
         searchField="label"
         onChange=(action "projectChanged")

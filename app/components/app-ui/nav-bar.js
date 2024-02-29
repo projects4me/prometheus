@@ -50,8 +50,8 @@ export default class NavBarComponent extends AppComponent {
      * @method get
      * @public
      */
-    get projectList() {
-        return this.args.projectList ?? '';
+    get projectsList() {
+        return this.args.projectsList ?? '';
     }
 
     /**
