@@ -89,6 +89,7 @@
       "cancelcicked": "You have made changes, canceling will discard them. Are you sure?",
       "deletecicked": "You are you about to delete this record, the record cannot be recovered. Are you sure?",
       "confirmcancel": "Yes",
+      "deletecancel": "Deletion cancelled",
       "onsecondthought": "Take me back",
       "upload": {
         "drop": "Drop to upload",
@@ -986,7 +987,8 @@
             "project": {
               "title": "Project",
               "shortcode": "Short Code"
-            }
+            },
+            "confirmdelete": "Yes, delete the <strong>{user}</strong> membership on <strong>{project}</strong>"
           }
         },
         "create": {

@@ -316,4 +316,53 @@ export default class AppRolePageController extends AppRoleController {
                 || membership.user.get('name').includes(this.userSearchQuery);
         });
     }
+
+    /**
+     * This method is used to remove user's membership associated with role.
+     * 
+     * @method removeMembership
+     * @param {Prometheus.Model.Membership} membership
+     */
+    @action deleteMembership(membership) {
+        Logger.debug('App.Role.Page->deleteMembership');
+        let _self = this;
+
+        let deleting = new Messenger().post({
+            message: htmlSafe(_self.intl.t("views.app.role.tabs.user.confirmdelete", {
+                user: membership.user.get('name'),
+                project: membership.project.get('name')
+            })),
+            type: 'warning',
+            showCloseButton: true,
+            actions: {
+                confirm: {
+                    label: htmlSafe(_self.intl.t("global.form.confirmcancel")).toString(),
+                    action: function () {
+
+                        // destroy the membership record
+                        membership.destroyRecord().then(function () {
+                            return deleting.update({
+                                message: htmlSafe(_self.intl.t("global.form.deleted")).toString(),
+                                type: 'success',
+                                actions: false
+                            });
+                        });
+                    }
+                },
+                cancel: {
+                    label: htmlSafe(_self.intl.t("global.form.cancel")).toString(),
+                    action: function () {
+                        return deleting.update({
+                            message: _self.intl.t("global.form.deletecancel"),
+                            type: 'success',
+                            actions: false
+                        });
+                    }
+                },
+
+            }
+        });
+
+        Logger.debug('App.Role.Page->deleteMembership');
+    }
 }

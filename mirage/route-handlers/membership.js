@@ -19,4 +19,11 @@ export function register(server, ctx) {
         let membership = server.create('membership', requestData.attributes);
         return membership
     });
+
+    server.delete('/membership/:id', (schema, request) => {
+        let id = request.params.id;
+        let model = schema.memberships.find(id);
+        schema.memberships.find(id).destroy();
+        return model;
+    });
 }

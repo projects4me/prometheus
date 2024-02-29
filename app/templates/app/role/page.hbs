@@ -149,6 +149,11 @@
                 <td>{{membership.user.email}}</td>
                 <td>{{membership.project.name}}</td>
                 <td>{{membership.project.shortCode}}</td>
+                <td>
+                  <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" {{action this.deleteMembership membership}} @aclContext="App.Role.User.Delete">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                  </AppUi::Button>
+                </td>
               </tr>
               {{/each}}
             </tbody>
