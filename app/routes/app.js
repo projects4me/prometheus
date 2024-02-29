@@ -5,7 +5,6 @@
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
 import { UnauthorizedError } from '@ember-data/adapter/error';
-import { hash } from 'rsvp';
 
 /**
  * This is the app route, the app route is used
@@ -131,33 +130,6 @@ export default Route.extend({
         }
     },
 
-    afterModel() {
-        let _self = this;
-
-        let usersOptions = {
-            fields: 'User.id,User.name',
-            sort: 'User.name',
-            order: 'ASC',
-            limit: -1
-        };
-
-        let rolesOptions = {
-            sort: 'Role.name',
-            order: 'ASC',
-            limit: -1
-        };
-
-
-        return hash({
-            users: _self.store.query('user', usersOptions),
-            roles: _self.store.query('role', rolesOptions)
-        }).then(function (results) {
-            Logger.info(results);
-            _self.set('users', results.users);
-            _self.set('roles', results.roles);
-        });
-    },
-
     /**
      * This function catches any issue thrown by the _loadCurrentUser function and
      * invalidates the session
@@ -180,116 +152,14 @@ export default Route.extend({
      * @protected
      */
     setupController: function (controller) {
-        Logger.debug('Prometheus.App.Route->setupController');
+        Logger.debug('Prometheus.App.Route::setupController()');
 
-        let _self = this;
+        let loadingAssetsController = this.controllerFor('app.loading-assets');
+        controller.set('roles', loadingAssetsController.get('roles'));
+        controller.set('users', loadingAssetsController.get('users'));
+        controller.set('projects', loadingAssetsController.get('projects'));
 
-        controller.set('roles', this.roles);
-        controller.set('users', this.users);
-
-        // Load the required data
-        _self._loadProjects(controller);
-        //_self._loadRoles(controller);
-        //_self._loadUsers(controller);
-
-        Logger.debug('-Prometheus.App.Route->setupController');
-    },
-
-    /**
-     * This function loads the projects in the system and lists them
-     *
-     * @param {Prometheus.Controllers.App} controller the controller object for this route
-     * @private
-     */
-    _loadProjects: function (controller) {
-        Logger.debug('Prometheus.App.Route->loadProjects');
-        let _self = this;
-
-        // If the user navigated directly to the wiki project or page then lets setup the project id
-        let projectId = this.paramsFor('app.project').project_id;
-        let projectName = null;
-
-        _self.set('breadCrumb', { title: 'Dashboard' });
-        Logger.debug(projectId);
-        Logger.debug(projectName);
-
-        let options = {
-            fields: "Project.id,Project.name",
-            query: "((Project.name STARTS A) OR (Project.name STARTS P))",
-            sort: 'Project.name',
-            order: 'ASC',
-            limit: 200
-        };
-
-        Logger.debug('Retreiving projects list with options ' + options);
-        _self.store.query('project', options).then(function (data) {
-            let projectCount = data.get('length');
-            let projectList = [];
-            let temp = null;
-            for (let i = 0; i < projectCount; i++) {
-                temp = data.objectAt(i);
-                projectList[i] = { label: temp.get('name'), value: temp.get('id') };
-            }
-            controller.set('projectList', projectList);
-
-            // if it was a sub route then setup the projectName and id
-            if (projectId !== null && projectId !== undefined) {
-                projectName = data.findBy('id', projectId).get('name');
-                controller.set('projectId', projectId);
-                controller.set('projectName', projectName);
-            }
-
-        });
-
-        Logger.debug('-Prometheus.App.Route->loadProjects');
-    },
-
-
-    /**
-     * This function loads all the roles in the system and sets them
-     * in the App.Controller
-     *
-     * @param {Prometheus.Controllers.App} controller the controller object for this route
-     * @private
-     */
-    _loadRoles: function (controller) {
-        Logger.debug('Prometheus.App.Route->loadRoles');
-        let _self = this;
-
-        let rolesOptions = {
-            sort: 'Role.name',
-            order: 'ASC',
-            limit: -1
-        };
-
-        let roles = _self.store.query('role', rolesOptions);
-        controller.set('roles', roles);
-
-        Logger.debug('-Prometheus.App.Route->loadRoles');
-    },
-
-    /**
-     * This function loads all the users in the system and sets them
-     * in the App.Controller
-     *
-     * @param {Prometheus.Controllers.App} controller the controller object for this route
-     * @private
-     */
-    _loadUsers: function (controller) {
-        Logger.debug('Prometheus.App.Route->loadUsers');
-        let _self = this;
-
-        let options = {
-            fields: 'User.id,User.name',
-            sort: 'User.name',
-            order: 'ASC',
-            limit: -1
-        };
-
-        let users = _self.store.query('user', options);
-        controller.set('users', users);
-
-        Logger.debug('-Prometheus.App.Route->loadUsers');
+        Logger.debug('-Prometheus.App.Route::setupController()');
     },
     actions: {
         /**
