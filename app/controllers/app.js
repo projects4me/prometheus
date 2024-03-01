@@ -74,6 +74,19 @@ export default class AppController extends PrometheusController {
     }
 
     /**
+     * This is the list of projects that has been extracted.
+     *
+     * @property projectsList
+     * @type Ember.computed
+     * @returns array
+     * @public
+     */
+    get projectsList() {
+        Logger.debug(this.projects);
+        return (new format(this)).getSelectList(this.projects);
+    }    
+
+    /**
      * This function invalidates the session which effectively logs the user out
      * of the application
      *

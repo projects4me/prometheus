@@ -16,8 +16,8 @@
   <div class="input-group">
     <PowerSelect
         class="form-control"
-        @options={{this.projectList}}
-        @selected={{find-by "value" this.projectId this.projectList}}
+        @options={{this.projectsList}}
+        @selected={{find-by "value" this.projectId this.projectsList}}
         @placeholder={{t "views.nav.selectproject"}}
         searchField="label"
         @onChange={{this.projectChanged}}

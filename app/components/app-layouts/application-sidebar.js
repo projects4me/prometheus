@@ -20,8 +20,8 @@ export default class ApplicationSidebarComponent extends Component {
      * @method get
      * @public
      */
-    get projectList() {
-        return this.args.projectList ?? '';
+    get projectsList() {
+        return this.args.projectsList ?? '';
     }
 
 }

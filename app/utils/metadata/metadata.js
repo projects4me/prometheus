@@ -80,7 +80,7 @@ export default Object.extend({
                 Project: {
                     label: 'views.nav.menu.project.label',
                     icon: 'briefcase',
-                    route: 'app.projectlist',
+                    route: 'app.projectsList',
                     anchorRoute: 'project',
                     projectRelated: false,
                     actions: {
