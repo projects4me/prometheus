@@ -25,11 +25,10 @@ export default class UserAdapter extends ApplicationAdapter {
      */
     urlForQueryRecord(query, modelName) {
         let url = super.urlForQueryRecord(...arguments);
+
         if (query.me) {
             url = this.urlForFindRecord('me', modelName)
             delete query.me;
-
-            (query) && (url += '?' + $.param(query))
         }
 
         return url;
