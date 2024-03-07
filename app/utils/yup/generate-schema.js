@@ -16,7 +16,10 @@ export default function generateSchemaFromMeta(metadata) {
             let validationType = field.validations.default.type;
             let validationRules = field.validations.default.rules;
 
-            innerSchema[field.name] = Yup[validationType]();
+            // cb (Callback) is only available when lazy is used in validation rules
+            let validationCb = field.validations.default.cb;
+
+            innerSchema[field.name] = Yup[validationType](validationCb);
 
             validationRules?.forEach((rule) => {
                 innerSchema[field.name] = innerSchema[field.name][rule.name](rule.value);
