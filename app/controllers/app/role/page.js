@@ -4,6 +4,8 @@
 
 import AppRoleController from 'prometheus/controllers/app/role';
 import { action, computed } from '@ember/object';
+import * as Yup from 'yup';
+import { inject as controller } from '@ember/controller';
 import { htmlSafe } from '@ember/template';
 import { tracked } from '@glimmer/tracking';
 import { task, timeout } from 'ember-concurrency';
@@ -42,6 +44,101 @@ export default class AppRolePageController extends AppRoleController {
      * @protected
      */
     @tracked permissionsState = {};
+
+    /**
+     * This flag is used to show or hide the modal dialog box for adding new memberships
+     * in the system.
+     *
+     * @property addRoleDialog
+     * @type bool
+     * @for AppRoleController
+     * @private
+     */
+    addMembershipDialog = false;
+
+    /**
+     * The app controller.
+     * 
+     * @property appController
+     * @type Prometheus.Controller.App
+     * @for AppRolePageController
+     * @private
+     */
+    @controller('app') appController;
+
+    /**
+     * This property maintain the list of projects that user selects.
+     * 
+     * @property selectedProjects
+     * @type Array
+     */
+    @tracked selectedProjects = [];
+
+    /**
+     * This object holds all of the information that we need to create our schema and also need to 
+     * render the template (in future).
+     * @property metadata
+     * @type Object
+     * @for AppRolePageController
+     * @protected
+     */
+    metadata = {
+        sections: [
+            {
+                name: "membershipCreate",
+                fields: [
+                    {
+                        name: "userId",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "hasProjects",
+                        validations: {
+                            default: {
+                                type: "lazy",
+                                cb: this.validateMembershipField()
+                            }
+                        }
+                    },
+                    {
+                        name: "relatedTo",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                ]
+            }
+        ]
+    }
+
+    /**
+     * This function is called on the initialization of the controller. In this function
+     * we're calling setupSchema method in order to generate schema, by analyzing metadata
+     * defined in the controller, that will be used to validate the form of the template.
+     *
+     * @method constructor
+     * @public
+     */
+    constructor() {
+        super(...arguments);
+        this.setupSchema();
+    }
 
     /**
      * This method update the given field's value and save the role model.
@@ -341,6 +438,7 @@ export default class AppRolePageController extends AppRoleController {
 
                         // destroy the membership record
                         membership.destroyRecord().then(function () {
+                            _self.memberships.removeObject(membership);
                             return deleting.update({
                                 message: htmlSafe(_self.intl.t("global.form.deleted")).toString(),
                                 type: 'success',
@@ -364,5 +462,186 @@ export default class AppRolePageController extends AppRoleController {
         });
 
         Logger.debug('App.Role.Page->deleteMembership');
+    }
+
+    /**
+     * This function is used to show the add membership modal dialog box by setting
+     * the addMembershipDialog flag to true.
+     *
+     * @method showAddMembershipDialog
+     * @protected
+     */
+    @action showAddMembershipDialog() {
+        this.set('addMembershipDialog', true);
+    }
+
+    /**
+     * This function is used to hide the add membership modal
+     *
+     * @method removeModal
+     * @protected
+     */
+    @action removeModal() {
+        if (this.isDestroyed || this.isDestroying) return;
+        this.set('addMembershipDialog', false);
+        $('.modal').modal('hide');
+    }
+
+    /**
+     * This is a computed property which gets list of projects from the App controller.
+     *
+     * @property projectsList
+     * @type Array
+     * @for AppRolePageController
+     * @private
+     */
+    @computed('appController.projectsList')
+    get projectsList() {
+        return this.appController.get('projectsList');
+    }
+
+    /**
+     * This get property returns list of relatedTo objects.
+     * 
+     * @property relatedToList
+     * @returns Array
+     * @for AppRolePageController
+     * @private
+     */
+    get relatedToList() {
+        return [
+            {
+                label: this.intl.t("views.app.role.tabs.user.membership.relatedTo.system"),
+                value: "system"
+            },
+            {
+                label: this.intl.t("views.app.role.tabs.user.membership.relatedTo.project"),
+                value: "project"
+            }
+        ]
+    }
+
+    /**
+     * This function is triggered before the validation is performed against the model.
+     * 
+     * @method beforeValidate
+     * @param {Prometheus.Models.*} model 
+     */
+    beforeValidate(model) {
+        let modelType = model.get('constructor.modelName');
+
+        if (modelType === 'membership') {
+            if (!(this.selectedProjects != undefined &&
+                this.selectedProjects.length > 0)) {
+                this.newMembership.set('hasProjects', '');
+            } else {
+                this.newMembership.set('hasProjects', true);
+            }
+        }
+    }
+
+    /**
+     * This function is used when validation is performed against the relatedId and hasProjects property
+     * of Membership model. If the relatedTo property value is set to "system" then relatedId and hasProjects
+     * property of Membership is not required.
+     * 
+     * @method validateMembershipField
+     * @protected
+     * @returns {function} Validation callback.
+     */
+    validateMembershipField() {
+        return () => {
+            let validationRule = null;
+            validationRule = (this.newMembership.relatedTo === 'system')
+                ? Yup['string']()['notRequired']()
+                : Yup['string']()['required']()
+
+            return validationRule;
+        }
+    }
+
+    /**
+     * This function is used to add one or more memberships in the system. If the relatedTo property of membership model is set to
+     * system then a single membership is created. When relatedTo is set to project then there is possibility that user has selected
+     * multiple projects, so in this case we'll create multiple memberships.
+     *
+     * @method addMembership
+     * @protected
+     */
+    @action addMembership() {
+        Logger.debug('AppRolePageController:addMembership()');
+        let _self = this;
+        let newMembership = _self.newMembership;
+        this.validate(newMembership, 'membershipCreate')
+            .then(async (validation) => {
+                if (validation.isValid) {
+                    if (this.newMembership.relatedTo === 'system') {
+                        await this._addMembership(this.newMembership);
+                    } else {
+                        for (const project of this.selectedProjects) {
+                            // Project contains label and value | a value from <option>
+                            let membership = this.newMembership;
+                            membership.relatedId = project.value;
+                            await this._addMembership(membership);
+                        }
+                    }
+
+                    _self.removeModal();
+                    _self.selectedProjects = [];
+                } else {
+                    let messages = _self._buildMessages(validation.errors, 'membership');
+
+                    new Messenger().post({
+                        message: messages,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                }
+            });
+        Logger.debug('-AppRolePageController:addMembership()');
+    }
+
+    /**
+     * This function is used to add a new membership in the system.
+     * 
+     * @param {Prometheus.Models.Membership} newMembership 
+     */
+    async _addMembership(newMembership) {
+        let _self = this;
+
+        try {
+            const membership = await newMembership.save();
+            Logger.debug('A new membership has been saved');
+
+            let user = _self.store.peekRecord('user', membership.userId);
+            membership.user = user;
+
+            // Setting project relationship for membership model.
+            if (membership.relatedTo !== 'system') {
+                let relatedModel = _self.store.peekRecord(membership.relatedTo, membership.relatedId);
+                membership.project = relatedModel;
+            }
+            _self.memberships.pushObject(membership);
+
+            new Messenger().post({
+                message: _self.intl.t(`views.app.role.tabs.user.membership.created.${membership.relatedTo}`, { name: membership.project.get('name') }),
+                type: 'success',
+                showCloseButton: true
+            });
+
+            _self.set('newMembership', _self.store.createRecord('membership', {
+                roleId: membership.roleId,
+                relatedTo: membership.relatedTo,
+                userId: membership.userId
+            }));
+        } catch (e) {
+            e.errors?.forEach((message) => {
+                new Messenger().post({
+                    message: message,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            });
+        }
     }
 }
