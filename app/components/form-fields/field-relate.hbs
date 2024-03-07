@@ -11,6 +11,7 @@
         @matcher={{@matcher}}
         @onFocus={{action (mut this.shouldValidate) true}}
         @onBlur={{action this.validate}}
+        @searchEnabled={{@searchEnabled}}
         @onClose={{action this.validate}} as |data|>
         {{component (concat 'related-fields/'@relateType) data=data}}
       </PowerSelect>
