@@ -7,6 +7,7 @@ import ENV from "prometheus/config/environment";
 import { singularize } from 'ember-inflector';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
+import AdapterError from '@ember-data/adapter/error';
 
 /**
  * This is the application adapter that fetches the information from the API.
@@ -70,9 +71,29 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
         let updateAttributes = _.pick(data.data.attributes, Object.keys(snapshot.changedAttributes()));
         data.data.attributes = updateAttributes;
 
-        if(_.isEmpty(updateAttributes)) {
+        if (_.isEmpty(updateAttributes)) {
             return false;
         }
         return this.ajax(url, 'PATCH', { data: data });
+    }
+
+    /**
+     * This hook is triggered when user got response against an API call. We're using this hook to set and return object
+     * of type AdapterError if user get an error as a response against an API call.
+     * 
+     * @method handleResponse
+     * @param {*} status 
+     * @param {*} headers 
+     * @param {*} payload 
+     * @param {*} requestData 
+     * @returns {Object}
+     */
+    handleResponse(status, headers, payload, requestData) {
+        if (payload?.status == 'ERROR') {
+            return new AdapterError(payload.messages);
+        }
+
+        this._super(status, headers, payload, requestData);
+        return payload;
     }
 }
