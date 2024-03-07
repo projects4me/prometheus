@@ -48,8 +48,14 @@ export default class AppRolePageRoute extends AppRoute {
      * @public
      */
     setupController(controller, model) {
+        let newMembership = this.store.createRecord('membership', {
+            roleId: model.role.id,
+            relatedTo: "system",
+        });
+
         controller.set('model', model.role);
         controller.set('model.permissions', model.permissions);
-        controller.set('memberships', model.memberships);
+        controller.set('memberships', model.memberships.toArray());
+        controller.set('newMembership', newMembership);
     }
 }
