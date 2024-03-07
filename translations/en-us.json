@@ -896,6 +896,13 @@
           "disabled": "Disabled"
         }
       },
+      "membership": {
+        "fields": {
+          "userId": "User",
+          "hasProjects": "Projects",
+          "relatedTo": "Related To"
+        }
+      },
       "chat": {
         "messagebox": "Type a message ..",
         "send": "Send"
@@ -988,6 +995,24 @@
               "title": "Project",
               "shortcode": "Short Code"
             },
+            "membership": {
+              "title": "Add a new membership",
+              "selectuser": "Select a new user",
+              "selectprojects": "Select one or more projects",
+              "selectrelatedto": "Select one or more projects",
+              "user": "User",
+              "projects": "Projects",
+              "relatedTo": {
+                "title": "Related To",
+                "project": "Project",
+                "system": "System"
+              },
+              "created": {
+                "system" : "Membership created for system",
+                "project" : "Membership created for project <strong>{name}</strong>"
+              }
+            },
+            "createMembership": "Create Membership",
             "confirmdelete": "Yes, delete the <strong>{user}</strong> membership on <strong>{project}</strong>"
           }
         },
