@@ -120,10 +120,12 @@ export default Route.extend({
         let _self = this;
         let eventName = 'routeWillChange';
         let isEventRegistered = (_self.router.has(eventName));
+        let loadingAssetsController = this.controllerFor('app.loading-assets');
 
         if (!isEventRegistered) {
             _self.router.on(eventName, (transition) => {
-                if (!_self.acl.hasRouteAccess(transition.to.name)) {
+                if (loadingAssetsController.get('dataLoaded')
+                    && !_self.acl.hasRouteAccess(transition.to.name)) {
                     _self.router.transitionTo('app.access-denied');
                 }
             });
