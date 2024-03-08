@@ -134,7 +134,7 @@ export default class AppLoadingAssetsRoute extends Route {
         Logger.debug('+Prometheus.Route.App.LoadingAssets::loadUsers()');
 
         let usersOptions = {
-            fields: 'User.id,User.name',
+            fields: 'User.id,User.name,User.email',
             sort: 'User.name',
             order: 'ASC',
             limit: -1
@@ -173,7 +173,7 @@ export default class AppLoadingAssetsRoute extends Route {
         Logger.debug('+Prometheus.Route.App.LoadingAssets::loadProjects()');
 
         let projectOptions = {
-            fields: "Project.id,Project.name",
+            fields: "Project.id,Project.name,Project.shortCode",
             query: "((Project.name STARTS A) OR (Project.name STARTS P))",
             sort: 'Project.name',
             order: 'ASC',

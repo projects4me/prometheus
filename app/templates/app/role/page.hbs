@@ -123,14 +123,83 @@
       </div>
       {{!-- Users to which this role is assigned --}}
       <div class="tab-pane" id="users">
-        {{!-- User Search component --}}
-        <FormFields::FieldSearch
-          @placeholder={{t "views.app.role.tabs.user.search"}}
-          @data-module={{concat "role-" this.model.name}}
-          @data-search="user"
-          @aclContext="App.Role.SearchUser"
-          @value={{this.userSearchQuery}}
-        />
+
+        <div data-role="user-membership-actions">
+          {{!-- User Search component --}}
+          <FormFields::FieldSearch
+            @placeholder={{t "views.app.role.tabs.user.search"}}
+            @data-module={{concat "role-" this.model.name}}
+            @data-search="user"
+            @aclContext="App.Role.SearchUser"
+            @value={{this.userSearchQuery}}
+          />
+
+          <AppUi::Button data-btn="create-membership" type="button" class="btn btn-primary" {{action this.showAddMembershipDialog}} @aclContext="App.Role.User.Membership.Create">
+            {{t "views.app.role.tabs.user.createMembership"}}
+          </AppUi::Button>
+        </div>
+
+        {{!-- Modal for creating new memberships for the user against project --}}
+        {{#if this.addMembershipDialog}}
+          {{#bootstrap-modal
+            title="views.app.role.tabs.user.membership.title"
+            confirmLabel="global.form.save"
+            closeLabel="global.form.cancel"
+            confirm=(action "addMembership")
+            close=(action "removeModal")
+          }}
+          <div class="box-body">
+            <FormFields::FieldRelate
+              @searchEnabled={{true}}
+              @searchField="label"
+              @placeholder={{t "views.app.role.tabs.user.membership.selectuser"}}
+              @label={{t "views.app.role.tabs.user.membership.user"}}
+              @value={{this.newMembership.userId}}
+              @data-field="membership.user"
+              @options={{this.usersList}}
+              @onchange={{action "selectRelated" this.newMembership 'userId'}}
+              @selected={{find-by "value" this.newMembership.userId this.usersList}}              
+              @relateType="relate-user"
+              @validate={{action this.validateField "membershipCreate" (hash name="userId" value=this.newMembership.userId model=this.newMembership)}}
+              @message={{this.message.membershipCreate.userId}}
+              @aclContext="App.Role.Membership.Create.User"
+            />
+
+            <FormFields::FieldRelate
+              @searchEnabled={{true}}
+              @searchField="label"            
+              @placeholder={{t "views.app.role.tabs.user.membership.selectrelatedto"}}
+              @label={{t "views.app.role.tabs.user.membership.relatedTo.title"}}
+              @value={{this.newMembership.relatedTo}}
+              @data-field="membership.relatedTo"
+              @options={{this.relatedToList}}
+              @selected={{find-by "value" this.newMembership.relatedTo this.relatedToList}}
+              @onchange={{action "selectRelated" this.newMembership 'relatedTo'}}
+              @relateType="relate-simple"
+              @validate={{action this.validateField "membershipCreate" (hash name="relatedTo" value=this.newMembership.relatedTo model=this.newMembership)}}              
+              @message={{this.message.membershipCreate.relatedTo}}
+              @aclContext="App.Role.Membership.Create.RelatedTo"
+            />            
+
+            {{#if (eq this.newMembership.relatedTo 'project')}}
+              <FormFields::FieldRelateMulti
+                @searchEnabled={{true}}
+                @searchField="label"
+                @selected={{this.selectedProjects}}     
+                @placeholder={{t "views.app.role.tabs.user.membership.selectprojects"}}
+                @label={{t "views.app.role.tabs.user.membership.projects"}}
+                @data-field="membership.project"
+                @options={{this.projectsList}}
+                @onchange={{action "selectStatic" this 'selectedProjects'}}
+                @relateType="relate-simple"
+                @validate={{action this.validateField "membershipCreate" (hash name="hasProjects" value=this.newMembership.hasProjects model=this.newMembership)}}              
+                @message={{this.message.membershipCreate.hasProjects}}
+                @aclContext="App.Role.Membership.Create.Project"
+              />
+            {{/if}}
+          </div>
+          {{/bootstrap-modal}}
+        {{/if}}        
 
         <div data-role="user-memberships">
           <table class="table table-hover table-striped">

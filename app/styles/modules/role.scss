@@ -35,6 +35,10 @@
               font-size: 1.5rem;
             }
           }
+
+          [data-role="user-membership-actions"] {
+            @include flexbox($justifyContent: space-between);
+          }
         }
       }
     }

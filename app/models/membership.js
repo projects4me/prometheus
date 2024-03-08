@@ -15,14 +15,24 @@ import Model, { attr, belongsTo } from '@ember-data/model';
 export default Model.extend({
 
     /**
-     * The identifier of the project for which this membership rule is defined
+     * The identifier of the module for which the membership is created.
      *
-     * @property projectId
+     * @property relatedId
      * @type String
      * @for Membership
      * @private
      */
-    projectId: attr('string'),
+    relatedId: attr('string'),
+
+    /**
+     * The name of the module for which the membership is created e.g. project.
+     *
+     * @property relatedTo
+     * @type String
+     * @for Membership
+     * @private
+     */
+    relatedTo: attr('string'),
 
     /**
      * The identifier of the for whom this membership rule is defined
