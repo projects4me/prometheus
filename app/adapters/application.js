@@ -93,7 +93,7 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
             return new AdapterError(payload.messages);
         }
 
-        this._super(status, headers, payload, requestData);
+        super.init(status, headers, payload, requestData);
         return payload;
     }
 }

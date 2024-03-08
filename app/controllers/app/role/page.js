@@ -54,7 +54,7 @@ export default class AppRolePageController extends AppRoleController {
      * @for AppRoleController
      * @private
      */
-    addMembershipDialog = false;
+    @tracked addMembershipDialog = false;
 
     /**
      * The app controller.
@@ -472,7 +472,7 @@ export default class AppRolePageController extends AppRoleController {
      * @protected
      */
     @action showAddMembershipDialog() {
-        this.set('addMembershipDialog', true);
+        this.addMembershipDialog = true;
     }
 
     /**
@@ -483,7 +483,7 @@ export default class AppRolePageController extends AppRoleController {
      */
     @action removeModal() {
         if (this.isDestroyed || this.isDestroying) return;
-        this.set('addMembershipDialog', false);
+        this.addMembershipDialog = false;
         $('.modal').modal('hide');
     }
 
