@@ -134,7 +134,7 @@
             @value={{this.userSearchQuery}}
           />
 
-          <AppUi::Button type="button" class="btn btn-primary" {{action this.showAddMembershipDialog}} @aclContext="App.Role.User.Membership.Create">
+          <AppUi::Button data-btn="create-membership" type="button" class="btn btn-primary" {{action this.showAddMembershipDialog}} @aclContext="App.Role.User.Membership.Create">
             {{t "views.app.role.tabs.user.createMembership"}}
           </AppUi::Button>
         </div>
@@ -155,7 +155,7 @@
               @placeholder={{t "views.app.role.tabs.user.membership.selectuser"}}
               @label={{t "views.app.role.tabs.user.membership.user"}}
               @value={{this.newMembership.userId}}
-              @data-field="select-user"
+              @data-field="membership.user"
               @options={{this.usersList}}
               @onchange={{action "selectRelated" this.newMembership 'userId'}}
               @selected={{find-by "value" this.newMembership.userId this.usersList}}              
@@ -171,7 +171,7 @@
               @placeholder={{t "views.app.role.tabs.user.membership.selectrelatedto"}}
               @label={{t "views.app.role.tabs.user.membership.relatedTo.title"}}
               @value={{this.newMembership.relatedTo}}
-              @data-field="select-relatedTo"
+              @data-field="membership.relatedTo"
               @options={{this.relatedToList}}
               @selected={{find-by "value" this.newMembership.relatedTo this.relatedToList}}
               @onchange={{action "selectRelated" this.newMembership 'relatedTo'}}
@@ -188,7 +188,7 @@
                 @selected={{this.selectedProjects}}     
                 @placeholder={{t "views.app.role.tabs.user.membership.selectprojects"}}
                 @label={{t "views.app.role.tabs.user.membership.projects"}}
-                @data-field="select-project"
+                @data-field="membership.project"
                 @options={{this.projectsList}}
                 @onchange={{action "selectStatic" this 'selectedProjects'}}
                 @relateType="relate-simple"
