@@ -8,6 +8,8 @@ import { singularize } from 'ember-inflector';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import AdapterError from '@ember-data/adapter/error';
+import ForbiddenError from './errors/forbidden-error';
+import UnauthorizedError from './errors/unauthorized-error';
 
 /**
  * This is the application adapter that fetches the information from the API.
@@ -89,11 +91,36 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
      * @returns {Object}
      */
     handleResponse(status, headers, payload, requestData) {
-        if (payload?.status == 'ERROR') {
-            return new AdapterError(payload.messages);
+        if (!this.isSuccess(status, headers, payload)) {
+            return this._createErrorResponse(status, payload);
         }
 
         super.init(status, headers, payload, requestData);
         return payload;
+    }
+
+    /**
+     * This method is called when server throws an error against the API call. In this method we're creating the adapter error
+     * object according to the type of status code.
+     * 
+     * @param {number} status 
+     * @param {Object} payload 
+     * @returns {Object}
+     */
+    _createErrorResponse(status, payload) {
+        let adapterError = null;
+        switch (status) {
+            case 401:
+                adapterError = new UnauthorizedError('Unauthorized request');
+                break;
+            case 403:
+                adapterError = new ForbiddenError(payload.error);
+                break;
+            default:
+                adapterError = new AdapterError(payload.error);
+                break;
+        }
+
+        return adapterError;
     }
 }
