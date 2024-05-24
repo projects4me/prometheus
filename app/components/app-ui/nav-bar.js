@@ -8,6 +8,7 @@ import { action } from '@ember/object';
 import Logger from "js-logger";
 import { tracked } from '@glimmer/tracking';
 import AppComponent from '../app';
+import { inject as service } from '@ember/service';
 
 /**
  * This component is used to render the navbar
@@ -25,9 +26,19 @@ export default class NavBarComponent extends AppComponent {
      * @property projectId
      * @type String
      * @for NavBar
-     * @private
+     * @protected
      */
     @tracked projectId;
+
+    /**
+     * The trackedProject service provides id of the selected project.
+     *
+     * @property trackedProject
+     * @type Ember.Service
+     * @for NavBar
+     * @private
+     */
+    @service trackedProject;
 
     /**
      * This function fetches the navigation metaData and makes it available for display
@@ -89,6 +100,8 @@ export default class NavBarComponent extends AppComponent {
      */
     @action projectChanged(project) {
         this.projectId = project.value;
+        this.trackedProject.setProjectId(project.value);
+
         if (project.value !== undefined && project.value !== null && project.value !== '') {
             this.router.transitionTo('app.project', { project_id: project.value });
         }
