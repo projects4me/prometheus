@@ -53,7 +53,7 @@ export default Widget.extend({
         let data = _self.get('data');
         let dataSet = [];
         let intl = this.intl;
-        data.forEach(function(issue){
+        data?.forEach(function(issue){
             dataSet.push([
                 '<a href="javascript:void(0);">'+issue.get('issueNumber')+'</a>',
                 '<a href="javascript:void(0);">'+issue.get('subject')+'</a>',
@@ -93,8 +93,8 @@ export default Widget.extend({
 
                 issueNumber = _.replace(issueNumber,'<a href="javascript:void(0);">','');
                 issueNumber = _.replace(issueNumber,'</a>','');
-                _self.get('router').transitionTo('app.project', {project_id:projectId});
-                _self.get('router').transitionTo('app.project.issue.page', {project_id:projectId,issue_number:issueNumber});
+                _self.get('router').transitionTo('app.project', projectId);
+                _self.get('router').transitionTo('app.project.issue.page', issueNumber);
             }
         } );
     }

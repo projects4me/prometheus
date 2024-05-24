@@ -421,14 +421,11 @@ export default class AppProjectIssuePageController extends PrometheusController.
                 let timelog = _self.get('store').createRecord('timelog');
                 _self.set('newTimeLog', timelog);
                 _self.get('model').objectAt(0).get('spent').pushObject(newLog);
-
                 new Messenger().post({
                     message: _self.intl.t("views.app.issue.detail.timelog.added"),
                     type: 'success',
                     showCloseButton: true
                 });
-
-                _self.send('reload');
 
             });
         } else {
@@ -471,8 +468,6 @@ export default class AppProjectIssuePageController extends PrometheusController.
                     type: 'success',
                     showCloseButton: true
                 });
-
-                //_self.send('reload');
 
             });
 

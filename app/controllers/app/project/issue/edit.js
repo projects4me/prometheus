@@ -60,11 +60,7 @@ export default class AppProjectIssueEditController extends AppProjectIssueCreate
      * @protected
      */
     afterCancel(model) {
-        let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
-        this.transitionToRoute('app.project.issue.page', {
-            project_id: projectId,
-            issue_number: model.get('issueNumber')
-        });
+        this.transitionToRoute('app.project.issue.page', model.get('issueNumber'));
         model.rollbackAttributes();
     }
 }
