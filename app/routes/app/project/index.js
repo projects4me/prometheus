@@ -3,6 +3,9 @@
  */
 
 import App from "prometheus/routes/app";
+import { inject } from '@ember/service';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 /**
  * The wiki route
@@ -26,28 +29,44 @@ export default App.extend({
     projectId: null,
 
     /**
-     * The setup controller function that will be called every time the user visits
-     * the route, this function is responsible for loading the required data
+     * The trackedProject service provides id of the selected project.
      *
-     * @method setupController
-     * @param {Prometheus.Controllers.Project} controller the controller object for this route
+     * @property trackedProject
+     * @type Ember.Service
+     * @for Project
      * @private
-     * @todo move the loading of related to afterModel
      */
-    setupController: function (controller) {
-        Logger.debug('AppProjectIndexRoute::setupController');
+    trackedProject: inject(),
+
+    /**
+     * This route hook is triggered before model hook. In this hook we're updating the projectId using the
+     * trackedProject service.
+     * 
+     * @method beforeModel
+     */
+    beforeModel() {
+        let projectId = this.trackedProject.getProjectId();
+        let params = this.paramsFor('app.project');
+
+        if (projectId !== params.project_id) {
+            this.trackedProject.setProjectId(params.project_id);
+        }
+    },
+
+    /**
+     * The model hook for this route used for fetching required data.
+     *
+     * @method model
+     * @protected
+     */
+    async model() {
+        Logger.debug('AppProjectIndexRoute::model');
         let _self = this;
-        // If the user navigated directly to the wiki project or page then lets setup the project id
-        let projectId = _self.paramsFor('app.project').project_id;
-        let projectName = null;
+        let projectId = _self.trackedProject.getProjectId();
 
         Logger.debug(projectId);
-        Logger.debug(projectName);
 
-        _self.loadIssuesTime(projectId, controller);
-        _self.loadActivities(projectId, controller);
-
-        let options = {
+        let _projectOptions = {
             //      fields: "Project.id,Project.name",
             query: "(Project.id : " + projectId + ")",
             rels: 'members,conversations,createdBy,owner,memberships,roles',
@@ -56,88 +75,7 @@ export default App.extend({
             limit: -1
         };
 
-        Logger.debug('Retreiving the project with options ');
-        Logger.debug(options);
-
-        _self.store.query('project', options).then(function (data) {
-            if (projectId !== null) {
-                projectName = data.findBy('id', projectId).get('name');
-                controller.set('projectId', projectId);
-                controller.set('projectName', projectName);
-            }
-            controller.set('model', data.objectAt(0));
-        });
-
-        controller.send('resetNewMilestone');
-    },
-
-
-    /**
-     * This function is used to retrieve and process the issues related to a project
-     * There are two reasons that the issues are being loaded separately and not
-     * part of the ordinal call sent to retrieve the project information. The first
-     * reason is performance, the number of issues on a large project can easily
-     * exceed 1000 issues and if we retrieve the information along with project
-     * information due to the obviously complex nature of many relationships between
-     * a project and other entities the retrieval cost for even a single project
-     * would be in hundred of thousand of rows examined. So we only bring in the
-     * information that for there are going to be one a few decade rows in total
-     * with the original project retrieval call.
-     * The second reason is to retrieve the related information. The API automatically`
-     * retrieves the related data but is restricted to first degree relationships.
-     * Second degree and above relationships are not retrieved via the default call
-     * due to obvious performance and complexity constraints.
-     *
-     * @method loadIssuesTime
-     * @param {String} projectId The identifier of the project being viewed
-     * @todo Explore the possibility of using the url project/:id/:relation as it is supported by the API
-     */
-    loadIssuesTime: function (projectId, controller) {
-
-        let _self = this;
-        let options = {
-            query: "(Issue.projectId : " + projectId + ")",
-            sort: "Issue.dateModified",
-            order: 'DESC',
-            rels: 'estimated,spent,project',
-            limit: -1
-        };
-
-        this.store.query('issue', options).then(function (issues) {
-            _self.get('controller').set('issuetime', issues);
-
-            // We have to fetch the milestone list separately as there might be a
-            // project milestone with no issue associated with it
-            let options = {
-                query: "(Milestone.projectId : " + projectId + ")",
-                sort: "Milestone.startDate",
-                order: 'DESC',
-                limit: -1
-            };
-            _self.store.query('milestone', options).then(function (milestones) {
-                milestones.forEach(function (milestone) {
-                    let milestoneIssues = issues.filterBy('milestoneId', milestone.get('id'));
-                    if (milestoneIssues !== undefined) {
-                        milestone.get('issues').pushObjects(milestoneIssues);
-                    }
-                });
-                controller.set('milestones', milestones.toArray());
-            });
-        });
-    },
-
-    /**
-     * This function is used to retrieve the activities related to a project. Just
-     * like the loadIssuesTime function the activities are loaded separately to
-     * avoid performance and complexity issues.
-     *
-     * @method loadActivities
-     * @param {String} projectId The identifier of the project which is being viewed
-     * @todo test performance and load in chunks if required.
-     */
-    loadActivities: function (projectId, controller) {
-        let _self = this;
-        let options = {
+        let _activityOptions = {
             // Retrieving the activities related to a project
             query: "((Activity.relatedId : " + projectId + ") AND (Activity.relatedTo : project))",
             sort: "Activity.dateCreated",
@@ -146,21 +84,102 @@ export default App.extend({
             limit: -1
         };
 
-        _self.store.query('activity', options).then(function (data) {
-            let activities = {};
-            // Group the activities with respect to the dateCreated
-            data.forEach(function (activity) {
-                let dateCreated = activity.get('dateCreated').substring(0, 10);
-                if (activities[dateCreated] !== undefined) {
-                    activities[dateCreated]['data'].push(activity);
-                }
-                else {
-                    activities[dateCreated] = { dateCreated: dateCreated, data: [activity] };
-                }
-            });
+        let _issueOptions = {
+            query: "(Issue.projectId : " + projectId + ")",
+            sort: "Issue.dateModified",
+            order: 'DESC',
+            rels: 'estimated,spent,project',
+            limit: -1
+        };
 
-            controller.set('activities', activities);
+        let _milestoneOptions = {
+            query: "(Milestone.projectId : " + projectId + ")",
+            sort: "Milestone.startDate",
+            order: 'DESC',
+            limit: -1
+        };
+
+        return hashSettled({
+            project: _self.store.query('project', _projectOptions),
+            milestones: _self.store.query('milestone', _milestoneOptions),
+            activities: _self.store.query('activity', _activityOptions),
+            issues: _self.store.query('issue', _issueOptions)
+        })
+            .then((data) => {
+                return extractHashSettled(data, 'project');
+            })
+            .catch((error) => {
+                _self.errorManager.handleError(error, {
+                    moduleName: "project"
+                });
+            })
+    },
+    /**
+     * The setup controller function that will be called every time the user visits
+     * the route, this function is responsible for loading the required data
+     *
+     * @method setupController
+     * @param {Prometheus.Controllers.Project} controller the controller object for this route
+     * @private
+     * @todo move the loading of related to afterModel
+     */
+    setupController(controller, model) {
+        let projectId = this.trackedProject.getProjectId();
+        let projectName = null;
+
+        // Set project
+        if (projectId !== null) {
+            projectName = model.project.findBy('id', projectId).get('name');
+            controller.set('projectId', projectId);
+            controller.set('projectName', projectName);
+        }
+        controller.set('model', model.project.objectAt(0));
+
+        // Set issues
+        controller.set('issuetime', model.issues);
+
+        this.loadActivities(model.activities, controller);
+        this.loadMilestones(model.milestones, model.issues, controller);
+
+        controller.send('resetNewMilestone');
+    },
+
+    /**
+     * This function is used to set the milestones to the project contorller.
+     * 
+     * @param {Prometheus.Models.Milestone} milestones 
+     * @param {Prometheus.Models.Issue} issues 
+     * @param {Prometheus.Controller.Project} controller 
+     */
+    loadMilestones(milestones, issues, controller) {
+        milestones.forEach(function (milestone) {
+            let milestoneIssues = issues?.filterBy('milestoneId', milestone.get('id'));
+            if (milestoneIssues !== undefined) {
+                milestone.get('issues').pushObjects(milestoneIssues);
+            }
         });
+        controller.set('milestones', milestones.toArray());
+    },
+
+    /**
+     * This function is used to set the activities to the project controller.
+     * 
+     * @param {Prometheus.Models.Activity} activities 
+     * @param {Prometheus.Controller.Project} controller 
+     */
+    loadActivities(activities, controller) {
+        let updatedActivities = {};
+        // Group the activities with respect to the dateCreated
+        activities.forEach(function (activity) {
+            let dateCreated = activity.get('dateCreated').substring(0, 10);
+            if (updatedActivities[dateCreated] !== undefined) {
+                updatedActivities[dateCreated]['data'].push(activity);
+            }
+            else {
+                updatedActivities[dateCreated] = { dateCreated: dateCreated, data: [activity] };
+            }
+        });
+        controller.set('activities', updatedActivities);
     },
     actions: {
         /**
@@ -172,14 +191,18 @@ export default App.extend({
          * 
          * @event willTransition
          * @public
-         */        
+         */
         willTransition() {
-            this.controller.milestones.forEach((milestone) => {
+            this.controller?.milestones?.forEach((milestone) => {
                 let issues = milestone.issues.toArray();
                 issues.forEach((issue) => {
                     issue.unloadRecord();
                 });
             });
+
+            this.controller?.issuetime?.forEach((issue) => {
+                issue.unloadRecord();
+            })
         }
     }
 });

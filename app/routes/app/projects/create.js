@@ -3,7 +3,8 @@
  */
 
 import App from "prometheus/routes/app";
-import { hash } from 'rsvp';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 import Format from "prometheus/utils/data/format";
 
 /**
@@ -37,16 +38,21 @@ export default App.extend({
             limit: -1
         }
 
-        return hash({
+        return hashSettled({
             project: _self.get('store').createRecord('project',{
                 assignee: _self.get('currentUser').user.id
             }),
             issuetypes: _self.store.query('issuetype',issuetypeOptions),
             issueStatuses: _self.store.query('issuestatus', issueStatusOptions)
         }).then(function(results){
-            _self.set('project',results.project);
-            _self.set('issuetypes',results.issuetypes.toArray());
-            _self.set('issueStatuses',results.issueStatuses);
+            let data = extractHashSettled(results);
+            _self.set('project',data.project);
+            _self.set('issuetypes',data.issuetypes.toArray());
+            _self.set('issueStatuses',data.issueStatuses);
+        }).catch((error) => {
+            _self.errorManager.handleError(error, {
+                moduleName: 'project'
+            });
         });
 
     },

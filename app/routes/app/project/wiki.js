@@ -6,6 +6,9 @@ import App from "prometheus/routes/app";
 import M2T from "prometheus/utils/data/modeltotree";
 import { set } from '@ember/object';
 import { htmlSafe } from '@ember/template';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
+import { inject } from '@ember/service';
 
 /**
  * The project wiki page route, it is loaded when a user tried to navigate to
@@ -37,119 +40,135 @@ export default App.extend({
      * @for Wiki
      * @private
      */
-    tree:{},
+    tree: {},
 
     /**
-     * The setup controller function that will be called every time
-     * the user visits the module route, this function is responsible
-     * for loading the required data for the route
+     * The trackedProject service provides id of the selected project.
      *
-     * @method setupController
-     * @param {Prometheus.Controllers.Wiki} controller the controller object for this route
+     * @property trackedProject
+     * @type Ember.Service
+     * @for ProjectWikiRoute
      * @private
      */
-    setupController:function(controller){
+    trackedProject: inject(),
 
-        Logger.debug('AppProjectWikiRoute::setupController');
+    /**
+     * The model hook for this route. In this we're fetching the list of wikis against the selected project.
+     * 
+     * @method model
+     * @returns {Promise}
+     */
+    model() {
+        Logger.debug('AppProjectWikiRoute::model');
 
-        let self = this;
-        let params = this.paramsFor('app.project');
+        let _self = this;
+        let projectId = this.trackedProject.getProjectId();
 
-        Logger.debug('The parameters are as follows');
-        Logger.debug(params);
-
-        Logger.debug('Inside the setup controller for the wiki project');
-        let intl = this.intl;
-
-        self.loadTags();
-
-        let options = {
-            query: '(Wiki.projectId : '+params.project_id+')',
-            sort : 'Wiki.name',
+        let tagOptions = {
+            fields: 'Tag.tag,Tag.id',
+            sort: 'Tag.tag',
             order: 'ASC',
             limit: -1
         };
-        controller.set('projectId',params.project_id);
-        let tree={};
+        let wikiOptions = {
+            query: '(Wiki.projectId : ' + projectId + ')',
+            sort: 'Wiki.name',
+            order: 'ASC',
+            limit: -1
+        };
 
-        Logger.debug('Retreiving projects list with options '+options);
-        self.store.query('wiki',options).then(function(data){
-            Logger.debug('Wiki Retrieved');
-            Logger.debug(data);
-            controller.set('model',data);
+        Logger.debug('-AppProjectWikiRoute::model');
 
-            // There might be a better way to handle this but I couldn't find it
-            // Ideally I should not have to pass the wikilist retrieved to the
-            // sub route, they should be able to pick it up but that is not working
-            // late binding/promise and all so lets just set for all the subroutes
-            let wikiCount = data.get('length');
-            let wikiList = [];
-            let temp = null;
-
-            wikiList[0] = {label:htmlSafe(intl.t("global.blank")), value:null};
-            for (let i=1;i<=wikiCount;i++)
-            {
-                temp = data.objectAt(i-1);
-                wikiList[i] = {label:temp.get('name'), value:temp.get('id')};
-            }
-
-            controller.set('wikiList',wikiList);
-            self.controllerFor('app.project.wiki.page').set('wikiList', wikiList);
-            self.controllerFor('app.project.wiki.create').set('wikiList', wikiList);
-            self.controllerFor('app.project.wiki.edit').set('wikiList', wikiList);
-
-            tree = M2T.modelToTree(data);
-
-            Logger.debug(tree);
-            self.set('tree',tree);
-            controller.set('tree',tree);
-
-            Logger.debug(self.get('router.currentRouteName'));
-
-            // We need the direction
-            if (self.get('router.currentRouteName') === 'app.project.wiki.index'){
-                if (data.findBy('name','Home') !== undefined){
-                    self.transitionTo('app.project.wiki.page',{project_id:params.projectId,wiki_name:'Home'});
-                }
-            }
+        return hashSettled({
+            tags: _self.store.query('tag', tagOptions),
+            wiki: _self.store.query('wiki', wikiOptions)
+        }).then((data) => {
+            return extractHashSettled(data, 'wiki');
+        }).catch((error) => {
+            _self.errorManager.handleError(error, {
+                moduleName: 'wiki'
+            });
         });
     },
 
     /**
-     * This function is used to retrieve the list of tags in the system
+     * The setupController hook. In this hook we're calling loadTags and LoadWikis method to load
+     * all tags and wikis related to the selected project.
+     * 
+     * @method setupController
+     * @param {Prometheus.Controllers.Wiki} controller 
+     * @param {Prometheus.Models.Wiki} model 
+     */
+    setupController(controller, model) {
+        controller.set('projectId', this.trackedProject.getProjectId());
+        this.loadTags(model.tags);
+        this.LoadWikis(model.wiki, controller);
+    },
+
+    /**
+     * This function is used to prepare tags list.
      *
      * @method loadTags
+     * @param {Prometheus.Models.Tag}
      * @private
      */
-    loadTags:function(){
-        let self = this;
-        let options = {
-            fields: 'Tag.tag,Tag.id',
-            sort : 'Tag.tag',
-            order: 'ASC',
-            limit: -1
-        };
+    loadTags(tags) {
+        let tagList = [];
+        let temp = null;
 
-        this.store.query('tag',options).then(function(data){
-            Logger.debug('Tags Retrieved');
-            Logger.debug(data);
+        for (let i = 0; i < tags.length; i++) {
+            temp = tags.objectAt(i);
+            tagList[i] = { label: temp.get('tag'), value: temp.get('id') };
+        }
 
-            // There might be a better way to handle this but I couldn't find it
-            // Ideally I should not have to pass the wikilist retrieved to the
-            // sub route, they should be able to pick it up but that is not working
-            // late binding/promise and all so lets just set for all the subroutes
-            let tagCount = data.get('length');
-            let tagList = [];
-            let temp = null;
-            for (let i=0;i<tagCount;i++)
-            {
-                temp = data.objectAt(i);
-                tagList[i] = {label:temp.get('tag'), value:temp.get('id')};
+        this.controllerFor('app.project.wiki.page').set('tagList', tagList);
+        this.controllerFor('app.project.wiki.edit').set('tagList', tagList);
+    },
+
+    /**
+     * This function prepare wikis list. 
+     * 
+     * @method LoadWikis
+     * @param {Prometheus.Models.Wiki} wikis 
+     * @param {Prometheus.Controller.Wiki} controller 
+     */
+    LoadWikis(wikis, controller) {
+        controller.set('model', wikis);
+
+        // There might be a better way to handle this but I couldn't find it
+        // Ideally I should not have to pass the wikilist retrieved to the
+        // sub route, they should be able to pick it up but that is not working
+        // late binding/promise and all so lets just set for all the subroutes
+        let wikiList = [];
+        let temp = null;
+        let intl = this.intl;
+        let tree = {};
+
+        wikiList[0] = { label: htmlSafe(intl.t("global.blank")), value: null };
+        for (let i = 1; i <= wikis.length; i++) {
+            temp = wikis.objectAt(i - 1);
+            wikiList[i] = { label: temp.get('name'), value: temp.get('id') };
+        }
+
+        controller.set('wikiList', wikiList);
+        this.controllerFor('app.project.wiki.page').set('wikiList', wikiList);
+        this.controllerFor('app.project.wiki.create').set('wikiList', wikiList);
+        this.controllerFor('app.project.wiki.edit').set('wikiList', wikiList);
+
+        tree = M2T.modelToTree(wikis);
+
+        Logger.debug(tree);
+        this.set('tree', tree);
+        controller.set('tree', tree);
+
+        Logger.debug(this.get('router.currentRouteName'));
+
+        // We need the direction
+        if (this.get('router.currentRouteName') === 'app.project.wiki.index') {
+            if (wikis.findBy('name', 'Home') !== undefined) {
+                this.transitionTo('app.project.wiki.page', 'Home');
             }
-            self.controllerFor('app.project.wiki.page').set('tagList', tagList);
-            self.controllerFor('app.project.wiki.edit').set('tagList', tagList);
-//     self.controllerFor('app.project.wiki.create').set('wikiList', wikiList);
-        });
+        }
     },
 
 
@@ -164,7 +183,7 @@ export default App.extend({
      * @for Wiki
      * @public
      */
-    actions:{
+    actions: {
 
         /**
          * This function is called the an individual wiki is updated that requires
@@ -176,16 +195,15 @@ export default App.extend({
          * @param {Prometheus.Models.Wiki} model the updated model of wiki
          * @public
          */
-        modelUpdated:function(model){
+        modelUpdated: function (model) {
             Logger.debug('The updated model is ');
             Logger.debug(model);
             Logger.debug('The tree is');
             Logger.debug(this.tree);
             let tree = this.tree;
-            let node = M2T.findNode(model.get('id'),tree);
-            if (node)
-            {
-                set(node,'name',model.get('name'));
+            let node = M2T.findNode(model.get('id'), tree);
+            if (node) {
+                set(node, 'name', model.get('name'));
             }
         },
 
@@ -202,7 +220,7 @@ export default App.extend({
          * @method refreshWiki
          * @public
          */
-        refreshWiki:function(){
+        refreshWiki: function () {
             Logger.debug('AppProjectWikiRoute::refreshWiki');
             this.refresh();
 

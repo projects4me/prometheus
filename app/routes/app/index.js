@@ -77,7 +77,9 @@ export default App.extend({
             Logger.info(results);
             _.forEach(widgets,function(widget){
                 _self.set(widget,results[widget]);
-            });
+            })
+        }).catch((error) =>{
+            _self.errorManager.handleError(error);
         });
     },
 

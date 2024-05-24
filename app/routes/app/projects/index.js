@@ -4,7 +4,8 @@
 
 import App from "prometheus/routes/app";
 import { inject } from '@ember/service';
-import { hash } from 'rsvp';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 /**
  * This is the route for projects list view
@@ -27,18 +28,18 @@ export default App.extend({
      * @for Index
      * @private
      */
-    queryParams:{
-        sort:{
-            refreshModel:true,
+    queryParams: {
+        sort: {
+            refreshModel: true,
         },
-        order:{
-            refreshModel:true,
+        order: {
+            refreshModel: true,
         },
-        page:{
-            refreshModel:true,
+        page: {
+            refreshModel: true,
         },
-        query:{
-            refreshModel:true,
+        query: {
+            refreshModel: true,
         }
     },
 
@@ -131,27 +132,27 @@ export default App.extend({
      * @return Prometheus.Model.Project
      * @private
      */
-    model:function(params){
+    model: function (params) {
         Logger.debug('Prometheus.App.Routes.Projects::model()');
         Logger.debug(params);
 
         let query = null;
 
         // Load the data if are passed via the parameter
-        if(params.sort){
-            this.set('sort',params.sort);
+        if (params.sort) {
+            this.set('sort', params.sort);
         }
-        if(params.order){
-            this.set('order',params.order);
+        if (params.order) {
+            this.set('order', params.order);
         }
-        if(params.query === ''){
-            this.set('query',null);
-        } else if(params.query){
+        if (params.query === '') {
+            this.set('query', null);
+        } else if (params.query) {
             query = params.query;
-            this.set('query',params.query);
+            this.set('query', params.query);
         }
-        if(params.page){
-            this.set('page',params.page);
+        if (params.page) {
+            this.set('page', params.page);
         }
 
         // Prepare the options
@@ -164,9 +165,12 @@ export default App.extend({
         };
 
         // Retrieve the data
-        let data = this.store.query('project',options);
         Logger.debug('-Prometheus.App.Routes.Projects::model()');
-        return data;
+        return this.store.query('project', options).catch((error) => {
+            _self.errorManager.handleError(error, {
+                moduleName: 'project'
+            });
+        });
     },
 
     /**
@@ -178,24 +182,27 @@ export default App.extend({
      * @method afterModel
      * @protected
      */
-    afterModel(){
+    afterModel() {
         let _self = this;
         let savedSearchesOption = {
-            query: '((Savedsearch.relatedTo : project) AND (Savedsearch.createdUser : '+_self.get('currentUser.user.id')+'))',
+            query: '((Savedsearch.relatedTo : project) AND (Savedsearch.createdUser : ' + _self.get('currentUser.user.id') + '))',
             limit: -1
         };
 
         let publicSearchesOption = {
-            query: '((Savedsearch.relatedTo : project) AND (Savedsearch.public : 1) AND (Savedsearch.createdUser !: '+_self.get('currentUser.user.id')+'))',
+            query: '((Savedsearch.relatedTo : project) AND (Savedsearch.public : 1) AND (Savedsearch.createdUser !: ' + _self.get('currentUser.user.id') + '))',
             limit: -1
         };
 
-        return hash({
-            savedsearches: _self.store.query('savedsearch',savedSearchesOption),
-            publicsearches: _self.store.query('savedsearch',publicSearchesOption)
-        }).then(function(results){
-            _self.set('savedsearches',results.savedsearches.toArray());
-            _self.set('publicsearches',results.publicsearches.toArray());
+        return hashSettled({
+            savedsearches: _self.store.query('savedsearch', savedSearchesOption),
+            publicsearches: _self.store.query('savedsearch', publicSearchesOption)
+        }).then(function (results) {
+            let data = extractHashSettled(results);
+            _self.set('savedsearches', data.savedsearches.toArray());
+            _self.set('publicsearches', data.publicsearches.toArray());
+        }).catch((error) => {
+            _self.errorManager.handleError(error);
         });
 
     },
@@ -214,17 +221,17 @@ export default App.extend({
      * @param {Prometheus.Models.Project} model The model that is created by this route
      * @private
      */
-    setupController:function(controller,model){
+    setupController: function (controller, model) {
         Logger.debug('Prometheus.App.Routes.Projects::setupController()');
         let savedSearch = this.store.createRecord('savedsearch');
-        controller.set('newSavedsearch',savedSearch);
-        controller.set('savedsearches',this.savedsearches);
-        controller.set('publicsearches',this.publicsearches);
-        controller.set('model',model);
-        controller.set('query',this.query);
-        controller.set('sort',this.sort);
-        controller.set('order',this.order);
-        controller.set('page',this.page);
+        controller.set('newSavedsearch', savedSearch);
+        controller.set('savedsearches', this.savedsearches);
+        controller.set('publicsearches', this.publicsearches);
+        controller.set('model', model);
+        controller.set('query', this.query);
+        controller.set('sort', this.sort);
+        controller.set('order', this.order);
+        controller.set('page', this.page);
         Logger.debug('Prometheus.App.Routes.Projects::setupController()');
     },
 

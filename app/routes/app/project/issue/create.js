@@ -3,7 +3,8 @@
  */
 
 import App from "prometheus/routes/app";
-import { hash } from 'rsvp';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 import format from "prometheus/utils/data/format";
 import Logger from "js-logger";
 import _ from 'lodash';
@@ -44,20 +45,25 @@ export default App.extend({
 
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::afterModel()');
 
-        return hash({
+        return hashSettled({
             issue: _self.store.createRecord('issue', {
                 assignee: _self.get('currentUser').user.id,
                 owner: _self.get('currentUser').user.id
             }),
             project: _self.store.query('project', projectOptions)
         }).then(function (results) {
-            Logger.debug(results);
-            _self.set('issue', results.issue);
-            const issueDescription = _.clone(results.issue.description);
+            let data = extractHashSettled(results, 'project');
+            Logger.debug(data);
+            _self.set('issue', data.issue);
+            const issueDescription = _.clone(data.issue.description);
             _self.set('issueDescription', issueDescription);
-            _self.set('project', results.project.objectAt(0));
-            _self.set('types', results.project.firstObject.issuetypes);
-            _self.set('statuses', results.project.firstObject.issuestatuses);
+            _self.set('project', data.project.objectAt(0));
+            _self.set('types', data.project.firstObject.issuetypes);
+            _self.set('statuses', data.project.firstObject.issuestatuses);
+        }).catch((error) => {
+            _self.errorManager.handleError(error, {
+                moduleName: 'project'
+            })
         });
     },
 

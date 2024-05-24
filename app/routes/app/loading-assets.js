@@ -5,7 +5,8 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import getCurrentUrl from 'prometheus/utils/location/current-url'
-import { hash } from 'rsvp';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 /**
  * The loading assets route.
@@ -68,6 +69,16 @@ export default class AppLoadingAssetsRoute extends Route {
     @service store;
 
     /**
+     * This service is used to different types of errors.
+     * 
+     * @property errorManager
+     * @type Ember.Service
+     * @for App
+     * @protected
+     */
+    @service errorManager;
+
+    /**
      * This method is called by ember when we enter this route and returns
      * resolved promises to the setupController function. In this method we're
      * fetching loggedin user model by using currentUser service. We'll fetch
@@ -85,12 +96,16 @@ export default class AppLoadingAssetsRoute extends Route {
 
         Logger.debug('-Prometheus.Route.App.LoadingAssets::model()');
 
-        return hash({
+        return hashSettled({
             userService: this.currentUser.loadUser(),
             settings: this.settings.loadSettings(),
             users: _self.loadUsers(),
             roles: _self.loadRoles(),
             projects: _self.loadProjects()
+        }).then((results) => {
+            return extractHashSettled(results);
+        }).catch((error) => {
+            _self.errorManager.handleError(error);
         });
 
     }

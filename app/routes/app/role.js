@@ -28,7 +28,11 @@ export default class AppRoleRoute extends App {
             limit: -1
         };
 
-        return this.store.query('role', rolesOptions);
+        return this.store.query('role', rolesOptions).catch((error) =>{
+            _self.errorManager.handleError(error, {
+                moduleName: "role"
+            });
+        });
     }
 
     /**

@@ -27,6 +27,10 @@ export default App.extend({
         Logger.debug('-Prometheus.Routes.App.User::afterModel()');
         return hash({
             user: _self.store.query('user', _userOptions)
+        }).catch((error) => {
+            _self.errorManager.handleError(error, {
+                moduleName: 'user'
+            });
         });
     },
     /**

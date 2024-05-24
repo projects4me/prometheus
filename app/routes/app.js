@@ -89,11 +89,22 @@ export default Route.extend({
     acl: inject(),
 
     /**
+     * This service is used to different types of errors.
+     * 
+     * @property errorManager
+     * @type Ember.Service
+     * @for App
+     * @protected
+     */
+    errorManager: inject(),
+
+    /**
      * This function is called by EmberJs before it retrieves the model. In this method
      * we're redirecting user to loading assets route if the intial data is not loaded.
      *
      * @method beforeModel
      * @public
+     * @todo Use registerRouteEvent in future when the Admin panel for Prometheus ACL will be created.
      */
     beforeModel(transition) {
         this.session.requireAuthentication(transition, this.authenticationRoute);
@@ -104,7 +115,7 @@ export default Route.extend({
             this.router.transitionTo('app.loading-assets');
         }
 
-        this.registerRouteEvent();
+        // this.registerRouteEvent();
     },
 
     /**

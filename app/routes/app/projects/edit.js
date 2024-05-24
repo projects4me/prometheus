@@ -34,10 +34,17 @@ export default App.extend({
      * @private
      */
     model(params) {
+        let _self = this;
+
         let projectOptions = {
             query: '(Project.id : ' + params.project_id + ')',
         };
-        return this.store.query('project', projectOptions);
+        return this.store.query('project', projectOptions)
+            .catch((error) => {
+                _self.errorManager.handleError(error, {
+                    moduleName: 'project'
+                });
+            });
     },
 
     /**

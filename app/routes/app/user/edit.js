@@ -21,11 +21,17 @@ export default class AppUserEditRoute extends AppRoute {
      * @public
      */
     model(params) {
+        let _self = this;
         let _userOptions = {
             query: `((User.id : ${params.user_id}))`
         };
 
-        return this.store.query('user', _userOptions);
+        return this.store.query('user', _userOptions)
+            .catch((error) => {
+                _self.errorManager.handleError(error, {
+                    moduleName: "user"
+                });
+            });
     }
 
     /**

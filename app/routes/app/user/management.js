@@ -50,10 +50,11 @@ export default class AppUserManagementRoute extends App {
     model(params) {
         Logger.debug('+Prometheus.Routes.App.User.Management::model()');
 
+        let _self = this;
         let query = params.query ? params.query : null;
         let page = params.page ? params.page : null;
-        let sort = params.sort ? params.sort: null;
-        let order = params.order ? params.order: null;
+        let sort = params.sort ? params.sort : null;
+        let order = params.order ? params.order : null;
 
         let _userOptions = {
             limit: 20,
@@ -65,7 +66,12 @@ export default class AppUserManagementRoute extends App {
         };
 
         Logger.debug('-Prometheus.Routes.App.User.Management::model()');
-        return this.store.query('user', _userOptions);
+        return this.store.query('user', _userOptions)
+            .catch((error) => {
+                _self.errorManager.handleError(error, {
+                    moduleName: 'user'
+                });
+            });
     }
 
     /**
