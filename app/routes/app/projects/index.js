@@ -134,6 +134,7 @@ export default App.extend({
      */
     model: function (params) {
         Logger.debug('Prometheus.App.Routes.Projects::model()');
+        let _self = this;
         Logger.debug(params);
 
         let query = null;

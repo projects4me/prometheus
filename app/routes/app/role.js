@@ -22,6 +22,7 @@ export default class AppRoleRoute extends App {
      * @protected
      */
     model() {
+        let _self = this;
         let rolesOptions = {
             sort: 'Role.name',
             order: 'ASC',

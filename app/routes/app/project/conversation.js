@@ -65,6 +65,7 @@ export default App.extend({
      */
     model() {
         Logger.debug('AppProjectConversationRoute::model');
+        let _self = this;
         let params = this.controllerFor('app.project');
 
         let projectId = this.trackedProject.getProjectId();
