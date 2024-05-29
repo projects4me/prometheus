@@ -3,7 +3,8 @@
  */
 
 import Create from "prometheus/routes/app/project/issue/create";
-import { hash } from 'rsvp';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 /**
  * The issues edit route
@@ -59,16 +60,21 @@ export default Create.extend({
         };
 
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Edit::afterModel()');
-        return hash({
+        return hashSettled({
             issue: _self.get('store').query('issue',issueOptions),
             project: _self.store.query('project',projectOptions)
         }).then(function(results){
-            _self.set('issue',results.issue.objectAt(0));
+            let data = extractHashSettled(results);
+            _self.set('issue',data.issue.objectAt(0));
             const issueDescription = _.clone(_self.issue.description);
             _self.set('issueDescription',issueDescription);
-            _self.set('project',results.project.objectAt(0));
-            _self.set('types',results.project.objectAt(0).get('issuetypes'));
-            _self.set('statuses',results.project.objectAt(0).get('issuestatuses'));
+            _self.set('project',data.project.objectAt(0));
+            _self.set('types',data.project.objectAt(0).get('issuetypes'));
+            _self.set('statuses',data.project.objectAt(0).get('issuestatuses'));
+        }).catch((error) => {
+            _self.errorManager.handleError(error, {
+                moduleName: "issue"
+            })
         });
     },
 

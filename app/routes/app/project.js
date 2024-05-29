@@ -3,8 +3,10 @@
  */
 
 import App from "prometheus/routes/app";
-import { hash } from 'rsvp';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 import { inject } from '@ember/service';
+
 
 /**
  * The wiki route
@@ -16,6 +18,7 @@ import { inject } from '@ember/service';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default App.extend({
+
     /**
      * The trackedProject service provides id of the selected project.
      *
@@ -25,6 +28,7 @@ export default App.extend({
      * @private
      */
     trackedProject: inject(),
+
     /**
      * The project Id
      *
@@ -44,31 +48,36 @@ export default App.extend({
 
         let issuesOptions = {
             fields: "Issue.id,Issue.subject,Issue.issueNumber,Issue.statusId,Issue.projectId",
-            query: "(Issue.projectId : "+projectId+")",
+            query: "(Issue.projectId : " + projectId + ")",
             sort: "Issue.issueNumber",
             order: "ASC",
             page: 0,
-            limit:-1,
+            limit: -1,
         };
 
         let projectOptions = {
-            query: "(Project.id : "+projectId+")",
+            query: "(Project.id : " + projectId + ")",
             rels: "members",
             sort: "members.name",
             order: "ASC",
             page: 0,
-            limit:-1,
+            limit: -1,
         };
 
-        return hash({
-            issues: _self.store.query('issue',issuesOptions),
-            project: _self.store.query('project',projectOptions)
-        }).then(function(results){
-            _self.set('issues',results.issues);
-            if (results.project.objectAt(0) != undefined &&
-                results.project.objectAt(0).get('members') != undefined) {
-                _self.set('members', results.project.objectAt(0).get('members'));
+        return hashSettled({
+            issues: _self.store.query('issue', issuesOptions),
+            project: _self.store.query('project', projectOptions)
+        }).then(function (results) {
+            let data = extractHashSettled(results);
+            _self.set('issues', data.issues);
+            if (data.project.objectAt(0) != undefined &&
+                data.project.objectAt(0).get('members') != undefined) {
+                _self.set('members', data.project.objectAt(0).get('members'));
             }
+        }).catch((error) => {
+            _self.errorManager.handleError(error, {
+                moduleName: "project"
+            });
         });
     },
 
@@ -80,7 +89,7 @@ export default App.extend({
      * @param {Prometheus.Controllers.Project} controller the controller object for this route
      * @private
      */
-    setupController:function(controller){
+    setupController: function (controller) {
         Logger.debug('AppProjectRoute::setupController');
         let _self = this;
 
@@ -92,23 +101,22 @@ export default App.extend({
 
         let options = {
             fields: "Project.id,Project.name",
-            query: "(Project.id : "+projectId+")",
+            query: "(Project.id : " + projectId + ")",
             order: 'ASC',
             limit: 1
         };
 
-        _self.store.query('project',options).then(function(data){
-            if (projectId !== null)
-            {
-                projectName = data.findBy('id',projectId).get('name');
-                controller.set('projectId',projectId);
-                controller.set('projectName',projectName);
+        _self.store.query('project', options).then(function (data) {
+            if (projectId !== null) {
+                projectName = data.findBy('id', projectId).get('name');
+                controller.set('projectId', projectId);
+                controller.set('projectName', projectName);
             }
-            controller.set('model',data.objectAt(0));
+            controller.set('model', data.objectAt(0));
         });
 
-        controller.set('issues',_self.get('issues'));
-        controller.set('members',_self.get('members'));
+        controller.set('issues', _self.get('issues'));
+        controller.set('members', _self.get('members'));
     },
 
 });

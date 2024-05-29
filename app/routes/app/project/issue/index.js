@@ -4,7 +4,8 @@
 
 import App from "prometheus/routes/app";
 import { inject } from '@ember/service';
-import { hash } from 'rsvp';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from "prometheus/utils/rsvp/extract-hash-settled";
 
 /**
  * The issues route
@@ -134,6 +135,7 @@ export default App.extend({
     model:function(params){
         Logger.debug('AppIssueRoute::model()');
         Logger.debug(params);
+        let _self = this;
 
         let query = null;
 
@@ -176,7 +178,12 @@ export default App.extend({
         };
 
         // Retrieve the data
-        let data = this.store.query('issue',options);
+        let data = this.store.query('issue',options).catch((error) =>{
+            _self.errorManager.handleError(error, {
+                moduleName: "issue"
+            });
+        });
+
         return data;
     },
 
@@ -207,12 +214,17 @@ export default App.extend({
             limit: -1
         };
 
-        return hash({
+        return hashSettled({
             savedsearches: _self.store.query('savedsearch',savedSearchesOption),
             publicsearches: _self.store.query('savedsearch',publicSearchesOption)
         }).then(function(results){
-            _self.set('savedsearches',results.savedsearches.toArray());
-            _self.set('publicsearches',results.publicsearches.toArray());
+            let data = extractHashSettled(results);
+            _self.set('savedsearches',data.savedsearches.toArray());
+            _self.set('publicsearches',data.publicsearches.toArray());
+        }).catch((error) =>{
+            _self.errorManager.handleError(error, {
+                moduleName: "issue"
+            });
         });
 
     },

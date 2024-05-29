@@ -3,7 +3,8 @@
  */
 
 import AppRoute from 'prometheus/routes/app';
-import { hash } from 'rsvp';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 /**
  *  This is the route to load a role selected by the user.
@@ -22,6 +23,7 @@ export default class AppRolePageRoute extends AppRoute {
      * @public
      */
     model(params) {
+        let _self = this;
         let permissionOptions = {
             roleId: params.role_id
         }
@@ -32,10 +34,16 @@ export default class AppRolePageRoute extends AppRoute {
             limit: -1
         }
 
-        return hash({
+        return hashSettled({
             role: this.store.findRecord('role', params.role_id),
             permissions: this.store.query('permission', permissionOptions),
             memberships: this.store.query('membership', membershipOptions)
+        }).then((results) => {
+            return extractHashSettled(results, 'role');
+        }).catch((error) => {
+            _self.errorManager.handleError(error, {
+                moduleName: 'role'
+            });
         });
     }
 

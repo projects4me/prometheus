@@ -274,10 +274,7 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
      * @param model
      */
     navigateToSuccess(model) {
-        this.transitionToRoute('app.project.issue.page', {
-            project_id: model.get('projectId'),
-            issue_number: model.get('issueNumber')
-        });
+        this.transitionToRoute('app.project.issue.page', model.get('issueNumber'));
     }
 
     /**

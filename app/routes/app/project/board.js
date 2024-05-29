@@ -34,7 +34,11 @@ export default App.extend({
             order: 'Milestone.endDate',
             limit: -1
         };
-        let milestones = await _self.store.query('milestone', _milestoneOptions);
+        let milestones = await _self.store.query('milestone', _milestoneOptions).catch((error) => {
+            _self.errorManager.handleError(error, {
+                moduleName: "milestone"
+            });
+        });
 
         //Fetch backlog issues
         let _issueOptions = {
@@ -42,22 +46,26 @@ export default App.extend({
             rels: 'assignedTo',
             limit: -1
         }
-        let backlogIssues = await _self.store.query('issue', _issueOptions);
+        let backlogIssues = await _self.store.query('issue', _issueOptions).catch((error) => _self.errorManager.handleError(error));
 
         //Fetch issue statuses of project
         let _issueStatusOptions = {
             query: `(Issuestatus.projectId : ${projectId})`,
             limit: -1
         };
-        let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions);
+
+        let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions).catch((error) => _self.errorManager.handleError(error));
 
         await hash(milestones.map(async (milestone) => {
             let issues = await _self.store.query('issue', {
-                query: `(Issue.milestoneId : ${milestone.id} )`,
+                query: `((Issue.milestoneId : ${milestone.id} ) AND (Issue.projectId : ${projectId}))`,
                 rels: 'assignedTo',
                 limit: -1
+            }).catch((error) => {
+                _self.errorManager.handleError(error);
             });
-            milestone.issues = issues;
+
+            milestone.issues.pushObjects(issues);
         }));
 
         //Create a milestone of type backlog
@@ -65,7 +73,7 @@ export default App.extend({
             id: null,
             milestoneType: "backlog",
             status: "planned",
-            issues: backlogIssues
+            issues: backlogIssues || []
         });
 
         let milestonesArray = [];
@@ -77,7 +85,7 @@ export default App.extend({
 
         let model = hash({
             milestones: milestonesArray,
-            issueStatuses: issueStatuses
+            issueStatuses: issueStatuses || []
         });
 
         return model;
@@ -100,7 +108,7 @@ export default App.extend({
                 limit: -1
             };
 
-            let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions);
+            let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions).catch(() => true);
             model.issueStatuses = issueStatuses;
         }
         return model;

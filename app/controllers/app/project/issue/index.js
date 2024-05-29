@@ -38,7 +38,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      */
     @action openDetail(issue) {
         Logger.debug("AppProjectIssueController::openDetail");
-        this.transitionToRoute('app.project.issue.page', { issue_number: issue.get('issueNumber') });
+        this.transitionToRoute('app.project.issue.page', issue.issueNumber);
         Logger.debug("-AppProjectIssueController::openDetail");
     }
 

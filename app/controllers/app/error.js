@@ -20,11 +20,7 @@ export default class AppErrorController extends Controller {
      * @returns string
      */
     get statusCode() {
-        let statusCode = '404';
-
-        if (this.model.errors) {
-            statusCode = this.model.errors[0].status;
-        }
+        let statusCode = this.model.statusCode ?? '404';
         return statusCode;
     }
 }
