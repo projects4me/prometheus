@@ -409,8 +409,8 @@ export default class AppRolePageController extends AppRoleController {
     @computed('memberships.length', 'userSearchQuery')
     get filteredMemberships() {
         return this.memberships.filter((membership) => {
-            return membership.user.get('name').toLowerCase().includes(this.userSearchQuery)
-                || membership.user.get('name').includes(this.userSearchQuery);
+            return membership.user?.get('name')?.toLowerCase()?.includes(this.userSearchQuery)
+                || membership.user?.get('name')?.includes(this.userSearchQuery);
         });
     }
 
