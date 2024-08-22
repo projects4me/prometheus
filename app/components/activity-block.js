@@ -6,6 +6,7 @@ import Component from '@ember/component';
 import { inject } from '@ember/service';
 import { set } from '@ember/object';
 import { computed } from '@ember/object';
+import { getOwner } from '@ember/application';
 
 /**
  * This component is used to render different activity blocks for the system
@@ -62,14 +63,7 @@ export default Component.extend({
             template = 'components/activity-blocks/'+activity.get('type');
         }
 
-        let container;
-        if (Prometheus.__container__ === undefined) {
-            container = Prometheus._applicationInstances[0].__container__;
-        } else {
-            container = Prometheus.__container__;
-        }
-
-        if (container.lookup('template:'+template) === undefined) {
+        if (getOwner(this).lookup(`template:${template}`) === undefined) {
             template = 'components/activity-blocks/index';
         }
 
