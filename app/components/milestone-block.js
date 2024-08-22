@@ -7,6 +7,7 @@ import Component from '@ember/component';
 import { inject } from '@ember/service';
 import { computed } from '@ember/object';
 import $ from 'jquery';
+import { getOwner } from '@ember/application';
 
 /**
  * This component is used to render different milestone blocks for the system
@@ -72,7 +73,7 @@ export default Component.extend({
         // Set the template name
         template = 'components/milestone-blocks/'+status;
 
-        if (Prometheus.__container__.lookup('template:'+template) === undefined) {
+        if (getOwner(this).lookup(`template:${template}`) === undefined) {
             template = 'components/milestone-blocks/index';
         }
         return template;
