@@ -39,6 +39,12 @@ export default Object.extend({
         "conversation":{
             "nav": true,
         },
+        "users":{
+            "nav": true
+        },
+        "roles": {
+            "nav": true
+        },
         "workflow":{
             "nav": true,
         },
@@ -168,6 +174,38 @@ export default Object.extend({
                     projectRelated: true,
                     routeParams: null
                 },
+                User:{
+                    label: 'views.nav.menu.user.label',
+                    icon: 'users',
+                    route: 'app.user',
+                    anchorRoute: 'user',
+                    projectRelated: false,
+                    actions:{
+                        section1:{
+                            create:{
+                                label: 'views.nav.menu.user.create',
+                                route: 'app.user.create',
+                                className: 'text-red',
+                                anchorRoute: 'user/create',
+                                projectRelated: false,
+                            },
+                            management:{
+                                label: 'views.nav.menu.user.management',
+                                route: 'app.user.management',
+                                className: 'text-teal',
+                                anchorRoute: 'user/management',
+                                projectRelated: false,
+                            },
+                        }
+                    }
+                },
+                Role: {
+                    label: 'views.nav.menu.role.label',
+                    icon: 'key',
+                    route: 'app.role',
+                    anchorRoute: 'role',
+                    projectRelated: false,
+                },  
                 Board:{
                     label: 'views.nav.menu.board.label',
                     icon: 'columns',
