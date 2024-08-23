@@ -1108,6 +1108,14 @@
         "conversation": {
           "label": "Conversations"
         },
+        "user":{
+          "label": "Users",
+          "create": "Create User",
+          "management": "User Management"
+        },
+        "role": {
+          "label": "Roles"
+        },
         "board": {
           "label": "Task Board"
         },
