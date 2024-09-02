@@ -112,5 +112,6 @@ export default App.extend({
 
         // Set the data in the controller so that any data bound in the view can get re-rendered
         controller.set('module', this.module);
+        controller.set('projectId', this.trackedProject.getProjectId());
     },
 });
