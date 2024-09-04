@@ -19,7 +19,7 @@ import { helper } from '@ember/component/helper';
  * @private
  */
 export function getRole(params) {
-    return params[1].filterBy('id',params[2].filterBy('userId',params[0])[0].get('roleId'))[0].get('name');
+    return params[1].filterBy('id',params[2].filterBy('userId',params[0])[0]?.get('roleId'))[0]?.get('name');
 }
 
 /**
