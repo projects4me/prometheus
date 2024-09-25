@@ -4,10 +4,13 @@ on:
   pull_request:
     types:
       - closed
+  workflow_run:
+    workflows: ["Run Prometheus test cases"]
+    types: 
+      - completed
     branches:
       - dev
       - qa
-      - qa-test
 
 jobs:
   Build-and-Test:
@@ -38,13 +41,13 @@ jobs:
           context: .
           file: docker/${{ env.TARGET_BRANCH }}/Dockerfile
 
-      # - name: Deploy
-      #   uses: appleboy/ssh-action@v1.0.3
-      #   with:
-      #     host: ${{ secrets.OVH_HOST }}
-      #     username: ${{ secrets.OVH_USERNAME }}
-      #     key: ${{ secrets.OVH_KEY }}
-      #     port: ${{ secrets.OVH_PORT }}
-      #     script: |
-      #       cd ${{ secrets.OVH_PROMETHEUS_HELM_PATH }}
-      #       helm upgrade prometheus-${{ env.TARGET_BRANCH }} . -f values-${{ env.TARGET_BRANCH }}.yaml      
+      - name: Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.OVH_HOST }}
+          username: ${{ secrets.OVH_USERNAME }}
+          key: ${{ secrets.OVH_KEY }}
+          port: ${{ secrets.OVH_PORT }}
+          script: |
+            cd ${{ secrets.OVH_PROMETHEUS_HELM_PATH }}
+            helm upgrade prometheus-${{ env.TARGET_BRANCH }} . -f values-${{ env.TARGET_BRANCH }}.yaml
