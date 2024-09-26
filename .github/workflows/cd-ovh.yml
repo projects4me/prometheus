@@ -50,4 +50,4 @@ jobs:
           port: ${{ secrets.OVH_PORT }}
           script: |
             cd ${{ secrets.OVH_PROMETHEUS_HELM_PATH }}
-            helm upgrade prometheus-${{ env.TARGET_BRANCH }} . -f values-${{ env.TARGET_BRANCH }}.yaml
+            helm --kubeconfig ${{ secrets.KUBECONFIG_PATH }} upgrade prometheus-${{ env.TARGET_BRANCH }} . -f values-${{ env.TARGET_BRANCH }}.yaml
