@@ -1,4 +1,4 @@
-name: Deploy Prometheus Dev
+name: Deploy Prometheus | Digital Ocean
 
 on:
   pull_request:

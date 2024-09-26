@@ -1,4 +1,4 @@
-name: Run Prometheus test cases
+name: Deploy Prometheus | OVH
 
 on:
   pull_request:
