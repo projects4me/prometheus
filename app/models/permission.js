@@ -54,16 +54,6 @@ export default class PermissionModel extends Model {
     @attr('string') readF;
 
     /**
-     * The value of the search flag.
-     * 
-     * @property searchF
-     * @type String
-     * @for PermissionModel
-     * @private
-     */
-    @attr('string') searchF;
-
-    /**
      * The value of the create flag.
      * 
      * @property createF
