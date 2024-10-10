@@ -45,16 +45,6 @@ export default class UserpermissionModel extends Model {
     @attr('string') _read;
 
     /**
-     * Search action value.
-     * 
-     * @property _search
-     * @type String
-     * @for Userpermission
-     * @private
-     */    
-    @attr('string') _search;
-
-    /**
      * Create action value.
      * 
      * @property _create
