@@ -63,7 +63,7 @@
                         {{#each this.permissionFlags as |flag|}}
                         <td>
                           <Role::PermissionOptions 
-                            @options={{get-permission-options 'apiOptions' permission}}
+                            @options={{get-permission-options 'apiOptions' permission flag}}
                             @value={{get permission flag}}
                             @permission={{permission}}
                             @flag={{flag}}
