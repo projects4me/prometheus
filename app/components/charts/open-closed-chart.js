@@ -32,7 +32,7 @@ export default class ChartsOpenClosedChartComponent extends Component {
                 backgroundColor: []
             }],
         }
-        let counts = [_self.args.closedCount, _self.args.openCount];
+        let counts = [_self.args.closedCount ?? '0', _self.args.openCount ?? '0'];
 
         counts.forEach((count, i) =>{
             data.labels.push(labels[i]);

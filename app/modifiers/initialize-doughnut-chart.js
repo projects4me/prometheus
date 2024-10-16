@@ -48,22 +48,34 @@ export default class InitializeDoughnutChartModifier extends Modifier {
      */
     initializeChart() {
         let _self = this;
-        _self.chart = new Chart(_self.element, {
-            type: 'customizedDoughnut',
-            data: _self.data,
-            options: {
-                responsive: true,
-                layout: {
-                    padding: 30
-                },
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
+        let renderChart = true;
+
+        let dataArray = _self.data.datasets[0].data;
+        // If value for both open and close is 0 then there is no need to render empty chart
+        if (dataArray[0] === '0'
+            && dataArray[1] === '0') {
+            renderChart = false;
+        }
+
+
+        if (renderChart) {
+            _self.chart = new Chart(_self.element, {
+                type: 'customizedDoughnut',
+                data: _self.data,
+                options: {
+                    responsive: true,
+                    layout: {
+                        padding: 30
+                    },
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     /** Called when user routed to another page. In this function we're destroying chart*/
