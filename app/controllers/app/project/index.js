@@ -205,6 +205,8 @@ export default class AppProjectIndexController extends PrometheusController {
                 roleId: _self.get('selectedRole'),
                 userId: _self.get('selectedUser'),
                 projectId: _self.get('model.id'),
+                relatedTo: 'project',
+                relatedId: _self.projectId
             });
 
             let role = _self.get('store').peekRecord('role', _selectedRole);
