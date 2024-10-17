@@ -345,7 +345,7 @@ export default class AppRolePageController extends AppRoleController {
 
         if (showSuccess) {
             new Messenger().post({
-                message: this.intl.t('views.app.role.permissions.updated'),
+                message: this.intl.t('views.app.role.tabs.permission.updated'),
                 type: 'success',
                 showCloseButton: true
             });
