@@ -644,4 +644,14 @@ export default class AppRolePageController extends AppRoleController {
             });
         }
     }
+
+    /**
+     * This property contains list of changed permissions.
+     * 
+     * @property changedPermissions
+     * @returns {Array}
+     */
+    get changedPermissions() {
+        return this.getChangedPermissions();
+    }
 }
