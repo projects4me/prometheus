@@ -34,86 +34,16 @@
           <div class="panel-group" id="accordion">
 
             {{#each-in this.permissions as |name permissions|}}
-            <div class="panel panel-default" data-permission-module={{name}}>
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion" href={{concat "#" name}} {{on "click" (fn
-                    this.setPermissions name)}}>{{name}}</a>
-                </h4>
-              </div>
-              <div id={{name}} class="panel-collapse collapse">
-
-                <div class="table-responsive">
-                  <table class="table table-hover table-striped">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>{{t "views.app.role.tabs.permission.flags.read"}}</th>
-                        <th>{{t "views.app.role.tabs.permission.flags.create"}}</th>
-                        <th>{{t "views.app.role.tabs.permission.flags.update"}}</th>
-                        <th>{{t "views.app.role.tabs.permission.flags.delete"}}</th>
-                        <th>{{t "views.app.role.tabs.permission.flags.import"}}</th>
-                        <th>{{t "views.app.role.tabs.permission.flags.export"}}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {{#each this.modulePermissions as |permission|}}
-                      <tr data-module-resource={{permission.resourceName}}>
-                        <td>{{permission.resourceAlias}}</td>
-                        {{#each this.permissionFlags as |flag|}}
-                        <td>
-                          <Role::PermissionOptions 
-                            @options={{get-permission-options 'apiOptions' permission flag}}
-                            @value={{get permission flag}}
-                            @permission={{permission}}
-                            @flag={{flag}}
-                          />
-                        </td>
-                        {{/each}}
-                        
-                        {{!-- Permission Update State --}}
-                        <td>
-                          <span data-module="permission-state">
-
-                            {{!-- If condition in concat required because the permissions states are maintained in object as of the
-                            following structure e.g.
-                            Issue 
-                              Issue (Model)
-                              Subject (field)
-
-                            And the resourceName property has the format of Issue.field or Issue.relationship. So what if the 
-                            the resourceName is "Issue" and I have to access Issue >> Issue, so for that purpose we have to add
-                            moduleName infront of resourceName to make get helper access of "Issue.Issue" property. --}}
-                            {{#if (get this.permissionsState (concat (if (eq permission.resourceName
-                            permission.moduleName) (concat permission.moduleName '.')) permission.resourceName
-                            '.isRunning'))}}
-                              <i class="fa fa-spinner fa-spin"></i>
-                            {{/if}}
-
-                            {{#if (get this.permissionsState (concat (if (eq permission.resourceName
-                            permission.moduleName) (concat permission.moduleName '.')) permission.resourceName
-                            '.isSuccessful'))}}
-                              <i class="fa fa-check-circle"></i>
-                            {{/if}}
-
-                            {{#if (get this.permissionsState (concat (if (eq permission.resourceName
-                            permission.moduleName) (concat permission.moduleName '.')) permission.resourceName
-                            '.isErrored'))}}
-                              <i class="fa fa-times-circle"></i>
-                            {{/if}}                             
-                                      
-                          </span>
-                        </td>                        
-                      </tr>
-                      {{/each}}
-                    </tbody>
-                  </table>
-                </div>
-
-                <AppUi::Button type="button" data-btn="save" class="btn btn-primary" {{on "click" (fn this.updatePermission.perform name)}}>{{t "global.form.save"}}</AppUi::Button>
-                <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</AppUi::Button>
-              </div>
-            </div>
+              <Role::ModulePermissions
+                @name={{name}}
+                @permissions={{permissions}}
+                @setPermissions={{this.setPermissions}}
+                @modulePermissions={{this.modulePermissions}}
+                @permissionsState={{this.permissionsState}}
+                @permissionFlags={{this.permissionFlags}}
+                @updatePermission={{this.updatePermission}}
+                @getChangedPermissions={{this.getChangedPermissions}}
+              />
             {{/each-in}}
 
           </div>

@@ -226,15 +226,15 @@ export default class AppRolePageController extends AppRoleController {
      * 
      * @method updatePermission
      * @param {Prometheus.Models.Permission} permission
-     * @param {string} moduleName
-     * @param {string} flag
-     * @param {string} roleId
+     * @param {String} moduleName
+     * @param {String} flag
+     * @param {String} roleId
      * @param {Event} evt
      * @protected
      */
     @(task(function* (moduleName) {
         let moduleEl = document.querySelector(`[data-permission-module="${moduleName}"]`);
-        let permissions = this.getChangedPermissions();
+        let permissions = this.getChangedPermissions(moduleName);
 
         for (let i = 0; i < permissions.length; i++) {
             let permission = permissions.objectAt(i);
@@ -274,7 +274,7 @@ export default class AppRolePageController extends AppRoleController {
      * This task is used to update the permission model.
      * 
      * @param {Prometheus.Model.Permission} permission
-     * @param {string} moduleName
+     * @param {String} moduleName
      * @param {Number} permissionsCount Count of permissions that are to be updated.
      * @method updatePermissionTask
      */
@@ -295,8 +295,8 @@ export default class AppRolePageController extends AppRoleController {
     /**
      * This function update the state of the permission by checking the result of the permission.
      * 
-     * @param {string} moduleName
-     * @param {string} resourceAlias
+     * @param {String} moduleName
+     * @param {String} resourceAlias
      * @param {boolean} isError
      * @param {boolean} isSuccessful
      * @method updatePermissionState
@@ -311,11 +311,13 @@ export default class AppRolePageController extends AppRoleController {
      * This function is used to return the permissions that are changed by user and to be updated in the next step.
      * 
      * @method getChangedPermissions
+     * @param {String} moduleName The name of module.
      * @returns {Array}
      */
-    getChangedPermissions() {
+    getChangedPermissions(moduleName) {
         const permissions = this.model.permissions.reduce((permissions, permission) => {
-            if (permission.dirtyType === 'updated' || permission.isError) {
+            if ((permission.dirtyType === 'updated' || permission.isError)
+                && permission.moduleName === moduleName) {
                 permissions.push(permission);
             }
             return permissions;
@@ -326,7 +328,7 @@ export default class AppRolePageController extends AppRoleController {
     /**
      * This function shows success or failure messages once all of the (changed) permissions are updated.
      * 
-     * @param {string} moduleName
+     * @param {String} moduleName
      * @method showMessages
      */
     showMessages(moduleName) {
@@ -356,7 +358,7 @@ export default class AppRolePageController extends AppRoleController {
      * This function is used to scroll the page to the first permission which got error on update.
      * 
      * @param {HTMLElement} moduleEl
-     * @param {string} moduleName
+     * @param {String} moduleName
      * @returns {null}
      */
     scrollToLatestCancelledPermission(moduleEl, moduleName) {
