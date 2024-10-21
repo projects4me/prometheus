@@ -19,12 +19,27 @@ export default class RolePermissionOptionsComponent extends Component {
     /**
      * This function is used to update the access level of permission.
      * 
-     * @param {*} permission 
-     * @param {*} flag 
-     * @param {*} evt 
+     * @param {Prometheus.Models.Permission} permission 
+     * @param {String} flag 
+     * @param {Event} evt 
      * @method updateAccessLevel
      */
     @action updateAccessLevel(permission, flag, evt) {
         permission[flag] = evt.target.value;
+    }
+
+    /**
+     * This function calls the updateAccessLevel function and after that calls updateDisableState
+     * to update the state of disabled attribute of the button. 
+     * 
+     * @param {Prometheus.Models.Permission} permission
+     * @param {String} flag
+     * @param {Function} updateDisableState
+     * @param {Event} evt
+     * @method updateAccessLevel
+     */
+    @action updatePermission(permission, flag, updateDisableState, evt) {
+        this.updateAccessLevel(permission, flag, evt);
+        updateDisableState(permission);
     }
 }

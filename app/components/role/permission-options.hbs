@@ -1,4 +1,4 @@
-<select {{on "change" (fn this.updateAccessLevel @permission @flag)}}>
+<select {{on "change" (fn this.updatePermission @permission @flag @updateDisableState)}}>
   {{#each @options as |optionObject|}}
   <option value={{optionObject.value}} selected={{eq @value optionObject.value}}>{{optionObject.label}}</option>
   {{/each}}
