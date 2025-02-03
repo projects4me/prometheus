@@ -199,9 +199,9 @@ export default class PrometheusController extends Controller {
 		if (element) {
 			element.scrollIntoView({ behavior: 'smooth', block: 'center' });
 			if (isHighlight) {
-				element.classList.add('highlight');
+				element.classList.add('highlight-box');
 				setTimeout(() => {
-					element.classList.remove('highlight');
+					element.classList.remove('highlight-box');
 				}, 3000);
 			}
 		}
