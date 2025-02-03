@@ -63,6 +63,7 @@
                   @placeholder={{t "views.app.project.create.startdateplaceholder"}}
                   @label={{t "views.app.project.create.startdate"}}
                   @value={{readonly this.model.startDate}}
+                  @format="YYYY-MM-DD"                  
                   @mask="alphanumeric"
                   @update={{action "selectStatic" this.model 'startDate'}}
                   @data-field="project.startDate"
@@ -82,6 +83,7 @@
                   @placeholder={{t "views.app.project.create.enddateplaceholder"}}
                   @label={{t "views.app.project.create.enddate"}}
                   @value={{readonly this.model.endDate}}
+                  @format="YYYY-MM-DD"                  
                   @mask="alphanumeric"
                   @update={{action "selectStatic" this.model 'endDate'}}
                   @data-field="project.endDate"
