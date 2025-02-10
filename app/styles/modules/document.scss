@@ -410,3 +410,37 @@ span[id="#"]{
     display: inline-block;
   }
 }
+
+.dotted-circle-add {
+  background: transparent;
+  border: 0.3rem dashed $borderColor;
+  color: $borderColor;
+  height: 3rem;
+  width: 3rem;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    border-color: $warningColor;
+    color: $warningColor;
+  }
+
+  ion.ion-md-add {
+    font-size: 2.5rem;
+    color: inherit;
+  }
+}
+
+// override AdminLTE rules
+.box-header:before,
+.box-header:after {
+  content: none;
+}
+
+.box-header {
+  @include flexbox($justifyContent: space-between, $alignItems: center);
+}

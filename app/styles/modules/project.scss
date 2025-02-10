@@ -228,27 +228,12 @@
 }
 
 .membership-add {
-  background: transparent;
-  border: 0.3rem dashed $borderColor;
-  color: $borderColor;
   height: 10rem;
   width: 10rem;
-  border-radius: 50%;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
   margin-top: 2.5rem;
-
-  &:hover {
-    border-color: $warningColor;
-    color: $warningColor;
-  }
 
   ion.ion-md-add {
     font-size: 6rem;
-    color: inherit;
-  }
-  .ion-md-add:before {
-    margin-top: 1.5rem;
   }
 }
 
