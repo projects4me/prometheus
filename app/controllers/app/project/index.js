@@ -56,14 +56,14 @@ export default class AppProjectIndexController extends PrometheusController {
     selectedRole = null;
 
     /**
-     * This field stores the selected user in the add member dialog
+     * This field stores the selected users in the add members dialog
      *
      * @property selectedUser
-     * @type int
+     * @type array
      * @for Index
      * @public
      */
-    selectedUser = null;
+    @tracked selectedUsers = [];
 
     /**
      * We are injecting the app controller as it contains the system
@@ -176,58 +176,50 @@ export default class AppProjectIndexController extends PrometheusController {
     }
 
     /**
-     * This method is used to set the selectedUser property
-     *
-     * @method selectUser
-     * @param user
-     * @public
-     */
-    @action selectUser(user) {
-        Logger.debug('Prometheus.App.Project.Controller->selectUser');
-        this.set('selectedUser', user.value);
-        Logger.debug('-Prometheus.App.Project.Controller->selectUser');
-    }
-
-    /**
      * This function is used to add a new member to the project
      *
-     * @method addTag
+     * @method addMembers
      */
-    @action addMember() {
-        Logger.debug('AppProjectIndexController:addMember');
+    @action addMembers() {
+        Logger.debug('AppProjectIndexController:addMembers');
         let _self = this;
 
-        let _selectedRole = _self.get('selectedRole');
-        let _selectedUser = _self.get('selectedUser');
+        let selectedRole = _self.get('selectedRole');
+        let selectedUsers = _self.get('selectedUsers');
 
-        if (_selectedUser !== null && _selectedRole !== null) {
-            let membership = _self.get('store').createRecord('membership', {
-                roleId: _self.get('selectedRole'),
-                userId: _self.get('selectedUser'),
-                projectId: _self.get('model.id'),
-                relatedTo: 'project',
-                relatedId: _self.projectId
-            });
+        if (selectedUsers !== null && selectedRole !== null) {
+            let role = _self.get('store').peekRecord('role', selectedRole);
 
-            let role = _self.get('store').peekRecord('role', _selectedRole);
-            let user = _self.get('store').peekRecord('user', _selectedUser);
+            selectedUsers.forEach(function (selectedUser) {
+                let user = _self.get('store').peekRecord('user', selectedUser.value);
 
-            // Add membership to the system
-            membership.save().then(function (data) {
-                _self.get('model.memberships').pushObject(data);
+                let membership = _self.get('store').createRecord('membership', {
+                    roleId: role.id,
+                    userId: user.id,
+                    projectId: _self.model.id,
+                    relatedTo: 'project',
+                    relatedId: _self.projectId
+                });
 
-                // Create a dummy record of roles and push in model.roles
-                _self.get('model.roles').pushObject(role);
-                // Add a dummy record of users and push in model.members
-                _self.get('model.members').pushObject(user);
+                // Add membership to the system
+                membership.save().then(function (data) {
+                    _self.get('model.memberships').pushObject(data);
 
-                _self.set('selectedUser', null);
-                new Messenger().post({
-                    message: htmlSafe(_self.intl.t("views.app.project.detail.membership.added", { role: role.get('name'), user: user.get('name') })),
-                    type: 'success',
-                    showCloseButton: true
+                    // Create a dummy record of roles and push in model.roles
+                    _self.get('model.roles').pushObject(role);
+                    // Add a dummy record of users and push in model.members
+                    _self.get('model.members').pushObject(user);
+
+                    new Messenger().post({
+                        message: htmlSafe(_self.intl.t("views.app.project.detail.membership.added", { role: role.get('name'), user: user.get('name') })),
+                        type: 'success',
+                        showCloseButton: true
+                    });
                 });
             });
+
+            _self.selectedUsers = [];
+            _self.selectedRole = null;
         } else {
             new Messenger().post({
                 message: _self.intl.t("views.app.project.detail.membership.missing"),
@@ -237,7 +229,7 @@ export default class AppProjectIndexController extends PrometheusController {
         }
 
         _self.send('removeAddMemberModal');
-        Logger.debug('-AppProjectIndexController:addMember');
+        Logger.debug('-AppProjectIndexController:addMembers');
     }
 
     /**

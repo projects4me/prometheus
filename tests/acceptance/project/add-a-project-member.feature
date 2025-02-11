@@ -18,6 +18,8 @@ Feature: Project | add a project member
     When User navigates to app/project/3
     And User clicks on add button to add a member
     And User selects User_2 as a member of project
+    And User selects User_3 as a member of project
     And User selects a role for that member
     And User clicks on save button
-    Then User_2 is added as a member of project
+    Then User 2 is added as a member of project
+    And User 3 is added as a member of project  
