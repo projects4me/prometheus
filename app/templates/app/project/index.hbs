@@ -228,7 +228,7 @@
               {{/each}}
               <li>
                 <a href="javascript:void(0);" {{action "showAddMemberDialog"}}>
-                  <div class="membership-add" data-toggle="tooltip" title="{{t "views.app.project.detail.membership.add"}}">
+                  <div class="dotted-circle-add membership-add" data-toggle="tooltip" title="{{t "views.app.project.detail.membership.add"}}">
                     <ion class="ion-md-add"></ion>
                   </div>
                 </a>
@@ -283,6 +283,11 @@
         <div class="box box-info project-milestones-section">
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.project.detail.milestones"}}</h3>
+            <a href="#"  {{on "click" this.showMilestoneDialog}}>
+              <div class="dotted-circle-add pull-right" data-toggle="tooltip" title="{{t "views.app.project.detail.membership.add"}}">
+                <ion class="ion-md-add"></ion>
+              </div>
+            </a>
           </div>
 
           <div class="box-body no-padding">
@@ -382,11 +387,6 @@
 
             {{/bootstrap-modal}}
           {{/if}}
-
-          <div class="box-footer text-center">
-            <span><a href="javascript:void();" {{action "showMilestoneDialog"}}><i class="fa fa-flag-checkered "></i> {{t "views.app.project.detail.milestone.add"}}</a></span>
-          </div>
-
         </div>
       </AccessControl>
       {{!-- Project Milestones --}}
