@@ -220,7 +220,7 @@
           <div class="box-body no-padding">
             <ul class="users-list clearfix">
               {{#each this.model.members as |member|}}
-                <li>
+                <li data-member-id={{member.id}}>
                   <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
                   <LinkTo @route="app.user.page" @model={{member.id}} class="users-list-name">{{member.name}}</LinkTo>
                   <span class="users-list-date">{{get-role member.id this.model.roles this.model.memberships}}</span>
@@ -239,21 +239,20 @@
                   title="views.app.project.detail.membership.add"
                   confirmLabel="global.form.save"
                   closeLabel="global.form.cancel"
-                  confirm=(action "addMember")
+                  confirm=(action "addMembers")
                   close=(action "removeAddMemberModal")}}
-                <form {{action 'addMember' on='submit'}}>
                   <div class="form-group">
-                      <FormFields::FieldRelate
+                      <FormFields::FieldRelateMulti
                           @placeholder={{t "views.app.project.detail.membership.selectuser"}}
                           @label={{t "views.app.project.detail.membership.user"}}
-                          @value={{this.selectedUser}}
                           @data-field="select-member"
                           @options={{this.usersList}}
-                          @selected={{find-by "value" this.selectedUser this.usersList}}
+                          @selected={{this.selectedUsers}}
                           @searchField="label"
-                          @onchange={{action "selectUser"}}
+                          @onchange={{action "selectStatic" this 'selectedUsers'}}
                           @relateType="relate-user"
                           @aclContext="App.Project.Read.Membership.Create.User"
+                          @closeOnSelect={{false}}
                       />
 
                     <FormFields::FieldRelate
@@ -269,7 +268,6 @@
                         @aclContext="App.Project.Read.Membership.Create.Role"
                     />
                   </div>
-                </form>
               {{/bootstrap-modal}}
             {{/if}}          {{!-- /.users-list --}}
           </div>

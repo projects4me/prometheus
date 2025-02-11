@@ -55,8 +55,9 @@ export const when = function () {
 export const then = function () {
     return [
         {
-            "$userName is added as a member of project": (assert, ctx) => async function (userName) {
-                assert.dom('ul.users-list li:nth-last-child(2) a').hasText(userName);
+            "User $id is added as a member of project": (assert, ctx) => async function (id) {
+
+                assert.dom(`[data-member-id="${id}"]`).exists();
             }
         }
     ];
