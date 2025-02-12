@@ -33,7 +33,7 @@ export const when = function () {
     return [
         {
             "User clicks on add button to add a member": (assert, ctx) => async function () {
-                await click('div.membership-add');
+                await click('[data-add="members"]');
                 assert.ok(true, "User clicks on add button to add a member");
             }
         },

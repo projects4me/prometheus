@@ -213,12 +213,18 @@
         <div class="box box-warning">
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
-            <div class="box-tools pull-right">
-            </div>
+            <AppUi::DottedAddButton
+              @title={{t "views.app.project.detail.membership.add"}}
+              @onClick={{this.showAddMemberDialog}}
+              @class="pull-right"
+              @aclContext="App.Project.Read.Membership.Create.Milestone"
+              @data-add="members"
+            />
           </div>
           {{!-- /.box-header --}}
           <div class="box-body no-padding">
             <ul class="users-list clearfix">
+            {{#if this.model.members}}
               {{#each this.model.members as |member|}}
                 <li data-member-id={{member.id}}>
                   <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
@@ -226,13 +232,11 @@
                   <span class="users-list-date">{{get-role member.id this.model.roles this.model.memberships}}</span>
                 </li>
               {{/each}}
-              <li>
-                <a href="javascript:void(0);" {{action "showAddMemberDialog"}}>
-                  <div class="dotted-circle-add membership-add" data-toggle="tooltip" title="{{t "views.app.project.detail.membership.add"}}">
-                    <ion class="ion-md-add"></ion>
-                  </div>
-                </a>
-              </li>
+            {{else}}
+              <Exceptions::NothingFound
+                @description={{t "views.app.project.detail.noMembers"}}
+              />
+            {{/if}}              
             </ul>
             {{#if this.addMemberDialog}}
               {{#bootstrap-modal
@@ -281,11 +285,13 @@
         <div class="box box-info project-milestones-section">
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.project.detail.milestones"}}</h3>
-            <a href="#"  {{on "click" this.showMilestoneDialog}}>
-              <div class="dotted-circle-add pull-right" data-toggle="tooltip" title="{{t "views.app.project.detail.membership.add"}}">
-                <ion class="ion-md-add"></ion>
-              </div>
-            </a>
+            <AppUi::DottedAddButton
+              @title={{t "views.app.project.detail.milestone.add"}}
+              @onClick={{this.showMilestoneDialog}}
+              @class="pull-right"
+              @data-add="milestone"
+              @aclContext="App.Project.Read.Membership.Create.Milestone"
+            />
           </div>
 
           <div class="box-body no-padding">

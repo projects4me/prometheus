@@ -382,6 +382,7 @@
           "milestones": "Project Milestones",
           "managemilestones": "Manage Milestones",
           "managemembers": "Manage Members",
+          "noMembers": "No members found for the project, please add some",
           "membership": {
             "add": "Add a new member",
             "selectrole": "Select a role",
