@@ -21,10 +21,12 @@ export default Factory.extend({
     closedIssues() {
         return (_.random(1, 10)).toString();
     },
+    shortCode(i) {
+        return `PROJECT_${++i}`;
+    },    
     afterCreate(project) {
         let ctx = new Context();
         project.update({
-            "shortCode": (project.name.split(' '))[0].toUpperCase(),
             "userId": ctx.get('currentUser').id
         })
     }

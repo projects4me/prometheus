@@ -321,4 +321,14 @@ export default class FormFieldsComponent extends Component {
             infoEl.style.display = 'none';
         }
     }
+
+    /**
+     * The onchange function used by the field.
+     * 
+     * @property onChange
+     * @for FormFieldsComponent
+     */
+    get onChange() {
+        return this.args.onchange ?? (() => true);
+    }    
 }

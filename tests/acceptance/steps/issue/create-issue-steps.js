@@ -1,25 +1,22 @@
 import { fillIn, currentURL, visit, click } from '@ember/test-helpers';
 import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
+import Collection from 'ember-cli-mirage/orm/collection';
 
 export const given = function () {
     return [
         {
             "$userName selects Project $projectId": (assert, ctx) => async function (userName, projectId) {
-                let project = server.create('project');
-                let oldProjectId = project.id;
-                let users = server.schema.users.all();
-                if (projectId !== '1') {
-                    project.update({
-                        id: projectId,
-                        members: users
-                    });
-                    server.db.projects.remove(oldProjectId);
-                } else {
-                    project.update({
-                        members: users
-                    });
-                }
+                let project = server.schema.projects.find(projectId);
+                project = project ?? server.create('project');
+
+                let users = new Collection('user');
+                let user = server.schema.users.findBy({name: userName});
+                users.models = [user];
+                project.update({
+                    id: projectId,
+                    members: users
+                });
                 ctx.set('currentProject', project);
                 assert.equal(project.id, projectId);
             }
@@ -32,8 +29,8 @@ export const when = function () {
         {
             "User navigates to issue create page": (assert, ctx) => async function () {
                 let currentProject = ctx.get('currentProject');
-                await visit(`/app/project/${currentProject.id}/issue/create/`);
-                assert.equal(currentURL(), `/app/project/${currentProject.id}/issue/create`, `User navigates to issue create page`);
+                await visit(`/app/project/${currentProject.shortCode}/issue/create/`);
+                assert.equal(currentURL(), `/app/project/${currentProject.shortCode}/issue/create`, `User navigates to issue create page`);
             },
         },
         {
@@ -87,7 +84,7 @@ export const then = function () {
             "User is navigated to issue detail view": (assert, ctx) => async function () {
                 let currentProject = ctx.get('currentProject');
                 let LatestCreatedIssue = ctx.get('latestCreatedIssue');
-                assert.equal(currentURL(), `/app/project/${currentProject.id}/issue/${LatestCreatedIssue.id}`, 'url matched');
+                assert.equal(currentURL(), `/app/project/${currentProject.shortCode}/issue/${LatestCreatedIssue.id}`, 'url matched');
             }
         },
         {

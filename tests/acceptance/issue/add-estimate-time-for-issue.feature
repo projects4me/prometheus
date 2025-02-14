@@ -6,13 +6,13 @@ Feature: Issue | add estimate time for issue
     Given There is no pre-existing data
     And default scenario is loaded
     And User_1 is logged in
-    And User selects Project 3
+    And User selects Project 1
     And Project has following details
     ---------
     | issue |
     | 5     |
     ---------
-    When User navigates to app/project/3/issue/4
+    When User navigates to app/project/project_1/issue/4
     And User clicks on estimate time
     And User add following log time for issue
     ---------------------------

@@ -20,6 +20,13 @@ export function register(server, ctx) {
         return membership
     });
 
+    server.patch('/membership/:id', (schema, request) => {
+        let requestData = getRequestData(request);
+        let membership = schema.memberships.find(requestData.id);
+        membership.update(requestData.attributes);
+        return membership;
+    });    
+
     server.delete('/membership/:id', (schema, request) => {
         let id = request.params.id;
         let model = schema.memberships.find(id);

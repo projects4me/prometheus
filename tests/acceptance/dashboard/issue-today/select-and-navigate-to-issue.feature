@@ -16,5 +16,5 @@ Feature: Dashboard - Issue Today | select and navigate to issue
     When User navigates to app
     And User searches for UniqueIssue inside Issue Today box
     And User clicks on UniqueIssue
-    Then User should be in app/project/1/issue/3 page
+    Then User should be in app/project/project_1/issue/3 page
     And Issue subject is UniqueIssue

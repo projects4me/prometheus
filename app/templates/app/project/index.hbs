@@ -226,10 +226,14 @@
             <ul class="users-list clearfix">
             {{#if this.model.members}}
               {{#each this.model.members as |member|}}
-                <li data-member-id={{member.id}}>
+                <li data-member-id={{member.id}} class="member-item">
+                  {{!-- Edit Member --}}
+                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "global.form.edit"}} @onClick={{fn this.showEditMemberDialog member}}>
+                    <i class="fa fa-pencil"></i>
+                  </AppUi::Button>
                   <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
                   <LinkTo @route="app.user.page" @model={{member.id}} class="users-list-name">{{member.name}}</LinkTo>
-                  <span class="users-list-date">{{get-role member.id this.model.roles this.model.memberships}}</span>
+                  <span class="users-list-date" data-member-role>{{get-role member.id this.appController.roles this.model.memberships}}</span>
                 </li>
               {{/each}}
             {{else}}
@@ -273,7 +277,43 @@
                     />
                   </div>
               {{/bootstrap-modal}}
-            {{/if}}          {{!-- /.users-list --}}
+            {{/if}}
+
+            {{#if this.editMemberDialog}}
+              {{#bootstrap-modal
+                  title="views.app.project.detail.membership.update"
+                  confirmLabel="global.form.save"
+                  closeLabel="global.form.cancel"
+                  confirm=(action "updateMember")
+                  close=(action "removeEditMemberModal")}}
+                  <div class="form-group">
+                      <FormFields::FieldRelate
+                          @placeholder={{t "views.app.project.detail.membership.selectuser"}}
+                          @label={{t "views.app.project.detail.membership.user"}}
+                          @data-field="select-member"
+                          @options={{this.currentMembers}}
+                          @selected={{find-by "value" this.selectedUser.id this.currentMembers}}
+                          @searchField="label"
+                          @relateType="relate-user"
+                          @aclContext="App.Project.Read.Membership.Create.User"
+                          @closeOnSelect={{false}}
+                          @disabled={{true}}
+                      />
+
+                    <FormFields::FieldRelate
+                        @placeholder={{t "views.app.project.detail.membership.selectrole"}}
+                        @label={{t "views.app.project.detail.membership.role"}}
+                        @data-field="select-role"
+                        @options={{this.rolesList}}
+                        @selected={{find-by "value" this.selectedRole this.rolesList}}
+                        @searchField="label"
+                        @onchange={{action "selectRole"}}
+                        @relateType="relate-simple"
+                        @aclContext="App.Project.Read.Membership.Create.Role"
+                    />
+                  </div>
+              {{/bootstrap-modal}}
+            {{/if}}            
           </div>
           {{!-- /.box-body --}}
         </div>

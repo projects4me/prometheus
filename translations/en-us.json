@@ -385,11 +385,13 @@
           "noMembers": "No members found for the project, please add some",
           "membership": {
             "add": "Add a new member",
+            "update": "Update member role",
             "selectrole": "Select a role",
             "role": "Role of the new member",
             "selectuser": "Select a new member",
             "user": "Member",
             "added": "<strong>{user}</strong> has been added to the project as <strong>{role}</strong>",
+            "updated":"<strong>{user}'s</strong> role has been updated to <strong>{role}</strong>",
             "missing": "Both the user and role selection is required"
           },
           "charts": {

@@ -6,7 +6,7 @@ Feature: Issue | issue create
     Given There is no pre-existing data
     And default scenario is loaded
     And User_4 is logged in
-    And User_4 selects Project 3
+    And User_4 selects Project 1
     When User navigates to issue create page 
     Then User_4 should be assignee
     And User_4 should be owner
@@ -16,7 +16,7 @@ Feature: Issue | issue create
     Given There is no pre-existing data
     And default scenario is loaded
     And User_4 is logged in
-    And User_4 selects Project 2
+    And User_4 selects Project 1
     And Project has following details
     ---------------------------------------
     | milestone | issuetype | issuestatus |

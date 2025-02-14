@@ -227,14 +227,19 @@
   }
 }
 
-.membership-add {
-  height: 10rem;
-  width: 10rem;
-  margin-top: 2.5rem;
+.member-item {
+  position: relative;
+}
 
-  ion.ion-md-add {
-    font-size: 6rem;
-  }
+.member-item [data-edit-member] {
+  position: absolute;
+  top: 1rem;
+  right: 0;
+
+}
+
+.member-item:hover {
+  cursor: pointer;
 }
 
 .projects {
