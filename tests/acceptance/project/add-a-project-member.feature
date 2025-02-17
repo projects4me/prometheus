@@ -5,21 +5,18 @@ Feature: Project | add a project member
 
     Given There is no pre-existing data
     And project scenario is loaded
-    And There are 10 projects in system
     And User_1 is logged in
-    And User_1 selects Project 3
+    And User_1 selects Project 1
     And Project has following details
-    -------------------------
-    | role  | members(user) |
-    | 5     | 4             |
-    -------------------------
-    #FOR ABOVE STEP 4 new Users will be created and will be assigned to Project
-    And Project membership is given to 5 users
-    When User navigates to app/project/3
+    ---------
+    | role  |
+    | 5     |
+    ---------
+    When User navigates to app/project/project_1
     And User clicks on add button to add a member
     And User selects User_2 as a member of project
     And User selects User_3 as a member of project
-    And User selects a role for that member
+    And User selects a role 1 for that member
     And User clicks on save button
     Then User 2 is added as a member of project
     And User 3 is added as a member of project  

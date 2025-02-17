@@ -6,7 +6,7 @@ Feature: Profile | navigate to one of latest issue
     Given There is no pre-existing data
     And default scenario is loaded
     And User_1 is logged in
-    And User_1 selects Project 2
+    And User_1 selects Project 1
     And Project has following details
     ---------
     | issue |
@@ -19,4 +19,4 @@ Feature: Profile | navigate to one of latest issue
     ---------------------------------------
     When User navigates to app/user/1
     When User clicks on latest issue 5
-    Then User should be in app/project/2/issue/5 page
+    Then User should be in app/project/project_1/issue/5 page

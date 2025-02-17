@@ -15,4 +15,4 @@ Feature: Profile | navigate to one of latest project
     ------------------------------------------
     When User navigates to app/user/1
     When User clicks on latest project 5
-    Then User should be in app/project/5 page
+    Then User should be in app/project/PROJECT_5 page

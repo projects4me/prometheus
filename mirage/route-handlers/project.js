@@ -1,16 +1,27 @@
 import getRequestData from "../helpers/parse-request";
 import pushObjectInModel from "../helpers/push-object-in-model";
+import getValueFromQuery from "../helpers/get-value-from-query";
 
 export function register(server, ctx) {
     server.get('/project', (schema, request) => {
         let model = schema.projects.all();
-
         //check if queryParams have a query object or not
         let projectQuery = request.queryParams.query;
+        if (projectQuery) {
+            const field = projectQuery.includes('Project.shortCode') ? 'Project.shortCode' : 
+                 projectQuery.includes('Project.id') ? 'Project.id' : null;
 
-        //if user has requested a saved search then return one project
-        if (projectQuery.indexOf("savedsearch") >= 0) {
+            if (field) {
+                const value = getValueFromQuery(field, projectQuery);
+                const criteria = field === 'Project.shortCode' ? { shortCode: value.toUpperCase() } : { id: value };
+                if (value) {
+                    model = schema.projects.where(criteria);
+                }
+            }
+
+            if (projectQuery.includes('savedsearch')) {
             pushObjectInModel(model, schema.projects.find(1));
+            }
         }
 
         return model;

@@ -38,7 +38,7 @@ export default App.extend({
      */
     async beforeModel(transition) {
         let _self = this;
-        let projectShortCode = _self.paramsFor('app.project')?.shortcode?.toUpperCase();
+        let projectShortCode = _self.paramsFor('app.project')?.shortcode;
         if(projectShortCode == undefined) {
             projectShortCode = _self.trackedProject.shortCode;
 

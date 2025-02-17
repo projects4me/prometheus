@@ -281,15 +281,13 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 	}
 
 	/**
-	 * This function navigate a user to the issue detail page
+	 * This function navigate a user to the project detail page
 	 *
 	 * @method navigateToSuccess
 	 * @param model
 	 */
 	navigateToSuccess(model) {
-		this.transitionToRoute('app.project', {
-			shortcode: model.shortCode
-		});
+		this.transitionToRoute('app.project', model.shortCode.toLowerCase());
 	}
 
 	/**

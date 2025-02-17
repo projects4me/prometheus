@@ -36,6 +36,17 @@ export default class AppProjectIndexController extends PrometheusController {
 
     /**
      * This flag is used to show or hide the modal dialog box
+     * for editing existing member.
+     *
+     * @property addMemberDialog
+     * @type bool
+     * @for Index
+     * @private
+     */
+    @tracked editMemberDialog = false;    
+
+    /**
+     * This flag is used to show or hide the modal dialog box
      * for editing milestones
      *
      * @property milestoneDialog
@@ -46,14 +57,24 @@ export default class AppProjectIndexController extends PrometheusController {
     milestoneDialog = false;
 
     /**
-     * This field stores the selected role in the add member dialog
+     * This field stores the selected role in the add/edit member dialog.
      *
      * @property selectedRole
      * @type int
      * @for Index
      * @public
      */
-    selectedRole = null;
+    @tracked selectedRole = null;
+
+    /**
+     * This field stores the selected user in the edit member dialog.
+     *
+     * @property selectedUser
+     * @type string
+     * @for Index
+     * @public
+     */
+    @tracked selectedUser = null;    
 
     /**
      * This field stores the selected users in the add members dialog
@@ -96,10 +117,21 @@ export default class AppProjectIndexController extends PrometheusController {
      */
     @computed('model', 'model.members')
     get usersList() {
-        let _self = this;
-        let currentMembers = (new format(this)).getSelectList(_self.get('model.members'));
-        let usersList = _self.get('appController.usersList');
+        let currentMembers = this.currentMembers;
+        let usersList = this.get('appController.usersList');
         return (_.differenceWith(usersList, currentMembers, _.isEqual));
+    }
+
+    /**
+     * This is the list of members in the project formatted to be used by 
+     * the field relate component.
+     * 
+     * @property currentMembers
+     * @for Index
+     * @public
+     */
+    get currentMembers() {
+        return (new format(this)).getSelectList(this.get('model.members'));
     }
 
     milestoneTypes = [
@@ -360,6 +392,33 @@ export default class AppProjectIndexController extends PrometheusController {
     }
 
     /**
+     * This function is used to show the edit member dialog box.
+     *
+     * @method showEditMemberDialog
+     * @public
+     */
+    @action showEditMemberDialog(member) {
+        let _self = this;
+        this.editMemberDialog = true;
+        this.selectedUser = member;
+        let role = this.appController.roles.filterBy('id',_self.model.memberships.filterBy('userId',member.id)[0]?.get('roleId'));
+        this.selectedRole = role[0].id;
+    }
+    
+    /**
+     * This function is used to hide the edit member modal.
+     *
+     * @method removeEditMemberModal
+     * @public
+     */
+    @action removeEditMemberModal() {
+        if (this.isDestroyed || this.isDestroying) return;
+        this.set('editMemberDialog', false);
+        $('.modal').modal('hide');
+        this.selectedRole = null;
+    }    
+
+    /**
      * This function is used to hide the add tag modal
      *
      * @method removeAddMemberModal
@@ -369,6 +428,7 @@ export default class AppProjectIndexController extends PrometheusController {
         if (this.isDestroyed || this.isDestroying) return;
         this.set('addMemberDialog', false);
         $('.modal').modal('hide');
+        this.selectedRole = null;
     }
 
     /**
@@ -416,5 +476,43 @@ export default class AppProjectIndexController extends PrometheusController {
         });
 
         _self.set('newMilestone', newMilestone);
+    }
+    
+    /**
+     * This function is used to update member's role in the project.
+     * 
+     * @method updateMember
+     * @public
+     */
+    @action 
+    async updateMember() {
+        let membership = this.model.memberships.find((membership) => membership.userId === this.selectedUser.id);
+        let _self = this;
+        
+        if(membership.roleId !== this.selectedRole) {
+            let role = this.store.peekRecord('role', this.selectedRole);
+
+            membership.roleId = role.id;
+
+            try {
+                await membership.save();
+
+                this.model.memberships = this.model.memberships.map((membership) => {
+                    if(membership.userId === this.selectedUser.id) {
+                        membership.roleId = role.id;
+                    }
+                    return membership;
+                });
+
+                new Messenger().post({
+                    message: htmlSafe(this.intl.t("views.app.project.detail.membership.updated", { role: role.get('name'), user: this.selectedUser.name})),
+                    type: 'success',
+                    showCloseButton: true
+                });
+            this.removeEditMemberModal();
+            } catch (error) {
+                _self.errorManager.handleError(error);
+            }
+        }
     }
 }

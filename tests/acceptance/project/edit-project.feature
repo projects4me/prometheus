@@ -7,7 +7,7 @@ Feature: Project | edit project
     And default scenario is loaded
     And User_1 is logged in
     And There are 10 projects in system
-    When User navigates to app/project/1
+    When User navigates to app/project/project_1
     And User clicks on edit button
     And User enters edited Project in project name
     And User enters edited Description in project description

@@ -2,33 +2,6 @@ import steps from '../steps';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 import { click } from '@ember/test-helpers';
 
-export const given = function () {
-    return [
-        {
-            "Project membership is given to $userCount users": (assert, ctx) => async function (userCount) {
-                let users = server.schema.users.all();
-                let currentProject = ctx.get('currentProject');
-
-                users.models.forEach((user) => {
-                    let membership = server.create('membership');
-                    membership.update({
-                        userId: user.id,
-                        roleId: '1',
-                        projectId: currentProject.id
-                    });
-                });
-
-                let project = ctx.get('currentProject');
-                project.update({
-                    memberships: server.schema.memberships.all()
-                });
-
-                assert.ok(true, `Project membership is given ${userCount} users`);
-            }
-        }
-    ];
-}
-
 export const when = function () {
     return [
         {
@@ -44,8 +17,8 @@ export const when = function () {
             }
         },
         {
-            "User selects a role for that member": (assert, ctx) => async function () {
-                await selectChoose('div[data-field="select-role"] div.input-group', '.ember-power-select-option', 1);
+            "User selects a role $roleIndex for that member": (assert, ctx) => async function (roleIndex) {
+                await selectChoose('div[data-field="select-role"] div.input-group', '.ember-power-select-option', parseInt(roleIndex - 1));
                 assert.ok(true, `role selected`);
             }
         }

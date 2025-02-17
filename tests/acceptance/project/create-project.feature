@@ -17,6 +17,6 @@ Feature: Project | create project
     And User enters test vision in project scope
     And User selects option 3 of project issuetypes
     And User clicks on save button
-    Then User should be in app/project/TEST page
+    Then User should be in app/project/testp page
     And Project name is test project
     And Project description is test description
