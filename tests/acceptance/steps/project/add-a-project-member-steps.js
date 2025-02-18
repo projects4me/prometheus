@@ -2,6 +2,26 @@ import steps from '../steps';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 import { click } from '@ember/test-helpers';
 
+export const given = function () {
+    return [
+        {
+            "User $userId is added as a member of project $projectId": (assert, ctx) => async function (userId, projectId) {
+                let project = server.schema.projects.find(projectId);
+                let members = project.members.add(server.schema.users.find(userId));
+                project.update({
+                    members: members
+                });
+
+                server.create('membership', {
+                    project: project,
+                    modifiedUser: userId,
+                    roleId: server.schema.roles.find(1).id
+                });
+            }
+        }
+    ];
+}
+
 export const when = function () {
     return [
         {

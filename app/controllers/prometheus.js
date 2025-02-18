@@ -70,6 +70,16 @@ export default class PrometheusController extends Controller {
 	@service('router') router;
 
     /**
+     * This service is used to different types of errors.
+     * 
+     * @property errorManager
+     * @type Ember.Service
+     * @for App
+     * @protected
+     */
+	@service('errorManager') errorManager;
+
+    /**
      * The trackedProject service provides the selected project.
      *
      * @property trackedProject

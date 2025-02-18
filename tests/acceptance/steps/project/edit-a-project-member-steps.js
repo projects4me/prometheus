@@ -26,19 +26,17 @@ export const given = function () {
 export const when = function () {
 	return [
 		{
-			'User clicks on edit button to edit member $memberId': (
-				assert,
-				ctx
-			) =>
-				async function (memberId) {
-					await click(
-						`[data-member-id="${memberId}"] [data-edit-member]`
-					);
-					assert.ok(
-						true,
-						`User clicks on edit button to edit member ${memberId}`
-					);
-				}
+			'User clicks on $buttonType button to $actionType member $memberId':
+				(assert, ctx) =>
+					async function (buttonType, actionType, memberId) {
+						await click(
+							`[data-member-id="${memberId}"] [data-${buttonType}-member]`
+						);
+						assert.ok(
+							true,
+							`User clicks on ${buttonType} button to ${actionType} member ${memberId}`
+						);
+					}
 		}
 	];
 };
