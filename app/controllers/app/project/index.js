@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import PrometheusController from "prometheus/controllers/prometheus";
+import PrometheusCreateController from "prometheus/controllers/prometheus/create";
 import format from "../../../utils/data/format";
 import _ from "lodash";
 import { inject as controller } from '@ember/controller';
@@ -21,7 +21,51 @@ import { htmlSafe } from "@ember/template";
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class AppProjectIndexController extends PrometheusController {
+export default class AppProjectIndexController extends PrometheusCreateController {
+
+    /**
+     * This object holds all of the information that we need to create our schema and also need to 
+     * render the template (in future).
+     * @property metadata
+     * @type Object
+     * @for AppProjectConversationController
+     * @private
+     */
+    metadata = {
+        sections: [
+            {
+                name: "memberDelete",
+                fields: [
+                    {
+                        name: "reAssignIssues",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+    
+    /**
+     * This function is called on the initialization of the controller. In this function
+     * we're calling setupSchema method in order to generate schema, by analyzing metadata
+     * defined in the controller, that will be used to validate the form of the template.
+     *
+     * @method constructor
+     * @public
+     */    
+    constructor() {
+        super(...arguments);
+        this.setupSchema();
+    }    
 
     /**
      * This flag is used to show or hide the modal dialog box
@@ -43,7 +87,27 @@ export default class AppProjectIndexController extends PrometheusController {
      * @for Index
      * @private
      */
-    @tracked editMemberDialog = false;    
+    @tracked editMemberDialog = false;
+    
+    /**
+     * This field is used to show or hide the modal dialog box
+     * for deleting a member
+     *
+     * @property deleteMemberDialog
+     * @type bool
+     * @for Index
+     * @private
+     */
+    @tracked deleteMemberDialog = false;
+    
+    /**
+     * Selected user to reassign issues after member deletion
+     * @property selectedNewIssuesAssignee 
+     * @type Object
+     * @for Index
+     * @public
+     */
+    @tracked selectedNewIssuesAssignee = null;
 
     /**
      * This flag is used to show or hide the modal dialog box
@@ -132,6 +196,19 @@ export default class AppProjectIndexController extends PrometheusController {
      */
     get currentMembers() {
         return (new format(this)).getSelectList(this.get('model.members'));
+    }
+
+    /**
+     * Returns list of project members excluding the selected member.
+     * Used for reassigning issues when deleting a member.
+     * 
+     * @property otherMembers
+     * @for Index
+     * @public 
+     */
+    get otherMembers() {
+        let members = this.currentMembers;
+        return members.filter(member => member.value !== this.selectedUser?.id);
     }
 
     milestoneTypes = [
@@ -403,6 +480,88 @@ export default class AppProjectIndexController extends PrometheusController {
         this.selectedUser = member;
         let role = this.appController.roles.filterBy('id',_self.model.memberships.filterBy('userId',member.id)[0]?.get('roleId'));
         this.selectedRole = role[0].id;
+    }
+
+    /**
+     * This function is used to show the delete member dialog box.
+     *
+     * @method showDeleteMemberDialog
+     * @public
+     */
+    @action showDeleteMemberDialog(member) {
+        this.deleteMemberDialog = true;
+        this.selectedUser = member;
+    }
+
+    /**
+     * This function is used to hide the delete member modal.
+     *
+     * @method removeDeleteMemberModal
+     * @public
+     */
+    @action removeDeleteMemberModal() {
+        if (this.isDestroyed || this.isDestroying) return;
+        this.deleteMemberDialog = false;
+        this.selectedNewIssuesAssignee = null;
+        $('.modal').modal('hide');
+    }
+
+    /**
+     * This property returns the model for the member delete form.
+     * 
+     * @property reAssignIssuesModel
+     */
+    get reAssignIssuesModel() {
+        return {
+            reAssignIssues: this.selectedNewIssuesAssignee?.value
+        }
+    }
+
+    /**
+     * Deletes a member from the project and reassigns their issues to another user.
+     * 
+     * @returns {Promise} Resolves when the member is successfully deleted, rejects on validation failure or error
+     * @method deleteMember
+     * @throws Will throw an error if the deletion fails
+     */
+    @action deleteMember() {
+        return new Promise((resolve, reject) => {
+            this.validate(this.reAssignIssuesModel, "memberDelete").then(async (validation) => {
+                if (validation.isValid) {
+                    let memberships = await this.model.memberships;
+                    let membership = memberships.find((membership) => membership.userId === this.selectedUser.id);
+                    let _self = this;
+            
+                    try {
+                        membership.deleteRecord();
+                        await membership.save({             
+                            adapterOptions: {
+                                queryParams: {
+                                    newAssigneeId: this.selectedNewIssuesAssignee.value
+                                }
+                            }
+                        });
+            
+                        this.model.memberships = this.model.memberships.filter((membership) => membership.userId !== this.selectedUser.id);
+                        this.model.members = this.model.members.filter((member) => member.id !== this.selectedUser.id);
+                        this.removeDeleteMemberModal();
+            
+                        new Messenger().post({
+                            message: htmlSafe(this.intl.t("views.app.project.detail.membership.deleted", { user: this.selectedUser.name})),
+                            type: 'success',
+                            showCloseButton: true
+                        });
+                        resolve();
+                    } catch(error) {
+                        _self.errorManager.handleError(error);
+                        reject();
+                    }
+                } else {
+                    this._showError(validation.errors, "project");
+                    reject();
+                }
+            });
+        });
     }
     
     /**

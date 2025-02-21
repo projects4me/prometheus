@@ -231,11 +231,19 @@
   position: relative;
 }
 
-.member-item [data-edit-member] {
-  position: absolute;
-  top: 1rem;
-  right: 0;
+.member-item {
+  button {
+    top: 0;
+    position: absolute;
+  }
 
+  [data-edit-member] {
+    right: 1.5rem;
+  }
+  
+  [data-delete-member] {
+    right: 0;
+  }
 }
 
 .member-item:hover {

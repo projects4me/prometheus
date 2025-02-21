@@ -228,9 +228,15 @@
               {{#each this.model.members as |member|}}
                 <li data-member-id={{member.id}} class="member-item">
                   {{!-- Edit Member --}}
-                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "global.form.edit"}} @onClick={{fn this.showEditMemberDialog member}}>
+                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "global.form.edit"}} @onClick={{fn this.showEditMemberDialog member}} @aclContext="App.Project.Read.Membership.Edit.User">
                     <i class="fa fa-pencil"></i>
                   </AppUi::Button>
+
+                  {{!-- Delete Member --}}
+                  <AppUi::Button data-delete-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "global.form.delete"}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="App.Project.Read.Membership.Delete.User">
+                    <i class="fa fa-times"></i>
+                  </AppUi::Button>
+
                   <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
                   <LinkTo @route="app.user.page" @model={{member.id}} class="users-list-name">{{member.name}}</LinkTo>
                   <span class="users-list-date" data-member-role>{{get-role member.id this.appController.roles this.model.memberships}}</span>
@@ -288,9 +294,8 @@
                   close=(action "removeEditMemberModal")}}
                   <div class="form-group">
                       <FormFields::FieldRelate
-                          @placeholder={{t "views.app.project.detail.membership.selectuser"}}
                           @label={{t "views.app.project.detail.membership.user"}}
-                          @data-field="select-member"
+                          @data-field="selected-member"
                           @options={{this.currentMembers}}
                           @selected={{find-by "value" this.selectedUser.id this.currentMembers}}
                           @searchField="label"
@@ -313,7 +318,44 @@
                     />
                   </div>
               {{/bootstrap-modal}}
-            {{/if}}            
+            {{/if}}
+
+            {{#if this.deleteMemberDialog}}
+              {{#bootstrap-modal
+                  title="views.app.project.detail.membership.delete"
+                  confirmLabel="global.form.delete"
+                  closeLabel="global.form.cancel"
+                  confirm=(action "deleteMember")
+                  close=(action "removeDeleteMemberModal")}}
+                  <div class="form-group">
+                      <FormFields::FieldRelate
+                          @label={{t "views.app.project.detail.membership.user"}}
+                          @data-field="selected-member"
+                          @options={{this.currentMembers}}
+                          @selected={{find-by "value" this.selectedUser.id this.currentMembers}}
+                          @searchField="label"
+                          @relateType="relate-user"
+                          @aclContext="App.Project.Read.Membership.Delete.User"
+                          @closeOnSelect={{false}}
+                          @disabled={{true}}
+                      />
+                      <FormFields::FieldRelate
+                          @placeholder={{t "views.app.project.detail.membership.reAssignIssuesPlaceholder"}}
+                          @label={{t "views.app.project.detail.membership.reAssignIssues"}}
+                          @data-field="new-assignee"
+                          @options={{this.otherMembers}}
+                          @selected={{find-by "value" this.selectedNewIssuesAssignee.value this.otherMembers}}
+                          @onchange={{action "selectStatic" this 'selectedNewIssuesAssignee'}}
+                          @searchField="label"
+                          @relateType="relate-user"
+                          @aclContext="App.Project.Read.Membership.Delete.User"
+                          @closeOnSelect={{false}}
+                          @validate={{action this.validateField "memberDelete" (hash name="reAssignIssues" model=this.reAssignIssuesModel)}}
+                          @message={{this.message.memberDelete.reAssignIssues}}
+                      />
+                  </div>
+              {{/bootstrap-modal}}
+            {{/if}}                     
           </div>
           {{!-- /.box-body --}}
         </div>
