@@ -275,6 +275,7 @@
   "views": {
     "signin": {
       "message": "Please sign in to proceed",
+      "workspaceTitle": "The complete workspace to manage your projects",
       "username": "Username",
       "password": "Password",
       "facebook": "Sign in using Facebook",
