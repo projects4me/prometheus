@@ -54,6 +54,11 @@
     text-overflow: ellipsis;
     white-space: pre;
   }
+
+  .box-body {
+    max-height: 50rem;
+    overflow-y: scroll;
+  }  
 }
 
 .project-conversations {

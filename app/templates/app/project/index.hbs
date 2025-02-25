@@ -376,7 +376,7 @@
             />
           </div>
 
-          <div class="box-body no-padding">
+          <div class="box-body no-padding" {{initialize-slimscroll width='4'}}>
             {{#if (eq this.milestones.length 0)}}
               <div class="no-entry">{{t "views.app.project.detail.milestone.noentry"}}</div>
             {{else}}
