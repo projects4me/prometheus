@@ -377,17 +377,19 @@
           </div>
 
           <div class="box-body no-padding">
-            {{#if (eq this.milestones.length 0)}}
-              <div class="no-entry">{{t "views.app.project.detail.milestone.noentry"}}</div>
-            {{else}}
+            {{#if (eq this.milestones)}}
+
               {{#each this.milestones as |milestone|}}
-                
                 <Project::Milestones
                   @editMilestone={{action "editMilestone"}}
                   @milestone={{milestone}}
                 />
+              {{/each}}                      
 
-              {{/each}}
+            {{else}}
+              <Exceptions::NothingFound
+                @description={{t "views.app.project.detail.milestone.noentry"}}
+              />            
             {{/if}}
           </div>
 
