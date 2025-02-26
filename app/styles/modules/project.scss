@@ -232,17 +232,14 @@
 }
 
 .member-item {
-  button {
-    top: 0;
-    position: absolute;
-  }
-
   [data-edit-member] {
-    right: 1.5rem;
+    right: 0.5rem;
+    position: relative;
   }
   
   [data-delete-member] {
     right: 0;
+    position: absolute;
   }
 }
 

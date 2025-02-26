@@ -76,7 +76,7 @@
 
       p {
         position: relative;
-        background-color: #5bc0de;
+        background-color: #5bc0de7d;
         padding: 0.3rem 0.8rem;
         border-radius: 0.4rem;
         font-size: 1.2rem;
@@ -97,7 +97,7 @@
   .data-input:valid ~ [data-form-field="label"] > .floating-label,
   .select-input ~ [data-form-field="label"] > .floating-label,
   .multiselect-input ~ [data-form-field="label"] > .floating-label,
-  .focused-field,
+  #editor ~ [data-form-field="label"] > .floating-label,
   .form-control[readonly] ~ [data-form-field="label"] > .floating-label {
     font-size: 1.4rem;
     color: $primaryColor;
