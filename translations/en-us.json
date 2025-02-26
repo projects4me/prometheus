@@ -398,7 +398,8 @@
             "updated":"<strong>{user}'s</strong> role has been updated to <strong>{role}</strong>",
             "missing": "Both the user and role selection is required",
             "reAssignIssuesPlaceholder": "Select a member to whom the in-progress issues will be reassigned",
-            "deleted": "Member <strong>{user}</strong> has been removed from the project"
+            "deleted": "Member <strong>{user}</strong> has been removed from the project",
+            "deleteWarning": "You are about to remove the member <strong>{user}</strong> from the project, once removed the member will lose access to the project and all the issues assigned to the member will be unassigned. Are you sure?"
           },
           "charts": {
             "estimatedspent": "Estimated vs Spent (Time in %)",
