@@ -71,6 +71,7 @@
       "cancel": "Cancel",
       "close": "Close",
       "delete": "Delete",
+      "remove": "Remove",
       "search": "Search",
       "searchPlaceholder": "Search ...",
       "loading": "Loading ...",
@@ -143,7 +144,8 @@
         "comment": "Comment",
         "role": "Role",
         "milestone": "Milestone",
-        "file": "File"
+        "file": "File",
+        "membership": "Membership"
       },
       "plural": {
         "project": "Projects",

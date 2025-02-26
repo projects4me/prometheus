@@ -227,11 +227,6 @@
             {{#if this.model.members}}
               {{#each this.model.members as |member|}}
                 <li data-member-id={{member.id}} class="member-item">
-                  {{!-- Edit Member --}}
-                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "global.form.edit"}} @onClick={{fn this.showEditMemberDialog member}} @aclContext="App.Project.Read.Membership.Edit.User">
-                    <i class="fa fa-pencil"></i>
-                  </AppUi::Button>
-
                   {{!-- Delete Member --}}
                   <AppUi::Button data-delete-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "global.form.delete"}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="App.Project.Read.Membership.Delete.User">
                     <i class="fa fa-times"></i>
@@ -239,7 +234,13 @@
 
                   <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
                   <LinkTo @route="app.user.page" @model={{member.id}} class="users-list-name">{{member.name}}</LinkTo>
-                  <span class="users-list-date" data-member-role>{{get-role member.id this.appController.roles this.model.memberships}}</span>
+                  <span class="users-list-date" data-member-role>
+                    {{get-role member.id this.appController.roles this.model.memberships}}
+                  {{!-- Edit Member's Role --}}
+                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "global.form.edit"}} @onClick={{fn this.showEditMemberDialog member}} @aclContext="App.Project.Read.Membership.Edit.User">
+                    <i class="fa fa-pencil"></i>
+                  </AppUi::Button>                    
+                  </span>
                 </li>
               {{/each}}
             {{else}}
@@ -323,7 +324,7 @@
             {{#if this.deleteMemberDialog}}
               {{#bootstrap-modal
                   title="views.app.project.detail.membership.delete"
-                  confirmLabel="global.form.delete"
+                  confirmLabel="global.form.remove"
                   closeLabel="global.form.cancel"
                   confirm=(action "deleteMember")
                   close=(action "removeDeleteMemberModal")}}
@@ -376,18 +377,20 @@
             />
           </div>
 
-          <div class="box-body no-padding" {{initialize-slimscroll width='4'}}>
-            {{#if (eq this.milestones.length 0)}}
-              <div class="no-entry">{{t "views.app.project.detail.milestone.noentry"}}</div>
-            {{else}}
+          <div class="box-body no-padding">
+            {{#if (eq this.milestones)}}
+
               {{#each this.milestones as |milestone|}}
-                
                 <Project::Milestones
                   @editMilestone={{action "editMilestone"}}
                   @milestone={{milestone}}
                 />
+              {{/each}}                      
 
-              {{/each}}
+            {{else}}
+              <Exceptions::NothingFound
+                @description={{t "views.app.project.detail.milestone.noentry"}}
+              />            
             {{/if}}
           </div>
 
@@ -522,7 +525,7 @@
           </div>
 
           <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer-outline"></i></span>
+            <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "views.app.project.detail.estimatedtime"}}</span>
               <span class="info-box-number">{{get-timelog this.issuetime "estimated"}}</span>
