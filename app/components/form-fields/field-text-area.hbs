@@ -14,23 +14,12 @@
     <span class="highlight"></span>
     <span class="bar"></span>
 
-    {{!-- Label --}}
-    <div data-form-field="label">
-      <label class="floating-label">
-        {{@label}} 
-      </label>
-
-        {{!-- Field Label Information --}}
-      {{#if @showFieldInfo}}
-        <div>
-          <i class="fa fa-info-circle" aria-hidden="true" data-label-info="btn" {{on "click" (fn this.toggleLabelInfo @data-field)}}></i>
-        </div>
-        <div class="field-label-info" data-field-label="info">
-          <i class="fa fa-caret-left" aria-hidden="true" data-field-label="caret"></i>
-          <p>{{@info}}</p>
-        </div>
-      {{/if}}
-    </div>
+    <FormFields::Label
+      @label={{@label}}
+      @showFieldInfo={{@showFieldInfo}}
+      @info={{@info}}
+      @data-field={{@data-field}}
+    />
 
     {{#if (and @message this.shouldValidate)}}
       <span class="error text-red" id={{@data-field}}>
