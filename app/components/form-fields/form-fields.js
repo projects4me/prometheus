@@ -305,23 +305,7 @@ export default class FormFieldsComponent extends Component {
     get onBlur() {
         return this.args.onBlur ?? (() => true);
     }
-
-    /**
-     * This function toggle the information of the label.
-     * 
-     * @method toggleLabelInfo
-     */
-    toggleLabelInfo(fieldName, event) {
-        let infoEl = document.querySelector(`[data-field="${fieldName}"] [data-field-label="info"]`);
-        let el = document.querySelector(`[data-field="${fieldName}"] [data-field-label="info"]`);
-        // data-label-info="btn"
-        if (infoEl.style.display === 'none') {
-            infoEl.style.display = 'inline-flex';
-        } else {
-            infoEl.style.display = 'none';
-        }
-    }
-
+    
     /**
      * The onchange function used by the field.
      * 

@@ -44,7 +44,10 @@
                 />
                 <span class="highlight"></span>
                 <span class="bar"></span>
-                <label class="floating-label focused-field">{{t "views.app.issue.create.description"}}</label>
+                <FormFields::Label
+                  @label={{t "views.app.issue.create.description"}}
+                  @data-field="issue.description"
+                />                
                 <span class="count pull-right"></span>
               </div>
 

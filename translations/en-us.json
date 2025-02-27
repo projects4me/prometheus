@@ -71,6 +71,7 @@
       "cancel": "Cancel",
       "close": "Close",
       "delete": "Delete",
+      "remove": "Remove",
       "search": "Search",
       "searchPlaceholder": "Search ...",
       "loading": "Loading ...",
@@ -143,7 +144,8 @@
         "comment": "Comment",
         "role": "Role",
         "milestone": "Milestone",
-        "file": "File"
+        "file": "File",
+        "membership": "Membership"
       },
       "plural": {
         "project": "Projects",
@@ -352,7 +354,7 @@
           "enddate": "End Date",
           "issuetypes": "Issue Types",
           "hasIssuetypes": "Issue Types",
-          "reAssignIssues": "Re Assign Issues"
+          "reAssignIssues": "Reassign Issues"
         },
         "detail": {
           "status.": "Loading ..",
@@ -392,14 +394,14 @@
             "selectrole": "Select a role",
             "role": "Role of the new member",
             "selectuser": "Select a new member",
-            "reAssignIssues": "Re Assign Issues To",
+            "reAssignIssues": "Reassign Issues To",
             "user": "Member",
             "added": "<strong>{user}</strong> has been added to the project as <strong>{role}</strong>",
             "updated":"<strong>{user}'s</strong> role has been updated to <strong>{role}</strong>",
             "missing": "Both the user and role selection is required",
-            "reAssignIssuesPlaceholder": "Select a member to whom the in-progress issues will be reassigned",
             "deleted": "Member <strong>{user}</strong> has been removed from the project",
-            "deleteWarning": "You are about to remove the member <strong>{user}</strong> from the project, once removed the member will lose access to the project and all the issues assigned to the member will be unassigned. Are you sure?"
+            "deleteWarning": "You are about to remove the member <strong>{user}</strong> from the project, once removed the member will lose access to the project and all the issues assigned to the member will be unassigned. Are you sure?",
+            "reAssignIssuesPlaceholder": "Select a member to whom the open issues will be reassigned"
           },
           "charts": {
             "estimatedspent": "Estimated vs Spent (Time in %)",
