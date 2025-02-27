@@ -228,7 +228,7 @@
               {{#each this.model.members as |member|}}
                 <li data-member-id={{member.id}} class="member-item">
                   {{!-- Delete Member --}}
-                  <AppUi::Button data-delete-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "global.form.delete"}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="App.Project.Read.Membership.Delete.User">
+                  <AppUi::Button data-delete-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.removeMember"}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="App.Project.Read.Membership.Delete.User">
                     <i class="fa fa-times"></i>
                   </AppUi::Button>
 
@@ -237,7 +237,7 @@
                   <span class="users-list-date" data-member-role>
                     {{get-role member.id this.appController.roles this.model.memberships}}
                   {{!-- Edit Member's Role --}}
-                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "global.form.edit"}} @onClick={{fn this.showEditMemberDialog member}} @aclContext="App.Project.Read.Membership.Edit.User">
+                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.editRole"}} @onClick={{fn this.showEditMemberDialog member}} @aclContext="App.Project.Read.Membership.Edit.User">
                     <i class="fa fa-pencil"></i>
                   </AppUi::Button>                    
                   </span>
