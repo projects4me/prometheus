@@ -444,3 +444,11 @@ span[id="#"]{
 .box-header {
   @include flexbox($justifyContent: space-between, $alignItems: center);
 }
+
+.flex-row {
+  @include flexbox;
+}
+
+.flex-column {
+  @include flexbox($direction: column);
+}

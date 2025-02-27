@@ -140,6 +140,20 @@
   }
 }
 
+[data-remove-member-warning] {
+  padding-left: 1rem;
+
+  i {
+    color: $dangerColor;
+    margin-top: 0.1rem;
+  }
+
+  h5 {
+    margin-top: 0;
+    margin-left: 0.5rem;
+  }
+}
+
 .project {
   .fa-ban {
     color: #d33724;

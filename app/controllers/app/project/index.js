@@ -674,4 +674,14 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
             }
         }
     }
+
+    /**
+     * Gets the warning message for deleting a project member
+     * @type {SafeString}
+     * @readonly
+     * @returns {SafeString} A localized HTML-safe string containing the delete warning message with the selected user's name
+     */
+    get deleteMemberWarning() {
+        return htmlSafe(this.intl.t("views.app.project.detail.membership.deleteWarning", { user: this.selectedUser.name }));
+    }
 }
