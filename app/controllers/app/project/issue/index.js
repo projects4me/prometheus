@@ -5,6 +5,7 @@
 import PrometheusListController from "prometheus/controllers/prometheus/list";
 import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
+import format from "prometheus/utils/data/format";
 
 /**
  * This controller is used to provide the interaction between the template and
@@ -18,6 +19,85 @@ import { htmlSafe } from '@ember/template';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class AppProjectIssueIndexController extends PrometheusListController {
+
+    /**
+     * This object holds all of the information that we need to create our schema and handle filtering
+     * rules for the issues list.
+     * @property metadata
+     * @type Object
+     * @for AppProjectIssueCreateController
+     * @protected
+     */
+    metadata = {
+        filters:[
+            {
+                id: 'Issue.issueNumber',
+                label: this.intl.t("views.app.issue.fields.issueNumber"),
+                type: 'string'
+            },
+            {
+                id: 'Issue.subject',
+                label: this.intl.t("views.app.issue.fields.subject"),
+                type: 'string',
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null','contains']
+            },
+            {
+                id: 'Issue.status',
+                label: this.intl.t("views.app.issue.fields.statusId"),
+                type: 'integer',
+                input: 'select',
+                get values() {
+                    return this._controller.statuses;
+                },
+                _controller: this,
+                operators: ['equal']
+            },
+            {
+                id: 'issuemilestone.name',
+                label: this.intl.t("views.app.issue.fields.milestoneId"),
+                type: 'string'
+            },
+            {
+                id: 'issuetype.name',
+                label: this.intl.t("views.app.issue.fields.typeId"),
+                type: 'string'
+            },                                
+            {
+                id: 'Issue.priority',
+                label: this.intl.t("views.app.issue.fields.priority"),
+                type: 'integer',
+                input: 'select',
+                values: (new format(this)).getTranslation('views.app.issue.lists.priority'),
+                operators: ['equal']
+            },
+            {
+                id: 'Issue.startDate',
+                label: this.intl.t("views.app.issue.fields.startDate"),
+                type: 'date',
+                input: "text",
+                operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between', 'not_between'],
+                plugin: 'datepicker',
+                plugin_config: {
+                    todayBtn: 'linked',
+                    todayHighlight: true,
+                    autoclose: true
+                }
+            },
+            {
+                id: 'Issue.endDate',
+                label: this.intl.t("views.app.issue.fields.endDate"),
+                type: 'date',
+                input: "text",
+                operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between', 'not_between'],
+                plugin: 'datepicker',
+                plugin_config: {
+                    todayBtn: 'linked',
+                    todayHighlight: true,
+                    autoclose: true
+                }
+            }
+        ]
+    }    
 
     /**
      * This property stores the field on which the page if currently sored on
@@ -169,5 +249,19 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
         });
 
         Logger.debug('-Prometheus.Controllers.Project.Issue->deleteSearch');
+    }
+
+    /**
+     * The translated list of the issue statuses.
+     * 
+     * @type {Object}
+     * @for AppProjectIssueIndexController
+     * @public
+     */
+    get statuses() {
+        return this.issueStatuses?.reduce((acc, status) => {
+            acc[status.name] = this.intl.t(`views.app.issue.lists.status.${status.name}`);
+            return acc;
+        }, {});
     }
 }

@@ -5,6 +5,7 @@
 import PrometheusListController from "prometheus/controllers/prometheus/list";
 import { htmlSafe } from '@ember/template';
 import { action } from '@ember/object';
+import format from "prometheus/utils/data/format";
 
 /**
  * This controller is used for the project list
@@ -16,6 +17,38 @@ import { action } from '@ember/object';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class AppProjectsIndexController extends PrometheusListController {
+
+    /**
+     * This object holds all of the information that we need to create our schema and handle filtering
+     * rules for the projects list.
+     * @property metadata
+     * @type Object
+     * @for AppProjectsIndexController
+     * @protected
+     */
+    metadata = {
+        filters: [
+            {
+                id: 'Project.name',
+                label: this.intl.t("views.app.project.filter.name"),
+                type: 'string'
+            },
+            {
+                id: 'Project.shortCode',
+                label: this.intl.t("views.app.project.filter.shortCode"),
+                type: 'string',
+                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null','contains']
+            },
+            {
+                id: 'Project.status',
+                label: this.intl.t("views.app.project.filter.status"),
+                type: 'integer',
+                input: 'select',
+                values: (new format(this)).getTranslation('views.app.project.lists.status'),
+                operators: ['equal']
+            }            
+        ]
+    }
 
     /**
      * This property stores the field on which the page if currently sored on

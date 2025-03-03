@@ -435,13 +435,12 @@ span[id="#"]{
   }
 }
 
-// override AdminLTE rules
-.box-header:before,
-.box-header:after {
+.box-header-no-content:before,
+.box-header-no-content:after {
   content: none;
 }
 
-.box-header {
+.box-header-flex {
   @include flexbox($justifyContent: space-between, $alignItems: center);
 }
 

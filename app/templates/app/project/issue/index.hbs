@@ -86,7 +86,7 @@
           <AppUi::Button type="button" class="btn" @onClick={{this.clearSearch}}>{{t "global.form.clear"}}</AppUi::Button>
         </div>
         <div class="list-view-filters collapse">
-          {{query-builder module="Issue" query=this.query}}
+          {{query-builder module="issue" query=this.query}}
           <AppUi::Button type="button" class="btn btn-primary pull-right" @onClick={{this.showSaveSearchDialog}} @aclContext="App.Project.Issue.List.SavedSearch.Create">{{t "global.form.savesearch"}}</AppUi::Button>
           {{#if this.saveSearchDialog}}
             {{#bootstrap-modal
