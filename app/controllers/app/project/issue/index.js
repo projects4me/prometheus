@@ -39,18 +39,16 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
                 id: 'Issue.subject',
                 label: this.intl.t("views.app.issue.fields.subject"),
                 type: 'string',
-                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null','contains']
             },
             {
                 id: 'Issue.status',
                 label: this.intl.t("views.app.issue.fields.statusId"),
-                type: 'integer',
+                type: 'string',
                 input: 'select',
                 get values() {
                     return this._controller.statuses;
                 },
                 _controller: this,
-                operators: ['equal']
             },
             {
                 id: 'issuemilestone.name',
@@ -65,17 +63,15 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
             {
                 id: 'Issue.priority',
                 label: this.intl.t("views.app.issue.fields.priority"),
-                type: 'integer',
+                type: 'string',
                 input: 'select',
                 values: (new format(this)).getTranslation('views.app.issue.lists.priority'),
-                operators: ['equal']
             },
             {
                 id: 'Issue.startDate',
                 label: this.intl.t("views.app.issue.fields.startDate"),
                 type: 'date',
                 input: "text",
-                operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between', 'not_between'],
                 plugin: 'datepicker',
                 plugin_config: {
                     todayBtn: 'linked',
@@ -88,7 +84,6 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
                 label: this.intl.t("views.app.issue.fields.endDate"),
                 type: 'date',
                 input: "text",
-                operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between', 'not_between'],
                 plugin: 'datepicker',
                 plugin_config: {
                     todayBtn: 'linked',

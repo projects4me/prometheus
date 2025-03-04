@@ -9,6 +9,7 @@ import { observer } from '@ember/object';
 import Component from '@ember/component';
 import { inject } from '@ember/service';
 import { getOwner } from '@ember/application';
+import queryBuilderOperators from "prometheus/utils/metadata/querybuilder-operators";
 
 /**
  * This component is used to render the chat-boxes in the application
@@ -106,6 +107,9 @@ export default Component.extend({
         let intl = _self.intl;
         let controller = getOwner(_self).lookup(`controller:${_self.controllerPaths[_self.module]}`);
         let filters = controller.metadata.filters;
+        filters.map((filter) => {
+            filter.operators = queryBuilderOperators[filter.type];
+        });
         
         _self.set('filters',filters);
 
