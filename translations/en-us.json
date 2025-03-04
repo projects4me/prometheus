@@ -394,6 +394,8 @@
             "update": "Update member role",
             "delete": "Remove member",
             "selectrole": "Select a role",
+            "editRole": "Edit Role",
+            "removeMember": "Remove Member",
             "role": "Role of the new member",
             "selectuser": "Select a new member",
             "reAssignIssues": "Reassign Issues To",
