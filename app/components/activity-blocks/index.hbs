@@ -4,6 +4,6 @@
   <span class="time" data-activity="dateCreated"><i class="fa fa-clock-o"></i> {{@activity.createdSince}} {{t "global.ago"}}</span>
   <h3 class="timeline-header"><a href="javascript:void(0)" data-activity="userName">{{@activity.createdUserName}}</a>{{t "views.app.activity.performedActivity"}}</h3>
   <div class="timeline-body" data-activity="description">
-    {{@activity.description}}
+    {{safe-html @activity.description}}
   </div>
 </div>

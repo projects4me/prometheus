@@ -8,6 +8,6 @@
     <LinkTo @route="app.project" @model={{@activity.relatedId}}> {{t (concat "global.module.singular." @activity.relatedTo)}} </LinkTo>
   </h3>
   <div class="timeline-body" data-activity="description">
-    {{@activity.description}}
+    {{safe-html @activity.description}}
   </div>
 </div>
