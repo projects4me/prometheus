@@ -72,8 +72,7 @@ export default class Format {
      * @return {Array}
      */
     getList(list) {
-        const translations = require("prometheus/locales/" + this.intl.locale + "/translations").default;
-        let listTranslation = _.head(_.at(translations, list));
+        const listTranslation = this.getTranslation(list);
         let l = [];
         _.mapKeys(listTranslation, function (label, value) {
             l.push({ "label": label, "value": value });
@@ -100,5 +99,17 @@ export default class Format {
             model.name = translatedName;
         });
         return this.getSelectList(model);
+    }
+
+    /**
+     * This function is used to get the list from translations.
+     *
+     * @method getTranslation
+     * @param list
+     * @return {Array}
+     */
+    getTranslation(list) {
+        const translations = require("prometheus/locales/" + this.intl.locale + "/translations").default;
+        return _.head(_.at(translations, list));
     }
 }

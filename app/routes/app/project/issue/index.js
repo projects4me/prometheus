@@ -125,6 +125,33 @@ export default App.extend({
     currentUser: inject(),
 
     /**
+     * In this hook we're loading list of issue statuses and types available in the project.
+     *
+     * @method beforeModel
+     * @protected
+     */    
+    beforeModel() {
+        let _self = this;
+        let projectId = this.trackedProject.getProjectId();
+        let projectOptions = {
+            query: '(Project.id : '+projectId+')',
+            rels: 'issuetypes,issuestatuses',
+            limit: -1
+        }
+
+        this.store.query('project',projectOptions)
+        .then((project) => {
+            _self.set('issueTypes',project.firstObject.issuetypes);
+            _self.set('issueStatuses',project.firstObject.issuestatuses);
+        })
+        .catch((error) =>{
+            _self.errorManager.handleError(error, {
+                moduleName: "issue"
+            });
+        });
+    },
+
+    /**
      * The model for this route
      *
      * @method model
@@ -249,6 +276,8 @@ export default App.extend({
         controller.set('sort',this.sort);
         controller.set('order',this.order);
         controller.set('page',this.page);
+        controller.set('issueTypes',this.issueTypes);
+        controller.set('issueStatuses',this.issueStatuses);
     },
 
 });

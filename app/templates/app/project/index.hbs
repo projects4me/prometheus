@@ -223,7 +223,7 @@
       {{!-- Project Members --}}
       <AccessControl @aclContext="App.Project.Read.Members.Read">
         <div class="box box-warning">
-          <div class="box-header with-border">
+          <div class="box-header with-border box-header-flex box-header-no-content">
             <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
             <AppUi::DottedAddButton
               @title={{t "views.app.project.detail.membership.add"}}
@@ -384,7 +384,7 @@
       {{!-- Project Milestones --}}
       <AccessControl @aclContext="App.Project.Read.Milestones.Read">
         <div class="box box-info project-milestones-section">
-          <div class="box-header with-border">
+          <div class="box-header with-border box-header-flex box-header-no-content">
             <h3 class="box-title">{{t "views.app.project.detail.milestones"}}</h3>
             <AppUi::DottedAddButton
               @title={{t "views.app.project.detail.milestone.add"}}
