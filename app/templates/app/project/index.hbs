@@ -76,7 +76,7 @@
           <div class="col-md-6">
             <div class="box box-info  project-conversations-section">
               <div class="box-header with-border">
-                <h3 class="box-title">{{t "views.app.project.detail.conversations"}}</h3>
+                <h3 class="box-title">{{t "views.app.project.detail.latestConversations"}}</h3>
 
                 <div class="box-tools pull-right">
                 </div>
@@ -84,16 +84,22 @@
               </div>
               {{!-- /.box-header --}}
               <div class="box-body no-padding">
-                <ul class="project-conversations show-5">
-                  {{#each this.model.conversations as |conversation|}}
-                    <li>
-                      <div class="user-block">
-                        <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
-                        <LinkTo @route="app.project.conversation" @query={{hash c_id=conversation.id}}><span class="subject">{{conversation.subject}}</span></LinkTo>
-                        <span class="description">{{translate-comment conversation.description}}</span>
-                      </div>
-                    </li>
-                  {{/each}}
+                <ul class="project-conversations show-5" {{initialize-slimscroll width='5'}}>
+                  {{#if this.model.conversations}}
+                    {{#each this.model.conversations as |conversation|}}
+                      <li>
+                        <div class="user-block">
+                          <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
+                          <LinkTo @route="app.project.conversation" @query={{hash c_id=conversation.id}}><span class="subject">{{conversation.subject}}</span></LinkTo>
+                          <span class="description">{{translate-comment conversation.description}}</span>
+                        </div>
+                      </li>
+                    {{/each}}
+                  {{else}}
+                    <Exceptions::NothingFound
+                      @description={{t "views.app.project.detail.noLatestConversations"}}
+                    />
+                  {{/if}}
                 </ul>
                 {{!-- /.users-list --}}
               </div>
@@ -121,19 +127,25 @@
               </div>
               {{!-- /.box-header --}}
               <div class="box-body no-padding">
-                <ul class="open-issues show-5 clearfix">
-                  {{#each this.issuetime as |issue|}}
-                    <li>
-                      <div class="issue-block">
-                        <div class="priority"><AppUi::PriorityIcon @priority={{issue.priority}}/></div>
-                        <div class="data-block">
-                          <span class="subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "navigateToIssuePage" issue.issueNumber}}>{{issue.issueNumber}}</LinkTo> - {{issue.subject}}</span>
-                          <span class="description">{{translate-comment issue.description}}</span>
-                          <strong>{{t "views.app.issue.status"}}:</strong> <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+                <ul class="open-issues show-5 clearfix" {{initialize-slimscroll width='5'}}>
+                  {{#if this.issuetime}}
+                    {{#each this.issuetime as |issue|}}
+                      <li>
+                        <div class="issue-block">
+                          <div class="priority"><AppUi::PriorityIcon @priority={{issue.priority}}/></div>
+                          <div class="data-block">
+                            <span class="subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "navigateToIssuePage" issue.issueNumber}}>{{issue.issueNumber}}</LinkTo> - {{issue.subject}}</span>
+                            <span class="description">{{translate-comment issue.description}}</span>
+                            <strong>{{t "views.app.issue.status"}}:</strong> <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  {{/each}}
+                      </li>
+                    {{/each}}
+                  {{else}}
+                    <Exceptions::NothingFound
+                      @description={{t "views.app.project.detail.noLatestIssues"}}
+                    />
+                  {{/if}}
                 </ul>
                 {{!-- /.users-list --}}
               </div>
