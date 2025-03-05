@@ -185,29 +185,4 @@ export default class ApplicationHeaderComponent extends AppComponent {
     signIn() {
 
     }
-
-    /**
-     * This function is used to route to a given module by providing the proper context to the route. If context is required by the route
-     * and projectId is not provided, it will show an error message.
-     * 
-     * @param {String} moduleName 
-     * @param {String} projectId 
-     * @param {Boolean} contextRequired 
-     */
-    @action routeToModule(moduleName, routePath, projectShortCode, contextRequired = false) {
-        let _self = this;
-
-        if (contextRequired && projectShortCode) {
-            this.router.transitionTo(routePath, { shortcode: projectShortCode });
-        }
-        else if (!contextRequired) {
-            this.router.transitionTo(routePath);
-        } else {
-            new Messenger().post({
-                message: _self.intl.t(`views.app.selectProject`),
-                type: 'error',
-                showCloseButton: true
-            });
-        }
-    }
 }
