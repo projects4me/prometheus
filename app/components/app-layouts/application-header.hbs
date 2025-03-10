@@ -25,23 +25,13 @@
   </div>
 
     {{!-- Create Modules e.g. Project,Issue,Conversation (START) --}}
-    <div class="btn-group create-modules" data-project-id={{this.trackedProject.id}}>
-
-      {{!-- Create Project --}}
-      
-      <AppUi::Button type="button" class="btn btn-default btn-sm" @onClick={{fn this.routeToModule 'project' 'app.projects.create'}} @aclContext="App.Project.Create">
-        <i class="fa fa-briefcase"></i> <span>{{t "views.app.createProject"}}</span>
-      </AppUi::Button>
-
-      {{!-- Create Issue --}}
-      <AppUi::Button type="button" class="btn btn-default btn-sm" @onClick={{fn this.routeToModule 'issue' 'app.project.issue.create' this.trackedProject.shortCode true}} @aclContext="App.Project.Issue.Create">
-        <i class="fa fa-tasks"></i> <span>{{t "views.app.createIssue"}}</span>
-      </AppUi::Button>
-
-      {{!-- Create Conversation --}}
-      <AppUi::Button type="button" class="btn btn-default btn-sm" @onClick={{fn this.routeToModule 'conversation' 'app.project.conversation' this.trackedProject.shortCode true}} @aclContext="App.Project.Conversation.Create">
-        <i class="fa fa-comments"></i> <span>{{t "views.app.createConversation"}}</span>
-      </AppUi::Button>
+    <div class="create-modules">
+      <button class="create-module-btn"><i class="fa fa-plus"></i></button>
+      <div class="create-module-dropdown-content">
+        <a href="/app/project/{{this.trackedProject.shortCode}}/issue/create" class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.issue"}}</a>
+        <a href="/app/project/{{this.trackedProject.shortCode}}/conversation/create" class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.conversation"}}</a>
+        <a href="/app/project/create">{{t "global.module.singular.project"}}</a>
+      </div>
     </div>
     {{!-- Create Modules e.g. Project,Issue,Conversation (END) --}}
 
