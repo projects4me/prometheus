@@ -1,0 +1,38 @@
+<AccessControl @aclContext={{@aclContext}}>
+  <div data-field={{@data-field}} class="form-field ember-view">
+    <div class="input-group multiselect-input">
+      <PowerSelectMultiple
+        @class="form-control"
+        @options={{@options}}
+        @placeholder={{@placeholder}}
+        @selected={{@selected}}
+        @searchField={{@searchField}}
+        @searchEnabled={{@searchEnabled}}
+        @search={{@search}}
+        @onChange={{@onchange}}
+        @matcher={{@matcher}}
+        @closeOnSelect={{@closeOnSelect}}
+        @onFocus={{fn (mut this.shouldValidate) true}}
+        @onBlur={{this.validate}}
+        @onClose={{this.validate}} as |data|>
+        <span data-multi-select-value={{data}}>{{data}}</span>
+      </PowerSelectMultiple>
+    </div>
+    <span class="highlight"></span>
+    <span class="bar"></span>
+
+    <FormFields::Label
+      @label={{@label}}
+      @showFieldInfo={{@showFieldInfo}}
+      @info={{@info}}
+      @data-field={{@data-field}}
+      @required={{@required}}
+    />
+
+    {{#if (and @message this.shouldValidate)}}
+      <span class="error text-red" id={{@data-field}}>
+        {{@message}}
+      </span>
+    {{/if}}
+  </div>
+</AccessControl>

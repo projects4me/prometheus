@@ -9,6 +9,8 @@ import queryParser from "prometheus/utils/query/parser";
 import $ from 'jquery';
 import { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import ENV from 'prometheus/config/environment';
 
 /**
  * This controller provides the base
@@ -99,6 +101,16 @@ export default class PrometheusListController extends PrometheusController {
     saveSearchDialog = false;
 
     /**
+     * This is the flag which is used to the display the export data dialog.
+     * 
+     * @property exportDialog
+     * @for List
+     * @type boolean
+     * @public
+     */
+    @tracked exportDialog = false;
+
+    /**
      * The empty saved search object that we utilize for saving searches
      *
      * @property savedsearch
@@ -107,6 +119,36 @@ export default class PrometheusListController extends PrometheusController {
      * @public
      */
     savedsearch = null;
+
+    /**
+     * This property stores the ids of the selected items in the list view.
+     *
+     * @property selectedIds
+     * @for List
+     * @type Array
+     * @public
+     */
+    @tracked selectedIds = [];
+
+    /**
+     * Selected relationships will be exported along with the model data.
+     * 
+     * @property exportRelationships
+     * @for List
+     * @type Array
+     * @public
+     */
+    @tracked exportRelationships = [];
+
+    /**
+     * This property tracks whether all items are selected or not.
+     *
+     * @property isAllSelected
+     * @for List
+     * @type Boolean
+     * @private
+     */
+    @tracked isAllSelected = false;
 
     /**
      * The project controller
@@ -263,10 +305,22 @@ export default class PrometheusListController extends PrometheusController {
      */
     @action selectAll(evt) {
         let isChecked = evt.target.checked;
+        let _self = this;
         Logger.debug('Prometheus.Controllers.List::selectAll');
+
+        if(!isChecked) {
+            this.selectedIds = [];
+            this.isAllSelected = false;
+        }
+
         // Select all the checkboxes in the list view
         _.each($('.list-view input[type=checkbox]').not('[data-select=all], [data-input-type=switch]'), function (element) {
             element.checked = isChecked;
+
+            if(isChecked) {
+                _self.selectedIds.push(element.dataset.select);
+                _self.isAllSelected = true;
+            }
         });
 
         _.each($('.list-view [data-select=all]'), function (element) {
@@ -288,7 +342,9 @@ export default class PrometheusListController extends PrometheusController {
      *@public
      */
     @action select(evt) {
-        let isChecked = evt.target.checked
+        let isChecked = evt.target.checked;
+        let id = evt.target.dataset.select;
+
         Logger.debug('Prometheus.Controllers.List::select');
         // Select/Deselect one checkboxes in the list view
         this.set('selectedCount', $('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
@@ -298,14 +354,18 @@ export default class PrometheusListController extends PrometheusController {
             let selectAll = $('[data-select=all]').prop('checked');
             if (selectAll) {
                 $('[data-select=all]').prop('checked', false);
+                this.isAllSelected = false;
             }
+            this.selectedIds = this.selectedIds.filter((item) => item !== id);
         }
         // If all the items in the list were selected then check the select all checkbox as well
         else {
             // if checked boxes are equal to total boxes then enable check all box
             if ($('.list-view input[type=checkbox]:checked').not('[data-select=all], [data-input-type=switch]').length === $('.list-view input[type=checkbox]').not('[data-select=all], [data-input-type=switch]').length) {
                 $('[data-select=all]').prop('checked', true);
+                this.isAllSelected = true;
             }
+            this.selectedIds.push(id);
         }
         Logger.debug('-Prometheus.Controllers.List::select');
     }
@@ -363,5 +423,138 @@ export default class PrometheusListController extends PrometheusController {
         this.set('saveSearchDialog', false);
         $('.modal').modal('hide');
         Logger.debug('-Prometheus.Controllers.List::removeSaveSearchDialog');
+    }
+
+    /**
+     * This function checks if there are any selected items or if a search query is required
+     * before displaying the export dialog. If no items are selected or a search query is required,
+     * it displays an error message using the Messenger class.
+     * 
+     * @method showExportDialog
+     * @returns {void}
+     */
+    @action showExportDialog() {
+        Logger.debug('Prometheus.Controllers.List::showExportDialog');
+        let moduleName = this.model.modelName;
+
+        if(_.isEmpty(this.selectedIds)) {
+            let message = this.intl.t('views.app.module.list.export.noItemsSelected', {moduleName: moduleName});
+            new Messenger().post({
+                message: message,
+                type: 'error',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        if(this.isAllSelected && _.isEmpty(this.query)) {
+            let message = this.intl.t('views.app.module.list.export.searchQueryRequired', {
+                moduleName: moduleName
+            });
+            new Messenger().post({
+                message: message,
+                type: 'error',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        this.exportDialog = true;
+        Logger.debug('-Prometheus.Controllers.List::showExportDialog');
+    }
+
+    /**
+     * This function hides the modal dialog, resets the export dialog state,
+     * and clears the export relationships array.
+     * 
+     * @method removeExportDialog
+     * @public 
+     */
+    @action removeExportDialog() {
+        Logger.debug('Prometheus.Controllers.List::removeExportDialog');
+        this.exportDialog = false;
+        $('.modal').modal('hide');
+        this.exportRelationships = [];
+        Logger.debug('-Prometheus.Controllers.List::removeExportDialog');
+    }
+
+    /**
+     * Exports modules by making an API call to fetch the data and then triggers a download.
+     * 
+     * @async
+     * @function exportModules
+     * @param {string} moduleName - The name of the module to export.
+     * @returns {Promise<void>} - A promise that resolves when the export is complete.
+     * @memberof PrometheusController
+     * @instance
+     */
+    @action 
+    async exportModules() {
+        let _self = this;
+        let moduleName = this.model.modelName;
+
+        const options  = _self.prepareOptionsForExport();
+        const URL = `${ENV.api.host}/api/v${ENV.api.version}/${moduleName}?${$.param(options)}`;
+        const moduleTranslated = this.intl.t(`global.module.plural.${moduleName.toLowerCase()}`);
+
+        const messenger = new Messenger().post({
+            message: this.intl.t('views.app.module.list.export.exporting', {moduleName: moduleTranslated}),
+            type: 'success',
+            showCloseButton: true
+        });
+
+        let response = await fetch(URL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${_self.session.data.authenticated.access_token}`
+            }
+        });
+
+        if(response.ok) {
+            let data = await response.json();
+            let downloadUrl = `${ENV.api.host}${data.download_url}`;
+            let link = document.createElement('a');
+            link.href = downloadUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            this.removeExportDialog();
+
+            messenger.update({
+                message: this.intl.t('views.app.module.list.export.exported', {moduleName: moduleTranslated}),
+                type: 'success',
+                showCloseButton: true
+            });
+        }
+    }
+
+    /**
+     * Prepares the options object for exporting data.
+     *
+     * @method prepareOptionsForExport
+     * @returns {Object} The options object with export settings.
+     */
+    prepareOptionsForExport() {
+        Logger.debug('Prometheus.Controllers.List::prepareOptionsForExport');
+        let ids = this.selectedIds.join(',');
+        let options = {
+            ids: ids,
+            projectId: this.trackedProject.id,
+            export: true,
+            limit: -1
+        };
+
+        if(!_.isEmpty(this.exportRelationships)) {
+            options.rels = this.exportRelationships.join(',');
+        }
+
+        if(this.isAllSelected) {
+            options.query = this.query;
+            options.selectAll = true;
+        }
+
+        return options;
+        Logger.debug('-Prometheus.Controllers.List::prepareOptionsForExport');
     }
 }
