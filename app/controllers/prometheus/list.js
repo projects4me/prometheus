@@ -500,30 +500,45 @@ export default class PrometheusListController extends PrometheusController {
         const messenger = new Messenger().post({
             message: this.intl.t('views.app.module.list.export.exporting', {moduleName: moduleTranslated}),
             type: 'success',
-            showCloseButton: true
+            showCloseButton: false,
+            hideAfter: false
         });
 
-        let response = await fetch(URL, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${_self.session.data.authenticated.access_token}`
+        try {
+            let response = await fetch(URL, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${_self.session.data.authenticated.access_token}`
+                }
+            });
+
+            if(response.ok) {
+                let data = await response.json();
+                let downloadUrl = `${ENV.api.host}${data.download_url}`;
+                let link = document.createElement('a');
+                link.href = downloadUrl;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                this.removeExportDialog();
+
+                messenger.update({
+                    message: this.intl.t('views.app.module.list.export.exported', {moduleName: moduleTranslated}),
+                    type: 'success',
+                    showCloseButton: true
+                });
+            } else {
+                messenger.update({
+                    message: this.intl.t('views.app.module.list.export.error', {moduleName: moduleTranslated}),
+                    type: 'error',
+                    showCloseButton: true
+                });
             }
-        });
-
-        if(response.ok) {
-            let data = await response.json();
-            let downloadUrl = `${ENV.api.host}${data.download_url}`;
-            let link = document.createElement('a');
-            link.href = downloadUrl;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            this.removeExportDialog();
-
+        } catch (error) {
             messenger.update({
-                message: this.intl.t('views.app.module.list.export.exported', {moduleName: moduleTranslated}),
-                type: 'success',
+                message: this.intl.t('views.app.module.list.export.error', {moduleName: moduleTranslated}),
+                type: 'error',
                 showCloseButton: true
             });
         }

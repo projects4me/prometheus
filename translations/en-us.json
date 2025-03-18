@@ -344,7 +344,8 @@
             "searchQueryRequired": "Search query is required to export the {moduleName}",
             "noItemsSelected": "No {moduleName} selected for export",
             "exporting": "Exporting <strong>{moduleName}</strong> ..",
-            "exported": "<strong>{moduleName}</strong> exported successfully"
+            "exported": "<strong>{moduleName}</strong> exported successfully",
+            "error": "An error occurred while exporting the {moduleName}. Please try again."
           }
         }
       },
