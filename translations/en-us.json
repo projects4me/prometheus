@@ -73,6 +73,7 @@
       "delete": "Delete",
       "remove": "Remove",
       "search": "Search",
+      "export": "Export",
       "searchPlaceholder": "Search ...",
       "loading": "Loading ...",
       "clear": "Clear",
@@ -333,6 +334,20 @@
       "createNewProjectDescription": "No projects are found, please create one by clicking on the button below",
       "contactAdminForProject": "No projects are found, to create one please contact administrator",
       "welcome": "Welcome to <b>Projects</b>4<b>Me</b>",
+      "module": {
+        "list": {
+          "export": {
+            "selectRelationship": {
+              "label": "Please select relationships you want to export along with the selected {moduleName}",
+              "placeholder": "select relationships.."
+            },
+            "searchQueryRequired": "Search query is required to export the {moduleName}",
+            "noItemsSelected": "No {moduleName} selected for export",
+            "exporting": "Exporting <strong>{moduleName}</strong> ..",
+            "exported": "<strong>{moduleName}</strong> exported successfully"
+          }
+        }
+      },
       "project": {
         "label": "Project",
         "noproject": "No project selected",

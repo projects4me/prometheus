@@ -126,6 +126,7 @@
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></AppUi::Button>
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.massupdate"}}" @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.discuss"}}"><i class="fa fa-comments-o"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.export"}}" @onClick={{this.showExportDialog}}><i class="fa fa-download"></i></AppUi::Button>
           </div>
           <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" @onClick={{this.reloadPage}}><i class="fa fa-refresh"></i></AppUi::Button>
           <div class="pull-right">
@@ -224,5 +225,27 @@
     </div>
     {{!-- /. box --}}
   </div>
+
+    {{!-- Modals --}}
+  {{#if this.exportDialog}}
+    {{#bootstrap-modal
+        title="global.form.export"
+        confirmLabel="global.form.export"
+        closeLabel="global.form.cancel"
+        confirm=(action "exportModules")
+        close=(action "removeExportDialog")}}
+        
+        <div class="form-group">
+          <FormFields::FieldMultiSelect
+            @options={{get-relationships "issue" this.store}}
+            @placeholder={{t "views.app.module.list.export.selectRelationship.placeholder"}}
+            @selected={{this.exportRelationships}}
+            @onchange={{fn (mut this.exportRelationships)}}
+            @label={{t "views.app.module.list.export.selectRelationship.label" moduleName=(lowercase (t "global.module.plural.issue"))}}
+            @aclContext="App.Project.Export.Relationships"
+          />
+        </div>
+    {{/bootstrap-modal}}
+  {{/if}}
   {{!-- /.col --}}
 </div>
