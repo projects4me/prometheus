@@ -496,6 +496,8 @@ export default class PrometheusListController extends PrometheusController {
         const options  = _self.prepareOptionsForExport();
         const URL = `${ENV.api.host}/api/v${ENV.api.version}/${moduleName}?${$.param(options)}`;
         const moduleTranslated = this.intl.t(`global.module.plural.${moduleName.toLowerCase()}`);
+        const messageDuration = 3; //seconds in which messenger notification will hide
+
 
         const messenger = new Messenger().post({
             message: this.intl.t('views.app.module.list.export.exporting', {moduleName: moduleTranslated}),
@@ -526,20 +528,23 @@ export default class PrometheusListController extends PrometheusController {
                 messenger.update({
                     message: this.intl.t('views.app.module.list.export.exported', {moduleName: moduleTranslated}),
                     type: 'success',
-                    showCloseButton: true
+                    showCloseButton: true,
+                    hideAfter: messageDuration*2
                 });
             } else {
                 messenger.update({
                     message: this.intl.t('views.app.module.list.export.error', {moduleName: moduleTranslated}),
                     type: 'error',
-                    showCloseButton: true
+                    showCloseButton: true,
+                    hideAfter: messageDuration
                 });
             }
         } catch (error) {
             messenger.update({
                 message: this.intl.t('views.app.module.list.export.error', {moduleName: moduleTranslated}),
                 type: 'error',
-                showCloseButton: true
+                showCloseButton: true,
+                hideAfter: messageDuration
             });
         }
     }
