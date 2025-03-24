@@ -64,9 +64,13 @@ export default Route.extend({
         let route = '';
         let currentUrl = getCurrentUrl(this.router);
 
+        // Create URL object
+        let url = new URL(currentUrl, window.location.origin);
+        let routeName = url.pathname?.split('/')[1];
+
         // If public route then no need to check for authentication
         let publicRoutes = ENV.publicRoutes;
-        if (publicRoutes.includes(currentUrl.substring(1))) {
+        if (publicRoutes.includes(routeName)) {
             return;
         }
 
