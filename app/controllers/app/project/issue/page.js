@@ -5,6 +5,7 @@
 import PrometheusController from "prometheus/controllers/prometheus";
 import { task } from 'ember-concurrency';
 import { inject as controller } from '@ember/controller';
+import { inject as service } from '@ember/service';
 import { set } from '@ember/object';
 import $ from 'jquery';
 import { computed, action } from '@ember/object';
@@ -86,6 +87,16 @@ export default class AppProjectIssuePageController extends PrometheusController.
      * @private
      */
     editingLog = null;
+
+    /**
+     * PubSub service is used to provide DDAD.
+     *
+     * @property pubSub
+     * @type Ember.Service
+     * @for AppProjectIssuePageController
+     * @protected
+     */
+    @service pubSub;    
 
     /**
      * We are pre-loading the project issues and the users in the
@@ -203,7 +214,7 @@ export default class AppProjectIssuePageController extends PrometheusController.
 
         comment.save().then(function (savedComment) {
             issue.get('comments').pushObject(savedComment);
-            _self.trigger('clearContents');
+            _self.pubSub.trigger('clearContents');
         });
 
         Logger.debug('-Prometheus.Controllers.App.Project.Issue.Page::_createComment');
