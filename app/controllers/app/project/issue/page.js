@@ -141,16 +141,6 @@ export default class AppProjectIssuePageController extends PrometheusController.
     }
 
     /**
-     * The comments from the comment box
-     *
-     * @property comment
-     * @type Array
-     * @for Page
-     * @public
-     */
-    comment = null;
-
-    /**
      * This is a task to handle file uploading
      *
      * @param handleUpload
@@ -200,6 +190,7 @@ export default class AppProjectIssuePageController extends PrometheusController.
      *
      * @param issue
      * @param comment
+     * @return {Promise}
      * @private
      */
     _createComment(issue, content) {
@@ -212,12 +203,12 @@ export default class AppProjectIssuePageController extends PrometheusController.
             comment: content,
         });
 
-        comment.save().then(function (savedComment) {
+        Logger.debug('-Prometheus.Controllers.App.Project.Issue.Page::_createComment');
+
+        return comment.save().then(function (savedComment) {
             issue.get('comments').pushObject(savedComment);
             _self.pubSub.trigger('clearContents');
         });
-
-        Logger.debug('-Prometheus.Controllers.App.Project.Issue.Page::_createComment');
     }
 
     /**
@@ -585,6 +576,17 @@ export default class AppProjectIssuePageController extends PrometheusController.
         Logger.debug('-App.Project.Issue.PageController->logTime');
     }
 
+    /**
+     * This action is used to save a comment for a given issue. If the issue does not have an associated
+     * conversation room, a new conversation room is created first. Once the conversation room is available,
+     * the comment is created and saved.
+     *
+     * @method saveComment
+     * @param {Prometheus.Models.Issue} issue - The issue object for which the comment is being saved.
+     * @param {Prometheus.Models.Comment} comment - The content of the comment to be saved.
+     * @return {Promise} - A promise that resolves when the comment is successfully saved.
+     * @public
+     */    
     @action saveComment(issue, comment) {
         Logger.debug('Prometheus.Controller.App.Project.Issue.Page::saveComment');
 
@@ -604,19 +606,15 @@ export default class AppProjectIssuePageController extends PrometheusController.
                 projectName: issue.get('project.name'),
                 issueId: issue.get('id')
             });
-            Logger.debug(newConversation);
-            // Save it
-            newConversation.save().then(function (conversation) {
+            Logger.debug('-Prometheus.Controller.App.Project.Issue.Page::saveComment');
+            return newConversation.save().then(function (conversation) {
                 issue.set('conversationRoomId', conversation.get('id'))
-                _self._createComment(issue, comment);
-                _self.set('comment', null);
+               return _self._createComment(issue, comment);
             });
         } else {
-            _self._createComment(issue, comment);
-            _self.set('comment', null);
+            Logger.debug('-Prometheus.Controller.App.Project.Issue.Page::saveComment');
+            return _self._createComment(issue, comment);
         }
-
-        Logger.debug('-Prometheus.Controller.App.Project.Issue.Page::saveComment');
     }
 
     /**

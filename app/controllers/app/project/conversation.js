@@ -188,7 +188,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
 
 
     /**
-     * This function is ued to save a calendar event
+     * This function is used to create a comment on the conversation.
      *
      * @method save
      * @param {String} relatedId
@@ -208,7 +208,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             comment: contents,
         });
 
-        comment.save().then(function (comment) {
+        return comment.save().then(function (comment) {
             let count = _self.model.get('length');
             while (count > 0) {
                 count--;
