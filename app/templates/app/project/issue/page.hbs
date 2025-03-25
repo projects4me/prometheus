@@ -108,7 +108,7 @@
                       <div class="comment-text">
                         <span class="username">
                           <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
-                          <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
+                          <span class="text-muted pull-right">{{format-date date=comment.dateModified format="MMM Do 'YY, h:mm a" localTime=true}}</span>
                         </span>
                         {{translate-comment comment.comment}}
                       </div>

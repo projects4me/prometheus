@@ -8,6 +8,7 @@ import ObjectProxy from '@ember/object/proxy';
 export default class CurrentUserStub extends Service {
     user = ObjectProxy.create({
         name: "Rana Nouman",
-        createdDate: "Feb-01-2022"
+        dateCreated: "Feb-01-2022",
+        timezone: "Asia/Karachi"
     });
 }
