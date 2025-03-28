@@ -33,7 +33,7 @@
           {{/if}}
         </span>
         <div class="box-tools pull-right">
-          <span class="modified-by">{{t "global.form.modified" user=this.model.modifiedUserName date=(get-date this.model 'dateModified' 'MMM Do \'YY, h:mm a')}}</span>
+          <span class="modified-by">{{t "global.form.modified" user=this.model.modifiedUserName date=(format-date date=this.model.dateModified format='MMM Do \'YY, h:mm a')}}</span>
         </div>
 
       </div>

@@ -79,7 +79,7 @@
 
             <p>
               {{this.currentUser.user.name}} - {{this.currentUser.user.title}}
-              <small>{{t "views.app.member"}}{{get-date this.currentUser.user 'createdDate' 'MMM YYYY'}}</small>
+              <small>{{t "views.app.member"}}{{format-date date=this.currentUser.user.dateCreated format='MMM YYYY'}}</small>
             </p>
           </li>
           {{!-- Menu Footer--}}
