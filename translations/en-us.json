@@ -69,6 +69,8 @@
       "discuss": "Discuss",
       "create": "Create",
       "cancel": "Cancel",
+      "yes": "Yes",
+      "no": "No",
       "close": "Close",
       "delete": "Delete",
       "remove": "Remove",
@@ -334,6 +336,14 @@
       "createNewProjectDescription": "No projects are found, please create one by clicking on the button below",
       "contactAdminForProject": "No projects are found, to create one please contact administrator",
       "welcome": "Welcome to <b>Projects</b>4<b>Me</b>",
+      "timezone": {
+        "change": {
+          "prompt": "We've detected that your timezone has changed. Would you like to update your timezone of your profile?",
+          "updating": "Updating your timezone...",
+          "success": "Your timezone has been successfully updated",
+          "error": "Sorry, there was a problem updating your timezone. Please try again later."
+        }
+      },
       "module": {
         "list": {
           "export": {
