@@ -185,4 +185,75 @@ export default class AppController extends PrometheusController {
         Logger.debug(message);
         Logger.debug('-Prometheus.Controllers.App::newMessage');
     }
+
+    /**
+     * This function detects if the user's timezone has changed from their stored timezone.
+     * If a change is detected, it prompts the user to update their timezone through a modal.
+     *
+     * @method detectTimezoneChange
+     * @protected
+     */
+    detectTimezoneChange() {
+        Logger.debug('Prometheus.Controllers.AppLoadingAssets::detectTimezoneChange');
+        let userTimezone = this.currentUser.user.timezone;
+        let currentTimezone = moment.tz.guess(true);
+        if (userTimezone !== currentTimezone) {
+            this.showTimezoneChangeNotification(currentTimezone);
+        }
+        Logger.debug('-Prometheus.Controllers.AppLoadingAssets::detectTimezoneChange');
+    }
+
+    /**
+     * This function displays a modal asking the user if they want to update their timezone.
+     * If confirmed, updates the user's timezone and saves it to the backend.
+     * Shows appropriate success/error messages to the user.
+     *
+     * @method showTimezoneChangeNotification
+     * @param {String} currentTimezone The detected timezone to update to
+     * @protected
+     */
+    showTimezoneChangeNotification(currentTimezone) {
+        Logger.debug('Prometheus.Controllers.AppLoadingAssets::showTimezoneChangeNotification');
+        let _self = this;
+        new Messenger().post({
+            message: _self.intl.t('views.app.timezone.change.prompt'),
+            type: "info",
+            showCloseButton: true,
+            hideAfter: false,
+            actions: {
+                confirm: {
+                    label: _self.intl.t('global.form.yes'),
+                    action: async function() {
+                        let user = _self.currentUser.user;
+                        user.timezone = currentTimezone;
+                        try {
+                            this.update({
+                                message: _self.intl.t('views.app.timezone.change.updating'),
+                                actions: null
+                            });
+                            await user.save();
+                            this.update({
+                                message: _self.intl.t('views.app.timezone.change.success'),
+                                hideAfter: 5
+                            });
+                        } catch (error) {
+                            Logger.error('Error updating user timezone:', error);
+                            this.update({
+                                message: _self.intl.t('views.app.timezone.change.error'),
+                                type: "error",
+                                hideAfter: 5
+                            });
+                        }
+                    }
+                },
+                cancel: {
+                    label: _self.intl.t('global.form.no'),
+                    action: function() {
+                        this.hide();
+                    }
+                }
+            }
+        });
+        Logger.debug('-Prometheus.Controllers.AppLoadingAssets::showTimezoneChangeNotification');
+    }
 }

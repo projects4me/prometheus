@@ -178,9 +178,12 @@ export default Route.extend({
         Logger.debug('Prometheus.App.Route::setupController()');
 
         let loadingAssetsController = this.controllerFor('app.loading-assets');
-        controller.set('roles', loadingAssetsController.get('roles'));
-        controller.set('users', loadingAssetsController.get('users'));
-        controller.set('projects', loadingAssetsController.get('projects'));
+        if(loadingAssetsController.get('dataLoaded')) {
+            controller.set('roles', loadingAssetsController.get('roles'));
+            controller.set('users', loadingAssetsController.get('users'));
+            controller.set('projects', loadingAssetsController.get('projects'));
+            controller.detectTimezoneChange();
+        }
 
         Logger.debug('-Prometheus.App.Route::setupController()');
     },
