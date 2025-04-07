@@ -252,12 +252,13 @@
                 close=(action "removeExportDialog")}}
                 
                 <div class="form-group">
-                  <FormFields::FieldMultiSelect
+                  <FormFields::FieldRelateMulti
                     @options={{get-relationships "project" this.store}}
                     @placeholder={{t "views.app.module.list.export.selectRelationship.placeholder"}}
                     @selected={{this.exportRelationships}}
-                    @onchange={{fn (mut this.exportRelationships)}}
+                    @onchange={{fn this.selectStatic this 'exportRelationships'}}
                     @label={{t "views.app.module.list.export.selectRelationship.label" moduleName=(lowercase (t "global.module.plural.project"))}}
+                    @relateType="relate-simple"
                     @aclContext="App.Project.Export.Relationships"
                   />
                 </div>
