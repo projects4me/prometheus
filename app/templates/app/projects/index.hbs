@@ -20,8 +20,6 @@
 <section class="content">
   <div class="row module projects project">
     <div class="col-md-2">
-      <a href="javascript:void(0);"  {{action "createProject"}}  class="btn btn-primary btn-block margin-bottom"><i class="fa fa-plus"></i> {{t "global.form.create"}} {{t "global.module.singular.project"}}</a>
-      
       <AccessControl @aclContext="App.Project.List.SavedSearches.Read">
         <div class="box box-solid">
           <div class="box-header with-border">
