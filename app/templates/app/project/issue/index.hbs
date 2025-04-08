@@ -151,7 +151,6 @@
 
         <div class="table-responsive issue-list">
           <table class="table table-hover table-striped">
-
             <thead>
               <tr>
                 <th></th>
@@ -167,21 +166,31 @@
             </thead>
 
             <tbody>
-              {{#each this.model as |issue|}}
-                <tr class="issue">
-                  <td class="select-box">
-                    <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{issue.id}} @aclContext="App.Project.Issue.List.SelectIssue"/>
-                  </td>
-                  <td class="issue-number"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.issueNumber}}</LinkTo></td>
-                  <td class="issue-subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.subject}}</LinkTo></td>
-                  <td class="issue-type">{{issue.issuetype.name}}</td>
-                  <td class="issue-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></td>
-                  <td class="issue-priority"><AppUi::PriorityIcon @priority = {{readonly issue.priority}}/> {{t (concat "views.app.issue.lists.priority." issue.priority)}}</td>
-                  <td class="issue-milestone"><a href="#">{{issue.issuemilestone.name}}</a></td>
-                  <td class="issue-start">{{moment-format issue.startDate 'DD/MMM/YY'}}</td>
-                  <td class="issue-end">{{moment-format issue.endDate 'DD/MMM/YY'}}</td>
-                </tr>
-              {{/each}}
+              {{#if 0}}
+                {{#each this.model as |issue|}}
+                  <tr class="issue">
+                    <td class="select-box">
+                      <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{issue.id}} @aclContext="App.Project.Issue.List.SelectIssue"/>
+                    </td>
+                    <td class="issue-number"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.issueNumber}}</LinkTo></td>
+                    <td class="issue-subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.subject}}</LinkTo></td>
+                    <td class="issue-type">{{issue.issuetype.name}}</td>
+                    <td class="issue-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></td>
+                    <td class="issue-priority"><AppUi::PriorityIcon @priority = {{readonly issue.priority}}/> {{t (concat "views.app.issue.lists.priority." issue.priority)}}</td>
+                    <td class="issue-milestone"><a href="#">{{issue.issuemilestone.name}}</a></td>
+                    <td class="issue-start">{{moment-format issue.startDate 'DD/MMM/YY'}}</td>
+                    <td class="issue-end">{{moment-format issue.endDate 'DD/MMM/YY'}}</td>
+                  </tr>
+                {{/each}}
+              {{else}}
+              <tr>
+                <td colspan="100%">
+                  <Exceptions::NothingFound 
+                    @description={{t "views.app.user.page.latestIssues.noIssues"}}
+                  />
+                </td>
+              </tr>
+              {{/if}}
             </tbody>
           </table>
           {{!-- /.table --}}
