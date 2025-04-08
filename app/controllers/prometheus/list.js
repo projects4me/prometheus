@@ -566,7 +566,8 @@ export default class PrometheusListController extends PrometheusController {
         };
 
         if(!_.isEmpty(this.exportRelationships)) {
-            options.rels = this.exportRelationships.join(',');
+            let rels = this.exportRelationships.map(relationship => relationship.value).join(',');
+            options.rels = rels;
         }
 
         if(this.isAllSelected) {
@@ -574,7 +575,7 @@ export default class PrometheusListController extends PrometheusController {
             options.selectAll = true;
         }
 
-        return options;
         Logger.debug('-Prometheus.Controllers.List::prepareOptionsForExport');
+        return options;
     }
 }
