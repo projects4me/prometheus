@@ -455,3 +455,15 @@ span[id="#"]{
 .pointer-none {
   pointer-events: none;
 }
+
+// jQuery query Builder custom styles
+.query-builder {
+  .rules-group-container {
+    .group-conditions {
+      .btn.btn-xs.btn-primary.active:not(.disabled) {
+        cursor: pointer;
+        box-shadow: 0 0 0.5rem 0.25rem $primaryColor;
+      }
+    }
+  }
+}
