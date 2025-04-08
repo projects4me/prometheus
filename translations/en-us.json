@@ -166,6 +166,43 @@
         "role": "Roles",
         "milestone": "Milestones",
         "file": "Files"
+      },
+      "project": {
+        "relationships": {
+          "owner": "Owner",
+          "createdBy": "Created By",
+          "modifiedBy": "Modified By",
+          "members": "Members",
+          "conversations": "Conversations",
+          "issues": "Issues",
+          "roles": "Roles",
+          "memberships": "Memberships",
+          "milestones": "Milestones",
+          "issuetypes": "Issue Types",
+          "issuestatuses": "Issue Statuses",
+          "activities": "Activities"
+        }
+      },
+      "issue": {
+        "relationships": {
+          "assignedTo": "Assigned To",
+          "createdBy": "Created By",
+          "modifiedBy": "Modified By",
+          "ownedBy": "Owned By",
+          "reportedBy": "Reported By",
+          "project": "Project",
+          "issuemilestone": "Milestone",
+          "parentissue": "Parent Issue",
+          "conversationroom": "Conversation Room",
+          "issuetype": "Issue Type",
+          "issuestatus": "Issue Status",
+          "estimated": "Estimated",
+          "spent": "Spent",
+          "childissues": "Child Issues",
+          "comments": "Comments",
+          "files": "Files",
+          "activities": "Activities"
+        }
       }
     }
   },
@@ -349,7 +386,7 @@
           "export": {
             "selectRelationship": {
               "label": "Please select relationships you want to export along with the selected {moduleName}",
-              "placeholder": "select relationships.."
+              "placeholder": "Select relationships.."
             },
             "searchQueryRequired": "Search query is required to export the {moduleName}",
             "noItemsSelected": "No {moduleName} selected for export",

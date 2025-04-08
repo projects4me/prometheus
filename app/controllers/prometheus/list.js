@@ -111,6 +111,16 @@ export default class PrometheusListController extends PrometheusController {
     @tracked exportDialog = false;
 
     /**
+     * The keydown event handler function for search queries
+     * 
+     * @property _searchRulesHandler
+     * @for List
+     * @type Function
+     * @private
+     */
+    _searchRulesHandler = null;
+
+    /**
      * The empty saved search object that we utilize for saving searches
      *
      * @property savedsearch
@@ -275,7 +285,18 @@ export default class PrometheusListController extends PrometheusController {
      */
     @action openFilters() {
         Logger.debug('Prometheus.Controllers.List::openFilters');
+        let filterEl = document.querySelector('.list-view-filters');
         $('.search [data-toggle=collapse]').click();
+        if (!this._searchRulesHandler && (filterEl.ariaExpanded === 'true')) {
+            this._searchRulesHandler = (e) => {
+                if(e.key === 'Enter') {
+                    let input = document.querySelector('.rule-value-container > input');
+                    input && input.blur();
+                    this.searchByRules();
+                }
+            };
+            document.addEventListener('keydown', this._searchRulesHandler);
+        }
         $('.search input').blur();
         Logger.debug('-Prometheus.Controllers.List::openFilters');
     }
@@ -289,6 +310,13 @@ export default class PrometheusListController extends PrometheusController {
     @action toggleFilters() {
         Logger.debug('Prometheus.Controllers.List::toggleFilters');
         $('#toggleFilters').toggleClass('dropToggle');
+        let filterEl = document.querySelector('.list-view-filters');
+        
+        if (filterEl.ariaExpanded === 'false') {
+            document.removeEventListener('keydown', this._searchRulesHandler);
+            this._searchRulesHandler = null;
+            Logger.debug('Prometheus.Controllers.List::toggleFilters - Event listener removed');
+        }
         Logger.debug('-Prometheus.Controllers.List::toggleFilters');
     }
 
@@ -566,7 +594,8 @@ export default class PrometheusListController extends PrometheusController {
         };
 
         if(!_.isEmpty(this.exportRelationships)) {
-            options.rels = this.exportRelationships.join(',');
+            let rels = this.exportRelationships.map(relationship => relationship.value).join(',');
+            options.rels = rels;
         }
 
         if(this.isAllSelected) {
@@ -574,7 +603,7 @@ export default class PrometheusListController extends PrometheusController {
             options.selectAll = true;
         }
 
-        return options;
         Logger.debug('-Prometheus.Controllers.List::prepareOptionsForExport');
+        return options;
     }
 }

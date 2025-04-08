@@ -20,8 +20,6 @@
 <section class="content">
   <div class="row module projects project">
     <div class="col-md-2">
-      <a href="javascript:void(0);"  {{action "createProject"}}  class="btn btn-primary btn-block margin-bottom"><i class="fa fa-plus"></i> {{t "global.form.create"}} {{t "global.module.singular.project"}}</a>
-      
       <AccessControl @aclContext="App.Project.List.SavedSearches.Read">
         <div class="box box-solid">
           <div class="box-header with-border">
@@ -146,7 +144,6 @@
                 <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContex="App.Project.List.SelectAllProjects"/>
               </span>            <div class="btn-group">
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.Project.Delete"><i class="fa fa-trash-o"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></AppUi::Button>
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.massupdate"}}" @aclContext="App.Project.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.discuss"}}"><i class="fa fa-comments-o"></i></AppUi::Button>
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.export"}}" @onClick={{this.showExportDialog}}><i class="fa fa-download"></i></AppUi::Button>
@@ -187,20 +184,30 @@
                 </thead>
 
                 <tbody>
-                  {{#each this.model as |project|}}
+                  {{#if this.model.length}}
+                    {{#each this.model as |project|}}
+                      <tr>
+                        <td>
+                          <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{project.id}} @aclContex="App.Project.List.SelectProject"/>
+                        </td>
+                        
+                        <td class="project-name"><LinkTo @route="app.project" @model={{project.shortCode}}>{{project.name}}</LinkTo></td>
+                        <td class="project-type">{{t (concat "views.app.project.lists.type." project.type)}}</td>
+                        <td class="project-owner"><LinkTo @route="app.user.page" @model={{project.owner.id}}>{{project.owner.name}}</LinkTo></td>
+                        <td class="project-description">{{html-safe project.description}}</td>
+                        <td class="project-status"><span class="badge {{project.status}}">{{t (concat "views.app.project.lists.status." project.status)}}</span></td>
+                        <td class="project-date">{{project.dateModified}}</td>
+                      </tr>
+                    {{/each}}
+                  {{else}}
                     <tr>
-                      <td>
-                        <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{project.id}} @aclContex="App.Project.List.SelectProject"/>
+                      <td colspan="100%">
+                        <Exceptions::NothingFound 
+                          @description={{t "views.app.user.page.latestProjects.noProject"}}
+                        />
                       </td>
-                      
-                      <td class="project-name"><LinkTo @route="app.project" @model={{project.shortCode}}>{{project.name}}</LinkTo></td>
-                      <td class="project-type">{{t (concat "views.app.project.lists.type." project.type)}}</td>
-                      <td class="project-owner"><LinkTo @route="app.user.page" @model={{project.owner.id}}>{{project.owner.name}}</LinkTo></td>
-                      <td class="project-description">{{html-safe project.description}}</td>
-                      <td class="project-status"><span class="badge {{project.status}}">{{t (concat "views.app.project.lists.status." project.status)}}</span></td>
-                      <td class="project-date">{{project.dateModified}}</td>
                     </tr>
-                  {{/each}}
+                  {{/if}}
                 </tbody>
               </table>
               {{!-- /.table --}}
@@ -216,9 +223,9 @@
               </span>
               <div class="btn-group">
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.Project.Delete"><i class="fa fa-trash-o"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></AppUi::Button>
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.massupdate"}}" @aclContext="App.Project.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.discuss"}}"><i class="fa fa-comments-o"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.export"}}" @onClick={{this.showExportDialog}}><i class="fa fa-download"></i></AppUi::Button>
               </div>
               <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" @onClick={{this.reloadPage}}><i class="fa fa-refresh"></i></AppUi::Button>
               <div class="pull-right">
@@ -252,13 +259,15 @@
                 close=(action "removeExportDialog")}}
                 
                 <div class="form-group">
-                  <FormFields::FieldMultiSelect
+                  <FormFields::FieldRelateMulti
                     @options={{get-relationships "project" this.store}}
                     @placeholder={{t "views.app.module.list.export.selectRelationship.placeholder"}}
                     @selected={{this.exportRelationships}}
-                    @onchange={{fn (mut this.exportRelationships)}}
+                    @onchange={{fn this.selectStatic this 'exportRelationships'}}
                     @label={{t "views.app.module.list.export.selectRelationship.label" moduleName=(lowercase (t "global.module.plural.project"))}}
+                    @relateType="relate-simple"
                     @aclContext="App.Project.Export.Relationships"
+                    @closeOnSelect={{false}}
                   />
                 </div>
             {{/bootstrap-modal}}
