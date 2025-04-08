@@ -243,6 +243,7 @@
             @onchange={{fn (mut this.exportRelationships)}}
             @label={{t "views.app.module.list.export.selectRelationship.label" moduleName=(lowercase (t "global.module.plural.issue"))}}
             @aclContext="App.Project.Export.Relationships"
+            @closeOnSelect={{false}}
           />
         </div>
     {{/bootstrap-modal}}
