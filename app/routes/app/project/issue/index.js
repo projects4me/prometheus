@@ -130,7 +130,7 @@ export default App.extend({
      * @method beforeModel
      * @protected
      */    
-    beforeModel() {
+    async beforeModel() {
         let _self = this;
         let projectId = this.trackedProject.getProjectId();
         let projectOptions = {
@@ -139,16 +139,26 @@ export default App.extend({
             limit: -1
         }
 
-        this.store.query('project',projectOptions)
-        .then((project) => {
-            _self.set('issueTypes',project.firstObject.issuetypes);
-            _self.set('issueStatuses',project.firstObject.issuestatuses);
-        })
-        .catch((error) =>{
-            _self.errorManager.handleError(error, {
-                moduleName: "issue"
-            });
-        });
+        const project = await this.store.query('project', projectOptions).catch(error => 
+            _self.errorManager.handleError(error, { moduleName: "project" })
+        );
+
+        const projectData = project?.objectAt(0);
+        if (projectData) {
+            _self.set('issueTypes', projectData.get('issuetypes'));
+            _self.set('issueStatuses', projectData.get('issuestatuses'));
+        }
+
+        const milestoneOptions = {
+            query: `(projectId : ${projectId})`,
+            fields: 'Milestone.name',
+            limit: -1
+        };
+
+        const milestones = await this.store.query('milestone', milestoneOptions).catch(error =>
+            _self.errorManager.handleError(error, { moduleName: "milestone" })
+        );
+        _self.set('milestones', milestones?.toArray() || []);
     },
 
     /**
@@ -198,7 +208,7 @@ export default App.extend({
         // Prepare the options
         let options = {
             query: query,
-            rels: 'ownedBy,assignedTo,issuemilestone,project,createdBy,modifiedBy,reportedBy,issuetype',
+            rels: 'ownedBy,assignedTo,issuemilestone,project,createdBy,modifiedBy,reportedBy,issuetype,issuestatus',
             sort: this.sort,
             order: this.order,
             page: this.page,
@@ -278,6 +288,7 @@ export default App.extend({
         controller.set('page',this.page);
         controller.set('issueTypes',this.issueTypes);
         controller.set('issueStatuses',this.issueStatuses);
+        controller.set('milestones',this.milestones);
     },
 
 });

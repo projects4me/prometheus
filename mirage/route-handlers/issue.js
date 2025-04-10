@@ -37,6 +37,16 @@ export function register(server, ctx) {
         let requestData = getRequestData(request);
         let issue = schema.issues.find(requestData.id);
         issue.update(requestData.attributes);
+
+        // Check for statusId and update status name
+        if (requestData.attributes.statusId) {
+            const statusRecord = schema.issuestatuses.find(requestData.attributes.statusId);
+            if (statusRecord) {
+                issue.update({
+                    status: statusRecord.name
+                });
+            }
+        }        
         return issue;
     });
 

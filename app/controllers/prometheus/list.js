@@ -111,6 +111,25 @@ export default class PrometheusListController extends PrometheusController {
     @tracked exportDialog = false;
 
     /**
+     * This is the flag which is used to the display the mass update dialog.
+     * 
+     * @property massUpdateDialog
+     * @for List
+     * @type boolean
+     * @public
+     */
+    @tracked massUpdateDialog = false;
+
+    /**
+     * This property stores the mass update model.
+     * 
+     * @property massUpdateModel
+     * @for List
+     * @type Prometheus.Models
+     * @public
+     */
+    @tracked massUpdateModel = null;
+    /**
      * The keydown event handler function for search queries
      * 
      * @property _searchRulesHandler
@@ -605,5 +624,45 @@ export default class PrometheusListController extends PrometheusController {
 
         Logger.debug('-Prometheus.Controllers.List::prepareOptionsForExport');
         return options;
+    }
+
+    /**
+     * This function is used to display the mass update dialog.
+     * 
+     * @method showMassUpdateDialog
+     * @public
+     */
+    @action showMassUpdateDialog() {
+        Logger.debug('Prometheus.Controllers.List::showMassUpdateDialog');
+        let moduleName = this.model.modelName;
+        this.massUpdateModel = this.store.createRecord(moduleName, {
+            priority: null
+        });
+
+        if(_.isEmpty(this.selectedIds)) {
+            let message = this.intl.t('views.app.module.list.noModuleSelected', {moduleName: `${moduleName}s`});
+            new Messenger().post({
+                message: message,
+                type: 'error',
+                showCloseButton: true
+            });
+            return;
+        }
+        this.massUpdateDialog = true;
+        Logger.debug('-Prometheus.Controllers.List::showMassUpdateDialog');
+    }
+
+    /**
+     * This function is used to hide the mass update dialog.
+     * 
+     * @method removeMassUpdateDialog
+     * @public
+     */
+    @action removeMassUpdateDialog() {
+        Logger.debug('Prometheus.Controllers.List::removeMassUpdateDialog');
+        this.massUpdateDialog = false;
+        this.massUpdateModel.unloadRecord();
+        $('.modal').modal('hide');
+        Logger.debug('-Prometheus.Controllers.List::removeMassUpdateDialog');
     }
 }

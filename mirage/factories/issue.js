@@ -3,6 +3,16 @@ import faker from 'faker';
 import * as date from '../helpers/getDate';
 import _ from 'lodash';
 
+// Define a mapping of status values to IDs
+const STATUS_MAP = {
+  "new": "1",
+  "in_progress": "2",
+  "done": "3",
+  "feedback": "4",
+  "pending": "5",
+  "deferred": "6"
+};
+
 export default Factory.extend({
     subject(i) {
         return `Issue Test ${++i}`;
@@ -42,10 +52,10 @@ export default Factory.extend({
         return date.startDate(10, 30);
     },
     status() {
-        return faker.random.arrayElement(["new", "in_progress", "done", "feedback", "pending", "deferred"]);
+        return faker.random.arrayElement(Object.keys(STATUS_MAP));
     },
-    statusId(){
-        return (_.random(1, 10)).toString();
+    statusId() {
+        return STATUS_MAP[this.status];
     },
     priority() {
         return faker.random.arrayElement(["medium", "high", "low", "critical", "blocker"]);

@@ -55,6 +55,13 @@ export const when = function () {
             }
         },
         {
+            "User selects $value value for $module $field": (assert) => async function (value, module, field) {
+                let selectEl = document.querySelector(`div[data-field="${module}.${field}"] > div.input-group > div`);
+                await selectChoose(selectEl, value);
+                assert.ok(true, `User selects option ${value} of ${module} ${field}`);
+            }
+        },
+        {
             "User selects option $id from milestone": (assert) => async function (id) {
                 await clickTrigger('div[data-field="issue.milestone"] > div.input-group.select-input');
                 await selectChoose('div[data-field="issue.milestone"] > div.input-group.select-input > div', '.ember-power-select-option', id); //not subtracted by 1 because it has it default value
