@@ -383,6 +383,7 @@
       },
       "module": {
         "list": {
+          "noModuleSelected": "Please select some {moduleName} first",
           "export": {
             "selectRelationship": {
               "label": "Please select relationships you want to export along with the selected {moduleName}",
@@ -393,6 +394,11 @@
             "exporting": "Exporting <strong>{moduleName}</strong> ..",
             "exported": "<strong>{moduleName}</strong> exported successfully",
             "error": "An error occurred while exporting the {moduleName}. Please try again."
+          },
+          "massUpdate": {
+            "updating": "Updating {moduleName} ..",
+            "updated": "<strong>{count} {moduleName}</strong> updated successfully",
+            "error": "An error occurred while updating the {moduleName}. Please try again."
           }
         }
       },

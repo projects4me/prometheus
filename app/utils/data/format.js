@@ -43,7 +43,7 @@ export default class Format {
         if (_.keys(model).length === 0) {
             return [];
         }
-        let count = model.get('length');
+        let count = model.length;
         let list = [];
         let temp = null;
 
@@ -52,7 +52,7 @@ export default class Format {
             if (map) {
                 list[i] = _.mapValues(map, function (o) { return temp.get(o) });
             } else {
-                list[i] = { label: temp.get('name'), value: temp.get('id') };
+                list[i] = { label: temp.name, value: temp.id };
             }
 
         }
@@ -94,11 +94,15 @@ export default class Format {
      */
     getTranslatedModelList(model, listPath) {
         let _self = this;
-        model.forEach((model) => {
-            let translatedName = _self.intl.t(`${listPath}.${model.name}`);
-            model.name = translatedName;
-        });
-        return this.getSelectList(model);
+        
+        const translatedModels = model?.map(item => {
+            return {
+                id: item.id,
+                name: _self.intl.t(`${listPath}.${item.name}`),
+            };
+        }) || [];
+        
+        return this.getSelectList(translatedModels);
     }
 
     /**

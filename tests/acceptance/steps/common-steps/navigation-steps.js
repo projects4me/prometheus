@@ -14,6 +14,17 @@ export const when = function () {
                 await visit(`/${page}`);
                 assert.equal(currentURL(), `/${page}`, `User navigates to /${page}`);
             }
+        },
+        {
+            "User clicks on the \"$buttonLabel\" button": (assert) => async function (buttonLabel) {
+                const buttonMapping = {
+                    "mass update issues": "button[data-btn='mass-update-issues']",
+                    "select all issues": "[data-select='all']",
+                };
+                const selector = buttonMapping[buttonLabel];
+                await click(selector);
+                assert.ok(true, `User clicks on the "${buttonLabel}" button`);
+            }
         }
     ];
 }
