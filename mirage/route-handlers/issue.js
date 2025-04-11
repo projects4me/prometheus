@@ -67,4 +67,11 @@ export function register(server, ctx) {
         ctx.set('latestCreatedIssue', issue);
         return issue;
     });
+
+    server.delete('/issue/:id', (schema, request) => {
+        let id = request.params.id;
+        let issue = schema.issues.find(id);
+        issue.destroy();
+        return issue;
+    });
 }

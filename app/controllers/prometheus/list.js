@@ -11,6 +11,7 @@ import { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import ENV from 'prometheus/config/environment';
+import { htmlSafe } from '@ember/template';
 
 /**
  * This controller provides the base
@@ -664,5 +665,73 @@ export default class PrometheusListController extends PrometheusController {
         this.massUpdateModel.unloadRecord();
         $('.modal').modal('hide');
         Logger.debug('-Prometheus.Controllers.List::removeMassUpdateDialog');
+    }
+
+    /**
+     * This function handles the deletion of a model with a confirmation dialog.
+     * It displays a warning message with confirm/cancel actions, and shows progress
+     * updates during the deletion process.
+     * 
+     * @method deleteModel
+     * @public
+     * @param {Object} model - The model instance to be deleted
+     * @param {String} fieldToDisplay - The field name to display in the confirmation message
+     * @returns {Promise} A promise that resolves when the deletion is complete
+     */
+    @action 
+    async deleteModel(model, fieldToDisplay) {
+        Logger.debug('Prometheus.Controllers.List::delete');
+        let _self = this;
+        let moduleName = model.constructor.modelName;
+        let moduleTranslated = _self.intl.t(`global.module.singular.${moduleName.toLowerCase()}`);
+
+        let messenger = new Messenger().post({
+            message: htmlSafe(_self.intl.t("views.app.module.list.delete.message", {
+                moduleName: moduleTranslated,
+                name: model.get(fieldToDisplay)
+            })),
+            type: 'warning',
+            showCloseButton: true,
+            actions: {
+                confirm: {
+                    label: htmlSafe(_self.intl.t("views.app.module.list.delete.confirmDelete", {
+                        moduleName: moduleTranslated
+                    })).string,
+                    action: async function () {
+                        messenger.update({
+                            message: _self.intl.t("views.app.module.list.delete.deleting", {
+                                moduleName: moduleTranslated
+                            }),
+                            type: 'info',
+                            actions: false,
+                            hideAfter: false
+                        });
+
+                        await model.destroyRecord();
+                        messenger.update({
+                            message: _self.intl.t("views.app.module.list.delete.deleted", {
+                                moduleName: moduleTranslated
+                            }),
+                            type: 'success',
+                            actions: false,
+                            hideAfter: 3
+                        });
+                    }
+                },
+                cancel: {
+                    label: htmlSafe(_self.intl.t("views.app.module.list.delete.onsecondthought")).string,
+                    action: function () {
+                        return messenger.update({
+                            message: _self.intl.t("views.app.module.list.delete.deletecancel"),
+                            type: 'success',
+                            actions: false,
+                            hideAfter: 3
+                        });
+                    }
+                },
+            }
+        });
+        
+        Logger.debug('-Prometheus.Controllers.List::delete');
     }
 }

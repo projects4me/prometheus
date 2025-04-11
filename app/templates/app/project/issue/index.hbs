@@ -166,7 +166,7 @@
             <tbody>
               {{#if this.model.length}}
                 {{#each this.model as |issue|}}
-                  <tr class="issue">
+                  <tr class="issue" data-issue-id={{issue.id}}>
                     <td class="select-box">
                       <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{issue.id}} @aclContext="App.Project.Issue.List.SelectIssue"/>
                     </td>
@@ -178,6 +178,9 @@
                     <td data-field="issue.milestone" class="issue-milestone"><a href="#">{{issue.issuemilestone.name}}</a></td>
                     <td data-field="issue.startDate" class="issue-start">{{moment-format issue.startDate 'DD/MMM/YY'}}</td>
                     <td data-field="issue.endDate" class="issue-end">{{moment-format issue.endDate 'DD/MMM/YY'}}</td>
+                    <td class="actions pull-right">
+                      <AppUi::Button data-btn="delete" type="button" @onClick={{fn this.deleteModel issue "issueNumber"}} class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.Project.Issue.Delete"><i class="fa fa-trash"></i></AppUi::Button>
+                    </td>                    
                   </tr>
                 {{/each}}
               {{else}}
