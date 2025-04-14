@@ -124,7 +124,7 @@
       "firstPage": "First Page",
       "last": "Last Page",
       "searchbox": "Toggle search box",
-      "selectedCount": "(Selected : {count}) "
+      "selectedCount": "<strong>(Selected : {count})</strong> "
     },
     "noentry": "No entry found..",
     "blank": "<span class='disabled-text'>-- blank --</em>",
@@ -745,6 +745,7 @@
           "milestone": "Milestone",
           "startDate": "Start Date",
           "endDate": "End Date",
+          "overview": "Overview",
           "selectedCount": "(Selected : {count}) "
         },
         "detail": {

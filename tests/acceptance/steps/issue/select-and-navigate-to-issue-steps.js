@@ -6,8 +6,7 @@ export const when = function () {
         {
             "User selects issue $issueIndex from list": (assert) => async function (issueIndex) {
                 let issueRows = document.querySelectorAll('div.row.issues table tbody tr');
-                let issueToNavigate = issueRows[issueIndex - 1].querySelector('td.issue-subject > a');
-
+                let issueToNavigate = issueRows[issueIndex - 1].querySelector('[data-field="issue.number"]');
                 await click(issueToNavigate);
                 assert.ok(true, `User selects issue ${issueIndex} from list`);
             }

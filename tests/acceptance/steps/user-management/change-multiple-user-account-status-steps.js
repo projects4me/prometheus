@@ -5,13 +5,13 @@ export const when = function () {
     return [
         {
             "User update account status of all users to $accountStatus": (assert) => async function (accountStatus) {
-                let massCheckBox = document.querySelector('[data-select=all]');
-                let massSwitchBtn = document.querySelector('.user-mass-actions [data-input-type=switch]');
+                let massCheckBox = document.querySelector('[data-select="all"]');
+                let massSwitchBtn = document.querySelector('.user-mass-actions [data-input-type="switch"]');
 
                 await click(massCheckBox);
 
                 if (accountStatus === 'inactive') {
-                    document.querySelector('.user-mass-actions [data-input-type=switch]').checked = true;
+                    document.querySelector('.user-mass-actions [data-input-type="switch"]').checked = true;
                 }
                 await click(massSwitchBtn);
             }

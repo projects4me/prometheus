@@ -22,10 +22,9 @@ export const then = function() {
                 const issuePriorityCells = document.querySelectorAll('[data-field="issue.priority"]');
                 
                 assert.ok(issuePriorityCells.length > 0, 'Issues are present in the list');
-                
                 for (let i = 0; i < issuePriorityCells.length; i++) {
                     assert.ok(
-                        issuePriorityCells[i].textContent.trim().includes(priority),
+                        issuePriorityCells[i].dataset.priority === priority.toLowerCase(),
                         `Issue ${i+1} has correct priority: ${priority}`
                     );
                 }

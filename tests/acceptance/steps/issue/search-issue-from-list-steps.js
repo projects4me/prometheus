@@ -5,7 +5,7 @@ export const then = function () {
         {
             "the searched issue should be inside list": (assert) => async function () {
                 let issueRow = document.querySelector('div.row.issues table tbody tr');
-                let expectedIssueSubject = issueRow.querySelector('td.issue-subject');
+                let expectedIssueSubject = issueRow.querySelector('[data-field="issue.subject"]');
                 assert.dom(expectedIssueSubject).hasText(server.schema.issues.find(1).subject);
             }
         },

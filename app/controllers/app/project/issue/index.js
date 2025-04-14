@@ -323,8 +323,9 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
             hideAfter: false
         });
 
+        let selectedIds = this.getSelectedIds();
         try{
-            for(let id of this.selectedIds) {
+            for(let id of selectedIds) {
                 let issue = this.store.peekRecord('issue', id);
                 let fields = ['statusId', 'priority', 'milestoneId'];
                 let oldMilestoneId = issue.get('milestoneId');
