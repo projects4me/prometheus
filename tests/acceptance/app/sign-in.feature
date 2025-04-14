@@ -6,8 +6,8 @@ Feature: App | sign in
     Given There is no pre-existing data
     And default scenario is loaded
     And User is not logged in
-    When User enters hammad in username
-    And User enters hammad in password
+    When User enters username in username
+    And User enters password in password
     And User click on signin button
     Then User should be in app page
 
@@ -16,7 +16,7 @@ Feature: App | sign in
     Given There is no pre-existing data
     And default scenario is loaded
     And User is not logged in
-    When User enters hammad in username
-    And User enters hamma in password
+    When User enters username in username
+    And User enters passwor in password
     And User click on signin button
     Then User should be in signin page

@@ -8,5 +8,5 @@ Feature: User Management | delete a user
     #default scenario creates 10 user.
     And User_1 is logged in
     When User navigates to app/user/management
-    When User delete a user of id 1
+    When User deletes a user of id 1
     Then User of id 1 is not present inside list

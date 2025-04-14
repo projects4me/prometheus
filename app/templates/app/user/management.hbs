@@ -1,4 +1,4 @@
-<div class="user-management">
+<div class="user-management list-view">
   
     <section class="content-header">
     <h1>
@@ -109,7 +109,7 @@
 
                         {{!++ actions ++}}
                         <td class="pull-right actions">
-                          <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @onClick={{fn this.deleteUser user}} @aclContext="App.User.Delete">
+                          <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @onClick={{fn this.deleteModel user 'name'}} @aclContext="App.User.Delete">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                           </AppUi::Button>
 

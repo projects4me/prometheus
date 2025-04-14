@@ -399,6 +399,14 @@
             "updating": "Updating {moduleName} ..",
             "updated": "<strong>{count} {moduleName}</strong> updated successfully",
             "error": "An error occurred while updating the {moduleName}. Please try again."
+          },
+          "delete": {
+            "message": "You are about to delete the {moduleName} <strong>{name}</strong>, once deleted it <strong>cannot be recovered</strong>.",
+            "confirmDelete": "<strong>Yes, delete the {moduleName}!</strong>",
+            "deleting": "Deleting {moduleName} ..",
+            "deletecancel": "Deletion cancelled",
+            "onsecondthought": "Hmm, I will just keep it.",
+            "deleted": "{moduleName} has been deleted"
           }
         }
       },
@@ -934,12 +942,7 @@
           "list": {
             "profile": "Profile",
             "accountStatus": "Status",
-            "emailaddress": "Email Address",
-            "deleteUser": "You are about to delete the user <strong>{name}</strong>, once deleted it <strong>cannot be recovered</strong>.",
-            "confirmDeleteUser": "<strong>Yes, delete the User!</strong>",
-            "deletecancel": "Deletion cancelled",
-            "onsecondthought": "Hmm, I will just keep it.",
-            "userDeleted": "User has been deleted"
+            "emailaddress": "Email Address"
           }
         },
         "create": {
