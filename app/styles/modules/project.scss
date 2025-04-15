@@ -82,7 +82,7 @@
 }
 
 .project-conversations,
-.open-issues {
+.issue-overview {
   max-height: 35rem;
   min-height: 35rem;
 }
@@ -96,10 +96,14 @@
   padding-top: 1.5rem;
 }
 
-.open-issues {
+.issue-overview {
   list-style: none;
   margin: 0;
   padding: 0;
+
+  .issue-block-container {
+    padding: 0 0 1rem 0;
+  }
 
   li {
     border-bottom: 1px solid #f4f4f4;
@@ -110,11 +114,11 @@
         float: left;
         font-size: 2rem;
         width: 4rem;
-        text-align: center;
       }
 
       .data-block {
-        margin-left: 5rem;
+        display: inline-block;
+        width: 90%;
         .subject {
           display: block;
           font-weight: 600;
