@@ -85,7 +85,7 @@ export default class AppUserManagementRoute extends App {
     setupController(controller, model) {
         Logger.debug('+Prometheus.Routes.App.User.Management::setupController()');
 
-        controller.set('users', model);
+        controller.set('model', model);
     }
 
 }

@@ -128,7 +128,7 @@
           </div>
           <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" @onClick={{this.reloadPage}}><i class="fa fa-refresh"></i></AppUi::Button>
           <div class="pull-right">
-            <span class="list-view-count">{{t "views.app.issue.list.selectedCount" count=this.selectedCount}}</span>
+            <span class="list-view-count">{{t "views.app.issue.list.selectedCount" count=this.checkboxCount}}</span>
             {{add (mult (sub this.page 1) 20) 1}}-{{add (mult (sub this.page 1) 20) this.model.length}} / {{add (mult (sub this.page 1) 20) this.model.length}}
             {{#if this.model.meta.links.next}}+{{/if}}
             <div class="btn-group">
@@ -214,7 +214,7 @@
           </div>
           <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" @onClick={{this.reloadPage}} @aclContext="App.Project.Issue.List.ReloadPage"><i class="fa fa-refresh"></i></AppUi::Button>
           <div class="pull-right">
-            <span class="list-view-count">{{t "views.app.issue.list.selectedCount" count=this.selectedCount}}</span>
+            <span class="list-view-count">{{t "views.app.issue.list.selectedCount" count=this.checkboxCount}}</span>
             {{add (mult (sub this.page 1) 20) 1}}-{{add (mult (sub this.page 1) 20) this.model.length}} / {{add (mult (sub this.page 1) 20) this.model.length}}
             {{#if this.model.meta.links.next}}+{{/if}}
             <div class="btn-group">
