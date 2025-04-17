@@ -12,6 +12,7 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import ENV from 'prometheus/config/environment';
 import { htmlSafe } from '@ember/template';
+import { scheduleOnce } from '@ember/runloop';
 
 /**
  * This controller provides the base
@@ -58,7 +59,7 @@ export default class PrometheusListController extends PrometheusController {
      * @type Integer
      * @private
      */
-    page = 1;
+    @tracked page = 1;
 
     /**
      * This property stores the field on which the page if currently sored on
@@ -88,7 +89,7 @@ export default class PrometheusListController extends PrometheusController {
      * @for List
      * @private
      */
-    selectedCount = 0;
+    @tracked selectedCount = 0;
 
     /**
      * This is the flag which is used to the display of the saved
@@ -152,13 +153,15 @@ export default class PrometheusListController extends PrometheusController {
 
     /**
      * This property stores the ids of the selected items in the list view.
+     * Organized by page number, where each key is a page number and the value
+     * is an array of selected IDs for that page.
      *
      * @property selectedIds
      * @for List
-     * @type Array
+     * @type Object
      * @public
      */
-    @tracked selectedIds = [];
+    @tracked selectedIds = {};
 
     /**
      * Selected relationships will be exported along with the model data.
@@ -354,28 +357,36 @@ export default class PrometheusListController extends PrometheusController {
     @action selectAll(evt) {
         let isChecked = evt.target.checked;
         let _self = this;
+        let currentPage = this.page.toString();
         Logger.debug('Prometheus.Controllers.List::selectAll');
 
         if(!isChecked) {
-            this.selectedIds = [];
+            // Clear only the current page selections
+            if (this.selectedIds[currentPage]) {
+                delete this.selectedIds[currentPage];
+            }
             this.isAllSelected = false;
+        } else {
+            // Initialize the array for current page if not exists
+            if (!this.selectedIds[currentPage]) {
+                this.selectedIds[currentPage] = [];
+            } else {
+                // Clear existing selections for this page
+                this.selectedIds[currentPage] = [];
+            }
         }
 
         // Select all the checkboxes in the list view
         _.each($('.list-view input[type=checkbox]').not('[data-select=all], [data-input-type=switch]'), function (element) {
             element.checked = isChecked;
-
             if(isChecked) {
-                _self.selectedIds.push(element.dataset.select);
+                _self.selectedIds[currentPage].push(element.dataset.select);
                 _self.isAllSelected = true;
             }
         });
 
-        _.each($('.list-view [data-select=all]'), function (element) {
-            element.checked = isChecked;
-        });
-
-        this.set('selectedCount', $('.list-view input[type=checkbox]:checked').not('[data-select=all], [data-input-type=switch]').length);
+        // Update total selected count across all pages
+        this.selectedCount = this.getTotalSelectedCount();
         Logger.debug('-Prometheus.Controllers.List::selectAll');
     }
 
@@ -392,30 +403,62 @@ export default class PrometheusListController extends PrometheusController {
     @action select(evt) {
         let isChecked = evt.target.checked;
         let id = evt.target.dataset.select;
-
+        let currentPage = this.page.toString();
+        
         Logger.debug('Prometheus.Controllers.List::select');
-        // Select/Deselect one checkboxes in the list view
-        this.set('selectedCount', $('.list-view input[type=checkbox]:checked').not('[data-select=all]').length);
-
+        
+        // Initialize the array for current page if not exists
+        if (!this.selectedIds[currentPage]) {
+            this.selectedIds[currentPage] = [];
+        }
+        
         // uncheck the select all checkbox, if an item was deselected and the select all checkbox was checked
         if (!isChecked) {
             let selectAll = $('[data-select=all]').prop('checked');
             if (selectAll) {
-                $('[data-select=all]').prop('checked', false);
                 this.isAllSelected = false;
             }
-            this.selectedIds = this.selectedIds.filter((item) => item !== id);
+            // Remove the id from the current page's selected ids
+            this.selectedIds[currentPage] = this.selectedIds[currentPage].filter((item) => item !== id);
+            
+            // Remove the page entry if empty
+            if (this.selectedIds[currentPage].length === 0) {
+                delete this.selectedIds[currentPage];
+            }
         }
         // If all the items in the list were selected then check the select all checkbox as well
         else {
+            // Add the id to the current page's selected ids if not already there
+            if (!this.selectedIds[currentPage].includes(id)) {
+                this.selectedIds[currentPage].push(id);
+            }
+            
             // if checked boxes are equal to total boxes then enable check all box
             if ($('.list-view input[type=checkbox]:checked').not('[data-select=all], [data-input-type=switch]').length === $('.list-view input[type=checkbox]').not('[data-select=all], [data-input-type=switch]').length) {
-                $('[data-select=all]').prop('checked', true);
                 this.isAllSelected = true;
             }
-            this.selectedIds.push(id);
         }
+        
+        // Update total selected count across all pages
+        this.selectedCount = this.getTotalSelectedCount();
         Logger.debug('-Prometheus.Controllers.List::select');
+    }
+
+    /**
+     * Get the total count of selected items across all pages
+     * 
+     * @method getTotalSelectedCount
+     * @private
+     * @returns {Number} Total count of selected items
+     */
+    getTotalSelectedCount() {
+        let count = 0;
+        for (const page in this.selectedIds) {
+            if (this.selectedIds.hasOwnProperty(page)) {
+                count += this.selectedIds[page].length;
+            }
+        }
+        return count;
     }
 
     /**
@@ -485,7 +528,7 @@ export default class PrometheusListController extends PrometheusController {
         Logger.debug('Prometheus.Controllers.List::showExportDialog');
         let moduleName = this.model.modelName;
 
-        if(_.isEmpty(this.selectedIds)) {
+        if(this.checkboxCount === 0) {
             let message = this.intl.t('views.app.module.list.export.noItemsSelected', {moduleName: moduleName});
             new Messenger().post({
                 message: message,
@@ -605,7 +648,10 @@ export default class PrometheusListController extends PrometheusController {
      */
     prepareOptionsForExport() {
         Logger.debug('Prometheus.Controllers.List::prepareOptionsForExport');
-        let ids = this.selectedIds.join(',');
+        
+        let selectedIds = this.getSelectedIds();
+        
+        let ids = selectedIds.join(',');
         let options = {
             ids: ids,
             projectId: this.trackedProject.id,
@@ -640,7 +686,7 @@ export default class PrometheusListController extends PrometheusController {
             priority: null
         });
 
-        if(_.isEmpty(this.selectedIds)) {
+        if(this.checkboxCount === 0) {
             let message = this.intl.t('views.app.module.list.noModuleSelected', {moduleName: `${moduleName}s`});
             new Messenger().post({
                 message: message,
@@ -733,5 +779,72 @@ export default class PrometheusListController extends PrometheusController {
         });
         
         Logger.debug('-Prometheus.Controllers.List::delete');
+    }
+
+    /**
+     * This function returns all the selected ids from all the pages.
+     * 
+     * @method getSelectedIds
+     * @returns {Array} An array of all the selected ids
+     */
+    getSelectedIds() {
+        Logger.debug('Prometheus.Controllers.List::getSelectedIds');
+        let selectedIds = [];
+        for (const page in this.selectedIds) {
+            if (this.selectedIds.hasOwnProperty(page)) {
+                selectedIds = selectedIds.concat(this.selectedIds[page]);
+            }
+        }
+        Logger.debug('-Prometheus.Controllers.List::getSelectedIds');
+        return selectedIds;
+    }
+
+    /**
+     * Get the count of selected checkboxes.
+     * 
+     * @property checkboxCount
+     * @type {Number}
+     * @public
+     */
+    get checkboxCount() {
+        Logger.debug('Prometheus.Controllers.List::checkboxCount');
+        if (this.model.length) { 
+           scheduleOnce('afterRender', this, () => {
+               this.updateCheckboxState(this.page);
+           });
+        }
+        Logger.debug('-Prometheus.Controllers.List::checkboxCount');
+        return this.selectedCount;
+    }
+
+    /**
+     * Update the checkbox state for the selected items.
+     * 
+     * @method updateCheckboxState
+     * @param {Number} currentPage - The current page number
+     * @public
+     */
+    updateCheckboxState(currentPage) {
+        Logger.debug('Prometheus.Controllers.List::updateCheckboxState');
+        let modelName = this.model.modelName;
+        for (const page in this.selectedIds) {
+            if (this.selectedIds.hasOwnProperty(page)) {
+                this.selectedIds[page].forEach(id => {
+                    let el = document.querySelector(`tr[data-${modelName}-id='${id}'] input[type=checkbox]`);
+                    el && (el.checked = true);
+                });
+            }
+        }
+
+        let selectAll = false;
+        if(this.model.length === this.selectedIds[currentPage]?.length) {
+            selectAll = true;
+        }
+
+        document.querySelectorAll('[data-select="all"]').forEach(el => {
+            el.checked = selectAll;
+        });
+
+        Logger.debug('-Prometheus.Controllers.List::updateCheckboxState');
     }
 }
