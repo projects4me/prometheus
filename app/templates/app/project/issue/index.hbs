@@ -152,11 +152,8 @@
             <thead>
               <tr>
                 <th></th>
-                <th class="{{sortable-class "Issue.issueNumber" this.sort this.order}}" data-sort="Issue.issueNumberSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.issueNumber'}}>{{t "views.app.issue.list.sr"}}</a></th>
-                <th class="{{sortable-class "Issue.subject" this.sort this.order}}" data-sort="Issue.subjectSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.subject'}}>{{t "views.app.issue.list.subject"}}</a></th>
+                <th class="{{sortable-class "Issue.issueNumber" this.sort this.order}}" data-sort="Issue.issueNumberSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.issueNumber'}}>{{t "views.app.issue.list.overview"}}</a></th>
                 <th class="{{sortable-class "issuetype.name" this.sort this.order}}" data-sort="Issue.statusSortable"><a href="javascript:void(0);" {{action "sortData" 'issuetype.name'}}>{{t "views.app.issue.list.issuetype"}}</a></th>
-                <th class="{{sortable-class "Issue.status" this.sort this.order}}" data-sort="Issue.statusSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.status'}}>{{t "views.app.issue.list.status"}}</a></th>
-                <th class="{{sortable-class "Issue.priority" this.sort this.order}}" data-sort="Issue.prioritySortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.priority'}}>{{t "views.app.issue.list.priority"}}</a></th>
                 <th class="{{sortable-class "milestone.name" this.sort this.order}}" data-sort="milestone.nameSortable"><a href="javascript:void(0);" {{action "sortData" 'milestone.name'}}>{{t "views.app.issue.list.milestone"}}</a></th>
                 <th class="{{sortable-class "Issue.startDate" this.sort this.order}}" data-sort="Issue.startDateSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.startDate'}}>{{t "views.app.issue.list.startDate"}}</a></th>
                 <th class="{{sortable-class "Issue.endDate" this.sort this.order}}" data-sort="Issue.endDateSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.endDate'}}>{{t "views.app.issue.list.endDate"}}</a></th>
@@ -170,11 +167,19 @@
                     <td class="select-box">
                       <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{issue.id}} @aclContext="App.Project.Issue.List.SelectIssue"/>
                     </td>
-                    <td data-field="issue.issueNumber" class="issue-number"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.issueNumber}}</LinkTo></td>
-                    <td data-field="issue.subject" class="issue-subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.subject}}</LinkTo></td>
+                    {{!-- <td data-field="issue.issueNumber" class="issue-number"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.issueNumber}}</LinkTo></td> --}}
+                    <td class="issue-overview">
+                      <li class="issue-block-container">
+                        <div class="issue-block">
+                          <div data-field="issue.priority" data-toggle="tooltip" data-priority="{{issue.priority}}" title="{{t (concat "views.app.issue.lists.priority." issue.priority)}}" class="priority"><AppUi::PriorityIcon @priority={{issue.priority}}/></div>
+                          <div class="data-block">
+                            <span class="subject"><LinkTo data-field="issue.number" @route="app.project.issue.page" @model={{issue.issueNumber}}>{{issue.issueNumber}}</LinkTo> - <span data-field="issue.subject"> {{issue.subject}} </span></span>
+                            <span data-field="issue.status" class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+                          </div>
+                        </div>
+                      </li>
+                    </td>
                     <td data-field="issuetype.name" class="issue-type">{{issue.issuetype.name}}</td>
-                    <td data-field="issue.status" class="issue-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></td>
-                    <td data-field="issue.priority" class="issue-priority"><AppUi::PriorityIcon @priority = {{readonly issue.priority}}/> {{t (concat "views.app.issue.lists.priority." issue.priority)}}</td>
                     <td data-field="issue.milestone" class="issue-milestone"><a href="#">{{issue.issuemilestone.name}}</a></td>
                     <td data-field="issue.startDate" class="issue-start">{{moment-format issue.startDate 'DD/MMM/YY'}}</td>
                     <td data-field="issue.endDate" class="issue-end">{{moment-format issue.endDate 'DD/MMM/YY'}}</td>
