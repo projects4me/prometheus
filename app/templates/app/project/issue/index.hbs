@@ -153,6 +153,7 @@
               <tr>
                 <th></th>
                 <th class="{{sortable-class "Issue.issueNumber" this.sort this.order}}" data-sort="Issue.issueNumberSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.issueNumber'}}>{{t "views.app.issue.list.overview"}}</a></th>
+                <th class="{{sortable-class "Issue.assignee" this.sort this.order}}" data-sort="Issue.assigneeSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.assignee'}}>{{t "views.app.issue.list.assignee"}}</a></th>
                 <th class="{{sortable-class "issuetype.name" this.sort this.order}}" data-sort="Issue.statusSortable"><a href="javascript:void(0);" {{action "sortData" 'issuetype.name'}}>{{t "views.app.issue.list.issuetype"}}</a></th>
                 <th class="{{sortable-class "milestone.name" this.sort this.order}}" data-sort="milestone.nameSortable"><a href="javascript:void(0);" {{action "sortData" 'milestone.name'}}>{{t "views.app.issue.list.milestone"}}</a></th>
                 <th class="{{sortable-class "Issue.startDate" this.sort this.order}}" data-sort="Issue.startDateSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.startDate'}}>{{t "views.app.issue.list.startDate"}}</a></th>
@@ -178,6 +179,10 @@
                           </div>
                         </div>
                       </li>
+                    </td>
+                    <td class="issue-assignee">
+                      <span><img class="img-circle user-img" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
+                      <span data-field="issue.assignee">{{issue.assignedTo.name}}</span>
                     </td>
                     <td data-field="issuetype.name" class="issue-type">{{issue.issuetype.name}}</td>
                     <td data-field="issue.milestone" class="issue-milestone"><a href="#">{{issue.issuemilestone.name}}</a></td>
