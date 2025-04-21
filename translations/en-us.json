@@ -741,6 +741,7 @@
           "subject": "Subject",
           "status": "Status",
           "issuetype": "Type",
+          "assignee": "Assignee",
           "priority": "Priority",
           "milestone": "Milestone",
           "startDate": "Start Date",
