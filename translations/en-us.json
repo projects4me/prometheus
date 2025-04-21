@@ -549,7 +549,8 @@
         },
         "list": {
           "savedsearch": {
-            "name": "Name of the search",
+            "name": "Search Name",
+            "inputname": "Enter the name of the search",
             "public": "Public",
             "missing": "Information missing",
             "label": "Saved Searches",
@@ -564,7 +565,7 @@
             "deletecancel": "Phew!! close one.",
             "onsecondthought": "Hmm, I will just keep it.",
             "deleted": "The search <strong>{name}</strong> has been deleted",
-            "query": "Query : "
+            "query": "Search Query: "
           },
           "name": "Name",
           "type": "Type",
@@ -720,7 +721,8 @@
         "list": {
           "create": "Create New",
           "savedsearch": {
-            "name": "Name of the search",
+            "inputname": "Enter the name of the search",
+            "name": "Search Name",
             "public": "Public",
             "missing": "Information missing",
             "label": "Saved Searches",
@@ -735,7 +737,7 @@
             "deletecancel": "Phew!! close one.",
             "onsecondthought": "Hmm, I will just keep it.",
             "deleted": "The search <strong>{name}</strong> has been deleted",
-            "query": "Query : "
+            "query": "Search Query: "
           },
           "sr": "#",
           "subject": "Subject",
