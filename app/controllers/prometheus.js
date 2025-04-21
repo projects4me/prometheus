@@ -216,4 +216,19 @@ export default class PrometheusController extends Controller {
 			}
 		}
 	}
+
+	/**
+	 * This action scrolls to the given element and highlights it (if needed).
+	 * 
+	 * @method scrollToElement
+	 * @param {HTMLElement} element
+	 * @param {Boolean} highlight
+	 * @public
+	 */
+	@action scrollToElement(element, highlight = false) {
+		if(this.settings.scrollToElement) {
+			this.scrollAndHighlight(element, highlight);
+			this.settings.scrollToElement = false;
+		}
+	}
 }

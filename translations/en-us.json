@@ -747,7 +747,9 @@
           "startDate": "Start Date",
           "endDate": "End Date",
           "overview": "Overview",
-          "selectedCount": "(Selected : {count}) "
+          "selectedCount": "(Selected : {count}) ",
+          "startConversation": "Start Conversation",
+          "openConversation": "Open Conversation"
         },
         "detail": {
           "issueNumber": "Issue Number",

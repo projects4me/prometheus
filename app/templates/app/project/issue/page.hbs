@@ -92,7 +92,8 @@
           {{!-- This is the issue conversations --}}
           <AccessControl @aclContext="App.Project.Issue.Read.ConversationRoom.Read">
             <div class="col-md-12">
-              <div class="box box-info conversations issue-conversation-section">
+              {{this.scrollConvo}}
+              <div class="box box-info conversations issue-conversation-section" {{did-insert this.scrollToElement false}}>
                 <div class="box-header with-border">
                   <h3 class="box-title">{{t "views.app.issue.detail.conversation"}}</h3>
                   <div class="box-tools pull-right">

@@ -361,4 +361,19 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
         this.removeMassUpdateDialog();
         Logger.debug('-AppProjectIssueIndexController::massUpdateIssue');
     }
+
+    /**
+     * This action routes to the issue comments page and scrolls to the conversation section.
+     * 
+     * @method routeToIssueComments
+     * @param {Prometheus.Models.Issue} issue
+     * @public
+     * @action
+     */
+    @action routeToIssueComments(issue) {
+        Logger.debug('AppProjectIssueIndexController::routeToIssueComments');
+        this.settings.scrollToElement = true;
+        this.transitionToRoute('app.project.issue.page', issue.issueNumber);
+        Logger.debug('-AppProjectIssueIndexController::routeToIssueComments');
+    }
 }
