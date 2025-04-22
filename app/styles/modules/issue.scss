@@ -183,18 +183,6 @@
       color: $primaryColor;
     }
 
-    .btn-group > .btn-box-tool:hover > .fa {
-      color: $primaryColor;
-    }
-
-    .dropdown-menu > li > a:hover {
-      background-color: $backgroundColor;
-    }
-
-    .dropdown-menu li + li {
-      border-top: 0.1rem solid $borderColor;
-    }
-
     .search-name {
       margin-right: 1rem;
     }
@@ -211,6 +199,17 @@
       top: 1rem;
     }
   }
+  .btn-group > .btn-box-tool:hover > .fa {
+    color: $primaryColor;
+  }
+
+  .dropdown-menu > li > a:hover {
+    background-color: $backgroundColor;
+  }
+
+  .dropdown-menu li + li {
+    border-top: 0.1rem solid $borderColor;
+  }  
 }
 
 .issue-hierarchy {

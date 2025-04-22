@@ -77,4 +77,53 @@
   .btn-comment-add {
     position: relative;
   }
+
+  .table-responsive {
+    td {
+      .dropdown-menu {
+        left: -11rem;
+      }
+    }
+    .list-item-actions {
+      .dropdown-menu {
+        padding: 0;
+
+        li {
+          padding: 0.3rem 0.3rem;
+        }
+
+        li:hover {
+          background-color: $primaryColor;
+          color: #FFFF;
+
+          button {
+            color: inherit;
+            text-align: start;
+            width: 100%;
+          }
+        }
+
+        li button {
+          padding: 0.3rem 2rem;
+          font-size: 1.3rem;
+
+          i {
+            margin-right: 0.5rem;
+          }
+        }
+      }
+      i {
+        font-size: 1.5rem;
+      }
+
+      .btn-group {
+        button > a {
+          color: #97a0b3;
+          &:hover {
+            color: $primaryColor;
+          }
+        }
+      }
+    }
+  }
 }
