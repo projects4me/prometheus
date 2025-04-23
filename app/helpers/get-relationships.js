@@ -17,7 +17,7 @@ export default helper(function getRelationships([
 	store,
 	kind = null
 ]) {
-	const relationships = getModelRelationships(modelName, store, kind, false);
+	const relationships = getModelRelationships(modelName, store, kind, true);
 	const translatedRelationships = relationships.map((relationship) => {
 		return {
 			label: relationship.translatedName,
