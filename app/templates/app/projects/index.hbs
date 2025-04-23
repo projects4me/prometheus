@@ -145,11 +145,8 @@
               </span>            <div class="btn-group">
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.Project.Delete"><i class="fa fa-trash-o"></i></AppUi::Button>
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.massupdate"}}" @aclContext="App.Project.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.discuss"}}"><i class="fa fa-comments-o"></i></AppUi::Button>
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.export"}}" @onClick={{this.showExportDialog}}><i class="fa fa-download"></i></AppUi::Button>
               </div>
-              {{!-- /.btn-group --}}
-              <AppUi::Button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></AppUi::Button>
               <div class="pull-right">
                 <span class="list-view-count">{{t "global.list.selectedCount" count=this.selectedCount}}</span>
                 {{add (mult (sub this.page 1) 20) 1}}-{{add (mult (sub this.page 1) 20) this.model.length}} / {{add (mult (sub this.page 1) 20) this.model.length}}
