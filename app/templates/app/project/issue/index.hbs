@@ -184,20 +184,37 @@
                     <td data-field="issue.milestone" class="issue-milestone"><a href="#">{{issue.issuemilestone.name}}</a></td>
                     <td data-field="issue.startDate" class="issue-start">{{moment-format issue.startDate 'DD/MMM/YY'}}</td>
                     <td data-field="issue.endDate" class="issue-end">{{moment-format issue.endDate 'DD/MMM/YY'}}</td>
-                    <td class="actions pull-right">
-                      <AppUi::Button data-btn="delete" type="button" @onClick={{fn this.deleteModel issue "issueNumber"}} class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.Project.Issue.Delete"><i class="fa fa-trash"></i></AppUi::Button>
-                      {{#if issue.conversationRoomId}}
-                        <LinkTo @route="app.project.conversation" @query={{hash c_id=issue.conversationRoomId}}>
-                        <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "views.app.issue.list.openConversation"}}">
-                          <i class="fa fa-comments-o"></i>
+                    <td class="pull-right list-item-actions">
+                      {{!-- <AppUi::Button data-btn="delete" type="button" @onClick={{fn this.deleteModel issue "issueNumber"}} class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.Project.Issue.Delete"><i class="fa fa-trash"></i></AppUi::Button> --}}                    
+                      <div class="btn-group">
+                        {{!-- Conversation Button --}}
+                        {{#if issue.conversationRoomId}}
+                          <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "views.app.issue.list.openConversation"}}">
+                            <LinkTo @route="app.project.conversation" @query={{hash c_id=issue.conversationRoomId}}>
+                              <i class="fa fa-comments-o"></i>
+                            </LinkTo>
                           </AppUi::Button>
-                        </LinkTo>
-                      {{else}}
-                        <AppUi::Button {{on "click" (fn this.routeToIssueComments issue)}} type="button" class="btn btn-box-tool btn-comment-add" data-toggle="tooltip" title="{{t "views.app.issue.list.startConversation"}}">
-                          <i class="fa fa-plus fa-comments-plus"></i>
-                          <i class="fa fa-comments-o"></i>
+                        {{else}}
+                          <AppUi::Button {{on "click" (fn this.routeToIssueComments issue)}} type="button" class="btn btn-box-tool btn-comment-add" data-toggle="tooltip" title="{{t "views.app.issue.list.startConversation"}}">
+                            <i class="fa fa-plus fa-comments-plus"></i>
+                            <i class="fa fa-comments-o"></i>
+                          </AppUi::Button>
+                        {{/if}}  
+
+                        {{!-- More Actions Button --}}
+                        <AppUi::Button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                          <i class="fa fa-ellipsis-v"></i>
                         </AppUi::Button>
-                      {{/if}}
+
+                        {{!-- More Actions Dropdown --}}
+                        <ul class="dropdown-menu" role="menu">
+                          <li>
+                            <AppUi::Button data-btn="delete" type="button" @onClick={{fn this.deleteModel issue "issueNumber"}} class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.Project.Issue.Delete">
+                              <i class="fa fa-trash"></i> {{t "global.form.delete"}}
+                            </AppUi::Button>
+                          </li>
+                        </ul>
+                      </div>
                     </td>                    
                   </tr>
                 {{/each}}
