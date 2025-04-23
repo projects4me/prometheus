@@ -81,7 +81,8 @@ export default Object.extend({
                     route: 'app',
                     anchorRoute: '',
                     routeParams: null,
-                    projectRelated: false
+                    projectRelated: false,
+                    order: 1
                 },
                 Project: {
                     label: 'views.nav.menu.project.label',
@@ -120,7 +121,8 @@ export default Object.extend({
                                 projectRelated: false,
                             }
                         }
-                    }
+                    },
+                    order: 5
                 },
                 Issue:{
                     label: 'views.nav.menu.issue.label',
@@ -164,7 +166,8 @@ export default Object.extend({
                                 routeParams: {module: 'issue'}
                             }
                         }
-                    }
+                    },
+                    order: 2                    
                 },
                 Conversation:{
                     label: 'views.nav.menu.conversation.label',
@@ -172,39 +175,8 @@ export default Object.extend({
                     route: 'app.project.conversation',
                     anchorRoute: 'conversation',
                     projectRelated: true,
-                    routeParams: null
-                },
-                User:{
-                    label: 'views.nav.menu.user.label',
-                    icon: 'users',
-                    route: 'app.user',
-                    anchorRoute: 'user',
-                    projectRelated: false,
-                    actions:{
-                        section1:{
-                            create:{
-                                label: 'views.nav.menu.user.create',
-                                route: 'app.user.create',
-                                className: 'text-red',
-                                anchorRoute: 'user/create',
-                                projectRelated: false,
-                            },
-                            management:{
-                                label: 'views.nav.menu.user.management',
-                                route: 'app.user.management',
-                                className: 'text-teal',
-                                anchorRoute: 'user/management',
-                                projectRelated: false,
-                            },
-                        }
-                    }
-                },
-                Role: {
-                    label: 'views.nav.menu.role.label',
-                    icon: 'key',
-                    route: 'app.role',
-                    anchorRoute: 'role',
-                    projectRelated: false,
+                    routeParams: null,
+                    order: 4
                 },  
                 Board:{
                     label: 'views.nav.menu.board.label',
@@ -212,51 +184,8 @@ export default Object.extend({
                     route: 'app.project.board',
                     anchorRoute: 'board',
                     projectRelated: true,
-                    routeParams: null
-                },
-                Workflow:{
-                    label: 'views.nav.menu.workflow.label',
-                    icon: 'puzzle-piece',
-                    route: 'app.module',
-                    anchorRoute: 'workflow',
-                    routeParams: {module: 'workflow'},
-                    projectRelated: false,
-                    actions:{
-                        section1:{
-                            list:{
-                                label: 'views.nav.menu.workflow.list',
-                                route: 'app.module',
-                                className: 'text-teal',
-                                anchorRoute: 'workflow',
-                                projectRelated: false,
-                                routeParams: {module: 'workflow'}
-                            },
-                            create:{
-                                label: 'views.nav.menu.workflow.create',
-                                route: 'app.create',
-                                className: 'text-red',
-                                anchorRoute: 'workflow/create',
-                                projectRelated: false,
-                                routeParams: {module: 'workflow'}
-                            }
-                        },
-                        section2:{
-                            import:{
-                                label: 'views.nav.menu.workflow.import',
-                                route: 'app.import',
-                                anchorRoute: 'workflow/import',
-                                projectRelated: false,
-                                routeParams: {module: 'workflow'}
-                            },
-                            export:{
-                                label: 'views.nav.menu.workflow.export',
-                                route: 'app.export',
-                                anchorRoute: 'workflow/export',
-                                projectRelated: false,
-                                routeParams: {module: 'workflow'}
-                            }
-                        }
-                    }
+                    routeParams: null,
+                    order: 3
                 },
                 Report:{
                     label: 'views.nav.menu.report.label',
@@ -293,7 +222,8 @@ export default Object.extend({
                                 routeParams: {module: 'report'}
                             }
                         }
-                    }
+                    },
+                    order: 9
                 },
                 Timelog:{
                     label: 'views.nav.menu.timelog.label',
@@ -337,7 +267,8 @@ export default Object.extend({
                                 routeParams: {module: 'timelog'}
                             }
                         }
-                    }
+                    },
+                    order: 7
                 },
                 Calendar:{
                     label: 'views.nav.menu.calendar.label',
@@ -345,7 +276,8 @@ export default Object.extend({
                     route: 'app.project.calendar',
                     anchorRoute: 'calendar',
                     projectRelated: true,
-                    routeParams: null
+                    routeParams: null,
+                    order: 8
                 },
                 Wiki:{
                     label: 'views.nav.menu.wiki.label',
@@ -353,8 +285,43 @@ export default Object.extend({
                     route: 'app.project.wiki',
                     anchorRoute: 'wiki',
                     projectRelated: true,
-                    routeParams: null
+                    routeParams: null,
+                    order: 6
                 }
+            },
+            adminItems: {
+                User:{
+                    label: 'views.nav.menu.user.label',
+                    icon: 'users',
+                    route: 'app.user',
+                    anchorRoute: 'user',
+                    projectRelated: false,
+                    actions:{
+                        section1:{
+                            create:{
+                                label: 'views.nav.menu.user.create',
+                                route: 'app.user.create',
+                                className: 'text-red',
+                                anchorRoute: 'user/create',
+                                projectRelated: false,
+                            },
+                            management:{
+                                label: 'views.nav.menu.user.management',
+                                route: 'app.user.management',
+                                className: 'text-teal',
+                                anchorRoute: 'user/management',
+                                projectRelated: false,
+                            },
+                        }
+                    },
+                },
+                Role: {
+                    label: 'views.nav.menu.role.label',
+                    icon: 'key',
+                    route: 'app.role',
+                    anchorRoute: 'role',
+                    projectRelated: false,
+                }            
             }
         },
         Project:{
@@ -472,133 +439,6 @@ export default Object.extend({
                         }
                     }
                 }
-            },
-
-            filters:{
-                enabledFilters:[
-                    {
-                        id: 'Project.name',
-                        label: "views.app.project.filter.name",
-                        type: 'string'
-                    },
-                    {
-                        id: 'Project.shortCode',
-                        label: "views.app.project.filter.shortCode",
-                        type: 'string',
-                        operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null','contains']
-                    },
-                    {
-                        id: 'Project.type',
-                        label: "views.app.project.filter.type",
-                        type: 'integer',
-                        input: 'select',
-                        values: {
-                            'scrum': 'Scrum',
-                            'kanban': 'Kanban',
-                            'business': 'Business',
-                            'other': 'Other',
-                        },
-                        operators: ['equal']
-                    },
-                    {
-                        id: 'Project.status',
-                        label: "views.app.project.filter.status",
-                        type: 'integer',
-                        input: 'select',
-                        values: {
-                            'new': 'New',
-                            'in_progress': 'In Progress',
-                            'pending': 'Pending',
-                            'completed': 'Completed',
-                            'closed': 'Closed',
-                            'deferred': 'Deferred',
-                        },
-                        operators: ['equal']
-                    },
-                    // {
-                    //   id: 'Project.phoneField',
-                    //   label: "views.app.project.filter.phoneField",
-                    //   type: 'string',
-                    //   placeholder: '____-____-____',
-                    //   operators: ['equal', 'not_equal'],
-                    //   validation: {
-                    //     format: /^.\({3}\).{3}-.{3}$/
-                    //   }
-                    // }
-                ]
-            }
-        },
-        Issue:{
-            filters:{
-                enabledFilters:[
-                    {
-                        id: 'Issue.issueNumber',
-                        label: "views.app.issue.filter.issueNumber",
-                        type: 'string'
-                    },
-                    {
-                        id: 'Issue.subject',
-                        label: "views.app.issue.filter.subject",
-                        type: 'string',
-                        operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null','contains']
-                    },
-                    {
-                        id: 'Issue.status',
-                        label: "views.app.issue.filter.status",
-                        type: 'integer',
-                        input: 'select',
-                        values: {
-                            'new': 'New',
-                            'in_progress': 'In Progress',
-                            'done': 'Done',
-                            'pending': 'Pending',
-                            'feedback': 'Feedback',
-                            'deferred': 'Deferred',
-                        },
-                        operators: ['equal']
-                    },
-                    {
-                        id: 'Issue.priority',
-                        label: "views.app.issue.filter.priority",
-                        type: 'integer',
-                        input: 'select',
-                        values: {
-                            'blocker': 'Blocker',
-                            'critical': 'Critical',
-                            'high': 'High',
-                            'medium': 'Medium',
-                            'low': 'Low',
-                            'lowest': 'Lowest'
-                        },
-                        operators: ['equal']
-                    },
-                    {
-                        id: 'Issue.startDate',
-                        label: "views.app.issue.filter.startDate",
-                        type: 'date',
-                        input: "text",
-                        operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between', 'not_between'],
-                        plugin: 'datepicker',
-                        plugin_config: {
-                            todayBtn: 'linked',
-                            todayHighlight: true,
-                            autoclose: true
-                        }
-                    },
-                    {
-                        id: 'Issue.endDate',
-                        label: "views.app.issue.filter.endDate",
-                        type: 'date',
-                        input: "text",
-                        operators: ['equal', 'less', 'less_or_equal', 'greater', 'greater_or_equal', 'between', 'not_between'],
-                        plugin: 'datepicker',
-                        plugin_config: {
-                            todayBtn: 'linked',
-                            todayHighlight: true,
-                            autoclose: true
-                        }
-                    },
-                ]
             }
         },
         Dashboard:{

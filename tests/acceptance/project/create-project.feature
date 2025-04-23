@@ -11,12 +11,12 @@ Feature: Project | create project
     And User enters test description in project description 
     And User selects start date of project
     And User selects end date of project
-    And User selects option 2 of project type
+    # And User selects option 2 of project type
     And User selects option 4 of project status
     And User enters test vision in project vision
     And User enters test vision in project scope
     And User selects option 3 of project issuetypes
     And User clicks on save button
-    Then User should be in app/project/1 page
+    Then User should be in app/project/testp page
     And Project name is test project
     And Project description is test description

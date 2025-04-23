@@ -5,25 +5,18 @@ import { click } from '@ember/test-helpers';
 export const given = function () {
     return [
         {
-            "Project membership is given to $userCount users": (assert, ctx) => async function (userCount) {
-                let users = server.schema.users.all();
-                let currentProject = ctx.get('currentProject');
-
-                users.models.forEach((user) => {
-                    let membership = server.create('membership');
-                    membership.update({
-                        userId: user.id,
-                        roleId: '1',
-                        projectId: currentProject.id
-                    });
-                });
-
-                let project = ctx.get('currentProject');
+            "User $userId is added as a member of project $projectId": (assert, ctx) => async function (userId, projectId) {
+                let project = server.schema.projects.find(projectId);
+                let members = project.members.add(server.schema.users.find(userId));
                 project.update({
-                    memberships: server.schema.memberships.all()
+                    members: members
                 });
 
-                assert.ok(true, `Project membership is given ${userCount} users`);
+                server.create('membership', {
+                    project: project,
+                    modifiedUser: userId,
+                    roleId: server.schema.roles.find(1).id
+                });
             }
         }
     ];
@@ -33,7 +26,7 @@ export const when = function () {
     return [
         {
             "User clicks on add button to add a member": (assert, ctx) => async function () {
-                await click('div.membership-add');
+                await click('[data-add="members"]');
                 assert.ok(true, "User clicks on add button to add a member");
             }
         },
@@ -44,8 +37,8 @@ export const when = function () {
             }
         },
         {
-            "User selects a role for that member": (assert, ctx) => async function () {
-                await selectChoose('div[data-field="select-role"] div.input-group', '.ember-power-select-option', 1);
+            "User selects a role $roleIndex for that member": (assert, ctx) => async function (roleIndex) {
+                await selectChoose('div[data-field="select-role"] div.input-group', '.ember-power-select-option', parseInt(roleIndex - 1));
                 assert.ok(true, `role selected`);
             }
         }
@@ -55,8 +48,9 @@ export const when = function () {
 export const then = function () {
     return [
         {
-            "$userName is added as a member of project": (assert, ctx) => async function (userName) {
-                assert.dom('ul.users-list li:nth-last-child(2) a').hasText(userName);
+            "User $id is added as a member of project": (assert, ctx) => async function (id) {
+
+                assert.dom(`[data-member-id="${id}"]`).exists();
             }
         }
     ];

@@ -15,54 +15,29 @@
   </a>
   <div class="global-search">
 
-<PowerSelect
-  @placeholder={{t "global.form.searchPlaceholder"}}
-  @searchEnabled={{true}}
-  @search={{perform this.search}}
-  @onChange={{this.itemSelected}} as |issue|>
-  <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
-</PowerSelect>
+    <PowerSelect
+      @placeholder={{t "global.form.searchPlaceholder"}}
+      @searchEnabled={{true}}
+      @search={{perform this.search}}
+      @onChange={{this.itemSelected}} as |issue|>
+      <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
+    </PowerSelect> 
   </div>
+
+    {{!-- Create Modules e.g. Project,Issue,Conversation (START) --}}
+    <div class="create-modules">
+      <button class="create-module-btn"><i class="fa fa-plus"></i></button>
+      <div class="create-module-dropdown-content">
+        <a href="/app/project/{{this.trackedProject.shortCode}}/issue/create" class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.issue"}}</a>
+        <a href="/app/project/{{this.trackedProject.shortCode}}/conversation/create" class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.conversation"}}</a>
+        <a href="/app/project/create">{{t "global.module.singular.project"}}</a>
+      </div>
+    </div>
+    {{!-- Create Modules e.g. Project,Issue,Conversation (END) --}}
+
   {{!-- Navbar Right Menu --}}
   <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
-      {{!-- Messages: style can be found in dropdown.less--}}
-      <li class="dropdown messages-menu">
-        {{!-- Menu toggle button --}}
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <i class="fa fa-envelope-o"></i>
-          <span class="label label-success">{{t "views.app.application.header.four"}}</span>
-        </a>
-        <ul class="dropdown-menu">
-          <li class="header">{{t "views.app.messages" count="4"}}</li>
-          <li>
-            {{!-- inner menu: contains the messages --}}
-            <ul class="menu">
-              <li>
-                {{!-- start message --}}
-                <a href="#">
-                  <div class="pull-left">
-                    {{!-- User Image --}}
-                    <img src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" class="img-circle" alt="{{t "global.form.image"}}">
-                  </div>
-                  {{!-- Message title and timestamp --}}
-                  <h4>
-                    {{t "views.app.application.header.supportTeam"}}
-                    <small><i class="fa fa-clock-o"></i>{{t "views.app.application.header.fiveMins"}}</small>
-                  </h4>
-                  {{!-- The message --}}
-                  <p>{{t "views.app.application.header.buyTheme"}}</p>
-                </a>
-              </li>
-              {{!-- end message --}}
-            </ul>
-            {{!-- /.menu --}}
-          </li>
-          <li class="footer"><a href="#">{{t "views.app.allmessages"}}</a></li>
-        </ul>
-      </li>
-      {{!-- /.messages-menu --}}
-
       {{!-- Notifications Menu --}}
       <li class="dropdown notifications-menu">
         {{!-- Menu toggle button --}}
@@ -87,43 +62,6 @@
           <li class="footer"><a href="#">{{t "views.app.allnotifications"}}</a></li>
         </ul>
       </li>
-      {{!-- Tasks Menu --}}
-      <li class="dropdown tasks-menu">
-        {{!-- Menu Toggle Button --}}
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <i class="fa fa-flag-o"></i>
-          <span class="label label-danger">{{t "views.app.application.header.ten"}}</span>
-        </a>
-        <ul class="dropdown-menu">
-          <li class="header">{{t "views.app.tasks" count="10"}}</li>
-          <li>
-            {{!-- Inner menu: contains the tasks --}}
-            <ul class="menu">
-              {{!-- Task item --}}
-              <li>
-                <a href="#">
-                  {{!-- Task title and progress text --}}
-                  <h3>
-                    {{t "views.app.application.header.designButtons"}}
-                    <small class="pull-right">{{t "views.app.application.header.twenty"}}</small>
-                  </h3>
-                  {{!-- The progress bar --}}
-                  <div class="progress xs">
-                    {{!-- Change the css width attribute to simulate progress --}}
-                    <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                      <span class="sr-only">{{t "views.app.application.header.twentyComplete"}}</span>
-                    </div>
-                  </div>
-                </a>
-              </li>
-              {{!-- end task item --}}
-            </ul>
-          </li>
-          <li class="footer">
-            <a href="#">{{t "views.app.alltasks"}}</a>
-          </li>
-        </ul>
-      </li>
       {{!-- User Account Menu --}}
       <li class="dropdown user user-menu">
         {{!-- Menu Toggle Button --}}
@@ -141,23 +79,8 @@
 
             <p>
               {{this.currentUser.user.name}} - {{this.currentUser.user.title}}
-              <small>{{t "views.app.member"}}{{get-date this.currentUser.user 'createdDate' 'MMM YYYY'}}</small>
+              <small>{{t "views.app.member"}}{{format-date date=this.currentUser.user.dateCreated format='MMM YYYY'}}</small>
             </p>
-          </li>
-          {{!-- Menu Body --}}
-          <li class="user-body">
-            <div class="row">
-              <div class="col-xs-4 text-center">
-                <a href="#">{{t "views.app.activity.title"}}</a>
-              </div>
-              <div class="col-xs-4 text-center">
-                <a href="#">{{t "views.app.today"}}</a>
-              </div>
-              <div class="col-xs-4 text-center">
-                <a href="#">{{t "views.app.history"}}</a>
-              </div>
-            </div>
-            {{!-- /.row --}}
           </li>
           {{!-- Menu Footer--}}
           <li class="user-footer">
@@ -177,10 +100,6 @@
             </div>
           </li>
         </ul>
-      </li>
-      {{!-- Control Sidebar Toggle Button --}}
-      <li>
-        <a href="javascript:void(0)" data-toggle="control-sidebar"><ion class="ion-md-chatboxes"></ion></a>
       </li>
     </ul>
   </div>

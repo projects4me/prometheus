@@ -32,68 +32,20 @@
 <ul class="sidebar-menu">
   <li class="header">{{t "views.nav.mainnav"}}</li>
 
-  {{#each-in this.metaData as |module definition|}}
-    {{#if definition.actions}}
-
-      <li class="treeview">
-        {{#if definition.projectRelated}}
-          <a href="/{{this.appPrefix}}/{{this.projectId}}/{{definition.anchorRoute}}">
-            <i class="fa fa-{{definition.icon}}"></i>
-            <span>{{t definition.label}}</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-        {{else}}
-          <a href="/{{this.appPrefix}}/{{definition.anchorRoute}}">
-            <i class="fa fa-{{definition.icon}}"></i>
-            <span>{{t definition.label}}</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-        {{/if}}
-        <ul class="treeview-menu">
-          {{#each-in definition.actions as |section menu|}}
-            {{#each-in menu as |entity item|}}
-              <li>
-                {{#if definition.projectRelated}}
-                  <a href="/{{this.appPrefix}}/{{this.projectId}}/{{item.anchorRoute}}" {{action "navigate" item.route  item.routeParams item.anchorRoute this.projectId}}>
-                    <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
-                  </a>
-                {{else}}
-                  <a href="/{{this.appPrefix}}/{{item.anchorRoute}}" {{action "navigate" item.route  item.routeParams item.anchorRoute}}>
-                    <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
-                  </a>
-                {{/if}}
-              </li>
-            {{/each-in}}
-            {{#if (not-last definition.actions menu)}}
-              <li role="separator" class="divider"></li>
-            {{/if}}
-          {{/each-in}}
-        </ul>
-      </li>
-    {{else}}
-      <li class="treeview">
-        {{#if definition.projectRelated}}
-          <a href="/{{this.appPrefix}}/{{this.projectId}}/{{definition.anchorRoute}}" {{action "navigate" definition.route definition.routeParams definition.anchorRoute this.projectId}}>
-            <i class="fa fa-{{definition.icon}}"></i>
-            <span>{{t definition.label}}</span>
-          </a>
-        {{else}}
-          <a href="/{{this.appPrefix}}/{{definition.anchorRoute}}" {{action "navigate" definition.route definition.routeParams definition.anchorRoute}}>
-            <i class="fa fa-{{definition.icon}}"></i>
-            <span>{{t definition.label}}</span>
-          </a>
-        {{/if}}
-      </li>
-    {{/if}}
-  {{/each-in}}
+  <AppUi::NavbarItems
+    @meta={{this.navigationMeta}}
+    @appPrefix={{this.appPrefix}}
+    @navigate={{this.navigate}}
+    @trackedProject={{this.trackedProject}}
+  />
 
   <li class="header">{{t "views.app.components.navBar.admin"}}</li>
-  <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>{{t "views.app.components.navBar.important"}}</span></a></li>
-  <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>{{t "views.app.components.navBar.warning"}}</span></a></li>
-  <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>{{t "views.app.components.navBar.information"}}</span></a></li>
+  <AppUi::NavbarItems
+    @meta={{this.adminNavigationMeta}}
+    @appPrefix={{this.appPrefix}}
+    @navigate={{this.navigate}}
+    @trackedProject={{this.trackedProject}}
+  />
+
 </ul>
 {{!-- /.sidebar-menu --}}

@@ -78,7 +78,7 @@ export default App.extend({
      */
     loadIssue(params) {
         let _self = this;
-        let projectId = (_self.paramsFor('app.project').project_id) ?? (_self.trackedProject.getProjectId());
+        let projectId = _self.trackedProject.getProjectId();
         let options = {
             query: `((Issue.issueNumber : ${params.issue_number}) AND (Issue.projectId : ${projectId}))`,
             sort: 'Issue.issueNumber,comments.dateCreated',

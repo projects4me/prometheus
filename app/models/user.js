@@ -140,6 +140,16 @@ export default Model.extend({
     createdUser: attr('string'),
 
     /**
+     * The name of the user who created this user.
+     *
+     * @property createdUserName
+     * @type String
+     * @for User
+     * @private
+     */    
+    createdUserName: attr('string'),
+
+    /**
      * User who modified this user
      *
      * @property modifiedUser
@@ -148,6 +158,16 @@ export default Model.extend({
      * @private
      */
     modifiedUser: attr('string'),
+
+    /**
+     * The name of the user who modified this user.
+     *
+     * @property createdUserName
+     * @type String
+     * @for User
+     * @private
+     */    
+    modifiedUserName: attr('string'),    
 
     /**
      * Title of the user

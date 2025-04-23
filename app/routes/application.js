@@ -5,6 +5,7 @@
 import Route from '@ember/routing/route';
 import { inject } from '@ember/service';
 import ENV from "prometheus/config/environment";
+import getCurrentUrl from "prometheus/utils/location/current-url";
 
 /**
  * This is the application route, in EmberJs the application route is the main
@@ -61,7 +62,17 @@ export default Route.extend({
     beforeModel: function () {
         this._super(...arguments);
         let route = '';
-        let currentUrl = (ENV.environment == 'test') ? this.router.location.path : this.router.location.concreteImplementation.location.pathname;
+        let currentUrl = getCurrentUrl(this.router);
+
+        // Create URL object
+        let url = new URL(currentUrl, window.location.origin);
+        let routeName = url.pathname?.split('/')[1];
+
+        // If public route then no need to check for authentication
+        let publicRoutes = ENV.publicRoutes;
+        if (publicRoutes.includes(routeName)) {
+            return;
+        }
 
         if (this.session.isAuthenticated) {
             route = (currentUrl != '/') ? currentUrl : 'app';

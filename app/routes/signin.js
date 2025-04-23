@@ -25,12 +25,41 @@ export default Route.extend({
      *
      * @property session
      * @type Object
-     * @for Application
+     * @for SigninRoute
      * @public
      */
-    session:inject(),
-    
+    session: inject(),
+
+    /**
+     * The intl library service that is used in order to get the translations.
+     *
+     * @property intl
+     * @type Ember.Service
+     * @for SigninRoute
+     * @public
+     */
+    intl: inject(),
+
     beforeModel() {
         this.session.prohibitAuthentication(this.routeIfAlreadyAuthenticated);
+        this.notifySessionExpired();
+    },
+    /**
+     * This function notifies the user when their session has expired.
+     * 
+     * @method notifySessionExpired
+     */
+    notifySessionExpired() {
+        let sessionExpired = localStorage.getItem('sessionExpired');
+        let _self = this;
+        
+        if (sessionExpired) {
+            new Messenger().post({
+                message: _self.intl.t("views.signin.sessionExpired"),
+                type: 'error',
+                showCloseButton: true
+            });
+            localStorage.removeItem('sessionExpired');
+        }
     }
 });

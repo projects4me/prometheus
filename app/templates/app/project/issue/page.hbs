@@ -11,7 +11,7 @@
               <h2 class="box-title">{{issue.issuetype.name}} - #{{issue.issueNumber}} | <span class="issueSubject">{{issue.subject}}</span></h2>
               <div class="box-tools pull-right">
                 <span class="project-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></span>
-                <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" {{action 'editIssue' issue.issueNumber}} @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
+                <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" @onClick={{fn this.editIssue issue.issueNumber}} @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
                 <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></AppUi::Button>
               </div>
             </div>
@@ -26,7 +26,7 @@
                     <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
                   </div>
                 </div>
-                <div class="col-xs-9 col-md-10"  data-field="issue.description">
+                <div class="col-xs-9 col-md-10 issue-description"  data-field="issue.description">
                   <h4>{{t "views.app.issue.detail.description"}}</h4>
                   <p>
                     {{safe-html issue.description}}
@@ -92,7 +92,8 @@
           {{!-- This is the issue conversations --}}
           <AccessControl @aclContext="App.Project.Issue.Read.ConversationRoom.Read">
             <div class="col-md-12">
-              <div class="box box-info conversations issue-conversation-section">
+              {{this.scrollConvo}}
+              <div class="box box-info conversations issue-conversation-section" {{did-insert this.scrollToElement false}}>
                 <div class="box-header with-border">
                   <h3 class="box-title">{{t "views.app.issue.detail.conversation"}}</h3>
                   <div class="box-tools pull-right">
@@ -108,7 +109,7 @@
                       <div class="comment-text">
                         <span class="username">
                           <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
-                          <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
+                          <span class="text-muted pull-right">{{format-date date=comment.dateModified format="MMM Do 'YY, h:mm a" localTime=true}}</span>
                         </span>
                         {{translate-comment comment.comment}}
                       </div>
@@ -127,7 +128,6 @@
                             @spellcheck={{false}}
                             @entity={{issue}}
                             @placeholder={{t "views.app.conversation.messagebox"}}
-                            @value={{this.comment}}
                             @save={{this.saveComment}}
                           />
                         </div>

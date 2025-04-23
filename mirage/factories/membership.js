@@ -24,9 +24,6 @@ export default Factory.extend({
     roleId() {
         return (_.random(1, 5)).toString();
     },
-    projectId() {
-        return (_.random(1, 10)).toString();
-    },
     userId() {
         return (_.random(1, 10)).toString();
     }

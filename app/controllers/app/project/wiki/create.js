@@ -147,7 +147,7 @@ export default class AppProjectWikiCreateController extends PrometheusCreateCont
      */
     navigateToSuccess(model) {
         this.transitionToRoute('app.project.wiki.page', {
-            project_id: model.get('projectId'),
+            shortcode: this.trackedProject.shortCode,
             wiki_name: model.get('name')
         });
     }
@@ -171,7 +171,6 @@ export default class AppProjectWikiCreateController extends PrometheusCreateCont
      * @protected
      */
     afterCancel() {
-        let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
-        this.transitionToRoute('app.project.wiki', { project_id: projectId });
+        this.transitionToRoute('app.project.wiki', { shortcode: this.trackedProject.shortCode });
     }
 }

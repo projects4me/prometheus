@@ -61,7 +61,7 @@ export default Widget.extend({
                 moment(issue.get('startDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 moment(issue.get('endDate') ,'YYYY-MM-DD').format('MMM Do YY'),
                 issue.get('project.name'),
-                issue.get('project.id')
+                issue.get('project.shortCode')
             ])
         });
 
@@ -75,7 +75,7 @@ export default Widget.extend({
                 { title: "Start date" },
                 { title: "End data" },
                 { title: "Project" },
-                { title: "projectId" }
+                { title: "projectShortCode" }
             ],
             columnDefs: [
                 {
@@ -89,11 +89,11 @@ export default Widget.extend({
         table.on( 'select', function ( e, dt, type, indexes ) {
             if ( type === 'row' ) {
                 let issueNumber = table.rows( indexes ).data().pluck(0)[0];
-                let projectId = table.rows( indexes ).data().pluck(6)[0];
+                let projectShortCode = table.rows( indexes ).data().pluck(6)[0];
 
                 issueNumber = _.replace(issueNumber,'<a href="javascript:void(0);">','');
                 issueNumber = _.replace(issueNumber,'</a>','');
-                _self.get('router').transitionTo('app.project', projectId);
+                _self.get('router').transitionTo('app.project', projectShortCode.toLowerCase());
                 _self.get('router').transitionTo('app.project.issue.page', issueNumber);
             }
         } );

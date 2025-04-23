@@ -61,7 +61,9 @@ module.exports = function(environment) {
 
         'ember-cli-mirage': {
             enabled: false
-        }
+        },
+        
+        publicRoutes: ['reset-password']
     };
 
     if (environment === 'development') {

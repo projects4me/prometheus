@@ -8,7 +8,8 @@ import MD from "../utils/metadata/metadata";
 import { observer } from '@ember/object';
 import Component from '@ember/component';
 import { inject } from '@ember/service';
-
+import { getOwner } from '@ember/application';
+import queryBuilderOperators from "prometheus/utils/metadata/querybuilder-operators";
 
 /**
  * This component is used to render the chat-boxes in the application
@@ -63,6 +64,20 @@ export default Component.extend({
     query:null,
 
     /**
+     * Mapping of module names to their controller paths
+     * 
+     * @property controllerPaths
+     * @type Object
+     * @for QueryBuilder
+     * @private
+     */
+    controllerPaths: {
+        'issue': 'app.project.issue.index',
+        'project': 'app.projects.index'
+    },
+
+
+    /**
      * This is an observer function that is triggered whenever
      * a query is changed so that we can reset the rules based
      * on the changed query
@@ -90,7 +105,12 @@ export default Component.extend({
     didInsertElement(){
         let _self = this;
         let intl = _self.intl;
-        let filters = MD.create().getViewMeta(_self.get('module'),'filters',intl).enabledFilters;
+        let controller = getOwner(_self).lookup(`controller:${_self.controllerPaths[_self.module]}`);
+        let filters = controller.metadata.filters;
+        filters.map((filter) => {
+            filter.operators = queryBuilderOperators[filter.type];
+        });
+        
         _self.set('filters',filters);
 
         queryBuilder.init('#'+this.elementId,filters);

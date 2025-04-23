@@ -1,5 +1,5 @@
 <AccessControl @aclContext={{@aclContext}}>
-  <button ...attributes>
+  <button type="button" {{on "click" this.handleClick}} disabled={{this.disabled}} ...attributes>
     {{yield}}
   </button>
 </AccessControl>

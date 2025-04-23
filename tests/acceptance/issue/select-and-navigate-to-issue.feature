@@ -6,12 +6,12 @@ Feature: Issue | select and navigate to issue
     Given There is no pre-existing data
     And default scenario is loaded
     And User_1 is logged in
-    And User_1 selects Project 2
+    And User_1 selects Project 1
     And Project has following details
     ---------
     | issue |
     | 5     |
     ---------
-    When User navigates to app/project/2/issue
+    When User navigates to app/project/project_1/issue
     And User selects issue 5 from list
-    Then User should be in app/project/2/issue/5 page
+    Then User should be in app/project/project_1/issue/5 page

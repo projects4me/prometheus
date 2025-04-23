@@ -14,5 +14,5 @@ import ENV from "prometheus/config/environment";
  * @returns {string} The current URL of the browser.
  */
 export default function getCurrentUrl(router) {
-    return (ENV.environment == 'test') ? router.location.path : router.location.concreteImplementation.location.pathname;
+    return (ENV.environment == 'test') ? router.location.path : router.location.getURL();
 }

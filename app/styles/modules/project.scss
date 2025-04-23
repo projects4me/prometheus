@@ -8,57 +8,65 @@
   This contains the CSS related to the project in the application.
 */
 
-.project-owner{
+.project-owner {
   text-align: center;
 
-  h4{
+  h4 {
     text-align: left;
   }
 
-  img{
-    width:100%;
+  img {
+    width: 100%;
   }
 }
 
-.project-details .badge{
+.project-details .badge {
   border-radius: 0.2rem;
 }
 
-.project-status .badge {
-    text-transform: uppercase;
+.project-details .project-description {
+  overflow-wrap: break-word;
 }
 
-.project-milestones-section{
+.project-status .badge {
+  text-transform: uppercase;
+}
 
-  .info-box{
+.project-milestones-section {
+  .info-box {
     position: relative;
   }
-  .info-box-icon{
+  .info-box-icon {
     height: 100%;
     padding-top: 1.5rem;
     position: absolute;
     line-height: 6rem;
   }
 
-  .info-box-content > .pull-right{
-    margin-top:0.5rem;
+  .info-box-content > .pull-right {
+    margin-top: 0.5rem;
   }
-  .info-box-content .pull-right{
-    margin-left:1.5rem;
+  .info-box-content .pull-right {
+    margin-left: 1.5rem;
   }
-  .info-box-number{
+  .info-box-number {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: pre;
   }
+
+  .box-body {
+    max-height: 50rem;
+    overflow-y: auto;
+  }  
 }
 
-.project-conversations{
+.project-conversations {
   list-style: none;
-  margin:0;
-  padding:0;
+  margin: 0;
+  padding: 0;
 
-  li{
+  li {
     border-bottom: 1px solid #f4f4f4;
     padding: 1rem;
 
@@ -73,40 +81,44 @@
   }
 }
 
-.project-conversations, .open-issues{
+.project-conversations,
+.issue-overview {
   max-height: 35rem;
-  overflow-x:hidden;
-  overflow-y: auto;
+  min-height: 35rem;
 }
 
-.project-estimated-spent{
+.project-estimated-spent {
   height: 35rem;
 }
 
-.project-activities{
+.project-activities {
   padding-left: 1.5rem;
   padding-top: 1.5rem;
 }
 
-.open-issues{
+.issue-overview {
   list-style: none;
-  margin:0;
-  padding:0;
+  margin: 0;
+  padding: 0;
 
-  li{
+  .issue-block-container {
+    padding: 0 0 1rem 0;
+  }
+
+  li {
     border-bottom: 1px solid #f4f4f4;
     padding: 1rem;
 
-    .issue-block{
-      .priority{
-        float:left;
-        font-size:2rem;
-        width:4rem;
-        text-align: center;
+    .issue-block {
+      .priority {
+        float: left;
+        font-size: 2rem;
+        width: 4rem;
       }
 
-      .data-block{
-        margin-left:5rem;
+      .data-block {
+        display: inline-block;
+        width: 90%;
         .subject {
           display: block;
           font-weight: 600;
@@ -119,7 +131,8 @@
       }
     }
 
-    .issue-block:before, .issue-block:after {
+    .issue-block:before,
+    .issue-block:after {
       content: " ";
       display: table;
     }
@@ -130,50 +143,66 @@
   }
 }
 
-.project{
+[data-remove-member-warning] {
+  padding-left: 1rem;
 
-  .fa-ban{
+  i {
+    color: $dangerColor;
+    margin-top: 0.1rem;
+  }
+
+  h5 {
+    margin-top: 0;
+    margin-left: 0.5rem;
+  }
+}
+
+.project {
+  .fa-ban {
     color: #d33724;
   }
-  .fa-angle-double-up{
+  .fa-angle-double-up {
     color: #d33724;
     font-weight: bold;
   }
-  .fa-arrow-up{
+  .fa-arrow-up {
     color: #e98a7e;
   }
-  .fa-dot-circle-o{
+  .fa-dot-circle-o {
     color: $primaryColor;
   }
-  .fa-arrow-down{
+  .fa-arrow-down {
     color: #5ac594;
   }
-  .fa-angle-double-down{
+  .fa-angle-double-down {
     color: #00a65a;
     font-weight: bold;
   }
 
-  .done,.complete{
-    background-color: #5AC594 !important;
+  .done,
+  .complete {
+    background-color: #5ac594 !important;
   }
 
-  .closed{
+  .closed {
     background-color: #e98a7e;
   }
 
-  .deferred,.pending,.feedback{
+  .deferred,
+  .pending,
+  .feedback {
     background-color: #f7bf65;
   }
 
-  .new{
+  .new {
     background-color: #80b5d3;
   }
 
-  .in_progress{
+  .in_progress {
     background-color: $primaryColor;
   }
 
-  .no-entry{
+  .no-entry {
     text-align: center;
     margin: 2rem 0rem;
     color: $lightColor;
@@ -183,80 +212,70 @@
   .edit-milestone {
     position: absolute;
     right: 1.2rem;
-    top:0.8rem;
+    top: 0.8rem;
     cursor: pointer;
   }
 
-  .edit-milestone:hover{
+  .edit-milestone:hover {
     font-weight: bold;
   }
-
 }
 
-.list-controls{
+.list-controls {
   padding: 0.5rem;
 
-
-  .checkbox-toggle{
+  .checkbox-toggle {
     padding: 0.3rem 0.8rem;
   }
 }
 
-.table-responsive{
-  tbody{
-    .checkbox-toggle{
+.table-responsive {
+  tbody {
+    .checkbox-toggle {
       padding: 0rem 0.5rem;
     }
   }
 }
 
-.list-view{
-  .select-box{
+.list-view {
+  .select-box {
     width: 4rem;
   }
 }
 
-
-
-.show-5{
-  li:nth-of-type(1n+6) {
+.show-5 {
+  li:nth-of-type(1n + 6) {
     display: none;
   }
 }
 
-.membership-add{
-  background: transparent;
-  border: 0.3rem dashed $borderColor;
-  color: $borderColor;
-  height: 10rem;
-  width: 10rem;
-  border-radius:50%;
-  -moz-border-radius:50%;
-  -webkit-border-radius:50%;
-  margin-top: 2.5rem;
-
-  &:hover{
-    border-color: $warningColor;
-    color: $warningColor;
-  }
-
-  ion.ion-md-add{
-    font-size: 6rem;
-    color: inherit;
-  }
-  .ion-md-add:before{
-    margin-top:1.5rem;
-  }
-
+.member-item {
+  position: relative;
 }
 
-.projects{
-  .nav-pills{
-    >li>a{
+.member-item {
+  [data-edit-member] {
+    right: 0.5rem;
+    position: relative;
+  }
+  
+  [data-delete-member] {
+    right: 0;
+    position: absolute;
+  }
+}
+
+.member-item:hover {
+  cursor: pointer;
+}
+
+.projects {
+  .nav-pills {
+    > li > a {
       margin-right: 2rem;
     }
 
-    a:hover{
+    a:hover {
       color: $primaryColor;
     }
 
@@ -272,21 +291,20 @@
       border-top: 0.1rem solid $borderColor;
     }
 
-    .search-name{
+    .search-name {
       margin-right: 1rem;
     }
 
-    .btn-group{
+    .btn-group {
       position: absolute;
-      right:1rem;
-      top:0.3rem;
+      right: 1rem;
+      top: 0.3rem;
     }
 
     .fa-filter {
       position: absolute;
-      right:0.5rem;
-      top:1rem;
+      right: 0.5rem;
+      top: 1rem;
     }
-
   }
 }

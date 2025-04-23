@@ -8,7 +8,7 @@ import format from "prometheus/utils/data/format";
 import { task, timeout } from 'ember-concurrency';
 import { action } from '@ember/object';
 import AppComponent from '../app';
-import {tracked} from'@glimmer/tracking';
+import { tracked } from '@glimmer/tracking';
 
 /**
  * This component is used to render the application header
@@ -39,7 +39,7 @@ export default class ApplicationHeaderComponent extends AppComponent {
      * @private
      */
     @tracked selected;
-    
+
     /**
      * We are using the store service to retrieve data for global search
      *
@@ -185,5 +185,4 @@ export default class ApplicationHeaderComponent extends AppComponent {
     signIn() {
 
     }
-
 }

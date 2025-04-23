@@ -5,50 +5,57 @@
 /**
   This contains the CSS related to the project in the application.
 */
-.issue, .issues-today{
-
+.issue,
+.issues-today {
   .fa {
     font-style: normal;
   }
-  .fa-ban{
+  .fa-ban {
     color: #d33724;
   }
-  .fa-angle-double-up{
+  .fa-angle-double-up {
     color: #d33724;
     font-weight: bold;
   }
-  .fa-arrow-up{
+  .fa-arrow-up {
     color: #e98a7e;
   }
-  .fa-dot-circle-o{
+  .fa-dot-circle-o {
     color: $primaryColor;
   }
-  .fa-arrow-down{
+  .fa-arrow-down {
     color: #5ac594;
   }
-  .fa-angle-double-down{
+  .fa-angle-double-down {
     color: #00a65a;
     font-weight: bold;
   }
 
-  .done,.complete{
-    background-color: #5AC594 !important;
+  .done,
+  .complete {
+    background-color: #5ac594 !important;
   }
 
-  .closed{
+  .closed {
     background-color: #e98a7e;
   }
 
-  .deferred,.pending,.feedback{
+  .deferred,
+  .pending,
+  .feedback {
     background-color: #f7bf65;
   }
 
-  .new{
+  .new {
     background-color: #80b5d3;
   }
 
-  .in_progress{
+  .in_progress {
     background-color: $primaryColor;
+  }
+
+  .issue-description {
+    overflow-wrap: break-word;
   }
 }
 
@@ -65,12 +72,13 @@
     background: #fff;
   }
 
-  .item:before, .item:after {
+  .item:before,
+  .item:after {
     content: " ";
     display: table;
   }
 
-  .item:after{
+  .item:after {
     clear: both;
   }
 
@@ -85,22 +93,21 @@
       width: 5rem;
       height: 5rem;
     }
-
   }
 
-  .log-edit{
-    position:absolute;
-    right:0;
+  .log-edit {
+    position: absolute;
+    right: 0;
     margin-right: 2rem;
     font-size: 1.4rem;
     color: $lightColor;
     cursor: pointer;
-    &:hover{
+    &:hover {
       color: $dangerColor;
     }
   }
 
-  .no-entry{
+  .no-entry {
     text-align: center;
     margin: 2rem;
     color: $lightColor;
@@ -108,7 +115,7 @@
   }
 
   .log-info {
-    margin-left:6rem;
+    margin-left: 6rem;
 
     .log-description {
       display: block;
@@ -125,7 +132,7 @@
   }
 }
 
-.issue-activities{
+.issue-activities {
   padding-left: 1.5rem;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
@@ -138,42 +145,41 @@
   border-bottom: 1px solid #f4f4f4;
 }
 
-.filePreviewModal
-{
-  .modal-dialog{
+.filePreviewModal {
+  .modal-dialog {
     width: 35%;
     height: 96%;
-    .modal-content{
+    .modal-content {
       width: 100%;
       height: 100%;
-      .modal-body{
-        width:100%;
-        height:100%;
-        margin-bottom:-12rem;
+      .modal-body {
+        width: 100%;
+        height: 100%;
+        margin-bottom: -12rem;
         padding-bottom: 12rem;
-        iframe{
-          width:100%;
-          height:100%;
+        iframe {
+          width: 100%;
+          height: 100%;
         }
       }
     }
   }
 }
 
-.issue-conversation-section{
-  .box-comments .box-footer{
+.issue-conversation-section {
+  .box-comments .box-footer {
     background: #fff;
   }
   margin-top: 0rem;
 }
 
-.issues{
-  .nav-pills{
-    >li>a{
+.issues {
+  .nav-pills {
+    > li > a {
       margin-right: 2rem;
     }
 
-    a:hover{
+    a:hover {
       color: $primaryColor;
     }
 
@@ -189,28 +195,27 @@
       border-top: 0.1rem solid $borderColor;
     }
 
-    .search-name{
+    .search-name {
       margin-right: 1rem;
     }
 
-    .btn-group{
+    .btn-group {
       position: absolute;
-      right:1rem;
-      top:0.3rem;
+      right: 1rem;
+      top: 0.3rem;
     }
 
     .fa-filter {
       position: absolute;
-      right:0.5rem;
-      top:1rem;
+      right: 0.5rem;
+      top: 1rem;
     }
-
   }
 }
 
-.issue-hierarchy{
-  .no-entry{
-    padding:1.4rem;
+.issue-hierarchy {
+  .no-entry {
+    padding: 1.4rem;
     text-align: center;
   }
 }
@@ -219,8 +224,8 @@
   .form-group {
     div[data-field="issue.description"] {
       > #editor {
-      height: 600px !important;
+        height: 600px !important;
+      }
     }
-   }
- }
+  }
 }

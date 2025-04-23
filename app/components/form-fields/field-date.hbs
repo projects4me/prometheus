@@ -7,7 +7,15 @@
       {{date-picker @update @format @singleDatePicker @showDropdowns @positionX @positionY @timePicker @timePickerIncrement @startDate @endDate @minDate this.maxDate @maxSpan @minYear @maxYear @autoApply @parentEl}} />
     <span class="highlight"></span>
     <span class="bar"></span>
-    <label class="floating-label">{{@label}}</label>
+
+    <FormFields::Label
+      @label={{@label}}
+      @showFieldInfo={{@showFieldInfo}}
+      @info={{@info}}
+      @data-field={{@data-field}}
+      @required={{@required}}
+    />
+
     {{#if (and @message this.shouldValidate)}}
       <span class="error text-red" id={{@data-field}}>
         {{@message}}

@@ -1,8 +1,6 @@
 <div class="row issues">
 
   <div class="col-md-2">
-    <a href="javascript:void(0);" {{action "create" "issue"}} class="btn btn-primary btn-block margin-bottom">{{t "views.app.issue.list.create"}}</a>
-
     <div class="box box-solid">
       <div class="box-header with-border">
         <h3 class="box-title">{{t "views.app.issue.list.savedsearch.label"}}</h3>
@@ -82,12 +80,12 @@
             />
             <span class="glyphicon glyphicon-search form-control-feedback"></span>
           </div>
-          <AppUi::Button type="button" class="btn btn-primary" {{action "searchByRules"}}  @aclContext="App.Project.Issue.Read">{{t "global.form.search"}}</AppUi::Button>
-          <AppUi::Button type="button" class="btn" {{action "clearSearch"}}>{{t "global.form.clear"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.searchByRules}}  @aclContext="App.Project.Issue.Read">{{t "global.form.search"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn" @onClick={{this.clearSearch}}>{{t "global.form.clear"}}</AppUi::Button>
         </div>
         <div class="list-view-filters collapse">
-          {{query-builder module="Issue" query=this.query}}
-          <AppUi::Button type="button" class="btn btn-primary pull-right" {{action "showSaveSearchDialog"}} @aclContext="App.Project.Issue.List.SavedSearch.Create">{{t "global.form.savesearch"}}</AppUi::Button>
+          {{query-builder module="issue" query=this.query}}
+          <AppUi::Button type="button" class="btn btn-primary pull-right" @onClick={{this.showSaveSearchDialog}} @aclContext="App.Project.Issue.List.SavedSearch.Create">{{t "global.form.savesearch"}}</AppUi::Button>
           {{#if this.saveSearchDialog}}
             {{#bootstrap-modal
                 title="global.form.savesearch"
@@ -124,22 +122,22 @@
           <div class="btn-group">
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.Project.Issue.Delete"><i class="fa fa-trash-o"></i></AppUi::Button>
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></AppUi::Button>
-            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.massupdate"}}" @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
-            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.discuss"}}"><i class="fa fa-comments-o"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.massupdate"}}" @onClick={{this.showMassUpdateDialog}} @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.export"}}" @onClick={{this.showExportDialog}}><i class="fa fa-download"></i></AppUi::Button>
           </div>
-          <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" {{action "reloadPage"}}><i class="fa fa-refresh"></i></AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" @onClick={{this.reloadPage}}><i class="fa fa-refresh"></i></AppUi::Button>
           <div class="pull-right">
-            <span class="list-view-count">{{t "views.app.issue.list.selectedCount" count=this.selectedCount}}</span>
+            <span class="list-view-count">{{t "views.app.issue.list.selectedCount" count=this.checkboxCount}}</span>
             {{add (mult (sub this.page 1) 20) 1}}-{{add (mult (sub this.page 1) 20) this.model.length}} / {{add (mult (sub this.page 1) 20) this.model.length}}
             {{#if this.model.meta.links.next}}+{{/if}}
             <div class="btn-group">
               {{#if this.model.meta.links.prev}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" {{action "paginate" (get-page this.model.meta.links.prev.href)}} @aclContext="App.Project.Issue.Read"><i class="fa fa-chevron-left"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="App.Project.Issue.Read"><i class="fa fa-chevron-left"></i></AppUi::Button>
               {{else}}
                 <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}}"><i class="fa fa-chevron-left"></i></AppUi::Button>
               {{/if}}
               {{#if this.model.meta.links.next}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" {{action "paginate" (get-page this.model.meta.links.next.href)}} @aclContext="App.Project.Issue.Read"><i class="fa fa-chevron-right"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="App.Project.Issue.Read"><i class="fa fa-chevron-right"></i></AppUi::Button>
               {{else}}
                 <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></AppUi::Button>
               {{/if}}
@@ -150,15 +148,12 @@
 
         <div class="table-responsive issue-list">
           <table class="table table-hover table-striped">
-
             <thead>
               <tr>
                 <th></th>
-                <th class="{{sortable-class "Issue.issueNumber" this.sort this.order}}" data-sort="Issue.issueNumberSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.issueNumber'}}>{{t "views.app.issue.list.sr"}}</a></th>
-                <th class="{{sortable-class "Issue.subject" this.sort this.order}}" data-sort="Issue.subjectSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.subject'}}>{{t "views.app.issue.list.subject"}}</a></th>
+                <th class="{{sortable-class "Issue.issueNumber" this.sort this.order}}" data-sort="Issue.issueNumberSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.issueNumber'}}>{{t "views.app.issue.list.overview"}}</a></th>
+                <th class="{{sortable-class "Issue.assignee" this.sort this.order}}" data-sort="Issue.assigneeSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.assignee'}}>{{t "views.app.issue.list.assignee"}}</a></th>
                 <th class="{{sortable-class "issuetype.name" this.sort this.order}}" data-sort="Issue.statusSortable"><a href="javascript:void(0);" {{action "sortData" 'issuetype.name'}}>{{t "views.app.issue.list.issuetype"}}</a></th>
-                <th class="{{sortable-class "Issue.status" this.sort this.order}}" data-sort="Issue.statusSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.status'}}>{{t "views.app.issue.list.status"}}</a></th>
-                <th class="{{sortable-class "Issue.priority" this.sort this.order}}" data-sort="Issue.prioritySortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.priority'}}>{{t "views.app.issue.list.priority"}}</a></th>
                 <th class="{{sortable-class "milestone.name" this.sort this.order}}" data-sort="milestone.nameSortable"><a href="javascript:void(0);" {{action "sortData" 'milestone.name'}}>{{t "views.app.issue.list.milestone"}}</a></th>
                 <th class="{{sortable-class "Issue.startDate" this.sort this.order}}" data-sort="Issue.startDateSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.startDate'}}>{{t "views.app.issue.list.startDate"}}</a></th>
                 <th class="{{sortable-class "Issue.endDate" this.sort this.order}}" data-sort="Issue.endDateSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.endDate'}}>{{t "views.app.issue.list.endDate"}}</a></th>
@@ -166,21 +161,57 @@
             </thead>
 
             <tbody>
-              {{#each this.model as |issue|}}
-                <tr class="issue">
-                  <td class="select-box">
-                    <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{issue.id}} @aclContext="App.Project.Issue.List.SelectIssue"/>
-                  </td>
-                  <td class="issue-number"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.issueNumber}}</LinkTo></td>
-                  <td class="issue-subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "openDetail" issue}}>{{issue.subject}}</LinkTo></td>
-                  <td class="issue-type">{{issue.issuetype.name}}</td>
-                  <td class="issue-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></td>
-                  <td class="issue-priority"><AppUi::PriorityIcon @priority = {{readonly issue.priority}}/> {{t (concat "views.app.issue.lists.priority." issue.priority)}}</td>
-                  <td class="issue-milestone"><a href="#">{{issue.milestone.name}}</a></td>
-                  <td class="issue-start">{{moment-format issue.startDate 'DD/MMM/YY'}}</td>
-                  <td class="issue-end">{{moment-format issue.endDate 'DD/MMM/YY'}}</td>
-                </tr>
-              {{/each}}
+              {{#if this.model.length}}
+                {{#each this.model as |issue|}}
+                  <tr class="issue" data-issue-id={{issue.id}}>
+                    <td class="select-box">
+                      <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{issue.id}} @aclContext="App.Project.Issue.List.SelectIssue"/>
+                    </td>
+                    <td class="issue-overview">
+                      <li class="issue-block-container">
+                        <div class="issue-block">
+                          <div data-field="issue.priority" data-toggle="tooltip" data-priority="{{issue.priority}}" title="{{t (concat "views.app.issue.lists.priority." issue.priority)}}" class="priority"><AppUi::PriorityIcon @priority={{issue.priority}}/></div>
+                          <div class="data-block">
+                            <span class="subject"><LinkTo data-field="issue.number" @route="app.project.issue.page" @model={{issue.issueNumber}}>{{issue.issueNumber}}</LinkTo> - <span data-field="issue.subject"> {{issue.subject}} </span></span>
+                            <span data-field="issue.status" class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+                          </div>
+                        </div>
+                      </li>
+                    </td>
+                    <td class="issue-assignee">
+                      <span><img class="img-circle user-img" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
+                      <span data-field="issue.assignee">{{issue.assignedTo.name}}</span>
+                    </td>
+                    <td data-field="issuetype.name" class="issue-type">{{issue.issuetype.name}}</td>
+                    <td data-field="issue.milestone" class="issue-milestone"><a href="#">{{issue.issuemilestone.name}}</a></td>
+                    <td data-field="issue.startDate" class="issue-start">{{moment-format issue.startDate 'DD/MMM/YY'}}</td>
+                    <td data-field="issue.endDate" class="issue-end">{{moment-format issue.endDate 'DD/MMM/YY'}}</td>
+                    <td class="actions pull-right">
+                      <AppUi::Button data-btn="delete" type="button" @onClick={{fn this.deleteModel issue "issueNumber"}} class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.Project.Issue.Delete"><i class="fa fa-trash"></i></AppUi::Button>
+                      {{#if issue.conversationRoomId}}
+                        <LinkTo @route="app.project.conversation" @query={{hash c_id=issue.conversationRoomId}}>
+                        <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "views.app.issue.list.openConversation"}}">
+                          <i class="fa fa-comments-o"></i>
+                          </AppUi::Button>
+                        </LinkTo>
+                      {{else}}
+                        <AppUi::Button {{on "click" (fn this.routeToIssueComments issue)}} type="button" class="btn btn-box-tool btn-comment-add" data-toggle="tooltip" title="{{t "views.app.issue.list.startConversation"}}">
+                          <i class="fa fa-plus fa-comments-plus"></i>
+                          <i class="fa fa-comments-o"></i>
+                        </AppUi::Button>
+                      {{/if}}
+                    </td>                    
+                  </tr>
+                {{/each}}
+              {{else}}
+              <tr>
+                <td colspan="100%">
+                  <Exceptions::NothingFound 
+                    @description={{t "views.app.user.page.latestIssues.noIssues"}}
+                  />
+                </td>
+              </tr>
+              {{/if}}
             </tbody>
           </table>
           {{!-- /.table --}}
@@ -197,22 +228,23 @@
           <div class="btn-group">
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.Project.Issue.Delete"><i class="fa fa-trash-o"></i></AppUi::Button>
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></AppUi::Button>
-            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.massupdate"}}" @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="mass-update-issues" title="{{t "global.form.massupdate"}}" @onClick={{this.showMassUpdateDialog}} @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.discuss"}}"><i class="fa fa-comments-o"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.export"}}" @onClick={{this.showExportDialog}}><i class="fa fa-download"></i></AppUi::Button>
           </div>
-          <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" {{action "reloadPage"}} @aclContext="App.Project.Issue.List.ReloadPage"><i class="fa fa-refresh"></i></AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.refresh"}}" @onClick={{this.reloadPage}} @aclContext="App.Project.Issue.List.ReloadPage"><i class="fa fa-refresh"></i></AppUi::Button>
           <div class="pull-right">
-            <span class="list-view-count">{{t "views.app.issue.list.selectedCount" count=this.selectedCount}}</span>
+            <span class="list-view-count">{{t "views.app.issue.list.selectedCount" count=this.checkboxCount}}</span>
             {{add (mult (sub this.page 1) 20) 1}}-{{add (mult (sub this.page 1) 20) this.model.length}} / {{add (mult (sub this.page 1) 20) this.model.length}}
             {{#if this.model.meta.links.next}}+{{/if}}
             <div class="btn-group">
               {{#if this.model.meta.links.prev}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" {{action "paginate" (get-page this.model.meta.links.prev.href)}} @aclContext="App.Project.Issue.Read"><i class="fa fa-chevron-left"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="App.Project.Issue.Read"><i class="fa fa-chevron-left"></i></AppUi::Button>
               {{else}}
                 <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}}"><i class="fa fa-chevron-left"></i></AppUi::Button>
               {{/if}}
               {{#if this.model.meta.links.next}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" {{action "paginate" (get-page this.model.meta.links.next.href)}} @aclContext="App.Project.Issue.Read"><i class="fa fa-chevron-right"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="App.Project.Issue.Read"><i class="fa fa-chevron-right"></i></AppUi::Button>
               {{else}}
                 <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></AppUi::Button>
               {{/if}}
@@ -224,5 +256,79 @@
     </div>
     {{!-- /. box --}}
   </div>
+
+    {{!-- Modals --}}
+  {{#if this.exportDialog}}
+    {{#bootstrap-modal
+        title="global.form.export"
+        confirmLabel="global.form.export"
+        closeLabel="global.form.cancel"
+        confirm=(action "exportModules")
+        close=(action "removeExportDialog")}}
+        
+        <div class="form-group">
+          <FormFields::FieldRelateMulti
+            @options={{get-relationships "issue" this.store}}
+            @placeholder={{t "views.app.module.list.export.selectRelationship.placeholder"}}
+            @selected={{this.exportRelationships}}
+            @onchange={{fn this.selectStatic this 'exportRelationships'}}
+            @relateType="relate-simple"
+            @label={{t "views.app.module.list.export.selectRelationship.label" moduleName=(lowercase (t "global.module.plural.issue"))}}
+            @aclContext="App.Project.Export.Relationships"
+            @closeOnSelect={{false}}
+          />
+        </div>
+    {{/bootstrap-modal}}
+  {{/if}}
+  {{#if this.massUpdateDialog}}
+    {{#bootstrap-modal
+        title="global.form.massupdate"
+        confirmLabel="global.form.save"
+        closeLabel="global.form.cancel"
+        confirm=(action "massUpdateIssue")
+        close=(action "removeMassUpdateDialog")}}
+
+        <div class="form-group">
+          <FormFields::FieldRelate
+            @placeholder={{t "views.app.issue.create.status"}}
+            @label={{t "views.app.issue.create.status"}}
+            @value={{this.massUpdateModel.statusId}}
+            @options={{this.statusOptions}}
+            @selected={{find-by "value" this.massUpdateModel.statusId this.statusOptions}}
+            @searchField="label"
+            @onchange={{action "selectRelated" this.massUpdateModel 'statusId'}}
+            @relateType="relate-simple"
+            @data-field="issue.status"
+            @aclContext="App.Project.Issue.Create.Status"
+          />
+
+          <FormFields::FieldRelate
+            @placeholder={{t "views.app.issue.create.priority"}}
+            @label={{t "views.app.issue.create.priority"}}
+            @value={{this.massUpdateModel.priority}}
+            @options={{this.priorityOptions}}
+            @selected={{find-by "value" this.massUpdateModel.priority this.priorityOptions}}
+            @searchField="label"
+            @onchange={{action "selectRelated" this.massUpdateModel 'priority'}}
+            @relateType="relate-issuepriority"
+            @data-field="issue.priority"
+            @aclContext="App.Project.Issue.Create.Priority"
+          />
+
+          <FormFields::FieldRelate
+            @placeholder={{t "views.app.issue.create.selectmilestone"}}
+            @label={{t "views.app.issue.create.milestone"}}
+            @value={{this.massUpdateModel.milestoneId}}
+            @options={{this.milestoneOptions}}
+            @selected={{find-by "value" this.massUpdateModel.milestoneId this.milestoneOptions}}
+            @searchField="label"
+            @onchange={{action "selectRelated" this.massUpdateModel 'milestoneId'}}
+            @relateType="relate-simple"
+            @data-field="issue.milestone"
+            @aclContext="App.Project.Issue.Create.Milestone"
+          />          
+        </div>
+     {{/bootstrap-modal}}
+  {{/if}}
   {{!-- /.col --}}
 </div>

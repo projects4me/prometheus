@@ -88,6 +88,12 @@ export default class UserProfileTimeSpentComponent extends Component {
             _self.timeToDisplay('years', years);
             _self.timeToDisplay('days', days);
         }
+
+        // Edge case for the (new) user who has zero spent time on issues.
+        if (_self.time.length === 0) {
+            _self.timeToDisplay('days', 0);
+            _self.timeToDisplay('hours', 0);
+        }
     }
 
     /**

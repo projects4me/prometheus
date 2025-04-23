@@ -35,9 +35,10 @@ export default App.extend({
      */
     model(params) {
         let _self = this;
+        let projectId = _self.trackedProject.getProjectId();
 
         let projectOptions = {
-            query: '(Project.id : ' + params.project_id + ')',
+            query: '(Project.id : ' + projectId + ')',
         };
         return this.store.query('project', projectOptions)
             .catch((error) => {

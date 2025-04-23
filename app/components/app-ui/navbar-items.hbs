@@ -1,0 +1,57 @@
+{{#each-in @meta as |module definition|}}
+{{#if definition.actions}}
+  <li class="treeview" data-navigation-module={{module}}>
+    {{#if definition.projectRelated}}
+      <a href="/{{@appPrefix}}/{{@trackedProject.shortCode}}/{{definition.anchorRoute}}">
+        <i class="fa fa-{{definition.icon}}"></i>
+        <span>{{t definition.label}}</span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+    {{else}}
+      <a href="/{{@appPrefix}}/{{definition.anchorRoute}}">
+        <i class="fa fa-{{definition.icon}}"></i>
+        <span>{{t definition.label}}</span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+    {{/if}}
+    <ul class="treeview-menu">
+      {{#each-in definition.actions as |section menu|}}
+        {{#each-in menu as |entity item|}}
+          <li>
+            {{#if definition.projectRelated}}
+              <a href="/{{@appPrefix}}/{{@trackedProject.shortCode}}/{{item.anchorRoute}}" {{action @navigate item.route  item.routeParams item.anchorRoute @trackedProject.shortCode}}>
+                <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
+              </a>
+            {{else}}
+              <a href="/{{@appPrefix}}/{{item.anchorRoute}}" {{action @navigate item.route  item.routeParams item.anchorRoute}}>
+                <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
+              </a>
+            {{/if}}
+          </li>
+        {{/each-in}}
+        {{#if (not-last definition.actions menu)}}
+          <li role="separator" class="divider"></li>
+        {{/if}}
+      {{/each-in}}
+    </ul>
+  </li>
+{{else}}
+  <li class="treeview" data-navigation-module={{module}}>
+    {{#if definition.projectRelated}}
+      <a href="/{{@appPrefix}}/{{@trackedProject.shortCode}}/{{definition.anchorRoute}}" {{action @navigate definition.route definition.routeParams definition.anchorRoute @trackedProject.shortCode}}>
+        <i class="fa fa-{{definition.icon}}"></i>
+        <span>{{t definition.label}}</span>
+      </a>
+    {{else}}
+      <a href="/{{@appPrefix}}/{{definition.anchorRoute}}" {{action @navigate definition.route definition.routeParams definition.anchorRoute}}>
+        <i class="fa fa-{{definition.icon}}"></i>
+        <span>{{t definition.label}}</span>
+      </a>
+    {{/if}}
+  </li>
+{{/if}}
+{{/each-in}}

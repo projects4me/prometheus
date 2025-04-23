@@ -3,11 +3,11 @@
  */
 
 import PrometheusController from "prometheus/controllers/prometheus";
-import { inject as controller } from '@ember/controller';
-import { computed, action } from '@ember/object';
-import { hash } from 'rsvp';
+import { inject as controller } from "@ember/controller";
+import { computed, action } from "@ember/object";
+import { hash } from "rsvp";
 import _ from "lodash";
-import { tracked } from '@glimmer/tracking';
+import { tracked } from "@glimmer/tracking";
 
 /**
  * This is the controller for issue create page
@@ -18,10 +18,9 @@ import { tracked } from '@glimmer/tracking';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class PrometheusCreateController extends PrometheusController {
-
     /**
      * This contains all of the validation messages of each field.
-     * 
+     *
      * @property message
      * @type Object
      * @for PrometheusCreateController
@@ -38,7 +37,7 @@ export default class PrometheusCreateController extends PrometheusController {
      * @type String
      * @private
      */
-    @tracked layoutName = 'create';
+    @tracked layoutName = "create";
 
     /**
      * This is the module for which we are trying to create
@@ -48,7 +47,16 @@ export default class PrometheusCreateController extends PrometheusController {
      * @for Create
      * @protected
      */
-    module = '';
+    module = "";
+
+    /**
+     * This flag is used to show the field information.
+     * 
+     * @property showFieldInfo
+     * @type Boolean
+     * @for Create
+     */
+    showFieldInfo = false;
 
     /**
      * This is the controller for the app, we are injecting it in order to
@@ -59,7 +67,7 @@ export default class PrometheusCreateController extends PrometheusController {
      * @for Create
      * @public
      */
-    @controller('app') appController;
+    @controller("app") appController;
 
     /**
      * This is a computed property in which gets the list of user
@@ -70,9 +78,9 @@ export default class PrometheusCreateController extends PrometheusController {
      * @for Create
      * @private
      */
-    @computed('appController.usersList')
+    @computed("appController.usersList")
     get usersList() {
-        return this.appController.get('usersList');
+        return this.appController.get("usersList");
     }
 
     /**
@@ -81,102 +89,86 @@ export default class PrometheusCreateController extends PrometheusController {
      * the saved page.
      *
      * @method save
+     * @param {string} schemaName The schema name for which we are saving the model.
+     * @param {string} module The module for which we are showing the error. This can be multiple modules in same view/template.
      * @public
      * @todo Handle the situation where we are not using validations
      */
-    @action save(schemaName) {
+    @action save(schemaName, module) {
         let model = this.model;
 
-        this.validate(model, schemaName).then((validation) => {
-            if (validation.isValid) {
-                this.beforeSave(model);
-                this._save(model);
-            } else {
-                this._showError(validation.errors);
-            }
+        const promise = new Promise((resolve, reject) => {
+            this.validate(model, schemaName).then((validation) => {
+                if (validation.isValid) {
+                    this.beforeSave(model);
+                    this._save(model, resolve, reject);
+                } else {
+                    this._showError(validation.errors, module);
+                    reject();
+                }
+            });
         });
+        return promise;
     }
 
     /**
      * This function is used to validate a field of the given schema.
      *
      * @method validateField
-     * @param {String} schemaName 
-     * @param {Object} actualField
-     * @param {Object} dependentField
-     * @param {Event} event 
+     * @param {String} schemaName
+     * @param {Object} field
+     * @param {Event} event
      * @protected
      */
-    @action validateField(schemaName, actualField, dependentField, event) {
+    @action validateField(schemaName, field, event) {
         //use model if passed otherwise use default "this.model"
-        let model = actualField.model ?? this.model;
+        let model = field.model ?? this.model;
 
         //Validate field if it exists on schema object
-        if (this[schemaName].fields[actualField.name]) {
+        if (this[schemaName].fields[field.name]) {
             try {
                 this.beforeValidate(model);
-                this[schemaName].validateSyncAt(actualField.name, model);
+                this[schemaName].validateSyncAt(field.name, model);
 
-                //If validation is passed then remove previous message of actual field (if exists)
-                _.set(this.message, `${schemaName}.${actualField.name}`, '');
+                //If validation is passed then remove previous message of field (if exists)
+                _.set(this.message, `${schemaName}.${field.name}`, "");
                 this.message = { ...this.message };
 
-                (dependentField) && (this.validateDependentField(schemaName, actualField, dependentField));
-
             } catch (e) {
-                this.setValidationMessages(e, schemaName, actualField, dependentField);
+                this.setValidationMessages(
+                    e,
+                    schemaName,
+                    field
+                );
             }
         }
     }
 
     /**
-     * This function is used to validates the dependent field. Let say there are two fields, Password and
-     * Confirm Password, and we want to validate the confirm password field when user give some input in password 
-     * field. So this function will apply validation on confirm password (dependent field) and will show appropriate
-     * message on that field.
-     *
-     * @method validateDependentField
-     * @param {String} schemaName 
-     * @param {Object} actualField
-     * @param {Object} dependentField
-     * @protected
-     */
-    validateDependentField(schemaName, actualField, dependentField) {
-        /**
-        * Check if validateDependent flag is true and  value of the actual and dependent field are equal, then
-        * remove the error message of dependent field.
-        */
-        if (actualField.validateDependent && actualField.value === dependentField.value) {
-            _.set(this.message, `${schemaName}.${dependentField.name}`, '');
-        }
-
-        //If validateDependent flag is true then validate it.
-        if (actualField.validateDependent) {
-            //Mutate name of actual field to dependent field in order to show appropriate message to the dependent field.
-            actualField.name = dependentField.name;
-
-            //validate dependent field
-            this[schemaName].validateSyncAt(dependentField.name, this.model);
-        }
-    }
-
-    /**
      * This function is used to set validation messages against each field.
-     * 
+     *
      * @method setValidationMessages
-     * @param {Error} e 
-     * @param {Object} actualField 
+     * @param {Error} error
      * @param {String} schemaName
-     * @param {Object} dependentField 
+     * @param {Object} field
      * @protected
      */
-    setValidationMessages(error, schemaName, actualField, dependentField) {
-        switch (error.type) {
-            case 'oneOf':
-                _.set(this.message, `${schemaName}.${actualField.name}`, this.intl.t(`errors.${error.type}`, { dependentField: dependentField.t }));
-                break;
-            default:
-                _.set(this.message, `${schemaName}.${actualField.name}`, this.intl.t(`errors.${error.type}`));
+    setValidationMessages(error, schemaName, field) {
+        let fieldName = (error.params.path) ? error.params.path : field.name;
+        let defaultErrorTypes = ['required', 'optionality'];
+        if (defaultErrorTypes.includes(error.type)) {
+            _.set(
+                this.message,
+                `${schemaName}.${fieldName}`,
+                this.intl.t(`errors.${error.type}`)
+            );
+        } else {
+            _.set(
+                this.message,
+                `${schemaName}.${fieldName}`,
+                error.errors[0]
+            );
+
         }
 
         this.message = { ...this.message };
@@ -191,13 +183,13 @@ export default class PrometheusCreateController extends PrometheusController {
      */
     @action cancel() {
         let _self = this;
-        let model = _self.get('model');
+        let model = _self.get("model");
         let intl = _self.intl;
 
         if (_self.hasChanged(model)) {
             let message = new Messenger().post({
                 message: intl.t("global.form.cancelcicked").toString(),
-                type: 'warning',
+                type: "warning",
                 showCloseButton: true,
                 actions: {
                     confirm: {
@@ -205,16 +197,15 @@ export default class PrometheusCreateController extends PrometheusController {
                         action: function () {
                             message.cancel();
                             _self.afterCancel(model);
-                        }
+                        },
                     },
                     cancel: {
                         label: intl.t("global.form.onsecondthought").toString(),
                         action: function () {
                             message.cancel();
-                        }
+                        },
                     },
-
-                }
+                },
             });
         } else {
             _self.afterCancel(model);
@@ -228,14 +219,20 @@ export default class PrometheusCreateController extends PrometheusController {
      * @param model
      * @private
      */
-    _save(model) {
+    _save(model, resolve, reject) {
         let _self = this;
-        model.save().then(function (data) {
-            _self.afterSave(data).then(function () {
-                _self.showSuccess(data);
-                _self.navigateToSuccess(data);
+        return model
+            .save()
+            .then(function (data) {
+                _self.afterSave(data).then(function () {
+                    _self.showSuccess(data);
+                    _self.navigateToSuccess(data);
+                    resolve();
+                });
+            })
+            .catch((e) => {
+                reject();
             });
-        });
     }
 
     /**
@@ -246,8 +243,7 @@ export default class PrometheusCreateController extends PrometheusController {
      * @param model
      * @protected
      */
-    beforeSave() {
-    }
+    beforeSave() {}
 
     /**
      * This a placeholder function that is called after we call
@@ -264,7 +260,7 @@ export default class PrometheusCreateController extends PrometheusController {
     /**
      * This function is used to validate the given model. If validations are passed then
      * save the model.
-     * 
+     *
      * @method validate
      * @param model
      * @param schemaName
@@ -277,13 +273,12 @@ export default class PrometheusCreateController extends PrometheusController {
                 this[schemaName].validateSync(model, { abortEarly: false });
 
                 resolve({
-                    isValid: true
+                    isValid: true,
                 });
-
             } catch (e) {
                 resolve({
                     isValid: false,
-                    errors: e
+                    errors: e,
                 });
             }
         });
@@ -297,8 +292,7 @@ export default class PrometheusCreateController extends PrometheusController {
      * @param model
      * @protected
      */
-    beforeValidate() {
-    }
+    beforeValidate() {}
 
     /**
      * This a placeholder function that is called after we call
@@ -308,8 +302,7 @@ export default class PrometheusCreateController extends PrometheusController {
      * @param model
      * @protected
      */
-    afterValidate() {
-    }
+    afterValidate() {}
 
     /**
      * This function is called when we need to show a success
@@ -323,8 +316,8 @@ export default class PrometheusCreateController extends PrometheusController {
         let _self = this;
         new Messenger().post({
             message: _self.getSuccessMessage(model),
-            type: 'success',
-            showCloseButton: true
+            type: "success",
+            showCloseButton: true,
         });
     }
 
@@ -336,7 +329,7 @@ export default class PrometheusCreateController extends PrometheusController {
      * @protected
      */
     getSuccessMessage() {
-        return '';
+        return "";
     }
 
     /**
@@ -347,8 +340,7 @@ export default class PrometheusCreateController extends PrometheusController {
      * @param model
      * @protected
      */
-    navigateToSuccess() {
-    }
+    navigateToSuccess() {}
 
     /**
      * This function is called when we need to show an error
@@ -356,17 +348,19 @@ export default class PrometheusCreateController extends PrometheusController {
      *
      * @method showSuccess
      * @param {Error} validationError
+     * @param {string} module The module for which we are showing the error. This can be multiple modules in same view/template.
      * @private
      */
-    _showError(validationError) {
+    _showError(validationError, module) {
         let _self = this;
-        Logger.debug(_self.get('module'));
-        let messages = _self._buildMessages(validationError, _self.get('module'));
+        module = module || _self.get("module");
+        Logger.debug(module);
+        let messages = _self._buildMessages(validationError, module);
 
         new Messenger().post({
             message: messages,
-            type: 'error',
-            showCloseButton: true
+            type: "error",
+            showCloseButton: true,
         });
     }
 
@@ -380,7 +374,7 @@ export default class PrometheusCreateController extends PrometheusController {
      * @protected
      */
     hasChanged(model) {
-        return (_.size(model.changedAttributes()) > 0);
+        return _.size(model.changedAttributes()) > 0;
     }
 
     /**
@@ -390,14 +384,13 @@ export default class PrometheusCreateController extends PrometheusController {
      * @method afterCancel
      * @protected
      */
-    afterCancel() {
-    }
+    afterCancel() {}
 
     /**
      * This function is used to rollback the attributes of the given model if
      * there is any change occurred in the model.
-     * 
-     * @param {Prometheus.Models} model 
+     *
+     * @param {Prometheus.Models} model
      */
     @action resetModelAttributes(model) {
         model.rollbackAttributes();

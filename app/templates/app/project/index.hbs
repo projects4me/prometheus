@@ -16,8 +16,7 @@
 
             <div class="box-tools pull-right">
               <span class="project-status"><span class="badge {{this.model.status}}">{{t (concat "views.app.project.lists.status." this.model.status)}}</span></span>
-              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" {{action "editProject" this.model.id}} @aclContext="App.Project.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
-              <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></AppUi::Button>
+              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" @onClick={{fn this.editProject this.model.shortCode}} @aclContext="App.Project.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
             </div>
             {{!-- /.box-tools --}}
           </div>
@@ -37,45 +36,24 @@
               <div class="col-xs-9 col-md-10">
                 <h4>{{t "views.app.project.detail.description"}}</h4>
                 <p class="project-description">
-                  {{this.model.description}}
+                  {{safe-html this.model.description}}
                 </p>
               </div>
             </div>
 
             <div class="row">
 
-              <div class="col-xs-6 col-md-4">
+              <div class="col-xs-6 col-md-6">
                 <h4>{{t "views.app.project.detail.duration"}}</h4>
                 <p class="project-duration">
                   {{moment-format this.model.startDate 'Do MMM \'YY'}} - {{moment-format this.model.endDate 'DD MMM \'YY'}}
                 </p>
               </div>
 
-              <div class="col-xs-6 col-md-4">
-                <h4>{{t "views.app.project.detail.type"}}</h4>
-                <p class="project-type">
-                  {{t (concat "views.app.project.lists.type." this.model.type)}}
-                </p>
-              </div>
-
-              <div class="col-xs-6 col-md-4">
+              <div class="col-xs-6 col-md-6">
                 <h4>{{t "views.app.project.detail.vision"}}</h4>
                 <p class="project-vision">
                   {{this.model.vision}}
-                </p>
-              </div>
-
-              <div class="col-xs-6 col-md-4">
-                <h4>{{t "views.app.project.detail.estimatedBudget"}}</h4>
-                <p class="project-estimatedBudget">
-                  {{format-money this.model.estimatedBudget symbol='$' format="%s%v"}}
-                </p>
-              </div>
-
-              <div class="col-xs-6 col-md-4">
-                <h4>{{t "views.app.project.detail.spentBudget"}}</h4>
-                <p class="project-spentBudget">
-                  {{format-money this.model.spentBudget symbol='$' format="%s%v"}}
                 </p>
               </div>
 
@@ -98,7 +76,7 @@
           <div class="col-md-6">
             <div class="box box-info  project-conversations-section">
               <div class="box-header with-border">
-                <h3 class="box-title">{{t "views.app.project.detail.conversations"}}</h3>
+                <h3 class="box-title">{{t "views.app.project.detail.latestConversations"}}</h3>
 
                 <div class="box-tools pull-right">
                 </div>
@@ -106,16 +84,22 @@
               </div>
               {{!-- /.box-header --}}
               <div class="box-body no-padding">
-                <ul class="project-conversations show-5">
-                  {{#each this.model.conversations as |conversation|}}
-                    <li>
-                      <div class="user-block">
-                        <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
-                        <span class="subject">{{conversation.subject}}</span>
-                        <span class="description">{{translate-comment conversation.description}}</span>
-                      </div>
-                    </li>
-                  {{/each}}
+                <ul class="project-conversations show-5" {{initialize-slimscroll width='5'}}>
+                  {{#if this.model.conversations}}
+                    {{#each this.model.conversations as |conversation|}}
+                      <li>
+                        <div class="user-block">
+                          <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
+                          <LinkTo @route="app.project.conversation" @query={{hash c_id=conversation.id}}><span class="subject">{{conversation.subject}}</span></LinkTo>
+                          <span class="description">{{translate-comment conversation.description}}</span>
+                        </div>
+                      </li>
+                    {{/each}}
+                  {{else}}
+                    <Exceptions::NothingFound
+                      @description={{t "views.app.project.detail.noLatestConversations"}}
+                    />
+                  {{/if}}
                 </ul>
                 {{!-- /.users-list --}}
               </div>
@@ -132,7 +116,7 @@
         {{!-- These are the lastest 5 open issues in this project --}}
         <AccessControl @aclContext="App.Project.Read.Issues.Read">
           <div class="col-md-6">
-            <div class="box box-success open-issues-section">
+            <div class="box box-success issue-overview-section">
               <div class="box-header with-border">
                 <h3 class="box-title">{{t "views.app.project.detail.latestissues"}}</h3>
 
@@ -143,19 +127,25 @@
               </div>
               {{!-- /.box-header --}}
               <div class="box-body no-padding">
-                <ul class="open-issues show-5 clearfix">
-                  {{#each this.issuetime as |issue|}}
-                    <li>
-                      <div class="issue-block">
-                        <div class="priority"><AppUi::PriorityIcon @priority={{issue.priority}}/></div>
-                        <div class="data-block">
-                          <span class="subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action "navigateToIssuePage" issue.issueNumber}}>{{issue.issueNumber}}</LinkTo> - {{issue.subject}}</span>
-                          <span class="description">{{translate-comment issue.description}}</span>
-                          <strong>{{t "views.app.issue.status"}}:</strong> <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+                <ul class="issue-overview show-5 clearfix" {{initialize-slimscroll width='5'}}>
+                  {{#if this.issuetime}}
+                    {{#each this.issuetime as |issue|}}
+                      <li>
+                        <div class="issue-block">
+                          <div class="priority"><AppUi::PriorityIcon @priority={{issue.priority}}/></div>
+                          <div class="data-block">
+                            <span class="subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}}>{{issue.issueNumber}}</LinkTo> - {{issue.subject}}</span>
+                            <span class="description">{{translate-comment issue.description}}</span>
+                            <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  {{/each}}
+                      </li>
+                    {{/each}}
+                  {{else}}
+                    <Exceptions::NothingFound
+                      @description={{t "views.app.project.detail.noLatestIssues"}}
+                    />
+                  {{/if}}
                 </ul>
                 {{!-- /.users-list --}}
               </div>
@@ -233,50 +223,63 @@
       {{!-- Project Members --}}
       <AccessControl @aclContext="App.Project.Read.Members.Read">
         <div class="box box-warning">
-          <div class="box-header with-border">
+          <div class="box-header with-border box-header-flex box-header-no-content">
             <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
-            <div class="box-tools pull-right">
-              <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "views.app.project.detail.managemembers"}}"><i class="fa fa-gear"></i></AppUi::Button>
-            </div>
+            <AppUi::DottedAddButton
+              @title={{t "views.app.project.detail.membership.add"}}
+              @onClick={{this.showAddMemberDialog}}
+              @class="pull-right"
+              @aclContext="App.Project.Read.Membership.Create.Milestone"
+              @data-add="members"
+            />
           </div>
           {{!-- /.box-header --}}
           <div class="box-body no-padding">
             <ul class="users-list clearfix">
+            {{#if this.model.members}}
               {{#each this.model.members as |member|}}
-                <li>
+                <li data-member-id={{member.id}} class="member-item">
+                  {{!-- Delete Member --}}
+                  <AppUi::Button data-delete-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.removeMember"}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="App.Project.Read.Membership.Delete.User">
+                    <i class="fa fa-times"></i>
+                  </AppUi::Button>
+
                   <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
                   <LinkTo @route="app.user.page" @model={{member.id}} class="users-list-name">{{member.name}}</LinkTo>
-                  <span class="users-list-date">{{get-role member.id this.model.roles this.model.memberships}}</span>
+                  <span class="users-list-date" data-member-role>
+                    {{get-role member.id this.appController.roles this.model.memberships}}
+                  {{!-- Edit Member's Role --}}
+                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.editRole"}} @onClick={{fn this.showEditMemberDialog member}} @aclContext="App.Project.Read.Membership.Edit.User">
+                    <i class="fa fa-pencil"></i>
+                  </AppUi::Button>                    
+                  </span>
                 </li>
               {{/each}}
-              <li>
-                <a href="javascript:void(0);" {{action "showAddMemberDialog"}}>
-                  <div class="membership-add" data-toggle="tooltip" title="{{t "views.app.project.detail.membership.add"}}">
-                    <ion class="ion-md-add"></ion>
-                  </div>
-                </a>
-              </li>
+            {{else}}
+              <Exceptions::NothingFound
+                @description={{t "views.app.project.detail.noMembers"}}
+              />
+            {{/if}}              
             </ul>
             {{#if this.addMemberDialog}}
               {{#bootstrap-modal
                   title="views.app.project.detail.membership.add"
                   confirmLabel="global.form.save"
                   closeLabel="global.form.cancel"
-                  confirm=(action "addMember")
+                  confirm=(action "addMembers")
                   close=(action "removeAddMemberModal")}}
-                <form {{action 'addMember' on='submit'}}>
                   <div class="form-group">
-                      <FormFields::FieldRelate
+                      <FormFields::FieldRelateMulti
                           @placeholder={{t "views.app.project.detail.membership.selectuser"}}
                           @label={{t "views.app.project.detail.membership.user"}}
-                          @value={{this.selectedUser}}
                           @data-field="select-member"
                           @options={{this.usersList}}
-                          @selected={{find-by "value" this.selectedUser this.usersList}}
+                          @selected={{this.selectedUsers}}
                           @searchField="label"
-                          @onchange={{action "selectUser"}}
+                          @onchange={{action "selectStatic" this 'selectedUsers'}}
                           @relateType="relate-user"
                           @aclContext="App.Project.Read.Membership.Create.User"
+                          @closeOnSelect={{false}}
                       />
 
                     <FormFields::FieldRelate
@@ -292,9 +295,86 @@
                         @aclContext="App.Project.Read.Membership.Create.Role"
                     />
                   </div>
-                </form>
               {{/bootstrap-modal}}
-            {{/if}}          {{!-- /.users-list --}}
+            {{/if}}
+
+            {{#if this.editMemberDialog}}
+              {{#bootstrap-modal
+                  title="views.app.project.detail.membership.update"
+                  confirmLabel="global.form.save"
+                  closeLabel="global.form.cancel"
+                  confirm=(action "updateMember")
+                  close=(action "removeEditMemberModal")}}
+                  <div class="form-group">
+                      <FormFields::FieldRelate
+                          @label={{t "views.app.project.detail.membership.user"}}
+                          @data-field="selected-member"
+                          @options={{this.currentMembers}}
+                          @selected={{find-by "value" this.selectedUser.id this.currentMembers}}
+                          @searchField="label"
+                          @relateType="relate-user"
+                          @aclContext="App.Project.Read.Membership.Create.User"
+                          @closeOnSelect={{false}}
+                          @disabled={{true}}
+                      />
+
+                    <FormFields::FieldRelate
+                        @placeholder={{t "views.app.project.detail.membership.selectrole"}}
+                        @label={{t "views.app.project.detail.membership.role"}}
+                        @data-field="select-role"
+                        @options={{this.rolesList}}
+                        @selected={{find-by "value" this.selectedRole this.rolesList}}
+                        @searchField="label"
+                        @onchange={{action "selectRole"}}
+                        @relateType="relate-simple"
+                        @aclContext="App.Project.Read.Membership.Create.Role"
+                    />
+                  </div>
+              {{/bootstrap-modal}}
+            {{/if}}
+
+            {{#if this.deleteMemberDialog}}
+              {{#bootstrap-modal
+                  title="views.app.project.detail.membership.delete"
+                  confirmLabel="global.form.remove"
+                  closeLabel="global.form.cancel"
+                  confirm=(action "deleteMember")
+                  close=(action "removeDeleteMemberModal")}}
+                  
+                  <div class="flex-row" data-remove-member-warning>
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <h5>{{this.deleteMemberWarning}}</h5>
+                  </div>
+                  <div class="form-group">
+                      <FormFields::FieldRelate
+                          @label={{t "views.app.project.detail.membership.user"}}
+                          @data-field="selected-member"
+                          @options={{this.currentMembers}}
+                          @selected={{find-by "value" this.selectedUser.id this.currentMembers}}
+                          @searchField="label"
+                          @relateType="relate-user"
+                          @aclContext="App.Project.Read.Membership.Delete.User"
+                          @closeOnSelect={{false}}
+                          @disabled={{true}}
+                      />
+                      <FormFields::FieldRelate
+                          @placeholder={{t "views.app.project.detail.membership.reAssignIssuesPlaceholder"}}
+                          @label={{t "views.app.project.detail.membership.reAssignIssues"}}
+                          @data-field="new-assignee"
+                          @options={{this.otherMembers}}
+                          @selected={{find-by "value" this.selectedNewIssuesAssignee.value this.otherMembers}}
+                          @onchange={{action "selectStatic" this 'selectedNewIssuesAssignee'}}
+                          @searchField="label"
+                          @relateType="relate-user"
+                          @aclContext="App.Project.Read.Membership.Delete.User"
+                          @closeOnSelect={{false}}
+                          @validate={{action this.validateField "memberDelete" (hash name="reAssignIssues" model=this.reAssignIssuesModel)}}
+                          @message={{this.message.memberDelete.reAssignIssues}}
+                          @required={{true}}
+                      />
+                  </div>
+              {{/bootstrap-modal}}
+            {{/if}}                     
           </div>
           {{!-- /.box-body --}}
         </div>
@@ -304,22 +384,31 @@
       {{!-- Project Milestones --}}
       <AccessControl @aclContext="App.Project.Read.Milestones.Read">
         <div class="box box-info project-milestones-section">
-          <div class="box-header with-border">
+          <div class="box-header with-border box-header-flex box-header-no-content">
             <h3 class="box-title">{{t "views.app.project.detail.milestones"}}</h3>
+            <AppUi::DottedAddButton
+              @title={{t "views.app.project.detail.milestone.add"}}
+              @onClick={{this.showMilestoneDialog}}
+              @class="pull-right"
+              @data-add="milestone"
+              @aclContext="App.Project.Read.Membership.Create.Milestone"
+            />
           </div>
 
           <div class="box-body no-padding">
-            {{#if (eq this.milestones.length 0)}}
-              <div class="no-entry">{{t "views.app.project.detail.milestone.noentry"}}</div>
-            {{else}}
+            {{#if this.milestones}}
+
               {{#each this.milestones as |milestone|}}
-                
                 <Project::Milestones
                   @editMilestone={{action "editMilestone"}}
                   @milestone={{milestone}}
                 />
+              {{/each}}                      
 
-              {{/each}}
+            {{else}}
+              <Exceptions::NothingFound
+                @description={{t "views.app.project.detail.milestone.noentry"}}
+              />            
             {{/if}}
           </div>
 
@@ -405,11 +494,6 @@
 
             {{/bootstrap-modal}}
           {{/if}}
-
-          <div class="box-footer text-center">
-            <span><a href="javascript:void();" {{action "showMilestoneDialog"}}><i class="fa fa-flag-checkered "></i> {{t "views.app.project.detail.milestone.add"}}</a></span>
-          </div>
-
         </div>
       </AccessControl>
       {{!-- Project Milestones --}}
@@ -459,7 +543,7 @@
           </div>
 
           <div class="info-box">
-            <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer-outline"></i></span>
+            <span class="info-box-icon bg-aqua"><i class="ion ion-ios-timer"></i></span>
             <div class="info-box-content">
               <span class="info-box-text">{{t "views.app.project.detail.estimatedtime"}}</span>
               <span class="info-box-number">{{get-timelog this.issuetime "estimated"}}</span>

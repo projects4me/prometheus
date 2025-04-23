@@ -16,9 +16,6 @@ export default Factory.extend({
     readF() {
         return faker.random.arrayElement(['0', '1', '2', '9']);
     },
-    searchF() {
-        return faker.random.arrayElement(['0', '1', '2', '9']);
-    },
     updateF() {
         return faker.random.arrayElement(['0', '1', '2', '9']);
     },

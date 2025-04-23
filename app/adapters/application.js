@@ -123,4 +123,24 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
 
         return adapterError;
     }
+
+    /**
+     * Builds the URL for deleting a record, with optional query parameters.
+     * 
+     * @param {string|number} id - The ID of the record to be deleted
+     * @param {string} modelName - The name of the model
+     * @param {object} snapshot - The snapshot containing adapter options
+     * @returns {string} The complete URL for the delete operation
+     * @override
+     */
+    urlForDeleteRecord(id, modelName, snapshot) {
+        let baseUrl = super.urlForDeleteRecord(...arguments);
+        const queryParams = snapshot?.adapterOptions?.queryParams || {};
+        
+        if (Object.keys(queryParams).length > 0) {
+          baseUrl = `${baseUrl}?${new URLSearchParams(queryParams)}`;
+        }
+        
+        return baseUrl;
+    }
 }

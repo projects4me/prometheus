@@ -26,7 +26,6 @@ export default class AppProjectWikiIndexController extends PrometheusController 
      * @public
      */
     @action create() {
-        let projectId = this.target.currentState.routerJsState.params["app.project"].project_id;
-        this.transitionToRoute('app.project.wiki.create', { project_id: projectId });
+        this.transitionToRoute('app.project.wiki.create', { shortcode: this.trackedProject.shortCode });
     }
 }

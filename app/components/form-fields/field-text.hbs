@@ -4,13 +4,17 @@
     <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}}
       maxlength={{@length}} aria-invalid="true" aria-describedBy={{@data-field}} {{apply-mask @mask}} {{on "focusin" this.focusIn}}
       readonly={{@readonly}} {{on "focusout" (action (mut this.shouldValidate) true) }} {{on "input" this.onInput}} {{on "focusout" this.onBlur}}
-      {{on "blur" (fn this.validate @dependentField)}} ...attributes/>
+      {{on "blur" this.validate}} ...attributes/>
     <span class="highlight"></span>
     <span class="bar"></span>
 
-    <label class="floating-label">
-      {{@label}}
-    </label>
+    <FormFields::Label
+      @label={{@label}}
+      @showFieldInfo={{@showFieldInfo}}
+      @info={{@info}}
+      @data-field={{@data-field}}
+      @required={{@required}}
+    />
       
     {{#if (and (not @readonly) (@lengthRequired)) }}
       <span class="count pull-right">{{this.charLength}}/{{@length}}</span>

@@ -10,4 +10,4 @@ Feature: App | select project from sidebar
     And tracked project service has id null
     When User navigates to app
     And User selects project 10 from sidebar
-    Then User should be in app/project/10 page
+    Then User should be in app/project/project_10 page

@@ -37,6 +37,16 @@ export function register(server, ctx) {
         let requestData = getRequestData(request);
         let issue = schema.issues.find(requestData.id);
         issue.update(requestData.attributes);
+
+        // Check for statusId and update status name
+        if (requestData.attributes.statusId) {
+            const statusRecord = schema.issuestatuses.find(requestData.attributes.statusId);
+            if (statusRecord) {
+                issue.update({
+                    status: statusRecord.name
+                });
+            }
+        }        
         return issue;
     });
 
@@ -55,6 +65,13 @@ export function register(server, ctx) {
             status: schema.issuestatuses.find(issue.statusId).name
         });
         ctx.set('latestCreatedIssue', issue);
+        return issue;
+    });
+
+    server.delete('/issue/:id', (schema, request) => {
+        let id = request.params.id;
+        let issue = schema.issues.find(id);
+        issue.destroy();
         return issue;
     });
 }

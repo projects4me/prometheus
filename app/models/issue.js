@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
+import Model, { attr, belongsTo, hasMany } from "@ember-data/model";
 
 /**
  * The issue model
@@ -14,7 +14,6 @@ import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default Model.extend({
-
     /**
      * Subject of the issue
      *
@@ -23,7 +22,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    subject: attr('string'),
+    subject: attr("string"),
 
     /**
      * Date on which the issue was created
@@ -33,7 +32,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    dateCreated: attr('string'),
+    dateCreated: attr("string"),
 
     /**
      * Date on which the issue was last modified
@@ -43,7 +42,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    dateModified: attr('string'),
+    dateModified: attr("string"),
 
     /**
      * Soft deletion flag
@@ -53,7 +52,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    deleted: attr('string'),
+    deleted: attr("string"),
 
     /**
      * Description of the issue
@@ -63,7 +62,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    description: attr('string'),
+    description: attr("string"),
 
     /**
      * Identifier of the create who created the issue
@@ -73,7 +72,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    createdUser: attr('string'),
+    createdUser: attr("string"),
 
     /**
      * The identifier of the user who is designated as the owner of the issue
@@ -83,7 +82,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    owner: attr('string'),
+    owner: attr("string"),
 
     /**
      * The identifier of the user who is currently the assignee of the issue
@@ -93,7 +92,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    assignee: attr('string'),
+    assignee: attr("string"),
 
     /**
      * The identifier of the user who reported the issue
@@ -103,7 +102,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    reportedUser: attr('string'),
+    reportedUser: attr("string"),
 
     /**
      * The identifier of the user who last modified the issue
@@ -113,7 +112,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    modifiedUser: attr('string'),
+    modifiedUser: attr("string"),
 
     /**
      * The number of the issue
@@ -123,7 +122,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    issueNumber: attr('string'),
+    issueNumber: attr("string"),
 
     /**
      * The end data set for the issue
@@ -133,7 +132,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    endDate: attr('string'),
+    endDate: attr("string"),
 
     /**
      * The date on which the issue is set to start
@@ -143,7 +142,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    startDate: attr('string'),
+    startDate: attr("string"),
 
     /**
      * Priority of the issue
@@ -153,7 +152,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    priority: attr('string', { defaultValue: 'medium' }),
+    priority: attr("string", { defaultValue: "medium" }),
 
     /**
      * The identifier of the project the issue belongs to
@@ -163,7 +162,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    projectId: attr('string'),
+    projectId: attr("string"),
 
     /**
      * The identifier of the conversation room for this issue
@@ -173,7 +172,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    conversationRoomId: attr('string'),
+    conversationRoomId: attr("string"),
 
     /**
      * The identifier of the milestone this issue is set for
@@ -183,7 +182,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    milestoneId: attr('string'),
+    milestoneId: attr("string"),
 
     /**
      * The identifier of the parent of the issue
@@ -193,7 +192,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    parentId: attr('string'),
+    parentId: attr("string"),
 
     /**
      * The identifier of the type this issue belongs to
@@ -203,7 +202,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    typeId: attr('string'),
+    typeId: attr("string"),
 
     /**
      * The status of the issue
@@ -213,7 +212,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    status: attr('string'),
+    status: attr("string"),
 
     /**
      * The identifier of the status this issue belongs to
@@ -223,7 +222,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    statusId: attr('string'),
+    statusId: attr("string"),
 
     /**
      * The user to whom this issue is currently assigned to
@@ -233,7 +232,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    assignedTo: belongsTo('user'),
+    assignedTo: belongsTo("user"),
 
     /**
      * The user who created this issue
@@ -243,7 +242,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    createdBy: belongsTo('user'),
+    createdBy: belongsTo("user"),
 
     /**
      * The user who last modified this issue
@@ -253,7 +252,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    modifiedBy: belongsTo('user'),
+    modifiedBy: belongsTo("user"),
 
     /**
      * The user who is responsible for this issue
@@ -263,7 +262,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    ownedBy: belongsTo('user'),
+    ownedBy: belongsTo("user"),
 
     /**
      * The user who reported this issue
@@ -273,7 +272,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    reportedBy: belongsTo('user'),
+    reportedBy: belongsTo("user"),
 
     /**
      * The project which this issues belongs to
@@ -283,7 +282,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    project: belongsTo('project'),
+    project: belongsTo("project"),
 
     /**
      * The milestone which this issue belongs to
@@ -293,7 +292,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    issuemilestone: belongsTo('milestone'),
+    issuemilestone: belongsTo("milestone"),
 
     /**
      * The parent issue of this issue
@@ -303,7 +302,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    parentissue: belongsTo('issue', { inverse: null }),
+    parentissue: belongsTo("issue", { inverse: null }),
 
     /**
      * The conversation room this issue is associated with
@@ -313,7 +312,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    conversationroom: belongsTo('conversationroom'),
+    conversationroom: belongsTo("conversationroom"),
 
     /**
      * The type of the issue
@@ -323,7 +322,7 @@ export default Model.extend({
      * @for IssueModel
      * @private
      */
-    issuetype: belongsTo('issuetype'),
+    issuetype: belongsTo("issuetype"),
 
     /**
      * The status of the issue
@@ -333,7 +332,7 @@ export default Model.extend({
      * @for IssueModel
      * @private
      */
-    issuestatus: belongsTo('issuestatus'),
+    issuestatus: belongsTo("issuestatus"),
 
     /**
      * The estimated time on the issue
@@ -343,7 +342,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    estimated: hasMany('timelog', { inverse: null }),
+    estimated: hasMany("timelog", { inverse: null }),
 
     /**
      * The spent time on the issue
@@ -353,7 +352,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    spent: hasMany('timelog', { inverse: null }),
+    spent: hasMany("timelog", { inverse: null }),
 
     /**
      * The child issues of this issue
@@ -363,7 +362,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    childissues: hasMany('issue', { inverse: null }),
+    childissues: hasMany("issue", { inverse: null }),
 
     /**
      * The comments made on this issue
@@ -373,7 +372,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    comments: hasMany('comment'),
+    comments: hasMany("comment"),
 
     /**
      * The child issues of this issue
@@ -383,7 +382,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    activities: hasMany('activity'),
+    activities: hasMany("activity"),
 
     /**
      * The files uploaded against the issue
@@ -393,6 +392,44 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    files: hasMany('upload')
+    files: hasMany("upload"),
 
+    /**
+     * The constructor for the issue model. In this we're setting the default status of the issue
+     * to new if new issue is being created, project has issue statuses and status is not set.
+     */
+    init() {
+        this._super(...arguments);
+
+        // set the default status to the issue
+        if (
+            this.isNew &&
+            this.project.get("issuestatuses")?.length > 0 &&
+            this.statusId === undefined
+        ) {
+            this.setDefaultStatusToIssue(
+                this.project.get("issuestatuses"),
+                this,
+                "new"
+            );
+        }
+    },
+
+    /**
+     * This function is used to set the default status to the issue.
+     *
+     * @method setDefaultStatusToIssue
+     * @param {Array} statuses The list of statuses
+     * @param {Object} issue The issue model
+     * @param {String} statusName The name of the status to set
+     * @returns {void}
+     */
+    setDefaultStatusToIssue(statuses, issue, statusName) {
+        let status = statuses.find((status) => {
+            return status.get("name") === statusName.toLowerCase();
+        });
+        if (status) {
+            issue.statusId = status.id;
+        }
+    },
 });

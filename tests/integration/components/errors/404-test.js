@@ -9,6 +9,6 @@ module('Integration | Component | errors/404', function (hooks) {
     test('it renders', async function (assert) {
         await render(hbs`<Errors::404 />`);
 
-        assert.dom(this.element).hasText('404 Oops! Page not found');
+        assert.dom(this.element).hasText('404 Oops! Page not found Return to home page');
     });
 });

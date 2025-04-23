@@ -153,8 +153,8 @@
       </div>
 
     <div class="col-sm-12">
-      <AppUi::Button type="button" data-btn="save" class="btn btn-primary" {{action "save" "userEdit"}} @aclContext="App.User.Edit">{{t "global.form.save"}}</AppUi::Button>
-      <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</AppUi::Button>
+      <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "userEdit"}} @disableOnSuccess={{true}} @aclContext="App.User.Edit">{{t "global.form.save"}}</AppUi::Button>
+      <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
     </div>
         
     </div>

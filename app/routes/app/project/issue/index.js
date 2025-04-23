@@ -19,6 +19,16 @@ import extractHashSettled from "prometheus/utils/rsvp/extract-hash-settled";
 export default App.extend({
 
     /**
+     * The trackedProject service provides id of the selected project.
+     *
+     * @property trackedProject
+     * @type Ember.Service
+     * @for Project
+     * @private
+     */
+    trackedProject: inject(),    
+
+    /**
      * We need to reload the model as the values related ot the page's data are
      * changed so we are relying on the queryParams provided by Ember to reload
      * the model as the following parameter are changed.
@@ -84,16 +94,6 @@ export default App.extend({
     query: '',
 
     /**
-     * The identifier of the project that we need to load the issues for
-     *
-     * @property projectId
-     * @type String
-     * @for Index
-     * @private
-     */
-    projectId: null,
-
-    /**
      * These are the saved searches related to the issues
      *
      * @property savedsearches
@@ -123,6 +123,43 @@ export default App.extend({
      * @private
      */
     currentUser: inject(),
+
+    /**
+     * In this hook we're loading list of issue statuses and types available in the project.
+     *
+     * @method beforeModel
+     * @protected
+     */    
+    async beforeModel() {
+        let _self = this;
+        let projectId = this.trackedProject.getProjectId();
+        let projectOptions = {
+            query: '(Project.id : '+projectId+')',
+            rels: 'issuetypes,issuestatuses',
+            limit: -1
+        }
+
+        const project = await this.store.query('project', projectOptions).catch(error => 
+            _self.errorManager.handleError(error, { moduleName: "project" })
+        );
+
+        const projectData = project?.objectAt(0);
+        if (projectData) {
+            _self.set('issueTypes', projectData.get('issuetypes'));
+            _self.set('issueStatuses', projectData.get('issuestatuses'));
+        }
+
+        const milestoneOptions = {
+            query: `(projectId : ${projectId})`,
+            fields: 'Milestone.name',
+            limit: -1
+        };
+
+        const milestones = await this.store.query('milestone', milestoneOptions).catch(error =>
+            _self.errorManager.handleError(error, { moduleName: "milestone" })
+        );
+        _self.set('milestones', milestones?.toArray() || []);
+    },
 
     /**
      * The model for this route
@@ -157,7 +194,7 @@ export default App.extend({
         }
 
         // Get the projectId from the parent
-        let projectId = this.paramsFor('app.project').project_id;
+        let projectId = this.trackedProject.getProjectId();
         Logger.debug('ProjectId : '+projectId);
 
         // Make sure that projectId is set for every query
@@ -171,7 +208,7 @@ export default App.extend({
         // Prepare the options
         let options = {
             query: query,
-            rels: 'ownedBy,assignedTo,issuemilestone,project,createdBy,modifiedBy,reportedBy,issuetype',
+            rels: 'ownedBy,assignedTo,issuemilestone,project,createdBy,modifiedBy,reportedBy,issuetype,issuestatus',
             sort: this.sort,
             order: this.order,
             page: this.page,
@@ -198,12 +235,8 @@ export default App.extend({
      */
     afterModel(){
         let _self = this;
-        let projectId = _self.paramsFor('app.project').project_id;
-        if (projectId === undefined && _self.context !== undefined) {
-            if (_self.context.project_id !== undefined) {
-                projectId = _self.context.project_id;
-            }
-        }
+        let projectId = _self.trackedProject.getProjectId();
+        
         let savedSearchesOption = {
             query: '((Savedsearch.relatedTo : issue) AND (Savedsearch.projectId : '+projectId+') AND (Savedsearch.createdUser : '+_self.get('currentUser.user.id')+'))',
             limit: -1
@@ -253,6 +286,9 @@ export default App.extend({
         controller.set('sort',this.sort);
         controller.set('order',this.order);
         controller.set('page',this.page);
+        controller.set('issueTypes',this.issueTypes);
+        controller.set('issueStatuses',this.issueStatuses);
+        controller.set('milestones',this.milestones);
     },
 
 });

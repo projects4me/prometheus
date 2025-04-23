@@ -20,9 +20,9 @@ Router.map(function() {
     this.route('module',{path:':module'});
     this.route('projects',{path:'project'},function(){
         this.route('create');
-        this.route('edit',{path:'/edit/:project_id'});
+        this.route('edit',{path:'/edit/:shortcode'});
     });
-    this.route('project',{ path: "project/:project_id" },function(){
+    this.route('project',{ path: "project/:shortcode" },function(){
         this.route('wiki',function(){
             this.route('index',{path:'/'});
             this.route('create');
@@ -59,6 +59,8 @@ Router.map(function() {
     });
   });
   this.route('signin', function() {});
+  this.route('reset-password');
+  this.route('not-found', {path: '/*path'});
 });
 
 export default Router;

@@ -79,14 +79,4 @@ export default class AppProjectController extends PrometheusController {
     get membersList() {
         return (new format(this)).getSelectList(this.members);
     }
-
-    /**
-     * This function navigates a user to the project page
-     *
-     * @method navigateToProject
-     * @public
-     */
-    @action navigateToProject(projectId) {
-        this.transitionToRoute('app.project', { project_id: projectId });
-    }
 }

@@ -30,21 +30,57 @@ export default App.extend({
     trackedProject: inject(),
 
     /**
-     * The project Id
-     *
-     * @property projectId
-     * @type String
-     * @for Project
+     * The beforeModel hook of the ember.js. In this hook we're loading the project and its members.
+     * 
+     * @method beforeModel
+     * @param {Transition} transition
      * @private
      */
-    projectId: null,
+    async beforeModel(transition) {
+        let _self = this;
+        let projectShortCode = _self.paramsFor('app.project')?.shortcode;
+        if(projectShortCode == undefined) {
+            projectShortCode = _self.trackedProject.shortCode;
+
+            // if projectShortCode is still undefined, then show error message and abort transition
+            if(projectShortCode == undefined) {
+                new Messenger().post({
+                    message: _self.intl.t('views.nav.error.selectProjectFirst'),
+                    type: "error",
+                    showCloseButton: true
+                });
+                transition.abort();
+            }
+        }
+
+        let projectOptions = {
+            query: "(Project.shortCode : " + projectShortCode + ")",
+            rels: "members",
+            sort: "members.name",
+            order: "ASC",
+            page: 0,
+            limit: -1,
+        };
+        
+        let project = await this.store.query('project', projectOptions).catch((error) => {
+            _self.errorManager.handleError(error, {
+                moduleName: "project"
+            });
+        });
+
+        if (project.objectAt(0) != undefined &&
+            project.objectAt(0).get('members') != undefined) {
+            _self.set('members', project.objectAt(0).get('members'));
+        }
+
+        // set projectId in trackedProject service
+        let projectId = project.objectAt(0).id;
+        _self.trackedProject.setProjectId(projectId);
+    },
 
     afterModel() {
         let _self = this;
-        let projectId = _self.paramsFor('app.project').project_id;
-        if (projectId === undefined) {
-            projectId = _self.trackedProject.getProjectId();
-        }
+        let projectId = _self.trackedProject.getProjectId();
 
         let issuesOptions = {
             fields: "Issue.id,Issue.subject,Issue.issueNumber,Issue.statusId,Issue.projectId",
@@ -55,25 +91,11 @@ export default App.extend({
             limit: -1,
         };
 
-        let projectOptions = {
-            query: "(Project.id : " + projectId + ")",
-            rels: "members",
-            sort: "members.name",
-            order: "ASC",
-            page: 0,
-            limit: -1,
-        };
-
         return hashSettled({
             issues: _self.store.query('issue', issuesOptions),
-            project: _self.store.query('project', projectOptions)
         }).then(function (results) {
             let data = extractHashSettled(results);
             _self.set('issues', data.issues);
-            if (data.project.objectAt(0) != undefined &&
-                data.project.objectAt(0).get('members') != undefined) {
-                _self.set('members', data.project.objectAt(0).get('members'));
-            }
         }).catch((error) => {
             _self.errorManager.handleError(error, {
                 moduleName: "project"
@@ -93,10 +115,7 @@ export default App.extend({
         Logger.debug('AppProjectRoute::setupController');
         let _self = this;
 
-        // If the user navigated directly to the wiki project or page then lets setup the project id
-        let projectId = this.paramsFor('app.project').project_id;
-        //setting up "projectId" property of "trackedProject" service in order to use that projectId in other parts of application
-        this.trackedProject.setProjectId(projectId);
+        let projectId = this.trackedProject.getProjectId();
         let projectName = null;
 
         let options = {

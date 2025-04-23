@@ -2,7 +2,7 @@
   {{#if this.projectId}}
     <h1>
       {{t "views.app.project.label"}}
-      <small><LinkTo @route="app.project" @model={{this.model.id}} {{action "navigateToProject" this.model.id}}>{{this.model.name}}</LinkTo></small>
+      <small><LinkTo @route="app.project" @model={{this.model.shortCode}}>{{this.model.name}}</LinkTo></small>
     </h1>
   {{else}}
     <div class="callout callout-warning no-project-selected">

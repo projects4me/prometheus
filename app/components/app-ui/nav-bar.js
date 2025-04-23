@@ -49,8 +49,6 @@ export default class NavBarComponent extends AppComponent {
     constructor() {
         Logger.debug('NavBarComponent::init()');
         super(...arguments);
-        this.metaData = MD.create().getViewMeta('Navigation', 'items');
-        Logger.debug(this.metaData);
         this.appPrefix = ENV.api.prefix;
         this.projectId = this.trackedProject.getProjectId();
     }
@@ -72,16 +70,16 @@ export default class NavBarComponent extends AppComponent {
      * @param {String} route
      * @param {Object} routeParams
      * @param {String} anchorRoute
-     * @param {String} projectId
+     * @param {String} shortCode
      * @public
      */
-    @action navigate(route, routeParams, anchorRoute, projectId) {
+    @action navigate(route, routeParams, anchorRoute, shortCode) {
         Logger.debug('A transition requested to route ' + route);
-        if (projectId !== undefined) {
+        if (shortCode !== undefined) {
             if (routeParams === null) {
                 routeParams = {};
             }
-            routeParams['project_id'] = projectId;
+            routeParams['shortcode'] = shortCode;
         }
         if (routeParams !== undefined && routeParams !== null && routeParams !== '') {
             this.router.transitionTo(route, routeParams);
@@ -101,9 +99,37 @@ export default class NavBarComponent extends AppComponent {
     @action projectChanged(project) {
         this.projectId = project.value;
         this.trackedProject.setProjectId(project.value);
+        let selectedProject = this.trackedProject.getProject();
 
-        if (project.value !== undefined && project.value !== null && project.value !== '') {
-            this.router.transitionTo('app.project', { project_id: project.value });
+        if(selectedProject.shortCode !== undefined){
+            this.router.transitionTo('app.project', { shortcode: selectedProject.shortCode.toLowerCase() });
         }
+    }
+
+    /**
+     * This property contains the metadata for navigation. It first get the metadata and then sorts it by order.
+     * 
+     * @property navigationMeta
+     * @for NavBar
+     */
+    get navigationMeta() {
+        let navigationMeta = MD.create().getViewMeta('Navigation', 'items');
+        let sortedNavigationMeta = Object.entries(navigationMeta)
+        .sort((a, b) => a[1].order - b[1].order)
+        .reduce((acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        }, {});
+
+        return sortedNavigationMeta;
+    }
+    /**
+     * This property contains the metadata for admin navigation.
+     * 
+     * @property adminNavigationMeta
+     * @for NavBar
+     */
+    get adminNavigationMeta() {
+        return MD.create().getViewMeta('Navigation', 'adminItems');
     }
 }

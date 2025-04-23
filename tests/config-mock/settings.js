@@ -1,6 +1,6 @@
 export default {
     aclSettings: {
-        permissionFlags: JSON.stringify(['readF', 'createF', 'searchF', 'updateF', 'deleteF', 'importF', 'exportF']),
+        permissionFlags: JSON.stringify(['readF', 'createF', 'updateF', 'deleteF', 'importF', 'exportF']),
         apiOptions: JSON.stringify({
             "field": {
                 "allow": "9",

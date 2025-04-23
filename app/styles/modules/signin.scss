@@ -1,0 +1,88 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the CSS related to the login page of the application.
+*/
+
+.app-updates {
+    min-height: 100vh;
+    background-color: $primaryColor;
+
+    .content {
+        @include flexbox($justifyContent: center, $alignItems: center, $direction: column);
+        min-height: 100vh;
+        margin-top: -1rem;
+    }
+
+    h2 {
+        color: #fff;
+        margin-bottom: 4rem;
+    }
+}
+
+.login-container {
+    @include flexbox($justifyContent: center, $alignItems: center);
+    min-height: 100vh;
+
+    .login-box {
+        margin: 0;
+        width: 50%;
+
+        [data-toggle-forget-password] {
+            cursor: pointer;
+        }
+
+        .login-logo {
+            margin-bottom: 0;
+
+            img {
+                width: 12.8rem;
+                height: 12.8rem;
+            }
+        }
+
+        [data-signin="lang-forget"] {
+            @include flexbox($alignItems: center);
+        }
+
+        .login-box-body {
+            [data-field="select-language"] {
+                margin: 1rem 0;
+            }
+
+            .title {
+                text-align: center;
+            }
+
+            [data-field^="user."] {
+                margin: 0 0 3rem 0;
+
+                input {
+                    border: 1px solid #ccc;
+                }
+
+                span.bar {
+                    display: none;
+                }
+            }
+
+            [data-field="user.password"] {
+                margin-bottom: 1rem;
+            }
+
+            .text-center {
+                button {
+                    width: 100%;
+                }
+
+                [data-back-to-signin] {
+                    margin-top: 1rem;
+                }
+            }
+        }
+    }
+}

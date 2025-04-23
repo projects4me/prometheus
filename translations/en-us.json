@@ -10,7 +10,6 @@
     "description": "This field",
     "required": "This field is required",
     "optionality": "This field is required",
-    "oneOf": "{dependentField} must matches",
     "email": "Please enter a valid email address",
     "inclusion": "{description} is not included in the list",
     "exclusion": "{description} is reserved",
@@ -36,7 +35,9 @@
     "api": {
       "forbidden": "Forbidden",
       "pageNotFound": "Oops! Page not found",
-      "internalServerError": "Internal Server Error"
+      "internalServerError": "Internal Server Error",
+      "returnTo": "Return to",
+      "homepage": "home page"
     }
   },
   "global": {
@@ -68,9 +69,13 @@
       "discuss": "Discuss",
       "create": "Create",
       "cancel": "Cancel",
+      "yes": "Yes",
+      "no": "No",
       "close": "Close",
       "delete": "Delete",
+      "remove": "Remove",
       "search": "Search",
+      "export": "Export",
       "searchPlaceholder": "Search ...",
       "loading": "Loading ...",
       "clear": "Clear",
@@ -119,7 +124,7 @@
       "firstPage": "First Page",
       "last": "Last Page",
       "searchbox": "Toggle search box",
-      "selectedCount": "(Selected : {count}) "
+      "selectedCount": "<strong>(Selected : {count})</strong> "
     },
     "noentry": "No entry found..",
     "blank": "<span class='disabled-text'>-- blank --</em>",
@@ -142,7 +147,8 @@
         "comment": "Comment",
         "role": "Role",
         "milestone": "Milestone",
-        "file": "File"
+        "file": "File",
+        "membership": "Membership"
       },
       "plural": {
         "project": "Projects",
@@ -160,6 +166,43 @@
         "role": "Roles",
         "milestone": "Milestones",
         "file": "Files"
+      },
+      "project": {
+        "relationships": {
+          "owner": "Owner",
+          "createdBy": "Created By",
+          "modifiedBy": "Modified By",
+          "members": "Members",
+          "conversations": "Conversations",
+          "issues": "Issues",
+          "roles": "Roles",
+          "memberships": "Memberships",
+          "milestones": "Milestones",
+          "issuetypes": "Issue Types",
+          "issuestatuses": "Issue Statuses",
+          "activities": "Activities"
+        }
+      },
+      "issue": {
+        "relationships": {
+          "assignedTo": "Assigned To",
+          "createdBy": "Created By",
+          "modifiedBy": "Modified By",
+          "ownedBy": "Owned By",
+          "reportedBy": "Reported By",
+          "project": "Project",
+          "issuemilestone": "Milestone",
+          "parentissue": "Parent Issue",
+          "conversationroom": "Conversation Room",
+          "issuetype": "Issue Type",
+          "issuestatus": "Issue Status",
+          "estimated": "Estimated",
+          "spent": "Spent",
+          "childissues": "Child Issues",
+          "comments": "Comments",
+          "files": "Files",
+          "activities": "Activities"
+        }
       }
     }
   },
@@ -274,15 +317,37 @@
   "views": {
     "signin": {
       "message": "Please sign in to proceed",
+      "workspaceTitle": "The complete workspace to manage your projects",
       "username": "Username",
       "password": "Password",
       "facebook": "Sign in using Facebook",
       "google": "Sign in using Google+",
       "remember": "Remember Me",
       "or": "- OR -",
-      "forgot": "I forgot my password",
+      "forgot": "Forgot Password?",
       "title": "<b>Projects</b>4<b>Me</b>",
-      "error": "Invalid username or password"
+      "invalid_grant": "Invalid username or password",
+      "resourceLocked": "Your account has been locked, please contact the system administrator",
+      "error": "Invalid username or password",
+      "sessionExpired": "Your <b>session</b> has expired. Please sign in again to continue",
+      "forgetPassword": {
+        "title": "<b>Forgot Password</b>",
+        "message": "Please enter your email address",
+        "email": "Email Address",
+        "error": "An error occurred while sending the email, please try again",
+        "success": "Reset link has been sent to your email address",
+        "sendLink": "Send Reset Link",
+        "backToSignin": "Back to Sign in"
+      },
+      "resetPassword": {
+        "title": "<b>Reset Password</b>",
+        "message": "Please enter your new password",
+        "password": "New Password",
+        "confirm": "Confirm Password",
+        "changePassword": "Change Password",
+        "error": "An error occurred while resetting the password, please try again",
+        "success": "Password has been reset successfully"
+      }
     },
     "app": {
       "member": "Member since ",
@@ -303,6 +368,48 @@
       "support": "Support",
       "reportissue": "Report Issue",
       "theme": "Theme <a href='https://github.com/almasaeed2010/AdminLTE'>AdminLTE</a> made with ♥ by <a href='https://almsaeedstudio.com/'>Almsaeed</a>",
+      "createModule": "Create Module",
+      "selectProject": "Please select a project first",
+      "createNewProjectDescription": "No projects are found, please create one by clicking on the button below",
+      "contactAdminForProject": "No projects are found, to create one please contact administrator",
+      "welcome": "Welcome to <b>Projects</b>4<b>Me</b>",
+      "timezone": {
+        "change": {
+          "prompt": "We've detected that your timezone has changed. Would you like to update your timezone of your profile?",
+          "updating": "Updating your timezone...",
+          "success": "Your timezone has been successfully updated",
+          "error": "Sorry, there was a problem updating your timezone. Please try again later."
+        }
+      },
+      "module": {
+        "list": {
+          "noModuleSelected": "Please select some {moduleName} first",
+          "export": {
+            "selectRelationship": {
+              "label": "Please select relationships you want to export along with the selected {moduleName}",
+              "placeholder": "Select relationships.."
+            },
+            "searchQueryRequired": "Search query is required to export the {moduleName}",
+            "noItemsSelected": "No {moduleName} selected for export",
+            "exporting": "Exporting <strong>{moduleName}</strong> ..",
+            "exported": "<strong>{moduleName}</strong> exported successfully",
+            "error": "An error occurred while exporting the {moduleName}. Please try again."
+          },
+          "massUpdate": {
+            "updating": "Updating {moduleName} ..",
+            "updated": "<strong>{count} {moduleName}</strong> updated successfully",
+            "error": "An error occurred while updating the {moduleName}. Please try again."
+          },
+          "delete": {
+            "message": "You are about to delete the {moduleName} <strong>{name}</strong>, once deleted it <strong>cannot be recovered</strong>.",
+            "confirmDelete": "<strong>Yes, delete the {moduleName}!</strong>",
+            "deleting": "Deleting {moduleName} ..",
+            "deletecancel": "Deletion cancelled",
+            "onsecondthought": "Hmm, I will just keep it.",
+            "deleted": "{moduleName} has been deleted"
+          }
+        }
+      },
       "project": {
         "label": "Project",
         "noproject": "No project selected",
@@ -321,7 +428,8 @@
           "startdate": "Start Date",
           "enddate": "End Date",
           "issuetypes": "Issue Types",
-          "hasIssuetypes": "Issue Types"
+          "hasIssuetypes": "Issue Types",
+          "reAssignIssues": "Reassign Issues"
         },
         "detail": {
           "status.": "Loading ..",
@@ -338,9 +446,11 @@
           "estimatedBudget": "Budget Estimated",
           "spentBudget": "Budget Spent",
           "issueratio": "Issue Distribution Ratio",
-          "conversations": "Conversations",
+          "latestConversations": "Latest Conversations",
+          "noLatestConversations": "No conversations found for the project",
           "viewallconversations": "View all conversations",
           "latestissues": "Latest Issues",
+          "noLatestIssues": "No issues found for the project",
           "viewallissues": "View all issues",
           "estimatedspent": "Estimated Time vs Spent Time",
           "summary": "Project Summary",
@@ -353,14 +463,24 @@
           "milestones": "Project Milestones",
           "managemilestones": "Manage Milestones",
           "managemembers": "Manage Members",
+          "noMembers": "No members found for the project, please add some",
           "membership": {
             "add": "Add a new member",
+            "update": "Update member role",
+            "delete": "Remove member",
             "selectrole": "Select a role",
+            "editRole": "Edit Role",
+            "removeMember": "Remove Member",
             "role": "Role of the new member",
             "selectuser": "Select a new member",
+            "reAssignIssues": "Reassign Issues To",
             "user": "Member",
             "added": "<strong>{user}</strong> has been added to the project as <strong>{role}</strong>",
-            "missing": "Both the user and role selection is required"
+            "updated":"<strong>{user}'s</strong> role has been updated to <strong>{role}</strong>",
+            "missing": "Both the user and role selection is required",
+            "deleted": "Member <strong>{user}</strong> has been removed from the project",
+            "deleteWarning": "You are about to remove the member <strong>{user}</strong> from the project, once removed the member will lose access to the project and all the issues assigned to the member will be unassigned. Are you sure?",
+            "reAssignIssuesPlaceholder": "Select a member to whom the open issues will be reassigned"
           },
           "charts": {
             "estimatedspent": "Estimated vs Spent (Time in %)",
@@ -418,15 +538,19 @@
           "startdateplaceholder": "Enter the project start date",
           "typeplaceholder": "Select the type of project",
           "statusplaceholder": "Which status is the project in?",
-          "visionholder": "What is the project vision",
+          "visionplaceholder": "What is the project vision",
           "scopeplaceholder": "What is the project scope",
           "created": "<strong>{name}</strong> created successfully",
           "issuetypes": "Issue Types",
-          "selectissuetypes": "Select issue type this project will support"
+          "selectissuetypes": "Select issue type this project will support",
+          "endDateInfo": "Sets the deadline for project completion.",
+          "statusInfo": "Defines the current state of the project.",
+          "issueTypesInfo": "Defines the types of issues that can be created in this project."
         },
         "list": {
           "savedsearch": {
-            "name": "Name of the search",
+            "name": "Search Name",
+            "inputname": "Enter the name of the search",
             "public": "Public",
             "missing": "Information missing",
             "label": "Saved Searches",
@@ -441,7 +565,7 @@
             "deletecancel": "Phew!! close one.",
             "onsecondthought": "Hmm, I will just keep it.",
             "deleted": "The search <strong>{name}</strong> has been deleted",
-            "query": "Query : "
+            "query": "Search Query: "
           },
           "name": "Name",
           "type": "Type",
@@ -597,7 +721,8 @@
         "list": {
           "create": "Create New",
           "savedsearch": {
-            "name": "Name of the search",
+            "inputname": "Enter the name of the search",
+            "name": "Search Name",
             "public": "Public",
             "missing": "Information missing",
             "label": "Saved Searches",
@@ -612,17 +737,21 @@
             "deletecancel": "Phew!! close one.",
             "onsecondthought": "Hmm, I will just keep it.",
             "deleted": "The search <strong>{name}</strong> has been deleted",
-            "query": "Query : "
+            "query": "Search Query: "
           },
           "sr": "#",
           "subject": "Subject",
           "status": "Status",
           "issuetype": "Type",
+          "assignee": "Assignee",
           "priority": "Priority",
           "milestone": "Milestone",
           "startDate": "Start Date",
           "endDate": "End Date",
-          "selectedCount": "(Selected : {count}) "
+          "overview": "Overview",
+          "selectedCount": "(Selected : {count}) ",
+          "startConversation": "Start Conversation",
+          "openConversation": "Open Conversation"
         },
         "detail": {
           "issueNumber": "Issue Number",
@@ -733,7 +862,10 @@
           "parent": "Parent",
           "selectparent": "Select the issue parent",
           "people": "People",
-          "estimates": "Estimates"
+          "estimates": "Estimates",
+          "validations": {
+            "endDateGreaterThanStartDate" : "End date should be after start date"
+          }
         },
         "filter": {
           "issueNumber": "Issue Number",
@@ -816,12 +948,7 @@
           "list": {
             "profile": "Profile",
             "accountStatus": "Status",
-            "emailaddress": "Email Address",
-            "deleteUser": "You are about to delete the user <strong>{name}</strong>, once deleted it <strong>cannot be recovered</strong>.",
-            "confirmDeleteUser": "<strong>Yes, delete the User!</strong>",
-            "deletecancel": "Deletion cancelled",
-            "onsecondthought": "Hmm, I will just keep it.",
-            "userDeleted": "User has been deleted"
+            "emailaddress": "Email Address"
           }
         },
         "create": {
@@ -848,7 +975,8 @@
           "validation": {
             "usernameTaken": "Username already taken!",
             "usernameAvailable": "Username available",
-            "usernameTakenByYou": "Username already taken by yourself"
+            "usernameTakenByYou": "Username already taken by yourself",
+            "passwordMatch": "Password must matches"
           }
         },
         "edit": {
@@ -968,7 +1096,6 @@
             "flags": {
               "read": "Read",
               "create": "Create",
-              "search": "Search",
               "update": "Update",
               "delete": "Delete",
               "import": "Import",
@@ -1008,8 +1135,8 @@
                 "system": "System"
               },
               "created": {
-                "system" : "Membership created for system",
-                "project" : "Membership created for project <strong>{name}</strong>"
+                "system": "Membership created for system",
+                "project": "Membership created for project <strong>{name}</strong>"
               }
             },
             "createMembership": "Create Membership",
@@ -1078,6 +1205,9 @@
     "nav": {
       "mainnav": "Main Navigation",
       "selectproject": "Select a project..",
+      "error": {
+        "selectProjectFirst": "Please select a project first"
+      },
       "menu": {
         "app": {
           "label": "Dashboard"
@@ -1108,7 +1238,7 @@
         "conversation": {
           "label": "Conversations"
         },
-        "user":{
+        "user": {
           "label": "Users",
           "create": "Create User",
           "management": "User Management"

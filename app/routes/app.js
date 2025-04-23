@@ -99,6 +99,16 @@ export default Route.extend({
     errorManager: inject(),
 
     /**
+     * The trackedProject service provides the selected project.
+     *
+     * @property trackedProject
+     * @type Ember.Service
+     * @for App
+     * @private
+     */
+    trackedProject: inject(),    
+
+    /**
      * This function is called by EmberJs before it retrieves the model. In this method
      * we're redirecting user to loading assets route if the intial data is not loaded.
      *
@@ -168,9 +178,12 @@ export default Route.extend({
         Logger.debug('Prometheus.App.Route::setupController()');
 
         let loadingAssetsController = this.controllerFor('app.loading-assets');
-        controller.set('roles', loadingAssetsController.get('roles'));
-        controller.set('users', loadingAssetsController.get('users'));
-        controller.set('projects', loadingAssetsController.get('projects'));
+        if(loadingAssetsController.get('dataLoaded')) {
+            controller.set('roles', loadingAssetsController.get('roles'));
+            controller.set('users', loadingAssetsController.get('users'));
+            controller.set('projects', loadingAssetsController.get('projects'));
+            controller.detectTimezoneChange();
+        }
 
         Logger.debug('-Prometheus.App.Route::setupController()');
     },

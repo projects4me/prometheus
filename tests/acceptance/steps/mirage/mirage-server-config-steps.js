@@ -22,7 +22,14 @@ export const given = function () {
                 }
                 assert.ok(true, "default data is loaded");
             }
-        }
+        },
+        {
+            "There is no $modelType": (assert) => async function (modelType) {
+                server.schema[modelType].all().models.forEach((model) => {
+                    model.destroy();
+                });
+            }
+        },        
     ];
 }
 

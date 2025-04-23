@@ -17,17 +17,6 @@ import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default App.extend({
-
-    /**
-     * The project Id
-     *
-     * @property projectId
-     * @type String
-     * @for Index
-     * @private
-     */
-    projectId: null,
-
     /**
      * The trackedProject service provides id of the selected project.
      *
@@ -37,21 +26,6 @@ export default App.extend({
      * @private
      */
     trackedProject: inject(),
-
-    /**
-     * This route hook is triggered before model hook. In this hook we're updating the projectId using the
-     * trackedProject service.
-     * 
-     * @method beforeModel
-     */
-    beforeModel() {
-        let projectId = this.trackedProject.getProjectId();
-        let params = this.paramsFor('app.project');
-
-        if (projectId !== params.project_id) {
-            this.trackedProject.setProjectId(params.project_id);
-        }
-    },
 
     /**
      * The model hook for this route used for fetching required data.

@@ -42,32 +42,16 @@ export default App.extend({
     setupController:function(controller){
         let _self = this;
 
-        let params = _self.getParams();
+        let projectId = _self.trackedProject.getProjectId();
 
         let wiki = this.store.createRecord('wiki',{
-            status:'published',
-            locked:0,
-            upvotes:1,
-            projectId:params.projectId,
+            status: 'published',
+            locked: 0,
+            upvotes: 1,
+            projectId: projectId,
         });
 
         controller.set('model',wiki);
         controller.set('markUp', _.clone(wiki.markUp));
     },
-
-    /**
-     * This function retrieves the route parameters, Most of the wiki functionality
-     * is similar so we one write it once and extends it for different routes.
-     * In order to make sure that we are able to retrieve the correct parameters we
-     * have exposed this function.
-     *
-     * @method getParams
-     * @return {Object} params The parameters for this route
-     * @private
-     */
-    getParams:function(){
-        let params = {};
-        params['projectId'] = this.paramsFor('app.project').project_id;
-        return params;
-    }
 });

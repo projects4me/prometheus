@@ -5,6 +5,7 @@
 import Create from "prometheus/routes/app/project/issue/create";
 import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
+import format from "prometheus/utils/data/format";
 
 /**
  * The issues edit route
@@ -42,7 +43,7 @@ export default Create.extend({
         Logger.debug('Prometheus.Routes.App.Project.Issue.Edit::afterModel()');
         let _self = this;
 
-        let projectId = _self.paramsFor('app.project').project_id;
+        let projectId = _self.trackedProject.getProjectId();
         let issueNumber = model.issue_number;
 
         let projectOptions = {
@@ -76,6 +77,32 @@ export default Create.extend({
                 moduleName: "issue"
             })
         });
+    },
+
+    /**
+     * The setupController hook for issue edit route.
+     * 
+     * @method setupController
+     * @param {Prometheus.Controllers.Issue} controller The controller object for the issues
+     */
+    setupController: function (controller) {
+        Logger.debug('Prometheus.Routes.App.Project.Issue.Create::setupController');
+
+        let _self = this;
+
+        let params = this.paramsFor('app.project.issue.edit');
+
+        this.set('breadCrumb', { title: '#' + params.issue_number, record: true });
+        controller.set('model', _self.get('issue'));
+        controller.set('project', _self.get('project'));
+        controller.set('types', _self.get('types'));
+        controller.set('statuses', _self.get('statuses'));
+        controller.set('issueDescription', _self.get('issueDescription'));
+
+        let priority = (new format(this)).getList('views.app.issue.lists.priority');
+        controller.set('priority', priority);
+
+        Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::setupController');
     },
 
 });

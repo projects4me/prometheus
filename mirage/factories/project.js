@@ -4,8 +4,8 @@ import * as date from '../helpers/getDate';
 import _ from 'lodash';
 
 export default Factory.extend({
-    name() {
-        return faker.company.companyName(0);
+    name(i) {
+        return `project_${++i}`;
     },
     dateCreated() {
         return date.createdDate(20, 30);
@@ -46,11 +46,13 @@ export default Factory.extend({
     vision() {
         return faker.lorem.text();
     },
+    shortCode(i) {
+        return `PROJECT_${++i}`;
+    },
     afterCreate(project) {
         project.update({
             "createdUserName": `User_${project.createdUser}`,
-            "modifiedUserName": `User_${project.modifiedUser}`,
-            "shortCode": (project.name.split(' '))[0].toUpperCase()
+            "modifiedUserName": `User_${project.modifiedUser}`
         })
     }
 });

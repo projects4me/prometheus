@@ -38,9 +38,11 @@ export default Helper.extend({
      * This method returns the permission options of the requested module of the system.
      * 
      * @param {string} type The name of the module e.g. API, frontend.
+     * @param {Prometheus.Models.Permission} permission The permission model.
+     * @param {string} flag The name of the permission flag e.g. readF.
      * @returns {Object} List of options
      */
-    compute([type, permission, ...rest], hash) {
+    compute([type, permission, flag, ...rest], hash) {
         let resourceType = 'field',
             modelDependentGroups = [];
 
@@ -53,7 +55,7 @@ export default Helper.extend({
         }];
 
         // Set options if the resource is model.
-        if (permission.moduleName === permission.resourceName) {
+        if (permission.moduleName === permission.resourceName && flag === 'readF') {
             resourceType = 'model';
             modelDependentGroups = this.settings.get('aclSettings')['modelGroups'][permission.resourceName];
             options = _.clone(this.settings.get('aclSettings')[type][resourceType]);

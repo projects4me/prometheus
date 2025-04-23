@@ -6,7 +6,7 @@
       @value={{@value}} 
       placeholder={{@placeholder}}
       @label={{@label}}
-      {{on "blur" (fn this.validate @dependentField)}}
+      {{on "blur" this.validate}}
       {{on "blur" this.onBlur}}
       {{on "focusout" (action (mut this.shouldValidate) true) }}
       ...attributes
@@ -14,9 +14,13 @@
     <span class="highlight"></span>
     <span class="bar"></span>
 
-    <label class="floating-label">
-      {{@label}} 
-    </label> 
+    <FormFields::Label
+      @label={{@label}}
+      @showFieldInfo={{@showFieldInfo}}
+      @info={{@info}}
+      @data-field={{@data-field}}
+      @required={{@required}}
+    />
 
     {{#if (and @message this.shouldValidate)}}
       <span class="error text-red" id={{@data-field}}>

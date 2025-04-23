@@ -8,25 +8,69 @@
   This contains the CSS related to the conversation page of the application.
 */
 
-
-
-.conversations{
-
+.conversations {
   margin-top: -15px;
 
-  .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12{
+  .col-xs-1,
+  .col-sm-1,
+  .col-md-1,
+  .col-lg-1,
+  .col-xs-2,
+  .col-sm-2,
+  .col-md-2,
+  .col-lg-2,
+  .col-xs-3,
+  .col-sm-3,
+  .col-md-3,
+  .col-lg-3,
+  .col-xs-4,
+  .col-sm-4,
+  .col-md-4,
+  .col-lg-4,
+  .col-xs-5,
+  .col-sm-5,
+  .col-md-5,
+  .col-lg-5,
+  .col-xs-6,
+  .col-sm-6,
+  .col-md-6,
+  .col-lg-6,
+  .col-xs-7,
+  .col-sm-7,
+  .col-md-7,
+  .col-lg-7,
+  .col-xs-8,
+  .col-sm-8,
+  .col-md-8,
+  .col-lg-8,
+  .col-xs-9,
+  .col-sm-9,
+  .col-md-9,
+  .col-lg-9,
+  .col-xs-10,
+  .col-sm-10,
+  .col-md-10,
+  .col-lg-10,
+  .col-xs-11,
+  .col-sm-11,
+  .col-md-11,
+  .col-lg-11,
+  .col-xs-12,
+  .col-sm-12,
+  .col-md-12,
+  .col-lg-12 {
     padding: 0rem;
   }
 
-  .twa{
+  .twa {
     font-size: 1.8rem;
   }
 
-  .box{
+  .box {
     margin-bottom: 0rem;
   }
 
-  .user-block .subject{
+  .user-block .subject {
     font-size: 1.6rem;
     font-weight: 600;
     display: block;
@@ -34,43 +78,46 @@
     margin-right: 5rem;
   }
 
-  .box-comments{
-    .message-box{
+  .box-comments {
+    .comment-text {
+      overflow-wrap: break-word;
+    }
+
+    .message-box {
       display: inline-flex;
       width: 100%;
-    
+
       > #editor {
         height: 100px !important;
         width: 100% !important;
       }
-      
+
       > #editor div.tui-editor-contents {
         min-height: 0px !important;
         padding: 3px 4px !important;
       }
-      .btn{
+      .btn {
         height: 4rem;
         margin-left: 1rem;
       }
-
     }
   }
 
-  .vote .info-box-icon{
+  .vote .info-box-icon {
     cursor: pointer;
   }
 
-  .vote .info-box-icon:hover{
+  .vote .info-box-icon:hover {
     font-size: 5rem;
   }
 
-  .vote .disagree .info-box-content{
+  .vote .disagree .info-box-content {
     margin-left: 0rem !important;
     margin-right: 9rem !important;
   }
 
-
-  .box-start:before, .box-start:after {
+  .box-start:before,
+  .box-start:after {
     content: " ";
     display: table;
   }
@@ -79,14 +126,14 @@
     clear: both;
   }
 
-  .box-start{
+  .box-start {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
     padding: 10px;
     background-color: $backgroundColor;
-    .new-conversation{
+    .new-conversation {
       font-size: 2rem;
       cursor: pointer;
     }
@@ -97,12 +144,12 @@
 =            masonry Page            =
 ====================================*/
 /* Inspired fom http://www.nextbootstrap.com/2016/01/masonry-layout-for-bootstrap-3.html */
-.masonry{
+.masonry {
   display: block;
 }
 
 /* 5 columns */
-.masonry.masonry-columns{
+.masonry.masonry-columns {
   -webkit-column-count: 3;
   -moz-column-count: 3;
   column-count: 3;
@@ -112,40 +159,39 @@
   column-gap: 2.5rem;
 }
 
-
 /*--------Responsive---------*/
-@media(max-width: 1170px){
-  .masonry.masonry-columns{
+@media (max-width: 1170px) {
+  .masonry.masonry-columns {
     -webkit-column-count: 2;
     -moz-column-count: 2;
     column-count: 2;
   }
 }
-@media(max-width: 991px){
-  .masonry.masonry-columns{
+@media (max-width: 991px) {
+  .masonry.masonry-columns {
     -webkit-column-count: 2;
     -moz-column-count: 2;
     column-count: 2;
   }
 }
 
-@media(max-width: 767px){
-  .masonry.masonry-columns{
+@media (max-width: 767px) {
+  .masonry.masonry-columns {
     -webkit-column-count: 1;
     -moz-column-count: 1;
     column-count: 1;
   }
 }
 
-@media(max-width: 540px){
-  .masonry.masonry-columns{
+@media (max-width: 540px) {
+  .masonry.masonry-columns {
     -webkit-column-count: 1;
     -moz-column-count: 1;
     column-count: 1;
   }
 }
 
-.masonry .masonry-item{
+.masonry .masonry-item {
   display: inline-block !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -153,21 +199,21 @@
   display: block;
   background-color: $backgroundColor;
   border: 0.1rem solid $primaryColor;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   float: none !important;
   margin-right: 0 !important;
   margin-bottom: 0 !important;
   margin-bottom: 2.5rem !important;
-  -webkit-box-shadow: 0 0.1rem 0.4rem 0 rgba(0,0,0,0.2);
-  box-shadow: 0 0.1rem 0.4rem 0 rgba(0,0,0,0.2);
+  -webkit-box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2);
 }
 
 .masonry .masonry-item {
-    display: inline-block;
-    margin-bottom: 2rem;
-    width: 100%;
-    border: 0.1rem solid transparent;
-    transition: all 0.4s ease-in-out;
+  display: inline-block;
+  margin-bottom: 2rem;
+  width: 100%;
+  border: 0.1rem solid transparent;
+  transition: all 0.4s ease-in-out;
 }
 
 .masonry-item:hover {
@@ -199,3 +245,12 @@
 }
 
 /*=====  End of masonry Page  ======*/
+
+// Comment/Conversation add icon 
+// ***REMOVE THIS WHEN UPGRADE TO FONT AWESOME 7***
+.fa-comments-plus {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.9rem;
+  font-size: 1rem !important;
+}

@@ -53,7 +53,7 @@ export default class AppProjectsEditController extends AppProjectsCreateControll
     }
 
     /**
-     * This function navigates a use to the issue page
+     * This function navigates the user to the project page
      *
      * @method afterCancel
      * @param model
@@ -62,7 +62,7 @@ export default class AppProjectsEditController extends AppProjectsCreateControll
      */
     afterCancel(model) {
         this.transitionToRoute('app.project', {
-            project_id: model.get('id'),
+            shortcode: model.shortCode,
         });
         model.rollbackAttributes();
     }

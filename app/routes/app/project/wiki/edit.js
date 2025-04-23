@@ -16,23 +16,6 @@ import Page from "prometheus/routes/app/project/wiki/page";
  */
 export default Page.extend({
 
-    /**
-     * This function retrieves the route parameters, Most of the wiki functionality
-     * is similar so we one write it once and extends it for different routes.
-     * In order to make sure that we are able to retrieve the correct parameters we
-     * have exposed this function.
-     *
-     * @method getParams
-     * @return {Object} params The parameters for this route
-     * @private
-     */
-    getParams:function(){
-        let params = {};
-        params['projectId'] = this.paramsFor('app.project').project_id;
-        params['wikiName'] = this.paramsFor('app.project.wiki.edit').wiki_name;
-        return params;
-    },
-
     setupController(controller){
         this._super(controller);
         let newTag = this.store.createRecord('tag',{});

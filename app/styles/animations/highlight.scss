@@ -1,0 +1,22 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Licensing : http://legal.projects4.me/LICENSE.txt, please don't remove :) */
+
+/**
+  This contains the SASS for highlight animation
+*/
+
+@keyframes highlight-box {
+  0% {
+    box-shadow: 0 0 1rem 0.7rem $primaryColor;
+  }
+  100% {
+    box-shadow: none;
+  }
+}
+
+.highlight-box {
+  animation: highlight-box 4s;
+}

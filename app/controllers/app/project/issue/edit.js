@@ -28,17 +28,6 @@ export default class AppProjectIssueEditController extends AppProjectIssueCreate
     layoutName = 'edit';
 
     /**
-     * This function sets the model properties before saving it
-     *
-     * @method beforeSave
-     * @param model
-     * @protected
-     */
-    beforeSave(model) {
-        model.set('projectId', this.target.currentState.routerJsState.params["app.project"].project_id);
-    }
-
-    /**
      * This function returns the success message
      *
      * @method getSuccessMessage

@@ -1,4 +1,4 @@
-<section class="content">
+<section class="content" {{did-insert this.scrollToConversation}}>
   <div class="conversations">
 
     <div class="row">
@@ -30,7 +30,7 @@
 
           {{#each this.model as |entity|}}
 
-            <div class="masonry-item">
+            <div class="masonry-item" id={{entity.id}}>
 
 
               <div class="box box-widget">
@@ -38,7 +38,7 @@
                   <div class="user-block">
                     <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{entity.createdUser}}" alt="{{t "global.form.image"}}">
                     <span class="subject"><a href="#">{{entity.subject}}</a></span>
-                    <span class="description"><a href="/app/user/{{entity.createdBy.id}}">{{entity.createdBy.name}}</a> - {{get-date entity "dateModified" "MMM Do 'YY, h:mm a"}}</span>
+                    <span class="description"><a href="/app/user/{{entity.createdBy.id}}">{{entity.createdBy.name}}</a> - {{format-date date=entity.dateModified format="MMM Do 'YY, h:mm a" localTime=true}}</span>
                   </div>
                   {{!-- /.user-block --}}
                   <div class="box-tools">
@@ -72,7 +72,7 @@
                   {{#if (user-created entity.votes this.currentUser.user.id)}}
                     {{t "views.app.conversation.you"}} <i class="fa fa-heart"></i>
                   {{else}}
-                    <AppUi::Button type="button" class="btn btn-default btn-xs" {{action "upvote" entity.id}} @aclContext="App.Project.Conversation.Upvote">
+                    <AppUi::Button type="button" class="btn btn-default btn-xs" @onClick={{fn this.upvote entity.id}} @aclContext="App.Project.Conversation.Upvote">
                       <i class="fa fa-heart-o"></i> {{t "views.app.conversation.upvote"}}
                     </AppUi::Button>
                   {{/if}}
@@ -96,7 +96,7 @@
                         <div class="comment-text">
                           <span class="username">
                             <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
-                            <span class="text-muted pull-right">{{get-date comment "dateModified" "MMM Do 'YY, h:mm a"}}</span>
+                            <span class="text-muted pull-right">{{format-date date=comment.dateModified format="MMM Do 'YY, h:mm a" localTime=true}}</span>
                           </span>{{!-- /.username --}}
                           {{translate-comment comment.comment}}
                         </div>

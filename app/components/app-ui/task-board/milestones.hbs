@@ -15,7 +15,7 @@
           />
         </div>
         <div class="box-tools pull-right">
-          <AppUi::Button type="button" class="btn btn-box-tool" {{action (toggle "toggleInput" this)}} data-widget="collapse">
+          <AppUi::Button type="button" class="btn btn-box-tool" @onClick={{toggle "toggleInput" this}} data-widget="collapse">
             <i class="fa fa-minus"></i>
           </AppUi::Button>
         </div>

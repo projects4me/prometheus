@@ -41,29 +41,32 @@
                     @validate={{action this.validateField "projectCreate" (hash name="name" value=this.model.name)}}
                     @message={{this.message.projectCreate.name}}
                     @aclContext="App.Project.Create.Name"
-                    {{autofocus}}                  
+                    {{autofocus}}
                   />
-
-                  <div class="form-field form-field-static ember-view">
-                    <span class="ember-text-field form-control input-sm data-input ember-view">{{this.shortCode}}</span>
-                    <span class="highlight"></span>
-                    <span class="bar"></span>
-                    <label class="floating-label active">{{t "views.app.project.create.shortcode"}}</label>
-                  </div>
                 </div>
 
-                <FormFields::FieldTextArea
-                  @placeholder={{t "views.app.project.create.descriptionplaceholder"}}
-                  @label={{t "views.app.project.create.description"}}
-                  @value={{this.model.description}}
-                  @data-field="project.description"
-                  @aclContext="App.Project.Create.Description"
+              <div data-field="project.description" class="form-field ember-view">
+                <AppUi::ToastUi
+                    @contents={{readonly this.model.description}}
+                    @initialValue={{this.model.description}}
+                    @editType='wysiwyg'
+                    @hide={{array 'footer'}}
+                    @onContentChange={{action "selectStatic" this.model 'description'}}              
                 />
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <FormFields::Label
+                  @label={{t "views.app.project.create.description"}}
+                  @data-field="project.description"
+                />
+                <span class="count pull-right"></span>
+              </div>                
 
                 <FormFields::FieldDate
                   @placeholder={{t "views.app.project.create.startdateplaceholder"}}
                   @label={{t "views.app.project.create.startdate"}}
                   @value={{readonly this.model.startDate}}
+                  @format="YYYY-MM-DD"                  
                   @mask="alphanumeric"
                   @update={{action "selectStatic" this.model 'startDate'}}
                   @data-field="project.startDate"
@@ -83,6 +86,7 @@
                   @placeholder={{t "views.app.project.create.enddateplaceholder"}}
                   @label={{t "views.app.project.create.enddate"}}
                   @value={{readonly this.model.endDate}}
+                  @format="YYYY-MM-DD"                  
                   @mask="alphanumeric"
                   @update={{action "selectStatic" this.model 'endDate'}}
                   @data-field="project.endDate"
@@ -94,22 +98,9 @@
                   @showDropdowns={{true}}
                   @validate={{action this.validateField "projectCreate" (hash name="endDate" value=this.model.endDate)}}
                   @message={{this.message.projectCreate.endDate}}
-                  @aclContext="App.Project.Create.EndDate"                            
-                />
-
-                <FormFields::FieldRelate
-                  @placeholder={{t "views.app.project.create.typeplaceholder"}}
-                  @label={{t "views.app.project.create.type"}}
-                  @value={{this.model.type}}
-                  @options={{this.type}}
-                  @selected={{find-by "value" this.model.type this.type}}
-                  @searchField="label"
-                  @onchange={{action "selectRelated" this.model 'type'}}
-                  @relateType="relate-simple"
-                  @data-field="project.type"
-                  @validate={{action this.validateField "projectCreate" (hash name="type" value=this.model.type)}}
-                  @message={{this.message.projectCreate.type}}
-                  @aclContext="App.Project.Create.Type"
+                  @aclContext="App.Project.Create.EndDate"
+                  @showFieldInfo={{this.showFieldInfo}}
+                  @info={{t "views.app.project.create.endDateInfo"}}                                     
                 />
 
                 <FormFields::FieldRelate
@@ -125,6 +116,8 @@
                   @validate={{action this.validateField "projectCreate" (hash name="status" value=this.model.status)}}
                   @message={{this.message.projectCreate.status}}
                   @aclContext="App.Project.Create.Status"
+                  @showFieldInfo={{this.showFieldInfo}}
+                  @info={{t "views.app.project.create.statusInfo"}}
                 />
 
                 <FormFields::FieldTextArea
@@ -195,13 +188,18 @@
                   @value={{this.model.issuetypes}}
                   @options={{this.issuetypeList}}
                   @selected={{this.selectedIssuetypes}}
+                  @closeOnSelect={{false}}
                   @searchField="label"
                   @onchange={{action "selectStatic" this 'selectedIssuetypes'}}
                   @relateType="relate-simple"
                   @data-field="project.issuetypes"
                   @validate={{action this.validateField "projectCreate" (hash name="hasIssuetypes" value=this.model.hasIssuetypes)}}
                   @message={{this.message.projectCreate.hasIssuetypes}}
-                  @aclContext="App.Project.Create.IssueTypes"    
+                  @aclContext="App.Project.Create.IssueTypes"
+                  @searchEnabled={{true}}
+                  @search={{this.searchIssueTypes}}  
+                  @showFieldInfo={{this.showFieldInfo}}
+                  @info={{t "views.app.project.create.issueTypesInfo"}}                                  
                 />
 
               </div>
@@ -212,8 +210,8 @@
       </div>
 
       <div class="col-sm-12">
-        <AppUi::Button type="button" data-btn="save" class="btn btn-primary" disabled="{{this.saveDisabled}}" {{action "save" "projectCreate"}} @aclContext="App.Project.Create">{{t "global.form.save"}}</AppUi::Button>
-        <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" {{action "cancel"}}>{{t "global.form.cancel"}}</AppUi::Button>
+        <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "projectCreate"}} @disableOnSuccess={{true}} @aclContext="App.Project.Create">{{t "global.form.save"}}</AppUi::Button>
+        <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
       </div>
 
     </div>

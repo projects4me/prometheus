@@ -15,7 +15,7 @@ export const when = function () {
         {
             "User selects end date of $module": (assert) => async function (module) {
                 await click(`div[data-field="${module}.endDate"] > input.ember-text-field`);
-                let endDateEl = document.querySelector('div.daterangepicker[style*="display: block"] > div.drp-calendar > div.calendar-table > table.table-condensed > tbody > tr td.today.active').parentElement.nextSibling.firstElementChild;
+                let endDateEl = document.querySelector('div.daterangepicker[style*="display: block"] > div.drp-calendar > div.calendar-table > table.table-condensed > tbody > tr td.today.active').nextSibling;
                 await click(endDateEl);
                 assert.ok(true, "User selects end date");
             }
@@ -23,7 +23,7 @@ export const when = function () {
         {
             "User selects spentOn date": (assert) => async function () {
                 await click(`div[data-field="issue.detail.timelog.spenton"] > input.ember-text-field`);
-                let dateEl = document.querySelector('div.daterangepicker[style*="display: block"] > div.drp-calendar > div.calendar-table > table.table-condensed > tbody > tr td.today.active').parentElement.nextSibling.firstElementChild;
+                let dateEl = document.querySelector('div.daterangepicker[style*="display: block"] > div.drp-calendar > div.calendar-table > table.table-condensed > tbody > tr td.today.active').nextSibling;
                 await click(dateEl);
                 assert.ok(true, "User selects spentOn date");
             }

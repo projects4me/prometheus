@@ -9,4 +9,4 @@ Feature: Project | select and navigate to project
     And There are 10 projects in system
     When User navigates to app/project
     And User selects project 5 from list
-    Then User should be in app/project/5 page
+    Then User should be in app/project/PROJECT_5 page

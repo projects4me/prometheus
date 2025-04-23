@@ -56,6 +56,19 @@ export default App.extend({
      */
     trackedProject: inject(),
 
+    /**
+     * Query params that the conversation route accepts.
+     * 
+     * @property queryParams
+     * @type Object
+     * @for Conversation
+     * @public
+     */
+    queryParams: {
+        c_id: {
+            refreshModel: false
+        }
+    },
 
     /**
      * The model hook for this route. This is used load the conversations that we have in the system.

@@ -42,17 +42,7 @@ export default class UserpermissionModel extends Model {
      * @for Userpermission
      * @private
      */    
-    @attr('string') _read;
-
-    /**
-     * Search action value.
-     * 
-     * @property _search
-     * @type String
-     * @for Userpermission
-     * @private
-     */    
-    @attr('string') _search;
+    @attr('string') readF;
 
     /**
      * Create action value.
@@ -62,7 +52,7 @@ export default class UserpermissionModel extends Model {
      * @for Userpermission
      * @private
      */    
-    @attr('string') _create;
+    @attr('string') createF;
 
     /**
      * Update action value.
@@ -72,7 +62,7 @@ export default class UserpermissionModel extends Model {
      * @for Userpermission
      * @private
      */    
-    @attr('string') _update;
+    @attr('string') updateF;
 
     /**
      * Delete action value
@@ -82,7 +72,7 @@ export default class UserpermissionModel extends Model {
      * @for Userpermission
      * @private
      */    
-    @attr('string') _delete;
+    @attr('string') deleteF;
 
     /**
      * Import action value.
@@ -92,7 +82,7 @@ export default class UserpermissionModel extends Model {
      * @for Userpermission
      * @private
      */    
-    @attr('string') _import;
+    @attr('string') importF;
 
     /**
      * Export action value.
@@ -102,5 +92,5 @@ export default class UserpermissionModel extends Model {
      * @for Userpermission
      * @private
      */    
-    @attr('string') _export;
+    @attr('string') exportF;
 }

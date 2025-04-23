@@ -52,8 +52,8 @@ export const then = function () {
     return [
         {
             "User is navigated to Issue $issueNumber detail view": (assert, ctx) => async function (issueNumber) {
-                let currentProjectId = ctx.get('currentProject').id;
-                assert.equal(currentURL(), `/app/project/${currentProjectId}/issue/${issueNumber}`, `user is navigated to detail view of Issue # ${issueNumber}`);
+                let shortCode = ctx.get('currentProject').shortCode;
+                assert.equal(currentURL(), `/app/project/${shortCode}/issue/${issueNumber}`, `user is navigated to detail view of Issue # ${issueNumber}`);
             }
         }
     ];

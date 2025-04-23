@@ -7,6 +7,7 @@ import { cancel } from '@ember/runloop';
 import { later } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
 import Logger from 'js-logger';
+import { action } from '@ember/object';
 
 /**
  * This component is used to serve as a container for the fields that we intend to
@@ -305,4 +306,28 @@ export default class FormFieldsComponent extends Component {
     get onBlur() {
         return this.args.onBlur ?? (() => true);
     }
+    
+    /**
+     * The onchange function used by the field.
+     * 
+     * @property onChange
+     * @for FormFieldsComponent
+     */
+    get onChange() {
+        return this.args.onchange ?? (() => true);
+    }
+
+    /**
+     * Handles keydown events for power select component.
+     * 
+     * @method handlePowerSelectKeydown
+     * @param {Object} select - The power select component instance.
+     * @param {Event} e - The keydown event object.
+     */
+    @action handlePowerSelectKeydown(select, e) {
+        this.args.onKeydown && this.args.onKeydown(select, e);
+        if(e.keyCode === 27) {
+            e.stopPropagation();
+        }
+    }    
 }

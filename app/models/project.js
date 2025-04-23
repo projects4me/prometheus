@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    type: attr('string'),
+    type: attr('string', { defaultValue: 'Kanban' }),
 
     /**
      * User who last modified the project

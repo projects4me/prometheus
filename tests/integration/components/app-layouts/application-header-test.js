@@ -7,9 +7,15 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import CurrentUserStub from '../../stub-services/current-user-stub';
+import AclStub from '../../stub-services/acl-stub';
 
 module('Integration | Component | application-header', function (hooks) {
     setupRenderingTest(hooks);
+
+    hooks.beforeEach(function(assert) {
+        this.owner.register('service:acl', AclStub);
+        this.owner.register('service:current-user', CurrentUserStub);
+    });
 
     test('it renders component with the sign out button', async function (assert) {
         let session = {
@@ -42,8 +48,6 @@ module('Integration | Component | application-header', function (hooks) {
     });
 
     test('it renders component with logged in user name and created date of that user', async function (assert) {
-        this.owner.register('service:current-user', CurrentUserStub);
-
         await render(hbs`
             <AppLayouts::ApplicationHeader />
         `);

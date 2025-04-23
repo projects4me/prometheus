@@ -7,24 +7,24 @@
 /**
   This contains the CSS related to the wiki pages of the application.
 */
-.wiki-page-islocked, .wiki-page-empty{
+.wiki-page-islocked,
+.wiki-page-empty {
   padding: 2rem;
 }
 
-.wiki-list{
-
-  .node-selected{
+.wiki-list {
+  .node-selected {
     background-color: $primaryColor !important;
   }
 
-  ul{
+  ul {
     list-style: none;
     padding: 0rem 0rem 0rem 1rem;
 
-    li{
-      line-height: 3.0rem;
+    li {
+      line-height: 3rem;
 
-      a{
+      a {
         border-bottom: 1px solid;
       }
     }
@@ -54,35 +54,32 @@
       width: 1.3em;
       position: absolute;
     }
-
   }
-
 }
 
-.wiki-project #editor{
+.wiki-project #editor {
   height: 35rem;
 }
-.wiki-page-contents{
+.wiki-page-contents {
   min-height: 35rem;
   height: 100%;
 }
 
-.wiki-detail .ember-power-select-trigger{
+.wiki-detail .ember-power-select-trigger {
   border-radius: 0px;
   line-height: 1.42857;
   padding: 0.6rem 1.2rem;
-  border-color: #CCC;
+  border-color: #ccc;
 
-  .ember-power-select-placeholder
-  {
+  .ember-power-select-placeholder {
     margin-left: 0px;
   }
 }
 
-.ember-power-select-dropdown{
-  border-color: #CCC;
-  .ember-power-select-search-input{
-    border-color: #CCC;
+.ember-power-select-dropdown {
+  border-color: #ccc;
+  .ember-power-select-search-input {
+    border-color: #ccc;
   }
 }
 
@@ -91,51 +88,51 @@
   padding: 0rem 0rem;
 }
 
-.ql-container{
+.ql-container {
   border: none !important;
 }
 
-.upvotes{
+.upvotes {
   font-size: 1.2rem;
   margin-left: 1rem;
   cursor: pointer;
 
-  .fa{
+  .fa {
     color: $primaryColor;
     font-size: 1.5rem;
   }
-  .fa:hover{
+  .fa:hover {
     font-size: 1.7rem;
-    text-shadow: 2px 2px 4px rgba(179,36,79, 0.5);
+    text-shadow: 2px 2px 4px rgba(179, 36, 79, 0.5);
     font-weight: bold;
   }
 }
 
-.wiki-no-home{
+.wiki-no-home {
   margin: 0px auto;
   text-align: center;
   padding: 5rem;
 
-  .fa-file-text-o{
+  .fa-file-text-o {
     font-size: 3rem;
   }
-  .btn{
+  .btn {
     margin-top: 2rem;
   }
 }
 
-.wiki-tags{
+.wiki-tags {
   display: inline-flex;
   line-height: 2.6rem;
 
-  .ember-power-select-trigger{
+  .ember-power-select-trigger {
     padding: 0.6rem 0.6rem 0rem;
-      line-height: 2.6rem;
-      min-width: 30rem;
-      height: 3.2rem;
+    line-height: 2.6rem;
+    min-width: 30rem;
+    height: 3.2rem;
   }
 
-  .ember-power-select-multiple-option{
+  .ember-power-select-multiple-option {
     background-color: $primaryColor;
     color: $backgroundColor;
     border-color: $primaryColor;
@@ -144,26 +141,29 @@
     margin: 0rem 0.2rem;
   }
 
-  .ember-power-select-trigger-multiple-input{
-      line-height: 1.42;
-      border: none !important;
-      margin: 0rem;
+  .ember-power-select-trigger-multiple-input {
+    line-height: 1.42;
+    border: none !important;
+    margin: 0rem;
   }
-
 }
 
-@media print{
-  .wiki-list-wrapper{
+@media print {
+  .wiki-list-wrapper {
     display: none;
   }
 }
 
 .wiki-detail {
-  .form-group{
+  .note-editor {
+    overflow-wrap: break-word;
+  }
+
+  .form-group {
     div[data-field="wiki.description"] {
       > #editor {
-      height: 600px !important;
+        height: 600px !important;
+      }
     }
-   }
   }
 }

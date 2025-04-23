@@ -43,7 +43,6 @@ import * as navigateToLatestIssue from './profile/navigate-to-one-of-latest-issu
 import * as navigateToMostWorkedMember from './profile/navigate-to-one-of-most-worked-member-steps';
 import * as verifyRecentActivities from './profile/verify-list-of-recent-activities-steps';
 import * as searchUserFromList from './user-management/search-user-from-list-steps';
-import * as deleteAUser from './user-management/delete-a-user-steps';
 import * as navigateToUser from './user-management/navigate-to-a-user-steps';
 import * as changeUserAccountStatus from './user-management/change-user-account-status-steps';
 import * as changeMultipleUserAccountStatus from './user-management/change-multiple-user-account-status-steps';
@@ -64,9 +63,14 @@ import * as setRequestQuery from './common-steps/set-request-query-steps';
 import * as searchUserAssociatedWithRole from './role/search-user-steps';
 import * as deleteUserMembership from './role/delete-user-membership-steps';
 import * as createMembershipFromRole from './role/create-membership-steps';
+import * as editAProjectMember from './project/edit-a-project-member-steps';
+import * as deleteMemberFromProject from './project/delete-member-from-project-steps';
+import * as timezoneChange from './user/timezone-change-steps';
+import * as massUpdateIssues from './issue/mass-update-issues-steps';
+import * as listSteps from './common-steps/list-steps';
 
 export default function (assert) {
-    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, deleteAUser, navigateToUser, changeUserAccountStatus, createUser, editUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData, createRole, renderPermissions, renderRoleUsers, setRequestQuery, searchUserAssociatedWithRole, deleteUserMembership, createMembershipFromRole);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, navigateToUser, changeUserAccountStatus, createUser, editUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData, createRole, renderPermissions, renderRoleUsers, setRequestQuery, searchUserAssociatedWithRole, deleteUserMembership, createMembershipFromRole, editAProjectMember, deleteMemberFromProject, timezoneChange, massUpdateIssues, listSteps);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()

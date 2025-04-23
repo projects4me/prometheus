@@ -122,7 +122,7 @@ export default class AppProjectWikiPageController extends PrometheusController {
      */
     @action edit() {
         let model = this.model;
-        this.transitionToRoute('app.project.wiki.edit', { project_id: model.get('projectId'), wiki_name: model.get('name') });
+        this.transitionToRoute('app.project.wiki.edit', { shortcode: this.trackedProject.shortCode, wiki_name: model.get('name') });
     }
 
     /**
@@ -132,7 +132,7 @@ export default class AppProjectWikiPageController extends PrometheusController {
      * @public
      */
     @action loadWiki(projectId, wikiName) {
-        this.transitionToRoute('app.project.wiki.page', { project_id: projectId, wiki_name: wikiName });
+        this.transitionToRoute('app.project.wiki.page', { shortcode: this.trackedProject.shortCode, wiki_name: wikiName });
     }
 
     /**
@@ -144,7 +144,7 @@ export default class AppProjectWikiPageController extends PrometheusController {
     @action create() {
         Logger.debug('Create a page for ');
         Logger.debug(this.projectId);
-        this.transitionToRoute('app.project.wiki.create', { project_id: this.projectId });
+        this.transitionToRoute('app.project.wiki.create', { shortcode: this.trackedProject.shortCode });
     }
 
     /**

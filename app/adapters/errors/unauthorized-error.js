@@ -23,5 +23,6 @@ export default class UnauthorizedError extends AdapterError {
      */
     constructor(message) {
         super(message);
+        localStorage.setItem('sessionExpired', true);
     }
 }

@@ -26,7 +26,7 @@ export default App.extend({
      */
     async model() {
         let _self = this;
-        let projectId = this.paramsFor('app.project').project_id;
+        let projectId = this.trackedProject.getProjectId();
 
         //Fetch milestones of current project
         let _milestoneOptions = {

@@ -31,6 +31,15 @@ export default Component.extend({
     intl: inject(),
 
     /**
+     * The current authenticated user.
+     *
+     * @property currentUser
+     * @type Ember.Service
+     * @for ActivityBlock
+     */
+    currentUser: inject('current-user'),    
+
+    /**
      * We need the component to render inside an li so that the UI does not break
      *
      * @property tagName
@@ -78,8 +87,12 @@ export default Component.extend({
      */
     didInsertElement(){
         let activity = this.activity;
-        let createdSince = moment.duration(moment(new Date()).diff(moment(activity.get('dateCreated')))).humanize();
-        set(activity,"createdSince",createdSince);
+        let userTimezone = this.currentUser.user.timezone;
+        const now = moment().tz(userTimezone);
+        const dateInUserTz = moment.utc(activity.get('dateCreated')).tz(userTimezone);
+        
+        const createdSince = moment.duration(now.diff(dateInUserTz)).humanize();
+        set(activity,"createdSince", createdSince);
     }
 
 });
