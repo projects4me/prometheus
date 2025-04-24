@@ -148,13 +148,13 @@
           <table class="table table-hover table-striped">
             <thead>
               <tr>
-                <th></th>
-                <th class="{{sortable-class "Issue.issueNumber" this.sort this.order}}" data-sort="Issue.issueNumberSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.issueNumber'}}>{{t "views.app.issue.list.overview"}}</a></th>
-                <th class="{{sortable-class "Issue.assignee" this.sort this.order}}" data-sort="Issue.assigneeSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.assignee'}}>{{t "views.app.issue.list.assignee"}}</a></th>
-                <th class="{{sortable-class "issuetype.name" this.sort this.order}}" data-sort="Issue.statusSortable"><a href="javascript:void(0);" {{action "sortData" 'issuetype.name'}}>{{t "views.app.issue.list.issuetype"}}</a></th>
-                <th class="{{sortable-class "milestone.name" this.sort this.order}}" data-sort="milestone.nameSortable"><a href="javascript:void(0);" {{action "sortData" 'milestone.name'}}>{{t "views.app.issue.list.milestone"}}</a></th>
-                <th class="{{sortable-class "Issue.startDate" this.sort this.order}}" data-sort="Issue.startDateSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.startDate'}}>{{t "views.app.issue.list.startDate"}}</a></th>
-                <th class="{{sortable-class "Issue.endDate" this.sort this.order}}" data-sort="Issue.endDateSortable"><a href="javascript:void(0);" {{action "sortData" 'Issue.endDate'}}>{{t "views.app.issue.list.endDate"}}</a></th>
+                <th class="select-box"></th>
+                <th data-sort="Issue.issueNumber">{{t "views.app.issue.list.overview"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.issueNumber')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                <th data-sort="Issue.assignee">{{t "views.app.issue.list.assignee"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.assignee')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                <th data-sort="issuetype.name">{{t "views.app.issue.list.issuetype"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'issuetype.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                <th data-sort="issuemilestone.name">{{t "views.app.issue.list.milestone"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'issuemilestone.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                <th data-sort="Issue.startDate">{{t "views.app.issue.list.startDate"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.startDate')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                <th data-sort="Issue.endDate">{{t "views.app.issue.list.endDate"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Issue.endDate')}}><i class="fa fa-sort"></i></AppUi::Button></th>                
               </tr>
             </thead>
 
