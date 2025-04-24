@@ -11,9 +11,9 @@ export const when = function () {
         {
             "User clicks on $sortAttribute heading to sort in $order order": (assert, ctx) => async function (sortAttribute, order) {
                 if (order.toLowerCase() === 'asc') {
-                    await click(`[data-sort="${sortAttribute}"] a`);
+                    await click(`[data-sort="${sortAttribute}"] button`);
                 }
-                await click(`[data-sort="${sortAttribute}"] a`);
+                await click(`[data-sort="${sortAttribute}"] button`);
 
                 ctx.set('sortDataType', null);
             }
