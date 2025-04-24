@@ -215,18 +215,31 @@ export default class PrometheusListController extends PrometheusController {
      */
     @action sortData(field) {
         Logger.debug('Prometheus.Controllers.List::sortData(' + field + ')');
-
+        let el = document.querySelector(`[data-sort="${field}"] button i`);
         // If the current field is being sorted then toggle it
         if (field === this.sort) {
             if (this.order === 'desc') {
+                el.classList.add('fa-sort-asc');
+                el.classList.remove('fa-sort-desc');
                 this.set('order', 'asc');
             } else {
+                el.classList.add('fa-sort-desc');
+                el.classList.remove('fa-sort-asc');
                 this.set('order', 'desc');
             }
         }
         // Otherwise start with the default value
         else {
+            el.classList.add('fa-sort-desc');
+            el.classList.remove('fa-sort');
             this.set('order', 'desc');
+
+            let previouslySorted = document.querySelector(`[data-sort="${this.sort}"] button i`);
+            if (previouslySorted) {
+                previouslySorted.classList.remove('fa-sort-asc');
+                previouslySorted.classList.remove('fa-sort-desc');
+                previouslySorted.classList.add('fa-sort');
+            }
         }
 
         // Set the field that is being sorted, if it is changed then the model

@@ -78,10 +78,10 @@
 
                   <thead>
                     <tr>
-                      <th>#</th>
-                      <th class="{{sortable-class "User.name" this.sort this.order}}" data-sort="User.name"><a href="javascript:void(0);" {{action "sortData" 'User.name'}}>{{t "views.app.user.management.list.profile"}}</a></th>
-                      <th class="{{sortable-class "User.email" this.sort this.order}}" data-sort="User.email"><a href="javascript:void(0);" {{action "sortData" 'User.email'}}>{{t "views.app.user.management.list.emailaddress"}}</a></th>
-                      <th class="{{sortable-class "User.accountStatus" this.sort this.order}}" data-sort="User.accountStatus"><a href="javascript:void(0);" {{action "sortData" 'User.accountStatus'}}>{{t "views.app.user.management.list.accountStatus"}}</a></th>
+                      <th class="select-box"></th>
+                      <th data-sort="User.name">{{t "views.app.user.management.list.profile"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'User.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                      <th data-sort="User.email">{{t "views.app.user.management.list.emailaddress"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'User.email')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                      <th data-sort="User.accountStatus">{{t "views.app.user.management.list.accountStatus"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'User.accountStatus')}}><i class="fa fa-sort"></i></AppUi::Button></th>
                     </tr>
                   </thead>
 
