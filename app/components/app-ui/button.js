@@ -24,6 +24,23 @@ export default class AppUiButtonComponent extends Component {
     @tracked disabled = false;
 
     /**
+     * This property returns the disabled state of the button.
+     *
+     * @property handleDisabled
+     * @type Boolean
+     * @for AppUiButtonComponent
+     */
+    get handleDisabled() {
+        if(this.args.disableOnEmpty){
+            let content = this.args.content;
+            if(_.isEmpty(content)){
+                return true;
+            }
+        }
+        return this.disabled;
+    }
+
+    /**
      * This function is triggered when user clicks on the button. It calls the action passed to
      * onClick argument. It also disables the button when the action is in progress and enables it
      * when the action is completed. If user don't want to enable the button after the action is

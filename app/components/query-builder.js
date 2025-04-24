@@ -4,7 +4,6 @@
 
 import queryParser from "../utils/query/parser";
 import queryBuilder from "../utils/query/builder";
-import MD from "../utils/metadata/metadata";
 import { observer } from '@ember/object';
 import Component from '@ember/component';
 import { inject } from '@ember/service';

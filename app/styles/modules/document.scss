@@ -303,6 +303,13 @@ span[id="#"]{
   th.select-box{
     min-width: 3rem;
   }
+
+  td.select-box{
+    input[type="checkbox"]{
+      transform: scale(1.1);
+      margin-left: 0.6rem;
+    }
+  }
   
   .btn-box-tool:hover,
   .btn-box-tool:focus {

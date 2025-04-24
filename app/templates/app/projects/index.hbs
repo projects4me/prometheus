@@ -184,7 +184,7 @@
                   {{#if this.model.length}}
                     {{#each this.model as |project|}}
                       <tr>
-                        <td>
+                        <td class="select-box">
                           <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{project.id}} @aclContex="App.Project.List.SelectProject"/>
                         </td>
                         

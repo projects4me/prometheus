@@ -742,4 +742,17 @@ export default class AppProjectIssuePageController extends PrometheusController.
         this.set('editEstimateDialog', false);
         $('.modal').modal('hide');
     }
+
+    /**
+     * This function is used to update the timelog.
+     *
+     * @method updateTimelog
+     * @param {Prometheus.Models.Timelog} timelog - The timelog object to be updated
+     * @param {String} field - The field to be updated
+     * @param {String} value - The value to be updated
+     * @public
+     */
+    @action updateTimelog(timelog, field, value) {
+        timelog[field] = value;
+    }
 }

@@ -86,8 +86,18 @@ export default {
      * @private
      */
     evalRule:function(rule){
+        let rangeOperator = ['between','not_between'];
         if (rule.type == 'date'){
-            rule.value = moment(rule.value,'MM/DD/YYYY').format('YYYY-MM-DD');
+            if(rangeOperator.includes(rule.operator)){
+                rule.value = rule.value.map(function(value){
+                    return moment(value,'MM/DD/YYYY').format('YYYY-MM-DD');
+                });
+
+                return `(${rule.field} ${this.queryOperators[rule.operator]} ${rule.value[0]} AND ${rule.value[1]})`;
+            }
+            else{
+                rule.value = moment(rule.value,'MM/DD/YYYY').format('YYYY-MM-DD');
+            }
         }
 
         return '('+rule.field+' '+(this.queryOperators[rule.operator])+' '+rule.value+')';
@@ -126,6 +136,7 @@ export default {
      * @public
      */
     getRules:function(query,metaData){
+        let rangeOperator = ['between','not_between'];
         // count of the statements found
         let count = 1;
 
@@ -206,7 +217,15 @@ export default {
 
                 /* If these statements grow then they must isolated in objects and functions */
                 if (metaData[metaDataIndex]['type'] == 'date') {
-                    value = moment(value,'YYYY-MM-DD').format('MM/DD/YYYY');
+                    if (rangeOperator.includes(operator)){
+                        value = value.split(' AND ');
+                        value = value.map(function(value){
+                            return moment(value,'YYYY-MM-DD').format('MM/DD/YYYY');
+                        });
+                    }
+                    else{
+                        value = moment(value,'YYYY-MM-DD').format('MM/DD/YYYY');
+                    }
                 }
 
                 // create the statement objects
