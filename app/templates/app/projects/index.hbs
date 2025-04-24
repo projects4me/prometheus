@@ -171,12 +171,12 @@
               <table class="table table-hover table-striped">
                 <thead>
                   <tr>
-                    <th></th>
-                    <th class="{{sortable-class "Project.name" this.sort this.order}}" data-sort="Project.nameSortable"><a href="javascript:void(0);" {{action "sortData" 'Project.name'}}>{{t "views.app.project.list.name"}}</a></th>
-                    <th class="{{sortable-class "owner.name" this.sort this.order}}" data-sort="owner.nameSortable"><a href="javascript:void(0);" {{action "sortData" 'owner.name'}}>{{t "views.app.project.list.owner"}}</a></th>
-                    <th class="project-description">{{t "views.app.project.list.description"}}</th>
-                    <th class="{{sortable-class "Project.status" this.sort this.order}}" data-sort="Project.statusSortable"><a href="javascript:void(0);" {{action "sortData" 'Project.status'}}>{{t "views.app.project.list.status"}}</a></th>
-                    <th class="project-date">{{t "views.app.project.list.date"}}</th>
+                    <th class="select-box"></th>
+                    <th data-sort="Project.name">{{t "views.app.project.list.name"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Project.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                    <th data-sort="owner.name">{{t "views.app.project.list.owner"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'owner.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                    <th data-sort="Project.description">{{t "views.app.project.list.description"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Project.description')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                    <th data-sort="Project.status">{{t "views.app.project.list.status"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Project.status')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                    <th data-sort="Project.dateModified">{{t "views.app.project.list.date"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Project.dateModified')}}><i class="fa fa-sort"></i></AppUi::Button></th>
                   </tr>
                 </thead>
 
