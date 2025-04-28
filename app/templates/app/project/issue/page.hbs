@@ -120,7 +120,7 @@
                       <img class="img-responsive img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
                       {{!-- .img-push is used to add margin to elements next to floating images --}}
                       <div class="img-push">
-                        <div class="message-box">
+                        <div class="message-box" data-field="issue.conversation">
                           <ConversationUi::MessageBox
                             @issueSearch={{perform this.search}}
                             @usersList={{this.usersList}}
@@ -300,7 +300,7 @@
                           {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
                         </span>
                         <span class="log-description">
-                          <strong>{{timelog.description}}</strong>
+                          {{safe-html timelog.description}}
                         </span>
                       </div>
                     </li>
@@ -323,13 +323,21 @@
                       hours=this.editingLog.hours
                       minutes=this.editingLog.minutes}}
 
-                  <FormFields::FieldTextArea
+                  <div data-field="issue.editEstimateTime" data-field-type="wysiwyg" class="form-field ember-view">
+                    <AppUi::ToastUi
                       @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
                       @label={{t "views.app.issue.detail.timelog.description"}}
-                      @value={{this.editingLog.description}}
+                      @onContentChange={{action "selectStatic" this.editingLog 'description'}}              
                       @data-field="issue.editEstimateTime"
-                      @aclContext="App.Project.Issue.Read.Estimate.Edit.Description"
-                  />
+                      @editType= 'wysiwyg'
+                      @hide={{array 'footer'}}
+                      @initialValue={{this.editingLog.description}}
+                    />
+                    <FormFields::Label
+                      @label={{t "views.app.issue.detail.timelog.description"}}
+                      @data-field="issue.editEstimateTime"
+                    />
+                  </div>
 
                 {{/bootstrap-modal}}
               {{/if}}
@@ -347,13 +355,19 @@
                       hours=this.newTimeLog.hours
                       minutes=this.newTimeLog.minutes}}
 
-                  <FormFields::FieldTextArea
+                  <div data-field="issue.estimateTime" data-field-type="wysiwyg" class="form-field ember-view">
+                    <AppUi::ToastUi 
                       @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
+                      @onContentChange={{action "selectStatic" this.newTimeLog 'description'}}              
+                      @editType= 'wysiwyg'
+                      @hide={{array 'footer'}}
+                      @initialValue={{this.newTimeLog.description}}
+                    />
+                    <FormFields::Label
                       @label={{t "views.app.issue.detail.timelog.description"}}
-                      @value={{this.newTimeLog.description}}
                       @data-field="issue.estimateTime"
-                      @aclContext="App.Project.Issue.Read.Estimate.Create.Description"
-                  />
+                    />
+                  </div>
 
                 {{/bootstrap-modal}}
               {{/if}}
@@ -396,7 +410,7 @@
                           {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
                         </span>
                         <span class="log-description">
-                          {{timelog.description}}
+                          {{safe-html timelog.description}}
                         </span>
                       </div>
                     </li>
@@ -436,13 +450,20 @@
                       @aclContext="App.Project.Issue.Read.Timelog.Edit.SpentOn"
                   />
 
-                  <FormFields::FieldTextArea
+                  <div data-field="issue.editTimelog" data-field-type="wysiwyg" class="form-field ember-view">
+                    <AppUi::ToastUi
                       @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
-                      @label={{t "views.app.issue.detail.timelog.description"}}
-                      @value={{this.editingLog.description}}
+                      @onContentChange={{action "selectStatic" this.editingLog 'description'}}              
                       @data-field="issue.editTimelog"
-                      @aclContext="App.Project.Issue.Read.Timelog.Edit.Description"
-                  />
+                      @editType='wysiwyg'
+                      @hide={{array 'footer'}}
+                      @initialValue={{this.editingLog.description}}
+                    />
+                    <FormFields::Label
+                      @label={{t "views.app.issue.detail.timelog.description"}}
+                      @data-field="issue.editTimelog"
+                    />
+                  </div>
 
                 {{/bootstrap-modal}}
               {{/if}}
@@ -478,13 +499,20 @@
                       @aclContext="App.Project.Issue.Read.Timelog.Create.SpentOn"
                   />
 
-                  <FormFields::FieldTextArea
+                  <div data-field="issue.timelog" data-field-type="wysiwyg" class="form-field ember-view">
+                    <AppUi::ToastUi
                       @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
-                      @label={{t "views.app.issue.detail.timelog.description"}}
-                      @value={{this.newTimeLog.description}}
+                      @onContentChange={{action "selectStatic" this.newTimeLog 'description'}}              
                       @data-field="issue.timelog"
-                      @aclContext="App.Project.Issue.Read.Timelog.Create.Description"
-                  />
+                      @editType='wysiwyg'
+                      @hide={{array 'footer'}}
+                      @initialValue={{this.newTimeLog.description}}
+                    />
+                    <FormFields::Label
+                      @label={{t "views.app.issue.detail.timelog.description"}}
+                      @data-field="issue.timelog"
+                    />
+                  </div>
 
                 {{/bootstrap-modal}}
               {{/if}}

@@ -101,6 +101,12 @@
         margin-left: 1rem;
       }
     }
+
+    [data-field="issue.conversation"] {
+      > #editor {
+        height: 15rem !important;
+      }
+    }
   }
 
   .vote .info-box-icon {
