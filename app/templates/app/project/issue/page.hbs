@@ -318,10 +318,12 @@
                     close=(action "removeEditEstimateModal")
                     confirm=(action "editLog")}}
 
-                  {{interval-selector
-                      days=this.editingLog.days
-                      hours=this.editingLog.hours
-                      minutes=this.editingLog.minutes}}
+                  <IntervalSelector
+                    @days={{this.editingLog.days}}
+                    @hours={{this.editingLog.hours}}
+                    @minutes={{this.editingLog.minutes}}
+                    @update={{fn this.updateTimelog this.editingLog}}
+                  />                      
 
                   <FormFields::FieldTextArea
                       @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
@@ -342,10 +344,12 @@
                     close=(action "removeEstimateTimeModal")
                     confirm=(action "addEstimate")}}
 
-                  {{interval-selector
-                      days=this.newTimeLog.days
-                      hours=this.newTimeLog.hours
-                      minutes=this.newTimeLog.minutes}}
+                  <IntervalSelector
+                    @days={{this.newTimeLog.days}}
+                    @hours={{this.newTimeLog.hours}}
+                    @minutes={{this.newTimeLog.minutes}}
+                    @update={{fn this.updateTimelog this.newTimeLog}}
+                  />                      
 
                   <FormFields::FieldTextArea
                       @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
@@ -414,10 +418,12 @@
                     close=(action "removeEditLogModal")
                     confirm=(action "editLog")}}
 
-                  {{interval-selector
-                      days=this.editingLog.days
-                      hours=this.editingLog.hours
-                      minutes=this.editingLog.minutes}}
+                  <IntervalSelector
+                    @days={{this.editingLog.days}}
+                    @hours={{this.editingLog.hours}}
+                    @minutes={{this.editingLog.minutes}}
+                    @update={{fn this.updateTimelog this.editingLog}}
+                  />                      
 
                   <FormFields::FieldDate
                       @placeholder={{t "views.app.issue.detail.timelog.inputspenton"}}
@@ -456,10 +462,12 @@
                     close=(action "removeLogTimeModal")
                     confirm=(action "logTime")}}
 
-                  {{interval-selector
-                      days=this.newTimeLog.days
-                      hours=this.newTimeLog.hours
-                      minutes=this.newTimeLog.minutes}}
+                  <IntervalSelector
+                    @days={{this.newTimeLog.days}}
+                    @hours={{this.newTimeLog.hours}}
+                    @minutes={{this.newTimeLog.minutes}}
+                    @update={{fn this.updateTimelog this.newTimeLog}}
+                  />                      
 
                   <FormFields::FieldDate
                       @placeholder={{t "views.app.issue.detail.timelog.inputspenton"}}

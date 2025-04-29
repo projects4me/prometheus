@@ -2,114 +2,122 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import { observer } from '@ember/object';
-import Component from '@ember/component';
+import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import Component from '@glimmer/component';
 
 /**
- * This class adds the functionality of dropdown action menu in the system
- * In order to allow capturing of an event of any specified name we are passing
- * all incoming actions over to the controller.
+ * This component adds the functionality of interval selection for the timelog.
  *
- * @class IntervalSelector
+ * @class IntervalSelectorComponent
  * @namespace Prometheus.Components
- * @extends Ember.Component
+ * @extends Glimmer.Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Component.extend({
-
+export default class IntervalSelectorComponent extends Component {
     /**
      * The number of days selected
      *
      * @property days
      * @type int
-     * @for IntervalSelector
+     * @for IntervalSelectorComponent
      * @public
      */
-    days: 0,
+    @tracked days = this.args.days || 0;
 
     /**
      * The number of hours selected
      *
      * @property hours
      * @type int
-     * @for IntervalSelector
+     * @for IntervalSelectorComponent
      * @public
      */
-    hours: 0,
+    @tracked hours = this.args.hours || 0;
 
     /**
      * The number of minutes selected
      *
      * @property minutes
      * @type int
-     * @for IntervalSelector
+     * @for IntervalSelectorComponent
      * @public
      */
-    minutes: 0,
+    @tracked minutes = this.args.minutes || 0;
 
     /**
-     * This is the observer function that is called when the
-     * days are changed
+     * Updates the days value, capping it at 99 if it exceeds 356
      *
-     * @method daysDidChange
+     * @method updateDays
+     * @param {Event} event - The input event
      * @public
      */
-    daysDidChange: observer('days', function() {
-        Logger.debug('Prometheus.Components.IntervalSelector->daysDidChange');
-
-        let _self = this;
-        let days = parseInt(_self.get('days'));
-
-        if (days >= 356)
-        {
-            _self.set('days',99);
+    @action
+    updateDays(event, value) {
+        const updateValue = event ? event.target.value : value;
+        const days = parseInt(updateValue, 10);
+        if (days >= 99) {
+            this.days = 99;
+        } else {
+            this.days = days;
         }
-
-        Logger.debug('-Prometheus.Components.IntervalSelector->daysDidChange');
-    }),
+        this.args.update('days', this.days.toString());
+    }
 
     /**
-     * This is the observer function that is called when the
-     * hours are changed
+     * Updates the hours value, converting excess hours to days
      *
-     * @method hoursDidChange
+     * @method updateHours
+     * @param {Event} event - The input event
      * @public
      */
-    hoursDidChange: observer('hours', function() {
-        Logger.debug('Prometheus.Components.IntervalSelector->hoursDidChange');
+    @action
+    updateHours(event, value) {
+        const updateValue = event ? event.target.value : value;
+        const hours = parseInt(updateValue, 10);
+        let days = parseInt(this.days, 10);
 
-        let _self = this;
-        let hours = parseInt(_self.get('hours'));
-        let days = parseInt(_self.get('days'));
-
-        if (hours >= 8)
-        {
-            _self.set('days',days+Math.floor(hours/8));
-            _self.set('hours',hours%8);
+        if (hours >= 8) {
+            days += Math.floor(hours / 8);
+            this.updateDays(null, days);
+            this.hours = hours % 8;
+        } else {
+            this.hours = hours;
         }
-
-        Logger.debug('-Prometheus.Components.IntervalSelector->hoursDidChange');
-    }),
+        this.args.update('hours', this.hours.toString());
+    }
 
     /**
-     * This is the observer function that is called when the
-     * minutes are changed
+     * Updates the minutes value, converting excess minutes to hours
      *
-     * @method minutesDidChange
+     * @method updateMinutes
+     * @param {Event} event - The input event
      * @public
      */
-    minutesDidChange: observer('minutes', function() {
-        Logger.debug('Prometheus.Components.IntervalSelector->minutesDidChange');
-
-        let _self = this;
-        let minutes = parseInt(_self.get('minutes'));
-        let hours = parseInt(_self.get('hours'));
-
-        if (minutes >= 60)
-        {
-            _self.set('hours',hours+Math.floor(minutes/60));
-            _self.set('minutes',minutes%60);
+    @action
+    updateMinutes(event, value) {
+        const updateValue = event ? event.target.value : value;
+        const minutes = parseInt(updateValue, 10);
+        let hours = parseInt(this.hours, 10);
+        
+        if (minutes >= 60) {
+            hours += Math.floor(minutes / 60);
+            this.updateHours(null, hours);
+            this.minutes = minutes % 60;
+        } else {
+            this.minutes = minutes;
         }
-        Logger.debug('-Prometheus.Components.IntervalSelector->minutesDidChange');
-    }),
-});
+        this.args.update('minutes', this.minutes.toString());
+    }
+
+    /**
+     * Calculates the total interval in minutes
+     *
+     * @property totalMinutes
+     * @type Number
+     * @readonly
+     */
+    get totalMinutes() {
+        return (this.days * 8 * 60) + (this.hours * 60) + this.minutes;
+    }
+}
