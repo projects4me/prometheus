@@ -1,17 +1,38 @@
 <div class="interval-selector">
-
   <div class="days">
-    <label>{{t "views.app.components.intervalselector.days"}}</label>
-    {{input value=this.days type="number" min="0" max="99"}}
+    <label for="days-input">{{t "views.app.components.intervalselector.days"}}</label>
+    <Input 
+      @type="number" 
+      @value={{this.days}} 
+      min="0" 
+      max="99" 
+      id="days-input"
+      {{on "input" this.updateDays}}
+    />
   </div>
 
   <div class="hours">
-    <label>{{t "views.app.components.intervalselector.hours"}}</label>
-    {{input value=this.hours type="number" min="0" max="8"}}
+    <label for="hours-input">{{t "views.app.components.intervalselector.hours"}}</label>
+    <Input 
+      @type="number" 
+      @value={{this.hours}} 
+      min="0" 
+      max="8" 
+      id="hours-input"
+      {{on "input" this.updateHours}}
+    />
   </div>
 
   <div class="minutes">
-    <label>{{t "views.app.components.intervalselector.minutes"}}</label>
-    {{input value=this.minutes type="number" min="0" max="60" step="10"}}
+    <label for="minutes-input">{{t "views.app.components.intervalselector.minutes"}}</label>
+    <Input 
+      @type="number" 
+      @value={{this.minutes}} 
+      min="0" 
+      max="60" 
+      step="5" 
+      id="minutes-input"
+      {{on "input" this.updateMinutes}}
+    />
   </div>
 </div>
