@@ -229,6 +229,14 @@
   }
 }
 
+.issue-list{
+  .select-box{
+    input[type="checkbox"]{
+      margin-top: 0.8rem;
+    }
+  }
+}
+
 .issue {
   [data-field-type="wysiwyg"] {
     > #editor {
