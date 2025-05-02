@@ -228,3 +228,11 @@
     }
   }
 }
+
+.issue {
+  [data-field-type="wysiwyg"] {
+    > #editor {
+      height: 18rem !important;
+    }
+  }
+}
