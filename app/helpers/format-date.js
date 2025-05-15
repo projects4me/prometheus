@@ -29,22 +29,21 @@ export default class FormatDateHelper extends Helper {
 	 * @param {Array} _positional - Unused positional parameters.
 	 * @param {Object} options - The options object.
 	 * @param {string|Date} options.date - The date to format.
-	 * @param {string} [options.format="MMMM Do YYYY, h:mm:ss a"] - The format string to use (follows Moment.js format).
+	 * @param {string} [options.format="DD MMM 'YY"] - The format string to use (follows Moment.js format).
 	 * @param {boolean} [options.localTime=false] - If true, converts UTC date to local timezone before formatting.
 	 * @returns {string} The formatted date string or empty string if date is undefined.
 	 */
-	compute([], { date, format, localTime = false }) {
-		let dateFormat = format || 'MMMM Do YYYY, h:mm:ss a';
+	compute([], { date, format = "DD MMM 'YY", localTime = false }) {
 		let formattedDate = '';
 		let userTimezone = this.currentUser.user.timezone;
 
 		if (date !== undefined) {
-			formattedDate = moment(date).format(dateFormat);
+			formattedDate = moment(date).format(format);
 			if (localTime) {
 				formattedDate = moment
 					.utc(date)
 					.tz(userTimezone)
-					.format(dateFormat);
+					.format(format);
 			}
 		}
 

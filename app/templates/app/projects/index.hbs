@@ -189,11 +189,10 @@
                         </td>
                         
                         <td class="project-name"><LinkTo @route="app.project" @model={{project.shortCode}}>{{project.name}}</LinkTo></td>
-                        <td class="project-type">{{t (concat "views.app.project.lists.type." project.type)}}</td>
                         <td class="project-owner"><LinkTo @route="app.user.page" @model={{project.owner.id}}>{{project.owner.name}}</LinkTo></td>
                         <td class="project-description">{{html-safe project.description}}</td>
                         <td class="project-status"><span class="badge {{project.status}}">{{t (concat "views.app.project.lists.status." project.status)}}</span></td>
-                        <td class="project-date">{{project.dateModified}}</td>
+                        <td class="project-date">{{format-date date=project.dateModified}}</td>
                       </tr>
                     {{/each}}
                   {{else}}

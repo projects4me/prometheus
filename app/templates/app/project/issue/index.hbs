@@ -182,8 +182,8 @@
                     </td>
                     <td data-field="issuetype.name" class="issue-type">{{issue.issuetype.name}}</td>
                     <td data-field="issue.milestone" class="issue-milestone"><a href="#">{{issue.issuemilestone.name}}</a></td>
-                    <td data-field="issue.startDate" class="issue-start">{{moment-format issue.startDate 'DD/MMM/YY'}}</td>
-                    <td data-field="issue.endDate" class="issue-end">{{moment-format issue.endDate 'DD/MMM/YY'}}</td>
+                    <td data-field="issue.startDate" class="issue-start">{{format-date date=issue.startDate}}</td>
+                    <td data-field="issue.endDate" class="issue-end">{{format-date date=issue.endDate}}</td>
                     <td class="pull-right list-item-actions">
                       <div class="btn-group">
                         {{!-- Conversation Button --}}

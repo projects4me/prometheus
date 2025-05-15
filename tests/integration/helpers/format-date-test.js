@@ -15,7 +15,7 @@ module('Integration | Helper | format-date', function (hooks) {
     test('it renders default format', async function (assert) {
         await render(hbs`{{format-date date=this.inputDate}}`);
 
-        assert.dom(this.element).hasText('April 4th 2024, 9:12:56 am');
+        assert.dom(this.element).hasText("04 Apr '24");
     });
 
     test('it renders custom format', async function (assert) {
