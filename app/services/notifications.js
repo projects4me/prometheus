@@ -7,6 +7,7 @@ import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
+import ENV from "prometheus/config/environment";
 
 /**
  * Service for managing user notifications
@@ -20,28 +21,28 @@ export default class NotificationsService extends Service {
 	/**
 	 * Store service for data operations
 	 * @type {Service}
-	 * @private
+	 * @public
 	 */
 	@service store;
 
 	/**
 	 * Current user service for user context
 	 * @type {Service}
-	 * @private
+	 * @public
 	 */
 	@service currentUser;
 
 	/**
 	 * Router service for navigation events
 	 * @type {Service}
-	 * @private
+	 * @public
 	 */
 	@service router;
 
 	/**
 	 * Intl service for internationalization
 	 * @type {Service}
-	 * @private
+	 * @public
 	 */
 	@service intl;
 
@@ -67,13 +68,6 @@ export default class NotificationsService extends Service {
 	@tracked page = 1;
 
 	/**
-	 * Indicates if the last page has been reached
-	 * @type {Boolean}
-	 * @public
-	 */
-	@tracked isLastPage = false;
-
-	/**
 	 * Indicates if notifications are currently being loaded
 	 * @type {Boolean}
 	 * @public
@@ -81,11 +75,25 @@ export default class NotificationsService extends Service {
 	@tracked isLoading = false;
 
 	/**
-	 * Indicates if slimscroll should be rendered
-	 * @type {Boolean}
-	 * @public
+	 * Page size for notification queries
+	 * @type {Number}
 	 */
-	@tracked renderSlimScroll = false;
+	pageSize = 15;
+
+	/**
+	 * Timer ID for the notification polling interval
+	 * @type {Number}
+	 * @private
+	 */
+	_pollingTimerId = null;
+
+	/**
+	 * Default interval for polling unread notifications (in milliseconds)
+	 * @type {Number}
+	 */
+	get pollingInterval() {
+		return ENV.app.notifications?.pollingInterval || 30000; // fallback to 30 seconds if not configured
+	}
 
 	/**
 	 * Constructor - sets up route change listener
@@ -105,7 +113,7 @@ export default class NotificationsService extends Service {
 	 * @param {Boolean} reset Whether to reset pagination and load from first page
 	 * @public
 	 * @async
-	 * @returns {Promise<void>}
+	 * @returns {Promise<Boolean>} Returns false if at last page or error occurs
 	 */
 	@action
 	async loadNotifications(reset = false) {
@@ -114,9 +122,7 @@ export default class NotificationsService extends Service {
 		}
 
 		if (reset) {
-			this.page = 1;
-			this.notifications = [];
-			this.isLastPage = false;
+			this.resetPagination();
 		}
 
 		if (this.isLoading || this.isLastPage) {
@@ -124,41 +130,31 @@ export default class NotificationsService extends Service {
 		}
 
 		this.isLoading = true;
-		this.renderSlimScroll = false;
 		try {
-			const pageSize = 10;
-			let options = {
-				rels: 'recipientRecords',
-				query: `((recipientRecords.userId : ${this.currentUser.user.id}))`,
-				sort: 'Systemnotification.dateCreated',
-				order: 'desc',
-				limit: pageSize,
-				page: this.page
-			};
+			let loadedNotifications = [];
 
-			// Get the query result
-			const userNotifications = await this.store.query(
-				'systemnotification',
-				options
+			// Load unread notifications first if beyond page 1
+			if (this.page > 1) {
+				const unreadResult = await this.loadUnreadNotifications();
+				loadedNotifications = unreadResult.notifications;
+			}
+
+			// Load regular paginated notifications
+			const paginatedResult = await this.loadPaginatedNotifications();
+			loadedNotifications = [
+				...loadedNotifications,
+				...paginatedResult.notifications
+			];
+
+			this.processLoadedNotifications(
+				loadedNotifications,
+				paginatedResult.meta
 			);
 
-			// Ensure we're working with an array - Ember Data might return a RecordArray
-			// which doesn't always spread properly
-			const notificationsArray = userNotifications
-				? Array.isArray(userNotifications)
-					? userNotifications
-					: userNotifications.toArray()
-				: [];
-
-			// If we got fewer results than requested, we've reached the end
-			this.isLastPage = notificationsArray.length < pageSize;
-
-			// Add new notifications to the existing array - safely
-			this.notifications = [...this.notifications, ...notificationsArray];
-
-			this.calculateUnreadCount();
+			// Update pagination state
+			this.isLastPage =
+				paginatedResult.notifications.length < this.pageSize;
 			this.page++;
-			this.renderSlimScroll = true;
 			return !this.isLastPage;
 		} catch (error) {
 			console.error('Error loading notifications:', error);
@@ -169,26 +165,120 @@ export default class NotificationsService extends Service {
 	}
 
 	/**
-	 * Calculates the number of unread notifications
-	 * Updates the unreadCount tracked property
-	 *
-	 * @method calculateUnreadCount
+	 * Resets pagination state
+	 * @method resetPagination
 	 * @public
 	 */
-	@action
-	calculateUnreadCount() {
-		let count = 0;
+	resetPagination() {
+		this.page = 1;
+		this.notifications = [];
+		this.isLastPage = false;
+	}
 
-		this.notifications.forEach((notification) => {
-			const userNotification = notification.recipientRecords.find(
-				(un) => un.userId === this.currentUser.user.id
-			);
+	/**
+	 * Loads only unread notifications
+	 * @method loadUnreadNotifications
+	 * @public
+	 * @async
+	 * @returns {Promise<Object>} Object containing notifications and metadata
+	 */
+	async loadUnreadNotifications() {
+		const options = {
+			rels: 'recipientRecords',
+			query: `((recipientRecords.userId : ${this.currentUser.user.id}) AND (recipientRecords.isRead : 0))`,
+			sort: 'Systemnotification.dateCreated',
+			order: 'desc',
+			limit: this.pageSize
+		};
 
-			if (userNotification && userNotification.isRead === '0') {
-				count++;
-			}
-		});
-		this.unreadCount = count;
+		const unreadNotifications = await this.store.query(
+			'systemnotification',
+			options
+		);
+
+		return {
+			notifications: unreadNotifications.toArray(),
+			meta: unreadNotifications.meta
+		};
+	}
+
+	/**
+	 * Loads paginated notifications
+	 * @method loadPaginatedNotifications
+	 * @public
+	 * @async
+	 * @returns {Promise<Object>} Object containing notifications and metadata
+	 */
+	async loadPaginatedNotifications() {
+		const options = {
+			rels: 'recipientRecords',
+			query: `((recipientRecords.userId : ${this.currentUser.user.id}))`,
+			sort: 'Systemnotification.dateCreated',
+			order: 'desc',
+			limit: this.pageSize,
+			page: this.page
+		};
+
+		const userNotifications = await this.store.query(
+			'systemnotification',
+			options
+		);
+
+		return {
+			notifications: userNotifications.toArray(),
+			meta: userNotifications.meta
+		};
+	}
+
+	/**
+	 * Processes loaded notifications and updates the notification array
+	 * @method processLoadedNotifications
+	 * @public
+	 * @param {Array} loadedNotifications New notifications to process
+	 * @param {Object} meta Metadata from the API response
+	 */
+	processLoadedNotifications(loadedNotifications, meta) {
+		// Update unread count
+		this.unreadCount = meta.unreadCount;
+
+		// If first page, just use the loaded notifications
+		if (this.page === 1) {
+			this.notifications = loadedNotifications;
+			return;
+		}
+
+		// For subsequent pages, merge and deduplicate
+		const uniqueNotifications =
+			this.deduplicateNotifications(loadedNotifications);
+		this.notifications = [...this.notifications, ...uniqueNotifications];
+		this.sortNotificationsByDate();
+	}
+
+	/**
+	 * Removes duplicate notifications
+	 * @method deduplicateNotifications
+	 * @public
+	 * @param {Array} newNotifications Notifications to deduplicate
+	 * @returns {Array} Deduplicated notifications
+	 */
+	deduplicateNotifications(newNotifications) {
+		return newNotifications.filter(
+			(notification) =>
+				!this.notifications.find(
+					(existing) => existing.id === notification.id
+				)
+		);
+	}
+
+	/**
+	 * Sorts notifications by date created (newest first)
+	 * @method sortNotificationsByDate
+	 * @public
+	 */
+	sortNotificationsByDate() {
+		this.notifications.sort(
+			(a, b) => new Date(b.dateCreated) - new Date(a.dateCreated)
+		);
 	}
 
 	/**
@@ -205,17 +295,27 @@ export default class NotificationsService extends Service {
 	async markAsRead(notification) {
 		if (!notification) return;
 
-		const recipientRecord = notification.recipientRecords.find(
-			(un) => un.userId === this.currentUser.user.id
-		);
+		try {
+			const recipientRecord = notification.recipientRecords.find(
+				(un) => un.userId === this.currentUser.user.id
+			);
 
-		if (recipientRecord && recipientRecord.isRead === '0') {
-			recipientRecord.isRead = '1';
-			document
-			.querySelector(`[data-notification-id="${notification.id}"]`)
-			.classList.remove('unread-notification');
-			await recipientRecord.save();
-			this.calculateUnreadCount();
+			if (recipientRecord && recipientRecord.isRead === '0') {
+				recipientRecord.isRead = '1';
+				document
+					.querySelector(
+						`[data-notification-id="${notification.id}"]`
+					)
+					.classList.remove('unread-notification');
+				await recipientRecord.save();
+				let response = this.store.adapterFor(
+					'systemnotificationrecipient'
+				).lastResponseMeta;
+				this.unreadCount = response.unreadCount;
+			}
+		} catch (error) {
+			console.error('Error marking notification as read:', error);
+			throw error;
 		}
 	}
 
@@ -302,6 +402,78 @@ export default class NotificationsService extends Service {
 				hideAfter: 3
 			});
 			console.error('Error marking all notifications as read:', error);
+		}
+	}
+
+	/**
+	 * Starts polling for new unread notifications at regular intervals
+	 *
+	 * @method startNotificationPolling
+	 * @param {Number} interval Polling interval in milliseconds (defaults to this.pollingInterval)
+	 * @public
+	 */
+	@action
+	startNotificationPolling(interval = this.pollingInterval) {
+		// Clear any existing timer first to prevent duplicates
+		this.stopNotificationPolling();
+
+		// Set up a new polling interval
+		this._pollingTimerId = setInterval(() => {
+			this.pollUnreadNotifications();
+		}, interval);
+	}
+
+	/**
+	 * Stops polling for new notifications
+	 *
+	 * @method stopNotificationPolling
+	 * @public
+	 */
+	@action
+	stopNotificationPolling() {
+		if (this._pollingTimerId !== null) {
+			clearInterval(this._pollingTimerId);
+			this._pollingTimerId = null;
+		}
+	}
+
+	/**
+	 * Polls for unread notifications and merges them with existing ones
+	 * This is called at regular intervals when polling is active
+	 *
+	 * @method pollUnreadNotifications
+	 * @public
+	 * @async
+	 */
+	@action
+	async pollUnreadNotifications() {
+		if (!this.currentUser.user) {
+			return;
+		}
+
+		try {
+			// Load only unread notifications
+			const result = await this.loadUnreadNotifications();
+			const unreadNotifications = result.notifications;
+
+			if (unreadNotifications.length > 0) {
+				// Update unread count from meta
+				this.unreadCount = result.meta.unreadCount;
+
+				// Add unique notifications to the list
+				const uniqueNotifications =
+					this.deduplicateNotifications(unreadNotifications);
+
+				if (uniqueNotifications.length > 0) {
+					this.notifications = [
+						...uniqueNotifications,
+						...this.notifications
+					];
+					this.sortNotificationsByDate();
+				}
+			}
+		} catch (error) {
+			console.error('Error polling for unread notifications:', error);
 		}
 	}
 }

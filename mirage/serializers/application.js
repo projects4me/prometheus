@@ -64,6 +64,9 @@ export default JSONAPISerializer.extend({
             }
         }
 
+        if(object.meta) {
+            _.set(json, 'meta', object.meta);
+        }
         return json;
     }
 });

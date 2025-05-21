@@ -2,7 +2,7 @@
     <a href={{this.getNotificationLink}} data-test-notification-link {{on "click" this.markAsRead}} class={{if (eq @notification.recipientRecords.firstObject.isRead "0") "unread-notification-link"}}>
       <span class="user-image" data-test-notification-user-image>
         <LinkTo @route="app.user.page" @model={{@notification.createdUser}}>
-          <img class="img-circle img-xs" src="{{this.apiHost}}/userimage/get/{{@notification.createdUser}}" alt="{{@notification.createdUserName}}">
+          <img class="img-circle img-xs user-image" src="{{this.apiHost}}/userimage/get/{{@notification.createdUser}}" alt="{{@notification.createdUserName}}">
         </LinkTo>
       </span>
       <span class="notification-content" data-test-notification-content>

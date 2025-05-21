@@ -122,6 +122,18 @@ export default class AppLoadingAssetsRoute extends Route {
     }
 
     /**
+     * After model hook to start notification polling.
+     * 
+     * @method afterModel
+     * @param {Object} model
+     * @protected
+     */
+    afterModel() {
+        this.notifications.startNotificationPolling();
+        return super.afterModel(...arguments);
+    }
+
+    /**
      * This function is used to set property to controller. We are setting dataLoaded
      * property to true and after that transitioning user to app route.
      *

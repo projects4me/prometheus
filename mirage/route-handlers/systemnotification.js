@@ -36,6 +36,9 @@ export function register(server, ctx) {
 		const end = start + pageSize;
 
 		const paginatedCollection = new Collection('systemnotification', notifications.models.slice(start, end));
+		paginatedCollection.meta = {
+			unreadCount: 10
+		}
 		return paginatedCollection;
 	});
 

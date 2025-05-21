@@ -21,9 +21,10 @@ export const given = function () {
 									userName: server.schema.users.first().name,
 									projectId: server.schema.projects.first().id,
 									projectShortcode:
-										server.schema.projects.first().shortcode,
+										server.schema.projects.first().shortCode,
 									projectName:
 										server.schema.projects.first().name,
+                                    relatedTo: "project"
 								}
 							}
 						);
