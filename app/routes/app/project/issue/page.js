@@ -27,6 +27,20 @@ export default App.extend({
     trackedProject: inject(),
 
     /**
+     * Query params that the route supports.
+     * 
+     * @property queryParams
+     * @type Array
+     * @for AppProjectIssuePageRoute
+     * @public
+     */
+    queryParams: {
+        s_id: {
+            refreshModel: false
+        }
+    },
+
+    /**
      * The model hook for this route. In this function we fetch and return issue by the 
      * provided issue number.
      * 

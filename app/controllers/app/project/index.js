@@ -55,6 +55,16 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     }
     
     /**
+     * Query params that the controller support.
+     *
+     * @property queryParams
+     * @type Array
+     * @for AppProjectIndexController
+     * @public
+     */
+    queryParams = ['s_id'];
+
+    /**
      * This function is called on the initialization of the controller. In this function
      * we're calling setupSchema method in order to generate schema, by analyzing metadata
      * defined in the controller, that will be used to validate the form of the template.
@@ -683,5 +693,26 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
      */
     get deleteMemberWarning() {
         return htmlSafe(this.intl.t("views.app.project.detail.membership.deleteWarning", { user: this.selectedUser.name }));
+    }
+
+    /**
+     * This action is used to scroll to the comment.
+     *
+     * @method scrollToComment
+     * @public
+     */
+    @action scrollToElement(element, type) {
+        let selectors = {
+            'milestone': {
+                'selector': `[data-milestone-id="${this.s_id}"]`,
+                'spread': '0.9rem',
+                'blur': '0.4rem'
+            },
+        }
+        let el = element.querySelector(selectors[type].selector);
+        this.scrollAndHighlight(el, true, {
+            spread: selectors[type]?.spread,
+            blur: selectors[type]?.blur
+        });
     }
 }

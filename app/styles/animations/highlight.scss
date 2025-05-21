@@ -10,7 +10,7 @@
 
 @keyframes highlight-box {
   0% {
-    box-shadow: 0 0 1rem 0.7rem $primaryColor;
+    box-shadow: 0 0 var(--highlight-blur, 1rem) var(--highlight-spread, 0.7rem) $primaryColor;
   }
   100% {
     box-shadow: none;

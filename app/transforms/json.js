@@ -20,11 +20,41 @@ export default class JsonTransform extends Transform {
      * @returns {Array} - An array containing the deserialized data.
      */
     deserialize(serialized) {
-        let data = [];
-        for (const [key, value] of Object.entries(serialized)) {
-            data[key] = JSON.parse(value);
+        if (serialized === null || serialized === undefined) {
+            return serialized;
         }
 
-        return data;
+        if (typeof serialized === 'string') {
+            try {
+                return JSON.parse(serialized);
+            } catch (e) {
+                return serialized;
+            }
+        }
+
+        if (typeof serialized === 'object') {
+            // Handle object with string values that need parsing
+            if (!Array.isArray(serialized)) {
+                const result = {};
+                for (const [key, value] of Object.entries(serialized)) {
+                    if (typeof value === 'string') {
+                        try {
+                            result[key] = JSON.parse(value);
+                        } catch (e) {
+                            result[key] = value;
+                        }
+                    } else {
+                        result[key] = this.deserialize(value);
+                    }
+                }
+                return result;
+            } else {
+                // Handle arrays
+                return serialized.map(item => this.deserialize(item));
+            }
+        }
+
+        // For primitive values
+        return serialized;
     }
 }

@@ -106,8 +106,18 @@ export default Route.extend({
      * @for App
      * @private
      */
-    trackedProject: inject(),    
+    trackedProject: inject(),
 
+    /**
+     * The notifications service
+     *
+     * @property notifications
+     * @type Ember.Service
+     * @for App
+     * @private
+     */
+    notifications: inject(),
+    
     /**
      * This function is called by EmberJs before it retrieves the model. In this method
      * we're redirecting user to loading assets route if the intial data is not loaded.

@@ -315,6 +315,11 @@
     "exclamation": "exclamation"
   },
   "views": {
+    "components": {
+      "infiniteScroll": {
+        "loadMore": "Load More"
+      }
+    },
     "signin": {
       "message": "Please sign in to proceed",
       "workspaceTitle": "The complete workspace to manage your projects",
@@ -359,7 +364,6 @@
       "today": "Today",
       "history": "History",
       "tasks": "You have {count} tasks",
-      "notifications": "You have {count} notifications",
       "messages": "You have {count} messages",
       "alltasks": "View all tasks",
       "allnotifications": "View all",
@@ -1155,6 +1159,19 @@
           "name": "Name",
           "description": "Description"
         }
+      },
+      "notifications": {
+        "title": "Notifications",
+        "unreadTitle": "You have some unread notifications",
+        "empty": "No notifications yet",
+        "emptyMessage": "New notifications will appear here.",
+        "markAllAsRead": "Mark all as read",
+        "markingAllAsRead": "Marking all notifications as read ...",
+        "markAllAsReadSuccess": "All notifications have been marked as read",
+        "markAllAsReadError": "An error occurred while marking all notifications as read",
+        "loading": "Loading more notifications...",
+        "noMore": "No more notifications to display",
+        "scrollToLoad": "Scroll down to load more"
       },
       "components": {
         "intervalselector": {

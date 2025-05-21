@@ -81,8 +81,14 @@
 @import "modules/exception.scss";
 @import "modules/user.scss";
 @import "modules/role.scss";
-
+@import "issue/issue-status.scss";
 @import 'summernote.scss';
+
+/*
+* Components styles
+*/
+@import 'components/infinite-scroll.scss';
+@import 'components/notifications-sidebar.scss';
 /*
 @import '../../custom/styles/custom.scss';
 */
