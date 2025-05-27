@@ -112,6 +112,15 @@ export default class AppProjectIssuePageController extends PrometheusController.
      */
     @controller('app.project') projectController;
 
+    /**
+     * Query params that the controller support.
+     *
+     * @property queryParams
+     * @type Array
+     * @for AppProjectIssuePageController
+     * @public
+     */
+    queryParams = ['s_id'];
 
     /**
      * This is a computed property in which gets the list of users
@@ -754,5 +763,21 @@ export default class AppProjectIssuePageController extends PrometheusController.
      */
     @action updateTimelog(timelog, field, value) {
         timelog[field] = value;
+    }
+
+    /**
+     * This action is used to scroll to the comment.
+     *
+     * @method scrollToComment
+     * @public
+     */
+    @action scrollToElement(element, type) {
+        let selectors = {
+            'comment': `[data-comment-id="${this.s_id}"]`,
+            'estimate': `[data-issue-estimate-id="${this.s_id}"]`,
+            'spent': `[data-issue-spent-id="${this.s_id}"]`
+        }
+        let el = element.querySelector(selectors[type]);
+        this.scrollAndHighlight(el, true);
     }
 }

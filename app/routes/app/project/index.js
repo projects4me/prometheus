@@ -28,6 +28,20 @@ export default App.extend({
     trackedProject: inject(),
 
     /**
+     * Query params that the route supports.
+     * 
+     * @property queryParams
+     * @type Array
+     * @for AppProjectIndexRoute
+     * @public
+     */
+    queryParams: {
+        s_id: {
+            refreshModel: false
+        }
+    },    
+
+    /**
      * The model hook for this route used for fetching required data.
      *
      * @method model

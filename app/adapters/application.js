@@ -37,6 +37,13 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
      */
     @service session;
 
+    /**
+     * Last response meta
+     * @type {Object}
+     * @public
+     */
+    lastResponseMeta = {};
+
     get headers() {
         const headers = {};
         if (this.session.isAuthenticated) {
@@ -94,8 +101,8 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
         if (!this.isSuccess(status, headers, payload)) {
             return this._createErrorResponse(status, payload);
         }
-
         super.init(status, headers, payload, requestData);
+        this.lastResponseMeta = payload.meta;
         return payload;
     }
 

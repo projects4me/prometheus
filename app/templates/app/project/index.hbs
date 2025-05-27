@@ -395,7 +395,7 @@
             />
           </div>
 
-          <div class="box-body no-padding">
+          <div class="box-body no-padding" {{did-insert this.scrollToElement 'milestone'}}>
             {{#if this.milestones}}
 
               {{#each this.milestones as |milestone|}}

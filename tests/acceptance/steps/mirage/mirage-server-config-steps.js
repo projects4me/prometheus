@@ -25,7 +25,7 @@ export const given = function () {
         },
         {
             "There is no $modelType": (assert) => async function (modelType) {
-                server.schema[modelType].all().models.forEach((model) => {
+                server.schema[modelType]?.all()?.models?.forEach((model) => {
                     model.destroy();
                 });
             }

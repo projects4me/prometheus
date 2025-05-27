@@ -92,17 +92,17 @@
           {{!-- This is the issue conversations --}}
           <AccessControl @aclContext="App.Project.Issue.Read.ConversationRoom.Read">
             <div class="col-md-12">
-              <div class="box box-info conversations issue-conversation-section" {{did-insert this.scrollToElement false}}>
+              <div class="box box-info conversations issue-conversation-section">
                 <div class="box-header with-border">
                   <h3 class="box-title">{{t "views.app.issue.detail.conversation"}}</h3>
                   <div class="box-tools pull-right">
                   </div>
                 </div>
                 {{!-- /.box-header --}}
-                <div class="box-body box-footer box-comments">
+                <div class="box-body box-footer box-comments" {{did-insert this.scrollToElement 'comment'}}>
 
                   {{#each issue.comments as |comment|}}
-                    <div class="box-comment">
+                    <div class="box-comment" data-comment-id="{{comment.id}}">
                       <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
 
                       <div class="comment-text">
@@ -280,10 +280,10 @@
             </div>
             {{!-- /.box-header --}}
             <div class="box-body no-padding">
-              <ul class="time-log time-log-in-box products-list product-list-in-box">
+              <ul class="time-log time-log-in-box products-list product-list-in-box" {{did-insert this.scrollToElement 'estimate'}}>
                 {{#if (gt issue.estimated.length 0)}}
                   {{#each issue.estimated as |timelog|}}
-                    <li class="item">
+                    <li class="item" data-issue-estimate-id={{timelog.id}}>
                       <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
                         <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
                       </div>
@@ -394,10 +394,10 @@
             </div>
             <div class="box-body no-padding">
 
-              <ul class="time-log time-log-in-box products-list product-list-in-box">
+              <ul class="time-log time-log-in-box products-list product-list-in-box" {{did-insert this.scrollToElement 'spent'}}>
                 {{#if (gt issue.spent.length 0)}}
                   {{#each issue.spent as |timelog|}}
-                    <li class="item">
+                    <li class="item" data-issue-spent-id={{timelog.id}}>
                       <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
                         <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
                       </div>

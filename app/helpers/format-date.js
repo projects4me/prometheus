@@ -31,20 +31,23 @@ export default class FormatDateHelper extends Helper {
 	 * @param {string|Date} options.date - The date to format.
 	 * @param {string} [options.format="DD MMM 'YY"] - The format string to use (follows Moment.js format).
 	 * @param {boolean} [options.localTime=false] - If true, converts UTC date to local timezone before formatting.
+	 * @param {boolean} [options.humanize=false] - If true, returns a relative time string (e.g. "2 days ago").
 	 * @returns {string} The formatted date string or empty string if date is undefined.
 	 */
-	compute([], { date, format = "DD MMM 'YY", localTime = false }) {
+	compute([], { date, format = "DD MMM 'YY", localTime = false, humanize = false }) {
 		let formattedDate = '';
 		let userTimezone = this.currentUser.user.timezone;
+		let momentDate;
 
 		if (date !== undefined) {
 			formattedDate = moment(date).format(format);
 			if (localTime) {
-				formattedDate = moment
-					.utc(date)
-					.tz(userTimezone)
-					.format(format);
+				momentDate = moment.utc(date).tz(userTimezone);
+			} else {
+				momentDate = moment(date);
 			}
+			// Use fromNow() for humanized format, otherwise use standard format
+			formattedDate = humanize ? momentDate.fromNow() : momentDate.format(format);
 		}
 
 		return formattedDate;

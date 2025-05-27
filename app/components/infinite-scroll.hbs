@@ -1,0 +1,41 @@
+<div
+	class='infinite-scroll-container {{@containerClass}}'
+	data-test-infinite-scroll
+	{{did-insert this.setupScrollListener}}
+	{{will-destroy this.teardownScrollListener}}
+>
+	{{#if this.isLoading}}
+		<div class='infinite-scroll-loading-sticky' data-test-infinite-scroll-loading>
+			<div class='loading-indicator' data-test-loading-indicator>
+				<i class='fa fa-spinner fa-spin'></i>
+				<span>{{@loadingText}}</span>
+			</div>
+		</div>
+	{{/if}}
+
+	{{yield}}
+
+	{{#if this.hasReachedEnd}}
+		<div class='infinite-scroll-end' data-test-infinite-scroll-end>
+			<div class='end-message' data-test-end-message>
+				<i class='fa fa-check-circle'></i>
+				<span>{{@endMessageText}}</span>
+			</div>
+		</div>
+	{{else}}
+		{{#if @useLoadMoreButton}}
+			<div class='infinite-scroll-load-more' data-test-infinite-scroll-load-more>
+				<AppUi::Button
+					type='button'
+					class='btn btn-primary load-more-button'
+					data-test-load-more-button
+					@onClick={{this.loadMore}}
+					@aclContext={{@aclContext}}
+				>
+					<i class='fa fa-refresh'></i>
+					<span>{{t "views.components.infiniteScroll.loadMore"}}</span>
+				</AppUi::Button>
+			</div>
+		{{/if}}
+	{{/if}}
+</div>

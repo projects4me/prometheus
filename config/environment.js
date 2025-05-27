@@ -30,7 +30,10 @@ module.exports = function(environment) {
                 level:'DEBUG',
                 default:true
             },
-            dateFormat: "YYYY-MM-DD"
+            dateFormat: "YYYY-MM-DD",
+            notifications: {
+                pollingInterval: 30000 // 30 seconds default
+            }
         },
         chat:{
             host:'localhost',

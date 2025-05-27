@@ -203,16 +203,28 @@ export default class PrometheusController extends Controller {
 	 * @method scrollAndHighlight
 	 * @param {HTMLElement} element
 	 * @param {Boolean} isHighlight
+	 * @param {Object} options - Options for customizing the highlight effect
+	 * @param {String} options.spread - The spread value for the highlight
+	 * @param {String} options.blur - The blur value for the highlight
 	 * @public
 	 */
-	scrollAndHighlight(element, isHighlight = false) {
+	scrollAndHighlight(element, isHighlight = false, options = {}) {
 		if (element) {
 			element.scrollIntoView({ behavior: 'smooth', block: 'center' });
 			if (isHighlight) {
+				if (options.spread) {
+					element.style.setProperty('--highlight-spread', options.spread);
+				}
+				if (options.blur) {
+					element.style.setProperty('--highlight-blur', options.blur);
+				}
+				
 				element.classList.add('highlight-box');
 				setTimeout(() => {
 					element.classList.remove('highlight-box');
-				}, 3000);
+					element.style.removeProperty('--highlight-spread');
+					element.style.removeProperty('--highlight-blur');
+				}, 4000); 
 			}
 		}
 	}

@@ -16,6 +16,8 @@ import * as Milestone from './route-handlers/milestone';
 import * as Project from './route-handlers/project';
 import * as Role from './route-handlers/role';
 import * as Savedsearch from './route-handlers/savedsearch';
+import * as Systemnotification from './route-handlers/systemnotification';
+import * as Systemnotificationrecipient from './route-handlers/systemnotificationrecipient';
 import * as Tag from './route-handlers/tag';
 import * as Tagged from './route-handlers/tagged';
 import * as Timelog from './route-handlers/timelog';
@@ -58,6 +60,8 @@ function routes() {
     Project.register(this, ctx);
     Role.register(this, ctx);
     Savedsearch.register(this, ctx);
+    Systemnotification.register(this, ctx);
+    Systemnotificationrecipient.register(this, ctx);
     Tag.register(this, ctx);
     Tagged.register(this, ctx);
     Timelog.register(this, ctx);

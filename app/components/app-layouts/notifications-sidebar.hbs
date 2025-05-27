@@ -1,0 +1,62 @@
+<aside class='notifications-sidebar' data-test-notifications-sidebar>
+	<section class='sidebar-body'>
+		<div class='notifications-body'>
+			<span class='title'>
+				{{#if this.notifications.hasUnreadNotifications}}
+					<div class='notifications-header' data-test-notifications-header>
+						<span>{{t 'views.app.notifications.unreadTitle'}}</span>
+						<button
+							type='button'
+							class='mark-all-read-btn'
+							data-test-mark-all-read
+							{{on 'click' this.markAllAsRead}}
+							title={{t 'views.app.notifications.markAllAsRead'}}
+						>
+							<i class='fa fa-check-circle'></i>
+							{{t 'views.app.notifications.markAllAsRead'}}
+						</button>
+					</div>
+				{{else}}
+					{{t 'views.app.notifications.title'}}
+				{{/if}}
+			</span>
+			<InfiniteScroll
+				@onLoadMore={{this.loadMoreNotifications}}
+				@threshold={{150}}
+				@containerClass='notifications-scroll-container'
+				@loadingText={{t 'views.app.notifications.loading'}}
+				@endMessageText={{t 'views.app.notifications.noMore'}}
+				@useLoadMoreButton={{true}}
+				@useScrollLoading={{true}}
+				@model={{this.notifications.notifications}}
+			>
+				<:default>
+					<ul class='notifications-list' data-test-notifications-list>
+						{{#if this.notifications.notifications.length}}
+							{{#each
+								this.notifications.notifications
+								as |notification|
+							}}
+								<AppUi::Notifications::Notification
+									@notification={{notification}}
+								/>
+							{{/each}}
+						{{else}}
+							<li class='empty-notifications' data-test-empty-notifications>
+								<div class='empty-icon'>
+									<i class='fa fa-bell-slash-o'></i>
+								</div>
+								<div class='empty-message' data-test-empty-message>
+									<strong>{{t
+											'views.app.notifications.empty'
+										}}</strong>
+									{{t 'views.app.notifications.emptyMessage'}}
+								</div>
+							</li>
+						{{/if}}
+					</ul>
+				</:default>
+			</InfiniteScroll>
+		</div>
+	</section>
+</aside>

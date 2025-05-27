@@ -38,30 +38,16 @@
   {{!-- Navbar Right Menu --}}
   <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
+
       {{!-- Notifications Menu --}}
       <li class="dropdown notifications-menu">
-        {{!-- Menu toggle button --}}
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-          <i class="fa fa-bell-o"></i>
-          <span class="label label-warning">{{t "views.app.application.header.thirteen"}}</span>
-        </a>
-        <ul class="dropdown-menu">
-          <li class="header">{{t "views.app.notifications" count="13"}}</li>
-          <li>
-            {{!-- Inner Menu: contains the notifications --}}
-            <ul class="menu">
-              {{!-- start notification --}}
-              <li>
-                <a href="#">
-                  <i class="fa fa-users text-aqua"></i>{{t "views.app.application.header.fiveMembers"}}
-                </a>
-              </li>
-              {{!-- end notification --}}
-            </ul>
-          </li>
-          <li class="footer"><a href="#">{{t "views.app.allnotifications"}}</a></li>
-        </ul>
+        {{!-- Add a button to toggle the sidebar instead of dropdown --}}
+        <AppUi::Button type="button" class="toggle-notifications-sidebar" {{on "click" this.toggleNotificationsSidebar}}>
+          <i class="fa {{if this.notifications.hasUnreadNotifications 'fa-bell notification-bell-unread' 'fa-bell-o'}}"></i>
+        </AppUi::Button>
       </li>
+
+
       {{!-- User Account Menu --}}
       <li class="dropdown user user-menu">
         {{!-- Menu Toggle Button --}}
@@ -100,7 +86,7 @@
             </div>
           </li>
         </ul>
-      </li>
+      </li> 
     </ul>
   </div>
 </nav>

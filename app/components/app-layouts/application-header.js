@@ -29,7 +29,16 @@ export default class ApplicationHeaderComponent extends AppComponent {
      * @private
      */
     @service store;
-
+    
+    /**
+     * The notifications service
+     *
+     * @property notifications
+     * @type Service
+     * @for ApplicationHeader
+     * @private
+     */
+    @service notifications;
     /**
      * This property is used to keep track the selected issue
      *
@@ -40,6 +49,16 @@ export default class ApplicationHeaderComponent extends AppComponent {
      */
     @tracked selected;
 
+    /**
+     * The pub-sub service
+     *
+     * @property pubSub
+     * @type Service
+     * @for ApplicationHeader
+     * @public
+     */
+    @service('pub-sub') pubSub;
+    
     /**
      * We are using the store service to retrieve data for global search
      *
@@ -184,5 +203,17 @@ export default class ApplicationHeaderComponent extends AppComponent {
      */
     signIn() {
 
+    }
+
+    /**
+     * This function is used to toggle the notifications sidebar
+     *
+     * @method toggleNotificationsSidebar
+     * @for ApplicationHeader
+     * @public
+     */
+    @action
+    toggleNotificationsSidebar() {
+        this.pubSub.trigger('toggle-notifications-sidebar');
     }
 }

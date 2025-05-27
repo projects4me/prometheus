@@ -10,63 +10,44 @@ import $ from 'jquery';
  * slimscroll to that element.
  *
  * @example
- *      <div {{initialize-slimscroll model=this.model.length}}>
- * 
+ *      <div {{initialize-slimscroll}}>
+ *
  * @class InitializeSlimscrollModifier
  * @namespace Prometheus.Modifiers
  * @extends Modifier
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class InitializeSlimscrollModifier extends Modifier {
+	/** Called when the modifier is installed on the DOM element*/
+	didInstall() {
+		this._attachSlimScroll();
+	}
+	/**
+	 * This function returns the value that will be used to set the width of the scroll bar.
+	 *
+	 * @method get
+	 * @retrun String
+	 * @public
+	 */
+	get width() {
+		return this.args.named.width;
+	}
 
-    /**
-     * This function returns model length. The use of this property here is just to 
-     * trigger the didUpdateArguments function in order to attach slimscroll to that element again,
-     * on update of the model.
-     *
-     * @method get
-     * @return String
-     * @public
-     */
-    get model() {
-        return this.args.named.model;
-    }
+	/**
+	 * This function apply slim scroll to element.
+	 *
+	 * @method _attachSlimScroll
+	 * @private
+	 */
+	_attachSlimScroll() {
+		let defaulWidth = 3,
+			size;
+		size = this.width ?? defaulWidth;
 
-    /** Called when the modifier is installed on the DOM element*/
-    didInstall() {
-        this._attachSlimScroll();
-    }
-
-    /**Called when the arguments provided to modifier are updated*/
-    didUpdateArguments() {
-        this._attachSlimScroll();
-    }
-
-    /**
-     * This function returns the value that will be used to set the width of the scroll bar.
-     * 
-     * @method get
-     * @retrun String
-     * @public
-     */
-    get width() {
-        return this.args.named.width;
-    }
-
-    /**
-     * This function apply slim scroll to element.
-     * 
-     * @method _attachSlimScroll
-     * @private
-     */
-    _attachSlimScroll() {
-        let defaulWidth = 3, size;
-        size = this.width ?? defaulWidth;
-
-        $(this.element).slimScroll({
-            height: this.element.clientHeight,
-            allowVisible: false,
-            size: size
-        });
-    }
+		$(this.element).slimScroll({
+			height: this.element.clientHeight,
+			allowVisible: false,
+			size: size
+		});
+	}
 }

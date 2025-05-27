@@ -460,3 +460,22 @@ span[id="#"]{
     }
   }
 }
+
+.label-primary {
+  background-color: $primaryColor;
+}
+
+.navbar .navbar-custom-menu .navbar-nav > li > button {
+  border-left: 1px solid #eee;
+  border-right-width: 0;
+  border-bottom: none;
+  border-top: none;
+  padding: 1.5rem;
+  background-color: #fff;
+}
+
+.navbar .navbar-custom-menu .navbar-nav > li > button:active,
+.navbar .navbar-custom-menu .navbar-nav > li > button:hover {
+  background: #fff;
+  color: #999;
+}

@@ -79,6 +79,16 @@ export default class AppLoadingAssetsRoute extends Route {
     @service errorManager;
 
     /**
+     * This service is used to load notifications.
+     *
+     * @property notifications
+     * @type Ember.Service
+     * @for AppLoadingAssetsRoute
+     * @protected
+     */
+    @service notifications;
+
+    /**
      * This method is called by ember when we enter this route and returns
      * resolved promises to the setupController function. In this method we're
      * fetching loggedin user model by using currentUser service. We'll fetch
@@ -101,13 +111,26 @@ export default class AppLoadingAssetsRoute extends Route {
             settings: this.settings.loadSettings(),
             users: _self.loadUsers(),
             roles: _self.loadRoles(),
-            projects: _self.loadProjects()
+            projects: _self.loadProjects(),
+            notifications: _self.notifications.loadNotifications()
         }).then((results) => {
             return extractHashSettled(results);
         }).catch((error) => {
             _self.errorManager.handleError(error);
         });
 
+    }
+
+    /**
+     * After model hook to start notification polling.
+     * 
+     * @method afterModel
+     * @param {Object} model
+     * @protected
+     */
+    afterModel() {
+        this.notifications.startNotificationPolling();
+        return super.afterModel(...arguments);
     }
 
     /**
