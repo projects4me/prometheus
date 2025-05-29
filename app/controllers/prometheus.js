@@ -243,4 +243,16 @@ export default class PrometheusController extends Controller {
 			this.settings.scrollToElement = false;
 		}
 	}
+
+	/**
+	 * This property returns the environment configuration.
+	 * 
+	 * @property env
+	 * @type Object
+	 * @for Prometheus.Controllers.Prometheus
+	 * @public
+	 */
+	get env() {
+		return ENV;
+	}
 }

@@ -33,6 +33,9 @@ module.exports = function(environment) {
             dateFormat: "YYYY-MM-DD",
             notifications: {
                 pollingInterval: 30000 // 30 seconds default
+            },
+            upload: {
+                maxFileSize: 2097152 // 2MB
             }
         },
         chat:{
