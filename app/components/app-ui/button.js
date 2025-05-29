@@ -50,11 +50,11 @@ export default class AppUiButtonComponent extends Component {
      * @for AppUiButtonComponent
      * @public
      */
-    @action async handleClick() {
+    @action async handleClick(e) {
         let { onClick, disableOnSuccess } = this.args;
         this.disabled = true;
         try {
-            await onClick();
+            await onClick(e);
             !disableOnSuccess && (this.disabled = false);
         } catch (e) {
             this.disabled = false;

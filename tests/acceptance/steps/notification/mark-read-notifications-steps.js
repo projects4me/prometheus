@@ -7,11 +7,11 @@ export const when = function () {
 			'User clicks on first unread notification': (assert, ctx) =>
 				async function () {
 					const unreadNotification = find(
-						'[data-test-notification].unread-notification'
+						'[data-notification].unread-notification'
 					);
 					await click(
 						unreadNotification.querySelector(
-							'[data-test-notification-link]'
+							'[data-notification-link]'
 						)
 					);
 					assert.ok(true, this.step);
@@ -20,7 +20,7 @@ export const when = function () {
 		{
 			'User clicks on mark all as read button': (assert, ctx) =>
 				async function () {
-					await click('[data-test-mark-all-read]');
+					await click('[data-mark-all-read]');
 					assert.ok(true, this.step);
 				}
 		}
@@ -34,7 +34,7 @@ export const then = function () {
 				async function () {
 					// The notification we clicked should no longer have unread-notification class
 					const clickedNotification = find(
-						'[data-test-notification]'
+						'[data-notification]'
 					);
 					assert
 						.dom(clickedNotification)
@@ -48,7 +48,7 @@ export const then = function () {
 			'All notifications should be marked as read': (assert, ctx) =>
 				async function () {
 					const unreadNotifications = findAll(
-						'[data-test-notification].unread-notification'
+						'[data-notification].unread-notification'
 					);
 					assert.equal(
 						unreadNotifications.length,

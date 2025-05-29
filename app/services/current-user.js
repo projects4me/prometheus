@@ -42,13 +42,12 @@ export default Service.extend({
      * @method loadUser
      * @public
      */
-    loadUser: function () {
+    loadUser: async function () {
         if (this.session.isAuthenticated) {
             // Retrieve the current user's object from the API
-            return this.store.queryRecord('user', { include: 'dashboard,aclPermissions,projects', me: true }).then((user) => {
-                // Set the retrieved user in the current object
-                this.set('user', user);
-            });
+            const user = await this.store.queryRecord('user', { include: 'dashboard,aclPermissions,projects', me: true });
+            // Set the retrieved user in the current object
+            this.set('user', user);
         }
     }
 

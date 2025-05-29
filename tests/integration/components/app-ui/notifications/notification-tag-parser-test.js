@@ -18,7 +18,7 @@ module(
 			);
 
 			assert
-				.dom('[data-test-notification-tag-parser]')
+				.dom('[data-notification-tag-parser]')
 				.hasText(
 					'This is a simple notification without tags',
 					'Plain content is rendered correctly'
@@ -42,7 +42,7 @@ module(
 			);
 
 			const tagParserElement = this.element.querySelector(
-				'[data-test-notification-tag-parser]'
+				'[data-notification-tag-parser]'
 			);
 			assert
 				.dom('a', tagParserElement)
@@ -81,7 +81,7 @@ module(
 			);
 
 			const tagParserElement = this.element.querySelector(
-				'[data-test-notification-tag-parser]'
+				'[data-notification-tag-parser]'
 			);
 			assert
 				.dom('span.badge.open', tagParserElement)
@@ -108,7 +108,7 @@ module(
 			);
 
 			assert
-				.dom('[data-test-notification-tag-parser]')
+				.dom('[data-notification-tag-parser]')
 				.hasText(
 					'Unknown module UnknownModule 123',
 					'Unknown module is rendered as text'
@@ -123,7 +123,7 @@ module(
 				hbs`<AppUi::Notifications::NotificationTagParser @notification={{this.notification}} />`
 			);
 			assert
-				.dom('[data-test-notification-tag-parser]')
+				.dom('[data-notification-tag-parser]')
 				.exists(
 					'Component renders without errors with missing context data'
 				);

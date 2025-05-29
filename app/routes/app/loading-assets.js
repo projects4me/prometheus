@@ -99,15 +99,15 @@ export default class AppLoadingAssetsRoute extends Route {
      * @returns Promise
      * @protected
      */
-    model() {
+    async model() {
         Logger.debug('+Prometheus.Route.App.LoadingAssets::model()');
 
         let _self = this;
 
         Logger.debug('-Prometheus.Route.App.LoadingAssets::model()');
+        await this.currentUser.loadUser();
 
         return hashSettled({
-            userService: this.currentUser.loadUser(),
             settings: this.settings.loadSettings(),
             users: _self.loadUsers(),
             roles: _self.loadRoles(),

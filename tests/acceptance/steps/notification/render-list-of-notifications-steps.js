@@ -70,7 +70,7 @@ export const when = function () {
 		{
 			'User scrolls to the bottom of notifications list': (assert, ctx) =>
 				async function () {
-					const container = find('[data-test-infinite-scroll]');
+					const container = find('[data-infinite-scroll]');
 					await scrollTo(container, 0, container.scrollHeight);
 					assert.ok(true, this.step);
 				}
@@ -86,7 +86,7 @@ export const then = function () {
 				ctx
 			) =>
 				async function (expectedCount) {
-					const notifications = findAll('[data-test-notification]');
+					const notifications = findAll('[data-notification]');
 					assert.equal(
 						notifications.length,
 						parseInt(expectedCount),
@@ -98,7 +98,7 @@ export const then = function () {
 			'More notifications should be loaded': (assert, ctx) =>
 				async function () {
 					// After scrolling, we should see more than the initial page of notifications
-					const notifications = findAll('[data-test-notification]');
+					const notifications = findAll('[data-notification]');
 					assert.ok(
 						notifications.length > 10,
 						'Additional notifications should be loaded after scrolling'
@@ -109,12 +109,12 @@ export const then = function () {
 			'User should see empty notifications message': (assert, ctx) =>
 				async function () {
 					assert
-						.dom('[data-test-empty-notifications]')
+						.dom('[data-empty-notifications]')
 						.exists(
 							'Empty notifications message should be displayed'
 						);
 					assert
-						.dom('[data-test-empty-message]')
+						.dom('[data-empty-message]')
 						.exists(
 							'Empty notifications message text should be visible'
 						);
