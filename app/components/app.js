@@ -70,13 +70,13 @@ export default class AppComponent extends Component {
     apiHost = ENV.api.host;
 
     /**
-     * Check if the environment is test
+     * Returns the application configuration
      * 
-     * @property isTestEnvironment
-     * @type Boolean
+     * @property config
+     * @type Object
      * @for App
      */
-    get isTestEnvironment() {
-        return ENV.environment === 'test';
+    get config() {
+        return ENV;
     }
 }

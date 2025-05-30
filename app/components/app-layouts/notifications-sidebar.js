@@ -88,6 +88,6 @@ export default class AppLayoutsNotificationsSidebarComponent extends Component {
      */
     @action
     async loadMoreNotifications() {
-      return await this.notifications.loadNotifications();
+      return await this.notifications.loadNotifications(...arguments);
     }
 }

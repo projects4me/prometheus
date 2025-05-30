@@ -29,13 +29,13 @@ module(
 			await render(hbs`<AppLayouts::NotificationsSidebar />`);
 
 			assert
-				.dom('[data-test-notifications-sidebar]')
+				.dom('[data-notifications-sidebar]')
 				.exists('The sidebar container exists');
 			assert
-				.dom('[data-test-empty-notifications]')
+				.dom('[data-empty-notifications]')
 				.exists('Empty notifications message is shown');
 			assert
-				.dom('[data-test-empty-message]')
+				.dom('[data-empty-message]')
 				.exists('Empty message exists');
 		});
 
@@ -54,19 +54,19 @@ module(
 			await render(hbs`<AppLayouts::NotificationsSidebar />`);
 
 			assert
-				.dom('[data-test-notifications-list]')
+				.dom('[data-notifications-list]')
 				.exists('Notifications list exists');
 			assert
-				.dom('[data-test-empty-notifications]')
+				.dom('[data-empty-notifications]')
 				.doesNotExist('Empty message is not shown');
 			assert
-				.dom('[data-test-notifications-header]')
+				.dom('[data-notifications-header]')
 				.exists('Notifications header is shown');
 			assert
-				.dom('[data-test-mark-all-read]')
+				.dom('[data-mark-all-read]')
 				.exists('Mark all as read button is shown');
 			assert
-				.dom('[data-test-notification-id="1"]')
+				.dom('[data-notification-id="1"]')
 				.exists('Specific notification is rendered');
 		});
 
@@ -94,9 +94,9 @@ module(
 			await render(hbs`<AppLayouts::NotificationsSidebar />`);
 
 			assert
-				.dom('[data-test-mark-all-read]')
+				.dom('[data-mark-all-read]')
 				.exists('Mark all as read button exists');
-			await click('[data-test-mark-all-read]');
+			await click('[data-mark-all-read]');
 		});
 
 		test('infinite scroll loads more notifications', async function (assert) {
@@ -107,7 +107,7 @@ module(
 
 			await render(hbs`<AppLayouts::NotificationsSidebar />`);
 			assert
-				.dom('[data-test-infinite-scroll]')
+				.dom('[data-infinite-scroll]')
 				.exists('Infinite scroll container exists');
 		});
 	}

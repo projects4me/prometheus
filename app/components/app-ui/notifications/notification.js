@@ -175,8 +175,8 @@ export default class AppUiNotificationsNotificationComponent extends AppComponen
 		await this.notifications.markAsRead(this.args.notification);
 
         // In test environment, we don't want to navigate to the link
-		if (!this.isTestEnvironment) {
-			window.location.href = link;
+		if (this.config.app.notifications.enableNav) {
+			this.router.transitionTo(link);
 		}
 	}
 
@@ -191,10 +191,10 @@ export default class AppUiNotificationsNotificationComponent extends AppComponen
 	getLink(element) {
 		let link = null;
 		if (element.tagName === 'A') {
-			link = element.href;
+			link = element.getAttribute('href');
 		}
 		if (element.tagName === 'IMG' && element.classList.contains('user-image')) {
-			link = element.parentElement.href;
+			link = element.parentElement.getAttribute('href');
 		}
 		if (!link) {
 			link = this.getNotificationLink;
