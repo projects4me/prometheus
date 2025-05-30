@@ -37,16 +37,16 @@ module(
 			);
 
 			assert
-				.dom('[data-test-notification]')
+				.dom('[data-notification]')
 				.exists('Notification element exists');
 			assert
-				.dom('[data-test-notification-id="1"]')
+				.dom('[data-notification-id="1"]')
 				.exists('Notification has correct ID');
 			assert
-				.dom('[data-test-notification-link]')
+				.dom('[data-notification-link]')
 				.exists('Notification link exists');
 			assert
-				.dom('[data-test-notification-timestamp]')
+				.dom('[data-notification-timestamp]')
 				.exists('Timestamp exists');
 		});
 
@@ -65,7 +65,7 @@ module(
 			);
 
 			assert
-				.dom('[data-test-notification]')
+				.dom('[data-notification]')
 				.hasClass('unread-notification', 'Unread class is applied');
 		});
 
@@ -88,7 +88,7 @@ module(
 			);
 
 			assert
-				.dom('[data-test-notification-link]')
+				.dom('[data-notification-link]')
 				.hasAttribute(
 					'href',
 					'/app/project/test/issue/123',

@@ -32,7 +32,8 @@ module.exports = function(environment) {
             },
             dateFormat: "YYYY-MM-DD",
             notifications: {
-                pollingInterval: 30000 // 30 seconds default
+                pollingInterval: 30000, // 30 seconds default
+                enableNav: true // Controls whether clicking notifications navigates to their links
             },
             upload: {
                 maxFileSize: 2097152 // 2MB
@@ -80,6 +81,7 @@ module.exports = function(environment) {
         // Testem prefers this...
         ENV.api.host = "http://test.projects4me";
         ENV.locationType = 'none';
+        ENV.app.notifications.enableNav = false;
 
         // keep test console output quieter
         ENV.APP.LOG_ACTIVE_GENERATION = false;

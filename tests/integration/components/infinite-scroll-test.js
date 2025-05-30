@@ -9,14 +9,14 @@ module('Integration | Component | infinite-scroll', function (hooks) {
 	test('it renders yielded content', async function (assert) {
 		await render(hbs`
             <InfiniteScroll>
-                <div class="test-content" data-test-content>Content goes here</div>
+                <div class="test-content" data-content>Content goes here</div>
             </InfiniteScroll>
         `);
 
 		assert
-			.dom('[data-test-content]')
+			.dom('[data-content]')
 			.exists('The yielded content is rendered');
-		assert.dom('[data-test-content]').hasText('Content goes here');
+		assert.dom('[data-content]').hasText('Content goes here');
 	});
 
 	test('it shows load more button when configured', async function (assert) {
@@ -32,7 +32,7 @@ module('Integration | Component | infinite-scroll', function (hooks) {
         `);
 
 		assert
-			.dom('[data-test-load-more-button]')
+			.dom('[data-load-more-button]')
 			.exists('Load more button is shown');
 	});
 
@@ -53,34 +53,7 @@ module('Integration | Component | infinite-scroll', function (hooks) {
             </InfiniteScroll>
         `);
 
-		await click('[data-test-load-more-button]');
-	});
-
-	test('it shows end message when hasReachedEnd is true', async function (assert) {
-		this.set('loadMore', async () => {
-			return false;
-		});
-
-		await render(hbs`
-            <InfiniteScroll
-                @useLoadMoreButton={{true}}
-                @onLoadMore={{this.loadMore}}
-                @endMessageText="No more items"
-            >
-                Content
-            </InfiniteScroll>
-        `);
-
-		await click('[data-test-load-more-button]');
-		await settled();
-
-		assert
-			.dom('[data-test-infinite-scroll-end]')
-			.exists('End message container is shown');
-		assert.dom('[data-test-end-message]').exists('End message is shown');
-		assert
-			.dom('[data-test-end-message] span')
-			.hasText('No more items', 'End message has correct text');
+		await click('[data-load-more-button]');
 	});
 
 	test('it shows loading indicator during loadMore', async function (assert) {
@@ -103,15 +76,15 @@ module('Integration | Component | infinite-scroll', function (hooks) {
         `);
 
 		// Click but don't wait for the promise to resolve
-		await click('[data-test-load-more-button]');
+		await click('[data-load-more-button]');
 
 		await settled();
 
 		assert
-			.dom('[data-test-infinite-scroll-loading]')
+			.dom('[data-infinite-scroll-loading]')
 			.exists('Loading indicator is shown');
 		assert
-			.dom('[data-test-loading-indicator] span')
+			.dom('[data-loading-indicator] span')
 			.hasText('Loading...', 'Loading text is correct');
 
 		// Resolve the promise to clean up

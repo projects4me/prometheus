@@ -1,15 +1,15 @@
-<li data-test-notification-id={{@notification.id}} data-notification-id={{@notification.id}} data-test-notification class="notification {{if (eq @notification.recipientRecords.firstObject.isRead "0") "unread-notification"}}">
-    <a href={{this.getNotificationLink}} data-test-notification-link {{on "click" this.markAsRead}} class={{if (eq @notification.recipientRecords.firstObject.isRead "0") "unread-notification-link"}}>
-      <span class="user-image" data-test-notification-user-image>
+<li data-notification-id={{@notification.id}} data-notification-id={{@notification.id}} data-notification class="notification {{if (eq @notification.recipientRecords.firstObject.isRead "0") "unread-notification"}}">
+    <a href={{this.getNotificationLink}} data-notification-link {{on "click" this.markAsRead}} class={{if (eq @notification.recipientRecords.firstObject.isRead "0") "unread-notification-link"}}>
+      <span class="user-image" data-notification-user-image>
         <LinkTo @route="app.user.page" @model={{@notification.createdUser}}>
           <img class="img-circle img-xs user-image" src="{{this.apiHost}}/userimage/get/{{@notification.createdUser}}" alt="{{@notification.createdUserName}}">
         </LinkTo>
       </span>
-      <span class="notification-content" data-test-notification-content>
+      <span class="notification-content" data-notification-content>
         <AppUi::Notifications::NotificationTagParser
           @notification={{@notification}}
         />
-        <div class="notification-timestamp" data-test-notification-timestamp>
+        <div class="notification-timestamp" data-notification-timestamp>
           {{format-date date=@notification.dateCreated localTime=true humanize=true}}
         </div>
       </span>

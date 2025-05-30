@@ -7,7 +7,7 @@ import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
-import ENV from "prometheus/config/environment";
+import ENV from 'prometheus/config/environment';
 
 /**
  * Service for managing user notifications
@@ -100,9 +100,6 @@ export default class NotificationsService extends Service {
 	 */
 	constructor() {
 		super(...arguments);
-		this.router.on('routeDidChange', () => {
-			this.loadNotifications();
-		});
 	}
 
 	/**
@@ -111,12 +108,13 @@ export default class NotificationsService extends Service {
 	 *
 	 * @method loadNotifications
 	 * @param {Boolean} reset Whether to reset pagination and load from first page
+	 * @param {Object} infiniteScrollOptions Additional options
 	 * @public
 	 * @async
 	 * @returns {Promise<Boolean>} Returns false if at last page or error occurs
 	 */
 	@action
-	async loadNotifications(reset = false) {
+	async loadNotifications(reset = false, infiniteScrollOptions = {}) {
 		if (!this.currentUser.user) {
 			return false;
 		}
@@ -125,7 +123,10 @@ export default class NotificationsService extends Service {
 			this.resetPagination();
 		}
 
-		if (this.isLoading || this.isLastPage) {
+		if (
+			this.isLoading ||
+			(this.isLastPage && !infiniteScrollOptions.loadMoreClicked)
+		) {
 			return false;
 		}
 
@@ -154,7 +155,9 @@ export default class NotificationsService extends Service {
 			// Update pagination state
 			this.isLastPage =
 				paginatedResult.notifications.length < this.pageSize;
-			this.page++;
+			if (paginatedResult.notifications.length > 0) {
+				this.page++;
+			}
 			return !this.isLastPage;
 		} catch (error) {
 			console.error('Error loading notifications:', error);

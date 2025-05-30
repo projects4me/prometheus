@@ -133,42 +133,46 @@ export default class InfiniteScrollComponent extends Component {
 	/**
 	 * Handles scroll events with debouncing
 	 * @method handleScroll
+	 * @param {Event} event - The scroll event
 	 * @public
 	 */
 	@action
-	handleScroll() {
-		debounce(this, this.checkScrollPosition, this.debounceTime);
+	handleScroll(event) {
+		debounce(this, this.checkScrollPosition, event, this.debounceTime);
 	}
 
 	/**
 	 * Checks if scroll position has reached threshold to load more content
 	 * @method checkScrollPosition
+	 * @param {Event} event - The scroll event
 	 * @private
 	 */
-	checkScrollPosition() {
+	checkScrollPosition(event) {
 		if (this.isLoading || this.hasReachedEnd) return;
 
 		const { scrollTop, scrollHeight, clientHeight } = this.scrollContainer;
 		const scrollRemaining = scrollHeight - scrollTop - clientHeight;
 
 		if (scrollRemaining <= this.threshold) {
-			this.loadMore();
+			this.loadMore(event);
 		}
 	}
 
 	/**
 	 * Loads more content using the provided callback
 	 * @method loadMore
+	 * @param {Event} event - The load more event
 	 * @public
 	 */
 	@action
-	async loadMore() {
-		if (this.isLoading || this.hasReachedEnd) return;
-
+	async loadMore(event) {
+		if (this.isLoading) return;
+		const loadMoreBtnClicked = event.type !== 'scroll';
 		try {
 			this.isLoading = true;
-			const hasMore = await this.args.onLoadMore();
-			this.hasReachedEnd = !hasMore;
+			await this.args.onLoadMore(false, {
+				loadMoreClicked: loadMoreBtnClicked
+			});
 		} catch (error) {
 			console.error('Failed to load more items', error);
 		} finally {

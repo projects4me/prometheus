@@ -30,8 +30,10 @@
         font-size: 1.3rem;
         text-align: center;
         border-bottom: 1px solid rgba(210, 214, 222, 0.8);
+        border-top: 1px solid rgba(210, 214, 222, 0.8);
         letter-spacing: 0.5px;
         position: relative;
+        margin-top: 1rem;
         
         .notifications-header {
             width: 100%;

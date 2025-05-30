@@ -1,14 +1,14 @@
-<aside class='notifications-sidebar' data-test-notifications-sidebar>
+<aside class='notifications-sidebar' data-notifications-sidebar>
 	<section class='sidebar-body'>
 		<div class='notifications-body'>
 			<span class='title'>
 				{{#if this.notifications.hasUnreadNotifications}}
-					<div class='notifications-header' data-test-notifications-header>
+					<div class='notifications-header' data-notifications-header>
 						<span>{{t 'views.app.notifications.unreadTitle'}}</span>
 						<button
 							type='button'
 							class='mark-all-read-btn'
-							data-test-mark-all-read
+							data-mark-all-read
 							{{on 'click' this.markAllAsRead}}
 							title={{t 'views.app.notifications.markAllAsRead'}}
 						>
@@ -31,7 +31,7 @@
 				@model={{this.notifications.notifications}}
 			>
 				<:default>
-					<ul class='notifications-list' data-test-notifications-list>
+					<ul class='notifications-list' data-notifications-list>
 						{{#if this.notifications.notifications.length}}
 							{{#each
 								this.notifications.notifications
@@ -42,11 +42,11 @@
 								/>
 							{{/each}}
 						{{else}}
-							<li class='empty-notifications' data-test-empty-notifications>
+							<li class='empty-notifications' data-empty-notifications>
 								<div class='empty-icon'>
 									<i class='fa fa-bell-slash-o'></i>
 								</div>
-								<div class='empty-message' data-test-empty-message>
+								<div class='empty-message' data-empty-message>
 									<strong>{{t
 											'views.app.notifications.empty'
 										}}</strong>
