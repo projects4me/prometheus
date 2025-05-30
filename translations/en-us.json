@@ -788,7 +788,9 @@
             "deletecancel": "Deletion cancelled",
             "onsecondthought": "Hmm, I will just keep it.",
             "deleted": "File has been deleted",
-            "preview": "Preview File"
+            "preview": "Preview File",
+            "uploadfailed": "Failed to upload file",
+            "uploadFailedSize": "File size is too large, please upload a file smaller than {size}MB"
           },
           "childissues": {
             "noentry": "No child issue found for this issue"

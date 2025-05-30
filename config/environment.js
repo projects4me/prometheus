@@ -34,6 +34,9 @@ module.exports = function(environment) {
             notifications: {
                 pollingInterval: 30000, // 30 seconds default
                 enableNav: true // Controls whether clicking notifications navigates to their links
+            },
+            upload: {
+                maxFileSize: 2097152 // 2MB
             }
         },
         chat:{

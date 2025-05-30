@@ -159,6 +159,16 @@ export default class AppProjectIssuePageController extends PrometheusController.
     @(task(function* (file) {
         let _self = this;
         Logger.debug('Trying to upload a file');
+        let maxFileSize = _self.env.app.upload.maxFileSize;
+
+        if(file.size > maxFileSize) {
+            new Messenger().post({
+                message: _self.intl.t("views.app.issue.detail.file.uploadFailedSize", { size: maxFileSize / 1024 / 1024 }),
+                type: 'error',
+                showCloseButton: true
+            });
+            return;
+        }
 
         let upload = this.store.createRecord('upload', {});
 
@@ -186,11 +196,14 @@ export default class AppProjectIssuePageController extends PrometheusController.
             set(upload, 'relatedId', data.data.attributes.relatedId);
             set(upload, 'fileThumbnail', data.data.attributes.fileThumbnail);
 
-            _self.model.objectAt(0).reload();
+            _self.model.objectAt(0).get('files').pushObject(upload);
         } catch (e) {
-            Logger.debug("Something has gone wrong");
-            Logger.debug(e);
-            //upload.rollback();
+            new Messenger().post({
+                message: _self.intl.t("views.app.issue.detail.file.uploadfailed"),
+                type: 'error',
+                showCloseButton: true
+            });
+            upload.rollback();
         }
     })).maxConcurrency(3).enqueue() handleUpload
 
