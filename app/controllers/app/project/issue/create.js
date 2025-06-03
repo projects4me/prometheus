@@ -202,7 +202,8 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
     @computed('project.milestones')
     get milestoneList() {
         let milestones = this.project.milestones.sortBy('dateCreated').reverse();
-        return (new format(this)).getSelectList(milestones, false, htmlSafe(this.intl.t('global.blank')).toHTML());
+        let blankPlaceholder = this.intl.t('views.app.milestone.lists.type.backlog');
+        return (new format(this)).getSelectList(milestones, false, {isRequired: true, placeholder: blankPlaceholder});
     }
 
     /**
