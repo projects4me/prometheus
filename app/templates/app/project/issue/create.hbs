@@ -66,6 +66,21 @@
                   @aclContext="App.Project.Issue.Create.Type"
               />
 
+              <FormFields::FieldRelate
+                @placeholder={{t "views.app.issue.create.selectmilestone"}}
+                @label={{t "views.app.issue.create.milestone"}}
+                @value={{this.model.milestoneId}}
+                @options={{this.milestoneList}}
+                @selected={{find-by "value" this.model.milestoneId this.milestoneList}}
+                @searchField="label"
+                @onchange={{action "selectMilestone" this.model 'milestoneId'}}
+                @relateType="relate-simple"
+                @data-field="issue.milestone"
+                @validate={{action this.validateField "issueCreate" (hash name="milestoneId" value=this.model.milestoneId)}}
+                @message={{this.message.issueCreate.milestoneId}}
+                @aclContext="App.Project.Issue.Create.Milestone"
+              />              
+
               <FormFields::FieldDate
                   @placeholder={{t "views.app.issue.create.placeholder.startDate"}}
                   @label={{t "views.app.issue.create.startDate"}}
@@ -131,22 +146,6 @@
                   @message={{this.message.issueCreate.priority}}
                   @aclContext="App.Project.Issue.Create.Priority"
               />
-
-              <FormFields::FieldRelate
-                  @placeholder={{t "views.app.issue.create.selectmilestone"}}
-                  @label={{t "views.app.issue.create.milestone"}}
-                  @value={{this.model.milestoneId}}
-                  @options={{this.milestoneList}}
-                  @selected={{find-by "value" this.model.milestoneId this.milestoneList}}
-                  @searchField="label"
-                  @onchange={{action "selectRelated" this.model 'milestoneId'}}
-                  @relateType="relate-simple"
-                  @data-field="issue.milestone"
-                  @validate={{action this.validateField "issueCreate" (hash name="milestoneId" value=this.model.milestoneId)}}
-                  @message={{this.message.issueCreate.milestoneId}}
-                  @aclContext="App.Project.Issue.Create.Milestone"
-              />
-
             </div>
 
           </div>

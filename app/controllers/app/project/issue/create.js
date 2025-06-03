@@ -335,4 +335,22 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
     @action changedParent(model, field, target) {
         model.set(field, target.id);
     }
+
+    /**
+     * This function is used to select the milestone for the issue
+     * and set the end date for the issue.
+     *
+     * @method selectMilestone
+     * @param model
+     * @param field
+     */
+    @action selectMilestone(model, field, target) {
+        model.set(field, target.value);
+
+        this.project.milestones.forEach((milestone) => {
+            if (milestone.id === target.value) {
+                model.set('endDate', milestone.endDate);
+            }
+        });
+    }
 }
