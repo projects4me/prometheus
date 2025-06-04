@@ -128,7 +128,7 @@ $color_jumbo_approx: rgba(127, 127, 135,1);
 }
 
 .disabled-text{
-  color: $lightColor;
+  color: $mediumColor;
   font-style: italic;
 }
 
@@ -478,4 +478,11 @@ span[id="#"]{
 .navbar .navbar-custom-menu .navbar-nav > li > button:hover {
   background: #fff;
   color: #999;
+}
+
+.tui-editor-defaultUI {
+  .tui-editor-contents {
+    font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.4rem;
+  }
 }

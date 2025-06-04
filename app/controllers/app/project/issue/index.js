@@ -299,7 +299,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      * @public
      */
     get milestoneOptions() {
-        return (new format(this)).getSelectList(this.milestones, false, htmlSafe(this.intl.t('global.blank')).toHTML());
+        return (new format(this)).getSelectList(this.milestones, false, {isRequired: true});
     }
 
     /**
