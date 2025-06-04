@@ -142,7 +142,11 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    startDate: attr("string"),
+    startDate: attr("string", {
+        defaultValue: () => {
+            return moment().format("YYYY-MM-DD");
+        }
+    }),
 
     /**
      * Priority of the issue
