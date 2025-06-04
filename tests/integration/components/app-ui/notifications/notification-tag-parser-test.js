@@ -72,7 +72,7 @@ module(
 		test('it renders field tags with appropriate HTML', async function (assert) {
 			this.set('notification', {
 				description:
-					'Issue changed to {{status:open}} with {{priority:high}}',
+					'Issue changed to {{status:in_progress}} with {{priority:high}}',
 				context: {}
 			});
 
@@ -84,17 +84,17 @@ module(
 				'[data-notification-tag-parser]'
 			);
 			assert
-				.dom('span.badge.open', tagParserElement)
+				.dom('span.badge.in_progress', tagParserElement)
 				.exists('Status badge is rendered');
 			assert
-				.dom('span.badge.open', tagParserElement)
-				.hasText('open', 'Status badge has correct text');
+				.dom('span.badge.in_progress', tagParserElement)
+				.hasText('In Progress', 'Status badge has correct text');
 			assert
 				.dom('span.priority-tag.high', tagParserElement)
 				.exists('Priority tag is rendered');
 			assert
 				.dom('span.priority-tag.high', tagParserElement)
-				.hasText('high', 'Priority tag has correct text');
+				.hasText('High', 'Priority tag has correct text');
 		});
 
 		test('it handles unknown module tags gracefully', async function (assert) {
