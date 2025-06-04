@@ -95,7 +95,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
      get onBlur() {
-        return this.args.named.onBlur;
+        return this.args.named.onBlur ?? (() => {});
     }    
 
     /**

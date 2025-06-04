@@ -177,26 +177,27 @@ export default class AppProjectIssuePageController extends PrometheusController.
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'issue',
-                    relatedId: _self.get('model').objectAt(0).get('id')
+                    relatedId: _self.issue.id
                 },
                 headers: upload.store.adapterFor('upload').headers
             };
 
             let response = yield file.upload(options);
             let data = yield response.json();
-            /**
-             *  @todo check for errors
-             */
-            set(upload, 'id', data.data.id);
-            set(upload, 'name', data.data.attributes.name);
-            set(upload, 'fileSize', data.data.attributes.fileSize);
-            set(upload, 'fileType', data.data.attributes.fileType);
-            set(upload, 'fileMime', data.data.attributes.fileMime);
-            set(upload, 'relatedTo', data.data.attributes.relatedTo);
-            set(upload, 'relatedId', data.data.attributes.relatedId);
-            set(upload, 'fileThumbnail', data.data.attributes.fileThumbnail);
+            
+            // Update the upload record with the response data
+            upload.setProperties({
+                id: data.data.id,
+                name: data.data.attributes.name,
+                fileSize: data.data.attributes.fileSize,
+                fileType: data.data.attributes.fileType,
+                fileMime: data.data.attributes.fileMime,
+                fileThumbnail: data.data.attributes.fileThumbnail
+            });
 
-            _self.model.objectAt(0).get('files').pushObject(upload);
+            // Add to the relationship
+            _self.issue.get('files').pushObject(upload);
+
         } catch (e) {
             new Messenger().post({
                 message: _self.intl.t("views.app.issue.detail.file.uploadfailed"),
@@ -320,7 +321,6 @@ export default class AppProjectIssuePageController extends PrometheusController.
     @action deleteFile(file) {
         Logger.debug('App.Project.Issue.PageController->deleteFile');
         let _self = this;
-        Logger.debug(self);
 
         let deleting = new Messenger().post({
             message: htmlSafe(_self.intl.t("views.app.issue.detail.file.delete", { name: file.get('name') })),
@@ -328,13 +328,24 @@ export default class AppProjectIssuePageController extends PrometheusController.
             showCloseButton: true,
             actions: {
                 confirm: {
-                    label: htmlSafe(_self.intl.t("views.app.issue.detail.file.confirmdelete")),
+                    label: htmlSafe(_self.intl.t("views.app.issue.detail.file.confirmdelete")).toString(),
                     action: function () {
-                        // destroy the upload
-                        file.destroyRecord().then(function (e) {
+                        // First remove from the relationship
+                        _self.issue.get('files').removeObject(file);
+                        
+                        // Then destroy the record
+                        file.destroyRecord().then(function () {
                             return deleting.update({
                                 message: _self.intl.t("views.app.issue.detail.file.deleted"),
                                 type: 'success',
+                                actions: false
+                            });
+                        }).catch(() => {
+                            // If destroy fails, add the file back to the relationship
+                            _self.issue.get('files').pushObject(file);
+                            deleting.update({
+                                message: _self.intl.t("views.app.issue.detail.file.deletefailed"),
+                                type: 'error',
                                 actions: false
                             });
                         });
@@ -349,12 +360,9 @@ export default class AppProjectIssuePageController extends PrometheusController.
                             actions: false
                         });
                     }
-                },
-
+                }
             }
         });
-
-        Logger.debug('-App.Project.Issue.PageController->deleteFile');
     }
 
     /**
@@ -437,14 +445,14 @@ export default class AppProjectIssuePageController extends PrometheusController.
 
         // Validate the time log and spentOn
         if (_self._validateLog(newLog)) {
-            newLog.set('issueId', _self.get('model').objectAt(0).get('id'));
+            newLog.set('issueId', _self.get('issue').get('id'));
             newLog.set('context', 'spent');
 
             newLog.save().then(function () {
 
                 let timelog = _self.get('store').createRecord('timelog');
                 _self.set('newTimeLog', timelog);
-                _self.get('model').objectAt(0).get('spent').pushObject(newLog);
+                _self.get('issue').get('spent').pushObject(newLog);
                 new Messenger().post({
                     message: _self.intl.t("views.app.issue.detail.timelog.added"),
                     type: 'success',
@@ -478,14 +486,14 @@ export default class AppProjectIssuePageController extends PrometheusController.
 
         // Validate the time log and spentOn
         if (_self._validateEstimate(newLog)) {
-            newLog.set('issueId', _self.get('model').objectAt(0).get('id'));
+            newLog.set('issueId', _self.issue.id);
             newLog.set('context', 'est');
 
             newLog.save().then(function () {
 
                 let timelog = _self.get('store').createRecord('timelog');
                 _self.set('newTimeLog', timelog);
-                _self.get('model').objectAt(0).get('estimated').pushObject(newLog);
+                _self.issue.estimated.pushObject(newLog);
 
                 new Messenger().post({
                     message: _self.intl.t("views.app.issue.detail.timelog.estimated"),
@@ -792,5 +800,42 @@ export default class AppProjectIssuePageController extends PrometheusController.
         }
         let el = element.querySelector(selectors[type]);
         this.scrollAndHighlight(el, true);
+    }
+
+    /**
+     * Updates the status of an issue
+     * 
+     * @method updateStatus
+     * @param {Prometheus.Models.Issue} issue The issue to update
+     * @param {String} newStatus The new status to set
+     * @public
+     */
+    @action updateStatus(issue, newStatus) {
+        Logger.debug('AppProjectIssuePageController::updateStatus');
+        let _self = this;
+        let translatedStatus = _self.intl.t(`views.app.issue.lists.status.${newStatus}`);
+        let messenger = new Messenger().post({
+            message: _self.intl.t("views.app.issue.detail.statusUpdating", { status: translatedStatus }),
+            type: 'info',
+            showCloseButton: false,
+            hideAfter: false
+        });
+        issue.set('status', newStatus);
+        issue.save().then(() => {
+            messenger.update({
+                message: _self.intl.t("views.app.issue.detail.statusUpdated", { status: translatedStatus }),
+                type: 'success',
+                showCloseButton: true,
+                hideAfter: 3000
+            });
+        }).catch(() => {
+            messenger.update({
+                message: _self.intl.t("views.app.issue.detail.statusUpdateFailed", { status: translatedStatus }),
+                type: 'error',
+                showCloseButton: true,
+                hideAfter: 3000
+            });
+            issue.rollbackAttributes();
+        });
     }
 }

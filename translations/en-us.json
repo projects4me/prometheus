@@ -588,7 +588,7 @@
             "pending": "Pending",
             "deferred": "Deferred",
             "done": "Done",
-            "wont_fix": "Wont't Fix"
+            "wont_fix": "Won't Fix"
           },
           "type.": "Loading ..",
           "type": {
@@ -762,6 +762,9 @@
           "subject": "Subject",
           "description": "Description",
           "status": "Status",
+          "statusUpdated": "Issue status updated to {status}",
+          "statusUpdateFailed": "Failed to update issue to status {status}",
+          "statusUpdating": "Updating issue status to {status} ..",
           "type": "Type",
           "priority": "Priority",
           "milestone": "Milestone",
@@ -902,7 +905,7 @@
             "in_progress": "In Progress",
             "pending": "Pending",
             "done": "Done",
-            "wont_fix": "Wont't Fix",
+            "wont_fix": "Won't Fix",
             "deferred": "Deferred ",
             "feedback": "feedback"
           }
