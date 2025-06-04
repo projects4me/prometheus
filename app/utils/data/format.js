@@ -5,6 +5,7 @@
 import _ from 'lodash';
 import { inject as service } from '@ember/service';
 import { getOwner, setOwner } from '@ember/application';
+import { htmlSafe } from '@ember/template';
 
 /* global require */
 
@@ -37,9 +38,11 @@ export default class Format {
      *
      * @method getSelectList
      * @param {Prometheus.Models.Object} model The model that needs to be converted
-     * @return {Array} list The array list of name and v.alues
+     * @param {Object} map The map of the model
+     * @param {Object} blankOptions The object that contains the isRequired and placeholder
+     * @return {Array} list The array list of name and values
      */
-    getSelectList(model = {}, map, blank) {
+    getSelectList(model = {}, map, blankOptions= {}) {
         if (_.keys(model).length === 0) {
             return [];
         }
@@ -57,8 +60,12 @@ export default class Format {
 
         }
 
-        if (blank) {
-            list.unshift({ label: blank, value: '' });
+        if (blankOptions.isRequired) {
+            let blankPlaceholder = this.intl.t('global.blank');
+            if(blankOptions.placeholder){
+                blankPlaceholder = htmlSafe(blankPlaceholder.replace('blank', blankOptions.placeholder));
+            }
+            list.unshift({ label: blankPlaceholder, value: '' });
         }
         return list;
     }

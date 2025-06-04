@@ -202,7 +202,8 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
     @computed('project.milestones')
     get milestoneList() {
         let milestones = this.project.milestones.sortBy('dateCreated').reverse();
-        return (new format(this)).getSelectList(milestones, false, htmlSafe(this.intl.t('global.blank')).toHTML());
+        let blankPlaceholder = this.intl.t('views.app.milestone.lists.type.backlog');
+        return (new format(this)).getSelectList(milestones, false, {isRequired: true, placeholder: blankPlaceholder});
     }
 
     /**
@@ -334,5 +335,23 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
      */
     @action changedParent(model, field, target) {
         model.set(field, target.id);
+    }
+
+    /**
+     * This function is used to select the milestone for the issue
+     * and set the end date for the issue.
+     *
+     * @method selectMilestone
+     * @param model
+     * @param field
+     */
+    @action selectMilestone(model, field, target) {
+        model.set(field, target.value);
+
+        this.project.milestones.forEach((milestone) => {
+            if (milestone.id === target.value) {
+                model.set('endDate', milestone.endDate);
+            }
+        });
     }
 }

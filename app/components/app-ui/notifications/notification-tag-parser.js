@@ -210,7 +210,8 @@ export default class AppUiNotificationsNotificationTagParserComponent extends Ap
 	 * @public
 	 */
 	renderStatusField(value) {
-		return `<span class="badge ${value}">${value}</span>`;
+		let translatedStatus = this.intl.t(`views.app.issue.lists.status.${value}`);
+		return `<span class="badge ${value}">${translatedStatus}</span>`;
 	}
 
 	/**
@@ -222,7 +223,8 @@ export default class AppUiNotificationsNotificationTagParserComponent extends Ap
 	 * @public
 	 */
 	renderPriorityField(value) {
-		return `<span class="priority-tag ${value}">${value}</span>`;
+		let translatedPriority = this.intl.t(`views.app.issue.lists.priority.${value}`);
+		return `<span class="priority-tag ${value}">${translatedPriority}</span>`;
 	}
 
 	/**

@@ -127,7 +127,7 @@
       "selectedCount": "<strong>(Selected : {count})</strong> "
     },
     "noentry": "No entry found..",
-    "blank": "<span class='disabled-text'>-- blank --</em>",
+    "blank": "<span class=''disabled-text''>-- blank --</span>",
     "oops": "Oops! Something went wrong, please contact the system administrator",
     "ago": "ago",
     "outof": "out of",
@@ -907,7 +907,7 @@
             "done": "Done",
             "wont_fix": "Won't Fix",
             "deferred": "Deferred ",
-            "feedback": "feedback"
+            "feedback": "Feedback"
           }
         }
       },

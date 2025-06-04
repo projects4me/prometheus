@@ -90,11 +90,12 @@ export default class PrometheusCreateController extends PrometheusController {
      *
      * @method save
      * @param {string} schemaName The schema name for which we are saving the model.
+     * @param {Event} event The event object.
      * @param {string} module The module for which we are showing the error. This can be multiple modules in same view/template.
      * @public
      * @todo Handle the situation where we are not using validations
      */
-    @action save(schemaName, module) {
+    @action save(schemaName, event, module) {
         let model = this.model;
 
         const promise = new Promise((resolve, reject) => {
