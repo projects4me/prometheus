@@ -10,9 +10,30 @@
             <div class="box-header with-border">
               <h2 class="box-title">{{issue.issuetype.name}} - #{{issue.issueNumber}} | <span class="issueSubject">{{issue.subject}}</span></h2>
               <div class="box-tools pull-right">
-                <span class="project-status"><span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span></span>
+
+                {{!-- Issue status dropdown --}}
+                <span class="issue-status">
+                  <div class="dropdown">
+                    <span class="badge {{issue.status}}" data-toggle="dropdown">
+                      {{t (concat "views.app.issue.lists.status." issue.status)}}
+                      <i class="fa fa-caret-down"></i>
+                    </span>
+                    <ul class="dropdown-menu">
+                      {{#each this.projectController.issueStatuses as |issuestatus|}}
+                        {{#if (not-eq issuestatus.name issue.status)}}
+                          <li>
+                            <a href="#" {{on "click" (fn this.updateStatus issue issuestatus.name)}}>
+                              <span class="badge {{issuestatus.name}}">{{t (concat "views.app.issue.lists.status." issuestatus.name)}}</span>
+                            </a>
+                          </li>
+                        {{/if}}
+                      {{/each}}
+                    </ul>
+                  </div>
+                </span>
+
+                {{!-- Edit issue button --}}
                 <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" @onClick={{fn this.editIssue issue.issueNumber}} @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title=""><i class="fa fa-gears"></i></AppUi::Button>
               </div>
             </div>
 

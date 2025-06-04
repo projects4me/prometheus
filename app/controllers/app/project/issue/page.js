@@ -793,4 +793,41 @@ export default class AppProjectIssuePageController extends PrometheusController.
         let el = element.querySelector(selectors[type]);
         this.scrollAndHighlight(el, true);
     }
+
+    /**
+     * Updates the status of an issue
+     * 
+     * @method updateStatus
+     * @param {Prometheus.Models.Issue} issue The issue to update
+     * @param {String} newStatus The new status to set
+     * @public
+     */
+    @action updateStatus(issue, newStatus) {
+        Logger.debug('AppProjectIssuePageController::updateStatus');
+        let _self = this;
+        let translatedStatus = _self.intl.t(`views.app.issue.lists.status.${newStatus}`);
+        let messenger = new Messenger().post({
+            message: _self.intl.t("views.app.issue.detail.statusUpdating", { status: translatedStatus }),
+            type: 'info',
+            showCloseButton: false,
+            hideAfter: false
+        });
+        issue.set('status', newStatus);
+        issue.save().then(() => {
+            messenger.update({
+                message: _self.intl.t("views.app.issue.detail.statusUpdated", { status: translatedStatus }),
+                type: 'success',
+                showCloseButton: true,
+                hideAfter: 3000
+            });
+        }).catch(() => {
+            messenger.update({
+                message: _self.intl.t("views.app.issue.detail.statusUpdateFailed", { status: translatedStatus }),
+                type: 'error',
+                showCloseButton: true,
+                hideAfter: 3000
+            });
+            issue.rollbackAttributes();
+        });
+    }
 }

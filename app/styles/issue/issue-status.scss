@@ -1,22 +1,55 @@
 .done,
 .complete {
-    background-color: #5ac594 !important;
+  background-color: #5ac594 !important;
 }
 
 .closed {
-    background-color: #e98a7e;
+  background-color: #e98a7e;
 }
 
 .deferred,
 .pending,
 .feedback {
-    background-color: #f7bf65;
+  background-color: #f7bf65;
 }
 
 .new {
-    background-color: #80b5d3;
+  background-color: #80b5d3;
 }
 
 .in_progress {
-    background-color: $primaryColor;
+  background-color: $primaryColor;
+}
+
+.issue-status {
+  display: inline-block;
+  cursor: pointer;
+  .dropdown-menu {
+    min-width: auto;
+    padding: 0.5rem 0;
+    border-radius: 0.4rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .dropdown-menu li {
+    padding: 0;
+
+    a {
+      padding: 0.8rem 1.5rem;
+      display: block;
+      white-space: nowrap;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+  }
+
+  span {
+    text-transform: uppercase;
+  }
+
+  i {
+    margin-left: 0.5rem;
+  }
 }
