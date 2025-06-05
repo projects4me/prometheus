@@ -4,6 +4,8 @@
 
 import App from "prometheus/routes/app";
 import { inject } from '@ember/service';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 /**
  * The issues route
@@ -73,15 +75,16 @@ export default App.extend({
     */
     setupController(controller, model) {
         Logger.debug('AppProjectIssuePageRoute::setupController');
-
+        let issue = model.issue.objectAt(0);
+        let project = model.project.objectAt(0);
         let _self = this;
-        _self.setupActivities(controller, model);
+        _self.setupActivities(controller, issue);
         let timelog = _self.store.createRecord('timelog');
 
         controller.set('newTimeLog', timelog);
-        controller.set('model', model);
+        controller.set('issue', issue);
+        controller.set('issueStatuses', project?.issuestatuses);
         Logger.debug('-AppProjectIssuePageRoute::setupController');
-
     },
 
     /**
@@ -101,7 +104,21 @@ export default App.extend({
             limit: -1,
         };
 
-        return _self.get('store').query('issue', options).catch((error) => {
+        let _projectOptions = {
+            query: `(Project.id : ${projectId})`,
+            rels: 'issuestatuses',
+            limit: -1,
+        }; 
+
+        let project = _self.get('store').query('project', _projectOptions);
+        let issue = _self.get('store').query('issue', options);
+
+        return hashSettled({
+            project: project,
+            issue: issue
+        }).then(function (results) {
+            return extractHashSettled(results);
+        }).catch((error) => {
             _self.errorManager.handleError(error, {
                 moduleName: 'issue'
             })
@@ -121,9 +138,9 @@ export default App.extend({
         controller.set('activities', activities);
         Logger.debug('AppProjectIssuePageRoute::setupActivities');
 
-        if (model.getEach('activities')[0] !== undefined) {
+        if (model.activities !== undefined) {
             // Group the activities with respect to the dateCreated
-            model.getEach('activities')[0].forEach(function (activity) {
+            model.activities.forEach(function (activity) {
                 let dateCreated = activity.get('dateCreated').substring(0, 10);
                 if (activities[dateCreated] !== undefined) {
                     activities[dateCreated]['data'].push(activity);

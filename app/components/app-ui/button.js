@@ -58,6 +58,7 @@ export default class AppUiButtonComponent extends Component {
             !disableOnSuccess && (this.disabled = false);
         } catch (e) {
             this.disabled = false;
+            console.error(e);
         }
     }
 }
