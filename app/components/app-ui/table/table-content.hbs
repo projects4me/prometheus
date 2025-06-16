@@ -1,0 +1,55 @@
+<table class='table table-hover table-striped'>
+	<thead>
+		<tr>
+			{{#each @columns as |column|}}
+				<th>{{column.label}}</th>
+			{{/each}}
+		</tr>
+	</thead>
+
+	<tbody>
+		{{#if (has-block 'body')}}
+			{{yield to='body'}}
+		{{else}}
+			{{#if @data.length}}
+				{{#each @data as |item|}}
+					<tr>
+						{{#each @columns as |column|}}
+							<td
+								class='{{column.className}}
+									{{if
+										column.valueClass
+										(get item column.valueClass)
+									}}'
+							>
+								{{#if column.component}}
+									{{component column.component item=item}}
+								{{else}}
+									{{#if column.valueTranslationKey}}
+										{{t
+											(concat
+												column.valueTranslationKey
+												'.'
+												(get item column.valueKey)
+											)
+										}}
+									{{else}}
+										{{get item column.valueKey}}
+									{{/if}}
+								{{/if}}
+							</td>
+						{{/each}}
+					</tr>
+				{{/each}}
+			{{else}}
+				<tr>
+					<td colspan='100%'>
+						<Exceptions::NothingFound
+							@description={{@emptyStateMessage}}
+						/>
+					</td>
+				</tr>
+			{{/if}}
+		{{/if}}
+	</tbody>
+</table>

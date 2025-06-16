@@ -1,7 +1,7 @@
 @setupApplicationTest
-Feature: Dashboard - Issue Today | check list of issues
+Feature: Dashboard - Recent Issues | check list of issues
 
-  Scenario: Checking issues list on Issue Today Box
+  Scenario: Checking issues list on Recent Issues Box
 
     Given There is no pre-existing data
     And default scenario is loaded

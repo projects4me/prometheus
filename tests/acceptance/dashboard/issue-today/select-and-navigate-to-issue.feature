@@ -1,5 +1,5 @@
 @setupApplicationTest
-Feature: Dashboard - Issue Today | select and navigate to issue
+Feature: Dashboard - Recent Issues | select and navigate to issue
 
   Scenario: Select an issue and navigate to that selected issue
 
@@ -14,7 +14,7 @@ Feature: Dashboard - Issue Today | select and navigate to issue
     -------------
     And Issue 3 has subject UniqueIssue
     When User navigates to app
-    And User searches for UniqueIssue inside Issue Today box
+    And User searches for UniqueIssue inside Recent Issues box
     And User clicks on UniqueIssue
     Then User should be in app/project/project_1/issue/3 page
     And Issue subject is UniqueIssue

@@ -4,8 +4,8 @@ export const then = function () {
     return [
         {
             "There are $issueCount issues present on dashboard": (assert, ctx) => async function (issueCount) {
-                assert.dom('.box.box-primary.issues-today').exists('Issue Today Box rendered');
-                assert.dom('.box.box-primary.issues-today tbody tr[role="row"]').exists({ count: parseInt(issueCount) }, '10 issues are present inside Issue Today box');
+                assert.dom('[data-recent-issues-table]').exists('Recent Issues Box rendered');
+                assert.dom('[data-recent-issues-table] tbody tr').exists({ count: parseInt(issueCount) }, '10 issues are present inside Recent Issues box');
             }
         }
     ];

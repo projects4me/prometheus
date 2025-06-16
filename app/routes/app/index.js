@@ -67,17 +67,14 @@ export default App.extend({
         _.forEach(widgets,function(widget){
             Promises[widget] = _self.store.query(widgetSettings[widget].model,widgetSettings[widget].options)
         });
-
+        _self.set('widgetSettings', widgetSettings);
         Logger.debug(_self);
         Logger.debug(widgetSettings);
         Logger.debug(widgets);
         Logger.debug('-Prometheus.Routes.Index::afterModel');
 
         return hash(Promises).then(function(results){
-            Logger.info(results);
-            _.forEach(widgets,function(widget){
-                _self.set(widget,results[widget]);
-            })
+            _self.set('widgets', results);
         }).catch((error) =>{
             _self.errorManager.handleError(error);
         });
@@ -93,11 +90,8 @@ export default App.extend({
      */
     setupController(controller){
         let _self = this;
-        let widgets = _self.get('widgets');
-        controller.set('widgets',widgets);
-        _.forEach(widgets,function(widget){
-            controller.set(widget,_self.get(widget));
-        });
+        controller.set('widgets',_self.widgets);
+        controller.set('widgetSettings',_self.widgetSettings);
     },
 
     /**
@@ -113,6 +107,7 @@ export default App.extend({
         let _self = this;
         let intl = _self.intl;
         let widgetSettings = MD.create().getViewMeta('Dashboard','widgets',intl);
+        let LoadingAssetsController = _self.controllerFor('app.loading-assets');
 
         _.forEach(widgetSettings,function(widgetSetting,idx){
             let query = widgetSettings[idx].options.query;
@@ -128,12 +123,29 @@ export default App.extend({
             query = _.replace(query,'```TOMORROW_START```',moment.utc().add(1,'days').startOf('day').format('YYYY-MM-DD HH:mm:ss'));
             query = _.replace(query,'```TOMORROW_END```',moment.utc().add(1,'days').endOf('day').format('YYYY-MM-DD HH:mm:ss'));
             query = _.replace(query,'```NOW```',moment.utc().format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```MY_PROJECTS```',_self.getProjectIds(LoadingAssetsController.get('projects')));
             widgetSettings[idx].options.query = query;
             Logger.debug(query);
         });
 
         Logger.debug('-_getWidgetSettings');
         return widgetSettings;
-    }
+    },
 
+    /**
+     * Prepare comma separated project ids from the provided projects array.
+     *
+     * @method getProjectIds
+     * @param {Array} projects - The array of projects
+     * @return {string} A comma-separated list of project IDs
+     * @public
+     */
+    getProjectIds(projects) {
+        let projectIds = '';
+        projects.forEach(function(project){
+            projectIds += `'${project.id}',`;
+        });
+        projectIds = projectIds.slice(0, -1);
+        return projectIds;
+    }
 });

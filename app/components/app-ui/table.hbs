@@ -1,0 +1,71 @@
+<div class='box box-primary list-view' ...attributes>
+	<div class='box-header with-border'>
+		{{#if @header}}
+			<h3 class='box-title'>{{@header}}</h3>
+		{{/if}}
+		{{#if this.showSearch}}
+			<div class='box-tools pull-right filters'>
+				<label for='table-search' class='sr-only'>{{t 'views.app.components.table.searchPlaceholder'}}</label>
+				<Input
+					@value={{this.query}}
+					{{on 'keyup' this.handleSearch}}
+					name='query'
+					id='table-search'
+					autocomplete='off'
+					placeholder={{this.searchPlaceholder}}
+				/>
+			</div>
+		{{/if}}
+	</div>
+
+	<div class='box-body no-padding'>
+		{{#if @useLazyLoading}}
+			<InfiniteScroll
+				@onLoadMore={{this.loadMore}}
+				@threshold={{150}}
+				@containerClass='table-responsive list-view'
+				@loadingText={{t 'views.app.components.table.loadingText'}}
+				@useLoadMoreButton={{true}}
+				@useScrollLoading={{false}}
+			>
+        {{#if (has-block 'body')}}
+          <AppUi::Table::TableContent
+            @columns={{this.columns}}
+            @data={{this.data}}
+            @emptyStateMessage={{@emptyStateMessage}}
+          >
+          <:body>
+            {{yield to='body'}}
+          </:body>
+				</AppUi::Table::TableContent>
+        {{else}}
+          <AppUi::Table::TableContent
+            @columns={{this.columns}}
+            @data={{this.data}}
+            @emptyStateMessage={{@emptyStateMessage}}
+          />        
+        {{/if}}
+			</InfiniteScroll>
+		{{else}}
+			<div class='table-responsive list-view'>
+				{{#if (has-block 'body')}}
+          <AppUi::Table::TableContent
+            @columns={{this.columns}}
+            @data={{this.data}}
+            @emptyStateMessage={{@emptyStateMessage}}
+          >
+          <:body>
+            {{yield to='body'}}
+            </:body>
+          </AppUi::Table::TableContent>
+        {{else}}
+          <AppUi::Table::TableContent
+            @columns={{this.columns}}
+            @data={{this.data}}
+            @emptyStateMessage={{@emptyStateMessage}}
+          />
+        {{/if}}
+			</div>
+		{{/if}}
+	</div>
+</div>

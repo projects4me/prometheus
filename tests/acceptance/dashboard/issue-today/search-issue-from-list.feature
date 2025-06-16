@@ -1,7 +1,7 @@
 @setupApplicationTest
-Feature: Dashboard - Issue Today | search issue from list
+Feature: Dashboard - Recent Issues | search issue from list
 
-  Scenario: Searching an issue that exists inside Issue Today Box
+  Scenario: Searching an issue that exists inside Recent Issues Box
 
     Given There is no pre-existing data
     And default scenario is loaded
@@ -14,10 +14,10 @@ Feature: Dashboard - Issue Today | search issue from list
     --------------
     And Issue 4 has subject UniqueIssue
     When User navigates to app
-    And User searches for UniqueIssue inside Issue Today box
-    Then Issue having subject UniqueIssue exists inside Issue Today Box
+    And User searches for UniqueIssue inside Recent Issues box
+    Then Issue having subject UniqueIssue exists inside Recent Issues Box
 
-  Scenario: Searching an issue that doesn't exists inside Issue Today Box
+  Scenario: Searching an issue that doesn't exists inside Recent Issues Box
 
     Given There is no pre-existing data
     And default scenario is loaded
@@ -29,5 +29,5 @@ Feature: Dashboard - Issue Today | search issue from list
     | 10         |
     --------------
     When User navigates to app
-    And User searches for UniqueIssue inside Issue Today box
-    Then Issue having subject UniqueIssue not-exists inside Issue Today Box
+    And User searches for UniqueIssue inside Recent Issues box
+    Then Issue having subject UniqueIssue not-exists inside Recent Issues Box

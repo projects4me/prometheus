@@ -443,41 +443,34 @@ export default Object.extend({
         },
         Dashboard:{
             widgets: {
-                issuesToday: {
-                    /**
-                     * @example
-                     *      ``` javascript
-                     *      options: {
-                     *          fields: "Project.id,Project.name",
-                     *          query: "(Project.id : "+projectId+")",
-                     *          rels : 'members',
-                     *          sort: "conversations.dateModified",
-                     *          order: 'ASC',
-                     *          limit: -1
-                     *      }
-                     *      ```
-                     */
+                recentIssues: {
                     model: 'issue',
                     options: {
-//                        query: "((Issue.dateModified BETWEEN ```TODAY_START``` AND ```TODAY_END```) AND (Issue.assignee : ```ME```))",
-                        query: "((Issue.assignee : ```ME```) AND ((Issue.startDate BETWEEN ```TODAY_START``` AND ```TODAY_END``` ) OR (issuestatus.name : in_progress)))",
-                        rels : 'createdBy,modifiedBy,project,issuestatus',
+                        query: "((Issue.assignee : ```ME```))",
+                        rels : 'project',
                         sort: "Issue.dateModified",
                         order: 'ASC',
-                        limit: -1
-                    }
+                        limit: 5
+                    },
+                    fields: ['issueNumber', 'subject', 'status', {label: 'project', valueKey: 'project.name'}, 'startDate', 'endDate'],
+                    translationKey: 'views.app.issue.fields',
+                    searchFields: ['issueNumber', 'subject', 'project.name'],
+                    useLazyLoading: true
                 },
-                weeklyMilestones: {
+                activeMilestones: {
                     model: 'milestone',
                     options: {
-                        query: "((Milestone.projectId CONTAINS ```MY_PROJECTS```) AND (Milestone.endDate BETWEEN ```WEEK_START``` AND ```WEEK_END```))",
-                        rels : 'issues',
+                        query: "((Milestone.projectId CONTAINS ```MY_PROJECTS```) AND (Milestone.status : in_progress))",
+                        rels : 'issues,project',
                         sort: "issues.dateModified",
                         order: 'ASC',
-                        limit: -1
-                    }
+                        limit: 5
+                    },
+                    fields: ['name', {label: 'project', valueKey: 'project.name'}, 'status', 'startDate', 'endDate'],
+                    translationKey: 'views.app.milestone.fields',
+                    searchFields: ['name', 'project.name'],
+                    useLazyLoading: true
                 }
-
             }
         }
     },
