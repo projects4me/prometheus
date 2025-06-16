@@ -1,0 +1,216 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="gantt-chart" data-test-gantt-chart>
+  {{!-- Gantt Chart Header --}}
+  <div class="gantt-chart__header">
+    <div class="gantt-chart__controls">
+      <div class="gantt-chart__time-scale">
+        <label class="gantt-chart__label">{{t "gantt.timeScale"}}</label>
+        <select 
+          class="gantt-chart__select" 
+          {{on "change" this.changeTimeScale}}
+          data-test-time-scale-select
+        >
+          <option value="days" selected={{eq this.timeScale "days"}}>
+            {{t "gantt.days"}}
+          </option>
+          <option value="weeks" selected={{eq this.timeScale "weeks"}}>
+            {{t "gantt.weeks"}}
+          </option>
+          <option value="months" selected={{eq this.timeScale "months"}}>
+            {{t "gantt.months"}}
+          </option>
+        </select>
+      </div>
+      
+      <div class="gantt-chart__zoom">
+        <button 
+          type="button" 
+          class="gantt-chart__zoom-btn gantt-chart__zoom-btn--out"
+          {{on "click" (fn this.changeTimeScale "months")}}
+          data-test-zoom-out
+        >
+          <i class="fa fa-search-minus"></i>
+        </button>
+        <button 
+          type="button" 
+          class="gantt-chart__zoom-btn gantt-chart__zoom-btn--in"
+          {{on "click" (fn this.changeTimeScale "days")}}
+          data-test-zoom-in
+        >
+          <i class="fa fa-search-plus"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="gantt-chart__info">
+      <span class="gantt-chart__task-count">
+        {{t "gantt.taskCount" count=@issues.length}}
+      </span>
+      {{#if this.selectedTask}}
+        <span class="gantt-chart__selected-task">
+          {{t "gantt.selectedTask" task=this.selectedTask.subject}}
+        </span>
+      {{/if}}
+    </div>
+  </div>
+
+  {{!-- Main Gantt Chart Container --}}
+  <div class="gantt-chart__container" data-test-gantt-container>
+    {{!-- Task List Sidebar --}}
+    <div class="gantt-chart__sidebar">
+      <div class="gantt-chart__sidebar-header">
+        <span class="gantt-chart__sidebar-title">{{t "gantt.tasks"}}</span>
+      </div>
+      
+      <div class="gantt-chart__task-list">
+        {{#each this.taskBars as |taskBar index|}}
+          <div 
+            class="gantt-chart__task-row {{if (eq this.selectedTask taskBar.issue) 'gantt-chart__task-row--selected'}}"
+            {{on "click" (fn this.selectTask taskBar.issue)}}
+            data-test-task-row={{index}}
+          >
+            <div class="gantt-chart__task-info">
+              <span class="gantt-chart__task-subject">
+                {{taskBar.issue.subject}}
+              </span>
+              <span class="gantt-chart__task-meta">
+                {{#if taskBar.issue.assignedTo}}
+                  <i class="fa fa-user"></i>
+                  {{get-username taskBar.issue.assignedTo}}
+                {{/if}}
+                <span class="gantt-chart__task-priority gantt-chart__task-priority--{{taskBar.issue.priority}}">
+                  {{taskBar.issue.priority}}
+                </span>
+              </span>
+            </div>
+            
+            <div class="gantt-chart__task-progress">
+              <div class="gantt-chart__progress-bar">
+                <div 
+                  class="gantt-chart__progress-fill"
+                  style="width: {{taskBar.progress}}%"
+                ></div>
+              </div>
+              <span class="gantt-chart__progress-text">{{taskBar.progress}}%</span>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+
+    {{!-- Timeline and Chart Area --}}
+    <div class="gantt-chart__timeline-container">
+      {{!-- Timeline Header --}}
+      <GanttChart::GanttTimeline
+        @columns={{this.timelineColumns}}
+        @onDateSelect={{@onDateSelect}}
+        @onDateHover={{@onDateHover}}
+        data-test-gantt-timeline
+      />
+
+      {{!-- Chart Area --}}
+      <div class="gantt-chart__chart-area">
+        {{!-- Background Grid --}}
+        <GanttChart::GanttGrid
+          @columns={{this.timelineColumns}}
+          @taskCount={{this.taskBars.length}}
+          @totalWidth={{this.totalTimelineWidth}}
+          @totalHeight={{this.totalChartHeight}}
+          data-test-gantt-grid
+        />
+
+        {{!-- Task Bars --}}
+        <div class="gantt-chart__tasks">
+          {{#each this.taskBars as |taskBar index|}}
+            <div 
+              class="gantt-chart__task-container"
+              style="top: {{mul index 40}}px;"
+              data-test-task-container={{index}}
+            >
+              <GanttChart::GanttTaskBar
+                @taskBar={{taskBar}}
+                @onTaskClick={{fn this.selectTask}}
+                @onTaskEdit={{@onTaskEdit}}
+                @onTaskHover={{@onTaskHover}}
+                @onDragStart={{this.startDrag}}
+                @onDrag={{@onTaskDrag}}
+                @onDragEnd={{@onTaskDragEnd}}
+                @onResizeStart={{@onResizeStart}}
+                @onResize={{@onTaskResize}}
+                @onResizeEnd={{@onResizeEnd}}
+                data-test-task-bar={{index}}
+              />
+            </div>
+          {{/each}}
+        </div>
+
+        {{!-- Dependency Lines --}}
+        <GanttChart::GanttDependencies
+          @taskBars={{this.taskBars}}
+          @issues={{@issues}}
+          @totalWidth={{this.totalTimelineWidth}}
+          @totalHeight={{this.totalChartHeight}}
+          data-test-gantt-dependencies
+        />
+
+        {{!-- Milestone Markers --}}
+        {{#if @milestones}}
+          <div class="gantt-chart__milestones">
+            {{#each @milestones as |milestone|}}
+              {{#if milestone.startDate}}
+                <div 
+                  class="gantt-chart__milestone"
+                  style="left: {{this.getMilestonePosition milestone}}px;"
+                  title="{{milestone.name}} - {{milestone.startDate}}"
+                  data-test-milestone={{milestone.id}}
+                >
+                  <div class="gantt-chart__milestone-marker"></div>
+                  <span class="gantt-chart__milestone-label">{{milestone.name}}</span>
+                </div>
+              {{/if}}
+            {{/each}}
+          </div>
+        {{/if}}
+
+        {{!-- Today Line --}}
+        <div 
+          class="gantt-chart__today-line"
+          style="left: {{this.todayLinePosition}}px;"
+          data-test-today-line
+        ></div>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Loading State --}}
+  {{#if @isLoading}}
+    <div class="gantt-chart__loading" data-test-gantt-loading>
+      <div class="gantt-chart__spinner"></div>
+      <span>{{t "gantt.loading"}}</span>
+    </div>
+  {{/if}}
+
+  {{!-- Empty State --}}
+  {{#if (and (not @isLoading) (not @issues.length))}}
+    <div class="gantt-chart__empty" data-test-gantt-empty>
+      <div class="gantt-chart__empty-icon">
+        <i class="fa fa-calendar-o"></i>
+      </div>
+      <h3 class="gantt-chart__empty-title">{{t "gantt.noTasks"}}</h3>
+      <p class="gantt-chart__empty-description">{{t "gantt.noTasksDescription"}}</p>
+      {{#if @onCreateTask}}
+        <button 
+          type="button" 
+          class="btn btn-primary gantt-chart__create-task-btn"
+          {{on "click" @onCreateTask}}
+          data-test-create-task
+        >
+          {{t "gantt.createFirstTask"}}
+        </button>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>

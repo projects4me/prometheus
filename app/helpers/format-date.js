@@ -2,54 +2,123 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import { inject as service } from '@ember/service';
-import Helper from '@ember/component/helper';
+import { helper } from '@ember/component/helper';
 
 /**
- * Formats a date string according to the specified format.
- *
- * @class FormatDateHelper
- * @namespace Prometheus.Helpers
- * @extends Helper
- * @author Hammad Hassan <gollomer@gmail.com>
+ * Helper to format dates in a consistent way
+ * 
+ * @function formatDate
+ * @param {Array} params - Array containing the date and optional format
+ * @param {Object} hash - Hash containing options
+ * @return {String} Formatted date string
  */
-export default class FormatDateHelper extends Helper {
-	/**
-	 * The current authenticated user of the application.
-	 *
-	 * @property currentUser
-	 * @type Ember.Service
-	 * @for FormatDateHelper
-	 */
-	@service currentUser;
+export function formatDate([date, format], hash = {}) {
+  if (!date) {
+    return '';
+  }
 
-	/**
-	 * Computes the formatted date string
-	 *
-	 * @param {Array} _positional - Unused positional parameters.
-	 * @param {Object} options - The options object.
-	 * @param {string|Date} options.date - The date to format.
-	 * @param {string} [options.format="DD MMM 'YY"] - The format string to use (follows Moment.js format).
-	 * @param {boolean} [options.localTime=false] - If true, converts UTC date to local timezone before formatting.
-	 * @param {boolean} [options.humanize=false] - If true, returns a relative time string (e.g. "2 days ago").
-	 * @returns {string} The formatted date string or empty string if date is undefined.
-	 */
-	compute([], { date, format = "DD MMM 'YY", localTime = false, humanize = false }) {
-		let formattedDate = '';
-		let userTimezone = this.currentUser.user.timezone;
-		let momentDate;
+  let dateObj;
+  
+  // Handle different date input types
+  if (date instanceof Date) {
+    dateObj = date;
+  } else if (typeof date === 'string') {
+    dateObj = new Date(date);
+  } else if (typeof date === 'number') {
+    dateObj = new Date(date);
+  } else {
+    return '';
+  }
 
-		if (date !== undefined) {
-			formattedDate = moment(date).format(format);
-			if (localTime) {
-				momentDate = moment.utc(date).tz(userTimezone);
-			} else {
-				momentDate = moment(date);
-			}
-			// Use fromNow() for humanized format, otherwise use standard format
-			formattedDate = humanize ? momentDate.fromNow() : momentDate.format(format);
-		}
+  // Check if date is valid
+  if (isNaN(dateObj.getTime())) {
+    return '';
+  }
 
-		return formattedDate;
-	}
+  // Use provided format or default format
+  const formatString = format || hash.format || 'short';
+
+  try {
+    switch (formatString) {
+      case 'short':
+        return dateObj.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+      
+      case 'long':
+        return dateObj.toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      
+      case 'medium':
+        return dateObj.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      
+      case 'iso':
+        return dateObj.toISOString().split('T')[0];
+      
+      case 'time':
+        return dateObj.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      
+      case 'datetime':
+        return dateObj.toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      
+      case 'relative':
+        return getRelativeTime(dateObj);
+      
+      default:
+        // Try to use the format string as a locale string option
+        return dateObj.toLocaleDateString('en-US');
+    }
+  } catch (error) {
+    console.warn('Error formatting date:', error);
+    return dateObj.toLocaleDateString();
+  }
 }
+
+/**
+ * Get relative time string (e.g., "2 days ago", "in 3 hours")
+ * 
+ * @function getRelativeTime
+ * @param {Date} date - The date to compare
+ * @return {String} Relative time string
+ */
+function getRelativeTime(date) {
+  const now = new Date();
+  const diffMs = date.getTime() - now.getTime();
+  const diffSeconds = Math.floor(diffMs / 1000);
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+
+  if (Math.abs(diffDays) >= 1) {
+    return rtf.format(diffDays, 'day');
+  } else if (Math.abs(diffHours) >= 1) {
+    return rtf.format(diffHours, 'hour');
+  } else if (Math.abs(diffMinutes) >= 1) {
+    return rtf.format(diffMinutes, 'minute');
+  } else {
+    return rtf.format(diffSeconds, 'second');
+  }
+}
+
+export default helper(formatDate);

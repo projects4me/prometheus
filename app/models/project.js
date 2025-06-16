@@ -329,6 +329,150 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    hasIssuetypes: attr('string', { defaultValue: true })
+    hasIssuetypes: attr('string', { defaultValue: true }),
+
+    /**
+     * Get all issues that have valid start and end dates for Gantt chart
+     *
+     * @property ganttIssues
+     * @type Array
+     * @for Project
+     * @computed
+     */
+    get ganttIssues() {
+        if (!this.issues) {
+            return [];
+        }
+
+        return this.issues.filter(issue => {
+            return issue.startDate && issue.startDate.length > 0;
+        }).sort((a, b) => {
+            const dateA = new Date(a.startDate);
+            const dateB = new Date(b.startDate);
+            return dateA - dateB;
+        });
+    },
+
+    /**
+     * Calculate project timeline start date based on earliest issue
+     *
+     * @property timelineStartDate
+     * @type Date
+     * @for Project
+     * @computed
+     */
+    get timelineStartDate() {
+        const projectStart = this.startDate ? new Date(this.startDate) : null;
+        const issueStartDates = this.ganttIssues
+            .map(issue => new Date(issue.startDate))
+            .filter(date => !isNaN(date.getTime()));
+
+        if (issueStartDates.length === 0) {
+            return projectStart || new Date();
+        }
+
+        const earliestIssueDate = new Date(Math.min(...issueStartDates));
+        
+        if (projectStart) {
+            return projectStart < earliestIssueDate ? projectStart : earliestIssueDate;
+        }
+        
+        return earliestIssueDate;
+    },
+
+    /**
+     * Calculate project timeline end date based on latest issue
+     *
+     * @property timelineEndDate
+     * @type Date
+     * @for Project
+     * @computed
+     */
+    get timelineEndDate() {
+        const projectEnd = this.endDate ? new Date(this.endDate) : null;
+        const issueEndDates = this.ganttIssues
+            .map(issue => new Date(issue.endDate || issue.startDate))
+            .filter(date => !isNaN(date.getTime()));
+
+        if (issueEndDates.length === 0) {
+            return projectEnd || new Date();
+        }
+
+        const latestIssueDate = new Date(Math.max(...issueEndDates));
+        
+        if (projectEnd) {
+            return projectEnd > latestIssueDate ? projectEnd : latestIssueDate;
+        }
+        
+        return latestIssueDate;
+    },
+
+    /**
+     * Calculate overall project progress based on issues
+     *
+     * @property overallProgress
+     * @type Number
+     * @for Project
+     * @computed
+     */
+    get overallProgress() {
+        const validIssues = this.ganttIssues;
+        
+        if (validIssues.length === 0) {
+            return 0;
+        }
+
+        const totalProgress = validIssues.reduce((sum, issue) => {
+            return sum + (issue.progressPercentage || 0);
+        }, 0);
+
+        return Math.round(totalProgress / validIssues.length);
+    },
+
+    /**
+     * Get critical path issues (longest sequence of dependent tasks)
+     *
+     * @property criticalPathIssues
+     * @type Array
+     * @for Project
+     * @computed
+     */
+    get criticalPathIssues() {
+        const issues = this.ganttIssues;
+        const criticalPath = [];
+        
+        // Simple critical path calculation
+        // In a full implementation, this would use proper CPM algorithm
+        issues.forEach(issue => {
+            if (issue.dependencyIds.length === 0) {
+                // Starting tasks (no dependencies)
+                criticalPath.push(issue);
+            }
+        });
+
+        return criticalPath;
+    },
+
+    /**
+     * Get project milestones sorted by date
+     *
+     * @property sortedMilestones
+     * @type Array
+     * @for Project
+     * @computed
+     */
+    get sortedMilestones() {
+        if (!this.milestones) {
+            return [];
+        }
+
+        return this.milestones
+            .filter(milestone => milestone.startDate || milestone.endDate)
+            .sort((a, b) => {
+                const dateA = new Date(a.startDate || a.endDate);
+                const dateB = new Date(b.startDate || b.endDate);
+                return dateA - dateB;
+            });
+    }
 
 });

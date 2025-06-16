@@ -1,0 +1,124 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Gantt Grid Component Styles */
+
+.gantt-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  
+  &__container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  &__line {
+    position: absolute;
+    background-color: var(--gantt-grid-line-color);
+    
+    &--vertical {
+      width: 1px;
+      
+      &.gantt-grid__line--today {
+        background-color: var(--gantt-today-line-color);
+        width: 2px;
+        z-index: 2;
+      }
+      
+      &.gantt-grid__line--weekend {
+        background-color: rgba(149, 165, 166, 0.3);
+      }
+      
+      &.gantt-grid__line--past {
+        opacity: 0.5;
+      }
+    }
+    
+    &--horizontal {
+      height: 1px;
+      
+      &.gantt-grid__line--alternate {
+        background-color: rgba(149, 165, 166, 0.1);
+        height: var(--gantt-row-height);
+        background-color: rgba(248, 249, 250, 0.5);
+      }
+    }
+  }
+  
+  &__column-bg {
+    position: absolute;
+    top: 0;
+    background-color: transparent;
+    transition: var(--gantt-transition);
+    
+    &--weekend {
+      background-color: var(--gantt-weekend-bg);
+    }
+    
+    &--today {
+      background-color: var(--gantt-today-bg);
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .gantt-grid {
+    &__line {
+      &--vertical {
+        &.gantt-grid__line--today {
+          width: 1px;
+        }
+      }
+    }
+  }
+}
+
+/* Print styles */
+@media print {
+  .gantt-grid {
+    &__line {
+      &--vertical {
+        &.gantt-grid__line--today {
+          background-color: #000000 !important;
+        }
+      }
+    }
+    
+    &__column-bg {
+      &--weekend,
+      &--today {
+        background-color: transparent !important;
+      }
+    }
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .gantt-grid {
+    &__line {
+      background-color: #000000;
+      
+      &--vertical {
+        &.gantt-grid__line--today {
+          background-color: #000000;
+        }
+      }
+    }
+    
+    &__column-bg {
+      &--weekend,
+      &--today {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="gantt-dependencies" data-test-gantt-dependencies>
+  {{#if this.dependencyPaths.length}}
+    <svg 
+      class="gantt-dependencies__svg"
+      viewBox="{{this.svgViewBox}}"
+      width="{{@totalWidth}}"
+      height="{{@totalHeight}}"
+      data-test-dependencies-svg
+    >
+      {{!-- Define arrow marker for dependency lines --}}
+      <defs>
+        <marker 
+          id="arrowhead" 
+          markerWidth="10" 
+          markerHeight="7" 
+          refX="9" 
+          refY="3.5" 
+          orient="auto"
+        >
+          <polygon 
+            points="0 0, 10 3.5, 0 7" 
+            style="{{html-safe (this.arrowMarkerStyle | object-to-style)}}"
+          />
+        </marker>
+        
+        {{!-- Critical path arrow marker --}}
+        <marker 
+          id="arrowhead-critical" 
+          markerWidth="10" 
+          markerHeight="7" 
+          refX="9" 
+          refY="3.5" 
+          orient="auto"
+        >
+          <polygon 
+            points="0 0, 10 3.5, 0 7" 
+            style="fill: #e74c3c; stroke: #e74c3c;"
+          />
+        </marker>
+      </defs>
+      
+      {{!-- Dependency paths --}}
+      {{#each this.dependencyPaths as |path|}}
+        <g class="gantt-dependencies__path-group" data-test-dependency-path>
+          {{!-- Main dependency line --}}
+          <path 
+            d="{{path.pathString}}"
+            class="{{this.getPathClasses path}}"
+            style="{{html-safe (this.getPathStyle path | object-to-style)}}"
+            data-test-dependency-line
+          >
+            <title>
+              {{path.fromIssue.subject}} → {{path.toIssue.subject}}
+            </title>
+          </path>
+          
+          {{!-- Arrow head --}}
+          <path 
+            d="{{path.arrowPath}}"
+            class="gantt-dependencies__arrow {{if (this.isCriticalPath path) 'gantt-dependencies__arrow--critical'}}"
+            style="{{html-safe (this.getPathStyle path | object-to-style)}}"
+            data-test-dependency-arrow
+          />
+          
+          {{!-- Connection points for visual feedback --}}
+          <circle 
+            cx="{{path.startX}}" 
+            cy="{{path.startY}}" 
+            r="3"
+            class="gantt-dependencies__connection-point gantt-dependencies__connection-point--start"
+            data-test-connection-start
+          />
+          <circle 
+            cx="{{path.endX}}" 
+            cy="{{path.endY}}" 
+            r="3"
+            class="gantt-dependencies__connection-point gantt-dependencies__connection-point--end"
+            data-test-connection-end
+          />
+        </g>
+      {{/each}}
+    </svg>
+  {{/if}}
+</div>

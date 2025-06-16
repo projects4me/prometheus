@@ -1,0 +1,33 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="gantt-grid" data-test-gantt-grid>
+  {{!-- Background Grid Container --}}
+  <div 
+    class="gantt-grid__container"
+    style="width: {{this.totalWidth}}px; height: {{this.totalHeight}}px;"
+  >
+    {{!-- Grid Lines --}}
+    {{#each this.gridLines as |line|}}
+      <div 
+        class="{{this.getLineClasses line}}"
+        style="{{html-safe (this.getLineStyle line | object-to-style)}}"
+        data-test-grid-line={{line.type}}
+      ></div>
+    {{/each}}
+    
+    {{!-- Column Backgrounds --}}
+    {{#each @columns as |column index|}}
+      <div 
+        class="gantt-grid__column-bg {{if (this.isWeekend column) 'gantt-grid__column-bg--weekend'}} {{if (this.isToday column) 'gantt-grid__column-bg--today'}}"
+        style="
+          left: {{mul index column.width}}px;
+          width: {{column.width}}px;
+          height: {{this.totalHeight}}px;
+        "
+        data-test-column-bg={{index}}
+      ></div>
+    {{/each}}
+  </div>
+</div>

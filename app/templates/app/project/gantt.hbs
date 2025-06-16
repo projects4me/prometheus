@@ -1,0 +1,532 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="project-gantt" data-test-project-gantt>
+  {{!-- Page Header --}}
+  <div class="project-gantt__header">
+    <div class="project-gantt__title-section">
+      <h1 class="project-gantt__title">
+        <i class="fa fa-bar-chart"></i>
+        {{t "gantt.title"}} - {{this.model.project.name}}
+      </h1>
+      
+      {{#if this.projectProgress}}
+        <div class="project-gantt__progress-summary">
+          <div class="progress-summary">
+            <div class="progress-summary__item">
+              <span class="progress-summary__label">{{t "gantt.totalTasks"}}</span>
+              <span class="progress-summary__value">{{this.projectProgress.total}}</span>
+            </div>
+            <div class="progress-summary__item">
+              <span class="progress-summary__label">{{t "gantt.completed"}}</span>
+              <span class="progress-summary__value progress-summary__value--success">{{this.projectProgress.completed}}</span>
+            </div>
+            <div class="progress-summary__item">
+              <span class="progress-summary__label">{{t "gantt.inProgress"}}</span>
+              <span class="progress-summary__value progress-summary__value--warning">{{this.projectProgress.inProgress}}</span>
+            </div>
+            {{#if this.projectProgress.overdue}}
+              <div class="progress-summary__item">
+                <span class="progress-summary__label">{{t "gantt.overdue"}}</span>
+                <span class="progress-summary__value progress-summary__value--danger">{{this.projectProgress.overdue}}</span>
+              </div>
+            {{/if}}
+            <div class="progress-summary__overall">
+              <span class="progress-summary__label">{{t "gantt.overallProgress"}}</span>
+              <div class="progress-summary__bar">
+                <div 
+                  class="progress-summary__fill"
+                  style="width: {{this.projectProgress.percentage}}%"
+                ></div>
+              </div>
+              <span class="progress-summary__percentage">{{this.projectProgress.percentage}}%</span>
+            </div>
+          </div>
+        </div>
+      {{/if}}
+    </div>
+
+    <div class="project-gantt__actions">
+      <div class="btn-group" role="group">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          {{on "click" this.refreshChart}}
+          title="{{t 'gantt.refresh'}}"
+          data-test-refresh-chart
+        >
+          <i class="fa fa-refresh"></i>
+          {{t "gantt.refresh"}}
+        </button>
+        
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          {{on "click" this.printChart}}
+          title="{{t 'gantt.print'}}"
+          data-test-print-chart
+        >
+          <i class="fa fa-print"></i>
+          {{t "gantt.print"}}
+        </button>
+        
+        <div class="btn-group" role="group">
+          <button 
+            type="button" 
+            class="btn btn-outline-secondary dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fa fa-download"></i>
+            {{t "gantt.export"}}
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a 
+                class="dropdown-item" 
+                href="#"
+                {{on "click" (fn this.exportChart "png")}}
+              >
+                {{t "gantt.exportPNG"}}
+              </a>
+            </li>
+            <li>
+              <a 
+                class="dropdown-item" 
+                href="#"
+                {{on "click" (fn this.exportChart "pdf")}}
+              >
+                {{t "gantt.exportPDF"}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          {{on "click" this.createTask}}
+          data-test-create-task
+        >
+          <i class="fa fa-plus"></i>
+          {{t "gantt.createTask"}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Gantt Chart Options --}}
+  <div class="project-gantt__options">
+    <div class="gantt-options">
+      <div class="gantt-options__group">
+        <label class="gantt-options__label">{{t "gantt.view"}}</label>
+        <div class="gantt-options__controls">
+          <div class="form-check form-check-inline">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              id="showDependencies"
+              checked={{this.showDependencies}}
+              {{on "change" this.toggleDependencies}}
+            />
+            <label class="form-check-label" for="showDependencies">
+              {{t "gantt.showDependencies"}}
+            </label>
+          </div>
+          
+          <div class="form-check form-check-inline">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              id="showMilestones"
+              checked={{this.showMilestones}}
+              {{on "change" this.toggleMilestones}}
+            />
+            <label class="form-check-label" for="showMilestones">
+              {{t "gantt.showMilestones"}}
+            </label>
+          </div>
+          
+          <div class="form-check form-check-inline">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              id="showCriticalPath"
+              checked={{this.showCriticalPath}}
+              {{on "change" this.toggleCriticalPath}}
+            />
+            <label class="form-check-label" for="showCriticalPath">
+              {{t "gantt.showCriticalPath"}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Main Gantt Chart --}}
+  <div class="project-gantt__chart">
+    {{#if this.error}}
+      <div class="alert alert-danger" role="alert">
+        <i class="fa fa-exclamation-triangle"></i>
+        {{this.error}}
+        <button 
+          type="button" 
+          class="btn btn-sm btn-outline-danger ms-2"
+          {{on "click" this.refreshChart}}
+        >
+          {{t "gantt.tryAgain"}}
+        </button>
+      </div>
+    {{else}}
+      <GanttChart::GanttChart
+        @issues={{this.ganttIssues}}
+        @milestones={{if this.showMilestones this.projectMilestones}}
+        @isLoading={{this.isLoading}}
+        @onTaskSelect={{this.selectTask}}
+        @onTaskEdit={{this.editTask}}
+        @onCreateTask={{this.createTask}}
+        @onTaskDrag={{this.onTaskDrag}}
+        @onTaskDragEnd={{this.onTaskDragEnd}}
+        @onTaskResize={{this.onTaskResize}}
+        @onDateSelect={{this.onDateSelect}}
+        @onDateHover={{this.onDateHover}}
+        data-test-gantt-chart
+      />
+    {{/if}}
+  </div>
+
+  {{!-- Selected Task Details Panel --}}
+  {{#if this.selectedTask}}
+    <div class="project-gantt__details">
+      <div class="task-details">
+        <div class="task-details__header">
+          <h3 class="task-details__title">
+            {{this.selectedTask.subject}}
+          </h3>
+          <button 
+            type="button" 
+            class="btn-close"
+            {{on "click" (fn this.selectTask null)}}
+            aria-label="{{t 'gantt.closeDetails'}}"
+          ></button>
+        </div>
+        
+        <div class="task-details__content">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.issueNumber"}}</label>
+                <span class="task-details__value">#{{this.selectedTask.issueNumber}}</span>
+              </div>
+              
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.priority"}}</label>
+                <span class="task-details__value">
+                  <span class="badge priority-{{this.selectedTask.priority}}">
+                    {{this.selectedTask.priority}}
+                  </span>
+                </span>
+              </div>
+              
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.status"}}</label>
+                <span class="task-details__value">
+                  {{#if this.selectedTask.issuestatus}}
+                    {{this.selectedTask.issuestatus.name}}
+                  {{else}}
+                    {{t "gantt.noStatus"}}
+                  {{/if}}
+                </span>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.startDate"}}</label>
+                <span class="task-details__value">{{format-date this.selectedTask.startDate}}</span>
+              </div>
+              
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.endDate"}}</label>
+                <span class="task-details__value">
+                  {{#if this.selectedTask.endDate}}
+                    {{format-date this.selectedTask.endDate}}
+                  {{else}}
+                    {{t "gantt.notSet"}}
+                  {{/if}}
+                </span>
+              </div>
+              
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.assignedTo"}}</label>
+                <span class="task-details__value">
+                  {{#if this.selectedTask.assignedTo}}
+                    {{get-username this.selectedTask.assignedTo}}
+                  {{else}}
+                    {{t "gantt.unassigned"}}
+                  {{/if}}
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          {{#if this.selectedTask.description}}
+            <div class="task-details__field">
+              <label class="task-details__label">{{t "gantt.description"}}</label>
+              <div class="task-details__description">
+                {{this.selectedTask.description}}
+              </div>
+            </div>
+          {{/if}}
+          
+          <div class="task-details__actions">
+            <button 
+              type="button" 
+              class="btn btn-primary"
+              {{on "click" (fn this.editTask this.selectedTask)}}
+            >
+              <i class="fa fa-edit"></i>
+              {{t "gantt.editTask"}}
+            </button>
+            
+            <LinkTo 
+              @route="app.project.issue.page" 
+              @model={{this.selectedTask.issueNumber}}
+              class="btn btn-outline-secondary"
+            >
+              <i class="fa fa-eye"></i>
+              {{t "gantt.viewTask"}}
+            </LinkTo>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+</div>
+
+{{!-- Custom Styles for this page --}}
+<style>
+.project-gantt {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  background-color: #ffffff;
+}
+
+.project-gantt__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  flex-shrink: 0;
+}
+
+.project-gantt__title {
+  margin: 0 0 1rem 0;
+  color: #212529;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.project-gantt__title i {
+  margin-right: 0.5rem;
+  color: #6c757d;
+}
+
+.progress-summary {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.progress-summary__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.progress-summary__label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+}
+
+.progress-summary__value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.progress-summary__value--success {
+  color: #198754;
+}
+
+.progress-summary__value--warning {
+  color: #fd7e14;
+}
+
+.progress-summary__value--danger {
+  color: #dc3545;
+}
+
+.progress-summary__overall {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-summary__bar {
+  width: 100px;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-summary__fill {
+  height: 100%;
+  background-color: #198754;
+  transition: width 0.3s ease;
+}
+
+.progress-summary__percentage {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #198754;
+}
+
+.project-gantt__options {
+  padding: 1rem 1.5rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #dee2e6;
+  flex-shrink: 0;
+}
+
+.gantt-options__group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gantt-options__label {
+  font-weight: 500;
+  color: #495057;
+  margin: 0;
+}
+
+.gantt-options__controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.project-gantt__chart {
+  flex: 1;
+  overflow: hidden;
+}
+
+.project-gantt__details {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  background-color: #ffffff;
+  border-left: 1px solid #dee2e6;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.task-details__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.task-details__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.task-details__content {
+  padding: 1.5rem;
+}
+
+.task-details__field {
+  margin-bottom: 1rem;
+}
+
+.task-details__label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+}
+
+.task-details__value {
+  display: block;
+  font-size: 0.875rem;
+  color: #212529;
+}
+
+.task-details__description {
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.task-details__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.badge.priority-high {
+  background-color: #dc3545;
+}
+
+.badge.priority-medium {
+  background-color: #fd7e14;
+}
+
+.badge.priority-low {
+  background-color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .project-gantt__header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .progress-summary {
+    justify-content: center;
+  }
+  
+  .project-gantt__details {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+</style>
