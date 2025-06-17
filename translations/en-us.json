@@ -708,6 +708,7 @@
           "subject": "Subject",
           "description": "Description",
           "statusId": "Status",
+          "status": "Status",
           "typeId": "Type",
           "priority": "Priority",
           "milestoneId": "Milestone",
@@ -720,7 +721,8 @@
           "dateModified": "Date Modified",
           "assignee": "Assignee",
           "reportedBy": "Reported User",
-          "parent": "Parent"
+          "parent": "Parent",
+          "project": "Project"
         },
         "list": {
           "create": "Create New",
@@ -1061,14 +1063,31 @@
         }
       },
       "widgets": {
-        "issuesToday": {
-          "title": "Issues Today"
+        "recentIssues": {
+          "title": "Recent Issues",
+          "searchPlaceholder": "Search recent issues...",
+          "emptyStateMessage": "No issues found"
         },
-        "weeklyMilestones": {
-          "title": "Weekly Milestones"
+        "activeMilestones": {
+          "title": "Active Milestones",
+          "searchPlaceholder": "Search active milestones...",
+          "emptyStateMessage": "No milestones found"
         }
       },
       "milestone": {
+        "fields": {
+          "name": "Name",
+          "dateCreated": "Date Created",
+          "dateModified": "Date Modified",
+          "description": "Description",
+          "status": "Status",
+          "type": "Type",
+          "createdUser": "Created By",
+          "modifiedUser": "Modified By",
+          "startDate": "Start Date",
+          "endDate": "End Date",
+          "project": "Project"
+        },
         "lists": {
           "status.": "Loading ..",
           "status": {
@@ -1196,6 +1215,10 @@
           "information": "Information",
           "warning": "Warning",
           "important": "Important"
+        },
+        "table": {
+          "searchPlaceholder": "Search...",
+          "loadingText": "Loading more items..."
         }
       },
       "application": {

@@ -1,0 +1,42 @@
+<AppUi::Table
+	@header={{t 'views.app.widgets.recentIssues.title'}}
+	@columns={{this.fields}}
+	@data={{@data}}
+	@showSearch={{true}}
+	@searchPlaceholder={{t 'views.app.widgets.recentIssues.searchPlaceholder'}}
+	@emptyStateMessage={{t 'views.app.widgets.recentIssues.emptyStateMessage'}}
+  @searchFields={{@widgetSettings.searchFields}}
+  @applyDefaultSearch={{true}}
+  @onSearch={{this.handleSearch}}
+  @useLazyLoading={{@widgetSettings.useLazyLoading}}
+  data-recent-issues-table
+>
+	<:body>
+		{{#each this.filteredData as |item|}}
+			<tr>
+        <td>
+          <LinkTo @route="app.project.issue.page" @models={{array (lowercase item.project.shortCode) item.issueNumber}}>
+            #{{item.issueNumber}}
+          </LinkTo>
+        </td>
+				<td>
+          {{item.subject}}
+			</td>
+			<td>
+				<span
+					class='badge {{item.status}}'
+				>{{t (concat 'views.app.issue.lists.status.' item.status)}}</span>
+			</td>
+				<td>
+					{{item.project.name}}
+				</td>      
+				<td>
+					{{format-date date=item.startDate}}
+				</td>
+				<td>
+					{{format-date date=item.endDate}}
+				</td>
+			</tr>
+		{{/each}}
+	</:body>
+</AppUi::Table>
