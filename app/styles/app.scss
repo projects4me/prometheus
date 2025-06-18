@@ -81,6 +81,7 @@
 @import "modules/role.scss";
 @import "issue/issue-status.scss";
 @import 'summernote.scss';
+@import 'modules/gantt-chart.scss';
 
 /*
 * Components styles
@@ -93,6 +94,12 @@
 @import 'components/pagination.scss';
 @import 'components/accordion.scss';
 @import 'components/toolbar.scss';
+@import 'components/gantt-chart.scss';
+@import 'components/gantt-dependencies.scss';
+@import 'components/gantt-grid.scss';
+@import 'components/gantt-task-bar.scss';
+@import 'components/gantt-timeline.scss';
+
 /*
 @import '../../custom/styles/custom.scss';
 */

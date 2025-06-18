@@ -1,0 +1,258 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Gantt Dependencies Component Styles */
+
+.gantt-dependencies {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    pointer-events: none;
+    
+    &__svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    
+    &__path-group {
+      cursor: pointer;
+      pointer-events: auto;
+      
+      &:hover {
+        .gantt-dependency {
+          stroke-width: 3;
+          opacity: 1;
+        }
+        
+        .gantt-dependencies__connection-point {
+          opacity: 1;
+          r: 4;
+        }
+      }
+    }
+    
+    &__arrow {
+      fill: #666;
+      stroke: #666;
+      stroke-width: 1;
+      
+      &--critical {
+        fill: var(--gantt-danger-color);
+        stroke: var(--gantt-danger-color);
+      }
+    }
+    
+    &__connection-point {
+      fill: var(--gantt-primary-color);
+      stroke: white;
+      stroke-width: 1;
+      opacity: 0;
+      transition: var(--gantt-transition);
+      
+      &--start {
+        fill: var(--gantt-success-color);
+      }
+      
+      &--end {
+        fill: var(--gantt-warning-color);
+      }
+    }
+  }
+  
+  /* Dependency line styles */
+  .gantt-dependency {
+    stroke: #666;
+    stroke-width: 2;
+    fill: none;
+    opacity: 0.7;
+    transition: var(--gantt-transition);
+    
+    &--finish-to-start {
+      stroke-dasharray: none;
+    }
+    
+    &--start-to-start {
+      stroke-dasharray: 5,5;
+    }
+    
+    &--finish-to-finish {
+      stroke-dasharray: 10,5;
+    }
+    
+    &--start-to-finish {
+      stroke-dasharray: 15,5,5,5;
+    }
+    
+    &--critical {
+      stroke: var(--gantt-danger-color);
+      stroke-width: 3;
+      opacity: 1;
+      animation: gantt-dependency-pulse 2s infinite;
+    }
+    
+    &--high-priority {
+      stroke: var(--gantt-danger-color);
+      stroke-width: 2.5;
+    }
+    
+    &--medium-priority {
+      stroke: var(--gantt-primary-color);
+    }
+    
+    &--low-priority {
+      stroke: var(--gantt-secondary-color);
+      opacity: 0.5;
+    }
+  }
+  
+  /* Animations */
+  @keyframes gantt-dependency-pulse {
+    0%, 100% {
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .gantt-dependency {
+      stroke-width: 1.5;
+      
+      &--critical {
+        stroke-width: 2;
+      }
+      
+      &--high-priority {
+        stroke-width: 2;
+      }
+    }
+    
+    .gantt-dependencies {
+      &__connection-point {
+        r: 2;
+      }
+      
+      &__path-group:hover {
+        .gantt-dependency {
+          stroke-width: 2;
+        }
+        
+        .gantt-dependencies__connection-point {
+          r: 3;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .gantt-dependency {
+      stroke-width: 1;
+      
+      &--critical,
+      &--high-priority {
+        stroke-width: 1.5;
+      }
+    }
+    
+    .gantt-dependencies {
+      &__connection-point {
+        r: 1.5;
+      }
+      
+      &__path-group:hover {
+        .gantt-dependency {
+          stroke-width: 1.5;
+        }
+        
+        .gantt-dependencies__connection-point {
+          r: 2;
+        }
+      }
+    }
+  }
+  
+  /* Print styles */
+  @media print {
+    .gantt-dependencies {
+      &__connection-point {
+        display: none !important;
+      }
+      
+      &__path-group:hover {
+        .gantt-dependency {
+          stroke-width: 2 !important;
+        }
+      }
+    }
+    
+    .gantt-dependency {
+      stroke: #000000 !important;
+      opacity: 1 !important;
+      
+      &--critical {
+        stroke-width: 3 !important;
+      }
+      
+      &--high-priority {
+        stroke-width: 2.5 !important;
+      }
+    }
+  }
+  
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .gantt-dependency {
+      stroke: #000000;
+      stroke-width: 3;
+      opacity: 1;
+      
+      &--critical,
+      &--high-priority,
+      &--medium-priority,
+      &--low-priority {
+        stroke: #000000;
+      }
+    }
+    
+    .gantt-dependencies {
+      &__arrow {
+        fill: #000000;
+        stroke: #000000;
+        
+        &--critical {
+          fill: #000000;
+          stroke: #000000;
+        }
+      }
+      
+      &__connection-point {
+        fill: #000000;
+        stroke: #ffffff;
+        stroke-width: 2;
+        
+        &--start,
+        &--end {
+          fill: #000000;
+        }
+      }
+    }
+  }
+  
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .gantt-dependency {
+      animation: none !important;
+    }
+    
+    .gantt-dependencies__connection-point {
+      transition: none !important;
+    }
+  }
+  
