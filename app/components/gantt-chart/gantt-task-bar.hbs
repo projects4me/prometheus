@@ -1,0 +1,123 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div 
+  class="{{this.taskBarClasses}}"
+  style="{{object-to-style this.taskBarStyle}}"
+  title="{{this.tooltipText}}"
+  {{on "click" this.onClick}}
+  {{on "dblclick" this.onDoubleClick}}
+  {{on "mouseenter" this.onMouseEnter}}
+  {{on "mouseleave" this.onMouseLeave}}
+  {{on "mousedown" this.onDragStart}}
+  data-test-task-bar
+>
+  {{!-- Task Bar Content --}}
+  <div class="gantt-task-bar__content">
+    {{!-- Progress Bar --}}
+    <div class="gantt-task-bar__progress">
+      <div 
+        class="gantt-task-bar__progress-fill"
+        style="{{object-to-style this.progressBarStyle}}"
+      ></div>
+    </div>
+    
+    {{!-- Task Label --}}
+    <div class="gantt-task-bar__label">
+      <span class="gantt-task-bar__text">
+        {{@taskBar.issue.subject}}
+      </span>
+      
+      {{!-- Priority Indicator --}}
+      {{#if @taskBar.issue.priority}}
+        <span class="gantt-task-bar__priority gantt-task-bar__priority--{{@taskBar.issue.priority}}">
+          {{#if (eq @taskBar.issue.priority "high")}}
+            <i class="fa fa-exclamation-triangle"></i>
+          {{else if (eq @taskBar.issue.priority "low")}}
+            <i class="fa fa-arrow-down"></i>
+          {{else}}
+            <i class="fa fa-minus"></i>
+          {{/if}}
+        </span>
+      {{/if}}
+    </div>
+    
+    {{!-- Assignee Avatar --}}
+    {{#if @taskBar.issue.assignedTo}}
+      <div class="gantt-task-bar__assignee">
+        {{#if @taskBar.issue.assignedTo.avatar}}
+          <img 
+            src="{{@taskBar.issue.assignedTo.avatar}}" 
+            alt="{{get-username @taskBar.issue.assignedTo}}"
+            class="gantt-task-bar__avatar"
+          />
+        {{else}}
+          <div class="gantt-task-bar__avatar gantt-task-bar__avatar--initials">
+            {{get-user-initials @taskBar.issue.assignedTo}}
+          </div>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+  
+  {{!-- Resize Handle (right edge) --}}
+  {{#if @taskBar.isDraggable}}
+    <div 
+      class="gantt-task-bar__resize-handle"
+      {{on "mousedown" this.onResizeStart}}
+      data-test-resize-handle
+    ></div>
+  {{/if}}
+  
+  {{!-- Dependency Connection Points --}}
+  <div class="gantt-task-bar__connection-start" data-test-connection-start></div>
+  <div class="gantt-task-bar__connection-end" data-test-connection-end></div>
+  
+  {{!-- Hover Tooltip --}}
+  {{#if this.isHovered}}
+    <div class="gantt-task-bar__tooltip">
+      <div class="gantt-task-bar__tooltip-content">
+        <h4 class="gantt-task-bar__tooltip-title">{{@taskBar.issue.subject}}</h4>
+        <div class="gantt-task-bar__tooltip-details">
+          <div class="gantt-task-bar__tooltip-row">
+            <span class="gantt-task-bar__tooltip-label">{{t "gantt.startDate"}}:</span>
+            <span class="gantt-task-bar__tooltip-value">{{format-date @taskBar.issue.startDate}}</span>
+          </div>
+          <div class="gantt-task-bar__tooltip-row">
+            <span class="gantt-task-bar__tooltip-label">{{t "gantt.endDate"}}:</span>
+            <span class="gantt-task-bar__tooltip-value">
+              {{#if @taskBar.issue.endDate}}
+                {{format-date @taskBar.issue.endDate}}
+              {{else}}
+                {{t "gantt.notSet"}}
+              {{/if}}
+            </span>
+          </div>
+          <div class="gantt-task-bar__tooltip-row">
+            <span class="gantt-task-bar__tooltip-label">{{t "gantt.progress"}}:</span>
+            <span class="gantt-task-bar__tooltip-value">{{@taskBar.progress}}%</span>
+          </div>
+          <div class="gantt-task-bar__tooltip-row">
+            <span class="gantt-task-bar__tooltip-label">{{t "gantt.priority"}}:</span>
+            <span class="gantt-task-bar__tooltip-value">{{@taskBar.issue.priority}}</span>
+          </div>
+          {{#if @taskBar.issue.assignedTo}}
+            <div class="gantt-task-bar__tooltip-row">
+              <span class="gantt-task-bar__tooltip-label">{{t "gantt.assignedTo"}}:</span>
+              <span class="gantt-task-bar__tooltip-value">{{get-username @taskBar.issue.assignedTo}}</span>
+            </div>
+          {{/if}}
+          {{#if @taskBar.issue.duration}}
+            <div class="gantt-task-bar__tooltip-row">
+              <span class="gantt-task-bar__tooltip-label">{{t "gantt.duration"}}:</span>
+              <span class="gantt-task-bar__tooltip-value">
+                {{t "gantt.durationDays" count=@taskBar.issue.duration}}
+              </span>
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  {{/if}}
+</div>

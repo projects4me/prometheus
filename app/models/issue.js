@@ -436,4 +436,142 @@ export default Model.extend({
             issue.statusId = status.id;
         }
     },
+
+    /**
+     * Dependencies - issues that this issue depends on (predecessors)
+     *
+     * @property dependencies
+     * @type String
+     * @for Issue
+     * @private
+     */
+    dependencies: attr('string'),
+
+    /**
+     * Calculate the duration of the issue in days
+     *
+     * @property duration
+     * @type Number
+     * @for Issue
+     * @computed
+     */
+    get duration() {
+        if (!this.startDate || !this.endDate) {
+            return 1; // Default to 1 day if dates are missing
+        }
+        
+        const start = new Date(this.startDate);
+        const end = new Date(this.endDate);
+        const diffTime = Math.abs(end - start);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        return Math.max(1, diffDays); // Minimum 1 day
+    },
+
+    /**
+     * Calculate the progress percentage based on status and time spent
+     *
+     * @property progressPercentage
+     * @type Number
+     * @for Issue
+     * @computed
+     */
+    get progressPercentage() {
+        // If issue has a status, use status-based progress
+        if (this.issuestatus && this.issuestatus.get) {
+            const status = this.issuestatus.get('name');
+            const done = this.issuestatus.get('done');
+            
+            if (done === '1' || status === 'done' || status === 'closed') {
+                return 100;
+            } else if (status === 'in-progress' || status === 'testing') {
+                return 50;
+            } else if (status === 'new' || status === 'open') {
+                return 0;
+            }
+        }
+
+        // Fallback: calculate based on time spent vs estimated
+        const estimatedHours = this.estimated.reduce((sum, timelog) => {
+            return sum + (parseFloat(timelog.get('hours')) || 0);
+        }, 0);
+        
+        const spentHours = this.spent.reduce((sum, timelog) => {
+            return sum + (parseFloat(timelog.get('hours')) || 0);
+        }, 0);
+
+        if (estimatedHours > 0) {
+            return Math.min(100, Math.round((spentHours / estimatedHours) * 100));
+        }
+
+        return 0;
+    },
+
+    /**
+     * Get the list of dependency issue IDs
+     *
+     * @property dependencyIds
+     * @type Array
+     * @for Issue
+     * @computed
+     */
+    get dependencyIds() {
+        if (!this.dependencies) {
+            return [];
+        }
+        
+        return this.dependencies.split(',')
+            .map(id => id.trim())
+            .filter(id => id.length > 0);
+    },
+
+    /**
+     * Check if this issue is overdue
+     *
+     * @property isOverdue
+     * @type Boolean
+     * @for Issue
+     * @computed
+     */
+    get isOverdue() {
+        if (!this.endDate) {
+            return false;
+        }
+        
+        const today = new Date();
+        const endDate = new Date(this.endDate);
+        const progress = this.progressPercentage;
+        
+        return endDate < today && progress < 100;
+    },
+
+    /**
+     * Get the CSS class for the issue based on its status and priority
+     *
+     * @property cssClass
+     * @type String
+     * @for Issue
+     * @computed
+     */
+    get cssClass() {
+        let classes = ['gantt-task'];
+        
+        // Add priority class
+        if (this.priority) {
+            classes.push(`priority-${this.priority}`);
+        }
+        
+        // Add status class
+        if (this.issuestatus && this.issuestatus.get) {
+            const status = this.issuestatus.get('name');
+            classes.push(`status-${status}`);
+        }
+        
+        // Add overdue class
+        if (this.isOverdue) {
+            classes.push('overdue');
+        }
+        
+        return classes.join(' ');
+    },    
 });

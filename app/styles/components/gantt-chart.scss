@@ -1,0 +1,494 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/* Gantt Chart Component Styles */
+
+/* CSS Custom Properties for theming */
+:root {
+    --gantt-primary-color: #3498db;
+    --gantt-secondary-color: #95a5a6;
+    --gantt-success-color: #27ae60;
+    --gantt-warning-color: #f39c12;
+    --gantt-danger-color: #e74c3c;
+    --gantt-info-color: #17a2b8;
+    
+    --gantt-bg-color: #ffffff;
+    --gantt-border-color: #dee2e6;
+    --gantt-text-color: #212529;
+    --gantt-text-muted: #6c757d;
+    
+    --gantt-grid-line-color: #e9ecef;
+    --gantt-weekend-bg: #f8f9fa;
+    --gantt-today-line-color: #dc3545;
+    --gantt-today-bg: rgba(220, 53, 69, 0.1);
+    
+    --gantt-task-height: 24px;
+    --gantt-row-height: 40px;
+    --gantt-sidebar-width: 300px;
+    
+    --gantt-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --gantt-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
+    
+    --gantt-border-radius: 4px;
+    --gantt-transition: all 0.2s ease-in-out;
+  }
+  
+  /* Main Gantt Chart Container */
+  .gantt-chart {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--gantt-bg-color);
+    border: 1px solid var(--gantt-border-color);
+    border-radius: var(--gantt-border-radius);
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid var(--gantt-border-color);
+      flex-shrink: 0;
+    }
+    
+    &__controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    &__time-scale {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    &__label {
+      font-weight: 500;
+      color: var(--gantt-text-color);
+      margin: 0;
+    }
+    
+    &__select {
+      padding: 0.375rem 0.75rem;
+      border: 1px solid var(--gantt-border-color);
+      border-radius: var(--gantt-border-radius);
+      background-color: var(--gantt-bg-color);
+      color: var(--gantt-text-color);
+      font-size: 0.875rem;
+      transition: var(--gantt-transition);
+      
+      &:focus {
+        outline: none;
+        border-color: var(--gantt-primary-color);
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+      }
+    }
+    
+    &__zoom {
+      display: flex;
+      gap: 0.25rem;
+    }
+    
+    &__zoom-btn {
+      padding: 0.375rem 0.5rem;
+      border: 1px solid var(--gantt-border-color);
+      background-color: var(--gantt-bg-color);
+      color: var(--gantt-text-color);
+      border-radius: var(--gantt-border-radius);
+      cursor: pointer;
+      transition: var(--gantt-transition);
+      
+      &:hover {
+        background-color: #e9ecef;
+        border-color: var(--gantt-secondary-color);
+      }
+      
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+      }
+    }
+    
+    &__info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--gantt-text-muted);
+      font-size: 0.875rem;
+    }
+    
+    &__task-count {
+      font-weight: 500;
+    }
+    
+    &__selected-task {
+      color: var(--gantt-primary-color);
+      font-weight: 500;
+    }
+    
+    &__container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    
+    &__sidebar {
+      width: var(--gantt-sidebar-width);
+      background-color: #f8f9fa;
+      border-right: 1px solid var(--gantt-border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    
+    &__sidebar-header {
+      padding: 0.75rem 1rem;
+      background-color: #e9ecef;
+      border-bottom: 1px solid var(--gantt-border-color);
+      font-weight: 600;
+      color: var(--gantt-text-color);
+    }
+    
+    &__task-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+    
+    &__task-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+      height: var(--gantt-row-height);
+      border-bottom: 1px solid var(--gantt-border-color);
+      cursor: pointer;
+      transition: var(--gantt-transition);
+      
+      &:hover {
+        background-color: #e9ecef;
+      }
+      
+      &--selected {
+        background-color: rgba(52, 152, 219, 0.1);
+        border-left: 3px solid var(--gantt-primary-color);
+      }
+    }
+    
+    &__task-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    &__task-subject {
+      display: block;
+      font-weight: 500;
+      color: var(--gantt-text-color);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 0.25rem;
+    }
+    
+    &__task-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--gantt-text-muted);
+    }
+    
+    &__task-priority {
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+      font-size: 0.625rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      
+      &--high {
+        background-color: rgba(231, 76, 60, 0.1);
+        color: var(--gantt-danger-color);
+      }
+      
+      &--medium {
+        background-color: rgba(52, 152, 219, 0.1);
+        color: var(--gantt-primary-color);
+      }
+      
+      &--low {
+        background-color: rgba(149, 165, 166, 0.1);
+        color: var(--gantt-secondary-color);
+      }
+    }
+    
+    &__task-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 60px;
+    }
+    
+    &__progress-bar {
+      width: 40px;
+      height: 6px;
+      background-color: #e9ecef;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    &__progress-fill {
+      height: 100%;
+      background-color: var(--gantt-success-color);
+      transition: var(--gantt-transition);
+    }
+    
+    &__progress-text {
+      font-size: 0.75rem;
+      color: var(--gantt-text-muted);
+      font-weight: 500;
+    }
+    
+    &__timeline-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    &__chart-area {
+      position: relative;
+      flex: 1;
+      overflow: auto;
+    }
+    
+    &__tasks {
+      position: relative;
+      z-index: 2;
+    }
+    
+    &__task-container {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: var(--gantt-row-height);
+      display: flex;
+      align-items: center;
+    }
+    
+    &__milestones {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+    
+    &__milestone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: auto;
+    }
+    
+    &__milestone-marker {
+      width: 12px;
+      height: 12px;
+      background-color: var(--gantt-warning-color);
+      transform: rotate(45deg);
+      margin-top: 0.5rem;
+      box-shadow: var(--gantt-shadow);
+    }
+    
+    &__milestone-label {
+      font-size: 0.75rem;
+      color: var(--gantt-text-color);
+      background-color: var(--gantt-bg-color);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--gantt-border-radius);
+      box-shadow: var(--gantt-shadow);
+      margin-top: 0.5rem;
+      white-space: nowrap;
+    }
+    
+    &__today-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: var(--gantt-today-line-color);
+      z-index: 4;
+      pointer-events: none;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -4px;
+        width: 10px;
+        height: 10px;
+        background-color: var(--gantt-today-line-color);
+        border-radius: 50%;
+      }
+    }
+    
+    &__loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: var(--gantt-text-muted);
+    }
+    
+    &__spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #e9ecef;
+      border-top: 3px solid var(--gantt-primary-color);
+      border-radius: 50%;
+      animation: gantt-spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+    
+    &__empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--gantt-text-muted);
+    }
+    
+    &__empty-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+    
+    &__empty-title {
+      margin: 0 0 0.5rem 0;
+      color: var(--gantt-text-color);
+    }
+    
+    &__empty-description {
+      margin: 0 0 1.5rem 0;
+      max-width: 400px;
+    }
+    
+    &__create-task-btn {
+      margin-top: 1rem;
+    }
+  }
+  
+  /* Animations */
+  @keyframes gantt-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .gantt-chart {
+      &__header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+      }
+      
+      &__controls {
+        justify-content: center;
+      }
+      
+      &__info {
+        justify-content: center;
+        text-align: center;
+      }
+      
+      &__sidebar {
+        width: 250px;
+      }
+      
+      &__task-subject {
+        font-size: 0.875rem;
+      }
+      
+      &__task-meta {
+        font-size: 0.625rem;
+      }
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .gantt-chart {
+      &__container {
+        flex-direction: column;
+      }
+      
+      &__sidebar {
+        width: 100%;
+        max-height: 200px;
+        border-right: none;
+        border-bottom: 1px solid var(--gantt-border-color);
+      }
+      
+      &__timeline-container {
+        min-height: 400px;
+      }
+    }
+  }
+  
+  /* Print Styles */
+  @media print {
+    .gantt-chart {
+      &__header {
+        background-color: transparent !important;
+        border-bottom: 1px solid #000 !important;
+      }
+      
+      &__controls {
+        display: none !important;
+      }
+      
+      &__sidebar {
+        background-color: transparent !important;
+      }
+      
+      &__task-row {
+        &:hover {
+          background-color: transparent !important;
+        }
+      }
+      
+      &__today-line {
+        background-color: #000 !important;
+      }
+    }
+  }
+  
+  /* High Contrast Mode */
+  @media (prefers-contrast: high) {
+    :root {
+      --gantt-border-color: #000000;
+      --gantt-grid-line-color: #000000;
+      --gantt-text-muted: #000000;
+    }
+  }
+  
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .gantt-chart * {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+  

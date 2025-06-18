@@ -1,0 +1,24 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="gantt-timeline" data-test-gantt-timeline>
+  <div 
+    class="gantt-timeline__header"
+    style="grid-template-columns: {{this.gridTemplateColumns}};"
+  >
+    {{#each @columns as |column|}}
+      <div 
+        class="{{fn this.getColumnClasses column}}"
+        {{on "click" (fn this.onColumnClick column)}}
+        {{on "mouseenter" (fn this.onColumnHover column)}}
+        data-test-timeline-column={{column.label}}
+      >
+        <span class="gantt-timeline__column-label">{{column.label}}</span>
+        {{#if (fn this.isToday column)}}
+          <div class="gantt-timeline__today-indicator"></div>
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
+</div>

@@ -23,21 +23,22 @@ Router.map(function() {
         this.route('edit',{path:'/edit/:shortcode'});
     });
     this.route('project',{ path: "project/:shortcode" },function(){
-        this.route('wiki',function(){
-            this.route('index',{path:'/'});
-            this.route('create');
-            this.route('page',{path:'/:wiki_name'});
-            this.route('edit',{path:'/edit/:wiki_name'});
-        });
-        this.route('conversation',{path:'conversations'});
-        this.route('board');
-        this.route('calendar');
-        this.route('issue',function(){
-            this.route('index',{path:'/'});
-            this.route('create');
-            this.route('page',{path:'/:issue_number'});
-            this.route('edit',{path:'/edit/:issue_number'});
-        });
+      this.route('wiki',function(){
+          this.route('index',{path:'/'});
+          this.route('create');
+          this.route('page',{path:'/:wiki_name'});
+          this.route('edit',{path:'/edit/:wiki_name'});
+      });
+      this.route('conversation',{path:'conversations'});
+      this.route('board');
+      this.route('calendar');
+      this.route('issue',function(){
+          this.route('index',{path:'/'});
+          this.route('create');
+          this.route('page',{path:'/:issue_number'});
+          this.route('edit',{path:'/edit/:issue_number'});
+      });
+      this.route('gantt');
     });
     this.route('user',function(){
       this.route('index',{path:'/'});

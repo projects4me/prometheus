@@ -1,0 +1,307 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="project-gantt" data-test-project-gantt>
+  {{!-- Page Header --}}
+  <div class="project-gantt__header">
+    <div class="project-gantt__title-section">
+      <h1 class="project-gantt__title">
+        <i class="fa fa-bar-chart"></i>
+        {{t "gantt.title"}} - {{this.model.project.name}}
+      </h1>
+      
+      {{#if this.projectProgress}}
+        <div class="project-gantt__progress-summary">
+          <div class="progress-summary">
+            <div class="progress-summary__item">
+              <span class="progress-summary__label">{{t "gantt.totalTasks"}}</span>
+              <span class="progress-summary__value">{{this.projectProgress.total}}</span>
+            </div>
+            <div class="progress-summary__item">
+              <span class="progress-summary__label">{{t "gantt.completed"}}</span>
+              <span class="progress-summary__value progress-summary__value--success">{{this.projectProgress.completed}}</span>
+            </div>
+            <div class="progress-summary__item">
+              <span class="progress-summary__label">{{t "gantt.inProgress"}}</span>
+              <span class="progress-summary__value progress-summary__value--warning">{{this.projectProgress.inProgress}}</span>
+            </div>
+            {{#if this.projectProgress.overdue}}
+              <div class="progress-summary__item">
+                <span class="progress-summary__label">{{t "gantt.overdue"}}</span>
+                <span class="progress-summary__value progress-summary__value--danger">{{this.projectProgress.overdue}}</span>
+              </div>
+            {{/if}}
+            <div class="progress-summary__overall">
+              <span class="progress-summary__label">{{t "gantt.overallProgress"}}</span>
+              <div class="progress-summary__bar">
+                <div 
+                  class="progress-summary__fill"
+                  style="width: {{this.projectProgress.percentage}}%"
+                ></div>
+              </div>
+              <span class="progress-summary__percentage">{{this.projectProgress.percentage}}%</span>
+            </div>
+          </div>
+        </div>
+      {{/if}}
+    </div>
+
+    <div class="project-gantt__actions">
+      <div class="btn-group" role="group">
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          {{on "click" this.refreshChart}}
+          title="{{t 'gantt.refresh'}}"
+          data-test-refresh-chart
+        >
+          <i class="fa fa-refresh"></i>
+          {{t "gantt.refresh"}}
+        </button>
+        
+        <button 
+          type="button" 
+          class="btn btn-outline-secondary"
+          {{on "click" this.printChart}}
+          title="{{t 'gantt.print'}}"
+          data-test-print-chart
+        >
+          <i class="fa fa-print"></i>
+          {{t "gantt.print"}}
+        </button>
+        
+        <div class="btn-group" role="group">
+          <button 
+            type="button" 
+            class="btn btn-outline-secondary dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fa fa-download"></i>
+            {{t "gantt.export"}}
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a 
+                class="dropdown-item" 
+                href="#"
+                {{on "click" (fn this.exportChart "png")}}
+              >
+                {{t "gantt.exportPNG"}}
+              </a>
+            </li>
+            <li>
+              <a 
+                class="dropdown-item" 
+                href="#"
+                {{on "click" (fn this.exportChart "pdf")}}
+              >
+                {{t "gantt.exportPDF"}}
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          {{on "click" this.createTask}}
+          data-test-create-task
+        >
+          <i class="fa fa-plus"></i>
+          {{t "gantt.createTask"}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Gantt Chart Options --}}
+  <div class="project-gantt__options">
+    <div class="gantt-options">
+      <div class="gantt-options__group">
+        <label class="gantt-options__label">{{t "gantt.view"}}</label>
+        <div class="gantt-options__controls">
+          <div class="form-check form-check-inline">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              id="showDependencies"
+              checked={{this.showDependencies}}
+              {{on "change" this.toggleDependencies}}
+            />
+            <label class="form-check-label" for="showDependencies">
+              {{t "gantt.showDependencies"}}
+            </label>
+          </div>
+          
+          <div class="form-check form-check-inline">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              id="showMilestones"
+              checked={{this.showMilestones}}
+              {{on "change" this.toggleMilestones}}
+            />
+            <label class="form-check-label" for="showMilestones">
+              {{t "gantt.showMilestones"}}
+            </label>
+          </div>
+          
+          <div class="form-check form-check-inline">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              id="showCriticalPath"
+              checked={{this.showCriticalPath}}
+              {{on "change" this.toggleCriticalPath}}
+            />
+            <label class="form-check-label" for="showCriticalPath">
+              {{t "gantt.showCriticalPath"}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Main Gantt Chart --}}
+  <div class="project-gantt__chart">
+    {{#if this.error}}
+      <div class="alert alert-danger" role="alert">
+        <i class="fa fa-exclamation-triangle"></i>
+        {{this.error}}
+        <button 
+          type="button" 
+          class="btn btn-sm btn-outline-danger ms-2"
+          {{on "click" this.refreshChart}}
+        >
+          {{t "gantt.tryAgain"}}
+        </button>
+      </div>
+    {{else}}
+      <GanttChart::GanttChart
+        @issues={{this.ganttIssues}}
+        @milestones={{if this.showMilestones this.projectMilestones}}
+        @isLoading={{this.isLoading}}
+        @onTaskSelect={{this.selectTask}}
+        @onTaskEdit={{this.editTask}}
+        @onCreateTask={{this.createTask}}
+        @onTaskDrag={{this.onTaskDrag}}
+        @onTaskDragEnd={{this.onTaskDragEnd}}
+        @onTaskResize={{this.onTaskResize}}
+        @onDateSelect={{this.onDateSelect}}
+        @onDateHover={{this.onDateHover}}
+        data-test-gantt-chart
+      />
+    {{/if}}
+  </div>
+
+  {{!-- Selected Task Details Panel --}}
+  {{#if this.selectedTask}}
+    <div class="project-gantt__details">
+      <div class="task-details">
+        <div class="task-details__header">
+          <h3 class="task-details__title">
+            {{this.selectedTask.subject}}
+          </h3>
+          <button 
+            type="button" 
+            class="btn-close"
+            {{on "click" (fn this.selectTask null)}}
+            aria-label="{{t 'gantt.closeDetails'}}"
+          ></button>
+        </div>
+        
+        <div class="task-details__content">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.issueNumber"}}</label>
+                <span class="task-details__value">#{{this.selectedTask.issueNumber}}</span>
+              </div>
+              
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.priority"}}</label>
+                <span class="task-details__value">
+                  <span class="badge priority-{{this.selectedTask.priority}}">
+                    {{this.selectedTask.priority}}
+                  </span>
+                </span>
+              </div>
+              
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.status"}}</label>
+                <span class="task-details__value">
+                  {{#if this.selectedTask.issuestatus}}
+                    {{this.selectedTask.issuestatus.name}}
+                  {{else}}
+                    {{t "gantt.noStatus"}}
+                  {{/if}}
+                </span>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.startDate"}}</label>
+                <span class="task-details__value">{{format-date this.selectedTask.startDate}}</span>
+              </div>
+              
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.endDate"}}</label>
+                <span class="task-details__value">
+                  {{#if this.selectedTask.endDate}}
+                    {{format-date this.selectedTask.endDate}}
+                  {{else}}
+                    {{t "gantt.notSet"}}
+                  {{/if}}
+                </span>
+              </div>
+              
+              <div class="task-details__field">
+                <label class="task-details__label">{{t "gantt.assignedTo"}}</label>
+                <span class="task-details__value">
+                  {{#if this.selectedTask.assignedTo}}
+                    {{get-username this.selectedTask.assignedTo}}
+                  {{else}}
+                    {{t "gantt.unassigned"}}
+                  {{/if}}
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          {{#if this.selectedTask.description}}
+            <div class="task-details__field">
+              <label class="task-details__label">{{t "gantt.description"}}</label>
+              <div class="task-details__description">
+                {{this.selectedTask.description}}
+              </div>
+            </div>
+          {{/if}}
+          
+          <div class="task-details__actions">
+            <button 
+              type="button" 
+              class="btn btn-primary"
+              {{on "click" (fn this.editTask this.selectedTask)}}
+            >
+              <i class="fa fa-edit"></i>
+              {{t "gantt.editTask"}}
+            </button>
+            
+            <LinkTo 
+              @route="app.project.issue.page" 
+              @model={{this.selectedTask.issueNumber}}
+              class="btn btn-outline-secondary"
+            >
+              <i class="fa fa-eye"></i>
+              {{t "gantt.viewTask"}}
+            </LinkTo>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+</div>

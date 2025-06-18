@@ -1,0 +1,221 @@
+.project-gantt {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  background-color: #ffffff;
+}
+
+.project-gantt__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  flex-shrink: 0;
+}
+
+.project-gantt__title {
+  margin: 0 0 1rem 0;
+  color: #212529;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.project-gantt__title i {
+  margin-right: 0.5rem;
+  color: #6c757d;
+}
+
+.progress-summary {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.progress-summary__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.progress-summary__label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+}
+
+.progress-summary__value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.progress-summary__value--success {
+  color: #198754;
+}
+
+.progress-summary__value--warning {
+  color: #fd7e14;
+}
+
+.progress-summary__value--danger {
+  color: #dc3545;
+}
+
+.progress-summary__overall {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-summary__bar {
+  width: 100px;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-summary__fill {
+  height: 100%;
+  background-color: #198754;
+  transition: width 0.3s ease;
+}
+
+.progress-summary__percentage {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #198754;
+}
+
+.project-gantt__options {
+  padding: 1rem 1.5rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #dee2e6;
+  flex-shrink: 0;
+}
+
+.gantt-options__group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gantt-options__label {
+  font-weight: 500;
+  color: #495057;
+  margin: 0;
+}
+
+.gantt-options__controls {
+  display: flex;
+  gap: 1rem;
+}
+
+.project-gantt__chart {
+  flex: 1;
+  overflow: hidden;
+}
+
+.project-gantt__details {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  background-color: #ffffff;
+  border-left: 1px solid #dee2e6;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.task-details__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.task-details__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.task-details__content {
+  padding: 1.5rem;
+}
+
+.task-details__field {
+  margin-bottom: 1rem;
+}
+
+.task-details__label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+}
+
+.task-details__value {
+  display: block;
+  font-size: 0.875rem;
+  color: #212529;
+}
+
+.task-details__description {
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.task-details__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.badge.priority-high {
+  background-color: #dc3545;
+}
+
+.badge.priority-medium {
+  background-color: #fd7e14;
+}
+
+.badge.priority-low {
+  background-color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .project-gantt__header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  
+  .progress-summary {
+    justify-content: center;
+  }
+  
+  .project-gantt__details {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
