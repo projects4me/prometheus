@@ -446,16 +446,17 @@ export default Object.extend({
                 recentIssues: {
                     model: 'issue',
                     options: {
-                        query: "((Issue.assignee : ```ME```))",
+                        query: "((Issue.projectId CONTAINS ```MY_PROJECTS```))",
                         rels : 'project',
                         sort: "Issue.dateModified",
-                        order: 'ASC',
+                        order: 'DESC',
                         limit: 5
                     },
                     fields: ['issueNumber', 'subject', 'status', {label: 'project', valueKey: 'project.name'}, 'startDate', 'endDate'],
                     translationKey: 'views.app.issue.fields',
                     searchFields: ['issueNumber', 'subject', 'project.name'],
-                    useLazyLoading: true
+                    useLazyLoading: true,
+                    filters: ["assignedToMe", "inProgressIssues"]
                 },
                 activeMilestones: {
                     model: 'milestone',

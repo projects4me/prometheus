@@ -16,9 +16,9 @@ import * as globalSearch from './app/global-search-steps';
 import * as filterIssuesBoard from './taskboard/filter-issues-steps';
 import * as toggleMilestoneBox from './taskboard/toggle-milestone-box-steps';
 import * as redirectToSocialLinks from './profile/redirect-to-user-social-links-steps';
-import * as checkIssuesListIssueToday from './dashboard/issue-today/check-list-of-issue-steps';
-import * as searchIssueFromIssueToday from './dashboard/issue-today/search-issue-from-list-steps';
-import * as selectIssueFromIssueToday from './dashboard/issue-today/select-and-navigate-to-issue-steps';
+import * as checkIssuesListIssueToday from './dashboard/recent-issues/check-list-of-issue-steps';
+import * as searchIssueFromIssueToday from './dashboard/recent-issues/search-issue-from-list-steps';
+import * as selectIssueFromIssueToday from './dashboard/recent-issues/select-and-navigate-to-issue-steps';
 import * as renderListOfProjects from './project/render-list-of-projects-steps';
 import * as renderListOfIssues from './issue/render-list-of-issues-steps';
 import * as renderListOfUsers from './user-management/render-list-of-users-steps';
@@ -70,9 +70,10 @@ import * as massUpdateIssues from './issue/mass-update-issues-steps';
 import * as listSteps from './common-steps/list-steps';
 import * as renderListOfNotifications from './notification/render-list-of-notifications-steps';
 import * as markReadNotifications from './notification/mark-read-notifications-steps';
+import * as filterIssuesRecentIssues from './dashboard/recent-issues/filter-issues-steps';
 
 export default function (assert) {
-    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, navigateToUser, changeUserAccountStatus, createUser, editUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData, createRole, renderPermissions, renderRoleUsers, setRequestQuery, searchUserAssociatedWithRole, deleteUserMembership, createMembershipFromRole, editAProjectMember, deleteMemberFromProject, timezoneChange, massUpdateIssues, listSteps, renderListOfNotifications, markReadNotifications);
+    let modules = new Array(signIn, formField, navigation, issueCreate, date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, toggleMilestoneBox, renderListOfProjects, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, selectAndNavigateToIssue, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, navigateToUser, changeUserAccountStatus, createUser, editUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData, createRole, renderPermissions, renderRoleUsers, setRequestQuery, searchUserAssociatedWithRole, deleteUserMembership, createMembershipFromRole, editAProjectMember, deleteMemberFromProject, timezoneChange, massUpdateIssues, listSteps, renderListOfNotifications, markReadNotifications, filterIssuesRecentIssues);
     let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()

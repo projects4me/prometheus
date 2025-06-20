@@ -38,4 +38,56 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 	handleSearch(query, filteredDataByTableComponent) {
 		this.filteredData = filteredDataByTableComponent;
 	}
+
+	/**
+	 * The filter callbacks for the table component
+	 * @property filterCallbacks
+	 * @type {Object}
+	 * @public
+	 */
+	get filterCallbacks() {
+		return {
+			'assignedToMe': this.filterAssignedToMe,
+			'inProgressIssues': this.filterInProgressIssues
+		};
+	}
+
+	/**
+	 * Filter callback for issues assigned to the current user
+	 * @method filterAssignedToMe
+	 * @param {Array} data - The data to filter
+	 * @returns {Array} - The filtered data
+	 * @public
+	 * @action
+	 */
+	@action
+	filterAssignedToMe(data) {
+		let currentUser = this.args.currentUser.user;
+		return data.filter(item => item.assignee === currentUser.id);
+	}
+	
+	/**
+	 * Filter callback for in-progress issues
+	 * @method filterInProgressIssues
+	 * @param {Array} data - The data to filter
+	 * @returns {Array} - The filtered data
+	 * @public
+	 * @action
+	 */
+	@action
+	filterInProgressIssues(data) {
+		return data.filter(item => item.status === 'in_progress');
+	}
+
+	/**
+	 * Sets the filtered data
+	 * @method setData
+	 * @param {Array} data - The data to set
+	 * @public
+	 * @action
+	 */
+	@action
+	setData(data) {
+		this.filteredData = data;
+	}
 }

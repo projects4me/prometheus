@@ -25,6 +25,7 @@ import { inject as service } from '@ember/service';
  *   @onLoadMore={{this.loadMoreItems}}
  *   @showSearch={{true}}
  *   @searchPlaceholder="Search items..."
+ *   @filterCallbacks={{this.filterCallbacks}}
  * >
  *   {{#each this.data as |item|}}
  *     <tr>
@@ -52,12 +53,28 @@ export default class AppUiTableComponent extends Component {
 	@tracked query = '';
 
 	/**
-	 * The filtered data based on the current search query
+	 * The filtered data based on the current search query and active filters
 	 * @property filteredData
 	 * @type {Array}
 	 * @public
 	 */
 	@tracked filteredData = this.args.data || [];
+
+	/**
+	 * The active filters that are currently applied
+	 * @property activeFilters
+	 * @type {Array}
+	 * @public
+	 */
+	@tracked activeFilters = [];
+
+	/**
+	 * The original data before any filtering is applied
+	 * @property originalData
+	 * @type {Array}
+	 * @public
+	 */
+	@tracked originalData = this.args.data || [];
 
 	/**
 	 * Determines whether the search input should be displayed
@@ -78,7 +95,10 @@ export default class AppUiTableComponent extends Component {
 	 * @default 'Search...'
 	 */
 	get searchPlaceholder() {
-		return this.args.searchPlaceholder || this.intl.t('views.app.components.table.searchPlaceholder');
+		return (
+			this.args.searchPlaceholder ||
+			this.intl.t('views.app.components.table.searchPlaceholder')
+		);
 	}
 
 	/**
@@ -125,6 +145,57 @@ export default class AppUiTableComponent extends Component {
 	}
 
 	/**
+	 * The filter callbacks provided by the parent component
+	 * @property filterCallbacks
+	 * @type {Object}
+	 * @public
+	 * @default {}
+	 */
+	get filterCallbacks() {
+		return this.args.filterCallbacks || {};
+	}
+
+	/**
+	 * The filters configuration for the table
+	 * @property filters
+	 * @type {Array}
+	 * @public
+	 * @default []
+	 */
+	get filters() {
+		const filters = this.args.filters || [];
+		return filters.map((filter) => {
+			return {
+				label: this.intl.t(
+					`views.app.widgets.recentIssues.filters.${filter}`
+				),
+				value: filter,
+				isActive: this.activeFilters.includes(filter)
+			};
+		});
+	}
+
+	/**
+	 * Applies all active filters to the given data
+	 * @method applyFilters
+	 * @param {Array} data - The data to filter
+	 * @returns {Array} - The filtered data
+	 * @private
+	 */
+	applyFilters(data) {
+		let filteredData = data.toArray ? data.toArray() : [...data];
+
+		this.activeFilters.forEach((filterName) => {
+			const filterCallback = this.filterCallbacks[filterName];
+			if (filterCallback) {
+				filteredData = filterCallback(filteredData);
+			}
+		});
+
+		return filteredData;
+	}
+
+	/**
 	 * Handles the search functionality for the table
 	 * If applyDefaultSearch is true, it filters the data based on searchFields
 	 * Otherwise, it calls the onSearch callback with the query and data
@@ -138,15 +209,16 @@ export default class AppUiTableComponent extends Component {
 	handleSearch(event) {
 		const query = event.target.value;
 		this.query = query;
+
 		if (this.args.applyDefaultSearch) {
 			if (!query || query.length === 0) {
-				this.filteredData = this.args.data;
-				this.onSearch(query, this.filteredData);
+				this.filteredData = this.applyFilters(this.originalData);
+				this.onSearch(query, this.filteredData, false);
 				return;
 			}
 
 			const searchFields = this.args.searchFields || [];
-			this.filteredData = this.args.data.filter((item) => {
+			const searchFilteredData = this.originalData.filter((item) => {
 				return searchFields.some((field) => {
 					const value = item.get(field);
 					return (
@@ -163,12 +235,14 @@ export default class AppUiTableComponent extends Component {
 				});
 			});
 
+			this.filteredData = this.applyFilters(searchFilteredData);
+
 			if (this.onSearch) {
-				this.onSearch(query, this.filteredData);
+				this.onSearch(query, this.filteredData, true);
 				return;
 			}
 		} else {
-			this.onSearch(query, this.args.data);
+			this.onSearch(query, this.originalData, false);
 		}
 	}
 
@@ -184,6 +258,35 @@ export default class AppUiTableComponent extends Component {
 	loadMore() {
 		if (this.onLoadMore) {
 			this.onLoadMore();
+		}
+	}
+
+	/**
+	 * Handles the filter toggle functionality for the table
+	 * Toggles the filter and reapplies all filters and search
+	 *
+	 * @method handleFilterToggle
+	 * @param {string} filterName - The name of the filter to toggle
+	 * @public
+	 * @action
+	 */
+	@action
+	handleFilterToggle(filterName) {
+		if (this.activeFilters.includes(filterName)) {
+			// Remove filter
+			this.activeFilters = this.activeFilters.filter(
+				(f) => f !== filterName
+			);
+		} else {
+			// Add filter
+			this.activeFilters = [...this.activeFilters, filterName];
+		}
+
+		if (this.query && this.query.length > 0) {
+			this.handleSearch({ target: { value: this.query } });
+		} else {
+			this.filteredData = this.applyFilters(this.originalData);
+			this.args.setData(this.filteredData);
 		}
 	}
 }
