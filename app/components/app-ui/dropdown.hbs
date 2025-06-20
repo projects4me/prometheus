@@ -1,0 +1,19 @@
+<div
+  class="app-dropdown"
+  {{click-outside this.closeDropdown disabled=(not this.isOpen)}}
+  ...attributes
+>
+  <button
+    type="button"
+    class="btn btn-primary app-dropdown-btn"
+    {{on "click" this.toggleDropdown}}
+    aria-haspopup="true"
+    aria-expanded={{this.isOpen}}
+  >
+    {{yield to="button"}}
+    <span class="caret"></span>
+  </button>
+  <div class="app-dropdown-content {{if this.isOpen 'show'}}">
+    {{yield to="content"}}
+  </div>
+</div>

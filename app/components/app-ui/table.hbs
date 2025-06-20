@@ -1,61 +1,72 @@
-<div class='box box-primary list-view' ...attributes>
-	<div class='box-header with-border'>
-		{{#if @header}}
-			<h3 class='box-title'>{{@header}}</h3>
-		{{/if}}
-		{{#if this.showSearch}}
-			<div class='box-tools pull-right filters'>
-				<label for='table-search' class='sr-only'>{{t 'views.app.components.table.searchPlaceholder'}}</label>
-				<Input
-					@value={{this.query}}
-					{{on 'keyup' this.handleSearch}}
-					name='query'
-					id='table-search'
-					autocomplete='off'
-					placeholder={{this.searchPlaceholder}}
-				/>
-			</div>
-		{{/if}}
-	</div>
+<div class="box box-primary list-view table-container" ...attributes>
+  <div class="box-header with-border">
+    {{#if @header}}
+      <h3 class="box-title">{{@header}}</h3>
+    {{/if}}
+    <div class="box-tools pull-right filters">
+      {{#if this.filters}}
+        <AppUi::Dropdown>
+          <:button>
+            <i class="fa fa-filter"></i>
+            <span>{{t "views.app.components.table.filters"}}</span>
+            {{#if this.activeFilters.length}}
+              <span class="badge" data-active-filters-count>{{this.activeFilters.length}}</span>
+            {{/if}}
+          </:button>
+          <:content>
+            {{#each this.filters as |filter|}}
+              <a href="#" {{on "click" (fn this.handleFilterToggle filter.value)}} data-filter-name="{{filter.value}}">
+                {{filter.label}}
+                {{#if filter.isActive}}
+                  <i class="fa fa-check pull-right"></i>
+                {{/if}}
+              </a>
+            {{/each}}
+          </:content>
+        </AppUi::Dropdown>
+      {{/if}}
+      {{#if this.showSearch}}
+      <div class="search-container">
+        <label for="table-search" class="sr-only">
+          {{t "views.app.components.table.searchPlaceholder"}}
+        </label>
+        <div class="input-group">
+          <span class="input-group-addon">
+            <i class="fa fa-search"></i>
+          </span>
+          <Input
+            @value={{this.query}}
+            {{on "keyup" this.handleSearch}}
+            name="query"
+            id="table-search"
+            autocomplete="off"
+            placeholder={{this.searchPlaceholder}}
+            class="form-control"
+          />
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  </div>
 
-	<div class='box-body no-padding'>
-		{{#if @useLazyLoading}}
-			<InfiniteScroll
-				@onLoadMore={{this.loadMore}}
-				@threshold={{150}}
-				@containerClass='table-responsive list-view'
-				@loadingText={{t 'views.app.components.table.loadingText'}}
-				@useLoadMoreButton={{true}}
-				@useScrollLoading={{false}}
-			>
-        {{#if (has-block 'body')}}
+  <div class="box-body no-padding">
+    {{#if @useLazyLoading}}
+      <InfiniteScroll
+        @onLoadMore={{this.loadMore}}
+        @threshold={{150}}
+        @containerClass="table-responsive list-view"
+        @loadingText={{t "views.app.components.table.loadingText"}}
+        @useLoadMoreButton={{true}}
+        @useScrollLoading={{false}}
+      >
+        {{#if (has-block "body")}}
           <AppUi::Table::TableContent
             @columns={{this.columns}}
             @data={{this.data}}
             @emptyStateMessage={{@emptyStateMessage}}
           >
-          <:body>
-            {{yield to='body'}}
-          </:body>
-				</AppUi::Table::TableContent>
-        {{else}}
-          <AppUi::Table::TableContent
-            @columns={{this.columns}}
-            @data={{this.data}}
-            @emptyStateMessage={{@emptyStateMessage}}
-          />        
-        {{/if}}
-			</InfiniteScroll>
-		{{else}}
-			<div class='table-responsive list-view'>
-				{{#if (has-block 'body')}}
-          <AppUi::Table::TableContent
-            @columns={{this.columns}}
-            @data={{this.data}}
-            @emptyStateMessage={{@emptyStateMessage}}
-          >
-          <:body>
-            {{yield to='body'}}
+            <:body>
+              {{yield to="body"}}
             </:body>
           </AppUi::Table::TableContent>
         {{else}}
@@ -65,7 +76,27 @@
             @emptyStateMessage={{@emptyStateMessage}}
           />
         {{/if}}
-			</div>
-		{{/if}}
-	</div>
+      </InfiniteScroll>
+    {{else}}
+      <div class="table-responsive list-view">
+        {{#if (has-block "body")}}
+          <AppUi::Table::TableContent
+            @columns={{this.columns}}
+            @data={{this.data}}
+            @emptyStateMessage={{@emptyStateMessage}}
+          >
+            <:body>
+              {{yield to="body"}}
+            </:body>
+          </AppUi::Table::TableContent>
+        {{else}}
+          <AppUi::Table::TableContent
+            @columns={{this.columns}}
+            @data={{this.data}}
+            @emptyStateMessage={{@emptyStateMessage}}
+          />
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
 </div>

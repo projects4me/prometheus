@@ -1,0 +1,15 @@
+.table-container {
+  .box-tools {
+    .app-dropdown {
+      margin-right: 0.5rem;
+      span {
+        margin: 0 0.4rem 0 0.1rem;
+      }
+    }
+    @include flexbox($alignItems: center);
+    .fa-filter {
+      font-size: 1.2rem;
+      line-height: 0;
+    }
+  }
+}
