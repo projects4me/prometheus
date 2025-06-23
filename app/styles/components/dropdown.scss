@@ -1,0 +1,45 @@
+.app-dropdown {
+    position: relative;
+    display: inline-block;
+  
+    .app-dropdown-btn {
+      cursor: pointer;
+      @include flexbox($display: inline-flex, $alignItems: center, $justifyContent: center);
+      border: none;
+      padding: 0.6rem 1.2rem;
+    }
+  
+    .app-dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #fff;
+      min-width: 160px;
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+      z-index: 100;
+      right: 0;
+      top: 100%;
+  
+      &.show {
+        display: block;
+      }
+  
+      > * {
+        color: inherit;
+        padding: 0.8rem 1rem;
+        text-decoration: none;
+        @include flexbox($display: flex, $alignItems: center, $justifyContent: space-between);
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+  
+        &:hover,
+        &:focus {
+          background-color: $primaryColor;
+          color: #fff;
+          outline: none;
+        }
+      }
+    }
+}

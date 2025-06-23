@@ -1066,7 +1066,11 @@
         "recentIssues": {
           "title": "Recent Issues",
           "searchPlaceholder": "Search recent issues...",
-          "emptyStateMessage": "No issues found"
+          "emptyStateMessage": "No issues found",
+          "filters": {
+            "assignedToMe": "Assigned to me",
+            "inProgressIssues": "In Progress"
+          }
         },
         "activeMilestones": {
           "title": "Active Milestones",
@@ -1218,7 +1222,8 @@
         },
         "table": {
           "searchPlaceholder": "Search...",
-          "loadingText": "Loading more items..."
+          "loadingText": "Loading more items...",
+          "filters": "Filters"
         }
       },
       "application": {

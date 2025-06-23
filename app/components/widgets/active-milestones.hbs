@@ -1,42 +1,43 @@
 <AppUi::Table
-	@header={{t 'views.app.widgets.activeMilestones.title'}}
-	@columns={{this.fields}}
-	@data={{@data}}
-	@showSearch={{true}}
-	@searchPlaceholder={{t 'views.app.widgets.activeMilestones.searchPlaceholder'}}
+  @header={{t "views.app.widgets.activeMilestones.title"}}
+  @columns={{this.fields}}
+  @data={{@data}}
+  @showSearch={{true}}
+  @searchPlaceholder={{t "views.app.widgets.activeMilestones.searchPlaceholder"}}
   @applyDefaultSearch={{true}}
-	@onSearch={{this.handleSearch}}
+  @onSearch={{this.handleSearch}}
   @searchFields={{@widgetSettings.searchFields}}
-	@onLoadMore={{this.loadMoreProjects}}
-	@emptyStateMessage={{t 'views.app.widgets.activeMilestones.emptyStateMessage'}}
-	@useLazyLoading={{@widgetSettings.useLazyLoading}}
-	data-active-milestones-table
+  @emptyStateMessage={{t "views.app.widgets.activeMilestones.emptyStateMessage"}}
+  @useLazyLoading={{@widgetSettings.useLazyLoading}}
+  data-active-milestones-table
 >
-	<:body>
-		{{#each this.filteredData as |item|}}
-			<tr>
-				<td>
-          <LinkTo @route="app.project.index" @model={{item.project.shortCode}} @query={{hash s_id=item.id}}>
+  <:body>
+    {{#each this.filteredData as |item|}}
+      <tr>
+        <td>
+          <LinkTo
+            @route="app.project.index"
+            @model={{item.project.shortCode}}
+            @query={{hash s_id=item.id}}
+          >
             {{item.name}}
           </LinkTo>
-				</td>
-				<td>
-					{{item.project.name}}
-				</td>
-				<td>
-					<span class='badge {{item.status}}'>{{t
-							(concat
-								'views.app.milestone.lists.status.' item.status
-							)
-						}}</span>
-				</td>
-				<td>
-					{{format-date date=item.startDate}}
-				</td>
-				<td>
-					{{format-date date=item.endDate}}
-				</td>
-			</tr>
-		{{/each}}
-	</:body>
+        </td>
+        <td>
+          {{item.project.name}}
+        </td>
+        <td>
+          <span class="badge {{item.status}}">{{t
+              (concat "views.app.milestone.lists.status." item.status)
+            }}</span>
+        </td>
+        <td>
+          {{format-date date=item.startDate}}
+        </td>
+        <td>
+          {{format-date date=item.endDate}}
+        </td>
+      </tr>
+    {{/each}}
+  </:body>
 </AppUi::Table>
