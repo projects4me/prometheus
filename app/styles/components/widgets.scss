@@ -1,15 +1,7 @@
 .widgets-container {
-    [data-recent-issues-table] {
-        .fa-filter {
-            font-size: 1.2rem;
-            span {
-                margin-left: 0.3rem;
-                margin-right: 0.6rem;
-                font-size: 1.4rem;
-            }
-        }
-        [data-active-filters-count] {
-            padding: 0.1rem 0.4rem;
-        }
+  [data-recent-issues-table] {
+    [data-active-filters-count] {
+      padding: 0.1rem 0.4rem;
     }
+  }
 }

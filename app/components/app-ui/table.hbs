@@ -1,4 +1,4 @@
-<div class="box box-primary list-view" ...attributes>
+<div class="box box-primary list-view table-container" ...attributes>
   <div class="box-header with-border">
     {{#if @header}}
       <h3 class="box-title">{{@header}}</h3>
@@ -7,7 +7,8 @@
       {{#if this.filters}}
         <AppUi::Dropdown>
           <:button>
-            <i class="fa fa-filter"><span>{{t "views.app.components.table.filters"}}</span></i>
+            <i class="fa fa-filter"></i>
+            <span>{{t "views.app.components.table.filters"}}</span>
             {{#if this.activeFilters.length}}
               <span class="badge" data-active-filters-count>{{this.activeFilters.length}}</span>
             {{/if}}
@@ -25,17 +26,25 @@
         </AppUi::Dropdown>
       {{/if}}
       {{#if this.showSearch}}
-        <label for="table-search" class="sr-only">{{t
-            "views.app.components.table.searchPlaceholder"
-          }}</label>
-        <Input
-          @value={{this.query}}
-          {{on "keyup" this.handleSearch}}
-          name="query"
-          id="table-search"
-          autocomplete="off"
-          placeholder={{this.searchPlaceholder}}
-        />
+      <div class="search-container">
+        <label for="table-search" class="sr-only">
+          {{t "views.app.components.table.searchPlaceholder"}}
+        </label>
+        <div class="input-group">
+          <span class="input-group-addon">
+            <i class="fa fa-search"></i>
+          </span>
+          <Input
+            @value={{this.query}}
+            {{on "keyup" this.handleSearch}}
+            name="query"
+            id="table-search"
+            autocomplete="off"
+            placeholder={{this.searchPlaceholder}}
+            class="form-control"
+          />
+          </div>
+        </div>
       {{/if}}
     </div>
   </div>
