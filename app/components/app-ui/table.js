@@ -22,7 +22,7 @@ import { inject as service } from '@ember/service';
  *   @searchFields={{['name', 'description']}}
  *   @applyDefaultSearch={{true}}
  *   @onSearch={{this.handleSearch}}
- *   @onLoadMore={{this.loadMoreItems}}
+ *   @onLoadMore={{this.loadMore}}
  *   @showSearch={{true}}
  *   @searchPlaceholder="Search items..."
  *   @filterCallbacks={{this.filterCallbacks}}
@@ -67,14 +67,6 @@ export default class AppUiTableComponent extends Component {
 	 * @public
 	 */
 	@tracked activeFilters = [];
-
-	/**
-	 * The original data before any filtering is applied
-	 * @property originalData
-	 * @type {Array}
-	 * @public
-	 */
-	@tracked originalData = this.args.data || [];
 
 	/**
 	 * Determines whether the search input should be displayed
@@ -166,13 +158,11 @@ export default class AppUiTableComponent extends Component {
 		const filters = this.args.filters || [];
 		return filters.map((filter) => {
 			return {
-				label: this.intl.t(
-					`views.app.widgets.recentIssues.filters.${filter}`
-				),
-				value: filter,
-				isActive: this.activeFilters.includes(filter)
+				label: filter.label,
+				value: filter.name,
+				isActive: this.activeFilters.includes(filter.name)
 			};
-		});
+		});	
 	}
 
 	/**
@@ -209,16 +199,16 @@ export default class AppUiTableComponent extends Component {
 	handleSearch(event) {
 		const query = event.target.value;
 		this.query = query;
-
+		let originalData = this.args.data;
 		if (this.args.applyDefaultSearch) {
 			if (!query || query.length === 0) {
-				this.filteredData = this.applyFilters(this.originalData);
+				this.filteredData = this.applyFilters(originalData);
 				this.onSearch(query, this.filteredData, false);
 				return;
 			}
 
 			const searchFields = this.args.searchFields || [];
-			const searchFilteredData = this.originalData.filter((item) => {
+			const searchFilteredData = originalData.filter((item) => {
 				return searchFields.some((field) => {
 					const value = item.get(field);
 					return (
@@ -242,7 +232,7 @@ export default class AppUiTableComponent extends Component {
 				return;
 			}
 		} else {
-			this.onSearch(query, this.originalData, false);
+			this.onSearch(query, originalData, false);
 		}
 	}
 
@@ -272,6 +262,7 @@ export default class AppUiTableComponent extends Component {
 	 */
 	@action
 	handleFilterToggle(filterName) {
+		const originalData = this.args.data;
 		if (this.activeFilters.includes(filterName)) {
 			// Remove filter
 			this.activeFilters = this.activeFilters.filter(
@@ -285,7 +276,7 @@ export default class AppUiTableComponent extends Component {
 		if (this.query && this.query.length > 0) {
 			this.handleSearch({ target: { value: this.query } });
 		} else {
-			this.filteredData = this.applyFilters(this.originalData);
+			this.filteredData = this.applyFilters(originalData);
 			this.args.setData(this.filteredData);
 		}
 	}

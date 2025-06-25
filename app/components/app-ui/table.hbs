@@ -52,17 +52,18 @@
   <div class="box-body no-padding">
     {{#if @useLazyLoading}}
       <InfiniteScroll
-        @onLoadMore={{this.loadMore}}
+        @onLoadMore={{this.onLoadMore}}
         @threshold={{150}}
         @containerClass="table-responsive list-view"
         @loadingText={{t "views.app.components.table.loadingText"}}
         @useLoadMoreButton={{true}}
         @useScrollLoading={{false}}
+        @pageSize={{@pageSize}}
       >
         {{#if (has-block "body")}}
           <AppUi::Table::TableContent
             @columns={{this.columns}}
-            @data={{this.data}}
+            @data={{this.filteredData}}
             @emptyStateMessage={{@emptyStateMessage}}
           >
             <:body>
@@ -72,7 +73,7 @@
         {{else}}
           <AppUi::Table::TableContent
             @columns={{this.columns}}
-            @data={{this.data}}
+            @data={{this.filteredData}}
             @emptyStateMessage={{@emptyStateMessage}}
           />
         {{/if}}
@@ -82,7 +83,7 @@
         {{#if (has-block "body")}}
           <AppUi::Table::TableContent
             @columns={{this.columns}}
-            @data={{this.data}}
+            @data={{this.filteredData}}
             @emptyStateMessage={{@emptyStateMessage}}
           >
             <:body>
@@ -92,7 +93,7 @@
         {{else}}
           <AppUi::Table::TableContent
             @columns={{this.columns}}
-            @data={{this.data}}
+            @data={{this.filteredData}}
             @emptyStateMessage={{@emptyStateMessage}}
           />
         {{/if}}

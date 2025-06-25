@@ -6,6 +6,7 @@ Feature: Profile | verify list of latest issues
     Given There is no pre-existing data
     And default scenario is loaded
     And User_1 is logged in
+    And User_1 selects Project 1
     And User has following details
     ---------------------------------------
     | latestIssues(userlatestissue)       |

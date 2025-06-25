@@ -16,6 +16,7 @@ import { tracked } from '@glimmer/tracking';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
+	
 	/**
 	 * The filtered data based on search criteria
 	 * @property filteredData
@@ -23,6 +24,14 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 	 * @public
 	 */
 	@tracked filteredData = this.args.data || [];
+
+	/**
+	 * The original data before any filtering is applied
+	 * @property originalData
+	 * @type {Array}
+	 * @public
+	 */
+	@tracked originalData = this.args.data || [];
 
 	/**
 	 * Handles the search functionality for the recent issues table
@@ -40,7 +49,26 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 	}
 
 	/**
-	 * The filter callbacks for the table component
+	 * The filters for the recent issues widget.
+	 * @property filters
+	 * @type {Array}
+	 * @public
+	 */
+	get filters() {
+		let filters = this.args.widgetSettings.filters || [];
+		if (filters.length === 0) {
+			return [];
+		}
+		return filters.map(filter => {
+			return {
+				name: filter,
+				label: this.intl.t(`views.app.widgets.recentIssues.filters.${filter}`)
+			}
+		});
+	}
+
+	/**
+	 * The filter callbacks for the recent issues widget.
 	 * @property filterCallbacks
 	 * @type {Object}
 	 * @public
@@ -89,5 +117,25 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 	@action
 	setData(data) {
 		this.filteredData = data;
+	}
+
+	/**
+	 * Loads more issues.
+	 * 
+	 * @method onLoadMore
+	 * @public
+	 * @action
+	 */
+	@action 
+	async onLoadMore(paginationInfo = {}) {
+		let issueOptions = this.args.widgetSettings.options;
+		issueOptions.page = paginationInfo.page;
+		issueOptions.limit = paginationInfo.pageSize;
+		let issues = await this.store.query('issue', issueOptions);
+		this.filteredData = [...this.filteredData.toArray(), ...issues.toArray()];
+		this.originalData = [...this.originalData.toArray(), ...issues.toArray()];
+		return {
+			items: issues
+		};
 	}
 }

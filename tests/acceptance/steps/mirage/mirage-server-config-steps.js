@@ -5,8 +5,9 @@ import projectScenario from 'prometheus/mirage/scenarios/project';
 export const given = function () {
     return [
         {
-            "There is no pre-existing data": (assert) => async function () {
+            "There is no pre-existing data": (assert, ctx) => async function () {
                 server.db.emptyData();
+                ctx.clear();
                 assert.ok(true, "There is no pre-exisiting data");
             }
         },

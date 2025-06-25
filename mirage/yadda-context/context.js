@@ -45,4 +45,19 @@ export default class Context {
     get(property) {
         return this[property];
     }
+
+    /**
+     * This function clears all properties from the context, resetting it to its initial state.
+     *
+     * @method clear
+     * @public
+     */
+    clear() {
+        const keys = Object.keys(this);
+        keys.forEach(key => {
+            if (key !== 'instance') {
+                delete this[key];
+            }
+        });
+    }
 }

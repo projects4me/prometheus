@@ -452,6 +452,7 @@ export default Object.extend({
                         order: 'DESC',
                         limit: 5
                     },
+                    pageSize: 5,
                     fields: ['issueNumber', 'subject', 'status', {label: 'project', valueKey: 'project.name'}, 'startDate', 'endDate'],
                     translationKey: 'views.app.issue.fields',
                     searchFields: ['issueNumber', 'subject', 'project.name'],

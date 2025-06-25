@@ -25,6 +25,16 @@ export default class WidgetsComponent extends Component {
 	@service intl;
 
 	/**
+     * This is the store service which is used to interact with the data API.
+     *
+     * @property store
+     * @type Ember.Service
+     * @for App
+     * @protected
+     */
+	@service store;
+
+	/**
 	 * Processes and formats the fields configuration from widgetSettings
 	 * Translates field labels using the provided translationKey
 	 *
