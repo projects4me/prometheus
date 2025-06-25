@@ -1,7 +1,7 @@
 <AppUi::Table
   @header={{t "views.app.widgets.recentIssues.title"}}
   @columns={{this.fields}}
-  @data={{@data}}
+  @data={{this.originalData}}
   @showSearch={{true}}
   @searchPlaceholder={{t "views.app.widgets.recentIssues.searchPlaceholder"}}
   @emptyStateMessage={{t "views.app.widgets.recentIssues.emptyStateMessage"}}
@@ -9,9 +9,11 @@
   @applyDefaultSearch={{true}}
   @onSearch={{this.handleSearch}}
   @useLazyLoading={{@widgetSettings.useLazyLoading}}
-  @filters={{@widgetSettings.filters}}
+  @filters={{this.filters}}
   @filterCallbacks={{this.filterCallbacks}}
   @setData={{this.setData}}
+  @onLoadMore={{this.onLoadMore}}
+  @pageSize={{@widgetSettings.pageSize}}
   data-recent-issues-table
 >
   <:body>

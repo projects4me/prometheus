@@ -1,6 +1,7 @@
 import getRequestData from "../helpers/parse-request";
 import pushObjectInModel from "../helpers/push-object-in-model";
 import getValueFromQuery from "../helpers/get-value-from-query";
+import paginate from '../helpers/paginate';
 
 export function register(server, ctx) {
     server.get('/issue', (schema, request) => {
@@ -25,6 +26,10 @@ export function register(server, ctx) {
             model = customIssues();
         }
 
+        if(ctx.get(`paginateIssues`)) {
+            const paginatedModels = paginate(model, request.queryParams);
+            return paginatedModels;
+        }
         return model;
     });
 

@@ -61,24 +61,11 @@ export default class NotificationsService extends Service {
 	@tracked unreadCount = 0;
 
 	/**
-	 * Page number for pagination
+	 * Track the page size
 	 * @type {Number}
 	 * @public
 	 */
-	@tracked page = 1;
-
-	/**
-	 * Indicates if notifications are currently being loaded
-	 * @type {Boolean}
-	 * @public
-	 */
-	@tracked isLoading = false;
-
-	/**
-	 * Page size for notification queries
-	 * @type {Number}
-	 */
-	pageSize = 15;
+	@tracked pageSize = 15;
 
 	/**
 	 * Timer ID for the notification polling interval
@@ -104,44 +91,38 @@ export default class NotificationsService extends Service {
 
 	/**
 	 * Loads notifications for the current user
-	 * Fetches notifications with pagination
+	 * Now focuses only on data fetching, not pagination management
 	 *
 	 * @method loadNotifications
-	 * @param {Boolean} reset Whether to reset pagination and load from first page
-	 * @param {Object} infiniteScrollOptions Additional options
+	 * @param {Object} paginationInfo - Object containing page, pageSize, etc.
 	 * @public
 	 * @async
-	 * @returns {Promise<Boolean>} Returns false if at last page or error occurs
+	 * @returns {Promise<Object>} Returns object with items and metadata
 	 */
 	@action
-	async loadNotifications(reset = false, infiniteScrollOptions = {}) {
+	async loadNotifications(paginationInfo = {}) {
 		if (!this.currentUser.user) {
-			return false;
+			return { items: [] }; // No hasReachedEnd here
 		}
 
-		if (reset) {
-			this.resetPagination();
-		}
+		const { page, pageSize } = paginationInfo;
 
-		if (
-			this.isLoading ||
-			(this.isLastPage && !infiniteScrollOptions.loadMoreClicked)
-		) {
-			return false;
-		}
-
-		this.isLoading = true;
 		try {
 			let loadedNotifications = [];
 
 			// Load unread notifications first if beyond page 1
-			if (this.page > 1) {
-				const unreadResult = await this.loadUnreadNotifications();
+			if (page > 1) {
+				const unreadResult = await this.loadUnreadNotifications(
+					pageSize
+				);
 				loadedNotifications = unreadResult.notifications;
 			}
 
 			// Load regular paginated notifications
-			const paginatedResult = await this.loadPaginatedNotifications();
+			const paginatedResult = await this.loadPaginatedNotifications(
+				page,
+				pageSize
+			);
 			loadedNotifications = [
 				...loadedNotifications,
 				...paginatedResult.notifications
@@ -152,30 +133,44 @@ export default class NotificationsService extends Service {
 				paginatedResult.meta
 			);
 
-			// Update pagination state
-			this.isLastPage =
-				paginatedResult.notifications.length < this.pageSize;
-			if (paginatedResult.notifications.length > 0) {
-				this.page++;
-			}
-			return !this.isLastPage;
+			return {
+				items: loadedNotifications,
+				meta: paginatedResult.meta
+			};
 		} catch (error) {
 			console.error('Error loading notifications:', error);
-			return false;
-		} finally {
-			this.isLoading = false;
+			return { items: [] };
 		}
 	}
 
 	/**
-	 * Resets pagination state
-	 * @method resetPagination
+	 * Loads paginated notifications
+	 * @method loadPaginatedNotifications
 	 * @public
+	 * @async
+	 * @param {Number} page - Page number
+	 * @param {Number} pageSize - Page size
+	 * @returns {Promise<Object>} Object containing notifications and metadata
 	 */
-	resetPagination() {
-		this.page = 1;
-		this.notifications = [];
-		this.isLastPage = false;
+	async loadPaginatedNotifications(page, pageSize) {
+		const options = {
+			rels: 'recipientRecords',
+			query: `((recipientRecords.userId : ${this.currentUser.user.id}))`,
+			sort: 'Systemnotification.dateCreated',
+			order: 'desc',
+			limit: pageSize,
+			page: page
+		};
+
+		const userNotifications = await this.store.query(
+			'systemnotification',
+			options
+		);
+
+		return {
+			notifications: userNotifications.toArray(),
+			meta: userNotifications.meta
+		};
 	}
 
 	/**
@@ -191,7 +186,7 @@ export default class NotificationsService extends Service {
 			query: `((recipientRecords.userId : ${this.currentUser.user.id}) AND (recipientRecords.isRead : 0))`,
 			sort: 'Systemnotification.dateCreated',
 			order: 'desc',
-			limit: this.pageSize
+			limit: 15
 		};
 
 		const unreadNotifications = await this.store.query(
@@ -200,36 +195,7 @@ export default class NotificationsService extends Service {
 		);
 
 		return {
-			notifications: unreadNotifications.toArray(),
-			meta: unreadNotifications.meta
-		};
-	}
-
-	/**
-	 * Loads paginated notifications
-	 * @method loadPaginatedNotifications
-	 * @public
-	 * @async
-	 * @returns {Promise<Object>} Object containing notifications and metadata
-	 */
-	async loadPaginatedNotifications() {
-		const options = {
-			rels: 'recipientRecords',
-			query: `((recipientRecords.userId : ${this.currentUser.user.id}))`,
-			sort: 'Systemnotification.dateCreated',
-			order: 'desc',
-			limit: this.pageSize,
-			page: this.page
-		};
-
-		const userNotifications = await this.store.query(
-			'systemnotification',
-			options
-		);
-
-		return {
-			notifications: userNotifications.toArray(),
-			meta: userNotifications.meta
+			notifications: unreadNotifications.toArray()
 		};
 	}
 

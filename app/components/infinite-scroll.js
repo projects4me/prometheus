@@ -56,6 +56,22 @@ export default class InfiniteScrollComponent extends Component {
 	@tracked hasReachedEnd = false;
 
 	/**
+	 * Tracks the current page number
+	 * @property page
+	 * @type {number}
+	 * @public
+	 */
+	@tracked page = 2;
+
+	/**
+	 * Tracks the page size
+	 * @property pageSize
+	 * @type {number}
+	 * @public
+	 */
+	@tracked pageSize = this.args.pageSize || 5;
+
+	/**
 	 * Gets the threshold distance from bottom before triggering load more
 	 * @property threshold
 	 * @type {number}
@@ -159,6 +175,17 @@ export default class InfiniteScrollComponent extends Component {
 	}
 
 	/**
+	 * Resets pagination state
+	 * @method resetPagination
+	 * @public
+	 */
+	@action
+	resetPagination() {
+		this.page = 1;
+		this.hasReachedEnd = false;
+	}
+
+	/**
 	 * Loads more content using the provided callback
 	 * @method loadMore
 	 * @param {Event} event - The load more event
@@ -166,13 +193,30 @@ export default class InfiniteScrollComponent extends Component {
 	 */
 	@action
 	async loadMore(event) {
-		if (this.isLoading) return;
+		if (this.isLoading || this.hasReachedEnd) return;
+		
 		const loadMoreBtnClicked = event.type !== 'scroll';
+		
 		try {
 			this.isLoading = true;
-			await this.args.onLoadMore(false, {
+			
+			// Call the provided loadMore function with current page info
+			const result = await this.args.onLoadMore({
+				page: this.page,
+				pageSize: this.pageSize,
 				loadMoreClicked: loadMoreBtnClicked
 			});
+
+			// Handle the result
+			if (result && result.items) {
+
+				// Check if we've reached the end
+				if (result.items.length < this.pageSize || result.hasReachedEnd) {
+					this.hasReachedEnd = true;
+				} else {
+					this.page++;
+				}
+			}
 		} catch (error) {
 			console.error('Failed to load more items', error);
 		} finally {

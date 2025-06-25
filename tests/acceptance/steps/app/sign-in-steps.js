@@ -47,6 +47,8 @@ export const when = function () {
 					) {
 						authenticateUser(userId, ctx);
 					}
+
+					ctx.set('currentUser', server.schema.users.find(userId));
 					await visit('/signin');
 					assert.ok(true, 'User clicked on signin button');
 				}
