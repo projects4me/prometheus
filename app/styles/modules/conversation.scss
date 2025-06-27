@@ -110,6 +110,15 @@
 
     .box-comment {
       margin-bottom: 0.5rem;
+      .img-sm {
+        width: 30px !important;
+        height: 30px !important;
+      }
+
+      img {
+        width: 100% !important;
+        height: 100% !important;
+      }
     }
   }
 
