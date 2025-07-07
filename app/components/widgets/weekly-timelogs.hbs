@@ -1,0 +1,120 @@
+<AppUi::Table
+  @header={{t "views.app.widgets.weeklyTimelogs.title"}}
+  @columns={{this.fields}}
+  @data={{this.data}}
+  @useLazyLoading={{@widgetSettings.useLazyLoading}}
+  @showSearch={{@widgetSettings.showSearch}}
+  @applyDefaultSearch={{true}}
+  @filters={{this.filters}}
+  @onSearch={{this.handleSearch}}
+  @filterCallbacks={{this.filterCallbacks}}
+  @onPaginate={{this.onPaginate}}
+  @pageSize={{@widgetSettings.pageSize}}
+  @usePagination={{@widgetSettings.usePagination}}
+  @containerClass="weekly-timelogs"
+  @searchFields={{@widgetSettings.searchFields}}
+  @setData={{this.setData}}
+  data-weekly-timelogs
+>
+  <:center>
+    <h6><b>{{format-date date=this.startWeek}}
+        -
+        {{format-date date=this.endWeek}}</b></h6>
+  </:center>
+
+  <:body>
+    {{#if this.timelogsByIssueNumber.length}}
+      {{#each this.timelogsByIssueNumber as |timelog|}}
+        <tr>
+          {{! Issue Number }}
+          <td>
+            <LinkTo
+              @route="app.project.issue.page"
+              @models={{array
+                (lowercase timelog.projectShortcode)
+                timelog.issueNumber
+              }}
+            >
+              #{{timelog.issueNumber}}
+            </LinkTo>
+          </td>
+          {{! Issue Subject }}
+          <td>
+            {{timelog.issueSubject}}
+          </td>
+          {{! Spent Time }}
+          <td>
+            {{#if timelog.timelogContext.spent}}
+              <b>{{timelog.timelogContext.spent.hours}}
+                {{t "views.app.widgets.weeklyTimelogs.hours"}}</b>
+              {{#if (gt timelog.timelogContext.spent.minutes 0)}}
+                <b>{{timelog.timelogContext.spent.minutes}}
+                  {{t "views.app.widgets.weeklyTimelogs.minutes"}}</b>
+              {{/if}}
+            {{else}}
+              <b>0 {{t "views.app.widgets.weeklyTimelogs.hours"}}</b>
+            {{/if}}
+          </td>
+          {{! Estimated Time }}
+          <td>
+            {{#if timelog.timelogContext.est}}
+              <b>{{timelog.timelogContext.est.hours}}
+                {{t "views.app.widgets.weeklyTimelogs.hours"}}</b>
+              {{#if (gt timelog.timelogContext.est.minutes 0)}}
+                <b>{{timelog.timelogContext.est.minutes}}
+                  {{t "views.app.widgets.weeklyTimelogs.minutes"}}</b>
+              {{/if}}
+            {{else}}
+              <b>0 {{t "views.app.widgets.weeklyTimelogs.hours"}}</b>
+            {{/if}}
+          </td>
+          {{! Issue Status }}
+          <td>
+            <span class="badge {{timelog.issueStatus}}">{{t
+                (concat "views.app.issue.lists.status." timelog.issueStatus)
+              }}</span>
+          </td>
+          {{! Project }}
+          <td>
+            <LinkTo
+              @route="app.project.index"
+              @model={{timelog.projectShortcode}}
+            >
+              {{timelog.projectShortcode}}
+            </LinkTo>
+          </td>
+        </tr>
+      {{/each}}
+      <tr>
+        <td colspan="6">
+          <div class="timelogs-summary">
+            <b>{{t "views.app.widgets.weeklyTimelogs.totalSpentTime"}}:
+              {{this.totalSpentTime.hours}}
+              {{t "views.app.widgets.weeklyTimelogs.hours"}}
+              {{#if (gt this.totalSpentTime.minutes 0)}}
+                {{this.totalSpentTime.minutes}}
+                {{t "views.app.widgets.weeklyTimelogs.minutes"}}
+              {{/if}}
+            </b>
+            <b>{{t "views.app.widgets.weeklyTimelogs.totalEstimatedTime"}}:
+              {{this.totalEstimatedTime.hours}}
+              {{t "views.app.widgets.weeklyTimelogs.hours"}}
+              {{#if (gt this.totalEstimatedTime.minutes 0)}}
+                {{this.totalEstimatedTime.minutes}}
+                {{t "views.app.widgets.weeklyTimelogs.minutes"}}
+              {{/if}}
+            </b>
+          </div>
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="6">
+          <Exceptions::NothingFound
+            @description={{this.timelogEmptyStateMessage}}
+          />
+        </td>
+      </tr>
+    {{/if}}
+  </:body>
+</AppUi::Table>

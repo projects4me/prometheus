@@ -1,7 +1,7 @@
 <AppUi::Table
   @header={{t "views.app.widgets.activeMilestones.title"}}
   @columns={{this.fields}}
-  @data={{@data}}
+  @data={{this.originalData}}
   @showSearch={{true}}
   @searchPlaceholder={{t "views.app.widgets.activeMilestones.searchPlaceholder"}}
   @applyDefaultSearch={{true}}
@@ -9,6 +9,7 @@
   @searchFields={{@widgetSettings.searchFields}}
   @emptyStateMessage={{t "views.app.widgets.activeMilestones.emptyStateMessage"}}
   @useLazyLoading={{@widgetSettings.useLazyLoading}}
+  @onLoadMore={{this.onLoadMore}}
   data-active-milestones-table
 >
   <:body>

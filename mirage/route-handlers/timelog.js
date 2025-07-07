@@ -2,6 +2,15 @@ import getRequestData from "../helpers/parse-request";
 import Collection from 'ember-cli-mirage/orm/collection';
 
 export function register(server, ctx) {
+
+    server.get('/timelog', (schema, request) => {
+        let model = schema.timelogs.all();
+        if(ctx.get('customCallback')) {
+            return ctx.get('customCallback')(model);
+        }
+        return model;
+    });
+
     server.post('/timelog', (schema, request) => {
         let requestData = getRequestData(request);
         let timelog = server.create('timelog', requestData.attributes);

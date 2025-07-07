@@ -1,0 +1,46 @@
+<div class="box box-primary">
+  <div class="box-header with-border">
+    <h3 class="box-title">
+      {{t "views.app.widgets.weeklyActivities.title"}}
+    </h3>
+  </div>
+  <div class="box-body" data-weekly-activities>
+    <Pagination
+      @onPageChange={{this.onPageChange}}
+      @containerClass="weekly-activities"
+    >
+      <:center>
+        <h6><b>{{format-date date=this.startWeek}}
+            -
+            {{format-date date=this.endWeek}}</b></h6>
+      </:center>
+      <:default>
+        <AppUi::Timeline
+          @activities={{this.activitiesList}}
+          as |key activityArray|
+        >
+          {{#let (get activityArray 0) as |activity|}}
+            {{#if (eq activity.relatedTo "issue")}}
+              <LinkTo
+                @route="app.project.issue.page"
+                @models={{array
+                  activity.issue.projectShortcode
+                  activity.issue.issueNumber
+                }}
+              >
+                {{key}}
+              </LinkTo>
+            {{else}}
+              <LinkTo
+                @route="app.project.index"
+                @model={{activity.project.shortCode}}
+              >
+                {{key}}
+              </LinkTo>
+            {{/if}}
+          {{/let}}
+        </AppUi::Timeline>
+      </:default>
+    </Pagination>
+  </div>
+</div>

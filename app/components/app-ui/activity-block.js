@@ -4,7 +4,7 @@
 
 import Component from '@glimmer/component';
 import { set } from '@ember/object';
-
+import { inject as service } from '@ember/service';
 /**
  * This component is used to render activity block.
  *
@@ -24,6 +24,15 @@ export default class AppUiActivityBlockComponent extends Component {
      * @private
      */
     relatedToList = ["project", "issue"];
+
+    /**
+     * This service is used to get current user.
+     *
+     * @property currentUser
+     * @type Service
+     * @for AppUiActivityBlockComponent
+     */
+    @service currentUser;
 
     /**
      * This function returns the type of activity block to render.
@@ -47,7 +56,11 @@ export default class AppUiActivityBlockComponent extends Component {
      * @public
      */
     setActivityTime(activity) {
-        let createdSince = moment.duration(moment(new Date()).diff(moment(activity.dateCreated))).humanize();
-        set(activity, "createdSince", createdSince);
+		let userTimezone = this.currentUser.user.timezone;
+		const now = moment().tz(userTimezone);
+		const dateInUserTz = moment.utc(activity.dateCreated).tz(userTimezone);
+
+        const createdSince = moment.duration(now.diff(dateInUserTz)).humanize();
+        set(activity,"createdSince", createdSince);
     }
 }

@@ -24,6 +24,14 @@ export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 	@tracked filteredData = this.args.data || [];
 
 	/**
+	 * The original data
+	 * @property originalData
+	 * @type {Array}
+	 * @public
+	 */
+	@tracked originalData = this.args.data || [];
+
+	/**
 	 * Handles the search functionality for the milestones table
 	 * Updates the filteredData property with the filtered results
 	 *
@@ -36,5 +44,31 @@ export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 	@action
 	handleSearch(query, filteredDataByTableComponent) {
 		this.filteredData = filteredDataByTableComponent;
+	}
+
+	/**
+	 * Loads more milestones.
+	 *
+	 * @method onLoadMore
+	 * @public
+	 * @action
+	 */
+	@action
+	async onLoadMore(paginationInfo = {}) {
+		let milestoneOptions = _.cloneDeep(this.args.widgetSettings.options);
+		milestoneOptions.page = paginationInfo.page;
+		milestoneOptions.limit = paginationInfo.pageSize;
+		let milestones = await this.store.query('milestone', milestoneOptions);
+		this.filteredData = [
+			...this.filteredData.toArray(),
+			...milestones.toArray()
+		];
+		this.originalData = [
+			...this.originalData.toArray(),
+			...milestones.toArray()
+		];
+		return {
+			items: milestones
+		};
 	}
 }

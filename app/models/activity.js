@@ -147,4 +147,13 @@ export default Model.extend({
      */
     project : belongsTo('project'),
 
+    /**
+     * The issue the activity is related to
+     *
+     * @property issue
+     * @type IssueModel
+     * @for Activity
+     * @private
+     */
+    issue : belongsTo('issue'),
 });

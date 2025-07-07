@@ -70,17 +70,19 @@
       }
     }
   }
+}
 
-  .infinite-scroll-load-more {
-    padding: 15px;
-    text-align: center;
-    border-top: 1px solid #eee;
-    margin-top: 10px;
+// Load more button styles moved outside the container
+.infinite-scroll-load-more {
+  padding: 0.5rem;
+  text-align: center;
+  border-top: 1px solid #eee;
 
-    .load-more-button {
-      i {
-        margin-right: 8px;
-      }
+  .load-more-button {
+    padding: 0.3rem 0.8rem;
+    font-size: 1.2rem;
+    i {
+      margin-right: 0.2rem;
     }
   }
 }

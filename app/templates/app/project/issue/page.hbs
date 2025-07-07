@@ -172,9 +172,9 @@
               </div>
               <div class="box-body no-padding">
                 <div class="issue-activities">
-                  <AppUi::Timeline
-                    @activities={{this.activities}}
-                  />
+                  <AppUi::Timeline @activities={{this.activities}} @dataKey='data' as |key|>
+                    {{moment-format key "Do MMM. YYYY"}}
+                  </AppUi::Timeline>
                 </div>
               </div>
             </div>

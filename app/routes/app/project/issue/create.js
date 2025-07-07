@@ -82,7 +82,8 @@ export default App.extend({
             assignee: _self.currentUser.user.id,
             owner: _self.currentUser.user.id,
             project: _self.project,
-            projectId: _self.project.id
+            projectId: _self.project.id,
+            projectShortcode: _self.project.shortCode
         });
 
         const issueDescription = _.clone(issue.description);
