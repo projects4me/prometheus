@@ -157,6 +157,16 @@ export default Model.extend({
     "spentOn": attr('string'),
 
     /**
+     * The project id
+     *
+     * @property projectId
+     * @type String
+     * @for Timelog
+     * @private
+     */
+    "projectId": attr('string'),
+
+    /**
      * The shortcode of the project
      *
      * @property projectShortcode
