@@ -445,7 +445,9 @@ export default class AppProjectIssuePageController extends PrometheusController.
 
         // Validate the time log and spentOn
         if (_self._validateLog(newLog)) {
-            newLog.set('issueId', _self.get('issue').get('id'));
+            newLog.set('issueId', _self.issue.id);
+            newLog.set('projectId', _self.issue.projectId);
+            newLog.set('projectShortcode', _self.issue.projectShortcode);
             newLog.set('context', 'spent');
 
             newLog.save().then(function () {
@@ -487,6 +489,8 @@ export default class AppProjectIssuePageController extends PrometheusController.
         // Validate the time log and spentOn
         if (_self._validateEstimate(newLog)) {
             newLog.set('issueId', _self.issue.id);
+            newLog.set('projectId', _self.issue.projectId);
+            newLog.set('projectShortcode', _self.issue.projectShortcode);
             newLog.set('context', 'est');
 
             newLog.save().then(function () {
