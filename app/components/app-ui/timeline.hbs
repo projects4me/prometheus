@@ -1,5 +1,7 @@
-<ul class="timeline">
-  {{!--
+{{#if (gt this.activitiesCount 0)}}
+
+  <ul class="timeline">
+    {{!
 
     The timeline supports the following use cases
 
@@ -13,25 +15,27 @@
     08. Related attached
     09. Related completed
     // Others to be added here
-  --}}
+  }}
+    {{#each-in this.activitiesList as |key activityArray|}}
+      {{! Group the time label }}
+      <li class="time-label">
+        <span class="bg-primary">
+          {{yield key activityArray}}
+        </span>
+      </li>
 
-  {{#each-in @activities as |dateCreated activityCont|}}
-    {{!-- Group the time label --}}
-    <li class="time-label">
-      <span class="bg-primary">
-        {{moment-format dateCreated "Do MMM. YYYY"}}
-      </span>
-    </li>
+      {{#each activityArray as |activity|}}
+        <AppUi::ActivityBlock @activity={{activity}} />
+      {{/each}}
 
-    {{#each-in activityCont.data as |index activity|}}
-      <AppUi::ActivityBlock 
-        @activity={{activity}}
-      />
     {{/each-in}}
 
-  {{/each-in}}
-
-  <li>
-    <i class="fa fa-clock-o bg-gray"></i>
-  </li>
-</ul>
+    <li>
+      <i class="fa fa-clock-o bg-gray"></i>
+    </li>
+  </ul>
+{{else}}
+  <Exceptions::NothingFound
+    @description={{t "views.app.components.timeline.noActivitiesFound"}}
+  />
+{{/if}}

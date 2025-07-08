@@ -11,9 +11,7 @@ export const given = function () {
 			'$userName is logged in': (assert, ctx) =>
 				async function (userName) {
 					let id = userName.slice(-1);
-					server['customUser'] = (schema) => {
-						return schema.users.find(id);
-					};
+					ctx.set('loggedInUser', server.schema.users.find(id));
 					await authenticateUser(id, ctx);
 					assert.ok(true, 'User is logged in');
 				}

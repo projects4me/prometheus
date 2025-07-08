@@ -14,7 +14,8 @@ Feature: Recent Issues Widget | load more issues
     And There is need to paginate the issues
     When User navigates to app
     And User clicks on load more button in recent issues widget
-    Then There should be 10 issues displayed in recent issues widget
+    #initial limit for issues are 5 set in metadata
+    Then There should be 10 issues present in recent issues widget
 
   Scenario: loading more issues with load more button - second click
     Given There is no pre-existing data
@@ -30,4 +31,4 @@ Feature: Recent Issues Widget | load more issues
     When User navigates to app
     And User clicks on load more button in recent issues widget
     And User clicks on load more button in recent issues widget again
-    Then There should be 15 issues displayed in recent issues widget
+    Then There should be 15 issues present in recent issues widget

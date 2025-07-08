@@ -17,9 +17,6 @@ export default Factory.extend({
     modifiedUser() {
         return (_.random(1, 10)).toString();
     },
-    issueId() {
-        return (_.random(1, 10)).toString();
-    },
     minutes() {
         return (_.random(0, 60)).toString();
     },

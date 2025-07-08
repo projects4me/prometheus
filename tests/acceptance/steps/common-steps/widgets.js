@@ -1,0 +1,179 @@
+import steps from '../steps';
+import { click, find, findAll } from '@ember/test-helpers';
+import DateUtils from 'prometheus/utils/date';
+import Collection from 'ember-cli-mirage/orm/collection';
+import Context from '../../../../mirage/yadda-context/context';
+
+const ctx = new Context();
+export const selectors = {
+	'recent issues': {
+		selector: '[data-recent-issues-table]',
+		handler: tableHandler,
+		noContent: {
+			message: 'No issues found'
+		}
+	},
+	'active milestones': {
+		selector: '[data-active-milestones-table]',
+		handler: tableHandler,
+		noContent: {
+			message: 'No milestones found'
+		}
+	},
+	'weekly activities': {
+		selector: '[data-weekly-activities]',
+		handler: (assert, ctx, expectedCount) => {
+			assert.dom('[data-weekly-activities] .timeline-item').exists({
+				count: parseInt(expectedCount)
+			});
+		},
+		noContent: {
+			message: 'No activities found'
+		}
+	},
+	'weekly timelogs': {
+		selector: '[data-weekly-timelogs]',
+		handler: (assert, ctx, expectedCount, modelType, widget) => {
+			const rows = findAll(`${selectors[widget].selector} tbody tr`);
+			//minus 1 for the footer row
+			assert.equal(
+				rows.length - 1,
+				parseInt(expectedCount),
+				`${expectedCount} timelogs should be present in weekly timelogs widget`
+			);
+		},
+		noContent: {
+			message: 'No timelogs found'
+		}
+	}
+};
+
+export const when = function () {
+	return [
+		{
+			'User clicks on load more button in $widget widget': (
+				assert,
+				ctx
+			) =>
+				async function (widget) {
+					const loadMoreButton = find(
+						`${selectors[widget].selector} [data-load-more-button]`
+					);
+					if (loadMoreButton) {
+						await click(loadMoreButton);
+						assert.ok(
+							true,
+							`User clicked on load more button in ${widget}`
+						);
+					} else {
+						assert.ok(
+							false,
+							`Load more button not found in ${widget}`
+						);
+					}
+				}
+		},
+		{
+			'User clicks on load more button in $widget widget again': (
+				assert,
+				ctx
+			) =>
+				async function (widget) {
+					const loadMoreButton = find(
+						`${selectors[widget].selector} [data-load-more-button]`
+					);
+					if (loadMoreButton) {
+						await click(loadMoreButton);
+						assert.ok(
+							true,
+							`User clicked on load more button in ${widget} again`
+						);
+					} else {
+						assert.ok(
+							false,
+							`Load more button not found in ${widget}`
+						);
+					}
+				}
+		}
+	];
+};
+
+export const then = function () {
+	return [
+		{
+			'There should be $expectedCount $modelType present in $widget widget':
+				(assert, ctx) =>
+					async function (expectedCount, modelType, widget) {
+						selectors[widget].handler(
+							assert,
+							ctx,
+							expectedCount,
+							modelType,
+							widget
+						);
+					}
+		},
+		{
+			'There should be no $modelType present in $widget widget': (
+				assert,
+				ctx
+			) =>
+				async function (modelType, widget) {
+					assert
+						.dom(
+							`${selectors[widget].selector} .no-content .description`
+						)
+						.hasText(selectors[widget].noContent.message);
+				}
+		}
+	];
+};
+
+function tableHandler(assert, ctx, expectedCount, modelType, widget) {
+	const rows = findAll(`${selectors[widget].selector} tbody tr`);
+	assert.equal(
+		rows.length,
+		parseInt(expectedCount),
+		`${expectedCount} ${modelType} should be present in ${widget}`
+	);
+}
+
+export function filterWeeklyWidgetModel(modelType, collection) {
+	if (!ctx.get('page')) {
+		ctx.set('page', 1);
+	}
+	let { startOfWeek, endOfWeek } = DateUtils.getWeekRangeForPage(
+		ctx.get('page')
+	);
+	let models = collection.models.filter(
+		(model) =>
+			model.dateCreated >= startOfWeek && model.dateCreated <= endOfWeek
+	);
+	return new Collection(modelType, models);
+}
+
+export function setDateForWeeklyWidget(collection, count, week) {
+	if (week === 'this') {
+		let date = DateUtils.getWeekRangeForPage(1);
+		let models = collection.models;
+		for (let i = 0; i < count; i++) {
+			models[i].update({
+				dateCreated: date.startOfWeek
+			});
+		}
+		ctx.set('lastSetCount', count);
+	} else if (week === 'previous') {
+		let date = DateUtils.getWeekRangeForPage(2);
+		let models = collection.models;
+		for (let i = ctx.get('lastSetCount'); i < models.length; i++) {
+			models[i].update({
+				dateCreated: date.startOfWeek
+			});
+		}
+	}
+}
+
+export default function (assert) {
+	return steps(assert);
+}

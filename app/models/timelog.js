@@ -157,6 +157,16 @@ export default Model.extend({
     "spentOn": attr('string'),
 
     /**
+     * The shortcode of the project
+     *
+     * @property projectShortcode
+     * @type String
+     * @for Timelog
+     * @private
+     */
+    "projectShortcode": attr('string'),
+
+    /**
      * The issue this timelog is associated with
      *
      * @property issue
@@ -165,6 +175,16 @@ export default Model.extend({
      * @private
      */
     issue: belongsTo('issue'),
+
+    /**
+     * The project this timelog is associated with
+     *
+     * @property project
+     * @type ProjectModel
+     * @for Timelog
+     * @private
+     */
+    project: belongsTo('project'),
 
     /**
      * The user who created this timelog

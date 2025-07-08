@@ -5,7 +5,31 @@
     }
   }
 
+  .pagination-data-container {
+    max-height: 32rem;
+    overflow-y: auto;
+  }  
+
   .infinite-scroll-container {
     max-height: 32rem;
+  }
+
+  .weekly-timelogs{
+    table {
+      margin-bottom: 0;
+    }
+    .timelogs-summary {
+      @include flexbox($display: flex, $justifyContent: space-between);
+      margin-top: 2rem;
+    }
+  }
+
+  .weekly-activities {
+    .time-label {
+      span {
+        background-color: white !important;
+        border: 1px solid $primaryColor;
+      }
+    }
   }
 }

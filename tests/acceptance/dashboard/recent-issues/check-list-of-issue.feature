@@ -13,4 +13,4 @@ Feature: Dashboard - Recent Issues | check list of issues
     | 10         |
     --------------
     When User navigates to app
-    Then There are 10 issues present on dashboard
+    Then There should be 10 issues present in recent issues widget

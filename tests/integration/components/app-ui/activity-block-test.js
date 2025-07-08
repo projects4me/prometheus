@@ -6,9 +6,14 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import CurrentUserStub from '../../stub-services/current-user-stub';
 
 module('Integration | Component | app-ui/activity-block', function (hooks) {
     setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.owner.register('service:currentUser', CurrentUserStub);
+    });
 
     test('it renders activity block component', async function (assert) {
         let activity = {

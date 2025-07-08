@@ -7,10 +7,15 @@ import { setupRenderingTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import CurrentUserStub from '../../stub-services/current-user-stub';
 
 module('Integration | Component | app-ui/timeline', function (hooks) {
     setupRenderingTest(hooks);
     setupMirage(hooks);
+
+    hooks.beforeEach(function () {
+        this.owner.register('service:currentUser', CurrentUserStub);
+    });
 
     test('it renders timeline component with some activities', async function (assert) {
         this.server.createList('activity', 2);
@@ -29,9 +34,9 @@ module('Integration | Component | app-ui/timeline', function (hooks) {
         this.set('activities', activities);
 
         await render(hbs`
-            <AppUi::Timeline
-                @activities={{this.activities}}
-            />
+            <AppUi::Timeline @activities={{this.activities}} @dataKey='data' as |key|>
+                {{key}}
+            </AppUi::Timeline>
         `);
 
         assert.dom('ul.timeline').exists();

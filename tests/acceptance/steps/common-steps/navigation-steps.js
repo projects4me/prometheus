@@ -1,5 +1,15 @@
 import { click, currentURL, visit } from '@ember/test-helpers';
 import steps from '../steps';
+import { selectors as widgetsSelectors } from './widgets';
+
+const selectors = {
+    components: {
+        "active milestones": widgetsSelectors['active milestones'].selector,
+        "recent issues": widgetsSelectors['recent issues'].selector,
+        "weekly activities": widgetsSelectors['weekly activities'].selector,
+        "weekly timelogs": widgetsSelectors['weekly timelogs'].selector
+    }
+};
 
 export const when = function () {
     return [
@@ -24,6 +34,23 @@ export const when = function () {
                 const selector = buttonMapping[buttonLabel];
                 await click(selector);
                 assert.ok(true, `User clicks on the "${buttonLabel}" button`);
+            }
+        },
+        //pagination steps
+        {
+            "User clicks on next page button in $componentName": (assert, ctx) => async function (componentName) {
+                const selector = `${selectors.components[componentName]} [data-btn='next']`;
+                ctx.set('page', (ctx.get('page') || 1) + 1);
+                await click(selector);
+                assert.ok(true, `User clicks on next page button in ${componentName}`);
+            }
+        },
+        {
+            "User clicks on previous page button in $componentName": (assert, ctx) => async function (componentName) {
+                const selector = `${selectors.components[componentName]} [data-btn='previous']`;
+                ctx.set('page', (ctx.get('page') || 1) - 1);
+                await click(selector);
+                assert.ok(true, `User clicks on previous page button in ${componentName}`);
             }
         }
     ];

@@ -111,7 +111,11 @@ export default class AppUiTableComponent extends Component {
 	 * @public
 	 */
 	get data() {
-		return this.filteredData;
+		let data = this.args.data;
+		if (this.activeFilters.length > 0) {
+			data = this.applyFilters(data);
+		}
+		return data;
 	}
 
 	/**
@@ -134,6 +138,23 @@ export default class AppUiTableComponent extends Component {
 	 */
 	get onLoadMore() {
 		return this.args.onLoadMore || (() => {});
+	}
+
+	/**
+	 * Callback function to be executed when paginate is triggered
+	 * @property onPaginate
+	 * @type {Function}
+	 * @public
+	 * @default () => {}
+	 */
+	@action 
+	async handlePaginate(page) {
+		// reset the query and active filters
+		this.query = '';
+		this.activeFilters = [];
+		if(this.args.onPaginate) {
+			await this.args.onPaginate(page);
+		}
 	}
 
 	/**
@@ -277,7 +298,11 @@ export default class AppUiTableComponent extends Component {
 			this.handleSearch({ target: { value: this.query } });
 		} else {
 			this.filteredData = this.applyFilters(originalData);
-			this.args.setData(this.filteredData);
+			if(this.args.setData) {
+				this.args.setData(this.filteredData);
+			} else {
+				console.error('pass setData function to the table component');
+			}
 		}
 	}
 }

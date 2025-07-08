@@ -468,10 +468,38 @@ export default Object.extend({
                         order: 'ASC',
                         limit: 5
                     },
+                    pageSize: 5,
                     fields: ['name', {label: 'project', valueKey: 'project.name'}, 'status', 'startDate', 'endDate'],
                     translationKey: 'views.app.milestone.fields',
                     searchFields: ['name', 'project.name'],
                     useLazyLoading: true
+                },
+                weeklyActivities: {
+                    model: 'activity',
+                    options: {
+                        query: "((Activity.dateCreated BETWEEN ```WEEK_START``` AND ```WEEK_END```) AND ((Activity.relatedTo : issue) OR (Activity.relatedTo : project)))",
+                        sort: "Activity.dateCreated",
+                        order: "DESC",
+                        rels: 'project,issue',
+                        limit: -1
+                    },
+                    fields: ['subject', 'createdUser', 'dateCreated'],
+                    translationKey: 'views.app.activity.fields',
+                    searchFields: ['subject', 'createdUser'],
+                    useLazyLoading: true
+                },
+                weeklyTimelogs: {
+                    model: 'timelog',
+                    options: {
+                        query: "((Timelog.spentOn BETWEEN ```WEEK_START``` AND ```WEEK_END```))",
+                        rels: 'issue',
+                        limit: -1
+                    },
+                    fields: ['issueNumber', 'subject', 'spent', 'estimated', 'status', 'project'],
+                    translationKey: 'views.app.widgets.weeklyTimelogs.fields',
+                    usePagination: true,
+                    searchFields: ['issue.issueNumber', 'issue.subject', 'projectShortcode'],
+                    filters: ["myTimeLogs"]
                 }
             }
         }

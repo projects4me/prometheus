@@ -1076,6 +1076,30 @@
           "title": "Active Milestones",
           "searchPlaceholder": "Search active milestones...",
           "emptyStateMessage": "No milestones found"
+        },
+        "weeklyTimelogs": {
+          "title": "Weekly Timelogs",
+          "searchPlaceholder": "Search weekly timelogs...",
+          "fields": {
+            "issueNumber": "#",
+            "subject": "Subject",
+            "status": "Issue Status",
+            "project": "Project",
+            "spent": "Time Spent",
+            "estimated": "Time Est."
+          },
+          "hours": "h",
+          "minutes": "m",
+          "emptyStateMessage": "No timelogs found for this week",
+          "noTimelogsFound": "No timelog found",
+          "filters": {
+            "myTimeLogs": "My Time Logs"
+          },
+          "totalSpentTime": "Total Spent Time",
+          "totalEstimatedTime": "Total Estimated Time"
+        },
+        "weeklyActivities": {
+          "title": "Weekly Activities"
         }
       },
       "milestone": {
@@ -1224,6 +1248,9 @@
           "searchPlaceholder": "Search...",
           "loadingText": "Loading more items...",
           "filters": "Filters"
+        },
+        "timeline": {
+          "noActivitiesFound": "No activities found"
         }
       },
       "application": {

@@ -50,54 +50,94 @@
   </div>
 
   <div class="box-body no-padding">
-    {{#if @useLazyLoading}}
-      <InfiniteScroll
-        @onLoadMore={{this.onLoadMore}}
-        @threshold={{150}}
-        @containerClass="table-responsive list-view"
-        @loadingText={{t "views.app.components.table.loadingText"}}
-        @useLoadMoreButton={{true}}
-        @useScrollLoading={{false}}
+    {{!-- Pagination Component Starts --}}
+    {{#if @usePagination}}
+      <Pagination
+        @onPageChange={{this.handlePaginate}}
         @pageSize={{@pageSize}}
+        @containerClass={{@containerClass}}
       >
-        {{#if (has-block "body")}}
-          <AppUi::Table::TableContent
-            @columns={{this.columns}}
-            @data={{this.filteredData}}
-            @emptyStateMessage={{@emptyStateMessage}}
-          >
-            <:body>
-              {{yield to="body"}}
-            </:body>
-          </AppUi::Table::TableContent>
-        {{else}}
-          <AppUi::Table::TableContent
-            @columns={{this.columns}}
-            @data={{this.filteredData}}
-            @emptyStateMessage={{@emptyStateMessage}}
-          />
-        {{/if}}
-      </InfiniteScroll>
+        <:center>
+          {{yield to="center"}}
+        </:center>
+
+        <:default>
+          {{#if (has-block "body")}}
+            <AppUi::Table::TableContent
+              @columns={{this.columns}}
+              @data={{this.data}}
+              @emptyStateMessage={{@emptyStateMessage}}
+            >
+              <:body>
+                {{yield to="body"}}
+              </:body>
+            </AppUi::Table::TableContent>
+          {{else}}
+            <AppUi::Table::TableContent
+              @columns={{this.columns}}
+              @data={{this.data}}
+              @emptyStateMessage={{@emptyStateMessage}}
+            />
+          {{/if}}
+        </:default>
+      </Pagination>
+      {{!-- Pagination Component Ends --}}
+
     {{else}}
-      <div class="table-responsive list-view">
-        {{#if (has-block "body")}}
-          <AppUi::Table::TableContent
-            @columns={{this.columns}}
-            @data={{this.filteredData}}
-            @emptyStateMessage={{@emptyStateMessage}}
-          >
-            <:body>
-              {{yield to="body"}}
-            </:body>
-          </AppUi::Table::TableContent>
-        {{else}}
-          <AppUi::Table::TableContent
-            @columns={{this.columns}}
-            @data={{this.filteredData}}
-            @emptyStateMessage={{@emptyStateMessage}}
-          />
-        {{/if}}
-      </div>
+      {{!-- Lazy Loading Starts --}}
+      {{#if @useLazyLoading}}
+        <InfiniteScroll
+          @onLoadMore={{this.onLoadMore}}
+          @threshold={{150}}
+          @containerClass="table-responsive list-view"
+          @loadingText={{t "views.app.components.table.loadingText"}}
+          @useLoadMoreButton={{true}}
+          @useScrollLoading={{false}}
+          @pageSize={{@pageSize}}
+        >
+          {{#if (has-block "body")}}
+            <AppUi::Table::TableContent
+              @columns={{this.columns}}
+              @data={{this.data}}
+              @emptyStateMessage={{@emptyStateMessage}}
+            >
+              <:body>
+                {{yield to="body"}}
+              </:body>
+            </AppUi::Table::TableContent>
+          {{else}}
+            <AppUi::Table::TableContent
+              @columns={{this.columns}}
+              @data={{this.data}}
+              @emptyStateMessage={{@emptyStateMessage}}
+            />
+          {{/if}}
+        </InfiniteScroll>
+        {{!-- Lazy Loading Ends --}}
+
+      {{else}}
+        <div class="table-responsive list-view">
+          {{#if (has-block "body")}}
+            <AppUi::Table::TableContent
+              @columns={{this.columns}}
+              @data={{this.data}}
+              @emptyStateMessage={{@emptyStateMessage}}
+            >
+              <:body>
+                {{yield to="body"}}
+              </:body>
+            </AppUi::Table::TableContent>
+          {{else}}
+            <AppUi::Table::TableContent
+              @columns={{this.columns}}
+              @data={{this.data}}
+              @emptyStateMessage={{@emptyStateMessage}}
+            />
+          {{/if}}
+        </div>
+        {{!-- Lazy Loading Ends --}}
+
+      {{/if}}
     {{/if}}
   </div>
 </div>

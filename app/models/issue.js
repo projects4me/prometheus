@@ -169,6 +169,15 @@ export default Model.extend({
     projectId: attr("string"),
 
     /**
+     * The short code of the project the issue belongs to
+     *
+     * @property projectShortCode
+     * @type String
+     * @for Issue
+     */
+    projectShortcode: attr("string"),
+
+    /**
      * The identifier of the conversation room for this issue
      *
      * @property conversationRoomId

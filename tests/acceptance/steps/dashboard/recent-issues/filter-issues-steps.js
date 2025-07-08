@@ -97,9 +97,7 @@ export const then = function () {
 						const issueRows = findAll(
 							'[data-recent-issues-table] tbody tr'
 						);
-						const currentUser = ctx.currentUser;
 
-						// Check that all visible issues are assigned to the specified user
 						issueRows.forEach((row) => {
 							const issueNumber = row
 								.querySelector('td:first-child a')

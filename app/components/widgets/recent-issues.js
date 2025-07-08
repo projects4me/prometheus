@@ -128,7 +128,7 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 	 */
 	@action 
 	async onLoadMore(paginationInfo = {}) {
-		let issueOptions = this.args.widgetSettings.options;
+		let issueOptions = _.cloneDeep(this.args.widgetSettings.options);
 		issueOptions.page = paginationInfo.page;
 		issueOptions.limit = paginationInfo.pageSize;
 		let issues = await this.store.query('issue', issueOptions);
