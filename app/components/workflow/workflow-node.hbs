@@ -1,0 +1,300 @@
+<div 
+  class={{this.nodeClass}}
+  style={{this.nodeStyle}}
+  draggable="true"
+  {{on "click" this.handleClick}}
+  {{on "dblclick" this.handleDoubleClick}}
+  {{on "mouseenter" this.handleMouseEnter}}
+  {{on "mouseleave" this.handleMouseLeave}}
+  {{on "dragstart" this.handleDragStart}}
+  {{on "dragend" this.handleDragEnd}}
+  {{on "contextmenu" this.handleContextMenu}}
+  {{on "mousedown" this.handleConnectionStart}}
+  data-test="workflow-node"
+  data-node-id={{@node.id}}
+  data-node-type={{@node.type}}>
+  
+  {{!-- Node Icon --}}
+  <div class="workflow-node__icon" style="color: {{this.nodeColor}};">
+    <i class="fa {{this.nodeIcon}}"></i>
+  </div>
+  
+  {{!-- Node Label --}}
+  <div class="workflow-node__label">
+    {{@node.name}}
+  </div>
+  
+  {{!-- Node Status Indicator --}}
+  {{#if this.nodeProperties.status}}
+    <div class="workflow-node__status workflow-node__status--{{this.nodeProperties.status}}">
+      <i class="fa fa-circle"></i>
+    </div>
+  {{/if}}
+  
+  {{!-- Selection Indicator --}}
+  {{#if @isSelected}}
+    <div class="workflow-node__selection-indicator">
+      <div class="selection-handle selection-handle--nw"></div>
+      <div class="selection-handle selection-handle--ne"></div>
+      <div class="selection-handle selection-handle--sw"></div>
+      <div class="selection-handle selection-handle--se"></div>
+    </div>
+  {{/if}}
+  
+  {{!-- Connection Points --}}
+  <div class="workflow-node__connection-points">
+    <div class="connection-point connection-point--top" data-direction="top"></div>
+    <div class="connection-point connection-point--right" data-direction="right"></div>
+    <div class="connection-point connection-point--bottom" data-direction="bottom"></div>
+    <div class="connection-point connection-point--left" data-direction="left"></div>
+  </div>
+</div>
+
+{{!-- Node Styles --}}
+<style>
+.workflow-node {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  min-height: 60px;
+  padding: 8px;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.workflow-node:hover,
+.workflow-node--hovered {
+  border-color: #007bff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.workflow-node--selected {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.workflow-node--dragging {
+  opacity: 0.8;
+  transform: translate(-50%, -50%) rotate(5deg);
+  z-index: 1000;
+}
+
+/* Node Type Specific Styles */
+.workflow-node--start {
+  border-radius: 50%;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.workflow-node--end {
+  border-radius: 50%;
+  background: linear-gradient(135deg, #dc3545, #e83e8c);
+  color: white;
+}
+
+.workflow-node--task {
+  border-radius: 4px;
+  background: linear-gradient(135deg, #007bff, #6610f2);
+  color: white;
+}
+
+.workflow-node--gateway {
+  transform: translate(-50%, -50%) rotate(45deg);
+  border-radius: 4px;
+  background: linear-gradient(135deg, #ffc107, #fd7e14);
+  color: white;
+}
+
+.workflow-node--gateway .workflow-node__icon,
+.workflow-node--gateway .workflow-node__label {
+  transform: rotate(-45deg);
+}
+
+.workflow-node--event {
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c757d, #495057);
+  color: white;
+  border-style: dashed;
+}
+
+.workflow-node__icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.workflow-node__label {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workflow-node__status {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.workflow-node__status--active {
+  background: #28a745;
+  color: white;
+}
+
+.workflow-node__status--inactive {
+  background: #6c757d;
+  color: white;
+}
+
+.workflow-node__status--error {
+  background: #dc3545;
+  color: white;
+}
+
+.workflow-node__status i {
+  font-size: 6px;
+}
+
+.workflow-node__selection-indicator {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  pointer-events: none;
+}
+
+.selection-handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #007bff;
+  border: 1px solid white;
+  border-radius: 2px;
+}
+
+.selection-handle--nw {
+  top: 0;
+  left: 0;
+}
+
+.selection-handle--ne {
+  top: 0;
+  right: 0;
+}
+
+.selection-handle--sw {
+  bottom: 0;
+  left: 0;
+}
+
+.selection-handle--se {
+  bottom: 0;
+  right: 0;
+}
+
+.workflow-node__connection-points {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.connection-point {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #007bff;
+  border: 2px solid white;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: all;
+  cursor: crosshair;
+}
+
+.workflow-node:hover .connection-point,
+.workflow-node--selected .connection-point {
+  opacity: 1;
+}
+
+.connection-point--top {
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.connection-point--right {
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.connection-point--bottom {
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.connection-point--left {
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.connection-point:hover {
+  background: #0056b3;
+  transform: scale(1.2);
+}
+
+/* Context Menu Styles */
+.workflow-context-menu {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+}
+
+.context-menu-item:hover {
+  background-color: #f8f9fa !important;
+}
+
+.context-menu-item.danger:hover {
+  background-color: #f8d7da !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .workflow-node {
+    min-width: 60px;
+    min-height: 45px;
+    padding: 6px;
+  }
+  
+  .workflow-node__icon {
+    font-size: 16px;
+  }
+  
+  .workflow-node__label {
+    font-size: 10px;
+    max-width: 50px;
+  }
+}
+</style>

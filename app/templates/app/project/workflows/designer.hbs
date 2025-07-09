@@ -1,0 +1,394 @@
+<div class="row workflow-designer">
+  <div class="col-md-12">
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">
+          <i class="fa fa-sitemap"></i> Workflow Designer: {{@model.workflow.name}}
+        </h3>
+        
+        <div class="box-tools pull-right">
+          {{#if this.hasUnsavedChanges}}
+            <span class="label label-warning" data-test="unsaved-changes-indicator">
+              <i class="fa fa-exclamation-triangle"></i> Unsaved Changes
+            </span>
+          {{/if}}
+
+          <button 
+            type="button" 
+            class="btn btn-success"
+            {{on "click" this.validateWorkflow}}
+            data-test="validate-workflow-btn">
+            <i class="fa fa-check"></i> Validate
+          </button>
+
+          <button 
+            type="button" 
+            class="btn btn-primary"
+            {{on "click" this.saveWorkflow}}
+            disabled={{this.isLoading}}
+            data-test="save-workflow-btn">
+            {{#if this.isLoading}}
+              <i class="fa fa-spinner fa-spin"></i> Saving...
+            {{else}}
+              <i class="fa fa-save"></i> Save
+            {{/if}}
+          </button>
+
+          <div class="btn-group">
+            <button 
+              type="button" 
+              class="btn btn-default dropdown-toggle" 
+              data-toggle="dropdown" 
+              aria-expanded="false"
+              data-test="workflow-actions-dropdown">
+              <i class="fa fa-ellipsis-v"></i>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <a href="javascript:void(0);" {{on "click" this.exportBPMN}} data-test="export-workflow-btn">
+                  <i class="fa fa-download"></i> Export Workflow
+                </a>
+              </li>
+              <li>
+                <a href="javascript:void(0);" {{on "click" this.toggleRuleEditor}} data-test="toggle-rules-btn">
+                  <i class="fa fa-cogs"></i> Business Rules
+                </a>
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a href="javascript:void(0);" {{on "click" this.clearSelection}} data-test="clear-selection-btn">
+                  <i class="fa fa-times"></i> Clear Selection
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <button 
+            type="button" 
+            class="btn btn-default"
+            {{on "click" this.backToList}}
+            data-test="back-to-list-btn">
+            <i class="fa fa-arrow-left"></i> Back to List
+          </button>
+        </div>
+      </div>
+      {{!-- /.box-header --}}
+      
+      <div class="box-body" style="padding: 0;">
+        {{#if this.errors.length}}
+          <div class="alert alert-danger" style="margin: 15px;" data-test="error-messages">
+            <h4><i class="icon fa fa-ban"></i> Validation Errors!</h4>
+            <ul>
+              {{#each this.errors as |error|}}
+                <li data-test="error-message">{{error}}</li>
+              {{/each}}
+            </ul>
+            <button 
+              type="button" 
+              class="btn btn-sm btn-default"
+              {{on "click" this.clearErrors}}
+              data-test="clear-errors-btn">
+              <i class="fa fa-times"></i> Clear
+            </button>
+          </div>
+        {{/if}}
+
+        <div class="workflow-designer-container">
+          {{!-- Toolbar --}}
+          <div class="workflow-toolbar" data-test="workflow-toolbar">
+            <div class="toolbar-section">
+              <h5><i class="fa fa-plus"></i> Add Elements</h5>
+              <div class="node-palette">
+                {{#each this.nodeTypes as |nodeType|}}
+                  <div 
+                    class="palette-item" 
+                    draggable="true"
+                    {{on "dragstart" (fn this.handleDragStart nodeType)}}
+                    {{on "click" (fn this.addNode nodeType.type)}}
+                    data-test="palette-item-{{nodeType.type}}"
+                    title="{{nodeType.description}}">
+                    <i class="fa {{nodeType.icon}}" style="color: {{nodeType.color}};"></i>
+                    <span>{{nodeType.label}}</span>
+                  </div>
+                {{/each}}
+              </div>
+            </div>
+
+            <div class="toolbar-section">
+              <h5><i class="fa fa-info-circle"></i> Instructions</h5>
+              <ul class="instruction-list">
+                <li>Drag elements from the palette to the canvas</li>
+                <li>Click elements to select and edit properties</li>
+                <li>Drag between elements to create transitions</li>
+                <li>Right-click elements for context menu</li>
+              </ul>
+            </div>
+          </div>
+
+          {{!-- Main Canvas Area --}}
+          <div class="workflow-canvas-container">
+            <div 
+              class="workflow-canvas" 
+              {{on "click" this.clearSelection}}
+              {{on "drop" this.handleCanvasDrop}}
+              {{on "dragover" this.handleCanvasDragOver}}
+              data-test="workflow-canvas">
+              
+              {{!-- Grid Background --}}
+              <div class="canvas-grid"></div>
+
+              {{!-- Workflow Nodes --}}
+              {{#each this.workflowNodes as |node|}}
+                <Workflow::WorkflowNode
+                  @node={{node}}
+                  @isSelected={{eq this.selectedNode node}}
+                  @onSelect={{this.selectNode}}
+                  @onMove={{this.moveNode}}
+                  @onDelete={{this.deleteNode}}
+                  @onStartConnection={{this.startConnection}}
+                  data-test="workflow-node-{{node.id}}" />
+              {{/each}}
+
+              {{!-- Workflow Transitions --}}
+              {{#each this.workflowTransitions as |transition|}}
+                <Workflow::WorkflowTransition
+                  @transition={{transition}}
+                  @sourceNode={{this.getNodeById transition.sourceNodeId}}
+                  @targetNode={{this.getNodeById transition.targetNodeId}}
+                  @isSelected={{eq this.selectedTransition transition}}
+                  @onSelect={{this.selectTransition}}
+                  @onDelete={{this.deleteTransition}}
+                  data-test="workflow-transition-{{transition.id}}" />
+              {{/each}}
+
+              {{!-- Connection Helper --}}
+              {{#if this.isConnecting}}
+                <div class="connection-helper" data-test="connection-helper">
+                  <div class="connection-line" style={{this.connectionLineStyle}}></div>
+                </div>
+              {{/if}}
+            </div>
+          </div>
+
+          {{!-- Properties Panel --}}
+          <div class="workflow-properties" data-test="workflow-properties">
+            {{#if this.showNodeProperties}}
+              <Workflow::NodeProperties
+                @node={{this.selectedNode}}
+                @projectMembers={{@model.projectMembers}}
+                @issueTypes={{@model.issueTypes}}
+                @issueStatuses={{@model.issueStatuses}}
+                @onUpdate={{this.updateNodeProperties}}
+                @onClose={{this.clearSelection}}
+                data-test="node-properties-panel" />
+            {{else if this.showTransitionProperties}}
+              <Workflow::TransitionProperties
+                @transition={{this.selectedTransition}}
+                @onUpdate={{this.updateTransitionProperties}}
+                @onClose={{this.clearSelection}}
+                data-test="transition-properties-panel" />
+            {{else}}
+              <div class="properties-placeholder" data-test="properties-placeholder">
+                <div class="placeholder-content">
+                  <i class="fa fa-hand-pointer-o fa-3x text-muted"></i>
+                  <h4>Select an Element</h4>
+                  <p class="text-muted">
+                    Click on a node or transition to view and edit its properties.
+                  </p>
+                </div>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Business Rules Editor Modal --}}
+        {{#if this.showRuleEditor}}
+          <Workflow::RuleEditor
+            @workflow={{@model.workflow}}
+            @issueTypes={{@model.issueTypes}}
+            @issueStatuses={{@model.issueStatuses}}
+            @projectMembers={{@model.projectMembers}}
+            @onClose={{this.toggleRuleEditor}}
+            data-test="rule-editor-modal" />
+        {{/if}}
+      </div>
+      {{!-- /.box-body --}}
+    </div>
+    {{!-- /.box --}}
+  </div>
+  {{!-- /.col --}}
+</div>
+{{!-- /.row --}}
+
+{{!-- Workflow Designer Styles --}}
+<style>
+.workflow-designer-container {
+  display: flex;
+  height: 600px;
+  border: 1px solid #ddd;
+}
+
+.workflow-toolbar {
+  width: 250px;
+  background: #f8f9fa;
+  border-right: 1px solid #ddd;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.toolbar-section {
+  margin-bottom: 20px;
+}
+
+.toolbar-section h5 {
+  margin-bottom: 10px;
+  color: #333;
+  font-weight: 600;
+}
+
+.node-palette {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.palette-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.palette-item:hover {
+  background: #e9ecef;
+  border-color: #007bff;
+  transform: translateY(-1px);
+}
+
+.palette-item i {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.palette-item span {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.instruction-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.instruction-list li {
+  padding: 4px 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.instruction-list li:before {
+  content: "•";
+  color: #007bff;
+  margin-right: 8px;
+}
+
+.workflow-canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+}
+
+.workflow-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 1000px;
+  min-height: 600px;
+  background: white;
+}
+
+.canvas-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+    linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.workflow-properties {
+  width: 300px;
+  background: #f8f9fa;
+  border-left: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.properties-placeholder {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-content {
+  text-align: center;
+  padding: 20px;
+}
+
+.connection-helper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.connection-line {
+  position: absolute;
+  background: #007bff;
+  height: 2px;
+  transform-origin: left center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .workflow-toolbar {
+    width: 200px;
+  }
+  
+  .workflow-properties {
+    width: 250px;
+  }
+}
+
+@media (max-width: 992px) {
+  .workflow-designer-container {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .workflow-toolbar,
+  .workflow-properties {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+  }
+  
+  .workflow-canvas-container {
+    height: 400px;
+  }
+}
+</style>
