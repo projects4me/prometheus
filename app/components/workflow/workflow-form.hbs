@@ -1,0 +1,168 @@
+<div class="workflow-form">
+  <form {{on "submit" (fn this.save)}} data-test="workflow-form">
+    <div class="row">
+      <div class="col-md-8">
+        {{!-- Name Field --}}
+        <div class="form-group {{if (this.hasFieldErrors 'name') 'has-error'}}">
+          <label for="workflow-name" class="control-label">
+            Name <span class="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            id="workflow-name"
+            class="form-control"
+            value={{this.changeset.name}}
+            {{on "input" (fn this.updateField 'name' value="target.value")}}
+            placeholder="Enter workflow name"
+            data-test="workflow-name-input"
+            required>
+          {{#if (this.hasFieldErrors 'name')}}
+            <span class="help-block text-danger" data-test="workflow-name-error">
+              {{this.getFieldError 'name'}}
+            </span>
+          {{/if}}
+        </div>
+
+        {{!-- Description Field --}}
+        <div class="form-group {{if (this.hasFieldErrors 'description') 'has-error'}}">
+          <label for="workflow-description" class="control-label">
+            Description <span class="text-danger">*</span>
+          </label>
+          <textarea
+            id="workflow-description"
+            class="form-control"
+            rows="4"
+            value={{this.changeset.description}}
+            {{on "input" (fn this.updateField 'description' value="target.value")}}
+            placeholder="Enter workflow description"
+            data-test="workflow-description-input"
+            required></textarea>
+          {{#if (this.hasFieldErrors 'description')}}
+            <span class="help-block text-danger" data-test="workflow-description-error">
+              {{this.getFieldError 'description'}}
+            </span>
+          {{/if}}
+        </div>
+
+        {{!-- Version Field --}}
+        <div class="form-group">
+          <label for="workflow-version" class="control-label">Version</label>
+          <input
+            type="text"
+            id="workflow-version"
+            class="form-control"
+            value={{this.changeset.version}}
+            {{on "input" (fn this.updateField 'version' value="target.value")}}
+            placeholder="1.0"
+            data-test="workflow-version-input">
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        {{!-- Status Toggle --}}
+        <div class="form-group">
+          <label class="control-label">Status</label>
+          <div class="checkbox">
+            <label>
+              <input
+                type="checkbox"
+                checked={{this.changeset.isActive}}
+                {{on "change" this.toggleActive}}
+                data-test="workflow-active-toggle">
+              Active
+            </label>
+          </div>
+          <small class="text-muted">
+            Active workflows can be used to create new instances
+          </small>
+        </div>
+
+        {{!-- System Workflow Toggle (Admin Only) --}}
+        {{#if this.canEditSystem}}
+          <div class="form-group">
+            <label class="control-label">System Workflow</label>
+            <div class="checkbox">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={{this.changeset.isSystem}}
+                  {{on "change" this.toggleSystem}}
+                  disabled={{this.isSystemWorkflowReadOnly}}
+                  data-test="workflow-system-toggle">
+                System Workflow
+              </label>
+            </div>
+            <small class="text-muted">
+              System workflows cannot be deleted and are managed by administrators
+            </small>
+          </div>
+        {{/if}}
+
+        {{!-- Form Actions --}}
+        <div class="form-group">
+          <div class="btn-group-vertical btn-block">
+            <AppUi::Button
+              type="submit"
+              class="btn btn-primary"
+              disabled={{or this.isLoading (not this.isValid)}}
+              data-test="workflow-save-btn">
+              {{#if this.isLoading}}
+                <i class="fa fa-spinner fa-spin"></i> Saving...
+              {{else}}
+                <i class="fa fa-save"></i> Save Workflow
+              {{/if}}
+            </AppUi::Button>
+
+            <AppUi::Button
+              type="button"
+              class="btn btn-default"
+              @onClick={{this.cancel}}
+              data-test="workflow-cancel-btn">
+              <i class="fa fa-times"></i> Cancel
+            </AppUi::Button>
+
+            {{#if this.hasChanges}}
+              <AppUi::Button
+                type="button"
+                class="btn btn-warning"
+                @onClick={{this.reset}}
+                data-test="workflow-reset-btn">
+                <i class="fa fa-undo"></i> Reset
+              </AppUi::Button>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{!-- Validation Summary --}}
+    {{#unless this.isValid}}
+      <div class="alert alert-danger" data-test="workflow-validation-errors">
+        <h4><i class="fa fa-exclamation-triangle"></i> Please fix the following errors:</h4>
+        <ul>
+          {{#each this.changeset.errors as |error|}}
+            <li>{{error.message}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/unless}}
+
+    {{!-- Form Info --}}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="alert alert-info">
+          <h4><i class="fa fa-info-circle"></i> Workflow Information</h4>
+          <ul class="list-unstyled">
+            <li><strong>Name:</strong> Used to identify the workflow in the system</li>
+            <li><strong>Description:</strong> Provides details about the workflow's purpose and functionality</li>
+            <li><strong>Version:</strong> Tracks changes and updates to the workflow definition</li>
+            <li><strong>Status:</strong> Controls whether the workflow can be used to create new instances</li>
+            {{#if this.args.isAdmin}}
+              <li><strong>System Workflow:</strong> Special workflows managed by administrators</li>
+            {{/if}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

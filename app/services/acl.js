@@ -96,6 +96,26 @@ export default class AclService extends Service {
             map: 'App.Project.Issue.Edit'
         },
         {
+            name: 'app.project.workflows.index',
+            map: 'App.Project.Workflow.List'
+        },
+        {
+            name: 'app.project.workflows.create',
+            map: 'App.Project.Workflow.Create'
+        },
+        {
+            name: 'app.project.workflows.edit',
+            map: 'App.Project.Workflow.Edit'
+        },
+        {
+            name: 'app.project.workflows.designer',
+            map: 'App.Project.Workflow.Design'
+        },
+        {
+            name: 'app.project.workflows.instances',
+            map: 'App.Project.Workflow.Monitor'
+        },
+        {
             name: 'app.user.page',
             map: 'App.User.Read'
         },

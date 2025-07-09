@@ -39,6 +39,13 @@ Router.map(function() {
             this.route('page',{path:'/:issue_number'});
             this.route('edit',{path:'/edit/:issue_number'});
         });
+        this.route('workflows', function() {
+            this.route('index');
+            this.route('create');
+            this.route('edit', { path: '/:workflow_id' });
+            this.route('designer', { path: '/designer/:workflow_id' });
+            this.route('instances', { path: '/instances/:workflow_id' });
+        });
     });
     this.route('user',function(){
       this.route('index',{path:'/'});

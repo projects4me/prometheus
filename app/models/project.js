@@ -322,6 +322,16 @@ export default Model.extend({
     activities: hasMany('activity'),
 
     /**
+     * The workflow definitions for this project
+     *
+     * @property workflows
+     * @type WorkflowDefinitionModel
+     * @for Project
+     * @private
+     */
+    workflows: hasMany('workflow-definition'),
+
+    /**
      * The issue types for this project
      *
      * @property issuetypes
@@ -473,6 +483,46 @@ export default Model.extend({
                 const dateB = new Date(b.startDate || b.endDate);
                 return dateA - dateB;
             });
+    },
+
+    /**
+     * Get active workflow definitions for this project
+     *
+     * @property activeWorkflows
+     * @type Array
+     * @for Project
+     * @computed
+     */
+    get activeWorkflows() {
+        if (!this.workflows) {
+            return [];
+        }
+
+        return this.workflows.filter(workflow => workflow.isActive);
+    },
+
+    /**
+     * Get all workflow instances for this project
+     *
+     * @property workflowInstances
+     * @type Array
+     * @for Project
+     * @computed
+     */
+    get workflowInstances() {
+        if (!this.workflows) {
+            return [];
+        }
+
+        // Collect all workflow instances from all workflow definitions
+        const instances = [];
+        this.workflows.forEach(workflow => {
+            if (workflow.workflowInstances) {
+                instances.push(...workflow.workflowInstances.toArray());
+            }
+        });
+
+        return instances;
     }
 
 });

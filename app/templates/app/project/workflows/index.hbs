@@ -1,0 +1,256 @@
+<div class="row workflows">
+  <div class="col-md-12">
+    <div class="box box-primary list-view">
+      <div class="box-header with-border">
+        <h3 class="box-title">Workflows</h3>
+        
+        <div class="box-tools pull-right">
+          {{#if this.canCreateWorkflow}}
+            <AppUi::Button 
+              type="button" 
+              class="btn btn-primary" 
+              @onClick={{this.createWorkflow}}
+              data-test="create-workflow-btn">
+              <i class="fa fa-plus"></i> Create Workflow
+            </AppUi::Button>
+          {{/if}}
+        </div>
+      </div>
+      {{!-- /.box-header --}}
+      
+      <div class="box-body">
+        {{!-- Search and Filter Controls --}}
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="input-group">
+              <span class="input-group-addon">
+                <i class="fa fa-search"></i>
+              </span>
+              <input 
+                type="text" 
+                class="form-control" 
+                placeholder="Search workflows..."
+                value={{this.searchTerm}}
+                {{on "input" (fn (mut this.searchTerm) value="target.value")}}
+                data-test="workflow-search-input">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <select 
+              class="form-control" 
+              value={{this.filterStatus}}
+              {{on "change" (fn (mut this.filterStatus) value="target.value")}}
+              data-test="workflow-status-filter">
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select 
+              class="form-control" 
+              value={{this.sortBy}}
+              {{on "change" (fn (mut this.sortBy) value="target.value")}}
+              data-test="workflow-sort-select">
+              <option value="name">Sort by Name</option>
+              <option value="version">Sort by Version</option>
+              <option value="dateCreated">Sort by Created Date</option>
+              <option value="dateModified">Sort by Modified Date</option>
+            </select>
+          </div>
+        </div>
+
+        {{!-- Workflows Table --}}
+        <div class="table-responsive">
+          <table class="table table-hover table-striped" data-test="workflows-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Version</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Instances</th>
+                <th>Created</th>
+                <th>Modified</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#if this.sortedWorkflows.length}}
+                {{#each this.sortedWorkflows as |workflow|}}
+                  <tr data-test="workflow-row-{{workflow.id}}">
+                    <td>
+                      <strong data-test="workflow-name">{{workflow.name}}</strong>
+                    </td>
+                    <td data-test="workflow-description">
+                      {{#if workflow.description}}
+                        {{workflow.description}}
+                      {{else}}
+                        <span class="text-muted">No description</span>
+                      {{/if}}
+                    </td>
+                    <td data-test="workflow-version">
+                      <span class="badge badge-info">{{workflow.version}}</span>
+                    </td>
+                    <td data-test="workflow-status">
+                      {{#if workflow.isActive}}
+                        <span class="badge badge-success">Active</span>
+                      {{else}}
+                        <span class="badge badge-default">Inactive</span>
+                      {{/if}}
+                    </td>
+                    <td data-test="workflow-type">
+                      {{#if workflow.isSystem}}
+                        <span class="badge badge-warning">System</span>
+                      {{else}}
+                        <span class="badge badge-primary">Custom</span>
+                      {{/if}}
+                    </td>
+                    <td data-test="workflow-instances">
+                      {{#if workflow.workflowInstances}}
+                        <span class="badge badge-info">{{workflow.workflowInstances.length}}</span>
+                      {{else}}
+                        <span class="badge badge-default">0</span>
+                      {{/if}}
+                    </td>
+                    <td data-test="workflow-created">
+                      {{format-date date=workflow.dateCreated}}
+                    </td>
+                    <td data-test="workflow-modified">
+                      {{format-date date=workflow.dateModified}}
+                    </td>
+                    <td class="text-center">
+                      <div class="btn-group" role="group">
+                        {{!-- Toggle Status --}}
+                        <AppUi::Button 
+                          type="button" 
+                          class="btn btn-sm {{if workflow.isActive 'btn-warning' 'btn-success'}}"
+                          @onClick={{fn this.toggleWorkflowStatus workflow}}
+                          data-test="toggle-workflow-status-{{workflow.id}}"
+                          title={{if workflow.isActive "Deactivate" "Activate"}}>
+                          <i class="fa {{if workflow.isActive 'fa-pause' 'fa-play'}}"></i>
+                        </AppUi::Button>
+
+                        {{!-- Edit --}}
+                        <AppUi::Button 
+                          type="button" 
+                          class="btn btn-sm btn-primary"
+                          @onClick={{fn this.editWorkflow workflow}}
+                          data-test="edit-workflow-{{workflow.id}}"
+                          title="Edit">
+                          <i class="fa fa-edit"></i>
+                        </AppUi::Button>
+
+                        {{!-- Design --}}
+                        <AppUi::Button 
+                          type="button" 
+                          class="btn btn-sm btn-info"
+                          @onClick={{fn this.designWorkflow workflow}}
+                          data-test="design-workflow-{{workflow.id}}"
+                          title="Design">
+                          <i class="fa fa-sitemap"></i>
+                        </AppUi::Button>
+
+                        {{!-- Instances --}}
+                        <AppUi::Button 
+                          type="button" 
+                          class="btn btn-sm btn-default"
+                          @onClick={{fn this.viewInstances workflow}}
+                          data-test="view-instances-{{workflow.id}}"
+                          title="View Instances">
+                          <i class="fa fa-list"></i>
+                        </AppUi::Button>
+
+                        {{!-- More Actions Dropdown --}}
+                        <div class="btn-group">
+                          <AppUi::Button 
+                            type="button" 
+                            class="btn btn-sm btn-default dropdown-toggle" 
+                            data-toggle="dropdown" 
+                            aria-expanded="false"
+                            data-test="workflow-actions-{{workflow.id}}">
+                            <i class="fa fa-ellipsis-v"></i>
+                          </AppUi::Button>
+                          <ul class="dropdown-menu" role="menu">
+                            <li>
+                              <a href="javascript:void(0);" {{action "duplicateWorkflow" workflow}} data-test="duplicate-workflow-{{workflow.id}}">
+                                <i class="fa fa-copy"></i> Duplicate
+                              </a>
+                            </li>
+                            <li>
+                              <a href="javascript:void(0);" {{action "exportWorkflow" workflow}} data-test="export-workflow-{{workflow.id}}">
+                                <i class="fa fa-download"></i> Export
+                              </a>
+                            </li>
+                            {{#unless workflow.isSystem}}
+                              <li class="divider"></li>
+                              <li>
+                                <a href="javascript:void(0);" {{action "deleteWorkflow" workflow}} data-test="delete-workflow-{{workflow.id}}" class="text-danger">
+                                  <i class="fa fa-trash"></i> Delete
+                                </a>
+                              </li>
+                            {{/unless}}
+                          </ul>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                {{/each}}
+              {{else}}
+                <tr>
+                  <td colspan="9" class="text-center">
+                    <div class="empty-state">
+                      <i class="fa fa-sitemap fa-3x text-muted"></i>
+                      <h4>No workflows found</h4>
+                      <p class="text-muted">
+                        {{#if this.searchTerm}}
+                          No workflows match your search criteria.
+                        {{else}}
+                          Get started by creating your first workflow.
+                        {{/if}}
+                      </p>
+                      {{#unless this.searchTerm}}
+                        <AppUi::Button 
+                          type="button" 
+                          class="btn btn-primary"
+                          @onClick={{this.createWorkflow}}
+                          data-test="create-first-workflow-btn">
+                          <i class="fa fa-plus"></i> Create Your First Workflow
+                        </AppUi::Button>
+                      {{/unless}}
+                    </div>
+                  </td>
+                </tr>
+              {{/if}}
+            </tbody>
+          </table>
+        </div>
+
+        {{!-- Pagination --}}
+        {{#if this.sortedWorkflows.length}}
+          <div class="row">
+            <div class="col-md-6">
+              <p class="text-muted">
+                Showing {{this.sortedWorkflows.length}} of {{this.model.workflows.length}} workflows
+              </p>
+            </div>
+            <div class="col-md-6 text-right">
+              <AppUi::Button 
+                type="button" 
+                class="btn btn-default"
+                @onClick={{this.refreshWorkflows}}
+                data-test="refresh-workflows-btn">
+                <i class="fa fa-refresh"></i> Refresh
+              </AppUi::Button>
+            </div>
+          </div>
+        {{/if}}
+      </div>
+      {{!-- /.box-body --}}
+    </div>
+    {{!-- /.box --}}
+  </div>
+  {{!-- /.col --}}
+</div>
+{{!-- /.row --}}

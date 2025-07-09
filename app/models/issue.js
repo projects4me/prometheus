@@ -399,6 +399,16 @@ export default Model.extend({
     files: hasMany("upload"),
 
     /**
+     * The workflow instance associated with this issue
+     *
+     * @property workflowInstance
+     * @type WorkflowInstanceModel
+     * @for Issue
+     * @private
+     */
+    workflowInstance: belongsTo("workflow-instance"),
+
+    /**
      * Dependencies - issues that this issue depends on (predecessors)
      *
      * @property dependencies
@@ -407,6 +417,16 @@ export default Model.extend({
      * @private
      */
     dependencies: attr('string'),
+
+    /**
+     * The identifier of the workflow instance associated with this issue
+     *
+     * @property workflowInstanceId
+     * @type String
+     * @for Issue
+     * @private
+     */
+    workflowInstanceId: attr("string"),
 
     /**
      * Calculate the duration of the issue in days
@@ -573,5 +593,124 @@ export default Model.extend({
         if (status) {
             issue.statusId = status.id;
         }
+    },
+
+    /**
+     * Get the current workflow node for this issue
+     *
+     * @property currentWorkflowNode
+     * @type WorkflowNodeModel
+     * @for Issue
+     * @computed
+     */
+    get currentWorkflowNode() {
+        if (!this.workflowInstance) {
+            return null;
+        }
+        
+        const instance = this.workflowInstance;
+        if (!instance.currentNode) {
+            return null;
+        }
+        
+        return instance.currentNode;
+    },
+
+    /**
+     * Get available transitions for the current workflow state
+     *
+     * @property availableTransitions
+     * @type Array
+     * @for Issue
+     * @computed
+     */
+    get availableTransitions() {
+        if (!this.workflowInstance || !this.currentWorkflowNode) {
+            return [];
+        }
+        
+        const instance = this.workflowInstance;
+        const definition = instance.workflowDefinition;
+        
+        if (!definition || !definition.workflowTransitions) {
+            return [];
+        }
+        
+        return definition.workflowTransitions.filter(transition => 
+            transition.fromNodeId === this.currentWorkflowNode.nodeId
+        );
+    },
+
+    /**
+     * Check if the issue can transition to a specific node
+     *
+     * @method canTransitionTo
+     * @param {String} nodeId The target node ID
+     * @param {String} userId The user ID making the transition
+     * @return {Boolean} True if transition is allowed
+     * @public
+     */
+    async canTransitionTo(nodeId, userId) {
+        if (!this.workflowInstance) {
+            return false;
+        }
+        
+        const instance = this.workflowInstance;
+        const currentNodeId = instance.currentNodeId;
+        
+        // Check if the transition exists
+        const transition = instance.workflowDefinition.workflowTransitions.find(t => 
+            t.fromNodeId === currentNodeId && t.toNodeId === nodeId
+        );
+        
+        if (!transition) {
+            return false;
+        }
+        
+        // Validate transition using workflow engine
+        const workflowEngine = this.store.owner.lookup('service:workflow-engine');
+        return await workflowEngine.validateTransition(currentNodeId, nodeId, userId, 'issue');
+    },
+
+    /**
+     * Execute a workflow transition for this issue
+     *
+     * @method executeWorkflowTransition
+     * @param {String} toNodeId The target node ID
+     * @param {String} userId The user ID making the transition
+     * @param {Object} variables Additional variables for the transition
+     * @return {Promise} Promise that resolves when transition is completed
+     * @public
+     */
+    async executeWorkflowTransition(toNodeId, userId, variables = {}) {
+        if (!this.workflowInstance) {
+            throw new Error('No workflow instance associated with this issue');
+        }
+        
+        const instance = this.workflowInstance;
+        const currentWorkflowNode = this.currentWorkflowNode;
+        
+        if (!currentWorkflowNode) {
+            throw new Error('No current workflow node found');
+        }
+        
+        // Check if transition is allowed
+        const canTransition = await this.canTransitionTo(toNodeId, userId);
+        if (!canTransition) {
+            throw new Error('Transition not allowed');
+        }
+        
+        // Execute the transition using workflow engine
+        const workflowEngine = this.store.owner.lookup('service:workflow-engine');
+        await workflowEngine.processTransition(
+            instance.id,
+            currentWorkflowNode.nodeId,
+            toNodeId,
+            userId,
+            variables
+        );
+        
+        // Refresh the workflow instance
+        await instance.reload();
     },
 });
