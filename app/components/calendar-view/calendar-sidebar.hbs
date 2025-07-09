@@ -1,0 +1,395 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="calendar-sidebar {{if this.isCollapsed 'calendar-sidebar--collapsed'}}" data-test-calendar-sidebar>
+  {{!-- Sidebar Header --}}
+  <div class="calendar-sidebar__header">
+    <h3 class="calendar-sidebar__title">
+      {{#unless this.isCollapsed}}
+        {{t "calendar.filters"}}
+        {{#if (gt this.activeFilterCount 0)}}
+          <span class="calendar-sidebar__filter-count" data-test-filter-count>
+            {{this.activeFilterCount}}
+          </span>
+        {{/if}}
+      {{/unless}}
+    </h3>
+    
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-secondary calendar-sidebar__toggle"
+      {{on "click" this.toggleCollapse}}
+      title={{if this.isCollapsed (t "calendar.expand_sidebar") (t "calendar.collapse_sidebar")}}
+      data-test-sidebar-toggle
+    >
+      <i class="fas fa-{{if this.isCollapsed 'chevron-right' 'chevron-left'}}" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  {{#unless this.isCollapsed}}
+    <div class="calendar-sidebar__content">
+      {{!-- Quick Filter Buttons --}}
+      <div class="calendar-sidebar__section">
+        <button
+          type="button"
+          class="calendar-sidebar__section-header"
+          {{on "click" (fn this.toggleSection "quickFilters")}}
+          data-test-section-toggle="quickFilters"
+        >
+          <i class="fas fa-{{if (this.isSectionExpanded "quickFilters") "chevron-down" "chevron-right"}}" aria-hidden="true"></i>
+          {{t "calendar.quick_filters"}}
+        </button>
+
+        {{#if (this.isSectionExpanded "quickFilters")}}
+          <div class="calendar-sidebar__section-content">
+            {{!-- My Calendar vs Project Calendar --}}
+            <div class="calendar-sidebar__quick-filters">
+              <button
+                type="button"
+                class="btn btn-sm {{if this.isMyCalendarActive 'btn-primary' 'btn-outline-secondary'}} calendar-sidebar__quick-filter"
+                {{on "click" this.applyMyCalendarFilter}}
+                data-test-my-calendar-filter
+              >
+                <i class="fas fa-user" aria-hidden="true"></i>
+                {{t "calendar.my_calendar"}}
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-sm {{if this.isProjectCalendarActive 'btn-primary' 'btn-outline-secondary'}} calendar-sidebar__quick-filter"
+                {{on "click" this.applyProjectCalendarFilter}}
+                data-test-project-calendar-filter
+              >
+                <i class="fas fa-users" aria-hidden="true"></i>
+                {{t "calendar.project_calendar"}}
+              </button>
+            </div>
+
+            {{!-- Basic Toggles --}}
+            <div class="calendar-sidebar__toggles">
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="show-my-issues"
+                  checked={{@activeFilters.showMyIssues}}
+                  {{on "change" (fn this.handleQuickFilterToggle "showMyIssues")}}
+                  data-test-filter-toggle="showMyIssues"
+                />
+                <label class="form-check-label" for="show-my-issues">
+                  {{t "calendar.show_my_issues"}}
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="show-project-issues"
+                  checked={{@activeFilters.showProjectIssues}}
+                  {{on "change" (fn this.handleQuickFilterToggle "showProjectIssues")}}
+                  data-test-filter-toggle="showProjectIssues"
+                />
+                <label class="form-check-label" for="show-project-issues">
+                  {{t "calendar.show_project_issues"}}
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="show-milestones"
+                  checked={{@activeFilters.showMilestones}}
+                  {{on "change" (fn this.handleQuickFilterToggle "showMilestones")}}
+                  data-test-filter-toggle="showMilestones"
+                />
+                <label class="form-check-label" for="show-milestones">
+                  {{t "calendar.show_milestones"}}
+                </label>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+      </div>
+
+      {{!-- Priority Filters --}}
+      <div class="calendar-sidebar__section">
+        <button
+          type="button"
+          class="calendar-sidebar__section-header"
+          {{on "click" (fn this.toggleSection "priorities")}}
+          data-test-section-toggle="priorities"
+        >
+          <i class="fas fa-{{if (this.isSectionExpanded "priorities") "chevron-down" "chevron-right"}}" aria-hidden="true"></i>
+          {{t "calendar.priorities"}}
+          {{#if @activeFilters.priorities.length}}
+            <span class="calendar-sidebar__section-count">({{@activeFilters.priorities.length}})</span>
+          {{/if}}
+        </button>
+
+        {{#if (this.isSectionExpanded "priorities")}}
+          <div class="calendar-sidebar__section-content">
+            {{#each this.availablePriorities as |priority|}}
+              <div class="form-check calendar-sidebar__filter-item">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  id="priority-{{priority.value}}"
+                  checked={{this.isFilterActive "priorities" priority.value}}
+                  {{on "change" (fn this.handleFilterToggle "priorities" priority.value)}}
+                  data-test-priority-filter={{priority.value}}
+                />
+                <label class="form-check-label calendar-sidebar__filter-label" for="priority-{{priority.value}}">
+                  <span class="calendar-sidebar__filter-color" style="background-color: {{priority.color}}"></span>
+                  {{priority.label}}
+                </label>
+              </div>
+            {{/each}}
+          </div>
+        {{/if}}
+      </div>
+
+      {{!-- Status Filters --}}
+      {{#if this.availableStatuses.length}}
+        <div class="calendar-sidebar__section">
+          <button
+            type="button"
+            class="calendar-sidebar__section-header"
+            {{on "click" (fn this.toggleSection "statuses")}}
+            data-test-section-toggle="statuses"
+          >
+            <i class="fas fa-{{if (this.isSectionExpanded "statuses") "chevron-down" "chevron-right"}}" aria-hidden="true"></i>
+            {{t "calendar.statuses"}}
+            {{#if @activeFilters.statuses.length}}
+              <span class="calendar-sidebar__section-count">({{@activeFilters.statuses.length}})</span>
+            {{/if}}
+          </button>
+
+          {{#if (this.isSectionExpanded "statuses")}}
+            <div class="calendar-sidebar__section-content">
+              {{#each this.availableStatuses as |status|}}
+                <div class="form-check calendar-sidebar__filter-item">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="status-{{status.value}}"
+                    checked={{this.isFilterActive "statuses" status.value}}
+                    {{on "change" (fn this.handleFilterToggle "statuses" status.value)}}
+                    data-test-status-filter={{status.value}}
+                  />
+                  <label class="form-check-label calendar-sidebar__filter-label" for="status-{{status.value}}">
+                    <span class="calendar-sidebar__filter-color" style="background-color: {{status.color}}"></span>
+                    {{status.label}}
+                  </label>
+                </div>
+              {{/each}}
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{!-- Assignee Filters --}}
+      {{#if this.availableAssignees.length}}
+        <div class="calendar-sidebar__section">
+          <button
+            type="button"
+            class="calendar-sidebar__section-header"
+            {{on "click" (fn this.toggleSection "assignees")}}
+            data-test-section-toggle="assignees"
+          >
+            <i class="fas fa-{{if (this.isSectionExpanded "assignees") "chevron-down" "chevron-right"}}" aria-hidden="true"></i>
+            {{t "calendar.assignees"}}
+            {{#if @activeFilters.assignees.length}}
+              <span class="calendar-sidebar__section-count">({{@activeFilters.assignees.length}})</span>
+            {{/if}}
+          </button>
+
+          {{#if (this.isSectionExpanded "assignees")}}
+            <div class="calendar-sidebar__section-content">
+              {{#each this.availableAssignees as |assignee|}}
+                <div class="form-check calendar-sidebar__filter-item">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="assignee-{{assignee.value}}"
+                    checked={{this.isFilterActive "assignees" assignee.value}}
+                    {{on "change" (fn this.handleFilterToggle "assignees" assignee.value)}}
+                    data-test-assignee-filter={{assignee.value}}
+                  />
+                  <label class="form-check-label calendar-sidebar__filter-label" for="assignee-{{assignee.value}}">
+                    {{#if assignee.avatar}}
+                      <img src={{assignee.avatar}} alt={{assignee.label}} class="calendar-sidebar__user-avatar" />
+                    {{else}}
+                      <span class="calendar-sidebar__user-initials">{{assignee.initials}}</span>
+                    {{/if}}
+                    {{assignee.label}}
+                  </label>
+                </div>
+              {{/each}}
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{!-- Issue Type Filters --}}
+      {{#if this.availableIssueTypes.length}}
+        <div class="calendar-sidebar__section">
+          <button
+            type="button"
+            class="calendar-sidebar__section-header"
+            {{on "click" (fn this.toggleSection "issueTypes")}}
+            data-test-section-toggle="issueTypes"
+          >
+            <i class="fas fa-{{if (this.isSectionExpanded "issueTypes") "chevron-down" "chevron-right"}}" aria-hidden="true"></i>
+            {{t "calendar.issue_types"}}
+            {{#if @activeFilters.issueTypes.length}}
+              <span class="calendar-sidebar__section-count">({{@activeFilters.issueTypes.length}})</span>
+            {{/if}}
+          </button>
+
+          {{#if (this.isSectionExpanded "issueTypes")}}
+            <div class="calendar-sidebar__section-content">
+              {{#each this.availableIssueTypes as |type|}}
+                <div class="form-check calendar-sidebar__filter-item">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="type-{{type.value}}"
+                    checked={{this.isFilterActive "issueTypes" type.value}}
+                    {{on "change" (fn this.handleFilterToggle "issueTypes" type.value)}}
+                    data-test-type-filter={{type.value}}
+                  />
+                  <label class="form-check-label calendar-sidebar__filter-label" for="type-{{type.value}}">
+                    <i class="fas fa-{{type.icon}}" style="color: {{type.color}}" aria-hidden="true"></i>
+                    {{type.label}}
+                  </label>
+                </div>
+              {{/each}}
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{!-- Filter Actions --}}
+      <div class="calendar-sidebar__actions">
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary"
+          {{on "click" this.resetToDefaults}}
+          data-test-reset-filters
+        >
+          {{t "calendar.reset_filters"}}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-danger"
+          {{on "click" this.clearAllFilters}}
+          data-test-clear-filters
+        >
+          {{t "calendar.clear_all"}}
+        </button>
+      </div>
+
+      {{!-- Saved Searches --}}
+      <div class="calendar-sidebar__section">
+        <button
+          type="button"
+          class="calendar-sidebar__section-header"
+          {{on "click" (fn this.toggleSection "savedSearches")}}
+          data-test-section-toggle="savedSearches"
+        >
+          <i class="fas fa-{{if (this.isSectionExpanded "savedSearches") "chevron-down" "chevron-right"}}" aria-hidden="true"></i>
+          {{t "calendar.saved_searches"}}
+          {{#if @savedSearches.length}}
+            <span class="calendar-sidebar__section-count">({{@savedSearches.length}})</span>
+          {{/if}}
+        </button>
+
+        {{#if (this.isSectionExpanded "savedSearches")}}
+          <div class="calendar-sidebar__section-content">
+            {{!-- Save Current Search Form --}}
+            {{#if this.showSavedSearchForm}}
+              <div class="calendar-sidebar__save-search-form" data-test-save-search-form>
+                <div class="input-group input-group-sm">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder={{t "calendar.search_name_placeholder"}}
+                    value={{this.newSearchName}}
+                    {{on "input" this.handleSearchNameInput}}
+                    {{on "keydown" this.handleSearchFormKeyDown}}
+                    data-test-search-name-input
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    {{on "click" this.saveCurrentSearch}}
+                    disabled={{not this.newSearchName.length}}
+                    data-test-save-search-btn
+                  >
+                    {{t "calendar.save"}}
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    {{on "click" this.hideSaveSearchForm}}
+                    data-test-cancel-save-search-btn
+                  >
+                    {{t "calendar.cancel"}}
+                  </button>
+                </div>
+              </div>
+            {{else}}
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary calendar-sidebar__save-search-btn"
+                {{on "click" this.showSaveSearchForm}}
+                data-test-show-save-search-form
+              >
+                <i class="fas fa-save" aria-hidden="true"></i>
+                {{t "calendar.save_current_search"}}
+              </button>
+            {{/if}}
+
+            {{!-- Saved Searches List --}}
+            {{#if @savedSearches.length}}
+              <div class="calendar-sidebar__saved-searches">
+                {{#each @savedSearches as |search|}}
+                  <div class="calendar-sidebar__saved-search" data-test-saved-search={{search.id}}>
+                    <button
+                      type="button"
+                      class="calendar-sidebar__saved-search-btn"
+                      {{on "click" (fn this.applySavedSearch search)}}
+                      title={{t "calendar.apply_search"}}
+                      data-test-apply-saved-search={{search.id}}
+                    >
+                      <i class="fas fa-search" aria-hidden="true"></i>
+                      {{search.name}}
+                    </button>
+                    
+                    <button
+                      type="button"
+                      class="calendar-sidebar__remove-search-btn"
+                      {{on "click" (fn this.removeSavedSearch search)}}
+                      title={{t "calendar.remove_search"}}
+                      data-test-remove-saved-search={{search.id}}
+                    >
+                      <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                {{/each}}
+              </div>
+            {{else}}
+              <p class="calendar-sidebar__empty-message">
+                {{t "calendar.no_saved_searches"}}
+              </p>
+            {{/if}}
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  {{/unless}}
+</div>

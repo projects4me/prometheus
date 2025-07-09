@@ -1,0 +1,123 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="calendar-view" data-test-calendar-view>
+  {{!-- Calendar Header with Navigation and Controls --}}
+  <CalendarView::CalendarHeader
+    @currentDate={{this.calendarState.currentDate}}
+    @currentView={{this.calendarState.currentView}}
+    @showWeekends={{this.calendarState.showWeekends}}
+    @onViewChange={{this.calendarState.setView}}
+    @onDateChange={{this.calendarState.goToDate}}
+    @onPrevious={{this.calendarState.goToPrevious}}
+    @onNext={{this.calendarState.goToNext}}
+    @onToday={{this.calendarState.goToToday}}
+    @onToggleWeekends={{this.calendarState.toggleWeekends}}
+    data-test-calendar-header
+  />
+
+  <div class="calendar-view__content">
+    {{!-- Sidebar with Filters and Saved Searches --}}
+    <CalendarView::CalendarSidebar
+      @activeFilters={{this.calendarState.activeFilters}}
+      @savedSearches={{this.calendarState.savedSearches}}
+      @project={{@project}}
+      @onFilterChange={{this.calendarState.updateFilters}}
+      @onToggleFilter={{this.calendarState.toggleFilter}}
+      @onSavedSearchApply={{this.calendarState.applySavedSearch}}
+      @onSavedSearchAdd={{this.calendarState.addSavedSearch}}
+      @onSavedSearchRemove={{this.calendarState.removeSavedSearch}}
+      class="calendar-view__sidebar"
+      data-test-calendar-sidebar
+    />
+
+    {{!-- Main Calendar Grid --}}
+    <div class="calendar-view__main">
+      {{#if this.isLoading}}
+        <div class="calendar-view__loading" data-test-calendar-loading>
+          <div class="spinner"></div>
+          <p>{{t "calendar.loading"}}</p>
+        </div>
+      {{else if this.error}}
+        <div class="calendar-view__error" data-test-calendar-error>
+          <p class="error-message">{{this.error}}</p>
+          <button type="button" class="btn btn-primary" {{on "click" this.retry}}>
+            {{t "calendar.retry"}}
+          </button>
+        </div>
+      {{else}}
+        <CalendarView::CalendarGrid
+          @currentView={{this.calendarState.currentView}}
+          @currentDate={{this.calendarState.currentDate}}
+          @calendarDates={{this.calendarState.calendarDates}}
+          @showWeekends={{this.calendarState.showWeekends}}
+          @selectedTimezone={{this.calendarState.selectedTimezone}}
+          @filteredIssues={{this.filteredIssues}}
+          @filteredMilestones={{this.filteredMilestones}}
+          @issuesByDate={{this.issuesByDate}}
+          @milestonesByDate={{this.milestonesByDate}}
+          @selectedIssue={{this.calendarState.selectedIssue}}
+          @getIssuesForDate={{this.getIssuesForDate}}
+          @getMilestonesForDate={{this.getMilestonesForDate}}
+          @isCurrentMonth={{this.calendarState.isCurrentMonth}}
+          @isToday={{this.calendarState.isToday}}
+          @onDateClick={{this.handleDateClick}}
+          @onIssueClick={{this.handleIssueClick}}
+          @onIssueDoubleClick={{this.handleIssueDoubleClick}}
+          @onMilestoneClick={{this.handleMilestoneClick}}
+          @onIssueDragStart={{this.handleIssueDragStart}}
+          @onIssueDrop={{this.handleIssueDrop}}
+          @onDragOver={{this.handleDragOver}}
+          @canEditIssue={{this.canEditIssue}}
+          class="calendar-view__grid"
+          data-test-calendar-grid
+        />
+      {{/if}}
+    </div>
+  </div>
+
+  {{!-- Issue Creation/Edit Popup --}}
+  {{#if this.calendarState.isCreatingIssue}}
+    <CalendarView::CalendarPopup
+      @mode="create"
+      @date={{this.calendarState.newIssueDate}}
+      @project={{@project}}
+      @timezone={{this.calendarState.selectedTimezone}}
+      @onSave={{this.handleIssueCreate}}
+      @onCancel={{this.calendarState.cancelIssueCreation}}
+      data-test-calendar-popup-create
+    />
+  {{/if}}
+
+  {{#if this.calendarState.selectedIssue}}
+    <CalendarView::CalendarPopup
+      @mode="edit"
+      @issue={{this.calendarState.selectedIssue}}
+      @project={{@project}}
+      @timezone={{this.calendarState.selectedTimezone}}
+      @onSave={{this.handleIssueUpdate}}
+      @onCancel={{this.calendarState.clearSelection}}
+      @canEdit={{this.canEditIssue this.calendarState.selectedIssue}}
+      data-test-calendar-popup-edit
+    />
+  {{/if}}
+
+  {{!-- Timezone Selector (if user has multiple timezones) --}}
+  {{#if @showTimezoneSelector}}
+    <CalendarView::CalendarTimezoneSelector
+      @selectedTimezone={{this.calendarState.selectedTimezone}}
+      @availableTimezones={{@availableTimezones}}
+      @onTimezoneChange={{this.calendarState.setTimezone}}
+      class="calendar-view__timezone-selector"
+      data-test-timezone-selector
+    />
+  {{/if}}
+</div>
+
+{{!-- Loading overlay for async operations --}}
+{{#if this.isLoading}}
+  <div class="calendar-view__overlay" data-test-calendar-overlay>
+    <div class="spinner-large"></div>
+  </div>
+{{/if}}

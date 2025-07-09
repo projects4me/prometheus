@@ -1,0 +1,218 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="calendar-grid calendar-grid--{{@currentView}}" data-test-calendar-grid={{@currentView}}>
+  
+  {{!-- Month View --}}
+  {{#if (eq @currentView "month")}}
+    <div class="calendar-grid__month">
+      {{!-- Day Headers --}}
+      <div class="calendar-grid__header">
+        {{#each this.visibleDayNames as |day|}}
+          <div class="calendar-grid__day-header" data-test-day-header={{day.index}}>
+            <span class="calendar-grid__day-name-short d-md-none">{{day.short}}</span>
+            <span class="calendar-grid__day-name-long d-none d-md-inline">{{day.long}}</span>
+          </div>
+        {{/each}}
+      </div>
+
+      {{!-- Calendar Weeks --}}
+      <div class="calendar-grid__weeks">
+        {{#each this.calendarWeeks as |week weekIndex|}}
+          <div class="calendar-grid__week" data-test-calendar-week={{weekIndex}}>
+            {{#each week as |date dateIndex|}}
+              <div
+                class={{this.getDateCellClasses date}}
+                {{on "click" (fn this.handleDateCellClick date)}}
+                {{on "mouseenter" (fn this.handleDateCellMouseEnter date)}}
+                {{on "mouseleave" this.handleDateCellMouseLeave}}
+                {{on "dragover" (fn this.handleDragOver date)}}
+                {{on "dragleave" this.handleDragLeave}}
+                {{on "drop" (fn this.handleDrop date)}}
+                data-test-date-cell={{format-date date "YYYY-MM-DD"}}
+              >
+                {{!-- Date Number --}}
+                <div class="calendar-grid__date-number">
+                  {{this.getDateDisplayText date}}
+                </div>
+
+                {{!-- Events Container --}}
+                <div class="calendar-grid__events">
+                  {{!-- Milestones --}}
+                  {{#each (this.getMilestonesForDate date) as |milestone|}}
+                    <CalendarView::CalendarEvent
+                      @type="milestone"
+                      @milestone={{milestone}}
+                      @view={{@currentView}}
+                      @onClick={{fn this.handleMilestoneClick milestone}}
+                      class="calendar-event--milestone"
+                      data-test-milestone-event={{milestone.id}}
+                    />
+                  {{/each}}
+
+                  {{!-- Issues --}}
+                  {{#each (this.getIssuesForDate date) as |issueData index|}}
+                    {{#if (lt index this.maxEventsPerCell)}}
+                      <CalendarView::CalendarEvent
+                        @type="issue"
+                        @issue={{issueData.issue}}
+                        @issueData={{issueData}}
+                        @view={{@currentView}}
+                        @isSelected={{eq @selectedIssue issueData.issue}}
+                        @canEdit={{@canEditIssue issueData.issue}}
+                        @onClick={{fn this.handleIssueClick issueData.issue}}
+                        @onDoubleClick={{fn this.handleIssueDoubleClick issueData.issue}}
+                        @onDragStart={{fn this.handleIssueDragStart issueData.issue}}
+                        class="calendar-event--issue"
+                        data-test-issue-event={{issueData.issue.id}}
+                      />
+                    {{/if}}
+                  {{/each}}
+
+                  {{!-- More Events Indicator --}}
+                  {{#if (this.hasMoreEvents date)}}
+                    <div class="calendar-grid__more-events" data-test-more-events>
+                      +{{this.getHiddenEventsCount date}} {{t "calendar.more"}}
+                    </div>
+                  {{/if}}
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
+
+  {{!-- Week View --}}
+  {{#if (eq @currentView "week")}}
+    <div class="calendar-grid__week-view">
+      {{!-- Time Column Header --}}
+      <div class="calendar-grid__time-header"></div>
+      
+      {{!-- Day Headers --}}
+      {{#each this.weekDates as |date|}}
+        <div class="calendar-grid__day-header calendar-grid__day-header--week" data-test-week-day-header={{format-date date "YYYY-MM-DD"}}>
+          <div class="calendar-grid__day-name">{{this.getDateDisplayText date}}</div>
+          <div class="calendar-grid__day-date {{if (@isToday date) 'calendar-grid__day-date--today'}}">
+            {{date.getDate}}
+          </div>
+        </div>
+      {{/each}}
+
+      {{!-- Time Slots --}}
+      {{#each this.timeSlots as |timeSlot|}}
+        <div class="calendar-grid__time-row" data-test-time-row={{timeSlot.hour}}>
+          {{!-- Time Label --}}
+          <div class="calendar-grid__time-label">
+            {{timeSlot.label}}
+          </div>
+
+          {{!-- Day Columns --}}
+          {{#each this.weekDates as |date|}}
+            <div
+              class="calendar-grid__time-cell {{this.getDateCellClasses date}}"
+              {{on "click" (fn this.handleDateCellClick date)}}
+              {{on "dragover" (fn this.handleDragOver date)}}
+              {{on "drop" (fn this.handleDrop date)}}
+              data-test-time-cell="{{format-date date 'YYYY-MM-DD'}}-{{timeSlot.hour}}"
+            >
+              {{!-- Events for this time slot --}}
+              {{#each (this.getEventsForTimeSlot date timeSlot.hour) as |issueData|}}
+                <CalendarView::CalendarEvent
+                  @type="issue"
+                  @issue={{issueData.issue}}
+                  @issueData={{issueData}}
+                  @view={{@currentView}}
+                  @timeSlot={{timeSlot}}
+                  @isSelected={{eq @selectedIssue issueData.issue}}
+                  @canEdit={{@canEditIssue issueData.issue}}
+                  @onClick={{fn this.handleIssueClick issueData.issue}}
+                  @onDoubleClick={{fn this.handleIssueDoubleClick issueData.issue}}
+                  @onDragStart={{fn this.handleIssueDragStart issueData.issue}}
+                  class="calendar-event--issue calendar-event--week"
+                  data-test-week-issue-event={{issueData.issue.id}}
+                />
+              {{/each}}
+            </div>
+          {{/each}}
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+
+  {{!-- Day View --}}
+  {{#if (eq @currentView "day")}}
+    <div class="calendar-grid__day-view">
+      {{!-- Day Header --}}
+      <div class="calendar-grid__day-header calendar-grid__day-header--day">
+        <h3 class="calendar-grid__day-title">{{this.getDateDisplayText this.dayDate}}</h3>
+      </div>
+
+      {{!-- Time Slots --}}
+      <div class="calendar-grid__day-content">
+        {{#each this.timeSlots as |timeSlot|}}
+          <div class="calendar-grid__time-row calendar-grid__time-row--day" data-test-day-time-row={{timeSlot.hour}}>
+            {{!-- Time Label --}}
+            <div class="calendar-grid__time-label calendar-grid__time-label--day">
+              {{timeSlot.label}}
+            </div>
+
+            {{!-- Time Content --}}
+            <div
+              class="calendar-grid__time-content {{this.getDateCellClasses this.dayDate}}"
+              {{on "click" (fn this.handleDateCellClick this.dayDate)}}
+              {{on "dragover" (fn this.handleDragOver this.dayDate)}}
+              {{on "drop" (fn this.handleDrop this.dayDate)}}
+              data-test-day-time-content={{timeSlot.hour}}
+            >
+              {{!-- Events for this time slot --}}
+              {{#each (this.getEventsForTimeSlot this.dayDate timeSlot.hour) as |issueData|}}
+                <CalendarView::CalendarEvent
+                  @type="issue"
+                  @issue={{issueData.issue}}
+                  @issueData={{issueData}}
+                  @view={{@currentView}}
+                  @timeSlot={{timeSlot}}
+                  @isSelected={{eq @selectedIssue issueData.issue}}
+                  @canEdit={{@canEditIssue issueData.issue}}
+                  @onClick={{fn this.handleIssueClick issueData.issue}}
+                  @onDoubleClick={{fn this.handleIssueDoubleClick issueData.issue}}
+                  @onDragStart={{fn this.handleIssueDragStart issueData.issue}}
+                  class="calendar-event--issue calendar-event--day"
+                  data-test-day-issue-event={{issueData.issue.id}}
+                />
+              {{/each}}
+
+              {{!-- Milestones for this day --}}
+              {{#if (eq timeSlot.hour 9)}}
+                {{#each (this.getMilestonesForDate this.dayDate) as |milestone|}}
+                  <CalendarView::CalendarEvent
+                    @type="milestone"
+                    @milestone={{milestone}}
+                    @view={{@currentView}}
+                    @onClick={{fn this.handleMilestoneClick milestone}}
+                    class="calendar-event--milestone calendar-event--day"
+                    data-test-day-milestone-event={{milestone.id}}
+                  />
+                {{/each}}
+              {{/if}}
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
+
+  {{!-- Empty State --}}
+  {{#unless (or this.calendarWeeks.length this.weekDates.length this.dayDate)}}
+    <div class="calendar-grid__empty" data-test-calendar-empty>
+      <div class="calendar-grid__empty-content">
+        <i class="fas fa-calendar-alt calendar-grid__empty-icon"></i>
+        <h4>{{t "calendar.no_data"}}</h4>
+        <p>{{t "calendar.no_data_description"}}</p>
+      </div>
+    </div>
+  {{/unless}}
+</div>

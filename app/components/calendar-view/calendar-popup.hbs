@@ -1,0 +1,312 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div 
+  class="calendar-popup-backdrop" 
+  {{on "click" this.handleBackdropClick}}
+  {{on "keydown" this.handleKeyDown}}
+  tabindex="-1"
+  data-test-calendar-popup-backdrop
+>
+  <div class="calendar-popup" data-test-calendar-popup={{@mode}}>
+    <div class="calendar-popup__header">
+      <h4 class="calendar-popup__title">{{this.popupTitle}}</h4>
+      <button
+        type="button"
+        class="btn-close calendar-popup__close"
+        {{on "click" this.handleCancel}}
+        aria-label={{t "calendar.close"}}
+        data-test-popup-close
+      ></button>
+    </div>
+
+    <form class="calendar-popup__form" {{on "submit" this.handleSubmit}} data-test-popup-form>
+      <div class="calendar-popup__body">
+        {{!-- Subject Field --}}
+        <div class="mb-3">
+          <label for="issue-subject" class="form-label">
+            {{t "calendar.subject"}} <span class="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            class="form-control {{if this.errors.subject 'is-invalid'}}"
+            id="issue-subject"
+            value={{this.formData.subject}}
+            {{on "input" (fn this.handleFieldChange "subject")}}
+            placeholder={{t "calendar.subject_placeholder"}}
+            disabled={{not this.canEdit}}
+            data-test-subject-input
+          />
+          {{#if this.errors.subject}}
+            <div class="invalid-feedback" data-test-subject-error>
+              {{this.errors.subject}}
+            </div>
+          {{/if}}
+        </div>
+
+        {{!-- Description Field --}}
+        <div class="mb-3">
+          <label for="issue-description" class="form-label">{{t "calendar.description"}}</label>
+          <textarea
+            class="form-control"
+            id="issue-description"
+            rows="3"
+            value={{this.formData.description}}
+            {{on "input" (fn this.handleFieldChange "description")}}
+            placeholder={{t "calendar.description_placeholder"}}
+            disabled={{not this.canEdit}}
+            data-test-description-input
+          ></textarea>
+        </div>
+
+        {{!-- Date Fields Row --}}
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="issue-start-date" class="form-label">
+              {{t "calendar.start_date"}} <span class="text-danger">*</span>
+            </label>
+            <input
+              type="date"
+              class="form-control {{if this.errors.startDate 'is-invalid'}}"
+              id="issue-start-date"
+              value={{this.formData.startDate}}
+              {{on "change" this.handleStartDateChange}}
+              disabled={{not this.canEdit}}
+              data-test-start-date-input
+            />
+            {{#if this.errors.startDate}}
+              <div class="invalid-feedback" data-test-start-date-error>
+                {{this.errors.startDate}}
+              </div>
+            {{/if}}
+          </div>
+
+          <div class="col-md-6">
+            <label for="issue-end-date" class="form-label">{{t "calendar.end_date"}}</label>
+            <input
+              type="date"
+              class="form-control {{if this.errors.endDate 'is-invalid'}}"
+              id="issue-end-date"
+              value={{this.formData.endDate}}
+              {{on "change" this.handleEndDateChange}}
+              disabled={{not this.canEdit}}
+              data-test-end-date-input
+            />
+            {{#if this.errors.endDate}}
+              <div class="invalid-feedback" data-test-end-date-error>
+                {{this.errors.endDate}}
+              </div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Priority and Assignee Row --}}
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="issue-priority" class="form-label">{{t "calendar.priority"}}</label>
+            <select
+              class="form-select"
+              id="issue-priority"
+              {{on "change" (fn this.handleFieldChange "priority")}}
+              disabled={{not this.canEdit}}
+              data-test-priority-select
+            >
+              {{#each this.availablePriorities as |priority|}}
+                <option value={{priority.value}} selected={{eq this.formData.priority priority.value}}>
+                  {{priority.label}}
+                </option>
+              {{/each}}
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="issue-assignee" class="form-label">{{t "calendar.assignee"}}</label>
+            <select
+              class="form-select"
+              id="issue-assignee"
+              {{on "change" (fn this.handleFieldChange "assignee")}}
+              disabled={{not this.canEdit}}
+              data-test-assignee-select
+            >
+              <option value="">{{t "calendar.unassigned"}}</option>
+              {{#each this.availableAssignees as |assignee|}}
+                <option value={{assignee.value}} selected={{eq this.formData.assignee assignee.value}}>
+                  {{assignee.label}}
+                </option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+
+        {{!-- Status and Type Row --}}
+        <div class="row mb-3">
+          {{#if this.availableStatuses.length}}
+            <div class="col-md-6">
+              <label for="issue-status" class="form-label">{{t "calendar.status"}}</label>
+              <select
+                class="form-select"
+                id="issue-status"
+                {{on "change" (fn this.handleFieldChange "statusId")}}
+                {{on "focus" this.setDefaultStatus}}
+                disabled={{not this.canEdit}}
+                data-test-status-select
+              >
+                <option value="">{{t "calendar.select_status"}}</option>
+                {{#each this.availableStatuses as |status|}}
+                  <option value={{status.value}} selected={{eq this.formData.statusId status.value}}>
+                    {{status.label}}
+                  </option>
+                {{/each}}
+              </select>
+            </div>
+          {{/if}}
+
+          {{#if this.availableIssueTypes.length}}
+            <div class="col-md-{{if this.availableStatuses.length '6' '12'}}">
+              <label for="issue-type" class="form-label">{{t "calendar.issue_type"}}</label>
+              <select
+                class="form-select"
+                id="issue-type"
+                {{on "change" (fn this.handleFieldChange "typeId")}}
+                {{on "focus" this.setDefaultIssueType}}
+                disabled={{not this.canEdit}}
+                data-test-type-select
+              >
+                <option value="">{{t "calendar.select_type"}}</option>
+                {{#each this.availableIssueTypes as |type|}}
+                  <option value={{type.value}} selected={{eq this.formData.typeId type.value}}>
+                    {{type.label}}
+                  </option>
+                {{/each}}
+              </select>
+            </div>
+          {{/if}}
+        </div>
+
+        {{!-- Estimated Hours --}}
+        <div class="mb-3">
+          <label for="issue-estimated-hours" class="form-label">{{t "calendar.estimated_hours"}}</label>
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control {{if this.errors.estimatedHours 'is-invalid'}}"
+              id="issue-estimated-hours"
+              value={{this.formData.estimatedHours}}
+              {{on "input" (fn this.handleFieldChange "estimatedHours")}}
+              placeholder="0"
+              min="0"
+              step="0.5"
+              disabled={{not this.canEdit}}
+              data-test-estimated-hours-input
+            />
+            <span class="input-group-text">{{t "calendar.hours"}}</span>
+            {{#if this.errors.estimatedHours}}
+              <div class="invalid-feedback" data-test-estimated-hours-error>
+                {{this.errors.estimatedHours}}
+              </div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Read-only fields for edit mode --}}
+        {{#if (eq @mode "edit")}}
+          <div class="calendar-popup__readonly-info">
+            <div class="row">
+              {{#if @issue.issueNumber}}
+                <div class="col-md-6">
+                  <label class="form-label">{{t "calendar.issue_number"}}</label>
+                  <div class="form-control-plaintext">
+                    #{{@issue.issueNumber}}
+                  </div>
+                </div>
+              {{/if}}
+
+              {{#if @issue.progressPercentage}}
+                <div class="col-md-6">
+                  <label class="form-label">{{t "calendar.progress"}}</label>
+                  <div class="form-control-plaintext">
+                    {{@issue.progressPercentage}}%
+                  </div>
+                </div>
+              {{/if}}
+            </div>
+
+            {{#if @issue.dateCreated}}
+              <div class="row">
+                <div class="col-md-6">
+                  <label class="form-label">{{t "calendar.created"}}</label>
+                  <div class="form-control-plaintext">
+                    {{format-date @issue.dateCreated "MMM DD, YYYY"}}
+                  </div>
+                </div>
+
+                {{#if @issue.dateModified}}
+                  <div class="col-md-6">
+                    <label class="form-label">{{t "calendar.modified"}}</label>
+                    <div class="form-control-plaintext">
+                      {{format-date @issue.dateModified "MMM DD, YYYY"}}
+                    </div>
+                  </div>
+                {{/if}}
+              </div>
+            {{/if}}
+          </div>
+        {{/if}}
+      </div>
+
+      <div class="calendar-popup__footer">
+        {{#if this.canEdit}}
+          <button
+            type="submit"
+            class="btn btn-primary"
+            disabled={{or this.isSubmitting (not this.isFormValid)}}
+            data-test-popup-submit
+          >
+            {{#if this.isSubmitting}}
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{/if}}
+            {{this.submitButtonText}}
+          </button>
+        {{/if}}
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          {{on "click" this.handleCancel}}
+          disabled={{this.isSubmitting}}
+          data-test-popup-cancel
+        >
+          {{if this.canEdit (t "calendar.cancel") (t "calendar.close")}}
+        </button>
+
+        {{!-- Additional actions for edit mode --}}
+        {{#if (and (eq @mode "edit") this.canEdit)}}
+          <div class="calendar-popup__additional-actions">
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-sm"
+              title={{t "calendar.delete_issue"}}
+              data-test-popup-delete
+            >
+              <i class="fas fa-trash" aria-hidden="true"></i>
+              {{t "calendar.delete"}}
+            </button>
+          </div>
+        {{/if}}
+      </div>
+    </form>
+
+    {{!-- Validation Summary --}}
+    {{#if (gt (object-keys this.errors).length 0)}}
+      <div class="calendar-popup__validation-summary alert alert-danger" data-test-validation-summary>
+        <h6>{{t "calendar.validation.please_fix_errors"}}</h6>
+        <ul class="mb-0">
+          {{#each-in this.errors as |field error|}}
+            <li>{{error}}</li>
+          {{/each-in}}
+        </ul>
+      </div>
+    {{/if}}
+  </div>
+</div>

@@ -2,134 +2,392 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import PrometheusController from "prometheus/controllers/prometheus";
+import Controller from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 /**
- * This is the controller for the calendar controller route
+ * Calendar Controller for project calendar view
  *
- * @class AppProjectCalendarController
+ * @class CalendarController
  * @namespace Prometheus.Controllers
- * @module App.Project
- * @extends Prometheus
- * @author Hammad Hassan <gollomer@gmail.com>
+ * @extends Ember.Controller
+ * @author Hammad Hassan <hammad@projects4.me>
  */
-export default class AppProjectCalendarController extends PrometheusController {
+export default class CalendarController extends Controller {
+    @service calendarState;
+    @service notifications;
+    @service router;
+    @service store;
 
-
-    /**
-     * Locale value, the default is en
-     *
-     * @property localeCode
-     * @type String
-     * @for Calendar
-     * @private
-     */
-    localeCode = 'en';
+    @tracked isLoading = false;
+    @tracked error = null;
 
     /**
-     * These are the header option for the calendar
-     *
-     * @property header
-     * @type Object
-     * @for Calendar
-     * @public
+     * Query parameters for URL state management
      */
-    header = {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'month,agendaWeek,agendaDay,listWeek'
-    };
+    queryParams = ['view', 'date', 'filters'];
+    @tracked view = null;
+    @tracked date = null;
+    @tracked filters = null;
 
     /**
-     * The events
-     *
-     * @property events
-     * @type Objects
-     * @for Calendar
-     * @public
+     * Sync query parameters with calendar state
      */
-    events = null;
+    get currentView() {
+        return this.view || this.calendarState.currentView;
+    }
 
-    /**
-     * This is the function that handled the click event
-     *
-     * @method clicked
-     * @param {Object} event
-     * @public
-     */
-    @action clicked(event) {
-        this.showModal(event);
+    get currentDate() {
+        return this.date ? new Date(this.date) : this.calendarState.currentDate;
+    }
+
+    get activeFilters() {
+        return this.filters ? JSON.parse(this.filters) : this.calendarState.activeFilters;
     }
 
     /**
-     * This function handles the event where the drag is started
-     *
-     * @method eventDragStart
-     * @param {Object} event
-     * @public
+     * Check if user can edit all issues (admin/project manager)
      */
-    @action eventDragStart(event) {
-        Logger.debug("AppProjectCalendarController::eventDragStart()");
-        Logger.debug(event);
+    get canEditAllIssues() {
+        // This would integrate with the existing ACL system
+        // For now, simplified check
+        return this.currentUser?.isAdmin || this.isProjectManager;
     }
 
     /**
-     * This function handles the action when the view has been rendered
-     *
-     * @method eventRender
-     * @param {Object} event
-     * @param {Object} eventElement
-     * @public
+     * Check if current user is project manager
      */
-    @action eventRender(event, eventElement) {
-        let _self = this;
-        if (event.priority) {
-            eventElement.find('div.fc-content').prepend(this.getPriorityHTML(event.priority));
-            eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));
+    get isProjectManager() {
+        if (!this.project || !this.currentUser) {
+            return false;
         }
-        if (event.className) {
-            let tooltip = _self.intl.t("views.app.issue.lists.priority." + event.priority);
-            tooltip += ' ' + _self.intl.t("views.app.issue.priority");
-            tooltip += ' - ' + _self.intl.t("views.app.issue.lists.status." + event.className);
-            eventElement.find('div.fc-content').attr('data-toggle', 'tooltip');
-            eventElement.find('div.fc-content').attr('title', tooltip);
-            //eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));
+        
+        // Check if user is project owner or has manager role
+        return this.project.owner?.id === this.currentUser.id ||
+               this.project.assignee === this.currentUser.id;
+    }
+
+    /**
+     * Handle calendar view change
+     */
+    @action
+    handleViewChange(newView) {
+        this.calendarState.setView(newView);
+        this.view = newView;
+    }
+
+    /**
+     * Handle date navigation
+     */
+    @action
+    handleDateChange(newDate) {
+        this.calendarState.goToDate(newDate);
+        this.date = newDate.toISOString().split('T')[0];
+    }
+
+    /**
+     * Handle filter changes
+     */
+    @action
+    handleFilterChange(newFilters) {
+        this.calendarState.updateFilters(newFilters);
+        this.filters = JSON.stringify(newFilters);
+    }
+
+    /**
+     * Handle issue selection
+     */
+    @action
+    handleIssueSelect(issue) {
+        this.calendarState.selectIssue(issue);
+        
+        // Optionally navigate to issue detail
+        // this.router.transitionTo('app.project.issue.page', issue.issueNumber);
+    }
+
+    /**
+     * Handle issue editing
+     */
+    @action
+    handleIssueEdit(issue) {
+        this.calendarState.selectIssue(issue);
+        // The popup will be shown via the calendar state
+    }
+
+    /**
+     * Handle milestone selection
+     */
+    @action
+    handleMilestoneSelect(milestone) {
+        // Navigate to milestone detail or show popup
+        console.log('Milestone selected:', milestone);
+    }
+
+    /**
+     * Handle issue creation
+     */
+    @action
+    async handleIssueCreate(issueData) {
+        try {
+            this.isLoading = true;
+            
+            const issue = this.store.createRecord('issue', {
+                ...issueData,
+                projectId: this.project.id
+            });
+            
+            await issue.save();
+            
+            // Add to local issues array
+            this.issues = [...this.issues, issue];
+            
+            this.notifications.success('Issue created successfully');
+            
+            return issue;
+        } catch (error) {
+            this.notifications.error('Failed to create issue');
+            console.error('Issue creation failed:', error);
+            throw error;
+        } finally {
+            this.isLoading = false;
         }
     }
 
     /**
-     * This function used to retrieve HTML tag for a priority
-     *
-     * @method getPriorityHTML
-     * @param priority
-     * @return {string}
-     * @public
+     * Handle issue update
      */
-    getPriorityHTML(priority) {
-        let HTML = '';
-        switch (priority) {
-            case 'blocker':
-                HTML += '<i class="fa fa-ban"></i>';
+    @action
+    async handleIssueUpdate(issue, updates) {
+        try {
+            this.isLoading = true;
+            
+            // Apply updates to issue
+            Object.assign(issue, updates);
+            await issue.save();
+            
+            this.notifications.success('Issue updated successfully');
+            
+            return issue;
+        } catch (error) {
+            this.notifications.error('Failed to update issue');
+            console.error('Issue update failed:', error);
+            throw error;
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    /**
+     * Handle issue deletion
+     */
+    @action
+    async handleIssueDelete(issue) {
+        try {
+            this.isLoading = true;
+            
+            await issue.destroyRecord();
+            
+            // Remove from local issues array
+            this.issues = this.issues.filter(i => i.id !== issue.id);
+            
+            this.notifications.success('Issue deleted successfully');
+            
+            // Clear selection
+            this.calendarState.clearSelection();
+            
+        } catch (error) {
+            this.notifications.error('Failed to delete issue');
+            console.error('Issue deletion failed:', error);
+            throw error;
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    /**
+     * Handle calendar refresh
+     */
+    @action
+    refreshCalendar() {
+        this.send('refreshCalendar');
+    }
+
+    /**
+     * Handle timezone change
+     */
+    @action
+    handleTimezoneChange(timezone) {
+        this.calendarState.selectedTimezone = timezone;
+        this.calendarState.savePreferences();
+    }
+
+    /**
+     * Handle saved search operations
+     */
+    @action
+    handleSavedSearchAdd(name, filters) {
+        this.calendarState.addSavedSearch(name, filters);
+        this.notifications.success(`Saved search "${name}" created`);
+    }
+
+    @action
+    handleSavedSearchApply(search) {
+        this.calendarState.applySavedSearch(search);
+        this.filters = JSON.stringify(search.filters);
+        this.notifications.info(`Applied search "${search.name}"`);
+    }
+
+    @action
+    handleSavedSearchRemove(searchId) {
+        const search = this.calendarState.savedSearches.find(s => s.id === searchId);
+        this.calendarState.removeSavedSearch(searchId);
+        
+        if (search) {
+            this.notifications.success(`Removed search "${search.name}"`);
+        }
+    }
+
+    /**
+     * Handle calendar navigation
+     */
+    @action
+    goToPrevious() {
+        this.calendarState.goToPrevious();
+        this.date = this.calendarState.currentDate.toISOString().split('T')[0];
+    }
+
+    @action
+    goToNext() {
+        this.calendarState.goToNext();
+        this.date = this.calendarState.currentDate.toISOString().split('T')[0];
+    }
+
+    @action
+    goToToday() {
+        this.calendarState.goToToday();
+        this.date = this.calendarState.currentDate.toISOString().split('T')[0];
+    }
+
+    /**
+     * Handle weekend toggle
+     */
+    @action
+    toggleWeekends() {
+        this.calendarState.toggleWeekends();
+    }
+
+    /**
+     * Handle keyboard shortcuts
+     */
+    @action
+    handleKeyboardShortcut(event) {
+        // Handle global calendar keyboard shortcuts
+        switch (event.key) {
+            case 'c':
+                if (event.ctrlKey || event.metaKey) {
+                    event.preventDefault();
+                    // Create new issue
+                    this.calendarState.startIssueCreation(new Date());
+                }
                 break;
-            case 'critical':
-                HTML += '<i class="fa fa-angle-double-up"></i>';
+            case 'r':
+                if (event.ctrlKey || event.metaKey) {
+                    event.preventDefault();
+                    this.refreshCalendar();
+                }
                 break;
-            case 'high':
-                HTML += '<i class="fa fa-arrow-up"></i>';
-                break;
-            case 'medium':
-                HTML += '<i class="fa fa-dot-circle-o"></i>';
-                break;
-            case 'low':
-                HTML += '<i class="fa fa-arrow-down"></i>';
-                break;
-            case 'lowest':
-                HTML += '<i class="fa fa-angle-double-down"></i>';
-                break;
-            default:
+            case 'Escape':
+                // Clear selections and close popups
+                this.calendarState.clearSelection();
+                this.calendarState.cancelIssueCreation();
                 break;
         }
-        return HTML;
+    }
+
+    /**
+     * Export calendar data
+     */
+    @action
+    async exportCalendar(format = 'ics') {
+        try {
+            this.isLoading = true;
+            
+            // This would integrate with an export service
+            const exportData = {
+                project: this.project,
+                issues: this.issues,
+                milestones: this.milestones,
+                dateRange: {
+                    start: this.calendarState.periodStart,
+                    end: this.calendarState.periodEnd
+                },
+                filters: this.calendarState.activeFilters
+            };
+            
+            // For now, just log the export data
+            console.log('Exporting calendar data:', exportData);
+            
+            this.notifications.success(`Calendar exported as ${format.toUpperCase()}`);
+            
+        } catch (error) {
+            this.notifications.error('Failed to export calendar');
+            console.error('Calendar export failed:', error);
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    /**
+     * Print calendar
+     */
+    @action
+    printCalendar() {
+        // Trigger print dialog with calendar-optimized styles
+        window.print();
+    }
+
+    /**
+     * Handle error recovery
+     */
+    @action
+    handleError(error) {
+        console.error('Calendar error:', error);
+        this.error = error.message || 'An unexpected error occurred';
+        this.isLoading = false;
+    }
+
+    /**
+     * Clear error state
+     */
+    @action
+    clearError() {
+        this.error = null;
+    }
+
+    /**
+     * Reset calendar to default state
+     */
+    @action
+    resetCalendar() {
+        this.calendarState.goToToday();
+        this.calendarState.setView('month');
+        this.calendarState.updateFilters({
+            showMyIssues: true,
+            showProjectIssues: true,
+            showMilestones: true,
+            priorities: ['high', 'medium', 'low'],
+            statuses: [],
+            assignees: [],
+            issueTypes: []
+        });
+        
+        // Clear query parameters
+        this.view = null;
+        this.date = null;
+        this.filters = null;
+        
+        this.notifications.info('Calendar reset to default view');
     }
 }

@@ -1,0 +1,127 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div
+  class={{this.eventClasses}}
+  style={{this.eventStyle}}
+  title={{this.tooltipText}}
+  draggable={{this.isDraggable}}
+  {{on "click" this.handleClick}}
+  {{on "dblclick" this.handleDoubleClick}}
+  {{on "dragstart" this.handleDragStart}}
+  {{on "contextmenu" this.handleContextMenu}}
+  data-test-calendar-event={{@type}}
+  data-test-event-id={{if (eq @type "issue") @issue.id @milestone.id}}
+>
+  {{!-- Event Icon --}}
+  {{#if this.eventData.icon}}
+    <div class="calendar-event__icon">
+      <i class="fas fa-{{this.eventData.icon}}" aria-hidden="true"></i>
+    </div>
+  {{/if}}
+
+  {{!-- Event Content --}}
+  <div class="calendar-event__content">
+    {{!-- Event Title --}}
+    <div class="calendar-event__title" data-test-event-title>
+      {{this.displayTitle}}
+    </div>
+
+    {{!-- Event Subtitle (for larger views) --}}
+    {{#if (and this.eventData.subtitle (or (eq @view "day") (eq @view "week")))}}
+      <div class="calendar-event__subtitle" data-test-event-subtitle>
+        {{this.eventData.subtitle}}
+      </div>
+    {{/if}}
+
+    {{!-- Event Details (for day view) --}}
+    {{#if (eq @view "day")}}
+      <div class="calendar-event__details">
+        {{!-- Priority Badge --}}
+        {{#if this.eventData.priority}}
+          <span class="calendar-event__badge calendar-event__badge--priority" data-test-event-priority>
+            {{t (concat "calendar.priority." this.eventData.priority)}}
+          </span>
+        {{/if}}
+
+        {{!-- Status Badge --}}
+        {{#if this.eventData.status}}
+          <span class="calendar-event__badge calendar-event__badge--status" data-test-event-status>
+            {{t (concat "calendar.status." this.eventData.status)}}
+          </span>
+        {{/if}}
+
+        {{!-- Assignee Info --}}
+        {{#if this.eventData.assignee}}
+          <div class="calendar-event__assignee" data-test-event-assignee>
+            <i class="fas fa-user" aria-hidden="true"></i>
+            <span>{{get-user-initials this.eventData.assignee}}</span>
+          </div>
+        {{/if}}
+      </div>
+    {{/if}}
+
+    {{!-- Progress Bar (for issues with progress) --}}
+    {{#if (and (eq @type "issue") (gt this.eventData.progress 0))}}
+      <div class="calendar-event__progress" data-test-event-progress>
+        <div class="calendar-event__progress-bar">
+          <div 
+            class="calendar-event__progress-fill" 
+            style="width: {{this.eventData.progress}}%"
+          ></div>
+        </div>
+        {{#if (eq @view "day")}}
+          <span class="calendar-event__progress-text">{{this.eventData.progress}}%</span>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+
+  {{!-- Event Actions (for editable events) --}}
+  {{#if (and @canEdit (eq @view "day"))}}
+    <div class="calendar-event__actions">
+      <button
+        type="button"
+        class="calendar-event__action-btn"
+        title={{t "calendar.edit_event"}}
+        {{on "click" this.handleDoubleClick}}
+        data-test-event-edit-btn
+      >
+        <i class="fas fa-edit" aria-hidden="true"></i>
+      </button>
+    </div>
+  {{/if}}
+
+  {{!-- Drag Handle (for draggable events) --}}
+  {{#if this.isDraggable}}
+    <div class="calendar-event__drag-handle" data-test-event-drag-handle>
+      <i class="fas fa-grip-vertical" aria-hidden="true"></i>
+    </div>
+  {{/if}}
+
+  {{!-- Multi-day Event Connectors --}}
+  {{#if (and (eq @type "issue") @issueData)}}
+    {{#if @issueData.isStart}}
+      <div class="calendar-event__connector calendar-event__connector--start"></div>
+    {{/if}}
+    {{#if @issueData.isEnd}}
+      <div class="calendar-event__connector calendar-event__connector--end"></div>
+    {{/if}}
+    {{#if @issueData.isMiddle}}
+      <div class="calendar-event__connector calendar-event__connector--middle"></div>
+    {{/if}}
+  {{/if}}
+
+  {{!-- Overdue Indicator --}}
+  {{#if this.eventData.isOverdue}}
+    <div class="calendar-event__overdue-indicator" title={{t "calendar.overdue"}} data-test-event-overdue>
+      <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+    </div>
+  {{/if}}
+
+  {{!-- Selection Indicator --}}
+  {{#if @isSelected}}
+    <div class="calendar-event__selection-indicator" data-test-event-selected></div>
+  {{/if}}
+</div>

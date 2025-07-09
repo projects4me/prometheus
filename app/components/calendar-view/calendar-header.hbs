@@ -1,0 +1,141 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="calendar-header" {{on "keydown" this.handleKeyDown}} tabindex="0" data-test-calendar-header>
+  <div class="calendar-header__left">
+    {{!-- Navigation Controls --}}
+    <div class="calendar-header__navigation">
+      <button
+        type="button"
+        class="btn btn-outline-secondary calendar-header__nav-btn"
+        title={{this.navigationLabels.previous}}
+        disabled={{not this.canGoToPrevious}}
+        {{on "click" this.handlePrevious}}
+        data-test-calendar-prev
+      >
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        <span class="sr-only">{{this.navigationLabels.previous}}</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary calendar-header__nav-btn"
+        title={{this.navigationLabels.next}}
+        disabled={{not this.canGoToNext}}
+        {{on "click" this.handleNext}}
+        data-test-calendar-next
+      >
+        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        <span class="sr-only">{{this.navigationLabels.next}}</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary calendar-header__today-btn {{if this.isToday 'active'}}"
+        {{on "click" this.handleToday}}
+        data-test-calendar-today
+      >
+        {{t "calendar.today"}}
+      </button>
+    </div>
+
+    {{!-- Current Date Display --}}
+    <div class="calendar-header__date">
+      <h2 class="calendar-header__date-text" data-test-calendar-current-date>
+        {{this.formattedCurrentDate}}
+      </h2>
+      
+      {{!-- Date Picker for Quick Navigation --}}
+      <input
+        type="date"
+        class="calendar-header__date-picker"
+        value={{this.currentDateValue}}
+        {{on "change" this.handleDatePickerChange}}
+        title={{t "calendar.select_date"}}
+        data-test-calendar-date-picker
+      />
+    </div>
+  </div>
+
+  <div class="calendar-header__right">
+    {{!-- View Controls --}}
+    <div class="calendar-header__view-controls">
+      {{!-- View Buttons --}}
+      <div class="btn-group calendar-header__view-buttons" role="group" aria-label={{t "calendar.view_selector"}}>
+        {{#each this.availableViews as |view|}}
+          <button
+            type="button"
+            class="btn btn-outline-secondary {{if (eq @currentView view.value) 'active'}}"
+            {{on "click" (fn this.handleViewButtonClick view.value)}}
+            title={{view.label}}
+            data-test-calendar-view-btn={{view.value}}
+          >
+            <i class="fas fa-{{view.icon}}" aria-hidden="true"></i>
+            <span class="calendar-header__view-label">{{view.label}}</span>
+          </button>
+        {{/each}}
+      </div>
+
+      {{!-- View Dropdown for Mobile --}}
+      <select
+        class="form-select calendar-header__view-select d-md-none"
+        {{on "change" this.handleViewChange}}
+        aria-label={{t "calendar.view_selector"}}
+        data-test-calendar-view-select
+      >
+        {{#each this.availableViews as |view|}}
+          <option value={{view.value}} selected={{eq @currentView view.value}}>
+            {{view.label}}
+          </option>
+        {{/each}}
+      </select>
+    </div>
+
+    {{!-- Additional Controls --}}
+    <div class="calendar-header__controls">
+      {{!-- Weekend Toggle --}}
+      <div class="form-check calendar-header__weekend-toggle">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="show-weekends"
+          checked={{@showWeekends}}
+          {{on "change" this.handleWeekendToggle}}
+          data-test-calendar-weekend-toggle
+        />
+        <label class="form-check-label" for="show-weekends">
+          {{t "calendar.show_weekends"}}
+        </label>
+      </div>
+
+      {{!-- Keyboard Shortcuts Info --}}
+      <button
+        type="button"
+        class="btn btn-outline-secondary btn-sm calendar-header__shortcuts-btn"
+        title={{t "calendar.keyboard_shortcuts"}}
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        data-test-calendar-shortcuts
+      >
+        <i class="fas fa-keyboard" aria-hidden="true"></i>
+        <span class="sr-only">{{t "calendar.keyboard_shortcuts"}}</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+{{!-- Keyboard Shortcuts Tooltip Content (Hidden) --}}
+<div class="d-none" data-test-calendar-shortcuts-content>
+  <div class="calendar-shortcuts">
+    <h6>{{t "calendar.keyboard_shortcuts"}}</h6>
+    <ul class="list-unstyled">
+      <li><kbd>←</kbd> {{t "calendar.shortcuts.previous"}}</li>
+      <li><kbd>→</kbd> {{t "calendar.shortcuts.next"}}</li>
+      <li><kbd>Home</kbd> {{t "calendar.shortcuts.today"}}</li>
+      <li><kbd>Ctrl+1</kbd> {{t "calendar.shortcuts.day_view"}}</li>
+      <li><kbd>Ctrl+2</kbd> {{t "calendar.shortcuts.week_view"}}</li>
+      <li><kbd>Ctrl+3</kbd> {{t "calendar.shortcuts.month_view"}}</li>
+    </ul>
+  </div>
+</div>

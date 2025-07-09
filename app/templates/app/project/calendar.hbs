@@ -1,19 +1,247 @@
-<div class="calendar">
-  <div class="row">
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
 
-    <div class="col-md-12">
-      <div class="box box-primary">
-        <div class="box-body no-padding">
-          {{!-- THE CALENDAR --}}
-
-        </div>
-        {{!-- /.box-body --}}
+<div class="project-calendar" {{on "keydown" this.handleKeyboardShortcut}} data-test-project-calendar>
+  {{!-- Page Header --}}
+  <div class="project-calendar__header">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="project-calendar__title">
+          {{t "calendar.title"}} - {{this.project.name}}
+        </h1>
+        <p class="project-calendar__subtitle text-muted">
+          {{t "calendar.subtitle"}}
+        </p>
       </div>
-      {{!-- /. box --}}
-    </div>
-    {{!-- /.col --}}
 
+      <div class="project-calendar__actions">
+        {{!-- Export/Print Actions --}}
+        <div class="btn-group me-2" role="group">
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm"
+            {{on "click" this.printCalendar}}
+            title={{t "calendar.print"}}
+            data-test-print-calendar
+          >
+            <i class="fas fa-print" aria-hidden="true"></i>
+            <span class="d-none d-md-inline ms-1">{{t "calendar.print"}}</span>
+          </button>
+
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-sm dropdown-toggle"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              title={{t "calendar.export"}}
+              data-test-export-calendar
+            >
+              <i class="fas fa-download" aria-hidden="true"></i>
+              <span class="d-none d-md-inline ms-1">{{t "calendar.export"}}</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <button class="dropdown-item" {{on "click" (fn this.exportCalendar "ics")}}>
+                  <i class="fas fa-calendar" aria-hidden="true"></i>
+                  {{t "calendar.export_ics"}}
+                </button>
+              </li>
+              <li>
+                <button class="dropdown-item" {{on "click" (fn this.exportCalendar "csv")}}>
+                  <i class="fas fa-file-csv" aria-hidden="true"></i>
+                  {{t "calendar.export_csv"}}
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {{!-- Refresh Button --}}
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm me-2"
+          {{on "click" this.refreshCalendar}}
+          disabled={{this.isLoading}}
+          title={{t "calendar.refresh"}}
+          data-test-refresh-calendar
+        >
+          <i class="fas fa-sync-alt {{if this.isLoading 'fa-spin'}}" aria-hidden="true"></i>
+          <span class="d-none d-md-inline ms-1">{{t "calendar.refresh"}}</span>
+        </button>
+
+        {{!-- Reset Button --}}
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-sm"
+          {{on "click" this.resetCalendar}}
+          title={{t "calendar.reset"}}
+          data-test-reset-calendar
+        >
+          <i class="fas fa-undo" aria-hidden="true"></i>
+          <span class="d-none d-md-inline ms-1">{{t "calendar.reset"}}</span>
+        </button>
+      </div>
+    </div>
   </div>
-  {{!-- /.row --}}
+
+  {{!-- Error Display --}}
+  {{#if this.error}}
+    <div class="alert alert-danger alert-dismissible" data-test-calendar-error>
+      <div class="d-flex align-items-center">
+        <i class="fas fa-exclamation-triangle me-2" aria-hidden="true"></i>
+        <div class="flex-grow-1">
+          <strong>{{t "calendar.error_title"}}</strong>
+          <div>{{this.error}}</div>
+        </div>
+        <button
+          type="button"
+          class="btn-close"
+          {{on "click" this.clearError}}
+          aria-label={{t "calendar.close"}}
+        ></button>
+      </div>
+    </div>
+  {{/if}}
+
+  {{!-- Main Calendar Component --}}
+  <CalendarView::CalendarView
+    @project={{this.project}}
+    @issues={{this.issues}}
+    @milestones={{this.milestones}}
+    @currentUser={{this.currentUser}}
+    @canEditAllIssues={{this.canEditAllIssues}}
+    @onIssueSelect={{this.handleIssueSelect}}
+    @onIssueEdit={{this.handleIssueEdit}}
+    @onIssueCreate={{this.handleIssueCreate}}
+    @onIssueUpdate={{this.handleIssueUpdate}}
+    @onIssueDelete={{this.handleIssueDelete}}
+    @onMilestoneSelect={{this.handleMilestoneSelect}}
+    @onViewChange={{this.handleViewChange}}
+    @onDateChange={{this.handleDateChange}}
+    @onFilterChange={{this.handleFilterChange}}
+    @onSavedSearchAdd={{this.handleSavedSearchAdd}}
+    @onSavedSearchApply={{this.handleSavedSearchApply}}
+    @onSavedSearchRemove={{this.handleSavedSearchRemove}}
+    @onTimezoneChange={{this.handleTimezoneChange}}
+    @onError={{this.handleError}}
+    class="project-calendar__main"
+    data-test-calendar-main
+  />
+
+  {{!-- Loading Overlay --}}
+  {{#if this.isLoading}}
+    <div class="project-calendar__loading-overlay" data-test-calendar-loading>
+      <div class="d-flex flex-column align-items-center justify-content-center h-100">
+        <div class="spinner-border text-primary mb-3" role="status">
+          <span class="visually-hidden">{{t "calendar.loading"}}</span>
+        </div>
+        <p class="text-muted">{{t "calendar.loading_message"}}</p>
+      </div>
+    </div>
+  {{/if}}
+
+  {{!-- Keyboard Shortcuts Help (Hidden by default) --}}
+  <div class="d-none" data-test-keyboard-shortcuts-help>
+    <div class="project-calendar__shortcuts-help">
+      <h5>{{t "calendar.keyboard_shortcuts"}}</h5>
+      <div class="row">
+        <div class="col-md-6">
+          <h6>{{t "calendar.shortcuts.navigation"}}</h6>
+          <ul class="list-unstyled">
+            <li><kbd>←</kbd> {{t "calendar.shortcuts.previous_period"}}</li>
+            <li><kbd>→</kbd> {{t "calendar.shortcuts.next_period"}}</li>
+            <li><kbd>Home</kbd> {{t "calendar.shortcuts.today"}}</li>
+            <li><kbd>Ctrl+1</kbd> {{t "calendar.shortcuts.day_view"}}</li>
+            <li><kbd>Ctrl+2</kbd> {{t "calendar.shortcuts.week_view"}}</li>
+            <li><kbd>Ctrl+3</kbd> {{t "calendar.shortcuts.month_view"}}</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h6>{{t "calendar.shortcuts.actions"}}</h6>
+          <ul class="list-unstyled">
+            <li><kbd>Ctrl+C</kbd> {{t "calendar.shortcuts.create_issue"}}</li>
+            <li><kbd>Ctrl+R</kbd> {{t "calendar.shortcuts.refresh"}}</li>
+            <li><kbd>Escape</kbd> {{t "calendar.shortcuts.close_popups"}}</li>
+            <li><kbd>?</kbd> {{t "calendar.shortcuts.show_help"}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Accessibility Announcements --}}
+  <div class="sr-only" aria-live="polite" data-test-calendar-announcements>
+    {{#if this.calendarState.selectedIssue}}
+      {{t "calendar.a11y.issue_selected" issue=this.calendarState.selectedIssue.subject}}
+    {{/if}}
+    
+    {{#if this.calendarState.isCreatingIssue}}
+      {{t "calendar.a11y.creating_issue" date=(format-date this.calendarState.newIssueDate)}}
+    {{/if}}
+  </div>
 </div>
-{{!-- /.calendar --}}
+
+{{!-- Page-specific styles --}}
+<style>
+  .project-calendar {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .project-calendar__header {
+    flex-shrink: 0;
+    padding: 1rem;
+    border-bottom: 1px solid var(--bs-border-color);
+    background: var(--bs-body-bg);
+  }
+
+  .project-calendar__title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .project-calendar__subtitle {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .project-calendar__main {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .project-calendar__loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 1050;
+    backdrop-filter: blur(2px);
+  }
+
+  .project-calendar__shortcuts-help {
+    background: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    padding: 1rem;
+    box-shadow: var(--bs-box-shadow);
+  }
+
+  @media print {
+    .project-calendar__header,
+    .project-calendar__actions {
+      display: none !important;
+    }
+    
+    .project-calendar {
+      height: auto;
+    }
+  }
+</style>
