@@ -1104,6 +1104,13 @@
         "weeklyWidgets": {
           "previousPage": "Previous Week",
           "nextPage": "Next Week"
+        },
+        "weeklyConversations": {
+          "title": "Weekly Conversations",
+          "fields": {
+            "comment": "Comment"
+          },
+          "noConversationsFound": "No conversations found for this week"
         }
       },
       "milestone": {

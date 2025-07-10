@@ -21,7 +21,7 @@ export default Factory.extend({
         return (_.random(1, 10)).toString();
     },
     relatedTo() {
-        return faker.random.arrayElement(["conversationroom", "chatroom"]);
+        return 'conversationrooms';
     },
     relatedId() {
         return (_.random(1, 5)).toString();

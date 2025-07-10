@@ -142,7 +142,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    conversationroom: belongsTo('conversationroom'),
+    conversationRoom: belongsTo('conversationroom'),
     
     /**
      * The chat room the comment is associated with

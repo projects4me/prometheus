@@ -1,0 +1,69 @@
+<div class="box box-primary" data-recent-conversations>
+  <div class="box-header with-border">
+    <h3 class="box-title">
+      {{t "views.app.widgets.weeklyConversations.title"}}
+    </h3>
+  </div>
+  <Pagination
+    @onPageChange={{this.onPageChange}}
+    @containerClass="conversations-scroll-container"
+    @previousButtonTitle="views.app.widgets.weeklyWidgets.previousPage"
+    @nextButtonTitle="views.app.widgets.weeklyWidgets.nextPage"
+    @reverseNavigation={{true}}
+  >
+    <:center>
+      <h6><b>{{format-date date=this.startWeek}}
+          -
+          {{format-date date=this.endWeek}}</b></h6>
+    </:center>
+    <:default>
+      <div class="box-body">
+        {{#if this.hasConversations}}
+          <AppUi::Accordion
+            @sections={{this.data}}
+            @canOpenMultipleSections={{true}}
+          >
+            <:title as |key|>
+              <b>{{call (fn this.getTitle key)}}</b>
+            </:title>
+            <:content as |comment|>
+              <div class="conversations">
+                <div class="box-comments">
+                  {{#each (call (fn this.getComments comment)) as |comment|}}
+                    <div class="box-comment" data-comment-id="{{comment.id}}">
+                      <img
+                        class="img-circle img-sm"
+                        src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}"
+                        alt="{{comment.createdUserName}}"
+                      />
+
+                      <div class="comment-text">
+                        <span class="username">
+                          <a
+                            href="/app/user/{{comment.createdUser}}"
+                          >{{comment.createdUserName}}</a>
+                          <span class="text-muted pull-right">{{format-date
+                              date=comment.dateModified
+                              format="MMM Do 'YY, h:mm a"
+                              localTime=true
+                            }}</span>
+                        </span>
+                        {{translate-comment comment.comment}}
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              </div>
+            </:content>
+          </AppUi::Accordion>
+        {{else}}
+          <Exceptions::NothingFound
+            @description={{t
+              "views.app.widgets.weeklyConversations.noConversationsFound"
+            }}
+          />
+        {{/if}}
+      </div>
+    </:default>
+  </Pagination>
+</div>

@@ -15,5 +15,5 @@ export default Factory.extend({
     userId(i) {
         return `${++i}`;
     },
-    "widgets": "recentIssues, activeMilestones, weeklyActivities, weeklyTimelogs"
+    "widgets": "recentIssues, activeMilestones, weeklyActivities, weeklyTimelogs, weeklyConversations"
 });

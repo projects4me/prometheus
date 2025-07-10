@@ -45,6 +45,15 @@ export const selectors = {
 		noContent: {
 			message: 'No timelogs found'
 		}
+	},
+	'weekly conversations': {
+		selector: '[data-recent-conversations]',
+		handler: (assert, ctx, expectedCount, modelType, widget) => {
+			assert.equal(findAll(`${selectors[widget].selector} [data-accordion-section]`).length, parseInt(expectedCount));
+		},
+		noContent: {
+			message: 'No conversations found for this week'
+		}
 	}
 };
 
@@ -154,9 +163,9 @@ export function filterWeeklyWidgetModel(modelType, collection) {
 }
 
 export function setDateForWeeklyWidget(collection, count, week) {
+	let models = collection.models;
 	if (week === 'this') {
 		let date = DateUtils.getWeekRangeForPage(1);
-		let models = collection.models;
 		for (let i = 0; i < count; i++) {
 			models[i].update({
 				dateCreated: date.startOfWeek
@@ -165,7 +174,6 @@ export function setDateForWeeklyWidget(collection, count, week) {
 		ctx.set('lastSetCount', count);
 	} else if (week === 'previous') {
 		let date = DateUtils.getWeekRangeForPage(2);
-		let models = collection.models;
 		for (let i = ctx.get('lastSetCount'); i < models.length; i++) {
 			models[i].update({
 				dateCreated: date.startOfWeek

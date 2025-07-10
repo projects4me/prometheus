@@ -1,0 +1,43 @@
+<div class="accordion-container" ...attributes>
+  {{#each-in this.sections as |key content|}}
+    <div class="accordion-section {{if (includes key this.openSections) 'open'}}" data-accordion-section={{key}}>
+      <div 
+        class="accordion-header {{if (includes key this.openSections) 'active'}}"
+        {{on "click" (fn this.toggleSection content key)}}
+        role="button"
+        tabindex="0"
+        {{on "keydown" (fn this.handleKeydown content key)}}
+        data-accordion-toggle-section={{key}}
+      >
+        <div class="accordion-title">
+          {{#if (has-block "title")}}
+            {{yield key to="title"}}
+          {{else}}
+            {{key}}
+          {{/if}}
+        </div>
+        <div class="accordion-icon">
+          <i class="fa {{if (includes key this.openSections) 'fa-minus' 'fa-plus'}}"></i>
+        </div>
+      </div>
+      
+      <div class="accordion-content {{if (includes key this.openSections) 'open'}}">
+        <div class="accordion-body">
+          {{#if (has-block "content")}}
+            {{yield key to="content"}}
+          {{else}}
+            {{#if (is-array content)}}
+              {{#each content as |contentItem|}}
+                <div class="content-item">
+                  {{contentItem}}
+                </div>
+              {{/each}}
+            {{else}}
+              {{content}}
+            {{/if}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  {{/each-in}}
+</div>
