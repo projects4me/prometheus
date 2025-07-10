@@ -25,9 +25,7 @@ export default function (assert) {
 			setDateForWeeklyWidget(timelogs, count, week);
 			assert.ok(
 				true,
-				'There are $count timelogs for $week week',
-				count,
-				week
+				`There are ${count} timelogs for ${week} week`
 			);
 		});
 }

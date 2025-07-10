@@ -24,6 +24,9 @@ import { next } from '@ember/runloop';
  *   @onPageChange={{this.handlePageChange}}
  *   @showPageInfo={{true}}
  *   @initialLoad={{true}}
+ *   @reverseNavigation={{true}}
+ *   @previousButtonTitle="views.customPreviousButtonTitle"
+ *   @nextButtonTitle="views.customNextButtonTitle"
  * />
  */
 export default class PaginationComponent extends Component {
@@ -60,12 +63,27 @@ export default class PaginationComponent extends Component {
 	@tracked hasMore = true; // Assume there are more pages until told otherwise
 
 	/**
+	 * Whether to reverse the navigation direction.
+	 * When true: Previous button loads newer data, Next button loads older data
+	 * When false: Previous button loads older data, Next button loads newer data
+	 * @property reverseNavigation
+	 * @type {boolean}
+	 * @public
+	 */
+	get reverseNavigation() {
+		return this.args.reverseNavigation === true;
+	}
+
+	/**
 	 * Determines whether the previous button should be disabled.
 	 * @property isPreviousDisabled
 	 * @type {boolean}
 	 * @public
 	 */
 	get isPreviousDisabled() {
+		if (this.reverseNavigation) {
+			return this.isLoading;
+		}
 		return this.page <= 1 || this.isLoading;
 	}
 
@@ -76,6 +94,9 @@ export default class PaginationComponent extends Component {
 	 * @public
 	 */
 	get isNextDisabled() {
+		if (this.reverseNavigation) {
+			return this.page <= 1 || this.isLoading;
+		}
 		return !this.hasMore || this.isLoading;
 	}
 
@@ -123,14 +144,14 @@ export default class PaginationComponent extends Component {
 	 */
 	async loadPage(page) {
 		if (this.isLoading) return;
-		next(this, function() {
+		next(this, function () {
 			this.isLoading = true;
 		});
 		try {
 			const result = await this.args.onPageChange({
 				page,
 				pageSize: this.pageSize,
-				previousPage: this.page,
+				previousPage: this.page
 			});
 			this.page = page;
 			// Parent callback should return { items, hasMore }
@@ -143,7 +164,7 @@ export default class PaginationComponent extends Component {
 		} catch (e) {
 			// Optionally handle error
 		} finally {
-			next(this, function() {
+			next(this, function () {
 				this.isLoading = false;
 			});
 		}
@@ -151,6 +172,8 @@ export default class PaginationComponent extends Component {
 
 	/**
 	 * Navigates to the previous page, if not disabled.
+	 * In reverse mode, this loads newer data.
+	 * In normal mode, this loads older data.
 	 *
 	 * @method goToPreviousPage
 	 * @public
@@ -160,11 +183,13 @@ export default class PaginationComponent extends Component {
 	@action
 	async goToPreviousPage() {
 		if (this.isPreviousDisabled) return;
-		await this.loadPage(this.page - 1);
+		await this.loadPage(this.page + (this.reverseNavigation ? 1 : -1));
 	}
 
 	/**
 	 * Navigates to the next page, if not disabled.
+	 * In reverse mode, this loads older data.
+	 * In normal mode, this loads newer data.
 	 *
 	 * @method goToNextPage
 	 * @public
@@ -174,7 +199,7 @@ export default class PaginationComponent extends Component {
 	@action
 	async goToNextPage() {
 		if (this.isNextDisabled) return;
-		await this.loadPage(this.page + 1);
+		await this.loadPage(this.page + (this.reverseNavigation ? -1 : 1));
 	}
 
 	/**

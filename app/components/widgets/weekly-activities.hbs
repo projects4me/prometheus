@@ -8,6 +8,9 @@
     <Pagination
       @onPageChange={{this.onPageChange}}
       @containerClass="weekly-activities"
+      @previousButtonTitle="views.app.widgets.weeklyWidgets.previousPage"
+      @nextButtonTitle="views.app.widgets.weeklyWidgets.nextPage"
+      @reverseNavigation={{true}}
     >
       <:center>
         <h6><b>{{format-date date=this.startWeek}}

@@ -14,9 +14,10 @@ Feature: Dashboard - Weekly Activities Widget | pagination
     --------------
     And 15 activities are for this week
     And 5 activities are for previous week
+    And Reverse navigation for pagination is enabled
     And There is custom callback setup to filter activity model
     When User navigates to app
-    And User clicks on next page button in weekly activities
+    And User clicks on previous page button in weekly activities
     Then There should be 5 activities present in weekly activities widget
   
   Scenario: User paginates through weekly activities with previous page button
@@ -31,8 +32,9 @@ Feature: Dashboard - Weekly Activities Widget | pagination
     --------------
     And 15 activities are for this week
     And 5 activities are for previous week
+    And Reverse navigation for pagination is enabled
     And There is custom callback setup to filter activity model
     When User navigates to app
-    And User clicks on next page button in weekly activities
     And User clicks on previous page button in weekly activities
+    And User clicks on next page button in weekly activities
     Then There should be 15 activities present in weekly activities widget

@@ -13,7 +13,7 @@
         data-pagination-prev
         {{on "click" this.goToPreviousPage}}
         disabled={{this.isPreviousDisabled}}
-        title={{t "views.components.pagination.previousPage"}}
+        title={{t (if @previousButtonTitle @previousButtonTitle "views.components.pagination.previousPage")}}
         data-btn="previous"
       >
         <i class="fa fa-caret-left"></i>
@@ -36,7 +36,7 @@
         data-pagination-next
         {{on "click" this.goToNextPage}}
         disabled={{this.isNextDisabled}}
-        title={{t "views.components.pagination.nextPage"}}
+        title={{t (if @nextButtonTitle @nextButtonTitle "views.components.pagination.nextPage")}}
         data-btn="next"
       >
         <i class="fa fa-caret-right"></i>
