@@ -107,7 +107,7 @@ export default class QueryBuilderNativeComponent extends Component {
                 }
             } catch (error) {
                 console.warn('Failed to parse initial query:', error);
-                this.errors = ['Invalid query format'];
+                this.errors = [this.intl.t('views.components.queryBuilder.validation.invalidSyntax')];
                 this.isValid = false;
             }
         }
@@ -303,7 +303,7 @@ export default class QueryBuilderNativeComponent extends Component {
                 const closeParens = (this.queryText.match(/\)/g) || []).length;
                 
                 if (openParens !== closeParens) {
-                    this.errors.push('Unbalanced parentheses');
+                    this.errors.push(this.intl.t('views.components.queryBuilder.validation.unbalancedParentheses'));
                     this.isValid = false;
                 }
 
@@ -312,7 +312,7 @@ export default class QueryBuilderNativeComponent extends Component {
                     queryParser.getRules(this.queryText, this.args.filters);
                 }
             } catch (error) {
-                this.errors.push('Invalid query syntax');
+                this.errors.push(this.intl.t('views.components.queryBuilder.validation.invalidSyntax'));
                 this.isValid = false;
             }
         }

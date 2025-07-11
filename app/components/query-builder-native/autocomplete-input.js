@@ -85,24 +85,24 @@ export default class AutocompleteInputComponent extends Component {
      */
     get operators() {
         return [
-            { value: ':', label: 'equals to' },
-            { value: '!:', label: 'not equals to' },
-            { value: '<', label: 'less than' },
-            { value: '>', label: 'greater than' },
-            { value: '<:', label: 'less than or equals' },
-            { value: '>:', label: 'greater than or equals' },
-            { value: 'CONTAINS', label: 'contains text' },
-            { value: '!CONTAINS', label: 'does not contain' },
-            { value: 'STARTS', label: 'starts with' },
-            { value: '!STARTS', label: 'does not start with' },
-            { value: 'ENDS', label: 'ends with' },
-            { value: '!ENDS', label: 'does not end with' },
-            { value: 'BETWEEN', label: 'between values' },
-            { value: '!BETWEEN', label: 'not between' },
-            { value: 'NULL', label: 'is null' },
-            { value: '!NULL', label: 'is not null' },
-            { value: 'EMPTY', label: 'is empty' },
-            { value: '!EMPTY', label: 'is not empty' }
+            { value: ':', label: this.intl.t('views.components.queryBuilder.operators.equals') },
+            { value: '!:', label: this.intl.t('views.components.queryBuilder.operators.notEquals') },
+            { value: '<', label: this.intl.t('views.components.queryBuilder.operators.lessThan') },
+            { value: '>', label: this.intl.t('views.components.queryBuilder.operators.greaterThan') },
+            { value: '<:', label: this.intl.t('views.components.queryBuilder.operators.lessThanOrEquals') },
+            { value: '>:', label: this.intl.t('views.components.queryBuilder.operators.greaterThanOrEquals') },
+            { value: 'CONTAINS', label: this.intl.t('views.components.queryBuilder.operators.contains') },
+            { value: '!CONTAINS', label: 'Not ' + this.intl.t('views.components.queryBuilder.operators.contains') },
+            { value: 'STARTS', label: this.intl.t('views.components.queryBuilder.operators.starts') },
+            { value: '!STARTS', label: 'Not ' + this.intl.t('views.components.queryBuilder.operators.starts') },
+            { value: 'ENDS', label: this.intl.t('views.components.queryBuilder.operators.ends') },
+            { value: '!ENDS', label: 'Not ' + this.intl.t('views.components.queryBuilder.operators.ends') },
+            { value: 'BETWEEN', label: this.intl.t('views.components.queryBuilder.operators.between') },
+            { value: '!BETWEEN', label: 'Not ' + this.intl.t('views.components.queryBuilder.operators.between') },
+            { value: 'NULL', label: this.intl.t('views.components.queryBuilder.operators.null') },
+            { value: '!NULL', label: 'Not ' + this.intl.t('views.components.queryBuilder.operators.null') },
+            { value: 'EMPTY', label: this.intl.t('views.components.queryBuilder.operators.empty') },
+            { value: '!EMPTY', label: 'Not ' + this.intl.t('views.components.queryBuilder.operators.empty') }
         ];
     }
 
@@ -326,8 +326,8 @@ export default class AutocompleteInputComponent extends Component {
                 // For values, we could suggest based on field type
                 // For now, just provide some common patterns
                 suggestions = [
-                    { value: "'text'", label: "Text value", type: 'value' },
-                    { value: "NULL", label: "NULL value", type: 'value' }
+                    { value: "'text'", label: this.intl.t('views.components.queryBuilder.autocomplete.suggestions.textValue'), type: 'value' },
+                    { value: "NULL", label: this.intl.t('views.components.queryBuilder.autocomplete.suggestions.nullValue'), type: 'value' }
                 ];
                 break;
         }

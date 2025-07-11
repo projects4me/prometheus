@@ -45,14 +45,14 @@
               </div>
             </div>
             
-            <span class="badge badge-secondary">{{suggestion.type}}</span>
+            <span class="badge badge-secondary">{{t (concat "views.components.queryBuilder.autocomplete.suggestionTypes." suggestion.type)}}</span>
           </button>
         {{/each}}
         
         {{#unless this.suggestions.length}}
           <div class="list-group-item text-muted text-center">
             <i class="fas fa-search me-2"></i>
-            No suggestions available
+            {{t "views.components.queryBuilder.autocomplete.noSuggestions"}}
           </div>
         {{/unless}}
       </div>
@@ -62,7 +62,7 @@
   {{!-- Validation feedback --}}
   {{#unless @isValid}}
     <div class="invalid-feedback">
-      Invalid query syntax. Please check your query format.
+      {{t "views.components.queryBuilder.autocomplete.invalidSyntax"}}
     </div>
   {{/unless}}
 </div>

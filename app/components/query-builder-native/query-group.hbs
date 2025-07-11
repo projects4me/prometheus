@@ -7,7 +7,7 @@
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
         <i class="fas fa-layer-group text-secondary me-2"></i>
-        <span class="fw-bold">Group</span>
+        <span class="fw-bold">{{t "views.components.queryBuilder.group.title"}}</span>
         
         {{!-- Condition Selector for multiple rules --}}
         {{#if (gt @group.rules.length 1)}}
@@ -34,7 +34,7 @@
         type="button" 
         class="btn btn-sm btn-outline-danger"
         {{on "click" this.removeGroup}}
-        title="Remove this group"
+        title={{t "views.components.queryBuilder.group.removeGroup"}}
       >
         <i class="fas fa-times"></i>
       </button>
@@ -73,7 +73,7 @@
       {{!-- Empty Group State --}}
       <div class="text-center py-3">
         <i class="fas fa-plus-circle fa-2x text-muted mb-2"></i>
-        <p class="text-muted mb-0">This group is empty. Add a rule to get started.</p>
+        <p class="text-muted mb-0">{{t "views.components.queryBuilder.group.emptyGroup"}}</p>
       </div>
     {{/if}}
 
@@ -94,7 +94,7 @@
         {{on "click" this.addNestedGroup}}
       >
         <i class="fas fa-layer-group me-1"></i>
-        Add Nested Group
+        {{t "views.components.queryBuilder.group.addNestedGroup"}}
       </button>
     </div>
   </div>

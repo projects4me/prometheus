@@ -125,16 +125,16 @@ export default class QueryRuleComponent extends Component {
      * @readonly
      */
     get valuePlaceholder() {
-        if (!this.currentField) return 'Enter value...';
+        if (!this.currentField) return this.intl.t('views.components.queryBuilder.rule.valuePlaceholders.text');
         
         switch (this.currentField.type) {
             case 'date':
-                return 'YYYY-MM-DD';
+                return this.intl.t('views.components.queryBuilder.rule.valuePlaceholders.date');
             case 'number':
-                return 'Enter number...';
+                return this.intl.t('views.components.queryBuilder.rule.valuePlaceholders.number');
             case 'string':
             default:
-                return 'Enter value...';
+                return this.intl.t('views.components.queryBuilder.rule.valuePlaceholders.text');
         }
     }
 

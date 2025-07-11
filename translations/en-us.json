@@ -550,6 +550,40 @@
         "validation": {
           "unbalancedParentheses": "Unbalanced parentheses",
           "invalidSyntax": "Invalid query syntax"
+        },
+        "group": {
+          "title": "Group",
+          "removeGroup": "Remove this group",
+          "emptyGroup": "This group is empty. Add a rule to get started.",
+          "addNestedGroup": "Add Nested Group"
+        },
+        "rule": {
+          "selectField": "Select Field...",
+          "selectOperator": "Operator...",
+          "selectValue": "Select Value...",
+          "fromPlaceholder": "From",
+          "toPlaceholder": "To",
+          "noValueRequired": "No value required",
+          "removeRule": "Remove this rule",
+          "valuePlaceholders": {
+            "date": "YYYY-MM-DD",
+            "number": "Enter number...",
+            "text": "Enter value..."
+          }
+        },
+        "autocomplete": {
+          "noSuggestions": "No suggestions available",
+          "invalidSyntax": "Invalid query syntax. Please check your query format.",
+          "suggestionTypes": {
+            "field": "field",
+            "operator": "operator",
+            "logical": "logical",
+            "value": "value"
+          },
+          "suggestions": {
+            "textValue": "Text value",
+            "nullValue": "NULL value"
+          }
         }
       }
     },

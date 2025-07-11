@@ -13,7 +13,7 @@
           {{on "change" this.updateField}}
           data-test-field-select
         >
-          <option value="">Select Field...</option>
+          <option value="">{{t "views.components.queryBuilder.rule.selectField"}}</option>
           {{#each this.availableFields as |field|}}
             <option value={{field.id}}>{{field.label}}</option>
           {{/each}}
@@ -29,7 +29,7 @@
           disabled={{not @rule.field}}
           data-test-operator-select
         >
-          <option value="">Operator...</option>
+          <option value="">{{t "views.components.queryBuilder.rule.selectOperator"}}</option>
           {{#each this.availableOperators as |operator|}}
             <option value={{operator}}>{{get this.operatorLabels operator}}</option>
           {{/each}}
@@ -48,7 +48,7 @@
               disabled={{not @rule.operator}}
               data-test-value-select
             >
-              <option value="">Select Value...</option>
+              <option value="">{{t "views.components.queryBuilder.rule.selectValue"}}</option>
               {{#each this.selectOptions as |option|}}
                 {{#if option.label}}
                   <option value={{option.value}}>{{option.label}}</option>
@@ -63,17 +63,17 @@
               <input 
                 type={{this.valueInputType}}
                 class="form-control"
-                placeholder="From {{this.valuePlaceholder}}"
+                placeholder={{concat (t "views.components.queryBuilder.rule.fromPlaceholder") " " this.valuePlaceholder}}
                 value={{get (split @rule.value ",") 0}}
                 {{on "input" this.updateValue}}
                 disabled={{not @rule.operator}}
                 data-test-value-input-from
               />
-              <span class="input-group-text">to</span>
+              <span class="input-group-text">{{t "views.components.queryBuilder.rule.toPlaceholder"}}</span>
               <input 
                 type={{this.valueInputType}}
                 class="form-control"
-                placeholder="To {{this.valuePlaceholder}}"
+                placeholder={{concat (t "views.components.queryBuilder.rule.toPlaceholder") " " this.valuePlaceholder}}
                 value={{get (split @rule.value ",") 1}}
                 {{on "input" this.updateValue}}
                 disabled={{not @rule.operator}}
@@ -96,7 +96,7 @@
       {{else}}
         {{!-- No value needed for operators like NULL, EMPTY --}}
         <div class="col-md-5 col-sm-8 mb-2">
-          <span class="text-muted small">No value required</span>
+          <span class="text-muted small">{{t "views.components.queryBuilder.rule.noValueRequired"}}</span>
         </div>
       {{/if}}
 
@@ -106,7 +106,7 @@
           type="button" 
           class="btn btn-sm btn-outline-danger"
           {{on "click" this.removeRule}}
-          title="Remove this rule"
+          title={{t "views.components.queryBuilder.rule.removeRule"}}
           data-test-remove-rule
         >
           <i class="fas fa-times"></i>
