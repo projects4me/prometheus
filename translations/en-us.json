@@ -1100,6 +1100,10 @@
         },
         "weeklyActivities": {
           "title": "Weekly Activities"
+        },
+        "weeklyWidgets": {
+          "previousPage": "Previous Week",
+          "nextPage": "Next Week"
         }
       },
       "milestone": {
@@ -1251,6 +1255,10 @@
         },
         "timeline": {
           "noActivitiesFound": "No activities found"
+        },
+        "pagination": {
+          "previousPage": "Previous Page",
+          "nextPage": "Next Page"
         }
       },
       "application": {

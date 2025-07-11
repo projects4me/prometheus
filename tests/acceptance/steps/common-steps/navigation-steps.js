@@ -11,6 +11,19 @@ const selectors = {
     }
 };
 
+export const given = function () {
+	return [
+		{
+			'Reverse navigation for pagination is enabled':
+				(assert, ctx) =>
+					async function () {
+						ctx.set('reverseNavigation', true);
+						assert.ok(true, 'Reverse navigation for pagination is enabled');
+					}
+		}
+	];
+};
+
 export const when = function () {
     return [
         {
@@ -40,7 +53,7 @@ export const when = function () {
         {
             "User clicks on next page button in $componentName": (assert, ctx) => async function (componentName) {
                 const selector = `${selectors.components[componentName]} [data-btn='next']`;
-                ctx.set('page', (ctx.get('page') || 1) + 1);
+                setPage(ctx, 'next');
                 await click(selector);
                 assert.ok(true, `User clicks on next page button in ${componentName}`);
             }
@@ -48,7 +61,7 @@ export const when = function () {
         {
             "User clicks on previous page button in $componentName": (assert, ctx) => async function (componentName) {
                 const selector = `${selectors.components[componentName]} [data-btn='previous']`;
-                ctx.set('page', (ctx.get('page') || 1) - 1);
+                setPage(ctx, 'previous');
                 await click(selector);
                 assert.ok(true, `User clicks on previous page button in ${componentName}`);
             }
@@ -64,6 +77,16 @@ export const then = function () {
             }
         }
     ];
+}
+
+function setPage(ctx, buttonType) {
+    if(ctx.get('reverseNavigation')) {
+        const page = buttonType === 'next' ? ctx.get('page') - 1 : ctx.get('page') + 1;
+        ctx.set('page', page);
+    } else {
+        const page = buttonType === 'next' ? ctx.get('page') + 1 : ctx.get('page') - 1;
+        ctx.set('page', page);
+    }
 }
 
 export default function (assert) {

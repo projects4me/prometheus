@@ -12,9 +12,7 @@ export default function (assert) {
 			setDateForWeeklyWidget(activities, count, week);
 			assert.ok(
 				true,
-				'There are $count activities for $week week',
-				count,
-				week
+				`There are ${count} activities for ${week} week`
 			);
 		})
 		.given(
