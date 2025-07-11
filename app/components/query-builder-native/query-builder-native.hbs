@@ -1,0 +1,262 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="card query-builder-native" data-test-query-builder>
+  <div class="card-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">
+        <i class="fas fa-filter me-2"></i>
+        {{@title}}
+      </h5>
+      
+      {{!-- Mode Toggle --}}
+      <div class="btn-group btn-group-sm" role="group">
+        <button 
+          type="button" 
+          class="btn {{if (eq this.mode 'visual') 'btn-primary' 'btn-outline-primary'}}"
+          {{on "click" (fn this.switchMode "visual")}}
+          data-test-mode-visual
+        >
+          <i class="fas fa-th-list me-1"></i>
+          {{t "views.components.queryBuilder.modes.visual"}}
+        </button>
+        <button 
+          type="button" 
+          class="btn {{if (eq this.mode 'text') 'btn-primary' 'btn-outline-primary'}}"
+          {{on "click" (fn this.switchMode "text")}}
+          data-test-mode-text
+        >
+          <i class="fas fa-code me-1"></i>
+          {{t "views.components.queryBuilder.modes.text"}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    {{!-- Error Messages --}}
+    {{#if this.errors.length}}
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>{{t "views.components.queryBuilder.labels.queryError"}}:</strong>
+        <ul class="mb-0 mt-2">
+          {{#each this.errors as |error|}}
+            <li>{{error}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
+
+    {{!-- Visual Mode --}}
+    {{#if (eq this.mode "visual")}}
+      <div class="query-builder-visual">
+        {{#if this.queryStructure.rules.length}}
+          {{!-- Condition Selector for multiple rules --}}
+          {{#if (gt this.queryStructure.rules.length 1)}}
+            <div class="mb-3" data-test-rules-connection>
+              <label class="form-label fw-bold">{{t "views.components.queryBuilder.labels.rulesConnection"}}:</label>
+              <div class="btn-group btn-group-sm ms-2" role="group">
+                <button 
+                  type="button" 
+                  class="btn {{if (eq this.queryStructure.condition 'AND') 'btn-success' 'btn-outline-success'}}"
+                  {on "click" (fn this.updateCondition "AND")}}
+                  data-test-connection-and
+                >
+                  AND
+                </button>
+                <button 
+                  type="button" 
+                  class="btn {{if (eq this.queryStructure.condition 'OR') 'btn-warning' 'btn-outline-warning'}}"
+                  {{on "click" (fn this.updateCondition "OR")}}
+                  data-test-connection-or
+                >
+                  OR
+                </button>
+              </div>
+            </div>
+          {{/if}}
+
+          {{!-- Rules List --}}
+          <div class="rules-container">
+            {{#each this.queryStructure.rules as |rule index|}}
+              {{#if rule.condition}}
+                {{!-- Rule Group --}}
+                <QueryBuilderNative::QueryGroup 
+                  @group={{rule}}
+                  @filters={{@filters}}
+                  @onUpdate={{fn this.updateRule rule.id}}
+                  @onRemove={{fn this.removeRule rule.id}}
+                  @index={{index}}
+                />
+              {{else}}
+                {{!-- Individual Rule --}}
+                <QueryBuilderNative::QueryRule 
+                  @rule={{rule}}
+                  @filters={{@filters}}
+                  @onUpdate={{fn this.updateRule rule.id}}
+                  @onRemove={{fn this.removeRule rule.id}}
+                  @index={{index}}
+                  @showConnector={{and (gt this.queryStructure.rules.length 1) (lt index (sub this.queryStructure.rules.length 1))}}
+                  @connector={{this.queryStructure.condition}}
+                />
+              {{/if}}
+            {{/each}}
+          </div>
+        {{else}}
+          {{!-- Empty State --}}
+          <div class="text-center py-4" data-test-empty-state>
+            <i class="fas fa-filter fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">{{t "views.components.queryBuilder.emptyState.title"}}</h5>
+            <p class="text-muted">{{t "views.components.queryBuilder.emptyState.description"}}</p>
+          </div>
+        {{/if}}
+
+        {{!-- Action Buttons --}}
+        <div class="d-flex gap-2 mt-3">
+          <button 
+            type="button" 
+            class="btn btn-primary btn-sm"
+            {{on "click" this.addRule}}
+            data-test-add-rule
+          >
+            <i class="fas fa-plus me-1"></i>
+            {{t "views.components.queryBuilder.buttons.addRule"}}
+          </button>
+          
+          <button 
+            type="button" 
+            class="btn btn-secondary btn-sm"
+            {{on "click" this.addGroup}}
+            data-test-add-group
+          >
+            <i class="fas fa-layer-group me-1"></i>
+            {{t "views.components.queryBuilder.buttons.addGroup"}}
+          </button>
+
+          {{#if this.queryStructure.rules.length}}
+            <button 
+              type="button" 
+              class="btn btn-outline-danger btn-sm ms-auto"
+              {{on "click" this.clearQuery}}
+              data-test-clear-all
+            >
+              <i class="fas fa-trash me-1"></i>
+              {{t "views.components.queryBuilder.buttons.clearAll"}}
+            </button>
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{!-- Text Mode --}}
+    {{#if (eq this.mode "text")}}
+      <div class="query-builder-text">
+        <div class="mb-3">
+          <label for="query-text-input" class="form-label fw-bold">
+            {{t "views.components.queryBuilder.labels.queryString"}}
+            <small class="text-muted ms-2">
+              {{t "views.components.queryBuilder.placeholders.syntaxHelp"}}
+            </small>
+          </label>
+          
+          {{!-- Autocomplete Input Component --}}
+          <QueryBuilderNative::AutocompleteInput
+            @value={{this.queryText}}
+            @filters={{@filters}}
+            @onChange={{this.updateQueryText}}
+            @placeholder={{t "views.components.queryBuilder.placeholders.queryText"}}
+            @isValid={{this.isValid}}
+            id="query-text-input"
+          />
+        </div>
+
+        {{!-- Query Help --}}
+        <div class="accordion" id="queryHelpAccordion" data-test-syntax-help>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="queryHelpHeading">
+              <button 
+                class="accordion-button collapsed" 
+                type="button" 
+                data-bs-toggle="collapse" 
+                data-bs-target="#queryHelpCollapse"
+              >
+                <i class="fas fa-question-circle me-2"></i>
+                {{t "views.components.queryBuilder.help.title"}}
+              </button>
+            </h2>
+            <div 
+              id="queryHelpCollapse" 
+              class="accordion-collapse collapse" 
+              data-bs-parent="#queryHelpAccordion"
+            >
+              <div class="accordion-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>{{t "views.components.queryBuilder.help.operators"}}</h6>
+                    <ul class="list-unstyled small">
+                      <li><code>:</code> - {{t "views.components.queryBuilder.operators.equals"}}</li>
+                      <li><code>!:</code> - {{t "views.components.queryBuilder.operators.notEquals"}}</li>
+                      <li><code>&lt;</code> - {{t "views.components.queryBuilder.operators.lessThan"}}</li>
+                      <li><code>&gt;</code> - {{t "views.components.queryBuilder.operators.greaterThan"}}</li>
+                      <li><code>&lt;:</code> - {{t "views.components.queryBuilder.operators.lessThanOrEquals"}}</li>
+                      <li><code>&gt;:</code> - {{t "views.components.queryBuilder.operators.greaterThanOrEquals"}}</li>
+                      <li><code>CONTAINS</code> - {{t "views.components.queryBuilder.operators.contains"}}</li>
+                      <li><code>STARTS</code> - {{t "views.components.queryBuilder.operators.starts"}}</li>
+                      <li><code>ENDS</code> - {{t "views.components.queryBuilder.operators.ends"}}</li>
+                      <li><code>BETWEEN</code> - {{t "views.components.queryBuilder.operators.between"}}</li>
+                      <li><code>NULL</code> - {{t "views.components.queryBuilder.operators.null"}}</li>
+                      <li><code>EMPTY</code> - {{t "views.components.queryBuilder.operators.empty"}}</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>{{t "views.components.queryBuilder.help.examples"}}</h6>
+                    <ul class="list-unstyled small">
+                      <li><code>((Issue.subject CONTAINS 'bug'))</code></li>
+                      <li><code>((Issue.priority : 'high') AND (Issue.status : 'open'))</code></li>
+                      <li><code>((Issue.startDate &gt; '2023-01-01') OR (Issue.endDate &lt; '2023-12-31'))</code></li>
+                      <li><code>((Issue.assignee !: NULL) AND (Issue.milestone CONTAINS 'v1.0'))</code></li>
+                    </ul>
+                    <div class="alert alert-info mt-2">
+                      <small>
+                        <i class="fas fa-info-circle me-1"></i>
+                        {{t "views.components.queryBuilder.help.note"}}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Action Buttons --}}
+        <div class="d-flex gap-2 mt-3">
+          {{#if this.queryText}}
+            <button 
+              type="button" 
+              class="btn btn-outline-danger btn-sm ms-auto"
+              {{on "click" this.clearQuery}}
+            >
+              <i class="fas fa-trash me-1"></i>
+              {{t "views.components.queryBuilder.buttons.clearQuery"}}
+            </button>
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{!-- Query Preview --}}
+    {{#if (and this.queryStructure.rules.length (eq this.mode "visual"))}}
+      <div class="mt-4 pt-3 border-top" data-test-query-preview>
+        <h6 class="text-muted mb-2">
+          <i class="fas fa-eye me-1"></i>
+          {{t "views.components.queryBuilder.labels.generatedQuery"}}:
+        </h6>
+        <div class="bg-light p-2 rounded">
+          <code class="text-dark">{{this.generateQueryString}}</code>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</div>

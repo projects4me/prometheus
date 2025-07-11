@@ -1,0 +1,126 @@
+{{!-- 
+  Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+--}}
+
+<div class="card border-left-primary mb-3 query-rule" data-test-query-rule>
+  <div class="card-body">
+    <div class="row align-items-center">
+      {{!-- Field Selector --}}
+      <div class="col-md-3 col-sm-6 mb-2">
+        <select 
+          class="form-control form-control-sm"
+          value={{@rule.field}}
+          {{on "change" this.updateField}}
+          data-test-field-select
+        >
+          <option value="">Select Field...</option>
+          {{#each this.availableFields as |field|}}
+            <option value={{field.id}}>{{field.label}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      {{!-- Operator Selector --}}
+      <div class="col-md-2 col-sm-6 mb-2">
+        <select 
+          class="form-control form-control-sm"
+          value={{@rule.operator}}
+          {{on "change" this.updateOperator}}
+          disabled={{not @rule.field}}
+          data-test-operator-select
+        >
+          <option value="">Operator...</option>
+          {{#each this.availableOperators as |operator|}}
+            <option value={{operator}}>{{get this.operatorLabels operator}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      {{!-- Value Input --}}
+      {{#if this.requiresValue}}
+        <div class="col-md-5 col-sm-8 mb-2">
+          {{#if this.hasSelectOptions}}
+            {{!-- Select dropdown for predefined values --}}
+            <select 
+              class="form-control form-control-sm"
+              value={{@rule.value}}
+              {{on "change" this.updateValue}}
+              disabled={{not @rule.operator}}
+              data-test-value-select
+            >
+              <option value="">Select Value...</option>
+              {{#each this.selectOptions as |option|}}
+                {{#if option.label}}
+                  <option value={{option.value}}>{{option.label}}</option>
+                {{else}}
+                  <option value={{option}}>{{option}}</option>
+                {{/if}}
+              {{/each}}
+            </select>
+          {{else if this.requiresTwoValues}}
+            {{!-- Two inputs for BETWEEN operator --}}
+            <div class="input-group input-group-sm">
+              <input 
+                type={{this.valueInputType}}
+                class="form-control"
+                placeholder="From {{this.valuePlaceholder}}"
+                value={{get (split @rule.value ",") 0}}
+                {{on "input" this.updateValue}}
+                disabled={{not @rule.operator}}
+                data-test-value-input-from
+              />
+              <span class="input-group-text">to</span>
+              <input 
+                type={{this.valueInputType}}
+                class="form-control"
+                placeholder="To {{this.valuePlaceholder}}"
+                value={{get (split @rule.value ",") 1}}
+                {{on "input" this.updateValue}}
+                disabled={{not @rule.operator}}
+                data-test-value-input-to
+              />
+            </div>
+          {{else}}
+            {{!-- Regular input --}}
+            <input 
+              type={{this.valueInputType}}
+              class="form-control form-control-sm"
+              placeholder={{this.valuePlaceholder}}
+              value={{@rule.value}}
+              {{on "input" this.updateValue}}
+              disabled={{not @rule.operator}}
+              data-test-value-input
+            />
+          {{/if}}
+        </div>
+      {{else}}
+        {{!-- No value needed for operators like NULL, EMPTY --}}
+        <div class="col-md-5 col-sm-8 mb-2">
+          <span class="text-muted small">No value required</span>
+        </div>
+      {{/if}}
+
+      {{!-- Remove Button --}}
+      <div class="col-md-2 col-sm-4 mb-2 text-end">
+        <button 
+          type="button" 
+          class="btn btn-sm btn-outline-danger"
+          {{on "click" this.removeRule}}
+          title="Remove this rule"
+          data-test-remove-rule
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    {{!-- Connector for multiple rules --}}
+    {{#if @showConnector}}
+      <div class="text-center mt-2">
+        <span class="badge {{if (eq @connector 'AND') 'badge-success' 'badge-warning'}}">
+          {{@connector}}
+        </span>
+      </div>
+    {{/if}}
+  </div>
+</div>

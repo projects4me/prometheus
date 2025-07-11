@@ -1,0 +1,265 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/**
+ * Styles for the native EmberJS Query Builder component
+ * Bootstrap-based styling with custom enhancements
+ */
+
+.query-builder-native {
+  .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  .query-builder-visual {
+    .rules-container {
+      .query-rule {
+        transition: all 0.2s ease-in-out;
+        
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+          padding: 1rem;
+        }
+
+        // Left border color coding
+        &.border-left-primary {
+          border-left: 4px solid #007bff;
+        }
+
+        // Connector badge styling
+        .badge {
+          font-size: 0.75rem;
+          padding: 0.25rem 0.5rem;
+          
+          &.badge-success {
+            background-color: #28a745;
+          }
+          
+          &.badge-warning {
+            background-color: #ffc107;
+            color: #212529;
+          }
+        }
+      }
+
+      .query-group {
+        margin-left: 1rem;
+        border-left: 3px solid #6c757d;
+        
+        .card-header {
+          background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+          
+          .btn-group {
+            .btn {
+              font-size: 0.75rem;
+              padding: 0.25rem 0.5rem;
+            }
+          }
+        }
+
+        // Nested group indentation
+        .query-group {
+          margin-left: 1.5rem;
+          border-left-color: #adb5bd;
+        }
+      }
+    }
+
+    // Empty state styling
+    .text-center {
+      i.fa-filter {
+        opacity: 0.3;
+      }
+    }
+  }
+
+  .query-builder-text {
+    .autocomplete-input {
+      .autocomplete-suggestions {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        background: white;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        
+        .list-group-item {
+          border-left: none;
+          border-right: none;
+          cursor: pointer;
+          transition: background-color 0.15s ease-in-out;
+          
+          &:first-child {
+            border-top: none;
+            border-top-left-radius: 0.375rem;
+            border-top-right-radius: 0.375rem;
+          }
+          
+          &:last-child {
+            border-bottom: none;
+            border-bottom-left-radius: 0.375rem;
+            border-bottom-right-radius: 0.375rem;
+          }
+          
+          &:hover {
+            background-color: #f8f9fa;
+          }
+          
+          &.active {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+          }
+        }
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        
+        &.is-invalid {
+          border-color: #dc3545;
+        }
+      }
+    }
+
+    // Accordion help section
+    .accordion {
+      .accordion-button {
+        font-size: 0.9rem;
+        padding: 0.75rem 1rem;
+        
+        &:not(.collapsed) {
+          background-color: #e7f3ff;
+          border-color: #007bff;
+        }
+      }
+      
+      .accordion-body {
+        font-size: 0.85rem;
+        
+        code {
+          background-color: #f8f9fa;
+          color: #e83e8c;
+          padding: 0.125rem 0.25rem;
+          border-radius: 0.25rem;
+        }
+      }
+    }
+  }
+
+  // Button styling
+  .btn-group {
+    .btn {
+      transition: all 0.15s ease-in-out;
+      
+      &:hover {
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  // Query preview section
+  .border-top {
+    border-color: #dee2e6 !important;
+    
+    code {
+      background-color: #f8f9fa;
+      color: #495057;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      word-break: break-all;
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .query-builder-visual {
+      .rules-container {
+        .query-rule {
+          .row {
+            .col-md-3,
+            .col-md-2,
+            .col-md-5 {
+              margin-bottom: 0.5rem;
+            }
+          }
+        }
+        
+        .query-group {
+          margin-left: 0.5rem;
+        }
+      }
+    }
+    
+    .card-header {
+      .d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+        
+        .btn-group {
+          margin-top: 0.5rem;
+        }
+      }
+    }
+  }
+
+  // Animation for adding/removing rules
+  .rules-container {
+    .query-rule,
+    .query-group {
+      animation: slideIn 0.3s ease-out;
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Dark mode support (if needed)
+@media (prefers-color-scheme: dark) {
+  .query-builder-native {
+    .card {
+      background-color: #2d3748;
+      border-color: #4a5568;
+    }
+    
+    .card-header {
+      background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+      border-bottom-color: #4a5568;
+    }
+    
+    .autocomplete-input {
+      .autocomplete-suggestions {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        
+        .list-group-item {
+          background-color: #2d3748;
+          border-color: #4a5568;
+          color: #e2e8f0;
+          
+          &:hover {
+            background-color: #4a5568;
+          }
+        }
+      }
+    }
+  }
+}

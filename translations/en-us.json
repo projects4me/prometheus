@@ -500,6 +500,57 @@
     "components": {
       "infiniteScroll": {
         "loadMore": "Load More"
+      },
+      "queryBuilder": {
+        "title": "Query Builder",
+        "modes": {
+          "visual": "Visual",
+          "text": "Text"
+        },
+        "buttons": {
+          "addRule": "Add Rule",
+          "addGroup": "Add Group",
+          "clearAll": "Clear All",
+          "clearQuery": "Clear Query"
+        },
+        "labels": {
+          "rulesConnection": "Rules Connection",
+          "queryString": "Query String",
+          "generatedQuery": "Generated Query",
+          "queryError": "Query Error"
+        },
+        "placeholders": {
+          "queryText": "Enter your query... e.g., ((Issue.subject CONTAINS 'bug') AND (Issue.priority : 'high'))",
+          "syntaxHelp": "Use syntax: ((field operator value) AND/OR (field operator value))"
+        },
+        "emptyState": {
+          "title": "No filters defined",
+          "description": "Add your first rule to start building a query"
+        },
+        "help": {
+          "title": "Query Syntax Help",
+          "operators": "Operators:",
+          "examples": "Examples:",
+          "note": "All conditions must be wrapped in parentheses and connected with AND/OR"
+        },
+        "operators": {
+          "equals": "Equals to",
+          "notEquals": "Not equals to",
+          "lessThan": "Less than",
+          "greaterThan": "Greater than",
+          "lessThanOrEquals": "Less than or equals",
+          "greaterThanOrEquals": "Greater than or equals",
+          "contains": "Contains text",
+          "starts": "Starts with",
+          "ends": "Ends with",
+          "between": "Between values",
+          "null": "Is null",
+          "empty": "Is empty"
+        },
+        "validation": {
+          "unbalancedParentheses": "Unbalanced parentheses",
+          "invalidSyntax": "Invalid query syntax"
+        }
       }
     },
     "signin": {
