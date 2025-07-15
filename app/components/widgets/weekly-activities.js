@@ -5,7 +5,6 @@
 import WidgetsComponent from '../widgets';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import _ from 'lodash';
 import DateUtils from 'prometheus/utils/date';
 
 /**

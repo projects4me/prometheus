@@ -500,6 +500,20 @@ export default Object.extend({
                     usePagination: true,
                     searchFields: ['issue.issueNumber', 'issue.subject', 'projectShortcode'],
                     filters: ["myTimeLogs"]
+                },
+                weeklyConversations: {
+                    model: 'comment',
+                    options: {
+                        sort: 'Comment.dateCreated',
+                        query: "((Comment.dateCreated BETWEEN ```WEEK_START``` AND ```WEEK_END```) AND (Comment.relatedTo : conversationrooms))",
+                        order: 'DESC',
+                        rels: 'conversationRoom,issue',
+                        limit: -1
+                    },
+                    fields: ['comment'],
+                    translationKey: 'views.app.widgets.recentConversations.fields',
+                    searchFields: ['comment'],
+                    usePagination: true
                 }
             }
         }

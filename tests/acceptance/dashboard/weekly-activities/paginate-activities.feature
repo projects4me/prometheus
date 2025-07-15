@@ -20,7 +20,7 @@ Feature: Dashboard - Weekly Activities Widget | pagination
     And User clicks on previous page button in weekly activities
     Then There should be 5 activities present in weekly activities widget
   
-  Scenario: User paginates through weekly activities with previous page button
+  Scenario: User paginates through weekly activities with next page button
     Given There is no pre-existing data
     And default scenario is loaded
     And User_1 is logged in

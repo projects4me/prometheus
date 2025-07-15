@@ -7,7 +7,8 @@ const selectors = {
         "active milestones": widgetsSelectors['active milestones'].selector,
         "recent issues": widgetsSelectors['recent issues'].selector,
         "weekly activities": widgetsSelectors['weekly activities'].selector,
-        "weekly timelogs": widgetsSelectors['weekly timelogs'].selector
+        "weekly timelogs": widgetsSelectors['weekly timelogs'].selector,
+        "weekly conversations": widgetsSelectors['weekly conversations'].selector
     }
 };
 

@@ -8,13 +8,13 @@
   .pagination-data-container {
     max-height: 32rem;
     overflow-y: auto;
-  }  
+  }
 
   .infinite-scroll-container {
     max-height: 32rem;
   }
 
-  .weekly-timelogs{
+  .weekly-timelogs {
     table {
       margin-bottom: 0;
     }
@@ -29,6 +29,18 @@
       span {
         background-color: white !important;
         border: 1px solid $primaryColor;
+      }
+    }
+  }
+
+  [data-recent-conversations] {
+    .accordion-body {
+      background: #f7f7f7;
+      padding: 0 1rem !important;
+    }
+    .conversations {
+      .box-comments {
+        margin-top: 2.5rem;
       }
     }
   }

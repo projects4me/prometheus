@@ -1,0 +1,94 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+.accordion-container {
+  border: 1px solid $borderColor;
+  border-radius: 4px;
+  overflow: hidden;
+  background: $backgroundColor;
+
+  .accordion-section {
+    border-bottom: 1px solid $borderColor;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: $backgroundColor;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      width: 100%;
+      text-align: left;
+
+      &:hover {
+        background: lighten($primaryColor, 45%);
+      }
+
+      &.active {
+        background: $primaryColor;
+        color: white;
+
+        .accordion-icon i {
+          color: white;
+        }
+      }
+
+      &:focus {
+        outline: 2px solid $primaryColor;
+        outline-offset: -2px;
+      }
+
+      .accordion-title {
+        flex: 1;
+        font-weight: 500;
+      }
+
+      .accordion-icon {
+        margin-left: 1rem;
+
+        i {
+          color: $primaryColor;
+          font-size: 1.2rem;
+          transition: transform 0.3s ease;
+        }
+      }
+    }
+
+    .accordion-content {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.6s ease, opacity 0.3s ease;
+      background: $backgroundColor;
+
+      &.open {
+        max-height: 500px;
+        overflow-y: auto;
+        opacity: 1;
+      }
+
+      .accordion-body {
+        padding: 1.5rem;
+        border-top: 1px solid lighten($borderColor, 5%);
+      }
+    }
+
+    &.open {
+      .accordion-header {
+        background: $primaryColor;
+        color: white;
+
+        .accordion-icon i {
+          color: white;
+        }
+      }
+    }
+  }
+}

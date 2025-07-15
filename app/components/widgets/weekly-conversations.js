@@ -1,0 +1,170 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+import WidgetsComponent from 'prometheus/components/widgets';
+import { action } from '@ember/object';
+import ENV from 'prometheus/config/environment';
+import { tracked } from '@glimmer/tracking';
+import DateUtils from 'prometheus/utils/date';
+
+/**
+ * A widget component that displays weekly conversations grouped by conversation room.
+ * Provides pagination by week and fetches comments for the selected week.
+ *
+ * @class WidgetsWeeklyConversationsComponent
+ * @namespace Prometheus.Components.Widgets
+ * @module Widgets.WeeklyConversations
+ * @extends WidgetsComponent
+ * @author Rana Nouman <ranamnouman@gmail.com>
+ *
+ * @example
+ * <Widgets::WeeklyConversations
+ *   @data={{this.comments}}
+ *   @widgetSettings={{this.widgetSettings}}
+ * />
+ */
+export default class WidgetsWeeklyConversationsComponent extends WidgetsComponent {
+	/**
+	 * API's host for fetching user images.
+	 *
+	 * @property apiHost
+	 * @type {String}
+	 * @public
+	 */
+	apiHost = ENV.api.host;
+
+	/**
+	 * The start date of the currently selected week.
+	 * @property startWeek
+	 * @type {String|Date}
+	 * @public
+	 */
+	@tracked startWeek = DateUtils.getWeekRangeForPage(1).startOfWeek;
+
+	/**
+	 * The end date of the currently selected week.
+	 * @property endWeek
+	 * @type {String|Date}
+	 * @public
+	 */
+	@tracked endWeek = DateUtils.getWeekRangeForPage(1).endOfWeek;
+
+	/**
+	 * The list of comment records to display, provided via the component's arguments.
+	 * @property comments
+	 * @type {Array}
+	 * @public
+	 */
+	@tracked comments = this.args.data || [];
+
+	/**
+	 * Internal cache for comments grouped by conversation subject.
+	 * @property commentsByConversationSubject
+	 * @type {Object}
+	 * @private
+	 */
+	@tracked commentsByConversationSubject = {};
+
+	/**
+	 * Groups comments by their related conversation room (relatedId).
+	 * Comments are organized by conversation subject for display in accordion sections.
+	 *
+	 * @property data
+	 * @type {Object}
+	 * @public
+	 */
+	get data() {
+		let comments = this.comments.toArray() || [];
+		let commentsByRelatedModule = {};
+
+		comments.forEach((comment) => {
+			let relatedId = comment.relatedId;
+			if (!commentsByRelatedModule[relatedId]) {
+				commentsByRelatedModule[relatedId] = [];
+			}
+			commentsByRelatedModule[relatedId].push(comment);
+		});
+
+		this.commentsByConversationSubject = commentsByRelatedModule;
+		return commentsByRelatedModule;
+	}
+
+	/**
+	 * Retrieves the conversation room subject title for a given relatedId.
+	 * Used as the accordion section title.
+	 *
+	 * @method getTitle
+	 * @param {String} relatedId - The conversation room identifier
+	 * @returns {String} - The conversation room subject
+	 * @public
+	 * @action
+	 */
+	@action getTitle(relatedId) {
+		let comments = this.commentsByConversationSubject[relatedId];
+		let title = '';
+		if (comments.length > 0) {
+			title = comments[0].conversationRoom.get('subject');
+		}
+		return title;
+	}
+
+	/**
+	 * Retrieves all comments for a specific conversation room.
+	 * Used to populate the accordion section content.
+	 *
+	 * @method getComments
+	 * @param {String} relatedId - The conversation room identifier
+	 * @returns {Array} - Array of comments for the conversation room
+	 * @public
+	 * @action
+	 */
+	@action getComments(relatedId) {
+		return this.commentsByConversationSubject[relatedId];
+	}
+
+	/**
+	 * Handles pagination changes, fetching comments for the selected week.
+	 * Updates the week range and queries the store for comments within the date range.
+	 *
+	 * @method onPageChange
+	 * @param {Object} paginationInfo - Contains the page number (week index)
+	 * @public
+	 * @action
+	 * @returns {Promise<Object>} - Resolves with the new comments or empty array on error
+	 */
+	@action
+	async onPageChange(paginationInfo = {}) {
+		try {
+			const { startOfWeek, endOfWeek } = DateUtils.getWeekRangeForPage(
+				paginationInfo.page
+			);
+			this.startWeek = startOfWeek;
+			this.endWeek = endOfWeek;
+			let commentOptions = _.cloneDeep(this.args.widgetSettings.options);
+			commentOptions.query = `(Comment.dateCreated BETWEEN ${this.startWeek} AND ${this.endWeek})`;
+			let comments = await this.store.query('comment', commentOptions);
+			this.comments = comments;
+			return {
+				items: comments
+			};
+		} catch (error) {
+			console.error('Error fetching comments:', error);
+			return {
+				items: []
+			};
+		}
+	}
+
+	/**
+	 * Determines whether there are any conversations to display.
+	 * Used to show/hide the empty state component.
+	 *
+	 * @property hasConversations
+	 * @type {Boolean}
+	 * @public
+	 */
+	get hasConversations() {
+		return this.comments.length > 0;
+	}
+}
