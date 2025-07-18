@@ -47,7 +47,7 @@ export default App.extend({
      * @method afterModel;
      * @protected
      */
-    afterModel()
+    async model()
     {
         Logger.debug('Prometheus.Routes.Index::afterModel');
         let _self = this;
@@ -62,22 +62,22 @@ export default App.extend({
 
         _self.set('widgets', widgets);
 
-        let Promises = {};
+        let widgetResults = {};
 
-        _.forEach(widgets,function(widget){
-            Promises[widget] = _self.store.query(widgetSettings[widget].model,widgetSettings[widget].options)
-        });
+        for (let widget of widgets) {
+            widgetResults[widget] = await _self.store.query(widgetSettings[widget].model,widgetSettings[widget].options)
+        }
         _self.set('widgetSettings', widgetSettings);
         Logger.debug(_self);
         Logger.debug(widgetSettings);
         Logger.debug(widgets);
         Logger.debug('-Prometheus.Routes.Index::afterModel');
 
-        return hash(Promises).then(function(results){
-            _self.set('widgets', results);
-        }).catch((error) =>{
+        try {
+            _self.set('widgets', widgetResults);
+        } catch (error) {
             _self.errorManager.handleError(error);
-        });
+        }
     },
 
     /**

@@ -1077,9 +1077,8 @@
           "searchPlaceholder": "Search active milestones...",
           "emptyStateMessage": "No milestones found"
         },
-        "weeklyTimelogs": {
-          "title": "Weekly Timelogs",
-          "searchPlaceholder": "Search weekly timelogs...",
+        "weeklyIssueTimelogs": {
+          "title": "Weekly Issue Timelogs",
           "fields": {
             "issueNumber": "#",
             "subject": "Subject",

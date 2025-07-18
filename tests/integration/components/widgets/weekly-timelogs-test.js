@@ -6,7 +6,7 @@ import EmberObject from '@ember/object';
 import { A } from '@ember/array';
 import CurrentUserStub from '../../stub-services/current-user-stub';
 
-module('Integration | Component | widgets/weekly-timelogs', function (hooks) {
+module('Integration | Component | widgets/weekly-issue-timelogs', function (hooks) {
 	setupRenderingTest(hooks);
 
 	hooks.beforeEach(function (assert) {
@@ -18,15 +18,27 @@ module('Integration | Component | widgets/weekly-timelogs', function (hooks) {
 	});
 
 	test('it renders with data', async function (assert) {
-		// Mock a timelog with EmberObject and .get()
+		let timelog = EmberObject.create({
+			context: 'spent',
+			days: 0,
+			hours: 2,
+			minutes: 30,
+		});
+		let timelogs = A([timelog]);		
+
 		let issue = EmberObject.create({
 			issueNumber: 42,
 			subject: 'Test Issue',
 			status: 'open',
 			get(key) {
 				return this[key];
-			}
+			},
+			projectShortcode: 'PRJ',
+			spent: timelogs,
+			estimated: timelogs
 		});
+		let issues = A([issue]);
+
 		this.set('widgetSettings', {
 			useLazyLoading: true,
 			showSearch: true,
@@ -43,22 +55,10 @@ module('Integration | Component | widgets/weekly-timelogs', function (hooks) {
 			],
 			filters: ['myTimeLogs']
 		});
-		let timelog = EmberObject.create({
-			issue,
-			projectShortcode: 'PRJ',
-			context: 'spent',
-			days: 0,
-			hours: 2,
-			minutes: 30,
-			timelogContext: {
-				spent: { hours: 2, minutes: 30 },
-				est: { hours: 3, minutes: 0 }
-			}
-		});
-		let data = A([timelog]);
-		this.set('timelogs', data);
+
+		this.set('issues', issues);
 		await render(
-			hbs`<Widgets::WeeklyTimelogs @data={{this.timelogs}} @widgetSettings={{this.widgetSettings}} />`
+			hbs`<Widgets::WeeklyIssueTimelogs @data={{this.issues}} @widgetSettings={{this.widgetSettings}} />`
 		);
 		assert.dom('.weekly-timelogs').exists('Table container is rendered');
 		assert.dom('tr').exists('A table row is rendered');

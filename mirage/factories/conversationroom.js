@@ -13,6 +13,9 @@ export default Factory.extend({
     dateModified() {
         return date.modifiedDate(1, 2);
     },
+    issueNumber() {
+        return faker.random.arrayElement(["1", "2", "3"]);
+    },
     "deleted": "0",
     description() {
         return faker.lorem.sentence();
@@ -22,6 +25,9 @@ export default Factory.extend({
     },
     modifiedUser() {
         return (_.random(1, 10)).toString();
+    },
+    projectShortcode() {
+        return faker.random.arrayElement(["PRJ1", "PRJ2", "PRJ3"]);
     },
     roomType() {
         return faker.random.arrayElement(["vote", "discussion"])

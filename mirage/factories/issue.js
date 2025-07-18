@@ -23,6 +23,9 @@ export default Factory.extend({
     dateModified() {
         return date.modifiedDate(5, 7);
     },
+    projectShortcode(i) {
+        return `PROJECT_${++i}`;
+    },
     "deleted": "0",
     description() {
         return faker.lorem.sentence();

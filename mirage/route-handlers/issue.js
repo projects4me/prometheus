@@ -30,6 +30,10 @@ export function register(server, ctx) {
             const paginatedModels = paginate(model, request.queryParams);
             return paginatedModels;
         }
+
+        if(ctx.get('customCallback')) {
+            return ctx.get('customCallback')(model);
+        }        
         return model;
     });
 

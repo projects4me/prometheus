@@ -638,7 +638,9 @@ export default class AppProjectIssuePageController extends PrometheusController.
                 roomType: 'discussion',
                 projectId: issue.get('projectId'),
                 projectName: issue.get('project.name'),
-                issueId: issue.get('id')
+                issueId: issue.get('id'),
+                projectShortcode: issue.get('projectShortcode'),
+                issueNumber: issue.get('issueNumber')
             });
             Logger.debug('-Prometheus.Controller.App.Project.Issue.Page::saveComment');
             return newConversation.save().then(function (conversation) {
@@ -800,10 +802,13 @@ export default class AppProjectIssuePageController extends PrometheusController.
         let selectors = {
             'comment': `[data-comment-id="${this.s_id}"]`,
             'estimate': `[data-issue-estimate-id="${this.s_id}"]`,
-            'spent': `[data-issue-spent-id="${this.s_id}"]`
+            'spent': `[data-issue-spent-id="${this.s_id}"]`,
+            'conversation': `[data-conversation-id="${this.s_id}"]`
         }
         let el = element.querySelector(selectors[type]);
-        this.scrollAndHighlight(el, true);
+        if(el) {
+            this.scrollAndHighlight(el, true);
+        }
     }
 
     /**

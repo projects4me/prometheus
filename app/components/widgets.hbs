@@ -1,6 +1,6 @@
-<div class='widgets-container' {{did-insert this.initSortable}} data-widgets>
+<div class='widgets-container' data-widgets>
 {{#each-in @widgets as |key value|}}
-	<div class='col-md-6 col-sm-12 widgets connectedSortable ui-sortable'>
+	<div class='widget'>
 		{{component
 			(concat 'widgets/' (dasherize key))
 			data=value

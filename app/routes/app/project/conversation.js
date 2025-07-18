@@ -79,7 +79,7 @@ export default App.extend({
     model() {
         Logger.debug('AppProjectConversationRoute::model');
         let _self = this;
-        let params = this.controllerFor('app.project');
+        let params = this.paramsFor('app.project');
 
         let projectId = this.trackedProject.getProjectId();
         let options = {
@@ -117,14 +117,18 @@ export default App.extend({
      */
     setupController: function (controller, model) {
         Logger.debug('AppProjectConversationRoute::setupController');
+        let params = this.paramsFor('app.project');
 
         controller.set('model', model.toArray());
 
-        let newConversation = this.store.createRecord('conversationroom', {});
+        let newConversation = this.store.createRecord('conversationroom', {
+            projectShortcode: params.shortcode
+        });
         controller.set('newConversation', newConversation);
 
         // Set the data in the controller so that any data bound in the view can get re-rendered
         controller.set('module', this.module);
         controller.set('projectId', this.trackedProject.getProjectId());
+        controller.set('projectShortcode', params.shortcode);
     },
 });

@@ -463,9 +463,9 @@ export default Object.extend({
                     model: 'milestone',
                     options: {
                         query: "((Milestone.projectId CONTAINS ```MY_PROJECTS```) AND (Milestone.status : in_progress))",
-                        rels : 'issues,project',
-                        sort: "issues.dateModified",
-                        order: 'ASC',
+                        rels : 'project',
+                        sort: "Milestone.endDate",
+                        order: 'DESC',
                         limit: 5
                     },
                     pageSize: 5,
@@ -488,15 +488,15 @@ export default Object.extend({
                     searchFields: ['subject', 'createdUser'],
                     useLazyLoading: true
                 },
-                weeklyTimelogs: {
-                    model: 'timelog',
-                    options: {
-                        query: "((Timelog.spentOn BETWEEN ```WEEK_START``` AND ```WEEK_END```))",
-                        rels: 'issue',
-                        limit: -1
-                    },
+                weeklyIssueTimelogs: {
+                    model: 'issue',
+					options: {
+						query: "((Issue.startDate <: ```WEEK_END```) AND (Issue.endDate >: ```WEEK_START```))",
+						rels: 'spent,estimated',
+						limit: -1
+					},
                     fields: ['issueNumber', 'subject', 'spent', 'estimated', 'status', 'project'],
-                    translationKey: 'views.app.widgets.weeklyTimelogs.fields',
+                    translationKey: 'views.app.widgets.weeklyIssueTimelogs.fields',
                     usePagination: true,
                     searchFields: ['issue.issueNumber', 'issue.subject', 'projectShortcode'],
                     filters: ["myTimeLogs"]

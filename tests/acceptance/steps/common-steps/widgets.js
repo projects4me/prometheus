@@ -49,12 +49,36 @@ export const selectors = {
 	'weekly conversations': {
 		selector: '[data-recent-conversations]',
 		handler: (assert, ctx, expectedCount, modelType, widget) => {
-			assert.equal(findAll(`${selectors[widget].selector} [data-accordion-section]`).length, parseInt(expectedCount));
+			assert.equal(
+				findAll(
+					`${selectors[widget].selector} [data-accordion-section]`
+				).length,
+				parseInt(expectedCount)
+			);
 		},
 		noContent: {
 			message: 'No conversations found for this week'
 		}
 	}
+};
+
+export const given = function () {
+	return [
+		{
+			'There is 1 issue for $type week': (assert, ctx) =>
+				async function (type) {
+					createIssue(1, type);
+					assert.ok(true, `There is 1 issue for ${type} week`);
+				}
+		},
+		{
+			'There is another issue for $type week': (assert, ctx) =>
+				async function (type) {
+					createIssue(2, type);
+					assert.ok(true, `There is another issue for ${type} week`);
+				}
+		}
+	];
 };
 
 export const when = function () {
@@ -180,6 +204,30 @@ export function setDateForWeeklyWidget(collection, count, week) {
 			});
 		}
 	}
+}
+
+function createIssue(issueNumber, type) {
+	let project = server.schema.projects.find(2);
+	let context = new Context();
+	let issue = server.schema.create('issue', {
+		projectId: project.id,
+		projectShortcode: project.shortCode,
+		startDate: DateUtils.getWeekRangeForPage(1).startOfWeek,
+		endDate: DateUtils.getWeekRangeForPage(1).endOfWeek,
+		issueNumber: issueNumber,
+		subject: `test issue ${issueNumber}`,
+		description: `test description ${issueNumber}`,
+		status: 'Open',
+		issueTypeId: 1
+	});
+	if (type === 'previous') {
+		issue.update({
+			startDate: DateUtils.getWeekRangeForPage(2).startOfWeek,
+			endDate: DateUtils.getWeekRangeForPage(2).endOfWeek
+		});
+	}
+
+	context.set('currentIssue', issue);
 }
 
 export default function (assert) {

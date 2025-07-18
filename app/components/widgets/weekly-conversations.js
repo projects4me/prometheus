@@ -167,4 +167,78 @@ export default class WidgetsWeeklyConversationsComponent extends WidgetsComponen
 	get hasConversations() {
 		return this.comments.length > 0;
 	}
+
+	/**
+	 * Determines the type of entity the conversation is related to.
+	 * Returns 'issue' if the conversation room is linked to an issue, otherwise 'conversationRoom'.
+	 *
+	 * @method conversationRelatedTo
+	 * @param {String} relatedId - The ID of the related conversation subject
+	 * @returns {String} - 'issue' or 'conversationRoom'
+	 * @public
+	 * @action
+	 */
+	@action
+	conversationRelatedTo(relatedId) {
+		let comments = this.commentsByConversationSubject[relatedId];
+		let comment = comments[0];
+		let relatedTo = 'conversationRoom';
+		if (comment.get('conversationRoom').get('issueNumber')) {
+			relatedTo = 'issue';
+		}
+		return relatedTo;
+	}
+
+	/**
+	 * Returns the route model array for navigating to an issue page.
+	 * The array contains the project shortcode and the issue number.
+	 *
+	 * @method getIssueRouteModel
+	 * @param {String} relatedId - The ID of the related conversation subject
+	 * @returns {Array} - [projectShortcode, issueNumber]
+	 * @public
+	 * @action
+	 */
+	@action
+	getIssueRouteModel(relatedId) {
+		let comments = this.commentsByConversationSubject[relatedId];
+		let comment = comments[0];
+		let issueNumber = comment.get('conversationRoom').get('issueNumber');
+		let projectShortcode = comment
+			.get('conversationRoom')
+			.get('projectShortcode');
+		return [projectShortcode, issueNumber];
+	}
+
+	/**
+	 * Returns the project shortcode for navigating to a conversation room.
+	 *
+	 * @method getConversationRouteModel
+	 * @param {String} relatedId - The ID of the related conversation subject
+	 * @returns {String} - projectShortcode
+	 * @public
+	 * @action
+	 */
+	@action
+	getConversationRouteModel(relatedId) {
+		let comments = this.commentsByConversationSubject[relatedId];
+		let comment = comments[0];
+		return comment.get('conversationRoom').get('projectShortcode');
+	}
+
+	/**
+	 * Returns the conversation room ID to be used as a query parameter to scroll to the specific conversation room
+	 *
+	 * @method getConversationRouteQuery
+	 * @param {String} relatedId - The ID of the related conversation subject
+	 * @returns {String} - conversationRoomId
+	 * @public
+	 * @action
+	 */
+	@action
+	getConversationRouteQuery(relatedId) {
+		let comments = this.commentsByConversationSubject[relatedId];
+		let comment = comments[0];
+		return comment.get('conversationRoom').get('id');
+	}
 }

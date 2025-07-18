@@ -135,6 +135,26 @@ export default Model.extend({
     issueId: attr('string'),
 
     /**
+     * The shortcode of the project that this room belongs to
+     *
+     * @property projectShortcode
+     * @type String
+     * @for Conversationroom
+     * @private
+     */
+    projectShortcode: attr('string'),
+
+    /**
+     * The number of the issue that this room belongs to
+     *
+     * @property issueNumber
+     * @type String
+     * @for Conversationroom
+     * @private
+     */
+    issueNumber: attr('string'),
+    
+    /**
      * The user who created the room
      *
      * @property createdBy
