@@ -39,7 +39,12 @@
             }}</span>
         </td>
         <td>
-          {{item.project.name}}
+          <LinkTo
+            @route="app.project.index"
+            @model={{lowercase item.project.shortCode}}
+          >
+            {{item.project.name}}
+          </LinkTo>
         </td>
         <td>
           {{format-date date=item.startDate}}

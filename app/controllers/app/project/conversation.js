@@ -318,7 +318,9 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                         _self.send('removeModal');
 
                         _self.set('newConversation',
-                            _self.get('store').createRecord('conversationroom', {}));
+                            _self.get('store').createRecord('conversationroom', {
+                                projectShortcode: _self.get('projectShortcode')
+                            }));
                     });
 
                 } else {

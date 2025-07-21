@@ -25,7 +25,12 @@
           </LinkTo>
         </td>
         <td>
-          {{item.project.name}}
+          <LinkTo
+            @route="app.project.index"
+            @model={{item.project.shortCode}}
+          >
+            {{item.project.name}}
+          </LinkTo>
         </td>
         <td>
           <span class="badge {{item.status}}">{{t

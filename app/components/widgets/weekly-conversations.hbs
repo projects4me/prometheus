@@ -24,7 +24,23 @@
             @canOpenMultipleSections={{true}}
           >
             <:title as |key|>
-              <b>{{call (fn this.getTitle key)}}</b>
+              {{#if (eq (call (fn this.conversationRelatedTo key)) "issue")}}
+                <LinkTo
+                  @route="app.project.issue.page"
+                  @models={{call (fn this.getIssueRouteModel key)}}
+                  @query={{hash s_id=(call (fn this.getConversationRouteQuery key))}}
+                >
+                  <b>{{call (fn this.getTitle key)}}</b>
+                </LinkTo>
+              {{else}}
+                <LinkTo
+                  @route="app.project.conversation"
+                  @model={{call (fn this.getConversationRouteModel key)}}
+                  @query={{hash s_id=(call (fn this.getConversationRouteQuery key))}}
+                >
+                  <b>{{call (fn this.getTitle key)}}</b>
+                </LinkTo>
+              {{/if}}
             </:title>
             <:content as |comment|>
               <div class="conversations">

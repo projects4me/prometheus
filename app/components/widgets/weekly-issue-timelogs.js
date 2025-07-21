@@ -7,25 +7,26 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { next } from '@ember/runloop';
 import DateUtils from 'prometheus/utils/date';
+import { cached } from '@glimmer/tracking';
 
 /**
  * A widget component that displays weekly timelogs grouped by issue.
  * Provides filtering, searching, and pagination by week, and calculates total spent and estimated time.
  *
- * @class WidgetsWeeklyTimelogsComponent
+ * @class WidgetsWeeklyIssueTimelogsComponent
  * @namespace Prometheus.Components.Widgets
- * @module Widgets.WeeklyTimelogs
+ * @module Widgets.WeeklyIssueTimelogs
  * @extends WidgetsComponent
  * @author Rana Nouman <ranamnouman@gmail.com>
  *
  * @example
- * <Widgets::WeeklyTimelogs
+ * <Widgets::WeeklyIssueTimelogs
  *   @data={{this.timelogs}}
  *   @widgetSettings={{this.widgetSettings}}
  *   @currentUser={{this.currentUser}}
  * />
  */
-export default class WidgetsWeeklyTimelogsComponent extends WidgetsComponent {
+export default class WidgetsWeeklyIssueTimelogsComponent extends WidgetsComponent {
 	/**
 	 * The original timelog data to display, provided via the component's arguments.
 	 * @property data
@@ -91,11 +92,11 @@ export default class WidgetsWeeklyTimelogsComponent extends WidgetsComponent {
 		);
 		this.startWeek = startOfWeek;
 		this.endWeek = endOfWeek;
-		let limit = this.args.widgetSettings.limit || 10;
-		const data = await this.store.query('timelog', {
-			query: `(Timelog.spentOn BETWEEN ${startOfWeek} AND ${endOfWeek})`,
+		let limit = this.args.widgetSettings.options.limit || -1;
+		const data = await this.store.query('issue', {
+			query: `(Issue.startDate <: ${endOfWeek}) AND (Issue.endDate >: ${startOfWeek})`,
 			limit: limit,
-			rels: 'issue'
+			rels: 'spent,estimated'
 		});
 		this.data = data;
 		this.filteredData = data;
@@ -109,51 +110,62 @@ export default class WidgetsWeeklyTimelogsComponent extends WidgetsComponent {
 	 * @type {Array}
 	 * @public
 	 */
+	@cached
 	get timelogsByIssueNumber() {
 		let data = this.filteredData;
 		let timelogs = [];
 		let timelogKeys = {};
-		let _self = this;
 		let projects = [];
-		data?.forEach((timelog) => {
-			// maintain all projects that have timelogs to show in the filters dropdown
-			if (!projects.includes(timelog.projectShortcode)) {
-				projects.push(timelog.projectShortcode);
-			}
 
-			let issue = timelog.issue;
-			let issueNumber = issue.get('issueNumber');
-			let daysToHours = timelog.days * 8;
-			let hours = parseInt(timelog.hours, 10) + parseInt(daysToHours, 10);
-			let duration = moment.duration({
-				hours: hours,
-				minutes: timelog.minutes
-			});
-			let hrs = duration.asHours();
-			let timelogContext = {};
-			timelogContext[timelog.context] = _self.formatHoursFloat(hrs);
-
-			if (Object.keys(timelogKeys).includes(issueNumber)) {
-				let tl = timelogs[timelogKeys[issueNumber]];
-				if (tl.timelogContext[timelog.context]) {
-					tl.timelogContext[timelog.context].hours +=
-						timelogContext[timelog.context].hours;
-					tl.timelogContext[timelog.context].minutes +=
-						timelogContext[timelog.context].minutes;
+		const addOrUpdateTimelog = (issue, context, formattedTime) => {
+			if (timelogKeys[issue.issueNumber] !== undefined) {
+				let tl = timelogs[timelogKeys[issue.issueNumber]];
+				if (tl.timelogContext[context]) {
+					tl.timelogContext[context].hours += formattedTime.hours;
+					tl.timelogContext[context].minutes += formattedTime.minutes;
 				} else {
-					tl.timelogContext[timelog.context] =
-						timelogContext[timelog.context];
+					tl.timelogContext[context] = formattedTime;
 				}
 			} else {
-				timelogs.pushObject({
-					issueNumber: issueNumber,
-					issueSubject: issue.get('subject'),
-					issueStatus: issue.get('status'),
-					timelogContext: timelogContext,
-					projectShortcode: timelog.projectShortcode
+				timelogs.push({
+					issueNumber: issue.issueNumber,
+					issueSubject: issue.subject,
+					issueStatus: issue.status,
+					timelogContext: { [context]: formattedTime },
+					projectShortcode: issue.projectShortcode
 				});
-				timelogKeys[issueNumber] = timelogs.length - 1;
+				timelogKeys[issue.issueNumber] = timelogs.length - 1;
 			}
+		};
+
+		data?.forEach((issue) => {
+			['spent', 'estimated'].forEach((context) => {
+				if (issue[context].length > 0) {
+					issue[context].forEach((timelog) => {
+						let daysToHours = timelog.days * 8;
+						let hours =
+							parseInt(timelog.hours, 10) +
+							parseInt(daysToHours, 10);
+						let duration = moment.duration({
+							hours: hours,
+							minutes: timelog.minutes
+						});
+						let formattedTime = this.formatHoursFloat(
+							duration.asHours()
+						);
+						addOrUpdateTimelog(
+							issue,
+							timelog.context,
+							formattedTime
+						);
+					});
+				} else {
+					addOrUpdateTimelog(issue, context, {
+						hours: 0,
+						minutes: 0
+					});
+				}
+			});
 		});
 
 		next(this, () => {
@@ -178,7 +190,7 @@ export default class WidgetsWeeklyTimelogsComponent extends WidgetsComponent {
 			return {
 				name: filter,
 				label: this.intl.t(
-					`views.app.widgets.weeklyTimelogs.filters.${filter}`
+					`views.app.widgets.weeklyIssueTimelogs.filters.${filter}`
 				)
 			};
 		});
@@ -209,9 +221,9 @@ export default class WidgetsWeeklyTimelogsComponent extends WidgetsComponent {
 			this.projects.forEach((project) => {
 				cb[project] = (data) => {
 					return data.filter((timelog) => {
-					return timelog.projectShortcode === project;
-				});
-			};
+						return timelog.projectShortcode === project;
+					});
+				};
 			});
 		}
 		return cb;
@@ -227,11 +239,10 @@ export default class WidgetsWeeklyTimelogsComponent extends WidgetsComponent {
 	 * @action
 	 */
 	@action
-	filterMyTimeLogs(data) {
-		let _self = this;
-		return data.filter((timelog) => {
-			return timelog.createdUser === _self.args.currentUser.user.id;
-		});
+	filterMyTimeLogs(issues) {
+		issues = this.filterTimelogsByContext(issues, 'spent');
+		issues = this.filterTimelogsByContext(issues, 'estimated');
+		return issues;
 	}
 
 	/**
@@ -278,8 +289,8 @@ export default class WidgetsWeeklyTimelogsComponent extends WidgetsComponent {
 	get timelogEmptyStateMessage() {
 		return this.intl.t(
 			this.query?.length > 0
-				? 'views.app.widgets.weeklyTimelogs.noTimelogsFound'
-				: 'views.app.widgets.weeklyTimelogs.emptyStateMessage'
+				? 'views.app.widgets.weeklyIssueTimelogs.noTimelogsFound'
+				: 'views.app.widgets.weeklyIssueTimelogs.emptyStateMessage'
 		);
 	}
 
@@ -366,5 +377,35 @@ export default class WidgetsWeeklyTimelogsComponent extends WidgetsComponent {
 			}
 			return acc;
 		}, 0);
+	}
+
+	/**
+	 * Filters timelogs by context (spent or estimated) for a given array of issues.
+	 *
+	 * @method filterTimelogsByContext
+	 * @param {Array} issues - The array of issues to filter
+	 * @param {String} context - The context to filter by ('spent' or 'estimated')
+	 * @returns {Array} - The filtered array of issues
+	 * @public
+	 * @action
+	 */
+	@action
+	filterTimelogsByContext(issues, context) {
+		let _self = this;
+		let otherContext = context === 'spent' ? 'estimated' : 'spent';
+		return issues.map((issue) => {
+			let filteredTimelogs = issue[context]?.filter((timelog) => {
+				return timelog.createdUser === _self.args.currentUser.user.id;
+			});
+			let updatedIssue = {
+				issueNumber: issue.issueNumber,
+				subject: issue.subject,
+				status: issue.status,
+				projectShortcode: issue.projectShortcode,
+				[context]: filteredTimelogs,
+				[otherContext]: issue[otherContext]
+			};
+			return updatedIssue;
+		});
 	}
 }
