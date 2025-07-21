@@ -493,6 +493,8 @@ export default Object.extend({
 					options: {
 						query: "((Issue.startDate <: ```WEEK_END```) AND (Issue.endDate >: ```WEEK_START```))",
 						rels: 'spent,estimated',
+                        sort: "Issue.dateModified",
+                        order: 'DESC',
 						limit: -1
 					},
                     fields: ['issueNumber', 'subject', 'spent', 'estimated', 'status', 'project'],
