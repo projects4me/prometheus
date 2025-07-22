@@ -10,17 +10,17 @@ Feature: Taskboard | filter issues board
     And Project has following details
     ------------------------------------------------------
     | milestones(milestone) | issuestatuses(issuestatus) |
-    | 1                     | 6                          |
+    | 1                     | 7                          |
     ------------------------------------------------------ 
     And Each milestone has 4 issues and there status are
     ------------------------------------------------------------
-    | new | in_progress | done | feedback | pending | deferred |
-    | 1   | 1           | 2    |  0       | 0       | 0        |
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 1           | 1         | 2    |  0       | 0       | 0        |
     ------------------------------------------------------------
     And backlog has 2 issues
     ------------------------------------------------------------
-    | new | in_progress | done | feedback | pending | deferred |
-    | 1   | 0           | 0    |  1       | 0       | 0        |
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 0           | 0         | 0    |  1       | 0       | 0        |
     ------------------------------------------------------------
     When User navigates to app/project/project_1/board
     And User search Issue Test 4 from milestone 1
