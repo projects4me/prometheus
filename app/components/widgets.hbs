@@ -1,12 +1,26 @@
-<div class='widgets-container' data-widgets>
-{{#each-in @widgets as |key value|}}
-	<div class='widget'>
-		{{component
-			(concat 'widgets/' (dasherize key))
-			data=value
-			widgetSettings=(get-prop @widgetSettings key)
-			currentUser=@currentUser
-		}}
-	</div>
-{{/each-in}}
+<div class="widgets-container row" data-widgets>
+  <div class="col-md-6">
+    {{#each (slice 0 3 (keys @widgets)) as |key|}}
+      <div class="widget">
+        {{component
+          (concat "widgets/" (dasherize key))
+          data=(get @widgets key)
+          widgetSettings=(get-prop @widgetSettings key)
+          currentUser=@currentUser
+        }}
+      </div>
+    {{/each}}
+  </div>
+  <div class="col-md-6">
+    {{#each (slice 3 6 (keys @widgets)) as |key|}}
+      <div class="widget">
+        {{component
+          (concat "widgets/" (dasherize key))
+          data=(get @widgets key)
+          widgetSettings=(get-prop @widgetSettings key)
+          currentUser=@currentUser
+        }}
+      </div>
+    {{/each}}
+  </div>
 </div>
