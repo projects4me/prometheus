@@ -3,12 +3,9 @@
  */
 
 import App from "prometheus/routes/app";
-import { hashSettled } from 'rsvp';
-import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 import format from "prometheus/utils/data/format";
 import Logger from "js-logger";
 import _ from 'lodash';
-import { inject } from '@ember/service';
 
 /**
  * This is the route that will handle the creation of new issues
@@ -32,7 +29,7 @@ export default App.extend({
      * @return Prometheus.Issue
      * @private
      */
-    afterModel() {
+    async afterModel() {
         Logger.debug('Prometheus.Routes.App.Project.Issue.Create::afterModel()');
         let _self = this;
         let projectId = _self.trackedProject.getProjectId();
@@ -45,20 +42,22 @@ export default App.extend({
         };
 
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::afterModel()');
-
-        return hashSettled({
-            project: _self.store.query('project', projectOptions)
-        }).then(function (results) {
-            let data = extractHashSettled(results, 'project');
-            Logger.debug(data);
-            _self.set('project', data.project.objectAt(0));
-            _self.set('types', data.project.firstObject.issuetypes);
-            _self.set('statuses', data.project.firstObject.issuestatuses);
-        }).catch((error) => {
+        try {
+            let project = await _self.store.query('project', projectOptions);
+            let projectData = project.objectAt(0);
+            if(projectData.issuestatuses === undefined || projectData.issuestatuses.length === 0) {
+                let issueStatuses = await _self.store.query('issuestatus', {
+                    query: `(Issuestatus.system : 1)`,
+                    limit: -1,
+                });
+                projectData.issuestatuses = issueStatuses;
+            }
+            this.set('project', projectData);
+        } catch (error) {
             _self.errorManager.handleError(error, {
                 moduleName: 'project'
             })
-        });
+        }
     },
 
     /**
@@ -73,7 +72,7 @@ export default App.extend({
      * @method setupController
      * @param {Prometheus.Controllers.Issue} controller The controller object for the issues
      * @private
-     */
+         */
     setupController: function (controller) {
         Logger.debug('Prometheus.Routes.App.Project.Issue.Create::setupController');
 
@@ -81,16 +80,16 @@ export default App.extend({
         let issue = _self.store.createRecord('issue', {
             assignee: _self.currentUser.user.id,
             owner: _self.currentUser.user.id,
-            project: _self.project,
-            projectId: _self.project.id,
-            projectShortcode: _self.project.shortCode
+            project: _self.get('project'),
+            projectId: _self.get('project').id,
+            projectShortcode: _self.get('project').shortCode
         });
 
         const issueDescription = _.clone(issue.description);
         controller.set('model', issue);
         controller.set('project', _self.get('project'));
-        controller.set('types', _self.get('types'));
-        controller.set('statuses', _self.get('statuses'));
+        controller.set('types', _self.get('project').issuetypes);
+        controller.set('statuses', _self.get('project').issuestatuses);
         controller.set('issueDescription', issueDescription);
 
         let priority = (new format(this)).getList('views.app.issue.lists.priority');
@@ -113,24 +112,6 @@ export default App.extend({
             if (!controller.model.id) {
                 controller.model.destroyRecord();
             }
-        }
-    },
-    actions: {
-        /**
-         * This event is triggered when user attempt to transition to another route. In this we're unloading
-         * issue statuses model from the ember store. Because when user will navigate from this route to
-         * project/board route, where we're again fetching the issue statuses against the same project, then
-         * store will use the loaded issue status models against the same xhr call. The issue status models 
-         * names are translated, that's we can't use these in board. So that's the reason of unloading the issue
-         * status records.
-         * 
-         * @event willTransition
-         * @public
-         */
-        willTransition() {
-            this.controller.statuses.forEach((status) => {
-                status.unloadRecord();
-            });
         }
     }
 });
