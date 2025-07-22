@@ -26,6 +26,7 @@ export default class AppProjectBoardController extends PrometheusController {
     statusClass = {
         new: 'box-info',
         in_progress: 'box-primary',
+        in_review: 'box-info',
         done: 'box-success',
         feedback: 'box-warning',
         pending: 'box-danger',
@@ -139,6 +140,7 @@ export default class AppProjectBoardController extends PrometheusController {
         let statusList = [
             'new',
             'in_progress',
+            'in_review',
             'done',
             'feedback',
             'pending',

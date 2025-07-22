@@ -10,9 +10,17 @@
 
 .board {
   .box {
+    .milestone.box-body {
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: $primaryColor $backgroundColor;
+    }
     .box-body {
       .lane {
         height: 100%;
+        width: 28rem;
+        margin-right: 0.5rem;
 
         .milestone, .box {
           height: 100%;
@@ -35,6 +43,7 @@
               border-top: 0.1rem solid #ccc;
               border-bottom: 0.1rem solid #ccc;
               user-select: none;
+              width: 27rem;
 
               .description {
                 word-wrap: break-word;

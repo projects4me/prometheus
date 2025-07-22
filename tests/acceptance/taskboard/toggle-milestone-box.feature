@@ -10,7 +10,7 @@ Feature: Taskboard | toggle milestone box board
     And Project has following details
     ------------------------------------------------------
     | milestones(milestone) | issuestatuses(issuestatus) |
-    | 1                     | 6                          |
+    | 1                     | 7                          |
     ------------------------------------------------------ 
     When User navigates to app/project/project_1/board
     And User toggle milestone 1 container
