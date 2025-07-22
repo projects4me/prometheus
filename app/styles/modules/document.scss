@@ -486,3 +486,9 @@ span[id="#"]{
     font-size: 1.4rem;
   }
 }
+
+// Modal dialogs
+.modal-open .modal {
+  background: rgb(255 255 255 / 4%);
+  backdrop-filter: blur(0.5rem);
+}
