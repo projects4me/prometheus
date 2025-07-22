@@ -92,11 +92,13 @@ export default class WidgetsWeeklyIssueTimelogsComponent extends WidgetsComponen
 		);
 		this.startWeek = startOfWeek;
 		this.endWeek = endOfWeek;
-		let limit = this.args.widgetSettings.options.limit || -1;
+		let { limit = -1, rels = 'spent,estimated', sort = 'Issue.dateModified', order = 'DESC' } = this.args.widgetSettings.options;
 		const data = await this.store.query('issue', {
 			query: `(Issue.startDate <: ${endOfWeek}) AND (Issue.endDate >: ${startOfWeek})`,
 			limit: limit,
-			rels: 'spent,estimated'
+			rels: rels,
+			sort: sort,
+			order: order
 		});
 		this.data = data;
 		this.filteredData = data;
