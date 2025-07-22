@@ -905,6 +905,7 @@
           "status": {
             "new": "New",
             "in_progress": "In Progress",
+            "in_review": "In Review",
             "pending": "Pending",
             "done": "Done",
             "wont_fix": "Won't Fix",

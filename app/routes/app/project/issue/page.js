@@ -4,8 +4,6 @@
 
 import App from "prometheus/routes/app";
 import { inject } from '@ember/service';
-import { hashSettled } from 'rsvp';
-import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 /**
  * The issues route
@@ -48,7 +46,7 @@ export default App.extend({
      * 
      * @returns {Promise}
      */
-    model() {
+    async model() {
         Logger.debug('AppProjectIssuePageRoute::model()');
 
         let _self = this;
@@ -56,7 +54,7 @@ export default App.extend({
         _self.set('breadCrumb', { title: '#' + params.issue_number, record: true });
 
         Logger.debug('-AppProjectIssuePageRoute::model()');
-        return _self.loadIssue(params);
+        return await _self.loadIssue(params);
     },
 
     /**
@@ -73,7 +71,7 @@ export default App.extend({
     * @param {Prometheus.Models.Issue} model The model that is created by this route
     * @private
     */
-    setupController(controller, model) {
+    async setupController(controller, model) {
         Logger.debug('AppProjectIssuePageRoute::setupController');
         let issue = model.issue.objectAt(0);
         let project = model.project.objectAt(0);
@@ -93,7 +91,7 @@ export default App.extend({
      * @param {Prometheus.Controllers.Issue} controller
      * @param {Object} params
      */
-    loadIssue(params) {
+    async loadIssue(params) {
         let _self = this;
         let projectId = _self.trackedProject.getProjectId();
         let options = {
@@ -110,19 +108,28 @@ export default App.extend({
             limit: -1,
         }; 
 
-        let project = _self.get('store').query('project', _projectOptions);
-        let issue = _self.get('store').query('issue', options);
+        try {
+            let project = await _self.get('store').query('project', _projectOptions);
+            let projectData = project.objectAt(0);
+            if(projectData.issuestatuses === undefined || projectData.issuestatuses.length === 0) {
+                let issueStatuses = await _self.get('store').query('issuestatus', {
+                    query: `(Issuestatus.system : 1)`,
+                    limit: -1,
+                });
+                projectData.issuestatuses = issueStatuses;
+            }
+            
+            let issue = await _self.get('store').query('issue', options);
 
-        return hashSettled({
-            project: project,
-            issue: issue
-        }).then(function (results) {
-            return extractHashSettled(results);
-        }).catch((error) => {
+        return {
+                project: project,
+                issue: issue
+            }
+        } catch (error) {
             _self.errorManager.handleError(error, {
                 moduleName: 'issue'
             })
-        })
+        }
     },
 
     /**
