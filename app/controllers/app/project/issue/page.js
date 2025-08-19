@@ -6,12 +6,12 @@ import PrometheusController from "prometheus/controllers/prometheus";
 import { task } from 'ember-concurrency';
 import { inject as controller } from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { set } from '@ember/object';
 import $ from 'jquery';
 import { computed, action } from '@ember/object';
 import Evented from '@ember/object/evented';
 import { htmlSafe } from "@ember/template";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
+import { tracked } from '@glimmer/tracking';
 
 /**
  * This controller is used to manage the issues detail/page view
@@ -121,6 +121,35 @@ export default class AppProjectIssuePageController extends PrometheusController.
      * @public
      */
     queryParams = ['s_id'];
+
+
+    /**
+     * Boolean flag indicating whether the issue planning dialog/modal is open.
+     *
+     * @property issuePlanDialog
+     * @type {Boolean}
+     * @public
+     */
+    @tracked issuePlanDialog = false;
+
+    /**
+     * Holds the data returned from the AI issue planning API for the current issue.
+     *
+     * @property issuePlanData
+     * @type {Object|null}
+     * @public
+     */
+    @tracked issuePlanData = null;
+
+    /**
+     * Boolean flag indicating whether the issue planning data is currently being loaded.
+     *
+     * @property issuePlanLoading
+     * @type {Boolean}
+     * @public
+     */
+    @tracked issuePlanLoading = false;
+
 
     /**
      * This is a computed property in which gets the list of users
@@ -846,5 +875,97 @@ export default class AppProjectIssuePageController extends PrometheusController.
             });
             issue.rollbackAttributes();
         });
+    }
+
+    /**
+     * This action sets the `issuePlanDialog` flag to true, which is typically used to show
+     * the modal in the template. It then calls {@link fetchIssuePlan} to retrieve the plan
+     * data for the current issue from the backend.
+     *
+     * @method showIssuePlanDialog
+     * @public
+     */
+    @action showIssuePlanDialog() {
+        this.issuePlanDialog = true;
+        this.fetchIssuePlan();
+    }
+
+    /**
+     * This method sets the `issuePlanDialog` flag to false, clears any loaded plan data
+     * and errors, and programmatically hides any open modal dialogs using jQuery.
+     *
+     * @method removeIssuePlanDialog
+     * @public
+     */
+    removeIssuePlanDialog() {
+        this.issuePlanDialog = false;
+        this.issuePlanData = null;
+        this.issuePlanError = null;
+        $('.modal').modal('hide');
+    }
+
+    /**
+     * This asynchronous action sends a POST request to the `/issueplanning` API endpoint,
+     * passing the current issue's number. It manages loading and error state, and parses
+     * the returned plan data if the request is successful. If the request fails or the
+     * backend returns an error, it sets an appropriate error message.
+     *
+     * @method fetchIssuePlan
+     * @async
+     * @public
+     * @returns {Promise<void>}
+     */
+    @action async fetchIssuePlan() {
+        this.issuePlanLoading = true;
+        this.issuePlanError = null;
+        this.issuePlanData = null;
+        let _self = this;
+        try {
+            let url = `${_self.env.api.host}/api/v${_self.env.api.version}/issueplanning`;
+            let requestBody = {
+                issueNumber: this.issue.issueNumber
+            };
+            let response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(requestBody),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${_self.session.data.authenticated.access_token}`
+                }
+            });
+            if (response.ok) {
+                let data = await response.json();
+                if (data.success && data.data) {
+                    this.issuePlanData = JSON.parse(data.data);
+                } else {
+                    this.issuePlanError = data.message || 'AI planning failed.';
+                }
+            } else {
+                this.issuePlanError = this.intl.t('global.oops');
+            }
+        } catch (e) {
+            this.issuePlanError = this.intl.t('global.oops');
+        } finally {
+            this.issuePlanLoading = false;
+        }
+    }
+    
+    /**
+     * This computed property attempts to retrieve the project using the project ID
+     * from the `projectController`. If the project is not found, it logs an error.
+     *
+     * @property project
+     * @type {DS.Model|undefined}
+     * @public
+     */
+    get project() {
+        let project = this.store.peekRecord(
+			'project',
+			this.projectController.projectId
+		);
+        if (!project) {
+            console.error('Project not found');
+        }
+        return project;
     }
 }

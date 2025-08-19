@@ -13,6 +13,17 @@ export const given = function () {
     ];
 }
 
+export const when = function () {
+    return [
+        {
+            "There is no custom callback": (assert, ctx) => async function () {
+                ctx.set('customCallback', null);
+                assert.ok(true, `There is no custom callback`);
+            }
+        }
+    ];
+}
+
 export default function (assert) {
     return steps(assert);
 }

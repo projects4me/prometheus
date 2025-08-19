@@ -250,3 +250,168 @@
     }
   }
 }
+
+[data-btn="ai-plan"] {
+  color: #fff;
+}
+
+// Issue Planning Modal Styles
+.issue-plan-task-list {
+  margin-top: 1.5rem;
+}
+
+.issue-plan-task-card {
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 0.2rem 0.4rem 0px, rgba(14, 30, 37, 0.32) 0px 0.2rem 1.6rem 0px;
+  border-radius: 6px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: #fafbfc;
+
+
+  .task-total-estimated {
+    text-align: end;
+    font-style: italic;
+    font-weight: 600;
+  }  
+}
+
+.issue-plan-task-header {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  @include flexbox($display: flex);
+  justify-content: space-between;
+  
+
+  input[type="checkbox"] {
+    margin: 0 0.5rem 0 0;
+  }
+
+  .issue-subject {
+    @include flexbox($display: flex);
+  }
+
+  .issue-estimated-hours {
+    text-align: right;
+  }
+
+  .task-own-estimated {
+    font-style: italic;
+    font-weight: 400;
+  }
+}
+
+.issue-plan-task-test {
+  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25rem, rgba(90, 125, 188, 0.05) 0px 0.25rem 1rem;
+  padding: 0.5rem;
+  border-radius: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.issue-plan-task-test-estimated-hours {
+  font-style: italic;
+}
+
+.issue-plan-task-desc {
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.issue-plan-task-dependency {
+  margin-top: 0.25rem;
+  font-size: 90%;
+  color: #B3244F;
+}
+
+.dependency-disabled {
+  text-decoration: line-through;
+}
+
+.issue-plan-task-tests {
+  margin-top: 1rem;
+  padding-inline-start: 2rem;
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  li {
+    input[type="checkbox"] {
+      margin: 0 0.5rem 0 0;
+    }
+  }
+
+  .issue-plan-task-test-header {
+    @include flexbox($display: flex);
+
+    .issue-plan-task-test-header-scenario {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.issue-plan-test-case-pre {
+  white-space: pre-wrap;
+  background: #f5f5f5;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.95em;
+  margin: 0.25rem 0;
+  color: #222;
+}
+
+.issue-plan-modal {
+  .modal-dialog {
+    width: 50%;
+  }
+}
+
+.issue-plan-issue-list {
+  .issue-plan-issue-item {
+    @include flexbox($display: flex, $justifyContent: space-between);
+    padding: 1.5rem;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 0.2rem 0.4rem 0px, rgba(14, 30, 37, 0.32) 0px 0.2rem 1.6rem 0px;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+
+    .issue-plan-issue-item-task-id {
+      font-weight: 700;
+    }
+
+    i.fa-spinner {
+      animation: pace-spinner 2s linear infinite;
+    }
+
+    .issue-plan-issue-item-status {
+      @include flexbox($display: flex, $alignItems: center);
+    }
+
+    .issue-plan-task-node-status {
+      padding: 0.1rem 0.2rem;
+    }
+  }
+}
+
+.issue-overview {
+  overflow-y: auto;
+
+  &.no-child-issues {
+    min-height: 10rem;
+  }
+}
+
+.child-issue {
+  margin-left: 1rem;
+  .issue-block{
+      padding-left: 0.5rem;
+      border-left: 0.4rem solid $warningColor;
+  }
+}
+
+.current-issue {
+  border-left: 0.4rem solid $primaryColor;
+}
+
+.issue-plan-issue-child {
+  margin-left: 2rem;
+}

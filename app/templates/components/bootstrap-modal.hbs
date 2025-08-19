@@ -1,4 +1,4 @@
-<div class="modal fade">
+<div class={{concat "modal fade " @containerClass}}>
   <div class="modal-dialog">
     <div class="modal-content box box-primary">
       <div class="modal-header">
@@ -10,8 +10,8 @@
       </div>
       <div class="modal-footer">
         <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" data-dismiss="modal">{{t this.closeLabel}}</AppUi::Button>
-        {{#if this.confirmLabel}}
-          <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{this.confirm}}>{{t this.confirmLabel}}</AppUi::Button>
+        {{#if (and this.confirmLabel (not @removeConfirmBtn))}}
+          <AppUi::Button type="button" data-btn={{if @dataSaveBtn @dataSaveBtn 'save'}} class="btn btn-primary" @onClick={{this.confirm}}>{{t this.confirmLabel}}</AppUi::Button>
         {{/if}}
       </div>
     </div>

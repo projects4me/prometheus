@@ -1,6 +1,7 @@
 import steps from '../steps';
 import defaultScenario from 'prometheus/mirage/scenarios/default';
 import projectScenario from 'prometheus/mirage/scenarios/project';
+import { removeExistingModals } from '../common-steps/modal-steps';
 
 export const given = function () {
     return [
@@ -8,6 +9,7 @@ export const given = function () {
             "There is no pre-existing data": (assert, ctx) => async function () {
                 server.db.emptyData();
                 ctx.clear();
+                removeExistingModals();
                 assert.ok(true, "There is no pre-exisiting data");
             }
         },

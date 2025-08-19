@@ -82,6 +82,7 @@ export default App.extend({
         controller.set('newTimeLog', timelog);
         controller.set('issue', issue);
         controller.set('issueStatuses', project?.issuestatuses);
+        controller.set('issueTypes', project?.issuetypes || []);
         Logger.debug('-AppProjectIssuePageRoute::setupController');
     },
 
@@ -98,13 +99,13 @@ export default App.extend({
             query: `((Issue.issueNumber : ${params.issue_number}) AND (Issue.projectId : ${projectId}))`,
             sort: 'Issue.issueNumber,comments.dateCreated',
             order: 'ASC',
-            rels: 'comments,activities,parentissue,assignedTo,ownedBy,modifiedBy,reportedBy,issuetype,files,spent,estimated,conversationroom',
+            rels: 'comments,activities,parentissue,assignedTo,ownedBy,modifiedBy,reportedBy,issuetype,files,spent,estimated,conversationroom,issuemilestone,childissues',
             limit: -1,
         };
 
         let _projectOptions = {
             query: `(Project.id : ${projectId})`,
-            rels: 'issuestatuses',
+            rels: 'issuestatuses,issuetypes',
             limit: -1,
         }; 
 
