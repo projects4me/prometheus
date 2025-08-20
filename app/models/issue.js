@@ -238,6 +238,16 @@ export default Model.extend({
     statusId: attr("string"),
 
     /**
+     * The issue plan of the issue
+     *
+     * @property isPlanned
+     * @type Boolean
+     * @for Issue
+     * @private
+     */
+    isPlanned: attr("bool"),
+
+    /**
      * The user to whom this issue is currently assigned to
      *
      * @property assignedTo

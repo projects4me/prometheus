@@ -1,0 +1,30 @@
+<div class="issue-plan-issue-item{{if this.isChild ' issue-plan-issue-child'}}" style={{this.indentStyle}}>
+  <div data-task-id="{{@node.task.id}}">
+    <span class="issue-plan-issue-item-task-id">{{@node.task.id}}</span> |
+    <span class="issue-plan-issue-item-task-subject">{{@node.task.subject}}</span>
+  </div>
+  <div class="issue-plan-issue-item-status">
+    {{#let (get @creationStates @node.task.id) as |state|}}
+      {{#if (eq state "creating")}}
+        <i class="fa fa-spinner fa-spin issue-plan-task-node-status"></i>
+      {{else if (eq state "success")}}
+        <i class="fa fa-check icon-success issue-plan-task-node-status"></i>
+      {{else if (eq state "error")}}
+        <i class="fa fa-times icon-error issue-plan-task-node-status"></i>
+        <AppUi::Button type="button" class="btn btn-link btn-xs issue-plan-retry-btn issue-plan-task-node-status" @onClick={{this.handleRetry}} title="Retry"><i class="fa fa-refresh"></i></AppUi::Button>
+        <AppUi::Button type="button" class="btn btn-link btn-xs issue-plan-copy-btn issue-plan-task-node-status" @onClick={{this.handleCopy}} title="Copy to clipboard"><i class="fa fa-files-o"></i></AppUi::Button>
+      {{else}}
+        <i class="fa fa-clock-o"></i>
+      {{/if}}
+    {{/let}}
+  </div>
+</div>
+{{#each @node.children as |child|}}
+  <Issue::IssuePlanTaskNode 
+    @node={{child}} 
+    @level={{add @level 1}} 
+    @creationStates={{@creationStates}} 
+    @onRetry={{@onRetry}} 
+    @onCopy={{@onCopy}}
+  />
+{{/each}}

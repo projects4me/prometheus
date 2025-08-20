@@ -33,6 +33,9 @@
 
               {{!-- Edit issue button --}}
               <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" @onClick={{fn this.editIssue this.issue.issueNumber}} @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
+              {{#unless this.issue.isPlanned}}
+                <AppUi::Button data-btn="ai-plan" type="button" class="btn btn-box-tool btn-primary" data-toggle="tooltip" title="" @onClick={{this.showIssuePlanDialog}}><i class="fa fa-magic"></i> {{t "views.app.issue.planWithAi.title"}}</AppUi::Button>
+              {{/unless}}
             </div>
           </div>
 
@@ -562,34 +565,48 @@
           </div>
 
           <div class="box-body no-padding">
-
-            <div class="table-responsive">
-              {{#if this.issue.childissues}}
-                <table class="table no-margin">
-                  <thead>
-                    <tr>
-                      <th>{{t "views.app.issue.detail.issueNumber"}}</th>
-                      <th>{{t "views.app.issue.detail.subject"}}</th>
-                      <th>{{t "views.app.issue.detail.status"}}</th>
-                      <th>{{t "views.app.issue.detail.priority"}}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {{#each this.issue.childissues as |child|}}
-                      <tr>
-                        <td><a href="#" {{action "navigateToIssue" child.issueNumber child.projectId}}>#{{child.issueNumber}}</a></td>
-                        <td>{{child.subject}}</td>
-                        <td><span class="badge {{child.status}}">{{t (concat "views.app.issue.lists.status." child.status)}}</span></td>
-                        <td><AppUi::PriorityIcon @priority={{child.priority}}/> {{t (concat "views.app.issue.lists.priority." child.priority)}}</td>
-                      </tr>
-                    {{/each}}
-                  </tbody>
-                </table>
-              {{else}}
-                <div class="no-entry">{{t "views.app.issue.detail.childissues.noentry"}}</div>
+            <ul class="issue-overview clearfix {{unless this.issue.childissues.length 'no-child-issues'}}">
+              {{#if this.issue.childissues.length}}
+                <li class="current-issue" data-field="issue.parentissue">
+                  <div class="issue-block">
+                    <div class="priority"><AppUi::PriorityIcon @priority={{this.issue.priority}}/></div>
+                    <div class="data-block">
+                      <span class="subject">
+                        <LinkTo
+                          @route="app.project.issue.page"
+                          @models={{array this.issue.projectShortcode this.issue.issueNumber}}
+                        >#{{this.issue.issueNumber}}</LinkTo> - {{this.issue.subject}}
+                      </span>
+                      <span class="description">{{translate-comment this.issue.description}}</span>
+                      <span class="badge {{this.issue.status}}">{{t (concat "views.app.issue.lists.status." this.issue.status)}}</span>
+                    </div>
+                  </div>
+                </li>
               {{/if}}
-            </div>
-
+              {{#if this.issue.childissues}}
+                {{#each this.issue.childissues as |child|}}
+                  <li class="child-issue" data-child-issue-id={{child.id}}>
+                    <div class="issue-block">
+                      <div class="priority"><AppUi::PriorityIcon @priority={{child.priority}}/></div>
+                      <div class="data-block">
+                        <span class="subject">
+                          <LinkTo
+                            @route="app.project.issue.page"
+                            @models={{array child.projectShortcode child.issueNumber}}
+                          >#{{child.issueNumber}}</LinkTo> - {{child.subject}}
+                        </span>
+                        <span class="description">{{translate-comment child.description}}</span>
+                        <span class="badge {{child.status}}">{{t (concat "views.app.issue.lists.status." child.status)}}</span>
+                      </div>
+                    </div>
+                  </li>
+                {{/each}}
+              {{else}}
+                <Exceptions::NothingFound
+                  @description={{t "views.app.issue.detail.childissues.noentry"}}
+                />
+              {{/if}}
+            </ul>
           </div>
         </div>
       </AccessControl>
@@ -601,3 +618,17 @@
   {{!-- /.end row --}}
 </div>
 {{!-- /.end project --}}
+
+{{!-- AI Planning Modal --}}
+<Issue::IssuePlanning
+  @isOpen={{this.issuePlanDialog}}
+  @loading={{this.issuePlanLoading}}
+  @error={{this.issuePlanError}}
+  @data={{this.issuePlanData}}
+  @issue={{this.issue}}
+  @project={{this.project}}
+  @onClose={{action this.removeIssuePlanDialog}}
+  @issueStatuses={{this.issueStatuses}}
+  @issueTypes={{this.issueTypes}}
+  @scrollAndHighlight={{this.scrollAndHighlight}}
+/>

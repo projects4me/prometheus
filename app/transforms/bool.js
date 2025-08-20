@@ -29,7 +29,7 @@ export default Transform.extend({
             return false;
         }
 
-        return Boolean(serialized);
+        return Boolean(parseInt(serialized, 10));
     },
 
     /**

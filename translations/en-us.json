@@ -912,6 +912,26 @@
             "deferred": "Deferred ",
             "feedback": "Feedback"
           }
+        },
+        "planWithAi": {
+          "modalTitle": "AI-Powered Issue Planning",
+          "title": "Plan with AI",
+          "tasksTitle": "Tasks",
+          "taskEstimatedHours": "Task Estimated Hours",
+          "estimatedHours": "Estimated Hours",
+          "dependency": "Depends On",
+          "testCases": "Test Cases ({count})",
+          "scenario": "Scenario",
+          "testCase": "Test Case",
+          "totalEstimatedHours": "Total Estimated Hours",
+          "modalConfirm": "Create Plan",
+          "creatingPlan": "Creating plan ..",
+          "planCreated": "Plan created successfully",
+          "planCreationFailed": "Failed to create plan",
+          "issueCreated": "Issue <strong>#{issueNumber}</strong> | <strong>{subject}</strong> has been created successfully",
+          "retryingTask": "Retrying creation of task <strong>{taskId}</strong> | <strong>{taskSubject}</strong> ..",
+          "taskCopiedToClipboard": "Task copied to clipboard!",
+          "taskCopyFailed": "Failed to copy task to clipboard!"
         }
       },
       "tag": {

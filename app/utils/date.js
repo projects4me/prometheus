@@ -35,4 +35,24 @@ export default class DateUtils {
 			endOfWeek: endOfWeek.format('YYYY-MM-DD HH:mm:ss.0')
 		};
 	}
+
+	/**
+	 * Converts a float value representing hours into an object containing hours and minutes.
+	 *
+	 * @method getHoursAndMinutes
+	 * @static
+	 * @param {number} floatHours - The number of hours as a float (e.g., 2.5)
+	 * @returns {Object} An object with `hours` and `minutes` properties
+	 * @public
+	 * @example
+	 *   DateUtils.getHoursAndMinutes(2.75); // { hours: 2, minutes: 45 }
+	 */
+	static getHoursAndMinutes(floatHours) {
+		if (typeof floatHours !== 'number' || isNaN(floatHours)) {
+			return { hours: 0, minutes: 0 };
+		}
+		const hours = Math.floor(floatHours);
+		const minutes = Math.round((floatHours - hours) * 60);
+		return { hours, minutes };
+	}
 }

@@ -63,4 +63,7 @@ export default Factory.extend({
     priority() {
         return faker.random.arrayElement(["medium", "high", "low", "critical", "blocker"]);
     },
+    isPlanned() {
+        return '0';
+    }
 });

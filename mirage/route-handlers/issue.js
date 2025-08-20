@@ -62,7 +62,6 @@ export function register(server, ctx) {
     server.post('/issue', (schema, request) => {
         let requestData = JSON.parse(request.requestBody).data;
         let issue = server.create('issue');
-
         /*updating issue twicely because of first getting default issueNumber
         * and setting it to requested attributes and then updating the
         * issue again
@@ -73,6 +72,12 @@ export function register(server, ctx) {
             issuetype: schema.issuetypes.find(requestData.attributes.typeId),
             status: schema.issuestatuses.find(issue.statusId).name
         });
+
+        let customCallback = ctx.get('customCallback');
+        if(customCallback) {
+            return customCallback(issue);
+        }
+        
         ctx.set('latestCreatedIssue', issue);
         return issue;
     });
