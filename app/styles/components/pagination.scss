@@ -3,6 +3,10 @@
   display: flex;
   flex-direction: column;
 
+  .pagination-secondary-footer {
+    padding: 0 1rem;
+  }
+
   .pagination-footer {
     width: 100%;
     display: flex;

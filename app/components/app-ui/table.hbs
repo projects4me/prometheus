@@ -64,6 +64,10 @@
           {{yield to="center"}}
         </:center>
 
+       <:secondary-footer>
+        {{yield to="secondary-footer"}}
+       </:secondary-footer>
+
         <:default>
           {{#if (has-block "body")}}
             <AppUi::Table::TableContent

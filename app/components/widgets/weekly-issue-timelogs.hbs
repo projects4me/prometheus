@@ -88,28 +88,6 @@
           </td>
         </tr>
       {{/each}}
-      <tr>
-        <td colspan="6">
-          <div class="timelogs-summary">
-            <b>{{t "views.app.widgets.weeklyIssueTimelogs.totalSpentTime"}}:
-              {{this.totalSpentTime.hours}}
-              {{t "views.app.widgets.weeklyIssueTimelogs.hours"}}
-              {{#if (gt this.totalSpentTime.minutes 0)}}
-                {{this.totalSpentTime.minutes}}
-                {{t "views.app.widgets.weeklyIssueTimelogs.minutes"}}
-              {{/if}}
-            </b>
-            <b>{{t "views.app.widgets.weeklyIssueTimelogs.totalEstimatedTime"}}:
-              {{this.totalEstimatedTime.hours}}
-              {{t "views.app.widgets.weeklyIssueTimelogs.hours"}}
-              {{#if (gt this.totalEstimatedTime.minutes 0)}}
-                {{this.totalEstimatedTime.minutes}}
-                {{t "views.app.widgets.weeklyIssueTimelogs.minutes"}}
-              {{/if}}
-            </b>
-          </div>
-        </td>
-      </tr>
     {{else}}
       <tr>
         <td colspan="6">
@@ -120,4 +98,24 @@
       </tr>
     {{/if}}
   </:body>
+  <:secondary-footer>
+    <div class="timelogs-summary">
+      <b>{{t "views.app.widgets.weeklyIssueTimelogs.totalSpentTime"}}:
+        {{this.totalSpentTime.hours}}
+        {{t "views.app.widgets.weeklyIssueTimelogs.hours"}}
+        {{#if (gt this.totalSpentTime.minutes 0)}}
+          {{this.totalSpentTime.minutes}}
+          {{t "views.app.widgets.weeklyIssueTimelogs.minutes"}}
+        {{/if}}
+      </b>
+      <b>{{t "views.app.widgets.weeklyIssueTimelogs.totalEstimatedTime"}}:
+        {{this.totalEstimatedTime.hours}}
+        {{t "views.app.widgets.weeklyIssueTimelogs.hours"}}
+        {{#if (gt this.totalEstimatedTime.minutes 0)}}
+          {{this.totalEstimatedTime.minutes}}
+          {{t "views.app.widgets.weeklyIssueTimelogs.minutes"}}
+        {{/if}}
+      </b>
+    </div>
+  </:secondary-footer>  
 </AppUi::Table>
