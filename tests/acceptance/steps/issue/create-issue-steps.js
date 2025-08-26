@@ -96,7 +96,7 @@ export const then = function () {
         },
         {
             "Issue subject is $content": (assert) => async function (content) {
-                let el = document.querySelector('div[data-field="issue.subject"] span.issueSubject');
+                let el = document.querySelector('div[data-field="issue.subject"] span.issue-subject');
                 assert.equal(content, el.innerText, 'subject matched');
             }
         },

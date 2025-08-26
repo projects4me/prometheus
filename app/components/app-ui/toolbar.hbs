@@ -1,0 +1,34 @@
+{{!-- Toolbar Component with Caret Down Dropdown --}}
+<div class="toolbar-container" {{click-outside this.closeDropdown disabled=(not this.isDropdownOpen)}} ...attributes>
+  <div class="toolbar-actions">
+    {{!-- Primary actions (always visible) --}}
+    {{yield to="primary"}}
+    
+    {{!-- Caret down button for additional actions --}}
+    {{#if this.showCaret}}
+      <div class="toolbar-caret-container">
+        <AppUi::Button
+          type="button"
+          class="btn btn-box-tool toolbar-caret-btn btn-no-outline"
+          @onClick={{this.toggleDropdown}}
+          aria-haspopup="true"
+          aria-expanded={{if this.isDropdownOpen "true" "false"}}
+          data-toggle="tooltip"
+          title="More actions"
+        >
+          <i class="fa fa-caret-down"></i>
+        </AppUi::Button>
+        
+        {{!-- Dropdown content --}}
+        <div class="toolbar-dropdown {{if this.isDropdownOpen 'show'}}">
+          {{yield to="dropdown"}}
+        </div>
+      </div>
+    {{/if}}
+    
+    {{!-- Fallback for backward compatibility --}}
+    {{#unless this.showCaret}}
+      {{yield}}
+    {{/unless}}
+  </div>
+</div>

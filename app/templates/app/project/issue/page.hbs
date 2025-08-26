@@ -6,9 +6,9 @@
       {{!-- This are the issue details --}}
       <AccessControl @aclContext="App.Project.Issue.Read">
         <div class="box box-primary issue-details" data-field="issue.subject">
-          <div class="box-header with-border">
-            <h2 class="box-title">{{this.issue.issuetype.name}} - #{{this.issue.issueNumber}} | <span class="issueSubject">{{this.issue.subject}}</span></h2>
-            <div class="box-tools pull-right">
+          <div class="box-header with-border box-header-no-content flex-row flex-jc-sb flex-ac-c">
+            <h2 class="box-title issue-title">{{this.issue.issuetype.name}} - #{{this.issue.issueNumber}} | 
+              <span class="issue-subject">{{this.issue.subject}}</span>
 
               {{!-- Issue status dropdown --}}
               <span class="issue-status">
@@ -29,14 +29,41 @@
                     {{/each}}
                   </ul>
                 </div>
-              </span>
-
-              {{!-- Edit issue button --}}
-              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="" @onClick={{fn this.editIssue this.issue.issueNumber}} @aclContext="App.Project.Issue.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
-              {{#unless this.issue.isPlanned}}
-                <AppUi::Button data-btn="ai-plan" type="button" class="btn btn-box-tool btn-primary" data-toggle="tooltip" title="" @onClick={{this.showIssuePlanDialog}}><i class="fa fa-magic"></i> {{t "views.app.issue.planWithAi.title"}}</AppUi::Button>
-              {{/unless}}
-            </div>
+              </span>              
+            </h2>
+            {{!-- Issue Actions Toolbar --}}
+            <AppUi::Toolbar>
+              <:primary>
+                {{!-- AI Plan button --}}
+                {{#unless this.issue.isPlanned}}
+                  <AppUi::Button 
+                    data-btn="ai-plan" 
+                    type="button" 
+                    class="btn btn-box-tool btn-no-outline" 
+                    data-toggle="tooltip" 
+                    title="{{t 'views.app.issue.planWithAi.title'}}" 
+                    @onClick={{this.showIssuePlanDialog}}
+                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="78" height="76" viewBox="0 0 78 76" fill="none">
+                  <path data-ai-btn fill-rule="evenodd" clip-rule="evenodd" d="M9.73381 0.86665C6.41996 1.92159 1.91324 6.6113 0.875631 10.0853C-0.241692 13.8247 -0.311698 53.8126 0.792455 57.8307C1.76006 61.3525 6.39917 65.9015 10.1781 67.0334C11.9879 67.5761 17.8774 67.8811 26.5311 67.8811C42.5416 67.8811 42.9367 67.7237 39.4295 62.7471L37.1852 59.5635H25.1434C13.0061 59.5635 11.0563 59.2315 9.22921 56.8513C8.08901 55.3666 7.98089 13.9792 9.10999 11.4999C9.53349 10.5711 10.6397 9.4649 11.5685 9.0414C13.9716 7.94695 54.3227 7.98022 56.3855 9.07814C59.3777 10.6723 59.5871 11.5928 59.6099 23.263C59.6259 31.3393 59.8726 34.6393 60.4985 35.1557C60.9754 35.5487 62.7685 35.9771 64.484 36.1067L67.6031 36.3437L67.7937 24.6181C67.9448 15.3302 67.7535 12.1979 66.8746 9.55155C65.5785 5.64993 61.7302 1.9812 57.6511 0.759215C54.0677 -0.31444 13.1544 -0.222947 9.73381 0.86665ZM23.2332 17.9918C22.4714 19.2241 13.8856 46.2042 13.8856 47.3645C13.8856 48.1609 14.542 48.4735 16.2111 48.4735C18.2406 48.4735 18.619 48.1865 19.1811 46.2208L19.8258 43.9681L26.1055 43.7706L32.3852 43.5724L33.0347 45.85C33.5455 47.6424 34.1028 48.1754 35.6526 48.3542C36.7353 48.4797 37.8928 48.3099 38.2255 47.9772C38.5693 47.6334 36.727 40.8858 33.9538 32.3277L29.0776 17.2827H26.3744C24.8877 17.2827 23.4737 17.6015 23.2332 17.9918ZM45.4043 18.1207C45.2081 18.6322 45.1319 25.5933 45.2351 33.5892L45.423 48.1269L47.6888 48.3452L49.9553 48.5636L49.7682 33.0964L49.5817 17.6293L47.6715 17.4095C46.541 17.2792 45.6157 17.5697 45.4043 18.1207ZM28.1398 30.6254C29.1795 33.7708 30.1742 36.7339 30.3502 37.2101C30.5845 37.8464 29.4921 38.0765 26.2455 38.0765H21.822L23.9055 31.4918C25.0512 27.8702 26.0473 24.9071 26.1187 24.9071C26.1901 24.9071 27.0994 27.48 28.1398 30.6254ZM59.0818 47.327C57.1847 52.617 55.0789 54.7567 49.6317 56.9296C47.3721 57.8314 45.4147 58.896 45.2809 59.296C45.1478 59.6959 47.1946 60.8687 49.8292 61.9021C55.4706 64.116 56.5664 65.1869 58.9632 70.8338C59.9537 73.1655 61.1008 75.1866 61.5139 75.3239C61.9271 75.4618 62.9979 73.6409 63.8942 71.2781C65.9222 65.932 67.7771 64.0862 73.4947 61.7261C75.9726 60.703 78 59.6176 78 59.314C78 59.0104 75.8208 57.8321 73.1578 56.696C70.4948 55.56 67.8131 54.1758 67.1983 53.6192C66.5835 53.0634 65.2042 50.4302 64.1326 47.7686C63.061 45.1062 61.8411 42.9284 61.4218 42.9284C61.0024 42.9284 59.9496 44.908 59.0818 47.327Z" fill="black"/>
+                  </svg>
+                  </AppUi::Button>
+                {{/unless}}
+                
+                {{!-- Edit issue button --}}
+                  <AppUi::Button 
+                    data-btn="edit" 
+                    type="button" 
+                    class="btn btn-box-tool btn-no-outline" 
+                    data-toggle="tooltip" 
+                    title="{{t 'global.form.edit'}}" 
+                    @onClick={{fn this.editIssue this.issue.issueNumber}} 
+                    @aclContext="App.Project.Issue.Edit"
+                  >
+                    <i class="fa fa-pencil"></i>
+                  </AppUi::Button>
+              </:primary>
+            </AppUi::Toolbar>
           </div>
 
           <div class="box-body">
