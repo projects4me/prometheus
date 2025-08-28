@@ -3,6 +3,12 @@
     {{yield}}
   </div>
 
+  {{#if (has-block "secondary-footer")}}
+    <div class="pagination-secondary-footer" data-pagination-secondary-footer>
+      {{yield to="secondary-footer"}}
+    </div>
+  {{/if}}
+
   <div class="pagination-footer" data-pagination-footer>
     <div class="pagination-controls">
       {{! Previous Page Button }}

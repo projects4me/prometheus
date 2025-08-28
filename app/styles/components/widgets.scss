@@ -27,10 +27,15 @@
   .weekly-activities {
     .time-label {
       span {
-        width: 100%;
-        background-color: white !important;
-        border: 1px dashed $primaryColor;
+        a {
+          color: white;
+        }
       }
+    }
+
+    .timeline-item {
+      box-shadow: rgba(14, 30, 37, 0.12) 0px 0.2rem 0.4rem 0px, rgba(14, 30, 37, 0.32) 0px 0.2rem 1.6rem 0px;
+      background: #f7f7f7;
     }
   }
 
