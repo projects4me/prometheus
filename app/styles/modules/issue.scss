@@ -62,6 +62,10 @@
       height: auto;
     }
   }
+
+  .issue-title {
+    width: 90%;
+  }
 }
 
 .time-log {
@@ -251,11 +255,17 @@
   }
 }
 
-[data-btn="ai-plan"] {
-  color: #fff;
+.issue-subject {
+  margin-right: 1rem;
 }
 
 // Issue Planning Modal Styles
+[data-btn="ai-plan"] {
+  i {
+    color: $warningColor;
+  }
+}
+
 .issue-plan-task-list {
   margin-top: 1.5rem;
 }
