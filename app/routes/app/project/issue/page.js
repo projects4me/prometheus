@@ -99,7 +99,7 @@ export default App.extend({
             query: `((Issue.issueNumber : ${params.issue_number}) AND (Issue.projectId : ${projectId}))`,
             sort: 'Issue.issueNumber,comments.dateCreated',
             order: 'ASC',
-            rels: 'comments,activities,parentissue,assignedTo,ownedBy,modifiedBy,reportedBy,issuetype,files,spent,estimated,conversationroom,issuemilestone,childissues',
+            rels: 'comments,activities,parentissue,assignedTo,ownedBy,modifiedBy,reportedBy,issuetype,files,spent,estimated,conversationroom,issuemilestone,childissues,watchers',
             limit: -1,
         };
 

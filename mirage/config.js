@@ -29,6 +29,7 @@ import * as Wiki from './route-handlers/wiki';
 import * as Permission from './route-handlers/permission';
 import * as Systemsetting from './route-handlers/systemsetting';
 import * as Issueplanning from './route-handlers/issueplanning';
+import * as Issuewatcher from './route-handlers/issuewatcher';
 
 export function makeServer(config) {
     let finalConfig = {
@@ -74,4 +75,5 @@ function routes() {
     Permission.register(this, ctx);
     Systemsetting.register(this, ctx);
     Issueplanning.register(this, ctx);
+    Issuewatcher.register(this, ctx);
 }

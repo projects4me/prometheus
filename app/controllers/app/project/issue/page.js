@@ -891,6 +891,49 @@ export default class AppProjectIssuePageController extends PrometheusController.
     }
 
     /**
+     * This action toggles the watching status of the current issue.
+     * If the issue is not being watched, it enables watching and shows a success message.
+     * If the issue is being watched, it disables watching and shows a success message.
+     *
+     * @method toggleWatcher
+     * @public
+     */
+    @action toggleWatcher() {
+        Logger.debug('AppProjectIssuePageController::toggleWatcher');
+        let _self = this;
+        
+        let watcher = this.issue.watchers.find(watcher => watcher.userId === this.currentUser.user.id);
+        if(watcher) {
+            watcher.isWatching = !watcher.isWatching;
+        } else {
+            watcher = this.store.createRecord('issuewatcher', {
+                issueId: this.issue.id,
+                userId: this.currentUser.user.id,
+                isWatching: true
+            });
+
+            this.issue.watchers.pushObject(watcher);
+        }
+        watcher.save().then(() => {
+            let messageKey = watcher.isWatching ? 'views.app.issue.watcher.enabled' : 'views.app.issue.watcher.disabled';
+            new Messenger().post({
+                message: _self.intl.t(messageKey),
+                type: 'success',
+                showCloseButton: true
+            });
+        }).catch(() => {
+            watcher.isWatching = !watcher.isWatching;
+            new Messenger().post({
+                message: _self.intl.t('global.oops'),
+                type: 'error',
+                showCloseButton: true
+            });
+        });
+        
+        Logger.debug('-AppProjectIssuePageController::toggleWatcher');
+    }
+
+    /**
      * This method sets the `issuePlanDialog` flag to false, clears any loaded plan data
      * and errors, and programmatically hides any open modal dialogs using jQuery.
      *
@@ -967,5 +1010,10 @@ export default class AppProjectIssuePageController extends PrometheusController.
             console.error('Project not found');
         }
         return project;
+    }
+
+    get isWatching() {
+        debugger;
+        return this.issue.watchers.find(watcher => watcher.userId === this.currentUser.user.id)?.isWatching || false;
     }
 }

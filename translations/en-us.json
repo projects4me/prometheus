@@ -932,6 +932,13 @@
           "retryingTask": "Retrying creation of task <strong>{taskId}</strong> | <strong>{taskSubject}</strong> ..",
           "taskCopiedToClipboard": "Task copied to clipboard!",
           "taskCopyFailed": "Failed to copy task to clipboard!"
+        },
+        "watcher": {
+          "title": "Watch Issue",
+          "watching": "Stop Watching Issue",
+          "notWatching": "Watch Issue",
+          "enabled": "Issue watching enabled",
+          "disabled": "Issue watching disabled"
         }
       },
       "tag": {

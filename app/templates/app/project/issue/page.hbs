@@ -62,6 +62,18 @@
                   >
                     <i class="fa fa-pencil"></i>
                   </AppUi::Button>
+
+                {{!-- Watcher Issue button --}}
+                <AppUi::Button 
+                  data-btn="watcher" 
+                  type="button" 
+                  class="btn btn-box-tool btn-no-outline" 
+                  data-toggle="tooltip" 
+                  title="{{t (if this.isWatching 'views.app.issue.watcher.watching' 'views.app.issue.watcher.notWatching')}}" 
+                  @onClick={{this.toggleWatcher}}
+                >
+                  <i class="fa {{if this.isWatching 'fa-eye-slash' 'fa-eye'}}"></i>
+                </AppUi::Button>
               </:primary>
             </AppUi::Toolbar>
           </div>
