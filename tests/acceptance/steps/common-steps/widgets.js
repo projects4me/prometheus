@@ -35,9 +35,8 @@ export const selectors = {
 		selector: '[data-weekly-timelogs]',
 		handler: (assert, ctx, expectedCount, modelType, widget) => {
 			const rows = findAll(`${selectors[widget].selector} tbody tr`);
-			//minus 1 for the footer row
 			assert.equal(
-				rows.length - 1,
+				rows.length,
 				parseInt(expectedCount),
 				`${expectedCount} timelogs should be present in weekly timelogs widget`
 			);

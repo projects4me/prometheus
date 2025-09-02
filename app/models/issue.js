@@ -398,14 +398,15 @@ export default Model.extend({
     comments: hasMany("comment"),
 
     /**
-     * The child issues of this issue
+     * The activities of the issue
      *
-     * @property childissues
-     * @type IssueModel
+     * @property activities
+     * @type ActivityModel
      * @for Issue
      * @private
      */
     activities: hasMany("activity"),
+    
 
     /**
      * The files uploaded against the issue
@@ -416,6 +417,16 @@ export default Model.extend({
      * @private
      */
     files: hasMany("upload"),
+
+    /**
+     * The watchers of the issue
+     *
+     * @property watchers
+     * @type IssueWatcherModel
+     * @for Issue
+     * @private
+     */
+    watchers: hasMany("issuewatcher"),
 
     /**
      * The constructor for the issue model. In this we're setting the default status of the issue

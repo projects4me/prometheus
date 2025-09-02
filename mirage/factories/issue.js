@@ -65,5 +65,8 @@ export default Factory.extend({
     },
     isPlanned() {
         return '0';
+    },
+    watched() {
+        return '0';
     }
 });
