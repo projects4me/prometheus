@@ -150,6 +150,14 @@ export default class AppProjectIssuePageController extends PrometheusController.
      */
     @tracked issuePlanLoading = false;
 
+    /**
+     * Boolean flag indicating whether the add watcher dialog is open.
+     *
+     * @property addWatcherDialog
+     * @type {Boolean}
+     * @public
+     */
+    @tracked addWatcherDialog = false;
 
     /**
      * This is a computed property in which gets the list of users
@@ -902,6 +910,15 @@ export default class AppProjectIssuePageController extends PrometheusController.
         Logger.debug('AppProjectIssuePageController::toggleWatcher');
         let _self = this;
         
+        if(this.isCoreMember) {
+            new Messenger().post({
+                message: this.intl.t('views.app.issue.watcher.cannotAddCoreMember'),
+                type: 'error',
+                showCloseButton: true
+            });
+            return;
+        }        
+
         let watcher = this.issue.watchers.find(watcher => watcher.userId === this.currentUser.user.id);
         if(watcher) {
             watcher.isWatching = !watcher.isWatching;
@@ -931,6 +948,58 @@ export default class AppProjectIssuePageController extends PrometheusController.
         });
         
         Logger.debug('-AppProjectIssuePageController::toggleWatcher');
+    }
+
+    /**
+     * This action toggles the add watcher dialog visibility.
+     *
+     * @method toggleAddWatcherDialog
+     * @public
+     */
+    @action removeAddWatcherDialog() {
+        if (this.isDestroyed || this.isDestroying) return;
+        this.set('addWatcherDialog', false);
+        $('.modal').modal('hide');
+    }
+
+    /**
+     * This action shows the add watcher dialog.
+     *
+     * @method showAddWatcherDialog
+     * @public
+     */
+    @action showAddWatcherDialog() {
+        this.addWatcherDialog = true;
+    }
+
+    /**
+     * This action adds a project member as a watcher to the current issue.
+     * For now, this method is a placeholder for the next iteration.
+     *
+     * @method addWatcher
+     * @param {Object} member The project member to add as a watcher
+     * @public
+     */
+    @action
+    async addWatcher(member) {
+        Logger.debug('AppProjectIssuePageController::addWatcher - Member:', member.name);
+        try {
+            let watcher = this.store.createRecord('issuewatcher', {
+                issueId: this.issue.id,
+                userId: member.id,
+                isWatching: true
+            });
+            await watcher.save();
+            this.issue.watchers.pushObject(watcher);
+            new Messenger().post({
+                message: htmlSafe(this.intl.t('views.app.issue.watcher.added', { name: member.name })),
+                type: 'success',
+                showCloseButton: true
+            });
+        } catch (e) {
+            Logger.error('AppProjectIssuePageController::addWatcher - Error:', e);
+        }
+        Logger.debug('-AppProjectIssuePageController::addWatcher');
     }
 
     /**
@@ -1013,7 +1082,57 @@ export default class AppProjectIssuePageController extends PrometheusController.
     }
 
     get isWatching() {
-        debugger;
         return this.issue.watchers.find(watcher => watcher.userId === this.currentUser.user.id)?.isWatching || false;
+    }
+
+    /**
+     * Computed property to determine if the current user is a core member of the issue.
+     * Core members are assignee, owner, modifiedBy, or reportedBy.
+     *
+     * @property isCoreMember
+     * @type {Boolean}
+     * @public
+     */
+    get isCoreMember() {
+        const currentUserId = this.currentUser.user.id;
+        return (
+            this.issue.assignee === currentUserId ||
+            this.issue.owner=== currentUserId ||
+            this.issue.modifiedUser === currentUserId ||
+            this.issue.reportedUser === currentUserId
+        );
+    }
+
+    /**
+     * Computed property to get available project members who can be added as watchers.
+     * Excludes current user, core issue members, and users who are actively watching the issue (isWatching: true).
+     *
+     * @property availableProjectMembers
+     * @type {Array}
+     * @public
+     */
+    get availableProjectMembers() {
+        if (!this.projectController.members) {
+            return [];
+        }
+
+        const currentUserId = this.currentUser.user.id;
+        const activeWatcherIds = this.issue.watchers
+            .filter(watcher => watcher.isWatching === true)
+            .map(watcher => watcher.userId);
+        
+        // Core issue members who shouldn't be added as watchers
+        const coreMemberIds = [
+            this.issue.assignee,
+            this.issue.owner,
+            this.issue.modifiedUser,
+            this.issue.reportedUser
+        ].filter(id => id); // Filter out undefined/null values
+
+        return this.projectController.members.filter(member => 
+            member.get('id') !== currentUserId && 
+            !activeWatcherIds.includes(member.get('id')) &&
+            !coreMemberIds.includes(member.get('id'))
+        );
     }
 }

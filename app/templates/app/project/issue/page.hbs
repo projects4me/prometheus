@@ -64,19 +64,41 @@
                   </AppUi::Button>
 
                 {{!-- Watcher Issue button --}}
-                <AppUi::Button 
-                  data-btn="watcher" 
-                  type="button" 
-                  class="btn btn-box-tool btn-no-outline" 
-                  data-toggle="tooltip" 
-                  title="{{t (if this.isWatching 'views.app.issue.watcher.watching' 'views.app.issue.watcher.notWatching')}}" 
-                  @onClick={{this.toggleWatcher}}
-                >
-                  <i class="fa {{if this.isWatching 'fa-eye-slash' 'fa-eye'}}"></i>
-                </AppUi::Button>
+                <div class="watcher-container">
+                  <AppUi::Button 
+                    data-btn="watcher" 
+                    type="button" 
+                    class="btn btn-box-tool btn-no-outline" 
+                    data-toggle="tooltip" 
+                    title="{{t (if this.isWatching 'views.app.issue.watcher.watching' 'views.app.issue.watcher.notWatching')}}" 
+                    @onClick={{this.toggleWatcher}}
+                    disabled={{this.isCoreMember}}
+                  >
+                    {{#if this.isCoreMember}}
+                      <i class="fa fa-eye-slash"></i>
+                    {{else}}
+                      <i class="fa {{if this.isWatching 'fa-eye-slash' 'fa-eye'}}"></i>
+                    {{/if}}
+                  </AppUi::Button>
+                  
+                  {{#if this.isCoreMember}}
+                    <AppUi::Button 
+                      data-btn="add-watcher" 
+                      type="button" 
+                      class="btn btn-box-tool btn-no-outline btn-sm" 
+                      data-toggle="tooltip" 
+                      title="{{t 'views.app.issue.watcher.addWatchers'}}" 
+                      @onClick={{this.showAddWatcherDialog}}
+                    >
+                      <i class="fa fa-plus"></i>
+                    </AppUi::Button>
+                  {{/if}}
+                </div>
               </:primary>
             </AppUi::Toolbar>
           </div>
+
+
 
           <div class="box-body">
 
@@ -671,3 +693,30 @@
   @issueTypes={{this.issueTypes}}
   @scrollAndHighlight={{this.scrollAndHighlight}}
 />
+
+{{!-- Add Watchers Modal --}}
+{{#if this.addWatcherDialog}}
+  {{#bootstrap-modal
+      title="views.app.issue.watcher.addWatchers"
+      closeLabel="global.form.close"
+      close=(action "removeAddWatcherDialog")}}
+    <div class="project-members-list">
+      {{#if this.availableProjectMembers.length}}
+        {{#each this.availableProjectMembers as |member|}}
+            <div class="member-item" data-member-id={{member.id}}>
+              <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}" data-toggle="tooltip" title="{{member.name}}">
+              <button type="button" class="btn btn-xs btn-success" {{on "click" (fn this.addWatcher member)}} data-toggle="tooltip" title="{{t 'views.app.issue.watcher.addWatcher'}}">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+        {{/each}}
+      {{else}}
+        <Exceptions::NothingFound
+          @infoIcon={{false}}
+          @fontStyle='italic'
+          @description={{t "views.app.issue.watcher.noAvailableMembers"}}
+        />
+      {{/if}}
+    </div>
+  {{/bootstrap-modal}}
+{{/if}}
