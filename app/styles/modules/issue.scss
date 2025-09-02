@@ -277,7 +277,6 @@
   margin-bottom: 1.5rem;
   background: #fafbfc;
 
-
   .task-total-estimated {
     text-align: end;
     font-style: italic;
@@ -424,4 +423,44 @@
 
 .issue-plan-issue-child {
   margin-left: 2rem;
+}
+
+// Watcher functionality styles
+.watcher-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  position: relative;
+
+  .btn-sm {
+    position: absolute;
+    top: -0.7rem;
+    right: -0.5rem;
+
+    i {
+      font-size: 1rem !important;
+    }
+  }
+}
+
+.project-members-list {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  img {
+    width: 6rem !important;
+    height: 6rem !important;
+  }
+
+  .btn-xs {
+    padding: 0.125rem 0.375rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    position: relative;
+    top: 0;
+    right: 8px;
+    border-radius: 50%;
+  }
 }

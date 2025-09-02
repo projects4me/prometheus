@@ -13,4 +13,13 @@ import Component from '@glimmer/component';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class ExceptionsNothingFoundComponent extends Component {
+    /**
+     * Whether the info icon is required.
+     * @property infoIconRequired
+     * @type {boolean}
+     * @public
+     */
+    get infoIconRequired() {
+        return this.args.infoIcon === true || this.args.infoIcon === undefined;
+    }
 }

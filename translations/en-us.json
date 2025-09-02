@@ -938,7 +938,12 @@
           "watching": "Stop Watching Issue",
           "notWatching": "Watch Issue",
           "enabled": "Issue watching enabled",
-          "disabled": "Issue watching disabled"
+          "disabled": "Issue watching disabled",
+          "addWatchers": "Add Watchers",
+          "addWatcher": "Add Watcher",
+          "added": "<strong>{name}</strong> added as Watcher",
+          "noAvailableMembers": "All members are actively watching this issue",
+          "cannotAddCoreMember": "Core members of issue are already added watchers by default"
         }
       },
       "tag": {
