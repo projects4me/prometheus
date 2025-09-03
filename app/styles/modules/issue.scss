@@ -434,8 +434,11 @@
 
   .btn-sm {
     position: absolute;
-    top: -0.7rem;
-    right: -0.5rem;
+    top: -.3rem;
+    right: 0.6rem;
+    height: 0;
+    width: 0;
+    padding: 0;
 
     i {
       font-size: 1rem !important;
