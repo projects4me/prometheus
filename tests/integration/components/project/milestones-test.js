@@ -55,7 +55,7 @@ module('Integration | Component | project/milestones', function (hooks) {
             await render(hbs`
                 <Project::Milestones
                     @milestone={{this.milestone}}
-                    @editMilestone{{this.editMilestone}}
+                    @editMilestone={{this.editMilestone}}
                 />
             `);
             let milestoneEl = document.querySelector(`[data-milestone='${milestone.name} | ${milestone.startDate}']`);
