@@ -462,10 +462,12 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
      * @method editMilestone
      * @public
      */
-    @action editMilestone(milestone) {
+    @action editMilestone(milestone, event) {
         let _self = this;
         _self.set('newMilestone', milestone);
         _self.set('milestoneDialog', true);
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     /**
