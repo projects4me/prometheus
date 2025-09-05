@@ -984,6 +984,18 @@ export default class AppProjectIssuePageController extends PrometheusController.
     async addWatcher(member) {
         Logger.debug('AppProjectIssuePageController::addWatcher - Member:', member.name);
         try {
+            let existingWatcher = this.issue.watchers.find(watcher => watcher.userId === member.id);
+            if(existingWatcher) {
+                existingWatcher.isWatching = true;
+                await existingWatcher.save();
+                new Messenger().post({
+                    message: htmlSafe(this.intl.t('views.app.issue.watcher.added', { name: member.name })),
+                    type: 'success',
+                    showCloseButton: true
+                });
+                return;
+            }
+
             let watcher = this.store.createRecord('issuewatcher', {
                 issueId: this.issue.id,
                 userId: member.id,
