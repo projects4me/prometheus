@@ -1,15 +1,27 @@
 <div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue currentFilteredMilestone=this.currentFilteredMilestone}}>
-
-  {{#each @milestones as |milestone|}}
-    <AppUi::TaskBoard::Milestones
-      @milestone={{milestone}}
-      @group={{@group}}
-      @statuses={{@statuses}}
-      @statusClass={{@statusClass}}
-      @group={{@group}}
-      @reRenderView={{fn this.reRenderView}}
-      @openIssue={{@openIssue}}
-    />
-  {{/each}}
-
+  <div class="nav-tabs-custom">
+    <ul class="nav nav-tabs milestone-tabs">
+      {{#each @milestones as |milestone index|}}
+        <li class="milestone-tab {{if (eq index 0) "active" ""}}" data-milestone-tab data-milestone-id={{if milestone.id milestone.id "backlog"}}>
+          <a href="#tab_{{milestone.id}}" data-toggle="tab" aria-expanded={{if (eq index 0) "true" "false"}}>
+            {{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+    <div class="tab-content">
+      {{#each @milestones as |milestone index|}}
+        <div class="tab-pane {{if (eq index 0) "active" ""}}" id="tab_{{milestone.id}}">
+          <AppUi::TaskBoard::Milestones
+            @milestone={{milestone}}
+            @group={{@group}}
+            @statuses={{@statuses}}
+            @statusClass={{@statusClass}}
+            @reRenderView={{this.reRenderView}}
+            @openIssue={{@openIssue}}
+          />
+        </div>
+      {{/each}}
+    </div>
+  </div>
 </div>
