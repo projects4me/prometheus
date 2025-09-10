@@ -6,7 +6,7 @@
       {{!-- This are the issue details --}}
       <AccessControl @aclContext="App.Project.Issue.Read">
         <div class="box box-primary issue-details" data-field="issue.subject">
-          <div class="box-header with-border box-header-no-content flex-row flex-jc-sb flex-ac-c">
+          <div class="box-header with-border box-header-no-content flex-row flex-jc-sb flex-ai-c">
             <h2 class="box-title issue-title">{{this.issue.issuetype.name}} - #{{this.issue.issueNumber}} | 
               <span class="issue-subject">{{this.issue.subject}}</span>
 
@@ -703,11 +703,12 @@
     <div class="project-members-list">
       {{#if this.availableProjectMembers.length}}
         {{#each this.availableProjectMembers as |member|}}
-            <div class="member-item" data-member-id={{member.id}}>
-              <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}" data-toggle="tooltip" title="{{member.name}}">
+            <div class="member-item flex-column flex-ai-c" data-member-id={{member.id}}>
+              <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
               <button type="button" class="btn btn-xs btn-success" {{on "click" (fn this.addWatcher member)}} data-toggle="tooltip" title="{{t 'views.app.issue.watcher.addWatcher'}}">
                 <i class="fa fa-plus"></i>
               </button>
+              <p data-toggle="tooltip" title="{{member.name}}">{{member.name}}</p>
             </div>
         {{/each}}
       {{else}}

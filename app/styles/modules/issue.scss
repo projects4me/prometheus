@@ -452,6 +452,25 @@
   gap: 0.5rem;
   flex-wrap: wrap;
 
+  .member-item {
+    max-width: 10rem;
+    width: 10rem;
+
+    button {
+      position: absolute;
+      right: 0.4rem;
+      top: 0.2rem;
+    }
+
+    p {
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
+  }
+
   img {
     width: 6rem !important;
     height: 6rem !important;
