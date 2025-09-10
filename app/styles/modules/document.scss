@@ -523,3 +523,13 @@ span[id="#"]{
 .flex-jc-sb {
   justify-content: space-between;
 }
+
+
+// #navtabs customization
+.nav-tabs-custom {
+  .nav-tabs {
+    li.active {
+      border-top-color: $primaryColor;
+    }
+  }
+}

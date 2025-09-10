@@ -30,8 +30,9 @@ export default App.extend({
 
         //Fetch milestones of current project
         let _milestoneOptions = {
-            query: `(Milestone.projectId : ${projectId} )`,
-            order: 'Milestone.endDate',
+            query: `((Milestone.projectId : ${projectId}) AND ((Milestone.status : in_progress) OR (Milestone.status : planned)))`,
+            sort: 'Milestone.dateModified',
+            order: 'DESC',
             limit: -1
         };
         let milestones = await _self.store.query('milestone', _milestoneOptions).catch((error) => {

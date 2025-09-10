@@ -14,6 +14,7 @@ module('Integration | Component | task-board', function (hooks) {
     test('it renders', async function (assert) {
         let milestones = [
             {
+                id: "1",
                 status: "in_progress",
                 milestoneType: "version",
                 name: "v0.1",
@@ -28,6 +29,7 @@ module('Integration | Component | task-board', function (hooks) {
                 ]
             },
             {
+                id: "2",
                 status: "planned",
                 milestoneType: "version",
                 name: "v0.2",
@@ -107,30 +109,70 @@ module('Integration | Component | task-board', function (hooks) {
                 @openIssue={{this.openIssue}}
             />
         `);
+        // Check milestone tabs are rendered
+        let milestoneTabs = document.querySelectorAll('.milestone-tab');
+        assert.equal(milestoneTabs.length, 3, 'Three milestone tabs should be rendered');
+        
+        // Check tab content
+        let tabContent = document.querySelectorAll('.tab-pane');
+        assert.equal(tabContent.length, 3, 'Three tab panes should be rendered');
 
-        // Board sections checking
-        let boardSections = document.querySelectorAll('div.milestone.box');
-        assert.equal(boardSections[0].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.1', "Milestone v0.1");
-        assert.equal(boardSections[1].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.2', "Milestone v0.2");
+        // Check first tab is active by default
+        assert.ok(milestoneTabs[0].classList.contains('active'), 'First milestone tab should be active');
+        assert.ok(tabContent[0].classList.contains('active'), 'First tab pane should be active');
 
-        //Sortable checking
-        let lane = document.querySelector('div.lane.box-body');
-        assert.ok(_.some(_.keys(lane), _.method('includes', 'Sortable')), 'Sortable attached');
+        // Check milestone tab names
+        let tab1Name = milestoneTabs[0].querySelector('a').innerText.trim();
+        let tab2Name = milestoneTabs[1].querySelector('a').innerText.trim();
+        let tab3Name = milestoneTabs[2].querySelector('a').innerText.trim();
 
-        //issues checking on behalf of there status
-        //milestone v0.1
-        let item = boardSections[0].querySelector('div.lane.box-body').children[0];
-        assert.equal(item.querySelector('h4 > a').innerText, `#${milestones[0].issues[0].issueNumber} -`, `${milestones[0].name} issue number`); //issue number --> 123
-        assert.equal(item.getAttribute('data-field-issue-status'), `${milestones[0].issues[0].status}`, `${milestones[0].name} issue status`); //status --> new
+        assert.ok(tab1Name.includes('Version v0.1'), 'First tab should contain v0.1');
+        assert.ok(tab2Name.includes('Version v0.2'), 'Second tab should contain v0.2');
+        assert.ok(tab3Name.includes('Backlog'), 'Third tab should contain Backlog');
 
-        //milestone v0.2
-        item = boardSections[1].querySelector('div.lane.box-body').children[0];
-        assert.equal(item.querySelector('h4 > a').innerText, `#${milestones[1].issues[0].issueNumber} -`, `${milestones[1].name} issue number`); //issue number --> 789
-        assert.equal(item.getAttribute('data-field-issue-status'), `${milestones[1].issues[0].status}`, `${milestones[1].name} issue status`); //status --> new
+        // Check milestone tab data attributes
+        assert.equal(milestoneTabs[0].getAttribute('data-milestone-id'), '1', 'First tab should have correct milestone ID');
+        assert.equal(milestoneTabs[1].getAttribute('data-milestone-id'), '2', 'Second tab should have correct milestone ID');
+        assert.equal(milestoneTabs[2].getAttribute('data-milestone-id'), 'backlog', 'Third tab should have backlog ID');
 
-        //backlog
-        item = boardSections[2].querySelector('div.lane.box-body').children[0];
-        assert.equal(item.querySelector('h4 > a').innerText, `#${backlogIssues[1].issueNumber} -`, 'backlog issue number'); //issue number --> 2221
-        assert.equal(item.getAttribute('data-field-issue-status'), `${backlogIssues[1].status}`, 'backlog issue status'); //status --> done
+        // Check that milestone boxes are rendered within tab content
+        let milestoneBoxes = document.querySelectorAll('div.milestone.box');
+        assert.equal(milestoneBoxes.length, 3, 'Three milestone boxes should be rendered');
+
+        // Check milestone box headers
+        assert.equal(milestoneBoxes[0].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.1', "Milestone v0.1 header");
+        assert.equal(milestoneBoxes[1].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.2', "Milestone v0.2 header");
+        assert.equal(milestoneBoxes[2].querySelector('div.box-header.with-border > strong').innerText, 'Backlog ', "Backlog header");
+
+        //Sortable checking - check that sortable is attached to lanes
+        let lanes = document.querySelectorAll('div.lane.box-body');
+        assert.ok(lanes.length > 0, 'Lanes should be present');
+        assert.ok(_.some(_.keys(lanes[0]), _.method('includes', 'Sortable')), 'Sortable should be attached to lanes');
+
+        // Check that milestone tabs have data-milestone-tab attribute
+        milestoneTabs.forEach((tab, index) => {
+            assert.ok(tab.hasAttribute('data-milestone-tab'), `Tab ${index + 1} should have data-milestone-tab attribute`);
+        });
+
+        // Check issues are rendered in the first active tab (v0.1)
+        let activeTabContent = document.querySelector('.tab-pane.active');
+        let activeMilestoneBox = activeTabContent.querySelector('div.milestone.box');
+        let activeLanes = activeMilestoneBox.querySelectorAll('div.lane.box-body');
+        
+        // Find the lane with issues (should be the first one with "new" status)
+        let issueLane = null;
+        activeLanes.forEach(lane => {
+            if (lane.getAttribute('data-field-status') === 'new' && lane.children.length > 0) {
+                issueLane = lane;
+            }
+        });
+        
+        if (issueLane) {
+            let item = issueLane.children[0];
+            assert.equal(item.querySelector('h4 > a').innerText, `#${milestones[0].issues[0].issueNumber} -`, `${milestones[0].name} issue number`); //issue number --> 123
+            assert.equal(item.getAttribute('data-field-issue-status'), `${milestones[0].issues[0].status}`, `${milestones[0].name} issue status`); //status --> new
+        } else {
+            assert.ok(false, 'Should find issues in the active tab');
+        }
     });
 });

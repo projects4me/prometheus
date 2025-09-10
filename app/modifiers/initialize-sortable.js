@@ -239,18 +239,16 @@ export default class InitializeSortable extends Modifier {
             }));
         });
 
-        let items = document.querySelectorAll('div.item');
         let milestoneEls = document.querySelectorAll('div.milestone.box-body');
-        _self.reRenderView(milestoneEls, items);
+        _self.reRenderView(milestoneEls);
     }
 
     //Called when the arguments provided to modifier are updated
     didUpdateArguments() {
         let _self = this;
-        let items = _self.currentFilteredMilestone.querySelectorAll('div.item');
         let milestoneEls = [];
         milestoneEls.pushObject(_self.currentFilteredMilestone);
-        _self.reRenderView(milestoneEls, items);
+        _self.reRenderView(milestoneEls);
     }
 
     /**
@@ -262,15 +260,18 @@ export default class InitializeSortable extends Modifier {
      * @param {HTMLCollection} items List of issue items
      * @private
      */
-    @action reRenderView(milestoneEls, items) {
+    @action reRenderView(milestoneEls) {
         let _self = this;
-        items.forEach((item) => {
-            _self._applySlimScroll(item);
-        });
-
+        let milestoneIds = [];
         milestoneEls.forEach((milestoneEl) => {
+            let milestoneId = milestoneEl.dataset.fieldMilestoneId || 'backlog';
+            milestoneIds.push(milestoneId);
+            document.querySelector(`[data-milestone-id="${milestoneId}"] a`).click();
             _self.setMilestoneBoxHeight(milestoneEl);
         });
+        
+        // set the first milestone tab as active
+        document.querySelector(`[data-milestone-id="${milestoneIds[0]}"] a`).click();
     }
 
     /**
@@ -365,12 +366,14 @@ export default class InitializeSortable extends Modifier {
         let parentHeaderHeight = parentElement.parentNode.querySelector('div.box-header').getBoundingClientRect().height;
         let lanes = [...parentElement.children];
         let heightArray = [];
+        let _self = this;
         lanes.forEach((lane) => {
             let laneBody = lane.querySelector('div.lane.box-body');
             let items = [...laneBody.children];
             let sum = 0;
             items.forEach((item) => {
                 let itemCSS = getComputedStyle(item);
+                _self._applySlimScroll(item);
                 sum += item.getBoundingClientRect().height + parseFloat(itemCSS.marginTop);
             })
             heightArray.push(sum);
@@ -391,7 +394,7 @@ export default class InitializeSortable extends Modifier {
             }
             laneBody.style.height = `${height}px`;
         });
-        (minHeightApplied) && (max = minHeight + 60);
+        (minHeightApplied) && (max = minHeight + 70);
         parentElement.style.height = `${max}px`;
 
     }

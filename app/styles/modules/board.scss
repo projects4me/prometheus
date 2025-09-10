@@ -14,7 +14,6 @@
       display: flex;
       overflow-x: auto;
       scrollbar-width: thin;
-      scrollbar-color: $primaryColor $backgroundColor;
     }
     .box-body {
       .lane {
@@ -170,6 +169,26 @@
       input {
         margin-right: 3rem;
         width: 30rem;
+      }
+    }
+  }
+
+  // Milestone tab drag and drop styles
+  .milestone-tabs {
+    .milestone-tab {
+      transition: all 0.3s ease;
+      
+      &.milestone-tab-droppable {
+        background-color: rgba(179, 36, 79, 0.1);
+        border: 2px dashed black;
+        border-radius: 4px;
+      }
+      
+      &.milestone-tab-hover {
+        background-color: rgba(179, 36, 79, 0.3);
+        border: 2px solid black;
+        border-radius: 4px;
+        transform: scale(1.05);
       }
     }
   }
