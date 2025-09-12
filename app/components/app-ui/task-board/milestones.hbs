@@ -39,10 +39,9 @@
                   
                     <h4>{{priority-icon priority=(readonly issue.priority)}} <LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}} {{action @openIssue issue}}>#{{issue.issueNumber}} - {{issue.subject}}</LinkTo></h4>
                     <p class="description">{{safe-html issue.description}}</p>
-                    <p>
-                      <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
-                      <span><img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
-                    </p>
+                    <div class="flex-row flex-jc-end">
+                      <div><img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></div>
+                    </div>
                     
                     {{#if issue.isSaving}}
                       <div class="item-overlay" {{lock-item}}>
