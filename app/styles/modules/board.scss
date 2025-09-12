@@ -29,119 +29,6 @@
             min-height: 45rem;
             padding: 0rem;
             border: 0.25rem solid $backgroundColor;
-
-            .item {
-              position: relative;
-              cursor: move;
-              margin: 0.3rem;
-              padding: 0.1rem 0.5rem 0.1rem 1rem;
-              border: 0.1rem solid #eee;
-              border-left: 0.5rem solid #eee;
-              background-color: $backgroundColor;
-              border-right: 0.1rem solid #ccc;
-              border-top: 0.1rem solid #ccc;
-              border-bottom: 0.1rem solid #ccc;
-              user-select: none;
-              width: 27rem;
-
-              .description {
-                word-wrap: break-word;
-                margin-bottom: 2rem;
-                height: 10rem;
-                overflow: auto;
-              }
-
-              p > img {
-                width: 10rem !important;
-                height: 10rem !important;
-              }
-
-              .img-circle {
-                width: 4rem;
-              }
-
-              .fa-ban {
-                color: #d33724;
-              }
-
-              .fa-angle-double-up {
-                color: #d33724;
-                font-weight: bold;
-              }
-
-              .fa-arrow-up {
-                color: #e98a7e;
-              }
-
-              .fa-dot-circle-o {
-                color: $primaryColor;
-              }
-
-              .fa-arrow-down {
-                color: #5ac594;
-              }
-
-              .fa-angle-double-down {
-                color: #00a65a;
-                font-weight: bold;
-              }
-
-              .item-overlay {
-                background-color: inherit;
-                position: absolute;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100%;
-                width: 100%;
-                top: 0%;
-                left: 0%;
-                bottom: 0%;
-                right: 0%;
-              }
-            }
-
-            .item-closed {
-              border-left-color: $darkColor;
-            }
-
-            .item-complete {
-              border-left-color: $successColor;
-            }
-
-            .item-deferred {
-              border-left-color: $infoColor;
-            }
-
-            .item-done {
-              border-left-color: $successColor;
-            }
-
-            .item-feedback {
-              border-left-color: $warningColor;
-            }
-
-            .item-in-progress {
-              border-left-color: $primaryColor;
-            }
-
-            .item-new {
-              border-left-color: $lightColor;
-            }
-
-            .item-pending {
-              border-left-color: $dangerColor;
-            }
-
-            .items-body {
-              height: 100%;
-            }
-
-            .curr-item {
-              border-top: 0.06rem dashed $primaryColor;
-              border-bottom: 0.06rem dashed $primaryColor;
-              border-right: 0.06rem dashed $primaryColor;
-            }
           }
 
           .box-body-border {
@@ -187,6 +74,130 @@
         border-radius: 4px;
         transform: scale(1.05);
       }
+      
+      // Active tab should not be droppable
+      &.active {
+        opacity: 0.7;
+        cursor: default;
+        
+        &.milestone-tab-droppable {
+          background-color: transparent;
+          border: none;
+        }
+      }
     }
   }
+
+  .item {
+    position: relative;
+    cursor: move;
+    margin: 0.3rem;
+    padding: 0.1rem 0.5rem 0.1rem 1rem;
+    border: 0.1rem solid #eee;
+    border-left: 0.5rem solid #eee;
+    background-color: $backgroundColor;
+    border-right: 0.1rem solid #ccc;
+    border-top: 0.1rem solid #ccc;
+    border-bottom: 0.1rem solid #ccc;
+    user-select: none;
+    width: 27rem;
+
+    .description {
+      word-wrap: break-word;
+      margin-bottom: 2rem;
+      height: 10rem;
+      overflow: auto;
+    }
+
+    p > img {
+      width: 10rem !important;
+      height: 10rem !important;
+    }
+
+    .img-circle {
+      width: 4rem;
+    }
+
+    .fa-ban {
+      color: #d33724;
+    }
+
+    .fa-angle-double-up {
+      color: #d33724;
+      font-weight: bold;
+    }
+
+    .fa-arrow-up {
+      color: #e98a7e;
+    }
+
+    .fa-dot-circle-o {
+      color: $primaryColor;
+    }
+
+    .fa-arrow-down {
+      color: #5ac594;
+    }
+
+    .fa-angle-double-down {
+      color: #00a65a;
+      font-weight: bold;
+    }
+
+    .item-overlay {
+      background-color: inherit;
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      top: 0%;
+      left: 0%;
+      bottom: 0%;
+      right: 0%;
+    }
+  }
+
+  .item-closed {
+    border-left-color: $darkColor;
+  }
+
+  .item-complete {
+    border-left-color: $successColor;
+  }
+
+  .item-deferred {
+    border-left-color: $infoColor;
+  }
+
+  .item-done {
+    border-left-color: $successColor;
+  }
+
+  .item-feedback {
+    border-left-color: $warningColor;
+  }
+
+  .item-in-progress {
+    border-left-color: $primaryColor;
+  }
+
+  .item-new {
+    border-left-color: $lightColor;
+  }
+
+  .item-pending {
+    border-left-color: $dangerColor;
+  }
+
+  .items-body {
+    height: 100%;
+  }
+
+  .curr-item {
+    border-top: 0.06rem dashed $primaryColor;
+    border-bottom: 0.06rem dashed $primaryColor;
+    border-right: 0.06rem dashed $primaryColor;
+  }  
 }

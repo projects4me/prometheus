@@ -239,6 +239,9 @@ export default class InitializeSortable extends Modifier {
             }));
         });
 
+        _self._setupMilestoneTabsAsSortable();
+        _self._setupTabSwitching();
+        
         let milestoneEls = document.querySelectorAll('div.milestone.box-body');
         _self.reRenderView(milestoneEls);
     }
@@ -246,6 +249,11 @@ export default class InitializeSortable extends Modifier {
     //Called when the arguments provided to modifier are updated
     didUpdateArguments() {
         let _self = this;
+        
+        _self._cleanupMilestoneTabSortables();
+        _self._setupMilestoneTabsAsSortable();
+        _self._setupTabSwitching();
+        
         let milestoneEls = [];
         milestoneEls.pushObject(_self.currentFilteredMilestone);
         _self.reRenderView(milestoneEls);
@@ -257,7 +265,6 @@ export default class InitializeSortable extends Modifier {
      * 
      * @method reRenderView
      * @param {HTMLCollection} milestoneEls List of milestone container elements
-     * @param {HTMLCollection} items List of issue items
      * @private
      */
     @action reRenderView(milestoneEls) {
@@ -270,7 +277,6 @@ export default class InitializeSortable extends Modifier {
             _self.setMilestoneBoxHeight(milestoneEl);
         });
         
-        // set the first milestone tab as active
         document.querySelector(`[data-milestone-id="${milestoneIds[0]}"] a`).click();
     }
 
@@ -313,7 +319,21 @@ export default class InitializeSortable extends Modifier {
      */
     _onEnd(evt) {
         let _self = this;
-        (evt.to !== evt.from) && (_self.updateIssue(evt.item, evt.to, evt.from, _self.reRenderView));
+        
+        if (evt.to !== evt.from) {
+            if (evt.to.hasAttribute('data-milestone-tab')) {
+                if (!evt.to.classList.contains('active')) {
+                    let prevMilestoneId = evt.from.getAttribute('data-field-milestone-id');
+                    let newMilestoneId = evt.to.getAttribute('data-milestone-id');
+                    if (prevMilestoneId !== newMilestoneId) {
+                        _self._handleMilestoneTabDrop(evt);
+                    }
+                }
+            } else {
+                _self.updateIssue(evt.item, evt.to, evt.from, _self.reRenderView);
+            }
+        }
+        
         _self.unSelectDropzones(evt);
         _self.oldLane = null;
     }
@@ -334,6 +354,13 @@ export default class InitializeSortable extends Modifier {
         droppableSections.forEach((node) => {
             (node.getAttribute('data-field-lane-group') === _self.groupName) && node.classList.add('box-body-border');
         });
+        
+        let milestoneTabs = document.querySelectorAll('[data-milestone-tab]');
+        milestoneTabs.forEach((tab) => {
+            if (!tab.classList.contains('active')) {
+                tab.classList.add('milestone-tab-droppable');
+            }
+        });
     }
 
     /**
@@ -350,6 +377,12 @@ export default class InitializeSortable extends Modifier {
         droppableSections.forEach((node) => {
             node.classList.remove('box-body-border');
             node.classList.remove('box-body-color');
+        });
+        
+        let milestoneTabs = document.querySelectorAll('[data-milestone-tab]');
+        milestoneTabs.forEach((tab) => {
+            tab.classList.remove('milestone-tab-droppable');
+            tab.classList.remove('milestone-tab-hover');
         });
     }
 
@@ -399,11 +432,152 @@ export default class InitializeSortable extends Modifier {
 
     }
 
+    /**
+     * This function handles the drop of an issue card on a milestone tab.
+     * 
+     * @method _handleMilestoneTabDrop
+     * @param {Object} evt
+     * @private
+     */
+    _handleMilestoneTabDrop(evt) {
+        let _self = this;
+        let milestoneId = evt.to.getAttribute('data-milestone-id');
+        
+        let targetMilestone = document.querySelector(`#tab_${milestoneId}`);
+        let laneStatus = evt.from.getAttribute('data-field-status');
+        let newMilestoneLane = null;
+        if (targetMilestone) {
+            let lanes = targetMilestone.querySelectorAll('.lane.box-body');
+            lanes.forEach((lane) => {
+                if (lane.getAttribute('data-field-status') === laneStatus && !newMilestoneLane) {
+                    newMilestoneLane = lane;
+                }
+            });
+        }
+        _self.updateIssue(evt.item, newMilestoneLane, evt.from, _self.reRenderView);
+    }
+
+    /**
+     * This function cleans up all existing milestone tab sortable instances.
+     * 
+     * @method _cleanupMilestoneTabSortables
+     * @private
+     */
+    _cleanupMilestoneTabSortables() {
+        let milestoneTabs = document.querySelectorAll('[data-milestone-tab]');
+        
+        milestoneTabs.forEach((tab) => {
+            if (tab.sortable) {
+                tab.sortable.destroy();
+                tab.sortable = null;
+            }
+        });
+    }
+
+    /**
+     * This function sets up milestone tabs as SortableJS instances so they can accept
+     * dropped issue cards from other lanes.
+     * 
+     * @method _setupMilestoneTabsAsSortable
+     * @private
+     */
+    _setupMilestoneTabsAsSortable() {
+        let _self = this;
+        let milestoneTabs = document.querySelectorAll('[data-milestone-tab]');
+        
+        milestoneTabs.forEach((tab) => {
+            if (tab.sortable) {
+                tab.sortable.destroy();
+                tab.sortable = null;
+            }
+            
+            if (!tab.classList.contains('active')) {
+                tab.sortable = new Sortable(tab, {
+                    group: _self.groupName,
+                    scroll: _self.scroll,
+                    scrollSensitivity: _self.scrollSensitivity,
+                    scrollSpeed: _self.scrollSpeed,
+                    sort: false, // Don't allow sorting within tabs
+                    forceFallback: _self.forceFallback,
+                    disableSortable: _self.disableSortable,
+                    animation: _self.animationSpeed,
+                    dragClass: _self.dragClass,
+                    chosenClass: _self.chosenClass,
+                    filter: '.not-draggable'
+                });
+            }
+        });
+    }
+
+    /**
+     * This function sets up event listeners for tab switching to update sortable instances
+     * when the active tab changes.
+     * 
+     * @method _setupTabSwitching
+     * @private
+     */
+    _setupTabSwitching() {
+        let _self = this;
+        let milestoneTabs = document.querySelectorAll('[data-milestone-tab]');
+        
+        milestoneTabs.forEach((tab) => {
+            let tabLink = tab.querySelector('a');
+            if (tabLink) {
+                tabLink.addEventListener('click', () => {
+                    // Small delay to allow tab switching to complete
+                    setTimeout(() => {
+                        _self._updateSortableInstances();
+                    }, 100);
+                });
+            }
+        });
+    }
+
+    /**
+     * This function updates sortable instances when tab switching occurs.
+     * It removes sortable from the newly active tab and adds it to the previously active tab.
+     * 
+     * @method _updateSortableInstances
+     * @private
+     */
+    _updateSortableInstances() {
+        let _self = this;
+        let milestoneTabs = document.querySelectorAll('[data-milestone-tab]');
+        
+        milestoneTabs.forEach((tab) => {
+            let isActive = tab.classList.contains('active');
+            let hasSortable = tab.sortable;
+            
+            if (hasSortable) {
+                tab.sortable.destroy();
+                tab.sortable = null;
+            }
+            
+            if (!isActive) {
+                tab.sortable = new Sortable(tab, {
+                    group: _self.groupName,
+                    scroll: _self.scroll,
+                    scrollSensitivity: _self.scrollSensitivity,
+                    scrollSpeed: _self.scrollSpeed,
+                    sort: false,
+                    forceFallback: _self.forceFallback,
+                    disableSortable: _self.disableSortable,
+                    animation: _self.animationSpeed,
+                    dragClass: _self.dragClass,
+                    chosenClass: _self.chosenClass,
+                    filter: '.not-draggable'
+                });
+            }
+        });
+    }
+
     //Removing sortable from each items of task board.
     willDestroy() {
         let _self = this;
         _self.sortableList.forEach((el) => {
             el.destroy();
         });
+        
+        _self._cleanupMilestoneTabSortables();
     }
 }
