@@ -6,6 +6,8 @@
           <a href="#tab_{{if milestone.id milestone.id "backlog"}}" data-toggle="tab" aria-expanded={{if (eq index 0) "true" "false"}}>
             {{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}
           </a>
+          <div class="drop-zone-area">
+          </div>
         </li>
       {{/each}}
     </ul>
