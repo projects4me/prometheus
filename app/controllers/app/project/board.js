@@ -124,7 +124,7 @@ export default class AppProjectBoardController extends PrometheusController {
         item.style.pointerEvents = "auto";
         (milestoneEl1 !== milestoneEl2) && (milestoneEls.pushObject(milestoneEl1));
         milestoneEls.pushObject(milestoneEl2);
-        reRenderViewCb(milestoneEls, [item]);
+        reRenderViewCb(milestoneEls);
         Logger.debug("-AppProjectBoardController::postUpdateProcessing");
     }
 

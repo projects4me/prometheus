@@ -243,7 +243,7 @@ export default class InitializeSortable extends Modifier {
         _self._setupTabSwitching();
         
         let milestoneEls = document.querySelectorAll('div.milestone.box-body');
-        _self.reRenderView(milestoneEls);
+        _self.reRenderView(milestoneEls, true);
     }
 
     //Called when the arguments provided to modifier are updated
@@ -265,9 +265,10 @@ export default class InitializeSortable extends Modifier {
      * 
      * @method reRenderView
      * @param {HTMLCollection} milestoneEls List of milestone container elements
+     * @param {boolean} activeFirstTab If true, the first tab will be activated
      * @private
      */
-    @action reRenderView(milestoneEls) {
+    @action reRenderView(milestoneEls, activeFirstTab = false) {
         let _self = this;
         let milestoneIds = [];
         milestoneEls.forEach((milestoneEl) => {
@@ -277,7 +278,13 @@ export default class InitializeSortable extends Modifier {
             _self.setMilestoneBoxHeight(milestoneEl);
         });
         
-        document.querySelector(`[data-milestone-id="${milestoneIds[0]}"] a`).click();
+        let milestoneId = '';
+       if(activeFirstTab) {
+            milestoneId = milestoneIds[0];
+       } else {
+            milestoneId = milestoneIds[milestoneIds.length - 1];
+       }
+       document.querySelector(`[data-milestone-id="${milestoneId}"] a`).click();
     }
 
     /**
