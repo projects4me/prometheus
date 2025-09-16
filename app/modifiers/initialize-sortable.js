@@ -171,8 +171,8 @@ export default class InitializeSortable extends Modifier {
      * @return String
      * @public
      */
-    get currentFilteredMilestone() {
-        return this.args.named.currentFilteredMilestone;
+    get query() {
+        return this.args.named.query;
     }
     /**
      * This property contains array of sortable objects. This is used to store sortable
@@ -253,9 +253,7 @@ export default class InitializeSortable extends Modifier {
         _self._cleanupMilestoneTabSortables();
         _self._setupMilestoneTabsAsSortable();
         _self._setupTabSwitching();
-        
-        let milestoneEls = [];
-        milestoneEls.pushObject(_self.currentFilteredMilestone);
+        let milestoneEls = document.querySelectorAll('div.milestone.box-body');
         _self.reRenderView(milestoneEls);
     }
 
