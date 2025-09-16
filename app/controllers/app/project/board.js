@@ -181,7 +181,8 @@ export default class AppProjectBoardController extends PrometheusController {
             'done',
             'feedback',
             'pending',
-            'deferred'
+            'deferred',
+            'in_review'
         ];
 
         let priorities = {
