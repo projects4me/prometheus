@@ -867,6 +867,8 @@ export default class AppProjectIssuePageController extends PrometheusController.
             hideAfter: false
         });
         issue.set('status', newStatus);
+        let statusId = this.issueStatuses.findBy('name', newStatus).id;
+        issue.set('statusId', statusId);
         issue.save().then(() => {
             messenger.update({
                 message: _self.intl.t("views.app.issue.detail.statusUpdated", { status: translatedStatus }),
