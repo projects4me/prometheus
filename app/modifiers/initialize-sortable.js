@@ -321,7 +321,8 @@ export default class InitializeSortable extends Modifier {
         let _self = this;
         
         if (evt.to !== evt.from) {
-            if (evt.to.hasAttribute('data-milestone-tab')) {
+            if (evt.to.parentElement.hasAttribute('data-milestone-tab')) {
+                evt.to = evt.to.parentElement;
                 if (!evt.to.classList.contains('active')) {
                     let prevMilestoneId = evt.from.getAttribute('data-field-milestone-id');
                     let newMilestoneId = evt.to.getAttribute('data-milestone-id');
@@ -464,12 +465,12 @@ export default class InitializeSortable extends Modifier {
      * @private
      */
     _cleanupMilestoneTabSortables() {
-        let milestoneTabs = document.querySelectorAll('[data-milestone-tab]');
+        let milestoneTabs = document.querySelectorAll('[data-milestone-tab] .drop-zone-area');
         
-        milestoneTabs.forEach((tab) => {
-            if (tab.sortable) {
-                tab.sortable.destroy();
-                tab.sortable = null;
+        milestoneTabs.forEach((dropZoneArea) => {
+            if (dropZoneArea.sortable) {
+                dropZoneArea.sortable.destroy();
+                dropZoneArea.sortable = null;
             }
         });
     }
@@ -486,13 +487,14 @@ export default class InitializeSortable extends Modifier {
         let milestoneTabs = document.querySelectorAll('[data-milestone-tab]');
         
         milestoneTabs.forEach((tab) => {
-            if (tab.sortable) {
-                tab.sortable.destroy();
-                tab.sortable = null;
+            let dropZoneArea = tab.querySelector('.drop-zone-area');
+            if (dropZoneArea.sortable) {
+                dropZoneArea.sortable.destroy();
+                dropZoneArea.sortable = null;
             }
             
             if (!tab.classList.contains('active')) {
-                tab.sortable = new Sortable(tab, {
+                dropZoneArea.sortable = new Sortable(tab, {
                     group: _self.groupName,
                     scroll: _self.scroll,
                     scrollSensitivity: _self.scrollSensitivity,
@@ -546,15 +548,16 @@ export default class InitializeSortable extends Modifier {
         
         milestoneTabs.forEach((tab) => {
             let isActive = tab.classList.contains('active');
-            let hasSortable = tab.sortable;
+            let dropZoneArea = tab.querySelector('.drop-zone-area');
+            let hasSortable = dropZoneArea.sortable;
             
             if (hasSortable) {
-                tab.sortable.destroy();
-                tab.sortable = null;
+                dropZoneArea.sortable.destroy();
+                dropZoneArea.sortable = null;
             }
-            
             if (!isActive) {
-                tab.sortable = new Sortable(tab, {
+                tab = dropZoneArea;
+                dropZoneArea.sortable = new Sortable(tab, {
                     group: _self.groupName,
                     scroll: _self.scroll,
                     scrollSensitivity: _self.scrollSensitivity,
