@@ -5,7 +5,7 @@ export const when = function () {
     return [
         {
             "User search $issueSubject from milestone $milestoneId": (assert, ctx) => async function (issueSubject, milestoneId) {
-                let inputEl = document.querySelector(`input[data-input-milestone-id="${milestoneId}"]`);
+                let inputEl = document.querySelector(`input[data-milestones-taskboard-search]`);
                 await fillIn(inputEl, "Issue Test 4");
                 assert.ok(true, `User searches for ${issueSubject} from milestone ${milestoneId}`);
             }

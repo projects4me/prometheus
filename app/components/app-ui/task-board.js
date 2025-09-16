@@ -4,7 +4,6 @@
 
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
 
 /**
  * This component is used to render milestones of selected project.
@@ -17,28 +16,13 @@ import { action } from '@ember/object';
 export default class TaskBoardComponent extends Component {
 
     /**
-     * This property is used to keep track the milestone container element, on which user is filtering the
-     * issues. The purpose for keeping it tracked is to re-adjust the height of milestone container element, when the 
-     * filtered issues are re-rendered on template.
+     * This property is used to keep track the query, which is provided by the user, for 
+     * filtering the issues.
      *
-     * @property currentFilteredMilestone
-     * @type Object
+     * @property query
+     * @type String
      * @for TaskBoard
      * @protected
      */
-    @tracked currentFilteredMilestone = null;
-
-    /**
-     * This function is bind with input helper and is called on keyup event of keyboard. This
-     * is used to set 'currentFilteredMilestone' property, in order to trigger an update to modifier
-     * to re-render the view.
-     *
-     * @method reRenderView
-     * @param {KeyboardEvent} evt
-     * @public
-     */
-    @action reRenderView(evt) {
-        let parentEl = evt.currentTarget.closest('div.milestone.box').querySelector('div.milestone.box-body');
-        this.currentFilteredMilestone = parentEl;
-    }
+    @tracked query;    
 }

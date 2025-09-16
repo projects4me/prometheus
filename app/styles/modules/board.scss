@@ -9,6 +9,32 @@
 */
 
 .board {
+
+  .board-container {
+    .nav-tabs-custom {
+      position: relative;
+
+      .milestone-tabs {
+        width: 80%;
+        display: inline-block;
+      }
+
+      .milestone-filters {
+        position: absolute;
+        top: 10px;
+        width: 20%;
+
+        .filters {
+          width: 100%;
+
+          input {
+            width: 80%;
+          }
+        }
+      }
+    }
+  }
+
   .box {
     .milestone.box-body {
       display: flex;

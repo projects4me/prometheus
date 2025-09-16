@@ -1,4 +1,4 @@
-<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue currentFilteredMilestone=this.currentFilteredMilestone}}>
+<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue query=this.query}}>
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs milestone-tabs">
       {{#each @milestones as |milestone index|}}
@@ -11,6 +11,17 @@
         </li>
       {{/each}}
     </ul>
+    <span class="milestone-filters">
+      <div class="box-tools pull-right filters">
+        <Input
+          @value={{this.query}}
+          data-milestones-taskboard-search
+          name="query"
+          autocomplete="off"
+          placeholder={{concat (t "global.form.search") " " (t "global.module.plural.issue") " .."}}
+        />
+      </div>
+    </span>
     <div class="tab-content">
       {{#each @milestones as |milestone index|}}
         <div class="tab-pane {{if (eq index 0) "active" ""}}" id="tab_{{if milestone.id milestone.id "backlog"}}">
@@ -19,7 +30,7 @@
             @group={{@group}}
             @statuses={{@statuses}}
             @statusClass={{@statusClass}}
-            @reRenderView={{this.reRenderView}}
+            @query={{this.query}}
             @openIssue={{@openIssue}}
           />
         </div>
