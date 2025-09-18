@@ -14,6 +14,10 @@
     .nav-tabs-custom {
       position: relative;
 
+      .box {
+        border-top: none;
+      }
+
       .milestone-tabs {
         width: 80%;
         display: inline-block;
@@ -79,6 +83,37 @@
       input {
         margin-right: 3rem;
         width: 30rem;
+      }
+    }
+
+    .milestone-header-content {
+      .milestone-icon {
+        width: 3%;
+        justify-content: center;
+
+        i {
+          text-align: center;
+          padding: 5px;
+          font-size: 3.5rem;
+        }
+      }
+
+      .milestone-progress-section {
+        width: 98%;
+
+        .progress {
+          height: 0.6rem;
+          background-color: $primaryColorLight;
+
+          .progress-bar {
+            background-color: $primaryColor;
+          }
+        }
+
+        .milestone-progress-info {
+          font-style: italic;
+          margin-left: 1rem;
+        }
       }
     }
   }

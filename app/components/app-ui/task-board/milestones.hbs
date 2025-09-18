@@ -1,7 +1,24 @@
 <div class="milestone box">
   
   <div class="box-header with-border">
-    <strong>{{t (concat "views.app.milestone.lists.type." this.milestone.milestoneType)}} {{this.milestone.name}}</strong>
+    <div class="milestone-header-content flex-row">
+      <div class="milestone-icon {{this.milestoneBgClass}} flex-row jc-c">
+        <i class="{{this.milestoneIcon}}"></i>
+      </div>
+      
+      <div class="milestone-progress-section">
+        <div class="milestone-progress-info flex-row flex-jc-sb">
+          <span class="progress-description">{{this.milestoneProgress}}% ({{this.completedIssuesCount}}/{{this.milestone.issues.length}} {{t "global.module.plural.issue"}})</span>
+          <span data-milestone="dates">
+            {{moment-format this.milestone.startDate 'Do MMM. YYYY'}} - {{moment-format this.milestone.endDate 'Do MMM. YYYY'}}
+          </span>
+        </div>
+        
+        <div class="progress">
+          <div class="progress-bar" style={{progress-width this.milestoneProgress}} data-toggle="tooltip" title="{{t "views.app.project.detail.milestone.progress" closed=this.completedIssuesCount total=this.milestone.issues.length}}"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="milestone box-body" data-field-milestone-id={{this.milestone.id}}>
