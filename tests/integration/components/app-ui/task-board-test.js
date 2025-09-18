@@ -135,14 +135,20 @@ module('Integration | Component | task-board', function (hooks) {
         assert.equal(milestoneTabs[1].getAttribute('data-milestone-id'), '2', 'Second tab should have correct milestone ID');
         assert.equal(milestoneTabs[2].getAttribute('data-milestone-id'), 'backlog', 'Third tab should have backlog ID');
 
+
         // Check that milestone boxes are rendered within tab content
         let milestoneBoxes = document.querySelectorAll('div.milestone.box');
         assert.equal(milestoneBoxes.length, 3, 'Three milestone boxes should be rendered');
 
-        // Check milestone box headers
-        assert.equal(milestoneBoxes[0].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.1', "Milestone v0.1 header");
-        assert.equal(milestoneBoxes[1].querySelector('div.box-header.with-border > strong').innerText, 'Version v0.2', "Milestone v0.2 header");
-        assert.equal(milestoneBoxes[2].querySelector('div.box-header.with-border > strong').innerText, 'Backlog ', "Backlog header");
+        // Check progress with percentage
+        assert.equal(milestoneBoxes[0].querySelector('div.progress-bar').style.width, '50%', 'First milestone box should have 50% progress');
+        assert.equal(milestoneBoxes[1].querySelector('div.progress-bar').style.width, '50%', 'Second milestone box should have 50% progress');
+        assert.equal(milestoneBoxes[2].querySelector('div.progress-bar').style.width, '50%', 'Third milestone box should have 50% progress');
+
+        // Check content of done versus total issues
+        assert.equal(milestoneBoxes[0].querySelector('.progress-description').innerText, '50% (1/2 Issues)', 'First milestone box should have 1/2 issues');
+        assert.equal(milestoneBoxes[1].querySelector('.progress-description').innerText, '50% (1/2 Issues)', 'Second milestone box should have 1/2 issues');
+        assert.equal(milestoneBoxes[2].querySelector('.progress-description').innerText, '50% (1/2 Issues)', 'Third milestone box should have 1/2 issues');
 
         //Sortable checking - check that sortable is attached to lanes
         let lanes = document.querySelectorAll('div.lane.box-body');
