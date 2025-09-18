@@ -3,6 +3,7 @@
  */
 
 import AppComponent from '../../app';
+import { action } from '@ember/object';
 
 /**
  * This component is used to render milestones of selected project.
@@ -142,5 +143,17 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 		closed += milestone.issues.filterBy('status', 'closed').length;
 		closed += milestone.issues.filterBy('status', 'deferred').length;
 		return closed;
+	}
+
+	/**
+	 * This function returns the count of issues for a specific status.
+	 *
+	 * @method getIssuesCountForStatus
+	 * @param {String} statusName - The name of the status
+	 * @public
+	 */
+	@action getIssuesCountForStatus(statusName) {
+		let milestone = this.milestone;
+		return milestone.issues.filterBy('status', statusName).length;
 	}
 }
