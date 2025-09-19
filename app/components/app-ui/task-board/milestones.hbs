@@ -28,7 +28,7 @@
         <div class="box {{get-prop @statusClass status.name}}">
 
           <div class="box-header with-border" data-field-status="{{status.name}}">
-            {{t (concat "views.app.issue.lists.status." status.name)}}
+            {{t (concat "views.app.issue.lists.status." status.name)}} ({{call (fn this.getIssuesCountForStatus status.name)}})
           </div>
 
           <div class="lane box-body" data-field-lane-group={{@group}} data-field-milestone-id={{this.milestone.id}} data-field-status="{{status.name}}" data-issue-status-id={{status.id}}>

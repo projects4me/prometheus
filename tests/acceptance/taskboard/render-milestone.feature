@@ -1,0 +1,31 @@
+@setupApplicationTest
+Feature: render milestone
+
+  Scenario: Render a milestone in taskboard and check number of issues based on status
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_4 is logged in
+    And User_4 selects Project 1
+    And Project has following details
+    ------------------------------------------------------
+    | milestones(milestone) | issuestatuses(issuestatus) |
+    | 1                     | 7                          |
+    ------------------------------------------------------ 
+    And Each milestone has 5 issues and there status are
+    ------------------------------------------------------------------------
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 1           | 1         | 2    |  0       | 0       | 0        |
+    ------------------------------------------------------------------------
+    And backlog has 2 issues
+    ------------------------------------------------------------------------
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 0           | 0         | 0    |  1       | 0       | 0        |
+    ------------------------------------------------------------------------    
+    When User navigates to app/project/project_1/board
+    Then User should see 1 issues in new status
+    And User should see 1 issues in in_progress status
+    And User should see 2 issues in done status
+    And User should see 0 issues in feedback status
+    And User should see 0 issues in pending status
+    And User should see 0 issues in deferred status
