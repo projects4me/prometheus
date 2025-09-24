@@ -1187,7 +1187,8 @@
         "hours": "h",
         "minutes": "m",
         "spent": "Spent",
-        "estimated": "Estimated"
+        "estimated": "Estimated",
+        "savedSearches": "Saved Searches"
       },
       "role": {
         "list": {

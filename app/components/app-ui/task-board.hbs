@@ -1,4 +1,4 @@
-<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue query=this.query}}>
+<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue query=this.query paramsQuery=@paramsQuery}}>
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs milestone-tabs">
       {{#each @milestones as |milestone index|}}
@@ -12,7 +12,22 @@
       {{/each}}
     </ul>
     <span class="milestone-filters">
-      <div class="box-tools pull-right filters">
+      <div class="box-tools pull-right filters flex-row">
+        <AppUi::Dropdown>
+          <:button>
+            {{t "views.app.board.savedSearches"}}
+          </:button>
+          <:content>
+           {{#each @savedSearches as |search|}}
+            <div {{on "click" (fn this.toggleSearch search)}} class="{{if (call (fn this.isSearchActive search)) 'active' ''}}">
+              {{search.name}}
+              {{#if (call (fn this.isSearchActive search))}}
+                <i class="fa fa-check pull-right"></i>
+              {{/if}}
+            </div>
+           {{/each}}
+          </:content>
+        </AppUi::Dropdown>
         <Input
           @value={{this.query}}
           data-milestones-taskboard-search

@@ -208,42 +208,49 @@ export default class InitializeSortable extends Modifier {
         let _self = this;
         let elementsList = _self.element.querySelectorAll('.lane.box-body');
         elementsList.forEach((el) => {
-            _self.sortableList.push(new Sortable(el, {
-                group: _self.groupName,
-                scroll: _self.scroll,
-                scrollSensitivity: _self.scrollSensitivity,
-                scrollSpeed: _self.scrollSpeed,
-                sort: _self.sort,
-                forceFallback: _self.forceFallback,
-                disableSortable: _self.disableSortable,
-                animation: _self.animationSpeed,
-                dragClass: _self.dragClass,
-                chosenClass: _self.chosenClass,
-                onStart: (evt) => {
-                    _self._onStart(evt);
-                },
-                onEnd: (evt) => {
-                    _self._onEnd(evt);
-                },
-                onMove: (evt) => {
-                    evt.to.classList.add('box-body-color');
-                    (_self.oldLane) && _self.oldLane.classList.remove('box-body-color');
-                    _self.oldLane = evt.to;
-                    _self.draggedItem = (evt.to != evt.from) ? evt.dragged : null;
-                },
-                store: {
-                    set: () => {
-                        (_self.draggedItem) && (_self.draggedItem.remove());
-                    }
-                },
-            }));
+            _self.sortableList.push(new Sortable(el, _self.getSortableOptions()));
         });
 
         _self._setupMilestoneTabsAsSortable();
         _self._setupTabSwitching();
         
         let milestoneEls = document.querySelectorAll('div.milestone.box-body');
-        _self.reRenderView(milestoneEls, true);
+        _self.reRenderView(milestoneEls);
+    }
+
+    /**
+     * This function gets milestone elements with active milestone prioritized first.
+     * 
+     * @method _getOrderedMilestoneElements
+     * @returns {Array} Array of milestone elements with active one first
+     * @private
+     */
+    _getOrderedMilestoneElements() {
+        // Get active milestone tab's lane box body element first
+        let activeTab = document.querySelector('[data-milestone-tab].active');
+        let activeMilestoneEl = null;
+        if (activeTab) {
+            let milestoneId = activeTab.getAttribute('data-milestone-id') || 'backlog';
+            activeMilestoneEl = document.querySelector(`[data-field-milestone-id="${milestoneId}"]`);
+        }
+        
+        // Get all milestone lane box body elements
+        let allMilestoneEls = document.querySelectorAll('div.milestone.box-body');
+        
+        // Create ordered array with active milestone first, then inactive ones
+        let milestoneEls = [];
+        if (activeMilestoneEl) {
+            milestoneEls.push(activeMilestoneEl);
+        }
+        
+        // Add inactive milestone elements
+        allMilestoneEls.forEach((el) => {
+            if (el !== activeMilestoneEl) {
+                milestoneEls.push(el);
+            }
+        });
+        
+        return milestoneEls;
     }
 
     //Called when the arguments provided to modifier are updated
@@ -253,7 +260,7 @@ export default class InitializeSortable extends Modifier {
         _self._cleanupMilestoneTabSortables();
         _self._setupMilestoneTabsAsSortable();
         _self._setupTabSwitching();
-        let milestoneEls = document.querySelectorAll('div.milestone.box-body');
+        let milestoneEls = _self._getOrderedMilestoneElements();
         _self.reRenderView(milestoneEls);
     }
 
@@ -263,10 +270,9 @@ export default class InitializeSortable extends Modifier {
      * 
      * @method reRenderView
      * @param {HTMLCollection} milestoneEls List of milestone container elements
-     * @param {boolean} activeFirstTab If true, the first tab will be activated
      * @private
      */
-    @action reRenderView(milestoneEls, activeFirstTab = false) {
+    @action reRenderView(milestoneEls) {
         let _self = this;
         let milestoneIds = [];
         milestoneEls.forEach((milestoneEl) => {
@@ -275,14 +281,7 @@ export default class InitializeSortable extends Modifier {
             document.querySelector(`[data-milestone-id="${milestoneId}"] a`).click();
             _self.setMilestoneBoxHeight(milestoneEl);
         });
-        
-        let milestoneId = '';
-       if(activeFirstTab) {
-            milestoneId = milestoneIds[0];
-       } else {
-            milestoneId = milestoneIds[milestoneIds.length - 1];
-       }
-       document.querySelector(`[data-milestone-id="${milestoneId}"] a`).click();
+       document.querySelector(`[data-milestone-id="${milestoneIds[0]}"] a`).click();
     }
 
     /**
@@ -577,6 +576,46 @@ export default class InitializeSortable extends Modifier {
                 });
             }
         });
+    }
+
+    /**
+     * This function returns the sortable options.
+     * 
+     * @method getSortableOptions
+     * @returns {Object} The sortable options
+     * @private
+     */
+    getSortableOptions() {
+        let _self = this;
+        return {
+            group: _self.groupName,
+            scroll: _self.scroll,
+            scrollSensitivity: _self.scrollSensitivity,
+            scrollSpeed: _self.scrollSpeed,
+            sort: _self.sort,
+            forceFallback: _self.forceFallback,
+            disableSortable: _self.disableSortable,
+            animation: _self.animationSpeed,
+            dragClass: _self.dragClass,
+            chosenClass: _self.chosenClass,
+            onStart: (evt) => {
+                _self._onStart(evt);
+            },
+            onEnd: (evt) => {
+                _self._onEnd(evt);
+            },
+            onMove: (evt) => {
+                evt.to.classList.add('box-body-color');
+                (_self.oldLane) && _self.oldLane.classList.remove('box-body-color');
+                _self.oldLane = evt.to;
+                _self.draggedItem = (evt.to != evt.from) ? evt.dragged : null;
+            },
+            store: {
+                set: () => {
+                    (_self.draggedItem) && (_self.draggedItem.remove());
+                }
+            }
+        }
     }
 
     //Removing sortable from each items of task board.
