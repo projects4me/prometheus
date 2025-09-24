@@ -4,6 +4,7 @@
 
 import AppComponent from '../../app';
 import { action } from '@ember/object';
+import DateUtils from 'prometheus/utils/date';
 
 /**
  * This component is used to render milestones of selected project.
@@ -156,4 +157,65 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 		let milestone = this.milestone;
 		return milestone.issues.filterBy('status', statusName).length;
 	}
+
+	/**
+	 * This function returns the spent time of the milestone in hours and minutes.
+	 *
+	 * @property spent
+	 * @type Object
+	 * @for TaskBoardMilestones
+	 * @public
+	 */
+	get spent() {
+		return this.calculateTimeForContext('spent');
+	}
+
+	/**
+	 * This function returns the estimated time of the milestone in hours and minutes.
+	 *
+	 * @property estimated
+	 * @type Object
+	 * @for TaskBoardMilestones
+	 * @public
+	 */
+	get estimated() {
+		return this.calculateTimeForContext('estimated');
+	}
+
+	/**
+	 * Calculates the total time (hours and minutes) for a given context (spent or estimated).
+	 * Normalizes minutes to ensure they don't exceed 60.
+	 *
+	 * @method calculateTimeForContext
+	 * @param {String} context - The context ('spent' or 'estimated')
+	 * @returns {Object} - { hours: number, minutes: number }
+	 * @for TaskBoardMilestones
+	 * @public
+	 */
+	calculateTimeForContext(context) {
+		let totalHours = 0;
+		let totalMinutes = 0;
+
+		this.milestone.issues.forEach(issue => {
+			issue[context]?.forEach(timelog => {
+				// Convert days to hours (8 hours per day)
+				let daysToHours = timelog.days * 8;
+				let hours = parseInt(timelog.hours, 10) + parseInt(daysToHours, 10);
+				let minutes = parseInt(timelog.minutes, 10);
+
+				totalHours += hours;
+				totalMinutes += minutes;
+			});
+		});
+
+		// Normalize minutes to ensure they don't exceed 60
+		const normalized = DateUtils.normalizeMinutes(totalMinutes);
+		totalHours += normalized.hours;
+		totalMinutes = normalized.minutes;
+
+		return {
+			hours: totalHours,
+			minutes: totalMinutes
+		};
+	}	
 }

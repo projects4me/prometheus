@@ -1183,7 +1183,11 @@
         }
       },
       "board": {
-        "backlog": "Backlog"
+        "backlog": "Backlog",
+        "hours": "h",
+        "minutes": "m",
+        "spent": "Spent",
+        "estimated": "Estimated"
       },
       "role": {
         "list": {
