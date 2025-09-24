@@ -44,7 +44,7 @@ export default App.extend({
         //Fetch backlog issues
         let _issueOptions = {
             query: `(((Issue.milestoneId NULL) OR (Issue.milestoneId EMPTY)) AND (Issue.projectId : ${projectId}))`,
-            rels: 'assignedTo',
+            rels: 'assignedTo,spent,estimated',
             limit: -1
         }
         let backlogIssues = await _self.store.query('issue', _issueOptions).catch((error) => _self.errorManager.handleError(error));
@@ -60,7 +60,7 @@ export default App.extend({
         await hash(milestones.map(async (milestone) => {
             let issues = await _self.store.query('issue', {
                 query: `((Issue.milestoneId : ${milestone.id} ) AND (Issue.projectId : ${projectId}))`,
-                rels: 'assignedTo',
+                rels: 'assignedTo,spent,estimated',
                 limit: -1
             }).catch((error) => {
                 _self.errorManager.handleError(error);

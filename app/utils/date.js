@@ -55,4 +55,23 @@ export default class DateUtils {
 		const minutes = Math.round((floatHours - hours) * 60);
 		return { hours, minutes };
 	}
+
+	/**
+	 * Normalizes minutes to hours and minutes.
+	 *
+	 * @method normalizeMinutes
+	 * @static
+	 * @param {number} mins - The number of minutes to normalize
+	 * @returns {Object} An object with `hours` and `minutes` properties
+	 * @public
+	 * @example
+	 *   DateUtils.normalizeMinutes(135); // { hours: 2, minutes: 15 }
+	 *   DateUtils.normalizeMinutes(1000); // { hours: 16, minutes: 40 }
+	 */
+	static normalizeMinutes(mins) {
+		const duration = moment.duration(mins, "minutes");
+		const hours = Math.floor(duration.asHours());
+		const minutes = duration.minutes();
+		return { hours, minutes };
+	}
 }

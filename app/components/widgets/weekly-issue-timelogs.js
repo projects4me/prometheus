@@ -125,6 +125,12 @@ export default class WidgetsWeeklyIssueTimelogsComponent extends WidgetsComponen
 				if (tl.timelogContext[context]) {
 					tl.timelogContext[context].hours += formattedTime.hours;
 					tl.timelogContext[context].minutes += formattedTime.minutes;
+
+					// normalize minutes
+					let minutes = tl.timelogContext[context].minutes;
+					let normalizedMinutesWithHrs = DateUtils.normalizeMinutes(minutes);
+					tl.timelogContext[context].hours += normalizedMinutesWithHrs.hours;
+					tl.timelogContext[context].minutes = normalizedMinutesWithHrs.minutes;
 				} else {
 					tl.timelogContext[context] = formattedTime;
 				}
@@ -148,17 +154,15 @@ export default class WidgetsWeeklyIssueTimelogsComponent extends WidgetsComponen
 						let hours =
 							parseInt(timelog.hours, 10) +
 							parseInt(daysToHours, 10);
-						let duration = moment.duration({
+
+						let hrsAndMinutes = {
 							hours: hours,
-							minutes: timelog.minutes
-						});
-						let formattedTime = this.formatHoursFloat(
-							duration.asHours()
-						);
+							minutes: parseInt(timelog.minutes, 10)
+						}
 						addOrUpdateTimelog(
 							issue,
 							timelog.context,
-							formattedTime
+							hrsAndMinutes
 						);
 					});
 				} else {
@@ -327,6 +331,12 @@ export default class WidgetsWeeklyIssueTimelogsComponent extends WidgetsComponen
 			'spent',
 			'minutes'
 		);
+		
+		// Normalize minutes to ensure they don't exceed 60
+		const normalized = DateUtils.normalizeMinutes(minutes);
+		hours += normalized.hours;
+		minutes = normalized.minutes;
+		
 		return {
 			hours: hours,
 			minutes: minutes
@@ -351,6 +361,12 @@ export default class WidgetsWeeklyIssueTimelogsComponent extends WidgetsComponen
 			'est',
 			'minutes'
 		);
+		
+		// Normalize minutes to ensure they don't exceed 60
+		const normalized = DateUtils.normalizeMinutes(minutes);
+		hours += normalized.hours;
+		minutes = normalized.minutes;
+		
 		return {
 			hours: hours,
 			minutes: minutes
