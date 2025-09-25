@@ -17,6 +17,28 @@ import { hash } from 'rsvp';
 export default App.extend({
 
     /**
+     * These are the query params that the route supports.
+     *
+     * @property queryParams
+     * @type Array
+     * @for Board
+     */
+    queryParams: {
+        query: {
+            refreshModel: true
+        }
+    },
+
+    /**
+     * This is the query that is used to filter the issues.
+     *
+     * @property query
+     * @type String
+     * @for Board
+     */
+    query: '',
+
+    /**
      * This function is called by ember when we enter this route and returns
      * resolved promises to the controller. In this function we returns milestone
      * array which contains all milestones and backlog related to the current project.
@@ -24,10 +46,13 @@ export default App.extend({
      * @method model;
      * @public
      */
-    async model() {
+    async model(params) {
         let _self = this;
         let projectId = this.trackedProject.getProjectId();
-
+        if(_.has(params, 'query')) {
+            this.set('query', params.query);
+        }
+        
         //Fetch milestones of current project
         let _milestoneOptions = {
             query: `((Milestone.projectId : ${projectId}) AND ((Milestone.status : in_progress) OR (Milestone.status : planned)))`,
@@ -47,6 +72,10 @@ export default App.extend({
             rels: 'assignedTo,spent,estimated',
             limit: -1
         }
+
+        if(this.query) {
+            _issueOptions.query = `(${_issueOptions.query}) AND (${this.query})`;
+        }
         let backlogIssues = await _self.store.query('issue', _issueOptions).catch((error) => _self.errorManager.handleError(error));
 
         //Fetch issue statuses of project
@@ -58,24 +87,25 @@ export default App.extend({
         let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions).catch((error) => _self.errorManager.handleError(error));
 
         await hash(milestones.map(async (milestone) => {
+            let query = `((Issue.milestoneId : ${milestone.id} ) AND (Issue.projectId : ${projectId}))`;
+            if(this.query) {
+                query = `(${query}) AND (${this.query})`;
+            }
             let issues = await _self.store.query('issue', {
                 query: `((Issue.milestoneId : ${milestone.id} ) AND (Issue.projectId : ${projectId}))`,
                 rels: 'assignedTo,spent,estimated',
+                query: query,
+                rels: 'assignedTo',
                 limit: -1
             }).catch((error) => {
                 _self.errorManager.handleError(error);
             });
-
+            milestone.issues.clear();
             milestone.issues.pushObjects(issues);
         }));
 
         //Create a milestone of type backlog
-        let backlog = _self.store.createRecord('milestone', {
-            id: null,
-            milestoneType: "backlog",
-            status: "planned",
-            issues: backlogIssues || []
-        });
+        let backlog = _self.getBacklogMilestone(backlogIssues);
 
         let milestonesArray = [];
 
@@ -84,9 +114,12 @@ export default App.extend({
         });
         milestonesArray.pushObject(backlog);
 
+
+        let savedSearches = await this.fetchSavedSearches();
         let model = hash({
             milestones: milestonesArray,
-            issueStatuses: issueStatuses || []
+            issueStatuses: issueStatuses || [],
+            savedSearches: savedSearches || []
         });
 
         return model;
@@ -116,6 +149,50 @@ export default App.extend({
     },
 
     /**
+     * This function is used to fetch the saved searches.
+     *
+     * @method fetchSavedSearches
+     * @returns {Array} The saved searches
+     */
+    async fetchSavedSearches() {
+        let savedSearches = await this.store.query('savedsearch', {
+            query: `(Savedsearch.relatedTo : issue) AND (Savedsearch.projectId : ${this.trackedProject.getProjectId()})`,
+            limit: -1
+        });
+
+        let publicSearches = await this.store.query('savedsearch', {
+            query: `(Savedsearch.relatedTo : issue) AND (Savedsearch.projectId : ${this.trackedProject.getProjectId()}) AND (Savedsearch.public : 1)`,
+            limit: -1
+        });
+        
+        let allSearches = savedSearches.toArray().concat(publicSearches.toArray());
+        return allSearches;
+    },
+
+    /**
+     * This function is used to get the backlog milestone.
+     * 
+     * @method getBacklogMilestone
+     * @param {Array} issues The issues to be added to the backlog milestone
+     * @returns {MilestoneModel} The backlog milestone
+     */
+    getBacklogMilestone(issues) {
+        let backlog = this.store.peekAll('milestone').findBy('milestoneType', 'backlog');
+        if(!backlog) {
+            backlog = this.store.createRecord('milestone', {
+            id: null,
+            milestoneType: "backlog",
+            status: "planned",
+            issues: issues || []
+            });
+        } else {
+            backlog.issues.clear();
+            backlog.issues.pushObjects(issues);
+        }
+        return backlog;
+    },
+
+    /**
      * This function is used to setup the controller for this
      * route
      *
@@ -127,5 +204,22 @@ export default App.extend({
         Logger.debug('Prometheus.Routes.Board::setupController');
         controller.set('milestones', model.milestones);
         controller.set('issueStatuses', model.issueStatuses);
+        controller.set('savedSearches', model.savedSearches);
+        controller.set('query', this.query);
     },
+
+    /**
+     * This function is triggered on route exit.
+     *
+     * @method resetController
+     * @param {Prometheus.Controllers.Board} controller The controller object for this route
+     * @param {boolean} isExiting Whether the route is exiting
+     * @private
+     */
+    resetController: function (controller, isExiting) {
+        if (isExiting) {
+            controller.query = '';
+            this.set('query', '');
+        }
+    }
 });

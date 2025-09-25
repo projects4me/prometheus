@@ -4,7 +4,7 @@
 
 import PrometheusController from "prometheus/controllers/prometheus";
 import { computed, action } from '@ember/object';
-
+import { tracked } from '@glimmer/tracking';
 /**
  * This is the controller for the board controller
  *
@@ -15,6 +15,16 @@ import { computed, action } from '@ember/object';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class AppProjectBoardController extends PrometheusController {
+
+    /**
+     * These are the query params that the controller supports.
+     *
+     * @property queryParams
+     * @type Array
+     * @for Board
+     */
+    queryParams = ['query'];
+
     /**
      * These are the issues statues
      *
@@ -42,6 +52,16 @@ export default class AppProjectBoardController extends PrometheusController {
      * @public
      */
     originalIssues = null;
+
+
+    /**
+     * This is the query that is used to filter the issues.
+     *
+     * @property query
+     * @type String
+     * @for Board
+     */
+    @tracked query = '';
 
     /**
      * These are the actions supported by the Project Board View
@@ -220,5 +240,16 @@ export default class AppProjectBoardController extends PrometheusController {
             });
         });
         return this.milestones;
+    }
+
+    /**
+     * This action is used to apply the search to the issues.
+     *
+     * @method applySearch
+     * @param {Object} search The search object to apply
+     * @public
+     */
+    @action applySearch(search) {
+        this.query = search.searchquery;
     }
 }
