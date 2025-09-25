@@ -9,11 +9,11 @@
       <div class="milestone-progress-section">
         <div class="milestone-progress-info flex-row flex-jc-sb">
           <strong class="progress-description">{{this.milestoneProgress}}% ({{this.completedIssuesCount}}/{{this.milestone.issues.length}} {{t "global.module.plural.issue"}})</strong>
-          <span>
-            <p data-milestone-time="spent">{{t "views.app.board.spent"}} {{this.spent.hours}} {{t "views.app.board.hours"}} {{this.spent.minutes}} {{t "views.app.board.minutes"}}</p>
-            |
-            <p data-milestone-time="estimated">{{t "views.app.board.estimated"}} {{this.estimated.hours}} {{t "views.app.board.hours"}} {{this.estimated.minutes}} {{t "views.app.board.minutes"}}</p>
-          </span>          
+          <div class="flex-row">
+            <div data-milestone-time="spent">{{t "views.app.board.spent"}} {{this.spent.hours}} {{t "views.app.board.hours"}} {{this.spent.minutes}} {{t "views.app.board.minutes"}}</div>
+            <div>&nbsp;|&nbsp;</div>
+            <div data-milestone-time="estimated">{{t "views.app.board.estimated"}} {{this.estimated.hours}} {{t "views.app.board.hours"}} {{this.estimated.minutes}} {{t "views.app.board.minutes"}}</div>
+          </div>
           <span data-milestone="dates">
             {{moment-format this.milestone.startDate 'Do MMM. YYYY'}} - {{moment-format this.milestone.endDate 'Do MMM. YYYY'}}
           </span>
