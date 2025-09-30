@@ -17,7 +17,7 @@ export const then = function () {
     return [
         {
             "There should be only issue $issueId present inside milestone $milestoneId": (assert) => async function (issueId, milestoneId) {
-                let issueItems = document.querySelectorAll(`div.milestone.box-body[data-field-milestone-id="${milestoneId}"] div.item`);
+                let issueItems = document.querySelectorAll(`div.milestone.box-body[data-field-milestone-id="${milestoneId}"] div.board-issue-item`);
                 assert.equal(issueItems.length, '1', `only 1 issue present inside milestone ${milestoneId} after searching`);
                 assert.equal(issueItems[0].dataset.fieldIssueId, `${issueId}`, `issue ${issueId} present inside milestone ${milestoneId}`);
             }

@@ -1188,7 +1188,10 @@
         "minutes": "m",
         "spent": "Spent",
         "estimated": "Estimated",
-        "savedSearches": "Saved Searches"
+        "savedSearches": "Saved Searches",
+        "issue": {
+          "loading": "Loading Issue Details..."
+        }
       },
       "role": {
         "list": {

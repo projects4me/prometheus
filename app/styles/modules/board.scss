@@ -30,6 +30,7 @@
 
         .filters {
           width: 100%;
+          margin-right: 1rem;
 
           .app-dropdown {
             margin-right: 0.5rem;
@@ -153,7 +154,7 @@
     }
   }
 
-  .item {
+  .board-issue-item {
     position: relative;
     cursor: move;
     margin: 0.3rem;
@@ -265,4 +266,12 @@
     border-bottom: 0.06rem dashed $primaryColor;
     border-right: 0.06rem dashed $primaryColor;
   }  
+
+  .issue-details-container {
+    .box-title {
+      i {
+        font-size: 1.2rem;
+      }
+    }
+  }
 }

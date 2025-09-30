@@ -61,6 +61,15 @@ export default class AppComponent extends Component {
     @service currentUser;
 
     /**
+     * The session service which is offered by ember-simple-auth
+     *
+     * @property session
+     * @type Ember.Service
+     * @for App
+     */
+    @service session;
+
+    /**
      * API's host.
      * 
      * @property apiHost
