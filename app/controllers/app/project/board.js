@@ -64,6 +64,42 @@ export default class AppProjectBoardController extends PrometheusController {
     @tracked query = '';
 
     /**
+     * The currently selected issue for displaying in the sidebar
+     *
+     * @property selectedIssue
+     * @type Object
+     * @for Board
+     */
+    @tracked selectedIssue = null;
+
+    /**
+     * The full issue details loaded for the selected issue
+     *
+     * @property selectedIssueDetails
+     * @type Object
+     * @for Board
+     */
+    @tracked selectedIssueDetails = null;
+
+    /**
+     * The issue types for the project
+     *
+     * @property issueTypes
+     * @type Array
+     * @for Board
+     */
+    @tracked issueTypes = [];
+
+    /**
+     * Loading state for issue details
+     *
+     * @property isLoadingIssueDetails
+     * @type Boolean
+     * @for Board
+     */
+    @tracked isLoadingIssueDetails = false;
+
+    /**
      * These are the actions supported by the Project Board View
      *
      * @property actions
@@ -251,5 +287,88 @@ export default class AppProjectBoardController extends PrometheusController {
      */
     @action applySearch(search) {
         this.query = search.searchquery;
+    }
+
+    /**
+     * This action is used to select an issue for displaying in the sidebar
+     *
+     * @method selectIssue
+     * @param {Object} issue The issue to select
+     * @public
+     */
+    @action async selectIssue(issue) {
+        Logger.debug("AppProjectBoardController::selectIssue");
+        this.selectedIssue = issue;
+        this.isLoadingIssueDetails = true;
+        await this.loadIssueDetails(issue);
+        this.isLoadingIssueDetails = false;
+        Logger.debug("-AppProjectBoardController::selectIssue");
+    }
+
+    /**
+     * This action is used to close the issue details sidebar
+     *
+     * @method closeIssueDetails
+     * @public
+     */
+    @action closeIssueDetails() {
+        Logger.debug("AppProjectBoardController::closeIssueDetails");
+        this.selectedIssue = null;
+        this.selectedIssueDetails = null;
+        this.isLoadingIssueDetails = false;
+        Logger.debug("-AppProjectBoardController::closeIssueDetails");
+    }
+
+    /**
+     * This method loads the full issue details similar to the page route
+     *
+     * @method loadIssueDetails
+     * @param {Object} issue The issue to load details for
+     * @public
+     */
+    async loadIssueDetails(issue) {
+        Logger.debug("AppProjectBoardController::loadIssueDetails");
+        let _self = this;
+        let projectId = this.trackedProject.getProjectId();
+        
+        let options = {
+            query: `((Issue.issueNumber : ${issue.issueNumber}) AND (Issue.projectId : ${projectId}))`,
+            sort: 'Issue.issueNumber,comments.dateCreated',
+            order: 'ASC',
+            rels: 'comments,parentissue,assignedTo,ownedBy,modifiedBy,reportedBy,issuetype,files,spent,estimated,conversationroom,childissues,watchers',
+            limit: -1,
+        };
+
+        let _projectOptions = {
+            query: `(Project.id : ${projectId})`,
+            rels: 'issuestatuses,issuetypes',
+            limit: -1,
+        };
+
+        try {
+            let project = await _self.store.query('project', _projectOptions);
+            let projectData = project.objectAt(0);
+            
+            if(projectData.issuestatuses === undefined || projectData.issuestatuses.length === 0) {
+                let issueStatuses = await _self.store.query('issuestatus', {
+                    query: `(Issuestatus.system : 1)`,
+                    limit: -1,
+                });
+                projectData.issuestatuses = issueStatuses;
+            }
+
+            let issueResult = await _self.store.query('issue', options);
+            let fullIssue = issueResult.objectAt(0);
+
+            this.selectedIssueDetails = fullIssue;
+            this.issueTypes = projectData.issuetypes || [];
+
+            Logger.debug("-AppProjectBoardController::loadIssueDetails");
+        } catch (error) {
+            Logger.error("AppProjectBoardController::loadIssueDetails - Error:", error);
+            this.errorManager.handleError(error, {
+                moduleName: 'issue'
+            });
+        }
     }
 }

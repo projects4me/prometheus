@@ -56,3 +56,28 @@ Feature: render milestone
     When User navigates to app/project/project_1/board
     Then User should see 28 hours and 45 minutes of spent time of first milestone
     And User should see 16 hours and 15 minutes of estimated time of first milestone
+
+  Scenario: Render a milestone in taskboard and check issue details
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_4 is logged in
+    And User_4 selects Project 1
+    And Project has following details
+    ------------------------------------------------------
+    | milestones(milestone) | issuestatuses(issuestatus) |
+    | 1                     | 7                          |
+    ------------------------------------------------------
+    And Each milestone has 5 issues and there status are
+    ------------------------------------------------------------------------
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 1           | 1         | 2    |  0       | 0       | 0        |
+    ------------------------------------------------------------------------
+    And backlog has 2 issues
+    ------------------------------------------------------------------------
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 0           | 0         | 0    |  1       | 0       | 0        |
+    ------------------------------------------------------------------------
+    When User navigates to app/project/project_1/board
+    And User clicks on first issue
+    Then User should see issue details section with issue subject

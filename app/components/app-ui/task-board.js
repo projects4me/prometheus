@@ -83,4 +83,18 @@ export default class TaskBoardComponent extends Component {
 	isSearchActive(search) {
 		return this.activeSearch && this.activeSearch.id === search.id;
 	}
+
+	/**
+	 * This action passes the selectIssue action to the milestones component
+	 *
+	 * @method selectIssue
+	 * @param {Object} issue The issue to select
+	 * @public
+	 */
+	@action
+	selectIssue(issue) {
+		if (this.args.selectIssue) {
+			this.args.selectIssue(issue);
+		}
+	}
 }
