@@ -5,6 +5,13 @@ import { htmlSafe } from "@ember/template";
 import { tracked } from '@glimmer/tracking';
 import AppComponent from 'prometheus/components/app';
 
+/**
+ * This component is used to render the issue details.
+ *
+ * @class IssueIssueDetailsComponent
+ * @namespace Prometheus.Components
+ * @author Rana Nouman <ranamnouman@gmail.com>
+ */
 export default class IssueIssueDetailsComponent extends AppComponent {
     /**
      * This flag is used to show or hide the modal dialog box
@@ -12,7 +19,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      *
      * @property previewFileDialog
      * @type boolean
-     * @for Page
+     * @for IssueIssueDetailsComponent
      * @private
      */
     @tracked previewFileDialog = false;
@@ -23,7 +30,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      *
      * @property logTimeDialog
      * @type boolean
-     * @for Page
+     * @for IssueIssueDetailsComponent
      * @private
      */
     @tracked logTimeDialog = false;
@@ -34,7 +41,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      *
      * @property estimateTimeDialog
      * @type boolean
-     * @for Page
+     * @for IssueIssueDetailsComponent
      * @private
      */
     @tracked estimateTimeDialog = false;
@@ -44,7 +51,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      *
      * @property newLogTime
      * @type Prometheus.Models.Timelog
-     * @for PAge
+     * @for IssueIssueDetailsComponent
      * @private
      */
     @tracked newTimeLog = null;
@@ -55,7 +62,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      *
      * @property editLogDialog
      * @type boolean
-     * @for Page
+     * @for IssueIssueDetailsComponent
      * @private
      */
     @tracked editLogDialog = false;
@@ -65,7 +72,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      *
      * @property editingLog
      * @type Prometheus.Models.Timelog
-     * @for PAge
+     * @for IssueIssueDetailsComponent
      * @private
      */
     @tracked editingLog = null;
@@ -75,7 +82,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      *
      * @property pubSub
      * @type Ember.Service
-     * @for AppProjectIssuePageController
+     * @for IssueIssueDetailsComponent
      * @protected
      */
     @service pubSub;   
@@ -85,7 +92,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      *
      * @property queryParams
      * @type Array
-     * @for AppProjectIssuePageController
+     * @for IssueIssueDetailsComponent
      * @public
      */
     queryParams = ['s_id'];
@@ -160,7 +167,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      *
      * @property usersList
      * @type Array
-     * @for Create
+     * @for IssueIssueDetailsComponent
      * @private
      */
     get usersList() {
@@ -173,7 +180,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      *
      * @property issuesList
      * @type Array
-     * @for Page
+     * @for IssueIssueDetailsComponent
      * @private
      */
     @computed('this.projectController.issuesList')
@@ -329,9 +336,14 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @public
      */
     @action editIssue(issueNumber) {
-        Logger.debug('AppProjectIssuePageController::editIssue(' + issueNumber + ')');
-        this.router.transitionTo('app.project.issue.edit', { issue_number: issueNumber });
-        Logger.debug('-AppProjectIssuePageController::paginate()');
+        Logger.debug('IssueIssueDetailsComponent::editIssue(' + issueNumber + ')');
+        if(!this.args.quickView) {
+            this.router.transitionTo('app.project.issue.edit', { issue_number: issueNumber });
+        } else {
+            let url = this.router.urlFor('app.project.issue.edit', { issue_number: issueNumber });
+            window.open(url, '_blank');
+        }
+        Logger.debug('-IssueIssueDetailsComponent::paginate()');
     }
 
     /**
@@ -351,7 +363,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @param file
      */
     @action deleteFile(file) {
-        Logger.debug('App.Project.Issue.PageController->deleteFile');
+        Logger.debug('IssueIssueDetailsComponent->deleteFile');
         let _self = this;
 
         let deleting = new Messenger().post({
@@ -403,7 +415,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @param file
      */
     @action downloadFile(file) {
-        Logger.debug('App.Project.Issue.PageController->downloadFile');
+        Logger.debug('IssueIssueDetailsComponent->downloadFile');
         let _self = this;
         Logger.debug(_self);
 
@@ -426,7 +438,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
 
         // navigate user to the page for download
 
-        Logger.debug('-App.Project.Issue.PageController->downloadFile');
+        Logger.debug('-IssueIssueDetailsComponent->downloadFile');
     }
 
     /**
@@ -435,7 +447,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @param file
      */
     @action previewFile(file) {
-        Logger.debug('App.Project.Issue.PageController->previewFile');
+        Logger.debug('IssueIssueDetailsComponent->previewFile');
         let _self = this;
         Logger.debug(_self);
         _self.showDialog();
@@ -458,7 +470,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
 
         // navigate user to the page for download
 
-        Logger.debug('-App.Project.Issue.PageController->previewFile');
+        Logger.debug('-IssueIssueDetailsComponent->previewFile');
     }
 
     /**
@@ -468,7 +480,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @public
      */
     @action logTime() {
-        Logger.debug('App.Project.Issue.PageController->logTime');
+        Logger.debug('IssueIssueDetailsComponent->logTime');
         let _self = this;
         let newLog = _self.newTimeLog;
 
@@ -504,7 +516,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
 
         _self.removeLogTimeModal();
 
-        Logger.debug('-App.Project.Issue.PageController->logTime');
+        Logger.debug('-IssueIssueDetailsComponent->logTime');
     }
 
     /**
@@ -602,7 +614,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @public
      */
     @action editLog() {
-        Logger.debug('App.Project.Issue.PageController->editLog');
+        Logger.debug('IssueIssueDetailsComponent->editLog');
         let _self = this;
         Logger.debug(_self);
         let log = _self.editingLog;
@@ -639,7 +651,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         _self.removeEditLogModal();
         _self.removeEditEstimateModal();
 
-        Logger.debug('-App.Project.Issue.PageController->logTime');
+        Logger.debug('-IssueIssueDetailsComponent->logTime');
     }
 
     /**
@@ -852,7 +864,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @public
      */
     @action updateStatus(issue, newStatus) {
-        Logger.debug('AppProjectIssuePageController::updateStatus');
+        Logger.debug('IssueIssueDetailsComponent::updateStatus');
         let _self = this;
         let translatedStatus = _self.intl.t(`views.app.issue.lists.status.${newStatus}`);
         let messenger = new Messenger().post({
@@ -904,7 +916,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @public
      */
     @action toggleWatcher() {
-        Logger.debug('AppProjectIssuePageController::toggleWatcher');
+        Logger.debug('IssueIssueDetailsComponent::toggleWatcher');
         let _self = this;
         
         if(this.isCoreMember) {
@@ -944,7 +956,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             });
         });
         
-        Logger.debug('-AppProjectIssuePageController::toggleWatcher');
+        Logger.debug('-IssueIssueDetailsComponent::toggleWatcher');
     }
 
     /**
@@ -979,7 +991,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      */
     @action
     async addWatcher(member) {
-        Logger.debug('AppProjectIssuePageController::addWatcher - Member:', member.name);
+        Logger.debug('IssueIssueDetailsComponent::addWatcher - Member:', member.name);
         try {
             let existingWatcher = this.issue.watchers.find(watcher => watcher.userId === member.id);
             if(existingWatcher) {
@@ -1006,9 +1018,9 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                 showCloseButton: true
             });
         } catch (e) {
-            Logger.error('AppProjectIssuePageController::addWatcher - Error:', e);
+            Logger.error('IssueIssueDetailsComponent::addWatcher - Error:', e);
         }
-        Logger.debug('-AppProjectIssuePageController::addWatcher');
+        Logger.debug('-IssueIssueDetailsComponent::addWatcher');
     }
 
     /**
@@ -1065,7 +1077,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                 this.issuePlanError = this.intl.t('global.oops');
             }
         } catch (e) {
-            Logger.error('AppProjectIssuePageController::fetchIssuePlan - Error:', e);
+            Logger.error('IssueIssueDetailsComponent::fetchIssuePlan - Error:', e);
             this.issuePlanError = this.intl.t('global.oops');
         } finally {
             this.issuePlanLoading = false;

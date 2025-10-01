@@ -7,11 +7,11 @@
       <AccessControl @aclContext="App.Project.Issue.Read">
         <div class="box box-primary issue-details" data-field="issue.subject">
           <div class="box-header with-border box-header-no-content flex-row flex-jc-sb flex-ai-c">
+            {{#unless @quickView}}
             <h2 class="box-title issue-title">{{this.issue.issuetype.name}} - #{{this.issue.issueNumber}} | 
               <span class="issue-subject">{{this.issue.subject}}</span>
 
               {{!-- Issue status dropdown --}}
-              {{#unless @quickView}}
               <span class="issue-status">
                 <div class="dropdown">
                   <span class="badge {{this.issue.status}}" data-toggle="dropdown">
@@ -31,13 +31,17 @@
                   </ul>
                 </div>
               </span>
-              {{/unless}}
             </h2>
+            {{else}}
+            <h4 class="box-title issue-title">
+              <LinkTo @route="app.project.issue.page" target="_blank" @model={{this.issue.issueNumber}}>#{{this.issue.issueNumber}} - {{this.issue.subject}}</LinkTo>
+            </h4>
+            {{/unless}}
             {{!-- Issue Actions Toolbar --}}
             <AppUi::Toolbar>
               <:primary>
                 {{!-- AI Plan button --}}
-                {{#unless this.issue.isPlanned}}
+                {{#unless (or @quickView this.issue.isPlanned)}}
                   <AppUi::Button 
                     data-btn="ai-plan" 
                     type="button" 
@@ -94,8 +98,21 @@
                     >
                       <i class="fa fa-plus"></i>
                     </AppUi::Button>
-                  {{/if}}
+                  {{/if}}                 
                 </div>
+
+                {{!-- Close issue button --}}
+                {{#if @quickView}}
+                  <AppUi::Button 
+                    data-btn="close" 
+                    type="button" 
+                    class="btn btn-box-tool btn-no-outline" 
+                    data-toggle="tooltip" 
+                    title="{{t 'views.app.issue.close'}}" 
+                    @onClick={{@closeIssueDetails}}>
+                    <i class="fa fa-times"></i>
+                  </AppUi::Button>
+                {{/if}}
               </:primary>
             </AppUi::Toolbar>
           </div>

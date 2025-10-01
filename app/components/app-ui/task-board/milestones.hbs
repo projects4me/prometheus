@@ -41,8 +41,10 @@
               {{#each issues as |issue|}}
                 {{#if (eq issue.status status.name)}}
                   <div class="board-issue-item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}">
-                  
-                    <h4>{{priority-icon priority=(readonly issue.priority)}} <a href="#" {{on "click" (fn @selectIssue issue)}}>#{{issue.issueNumber}} - {{issue.subject}}</a></h4>
+                    <div class="flex-row flex-jc-sb flex-ai-c">
+                      <h4>{{priority-icon priority=(readonly issue.priority)}} <LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}}>#{{issue.issueNumber}} - {{issue.subject}}</LinkTo></h4>
+                      <div class="issue-quick-view-icon" data-toggle="tooltip" title="{{t 'views.app.board.quickView'}}"><i class="fa fa-eye" {{on "click" (fn @selectIssue issue)}}></i></div>
+                    </div>
                     <p class="description">{{safe-html issue.description}}</p>
                     <div class="flex-row flex-jc-end">
                       <div><img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></div>

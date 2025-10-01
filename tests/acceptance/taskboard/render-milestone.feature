@@ -79,5 +79,5 @@ Feature: render milestone
     | 1   | 0           | 0         | 0    |  1       | 0       | 0        |
     ------------------------------------------------------------------------
     When User navigates to app/project/project_1/board
-    And User clicks on first issue
+    And User clicks on first issue quick view
     Then User should see issue details section with issue subject

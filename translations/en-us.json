@@ -944,7 +944,8 @@
           "added": "<strong>{name}</strong> added as Watcher",
           "noAvailableMembers": "All members are actively watching this issue",
           "cannotAddCoreMember": "Core members of issue are already added watchers by default"
-        }
+        },
+        "close": "Close Quick View"
       },
       "tag": {
         "fields": {
@@ -1184,6 +1185,7 @@
       },
       "board": {
         "backlog": "Backlog",
+        "quickView": "Quick View",
         "hours": "h",
         "minutes": "m",
         "spent": "Spent",
