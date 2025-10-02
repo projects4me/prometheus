@@ -831,7 +831,10 @@
             "edit": "Edit time log",
             "delete": "Delete time log",
             "estimates": "Estimates"
-          }
+          },
+          "assigneeUpdating": "Updating assignee to <strong>{name}</strong> ..",
+          "assigneeUpdated": "Assignee updated to <strong>{name}</strong>",
+          "assigneeUpdateFailed": "Failed to update assignee to <strong>{name}</strong>"
         },
         "edit": {
           "page": "Edit Issue : <strong>#{issueNumber} - {name}</strong>",

@@ -5,6 +5,7 @@
 import PrometheusController from "prometheus/controllers/prometheus";
 import { computed, action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import {inject as controller } from '@ember/controller';
 /**
  * This is the controller for the board controller
  *
@@ -15,6 +16,15 @@ import { tracked } from '@glimmer/tracking';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class AppProjectBoardController extends PrometheusController {
+
+    /**
+     * The project controller
+     *
+     * @property projectController
+     * @type Ember.Service
+     * @for AppProjectBoardController
+     */
+    @controller('app.project') projectController;
 
     /**
      * These are the query params that the controller supports.

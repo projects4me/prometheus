@@ -55,6 +55,10 @@ export function register(server, ctx) {
                     status: statusRecord.name
                 });
             }
+        }
+        
+        if(ctx.get('customCallback')) {
+            return ctx.get('customCallback')(issue);
         }        
         return issue;
     });
