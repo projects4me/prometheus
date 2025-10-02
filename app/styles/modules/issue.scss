@@ -446,6 +446,40 @@
   }
 }
 
+// Assignee dropdown styles
+.users-list {
+  .dropdown {
+    .users-list-name {
+      cursor: pointer;
+    }
+
+    .dropdown-menu {
+      padding: 0;
+      li {
+        a {
+          display: flex;
+          align-items: center;
+          padding: 0.5rem 1rem;
+          color: $darkColor;
+          text-decoration: none;
+
+          &:hover {
+            background-color: $primaryColor;
+            color: white;
+          }
+
+          img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+
 .project-members-list {
   display: flex;
   align-items: center;

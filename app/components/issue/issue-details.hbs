@@ -269,7 +269,22 @@
             <ul class="users-list clearfix">
               <li>
                 <img src="{{this.apiHost}}/userimage/get/{{this.issue.assignedTo.id}}" alt="{{this.issue.assignedTo.name}}">
-                <LinkTo @route="app.user.page" @model={{this.issue.assignedTo.id}} class="users-list-name">{{this.issue.assignedTo.name}}</LinkTo>
+                <div class="dropdown" data-issue-assignee-dropdown>
+                  <span class="users-list-name" data-toggle="dropdown" data-issue-assignee>
+                    {{this.issue.assignedTo.name}}
+                    <i class="fa fa-caret-down"></i>
+                  </span>
+                  <ul class="dropdown-menu">
+                    {{#each this.availableAssignees as |member|}}
+                      <li>
+                        <a href="#" {{on "click" (fn this.updateAssignee this.issue member)}}>
+                          <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}" style="width: 20px; height: 20px; border-radius: 50%; margin-right: 8px;">
+                          {{member.name}}
+                        </a>
+                      </li>
+                    {{/each}}
+                  </ul>
+                </div>
                 <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
               </li>
               <li>
