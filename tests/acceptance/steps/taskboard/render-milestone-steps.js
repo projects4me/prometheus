@@ -15,9 +15,9 @@ export default function (assert) {
 			});
 		});
 	})
-	.when('User clicks on first issue', async function () {
+	.when('User clicks on first issue quick view', async function () {
 		let issue = server.schema.issues.all().models[0];
-		let issueEl = document.querySelector(`[data-field-issue-id="${issue.id}"] h4 a`);
+		let issueEl = document.querySelector(`[data-field-issue-id="${issue.id}"] .issue-quick-view-icon i`);
 		await click(issueEl);
 	})
 	.then('User should see $hours hours and $minutes minutes of $context time of first milestone', function (hours, minutes, context) {
@@ -30,8 +30,8 @@ export default function (assert) {
 	})
 	.then('User should see issue details section with issue subject', function () {
 		let issue = server.schema.issues.all().models[0];
-		let issueDetails = document.querySelector('.issue-details-container .issue-details .issue-subject');
-		assert.equal(issueDetails.innerText, issue.subject);
+		let issueDetails = document.querySelector('.issue-details-container .issue-details .issue-title');
+		assert.equal(issueDetails.innerText.includes(issue.subject), true);
 	})
 	.then(
 		'User should see $issuesCount issues in $status status',
