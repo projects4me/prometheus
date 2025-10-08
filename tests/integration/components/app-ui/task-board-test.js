@@ -7,11 +7,13 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import _ from 'lodash';
-
+import AclStub from '../../stub-services/acl-stub';
 module('Integration | Component | task-board', function (hooks) {
     setupRenderingTest(hooks);
 
     test('it renders', async function (assert) {
+        this.owner.register('service:acl', AclStub);
+        
         let milestones = [
             {
                 id: "1",

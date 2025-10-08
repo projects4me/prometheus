@@ -4,7 +4,9 @@
 
 import AppComponent from '../../app';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import DateUtils from 'prometheus/utils/date';
+import format from 'prometheus/utils/data/format';
 
 /**
  * This component is used to render milestones of selected project.
@@ -15,6 +17,27 @@ import DateUtils from 'prometheus/utils/date';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class TaskBoardMilestonesComponent extends AppComponent {
+	/**
+	 * This flag is used to show or hide the modal dialog box
+	 * for adding issues
+	 *
+	 * @property addIssueDialog
+	 * @type boolean
+	 * @for TaskBoardMilestones
+	 * @protected
+	 */
+	@tracked addIssueDialog = false;
+
+	/**
+	 * This is the new issue model for the modal form
+	 *
+	 * @property newIssue
+	 * @type Object
+	 * @for TaskBoardMilestones
+	 * @protected
+	 */
+	@tracked newIssue = null;
+
 	/**
 	 * This property returns the progress of the milestone
 	 *
@@ -196,11 +219,12 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 		let totalHours = 0;
 		let totalMinutes = 0;
 
-		this.milestone.issues.forEach(issue => {
-			issue[context]?.forEach(timelog => {
+		this.milestone.issues.forEach((issue) => {
+			issue[context]?.forEach((timelog) => {
 				// Convert days to hours (8 hours per day)
 				let daysToHours = timelog.days * 8;
-				let hours = parseInt(timelog.hours, 10) + parseInt(daysToHours, 10);
+				let hours =
+					parseInt(timelog.hours, 10) + parseInt(daysToHours, 10);
 				let minutes = parseInt(timelog.minutes, 10);
 
 				totalHours += hours;
@@ -217,5 +241,139 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 			hours: totalHours,
 			minutes: totalMinutes
 		};
-	}	
+	}
+
+	/**
+	 * This function is used to show the add issue modal dialog box
+	 *
+	 * @method showAddIssueDialog
+	 * @public
+	 */
+	@action showAddIssueDialog(statusName) {
+		let status = this.args.statuses.find(
+			(status) => status.name === statusName
+		);
+		let milestone = this.args.milestone;
+		if (this.newIssue === null) {
+			this.newIssue = this.store.createRecord('issue', {
+				owner: this.currentUser.user.id,
+				assignee: this.currentUser.user.id,
+				reportedUser: this.currentUser.user.id,
+				projectId: this.trackedProject.getProjectId(),
+				projectShortcode: this.trackedProject.shortCode,
+				assignedTo: this.currentUser.user
+			});
+		}
+
+		if (this.newIssue) {
+			this.newIssue.statusId = status.id;
+			this.newIssue.status = status.name;
+			this.newIssue.milestoneId = milestone.id;
+		}
+
+		this.addIssueDialog = true;
+	}
+
+	/**
+	 * This function is used to hide the add issue modal dialog box
+	 *
+	 * @method removeAddIssueModal
+	 * @public
+	 */
+	@action removeAddIssueModal() {
+		if (this.isDestroyed || this.isDestroying) return;
+		this.addIssueDialog = false;
+		$('.modal').modal('hide');
+	}
+
+	/**
+	 * This function is used to save the new issue
+	 *
+	 * @method saveIssue
+	 * @public
+	 */
+	@action async saveIssue() {
+		let messenger = new Messenger().post({
+			message: this.intl.t('views.app.board.issue.creating'),
+			type: 'info',
+			showCloseButton: false,
+			hideAfter: false
+		});
+		try {
+			await this.args.save('issueCreate', 'issue', this.newIssue, false);
+			messenger.update({
+				message: this.intl.t('views.app.board.issue.created', {
+					subject: this.newIssue.subject
+				}),
+				type: 'success',
+				showCloseButton: true,
+				hideAfter: 3
+			});
+			this.milestone.issues.pushObject(this.newIssue);
+			this.removeAddIssueModal();
+			this.newIssue = null;
+		} catch (error) {
+			messenger.update({
+				message: this.intl.t('views.app.board.issue.error'),
+				type: 'error',
+				showCloseButton: true,
+				hideAfter: 3
+			});
+			Logger.error(
+				'TaskBoardMilestonesComponent::saveIssue - Error:',
+				error
+			);
+		}
+	}
+
+	/**
+	 * This property returns the list of issue statuses
+	 *
+	 * @property issueStatusList
+	 * @type Array
+	 * @for TaskBoardMilestones
+	 * @public
+	 */
+	get issueStatusList() {
+		return new format(this).getTranslatedModelList(
+			this.args.statuses,
+			'views.app.issue.lists.status'
+		);
+	}
+
+	/**
+	 * This property returns the list of issue types
+	 *
+	 * @property typeList
+	 * @type Array
+	 * @for TaskBoardMilestones
+	 */
+	get typeList() {
+		return new format(this).getSelectList(this.args.issueTypes);
+	}
+
+	/**
+	 * This property returns the list of priorities
+	 *
+	 * @property priority
+	 * @type Array
+	 * @for TaskBoardMilestones
+	 */
+	get priority() {
+		return new format(this).getList('views.app.issue.lists.priority');
+	}
+
+	/**
+	 * This property returns the sorted issues
+	 *
+	 * @property sortedIssues
+	 * @type Array
+	 * @for TaskBoardMilestones
+	 */
+	get sortedIssues() {
+		let issues = (this.milestone.issues || []).slice().sort((a, b) => {
+			return new Date(b.dateModified) - new Date(a.dateModified);
+		});
+		return issues;
+	}
 }

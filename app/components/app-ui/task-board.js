@@ -15,6 +15,17 @@ import { action } from '@ember/object';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class TaskBoardComponent extends Component {
+
+	/**
+	 * This property is used to keep track the state of the creating issue process.
+	 *
+	 * @property creatingIssue
+	 * @type boolean
+	 * @for TaskBoard
+	 * @protected
+	 */
+	@tracked creatingIssue = false;
+
 	/**
 	 * This property is used to keep track the query, which is provided by the user, for
 	 * filtering the issues.
@@ -95,6 +106,30 @@ export default class TaskBoardComponent extends Component {
 	selectIssue(issue) {
 		if (this.args.selectIssue) {
 			this.args.selectIssue(issue);
+		}
+	}
+
+	/**
+	 * This action is used to save the issue.
+	 *
+	 * @method saveIssue
+	 * @param {...any} args The arguments to pass to the save method
+	 * @protected
+	 */
+	@action 
+	async saveIssue(...args) {
+		try {
+			if (this.args.save) {
+				await this.args.save(...args);
+				this.creatingIssue = true;
+			}
+		} catch (error) {
+			this.creatingIssue = false;
+			Logger.error('TaskBoardComponent::saveIssue - Error:', error);
+			throw error;
+		}
+		finally {
+			this.creatingIssue = false;
 		}
 	}
 }

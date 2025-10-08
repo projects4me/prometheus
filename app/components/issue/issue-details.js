@@ -881,14 +881,14 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                 message: _self.intl.t("views.app.issue.detail.statusUpdated", { status: translatedStatus }),
                 type: 'success',
                 showCloseButton: true,
-                hideAfter: 3000
+                hideAfter: 3
             });
         }).catch(() => {
             messenger.update({
                 message: _self.intl.t("views.app.issue.detail.statusUpdateFailed", { status: translatedStatus }),
                 type: 'error',
                 showCloseButton: true,
-                hideAfter: 3000
+                hideAfter: 3
             });
             issue.rollbackAttributes();
         });
@@ -1202,14 +1202,14 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                 message: htmlSafe(_self.intl.t("views.app.issue.detail.assigneeUpdated", { name: newAssignee.name })),
                 type: 'success',
                 showCloseButton: true,
-                hideAfter: 3000
+                hideAfter: 3
             });
         }).catch(() => {
             messenger.update({
                 message: htmlSafe(_self.intl.t("views.app.issue.detail.assigneeUpdateFailed", { name: newAssignee.name })),
                 type: 'error',
                 showCloseButton: true,
-                hideAfter: 3000
+                hideAfter: 3
             });
             issue.rollbackAttributes();
         });

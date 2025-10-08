@@ -1,4 +1,4 @@
-<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue query=this.query paramsQuery=@paramsQuery}}>
+<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue query=this.query paramsQuery=@paramsQuery creatingIssue=this.creatingIssue}}>
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs milestone-tabs">
       {{#each @milestones as |milestone index|}}
@@ -48,6 +48,14 @@
             @query={{this.query}}
             @openIssue={{@openIssue}}
             @selectIssue={{this.selectIssue}}
+            @validateField={{@validateField}}
+            @selectStatic={{@selectStatic}}
+            @selectRelated={{@selectRelated}}
+            @save={{this.saveIssue}}
+            @message={{@message}}
+            @issueTypes={{@issueTypes}}
+            @membersList={{@membersList}}
+            @search={{@search}}
           />
         </div>
       {{/each}}
