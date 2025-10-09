@@ -90,19 +90,20 @@ export default class PrometheusCreateController extends PrometheusController {
      *
      * @method save
      * @param {string} schemaName The schema name for which we are saving the model.
-     * @param {Event} event The event object.
      * @param {string} module The module for which we are showing the error. This can be multiple modules in same view/template.
+     * @param {Prometheus.Models} model The model to save.
+     * @param {boolean} showDefaultSuccessMessage Whether to show the default success message.
+     * @param {Event} event The event object.
      * @public
      * @todo Handle the situation where we are not using validations
      */
-    @action save(schemaName, event, module) {
-        let model = this.model;
-
+    @action save(schemaName, module, model, showDefaultSuccessMessage = true, event) {
+        model = this.model || model;
         const promise = new Promise((resolve, reject) => {
             this.validate(model, schemaName).then((validation) => {
                 if (validation.isValid) {
                     this.beforeSave(model);
-                    this._save(model, resolve, reject);
+                    this._save(model, resolve, reject, showDefaultSuccessMessage);
                 } else {
                     this._showError(validation.errors, module);
                     reject();
@@ -220,13 +221,15 @@ export default class PrometheusCreateController extends PrometheusController {
      * @param model
      * @private
      */
-    _save(model, resolve, reject) {
+    _save(model, resolve, reject, showDefaultSuccessMessage = true) {
         let _self = this;
         return model
             .save()
             .then(function (data) {
                 _self.afterSave(data).then(function () {
-                    _self.showSuccess(data);
+                    if (showDefaultSuccessMessage) {
+                        _self.showSuccess(data);
+                    }
                     _self.navigateToSuccess(data);
                     resolve();
                 });
@@ -362,6 +365,7 @@ export default class PrometheusCreateController extends PrometheusController {
             message: messages,
             type: "error",
             showCloseButton: true,
+            hideAfter: 5
         });
     }
 

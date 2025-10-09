@@ -55,7 +55,7 @@ export default App.extend({
 
         let projectOptions = {
             query: "(Project.shortCode : " + projectShortCode + ")",
-            rels: "members,issuestatuses",
+            rels: "members,issuestatuses,issuetypes",
             sort: "members.name",
             order: "ASC",
             page: 0,
@@ -72,6 +72,7 @@ export default App.extend({
             project.objectAt(0).get('members') != undefined) {
             _self.set('members', project.objectAt(0).get('members'));
             _self.set('issuestatuses', project.objectAt(0).get('issuestatuses'));
+            _self.set('issuetypes', project.objectAt(0).get('issuetypes'));
         }
 
         // set projectId in trackedProject service
@@ -138,6 +139,7 @@ export default App.extend({
         controller.set('issues', _self.get('issues'));
         controller.set('members', _self.get('members'));
         controller.set('issueStatuses', _self.get('issuestatuses'));
+        controller.set('issuetypes', _self.get('issuetypes'));
     },
 
 });

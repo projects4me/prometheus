@@ -2,10 +2,12 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import PrometheusController from "prometheus/controllers/prometheus";
+import PrometheusCreateController from "prometheus/controllers/prometheus/create";
 import { computed, action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import {inject as controller } from '@ember/controller';
+import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
+
 /**
  * This is the controller for the board controller
  *
@@ -14,8 +16,117 @@ import {inject as controller } from '@ember/controller';
  * @module App.Project
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
- */
-export default class AppProjectBoardController extends PrometheusController {
+ */export default class AppProjectBoardController extends PrometheusCreateController.extend(ProjectRelated) {
+
+    /**
+     * This object holds all of the information that we need to create our schema and also need to 
+     * render the template (in future).
+     * @property metadata
+     * @type Object
+     * @for AppProjectBoardController
+     * @protected
+     */
+    metadata = {
+        sections: [
+            {
+                name: "issueCreate",
+                fields: [
+                    {
+                        name: "subject",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "typeId",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "statusId",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "priority",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "startDate",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "endDate",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    },
+                                    {
+                                        name: "test",
+                                        value: [
+                                            'end-date-greater-than-start-date',
+                                            this.intl.t(
+                                                'views.app.issue.create.validations.endDateGreaterThanStartDate'
+                                            ),
+                                            function(value) {
+                                                const endDate = new Date(value);
+                                                const startDate = new Date(this.parent.startDate);
+                                                return endDate > startDate;
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    };
 
     /**
      * The project controller
@@ -25,6 +136,19 @@ export default class AppProjectBoardController extends PrometheusController {
      * @for AppProjectBoardController
      */
     @controller('app.project') projectController;
+
+    /**
+     * This function is called on the initialization of the controller. In this function
+     * we're calling setupSchema method in order to generate schema, by analyzing metadata
+     * defined in the controller, that will be used to validate the form of the template.
+     *
+     * @method constructor
+     * @public
+     */    
+    constructor() {
+        super(...arguments);
+        this.setupSchema();
+    }
 
     /**
      * These are the query params that the controller supports.

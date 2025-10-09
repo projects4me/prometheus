@@ -1195,7 +1195,11 @@
         "estimated": "Estimated",
         "savedSearches": "Saved Searches",
         "issue": {
-          "loading": "Loading Issue Details..."
+          "loading": "Loading Issue Details...",
+          "create": "Create Issue",
+          "creating": "Creating issue ..",
+          "created": "Issue <strong>{subject}</strong> created successfully",
+          "error": "Failed to create issue"
         }
       },
       "role": {

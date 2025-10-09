@@ -33,11 +33,21 @@
         <div class="box {{get-prop @statusClass status.name}}">
 
           <div class="box-header with-border" data-field-status="{{status.name}}">
-            {{t (concat "views.app.issue.lists.status." status.name)}} ({{call (fn this.getIssuesCountForStatus status.name)}})
+            <div class="flex-row flex-jc-sb flex-ai-c">
+              <div>
+                {{t (concat "views.app.issue.lists.status." status.name)}} ({{call (fn this.getIssuesCountForStatus status.name)}})
+              </div>
+              <AppUi::DottedAddButton 
+                @onClick={{fn this.showAddIssueDialog status.name}}
+                @title={{t "views.app.board.issue.create"}}
+                @data-add={{concat "issue-" status.name}}
+                @aclContext="App.Issue.Create"
+              />
+            </div>
           </div>
 
           <div class="lane box-body" data-field-lane-group={{@group}} data-field-milestone-id={{this.milestone.id}} data-field-status="{{status.name}}" data-issue-status-id={{status.id}}>
-            <AppUi::TaskBoard::IssuesProvider @issues={{this.milestone.issues}} @query={{@query}} as |issues|>
+            <AppUi::TaskBoard::IssuesProvider @issues={{this.sortedIssues}} @query={{@query}} as |issues|>
               {{#each issues as |issue|}}
                 {{#if (eq issue.status status.name)}}
                   <div class="board-issue-item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}">
@@ -70,3 +80,130 @@
   </div>
 
 </div>
+
+{{!-- Add Issue Modal --}}
+{{#if this.addIssueDialog}}
+  {{#bootstrap-modal
+    title="views.app.board.issue.create"
+    closeLabel="global.form.close"
+    confirmLabel="global.form.save"
+    close=(action "removeAddIssueModal")
+    confirm=(action "saveIssue")
+  }}
+    <div class="form-group">
+      <FormFields::FieldText
+        @placeholder={{t "views.app.issue.create.placeholder.subject"}}
+        @label={{t "views.app.issue.create.subject"}}
+        @type="text"
+        @value={{this.newIssue.subject}}
+        @data-field="issue.subject"
+        @length="255"
+        @validate={{action @validateField "issueCreate" (hash name="subject" value=this.newIssue.subject model=this.newIssue)}}
+        @message={{@message.issueCreate.subject}}
+        @aclContext="App.Project.Issue.Create.Subject"
+        {{autofocus}}
+      />
+
+      <div data-field="issue.description" class="form-field ember-view">
+        <AppUi::ToastUi
+          @usersList={{@membersList}}
+          @issueSearch={{perform @search}}
+          @contents={{readonly this.newIssue.description}}
+          @initialValue={{this.newIssue.description}}
+          @editType='wysiwyg'
+          @hide={{array 'footer'}}
+          @onContentChange={{action @selectStatic this.newIssue 'description'}}              
+        />
+        <span class="highlight"></span>
+        <span class="bar"></span>
+        <FormFields::Label
+          @label={{t "views.app.issue.create.description"}}
+          @data-field="issue.description"
+        />                
+        <span class="count pull-right"></span>
+      </div>        
+
+      <FormFields::FieldRelate
+        @placeholder={{t "views.app.issue.create.type"}}
+        @label={{t "views.app.issue.create.type"}}
+        @value={{this.newIssue.typeId}}
+        @options={{this.typeList}}
+        @selected={{find-by "value" this.newIssue.typeId this.typeList}}
+        @searchField="label"
+        @onchange={{action @selectRelated this.newIssue 'typeId'}}
+        @relateType="relate-simple"
+        @data-field="issue.type"
+        @validate={{action @validateField "issueCreate" (hash name="typeId" value=this.newIssue.typeId model=this.newIssue)}}
+        @message={{@message.issueCreate.typeId}}
+        @aclContext="App.Project.Issue.Create.Type"
+      />
+
+      <FormFields::FieldRelate
+        @placeholder={{t "views.app.issue.create.status"}}
+        @label={{t "views.app.issue.create.status"}}
+        @value={{this.newIssue.statusId}}
+        @options={{this.issueStatusList}}
+        @selected={{find-by "value" this.newIssue.statusId this.issueStatusList}}
+        @searchField="label"
+        @onchange={{action @selectRelated this.newIssue 'statusId'}}
+        @relateType="relate-simple"
+        @data-field="issue.status"
+        @validate={{action @validateField "issueCreate" (hash name="statusId" value=this.newIssue.statusId model=this.newIssue)}}                
+        @message={{@message.issueCreate.statusId}}
+        @disabled={{true}}
+        @aclContext="App.Project.Issue.Create.Status"
+      />
+
+      <FormFields::FieldRelate
+        @placeholder={{t "views.app.issue.create.priority"}}
+        @label={{t "views.app.issue.create.priority"}}
+        @value={{this.newIssue.priority}}
+        @options={{this.priority}}
+        @selected={{find-by "value" this.newIssue.priority this.priority}}
+        @searchField="label"
+        @onchange={{action @selectRelated this.newIssue 'priority'}}
+        @relateType="relate-issuepriority"
+        @data-field="issue.priority"
+        @validate={{action @validateField "issueCreate" (hash name="priority" value=this.newIssue.priority model=this.newIssue)}}
+        @message={{@message.issueCreate.priority}}
+        @aclContext="App.Project.Issue.Create.Priority"
+      />
+
+      <FormFields::FieldDate
+        @placeholder={{t "views.app.issue.create.placeholder.startDate"}}
+        @label={{t "views.app.issue.create.startDate"}}
+        @value="{{readonly this.newIssue.startDate}}"
+        @update={{action @selectStatic this.newIssue 'startDate'}}
+        @data-field="issue.startDate"
+        @format="YYYY-MM-DD"
+        @singleDatePicker={{true}}
+        @showDropdowns={{true}}
+        @positionX="right"
+        @positionY="down"
+        @autoApply={{true}}
+        @minDate='1990'
+        @validate={{action @validateField "issueCreate" (hash name="startDate" value=this.newIssue.startDate model=this.newIssue)}}                
+        @message={{@message.issueCreate.startDate}}
+        @aclContext="App.Project.Issue.Create.StartDate"
+      />
+
+      <FormFields::FieldDate
+        @placeholder={{t "views.app.issue.create.placeholder.endDate"}}
+        @label={{t "views.app.issue.create.endDate"}}
+        @value={{readonly this.newIssue.endDate}}
+        @update={{action @selectStatic this.newIssue 'endDate'}}
+        @data-field="issue.endDate"
+        @format="YYYY-MM-DD"
+        @singleDatePicker={{true}}
+        @showDropdowns={{true}}
+        @positionX="right"
+        @positionY="down"
+        @autoApply={{true}}
+        @minDate='1990'
+        @validate={{action @validateField "issueCreate" (hash name="endDate" value=this.newIssue.endDate model=this.newIssue)}}                
+        @message={{@message.issueCreate.endDate}}
+        @aclContext="App.Project.Issue.Create.EndDate"
+      />
+    </div>
+  {{/bootstrap-modal}}
+{{/if}}
