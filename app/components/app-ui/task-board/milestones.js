@@ -301,6 +301,10 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 		});
 		try {
 			await this.args.save('issueCreate', 'issue', this.newIssue, false);
+			
+			//set issue type
+			this.newIssue.issuetype = this.store.peekRecord('issuetype', this.newIssue.typeId);
+
 			messenger.update({
 				message: this.intl.t('views.app.board.issue.created', {
 					subject: this.newIssue.subject

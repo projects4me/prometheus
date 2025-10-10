@@ -1194,6 +1194,13 @@
         "spent": "Spent",
         "estimated": "Estimated",
         "savedSearches": "Saved Searches",
+        "infoTags": {
+          "blocked": "Blocked",
+          "overdue": "Overdue",
+          "reopened": "Reopened",
+          "noTimelogs": "No Timelogs",
+          "missingDescription": "Missing Description"
+        },
         "issue": {
           "loading": "Loading Issue Details...",
           "create": "Create Issue",
