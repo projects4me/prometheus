@@ -69,7 +69,7 @@ export default App.extend({
         //Fetch backlog issues
         let _issueOptions = {
             query: `(((Issue.milestoneId NULL) OR (Issue.milestoneId EMPTY)) AND (Issue.projectId : ${projectId}))`,
-            rels: 'assignedTo,spent,estimated',
+            rels: 'assignedTo,spent,estimated,parentissue,issuetype',
             limit: -1
         }
 
@@ -93,9 +93,8 @@ export default App.extend({
             }
             let issues = await _self.store.query('issue', {
                 query: `((Issue.milestoneId : ${milestone.id} ) AND (Issue.projectId : ${projectId}))`,
-                rels: 'assignedTo,spent,estimated',
+                rels: 'assignedTo,spent,estimated,parentissue,issuetype',
                 query: query,
-                rels: 'assignedTo',
                 limit: -1
             }).catch((error) => {
                 _self.errorManager.handleError(error);

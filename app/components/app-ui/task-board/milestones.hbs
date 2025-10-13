@@ -56,7 +56,12 @@
                       <div class="issue-quick-view-icon" data-toggle="tooltip" title="{{t 'views.app.board.quickView'}}"><i class="fa fa-eye" {{on "click" (fn @selectIssue issue)}}></i></div>
                     </div>
                     <p class="description">{{safe-html issue.description}}</p>
-                    <div class="flex-row flex-jc-end">
+                    <div class="flex-row flex-jc-sb flex-ai-c">
+                      {{#if issue.infoTag}}
+                        <div class="badge info-tag">{{issue.infoTag}}</div>
+                      {{else}}
+                        <div></div>
+                      {{/if}}
                       <div><img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></div>
                     </div>
                     

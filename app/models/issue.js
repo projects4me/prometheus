@@ -3,6 +3,8 @@
  */
 
 import Model, { attr, belongsTo, hasMany } from "@ember-data/model";
+import { inject as service } from "@ember/service";
+import { computed } from "@ember/object";
 
 /**
  * The issue model
@@ -14,6 +16,15 @@ import Model, { attr, belongsTo, hasMany } from "@ember-data/model";
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default Model.extend({
+    /**
+     * The intl service
+     *
+     * @property intl
+     * @type Service
+     * @for Issue
+     * @public
+     */
+    intl: service(),
     /**
      * Subject of the issue
      *
@@ -248,6 +259,16 @@ export default Model.extend({
     isPlanned: attr("bool"),
 
     /**
+     * The issue is reopened flag
+     *
+     * @property isReopened
+     * @type Boolean
+     * @for Issue
+     * @private
+     */
+    isReopened: attr("bool"),
+
+    /**
      * The user to whom this issue is currently assigned to
      *
      * @property assignedTo
@@ -466,4 +487,91 @@ export default Model.extend({
             issue.statusId = status.id;
         }
     },
+    /**
+     * Computed property that determines which info tag to display for an issue based on priority.
+     * Returns the highest priority tag that applies to the issue.
+     *
+     * @property infoTag
+     * @type String|null
+     * @for Issue
+     * @public
+     */
+    infoTag: computed(
+        'parentissue.status',
+        'status',
+        'endDate',
+        'isReopened',
+        'spent.length',
+        'description',
+        'issuetype.name',
+        function() {
+            let parentissue = this.parentissue;
+            
+            // Priority 1: Blocked (when parent issue status is 'in_progress')
+            if (parentissue && parentissue.get('status') === 'in_progress') {
+                return this.intl.t('views.app.board.infoTags.blocked');
+            }
+
+            // Priority 2: Overdue (when issue status is 'new' or 'in_progress' AND issue is past endDate)
+            if ((this.status === 'new' || this.status === 'in_progress') && this.isIssueOverdue()) {
+                return this.intl.t('views.app.board.infoTags.overdue');
+            }
+            // Priority 3: Reopened (in all statuses - simplified logic for now)
+            if (this.isReopened) {
+                return this.intl.t('views.app.board.infoTags.reopened');
+            }
+
+            // Priority 4: No Timelogs (when issue status is 'done' AND no spent timelogs exist)
+            if (this.status === 'done' && !this.hasTimelogs()) {
+                return this.intl.t('views.app.board.infoTags.noTimelogs');
+            }
+
+            // Priority 5: Missing Description (when issue status is 'new' or 'in_progress' AND description is empty)
+            if ((this.status === 'new' || this.status === 'in_progress') && !this.hasDescription()) {
+                return this.intl.t('views.app.board.infoTags.missingDescription');
+            }
+
+            // Priority 6: Show Issue Type
+            return this.issuetype?.get('name');
+        }
+    ),
+
+	/**
+	 * Checks if an issue is overdue by comparing its endDate with current date.
+	 *
+	 * @method isIssueOverdue
+	 * @returns {Boolean} - True if issue is overdue
+	 * @for Issue
+	 * @public
+	 */
+	isIssueOverdue() {
+		if (!this.endDate) {
+			return false;
+		}
+		return moment().isAfter(moment(this.endDate));
+	},
+
+	/**
+	 * Checks if an issue has spent timelogs.
+	 *
+	 * @method hasTimelogs
+	 * @returns {Boolean} - True if issue has timelogs
+	 * @for Issue
+	 * @public
+	 */
+	hasTimelogs() {
+		return this.spent && this.spent.length > 0;
+	},
+
+	/**
+	 * Checks if an issue has a meaningful description.
+	 *
+	 * @method hasDescription
+	 * @returns {Boolean} - True if issue has description
+	 * @for Issue
+	 * @public
+	 */
+	hasDescription() {
+		return this.description && this.description.trim().length > 0;
+	}
 });

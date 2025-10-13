@@ -64,9 +64,10 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
      * @param {*} store 
      * @param {*} schema 
      * @param {*} snapshot 
+     * @param {Object} moreUpdatedAttributes - Additional attributes to be updated
      * @returns 
      */
-    updateRecord(store, schema, snapshot) {
+    updateRecord(store, schema, snapshot, moreUpdatedAttributes) {
         let data = {};
         const type = snapshot.modelName;
         const serializer = store.serializerFor(type);
@@ -77,12 +78,16 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
         const url = this.buildURL(type, id, snapshot, 'updateRecord');
 
         //pick only updated attributes
-        let updateAttributes = _.pick(data.data.attributes, Object.keys(snapshot.changedAttributes()));
-        data.data.attributes = updateAttributes;
+        let updatedAttributes = _.pick(data.data.attributes, Object.keys(snapshot.changedAttributes()));
+        data.data.attributes = updatedAttributes;
 
-        if (_.isEmpty(updateAttributes)) {
+        if (_.isEmpty(updatedAttributes)) {
             return false;
         }
+
+        if (moreUpdatedAttributes) {
+            updatedAttributes = _.assign(updatedAttributes, moreUpdatedAttributes);
+        }        
         return this.ajax(url, 'PATCH', { data: data });
     }
 
