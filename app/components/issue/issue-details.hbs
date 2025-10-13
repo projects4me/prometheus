@@ -287,10 +287,12 @@
               <li>
                 <img src="{{this.apiHost}}/userimage/get/{{this.issue.assignedTo.id}}" alt="{{this.issue.assignedTo.name}}">
                 <div class="dropdown" data-issue-assignee-dropdown>
-                  <span class="users-list-name" data-toggle="dropdown" data-issue-assignee>
-                    {{this.issue.assignedTo.name}}
-                    <i class="fa fa-caret-down"></i>
-                  </span>
+                  <div class="flex-row flex-ai-c flex-jc-c" data-toggle="dropdown">
+                    <span class="users-list-name" data-issue-assignee>
+                      {{this.issue.assignedTo.name}}
+                    </span>
+                      <i class="fa fa-caret-down"></i>
+                  </div>
                   <ul class="dropdown-menu">
                     {{#each this.availableAssignees as |member|}}
                       <li>
