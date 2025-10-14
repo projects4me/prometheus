@@ -17,7 +17,7 @@ export default function (assert) {
 	})
 	.when('User clicks on first issue quick view', async function () {
 		let issue = server.schema.issues.all().models[0];
-		let issueEl = document.querySelector(`[data-field-issue-id="${issue.id}"] .issue-quick-view-icon i`);
+		let issueEl = document.querySelector(`[data-field-issue-id="${issue.id}"] a`);
 		await click(issueEl);
 	})
 	.then('User should see $hours hours and $minutes minutes of $context time of first milestone', function (hours, minutes, context) {
