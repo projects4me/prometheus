@@ -505,4 +505,18 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
             });
         }
     }
+
+    /**
+     * This action is used to enable the pointer events of an issue after the assignee is updated.
+     *
+     * @method postUpdateAssignee
+     * @param {Object} issue The issue to enable the pointer events for
+     * @public
+     */
+    @action postUpdateAssignee(issue) {
+        Logger.debug("AppProjectBoardController::postUpdateAssignee");
+        let issueEl = document.querySelector(`[data-field-issue-id="${issue.id}"]`);
+        issueEl.style.setProperty('pointer-events', 'auto');
+        Logger.debug("-AppProjectBoardController::postUpdateAssignee");
+    }
 }

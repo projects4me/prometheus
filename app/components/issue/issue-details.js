@@ -1204,6 +1204,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                 showCloseButton: true,
                 hideAfter: 3
             });
+            this.postUpdateAssignee(issue);
         }).catch(() => {
             messenger.update({
                 message: htmlSafe(_self.intl.t("views.app.issue.detail.assigneeUpdateFailed", { name: newAssignee.name })),
@@ -1212,6 +1213,21 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                 hideAfter: 3
             });
             issue.rollbackAttributes();
+            this.postUpdateAssignee(issue);
         });
     }    
+
+
+    /**
+     * This function is called after the assignee is updated.
+     *
+     * @method postUpdateAssignee
+     * @param {Object} issue Issue Model
+     * @public
+     */
+    postUpdateAssignee(issue) {
+        if(this.args.postUpdateAssignee) {
+            this.args.postUpdateAssignee(issue);
+        }
+    }
 }
