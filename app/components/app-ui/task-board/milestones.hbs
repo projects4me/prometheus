@@ -55,7 +55,7 @@
                       <h4>{{priority-icon priority=(readonly issue.priority)}} <LinkTo @route="app.project.issue.page" @disabledClass="navigate-issue-quick-view" @disabled={{true}} @model={{issue.issueNumber}} {{on "click" (fn @selectIssue issue)}}>#{{issue.issueNumber}} - {{issue.subject}}</LinkTo></h4>
                     </div>
                     <p class="description">{{safe-html issue.description}}</p>
-                    <div class="flex-row flex-jc-sb flex-ai-c">
+                    <div class="flex-row flex-jc-sb flex-ai-c issue-card-footer">
                       {{#if issue.infoTag}}
                         <div class="badge info-tag">{{issue.infoTag}}</div>
                       {{else}}
