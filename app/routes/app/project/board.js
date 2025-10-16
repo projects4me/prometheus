@@ -217,8 +217,9 @@ export default App.extend({
      */
     resetController: function (controller, isExiting) {
         if (isExiting) {
-            controller.query = '';
-            this.set('query', '');
+            controller.query = null;
+            controller.searchId = null;
+            this.set('query', null);
         }
     }
 });
