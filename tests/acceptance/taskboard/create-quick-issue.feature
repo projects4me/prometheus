@@ -1,5 +1,5 @@
 @setupApplicationTest
-Feature: create quick issue
+Feature: create quick issue | Taskboard
 
   Scenario: Render a milestone in taskboard and create a quick issue
 

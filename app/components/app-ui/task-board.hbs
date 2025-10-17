@@ -1,4 +1,4 @@
-<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue query=this.query paramsQuery=@paramsQuery creatingIssue=this.creatingIssue}}>
+<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue query=this.query paramsQuery=@paramsQuery creatingIssue=this.creatingIssue newMilestoneAdded=this.newMilestoneAdded}}>
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs milestone-tabs">
       {{#each @milestones as |milestone index|}}
@@ -10,6 +10,15 @@
           </div>
         </li>
       {{/each}}
+      {{!-- Create Milestone Button --}}
+      <li class="milestone-tab not-draggable">
+        <AppUi::DottedAddButton 
+          @onClick={{this.showCreateMilestoneDialog}}
+          @title={{t "views.app.board.milestone.create"}}
+          @data-add="milestone-create"
+          @aclContext="App.Project.Milestone.Create"
+        />
+      </li>
     </ul>
     <span class="milestone-filters">
       <div class="box-tools pull-right filters flex-row">
@@ -62,3 +71,105 @@
     </div>
   </div>
 </div>
+
+{{!-- Create Milestone Modal --}}
+{{#if this.addMilestoneDialog}}
+  {{#bootstrap-modal
+    title="views.app.board.milestone.create"
+    closeLabel="global.form.close"
+    confirmLabel="global.form.save"
+    close=(action "removeAddMilestoneModal")
+    confirm=(action "saveMilestone")
+  }}
+    <div class="form-group">
+      <FormFields::FieldText
+        @placeholder={{t "views.app.project.detail.milestone.inputname"}}
+        @label={{t "views.app.project.detail.milestone.name"}}
+        @type="text"
+        @value={{this.newMilestone.name}}
+        @data-field="milestone.name"
+        @length="255"
+        @validate={{action @validateField "milestoneCreate" (hash name="name" value=this.newMilestone.name model=this.newMilestone)}}
+        @message={{@message.milestoneCreate.name}}
+        @aclContext="App.Project.Milestone.Create.Name"
+        {{autofocus}}
+      />
+
+      <FormFields::FieldDate
+        @placeholder={{t "views.app.project.detail.milestone.inputstartdate"}}
+        @label={{t "views.app.project.detail.milestone.startdate"}}
+        @value="{{readonly this.newMilestone.startDate}}"
+        @update={{action @selectStatic this.newMilestone 'startDate'}}
+        @data-field="milestone.startDate"
+        @format="YYYY-MM-DD"
+        @singleDatePicker={{true}}
+        @showDropdowns={{true}}
+        @positionX="right"
+        @positionY="down"
+        @autoApply={{true}}
+        @minDate='1990'
+        @validate={{action @validateField "milestoneCreate" (hash name="startDate" value=this.newMilestone.startDate model=this.newMilestone)}}                
+        @message={{@message.milestoneCreate.startDate}}
+        @aclContext="App.Project.Milestone.Create.StartDate"
+      />
+
+      <FormFields::FieldDate
+        @placeholder={{t "views.app.project.detail.milestone.inputenddate"}}
+        @label={{t "views.app.project.detail.milestone.enddate"}}
+        @value={{readonly this.newMilestone.endDate}}
+        @update={{action @selectStatic this.newMilestone 'endDate'}}
+        @data-field="milestone.endDate"
+        @format="YYYY-MM-DD"
+        @singleDatePicker={{true}}
+        @showDropdowns={{true}}
+        @positionX="right"
+        @positionY="down"
+        @autoApply={{true}}
+        @minDate='1990'
+        @validate={{action @validateField "milestoneCreate" (hash name="endDate" value=this.newMilestone.endDate model=this.newMilestone)}}                
+        @message={{@message.milestoneCreate.endDate}}
+        @aclContext="App.Project.Milestone.Create.EndDate"
+      />
+
+      <FormFields::FieldRelate
+        @placeholder={{t "views.app.project.detail.milestone.inputtype"}}
+        @label={{t "views.app.project.detail.milestone.type"}}
+        @value={{this.newMilestone.milestoneType}}
+        @options={{this.milestoneTypes}}
+        @selected={{find-by "value" this.newMilestone.milestoneType this.milestoneTypes}}
+        @searchField="label"
+        @onchange={{action @selectRelated this.newMilestone 'milestoneType'}}
+        @relateType="relate-simple"
+        @data-field="milestone.type"
+        @validate={{action @validateField "milestoneCreate" (hash name="milestoneType" value=this.newMilestone.milestoneType model=this.newMilestone)}}
+        @message={{@message.milestoneCreate.milestoneType}}
+        @aclContext="App.Project.Milestone.Create.Type"
+      />
+
+      <FormFields::FieldRelate
+        @placeholder={{t "views.app.project.detail.milestone.inputstatus"}}
+        @label={{t "views.app.project.detail.milestone.status"}}
+        @value={{this.newMilestone.status}}
+        @options={{this.milestoneStatuses}}
+        @selected={{find-by "value" this.newMilestone.status this.milestoneStatuses}}
+        @searchField="label"
+        @onchange={{action @selectRelated this.newMilestone 'status'}}
+        @relateType="relate-simple"
+        @data-field="milestone.status"
+        @validate={{action @validateField "milestoneCreate" (hash name="status" value=this.newMilestone.status model=this.newMilestone)}}
+        @message={{@message.milestoneCreate.status}}
+        @aclContext="App.Project.Milestone.Create.Status"
+      />
+
+      <FormFields::FieldTextArea
+        @placeholder={{t "views.app.project.detail.milestone.inputdescription"}}
+        @label={{t "views.app.project.detail.milestone.description"}}
+        @value={{this.newMilestone.description}}
+        @data-field="milestone.description"
+        @validate={{action @validateField "milestoneCreate" (hash name="description" value=this.newMilestone.description model=this.newMilestone)}}
+        @message={{@message.milestoneCreate.description}}
+        @aclContext="App.Project.Milestone.Create.Description"
+      />
+    </div>
+  {{/bootstrap-modal}}
+{{/if}}

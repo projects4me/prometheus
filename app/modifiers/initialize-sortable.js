@@ -56,7 +56,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get scrollSensitivity() {
-        return this.args.named.scrollSensitivity;
+        return this.args.named.scrollSensitivity;   
     }
 
     /**
@@ -174,16 +174,6 @@ export default class InitializeSortable extends Modifier {
     get query() {
         return this.args.named.query;
     }
-    /**
-     * This property contains array of sortable objects. This is used to store sortable
-     * objects that are attached to each lane. This property is used when this page will 
-     * destroy in order to remove sortable from each lane.
-     *
-     * @property sortableList
-     * @type Array
-     * @private
-     */
-    sortableList = [];
 
     /**
      * This property is used to keep in track the old highlighted lane.
@@ -205,21 +195,31 @@ export default class InitializeSortable extends Modifier {
 
     //Called when the modifier is installed on the DOM element
     didInstall() {
-        let _self = this;
-        let elementsList = _self.element.querySelectorAll('.lane.box-body');
-        elementsList.forEach((el) => {
-            _self.sortableList.push(new Sortable(el, _self.getSortableOptions()));
-        });
-
-        _self._setupMilestoneTabsAsSortable();
-        _self._setupTabSwitching();
-        
+        this._attachSortableToLanes();
+        this._setupMilestoneTabsAsSortable();
+        this._setupTabSwitching();
         let milestoneEls = document.querySelectorAll('div.milestone.box-body');
-        _self.reRenderView(milestoneEls);
+        this.reRenderView(milestoneEls);
     }
 
     /**
-     * This function gets milestone elements with active milestone prioritized first.
+     * This function attaches sortable to the lanes.
+     * 
+     * @method _attachSortableToLanes
+     * @private
+     */
+    _attachSortableToLanes() {
+        let _self = this;
+        let elementsList = _self.element.querySelectorAll('.lane.box-body');
+        elementsList.forEach((el) => {
+            if (!Sortable.get(el)) {
+                new Sortable(el, _self.getSortableOptions());
+            }
+        });
+    }
+
+    /**
+     * This function gets milestone elements with a ctive milestone prioritized first.
      * 
      * @method _getOrderedMilestoneElements
      * @returns {Array} Array of milestone elements with active one first
@@ -256,7 +256,9 @@ export default class InitializeSortable extends Modifier {
     //Called when the arguments provided to modifier are updated
     didUpdateArguments() {
         let _self = this;
-        
+        if(this.args.named.newMilestoneAdded) {
+            _self._attachSortableToLanes();
+        }
         _self._cleanupMilestoneTabSortables();
         _self._setupMilestoneTabsAsSortable();
         _self._setupTabSwitching();
@@ -621,10 +623,12 @@ export default class InitializeSortable extends Modifier {
     //Removing sortable from each items of task board.
     willDestroy() {
         let _self = this;
-        _self.sortableList.forEach((el) => {
-            el.destroy();
+        let elementsList = _self.element.querySelectorAll('.lane.box-body');
+        elementsList.forEach((el) => {
+            if (Sortable.get(el)) {
+                Sortable.get(el).destroy();
+            }
         });
-        
         _self._cleanupMilestoneTabSortables();
     }
 }

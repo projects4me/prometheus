@@ -14,4 +14,9 @@ export function register(server, ctx) {
 		let id = request.params.id;
 		return schema.milestones.find(id);
 	});
+
+	server.post('/milestone', function (schema, request) {
+		const attrs = JSON.parse(request.requestBody);
+		return schema.milestones.create(attrs);
+	})
 }

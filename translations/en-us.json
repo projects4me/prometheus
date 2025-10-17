@@ -1184,6 +1184,11 @@
             "milestone": "Milestone",
             "backlog": "Backlog"
           }
+        },
+        "create": {
+          "validations": {
+            "endDateGreaterThanStartDate": "End date must be greater than start date"
+          }
         }
       },
       "board": {
@@ -1207,6 +1212,12 @@
           "creating": "Creating issue ..",
           "created": "Issue <strong>{subject}</strong> created successfully",
           "error": "Failed to create issue"
+        },
+        "milestone": {
+          "create": "Create Milestone",
+          "creating": "Creating milestone ..",
+          "created": "Milestone <strong>{name}</strong> created successfully",
+          "error": "Failed to create milestone"
         }
       },
       "role": {

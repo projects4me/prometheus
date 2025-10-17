@@ -1,5 +1,5 @@
 import steps from '../steps';
-import { typeIn } from '@ember/test-helpers';
+import { fillIn } from '@ember/test-helpers';
 
 export const when = function () {
     return [
@@ -7,7 +7,7 @@ export const when = function () {
             "User enters $value in $modelName $fieldName $fieldType field": (assert) => async function (value, modelName, fieldName, fieldType) {
                 let el = document.querySelector(`[data-field="${modelName}.${fieldName}"] ${fieldType}`);
                 el.value = '';
-                await typeIn(el, value);
+                await fillIn(el, value);
                 assert.equal(el.value, value, `User enters ${value} in ${modelName} ${fieldName} ${fieldType} field`)
             }
         }

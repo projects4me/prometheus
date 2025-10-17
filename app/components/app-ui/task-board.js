@@ -2,9 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import AppComponent from 'prometheus/components/app';
 
 /**
  * This component is used to render milestones of selected project.
@@ -14,9 +14,10 @@ import { action } from '@ember/object';
  * @extends Ember.Component
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default class TaskBoardComponent extends Component {
+export default class TaskBoardComponent extends AppComponent {
 
 	/**
+<<<<<<< HEAD
 	 * Constructor to initialize the component. We're setting the active search based on the selected search id (query param based).
 	 *
 	 * @method constructor
@@ -31,6 +32,11 @@ export default class TaskBoardComponent extends Component {
 
 	/**
 	 * This property is used to keep track the state of the creating issue process.
+||||||| constructed merge base
+	 * This property is used to keep track the state of the creating issue process.
+=======
+	 * This property is used to keep track the state of the issue creation process.
+>>>>>>> Add milestone creation feature in taskboard
 	 *
 	 * @property creatingIssue
 	 * @type boolean
@@ -70,6 +76,38 @@ export default class TaskBoardComponent extends Component {
 	 * @protected
 	 */
 	@tracked activeSearch = null;
+
+	/**
+	 * This property is used to keep track the state of the new milestone addition to give a hint to the 
+	 * initialize-sortable modifier to re-attach the sortable to the lanes.
+	 *
+	 * @property newMilestoneAdded
+	 * @type boolean
+	 * @for TaskBoard
+	 * @protected
+	 */
+	@tracked newMilestoneAdded = false;
+
+	/**
+	 * This flag is used to show or hide the modal dialog box
+	 * for adding milestones
+	 *
+	 * @property addMilestoneDialog
+	 * @type boolean
+	 * @for TaskBoard
+	 * @protected
+	 */
+	@tracked addMilestoneDialog = false;
+
+	/**
+	 * This is the new milestone model for the modal form
+	 *
+	 * @property newMilestone
+	 * @type Object
+	 * @for TaskBoard
+	 * @protected
+	 */
+	@tracked newMilestone = null;	
 
 	/**
 	 * This action is used to toggle the search filter on/off.
@@ -144,5 +182,135 @@ export default class TaskBoardComponent extends Component {
 		finally {
 			this.creatingIssue = false;
 		}
+	}
+
+	/**
+	 * This action is used to show the create milestone dialog.
+	 *
+	 * @method showCreateMilestoneDialog
+	 * @public
+	 */
+	@action
+	showCreateMilestoneDialog() {
+		if (this.newMilestone === null) {
+			this.newMilestone = this.store.createRecord('milestone', {
+				projectId: this.trackedProject.getProjectId(),
+				startDate: moment().format('YYYY-MM-DD'),
+				endDate: moment().format('YYYY-MM-DD'),
+				milestoneType: 'milestone',
+				status: 'planned'
+			});
+		}
+		this.addMilestoneDialog = true;
+	}
+
+	/**
+	 * This action is used to hide the add milestone modal dialog box
+	 *
+	 * @method removeAddMilestoneModal
+	 * @public
+	 */
+	@action
+	removeAddMilestoneModal() {
+		if (this.isDestroyed || this.isDestroying) return;
+		this.addMilestoneDialog = false;
+		$('.modal').modal('hide');
+	}
+
+	/**
+	 * This action is used to save the new milestone
+	 *
+	 * @method saveMilestone
+	 * @public
+	 */
+	@action
+	async saveMilestone() {
+		let messenger = new Messenger().post({
+			message: this.intl.t('views.app.board.milestone.creating'),
+			type: 'info',
+			showCloseButton: false,
+			hideAfter: false
+		});
+		try {
+			await this.args.save('milestoneCreate', 'milestone', this.newMilestone, false);
+			// Add the newly created milestone to the beginning of the milestones list
+			// This will make it appear as the first tab
+			this.args.milestones.unshiftObject(this.newMilestone);
+			this.switchToMilestoneTab(this.newMilestone.id);
+			
+			messenger.update({
+				message: this.intl.t('views.app.board.milestone.created', {
+					name: this.newMilestone.name
+				}),
+				type: 'success',
+				showCloseButton: true,
+				hideAfter: 3
+			});
+			this.removeAddMilestoneModal();
+			this.newMilestone = null;
+			this.newMilestoneAdded = true;
+		} catch (error) {
+			this.newMilestoneAdded = false;
+			messenger.update({
+				message: this.intl.t('views.app.board.milestone.error'),
+				type: 'error',
+				showCloseButton: true,
+				hideAfter: 3
+			});
+			Logger.error(
+				'TaskBoardComponent::saveMilestone - Error:',
+				error
+			);
+		}
+	}
+
+	/**
+	 * This property returns the list of milestone types
+	 *
+	 * @property milestoneTypes
+	 * @type Array
+	 * @for TaskBoard
+	 * @public
+	 */
+	get milestoneTypes() {
+		return [
+			{ "label": "Milestone", "value": "milestone" },
+			{ "label": "Version", "value": "version" },
+			{ "label": "Patch", "value": "patch" },
+			{ "label": "Release", "value": "release" },
+			{ "label": "Sprint", "value": "sprint" }
+		];
+	}
+
+	/**
+	 * This property returns the list of milestone statuses
+	 *
+	 * @property milestoneStatuses
+	 * @type Array
+	 * @for TaskBoard
+	 * @public
+	 */
+	get milestoneStatuses() {
+		return [
+			{ "label": "Planned", "value": "planned" },
+			{ "label": "In Progress", "value": "in_progress" },
+			{ "label": "Completed", "value": "completed" },
+			{ "label": "Closed", "value": "closed" },
+			{ "label": "Complete", "value": "complete" },
+			{ "label": "Overdue", "value": "overdue" },
+			{ "label": "Deferred", "value": "deferred" },
+			{ "label": "Failed", "value": "failed" }
+		];
+	}
+
+	/**
+	 * This method switches to the specified milestone tab
+	 *
+	 * @method switchToMilestoneTab
+	 * @param {String} milestoneId The ID of the milestone to switch to
+	 * @public
+	 */
+	switchToMilestoneTab(milestoneId) {
+		$(`[data-milestone-id="${milestoneId}"] a`).tab('show');
 	}
 }
