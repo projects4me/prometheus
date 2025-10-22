@@ -111,9 +111,9 @@ module('Integration | Component | task-board', function (hooks) {
                 @openIssue={{this.openIssue}}
             />
         `);
-        // Check milestone tabs are rendered
+        // Check milestone tabs are rendered (3 milestones + 1 create button)
         let milestoneTabs = document.querySelectorAll('.milestone-tab');
-        assert.equal(milestoneTabs.length, 3, 'Three milestone tabs should be rendered');
+        assert.equal(milestoneTabs.length, 4, 'Four milestone tabs should be rendered (3 milestones + 1 create button)');
         
         // Check tab content
         let tabContent = document.querySelectorAll('.tab-pane');
@@ -159,6 +159,9 @@ module('Integration | Component | task-board', function (hooks) {
 
         // Check that milestone tabs have data-milestone-tab attribute
         milestoneTabs.forEach((tab, index) => {
+            if (index === 3) { // Skip the create milestone button
+                return;
+            }
             assert.ok(tab.hasAttribute('data-milestone-tab'), `Tab ${index + 1} should have data-milestone-tab attribute`);
         });
 

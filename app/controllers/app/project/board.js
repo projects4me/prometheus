@@ -124,6 +124,90 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
                         }
                     }
                 ]
+            },
+            {
+                name: "milestoneCreate",
+                fields: [
+                    {
+                        name: "name",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "startDate",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "endDate",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    },
+                                    {
+                                        name: "test",
+                                        value: [
+                                            'end-date-greater-than-start-date',
+                                            this.intl.t(
+                                                'views.app.milestone.create.validations.endDateGreaterThanStartDate'
+                                            ),
+                                            function(value) {
+                                                const endDate = new Date(value);
+                                                const startDate = new Date(this.parent.startDate);
+                                                return endDate > startDate;
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "milestoneType",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        name: "status",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [
+                                    {
+                                        name: "required"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
             }
         ]
     };

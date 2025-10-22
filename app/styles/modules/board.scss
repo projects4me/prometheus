@@ -21,6 +21,20 @@
       .milestone-tabs {
         width: 80%;
         display: inline-block;
+
+        .dotted-circle-add {
+          height: 2rem;
+          width: 2rem;
+
+          .ion-md-add {
+            font-size: 1.5rem;
+          }
+
+          &:hover {
+            border-color: $primaryColor;
+            color: $primaryColor;
+          }
+        }
       }
 
       .milestone-filters {
