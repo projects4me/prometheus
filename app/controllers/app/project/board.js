@@ -157,7 +157,7 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
      * @type Array
      * @for Board
      */
-    queryParams = ['query'];
+    queryParams = ['query', 'searchId'];
 
     /**
      * These are the issues statues
@@ -196,6 +196,15 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
      * @for Board
      */
     @tracked query = '';
+
+    /**
+     * This is the ID of the selected saved search.
+     *
+     * @property searchId
+     * @type String
+     * @for Board
+     */
+    @tracked searchId = null;
 
     /**
      * The currently selected issue for displaying in the sidebar
@@ -421,6 +430,7 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
      */
     @action applySearch(search) {
         this.query = search.searchquery;
+        this.searchId = search.id;
     }
 
     /**

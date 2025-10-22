@@ -17,6 +17,19 @@ import { action } from '@ember/object';
 export default class TaskBoardComponent extends Component {
 
 	/**
+	 * Constructor to initialize the component. We're setting the active search based on the selected search id (query param based).
+	 *
+	 * @method constructor
+	 * @public
+	 */
+	constructor() {
+		super(...arguments);
+		if (this.args.selectedSearchId && this.args.savedSearches) {
+			this.activeSearch = this.args.savedSearches.find(search => search.id === this.args.selectedSearchId) || null;
+		}
+	}
+
+	/**
 	 * This property is used to keep track the state of the creating issue process.
 	 *
 	 * @property creatingIssue
@@ -73,7 +86,7 @@ export default class TaskBoardComponent extends Component {
 			// Same search clicked - deactivate it
 			this.activeSearch = null;
 			this.filterQuery = '';
-			this.args.applySearch({ searchquery: '' });
+			this.args.applySearch({ searchquery: '', id: null });
 		} else {
 			// Different search clicked - activate it
 			this.activeSearch = search;
@@ -83,7 +96,7 @@ export default class TaskBoardComponent extends Component {
 	}
 
 	/**
-	 * This computed property checks if a search is currently active.
+	 * This method checks if a search is currently active.
 	 *
 	 * @method isSearchActive
 	 * @param {Object} search The search object to check
