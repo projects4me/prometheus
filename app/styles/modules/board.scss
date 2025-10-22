@@ -70,9 +70,13 @@
     }
     .box-body {
       .lane {
-        height: 100%;
+        height: inherit;
         width: 28rem;
         margin-right: 0.5rem;
+
+        .box-header {
+          height: 4rem;
+        }
 
         .dotted-circle-add {
           height: 2rem;
@@ -89,6 +93,7 @@
           
           .milestone, .box-body {
             min-height: 45rem;
+            height: calc(100% - 4rem);
             padding: 0rem;
             border: 0.25rem solid $backgroundColor;
           }

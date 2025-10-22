@@ -281,7 +281,7 @@ export default class InitializeSortable extends Modifier {
             let milestoneId = milestoneEl.dataset.fieldMilestoneId || 'backlog';
             milestoneIds.push(milestoneId);
             document.querySelector(`[data-milestone-id="${milestoneId}"] a`).click();
-            _self.setMilestoneBoxHeight(milestoneEl);
+            _self.applySlimScrollToMilestoneItems(milestoneEl);
         });
        document.querySelector(`[data-milestone-id="${milestoneIds[0]}"] a`).click();
     }
@@ -394,49 +394,22 @@ export default class InitializeSortable extends Modifier {
     }
 
     /**
-     * This function is called when an item is shifted from one lane to another lane (its status is updated)
-     * and is used to set the height of parent element by getting max size of a lane and that max is set it to its
-     * parent element. Parent element is a section which contain lanes. Firstly this function will be called on the 
-     * initialization of this modifier (on reRender function) to set the every sections of milestone.
+     * This function applies slim scroll to the items in the milestone container.
      * 
-     * @method setMilestoneBoxHeight
-     * @param {HTMLElement} parentElement it contains milestone container element
+     * @method applySlimScrollToMilestoneItems
+     * @param {HTMLElement} milestoneEl
+     * @private
      */
-    setMilestoneBoxHeight(parentElement) {
-        let parentHeaderHeight = parentElement.parentNode.querySelector('div.box-header').getBoundingClientRect().height;
-        let lanes = [...parentElement.children];
-        let heightArray = [];
+    applySlimScrollToMilestoneItems(milestoneEl) {
         let _self = this;
+        let lanes = [...milestoneEl.children];
         lanes.forEach((lane) => {
             let laneBody = lane.querySelector('div.lane.box-body');
-            let items = [...laneBody.children];
-            let sum = 0;
-            items.forEach((item) => {
-                let itemCSS = getComputedStyle(item);
+            let laneItems = [...laneBody.children];
+            laneItems.forEach((item) => {
                 _self._applySlimScroll(item);
-                sum += item.getBoundingClientRect().height + parseFloat(itemCSS.marginTop);
-            })
-            heightArray.push(sum);
+            });            
         });
-        let max = (Math.max(...heightArray) + (parentHeaderHeight * 2));
-        let minHeight = 0;
-        let minHeightApplied = false;
-
-        //set height of lanes
-        lanes.forEach((lane) => {
-            let headerHeight = lane.querySelector('div.box-header').getBoundingClientRect().height;
-            let laneBody = lane.querySelector('div.lane.box-body');
-            minHeight = parseFloat(getComputedStyle(laneBody).minHeight);
-            let height = max - (headerHeight + parentHeaderHeight);
-            if (height < minHeight) {
-                height = minHeight;
-                minHeightApplied = true;
-            }
-            laneBody.style.height = `${height}px`;
-        });
-        (minHeightApplied) && (max = minHeight + 70);
-        parentElement.style.height = `${max}px`;
-
     }
 
     /**
