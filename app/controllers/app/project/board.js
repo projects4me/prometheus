@@ -613,4 +613,78 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
         issueEl.style.setProperty('pointer-events', 'auto');
         Logger.debug("-AppProjectBoardController::postUpdateAssignee");
     }
+
+    /**
+     * This action is used to mark a milestone as complete by setting its status to 'done' and removing it from the milestones list.
+     *
+     * @method markMilestoneAsComplete
+     * @param {Object} milestone The milestone to mark as complete
+     * @public
+     */
+    @action async markMilestoneAsComplete(milestone) {
+        Logger.debug("AppProjectBoardController::markMilestoneAsComplete");
+        let messenger = new Messenger().post({
+            message: this.intl.t('views.app.board.milestone.markComplete.markingComplete', {
+                milestoneName: milestone.name
+            }),
+            type: 'success',
+            showCloseButton: true,
+            hideAfter: 3
+        });
+        try {
+            milestone.set('status', 'completed');
+            await milestone.save();
+            this.milestones.removeObject(milestone);
+            messenger.update({
+                message: this.intl.t('views.app.board.milestone.markComplete.success', {
+                    milestoneName: milestone.name
+                }),
+                type: 'success',
+                showCloseButton: true,
+                hideAfter: 3
+            });
+            Logger.debug("-AppProjectBoardController::markMilestoneAsComplete");
+        } catch (error) {
+            Logger.error("AppProjectBoardController::markMilestoneAsComplete - Error:", error);
+            messenger.update({
+                message: this.intl.t('views.app.board.milestone.markComplete.error'),
+                type: 'error',
+                showCloseButton: true,
+                hideAfter: 5
+            });
+            
+            this.errorManager.handleError(error, {
+                moduleName: 'milestone'
+            });
+        }
+    }
+
+    /**
+     * This function is used to calculate the progress percentage for the given milestone.
+     * 
+     * @param {Prometheus.Models.Milestone} milestone 
+     * @returns 
+     */
+    @action getMilestoneProgress(milestone) {
+        let totalIssues = milestone.issues.length;
+		if (totalIssues === 0) return 0;
+		
+		let completed = this.getCompletedIssuesCount(milestone);
+		return Math.round((completed / totalIssues) * 100);
+    }
+
+    /**
+     * This function returns the completed issues count for the given milestone.
+     * 
+     * @param {Prometheus.Models.Milestone} milestone 
+     * @returns 
+     */
+    @action getCompletedIssuesCount(milestone) {
+		let closed = 0;
+		closed += milestone.issues.filterBy('status', 'done').length;
+		closed += milestone.issues.filterBy('status', 'complete').length;
+		closed += milestone.issues.filterBy('status', 'closed').length;
+		closed += milestone.issues.filterBy('status', 'deferred').length;
+		return closed;
+    }
 }

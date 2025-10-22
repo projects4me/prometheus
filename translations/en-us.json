@@ -1217,7 +1217,19 @@
           "create": "Create Milestone",
           "creating": "Creating milestone ..",
           "created": "Milestone <strong>{name}</strong> created successfully",
-          "error": "Failed to create milestone"
+          "error": "Failed to create milestone",
+          "markComplete": {
+            "title": "Mark milestone as complete",
+            "confirm": "Mark as complete",
+            "message": "Are you sure you want to mark the milestone <strong>{milestoneName}</strong> as complete?",
+            "details": "Milestone Details:",
+            "totalIssues": "Total Issues: <strong>{count}</strong>",
+            "progress": "Progress: <strong>{progress}%</strong>",
+            "completedIssues": "Completed Issues: <strong>{count}</strong>",
+            "markingComplete": "Marking milestone <strong>{milestoneName}</strong> as complete ..",
+            "success": "Milestone <strong>{milestoneName}</strong> has been marked as complete",
+            "error": "Failed to mark milestone as complete. Please try again."
+          }
         }
       },
       "role": {

@@ -1,4 +1,5 @@
 import paginate from '../helpers/paginate';
+import getRequestData from '../helpers/parse-request';
 
 export function register(server, ctx) {
 	server.get('/milestone', (schema, request) => {
@@ -19,4 +20,12 @@ export function register(server, ctx) {
 		const attrs = JSON.parse(request.requestBody);
 		return schema.milestones.create(attrs);
 	})
+
+	server.patch('/milestone/:id', (schema, request) => {
+		let id = request.params.id;
+		let requestData = getRequestData(request);
+		let milestone = schema.milestones.find(id);
+		milestone.update(requestData.attributes);
+		return milestone;
+	});
 }

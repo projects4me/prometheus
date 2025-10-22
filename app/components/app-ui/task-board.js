@@ -2,9 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import AppComponent from 'prometheus/components/app';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import AppComponent from 'prometheus/components/app';
 
 /**
  * This component is used to render milestones of selected project.
@@ -17,7 +17,6 @@ import AppComponent from 'prometheus/components/app';
 export default class TaskBoardComponent extends AppComponent {
 
 	/**
-<<<<<<< HEAD
 	 * Constructor to initialize the component. We're setting the active search based on the selected search id (query param based).
 	 *
 	 * @method constructor
@@ -31,12 +30,7 @@ export default class TaskBoardComponent extends AppComponent {
 	}
 
 	/**
-	 * This property is used to keep track the state of the creating issue process.
-||||||| constructed merge base
-	 * This property is used to keep track the state of the creating issue process.
-=======
 	 * This property is used to keep track the state of the issue creation process.
->>>>>>> Add milestone creation feature in taskboard
 	 *
 	 * @property creatingIssue
 	 * @type boolean
@@ -108,6 +102,36 @@ export default class TaskBoardComponent extends AppComponent {
 	 * @protected
 	 */
 	@tracked newMilestone = null;	
+
+	/**
+	 * This property is used to show/hide the mark as complete milestone confirmation modal.
+	 *
+	 * @property showMarkMilestoneAsCompleteModal
+	 * @type boolean
+	 * @for TaskBoard
+	 * @protected
+	 */
+	@tracked showMarkMilestoneAsCompleteModal = false;
+
+	/**
+	 * This property holds the active milestone.
+	 *
+	 * @property activeMilestone
+	 * @type Object
+	 * @for TaskBoard
+	 * @protected
+	 */
+	@tracked activeMilestone = null;
+
+	/**
+	 * This property tracks the checkbox state of the mark as complete button. If it is checked, the milestone will be marked as complete.
+	 *
+	 * @property markMilestoneAsCompleteChecked
+	 * @type boolean
+	 * @for TaskBoard
+	 * @protected
+	 */
+	@tracked markMilestoneAsCompleteChecked = false;
 
 	/**
 	 * This action is used to toggle the search filter on/off.
@@ -312,5 +336,141 @@ export default class TaskBoardComponent extends AppComponent {
 	 */
 	switchToMilestoneTab(milestoneId) {
 		$(`[data-milestone-id="${milestoneId}"] a`).tab('show');
+	}
+
+	/**
+	 * This action sets the provided milestone as active when a tab is clicked
+	 *
+	 * @method updateActiveMilestone
+	 * @param {Object} milestone The milestone to update
+	 * @public
+	 */
+	@action
+	updateActiveMilestone(milestone) {
+		Logger.debug("TaskBoardComponent::updateActiveMilestone");
+		this.activeMilestone = milestone;
+		this.closeCheckboxChecked = false;
+		Logger.debug("-TaskBoardComponent::updateActiveMilestone");
+	}
+
+	/**
+	 * This action is triggered when the close milestone checkbox is clicked.
+	 * It opens the modal to close the active milestone.
+	 *
+	 * @method toggleMarkMilestoneAsComplete
+	 * @public
+	 */
+	@action
+	toggleMarkMilestoneAsComplete() {
+		Logger.debug("TaskBoardComponent::toggleMarkMilestoneAsComplete");
+		if (this.markMilestoneAsCompleteChecked) {
+			// Checkbox was unchecked, close modal if open
+			this.showMarkMilestoneAsCompleteModal = false;
+		} else {
+			// Checkbox was checked, set active milestone and open modal
+			this.activeMilestone = this.getActiveMilestone();
+			this.showMarkMilestoneAsCompleteModal = true;
+			this.markMilestoneAsCompleteChecked = true;
+		}
+		
+		Logger.debug("-TaskBoardComponent::toggleMarkMilestoneAsComplete");
+	}
+
+	/**
+	 * This action is used to cancel the close milestone operation.
+	 * Unchecks the checkbox and closes the modal.
+	 *
+	 * @method cancelMarkMilestoneAsComplete
+	 * @public
+	 */
+	@action
+	cancelMarkMilestoneAsComplete() {
+		Logger.debug("TaskBoardComponent::cancelMarkMilestoneAsComplete");
+        if (this.isDestroyed || this.isDestroying) return;
+		this.showMarkMilestoneAsCompleteModal = false;
+		this.markMilestoneAsCompleteChecked = false;
+		$('.modal').modal('hide');
+		Logger.debug("-TaskBoardComponent::cancelMarkMilestoneAsComplete");
+	}
+
+	/**
+	 * This action is used to confirm the mark as complete milestone operation.
+	 *
+	 * @method markMilestoneAsComplete
+	 * @public
+	 */
+	@action
+	async markMilestoneAsComplete() {
+		Logger.debug("TaskBoardComponent::markMilestoneAsComplete");
+		try {
+			if (this.args.markMilestoneAsComplete && this.activeMilestone) {
+				await this.args.markMilestoneAsComplete(this.activeMilestone);
+				this.cancelMarkMilestoneAsComplete();
+				this.setNewActiveMilestone();
+			}
+		} catch (error) {
+			Logger.error('TaskBoardComponent::markMilestoneAsComplete - Error:', error);
+			this.cancelMarkMilestoneAsComplete();
+			throw error;
+		}
+		Logger.debug("-TaskBoardComponent::markMilestoneAsComplete");
+	}
+
+	/**
+	 * This computed property returns the completed issues count for the active milestone.
+	 *
+	 * @property completedIssuesCount
+	 * @type Number
+	 * @for TaskBoard
+	 * @public
+	 */
+	get completedIssuesCount() {
+		if (!this.activeMilestone) return 0;
+		return this.args.getCompletedIssuesCount(this.activeMilestone);
+	}
+
+	/**
+	 * This computed property returns the progress percentage for the active milestone.
+	 *
+	 * @property milestoneProgress
+	 * @type Number
+	 * @for TaskBoard
+	 * @public
+	 */
+	get milestoneProgress() {
+		if (!this.activeMilestone) return 0;
+		return this.args.getMilestoneProgress(this.activeMilestone);
+	}
+
+	/**
+	 * This method gets the currently active milestone (the one being viewed).
+	 *
+	 * @method getActiveMilestone
+	 * @returns {Object} The active milestone
+	 * @public
+	 */
+	getActiveMilestone() {
+		Logger.debug("TaskBoardComponent::getActiveMilestone");
+		let milestoneId = document.querySelector('[data-milestone-tab].active').getAttribute('data-milestone-id');
+		let milestone = this.args.milestones.findBy('id', milestoneId);
+		milestone = milestone ? milestone : this.args.milestones.findBy('milestoneType', milestoneId);
+		Logger.debug("-TaskBoardComponent::getActiveMilestone");
+		return milestone;
+	}
+
+	/**
+	 * This method sets the new active milestone.
+	 *
+	 * @method setNewActiveMilestone
+	 * @public
+	 */
+	setNewActiveMilestone() {
+		Logger.debug("TaskBoardComponent::setNewActiveMilestone");
+		let newActiveMilestone = this.args.milestones.objectAt(0);
+		if(newActiveMilestone) {
+			this.activeMilestone = newActiveMilestone;
+			document.querySelector(`[data-milestone-id="${newActiveMilestone.id}"] a`).click();
+		}
+		Logger.debug("-TaskBoardComponent::setNewActiveMilestone");
 	}
 }

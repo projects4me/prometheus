@@ -3,7 +3,7 @@
     <ul class="nav nav-tabs milestone-tabs">
       {{#each @milestones as |milestone index|}}
         <li class="milestone-tab {{if (eq index 0) "active" ""}} not-draggable" data-milestone-tab data-milestone-id={{if milestone.id milestone.id "backlog"}}>
-          <a href="#tab_{{if milestone.id milestone.id "backlog"}}" data-toggle="tab" aria-expanded={{if (eq index 0) "true" "false"}}>
+          <a href="#tab_{{if milestone.id milestone.id "backlog"}}" data-toggle="tab" aria-expanded={{if (eq index 0) "true" "false"}} {{on "click" (fn this.updateActiveMilestone milestone)}}>
             {{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}
           </a>
           <div class="drop-zone-area">
@@ -19,6 +19,26 @@
           @aclContext="App.Project.Milestone.Create"
         />
       </li>
+
+      {{!-- Mark as complete section, only when active milestone is not backlog --}}
+      {{#if (not-eq this.activeMilestone.milestoneType "backlog")}}
+        <li class="milestone-close-tab">
+          <div class="milestone-close-section">
+            <input 
+              type="checkbox" 
+              class="milestone-close-checkbox" 
+              id="milestone-mark-as-complete-checkbox"
+              checked={{this.markMilestoneAsCompleteChecked}}
+              {{on "change" this.toggleMarkMilestoneAsComplete}}
+              title={{t "views.app.board.milestone.markComplete.confirm"}}
+            />
+            <label for="milestone-mark-as-complete-checkbox" class="milestone-close-label">
+              {{t "views.app.board.milestone.markComplete.confirm"}}
+              <i class="fa fa-check"></i>
+            </label>
+            </div>
+          </li>
+      {{/if}}
     </ul>
     <span class="milestone-filters">
       <div class="box-tools pull-right filters flex-row">
@@ -65,6 +85,8 @@
             @issueTypes={{@issueTypes}}
             @membersList={{@membersList}}
             @search={{@search}}
+            @getMilestoneProgress={{@getMilestoneProgress}}
+            @getCompletedIssuesCount={{@getCompletedIssuesCount}}            
           />
         </div>
       {{/each}}
@@ -170,6 +192,34 @@
         @message={{@message.milestoneCreate.description}}
         @aclContext="App.Project.Milestone.Create.Description"
       />
+    </div>
+  {{/bootstrap-modal}}
+{{/if}}
+
+{{!-- Close Milestone Confirmation Modal --}}
+{{#if this.showMarkMilestoneAsCompleteModal}}
+  {{#bootstrap-modal
+    title="views.app.board.milestone.markComplete.title"
+    closeLabel="global.form.cancel"
+    confirmLabel="views.app.board.milestone.markComplete.confirm"
+    close=(action "cancelMarkMilestoneAsComplete")
+    confirm=(action "markMilestoneAsComplete")
+    confirmClass="btn-danger"
+  }}
+    <div class="close-milestone-confirmation">
+      <div class="alert alert-warning flex-row flex-ai-c">
+        <i class="fa fa-exclamation-triangle"></i>
+        <p>{{safe-html (t "views.app.board.milestone.markComplete.message" milestoneName=this.activeMilestone.name)}}</p>
+      </div>
+      
+      <div class="milestone-info">
+        <strong>{{t "views.app.board.milestone.markComplete.details"}}</strong>
+        <ul>
+          <li>{{safe-html (t "views.app.board.milestone.markComplete.totalIssues" count=this.activeMilestone.issues.length)}}</li>
+          <li>{{safe-html (t "views.app.board.milestone.markComplete.completedIssues" count=this.completedIssuesCount)}}</li>
+          <li>{{safe-html (t "views.app.board.milestone.markComplete.progress" progress=this.milestoneProgress)}}</li>
+        </ul>
+      </div>
     </div>
   {{/bootstrap-modal}}
 {{/if}}

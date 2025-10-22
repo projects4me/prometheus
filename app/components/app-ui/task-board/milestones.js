@@ -139,17 +139,8 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 	 * @public
 	 */
 	calculateMilestoneProgress() {
-		let milestone = this.milestone;
-		let progress = 0;
-		let totalIssues = milestone.issues.length;
-
-		// Calculate the progress
-		if (totalIssues > 0) {
-			let closed = this.getCompletedIssuesCount();
-			progress = _.round((closed / totalIssues) * 100);
-		}
-
-		return progress;
+		if (!this.milestone) return 0;
+		return this.args.getMilestoneProgress(this.milestone);
 	}
 
 	/**
@@ -160,13 +151,8 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 	 * @public
 	 */
 	getCompletedIssuesCount() {
-		let milestone = this.milestone;
-		let closed = 0;
-		closed += milestone.issues.filterBy('status', 'done').length;
-		closed += milestone.issues.filterBy('status', 'complete').length;
-		closed += milestone.issues.filterBy('status', 'closed').length;
-		closed += milestone.issues.filterBy('status', 'deferred').length;
-		return closed;
+		if (!this.milestone) return 0;
+		return this.args.getCompletedIssuesCount(this.milestone);
 	}
 
 	/**
