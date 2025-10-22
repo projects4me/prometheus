@@ -216,6 +216,12 @@ export default class InitializeSortable extends Modifier {
                 new Sortable(el, _self.getSortableOptions());
             }
         });
+
+        _self._setupMilestoneTabsAsSortable();
+        _self._setupTabSwitching();
+        
+        let milestoneEls = document.querySelectorAll('div.milestone.box-body');
+        _self.reRenderView(milestoneEls, true);
     }
 
     /**
@@ -263,7 +269,7 @@ export default class InitializeSortable extends Modifier {
         _self._setupMilestoneTabsAsSortable();
         _self._setupTabSwitching();
         let milestoneEls = _self._getOrderedMilestoneElements();
-        _self.reRenderView(milestoneEls);
+        _self.reRenderView(milestoneEls, true);
     }
 
     /**
@@ -272,9 +278,10 @@ export default class InitializeSortable extends Modifier {
      * 
      * @method reRenderView
      * @param {HTMLCollection} milestoneEls List of milestone container elements
-     * @private
+     * @param {boolean} autoSelectFirstMilestone Whether to auto select the first milestone
+     * @public
      */
-    @action reRenderView(milestoneEls) {
+    @action reRenderView(milestoneEls, autoSelectFirstMilestone = false) {
         let _self = this;
         let milestoneIds = [];
         milestoneEls.forEach((milestoneEl) => {
@@ -283,7 +290,9 @@ export default class InitializeSortable extends Modifier {
             document.querySelector(`[data-milestone-id="${milestoneId}"] a`).click();
             _self.applySlimScrollToMilestoneItems(milestoneEl);
         });
-       document.querySelector(`[data-milestone-id="${milestoneIds[0]}"] a`).click();
+        let milestoneIndex = (autoSelectFirstMilestone) ? 0 : 1;
+        document.querySelector(`[data-milestone-id="${milestoneIds[milestoneIndex]}"] a`).click();
+
     }
 
     /**
