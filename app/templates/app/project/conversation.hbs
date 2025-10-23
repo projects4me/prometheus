@@ -4,10 +4,10 @@
     <div class="row">
       <div class="col-sm-12">
 
-        <div class="masonry masonry-columns">
+        <div class="conversation-grid">
 
           {{!-- Sections that lets us create a new conversation --}}
-          <div class="masonry-item">
+          <div class="conversation-item">
             <div class="box box-widget">
 
               <div class="box-start">
@@ -30,7 +30,7 @@
 
           {{#each this.model as |entity|}}
 
-            <div class="masonry-item" id={{entity.id}}>
+            <div class="conversation-item" id={{entity.id}}>
 
 
               <div class="box box-widget">
