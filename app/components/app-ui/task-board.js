@@ -123,15 +123,6 @@ export default class TaskBoardComponent extends AppComponent {
 	 */
 	@tracked activeMilestone = null;
 
-	/**
-	 * This property tracks the checkbox state of the mark as complete button. If it is checked, the milestone will be marked as complete.
-	 *
-	 * @property markMilestoneAsCompleteChecked
-	 * @type boolean
-	 * @for TaskBoard
-	 * @protected
-	 */
-	@tracked markMilestoneAsCompleteChecked = false;
 
 	/**
 	 * This action is used to toggle the search filter on/off.
@@ -349,7 +340,6 @@ export default class TaskBoardComponent extends AppComponent {
 	updateActiveMilestone(milestone) {
 		Logger.debug("TaskBoardComponent::updateActiveMilestone");
 		this.activeMilestone = milestone;
-		this.closeCheckboxChecked = false;
 		Logger.debug("-TaskBoardComponent::updateActiveMilestone");
 	}
 
@@ -363,16 +353,8 @@ export default class TaskBoardComponent extends AppComponent {
 	@action
 	toggleMarkMilestoneAsComplete() {
 		Logger.debug("TaskBoardComponent::toggleMarkMilestoneAsComplete");
-		if (this.markMilestoneAsCompleteChecked) {
-			// Checkbox was unchecked, close modal if open
-			this.showMarkMilestoneAsCompleteModal = false;
-		} else {
-			// Checkbox was checked, set active milestone and open modal
-			this.activeMilestone = this.getActiveMilestone();
-			this.showMarkMilestoneAsCompleteModal = true;
-			this.markMilestoneAsCompleteChecked = true;
-		}
-		
+		this.activeMilestone = this.getActiveMilestone();
+		this.showMarkMilestoneAsCompleteModal = true;
 		Logger.debug("-TaskBoardComponent::toggleMarkMilestoneAsComplete");
 	}
 
@@ -388,7 +370,6 @@ export default class TaskBoardComponent extends AppComponent {
 		Logger.debug("TaskBoardComponent::cancelMarkMilestoneAsComplete");
         if (this.isDestroyed || this.isDestroying) return;
 		this.showMarkMilestoneAsCompleteModal = false;
-		this.markMilestoneAsCompleteChecked = false;
 		$('.modal').modal('hide');
 		Logger.debug("-TaskBoardComponent::cancelMarkMilestoneAsComplete");
 	}

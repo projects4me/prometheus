@@ -528,6 +528,7 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
         Logger.debug("AppProjectBoardController::selectIssue");
         this.selectedIssue = issue;
         this.isLoadingIssueDetails = true;
+        window.scrollTo({top: 0, behavior: 'smooth'});
         await this.loadIssueDetails(issue);
         this.isLoadingIssueDetails = false;
         Logger.debug("-AppProjectBoardController::selectIssue");
