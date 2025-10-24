@@ -76,35 +76,42 @@ export default App.extend({
      * @method model
      * @returns {Promise}
      */
-    model() {
+    async model() {
         Logger.debug('AppProjectConversationRoute::model');
         let _self = this;
-        let params = this.paramsFor('app.project');
-
         let projectId = this.trackedProject.getProjectId();
-        let options = {
-            limit: -1,
-            page: 0
-        };
-
-        if (params.query !== undefined && params.query !== '' && params.query !== null) {
-            options.query = params.query;
-        }
-
+        
+        // Initial load with pagination - load first 15 conversations
         let _conversationOptions = {
-            rels: "comments",
             order: "DESC",
-            sort: "comments.dateModified, Conversationroom.dateModified",
-            query: "(Conversationroom.projectId : " + projectId + ")"
+            sort: "Conversationroom.dateModified",
+            query: "(Conversationroom.projectId : " + projectId + ")",
+            limit: 5,
+            page: 1
         }
 
         Logger.debug('-AppProjectConversationRoute::model');
-        return this.store.query(this.module, _conversationOptions)
+        let conversations = await this.store.query(this.module, _conversationOptions)
             .catch((error) => {
                 _self.errorManager.handleError(error, {
                     moduleName: 'conversationroom'
                 })
-            })
+            });
+
+        for(let conversation of conversations.toArray()) {
+            let comments = await this.store.query('comment', {
+                query: `(Comment.relatedId : ${conversation.id})`,
+                sort: 'Comment.dateCreated',
+                order: 'ASC',
+                limit: -1
+            }).catch((error) => {
+                _self.errorManager.handleError(error, {
+                    moduleName: 'conversationroom'
+                })
+            });
+            conversation.comments = comments;
+        }
+        return conversations;
     },
 
     /**
@@ -117,18 +124,17 @@ export default App.extend({
      */
     setupController: function (controller, model) {
         Logger.debug('AppProjectConversationRoute::setupController');
-        let params = this.paramsFor('app.project');
 
-        controller.set('model', model.toArray());
-
+        controller.set('conversations', model.toArray());
         let newConversation = this.store.createRecord('conversationroom', {
-            projectShortcode: params.shortcode
+            projectShortcode: this.trackedProject.shortCode
         });
         controller.set('newConversation', newConversation);
 
         // Set the data in the controller so that any data bound in the view can get re-rendered
         controller.set('module', this.module);
         controller.set('projectId', this.trackedProject.getProjectId());
-        controller.set('projectShortcode', params.shortcode);
+        controller.set('projectShortcode', this.trackedProject.shortCode);
+        controller.set('hasMoreConversations', model.length >= controller.pageSize);
     },
 });

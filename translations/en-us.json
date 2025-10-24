@@ -644,7 +644,9 @@
               "label": "Vote"
             }
           ]
-        }
+        },
+        "loading": "Loading more conversations...",
+        "noMore": "No more conversations to load"
       },
       "wiki": {
         "welcome": "Welcome to Projects4Me documentation tool.",
