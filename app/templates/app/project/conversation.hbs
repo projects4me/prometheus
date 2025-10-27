@@ -47,7 +47,7 @@
                   <div class="user-block">
                     <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{entity.createdUser}}" alt="{{t "global.form.image"}}">
                     <span class="subject"><a href="#">{{entity.subject}}</a></span>
-                    <span class="description"><a href="/app/user/{{entity.createdBy.id}}">{{entity.createdBy.name}}</a> - {{format-date date=entity.dateModified format="MMM Do 'YY, h:mm a" localTime=true}}</span>
+                    <span class="description"><a href="/app/user/{{entity.createdBy.id}}">{{entity.createdBy.name}}</a> - {{format-date date=entity.dateModified format="DD MMM 'YY, h:mm a" localTime=true}}</span>
                   </div>
                   {{!-- /.user-block --}}
                   <div class="box-tools">
@@ -105,7 +105,7 @@
                         <div class="comment-text">
                           <span class="username">
                             <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
-                            <span class="text-muted pull-right">{{format-date date=comment.dateModified format="MMM Do 'YY, h:mm a" localTime=true}}</span>
+                            <span class="text-muted pull-right">{{format-date date=comment.dateModified format="DD MMM 'YY, h:mm a" localTime=true}}</span>
                           </span>{{!-- /.username --}}
                           {{translate-comment comment.comment}}
                         </div>
