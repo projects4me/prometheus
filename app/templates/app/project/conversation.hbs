@@ -2,33 +2,42 @@
   <div class="conversations">
 
     <div class="row">
-      <div class="col-sm-12">
+      {{!-- Lazy Loading Conversations with Container Scroll --}}
+      <InfiniteScroll
+        @onLoadMore={{this.loadMoreConversations}}
+        @threshold={{150}}
+        @containerClass="col-sm-12 conversation-scroll-container"
+        @loadingText={{t "views.app.conversation.loading"}}
+        @endMessageText={{t "views.app.conversation.noMore"}}
+        @useLoadMoreButton={{false}}
+        @useScrollLoading={{true}}
+        @pageSize={{this.pageSize}}
+        @model={{this.conversations}}
+      >
+        <:default>
+          <div class="conversation-grid">
+            {{!-- Sections that lets us create a new conversation --}}
+            <div class="conversation-item">
+              <div class="box box-widget">
 
-        <div class="conversation-grid">
-
-          {{!-- Sections that lets us create a new conversation --}}
-          <div class="conversation-item">
-            <div class="box box-widget">
-
-              <div class="box-start">
-                <img class="img-responsive img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
-                {{!-- .img-push is used to add margin to elements next to floating images --}}
-                <div class="img-push">
-                  <a href="javascript:void(0);" {{action "showDialog"}}>
-                    <span class="disabled-text new-conversation">
-                      {{t "views.app.conversation.create"}}
-                      <div class="pull-right" data-btn="addConversation">
-                        <i class="fa fa-plus btn"></i>
-                      </div>
-                    </span>
-                  </a>
+                <div class="box-start">
+                  <img class="img-responsive img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
+                  {{!-- .img-push is used to add margin to elements next to floating images --}}
+                  <div class="img-push">
+                    <a href="javascript:void(0);" {{action "showDialog"}}>
+                      <span class="disabled-text new-conversation">
+                        {{t "views.app.conversation.create"}}
+                        <div class="pull-right" data-btn="addConversation">
+                          <i class="fa fa-plus btn"></i>
+                        </div>
+                      </span>
+                    </a>
+                  </div>
                 </div>
+                {{!-- /.box-footer --}}
               </div>
-              {{!-- /.box-footer --}}
             </div>
-          </div>
-
-          {{#each this.model as |entity|}}
+            {{#each this.conversations as |entity|}}
 
             <div class="conversation-item" id={{entity.id}}>
 
@@ -112,7 +121,7 @@
                             <ConversationUi::MessageBox
                               @usersList={{this.membersList}}
                               @issueSearch={{perform this.search}}
-                              @save={{action "save"}}
+                              @save={{this.saveComment}}
                               @entity={{entity.id}}
                               @hide={{'toolbar'}}
                             />
@@ -186,10 +195,10 @@
 
             </div>
 
-          {{/each}}
-        </div>
-
-      </div>
+            {{/each}}
+          </div>
+        </:default>
+      </InfiniteScroll>
     </div>
 
   </div>

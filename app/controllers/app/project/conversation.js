@@ -8,7 +8,7 @@ import Evented from '@ember/object/evented';
 import $ from "jquery";
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
-
+import { tracked } from '@glimmer/tracking';
 /**
  * This is the controller for the conversation controller route
  *
@@ -186,16 +186,55 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      */
     roomType = { value: "discussion", label: "Discussion" };
 
+    /**
+     * Current page for pagination
+     * @property currentPage
+     * @type {number}
+     * @public
+     */
+    @tracked currentPage = 1;
+
+    /**
+     * Page size for pagination
+     * @property pageSize
+     * @type {number}
+     * @public
+     */
+    @tracked pageSize = 5;
+
+    /**
+     * Whether there are more conversations to load
+     * @property hasMoreConversations
+     * @type {boolean}
+     * @public
+     */
+    @tracked hasMoreConversations = true;
+
+    /**
+     * Whether conversations are currently being loaded
+     * @property isLoadingConversations
+     * @type {boolean}
+     * @public
+     */
+    @tracked isLoadingConversations = false;
+
+    /**
+     * Conversations list
+     * @property conversations
+     * @type {Array}
+     * @public
+     */
+    @tracked conversations = [];
 
     /**
      * This function is used to create a comment on the conversation.
      *
-     * @method save
+     * @method saveComment
      * @param {String} relatedId
      * @param {String} contents
      * @public
      */
-    @action save(relatedId, contents) {
+    @action saveComment(relatedId, contents) {
         Logger.debug('AppProjectConversationController::save()');
         if (contents == undefined) {
             return false;
@@ -209,15 +248,9 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         });
 
         return comment.save().then(function (comment) {
-            let count = _self.model.get('length');
-            while (count > 0) {
-                count--;
-                if (_self.model.objectAt(count).get('id') === relatedId) {
-                    _self.model.objectAt(count).get('comments').pushObject(comment);
-                    _self.pubSub.trigger('clearContents');
-                    break;
-                }
-            }
+            let conversation = _self.conversations.find(conversation => conversation.id === relatedId);
+            conversation.comments.pushObject(comment);
+            _self.pubSub.trigger('clearContents');
         });
 
     }
@@ -245,11 +278,11 @@ export default class AppProjectConversationController extends PrometheusCreateCo
 
 
         comment.save().then(function (savedComment) {
-            let count = _self.model.get('length');
+            let count = _self.conversations.length;
             while (count > 0) {
                 count--;
-                if (_self.model.objectAt(count).get('id') === relatedId) {
-                    _self.model.objectAt(count).get('comments').pushObject(savedComment);
+                if (_self.conversations[count].id === relatedId) {
+                    _self.conversations[count].comments.pushObject(savedComment);
                     event.target.value = '';
                     break;
                 }
@@ -282,7 +315,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                     showCloseButton: true
                 });
 
-                _self.get('model').filterBy('id', conversationId)[0].get('votes').addObject(data);
+                _self.conversations.filterBy('id', conversationId)[0].votes.addObject(data);
             }
         });
     }
@@ -308,7 +341,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                     newConversation.save().then(function (conversation) {
                         Logger.debug('A new conversation has been saved');
 
-                        _self.get('model').unshiftObject(conversation);
+                        _self.conversations.unshiftObject(conversation);
                         new Messenger().post({
                             message: _self.intl.t("views.app.conversation.created", { name: conversation.get('subject') }),
                             type: 'success',
@@ -382,5 +415,72 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         let conversationId = this.c_id;
         let element = document.getElementById(conversationId);
         this.scrollAndHighlight(element, true);
-    }    
+    }
+
+    /**
+     * Loads more conversations for lazy loading
+     * @method loadMoreConversations
+     * @param {Object} paginationInfo - Object containing page, pageSize, etc.
+     * @public
+     * @async
+     * @returns {Promise<Object>} Returns object with items and metadata
+     */
+    @action
+    async loadMoreConversations(paginationInfo = {}) {
+        if (this.isLoadingConversations || !this.hasMoreConversations) {
+            return { items: [] };
+        }
+
+        const { page, pageSize } = paginationInfo;
+        
+        try {
+            this.isLoadingConversations = true;
+            
+            let projectId = this.trackedProject.getProjectId();
+            let _conversationOptions = {
+                rels: "comments",
+                order: "DESC",
+                sort: "comments.dateModified, Conversationroom.dateModified",
+                query: "(Conversationroom.projectId : " + projectId + ")",
+                limit: pageSize,
+                page: page
+            };
+
+            let newConversations = await this.store.query('conversationroom', _conversationOptions);
+
+            for(let conversation of newConversations.toArray()) {
+                let comments = await this.store.query('comment', {
+                    query: `(Comment.relatedId : ${conversation.id})`,
+                    sort: 'Comment.dateCreated',
+                    order: 'ASC',
+                    limit: -1
+                }).catch((error) => {
+                    this.errorManager.handleError(error, {
+                        moduleName: 'conversationroom'
+                    });
+                });
+                conversation.comments = comments;
+            }
+            // Check if we've reached the end
+            if (newConversations.length < pageSize) {
+                this.hasMoreConversations = false;
+            }
+
+            // Add new conversations to the existing list
+            this.conversations = [...this.conversations, ...newConversations.toArray()];
+            
+            return {
+                items: newConversations.toArray(),
+                hasReachedEnd: !this.hasMoreConversations
+            };
+        } catch (error) {
+            Logger.error('Error loading more conversations:', error);
+            this.errorManager.handleError(error, {
+                moduleName: 'conversationroom'
+            });
+            return { items: [] };
+        } finally {
+            this.isLoadingConversations = false;
+        }
+    }
 }

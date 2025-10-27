@@ -162,13 +162,8 @@
 /*====================================
 =            Conversation Grid        =
 ====================================*/
-.conversation-grid {
-  display: flex;
-  flex-direction: column;
-  max-width: 85rem;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
+// Conversation grid styles are now handled by .conversation-scroll-container
+// which is applied to the InfiniteScroll container
 
 .conversation-item {
   width: 100%;
@@ -186,16 +181,23 @@
 }
 
 @media (max-width: 768px) {
-  .conversation-grid {
-    max-width: 100%;
-    padding: 0 1.5rem;
+  .conversation-scroll-container {
+    height: calc(100vh - 150px);
+    
+    .conversation-grid {
+      padding: 0 1.5rem;
+    }
   }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .conversation-grid {
-    max-width: 50rem;
-    padding: 0 2rem;
+  .conversation-scroll-container {
+    height: calc(100vh - 180px);
+    
+    .conversation-grid {
+      max-width: 50rem;
+      padding: 0 2rem;
+    }
   }
 }
 
@@ -229,4 +231,43 @@
   top: 0.6rem;
   left: 0.7rem;
   font-size: 1rem !important;
+}
+
+/*====================================
+=            Lazy Loading Styles     =
+====================================*/
+.conversation-scroll-container {
+  height: calc(100vh - 100px) !important;
+
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+    
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+  
+  .conversation-grid {
+    display: flex;
+    flex-direction: column;
+    max-width: 85rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+}
+
+// Remove browser default scrollbar from body
+body {
+  overflow: hidden;
 }
