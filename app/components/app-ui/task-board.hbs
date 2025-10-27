@@ -20,24 +20,19 @@
         />
       </li>
 
-      {{!-- Mark as complete section, only when active milestone is not backlog --}}
+      {{!-- Mark as complete button, only when active milestone is not backlog --}}
       {{#if (not-eq this.activeMilestone.milestoneType "backlog")}}
         <li class="milestone-close-tab">
-          <div class="milestone-close-section">
-            <input 
-              type="checkbox" 
-              class="milestone-close-checkbox" 
-              id="milestone-mark-as-complete-checkbox"
-              checked={{this.markMilestoneAsCompleteChecked}}
-              {{on "change" this.toggleMarkMilestoneAsComplete}}
-              title={{t "views.app.board.milestone.markComplete.confirm"}}
-            />
-            <label for="milestone-mark-as-complete-checkbox" class="milestone-close-label">
-              {{t "views.app.board.milestone.markComplete.confirm"}}
-              <i class="fa fa-check"></i>
-            </label>
-            </div>
-          </li>
+          <AppUi::Button
+            class="milestone-mark-complete-button"
+            @onClick={{this.toggleMarkMilestoneAsComplete}}
+            @aclContext="App.Project.Milestone.Update"
+            title={{t "views.app.board.milestone.markComplete.confirm"}}
+          >
+            <i class="fa fa-check"></i>
+            {{t "views.app.board.milestone.markComplete.confirm"}}
+          </AppUi::Button>
+        </li>
       {{/if}}
     </ul>
     <span class="milestone-filters">

@@ -199,7 +199,7 @@ export default class InitializeSortable extends Modifier {
         this._setupMilestoneTabsAsSortable();
         this._setupTabSwitching();
         let milestoneEls = document.querySelectorAll('div.milestone.box-body');
-        this.reRenderView(milestoneEls);
+        this.reRenderView(milestoneEls, true);
     }
 
     /**
