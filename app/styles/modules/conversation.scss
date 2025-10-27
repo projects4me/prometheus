@@ -109,7 +109,18 @@
     }
 
     .box-comment {
-      margin-bottom: 0.5rem;
+      &:nth-child(even) {
+        background-color: lighten($borderColor, 15%);
+      }
+      
+      &:nth-child(odd) {
+        background-color: lighten($borderColor, 8%);
+      }
+
+      &:nth-last-child(2) {
+        margin-bottom: 1rem;
+      }
+      
       .img-sm {
         width: 30px !important;
         height: 30px !important;
