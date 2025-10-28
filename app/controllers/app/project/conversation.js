@@ -200,7 +200,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @type {number}
      * @public
      */
-    @tracked pageSize = 5;
+    @tracked pageSize = 10;
 
     /**
      * Whether there are more conversations to load
@@ -438,9 +438,8 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             
             let projectId = this.trackedProject.getProjectId();
             let _conversationOptions = {
-                rels: "comments",
                 order: "DESC",
-                sort: "comments.dateModified, Conversationroom.dateModified",
+                sort: "Conversationroom.dateModified",
                 query: "(Conversationroom.projectId : " + projectId + ")",
                 limit: pageSize,
                 page: page

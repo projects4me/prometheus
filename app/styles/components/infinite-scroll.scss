@@ -3,50 +3,6 @@
   position: relative;
   height: 100%;
 
-  .infinite-scroll-loading-sticky {
-    position: sticky;
-    background-color: #fff;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    padding: 8px 0;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    i {
-      margin-right: 8px;
-      color: $primaryColor;
-    }
-
-    span {
-      font-weight: 500;
-    }
-
-    .loading-indicator {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 0;
-      margin: 5px 0;
-
-      i {
-        margin-right: 10px;
-        color: $primaryColor;
-        font-size: 16px;
-        animation: spin 1s infinite linear;
-      }
-
-      span {
-        font-weight: 500;
-        color: #444;
-        letter-spacing: 0.2px;
-      }
-    }
-  }
-
   .infinite-scroll-end {
     padding: 10px;
     text-align: center;
@@ -72,7 +28,6 @@
   }
 }
 
-// Load more button styles moved outside the container
 .infinite-scroll-load-more {
   padding: 0.5rem;
   text-align: center;
@@ -83,6 +38,42 @@
     font-size: 1.2rem;
     i {
       margin-right: 0.2rem;
+    }
+  }
+}
+
+.infinite-scroll-loading {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: transparent;
+  padding: 1.2rem 0;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  .loading-indicator {
+    display: flex;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.6rem;
+    background-color: #fff;
+    border-radius: 2rem;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+
+    i {
+      margin-right: 0.8rem;
+      color: $primaryColor;
+      animation: spin 1s infinite linear;
+    }
+
+    span {
+      font-weight: 500;
+      color: #444;
     }
   }
 }
