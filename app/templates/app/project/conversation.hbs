@@ -2,14 +2,16 @@
   <div class="conversations">
 
     <div class="row">
-      {{!-- Lazy Loading Conversations with Container Scroll --}}
+      <div class="col-sm-3"></div>
+      {{!-- Lazy Loading Conversations with Browser Scroll --}}
+      <div class="col-sm-6">
       <InfiniteScroll
+        @useBrowserScroll={{true}}
         @onLoadMore={{this.loadMoreConversations}}
-        @threshold={{150}}
-        @containerClass="col-sm-12 conversation-scroll-container"
+        @threshold={{200}}
         @loadingText={{t "views.app.conversation.loading"}}
         @endMessageText={{t "views.app.conversation.noMore"}}
-        @useLoadMoreButton={{false}}
+        @useLoadMoreButton={{true}}
         @useScrollLoading={{true}}
         @pageSize={{this.pageSize}}
         @model={{this.conversations}}
@@ -199,6 +201,8 @@
           </div>
         </:default>
       </InfiniteScroll>
+      </div>
+      <div class="col-sm-3"></div>
     </div>
 
   </div>

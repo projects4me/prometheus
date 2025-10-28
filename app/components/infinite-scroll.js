@@ -72,6 +72,26 @@ export default class InfiniteScrollComponent extends Component {
 	@tracked pageSize = this.args.pageSize || 5;
 
 	/**
+	 * Determines whether to use browser scroll instead of container scroll
+	 * @property useBrowserScroll
+	 * @type {boolean}
+	 * @public
+	 */
+	get useBrowserScroll() {
+		return this.args.useBrowserScroll || false;
+	}
+
+	/**
+	 * Gets the loading offset for browser scroll mode
+	 * @property loadingOffset
+	 * @type {number}
+	 * @public
+	 */
+	get loadingOffset() {
+		return this.args.loadingOffset || 0;
+	}
+
+	/**
 	 * Gets the threshold distance from bottom before triggering load more
 	 * @property threshold
 	 * @type {number}
@@ -111,6 +131,7 @@ export default class InfiniteScrollComponent extends Component {
 	constructor() {
 		super(...arguments);
 		this._boundHandleScroll = this.handleScroll.bind(this);
+		this._boundHandleBrowserScroll = this.handleBrowserScroll.bind(this);
 	}
 
 	/**
@@ -123,7 +144,11 @@ export default class InfiniteScrollComponent extends Component {
 	setupScrollListener(element) {
 		this.scrollContainer = element;
 
-		if (this.useScrollLoading) {
+		if (this.useBrowserScroll) {
+			// Browser scroll mode
+			window.addEventListener('scroll', this._boundHandleBrowserScroll, { passive: true });
+		} else if (this.useScrollLoading) {
+			// Container scroll mode (existing logic)
 			this.scrollContainer.addEventListener(
 				'scroll',
 				this._boundHandleScroll
@@ -138,7 +163,9 @@ export default class InfiniteScrollComponent extends Component {
 	 */
 	@action
 	teardownScrollListener() {
-		if (this.scrollContainer && this.useScrollLoading) {
+		if (this.useBrowserScroll) {
+			window.removeEventListener('scroll', this._boundHandleBrowserScroll);
+		} else if (this.scrollContainer && this.useScrollLoading) {
 			this.scrollContainer.removeEventListener(
 				'scroll',
 				this._boundHandleScroll
@@ -158,6 +185,17 @@ export default class InfiniteScrollComponent extends Component {
 	}
 
 	/**
+	 * Handles browser scroll events with debouncing
+	 * @method handleBrowserScroll
+	 * @param {Event} event - The scroll event
+	 * @public
+	 */
+	@action
+	handleBrowserScroll(event) {
+		debounce(this, this.checkBrowserScrollPosition, event, this.debounceTime);
+	}
+
+	/**
 	 * Checks if scroll position has reached threshold to load more content
 	 * @method checkScrollPosition
 	 * @param {Event} event - The scroll event
@@ -168,6 +206,26 @@ export default class InfiniteScrollComponent extends Component {
 
 		const { scrollTop, scrollHeight, clientHeight } = this.scrollContainer;
 		const scrollRemaining = scrollHeight - scrollTop - clientHeight;
+
+		if (scrollRemaining <= this.threshold) {
+			this.loadMore(event);
+		}
+	}
+
+	/**
+	 * Checks if browser scroll position has reached threshold to load more content
+	 * @method checkBrowserScrollPosition
+	 * @param {Event} event - The scroll event
+	 * @private
+	 */
+	checkBrowserScrollPosition(event) {
+		if (this.isLoading || this.hasReachedEnd) return;
+
+		const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+		const windowHeight = window.innerHeight;
+		const documentHeight = document.documentElement.scrollHeight;
+
+		const scrollRemaining = documentHeight - scrollTop - windowHeight;
 
 		if (scrollRemaining <= this.threshold) {
 			this.loadMore(event);

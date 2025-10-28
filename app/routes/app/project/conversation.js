@@ -86,7 +86,7 @@ export default App.extend({
             order: "DESC",
             sort: "Conversationroom.dateModified",
             query: "(Conversationroom.projectId : " + projectId + ")",
-            limit: 5,
+            limit: 10,
             page: 1
         }
 

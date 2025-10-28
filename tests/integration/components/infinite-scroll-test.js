@@ -91,4 +91,40 @@ module('Integration | Component | infinite-scroll', function (hooks) {
 		resolvePromise(true);
 		await settled();
 	});
+
+	test('it renders browser scroll mode when useBrowserScroll is true', async function (assert) {
+		await render(hbs`
+            <InfiniteScroll @useBrowserScroll={{true}}>
+                <div class="test-content" data-content>Content goes here</div>
+            </InfiniteScroll>
+        `);
+
+		assert
+			.dom('[data-content]')
+			.exists('The yielded content is rendered');
+		assert
+			.dom('.infinite-scroll-container')
+			.doesNotExist('Container wrapper is not rendered in browser scroll mode');
+	});
+
+	test('it calls loadMore action when browser scroll button clicked', async function (assert) {
+		assert.expect(1);
+
+		this.set('loadMore', () => {
+			assert.ok(true, 'loadMore action was triggered');
+			return true;
+		});
+
+		await render(hbs`
+            <InfiniteScroll
+                @useBrowserScroll={{true}}
+                @useLoadMoreButton={{true}}
+                @onLoadMore={{this.loadMore}}
+            >
+                Content
+            </InfiniteScroll>
+        `);
+
+		await click('[data-load-more-button]');
+	});
 });

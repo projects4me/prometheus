@@ -1,33 +1,22 @@
-<div
-	class='infinite-scroll-container {{@containerClass}}'
-	data-infinite-scroll
-	{{did-insert this.setupScrollListener}}
-	{{will-destroy this.teardownScrollListener}}
->
-	{{#if this.isLoading}}
-		<div class='infinite-scroll-loading-sticky' data-infinite-scroll-loading>
-			<div class='loading-indicator' data-loading-indicator>
-				<i class='fa fa-spinner fa-spin'></i>
-				<span>{{@loadingText}}</span>
-			</div>
-		</div>
-	{{/if}}
+{{!-- ********** Browser Scroll Mode ********** --}}
 
-	{{yield}}
+{{#if this.useBrowserScroll}}
+  {{#if this.isLoading}}
+    <div class='infinite-scroll-loading' 
+         data-infinite-scroll-loading>
+      <div class='loading-indicator' data-loading-indicator>
+        <i class='fa fa-spinner fa-spin'></i>
+        <span>{{@loadingText}}</span>
+      </div>
+    </div>
+  {{/if}}
 
-  {{!-- Not required for now, will be used in the future using hasReachedEnd --}}
-	{{#if false}}
-		<div class='infinite-scroll-end' data-infinite-scroll-end>
-			<div class='end-message' data-end-message>
-				<i class='fa fa-check-circle'></i>
-				<span>{{@endMessageText}}</span>
-			</div>
-		</div>
-	{{/if}}
-</div>
+  <div {{did-insert this.setupScrollListener}} {{will-destroy this.teardownScrollListener}}>
+    {{yield}}
+  </div>
 
-	{{#if @useLoadMoreButton}}
-	<div class='infinite-scroll-load-more' data-infinite-scroll-load-more>
+  {{#if @useLoadMoreButton}}
+    <div class='infinite-scroll-load-more' data-infinite-scroll-load-more>
       <AppUi::Button
         type='button'
         class='btn btn-primary load-more-button'
@@ -40,3 +29,50 @@
       </AppUi::Button>
     </div>
   {{/if}}
+
+{{else}}
+  
+  {{!-- ********** Container Scroll Mode ********** --}}
+  <div
+    class='infinite-scroll-container {{@containerClass}}'
+    data-infinite-scroll
+    {{did-insert this.setupScrollListener}}
+    {{will-destroy this.teardownScrollListener}}
+  >
+    {{#if this.isLoading}}
+      <div class='infinite-scroll-loading' data-infinite-scroll-loading>
+        <div class='loading-indicator' data-loading-indicator>
+          <i class='fa fa-spinner fa-spin'></i>
+          <span>{{@loadingText}}</span>
+        </div>
+      </div>
+    {{/if}}
+
+    {{yield}}
+
+    {{!-- Not required for now, will be used in the future using hasReachedEnd --}}
+    {{#if false}}
+      <div class='infinite-scroll-end' data-infinite-scroll-end>
+        <div class='end-message' data-end-message>
+          <i class='fa fa-check-circle'></i>
+          <span>{{@endMessageText}}</span>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+
+  {{#if @useLoadMoreButton}}
+    <div class='infinite-scroll-load-more' data-infinite-scroll-load-more>
+      <AppUi::Button
+        type='button'
+        class='btn btn-primary load-more-button'
+        data-load-more-button
+        @onClick={{this.loadMore}}
+        @aclContext={{@aclContext}}
+      >
+        <i class='fa fa-refresh'></i>
+        <span>{{t "views.components.infiniteScroll.loadMore"}}</span>
+      </AppUi::Button>
+    </div>
+  {{/if}}
+{{/if}}
