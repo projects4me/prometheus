@@ -202,7 +202,24 @@
         </:default>
       </InfiniteScroll>
       </div>
-      <div class="col-sm-3"></div>
+      <div class="col-sm-3 conversation-sidebar">
+
+        {{!-- This will contain conversation opened using the c_id query param --}}
+        <div class="conversation-opened-container">
+
+        </div>        
+        
+        <div class="conversation-actions">
+          <AppUi::Button
+            type="button"
+            class="btn btn-default"
+            data-btn="refresh"
+            @onClick={{this.refreshConversation}}
+          >
+            <i class="fa fa-refresh"></i> {{t "global.form.refresh"}}
+          </AppUi::Button>
+        </div>
+      </div>
     </div>
 
   </div>

@@ -74,6 +74,22 @@
     margin-bottom: 0rem;
   }
 
+  .conversation-sidebar { 
+    height: 90vh;
+    padding-left: 2rem;
+
+    .conversation-opened-container {
+      height: 80%;
+    }
+
+    .conversation-actions {
+      height: 20%;
+      display: flex;
+      align-items: flex-start;
+      position: fixed;
+    }
+  }
+
   .user-block .subject {
     font-size: 1.6rem;
     font-weight: 600;
