@@ -646,7 +646,10 @@
           ]
         },
         "loading": "Loading more conversations...",
-        "noMore": "No more conversations to load"
+        "noMore": "No more conversations to load",
+        "refreshing": "Refreshing conversations...",
+        "refreshed": "Conversations refreshed successfully",
+        "refreshError": "Failed to refresh conversations, please try again later"
       },
       "wiki": {
         "welcome": "Welcome to Projects4Me documentation tool.",

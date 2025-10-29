@@ -188,11 +188,11 @@ export default class AppProjectConversationController extends PrometheusCreateCo
 
     /**
      * Current page for pagination
-     * @property currentPage
+     * @property page
      * @type {number}
      * @public
      */
-    @tracked currentPage = 1;
+    @tracked page = 1;
 
     /**
      * Page size for pagination
@@ -431,8 +431,6 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             return { items: [] };
         }
 
-        const { page, pageSize } = paginationInfo;
-        
         try {
             this.isLoadingConversations = true;
             
@@ -441,8 +439,8 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                 order: "DESC",
                 sort: "Conversationroom.dateModified",
                 query: "(Conversationroom.projectId : " + projectId + ")",
-                limit: pageSize,
-                page: page
+                limit: this.pageSize,
+                page: this.page + 1
             };
 
             let newConversations = await this.store.query('conversationroom', _conversationOptions);
@@ -461,10 +459,11 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                 conversation.comments = comments;
             }
             // Check if we've reached the end
-            if (newConversations.length < pageSize) {
+            if (newConversations.length < this.pageSize) {
                 this.hasMoreConversations = false;
             }
 
+            this.page++;
             // Add new conversations to the existing list
             this.conversations = [...this.conversations, ...newConversations.toArray()];
             
@@ -481,5 +480,45 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         } finally {
             this.isLoadingConversations = false;
         }
+    }
+
+    /**
+     * Refreshes the conversation
+     * @method refreshConversation
+     * @public
+     * @async
+     */
+    @action 
+    async refreshConversation() {
+        Logger.debug('AppProjectConversationController:refreshConversation');
+        let messenger = new Messenger().post({
+            message: this.intl.t("views.app.conversation.refreshing"),
+            type: 'info',
+            showCloseButton: true,
+            hideAfter: false
+        });
+        document.querySelector('.conversation-grid').classList.add('filter-blur');
+        await this.router.refresh().catch((error) => {
+            this.errorManager.handleError(error, {
+                moduleName: 'conversationroom'
+            });
+            messenger.update({
+                message: this.intl.t("views.app.conversation.refreshError"),
+                type: 'error',
+                showCloseButton: true,
+                hideAfter: 3
+            });
+            document.querySelector('.conversation-grid').classList.remove('filter-blur');
+        });
+        this.page = 1;
+        this.hasMoreConversations = true;
+        window.scrollTo({ top: 0, behavior: "smooth" })
+        document.querySelector('.conversation-grid').classList.remove('filter-blur');
+        messenger.update({
+            message: this.intl.t("views.app.conversation.refreshed"),
+            type: 'success',
+            showCloseButton: true,
+            hideAfter: 3
+        });
     }
 }
