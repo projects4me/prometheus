@@ -216,7 +216,16 @@
             data-btn="refresh"
             @onClick={{this.refreshConversation}}
           >
-            <i class="fa fa-refresh"></i> {{t "global.form.refresh"}}
+            <i class="fa fa-refresh"></i>
+          </AppUi::Button>
+
+          <AppUi::Button
+            type="button"
+            class="btn btn-default"
+            data-btn="scrollToTop"
+            @onClick={{this.scrollToTop}}
+          >
+            <i class="fa fa-arrow-up"></i>
           </AppUi::Button>
         </div>
       </div>

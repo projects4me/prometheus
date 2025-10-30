@@ -512,7 +512,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         });
         this.page = 1;
         this.hasMoreConversations = true;
-        window.scrollTo({ top: 0, behavior: "smooth" })
+        this.scrollToTop();
         document.querySelector('.conversation-grid').classList.remove('filter-blur');
         messenger.update({
             message: this.intl.t("views.app.conversation.refreshed"),
@@ -520,5 +520,15 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             showCloseButton: true,
             hideAfter: 3
         });
+    }
+
+    /**
+     * Scrolls to the top of the conversation grid.
+     * 
+     * @method scrollToTop
+     * @public
+     */
+    @action scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
     }
 }
