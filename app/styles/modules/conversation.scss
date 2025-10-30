@@ -80,18 +80,28 @@
 
     .conversation-opened-container {
       height: 80%;
+      overflow-y: auto;
+
+      .conversation-item {
+        margin: 0;
+      }
     }
 
     .conversation-actions {
       height: 20%;
-      bottom: 0;
-      right: 1rem;
-      position: fixed;
+      bottom: -1rem;
+      right: 10rem;
+      position: absolute;
 
       button {
+        position: fixed;
         i {
           font-size: 2rem;
         }
+      }
+
+      [data-btn="scrollToTop"] {
+        margin-left: 5rem;
       }
     }
   }
