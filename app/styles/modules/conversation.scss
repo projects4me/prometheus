@@ -84,9 +84,15 @@
 
     .conversation-actions {
       height: 20%;
-      display: flex;
-      align-items: flex-start;
+      bottom: 0;
+      right: 1rem;
       position: fixed;
+
+      button {
+        i {
+          font-size: 2rem;
+        }
+      }
     }
   }
 
