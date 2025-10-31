@@ -54,6 +54,11 @@ export default class AppUiButtonComponent extends Component {
         let { onClick, disableOnSuccess } = this.args;
         this.disabled = true;
         try {
+
+            if(typeof onClick !== 'function') {
+                console.error('must pass function to button component');
+            }
+
             await onClick(e);
             !disableOnSuccess && (this.disabled = false);
         } catch (e) {
