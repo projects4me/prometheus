@@ -11,7 +11,7 @@
       <div class="modal-footer">
         <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" data-dismiss="modal">{{t this.closeLabel}}</AppUi::Button>
         {{#if (and this.confirmLabel (not @removeConfirmBtn))}}
-          <AppUi::Button type="button" data-btn={{if @dataSaveBtn @dataSaveBtn 'save'}} class="btn btn-primary" @onClick={{this.confirm}}>{{t this.confirmLabel}}</AppUi::Button>
+          <AppUi::Button type="button" data-btn={{if @dataSaveBtn @dataSaveBtn 'save'}} disabled={{@disableSaveBtn}} class="btn btn-primary" @onClick={{this.confirm}}>{{t this.confirmLabel}}</AppUi::Button>
         {{/if}}
       </div>
     </div>
