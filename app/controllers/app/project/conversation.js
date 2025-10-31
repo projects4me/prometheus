@@ -248,11 +248,13 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         });
 
         return comment.save().then(function (comment) {
-            let conversation = _self.conversations.find(conversation => conversation.id === relatedId);
-            conversation.comments.pushObject(comment);
+            if(_self.selectedConversation?.id === relatedId) {
+                _self.selectedConversation.comments.pushObject(comment);
+            } else {
+                _self.conversations.find((conversation) => conversation.id === relatedId).comments.pushObject(comment);
+            }
             _self.pubSub.trigger('clearContents');
         });
-
     }
 
     /**
@@ -278,14 +280,10 @@ export default class AppProjectConversationController extends PrometheusCreateCo
 
 
         comment.save().then(function (savedComment) {
-            let count = _self.conversations.length;
-            while (count > 0) {
-                count--;
-                if (_self.conversations[count].id === relatedId) {
-                    _self.conversations[count].comments.pushObject(savedComment);
-                    event.target.value = '';
-                    break;
-                }
+            if(_self.selectedConversation?.id === relatedId) {
+                _self.selectedConversation.comments.pushObject(savedComment);
+            } else {
+                _self.conversations.find((conversation) => conversation.id === relatedId).comments.pushObject(savedComment);
             }
         });
     }
@@ -315,7 +313,11 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                     showCloseButton: true
                 });
 
-                _self.conversations.filterBy('id', conversationId)[0].votes.addObject(data);
+                if(_self.selectedConversation?.id === conversationId) {
+                    _self.selectedConversation.votes.addObject(data);
+                } else {
+                    _self.conversations.find((conversation) => conversation.id === conversationId).votes.addObject(data);
+                }
             }
         });
     }
@@ -438,6 +440,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             let _conversationOptions = {
                 order: "DESC",
                 sort: "Conversationroom.dateModified",
+                rels: 'votes',
                 query: "(Conversationroom.projectId : " + projectId + ")",
                 limit: this.pageSize,
                 page: this.page + 1

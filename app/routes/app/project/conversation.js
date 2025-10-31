@@ -57,34 +57,21 @@ export default App.extend({
     trackedProject: inject(),
 
     /**
-     * Query params that the conversation route accepts.
-     * 
-     * @property queryParams
-     * @type Object
-     * @for Conversation
-     * @public
-     */
-    queryParams: {
-        c_id: {
-            refreshModel: false
-        }
-    },
-
-    /**
      * The model hook for this route. This is used load the conversations that we have in the system.
      * 
      * @method model
      * @returns {Promise}
      */
-    async model() {
+    async model(params) {
         Logger.debug('AppProjectConversationRoute::model');
         let _self = this;
         let projectId = this.trackedProject.getProjectId();
-        
+
         // Initial load with pagination - load first 15 conversations
         let _conversationOptions = {
             order: "DESC",
             sort: "Conversationroom.dateModified",
+            rels: 'votes',
             query: "(Conversationroom.projectId : " + projectId + ")",
             limit: 10,
             page: 1
@@ -111,7 +98,24 @@ export default App.extend({
             });
             conversation.comments = comments;
         }
-        return conversations;
+
+        let selectedConversation = null;
+        if(params.c_id) {
+            selectedConversation = await this.store.query('conversationroom', {
+                query: `(Conversationroom.id : ${params.c_id})`,
+                rels: 'votes,comments',
+                limit: -1
+            }).catch((error) => {
+                _self.errorManager.handleError(error, {
+                    moduleName: 'conversationroom'
+                })
+            });
+        }
+
+        return {
+            "conversations": conversations,
+            "selectedConversation": selectedConversation
+        };
     },
 
     /**
@@ -125,7 +129,8 @@ export default App.extend({
     setupController: function (controller, model) {
         Logger.debug('AppProjectConversationRoute::setupController');
 
-        controller.set('conversations', model.toArray());
+        controller.set('conversations', model.conversations.toArray());
+        controller.set('selectedConversation', model.selectedConversation?.objectAt(0));
         let newConversation = this.store.createRecord('conversationroom', {
             projectShortcode: this.trackedProject.shortCode
         });
@@ -135,6 +140,6 @@ export default App.extend({
         controller.set('module', this.module);
         controller.set('projectId', this.trackedProject.getProjectId());
         controller.set('projectShortcode', this.trackedProject.shortCode);
-        controller.set('hasMoreConversations', model.length >= controller.pageSize);
+        controller.set('hasMoreConversations', model.conversations.length >= controller.pageSize);
     },
 });

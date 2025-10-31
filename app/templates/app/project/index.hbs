@@ -87,7 +87,7 @@
                 <ul class="project-conversations show-5" {{initialize-slimscroll width='5'}}>
                   {{#if this.model.conversations}}
                     {{#each this.model.conversations as |conversation|}}
-                      <li>
+                      <li data-conversation-id="{{conversation.id}}">
                         <div class="user-block">
                           <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
                           <LinkTo @route="app.project.conversation" @query={{hash c_id=conversation.id}}><span class="subject">{{conversation.subject}}</span></LinkTo>
