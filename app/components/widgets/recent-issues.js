@@ -127,15 +127,38 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 	 * @action
 	 */
 	@action 
-	async onLoadMore(paginationInfo = {}) {
+	async onLoadMore(paginationInfo = {}, activeFilters) {
 		let issueOptions = _.cloneDeep(this.args.widgetSettings.options);
 		issueOptions.page = paginationInfo.page;
 		issueOptions.limit = paginationInfo.pageSize;
 		let issues = await this.store.query('issue', issueOptions);
-		this.filteredData = [...this.filteredData.toArray(), ...issues.toArray()];
+		let filteredIssues = this.reApplyFilters(issues, activeFilters);
+		this.filteredData = [...this.filteredData.toArray(), ...filteredIssues];
 		this.originalData = [...this.originalData.toArray(), ...issues.toArray()];
+
+		// return OG issues list got from API
 		return {
 			items: issues
 		};
+	}
+
+	/**
+	 * Reapplies the filters to the data
+	 * @method reApplyFilters
+	 * @param {Array} data - The data to reapply the filters to
+	 * @param {Array} activeFilters - The active filters
+	 * @returns {Array} - The filtered data
+	 */
+	@action
+	reApplyFilters(data, activeFilters) {
+		let issues = data.toArray();
+
+		activeFilters?.forEach(filter => {
+			const filterCallback = this.filterCallbacks[filter];
+			if(filterCallback) {
+				issues = filterCallback(issues);
+			}
+		});
+		return issues;
 	}
 }

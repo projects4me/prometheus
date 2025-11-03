@@ -35,6 +35,15 @@ export default class WidgetsComponent extends Component {
 	@service store;
 
 	/**
+	 * The current user service
+	 * @property currentUser
+	 * @type {Prometheus.Services.currentUser}
+	 * for App
+	 * @protected
+	 */
+	@service currentUser;
+
+	/**
 	 * Processes and formats the fields configuration from widgetSettings
 	 * Translates field labels using the provided translationKey
 	 *
