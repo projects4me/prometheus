@@ -54,7 +54,7 @@
         {{#each @entity.comments as |comment|}}
           <div class="box-comment">
             <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
-            <div class="comment-text">
+            <div class="comment-text" {{modify-links}}>
               <span class="username">
                 <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
                 <span class="text-muted pull-right">{{format-date date=comment.dateModified format="DD MMM 'YY, h:mm a" localTime=true}}</span>
