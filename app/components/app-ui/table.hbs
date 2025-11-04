@@ -94,7 +94,7 @@
       {{!-- Lazy Loading Starts --}}
       {{#if @useLazyLoading}}
         <InfiniteScroll
-          @onLoadMore={{this.onLoadMore}}
+          @onLoadMore={{this.loadMore}}
           @threshold={{150}}
           @containerClass="table-responsive list-view"
           @loadingText={{t "views.app.components.table.loadingText"}}

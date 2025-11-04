@@ -262,13 +262,14 @@ export default class AppUiTableComponent extends Component {
 	 * Calls the onLoadMore callback if it exists
 	 *
 	 * @method loadMore
+	 * @param {Object} paginationInfo - The pagination information
+	 * @returns {Promise<Object>} - The promise that resolves to the pagination information
 	 * @public
-	 * @action
 	 */
 	@action
-	loadMore() {
+	loadMore(paginationInfo = {}) {
 		if (this.onLoadMore) {
-			this.onLoadMore();
+			return this.onLoadMore(paginationInfo, this.activeFilters);
 		}
 	}
 
