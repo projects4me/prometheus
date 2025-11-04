@@ -33,7 +33,14 @@
 
       &.active {
         background: $primaryColor;
-        color: white;
+
+        a {
+          color: white;
+        }
+
+        a:hover {
+          color: $lightColor;
+        }
 
         .accordion-icon i {
           color: white;

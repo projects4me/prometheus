@@ -35,6 +35,11 @@ export default class AppUiAccordionComponent extends Component {
 	get sections() {
 		scheduleOnce('afterRender', this, () => {
 			this.openSections = [];
+			if(this.args.openAllSections) {
+				Object.keys(this.args.sections).forEach((key) => {
+					this.openSections.push(key);
+				});
+			}
 		});
 		return this.args.sections;
 	}

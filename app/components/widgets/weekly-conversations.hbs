@@ -22,6 +22,7 @@
           <AppUi::Accordion
             @sections={{this.data}}
             @canOpenMultipleSections={{true}}
+            @openAllSections={{true}}
           >
             <:title as |key|>
               {{#if (eq (call (fn this.conversationRelatedTo key)) "issue")}}
