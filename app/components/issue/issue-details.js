@@ -134,6 +134,15 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      */
     @tracked addWatcherDialog = false;
 
+    /**
+     * The abort controller which will be used to cancel the issue planning api call when user closes the modal.
+     * 
+     * @property issuePlanningAbortController
+     * @type {AbortController}
+     * @public
+     */
+    issuePlanningAbortController = new AbortController();
+
     constructor() {
         super(...arguments);
         this.newTimeLog = this.store.createRecord('timelog');
@@ -1030,7 +1039,10 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @method removeIssuePlanDialog
      * @public
      */
-    removeIssuePlanDialog() {
+    @action removeIssuePlanDialog() {
+        // Before closing, cancel the xhr request of issue planning
+        this.issuePlanningAbortController.abort('AbortError');
+        this.issuePlanningAbortController = new AbortController();
         this.issuePlanDialog = false;
         this.issuePlanData = null;
         this.issuePlanError = null;
@@ -1064,9 +1076,14 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${_self.session.data.authenticated.access_token}`
+                },
+                signal: this.issuePlanningAbortController.signal
+            }).catch((error) => {
+                if(error === 'AbortError') {
+                    return;
                 }
             });
-            if (response.ok) {
+            if (response?.ok) {
                 let data = await response.json();
                 if (data.success && data.data) {
                     this.issuePlanData = JSON.parse(data.data);
