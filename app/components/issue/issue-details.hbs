@@ -208,7 +208,7 @@
                   <div class="box-comment" data-comment-id="{{comment.id}}">
                     <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
 
-                    <div class="comment-text">
+                    <div class="comment-text" {{modify-links}}>
                       <span class="username">
                         <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
                         <span class="text-muted pull-right">{{format-date date=comment.dateModified format="MMM Do 'YY, h:mm a" localTime=true}}</span>
@@ -419,7 +419,7 @@
                         {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "views.app.issue.detail.timelog.h"}}{{/if}}
                         {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
                       </span>
-                      <span class="log-description">
+                      <span class="log-description" {{modify-links}}>
                         {{safe-html timelog.description}}
                       </span>
                     </div>
