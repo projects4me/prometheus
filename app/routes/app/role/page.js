@@ -65,5 +65,6 @@ export default class AppRolePageRoute extends AppRoute {
         controller.set('model.permissions', model.permissions);
         controller.set('memberships', model.memberships.toArray());
         controller.set('newMembership', newMembership);
+        this.breadcrumb.setTitle(this.routeName, model.role.get('name'));
     }
 }

@@ -98,10 +98,7 @@ export default App.extend({
 		);
 		let params = this.paramsFor('app.project.issue.edit');
 
-		this.set('breadCrumb', {
-			title: '#' + params.issue_number,
-			record: true
-		});
+		this.breadcrumb.setTitle('app.project.issue.page', `#${params.issue_number}`);
 		controller.set('model', this.get('issue'));
 		controller.set('project', this.get('project'));
 		controller.set('types', this.get('project').issuetypes);

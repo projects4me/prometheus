@@ -1,0 +1,12 @@
+{{#if this.items.length}}
+  <ol class="breadcrumb" >
+    {{#each this.itemsWithLastFlag as |item|}}
+      <BreadCrumbItem 
+        @item={{item}} 
+        @isLast={{item.isLast}}
+        @linkable={{@linkable}}
+      />
+    {{/each}}
+  </ol>
+{{/if}}
+

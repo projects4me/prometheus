@@ -1,0 +1,32 @@
+<li class="{{if @isLast 'active'}}">
+  {{#if this.isClickable}}
+    {{#if this.useModels}}
+      <LinkTo @route={{@item.route}} @models={{this.linkToModel}}>
+        {{#if @item.icon}}
+          <i class="fa fa-{{@item.icon}}"></i>
+        {{/if}}
+        {{@item.title}}
+      </LinkTo>
+    {{else if this.linkToModel}}
+      <LinkTo @route={{@item.route}} @model={{this.linkToModel}}>
+        {{#if @item.icon}}
+          <i class="fa fa-{{@item.icon}}"></i>
+        {{/if}}
+        {{@item.title}}
+      </LinkTo>
+    {{else}}
+      <LinkTo @route={{@item.route}}>
+        {{#if @item.icon}}
+          <i class="fa fa-{{@item.icon}}"></i>
+        {{/if}}
+        {{@item.title}}
+      </LinkTo>
+    {{/if}}
+  {{else}}
+    {{#if @item.icon}}
+      <i class="fa fa-{{@item.icon}}"></i>
+    {{/if}}
+    {{@item.title}}
+  {{/if}}
+</li>
+

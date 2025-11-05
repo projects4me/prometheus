@@ -51,8 +51,6 @@ export default App.extend({
 
         let _self = this;
         let params = _self.paramsFor('app.project.issue.page');
-        _self.set('breadCrumb', { title: '#' + params.issue_number, record: true });
-
         Logger.debug('-AppProjectIssuePageRoute::model()');
         return await _self.loadIssue(params);
     },
@@ -83,6 +81,8 @@ export default App.extend({
         controller.set('issue', issue);
         controller.set('issueStatuses', project?.issuestatuses);
         controller.set('issueTypes', project?.issuetypes || []);
+        this.breadcrumb.setTitle(this.routeName, `#${issue.issueNumber}`);
+        this.breadcrumb.setIcon(this.routeName, 'bug');
         Logger.debug('-AppProjectIssuePageRoute::setupController');
     },
 

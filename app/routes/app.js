@@ -117,6 +117,16 @@ export default Route.extend({
      * @private
      */
     notifications: inject(),
+
+    /**
+     * The breadcrumb service.
+     * 
+     * @property breadcrumb
+     * @type Ember.Service
+     * @for App
+     * @private
+     */
+    breadcrumb: inject(),
     
     /**
      * This function is called by EmberJs before it retrieves the model. In this method

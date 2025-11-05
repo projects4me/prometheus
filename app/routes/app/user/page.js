@@ -43,6 +43,7 @@ export default App.extend({
     setupController: function (controller, model) {
         Logger.debug('+Prometheus.Routes.App.User::setupController()');
         controller.set('model', model.user.objectAt(0));
+        this.breadcrumb.setTitle(this.routeName, model.user.objectAt(0).get('name'));
         Logger.debug('-Prometheus.Routes.App.User::setupController()');
     }
 });
