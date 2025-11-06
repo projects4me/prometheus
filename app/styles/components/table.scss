@@ -3,7 +3,7 @@
     .app-dropdown {
       margin-right: 0.5rem;
       span {
-        margin: 0 0.2rem 0 0.1rem;
+        margin-left: 0.1rem;
       }
     }
     @include flexbox($alignItems: center);

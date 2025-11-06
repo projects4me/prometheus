@@ -11,7 +11,7 @@
     aria-expanded={{this.isOpen}}
   >
     {{yield to="button"}}
-    <span class="caret"></span>
+    <i class="fa {{if this.isOpen 'fa-caret-up' 'fa-caret-down'}}"></i>
   </button>
   <div class="app-dropdown-content {{if this.isOpen 'show'}}">
     {{yield to="content"}}

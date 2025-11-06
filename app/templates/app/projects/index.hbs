@@ -19,82 +19,34 @@
 
 <section class="content">
   <div class="row module projects project">
-    <div class="col-md-2">
-      <AccessControl @aclContext="App.Project.List.SavedSearches.Read">
-        <div class="box box-solid">
-          <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.project.list.savedsearch.label"}}</h3>
-
-            <div class="box-tools">
-              <AppUi::Button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-              </AppUi::Button>
-            </div>
-          </div>
-          <div class="box-body no-padding">
-            <ul class="nav nav-pills nav-stacked">
-              {{#each this.savedsearches as |search|}}
-                <li>
-                  <a href="javascript:void(0);" {{action "applySearch" search}}>
-                    <div class="search-name">{{search.name}}</div>
-                    <i class="fa fa-filter pull-right" data-toggle="tooltip" title="{{t "views.app.project.list.savedsearch.apply"}}"></i>
-                  </a>
-                  <div class="btn-group" data-toggle="tooltip" title="{{t "global.form.more"}}">
-                    <AppUi::Button type="button" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                      <i class="fa fa-ellipsis-v"></i>
-                    </AppUi::Button>
-                    <ul class="dropdown-menu" role="menu">
-                      <li><a href="javascript:void(0);" {{action "deleteSearch" search}}><i class="fa fa-trash"></i>{{t "global.form.delete"}}</a></li>
-                    </ul>
-                  </div>
-                </li>
-              {{/each}}
-            </ul>
-          </div>
-          {{!-- /.box-body --}}
-        </div>
-      </AccessControl>
-
-      {{!-- /. box --}}
-      <AccessControl @aclContext="App.Project.List.SharedSearches.Read">
-        <div class="box box-solid">
-          <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.project.list.savedsearch.shared"}}</h3>
-
-            <div class="box-tools">
-              <AppUi::Button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-              </AppUi::Button>
-            </div>
-          </div>
-          <div class="box-body no-padding">
-            <ul class="nav nav-pills nav-stacked">
-              {{#each this.publicsearches as |search|}}
-                <li><a href="javascript:void(0);" {{action "copySearch" search}}>{{search.name}}<i class="fa fa-copy pull-right" data-toggle="tooltip" title="{{t "views.app.project.list.savedsearch.import"}}"></i></a></li>
-              {{/each}}
-            </ul>
-          </div>
-          {{!-- /.box-body --}}
-        </div>
-      </AccessControl>
-      {{!-- /.box --}}
-    </div>
-    {{!-- /.col --}}
-    <div class="col-md-10">
+    <div class="col-md-12">
 
       <AccessControl @aclContext="App.Project.List">
         <div class="box box-primary list-view">
           <div class="box-header with-border">
 
             <div class="search">
-              <span data-toggle="tooltip" title="{{t "global.list.searchbox"}}">
-                <AppUi::Button id="toggleFilters" @onClick={{this.toggleFilters}} type="button" class="btn dropdown-toggle" data-toggle="collapse" data-target=".list-view-filters">
-                  <span class="caret"></span>
-                  <span class="sr-only">{{t "global.list.toggleDropdown"}}</span>
-                </AppUi::Button>
-              </span>
+              {{!-- Saved Searches Dropdown --}}
+              <AppUi::Dropdown>
+                <:button>
+                  {{t "views.app.project.list.savedsearch.label"}}
+                </:button>
+                <:content>
+                  {{#each this.savedsearches as |search|}}
+                    <div {{on "click" (fn this.toggleSearch search)}} class="{{if (call (fn this.isSearchActive search)) 'active' ''}}">
+                      {{search.name}}
+                      {{#if (call (fn this.isSearchActive search))}}
+                        <i class="fa fa-check pull-right"></i>
+                      {{/if}}
+                    </div>
+                  {{/each}}
+                </:content>
+              </AppUi::Dropdown>
+              {{!-- End Saved Searches Dropdown --}}
               <div class="has-feedback">
                 <FormFields::FieldText
+                  data-toggle="collapse"
+                  data-target=".list-view-filters"
                   @focusIn={{fn this.openFilters}}
                   @insert-newline={{this.filter}}
                   @value={{this.query}}

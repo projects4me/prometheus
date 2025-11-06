@@ -26,7 +26,7 @@ module('Integration | Component | app-ui/dropdown', function (hooks) {
 		assert
 			.dom('.app-dropdown-btn')
 			.hasText('Filters', 'Button text is rendered');
-		assert.dom('.caret').exists('Caret icon exists');
+		assert.dom('.fa-caret-down').exists('Caret icon exists');
 	});
 
 	test('it renders dropdown content', async function (assert) {
