@@ -326,7 +326,13 @@ span[id="#"]{
 
 .search {
   display: inline-flex;
+  align-items: baseline;
   width: 100%;
+
+  .app-dropdown-btn {
+    height: auto !important;
+    width: auto !important;
+  }
 
   .has-feedback {
     width: 100%;

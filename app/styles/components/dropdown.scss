@@ -8,6 +8,11 @@
       @include flexbox($display: inline-flex, $alignItems: center, $justifyContent: center);
       border: none;
       padding: 0.4rem 0.6rem;
+
+      i.fa-caret-down,i.fa-caret-up {
+        margin: 0.2rem 0 0 0.2rem;
+        font-size: 1.2rem;
+      }
     }
   
     .app-dropdown-content {
@@ -16,7 +21,7 @@
       background-color: #fff;
       min-width: 160px;
       box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-      z-index: 100;
+      z-index: 99999;
       right: 0;
       top: 100%;
   

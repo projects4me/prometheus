@@ -39,7 +39,7 @@ export default class PrometheusListController extends PrometheusController {
      * @type Array
      * @private
      */
-    queryParams = ['sort', 'order', 'page', 'query'];
+    queryParams = ['sort', 'order', 'page', 'query', 'searchId'];
 
     /**
      * This property stores the current sorting order of the page,
@@ -80,6 +80,16 @@ export default class PrometheusListController extends PrometheusController {
      * @private
      */
     query = '';
+
+    /**
+     * This property stores the current search id.
+     *
+     * @property searchId
+     * @for List
+     * @type String
+     * @private
+     */
+    @tracked searchId = null;
 
     /**
      * The count of the selected items in the list view.
@@ -192,6 +202,16 @@ export default class PrometheusListController extends PrometheusController {
      * @public
      */
     @controller('app.project') appProjectController;
+
+    /**
+     * This property is used to keep track of the currently active search filter.
+     *
+     * @property activeSearch
+     * @type Object
+     * @for PrometheusListController
+     * @protected
+     */
+    @tracked activeSearch = null;
 
     /**
      * This action allows us to more from one page to the other
@@ -309,6 +329,8 @@ export default class PrometheusListController extends PrometheusController {
         Logger.debug('Prometheus.Controllers.List::clearSearch');
         queryBuilder.clear();
         this.set('query', '');
+        this.set('searchId', null);
+        this.set('activeSearch', null);
         this.set('page', 1);
         Logger.debug('-Prometheus.Controllers.List::clearSearch');
     }
@@ -335,25 +357,6 @@ export default class PrometheusListController extends PrometheusController {
         }
         $('.search input').blur();
         Logger.debug('-Prometheus.Controllers.List::openFilters');
-    }
-
-    /**
-     * Toggle the dropdown arrow on toggle
-     *
-     * @method toggleFilters
-     * @private
-     */
-    @action toggleFilters() {
-        Logger.debug('Prometheus.Controllers.List::toggleFilters');
-        $('#toggleFilters').toggleClass('dropToggle');
-        let filterEl = document.querySelector('.list-view-filters');
-        
-        if (filterEl.ariaExpanded === 'false') {
-            document.removeEventListener('keydown', this._searchRulesHandler);
-            this._searchRulesHandler = null;
-            Logger.debug('Prometheus.Controllers.List::toggleFilters - Event listener removed');
-        }
-        Logger.debug('-Prometheus.Controllers.List::toggleFilters');
     }
 
     /**
@@ -860,4 +863,44 @@ export default class PrometheusListController extends PrometheusController {
 
         Logger.debug('-Prometheus.Controllers.List::updateCheckboxState');
     }
+
+    /**
+     * This action is used to toggle the search filter on/off.
+     * If the same search is clicked again, it will be deactivated.
+     * If a different search is clicked, it will replace the current one.
+     *
+     * @method toggleSearch
+     * @param {Object} search The search object to toggle
+     * @public
+     */
+    @action
+    toggleSearch(search) {
+        Logger.debug('AppProjectIssueIndexController::toggleSearch');
+        if (this.activeSearch && this.activeSearch.id === search.id) {
+            // Same search clicked - deactivate it
+            this.activeSearch = null;
+            this.set('query', '');
+            this.set('searchId', null);
+            this.set('page', 1);
+        } else {
+            // Different search clicked - activate it
+            this.activeSearch = search;
+            this.set('searchId', search.get('id'));
+            this.applySearch(search);
+        }
+        Logger.debug('-AppProjectIssueIndexController::toggleSearch');
+    }
+
+    /**
+     * This method checks if a search is currently active.
+     *
+     * @method isSearchActive
+     * @param {Object} search The search object to check
+     * @returns {boolean} True if the search is active
+     * @public
+     */
+    @action
+    isSearchActive(search) {
+        return this.activeSearch && this.activeSearch.id === search.id;
+    }    
 }

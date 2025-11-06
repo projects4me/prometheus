@@ -94,17 +94,6 @@ export default App.extend({
     savedsearches: null,
 
     /**
-     * These are the saved searches related to the projects
-     * that are publicly available but not created by currentUser
-     *
-     * @property publicsearches
-     * @type Prometheus.Models.Savedsearch
-     * @for Index
-     * @private
-     */
-    publicsearches: null,
-
-    /**
      * The current user
      *
      * @property currentUser
@@ -190,18 +179,11 @@ export default App.extend({
             limit: -1
         };
 
-        let publicSearchesOption = {
-            query: '((Savedsearch.relatedTo : project) AND (Savedsearch.public : 1) AND (Savedsearch.createdUser !: ' + _self.get('currentUser.user.id') + '))',
-            limit: -1
-        };
-
         return hashSettled({
-            savedsearches: _self.store.query('savedsearch', savedSearchesOption),
-            publicsearches: _self.store.query('savedsearch', publicSearchesOption)
+            savedsearches: _self.store.query('savedsearch', savedSearchesOption)
         }).then(function (results) {
             let data = extractHashSettled(results);
             _self.set('savedsearches', data.savedsearches.toArray());
-            _self.set('publicsearches', data.publicsearches.toArray());
         }).catch((error) => {
             _self.errorManager.handleError(error);
         });
@@ -227,12 +209,15 @@ export default App.extend({
         let savedSearch = this.store.createRecord('savedsearch');
         controller.set('newSavedsearch', savedSearch);
         controller.set('savedsearches', this.savedsearches);
-        controller.set('publicsearches', this.publicsearches);
         controller.set('model', model);
         controller.set('query', this.query);
         controller.set('sort', this.sort);
         controller.set('order', this.order);
         controller.set('page', this.page);
+
+        if(controller.searchId && this.savedsearches) {
+            controller.set('activeSearch', this.savedsearches.find(search => search.id === controller.searchId) || null);
+        }
         Logger.debug('Prometheus.App.Routes.Projects::setupController()');
     },
 

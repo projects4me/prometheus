@@ -24,7 +24,9 @@ export const when = function () {
         },
         {
             "User selects a saved search": (assert) => async function () {
-                let savedSearchEl = document.querySelector('div.search-name').parentNode;
+                let savedSearchBtn = document.querySelector('.app-dropdown-btn');
+                await click(savedSearchBtn);
+                let savedSearchEl = document.querySelector('div.app-dropdown-content div');
                 await click(savedSearchEl);
                 assert.ok(true, "User selects a saved search");
             }
