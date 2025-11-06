@@ -78,6 +78,8 @@ export default App.extend({
         // set projectId in trackedProject service
         let projectId = project.objectAt(0).id;
         _self.trackedProject.setProjectId(projectId);
+
+        this.breadcrumb.setTitle(this.routeName, project.objectAt(0).get('name'));
     },
 
     afterModel() {

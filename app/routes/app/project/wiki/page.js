@@ -89,6 +89,6 @@ export default App.extend({
             controller.set('parentId', model.get('parentId'));
         }
 
-        this.set('breadCrumb', { title: wikiName, record: true });
+        this.breadcrumb.setTitle(this.routeName, wikiName);
     }
 });

@@ -542,3 +542,14 @@ span[id="#"]{
 .filter-blur {
   filter: blur(2px);
 }
+
+/* Breadcrumb */
+.content-header {
+  .breadcrumb {
+    li {
+      a {
+        color: #3c8dbc !important;
+      }
+    }
+  }
+}
