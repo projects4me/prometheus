@@ -1,7 +1,7 @@
 @setupApplicationTest
-Feature: Issue | select and navigate to issue
+Feature: open issue in a sidepanel
 
-  Scenario: Selecting one of an issue from list and navigate to that issue 
+  Scenario: Viewing issue details in sidepanel from list view
 
     Given There is no pre-existing data
     And default scenario is loaded
@@ -13,5 +13,7 @@ Feature: Issue | select and navigate to issue
     | 5     |
     ---------
     When User navigates to app/project/project_1/issue
-    And User selects issue 5 from list
-    Then User should be in app/project/project_1/issue/5 page
+    And User clicks on issue 1 from issues list
+    Then The sidepanel should be rendered
+    And User should see the issue 1 details in the sidepanel
+

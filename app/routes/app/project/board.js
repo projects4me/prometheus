@@ -219,6 +219,10 @@ export default App.extend({
         if (isExiting) {
             controller.query = null;
             controller.searchId = null;
+            controller.projectData = null;
+            controller.isLoadingIssueDetails = false;
+            controller.selectedIssue = null;
+            controller.selectedIssueDetails = null;
             this.set('query', null);
         }
     }
