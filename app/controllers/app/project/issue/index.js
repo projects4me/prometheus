@@ -7,6 +7,7 @@ import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import format from "prometheus/utils/data/format";
 import { inject as controller } from '@ember/controller';
+import { tracked } from '@glimmer/tracking';
 
 /**
  * This controller is used to provide the interaction between the template and
@@ -107,6 +108,51 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
 
     @controller('app.project.index')
     appProjectIndexController;
+
+    /**
+     * The currently selected issue for displaying in the sidebar
+     *
+     * @property selectedIssue
+     * @type Object
+     * @for AppProjectIssueIndexController
+     */
+    @tracked selectedIssue = null;
+
+    /**
+     * The full issue details loaded for the selected issue
+     *
+     * @property selectedIssueDetails
+     * @type Object
+     * @for AppProjectIssueIndexController
+     */
+    @tracked selectedIssueDetails = null;
+
+    /**
+     * Loading state for issue details
+     *
+     * @property isLoadingIssueDetails
+     * @type Boolean
+     * @for AppProjectIssueIndexController
+     */
+    @tracked isLoadingIssueDetails = false;    
+
+    /**
+     * The project controller
+     *
+     * @property projectController
+     * @type Ember.Controller
+     * @for AppProjectIssueIndexController
+     */
+    @controller('app.project') projectController;
+
+    /**
+     * The project data loaded for the selected issue
+     *
+     * @property projectData
+     * @type Object
+     * @for AppProjectIssueIndexController
+     */
+    @tracked projectData = null;
 
     /**
      * This function is used to navigate the user to the detail page for the issues
@@ -375,5 +421,105 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
         this.settings.scrollToElement = true;
         this.transitionToRoute('app.project.issue.page', issue.issueNumber);
         Logger.debug('-AppProjectIssueIndexController::routeToIssueComments');
+    }
+
+    /**
+     * This action helps us set a static field value.
+     * Since PrometheusListController doesn't have this method, we need to add it here.
+     *
+     * @method selectStatic
+     * @param {Object} obj
+     * @param {String} field
+     * @param {Object} target
+     * @public
+     */
+    @action selectStatic(obj, field, target) {
+        obj.set(field, target);
+    }
+
+    /**
+     * This action is used to select an issue for displaying in the sidebar
+     *
+     * @method selectIssue
+     * @param {Object} issue The issue to select
+     * @public
+     */
+    @action async selectIssue(issue) {
+        Logger.debug("AppProjectIssueIndexController::selectIssue");
+        this.selectedIssue = issue;
+        this.isLoadingIssueDetails = true;
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        await this.loadIssueDetails(issue);
+        this.isLoadingIssueDetails = false;
+        Logger.debug("-AppProjectIssueIndexController::selectIssue");
+    }
+
+    /**
+     * This action is used to close the issue details sidebar
+     *
+     * @method closeIssueDetails
+     * @public
+     */
+    @action closeIssueDetails() {
+        Logger.debug("AppProjectIssueIndexController::closeIssueDetails");
+        this.selectedIssue = null;
+        this.selectedIssueDetails = null;
+        this.isLoadingIssueDetails = false;
+        Logger.debug("-AppProjectIssueIndexController::closeIssueDetails");
+    }
+
+    /**
+     * This method loads the full issue details similar to the board page
+     *
+     * @method loadIssueDetails
+     * @param {Object} issue The issue to load details for
+     * @public
+     */
+    async loadIssueDetails(issue) {
+        Logger.debug("AppProjectIssueIndexController::loadIssueDetails");
+        let projectId = this.trackedProject.getProjectId();
+        
+        let options = {
+            query: `((Issue.issueNumber : ${issue.issueNumber}) AND (Issue.projectId : ${projectId}))`,
+            sort: 'Issue.issueNumber,comments.dateCreated',
+            order: 'ASC',
+            rels: 'comments,parentissue,assignedTo,ownedBy,modifiedBy,reportedBy,issuetype,files,spent,estimated,conversationroom,childissues,watchers',
+            limit: -1,
+        };
+
+        let _projectOptions = {
+            query: `(Project.id : ${projectId})`,
+            rels: 'issuestatuses,issuetypes',
+            limit: -1,
+        };
+
+        try {
+            if(this.projectData === null) {
+                let project = await this.store.query('project', _projectOptions);
+                this.projectData = project.objectAt(0);
+            }
+            
+            if(this.projectData.issuestatuses === undefined || this.projectData.issuestatuses.length === 0) {
+                let issueStatuses = await this.store.query('issuestatus', {
+                    query: `(Issuestatus.system : 1)`,
+                    limit: -1,
+                });
+                this.projectData.issuestatuses = issueStatuses.toArray();
+            }
+
+            let issueResult = await this.store.query('issue', options);
+            let fullIssue = issueResult.objectAt(0);
+
+            this.selectedIssueDetails = fullIssue;
+            this.issueTypes = this.projectData.issuetypes || [];
+            this.issueStatuses = this.projectData.issuestatuses || [];
+
+            Logger.debug("-AppProjectIssueIndexController::loadIssueDetails");
+        } catch (error) {
+            Logger.error("AppProjectIssueIndexController::loadIssueDetails - Error:", error);
+            this.errorManager.handleError(error, {
+                moduleName: 'issue'
+            });
+        }
     }
 }

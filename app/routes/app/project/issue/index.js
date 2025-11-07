@@ -276,4 +276,21 @@ export default App.extend({
         }
     },
 
+    /**
+     * This function is called by the route when it is exiting.
+     *
+     * @method resetController
+     * @param {Prometheus.Controllers.Issue} controller The controller object for the issues
+     * @param {boolean} isExiting Whether the route is exiting
+     * @private
+     */
+    resetController:function(controller, isExiting) {
+        if (isExiting) {
+            controller.selectedIssue = null;
+            controller.selectedIssueDetails = null;
+            controller.isLoadingIssueDetails = false;
+            controller.projectData = null;
+        }
+    }
+
 });

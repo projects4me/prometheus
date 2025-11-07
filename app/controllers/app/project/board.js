@@ -327,6 +327,15 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
     @tracked isLoadingIssueDetails = false;
 
     /**
+     * The project data loaded for the selected issue
+     *
+     * @property projectData
+     * @type Object
+     * @for Board
+     */
+    @tracked projectData = null;
+
+    /**
      * These are the actions supported by the Project Board View
      *
      * @property actions
@@ -557,7 +566,6 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
      */
     async loadIssueDetails(issue) {
         Logger.debug("AppProjectBoardController::loadIssueDetails");
-        let _self = this;
         let projectId = this.trackedProject.getProjectId();
         
         let options = {
@@ -575,22 +583,24 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
         };
 
         try {
-            let project = await _self.store.query('project', _projectOptions);
-            let projectData = project.objectAt(0);
+            if(this.projectData === null) {
+                let project = await this.store.query('project', _projectOptions);
+                this.projectData = project.objectAt(0);
+            }
             
-            if(projectData.issuestatuses === undefined || projectData.issuestatuses.length === 0) {
-                let issueStatuses = await _self.store.query('issuestatus', {
+            if(this.projectData.issuestatuses === undefined || this.projectData.issuestatuses.length === 0) {
+                let issueStatuses = await this.store.query('issuestatus', {
                     query: `(Issuestatus.system : 1)`,
                     limit: -1,
                 });
-                projectData.issuestatuses = issueStatuses;
+                this.projectData.issuestatuses = issueStatuses;
             }
 
-            let issueResult = await _self.store.query('issue', options);
+            let issueResult = await this.store.query('issue', options);
             let fullIssue = issueResult.objectAt(0);
 
             this.selectedIssueDetails = fullIssue;
-            this.issueTypes = projectData.issuetypes || [];
+            this.issueTypes = this.projectData.issuetypes || [];
 
             Logger.debug("-AppProjectBoardController::loadIssueDetails");
         } catch (error) {
