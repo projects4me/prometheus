@@ -211,7 +211,7 @@
                     <div class="comment-text" {{modify-links}}>
                       <span class="username">
                         <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
-                        <span class="text-muted pull-right">{{format-date date=comment.dateModified format="MMM Do 'YY, h:mm a" localTime=true}}</span>
+                        <span class="text-muted pull-right">{{format-date-time date=comment.dateModified}}</span>
                       </span>
                       {{translate-comment comment.comment}}
                     </div>
