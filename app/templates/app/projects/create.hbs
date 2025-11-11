@@ -134,34 +134,6 @@
       </AccessControl>
 
       <div class="col-md-4">
-
-        <AccessControl @aclContext="App.Project.Create.Owner.Create">
-          <div class="box box-warning project-people">
-            <div class="box-header with-border">
-              <h3 class="box-title">{{t "views.app.project.create.people"}}</h3>
-            </div>
-
-            <div class="box-body no-padding">
-
-                <FormFields::FieldRelate
-                  @placeholder={{t "views.app.project.create.selectassignee"}}
-                  @label={{t "views.app.project.create.assignee"}}
-                  @value={{this.model.assignee}}
-                  @options={{this.usersList}}
-                  @selected={{find-by "value" this.model.assignee this.usersList}}
-                  @searchField="label"
-                  @onchange={{action "selectRelated" this.model 'assignee'}}
-                  @relateType="relate-user"
-                  @data-field="project.assignee"
-                  @validate={{action this.validateField "projectCreate" (hash name="assignee" value=this.model.assignee)}}
-                  @message={{this.message.projectCreate.assignee}}
-                  @aclContext="App.Project.Create.Assignee"
-              />
-
-            </div>
-          </div>
-        </AccessControl>
-
         <AccessControl @aclContext="App.Project.Create.ProjectManager.Create">
           <div class="box box-warning project-people">
             <div class="box-header with-border">

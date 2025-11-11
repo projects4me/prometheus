@@ -114,7 +114,7 @@
                   <tr>
                     <th class="select-box"></th>
                     <th data-sort="Project.name">{{t "views.app.project.list.name"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Project.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
-                    <th data-sort="owner.name">{{t "views.app.project.list.owner"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'owner.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                    <th data-sort="manager.name">{{t "views.app.project.list.manager"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'manager.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
                     <th data-sort="Project.description">{{t "views.app.project.list.description"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Project.description')}}><i class="fa fa-sort"></i></AppUi::Button></th>
                     <th data-sort="Project.status">{{t "views.app.project.list.status"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Project.status')}}><i class="fa fa-sort"></i></AppUi::Button></th>
                     <th data-sort="Project.dateModified">{{t "views.app.project.list.date"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'Project.dateModified')}}><i class="fa fa-sort"></i></AppUi::Button></th>
@@ -130,7 +130,7 @@
                         </td>
                         
                         <td class="project-name"><LinkTo @route="app.project" @model={{project.shortCode}}>{{project.name}}</LinkTo></td>
-                        <td class="project-owner"><LinkTo @route="app.user.page" @model={{project.owner.id}}>{{project.owner.name}}</LinkTo></td>
+                        <td class="project-manager"><LinkTo @route="app.user.page" @model={{project.manager.id}}>{{project.manager.name}}</LinkTo></td>
                         <td class="project-description">{{html-safe project.description}}</td>
                         <td class="project-status"><span class="badge {{project.status}}">{{t (concat "views.app.project.lists.status." project.status)}}</span></td>
                         <td class="project-date">{{format-date date=project.dateModified}}</td>

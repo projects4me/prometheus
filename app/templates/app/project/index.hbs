@@ -26,10 +26,10 @@
             <div class="row">
 
               <div class="col-xs-3 col-md-2">
-                <div class="project-owner">
-                  <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{this.model.owner.id}}" alt="{{this.model.owner.name}}">
-                  <LinkTo @route="app.user.page" @model={{this.model.owner.id}} class="users-list-name" >{{this.model.owner.name}}</LinkTo>
-                  <span class="users-list-date">{{t "views.app.project.detail.owner"}}</span>
+                <div class="project-manager">
+                  <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{this.model.manager.id}}" alt="{{this.model.manager.name}}">
+                  <LinkTo @route="app.user.page" @model={{this.model.manager.id}} class="users-list-name" >{{this.model.manager.name}}</LinkTo>
+                  <span class="users-list-date">{{t "views.app.project.detail.manager"}}</span>
                 </div>
               </div>
 
