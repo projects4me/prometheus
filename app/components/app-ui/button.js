@@ -47,23 +47,28 @@ export default class AppUiButtonComponent extends Component {
      * completed, they can set disableOnSuccess to true.
      *
      * @method handleClick
+     * @param {Event} e The event object.
      * @for AppUiButtonComponent
      * @public
      */
     @action async handleClick(e) {
-        let { onClick, disableOnSuccess } = this.args;
+        let { onClick, disableOnSuccess, eventRequired } = this.args;
         this.disabled = true;
         try {
-
-            if(typeof onClick !== 'function') {
+            if (typeof onClick !== 'function') {
                 console.error('must pass function to button component');
+                this.disabled = false;
+                return;
             }
 
-            await onClick(e);
-            !disableOnSuccess && (this.disabled = false);
-        } catch (e) {
+            await (eventRequired ? onClick(e) : onClick());
+
+            if (!disableOnSuccess) {
+                this.disabled = false;
+            }
+        } catch (err) {
             this.disabled = false;
-            console.error(e);
+            console.error(err);
         }
     }
 }
