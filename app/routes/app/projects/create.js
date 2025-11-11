@@ -40,7 +40,8 @@ export default App.extend({
 
         return hashSettled({
             project: _self.get('store').createRecord('project',{
-                assignee: _self.get('currentUser').user.id
+                assignee: _self.get('currentUser').user.id,
+                projectManager: _self.get('currentUser').user.id
             }),
             issuetypes: _self.store.query('issuetype',issuetypeOptions),
             issueStatuses: _self.store.query('issuestatus', issueStatusOptions)
@@ -81,5 +82,24 @@ export default App.extend({
         controller.set('type',type);
         controller.set('status', status);
     },
+
+    /**
+     * This function is used to destroy the model if it is not saved yet and 
+     * and reset the selected issuetypes.
+     *
+     * @method resetController
+     * @param {Prometheus.Controllers.Project} controller
+     * @protected
+     */
+    resetController:function(controller)
+    {
+        Logger.debug('AppProjectIndexRoute::resetController');
+        if (!controller.model.id) {
+            controller.model.destroyRecord();
+            Logger.debug('AppProjectIndexRoute::resetController - model destroyed');
+        }
+        controller.set('selectedIssuetypes',[]);
+        Logger.debug('AppProjectIndexRoute::resetController');
+    }
 
 });

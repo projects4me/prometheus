@@ -536,6 +536,8 @@
           "startdate": "Start Date",
           "enddate": "End Date",
           "people": "People",
+          "projectmanager": "Project Manager",
+          "selectprojectmanager": "Select the project manager",
           "nameplaceholder": "Enter a name",
           "descriptionplaceholder": "Enter project summary",
           "enddateplaceholder": "Enter the target end date",

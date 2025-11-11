@@ -197,6 +197,16 @@ export default Model.extend({
     done: attr('string'),
 
     /**
+     * Project manager
+     *
+     * @property projectManager
+     * @type String
+     * @for Project
+     * @private
+     */
+    projectManager: attr('string'),
+
+    /**
     * Project owner
     *
     * @property owner

@@ -22,6 +22,9 @@ export default Factory.extend({
     assignee() {
         return (_.random(1, 10)).toString();
     },
+    projectManager() {
+        return (_.random(1, 10)).toString();
+    },
     "deleted": "0",
     description() {
         return faker.lorem.sentence();

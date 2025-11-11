@@ -12,5 +12,5 @@ Feature: Project | edit project
     And User enters edited Project in project name
     And User enters edited Description in project description
     And User clicks on save button
-    Then Project name is edited Project
-    And Project description is edited Description
+    Then Project name is edited Project in list view
+    And Project description is edited Description in list view
