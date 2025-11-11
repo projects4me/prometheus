@@ -52,14 +52,6 @@ export const then = function () {
 				}
 		},
 		{
-			'Project vision is $expectedProjectVision': (assert) =>
-				async function (expectedProjectVision) {
-					assert
-						.dom('p.project-vision')
-						.hasText(expectedProjectVision);
-				}
-		},
-		{
 			'Project issuetypes are $issueType1, $issueType2': (assert, ctx) =>
 				async function (issueType1, issueType2) {
 					let project = ctx.get('latestCreatedProject');

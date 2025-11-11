@@ -162,6 +162,33 @@
           </div>
         </AccessControl>
 
+        <AccessControl @aclContext="App.Project.Create.ProjectManager.Create">
+          <div class="box box-warning project-people">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "views.app.project.create.projectmanager"}}</h3>
+            </div>
+
+            <div class="box-body no-padding">
+
+                <FormFields::FieldRelate
+                  @placeholder={{t "views.app.project.create.selectprojectmanager"}}
+                  @label={{t "views.app.project.create.projectmanager"}}
+                  @value={{this.model.projectManager}}
+                  @options={{this.usersList}}
+                  @selected={{find-by "value" this.model.projectManager this.usersList}}
+                  @searchField="label"
+                  @onchange={{action "selectRelated" this.model 'projectManager'}}
+                  @relateType="relate-user"
+                  @data-field="project.projectManager"
+                  @validate={{action this.validateField "projectCreate" (hash name="projectManager" value=this.model.projectManager)}}
+                  @message={{this.message.projectCreate.projectManager}}
+                  @aclContext="App.Project.Create.ProjectManager"
+              />
+
+            </div>
+          </div>
+        </AccessControl>
+
         {{#if (eq this.layoutName "create")}}
           <AccessControl @aclContext="App.Project.Create.IssueTypes.Create">
             <div class="box box-danger project-issue-types">

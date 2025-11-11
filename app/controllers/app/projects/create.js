@@ -87,7 +87,46 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 								]
 							}
 						}
-					}
+					},
+					{
+						name: 'projectManager',
+						validations: {
+							default: {
+								type: 'string',
+								rules: [
+									{
+										name: 'required'
+									}
+								]
+							}
+						}
+					},
+					{
+						name: 'assignee',
+						validations: {
+							default: {
+								type: 'string',
+								rules: [
+									{
+										name: 'required'
+									}
+								]
+							}
+						}
+					},
+					{
+						name: 'status',
+						validations: {
+							default: {
+								type: 'string',
+								rules: [
+									{
+										name: 'required'
+									}
+								]
+							}
+						}
+					}										
 				]
 			}
 		]
@@ -287,7 +326,11 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 	 * @param model
 	 */
 	navigateToSuccess(model) {
-		this.transitionToRoute('app.project', model.shortCode.toLowerCase());
+		if(this.model.projectManager === this.currentUser.user.id) {
+			this.transitionToRoute('app.project', model.shortCode.toLowerCase());
+		} else {
+			this.transitionToRoute('app.projects.index');
+		}
 	}
 
 	/**
