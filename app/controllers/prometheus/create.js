@@ -93,11 +93,10 @@ export default class PrometheusCreateController extends PrometheusController {
      * @param {string} module The module for which we are showing the error. This can be multiple modules in same view/template.
      * @param {Prometheus.Models} model The model to save.
      * @param {boolean} showDefaultSuccessMessage Whether to show the default success message.
-     * @param {Event} event The event object.
      * @public
      * @todo Handle the situation where we are not using validations
      */
-    @action save(schemaName, module, model, showDefaultSuccessMessage = true, event) {
+    @action save(schemaName, module, model, showDefaultSuccessMessage = true) {
         model = this.model || model;
         const promise = new Promise((resolve, reject) => {
             this.validate(model, schemaName).then((validation) => {
@@ -119,10 +118,9 @@ export default class PrometheusCreateController extends PrometheusController {
      * @method validateField
      * @param {String} schemaName
      * @param {Object} field
-     * @param {Event} event
      * @protected
      */
-    @action validateField(schemaName, field, event) {
+    @action validateField(schemaName, field) {
         //use model if passed otherwise use default "this.model"
         let model = field.model ?? this.model;
 
