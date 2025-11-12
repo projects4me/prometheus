@@ -169,7 +169,7 @@
       },
       "project": {
         "relationships": {
-          "owner": "Owner",
+          "manager": "Manager",
           "createdBy": "Created By",
           "modifiedBy": "Modified By",
           "members": "Members",
@@ -425,7 +425,6 @@
           "shortCode": "Short Code",
           "description": "Project Summary",
           "type": "Type",
-          "assignee": "Owner",
           "status": "Status",
           "scope": "Scope",
           "vision": "Vision",
@@ -445,7 +444,7 @@
           "status": "Status",
           "type": "Type",
           "duration": "Duration",
-          "owner": "Project Owner",
+          "manager": "Project Manager",
           "vision": "Project Vision",
           "estimatedBudget": "Budget Estimated",
           "spentBudget": "Budget Spent",
@@ -528,8 +527,6 @@
           "shortcode": "Short Code",
           "description": "Project Summary",
           "type": "Type",
-          "assignee": "Owner",
-          "selectassignee": "Select the owner of the project",
           "status": "Status",
           "scope": "Scope",
           "vision": "Vision",
@@ -575,7 +572,7 @@
           },
           "name": "Name",
           "type": "Type",
-          "owner": "Owner",
+          "manager": "Manager",
           "description": "Description",
           "status": "Status",
           "date": "Date"

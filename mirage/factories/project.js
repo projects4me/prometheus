@@ -19,9 +19,6 @@ export default Factory.extend({
     modifiedUser() {
         return (_.random(1, 10)).toString();
     },
-    assignee() {
-        return (_.random(1, 10)).toString();
-    },
     projectManager() {
         return (_.random(1, 10)).toString();
     },

@@ -14,7 +14,7 @@ module('Integration | Utility | model/relationship', function (hooks) {
 		// Verify relationships are returned
 		assert.ok(relationships.length > 0, 'Should return relationships');
 		assert.ok(
-			relationships.includes('owner'),
+			relationships.includes('manager'),
 			'Should include belongsTo relationships'
 		);
 		assert.ok(
@@ -39,8 +39,8 @@ module('Integration | Utility | model/relationship', function (hooks) {
 			'Should return belongsTo relationships'
 		);
 		assert.ok(
-			belongsToRelationships.includes('owner'),
-			'Should include owner relationship'
+			belongsToRelationships.includes('manager'),
+			'Should include manager relationship'
 		);
 		assert.notOk(
 			belongsToRelationships.includes('issues'),
@@ -68,7 +68,7 @@ module('Integration | Utility | model/relationship', function (hooks) {
 			'Should include issues relationship'
 		);
 		assert.notOk(
-			hasManyRelationships.includes('owner'),
+			hasManyRelationships.includes('manager'),
 			'Should not include belongsTo relationships'
 		);
 	});
@@ -115,13 +115,13 @@ module('Integration | Utility | model/relationship', function (hooks) {
 			translatedBelongsTo.length > 0,
 			'Should return relationships'
 		);
-		const ownerRel = translatedBelongsTo.find(
-			(rel) => rel.name === 'owner'
+		const managerRel = translatedBelongsTo.find(
+			(rel) => rel.name === 'manager'
 		);
-		assert.ok(ownerRel, 'Should include owner relationship');
+		assert.ok(managerRel, 'Should include manager relationship');
 		assert.ok(
-			ownerRel.translatedName,
-			'Should include translated name for owner'
+			managerRel.translatedName,
+			'Should include translated name for manager'
 		);
 	});
 });

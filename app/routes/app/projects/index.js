@@ -148,7 +148,7 @@ export default App.extend({
         // Prepare the options
         let options = {
             query: query,
-            rels: 'owner',
+            rels: 'manager',
             sort: this.sort,
             order: this.order,
             page: this.page,

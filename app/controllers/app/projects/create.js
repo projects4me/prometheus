@@ -102,19 +102,6 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 						}
 					},
 					{
-						name: 'assignee',
-						validations: {
-							default: {
-								type: 'string',
-								rules: [
-									{
-										name: 'required'
-									}
-								]
-							}
-						}
-					},
-					{
 						name: 'status',
 						validations: {
 							default: {

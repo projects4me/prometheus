@@ -95,16 +95,6 @@ export default Model.extend({
     modifiedUser: attr('string'),
 
     /**
-     * The project owner ot assignee
-     *
-     * @property assignee
-     * @type String
-     * @for Project
-     * @private
-     */
-    assignee: attr('string'),
-
-    /**
      * Soft deletion flag of the project
      *
      * @property deleted
@@ -207,14 +197,14 @@ export default Model.extend({
     projectManager: attr('string'),
 
     /**
-    * Project owner
+    * Project manager
     *
-    * @property owner
-    * @type Relationship
+    * @property manager
+    * @type UserModel
     * @for Project
     * @private
     */
-    owner: belongsTo('user', { inverse: null }),
+    manager: belongsTo('user', { inverse: null }),
 
     /**
      * User who created the project

@@ -57,7 +57,7 @@ export default App.extend({
         let _projectOptions = {
             //      fields: "Project.id,Project.name",
             query: "(Project.id : " + projectId + ")",
-            rels: 'members,conversations,createdBy,owner,memberships,roles',
+            rels: 'members,conversations,createdBy,memberships,roles,manager',
             sort: "conversations.dateModified",
             order: 'ASC',
             limit: -1
