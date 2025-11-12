@@ -123,7 +123,7 @@
 
             <div class="row">
               <div class="col-xs-3 col-md-2" data-field="issue.assignee">
-                <div class="project-owner">
+                <div class="project-manager">
                   <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{this.issue.assignedTo.id}}" alt="{{this.issue.assignedTo.name}}">
                   <LinkTo @route="app.user.page" @model={{this.issue.assignedTo.id}} class="users-list-name">{{this.issue.assignedTo.name}}</LinkTo>
                   <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
