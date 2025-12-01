@@ -1,0 +1,71 @@
+{{#if @showBars}}
+  {{! Timeline side - Show bars }}
+  <div class="gantt-timeline-row milestone-row" data-milestone-id="{{this.milestoneId}}">
+    {{#if this.hasValidDates}}
+      <AppUi::GanttChart::GanttBar
+        @startDate={{this.milestoneBarStartDate}}
+        @endDate={{this.milestoneBarEndDate}}
+        @timelineStart={{@timelineStart}}
+        @dayWidth={{@dayWidth}}
+        @type="milestone"
+        @label={{this.milestoneName}}
+      />
+    {{/if}}
+  </div>
+
+  {{#if @isExpanded}}
+    {{#each this.validIssues as |issue|}}
+      <AppUi::GanttChart::TaskRow
+        @issue={{issue}}
+        @timelineStart={{@timelineStart}}
+        @dayWidth={{@dayWidth}}
+        @onIssueClick={{@onIssueClick}}
+        @onIssueDragStart={{@onIssueDragStart}}
+        @onIssueDragUpdate={{@onIssueDragUpdate}}
+        @onIssueDragEnd={{@onIssueDragEnd}}
+        @showBars={{true}}
+        @registerBar={{@registerBar}}
+        @unregisterBar={{@unregisterBar}}
+        @onStartDependencyLink={{@onStartDependencyLink}}
+        @onCompleteDependencyLink={{@onCompleteDependencyLink}}
+        @isLinking={{@isLinking}}
+        @linkingState={{@linkingState}}
+        @updateDependencyPositions={{@updateDependencyPositions}}
+      />
+    {{/each}}
+  {{/if}}
+{{else}}
+  {{! Task list side - Show names and dates }}
+  <div class="gantt-task-row milestone-row" data-milestone-id="{{this.milestoneId}}">
+    <div class="task-info">
+      <div class="task-name">
+        <span class="toggle-icon" {{on "click" this.toggleMilestone}}>
+          {{#if @isExpanded}}
+            <i class="fa fa-chevron-down"></i>
+          {{else}}
+            <i class="fa fa-chevron-right"></i>
+          {{/if}}
+        </span>
+        <strong>{{this.milestoneName}}</strong>
+        {{#if this.validIssues.length}}
+          <span class="issue-count">({{this.validIssues.length}})</span>
+        {{/if}}
+      </div>
+      <div class="task-dates">
+        {{this.dateRange}}
+      </div>
+    </div>
+  </div>
+
+  {{#if @isExpanded}}
+    {{#each this.validIssues as |issue|}}
+      <AppUi::GanttChart::TaskRow
+        @issue={{issue}}
+        @timelineStart={{@timelineStart}}
+        @dayWidth={{@dayWidth}}
+        @onIssueClick={{@onIssueClick}}
+        @showBars={{false}}
+      />
+    {{/each}}
+  {{/if}}
+{{/if}}

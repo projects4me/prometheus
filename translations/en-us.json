@@ -90,7 +90,7 @@
       "signout": "Sign Out",
       "signup": "Sign Up",
       "deleted": "The record has been deleted.",
-      "modified": "Modified by <strong>{user}</strong> on <strong>{date}<strong>",
+      "modified": "Modified by <strong>{user}</strong> on <strong>{date}</strong>",
       "cancelcicked": "You have made changes, canceling will discard them. Are you sure?",
       "deletecicked": "You are you about to delete this record, the record cannot be recovered. Are you sure?",
       "confirmcancel": "Yes",
@@ -1306,6 +1306,36 @@
           "description": "Description"
         }
       },
+      "gantt": {
+        "timeScale": {
+          "days": "Days",
+          "weeks": "Weeks"
+        },
+        "headers": {
+          "task": "Task",
+          "startEnd": "Start - End"
+        },
+        "issue": {
+          "updating": "Updating issue <strong>{issueNumber}</strong>...",
+          "updated": "Issue <strong>{issueNumber}</strong> updated. New dates: <strong>{startDate}</strong> - <strong>{endDate}</strong>",
+          "updateError": "Failed to update issue dates"
+        },
+        "dependency": {
+          "duplicate": "A dependency already exists between <strong>{predecessor}</strong> and <strong>{successor}</strong>",
+          "cycleError": "Creating this dependency would create a circular dependency between <strong>{predecessor}</strong> and <strong>{successor}</strong>",
+          "creating": "Creating dependency between {predecessor} and {successor}...",
+          "created": "Dependency created between <strong>{predecessor}</strong> and <strong>{successor}</strong>",
+          "createError": "Failed to create dependency",
+          "deleting": "Deleting dependency between <strong>{predecessor}</strong> and <strong>{successor}</strong>...",
+          "deleted": "Dependency deleted between <strong>{predecessor}</strong> and <strong>{successor}</strong>",
+          "deleteError": "Failed to delete dependency",
+          "deleteAction": "Delete"
+        },
+        "connectors": {
+          "startConnector": "Dependency start connector",
+          "endConnector": "Dependency end connector"
+        }
+      },
       "notifications": {
         "title": "Notifications",
         "unreadTitle": "You have some unread notifications",
@@ -1447,6 +1477,26 @@
         },
         "calendar": {
           "label": "Calendar"
+        },
+        "gantt": {
+          "label": "Gantt Chart",
+          "issue": {
+            "updating": "Updating issue #{issueNumber} dates...",
+            "updated": "Issue #{issueNumber} dates updated to {startDate} - {endDate}",
+            "updateError": "Failed to update issue dates. Please try again."
+          },
+          "dependency": {
+            "creating": "Linking #{successor} to #{predecessor}...",
+            "created": "#{successor} now depends on #{predecessor}",
+            "duplicate": "#{successor} already depends on #{predecessor}",
+            "cycleError": "Cannot create circular dependency between #{successor} and #{predecessor}",
+            "createError": "Failed to create dependency. Please try again.",
+            "deleteConfirm": "Remove dependency so #{successor} no longer depends on #{predecessor}?",
+            "deleting": "Removing dependency between #{predecessor} and #{successor}...",
+            "deleted": "Dependency between #{predecessor} and #{successor} removed",
+            "deleteError": "Failed to delete dependency. Please try again.",
+            "deleteAction": "Delete"
+          }
         },
         "wiki": {
           "label": "Wiki",
