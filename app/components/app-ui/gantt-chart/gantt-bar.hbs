@@ -1,0 +1,38 @@
+<div 
+  class="{{this.effectiveBarClass}}" 
+  {{did-insert this.applyBarStyle}}
+  {{did-update this.applyBarStyle this.barLeft this.barWidth this.dragOffset this.isDragging}}
+  {{on "mousedown" this.handleMouseDown}}
+  {{on "click" this.handleClick}}
+  {{on "mouseenter" this.handleMouseEnter}}
+  {{on "mouseleave" this.handleMouseLeave}}
+  {{did-insert this.registerElement}}
+  {{will-destroy this.unregisterElement}}
+  data-issue-id="{{@issue.id}}"
+  role="button"
+  tabindex="0"
+>
+  {{#if this.shouldShowConnectors}}
+    <div class="gantt-bar-connectors">
+      <button
+        type="button"
+        class="connector-dot connector-dot-start"
+        data-connector="start"
+        aria-label="Dependency start connector"
+        {{on "mousedown" (fn this.handleConnectorMouseDown "start")}}
+        {{on "mouseup" (fn this.handleConnectorMouseUp "start")}}
+      ></button>
+      <button
+        type="button"
+        class="connector-dot connector-dot-end"
+        data-connector="end"
+        aria-label="Dependency end connector"
+        {{on "mousedown" (fn this.handleConnectorMouseDown "end")}}
+        {{on "mouseup" (fn this.handleConnectorMouseUp "end")}}
+      ></button>
+    </div>
+  {{/if}}
+  {{#if this.showLabel}}
+    <span class="bar-label">{{this.displayLabel}}</span>
+  {{/if}}
+</div>

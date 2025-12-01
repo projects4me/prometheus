@@ -1,0 +1,125 @@
+<div class="gantt-chart">
+  <div class="gantt-time-scale-selector">
+    <button
+      type="button"
+      class="scale-tab {{if (eq this.timeScale 'days') 'active'}}"
+      {{on "click" (fn this.setTimeScale "days")}}
+    >
+      Days
+    </button>
+    <button
+      type="button"
+      class="scale-tab {{if (eq this.timeScale 'weeks') 'active'}}"
+      {{on "click" (fn this.setTimeScale "weeks")}}
+    >
+      Weeks
+    </button>
+  </div>
+
+  <div class="gantt-container">
+    {{! Left side - Task list }}
+    <div class="gantt-task-list">
+      <div class="gantt-header">
+        <div class="gantt-header-row">
+          <div class="gantt-header-cell task-name">Task</div>
+          <div class="gantt-header-cell task-dates">Start - End</div>
+        </div>
+      </div>
+      <div class="gantt-tasks">
+        {{#each @milestones as |milestone|}}
+          <AppUi::GanttChart::GanttRow
+            @milestone={{milestone}}
+            @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
+            @onToggle={{this.toggleMilestone}}
+            @onIssueClick={{this.handleIssueClick}}
+            @timelineStart={{@timelineStart}}
+            @timelineEnd={{@timelineEnd}}
+            @dayWidth={{this.dayWidth}}
+          />
+        {{/each}}
+      </div>
+    </div>
+
+    {{! Right side - Timeline }}
+    <div class="gantt-timeline-container">
+      <AppUi::GanttChart::TimelineHeader
+        @dateRange={{this.dateRange}}
+        @monthGroups={{this.monthGroups}}
+        @weekGroups={{this.weekGroups}}
+        @yearGroups={{this.yearGroups}}
+        @dayWidth={{this.dayWidth}}
+        @timelineWidth={{this.timelineWidth}}
+        @timeScale={{this.timeScale}}
+      />
+      <div class="gantt-timeline-body" {{did-insert this.registerTimelineBody}} {{will-destroy this.unregisterTimelineBody}}>
+        <svg
+          class="gantt-grid-overlay"
+          {{did-insert this.applyGridOverlayStyle}}
+          {{did-update this.applyGridOverlayStyle this.timelineWidth}}
+          width={{this.timelineWidth}}
+          height="100%"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <defs>
+            <pattern
+              id={{this.gridPatternId}}
+              width={{this.gridPatternWidth}}
+              height={{this.rowHeight}}
+              patternUnits="userSpaceOnUse"
+            >
+              <path d={{this.gridVerticalPath}} class="grid-line-vertical" vector-effect="non-scaling-stroke" />
+              <path d={{this.gridHorizontalPath}} class="grid-line-horizontal" vector-effect="non-scaling-stroke" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill={{concat "url(#" this.gridPatternId ")"}} />
+        </svg>
+        <div 
+          class="gantt-weekend-overlay"
+          {{did-insert this.applyWeekendOverlayStyle}}
+          {{did-update this.applyWeekendOverlayStyle this.timelineWidth}}
+        >
+          {{#each this.weekendHighlights as |highlight|}}
+            <div
+              class="weekend-block"
+              {{did-insert (fn this.applyWeekendBlockStyle highlight)}}
+              {{did-update (fn this.applyWeekendBlockStyle highlight) highlight}}
+            ></div>
+          {{/each}}
+        </div>
+        <AppUi::GanttChart::DependencyLayer
+          @dependencies={{this.dependencies}}
+          @barRegistry={{this.barRegistry}}
+          @registryVersion={{this.barRegistryVersion}}
+          @timelineBodyElement={{this.timelineBodyElement}}
+          @timelineWidth={{this.timelineWidth}}
+          @linkingState={{this.linkingState}}
+          @getDragOffset={{this.getDragOffset}}
+          @onDeleteDependency={{this.handleDeleteDependency}}
+        />
+        {{#each @milestones as |milestone|}}
+          <AppUi::GanttChart::GanttRow
+            @milestone={{milestone}}
+            @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
+            @onToggle={{this.toggleMilestone}}
+            @onIssueClick={{this.handleIssueClick}}
+            @onIssueDragStart={{this.handleIssueDragStart}}
+            @onIssueDragUpdate={{this.handleIssueDragUpdate}}
+            @onIssueDragEnd={{this.handleIssueDragEnd}}
+            @timelineStart={{@timelineStart}}
+            @timelineEnd={{@timelineEnd}}
+            @dayWidth={{this.dayWidth}}
+            @showBars={{true}}
+            @registerBar={{this.registerIssueBar}}
+            @unregisterBar={{this.unregisterIssueBar}}
+            @onStartDependencyLink={{this.startDependencyLink}}
+            @onCompleteDependencyLink={{this.completeDependencyLink}}
+            @isLinking={{this.isLinking}}
+            @linkingState={{this.linkingState}}
+            @updateDependencyPositions={{this.updateBarRegisteryVersion}}
+          />
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<section class="content">
+  <div class="gantt-view">
+    <AppUi::GanttChart
+      @milestones={{this.milestones}}
+      @timelineStart={{this.timelineStart}}
+      @timelineEnd={{this.timelineEnd}}
+      @expandedMilestones={{this.expandedMilestones}}
+      @onToggleMilestone={{this.toggleMilestone}}
+      @onIssueClick={{this.openIssue}}
+      @onSelectIssue={{this.selectIssue}}
+      @onIssueDragEnd={{this.updateIssueDates}}
+      @isMilestoneExpanded={{this.isMilestoneExpanded}}
+      @onCreateDependency={{this.createDependency}}
+      @onDeleteDependency={{this.deleteDependency}}
+    />
+  </div>
+</section>

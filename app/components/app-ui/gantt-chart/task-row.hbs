@@ -1,0 +1,47 @@
+{{#if @showBars}}
+  {{! Timeline side - Show task bar }}
+  <div class="gantt-timeline-row task-row {{this.statusClass}} {{this.priorityClass}}" data-issue-id="{{@issue.id}}">
+    <AppUi::GanttChart::GanttBar
+      @startDate={{@issue.startDate}}
+      @endDate={{@issue.endDate}}
+      @timelineStart={{@timelineStart}}
+      @dayWidth={{@dayWidth}}
+      @type="task"
+      @status={{@issue.status}}
+      @priority={{@issue.priority}}
+      @onClick={{this.handleClick}}
+      @onDragStart={{this.handleDragStart}}
+      @onDragUpdate={{this.handleDragUpdate}}
+      @onDragEnd={{this.handleDragEnd}}
+      @showLabel={{true}}
+      @label={{concat "#" this.issueNumber " - " this.issueSubject}}
+      @issue={{@issue}}
+      @showConnectors={{true}}
+      @isLinking={{@isLinking}}
+      @linkingState={{@linkingState}}
+      @registerBar={{@registerBar}}
+      @unregisterBar={{@unregisterBar}}
+      @onConnectorMouseDown={{@onStartDependencyLink}}
+      @updateDependencyPositions={{@updateDependencyPositions}}
+      @onConnectorMouseUp={{@onCompleteDependencyLink}}
+    />
+  </div>
+{{else}}
+  {{! Task list side - Show issue info }}
+  <div class="gantt-task-row task-row {{this.statusClass}} {{this.priorityClass}}" data-issue-id="{{@issue.id}}">
+    <div class="task-info">
+      <div class="task-name" {{on "click" this.handleClick}}>
+        <span class="issue-number">#{{this.issueNumber}}</span>
+        <span class="issue-subject">{{this.issueSubject}}</span>
+        {{#if this.assigneeName}}
+          <span class="assignee-avatar" title="{{@issue.assignedTo.firstName}} {{@issue.assignedTo.lastName}}">
+            {{this.assigneeName}}
+          </span>
+        {{/if}}
+      </div>
+      <div class="task-dates">
+        {{this.dateRange}}
+      </div>
+    </div>
+  </div>
+{{/if}}

@@ -1,0 +1,53 @@
+<div class="gantt-dependency-layer">
+  <svg
+    class="gantt-dependency-layer-canvas"
+    {{did-insert this.setupElement}}
+    {{did-update this.refreshLines @registryVersion @dependencies @timelineBodyElement @linkingState}}
+  >
+    <defs>
+      <marker
+        id="dependency-arrowhead"
+        markerWidth="10"
+        markerHeight="10"
+        refX="10"
+        refY="3"
+        orient="auto"
+        markerUnits="strokeWidth"
+      >
+        <path d="M 0 0 L 10 3 L 0 6 z" class="dependency-arrowhead"></path>
+      </marker>
+    </defs>
+
+    {{#each this.lines as |line|}}
+      <path
+        d={{line.path}}
+        class="dependency-line"
+        data-from-issue-id="{{line.fromIssueId}}"
+        data-to-issue-id="{{line.toIssueId}}"
+        {{on "contextmenu" (fn this.handleContextMenu line)}}
+        marker-end="url(#dependency-arrowhead)"
+      />
+    {{/each}}
+
+    {{#if this.previewLine}}
+      <path
+        d={{this.previewLine.path}}
+        class="dependency-line preview"
+        marker-end="url(#dependency-arrowhead)"
+      />
+    {{/if}}
+  </svg>
+
+  {{#if this.contextMenu}}
+    <div
+      class="dependency-context-menu"
+      {{did-insert this.applyContextMenuStyle}}
+      {{did-update this.applyContextMenuStyle this.contextMenu}}
+    >
+      <button type="button" class="context-menu-item" {{on "click" this.handleDeleteDependency}}>
+        <i class="fa fa-trash"></i> {{t "global.form.delete"}}
+      </button>
+    </div>
+  {{/if}}
+</div>
+

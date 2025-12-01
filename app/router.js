@@ -32,6 +32,7 @@ Router.map(function() {
         this.route('conversation',{path:'conversations'});
         this.route('board');
         this.route('calendar');
+        this.route('gantt');
         this.route('issue',function(){
             this.route('index',{path:'/'});
             this.route('create');

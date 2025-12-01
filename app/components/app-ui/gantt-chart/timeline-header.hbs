@@ -1,0 +1,54 @@
+<div class="gantt-timeline-header">
+  {{#if this.showYearRow}}
+    <div class="gantt-header-row year-row">
+      {{#each @yearGroups as |yearGroup|}}
+        <div
+          class="gantt-header-cell year-cell"
+          {{did-insert (fn this.applySpanStyle yearGroup)}}
+          {{did-update (fn this.applySpanStyle yearGroup) yearGroup @dayWidth}}
+        >
+          {{yearGroup.year}}
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+
+  <div class="gantt-header-row month-row">
+    {{#each @monthGroups as |monthGroup|}}
+      <div
+        class="gantt-header-cell month-cell"
+        {{did-insert (fn this.applySpanStyle monthGroup)}}
+        {{did-update (fn this.applySpanStyle monthGroup) monthGroup @dayWidth}}
+      >
+        {{monthGroup.month}} {{monthGroup.year}}
+      </div>
+    {{/each}}
+  </div>
+
+  {{#if this.showWeekRow}}
+    <div class="gantt-header-row week-row">
+      {{#each @weekGroups as |weekGroup|}}
+        <div
+          class="gantt-header-cell week-cell"
+          {{did-insert (fn this.applySpanStyle weekGroup)}}
+          {{did-update (fn this.applySpanStyle weekGroup) weekGroup @dayWidth}}
+        >
+          W{{weekGroup.week}} ({{weekGroup.year}})
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+
+  <div class="gantt-header-row day-row">
+    {{#each @dateRange as |date|}}
+      <div
+        class="gantt-header-cell day-cell {{if date.isFirstOfMonth 'first-of-month'}}"
+        {{did-insert this.applyDayCellStyle}}
+        {{did-update this.applyDayCellStyle @dayWidth}}
+        title="{{date.dayOfWeek}}, {{date.month}} {{date.day}}, {{date.year}}"
+      >
+        {{date.day}}
+      </div>
+    {{/each}}
+  </div>
+</div>

@@ -4,7 +4,7 @@
   @query={{hash query=(concat "((issuemilestone.name : " @milestone.name "))")}}
 >
   <AppUi::MilestoneBlock @milestone={{@milestone}}>
-    <AppUi::Button class="btn btn-box-tool" @onClick={{fn @editMilestone @milestone}} data-milestone-action="edit">
+    <AppUi::Button class="btn btn-box-tool" @onClick={{fn @editMilestone @milestone}} @eventRequired={{true}} data-milestone-action="edit">
       <i class="fa fa-pencil edit-milestone" data-toggle="tooltip" title="{{t "global.form.edit"}}"></i>
     </AppUi::Button>
 
