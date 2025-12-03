@@ -507,10 +507,15 @@
   overflow: visible;
 }
 
+.dependency-canvas-background {
+  pointer-events: all;
+  cursor: default;
+}
+
 .dependency-line {
   fill: none;
   stroke: #4dabf7;
-  stroke-width: 2px;
+  stroke-width: 3px;
   opacity: 0.7;
   pointer-events: visibleStroke;
   cursor: pointer;
@@ -531,10 +536,26 @@
     cursor: default;
     pointer-events: none;
   }
+
+  &.active {
+    stroke: #1c7ed6;
+    stroke-width: 3px;
+    opacity: 1;
+    filter: drop-shadow(0 0 4px rgba(28, 126, 214, 0.6));
+
+    &:hover {
+      stroke: #1971c2;
+      stroke-width: 3.5px;
+    }
+  }
 }
 
 .dependency-arrowhead {
   fill: #4dabf7;
+}
+
+.dependency-arrowhead-active {
+  fill: #1c7ed6;
 }
 
 .dependency-context-menu {
