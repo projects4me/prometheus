@@ -250,6 +250,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    &.completed {
+      text-decoration: line-through;
+    }
   }
 
   .issue-count {
@@ -407,6 +411,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     pointer-events: none; /* Prevent text selection during drag */
+
+    &.completed {
+      text-decoration: line-through;
+    }
   }
 
   /* Status colors */

@@ -33,6 +33,6 @@
     </div>
   {{/if}}
   {{#if this.showLabel}}
-    <span class="bar-label">{{this.displayLabel}}</span>
+    <span class="bar-label {{if this.isCompleted 'completed'}}">{{this.displayLabel}}</span>
   {{/if}}
 </div>
