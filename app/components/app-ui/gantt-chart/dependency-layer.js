@@ -65,6 +65,43 @@ export default class DependencyLayerComponent extends Component {
     @tracked contextMenu = null;
 
     /**
+     * Track the currently active/selected dependency line ID
+     *
+     * @property activeDependencyId
+     * @type String|null
+     * @public
+     */
+    @tracked activeDependencyId = null;
+
+    /**
+     * Handle left click on dependency line to make it active
+     *
+     * @method handleLineClick
+     * @param {Object} line
+     * @param {Event} event
+     * @public
+     */
+    @action handleLineClick(line, event) {
+        if (event.button !== 0 && event.button !== undefined) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!line?.id) {
+            return;
+        }
+
+        // Toggle active state: if clicking the same line, deselect it
+        if (this.activeDependencyId === line.id) {
+            this.activeDependencyId = null;
+        } else {
+            this.activeDependencyId = line.id;
+        }
+    }
+
+    /**
      * Event handler for contextmenu events on dependency lines
      *
      * @method handleContextMenu
@@ -158,6 +195,24 @@ export default class DependencyLayerComponent extends Component {
             !event.target.closest('.dependency-context-menu')
         ) {
             this.closeContextMenu();
+        }
+    }
+
+    /**
+     * Handle clicking outside dependency lines to deselect active dependency
+     *
+     * @method handleCanvasClick
+     * @param {Event} event
+     * @public
+     */
+    @action handleCanvasClick(event) {
+        const target = event.target;
+        if (
+            target.tagName === 'svg' ||
+            (target.tagName === 'rect' && target.classList.contains('dependency-canvas-background')) ||
+            target.tagName === 'defs'
+        ) {
+            this.activeDependencyId = null;
         }
     }
 
