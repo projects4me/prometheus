@@ -70,21 +70,6 @@ export default class GanttRoute extends App {
 				});
 			});
 
-		// Fetch backlog issues (issues without milestone)
-		let _issueOptions = {
-			query: `(((Issue.milestoneId NULL) OR (Issue.milestoneId EMPTY)) AND (Issue.projectId : ${projectId}))`,
-			rels: 'assignedTo,spent,estimated,parentissue,issuetype',
-			limit: -1
-		};
-
-		if (this.query) {
-			_issueOptions.query = `(${_issueOptions.query}) AND (${this.query})`;
-		}
-
-		let backlogIssues = await _self.store
-			.query('issue', _issueOptions)
-			.catch((error) => _self.errorManager.handleError(error));
-
 		// Fetch issues for each milestone
 		await hash(
 			milestones.map(async (milestone) => {
@@ -106,14 +91,8 @@ export default class GanttRoute extends App {
 			})
 		);
 
-		// Create a backlog milestone
-		let backlog = _self.getBacklogMilestone(backlogIssues);
-
-		let milestonesArray = [];
-		milestones.forEach((milestone) => {
-			milestonesArray.pushObject(milestone);
-		});
-		milestonesArray.pushObject(backlog);
+		// Convert milestones to array
+		let milestonesArray = milestones.toArray ? milestones.toArray() : Array.from(milestones);
 
 		// Calculate project timeline bounds
 		let timelineBounds = this.calculateTimelineBounds(milestonesArray);
@@ -125,32 +104,6 @@ export default class GanttRoute extends App {
 		});
 
 		return model;
-	}
-
-	/**
-	 * This function is used to get the backlog milestone.
-	 *
-	 * @method getBacklogMilestone
-	 * @param {Array} issues The issues to be added to the backlog milestone
-	 * @returns {MilestoneModel} The backlog milestone
-	 */
-	getBacklogMilestone(issues) {
-		let backlog = this.store
-			.peekAll('milestone')
-			.findBy('milestoneType', 'backlog');
-		if (!backlog) {
-			backlog = this.store.createRecord('milestone', {
-				id: null,
-				name: 'Backlog',
-				milestoneType: 'backlog',
-				status: 'planned',
-				issues: issues || []
-			});
-		} else {
-			backlog.issues.clear();
-			backlog.issues.pushObjects(issues);
-		}
-		return backlog;
 	}
 
 	/**

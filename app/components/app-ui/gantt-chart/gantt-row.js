@@ -49,7 +49,7 @@ export default class GanttRowComponent extends Component {
      * @public
      */
     get milestoneName() {
-        return this.args.milestone.name || 'Backlog';
+        return this.args.milestone.name;
     }
 
     /**
