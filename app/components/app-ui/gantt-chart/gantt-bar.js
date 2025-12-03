@@ -168,6 +168,18 @@ export default class GanttBarComponent extends Component {
     }
 
     /**
+     * Check if the issue is completed (status is 'done')
+     *
+     * @property isCompleted
+     * @type Boolean
+     * @for GanttBar
+     * @public
+     */
+    get isCompleted() {
+        return this.args.status === 'done';
+    }
+
+    /**
      * Determine whether dependency connectors should be visible
      *
      * @property shouldShowConnectors
