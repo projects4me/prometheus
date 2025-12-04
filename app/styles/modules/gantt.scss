@@ -187,13 +187,19 @@
 .gantt-task-row {
   display: flex;
   align-items: center;
+  cursor: pointer;
   min-height: 45px;
   border-bottom: 1px solid #e8e8e8;
   background: #fff;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, box-shadow 0.2s;
 
   &:hover {
     background: #f5f9ff;
+  }
+
+  &.selected {
+    background: #e3f2fd;
+    box-shadow: inset 4px 0 0 #1d4ed8;
   }
 
   &.milestone-row {
@@ -345,6 +351,11 @@
 .gantt-timeline-row {
   position: relative;
   min-height: 45px;
+  transition: background-color 0.2s;
+
+  &.selected {
+    background: rgba(29, 78, 216, 0.08);
+  }
 
   &.milestone-row {
     min-height: 50px;
@@ -388,6 +399,7 @@
 .gantt-bar-task {
   background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
   height: 24px;
+  z-index: 10;
 
   &.draggable {
     cursor: grab;
@@ -455,6 +467,11 @@
   &.bar-priority-high {
     border-left: 3px solid #e67700;
   }
+
+  /* Selected state for highlighting */
+  .gantt-timeline-row.selected & {
+    z-index: 10;
+  }
 }
 
 .gantt-bar-connectors {
@@ -504,7 +521,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
+  pointer-events: visibleStroke;
   overflow: visible;
   z-index: 5;
 }

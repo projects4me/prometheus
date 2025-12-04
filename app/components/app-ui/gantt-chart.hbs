@@ -32,6 +32,7 @@
             @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
             @onToggle={{this.toggleMilestone}}
             @onIssueClick={{this.handleIssueClick}}
+            @selectedIssue={{@selectedIssue}}
             @timelineStart={{@timelineStart}}
             @timelineEnd={{@timelineEnd}}
             @dayWidth={{this.dayWidth}}
@@ -41,7 +42,7 @@
     </div>
 
     {{! Right side - Timeline }}
-    <div class="gantt-timeline-container">
+    <div class="gantt-timeline-container" {{did-insert this.registerTimelineContainer}} {{will-destroy this.unregisterTimelineContainer}}>
       <AppUi::GanttChart::TimelineHeader
         @dateRange={{this.dateRange}}
         @monthGroups={{this.monthGroups}}
@@ -103,6 +104,7 @@
             @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
             @onToggle={{this.toggleMilestone}}
             @onIssueClick={{this.handleIssueClick}}
+            @selectedIssue={{@selectedIssue}}
             @onIssueDragStart={{this.handleIssueDragStart}}
             @onIssueDragUpdate={{this.handleIssueDragUpdate}}
             @onIssueDragEnd={{this.handleIssueDragEnd}}
