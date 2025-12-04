@@ -30,15 +30,6 @@
       </marker>
     </defs>
 
-    {{! Background rectangle to catch clicks on empty canvas area }}
-    <rect
-      class="dependency-canvas-background"
-      width="100%"
-      height="100%"
-      fill="transparent"
-      pointer-events="all"
-    />
-
     {{#each this.lines as |line|}}
       <path
         d={{line.path}}

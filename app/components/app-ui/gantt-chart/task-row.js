@@ -100,6 +100,18 @@ export default class TaskRowComponent extends Component {
 	}
 
 	/**
+	 * Check if this issue is currently selected
+	 *
+	 * @property isSelected
+	 * @type Boolean
+	 * @for TaskRow
+	 * @public
+	 */
+	get isSelected() {
+		return this.args.selectedIssue?.id === this.args.issue?.id;
+	}
+
+	/**
 	 * Action to handle issue click
 	 *
 	 * @method handleClick

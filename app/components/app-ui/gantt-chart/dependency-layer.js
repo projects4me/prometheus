@@ -207,11 +207,7 @@ export default class DependencyLayerComponent extends Component {
      */
     @action handleCanvasClick(event) {
         const target = event.target;
-        if (
-            target.tagName === 'svg' ||
-            (target.tagName === 'rect' && target.classList.contains('dependency-canvas-background')) ||
-            target.tagName === 'defs'
-        ) {
+        if (target.tagName === 'svg') {
             this.activeDependencyId = null;
         }
     }

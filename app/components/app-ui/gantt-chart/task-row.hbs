@@ -1,6 +1,6 @@
 {{#if @showBars}}
   {{! Timeline side - Show task bar }}
-  <div class="gantt-timeline-row task-row {{this.statusClass}} {{this.priorityClass}}" data-issue-id="{{@issue.id}}">
+  <div class="gantt-timeline-row task-row {{this.statusClass}} {{this.priorityClass}} {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}">
     <AppUi::GanttChart::GanttBar
       @startDate={{@issue.startDate}}
       @endDate={{@issue.endDate}}
@@ -9,7 +9,6 @@
       @type="task"
       @status={{@issue.status}}
       @priority={{@issue.priority}}
-      @onClick={{this.handleClick}}
       @onDragStart={{this.handleDragStart}}
       @onDragUpdate={{this.handleDragUpdate}}
       @onDragEnd={{this.handleDragEnd}}
@@ -28,9 +27,9 @@
   </div>
 {{else}}
   {{! Task list side - Show issue info }}
-  <div class="gantt-task-row task-row {{this.statusClass}} {{this.priorityClass}}" data-issue-id="{{@issue.id}}">
+  <div class="gantt-task-row task-row {{this.statusClass}} {{this.priorityClass}} {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}" {{on "click" this.handleClick}}>
     <div class="task-info">
-      <div class="task-name" {{on "click" this.handleClick}}>
+      <div class="task-name">
         <span class="issue-number">#{{this.issueNumber}}</span>
         <span class="issue-subject">{{this.issueSubject}}</span>
         {{#if this.assigneeName}}

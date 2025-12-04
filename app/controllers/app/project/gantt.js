@@ -64,15 +64,21 @@ export default class AppProjectGanttController extends PrometheusController {
 	@tracked expandedMilestones = new Set();
 
 	/**
-	 * This action is used to help navigate a user to the detail view of an issue
+	 * This action is used to highlight an issue in both list and timeline views
+	 * Toggles selection: if the same issue is clicked again, it will be deselected
 	 *
 	 * @method openIssue
-	 * @param {Prometheus.Models.Issue} issue The issue the user wants to navigate to
+	 * @param {Prometheus.Models.Issue} issue The issue to highlight
 	 * @public
 	 */
 	@action openIssue(issue) {
 		Logger.debug('AppProjectGanttController::openIssue');
-		this.transitionToRoute('app.project.issue.page', issue.issueNumber);
+		// Toggle selection: if clicking the same issue, deselect it
+		if (this.selectedIssue?.id === issue?.id) {
+			this.selectedIssue = null;
+		} else {
+			this.selectedIssue = issue;
+		}
 		Logger.debug('-AppProjectGanttController::openIssue');
 	}
 

@@ -8,7 +8,8 @@ import { action } from '@ember/object';
 import {
 	generateDateRange,
 	groupDatesByMonth,
-	getTotalDays
+	getTotalDays,
+	calculateBarPosition
 } from 'prometheus/utils/gantt-helpers';
 import { guidFor } from '@ember/object/internals';
 
@@ -70,6 +71,16 @@ export default class GanttChartComponent extends AppComponent {
 	 * @private
 	 */
 	@tracked timelineBodyElement = null;
+
+	/**
+	 * Tracks the scrollable timeline container element
+	 *
+	 * @property timelineContainerElement
+	 * @type HTMLElement|null
+	 * @for GanttChartComponent
+	 * @private
+	 */
+	@tracked timelineContainerElement = null;
 
 	/**
 	 * Describes the currently active dependency link interaction (if any)
@@ -545,9 +556,64 @@ export default class GanttChartComponent extends AppComponent {
 	 */
 	@action
 	handleIssueClick(issue) {
+		const isCurrentlySelected = this.args.selectedIssue?.id === issue?.id;
+		const isSelecting = !isCurrentlySelected;
+
 		if (this.args.onIssueClick) {
 			this.args.onIssueClick(issue);
 		}
+		if (isSelecting) {
+			this.scrollToIssue(issue);
+		}
+	}
+
+	/**
+	 * Scroll the timeline to show the specified issue
+	 * Scrolls both horizontally (to the bar position) and vertically (to the row position)
+	 *
+	 * @method scrollToIssue
+	 * @param {Object} issue The issue to scroll to
+	 * @public
+	 */
+	@action
+	scrollToIssue(issue) {
+		if (!issue || !issue.startDate || !this.timelineContainerElement || !this.timelineBodyElement) {
+			return;
+		}
+
+		// Calculate horizontal scroll position (x-axis)
+		const barLeft = calculateBarPosition(
+			this.args.timelineStart,
+			issue.startDate,
+			this.dayWidth
+		);
+
+		const containerWidth = this.timelineContainerElement.clientWidth;
+		const scrollLeft = Math.max(0, barLeft - (containerWidth / 2) + (this.dayWidth * 2));
+
+		// Find the issue row element for vertical scroll (y-axis)
+		const issueRow = this.timelineBodyElement.querySelector(
+			`.gantt-timeline-row[data-issue-id="${issue.id}"]`
+		);
+
+		let scrollTop = this.timelineContainerElement.scrollTop;
+
+		if (issueRow) {
+			const rowRect = issueRow.getBoundingClientRect();
+			const containerRect = this.timelineContainerElement.getBoundingClientRect();
+			const rowTop = rowRect.top - containerRect.top + this.timelineContainerElement.scrollTop;
+			const containerHeight = this.timelineContainerElement.clientHeight;
+			const rowHeight = rowRect.height;
+
+			// Center the row vertically in the viewport
+			scrollTop = Math.max(0, rowTop - (containerHeight / 2) + (rowHeight / 2));
+		}
+
+		this.timelineContainerElement.scrollTo({
+			left: scrollLeft,
+			top: scrollTop,
+			behavior: 'smooth'
+		});
 	}
 
 	/**
@@ -685,6 +751,27 @@ export default class GanttChartComponent extends AppComponent {
 	 */
 	@action unregisterTimelineBody() {
 		this.timelineBodyElement = null;
+	}
+
+	/**
+	 * Capture the timeline container element for scrolling
+	 *
+	 * @method registerTimelineContainer
+	 * @param {HTMLElement} element
+	 * @public
+	 */
+	@action registerTimelineContainer(element) {
+		this.timelineContainerElement = element;
+	}
+
+	/**
+	 * Clear the stored timeline container reference when component is destroyed
+	 *
+	 * @method unregisterTimelineContainer
+	 * @public
+	 */
+	@action unregisterTimelineContainer() {
+		this.timelineContainerElement = null;
 	}
 
 	/**
