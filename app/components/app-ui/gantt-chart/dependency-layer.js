@@ -349,14 +349,49 @@ export default class DependencyLayerComponent extends Component {
             return '';
         }
 
-        const direction = end.x >= start.x ? 1 : -1;
-        const deltaX = Math.max(30, Math.abs(end.x - start.x) / 2);
+        let adjustedStart = { ...start };
+        let adjustedEnd = { ...end };
+        const isTargetToLeft = end.x < start.x;
+        
+        if (isTargetToLeft) {
+            adjustedStart.x = start.x +10;
+        }
+
+        if (isTargetToLeft) {
+            const horizontalDistance = Math.abs(adjustedStart.x - adjustedEnd.x);
+            const verticalDistance = Math.abs(end.y - start.y);
+            
+            const verticalOffset = Math.max(25, Math.min(50, horizontalDistance * 0.2));
+            
+            const initialCurveRight = 20;
+            const initialCurveDown = verticalDistance < 15 ? Math.max(40, verticalOffset * 0.8) : 25;
+            
+            const control1X = start.x + initialCurveRight;
+            const control1Y = start.y + initialCurveDown;
+            
+            const intermediateX = start.x - 20;
+            const intermediateY = start.y + (verticalDistance < 15 ? Math.max(40, verticalOffset * 0.5) : 20);
+            
+            const intermediateControlX = start.x + initialCurveRight * 0.5;
+            const intermediateControlY = start.y + initialCurveDown * 0.7;
+            
+            const control2X = intermediateX - Math.max(40, horizontalDistance * 0.35);
+            const control2Y = intermediateY + (verticalDistance < 15 ? verticalOffset * 0.5 : 0);
+            
+            const control3X = adjustedEnd.x - Math.max(50, horizontalDistance * 0.8);
+            const control3Y = adjustedEnd.y - (verticalDistance < 15 ? verticalOffset : 0);
+            
+            return `M ${start.x} ${start.y} C ${control1X} ${control1Y}, ${intermediateControlX} ${intermediateControlY}, ${intermediateX} ${intermediateY} C ${control2X} ${control2Y}, ${control3X} ${control3Y}, ${adjustedEnd.x} ${adjustedEnd.y}`;
+        }
+
+        const direction = 1;
+        const deltaX = Math.max(30, Math.abs(adjustedEnd.x - start.x) / 2);
         const controlOffset = deltaX * direction;
 
         const control1X = start.x + controlOffset;
-        const control2X = end.x - controlOffset;
+        const control2X = adjustedEnd.x - controlOffset;
 
-        return `M ${start.x} ${start.y} C ${control1X} ${start.y}, ${control2X} ${end.y}, ${end.x} ${end.y}`;
+        return `M ${start.x} ${start.y} C ${control1X} ${start.y}, ${control2X} ${adjustedEnd.y}, ${adjustedEnd.x} ${adjustedEnd.y}`;
     }
 
     /**

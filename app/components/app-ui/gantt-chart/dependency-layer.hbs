@@ -50,17 +50,17 @@
       />
     {{/if}}
   </svg>
-
-  {{#if this.contextMenu}}
-    <div
-      class="dependency-context-menu"
-      {{did-insert this.applyContextMenuStyle}}
-      {{did-update this.applyContextMenuStyle this.contextMenu}}
-    >
-      <button type="button" class="context-menu-item" {{on "click" this.handleDeleteDependency}}>
-        <i class="fa fa-trash"></i> {{t "global.form.delete"}}
-      </button>
-    </div>
-  {{/if}}
 </div>
+
+{{#if this.contextMenu}}
+  <div
+    class="dependency-context-menu"
+    {{did-insert this.applyContextMenuStyle}}
+    {{did-update this.applyContextMenuStyle this.contextMenu}}
+  >
+    <button type="button" class="context-menu-item" {{on "click" this.handleDeleteDependency}}>
+      <i class="fa fa-trash"></i> {{t "global.form.delete"}}
+    </button>
+  </div>
+{{/if}}
 
