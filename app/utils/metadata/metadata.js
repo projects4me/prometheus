@@ -80,7 +80,6 @@ export default Object.extend({
                     icon: 'dashboard',
                     route: 'app',
                     anchorRoute: '',
-                    routeParams: null,
                     projectRelated: false,
                     order: 1
                 },
@@ -122,14 +121,13 @@ export default Object.extend({
                             }
                         }
                     },
-                    order: 5
+                    order: 6
                 },
                 Issue:{
                     label: 'views.nav.menu.issue.label',
                     icon: 'tasks',
                     route: 'app.project.issue',
                     anchorRoute: 'issue',
-                    routeParams: {module: 'issue'},
                     projectRelated: true,
                     actions:{
                         section1:{
@@ -139,7 +137,7 @@ export default Object.extend({
                                 className: 'text-teal',
                                 anchorRoute: 'issue',
                                 projectRelated: true,
-                                routeParams: {module: 'issue'}
+        
                             },
                             create:{
                                 label: 'views.nav.menu.issue.create',
@@ -147,7 +145,7 @@ export default Object.extend({
                                 className: 'text-red',
                                 anchorRoute: 'issue/create',
                                 projectRelated: true,
-                                routeParams: {module: 'issue'}
+        
                             }
                         },
                         section2:{
@@ -156,14 +154,14 @@ export default Object.extend({
                                 route: 'app.import',
                                 anchorRoute: 'issue/import',
                                 projectRelated: true,
-                                routeParams: {module: 'issue'}
+        
                             },
                             export:{
                                 label: 'views.nav.menu.issue.export',
                                 route: 'app.export',
                                 anchorRoute: 'issue/export',
                                 projectRelated: true,
-                                routeParams: {module: 'issue'}
+        
                             }
                         }
                     },
@@ -175,8 +173,7 @@ export default Object.extend({
                     route: 'app.project.conversation',
                     anchorRoute: 'conversation',
                     projectRelated: true,
-                    routeParams: null,
-                    order: 4
+                    order: 5
                 },  
                 Board:{
                     label: 'views.nav.menu.board.label',
@@ -184,15 +181,21 @@ export default Object.extend({
                     route: 'app.project.board',
                     anchorRoute: 'board',
                     projectRelated: true,
-                    routeParams: null,
                     order: 3
+                },
+                Gantt:{
+                    label: 'views.nav.menu.gantt.label',
+                    icon: 'calendar',
+                    route: 'app.project.gantt',
+                    anchorRoute: 'gantt',
+                    projectRelated: true,
+                    order: 4
                 },
                 Report:{
                     label: 'views.nav.menu.report.label',
                     icon: 'bar-chart',
                     route: 'app.module',
                     anchorRoute: 'report',
-                    routeParams: {module: 'report'},
                     projectRelated: false,
                     actions:{
                         section1:{
@@ -202,7 +205,7 @@ export default Object.extend({
                                 className: 'text-teal',
                                 anchorRoute: 'report',
                                 projectRelated: false,
-                                routeParams: {module: 'report'}
+        
                             },
                             create:{
                                 label: 'views.nav.menu.report.create',
@@ -210,7 +213,7 @@ export default Object.extend({
                                 className: 'text-red',
                                 anchorRoute: 'report/create',
                                 projectRelated: false,
-                                routeParams: {module: 'report'}
+        
                             }
                         },
                         section2:{
@@ -219,7 +222,7 @@ export default Object.extend({
                                 route: 'app.export',
                                 anchorRoute: 'report/export',
                                 projectRelated: false,
-                                routeParams: {module: 'report'}
+        
                             }
                         }
                     },
@@ -230,7 +233,6 @@ export default Object.extend({
                     icon: 'clock-o',
                     route: 'app.module',
                     anchorRoute: 'timelog',
-                    routeParams: {module: 'timelog'},
                     projectRelated: false,
                     actions:{
                         section1:{
@@ -240,7 +242,7 @@ export default Object.extend({
                                 className:"text-teal",
                                 anchorRoute: 'timelog',
                                 projectRelated: false,
-                                routeParams: {module: 'timelog'}
+        
                             },
                             create:{
                                 label: 'views.nav.menu.timelog.create',
@@ -248,7 +250,7 @@ export default Object.extend({
                                 className: "text-red",
                                 anchorRoute: 'timelog/create',
                                 projectRelated: false,
-                                routeParams: {module: 'timelog'}
+        
                             }
                         },
                         section2:{
@@ -257,26 +259,17 @@ export default Object.extend({
                                 route: 'app.import',
                                 anchorRoute: 'timelog/import',
                                 projectRelated: false,
-                                routeParams: {module: 'timelog'}
+        
                             },
                             export:{
                                 label: 'views.nav.menu.timelog.export',
                                 route: 'app.export',
                                 anchorRoute: 'timelog/export',
                                 projectRelated: false,
-                                routeParams: {module: 'timelog'}
+        
                             }
                         }
                     },
-                    order: 7
-                },
-                Calendar:{
-                    label: 'views.nav.menu.calendar.label',
-                    icon: 'calendar',
-                    route: 'app.project.calendar',
-                    anchorRoute: 'calendar',
-                    projectRelated: true,
-                    routeParams: null,
                     order: 8
                 },
                 Wiki:{
@@ -285,8 +278,7 @@ export default Object.extend({
                     route: 'app.project.wiki',
                     anchorRoute: 'wiki',
                     projectRelated: true,
-                    routeParams: null,
-                    order: 6
+                    order: 7
                 }
             },
             adminItems: {
