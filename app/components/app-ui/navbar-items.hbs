@@ -2,7 +2,7 @@
 {{#if definition.actions}}
   <li class="treeview" data-navigation-module={{module}}>
     {{#if definition.projectRelated}}
-      <a href="/{{@appPrefix}}/{{@trackedProject.shortCode}}/{{definition.anchorRoute}}">
+      <a href="/{{@appPrefix}}/project/{{@trackedProject.shortCode}}/{{definition.anchorRoute}}">
         <i class="fa fa-{{definition.icon}}"></i>
         <span>{{t definition.label}}</span>
         <span class="pull-right-container">
@@ -23,11 +23,11 @@
         {{#each-in menu as |entity item|}}
           <li>
             {{#if definition.projectRelated}}
-              <a href="/{{@appPrefix}}/{{@trackedProject.shortCode}}/{{item.anchorRoute}}" {{action @navigate item.route  item.routeParams item.anchorRoute @trackedProject.shortCode}}>
+              <a href="/{{@appPrefix}}/project/{{@trackedProject.shortCode}}/{{item.anchorRoute}}" {{action @navigate item.route definition.projectRelated @trackedProject.shortCode}}>
                 <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
               </a>
             {{else}}
-              <a href="/{{@appPrefix}}/{{item.anchorRoute}}" {{action @navigate item.route  item.routeParams item.anchorRoute}}>
+              <a href="/{{@appPrefix}}/{{item.anchorRoute}}" {{action @navigate item.route}}>
                 <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
               </a>
             {{/if}}
@@ -42,12 +42,12 @@
 {{else}}
   <li class="treeview" data-navigation-module={{module}}>
     {{#if definition.projectRelated}}
-      <a href="/{{@appPrefix}}/{{@trackedProject.shortCode}}/{{definition.anchorRoute}}" {{action @navigate definition.route definition.routeParams definition.anchorRoute @trackedProject.shortCode}}>
+      <a href="/{{@appPrefix}}/project/{{@trackedProject.shortCode}}/{{definition.anchorRoute}}" {{action @navigate definition.route definition.projectRelated @trackedProject.shortCode}}>
         <i class="fa fa-{{definition.icon}}"></i>
         <span>{{t definition.label}}</span>
       </a>
     {{else}}
-      <a href="/{{@appPrefix}}/{{definition.anchorRoute}}" {{action @navigate definition.route definition.routeParams definition.anchorRoute}}>
+      <a href="/{{@appPrefix}}/{{definition.anchorRoute}}" {{action @navigate definition.route}}>
         <i class="fa fa-{{definition.icon}}"></i>
         <span>{{t definition.label}}</span>
       </a>

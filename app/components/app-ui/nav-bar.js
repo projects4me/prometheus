@@ -69,19 +69,17 @@ export default class NavBarComponent extends AppComponent {
      * @method navigate
      * @param {String} route
      * @param {Object} routeParams
-     * @param {String} anchorRoute
+     * @param {Boolean} projectRelated
      * @param {String} shortCode
      * @public
      */
-    @action navigate(route, routeParams, anchorRoute, shortCode) {
+    @action navigate(route, projectRelated, shortCode) {
         Logger.debug('A transition requested to route ' + route);
-        if (shortCode !== undefined) {
-            if (routeParams === null) {
-                routeParams = {};
-            }
+        let routeParams = {};
+        if (projectRelated === true) {
             routeParams['shortcode'] = shortCode;
         }
-        if (routeParams !== undefined && routeParams !== null && routeParams !== '') {
+        if (Object.keys(routeParams).length > 0) {
             this.router.transitionTo(route, routeParams);
         }
         else {

@@ -1479,7 +1479,7 @@
           "label": "Calendar"
         },
         "gantt": {
-          "label": "Gantt Chart",
+          "label": "Gantt Cal",
           "issue": {
             "updating": "Updating issue #{issueNumber} dates...",
             "updated": "Issue #{issueNumber} dates updated to {startDate} - {endDate}",
