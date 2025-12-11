@@ -12,6 +12,9 @@
       @onDragStart={{this.handleDragStart}}
       @onDragUpdate={{this.handleDragUpdate}}
       @onDragEnd={{this.handleDragEnd}}
+      @onResizeStart={{this.handleResizeStart}}
+      @onResizeUpdate={{this.handleResizeUpdate}}
+      @onResizeEnd={{this.handleResizeEnd}}
       @showLabel={{true}}
       @label={{concat "#" this.issueNumber " - " this.issueSubject}}
       @issue={{@issue}}

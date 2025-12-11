@@ -694,6 +694,72 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
+	 * Action to handle issue resize start
+	 *
+	 * @method handleIssueResizeStart
+	 * @param {Object} issue The issue that is being resized
+	 * @public
+	 */
+	@action
+	handleIssueResizeStart(issue) {
+		if (issue?.id) {
+			this.updateBarRegisteryVersion();
+		}
+	}
+
+	/**
+	 * Action to handle issue resize update (during resize)
+	 *
+	 * @method handleIssueResizeUpdate
+	 * @param {Object} issue The issue that is being resized
+	 * @param {String} resizeHandle 'left' or 'right'
+	 * @param {Number} resizeOffset The current resize offset in pixels
+	 * @public
+	 */
+	@action
+	handleIssueResizeUpdate(issue, resizeHandle, resizeOffset) {
+		if (issue?.id) {
+			this.updateBarRegisteryVersion();
+		}
+	}
+
+	/**
+	 * Action to handle issue resize end
+	 *
+	 * @method handleIssueResizeEnd
+	 * @param {Object} issue The issue that was resized
+	 * @param {String} newStartDate The new start date
+	 * @param {String} newEndDate The new end date
+	 * @public
+	 */
+	@action
+	handleIssueResizeEnd(issue, newStartDate, newEndDate) {
+		if (this.args.onIssueResizeEnd) {
+			const wrappedCallback = async () => {
+				try {
+					await this.args.onIssueResizeEnd(
+						issue,
+						newStartDate,
+						newEndDate
+					);
+				} catch (error) {
+					console.error('handleIssueResizeEnd - Error:', error);
+				} finally {
+					if (issue?.id) {
+						this.updateBarRegisteryVersion();
+					}
+				}
+			};
+
+			return wrappedCallback();
+		} else {
+			if (issue?.id) {
+				this.updateBarRegisteryVersion();
+			}
+		}
+	}
+
+	/**
 	 * Handle delete dependency action from dependency layer context menu
 	 *
 	 * @method handleDeleteDependency

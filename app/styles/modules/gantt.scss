@@ -469,44 +469,69 @@
   }
 }
 
-.gantt-bar-connectors {
+.gantt-bar-hover-zones {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-.connector-dot {
+.hover-zone {
   position: absolute;
-  top: 50%;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  .gantt-bar:hover &,
+  .gantt-bar.resizing &,
+  .gantt-bar.dragging &,
+  .gantt-bar.show-connectors & {
+    opacity: 1;
+  }
+
+  &.hover-zone-left {
+    left: -24px;
+    justify-content: flex-start;
+  }
+
+  &.hover-zone-right {
+    right: -24px;
+    justify-content: flex-end;
+  }
+}
+
+.connector-dot {
+  position: relative;
   width: 14px;
   height: 14px;
   border-radius: 50%;
   border: 2px solid #4dabf7;
   background: #fff;
-  transform: translate(-50%, -50%);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   pointer-events: auto;
   transition:
     background 0.2s,
     border-color 0.2s,
     transform 0.2s;
+  flex-shrink: 0;
 
   &:hover {
     background: #4dabf7;
     border-color: #1c7ed6;
-  }
-
-  &.connector-dot-start {
-    left: 0;
-  }
-
-  &.connector-dot-end {
-    left: 100%;
+    transform: scale(1.1);
   }
 
   &:focus {
     outline: none;
-    transform: translate(-50%, -50%) scale(1.1);
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 }
 

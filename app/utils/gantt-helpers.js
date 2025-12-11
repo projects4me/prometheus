@@ -39,6 +39,8 @@ export function getPositionInDays(timelineStart, itemStart) {
 
 /**
  * Calculate the width of a bar in pixels based on duration
+ * The width represents the inclusive count of days (start and end are both included)
+ * For example: Oct 15 to Oct 19 = 5 days (15, 16, 17, 18, 19)
  *
  * @function calculateBarWidth
  * @param {String} startDate Start date in YYYY-MM-DD format
@@ -48,8 +50,9 @@ export function getPositionInDays(timelineStart, itemStart) {
  */
 export function calculateBarWidth(startDate, endDate, dayWidth) {
     let days = getDaysBetween(startDate, endDate);
-    // Minimum width of 1 day
-    if (days < 1) days = 1;
+    // Add 1 to make it inclusive (both start and end dates are included)
+    // Minimum width of 1 day (when start and end are the same)
+    days = Math.max(1, days + 1);
     return days * dayWidth;
 }
 
