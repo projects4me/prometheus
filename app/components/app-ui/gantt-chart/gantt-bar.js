@@ -39,6 +39,86 @@ export default class GanttBarComponent extends Component {
     @tracked isHovering = false;
 
     /**
+     * Track if the bar is being resized
+     *
+     * @property isResizing
+     * @type Boolean
+     * @for GanttBar
+     * @private
+     */
+    @tracked isResizing = false;
+
+    /**
+     * Track which resize handle is active ('left' or 'right')
+     *
+     * @property resizeHandle
+     * @type String
+     * @for GanttBar
+     * @private
+     */
+    resizeHandle = null;
+
+    /**
+     * Store the starting X position of the resize
+     *
+     * @property resizeStartX
+     * @type Number
+     * @for GanttBar
+     * @private
+     */
+    resizeStartX = 0;
+
+    /**
+     * Store the original start date before resize
+     *
+     * @property originalStartDate
+     * @type String
+     * @for GanttBar
+     * @private
+     */
+    originalStartDate = null;
+
+    /**
+     * Store the original end date before resize
+     *
+     * @property originalEndDate
+     * @type String
+     * @for GanttBar
+     * @private
+     */
+    originalEndDate = null;
+
+    /**
+     * Store the original width before resize
+     *
+     * @property originalWidth
+     * @type Number
+     * @for GanttBar
+     * @private
+     */
+    originalWidth = 0;
+
+    /**
+     * Store the original left position before resize
+     *
+     * @property originalLeft
+     * @type Number
+     * @for GanttBar
+     * @private
+     */
+    originalLeftForResize = 0;
+
+    /**
+     * Store the current resize offset
+     *
+     * @property resizeOffset
+     * @type Number
+     * @for GanttBar
+     * @private
+     */
+    @tracked resizeOffset = 0;
+
+    /**
      * Store the starting X position of the drag
      *
      * @property dragStartX
@@ -164,7 +244,7 @@ export default class GanttBarComponent extends Component {
      */
     get showLabel() {
         // Only show label if bar is wide enough (> 100px)
-        return this.barWidth > 100 && this.displayLabel;
+        return this.displayLabel;
     }
 
     /**
@@ -219,7 +299,36 @@ export default class GanttBarComponent extends Component {
     }
 
     /**
-     * Action to handle mouse down on bar (start drag)
+     * Check if mouse is in a resize zone (left or right edge)
+     *
+     * @method isInResizeZone
+     * @param {Event} event The mouse event
+     * @param {HTMLElement} element The bar element
+     * @returns {String|null} 'left', 'right', or null
+     * @private
+     */
+    isInResizeZone(event, element) {
+        if (!element || this.args.type !== 'task') {
+            return null;
+        }
+
+        const rect = element.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const resizeZoneWidth = 15; // Width of resize zone in pixels
+
+        if (x >= 0 && x <= resizeZoneWidth) {
+            return 'left';
+        }
+
+        if (x >= rect.width - resizeZoneWidth && x <= rect.width) {
+            return 'right';
+        }
+
+        return null;
+    }
+
+    /**
+     * Action to handle mouse down on bar (start drag or resize)
      *
      * @method handleMouseDown
      * @param {Event} event The mouse event
@@ -232,20 +341,24 @@ export default class GanttBarComponent extends Component {
             return;
         }
 
-        // Only allow dragging for task bars, not milestone bars
         if (this.args.type !== 'task') {
             return;
         }
 
-        // Don't start drag if clicking on connector dots
         if (event.target.closest('.connector-dot')) {
+            return;
+        }
+
+        const resizeZone = this.isInResizeZone(event, event.currentTarget);
+        if (resizeZone) {
+            this.handleResizeMouseDown(resizeZone, event);
             return;
         }
 
         event.preventDefault();
         event.stopPropagation();
         
-        this.isDragging = false; // Will be set to true if mouse moves
+        this.isDragging = false;
         this.dragStartX = event.clientX;
         this.originalLeft = this.barLeft;
         this.dragOffset = 0;
@@ -253,6 +366,37 @@ export default class GanttBarComponent extends Component {
         // Add event listeners to document for mouse move and up
         document.addEventListener('mousemove', this.handleMouseMove);
         document.addEventListener('mouseup', this.handleMouseUp);
+    }
+
+    /**
+     * Action to handle mouse move on bar (detect resize zones for cursor)
+     *
+     * @method handleBarMouseMove
+     * @param {Event} event The mouse event
+     * @public
+     */
+    @action
+    handleBarMouseMove(event) {
+        if (this.args.type !== 'task') {
+            return;
+        }
+
+        if (this.isDragging || this.isResizing) {
+            return;
+        }
+
+        if (event.target.closest('.connector-dot')) {
+            return;
+        }
+
+        const resizeZone = this.isInResizeZone(event, event.currentTarget);
+        if (resizeZone === 'left') {
+            event.currentTarget.style.cursor = 'w-resize';
+        } else if (resizeZone === 'right') {
+            event.currentTarget.style.cursor = 'e-resize';
+        } else {
+            event.currentTarget.style.cursor = '';
+        }
     }
 
     /**
@@ -361,23 +505,38 @@ export default class GanttBarComponent extends Component {
     }
 
     /**
-     * Handle hover to toggle connectors
+     * Handle hover to show connectors and hover zones
      *
      * @method handleMouseEnter
      * @public
      */
     @action handleMouseEnter() {
+        // Show connectors when hovering over the bar to indicate they're available
         this.isHovering = true;
     }
 
     /**
-     * Handle mouse leave to hide connectors
+     * Handle hover on hover zone to keep connectors visible
      *
-     * @method handleMouseLeave
+     * @method handleHoverZoneEnter
      * @public
      */
-    @action handleMouseLeave() {
+    @action handleHoverZoneEnter() {
+        this.isHovering = true;
+    }
+
+    /**
+     * Handle mouse leave to hide connectors and reset cursor
+     *
+     * @method handleMouseLeave
+     * @param {Event} event The mouse event
+     * @public
+     */
+    @action handleMouseLeave(event) {
         this.isHovering = false;
+        if (event.currentTarget && !this.isDragging && !this.isResizing) {
+            event.currentTarget.style.cursor = '';
+        }
     }
 
     /**
@@ -429,23 +588,24 @@ export default class GanttBarComponent extends Component {
         if (!element) {
             return;
         }
-        const left = this.barLeft + this.dragOffset;
+        const left = this.effectiveBarLeft + this.dragOffset;
+        const width = this.effectiveBarWidth;
         element.style.left = `${left}px`;
-        element.style.width = `${this.barWidth}px`;
-        if (this.isDragging) {
+        element.style.width = `${width}px`;
+        if (this.isDragging || this.isResizing) {
             element.style.opacity = '0.7';
-            element.style.cursor = 'grabbing';
+            element.style.cursor = this.isResizing ? (this.resizeHandle === 'left' ? 'w-resize' : 'e-resize') : 'grabbing';
         } else {
             element.style.opacity = '';
             element.style.cursor = '';
         }
 
         // For smooth transition of dependency positions
-        if (this.args.updateDependencyPositions) {
+        if (this.args.updateDependencyPositions && (this.isDragging || this.isResizing)) {
             let times = 0;
             let updateDepPos = () => {
                 element = $(element);
-                let updatedLeft = this.barLeft + this.dragOffset;
+                let updatedLeft = this.effectiveBarLeft + this.dragOffset;
                 this.args.updateDependencyPositions(updatedLeft);
                 times++;
                 if (times < 5) {
@@ -457,7 +617,7 @@ export default class GanttBarComponent extends Component {
     }
 
     /**
-     * Get the effective bar class including dragging state
+     * Get the effective bar class including dragging and resizing state
      *
      * @property effectiveBarClass
      * @type String
@@ -474,7 +634,198 @@ export default class GanttBarComponent extends Component {
         if (this.isDragging) {
             classes.push('dragging');
         }
+
+        if (this.isResizing) {
+            classes.push('resizing');
+        }
         
         return classes.join(' ');
+    }
+
+    /**
+     * Action to handle resize handle mouse down (start resize)
+     *
+     * @method handleResizeMouseDown
+     * @param {String} handle 'left' or 'right'
+     * @param {Event} event The mouse event
+     * @public
+     */
+    @action
+    handleResizeMouseDown(handle, event) {
+        // Only allow resizing on left mouse button (button 0)
+        if (event.button !== 0) {
+            return;
+        }
+
+        // Only allow resizing for task bars
+        if (this.args.type !== 'task') {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.isResizing = true;
+        this.resizeHandle = handle;
+        this.resizeStartX = event.clientX;
+        this.originalStartDate = this.args.startDate;
+        this.originalEndDate = this.args.endDate;
+        this.originalWidth = this.barWidth;
+        this.originalLeftForResize = this.barLeft;
+        this.resizeOffset = 0;
+
+        if (this.args.onResizeStart) {
+            this.args.onResizeStart();
+        }
+
+        document.addEventListener('mousemove', this.handleResizeMouseMove);
+        document.addEventListener('mouseup', this.handleResizeMouseUp);
+    }
+
+    /**
+     * Action to handle mouse move during resize
+     *
+     * @method handleResizeMouseMove
+     * @param {Event} event The mouse event
+     * @public
+     */
+    @action
+    handleResizeMouseMove(event) {
+        if (!this.isResizing) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const deltaX = event.clientX - this.resizeStartX;
+        this.resizeOffset = deltaX;
+
+        // Notify resize update
+        if (this.args.onResizeUpdate) {
+            this.args.onResizeUpdate(this.resizeHandle, this.resizeOffset);
+        }
+    }
+
+    /**
+     * Action to handle mouse up (end resize)
+     *
+     * @method handleResizeMouseUp
+     * @param {Event} event The mouse event
+     * @public
+     */
+    @action
+    async handleResizeMouseUp(event) {
+        if (event.button !== 0 && event.button !== undefined) {
+            return;
+        }
+
+        event.preventDefault();
+        document.removeEventListener('mousemove', this.handleResizeMouseMove);
+        document.removeEventListener('mouseup', this.handleResizeMouseUp);
+
+        if (this.isResizing && this.args.onResizeEnd) {
+            const daysOffset = Math.round(this.resizeOffset / this.args.dayWidth);
+            
+            if (daysOffset !== 0) {
+                let newStartDate = this.originalStartDate;
+                let newEndDate = this.originalEndDate;
+
+                if (this.resizeHandle === 'left') {
+                    // Resizing from left: adjust start date
+                    newStartDate = moment(this.originalStartDate)
+                        .add(daysOffset, 'days')
+                        .format('YYYY-MM-DD');
+                    
+                    // Ensure start date doesn't exceed end date
+                    if (moment(newStartDate).isAfter(this.originalEndDate)) {
+                        newStartDate = this.originalEndDate;
+                    }
+                } else if (this.resizeHandle === 'right') {
+                    // Resizing from right: calculate end date from the right edge position
+                    // The bar width is inclusive, so we need to account for that
+                    // Calculate the new width in days (inclusive)
+                    const newWidth = this.originalWidth + this.resizeOffset;
+                    const newWidthInDays = Math.max(1, Math.round(newWidth / this.args.dayWidth));
+                    
+                    // End date = start date + (width in days - 1) because width is inclusive
+                    // For example: start Oct 15, width 5 days = Oct 15, 16, 17, 18, 19 (end = Oct 19)
+                    newEndDate = moment(this.originalStartDate)
+                        .add(newWidthInDays - 1, 'days')
+                        .format('YYYY-MM-DD');
+                    
+                    // Ensure end date doesn't go before start date
+                    if (moment(newEndDate).isBefore(this.originalStartDate)) {
+                        newEndDate = this.originalStartDate;
+                    }
+                }
+
+                this.resetResizeState();
+                try {
+                    await this.args.onResizeEnd(newStartDate, newEndDate);
+                } finally {
+                    if (this.args.updateDependencyPositions) {
+                        this.args.updateDependencyPositions();
+                    }
+                }
+            } else {
+                this.resetResizeState();
+            }
+        } else {
+            this.resetResizeState();
+        }
+    }
+
+    /**
+     * Reset the resize state
+     *
+     * @method resetResizeState
+     * @public
+     */
+    @action resetResizeState() {
+        this.isResizing = false;
+        this.resizeHandle = null;
+        this.resizeOffset = 0;
+        this.resizeStartX = 0;
+        this.originalStartDate = null;
+        this.originalEndDate = null;
+        this.originalWidth = 0;
+        this.originalLeftForResize = 0;
+    }
+
+    /**
+     * Get the effective bar width including resize offset
+     *
+     * @property effectiveBarWidth
+     * @type Number
+     * @for GanttBar
+     * @public
+     */
+    get effectiveBarWidth() {
+        if (this.isResizing) {
+            if (this.resizeHandle === 'right') {
+                // Resizing from right: width increases/decreases
+                return Math.max(this.args.dayWidth, this.originalWidth + this.resizeOffset);
+            } else if (this.resizeHandle === 'left') {
+                // Resizing from left: width decreases/increases (inverse of offset)
+                return Math.max(this.args.dayWidth, this.originalWidth - this.resizeOffset);
+            }
+        }
+        return this.barWidth;
+    }
+
+    /**
+     * Get the effective bar left position including resize offset
+     *
+     * @property effectiveBarLeft
+     * @type Number
+     * @for GanttBar
+     * @public
+     */
+    get effectiveBarLeft() {
+        if (this.isResizing && this.resizeHandle === 'left') {
+            // Resizing from left: position moves with offset
+            return this.originalLeftForResize + this.resizeOffset;
+        }
+        return this.barLeft;
     }
 }

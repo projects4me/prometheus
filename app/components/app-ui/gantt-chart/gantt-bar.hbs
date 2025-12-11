@@ -1,8 +1,9 @@
 <div 
-  class="{{this.effectiveBarClass}}" 
+  class="{{this.effectiveBarClass}} {{if this.shouldShowConnectors 'show-connectors'}}" 
   {{did-insert this.applyBarStyle}}
-  {{did-update this.applyBarStyle this.barLeft this.barWidth this.dragOffset this.isDragging}}
+  {{did-update this.applyBarStyle this.barLeft this.barWidth this.dragOffset this.isDragging this.isResizing this.resizeOffset}}
   {{on "mousedown" this.handleMouseDown}}
+  {{on "mousemove" this.handleBarMouseMove}}
   {{on "click" this.handleClick}}
   {{on "mouseenter" this.handleMouseEnter}}
   {{on "mouseleave" this.handleMouseLeave}}
@@ -10,24 +11,38 @@
   {{will-destroy this.unregisterElement}}
   data-issue-id="{{@issue.id}}"
 >
-  {{#if this.shouldShowConnectors}}
-    <div class="gantt-bar-connectors">
-      <button
-        type="button"
-        class="connector-dot connector-dot-start"
-        data-connector="start"
-        aria-label="Dependency start connector"
-        {{on "mousedown" (fn this.handleConnectorMouseDown "start")}}
-        {{on "mouseup" (fn this.handleConnectorMouseUp "start")}}
-      ></button>
-      <button
-        type="button"
-        class="connector-dot connector-dot-end"
-        data-connector="end"
-        aria-label="Dependency end connector"
-        {{on "mousedown" (fn this.handleConnectorMouseDown "end")}}
-        {{on "mouseup" (fn this.handleConnectorMouseUp "end")}}
-      ></button>
+  {{#if (and (eq @type "task") @issue)}}
+    <div class="gantt-bar-hover-zones">
+      <div 
+        class="hover-zone hover-zone-left"
+        {{on "mouseenter" this.handleHoverZoneEnter}}
+      >
+        {{#if this.shouldShowConnectors}}
+          <button
+            type="button"
+            class="connector-dot connector-dot-start"
+            data-connector="start"
+            aria-label="Dependency start connector"
+            {{on "mousedown" (fn this.handleConnectorMouseDown "start")}}
+            {{on "mouseup" (fn this.handleConnectorMouseUp "start")}}
+          ></button>
+        {{/if}}
+      </div>
+      <div 
+        class="hover-zone hover-zone-right"
+        {{on "mouseenter" this.handleHoverZoneEnter}}
+      >
+        {{#if this.shouldShowConnectors}}
+          <button
+            type="button"
+            class="connector-dot connector-dot-end"
+            data-connector="end"
+            aria-label="Dependency end connector"
+            {{on "mousedown" (fn this.handleConnectorMouseDown "end")}}
+            {{on "mouseup" (fn this.handleConnectorMouseUp "end")}}
+          ></button>
+        {{/if}}
+      </div>
     </div>
   {{/if}}
   {{#if this.showLabel}}

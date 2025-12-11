@@ -14,90 +14,90 @@ import { action } from '@ember/object';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class TaskRowComponent extends Component {
-	/**
-	 * Get the issue subject for display
-	 *
-	 * @property issueSubject
-	 * @type String
-	 * @for TaskRow
-	 * @public
-	 */
-	get issueSubject() {
-		return this.args.issue.subject || 'Untitled Issue';
-	}
+    /**
+     * Get the issue subject for display
+     *
+     * @property issueSubject
+     * @type String
+     * @for TaskRow
+     * @public
+     */
+    get issueSubject() {
+        return this.args.issue.subject || 'Untitled Issue';
+    }
 
-	/**
-	 * Get the issue number for display
-	 *
-	 * @property issueNumber
-	 * @type String
-	 * @for TaskRow
-	 * @public
-	 */
-	get issueNumber() {
-		return this.args.issue.issueNumber || '';
-	}
+    /**
+     * Get the issue number for display
+     *
+     * @property issueNumber
+     * @type String
+     * @for TaskRow
+     * @public
+     */
+    get issueNumber() {
+        return this.args.issue.issueNumber || '';
+    }
 
-	/**
-	 * Get the issue date range string
-	 *
-	 * @property dateRange
-	 * @type String
-	 * @for TaskRow
-	 * @public
-	 */
-	get dateRange() {
-		let start = moment(this.args.issue.startDate).format('MMM DD');
-		let end = moment(this.args.issue.endDate).format('MMM DD');
-		return `${start} - ${end}`;
-	}
+    /**
+     * Get the issue date range string
+     *
+     * @property dateRange
+     * @type String
+     * @for TaskRow
+     * @public
+     */
+    get dateRange() {
+        let start = moment(this.args.issue.startDate).format('MMM DD');
+        let end = moment(this.args.issue.endDate).format('MMM DD');
+        return `${start} - ${end}`;
+    }
 
-	/**
-	 * Get the assignee name or initials
-	 *
-	 * @property assigneeName
-	 * @type String
-	 * @for TaskRow
-	 * @public
-	 */
-	get assigneeName() {
-		if (this.args.issue.assignedTo && this.args.issue.assignedTo.get) {
-			let firstName = this.args.issue.assignedTo.get('firstName') || '';
-			let lastName = this.args.issue.assignedTo.get('lastName') || '';
-			if (firstName && lastName) {
+    /**
+     * Get the assignee name or initials
+     *
+     * @property assigneeName
+     * @type String
+     * @for TaskRow
+     * @public
+     */
+    get assigneeName() {
+        if (this.args.issue.assignedTo && this.args.issue.assignedTo.get) {
+            let firstName = this.args.issue.assignedTo.get('firstName') || '';
+            let lastName = this.args.issue.assignedTo.get('lastName') || '';
+            if (firstName && lastName) {
 				return `${firstName.charAt(0)}${lastName.charAt(
 					0
 				)}`.toUpperCase();
-			}
-		}
-		return '';
-	}
+            }
+        }
+        return '';
+    }
 
-	/**
-	 * Get the priority class for styling
-	 *
-	 * @property priorityClass
-	 * @type String
-	 * @for TaskRow
-	 * @public
-	 */
-	get priorityClass() {
-		let priority = this.args.issue.priority || 'medium';
-		return `priority-${priority}`;
-	}
+    /**
+     * Get the priority class for styling
+     *
+     * @property priorityClass
+     * @type String
+     * @for TaskRow
+     * @public
+     */
+    get priorityClass() {
+        let priority = this.args.issue.priority || 'medium';
+        return `priority-${priority}`;
+    }
 
-	/**
-	 * Get the status class for styling
-	 *
-	 * @property statusClass
-	 * @type String
-	 * @for TaskRow
-	 * @public
-	 */
-	get statusClass() {
-		let status = this.args.issue.status || 'new';
-		return `status-${status}`;
-	}
+    /**
+     * Get the status class for styling
+     *
+     * @property statusClass
+     * @type String
+     * @for TaskRow
+     * @public
+     */
+    get statusClass() {
+        let status = this.args.issue.status || 'new';
+        return `status-${status}`;
+    }
 
 	/**
 	 * Check if this issue is currently selected
@@ -111,18 +111,18 @@ export default class TaskRowComponent extends Component {
 		return this.args.selectedIssue?.id === this.args.issue?.id;
 	}
 
-	/**
-	 * Action to handle issue click
-	 *
-	 * @method handleClick
-	 * @public
-	 */
-	@action
-	handleClick() {
-		if (this.args.onIssueClick) {
-			this.args.onIssueClick(this.args.issue);
-		}
-	}
+    /**
+     * Action to handle issue click
+     *
+     * @method handleClick
+     * @public
+     */
+    @action
+    handleClick() {
+        if (this.args.onIssueClick) {
+            this.args.onIssueClick(this.args.issue);
+        }
+    }
 
 	/**
 	 * Action to handle bar drag start
@@ -151,25 +151,72 @@ export default class TaskRowComponent extends Component {
 		}
 	}
 
-	/**
-	 * Action to handle bar drag end
-	 *
-	 * @method handleDragEnd
-	 * @param {Number} daysMoved Number of days the bar was moved
-	 * @public
-	 */
-	@action
-	handleDragEnd(daysMoved) {
-		if (this.args.onIssueDragEnd) {
-			// Calculate new dates based on the number of days moved
+    /**
+     * Action to handle bar drag end
+     *
+     * @method handleDragEnd
+     * @param {Number} daysMoved Number of days the bar was moved
+     * @public
+     */
+    @action
+    handleDragEnd(daysMoved) {
+        if (this.args.onIssueDragEnd) {
+            // Calculate new dates based on the number of days moved
 			let newStartDate = moment(this.args.issue.startDate)
 				.add(daysMoved, 'days')
 				.format('YYYY-MM-DD');
 			let newEndDate = moment(this.args.issue.endDate)
 				.add(daysMoved, 'days')
 				.format('YYYY-MM-DD');
-
+            
 			return this.args.onIssueDragEnd(
+				this.args.issue,
+				newStartDate,
+				newEndDate
+			);
+        }
+    }
+
+	/**
+	 * Action to handle bar resize start
+	 *
+	 * @method handleResizeStart
+	 * @public
+	 */
+	@action
+	handleResizeStart() {
+		if (this.args.onIssueResizeStart) {
+			this.args.onIssueResizeStart(this.args.issue);
+		}
+	}
+
+	/**
+	 * Action to handle bar resize update (during resize)
+	 *
+	 * @method handleResizeUpdate
+	 * @param {String} resizeHandle 'left' or 'right'
+	 * @param {Number} resizeOffset The current resize offset in pixels
+	 * @public
+	 */
+	@action
+	handleResizeUpdate(resizeHandle, resizeOffset) {
+		if (this.args.onIssueResizeUpdate) {
+			this.args.onIssueResizeUpdate(this.args.issue, resizeHandle, resizeOffset);
+		}
+	}
+
+	/**
+	 * Action to handle bar resize end
+	 *
+	 * @method handleResizeEnd
+	 * @param {String} newStartDate The new start date
+	 * @param {String} newEndDate The new end date
+	 * @public
+	 */
+	@action
+	handleResizeEnd(newStartDate, newEndDate) {
+		if (this.args.onIssueResizeEnd) {
+			return this.args.onIssueResizeEnd(
 				this.args.issue,
 				newStartDate,
 				newEndDate
