@@ -9,6 +9,7 @@
   {{on "mouseleave" this.handleMouseLeave}}
   {{did-insert this.registerElement}}
   {{will-destroy this.unregisterElement}}
+  {{initialize-tooltip this.tooltipContent}}
   data-issue-id="{{@issue.id}}"
 >
   {{#if (and (eq @type "task") @issue)}}

@@ -1334,6 +1334,12 @@
         "connectors": {
           "startConnector": "Dependency start connector",
           "endConnector": "Dependency end connector"
+        },
+        "tooltip": {
+          "estimatedHours": "estimated hours",
+          "spentHours": "spent hours",
+          "modifiedBy": "modified by",
+          "at": "at"
         }
       },
       "notifications": {

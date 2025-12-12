@@ -5,8 +5,9 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
 import { calculateBarWidth, calculateBarPosition } from 'prometheus/utils/gantt-helpers';
-import { next } from '@ember/runloop';
+import DateUtils from 'prometheus/utils/date';
 
 /**
  * This component renders a single Gantt bar (milestone or task)
@@ -17,6 +18,14 @@ import { next } from '@ember/runloop';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class GanttBarComponent extends Component {
+	/**
+	 * The internationalization service for handling translations
+	 *
+	 * @property intl
+	 * @type {Prometheus.Services.intl}
+	 * @public
+	 */
+	@service intl;
 
     /**
      * Track if the bar is being dragged
@@ -828,4 +837,81 @@ export default class GanttBarComponent extends Component {
         }
         return this.barLeft;
     }
+
+    /**
+     * Calculate accumulated time (hours and minutes) for a given context (spent or estimated)
+     *
+     * @method calculateTimeForContext
+     * @param {String} context The context ('spent' or 'estimated')
+     * @returns {Object} Object with hours and minutes
+     * @public
+     */
+    calculateTimeForContext(context) {
+        if (!this.args.issue || !this.args.issue[context]) {
+            return { hours: 0, minutes: 0 };
+        }
+
+        let totalHours = 0;
+        let totalMinutes = 0;
+
+        const timelogs = this.args.issue[context];
+        if (timelogs && timelogs.length > 0) {
+            timelogs.forEach((timelog) => {
+                // Convert days to hours (8 hours per day)
+                const daysToHours = (timelog.days || 0) * 8;
+                const hours = parseInt(timelog.hours || 0, 10) + parseInt(daysToHours, 10);
+                const minutes = parseInt(timelog.minutes || 0, 10);
+
+                totalHours += hours;
+                totalMinutes += minutes;
+            });
+        }
+
+        // Normalize minutes to ensure they don't exceed 60
+        const normalized = DateUtils.normalizeMinutes(totalMinutes);
+        totalHours += normalized.hours;
+        totalMinutes = normalized.minutes;
+
+        return {
+            hours: totalHours,
+            minutes: totalMinutes
+        };
+    }
+
+    /**
+     * Get the formatted tooltip content with estimated and spent hours, and modified info
+     *
+     * @property tooltipContent
+     * @type String
+     * @for GanttBar
+     * @public
+     */
+    get tooltipContent() {
+        if (this.args.type !== 'task' || !this.args.issue) {
+            return '';
+        }
+
+        const estimated = this.calculateTimeForContext('estimated');
+        const spent = this.calculateTimeForContext('spent');
+
+        const formatTime = (time) => {
+            const hrs = time.hours || 0;
+            const mins = time.minutes || 0;
+            return `${hrs}hrs ${mins} min`;
+        };
+
+        const modifiedByName = this.args.issue.modifiedBy.get('name');
+        const formattedDateModified = moment(this.args.issue.dateModified).format("DD MMM 'YY, h:mm a");
+
+        const estimatedLabel = this.intl.t('views.app.gantt.tooltip.estimatedHours');
+        const spentLabel = this.intl.t('views.app.gantt.tooltip.spentHours');
+        const modifiedByLabel = this.intl.t('views.app.gantt.tooltip.modifiedBy');
+        const atLabel = this.intl.t('views.app.gantt.tooltip.at');
+
+        let content = `<strong>${estimatedLabel}:</strong> ${formatTime(estimated)}<br><strong>${spentLabel}:</strong> ${formatTime(spent)}`;
+        content += `<br><strong>${modifiedByLabel}:</strong> ${modifiedByName} ${atLabel} ${formattedDateModified}`;
+
+        return content;
+    }
+
 }

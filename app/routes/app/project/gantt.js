@@ -80,7 +80,7 @@ export default class GanttRoute extends App {
 				let issues = await _self.store
 					.query('issue', {
 						query: query,
-						rels: 'assignedTo,spent,estimated,parentissue,issuetype,issuestatus',
+						rels: 'assignedTo,modifiedBy,spent,estimated,parentissue,issuetype,issuestatus',
 						limit: -1
 					})
 					.catch((error) => {
