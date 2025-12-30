@@ -193,6 +193,11 @@
   background: #fff;
   transition: background-color 0.2s, box-shadow 0.2s;
 
+  .issue-overview {
+    padding: 1rem;
+    min-height: 0;
+  }
+
   &:hover {
     background: #f5f9ff;
   }
