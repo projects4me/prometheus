@@ -97,6 +97,7 @@
           @linkingState={{this.linkingState}}
           @getDragOffset={{this.getDragOffset}}
           @onDeleteDependency={{this.handleDeleteDependency}}
+          @onCancelDependencyLink={{this.cancelDependencyLink}}
         />
         {{#each @milestones as |milestone|}}
           <AppUi::GanttChart::GanttRow

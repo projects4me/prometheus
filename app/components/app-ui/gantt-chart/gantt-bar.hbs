@@ -24,8 +24,7 @@
             class="connector-dot connector-dot-start"
             data-connector="start"
             aria-label="Dependency start connector"
-            {{on "mousedown" (fn this.handleConnectorMouseDown "start")}}
-            {{on "mouseup" (fn this.handleConnectorMouseUp "start")}}
+            {{on "click" (fn this.handleConnectorClick "start")}}
           ></button>
         {{/if}}
       </div>
@@ -39,8 +38,7 @@
             class="connector-dot connector-dot-end"
             data-connector="end"
             aria-label="Dependency end connector"
-            {{on "mousedown" (fn this.handleConnectorMouseDown "end")}}
-            {{on "mouseup" (fn this.handleConnectorMouseUp "end")}}
+            {{on "click" (fn this.handleConnectorClick "end")}}
           ></button>
         {{/if}}
       </div>
