@@ -225,6 +225,10 @@
   padding: 8px 15px;
 }
 
+.gantt-task-row.milestone-row .task-info {
+  cursor: pointer;
+}
+
 .task-name {
   flex: 1;
   display: flex;
