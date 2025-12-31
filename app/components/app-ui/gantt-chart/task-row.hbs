@@ -31,18 +31,13 @@
 {{else}}
   {{! Task list side - Show issue info }}
   <div class="gantt-task-row task-row {{this.statusClass}} {{this.priorityClass}} {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}" {{on "click" this.handleClick}}>
-    <div class="task-info">
-      <div class="task-name">
-        <span class="issue-number">#{{this.issueNumber}}</span>
-        <span class="issue-subject">{{this.issueSubject}}</span>
-        {{#if this.assigneeName}}
-          <span class="assignee-avatar" title="{{@issue.assignedTo.firstName}} {{@issue.assignedTo.lastName}}">
-            {{this.assigneeName}}
-          </span>
-        {{/if}}
-      </div>
-      <div class="task-dates">
-        {{this.dateRange}}
+    <div class="issue issue-overview">
+      <div class="issue-block">
+        <div class="priority"><AppUi::PriorityIcon @priority={{@issue.priority}}/></div>
+        <div class="data-block">
+          <span class="subject"><LinkTo @route="app.project.issue.page" @model={{this.issueNumber}}>{{this.issueNumber}}</LinkTo> - {{this.issueSubject}}</span>
+          <span class="badge {{@issue.status}}">{{t (concat "views.app.issue.lists.status." @issue.status)}}</span>
+        </div>
       </div>
     </div>
   </div>

@@ -123,39 +123,38 @@
   li {
     border-bottom: 1px solid #f4f4f4;
     padding: 1rem;
+  }
 
-    .issue-block {
-      .priority {
-        float: left;
-        font-size: 2rem;
-        width: 4rem;
-      }
+  .issue-block {
+    @include flexbox($display: flex);
 
-      .data-block {
-        display: inline-block;
-        width: 90%;
-        .subject {
-          display: block;
-          font-weight: 600;
-        }
-
-        .description {
-          display: block;
-          margin-top: 0.5rem;
-        }
-      }
+    .priority {
+      font-size: 2rem;
+      margin-right: 1rem;
     }
 
-    .issue-block:before,
-    .issue-block:after {
-      content: " ";
-      display: table;
-    }
+    .data-block {
+      .subject {
+        display: block;
+        font-weight: 600;
+      }
 
-    .issue-block:after {
-      clear: both;
+      .description {
+        display: block;
+        margin-top: 0.5rem;
+      }
     }
   }
+
+  .issue-block:before,
+  .issue-block:after {
+    content: " ";
+    display: table;
+  }
+
+  .issue-block:after {
+    clear: both;
+  }  
 }
 
 [data-remove-member-warning] {

@@ -1331,6 +1331,8 @@
           "deleteError": "Failed to delete dependency",
           "deleteAction": "Delete"
         },
+        "milestone": "Milestones",
+        "startEndDate": "Start - End",
         "connectors": {
           "startConnector": "Dependency start connector",
           "endConnector": "Dependency end connector"
