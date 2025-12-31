@@ -872,7 +872,8 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Begin creating a dependency by dragging from a connector
+	 * Begin creating a dependency by clicking on a connector
+	 * Sets up linking state and tracks mouse movement for preview line
 	 *
 	 * @method startDependencyLink
 	 * @param {Object} issue
@@ -911,8 +912,9 @@ export default class GanttChartComponent extends AppComponent {
 			pointer: startPoint
 		};
 
+		// Track mouse movement for preview line visualization
+		// Connection will be completed via click
 		document.addEventListener('mousemove', this.handleGlobalMouseMove);
-		document.addEventListener('mouseup', this.handleGlobalMouseUp);
 	}
 
 	/**
@@ -1006,18 +1008,6 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Handle mouse up events outside connector targets
-	 *
-	 * @method handleGlobalMouseUp
-	 * @public
-	 */
-	@action handleGlobalMouseUp() {
-		if (this.linkingState) {
-			this.resetLinkingState();
-		}
-	}
-
-	/**
 	 * Reset linking state and detach global listeners
 	 *
 	 * @method resetLinkingState
@@ -1025,7 +1015,6 @@ export default class GanttChartComponent extends AppComponent {
 	 */
 	resetLinkingState() {
 		document.removeEventListener('mousemove', this.handleGlobalMouseMove);
-		document.removeEventListener('mouseup', this.handleGlobalMouseUp);
 		this.linkingState = null;
 	}
 

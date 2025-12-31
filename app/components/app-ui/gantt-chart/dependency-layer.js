@@ -199,16 +199,34 @@ export default class DependencyLayerComponent extends Component {
     }
 
     /**
-     * Handle clicking outside dependency lines to deselect active dependency
+     * Handle clicking on canvas to deselect active dependency or dismiss linking state
      *
      * @method handleCanvasClick
      * @param {Event} event
      * @public
      */
     @action handleCanvasClick(event) {
+        // Only handle left clicks
+        if (event.button !== 0 && event.button !== undefined) {
+            return;
+        }
+
         const target = event.target;
+        
+        // If clicking on SVG canvas (not on a dependency line)
         if (target.tagName === 'svg') {
             this.activeDependencyId = null;
+            
+            // If there's an active linking state, dismiss it
+            // Note: Clicks on connector dots should be stopped by stopPropagation
+            // in the connector click handler, so they won't reach here
+            if (this.args.linkingState) {
+                // Check if we're clicking on a connector dot
+                const isConnectorDot = target.closest && target.closest('.connector-dot');
+                if (!isConnectorDot && this.args.onCancelDependencyLink) {
+                    this.args.onCancelDependencyLink();
+                }
+            }
         }
     }
 

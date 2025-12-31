@@ -549,38 +549,37 @@ export default class GanttBarComponent extends Component {
     }
 
     /**
-     * Handle starting a dependency drag from a connector
+     * Handle clicking on a connector dot
+     * If linking state exists, complete the connection
+     * Otherwise, start a new connection
      *
-     * @method handleConnectorMouseDown
+     * @method handleConnectorClick
      * @param {String} position
      * @param {Event} event
      * @public
      */
-    @action handleConnectorMouseDown(position, event) {
+    @action handleConnectorClick(position, event) {
+        if (event.button !== 0 && event.button !== undefined) {
+            return;
+        }
+
         event.preventDefault();
         event.stopPropagation();
 
-        if (this.args.onConnectorMouseDown && this.args.issue) {
-            this.args.onConnectorMouseDown(this.args.issue, position, event);
-        }
-    }
-
-    /**
-     * Handle completing a dependency drag on a connector
-     *
-     * @method handleConnectorMouseUp
-     * @param {String} position
-     * @param {Event} event
-     * @public
-     */
-    @action handleConnectorMouseUp(position, event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
+        if (!this.args.issue) {
+            return;
         }
 
-        if (this.args.onConnectorMouseUp && this.args.issue) {
-            this.args.onConnectorMouseUp(this.args.issue, position, event);
+        // If there's an active linking state, try to complete the connection
+        if (this.args.linkingState && this.args.linkingState.sourceIssue) {
+            if (this.args.onCompleteDependencyLink) {
+                this.args.onCompleteDependencyLink(this.args.issue, position, event);
+            }
+        } else {
+            // Start a new connection
+            if (this.args.onStartDependencyLink) {
+                this.args.onStartDependencyLink(this.args.issue, position, event);
+            }
         }
     }
 
