@@ -155,6 +155,21 @@ export default class GanttRowComponent extends Component {
     }
 
     /**
+     * Action to handle keyboard events for milestone toggle
+     *
+     * @method handleKeyDown
+     * @param {Event} event The keyboard event
+     * @public
+     */
+    @action
+    handleKeyDown(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.toggleMilestone();
+        }
+    }
+
+    /**
      * Action to handle issue click
      *
      * @method handleIssueClick

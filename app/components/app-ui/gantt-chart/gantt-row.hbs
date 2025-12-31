@@ -41,9 +41,9 @@
 {{else}}
   {{! Task list side - Show names and dates }}
   <div class="gantt-task-row milestone-row" data-milestone-id="{{this.milestoneId}}">
-    <div class="task-info">
+    <div class="task-info" {{on "click" this.toggleMilestone}} {{on "keydown" this.handleKeyDown}} role="button" tabindex="0">
       <div class="task-name">
-        <span class="toggle-icon" {{on "click" this.toggleMilestone}}>
+        <span class="toggle-icon">
           {{#if @isExpanded}}
             <i class="fa fa-chevron-down"></i>
           {{else}}
