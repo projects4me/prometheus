@@ -5,6 +5,7 @@
 import AppComponent from 'prometheus/components/app';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { next, later } from '@ember/runloop';
 import {
 	generateDateRange,
 	groupDatesByMonth,
@@ -33,14 +34,36 @@ export default class GanttChartComponent extends AppComponent {
 		this.gridPatternId = `gantt-grid-${guidFor(this)}`;
 	}
 	/**
-	 * Width of a single day column in pixels
+	 * Width of a single day column in pixels for days view
+	 *
+	 * @property dayWidthValue
+	 * @type Number
+	 * @for GanttChartComponent
+	 * @private
+	 */
+	dayWidthValue = 80;
+
+	/**
+	 * Width of a single day column in pixels for weeks view
+	 *
+	 * @property weekWidth
+	 * @type Number
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	weekWidth = 35;
+
+	/**
+	 * Width of a single day column in pixels (dynamic based on timeScale)
 	 *
 	 * @property dayWidth
 	 * @type Number
 	 * @for GanttChartComponent
 	 * @public
 	 */
-	dayWidth = 40;
+	get dayWidth() {
+		return this.timeScale === 'weeks' ? this.weekWidth : this.dayWidthValue;
+	}
 
 	/**
 	 * Registry of rendered task bars so we can calculate dependency positions
@@ -100,6 +123,36 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	@tracked timeScale = 'days';
+
+	/**
+	 * Controls visibility of the scale conversion overlay
+	 *
+	 * @property showScaleConversionOverlay
+	 * @type Boolean
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	@tracked showScaleConversionOverlay = false;
+
+	/**
+	 * Stores the timeout ID for auto-hiding the overlay
+	 *
+	 * @property overlayTimeout
+	 * @type Number|null
+	 * @for GanttChartComponent
+	 * @private
+	 */
+	overlayTimeout = null;
+
+	/**
+	 * Stores the conversion message
+	 *
+	 * @property conversionMessage
+	 * @type String
+	 * @for GanttChartComponent
+	 * @public
+	 */
+	@tracked conversionMessage = '';
 
 	/**
 	 * Computed property that generates the date range for the timeline
@@ -422,6 +475,61 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
+	 * Set overlay width based on timeline container viewport
+	 *
+	 * @method setOverlayWidth
+	 * @public
+	 */
+	setOverlayWidth() {
+		if (!this.timelineContainerElement) {
+			return;
+		}
+
+		const rect = this.timelineContainerElement.getBoundingClientRect();
+		
+		let overlay = this.timelineContainerElement.querySelector('.gantt-scale-conversion-overlay');
+		if (overlay) {
+			overlay.style.width = `${rect.width}px`;
+		}
+	}
+
+	/**
+	 * Show the scale conversion overlay
+	 *
+	 * @method showConversionOverlay
+	 * @public
+	 */
+	showConversionOverlay() {
+		if (this.overlayTimeout) {
+			clearTimeout(this.overlayTimeout);
+		}
+
+		this.showScaleConversionOverlay = true;
+		this.toggleTimelineContainerScroll();
+		this.setOverlayWidth();
+		this.overlayTimeout = setTimeout(() => {
+			this.showScaleConversionOverlay = false;
+			this.toggleTimelineContainerScroll();
+			this.overlayTimeout = null;
+		}, this.config.app.gantt.conversionOverlayTimeout);
+	}
+
+	/**
+	 * Set the conversion message based on the scale
+	 *
+	 * @method setTimeScaleConversionMessage
+	 * @param {String} scale
+	 */
+	@action
+	setTimeScaleConversionMessage(scale) {
+		if (scale === 'days') {
+			this.conversionMessage = this.intl.t('views.app.gantt.conversion.switchingToDays');
+		} else {
+			this.conversionMessage = this.intl.t('views.app.gantt.conversion.switchingToWeeks');
+		}
+	}
+
+	/**
 	 * Change time scale between days and weeks
 	 *
 	 * @method setTimeScale
@@ -430,9 +538,41 @@ export default class GanttChartComponent extends AppComponent {
 	@action
 	setTimeScale(scale) {
 		if (scale && this.timeScale !== scale) {
-			this.timeScale = scale;
+			this.setTimeScaleConversionMessage(scale);
+			this.showConversionOverlay();
+			later(this, () => {
+				this.timeScale = scale;
+				next(this, () => {
+					if (this.args.selectedIssue) {
+						this.scrollToIssue(this.args.selectedIssue);
+					}
+				});
+			}, 100);
 		}
 	}
+
+	/**
+	 * Toggle the timeline container scroll
+	 *
+	 * @method toggleTimelineContainerScroll
+	 * @public
+	 */
+	@action toggleTimelineContainerScroll() {
+		this.timelineContainerElement.style.overflow = this.showScaleConversionOverlay ? 'hidden' : 'auto';
+	}
+
+	/**
+	 * Update the timeline body width when timelineWidth changes
+	 *
+	 * @method updateTimelineBodyWidth
+	 * @param {HTMLElement} element
+	 * @public
+	 */
+	@action updateTimelineBodyWidth(element) {
+			if (element && this.timelineWidth) {
+				element.style.width = `${this.timelineWidth}px`;
+			}
+	}	
 
 	/**
 	 * Flatten all milestone issues into a single array for convenience
@@ -1067,5 +1207,11 @@ export default class GanttChartComponent extends AppComponent {
 	willDestroy() {
 		super.willDestroy(...arguments);
 		this.resetLinkingState();
+		
+		// Clear overlay timeout if it exists
+		if (this.overlayTimeout) {
+			clearTimeout(this.overlayTimeout);
+			this.overlayTimeout = null;
+		}
 	}
 }

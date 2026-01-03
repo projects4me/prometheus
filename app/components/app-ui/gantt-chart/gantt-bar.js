@@ -608,13 +608,11 @@ export default class GanttBarComponent extends Component {
             element.style.cursor = '';
         }
 
-        // For smooth transition of dependency positions
-        if (this.args.updateDependencyPositions && (this.isDragging || this.isResizing)) {
+        // For smooth transition of dependency positions 
+        if (this.args.updateDependencyPositions) {
             let times = 0;
             let updateDepPos = () => {
-                element = $(element);
-                let updatedLeft = this.effectiveBarLeft + this.dragOffset;
-                this.args.updateDependencyPositions(updatedLeft);
+                this.args.updateDependencyPositions();
                 times++;
                 if (times < 5) {
                     requestAnimationFrame(updateDepPos);
