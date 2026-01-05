@@ -2,7 +2,7 @@
   <svg
     class="gantt-dependency-layer-canvas"
     {{did-insert this.setupElement}}
-    {{did-update this.refreshLines @registryVersion @dependencies @timelineBodyElement @linkingState}}
+    {{did-update this.refreshLines @registryVersion @dependencies @timelineBodyElement @linkingState @timelineWidth}}
     {{on "click" this.handleCanvasClick}}
   >
     <defs>

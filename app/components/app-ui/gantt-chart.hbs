@@ -44,6 +44,15 @@
 
     {{! Right side - Timeline }}
     <div class="gantt-timeline-container" {{did-insert this.registerTimelineContainer}} {{will-destroy this.unregisterTimelineContainer}}>
+      {{! Scale conversion overlay }}
+      {{#if this.showScaleConversionOverlay}}
+        <div class="gantt-scale-conversion-overlay">
+          <div class="gantt-scale-conversion-message">
+            <i class="fa fa-refresh fa-spin"></i>
+            <span>{{this.conversionMessage}}</span>
+          </div>
+        </div>
+      {{/if}}
       <AppUi::GanttChart::TimelineHeader
         @dateRange={{this.dateRange}}
         @monthGroups={{this.monthGroups}}
@@ -53,7 +62,7 @@
         @timelineWidth={{this.timelineWidth}}
         @timeScale={{this.timeScale}}
       />
-      <div class="gantt-timeline-body" {{did-insert this.registerTimelineBody}} {{will-destroy this.unregisterTimelineBody}}>
+      <div class="gantt-timeline-body" {{did-insert this.registerTimelineBody}} {{did-update this.updateTimelineBodyWidth this.timelineWidth}} {{will-destroy this.unregisterTimelineBody}}>
         <svg
           class="gantt-grid-overlay"
           {{did-insert this.applyGridOverlayStyle}}
@@ -85,7 +94,7 @@
             <div
               class="weekend-block"
               {{did-insert (fn this.applyWeekendBlockStyle highlight)}}
-              {{did-update (fn this.applyWeekendBlockStyle highlight) highlight}}
+              {{did-update (fn this.applyWeekendBlockStyle highlight) this.timelineWidth}}
             ></div>
           {{/each}}
         </div>
