@@ -116,6 +116,46 @@ export default class GanttChartComponent extends AppComponent {
 	@tracked linkingState = null;
 
 	/**
+	 * Animation frame ID for auto-scroll during dependency linking
+	 *
+	 * @property autoScrollFrameId
+	 * @type Number|null
+	 * @for GanttChartComponent
+	 * @private
+	 */
+	autoScrollFrameId = null;
+
+	/**
+	 * Scroll zone threshold in pixels (distance from edge to trigger scroll)
+	 *
+	 * @property scrollZone
+	 * @type Number
+	 * @for GanttChartComponent
+	 * @private
+	 */
+	scrollZone = 20;
+
+	/**
+	 * Scroll speed in pixels per frame (constant speed)
+	 *
+	 * @property scrollSpeed
+	 * @type Number
+	 * @for GanttChartComponent
+	 * @private
+	 */
+	scrollSpeed = 15;
+
+	/**
+	 * Current horizontal scroll speed
+	 *
+	 * @property currentScrollX
+	 * @type Number
+	 * @for GanttChartComponent
+	 * @private
+	 */
+	currentScrollX = 0;
+
+	/**
 	 * Current time scale filter (days | weeks)
 	 *
 	 * @property timeScale
@@ -1145,6 +1185,9 @@ export default class GanttChartComponent extends AppComponent {
 					this.timelineBodyElement.scrollTop
 			}
 		};
+
+		// Check for auto-scroll during dependency linking
+		this.checkAndStartAutoScrollForLinking(event);
 	}
 
 	/**
@@ -1156,6 +1199,157 @@ export default class GanttChartComponent extends AppComponent {
 	resetLinkingState() {
 		document.removeEventListener('mousemove', this.handleGlobalMouseMove);
 		this.linkingState = null;
+		this.stopAutoScroll();
+	}
+
+	/**
+	 * Check if cursor is near container boundaries and start auto-scroll if needed (for dependency linking)
+	 *
+	 * @method checkAndStartAutoScrollForLinking
+	 * @param {Event} event The mouse event
+	 * @private
+	 */
+	checkAndStartAutoScrollForLinking(event) {
+		const container = this.timelineContainerElement;
+		if (!container) {
+			return;
+		}
+
+		const rect = container.getBoundingClientRect();
+		const mouseX = event.clientX;
+
+		const distFromLeft = mouseX - rect.left;
+		const distFromRight = rect.right - mouseX;
+
+		let scrollX = 0;
+
+		if (distFromLeft < this.scrollZone) {
+			scrollX = -this.scrollSpeed;
+		} else if (distFromRight < this.scrollZone) {
+			scrollX = this.scrollSpeed;
+		}
+
+		// Start or continue auto-scroll if needed
+		if (scrollX !== 0) {
+			// Update scroll direction/speed
+			this.currentScrollX = scrollX;
+			
+			if (!this.autoScrollFrameId) {
+				this.performAutoScroll(container, (scrollDeltaX) => {
+					if (this.linkingState) {
+						this.linkingState = {
+							...this.linkingState,
+							pointer: {
+								...this.linkingState.pointer,
+								x: this.linkingState.pointer.x + scrollDeltaX
+							}
+						};
+					}
+				});
+			}
+		} else {
+			this.stopAutoScroll();
+		}
+	}
+
+	/**
+	 * Auto-scroll animation method (DRY - used by drag, resize, and dependency linking)
+	 *
+	 * @method performAutoScroll
+	 * @param {HTMLElement} container The timeline container element
+	 * @param {Function} scrollSyncCallback Callback to handle scroll sync
+	 * @private
+	 */
+	performAutoScroll(container, scrollSyncCallback) {
+		const scroll = () => {
+			if (!container || !this.currentScrollX) {
+				this.stopAutoScroll();
+				return;
+			}
+
+			const currentScrollX = container.scrollLeft;
+			const maxScrollX = container.scrollWidth - container.clientWidth;
+
+			let newScrollX = currentScrollX + this.currentScrollX;
+			newScrollX = Math.max(0, Math.min(maxScrollX, newScrollX));
+
+			if (newScrollX !== currentScrollX) {
+				const scrollDeltaX = newScrollX - currentScrollX;
+				container.scrollLeft = newScrollX;
+				
+				if (scrollSyncCallback && typeof scrollSyncCallback === 'function') {
+					scrollSyncCallback(scrollDeltaX);
+				}
+			}
+
+			if (this.autoScrollFrameId && this.currentScrollX !== 0) {
+				this.autoScrollFrameId = requestAnimationFrame(scroll);
+			} else {
+				this.stopAutoScroll();
+			}
+		};
+
+		this.autoScrollFrameId = requestAnimationFrame(scroll);
+	}
+
+	/**
+	 * Check and start auto-scroll based on bar position.
+	 *
+	 * @method checkAndStartAutoScrollForBar
+	 * @param {Number} barLeft Bar's left position in timeline
+	 * @param {Number} barWidth Bar's width in pixels
+	 * @param {Function} scrollSyncCallback Callback to handle scroll sync
+	 * @public
+	 */
+	@action
+	checkAndStartAutoScrollForBar(barLeft, barWidth, scrollSyncCallback) {
+		const container = this.timelineContainerElement;
+		if (!container) {
+			return;
+		}
+
+		const barRight = barLeft + barWidth;
+
+		const containerScrollLeft = container.scrollLeft;
+		const containerVisibleLeft = containerScrollLeft;
+		const containerVisibleRight = containerScrollLeft + container.clientWidth;
+
+		const barDistFromLeftEdge = barLeft - containerVisibleLeft;
+		const barDistFromRightEdge = containerVisibleRight - barRight;
+
+		let scrollX = 0;
+
+		if (barDistFromLeftEdge < this.scrollZone) {
+			scrollX = -this.scrollSpeed;
+		}
+		else if (barDistFromRightEdge < this.scrollZone) {
+			scrollX = this.scrollSpeed;
+		}
+
+		if (scrollX !== 0) {
+			this.currentScrollX = scrollX;
+			
+			if (!this.autoScrollFrameId) {
+				this.performAutoScroll(container, scrollSyncCallback);
+			}
+		} else {
+			this.stopAutoScroll();
+		}
+	}
+
+	/**
+	 * Stop auto-scroll animation
+	 *
+	 * @method stopAutoScroll
+	 * @public
+	 */
+	@action
+	stopAutoScroll() {
+		if (this.autoScrollFrameId) {
+			cancelAnimationFrame(this.autoScrollFrameId);
+			this.autoScrollFrameId = null;
+		}
+		this.currentScrollX = 0;
 	}
 
 	/**
@@ -1213,5 +1407,6 @@ export default class GanttChartComponent extends AppComponent {
 			clearTimeout(this.overlayTimeout);
 			this.overlayTimeout = null;
 		}
+		this.stopAutoScroll();
 	}
 }
