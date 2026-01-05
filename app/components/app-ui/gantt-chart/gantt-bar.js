@@ -128,7 +128,7 @@ export default class GanttBarComponent extends Component {
     @tracked resizeOffset = 0;
 
     /**
-     * Store the starting X position of the drag
+     * Store the starting X position of the drag (viewport coordinates)
      *
      * @property dragStartX
      * @type Number
@@ -136,6 +136,26 @@ export default class GanttBarComponent extends Component {
      * @private
      */
     dragStartX = 0;
+
+    /**
+     * Last known mouse X position (for scroll compensation)
+     *
+     * @property lastMouseX
+     * @type Number
+     * @for GanttBar
+     * @private
+     */
+    lastMouseX = 0;
+
+    /**
+     * Accumulated scroll delta during drag (to account for auto-scroll)
+     *
+     * @property accumulatedScrollDeltaX
+     * @type Number
+     * @for GanttBar
+     * @private
+     */
+    accumulatedScrollDeltaX = 0;
 
     /**
      * Store the original left position before drag
@@ -156,6 +176,46 @@ export default class GanttBarComponent extends Component {
      * @private
      */
     @tracked dragOffset = 0;
+
+    /**
+     * Animation frame ID for auto-scroll
+     *
+     * @property autoScrollFrameId
+     * @type Number|null
+     * @for GanttBar
+     * @private
+     */
+    autoScrollFrameId = null;
+
+    /**
+     * Scroll zone threshold in pixels (distance from edge to trigger scroll)
+     *
+     * @property scrollZone
+     * @type Number
+     * @for GanttBar
+     * @private
+     */
+    scrollZone = 20;
+
+    /**
+     * Scroll speed in pixels per frame (constant speed)
+     *
+     * @property scrollSpeed
+     * @type Number
+     * @for GanttBar
+     * @private
+     */
+    scrollSpeed = 15;
+
+    /**
+     * Current horizontal scroll speed
+     *
+     * @property currentScrollX
+     * @type Number
+     * @for GanttBar
+     * @private
+     */
+    currentScrollX = 0;
 
     /**
      * Calculate the width of the bar
@@ -433,11 +493,18 @@ export default class GanttBarComponent extends Component {
         }
         
         if (this.isDragging) {
-            this.dragOffset = deltaX;
+            this.lastMouseX = event.clientX;
+            
+            // Calculate drag offset: mouse movement + accumulated scroll adjustments
+            // The accumulated scroll delta accounts for auto-scroll that happened
+            this.dragOffset = deltaX + this.accumulatedScrollDeltaX;
+            
             // Notify drag update
             if (this.args.onDragUpdate) {
                 this.args.onDragUpdate(this.dragOffset);
             }
+            // Check for auto-scroll
+            this.checkAndStartAutoScroll(event);
         }
     }
 
@@ -456,6 +523,7 @@ export default class GanttBarComponent extends Component {
         event.preventDefault();
         document.removeEventListener('mousemove', this.handleMouseMove);
         document.removeEventListener('mouseup', this.handleMouseUp);
+        this.stopAutoScroll();
         if (this.isDragging && this.args.onDragEnd) {
             const daysMoved = Math.round(this.dragOffset / this.args.dayWidth);
             
@@ -486,6 +554,9 @@ export default class GanttBarComponent extends Component {
         this.dragOffset = 0;
         this.dragStartX = 0;
         this.originalLeft = 0;
+        this.lastMouseX = 0;
+        this.accumulatedScrollDeltaX = 0;
+        this.stopAutoScroll();
     }
 
     /**
@@ -712,6 +783,8 @@ export default class GanttBarComponent extends Component {
         if (this.args.onResizeUpdate) {
             this.args.onResizeUpdate(this.resizeHandle, this.resizeOffset);
         }
+        // Check for auto-scroll
+        this.checkAndStartAutoScroll(event);
     }
 
     /**
@@ -730,6 +803,7 @@ export default class GanttBarComponent extends Component {
         event.preventDefault();
         document.removeEventListener('mousemove', this.handleResizeMouseMove);
         document.removeEventListener('mouseup', this.handleResizeMouseUp);
+        this.stopAutoScroll();
 
         if (this.isResizing && this.args.onResizeEnd) {
             const daysOffset = Math.round(this.resizeOffset / this.args.dayWidth);
@@ -798,6 +872,7 @@ export default class GanttBarComponent extends Component {
         this.originalEndDate = null;
         this.originalWidth = 0;
         this.originalLeftForResize = 0;
+        this.stopAutoScroll();
     }
 
     /**
@@ -911,6 +986,129 @@ export default class GanttBarComponent extends Component {
         content += `<br><strong>${modifiedByLabel}:</strong> ${modifiedByName} ${atLabel} ${formattedDateModified}`;
 
         return content;
+    }
+
+    /**
+     * Check if cursor is near container boundaries and start auto-scroll if needed
+     *
+     * @method checkAndStartAutoScroll
+     * @param {Event} event The mouse event
+     * @private
+     */
+    checkAndStartAutoScroll(event) {
+        const container = this.args.timelineContainer;
+        if (!container) {
+            return;
+        }
+
+        const rect = container.getBoundingClientRect();
+        const mouseX = event.clientX;
+
+        // Calculate distances from left and right edges
+        const distFromLeft = mouseX - rect.left;
+        const distFromRight = rect.right - mouseX;
+
+        // Determine scroll direction and speed (horizontal only)
+        let scrollX = 0;
+
+        // Horizontal scrolling
+        if (distFromLeft < this.scrollZone && distFromLeft > 0) {
+            scrollX = -this.scrollSpeed;
+        } else if (distFromRight < this.scrollZone && distFromRight > 0) {
+            scrollX = this.scrollSpeed;
+        }
+
+        // Start or continue auto-scroll if needed
+        if (scrollX !== 0) {
+            // Update scroll direction/speed
+            this.currentScrollX = scrollX;
+            
+            if (!this.autoScrollFrameId) {
+                this.performAutoScroll(container);
+            }
+        } else {
+            // Stop auto-scroll if cursor is not in scroll zone
+            this.stopAutoScroll();
+        }
+    }
+
+    /**
+     * Perform auto-scroll animation
+     *
+     * @method performAutoScroll
+     * @param {HTMLElement} container The timeline container element
+     * @private
+     */
+    performAutoScroll(container) {
+        const scroll = () => {
+            if (!container || !this.currentScrollX) {
+                this.stopAutoScroll();
+                return;
+            }
+    
+            const currentScrollX = container.scrollLeft;
+            const maxScrollX = container.scrollWidth - container.clientWidth;
+    
+            // Apply horizontal scroll if within bounds
+            let newScrollX = currentScrollX + this.currentScrollX;
+            newScrollX = Math.max(0, Math.min(maxScrollX, newScrollX));
+    
+            // Only scroll if we're not at the boundaries
+            if (newScrollX !== currentScrollX) {
+                // Calculate scroll delta before scrolling
+                const scrollDeltaX = newScrollX - currentScrollX;
+                
+                container.scrollLeft = newScrollX;
+                
+                // update the gantt bar position
+                if (this.isDragging && scrollDeltaX !== 0) {
+                    this.accumulatedScrollDeltaX += scrollDeltaX;
+                    const currentDeltaX = this.lastMouseX ? this.lastMouseX - this.dragStartX : 0;
+                    this.dragOffset = currentDeltaX + this.accumulatedScrollDeltaX;
+                    if (this.args.onDragUpdate) {
+                        this.args.onDragUpdate(this.dragOffset);
+                    }
+                } else if (this.isResizing && scrollDeltaX !== 0) {
+                    this.resizeOffset += scrollDeltaX;
+                    if (this.args.onResizeUpdate) {
+                        this.args.onResizeUpdate(this.resizeHandle, this.resizeOffset);
+                    }
+                }
+            }
+    
+            if (this.autoScrollFrameId && this.currentScrollX !== 0) {
+                this.autoScrollFrameId = requestAnimationFrame(scroll);
+            } else {
+                this.stopAutoScroll();
+            }
+        };
+    
+        this.autoScrollFrameId = requestAnimationFrame(scroll);
+    }
+
+    /**
+     * Stop auto-scroll animation
+     *
+     * @method stopAutoScroll
+     * @private
+     */
+    stopAutoScroll() {
+        if (this.autoScrollFrameId) {
+            cancelAnimationFrame(this.autoScrollFrameId);
+            this.autoScrollFrameId = null;
+        }
+        this.currentScrollX = 0;
+    }
+
+    /**
+     * Cleanup when component is destroyed
+     *
+     * @method willDestroy
+     * @public
+     */
+    willDestroy() {
+        super.willDestroy(...arguments);
+        this.stopAutoScroll();
     }
 
 }
