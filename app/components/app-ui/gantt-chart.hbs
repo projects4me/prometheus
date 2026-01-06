@@ -134,6 +134,8 @@
             @linkingState={{this.linkingState}}
             @updateDependencyPositions={{this.updateBarRegisteryVersion}}
             @timelineContainer={{this.timelineContainerElement}}
+            @onCheckAutoScroll={{this.checkAndStartAutoScrollForBar}}
+            @onStopAutoScroll={{this.stopAutoScroll}}
           />
         {{/each}}
       </div>
