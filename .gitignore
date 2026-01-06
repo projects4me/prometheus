@@ -25,7 +25,7 @@
 /package-lock.json.ember-try
 /yarn.lock.ember-try
 .cursorrules
-.cursor/rules/.generic.mdc
+.cursor/rules/generic.mdc
 .cursor/rules/acceptance.mdc
 .cursor/rules/frontend-overview.mdc
 package-lock.json
