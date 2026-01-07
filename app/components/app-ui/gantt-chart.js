@@ -1294,15 +1294,17 @@ export default class GanttChartComponent extends AppComponent {
 
 	/**
 	 * Check and start auto-scroll based on bar position.
+	 * Uses cursor movement direction as primary, edge-based direction as fallback.
 	 *
 	 * @method checkAndStartAutoScrollForBar
 	 * @param {Number} barLeft Bar's left position in timeline
 	 * @param {Number} barWidth Bar's width in pixels
+	 * @param {Number} cursorDeltaX Cursor movement direction (positive = right, negative = left, 0 = not moving)
 	 * @param {Function} scrollSyncCallback Callback to handle scroll sync
 	 * @public
 	 */
 	@action
-	checkAndStartAutoScrollForBar(barLeft, barWidth, scrollSyncCallback) {
+	checkAndStartAutoScrollForBar(barLeft, barWidth, cursorDeltaX, scrollSyncCallback) {
 		const container = this.timelineContainerElement;
 		if (!container) {
 			return;
@@ -1317,13 +1319,32 @@ export default class GanttChartComponent extends AppComponent {
 		const barDistFromLeftEdge = barLeft - containerVisibleLeft;
 		const barDistFromRightEdge = containerVisibleRight - barRight;
 
+		// Check if bar is near/outside edges (determines IF we should scroll)
+		const isLeftEdgeInThreshold = barDistFromLeftEdge < this.scrollZone;
+		const isRightEdgeInThreshold = barDistFromRightEdge < this.scrollZone;
+
+		// If bar is not near any edge, don't scroll
+		if (!isLeftEdgeInThreshold && !isRightEdgeInThreshold) {
+			this.stopAutoScroll();
+			return;
+		}
+
 		let scrollX = 0;
 
-		if (barDistFromLeftEdge < this.scrollZone) {
-			scrollX = -this.scrollSpeed;
-		}
-		else if (barDistFromRightEdge < this.scrollZone) {
-			scrollX = this.scrollSpeed;
+		// Primary: Use cursor movement direction if cursor is moving
+		if (cursorDeltaX !== 0) {
+			if (cursorDeltaX > 0) {
+				scrollX = this.scrollSpeed;
+			} else {
+				scrollX = -this.scrollSpeed;
+			}
+		} else {
+			// Fallback: Use edge-based direction when cursor is not moving
+			if (isLeftEdgeInThreshold) {
+				scrollX = -this.scrollSpeed;
+			} else if (isRightEdgeInThreshold) {
+				scrollX = this.scrollSpeed;
+			}
 		}
 
 		if (scrollX !== 0) {

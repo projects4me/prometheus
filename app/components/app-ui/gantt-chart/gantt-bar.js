@@ -148,6 +148,16 @@ export default class GanttBarComponent extends Component {
     lastMouseX = 0;
 
     /**
+     * Previous mouse X position (to track cursor movement direction)
+     *
+     * @property previousMouseX
+     * @type Number
+     * @for GanttBar
+     * @private
+     */
+    previousMouseX = 0;
+
+    /**
      * Accumulated scroll delta during drag (to account for auto-scroll)
      *
      * @property accumulatedScrollDeltaX
@@ -432,6 +442,9 @@ export default class GanttBarComponent extends Component {
         this.dragStartX = event.clientX;
         this.originalLeft = this.barLeft;
         this.dragOffset = 0;
+        this.lastMouseX = event.clientX;
+        this.previousMouseX = event.clientX;
+        this.accumulatedScrollDeltaX = 0;
 
         // Add event listeners to document for mouse move and up
         document.addEventListener('mousemove', this.handleMouseMove);
@@ -496,6 +509,10 @@ export default class GanttBarComponent extends Component {
         if (this.isDragging) {
             this.lastMouseX = event.clientX;
             
+            // Calculate cursor movement direction (for auto-scroll direction)
+            const cursorDeltaX = this.previousMouseX ? event.clientX - this.previousMouseX : 0;
+            this.previousMouseX = event.clientX;
+            
             this.dragOffset = deltaX + this.accumulatedScrollDeltaX;
             
             if (this.args.onDragUpdate) {
@@ -504,7 +521,7 @@ export default class GanttBarComponent extends Component {
             if (this.args.onCheckAutoScroll) {
                 const barLeft = this.effectiveBarLeft + this.dragOffset;
                 const barWidth = this.effectiveBarWidth;
-                this.args.onCheckAutoScroll(barLeft, barWidth, (scrollDeltaX) => {
+                this.args.onCheckAutoScroll(barLeft, barWidth, cursorDeltaX, (scrollDeltaX) => {
                     this.syncBarWithScroll(scrollDeltaX);
                 });
             }
@@ -560,6 +577,7 @@ export default class GanttBarComponent extends Component {
         this.dragStartX = 0;
         this.originalLeft = 0;
         this.lastMouseX = 0;
+        this.previousMouseX = 0;
         this.accumulatedScrollDeltaX = 0;
         if (this.args.onStopAutoScroll) {
             this.args.onStopAutoScroll();
@@ -758,6 +776,7 @@ export default class GanttBarComponent extends Component {
         this.originalLeftForResize = this.barLeft;
         this.resizeOffset = 0;
         this.lastMouseX = event.clientX;
+        this.previousMouseX = event.clientX;
         this.accumulatedScrollDeltaX = 0;
 
         if (this.args.onResizeStart) {
@@ -785,6 +804,10 @@ export default class GanttBarComponent extends Component {
 
         this.lastMouseX = event.clientX;
 
+        // Calculate cursor movement direction (for auto-scroll direction)
+        const cursorDeltaX = this.previousMouseX ? event.clientX - this.previousMouseX : 0;
+        this.previousMouseX = event.clientX;
+
         const deltaX = event.clientX - this.resizeStartX;
         
         this.resizeOffset = deltaX + this.accumulatedScrollDeltaX;
@@ -795,7 +818,7 @@ export default class GanttBarComponent extends Component {
         if (this.args.onCheckAutoScroll) {
             const barLeft = this.effectiveBarLeft;
             const barWidth = this.effectiveBarWidth;
-            this.args.onCheckAutoScroll(barLeft, barWidth, (scrollDeltaX) => {
+            this.args.onCheckAutoScroll(barLeft, barWidth, cursorDeltaX, (scrollDeltaX) => {
                 this.syncBarWithScroll(scrollDeltaX);
             });
         }
@@ -889,6 +912,7 @@ export default class GanttBarComponent extends Component {
         this.originalWidth = 0;
         this.originalLeftForResize = 0;
         this.lastMouseX = 0;
+        this.previousMouseX = 0;
         this.accumulatedScrollDeltaX = 0;
         if (this.args.onStopAutoScroll) {
             this.args.onStopAutoScroll();
