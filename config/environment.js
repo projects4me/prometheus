@@ -35,9 +35,6 @@ module.exports = function(environment) {
                 pollingInterval: 30000, // 30 seconds default
                 enableNav: true // Controls whether clicking notifications navigates to their links
             },
-            gantt: {
-                conversionOverlayTimeout: 5000 // 5 seconds default
-            },
             upload: {
                 maxFileSize: 2097152 // 2MB
             }

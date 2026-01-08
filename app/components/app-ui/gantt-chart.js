@@ -175,16 +175,6 @@ export default class GanttChartComponent extends AppComponent {
 	@tracked showScaleConversionOverlay = false;
 
 	/**
-	 * Stores the timeout ID for auto-hiding the overlay
-	 *
-	 * @property overlayTimeout
-	 * @type Number|null
-	 * @for GanttChartComponent
-	 * @private
-	 */
-	overlayTimeout = null;
-
-	/**
 	 * Stores the conversion message
 	 *
 	 * @property conversionMessage
@@ -540,18 +530,9 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	showConversionOverlay() {
-		if (this.overlayTimeout) {
-			clearTimeout(this.overlayTimeout);
-		}
-
 		this.showScaleConversionOverlay = true;
 		this.toggleTimelineContainerScroll();
 		this.setOverlayWidth();
-		this.overlayTimeout = setTimeout(() => {
-			this.showScaleConversionOverlay = false;
-			this.toggleTimelineContainerScroll();
-			this.overlayTimeout = null;
-		}, this.config.app.gantt.conversionOverlayTimeout);
 	}
 
 	/**
@@ -807,7 +788,6 @@ export default class GanttChartComponent extends AppComponent {
 	handleIssueDragStart(issue) {
 		if (issue?.id) {
 			this.draggedBars[issue.id] = 0;
-			// Trigger dependency layer refresh
 			this.updateBarRegisteryVersion();
 		}
 	}
@@ -824,8 +804,6 @@ export default class GanttChartComponent extends AppComponent {
 	handleIssueDragUpdate(issue, dragOffset) {
 		if (issue?.id) {
 			this.draggedBars[issue.id] = dragOffset;
-			// Trigger dependency layer refresh to update arrow positions
-			// getBoundingClientRect() will read the current CSS position
 			this.updateBarRegisteryVersion();
 		}
 	}
@@ -1393,6 +1371,41 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
+	 * Hide the scale conversion overlay when the timeline width is changed and update the dependency arrow positions.
+	 *
+	 * @method hideScaleConversionOverlay
+	 * @public
+	 */
+	@action
+	hideScaleConversionOverlay(){
+		next(() => {
+			this.hideConversionOverlay();
+			let times = 0;
+
+			// update dependency positions to ensure the dependency layer is updated when conversion scale is changed
+			let updateDepPos = () => {
+				this.updateBarRegisteryVersion();
+				times++;
+				if (times < 30) {
+					requestAnimationFrame(updateDepPos);
+				}
+			};
+			requestAnimationFrame(updateDepPos.bind(this));			
+		});
+	}
+	
+	/**
+	 * Hide the scale conversion overlay
+	 *
+	 * @method hideConversionOverlay
+	 * @public
+	 */
+	hideConversionOverlay(){
+		this.showScaleConversionOverlay = false;
+		this.toggleTimelineContainerScroll();
+	}
+
+	/**
 	 * Reset linking state and detach global listeners when component is destroyed
 	 *
 	 * @method willDestroy
@@ -1401,12 +1414,6 @@ export default class GanttChartComponent extends AppComponent {
 	willDestroy() {
 		super.willDestroy(...arguments);
 		this.resetLinkingState();
-		
-		// Clear overlay timeout if it exists
-		if (this.overlayTimeout) {
-			clearTimeout(this.overlayTimeout);
-			this.overlayTimeout = null;
-		}
 		this.stopAutoScroll();
 	}
 }

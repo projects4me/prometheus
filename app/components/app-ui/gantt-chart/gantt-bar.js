@@ -8,6 +8,7 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import { calculateBarWidth, calculateBarPosition } from 'prometheus/utils/gantt-helpers';
 import DateUtils from 'prometheus/utils/date';
+import { later } from '@ember/runloop';
 
 /**
  * This component renders a single Gantt bar (milestone or task)
@@ -564,6 +565,9 @@ export default class GanttBarComponent extends Component {
         if (this.args.onStopAutoScroll) {
             this.args.onStopAutoScroll();
         }
+        later(() => {
+            this.args.updateDependencyPositions();
+        }, 200);
     }
 
     /**
@@ -684,19 +688,6 @@ export default class GanttBarComponent extends Component {
         } else {
             element.style.opacity = '';
             element.style.cursor = '';
-        }
-
-        // For smooth transition of dependency positions 
-        if (this.args.updateDependencyPositions) {
-            let times = 0;
-            let updateDepPos = () => {
-                this.args.updateDependencyPositions();
-                times++;
-                if (times < 5) {
-                    requestAnimationFrame(updateDepPos);
-                }
-            };
-            requestAnimationFrame(updateDepPos.bind(this));
         }
     }
 
