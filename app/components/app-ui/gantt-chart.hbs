@@ -43,7 +43,10 @@
     </div>
 
     {{! Right side - Timeline }}
-    <div class="gantt-timeline-container" {{did-insert this.registerTimelineContainer}} {{will-destroy this.unregisterTimelineContainer}}>
+    <div class="gantt-timeline-container" 
+      {{did-insert this.registerTimelineContainer}} 
+      {{did-update this.hideScaleConversionOverlay this.timelineWidth}}
+      {{will-destroy this.unregisterTimelineContainer}}>
       {{! Scale conversion overlay }}
       {{#if this.showScaleConversionOverlay}}
         <div class="gantt-scale-conversion-overlay">
@@ -59,7 +62,6 @@
         @weekGroups={{this.weekGroups}}
         @yearGroups={{this.yearGroups}}
         @dayWidth={{this.dayWidth}}
-        @timelineWidth={{this.timelineWidth}}
         @timeScale={{this.timeScale}}
       />
       <div class="gantt-timeline-body" {{did-insert this.registerTimelineBody}} {{did-update this.updateTimelineBodyWidth this.timelineWidth}} {{will-destroy this.unregisterTimelineBody}}>
@@ -103,7 +105,6 @@
           @barRegistry={{this.barRegistry}}
           @registryVersion={{this.barRegistryVersion}}
           @timelineBodyElement={{this.timelineBodyElement}}
-          @timelineWidth={{this.timelineWidth}}
           @linkingState={{this.linkingState}}
           @getDragOffset={{this.getDragOffset}}
           @onDeleteDependency={{this.handleDeleteDependency}}
@@ -136,6 +137,7 @@
             @timelineContainer={{this.timelineContainerElement}}
             @onCheckAutoScroll={{this.checkAndStartAutoScrollForBar}}
             @onStopAutoScroll={{this.stopAutoScroll}}
+            @timelineWidth={{this.timelineWidth}}
           />
         {{/each}}
       </div>
