@@ -55,6 +55,24 @@ export default class AppProjectGanttController extends PrometheusController {
 	@tracked selectedIssue = null;
 
 	/**
+	 * The issue currently displayed in the side panel
+	 *
+	 * @property panelIssue
+	 * @type Object
+	 * @for AppProjectGanttController
+	 */
+	@tracked panelIssue = null;
+
+	/**
+	 * Whether the issue details panel is open
+	 *
+	 * @property isIssuePanelOpen
+	 * @type Boolean
+	 * @for AppProjectGanttController
+	 */
+	@tracked isIssuePanelOpen = false;
+
+	/**
 	 * Tracking expanded milestones - stores IDs of expanded milestones
 	 *
 	 * @property expandedMilestones
@@ -105,6 +123,36 @@ export default class AppProjectGanttController extends PrometheusController {
 		Logger.debug('AppProjectGanttController::closeIssueDetails');
 		this.selectedIssue = null;
 		Logger.debug('-AppProjectGanttController::closeIssueDetails');
+	}
+
+	/**
+	 * This action opens the issue details panel on double-click
+	 *
+	 * @method openIssuePanel
+	 * @param {Prometheus.Models.Issue} issue The issue to display in the panel
+	 * @public
+	 */
+	@action openIssuePanel(issue) {
+		Logger.debug('AppProjectGanttController::openIssuePanel');
+		if (issue) {
+			this.panelIssue = issue;
+			this.isIssuePanelOpen = true;
+			this.selectedIssue = issue;
+		}
+		Logger.debug('-AppProjectGanttController::openIssuePanel');
+	}
+
+	/**
+	 * This action closes the issue details panel
+	 *
+	 * @method closeIssuePanel
+	 * @public
+	 */
+	@action closeIssuePanel() {
+		Logger.debug('AppProjectGanttController::closeIssuePanel');
+		this.isIssuePanelOpen = false;
+		this.panelIssue = null;
+		Logger.debug('-AppProjectGanttController::closeIssuePanel');
 	}
 
 	/**

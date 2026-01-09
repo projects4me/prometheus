@@ -182,4 +182,18 @@ export default class GanttRowComponent extends Component {
             this.args.onIssueClick(issue);
         }
     }
+
+    /**
+     * Action to handle issue number link click (opens panel)
+     *
+     * @method handleOpenIssuePanel
+     * @param {Object} issue The issue that was clicked
+     * @public
+     */
+    @action
+    handleOpenIssuePanel(issue) {
+        if (this.args.onOpenIssuePanel) {
+            this.args.onOpenIssuePanel(issue);
+        }
+    }
 }

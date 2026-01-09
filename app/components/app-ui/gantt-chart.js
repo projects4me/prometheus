@@ -729,6 +729,20 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
+	 * Action to handle issue number link click (opens panel)
+	 *
+	 * @method handleOpenIssuePanel
+	 * @param {Object} issue The issue that was clicked
+	 * @public
+	 */
+	@action
+	handleOpenIssuePanel(issue) {
+		if (this.args.onOpenIssuePanel) {
+			this.args.onOpenIssuePanel(issue);
+		}
+	}
+
+	/**
 	 * Scroll the timeline to show the specified issue
 	 * Scrolls both horizontally (to the bar position) and vertically (to the row position)
 	 *

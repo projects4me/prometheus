@@ -33,7 +33,9 @@
             @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
             @onToggle={{this.toggleMilestone}}
             @onIssueClick={{this.handleIssueClick}}
+            @onOpenIssuePanel={{this.handleOpenIssuePanel}}
             @selectedIssue={{@selectedIssue}}
+            @isIssuePanelOpen={{@isIssuePanelOpen}}
             @timelineStart={{@timelineStart}}
             @timelineEnd={{@timelineEnd}}
             @dayWidth={{this.dayWidth}}
@@ -43,7 +45,7 @@
     </div>
 
     {{! Right side - Timeline }}
-    <div class="gantt-timeline-container" 
+    <div class="gantt-timeline-container {{if @isIssuePanelOpen 'gantt-timeline-hidden'}}" 
       {{did-insert this.registerTimelineContainer}} 
       {{did-update this.hideScaleConversionOverlay this.timelineWidth}}
       {{will-destroy this.unregisterTimelineContainer}}>
@@ -116,7 +118,9 @@
             @isExpanded={{call (fn this.isMilestoneExpanded milestone.id)}}
             @onToggle={{this.toggleMilestone}}
             @onIssueClick={{this.handleIssueClick}}
+            @onOpenIssuePanel={{this.handleOpenIssuePanel}}
             @selectedIssue={{@selectedIssue}}
+            @isIssuePanelOpen={{@isIssuePanelOpen}}
             @onIssueDragStart={{this.handleIssueDragStart}}
             @onIssueDragUpdate={{this.handleIssueDragUpdate}}
             @onIssueDragEnd={{this.handleIssueDragEnd}}
@@ -142,5 +146,15 @@
         {{/each}}
       </div>
     </div>
+    
+    {{! Issue Details Panel - shown when issue is opened }}
+    <AppUi::GanttChart::IssueDetailsPanel
+      @isOpen={{@isIssuePanelOpen}}
+      @issue={{@panelIssue}}
+      @onClose={{@onCloseIssuePanel}}
+      @selectStatic={{@selectStatic}}
+      @projectController={{@projectController}}
+      @issueTypes={{@issueTypes}}
+    />
   </div>
 </div>

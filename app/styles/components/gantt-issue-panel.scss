@@ -1,0 +1,29 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/**
+ * Gantt Issue Details Panel Styles
+ */
+
+.gantt-issue-panel {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: auto;
+  background: #fff;
+  position: relative;
+  display: none;
+
+  &.gantt-issue-panel-visible {
+    display: block;
+  }
+
+  .users-list > li > img {
+    max-width: 50%;
+  }
+}
+
+.gantt-timeline-hidden {
+  display: none !important;
+}
+
