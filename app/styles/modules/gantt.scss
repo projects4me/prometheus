@@ -196,6 +196,57 @@
   .issue-overview {
     padding: 1rem;
     min-height: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .issue-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-shrink: 0;
+    margin-left: 1.2rem;
+  }
+
+  .issue-actions-separator {
+    width: 0.1rem;
+    height: 2.4rem;
+    background: #e0e0e0;
+  }
+
+  .issue-overview-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.8rem;
+    height: 2.8rem;
+    border: none;
+    background: transparent;
+    color: #666;
+    cursor: pointer;
+    border-radius: 0.4rem;
+    transition: all 0.2s;
+    padding: 0;
+
+    i {
+      font-size: 1.4rem;
+    }
+
+    &:hover {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.2);
+    }
   }
 
   &:hover {
