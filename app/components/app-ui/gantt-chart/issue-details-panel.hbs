@@ -1,0 +1,19 @@
+<div 
+  class="gantt-issue-panel {{if this.isOpen 'gantt-issue-panel-visible'}}"
+  {{did-insert this.registerPanel}}
+  {{did-update this.handleIssueChange @issue.id @isOpen}}
+>
+  {{#if this.isOpen}}
+    <Issue::IssueDetails
+      @issue={{@issue}}
+      @activities={{null}}
+      @selectStatic={{@selectStatic}}
+      @projectController={{@projectController}}
+      @issueTypes={{@issueTypes}}
+      @s_id={{null}}
+      @quickView={{true}}
+      @closeIssueDetails={{this.handleClose}}
+    />
+  {{/if}}
+</div>
+

@@ -34,13 +34,25 @@
   </div>
 {{else}}
   {{! Task list side - Show issue info }}
-  <div class="gantt-task-row task-row {{this.statusClass}} {{this.priorityClass}} {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}" {{on "click" this.handleClick}}>
+  <div class="gantt-task-row task-row {{this.statusClass}} {{this.priorityClass}} {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}" {{on "click" this.clickHandler}}>
     <div class="issue issue-overview">
       <div class="issue-block">
         <div class="priority"><AppUi::PriorityIcon @priority={{@issue.priority}}/></div>
         <div class="data-block">
-          <span class="subject"><LinkTo @route="app.project.issue.page" @model={{this.issueNumber}}>{{this.issueNumber}}</LinkTo> - {{this.issueSubject}}</span>
-          <span class="badge {{@issue.status}}">{{t (concat "views.app.issue.lists.status." @issue.status)}}</span>
+          <span class="subject">
+            <LinkTo
+              @route="app.project.issue.page"
+              @disabledClass="navigate-issue-quick-view"
+              @disabled={{true}}
+              @model={{this.issueNumber}}
+              {{on "click" this.handleIssueNumberClick}}
+            >
+              #{{this.issueNumber}} - {{this.issueSubject}}
+            </LinkTo>
+          </span>
+          <span class="badge {{@issue.status}}">
+            {{t (concat "views.app.issue.lists.status." @issue.status)}}
+          </span>
         </div>
       </div>
     </div>

@@ -306,6 +306,10 @@
   overflow-y: auto;
   background: #fff;
   position: relative;
+
+  &.gantt-timeline-hidden {
+    display: none !important;
+  }
 }
 
 .gantt-timeline-header {
