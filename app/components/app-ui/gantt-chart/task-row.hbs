@@ -40,20 +40,23 @@
         <div class="priority"><AppUi::PriorityIcon @priority={{@issue.priority}}/></div>
         <div class="data-block">
           <span class="subject">
-            <LinkTo
-              @route="app.project.issue.page"
-              @disabledClass="navigate-issue-quick-view"
-              @disabled={{true}}
-              @model={{this.issueNumber}}
-              {{on "click" this.handleIssueNumberClick}}
-            >
-              #{{this.issueNumber}} - {{this.issueSubject}}
-            </LinkTo>
+            #{{this.issueNumber}} - {{this.issueSubject}}
           </span>
           <span class="badge {{@issue.status}}">
             {{t (concat "views.app.issue.lists.status." @issue.status)}}
           </span>
         </div>
+      </div>
+      <div class="issue-actions">
+        <span class="issue-actions-separator"></span>
+        <button
+          type="button"
+          class="issue-overview-icon"
+          {{on "click" this.handleIssueNumberClick}}
+          aria-label="Open issue overview"
+        >
+          <i class="fa fa-eye"></i>
+        </button>
       </div>
     </div>
   </div>
