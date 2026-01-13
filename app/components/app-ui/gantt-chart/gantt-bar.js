@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Component from '@glimmer/component';
+import AppComponent from 'prometheus/components/app';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
@@ -18,7 +18,7 @@ import { later } from '@ember/runloop';
  * @extends Component
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default class GanttBarComponent extends Component {
+export default class GanttBarComponent extends AppComponent {
 	/**
 	 * The internationalization service for handling translations
 	 *

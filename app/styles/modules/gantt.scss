@@ -393,6 +393,16 @@
   &:hover {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   }
+
+  .assignee-avatar {
+    position: absolute;
+    right: -4.5rem;
+
+    img {
+      width: 4rem !important;
+      height: 4rem !important;
+    }
+  }
 }
 
 .gantt-bar-milestone {
@@ -508,12 +518,12 @@
   }
 
   &.hover-zone-left {
-    left: -24px;
+    left: -2.4rem;
     justify-content: flex-start;
   }
 
   &.hover-zone-right {
-    right: -24px;
+    right: -6rem;
     justify-content: flex-end;
   }
 }
