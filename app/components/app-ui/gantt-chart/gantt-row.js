@@ -53,31 +53,6 @@ export default class GanttRowComponent extends Component {
     }
 
     /**
-     * Get milestone date range string
-     * Shows the effective date range based on milestone and issue dates
-     *
-     * @property dateRange
-     * @type String
-     * @for GanttRow
-     * @public
-     */
-    get dateRange() {
-        if (!this.hasValidDates) {
-            return 'No dates set';
-        }
-        let startDate = this.milestoneBarStartDate;
-        let endDate = this.milestoneBarEndDate;
-        
-        if (!startDate || !endDate) {
-            return 'No dates set';
-        }
-        
-        let start = moment(startDate).format('MMM DD, YYYY');
-        let end = moment(endDate).format('MMM DD, YYYY');
-        return `${start} - ${end}`;
-    }
-
-    /**
      * Get issues with valid dates
      *
      * @property validIssues
