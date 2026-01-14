@@ -90,6 +90,41 @@ export default class GanttRowComponent extends Component {
     }
 
     /**
+     * Get the total number of issues for the milestone
+     *
+     * @property totalIssuesCount
+     * @type Number
+     * @for GanttRow
+     * @public
+     */
+    get totalIssuesCount() {
+        return this.args.milestone.issues ? this.args.milestone.issues.length : 0;
+    }
+
+    /**
+     * Get the count of completed issues for the milestone
+     * Completed issues include: done, complete, closed, deferred
+     *
+     * @property completedIssuesCount
+     * @type Number
+     * @for GanttRow
+     * @public
+     */
+    get completedIssuesCount() {
+        if (!this.args.milestone.issues) {
+            return 0;
+        }
+        
+        let closed = 0;
+        closed += this.args.milestone.issues.filterBy('status', 'done').length;
+        closed += this.args.milestone.issues.filterBy('status', 'complete').length;
+        closed += this.args.milestone.issues.filterBy('status', 'closed').length;
+        closed += this.args.milestone.issues.filterBy('status', 'deferred').length;
+        
+        return closed;
+    }
+
+    /**
      * Calculate the effective start date for the milestone bar
      * considering the earliest issue start date.
      *
