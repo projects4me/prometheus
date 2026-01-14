@@ -8,7 +8,6 @@
       @dayWidth={{@dayWidth}}
       @type="task"
       @status={{@issue.status}}
-      @priority={{@issue.priority}}
       @onDragStart={{this.handleDragStart}}
       @onDragUpdate={{this.handleDragUpdate}}
       @onDragEnd={{this.handleDragEnd}}
@@ -34,7 +33,7 @@
   </div>
 {{else}}
   {{! Task list side - Show issue info }}
-  <div class="gantt-task-row task-row {{this.statusClass}} {{this.priorityClass}} {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}" {{on "click" this.clickHandler}}>
+  <div class="gantt-task-row task-row {{if this.isSelected 'selected'}}" data-issue-id="{{@issue.id}}" {{on "click" this.clickHandler}}>
     <div class="issue issue-overview">
       <div class="issue-block">
         <div class="priority"><AppUi::PriorityIcon @priority={{@issue.priority}}/></div>

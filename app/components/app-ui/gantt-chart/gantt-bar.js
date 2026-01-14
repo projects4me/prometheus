@@ -288,15 +288,8 @@ export default class GanttBarComponent extends AppComponent {
             classes.push('gantt-bar-milestone');
         } else {
             classes.push('gantt-bar-task');
-            
-            // Add status class
             if (this.args.status) {
-                classes.push(`bar-status-${this.args.status}`);
-            }
-            
-            // Add priority class
-            if (this.args.priority) {
-                classes.push(`bar-priority-${this.args.priority}`);
+                classes.push(`${this.args.status}`);
             }
         }
         

@@ -86,19 +86,6 @@ export default class TaskRowComponent extends Component {
         return `priority-${priority}`;
     }
 
-    /**
-     * Get the status class for styling
-     *
-     * @property statusClass
-     * @type String
-     * @for TaskRow
-     * @public
-     */
-    get statusClass() {
-        let status = this.args.issue.status || 'new';
-        return `status-${status}`;
-    }
-
 	/**
 	 * Check if this issue is currently selected
 	 *
