@@ -285,7 +285,7 @@ export default class GanttBarComponent extends AppComponent {
         let classes = ['gantt-bar'];
         
         if (this.args.type === 'milestone') {
-            classes.push('gantt-bar-milestone');
+            classes.push('gantt-bar-milestone', 'bg-red');
         } else {
             classes.push('gantt-bar-task');
             
