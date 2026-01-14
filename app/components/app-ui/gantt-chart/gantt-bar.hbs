@@ -52,4 +52,8 @@
   {{#if this.showLabel}}
     <span class="bar-label {{if this.isCompleted 'completed'}}">{{this.displayLabel}}</span>
   {{/if}}
+  {{#if (eq @type "milestone")}}
+    <i class="fa fa-caret-up milestone-caret milestone-caret-start"></i>
+    <i class="fa fa-caret-up milestone-caret milestone-caret-end"></i>
+  {{/if}}
 </div>
