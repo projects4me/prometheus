@@ -174,6 +174,8 @@ export default class GanttRoute extends App {
 		controller.set('timelineStart', model.timelineStart);
 		controller.set('timelineEnd', model.timelineEnd);
 		controller.set('query', this.query);
+		
+		controller.autoExpandFirstMilestone();
 	}
 
 	/**
