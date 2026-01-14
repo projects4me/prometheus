@@ -57,8 +57,8 @@
           {{/if}}
         </span>
         <strong>{{this.milestoneName}}</strong>
-        {{#if this.validIssues.length}}
-          <span class="issue-count">({{this.validIssues.length}})</span>
+        {{#if this.totalIssuesCount}}
+          <span class="issue-count">({{this.completedIssuesCount}}/{{this.totalIssuesCount}})</span>
         {{/if}}
       </div>
       <div class="task-dates">
