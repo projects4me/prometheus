@@ -6,12 +6,11 @@
   {{#if this.isOpen}}
     <Issue::IssueDetails
       @issue={{@issue}}
-      @activities={{null}}
       @selectStatic={{@selectStatic}}
       @projectController={{@projectController}}
       @issueTypes={{@issueTypes}}
-      @s_id={{null}}
       @quickView={{true}}
+      @renderSingleColumn={{false}}
       @closeIssueDetails={{this.handleClose}}
     />
   {{/if}}
