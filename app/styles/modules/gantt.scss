@@ -494,7 +494,6 @@
 }
 
 .gantt-bar-task {
-  background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
   height: 24px;
   z-index: 2;
 
@@ -524,45 +523,6 @@
     &.completed {
       text-decoration: line-through;
     }
-  }
-
-  /* Status colors */
-  &.bar-status-new {
-    background: linear-gradient(135deg, #74c0fc 0%, #4dabf7 100%);
-  }
-
-  &.bar-status-in_progress {
-    background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
-  }
-
-  &.bar-status-in_review {
-    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-  }
-
-  &.bar-status-done {
-    background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
-  }
-
-  &.bar-status-feedback {
-    background: linear-gradient(135deg, #ffa94d 0%, #fd7e14 100%);
-  }
-
-  &.bar-status-pending {
-    background: linear-gradient(135deg, #ff8787 0%, #fa5252 100%);
-  }
-
-  &.bar-status-deferred {
-    background: linear-gradient(135deg, #ced4da 0%, #adb5bd 100%);
-  }
-
-  /* Priority indicators */
-  &.bar-priority-critical,
-  &.bar-priority-blocker {
-    border-left: 3px solid #c92a2a;
-  }
-
-  &.bar-priority-high {
-    border-left: 3px solid #e67700;
   }
 }
 
