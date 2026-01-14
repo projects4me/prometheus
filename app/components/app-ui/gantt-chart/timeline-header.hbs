@@ -40,9 +40,9 @@
   {{/if}}
 
   <div class="gantt-header-row day-row">
-    {{#each @dateRange as |date|}}
+    {{#each this.dateRangeWithFlags as |date|}}
       <div
-        class="gantt-header-cell day-cell {{if date.isFirstOfMonth 'first-of-month'}}"
+        class="gantt-header-cell day-cell {{if date.isFirstOfMonth 'first-of-month'}} {{if date.isCurrentWeek 'current-week'}} {{if date.isCurrentWeekFirst 'current-week-first'}} {{if date.isCurrentWeekLast 'current-week-last'}} {{if date.isToday 'current-day'}}"
         {{did-insert this.applyDayCellStyle}}
         {{did-update this.applyDayCellStyle @dayWidth}}
         title="{{date.dayOfWeek}}, {{date.month}} {{date.day}}, {{date.year}}"
