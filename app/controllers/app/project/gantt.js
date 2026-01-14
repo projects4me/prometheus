@@ -82,6 +82,21 @@ export default class AppProjectGanttController extends PrometheusController {
 	@tracked expandedMilestones = new Set();
 
 	/**
+	 * Auto-expand the first milestone (latest/top one) if no milestones are expanded
+	 *
+	 * @method autoExpandFirstMilestone
+	 * @public
+	 */
+	autoExpandFirstMilestone() {
+		if (this.expandedMilestones.size === 0 && this.milestones && this.milestones.length > 0) {
+			const firstMilestone = this.milestones[0];
+			if (firstMilestone && firstMilestone.id) {
+				this.expandedMilestones = new Set([firstMilestone.id]);
+			}
+		}
+	}
+
+	/**
 	 * This action is used to highlight an issue in both list and timeline views
 	 * Toggles selection: if the same issue is clicked again, it will be deselected
 	 *
