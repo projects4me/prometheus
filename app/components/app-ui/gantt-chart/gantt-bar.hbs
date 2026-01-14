@@ -43,6 +43,11 @@
         {{/if}}
       </div>
     </div>
+    <span class="assignee-avatar">
+      <img src="{{this.apiHost}}/userimage/get/{{@issue.assignedTo.id}}" alt="{{@issue.assignedTo.name}}" class="img-circle img-sm"
+      {{initialize-tooltip @issue.assignedTo.name placement="bottom"}}
+      >
+    </span>    
   {{/if}}
   {{#if this.showLabel}}
     <span class="bar-label {{if this.isCompleted 'completed'}}">{{this.displayLabel}}</span>
