@@ -15,6 +15,93 @@ import { action } from '@ember/object';
  */
 export default class TimelineHeaderComponent extends Component {
 	/**
+	 * Get today's date in YYYY-MM-DD format
+	 *
+	 * @property today
+	 * @type String
+	 * @for TimelineHeaderComponent
+	 * @public
+	 */
+	get today() {
+		return moment().format('YYYY-MM-DD');
+	}
+
+	/**
+	 * Get the start of the current week (Monday)
+	 *
+	 * @property currentWeekStart
+	 * @type moment
+	 * @for TimelineHeaderComponent
+	 * @public
+	 */
+	get currentWeekStart() {
+		return moment().startOf('isoWeek');
+	}
+
+	/**
+	 * Get the end of the current week (Sunday)
+	 *
+	 * @property currentWeekEnd
+	 * @type moment
+	 * @for TimelineHeaderComponent
+	 * @public
+	 */
+	get currentWeekEnd() {
+		return moment().endOf('isoWeek');
+	}
+
+	/**
+	 * Get the dateRange with current day and week flags added
+	 *
+	 * @property dateRangeWithFlags
+	 * @type Array
+	 * @for TimelineHeaderComponent
+	 * @public
+	 */
+	get dateRangeWithFlags() {
+		if (!this.args.dateRange || this.args.dateRange.length === 0) {
+			return [];
+		}
+
+		const today = this.today;
+		const weekStart = this.currentWeekStart;
+		const weekEnd = this.currentWeekEnd;
+		
+		// Single pass: map dates and track first/last current week indices
+		let firstCurrentWeekIndex = -1;
+		let lastCurrentWeekIndex = -1;
+		
+		const datesWithFlags = this.args.dateRange.map((date, index) => {
+			const dateMoment = moment(date.date);
+			const isCurrentWeek = dateMoment.isSameOrAfter(weekStart, 'day') && 
+			                      dateMoment.isSameOrBefore(weekEnd, 'day');
+			
+			// Track first and last current week indices
+			if (isCurrentWeek) {
+				if (firstCurrentWeekIndex === -1) {
+					firstCurrentWeekIndex = index;
+				}
+				lastCurrentWeekIndex = index;
+			}
+			
+			return {
+				...date,
+				isToday: date.date === today,
+				isCurrentWeek,
+				isCurrentWeekFirst: false, // Will be set correctly after we know all indices
+				isCurrentWeekLast: false
+			};
+		});
+
+		// Set first and last flags in a single pass
+		if (firstCurrentWeekIndex !== -1) {
+			datesWithFlags[firstCurrentWeekIndex].isCurrentWeekFirst = true;
+			datesWithFlags[lastCurrentWeekIndex].isCurrentWeekLast = true;
+		}
+
+		return datesWithFlags;
+	}
+	/**
 	 * Check if the year row should be shown
 	 *
 	 * @property showYearRow
