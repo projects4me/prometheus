@@ -457,9 +457,8 @@
 }
 
 .gantt-bar-milestone {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
   height: 1.8rem;
-  border-left: 3px solid #c92a2a;
+  border-left: 3px solid rgba(0, 0, 0, 0.2);
   font-weight: 600;
   color: #fff;
   border-radius: 0;
