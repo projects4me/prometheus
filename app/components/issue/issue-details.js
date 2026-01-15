@@ -171,6 +171,17 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     }
 
     /**
+     * Whether to render the issue details in a single column.
+     *
+     * @property renderSingleColumn
+     * @type boolean
+     * @public
+     */
+    get renderSingleColumn() {
+        return this.args.renderSingleColumn ?? true;
+    }
+
+    /**
      * This is a computed property in which gets the list of users
      * in the system loaded by the project controller
      *

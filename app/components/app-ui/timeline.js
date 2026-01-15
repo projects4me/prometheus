@@ -26,6 +26,7 @@ export default class AppUiTimelineComponent extends Component {
 	get activitiesList() {
 		let { activities, dataKey } = this.args;
 		let result = {};
+
 		Object.entries(activities).forEach(([key, activityCont]) => {
 			result[key] =
 				dataKey && activityCont[dataKey]

@@ -1,7 +1,7 @@
 <div class="issue">
   <div class="row">
     {{!-- The first Column that contains the issue details,etc --}}
-    <div class="col-md-{{if @quickView '12' '8'}}">
+    <div class="col-md-{{if (and @quickView this.renderSingleColumn) '12' '8'}}">
 
       {{!-- This are the issue details --}}
       <AccessControl @aclContext="App.Project.Issue.Read">
@@ -271,7 +271,7 @@
     </div>
     {{!-- /.end col-md -8 --}}
 
-    <div class="col-md-{{if @quickView '12' '4'}}">
+    <div class="col-md-{{if (and @quickView this.renderSingleColumn) '12' '4'}}">
 
       {{!-- Project Members --}}
       <AccessControl @aclContext="App.Project.Issue.Read">
