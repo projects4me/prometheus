@@ -50,10 +50,16 @@
     </span>    
   {{/if}}
   {{#if this.showLabel}}
-    <span class="bar-label {{if this.isCompleted 'completed'}}">{{this.displayLabel}}</span>
+    {{#if (eq @type "milestone")}}
+      <div class="milestone-sticky-label">
+        <i class="fa fa-caret-up milestone-caret milestone-caret-start"></i>
+        <span class="bar-label">{{this.displayLabel}}</span>
+      </div>
+    {{else}}
+      <span class="bar-label {{if this.isCompleted 'completed'}}">{{this.displayLabel}}</span>
+    {{/if}}
   {{/if}}
   {{#if (eq @type "milestone")}}
-    <i class="fa fa-caret-up milestone-caret milestone-caret-start"></i>
     <i class="fa fa-caret-up milestone-caret milestone-caret-end"></i>
   {{/if}}
 </div>
