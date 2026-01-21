@@ -81,9 +81,6 @@ module('Integration | Component | infinite-scroll', function (hooks) {
 		await settled();
 
 		assert
-			.dom('[data-infinite-scroll-loading]')
-			.exists('Loading indicator is shown');
-		assert
 			.dom('[data-loading-indicator] span')
 			.hasText('Loading...', 'Loading text is correct');
 

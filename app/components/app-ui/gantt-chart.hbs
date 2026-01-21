@@ -1,21 +1,4 @@
 <div class="gantt-chart">
-  <div class="gantt-time-scale-selector">
-    <button
-      type="button"
-      class="scale-tab {{if (eq this.timeScale 'days') 'active'}}"
-      {{on "click" (fn this.setTimeScale "days")}}
-    >
-      Days
-    </button>
-    <button
-      type="button"
-      class="scale-tab {{if (eq this.timeScale 'weeks') 'active'}}"
-      {{on "click" (fn this.setTimeScale "weeks")}}
-    >
-      Weeks
-    </button>
-  </div>
-
   <div class="gantt-container">
 
     {{! Left side - Task list }}
@@ -26,7 +9,7 @@
           <div class="gantt-header-cell task-dates">{{t "views.app.gantt.startEndDate"}}</div>
         </div>
       </div>
-      <div class="gantt-tasks">
+      <div class="gantt-tasks" {{initialize-slimscroll width="6"}}>
         {{#each @milestones as |milestone|}}
           <AppUi::GanttChart::GanttRow
             @milestone={{milestone}}
@@ -45,18 +28,28 @@
     </div>
 
     {{! Right side - Timeline }}
-    <div class="gantt-timeline-container {{if @isIssuePanelOpen 'gantt-timeline-hidden'}}" 
-      {{did-insert this.registerTimelineContainer}} 
-      {{did-update this.hideScaleConversionOverlay this.timelineWidth}}
-      {{will-destroy this.unregisterTimelineContainer}}>
+    <div class="gantt-timeline-wrapper {{if @isIssuePanelOpen 'gantt-timeline-hidden'}}">
+      <div class="nav-tabs-custom gantt-time-scale-selector">
+        <ul class="nav nav-tabs gantt-time-scale-tabs">
+          <li class="gantt-time-scale-tab {{if (eq this.timeScale 'days') 'active' ''}}">
+            <a href="#gantt-scale-days" data-toggle="tab" aria-expanded={{if (eq this.timeScale 'days') "true" "false"}} {{on "click" (fn this.setTimeScale "days")}}>
+              Days
+            </a>
+          </li>
+          <li class="gantt-time-scale-tab {{if (eq this.timeScale 'weeks') 'active' ''}}">
+            <a href="#gantt-scale-weeks" data-toggle="tab" aria-expanded={{if (eq this.timeScale 'weeks') "true" "false"}} {{on "click" (fn this.setTimeScale "weeks")}}>
+              Weeks
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="gantt-timeline-container" 
+        {{did-insert this.registerTimelineContainer}} 
+        {{did-update this.hideScaleConversionOverlay this.timelineWidth}}
+        {{will-destroy this.unregisterTimelineContainer}}>
       {{! Scale conversion overlay }}
       {{#if this.showScaleConversionOverlay}}
-        <div class="gantt-scale-conversion-overlay">
-          <div class="gantt-scale-conversion-message">
-            <i class="fa fa-refresh fa-spin"></i>
-            <span>{{this.conversionMessage}}</span>
-          </div>
-        </div>
+        <AppUi::Loader @message={{this.conversionMessage}} @variant="overlay" />
       {{/if}}
       <AppUi::GanttChart::TimelineHeader
         @dateRange={{this.dateRange}}
@@ -144,6 +137,7 @@
             @timelineWidth={{this.timelineWidth}}
           />
         {{/each}}
+      </div>
       </div>
     </div>
     
