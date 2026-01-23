@@ -981,41 +981,19 @@ export default class GanttBarComponent extends AppComponent {
     }
 
     /**
-     * Get the formatted tooltip content with estimated and spent hours, and modified info
+     * Format the time for a given context
      *
-     * @property tooltipContent
-     * @type String
-     * @for GanttBar
+     * @method formatTime
+     * @param {String} type The context ('spent' or 'estimated')
+     * @returns {String} The formatted time
      * @public
      */
-    get tooltipContent() {
-        if (this.args.type !== 'task' || !this.args.issue) {
-            return '';
-        }
-
-        const estimated = this.calculateTimeForContext('estimated');
-        const spent = this.calculateTimeForContext('spent');
-
-        const formatTime = (time) => {
-            const hrs = time.hours || 0;
-            const mins = time.minutes || 0;
-            return `${hrs}hrs ${mins} min`;
-        };
-
-        const modifiedByName = this.args.issue.modifiedBy.get('name');
-        const formattedDateModified = moment(this.args.issue.dateModified).format("DD MMM 'YY, h:mm a");
-
-        const estimatedLabel = this.intl.t('views.app.gantt.tooltip.estimatedHours');
-        const spentLabel = this.intl.t('views.app.gantt.tooltip.spentHours');
-        const modifiedByLabel = this.intl.t('views.app.gantt.tooltip.modifiedBy');
-        const atLabel = this.intl.t('views.app.gantt.tooltip.at');
-
-        let content = `<strong>${estimatedLabel}:</strong> ${formatTime(estimated)}<br><strong>${spentLabel}:</strong> ${formatTime(spent)}`;
-        content += `<br><strong>${modifiedByLabel}:</strong> ${modifiedByName} ${atLabel} ${formattedDateModified}`;
-
-        return content;
+    @action formatTime(type) {
+        let time = this.calculateTimeForContext(type);
+        const hrs = time.hours || 0;
+        const mins = time.minutes || 0;
+        return `${hrs} ${this.intl.t('global.time.hrs')} ${mins} ${this.intl.t('global.time.min')}`;
     }
-
 
     /**
      * Sync bar with scroll.
