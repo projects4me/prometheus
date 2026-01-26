@@ -11,6 +11,9 @@
   in order you cater any style chnages that you may want
 */
 
+// Variables should be imported at very first
+
+@import "variables.scss";
 
 /**
   Import global mixin file.
@@ -41,12 +44,11 @@
 @import 'vendor/AdminLTE/plugins/daterangepicker/daterangepicker.scss';
 @import 'vendor/@toast-ui/toastui-editor.scss';
 @import 'vendor/@toast-ui/codemirror.scss';
+@import 'vendor/tippy.js/tippy.scss';
 
 /*
   Include the application wide styles
 */
-
-@import "variables.scss";
 @import 'modules/document.scss';
 @import 'pace.scss';
 
@@ -95,6 +97,7 @@
 @import 'components/pagination.scss';
 @import 'components/accordion.scss';
 @import 'components/toolbar.scss';
+@import 'components/tooltip-themes.scss';
 /*
 @import '../../custom/styles/custom.scss';
 */

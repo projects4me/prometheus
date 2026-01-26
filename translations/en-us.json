@@ -204,6 +204,10 @@
           "activities": "Activities"
         }
       }
+    },
+    "time": {
+      "hrs": "hrs",
+      "min": "min"
     }
   },
   "emoji": {
@@ -1342,9 +1346,9 @@
           "endConnector": "Dependency end connector"
         },
         "tooltip": {
-          "estimatedHours": "estimated hours",
-          "spentHours": "spent hours",
-          "modifiedBy": "modified by",
+          "estimatedHours": "Estimated hours",
+          "spentHours": "Spent hours",
+          "modifiedBy": "Modified by",
           "at": "at"
         }
       },

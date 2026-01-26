@@ -1,0 +1,11 @@
+// This file contains the styles for the tooltip themes
+
+.tippy-box[data-theme~="gantt-issue-tooltip"] {
+    padding: 1rem;
+    line-height: 1.8;
+
+    .issue-title {
+        font-size: 1.6rem;
+        line-height: normal;
+    }
+}

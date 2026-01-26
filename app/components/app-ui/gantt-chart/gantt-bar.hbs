@@ -9,8 +9,8 @@
   {{on "mouseleave" this.handleMouseLeave}}
   {{did-insert this.registerElement}}
   {{will-destroy this.unregisterElement}}
-  {{initialize-tooltip this.tooltipContent}}
   data-issue-id="{{@issue.id}}"
+  {{initialize-tooltip templateId=@issue.issueNumber interactive=true theme="gantt-issue-tooltip"}}
 >
   {{#if (and (eq @type "task") @issue)}}
     <div class="gantt-bar-hover-zones">
@@ -45,7 +45,7 @@
     </div>
     <span class="assignee-avatar">
       <img src="{{this.apiHost}}/userimage/get/{{@issue.assignedTo.id}}" alt="{{@issue.assignedTo.name}}" class="img-circle img-sm"
-      {{initialize-tooltip @issue.assignedTo.name placement="bottom"}}
+      {{initialize-tooltip content=@issue.assignedTo.name placement="right"}}
       >
     </span>    
   {{/if}}
@@ -62,4 +62,22 @@
   {{#if (eq @type "milestone")}}
     <i class="fa fa-caret-up milestone-caret milestone-caret-end"></i>
   {{/if}}
+</div>
+
+{{!-- Tooltip content for the issue --}}
+<div id="tooltip-{{@issue.issueNumber}}" style="display: none;">
+  <LinkTo @route="app.project.issue.page" @models={{array (lowercase @issue.projectShortcode) @issue.issueNumber}} class="issue-title">
+    #{{@issue.issueNumber}} - {{@issue.subject}}
+  </LinkTo>
+  <br>
+  <ion class="ion-md-stopwatch"></ion>
+  <strong>
+    {{t 'views.app.gantt.tooltip.estimatedHours'}}:</strong> {{call this.formatTime 'estimated'}}
+  <br>
+  <ion class="ion-md-stopwatch"></ion>
+  <strong>
+    {{t 'views.app.gantt.tooltip.spentHours'}}:</strong> {{call this.formatTime 'spent'}}
+  <br>
+  <strong>{{t 'views.app.gantt.tooltip.modifiedBy'}}:</strong> {{@issue.modifiedBy.name}}
+  {{t 'views.app.gantt.tooltip.at'}} {{format-date-time date=@issue.dateModified}}
 </div>

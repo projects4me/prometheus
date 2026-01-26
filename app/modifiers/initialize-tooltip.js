@@ -4,13 +4,14 @@
 
 import Modifier from 'ember-modifier';
 import $ from 'jquery';
+import tippy, { followCursor } from 'tippy.js';
 
 /**
  * This modifier initializes Bootstrap tooltip on an element.
  * It handles tooltip initialization, updates, and cleanup.
  *
  * @example
- *      <div {{initialize-tooltip @tooltipContent}}>
+ *      <div {{initialize-tooltip content="Add issue"}}>
  *
  * @class InitializeTooltipModifier
  * @namespace Prometheus.Modifiers
@@ -19,67 +20,74 @@ import $ from 'jquery';
  */
 export default class InitializeTooltipModifier extends Modifier {
 	/**
-	 * The tooltip content to display
-	 * @type {String}
+	 * The tippy tooltip instance
+	 * @type {Object}
 	 * @private
 	 */
-	_tooltipContent = null;
+	_tooltip = null;
 
 	/**
-	 * Whether the tooltip is initialized
-	 * @type {Boolean}
-	 * @private
-	 */
-	_isInitialized = false;
-
-	/**
-	 * This function is called when the element is rendered in the DOM or when arguments change.
-	 * It initializes or updates the Bootstrap tooltip.
+	 * Triggered when the element is installed or updated on the DOM.
 	 *
-	 * @param {Element} element - The element the modifier is attached to.
-	 * @param {Array} positional - The positional arguments passed to the modifier.
-	 * @param {Object} named - The named arguments passed to the modifier.
+	 * @method modify
+	 * @param {Element} element - The element to initialize the tooltip on
+	 * @param {Array} args - The arguments for the modifier
+	 * @param {Object} options - The options for the modifier
+	 * @public
 	 */
 	modify(
 		element,
-		[tooltipContent],
-		{ placement = 'top', trigger = 'hover', html = true }
-	) {
-		if (!tooltipContent) {
-			this._destroyTooltip(element);
-			return;
+		[],
+		{
+			content = '',
+			templateId = null,
+			placement = 'top',
+			interactive = false,
+			theme = 'light'
 		}
-
-		if (this._tooltipContent !== tooltipContent) {
-			this._tooltipContent = tooltipContent;
-
-			if (element) {
-				if (this._isInitialized) {
-					this._destroyTooltip(element);
-				}
-
-				element.setAttribute('data-toggle', 'tooltip');
-				element.setAttribute('data-html', html.toString());
-				element.setAttribute('title', tooltipContent);
-
-				$(element).tooltip({
-					html: html,
-					placement: placement,
-					trigger: trigger
-				});
-
-				this._isInitialized = true;
+	) {
+		if (element) {
+			if (this._tooltip) {
+				this._destroyTooltip(element);
 			}
+
+			this._tooltip = tippy(element, {
+				content: this.getContent(templateId, content),
+				allowHTML: true,
+				plugins: [followCursor],
+				followCursor: true,
+				followCursor: 'horizontal',
+				placement: placement,
+				theme: theme,
+				interactive: interactive
+			});
+		}
+	}
+
+	/**
+	 * Returns the content for the tooltip based on the template id or the content passed.
+	 *
+	 * @method getContent
+	 * @param {String} templateId - The id of the template to use
+	 * @param {String} content - The content to display
+	 * @returns {String} The content to display
+	 * @public
+	 */
+	getContent(templateId, content) {
+		if (templateId) {
+			const template = document.getElementById(`tooltip-${templateId}`);
+			return template?.innerHTML;
+		} else {
+			return content;
 		}
 	}
 
 	/**
 	 * This function is called when the modifier is destroyed.
-	 * It cleans up the Bootstrap tooltip.
 	 */
 	willRemove() {
-		if (this.element && this._isInitialized) {
-			this._destroyTooltip(this.element);
+		if (this._tooltip) {
+			this._destroyTooltip();
 		}
 	}
 
@@ -90,14 +98,10 @@ export default class InitializeTooltipModifier extends Modifier {
 	 * @param {Element} element - The element with the tooltip
 	 * @private
 	 */
-	_destroyTooltip(element) {
-		if (element && typeof $ !== 'undefined') {
-			try {
-				$(element).tooltip('dispose');
-				this._isInitialized = false;
-			} catch (e) {
-				this._isInitialized = false;
-			}
+	_destroyTooltip() {
+		if (this._tooltip) {
+			this._tooltip.destroy();
+			this._tooltip = null;
 		}
 	}
 }
