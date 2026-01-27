@@ -98,7 +98,11 @@
                     <div class="progress-bar bg-green" style={{progress-width (round (mult (div (count-votes @entity.comments "I agree") @entity.comments.length) 100))}}></div>
                   </div>
                   <span class="progress-description">
-                    {{round (mult (div (count-votes @entity.comments "I agree") @entity.comments.length) 100)}}% {{t "views.app.conversation.vote.agree"}}
+                    {{#if @entity.comments.length}}
+                      {{round (mult (div (count-votes @entity.comments "I agree") @entity.comments.length) 100)}}% {{t "views.app.conversation.vote.agree"}}
+                    {{else}}
+                      0% {{t "views.app.conversation.vote.agree"}}
+                    {{/if}}
                   </span>
                 </div>
                 {{!-- /.info-box-content --}}
@@ -120,7 +124,11 @@
                     <div class="progress-bar bg-red" style={{progress-width (round (mult (div (count-votes @entity.comments "I disagree") @entity.comments.length) 100))}}></div>
                   </div>
                   <span class="progress-description">
-                    {{round (mult (div (count-votes @entity.comments "I disagree") @entity.comments.length) 100)}}% {{t "views.app.conversation.vote.disagree"}}
+                    {{#if @entity.comments.length}}
+                      {{round (mult (div (count-votes @entity.comments "I disagree") @entity.comments.length) 100)}}% {{t "views.app.conversation.vote.disagree"}}
+                    {{else}}
+                      0% {{t "views.app.conversation.vote.disagree"}}
+                    {{/if}}
                   </span>
                 </div>
                 {{!-- /.info-box-content --}}
