@@ -37,4 +37,21 @@ export default class MessageBoxComponent extends Component{
         this.comment = content;
     }
 
+    /**
+     * This function handles keyboard submit (Enter key) for quick posting
+     *
+     * @method handleKeyboardSubmit
+     * @param {String} content The content to submit
+     * @for MessageBoxComponent
+     * @public
+     */
+    @action handleKeyboardSubmit(content, shouldSave = true) {
+        if (!content) {
+            return;
+        }
+
+        if (this.args.save && this.args.entity && shouldSave) {
+            this.args.save(this.args.entity, content);
+        }
+    }
 }

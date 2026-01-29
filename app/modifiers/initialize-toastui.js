@@ -144,6 +144,18 @@ export default class ToastEditor extends Modifier {
         return this.args.named.initialValue;
     }
 
+    /**
+     * This function returns onKeyboardSubmit callback which will be triggered
+     * when user presses Enter key (without Shift) to submit content.
+     *
+     * @method get
+     * @returns Function
+     * @public
+     */
+    get onKeyboardSubmit() {
+        return this.args.named.onKeyboardSubmit;
+    }
+
     //Called when the modifier is installed on the DOM element
     didInstall() {
         let emojiList = {
@@ -357,6 +369,14 @@ export default class ToastEditor extends Modifier {
             }
         });
 
+        editor.addHook('keydown', (data) => {
+            let event = data.data;
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                return false;
+            }
+          });
+
         function remoteSearch(text, cb) {
             var result = _self.issueSearch(text);
             let map = {
@@ -386,11 +406,41 @@ export default class ToastEditor extends Modifier {
                 list.classList.add('dropdown-menu');
             })
         });
+
+        if (_self.onKeyboardSubmit) {
+            // Track if Tribute menu is currently active
+            let isTributeActive = false;
+            this.targetElement.addEventListener('tribute-active-true', () => {
+                isTributeActive = true;
+            });
+            this.targetElement.addEventListener('tribute-active-false', () => {
+                isTributeActive = false;
+            });
+
+            this.keyboardHandler = (event) => {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    const tributeMenu = document.querySelector('.tribute-container');
+                    const tributeVisible = tributeMenu && 
+                        tributeMenu.style.display !== 'none' && 
+                        tributeMenu.offsetParent !== null;
+
+                    const content = editor.getHtml();
+                    if (content && _self.onKeyboardSubmit) {
+                        _self.onKeyboardSubmit(content, !isTributeActive && !tributeVisible);
+                    }
+                }
+            };
+            this.targetElement.addEventListener('keydown', this.keyboardHandler);
+        }
         this.element.value = this.contents;
     }
 
-    //Removing tribute from element
+    //Removing tribute from element and keyboard event listener
     willDestroy() {
         this.tribute.detach(this.targetElement);
+        
+        if (this.keyboardHandler && this.targetElement) {
+            this.targetElement.removeEventListener('keydown', this.keyboardHandler);
+        }
     }
 }
