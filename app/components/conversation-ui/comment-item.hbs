@@ -1,0 +1,46 @@
+<div class="comment-item-wrapper">
+  <div class="box-comment" data-comment-id="{{@comment.id}}">
+    <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{@comment.createdUser}}" alt="{{@comment.createdUserName}}">
+
+    <div class="comment-text" {{modify-links}}>
+      <span class="username">
+        <a href="/app/user/{{@comment.createdUser}}">{{@comment.createdUserName}}</a>
+        <span class="text-muted pull-right">
+          {{format-date-time date=@comment.dateModified}}
+          {{#if this.isOwnComment}}
+            <AppUi::Button 
+              data-btn="delete" 
+              type="button" 
+              class="btn btn-box-tool"
+              @onClick={{this.showDeleteCommentDialog}}
+              data-toggle="tooltip" 
+              title="{{t 'global.form.delete'}}"
+            >
+              <i class="fa fa-trash-o"></i>
+            </AppUi::Button>
+          {{/if}}
+        </span>
+      </span>
+      {{translate-comment @comment.comment}}    
+    </div>
+  </div>
+
+  {{#if this.showDeleteCommentModal}}
+    {{#bootstrap-modal
+      title="views.app.conversation.comment.delete.title"
+      closeLabel="global.form.cancel"
+      confirmLabel="views.app.conversation.comment.delete.confirm"
+      close=(action "removeDeleteCommentModal")
+      confirm=(action "deleteComment")
+      confirmClass="btn-danger"
+    }}
+      <div class="delete-comment-confirmation">
+        <div class="alert alert-warning flex-row flex-ai-c">
+          <i class="fa fa-exclamation-triangle"></i>
+          <p>{{safe-html (t "views.app.conversation.comment.delete.message")}}</p>
+        </div>
+      </div>
+    {{/bootstrap-modal}}
+  {{/if}}
+</div>
+

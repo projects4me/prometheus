@@ -205,17 +205,7 @@
               <div class="box-body box-footer box-comments" {{did-insert this.scrollToElement 'comment'}}>
 
                 {{#each this.issue.comments as |comment|}}
-                  <div class="box-comment" data-comment-id="{{comment.id}}">
-                    <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}" alt="{{comment.createdUserName}}">
-
-                    <div class="comment-text" {{modify-links}}>
-                      <span class="username">
-                        <a href="/app/user/{{comment.createdUser}}">{{comment.createdUserName}}</a>
-                        <span class="text-muted pull-right">{{format-date-time date=comment.dateModified}}</span>
-                      </span>
-                      {{translate-comment comment.comment}}
-                    </div>
-                  </div>
+                  <ConversationUi::CommentItem @comment={{comment}} />
                 {{/each}}
 
                 <div class="box-footer box-comments">

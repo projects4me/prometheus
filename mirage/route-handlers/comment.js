@@ -23,4 +23,12 @@ export function register(server, ctx) {
 		}
 		return model;
 	});
+	
+	server.delete('/comment/:id', (schema, request) => {
+        let id = request.params.id;
+		debugger;
+        let comment = schema.comments.find(id);
+        comment.destroy();
+        return comment;
+    });
 }
