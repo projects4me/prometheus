@@ -117,18 +117,23 @@
             @aclContext='App.Project.Conversation.Create.Subject'
         />
 
-        <FormFields::FieldTextArea
-            @placeholder={{t "views.app.conversation.new.description"}}
+        <div data-field="newConversation.description" class="form-field ember-view">
+          <AppUi::ToastUi
+              @usersList={{this.membersList}}
+              @contents={{readonly this.newConversation.description}}
+              @initialValue={{this.newConversation.description}}
+              @editType='wysiwyg'
+              @hide={{array 'footer'}}
+              @onContentChange={{action (mut this.newConversation.description)}}
+          />
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <FormFields::Label
             @label={{t "views.app.conversation.new.description"}}
-            @value={{this.newConversation.description}}
             @data-field="newConversation.description"
-            @focus-out={{action (mut this.showDescriptionError) true}}
-            @v-focus={{this.showDescriptionError}}
-            @v-model={{this.newConversation}}
-            @v-field='description'
-            @v-output='message'
-            @aclContext='App.Project.Conversation.Create.Description'
-        />
+          />
+          <span class="count pull-right"></span>
+        </div>
 
         <FormFields::FieldRelate
             @placeholder={{t "views.app.conversation.new.type"}}
