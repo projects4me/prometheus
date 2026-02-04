@@ -117,6 +117,21 @@
   .box-comments {
     .comment-text {
       overflow-wrap: break-word;
+
+      [data-btn="delete"] {
+        @include button-no-style;
+
+        i {
+          font-size: 1.4rem;
+        }
+
+        &:hover,
+        &:focus {
+          i {
+            color: $dangerColor;
+          }
+        }
+      }
     }
 
     .message-box {
@@ -144,7 +159,7 @@
       }
     }
 
-    .box-comment {
+    > .box-comment {
       &:nth-child(even) {
         background-color: lighten($borderColor, 15%);
       }
@@ -165,6 +180,36 @@
       img {
         width: 100% !important;
         height: 100% !important;
+      }
+    }
+
+    .box-comment {
+      border-bottom: 1px solid #eee !important;
+    }
+    
+    > .comment-item-wrapper {
+      &:nth-child(even) > .box-comment {
+        background-color: lighten($borderColor, 15%);
+      }
+      
+      &:nth-child(odd) > .box-comment {
+        background-color: lighten($borderColor, 8%);
+      }
+
+      &:nth-last-child(2) > .box-comment {
+        margin-bottom: 1rem;
+      }
+      
+      .box-comment {
+        .img-sm {
+          width: 30px !important;
+          height: 30px !important;
+        }
+
+        img {
+          width: 100% !important;
+          height: 100% !important;
+        }
       }
     }
   }
@@ -288,4 +333,11 @@
   top: 0.6rem;
   left: 0.7rem;
   font-size: 1rem !important;
+}
+
+.delete-comment-confirmation {
+  p {
+    color: white;
+    margin-left: 0.5rem;
+  }
 }

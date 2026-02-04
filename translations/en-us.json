@@ -652,7 +652,17 @@
         "noMore": "No more conversations to load",
         "refreshing": "Refreshing conversations...",
         "refreshed": "Conversations refreshed successfully",
-        "refreshError": "Failed to refresh conversations, please try again later"
+        "refreshError": "Failed to refresh conversations, please try again later",
+        "comment": {
+          "delete": {
+            "title": "Delete Comment",
+            "confirm": "Yes, delete the comment!",
+            "message": "Are you sure you want to delete this comment?",
+            "deleted": "Comment has been deleted successfully",
+            "deleting": "Deleting comment ..",
+            "error": "An error occurred while deleting the comment. Please try again."
+          }
+        }
       },
       "wiki": {
         "welcome": "Welcome to Projects4Me documentation tool.",

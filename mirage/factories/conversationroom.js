@@ -30,7 +30,7 @@ export default Factory.extend({
         return faker.random.arrayElement(["PRJ1", "PRJ2", "PRJ3"]);
     },
     roomType() {
-        return faker.random.arrayElement(["vote", "discussion"])
+        return "discussion";
     },
     afterCreate(conversationroom) {
         conversationroom.update({
