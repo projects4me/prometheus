@@ -52,7 +52,11 @@
     <div class="box-footer box-comments">
       {{#if (eq @entity.roomType "discussion")}}
         {{#each @entity.comments as |comment|}}
-          <ConversationUi::CommentItem @comment={{comment}} />
+          <ConversationUi::CommentItem 
+            @comment={{comment}} 
+            @usersList={{@membersList}}
+            @issueSearch={{perform @search}}
+          />
         {{/each}}
         <div class="box-footer">
           <form action="#" method="post">

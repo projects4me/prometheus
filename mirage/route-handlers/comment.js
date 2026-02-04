@@ -23,10 +23,17 @@ export function register(server, ctx) {
 		}
 		return model;
 	});
+
+	server.patch('/comment/:id', (schema, request) => {
+		let id = request.params.id;
+		let requestData = getRequestData(request);
+		let comment = schema.comments.find(id);
+		comment.update(requestData.attributes);
+		return comment;
+	});
 	
 	server.delete('/comment/:id', (schema, request) => {
         let id = request.params.id;
-		debugger;
         let comment = schema.comments.find(id);
         comment.destroy();
         return comment;

@@ -205,7 +205,11 @@
               <div class="box-body box-footer box-comments" {{did-insert this.scrollToElement 'comment'}}>
 
                 {{#each this.issue.comments as |comment|}}
-                  <ConversationUi::CommentItem @comment={{comment}} />
+                  <ConversationUi::CommentItem 
+                    @comment={{comment}} 
+                    @usersList={{this.usersList}}
+                    @issueSearch={{perform this.search}}
+                  />
                 {{/each}}
 
                 <div class="box-footer box-comments">

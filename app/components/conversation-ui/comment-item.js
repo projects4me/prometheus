@@ -36,6 +36,24 @@ export default class ConversationUiCommentItemComponent extends AppComponent {
     @tracked showDeleteCommentModal = false;
 
     /**
+     * Flag to show or hide the edit comment modal
+     *
+     * @property showEditCommentModal
+     * @type Boolean
+     * @private
+     */
+    @tracked showEditCommentModal = false;
+
+    /**
+     * The edited comment content
+     *
+     * @property editedCommentContent
+     * @type String
+     * @private
+     */
+    @tracked editedCommentContent = '';
+
+    /**
      * Computed property to check if the current user is the owner of the comment
      *
      * @property isOwnComment
@@ -47,6 +65,97 @@ export default class ConversationUiCommentItemComponent extends AppComponent {
             return false;
         }
         return this.comment.createdUser === this.currentUser.user.id;
+    }
+
+    /**
+     * This action shows the edit comment dialog and populates it with current comment content
+     *
+     * @method showEditCommentDialog
+     * @public
+     */
+    @action showEditCommentDialog() {
+        Logger.debug('ConversationUiCommentItemComponent::showEditCommentDialog');
+        // Set the initial content to the current comment content
+        this.editedCommentContent = this.comment.comment || '';
+        this.showEditCommentModal = true;
+    }
+
+    /**
+     * This action cancels the edit comment operation and closes the modal
+     *
+     * @method removeEditCommentModal
+     * @public
+     */
+    @action removeEditCommentModal() {
+        Logger.debug('ConversationUiCommentItemComponent::removeEditCommentModal');
+        if (this.isDestroyed || this.isDestroying) return;
+        this.showEditCommentModal = false;
+        this.editedCommentContent = '';
+        $('.modal').modal('hide');
+    }
+
+    /**
+     * This action handles content change in the ToastUI editor
+     *
+     * @method handleEditContentChange
+     * @param {String} content The updated content from ToastUI
+     * @public
+     */
+    @action handleEditContentChange(content) {
+        this.editedCommentContent = content;
+    }
+
+    /**
+     * This action updates the comment after user modifies and saves
+     *
+     * @method updateComment
+     * @public
+     */
+    @action async updateComment() {
+        Logger.debug('ConversationUiCommentItemComponent::updateComment');
+        
+        // Validate content
+        if (!this.editedCommentContent || !this.editedCommentContent.trim()) {
+            new Messenger().post({
+                message: this.intl.t("views.app.conversation.comment.edit.empty"),
+                type: 'error',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        let comment = this.comment;
+        let messenger = new Messenger().post({
+            message: this.intl.t("views.app.conversation.comment.edit.updating"),
+            type: 'info',
+            showCloseButton: false,
+            hideAfter: false
+        });
+
+        try {
+            comment.set('comment', this.editedCommentContent);
+            await comment.save();
+            
+            messenger.update({
+                message: this.intl.t("views.app.conversation.comment.edit.updated"),
+                type: 'success',
+                showCloseButton: true,
+                hideAfter: 3
+            });
+            
+            this.removeEditCommentModal();
+        } catch (error) {
+            Logger.error('ConversationUiCommentItemComponent::updateComment - Error:', error);
+            comment.rollbackAttributes();
+            messenger.update({
+                message: this.intl.t("views.app.conversation.comment.edit.error"),
+                type: 'error',
+                showCloseButton: true,
+                hideAfter: 3
+            });
+        }
+        
+        Logger.debug('-ConversationUiCommentItemComponent::updateComment');
     }
 
     /**
