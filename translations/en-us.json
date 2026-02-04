@@ -609,7 +609,7 @@
       "conversation": {
         "fields": {
           "subject": "Subject",
-          "description": "Topic",
+          "description": "Description",
           "roomType": "Type",
           "projectId": "Project"
         },
@@ -635,7 +635,7 @@
         },
         "new": {
           "subject": "Subject",
-          "description": "Topic",
+          "description": "Description",
           "type": "Type",
           "roomType": [
             {
