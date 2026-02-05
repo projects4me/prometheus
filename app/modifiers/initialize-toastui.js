@@ -302,7 +302,7 @@ export default class ToastEditor extends Modifier {
                 menuItemTemplate: function (item) {
                     return (
                         '<a href="/app/project/' +
-                        item.original.projectId + '/issue/' + item.original.number +
+                        item.original.projectShortcode + '/issue/' + item.original.number +
                         '">' +
                         item.original.number + '-' + item.original.name +
                         "</a>"
@@ -313,7 +313,7 @@ export default class ToastEditor extends Modifier {
                     let iconClass = icon.getClass(item.original.priority);
                     return (
                         '<span class="issue" contenteditable="false" id="#"><a class="' + item.original.status + ' badge"href="/app/project/' +
-                        item.original.projectId + '/issue/' + item.original.number +
+                        item.original.projectShortcode + '/issue/' + item.original.number +
                         '"><i class="fa ' + iconClass + '"></i> #' +
                         item.original.number + ' - ' + item.original.name +
                         "</a></span>"
@@ -371,7 +371,7 @@ export default class ToastEditor extends Modifier {
 
         editor.addHook('keydown', (data) => {
             let event = data.data;
-            if (event.key === 'Enter' && event.shiftKey) {
+            if (event.key === 'Enter' && event.ctrlKey) {
                 event.preventDefault();
                 return false;
             }
@@ -384,10 +384,11 @@ export default class ToastEditor extends Modifier {
                 name: 'subject',
                 number: 'issueNumber',
                 status: 'status',
-                projectId: 'projectId',
+                projectShortcode: 'projectShortcode',
                 priority: 'priority'
             };
             result.then(function (data) {
+                console.log(data);
                 cb((new format(_self)).getSelectList(data, map));
             });
         }
@@ -418,7 +419,7 @@ export default class ToastEditor extends Modifier {
             });
 
             this.keyboardHandler = (event) => {
-                if (event.key === 'Enter' && event.shiftKey) {
+                if (event.key === 'Enter' && event.ctrlKey) {
                     const tributeMenu = document.querySelector('.tribute-container');
                     const tributeVisible = tributeMenu && 
                         tributeMenu.style.display !== 'none' && 
