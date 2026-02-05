@@ -1,9 +1,10 @@
-import { computed, action } from '@ember/object';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency';
+import { task, timeout } from 'ember-concurrency';
 import { htmlSafe } from "@ember/template";
 import { tracked } from '@glimmer/tracking';
 import AppComponent from 'prometheus/components/app';
+import RSVP from 'rsvp';
 
 /**
  * This component is used to render the issue details.
@@ -191,7 +192,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @private
      */
     get usersList() {
-        return this.projectController.get('usersList');
+        return this.projectController.get('membersList');
     }
 
     /**
@@ -203,7 +204,6 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @for IssueIssueDetailsComponent
      * @private
      */
-    @computed('this.projectController.issuesList')
     get issuesList() {
         return this.projectController.get('issuesList');
     }
@@ -1258,4 +1258,37 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             this.args.postUpdateAssignee(issue);
         }
     }
+
+    /**
+     * This function loads the search data
+     *
+     * @param query
+     * @return {RSVP.Promise|Test.Promise|*}
+     */
+    loadSearchData(query) {
+        let _self = this;
+        let projectId = this.trackedProject.getProjectId();
+        let options = {
+            fields: 'Issue.id,Issue.issueNumber,Issue.subject,Issue.status,Issue.priority,Issue.projectId',
+            query: '((Issue.issueNumber CONTAINS ' + query +') AND (Issue.projectId : '+ projectId +'))',
+            limit: 5,
+            sort:'Issue.issueNumber',
+            order: 'DESC'
+        };
+        return new RSVP.Promise((resolve) => {
+            resolve(_self.store.query('issue', options));
+        });
+    }
+
+    /**
+     * This is the task that is used to perform the search.
+     *
+     * @property search
+     * @type task
+     * @public
+     */
+    @task(function* (query) {
+       yield timeout(500);
+       return this.loadSearchData(query);
+    }) search
 }
