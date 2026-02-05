@@ -9,6 +9,16 @@
           {{format-date-time date=@comment.dateModified}}
           {{#if this.isOwnComment}}
             <AppUi::Button 
+              data-btn="edit" 
+              type="button" 
+              class="btn btn-box-tool"
+              @onClick={{this.showEditCommentDialog}}
+              data-toggle="tooltip" 
+              title="{{t 'global.form.edit'}}"
+            >
+              <i class="fa fa-pencil"></i>
+            </AppUi::Button>
+            <AppUi::Button 
               data-btn="delete" 
               type="button" 
               class="btn btn-box-tool"
@@ -24,6 +34,34 @@
       {{translate-comment @comment.comment}}    
     </div>
   </div>
+
+  {{#if this.showEditCommentModal}}
+    {{#bootstrap-modal
+      title="views.app.conversation.comment.edit.title"
+      closeLabel="global.form.cancel"
+      confirmLabel="views.app.conversation.comment.edit.update"
+      close=(action "removeEditCommentModal")
+      confirm=(action "updateComment")
+    }}
+      <div class="edit-comment-form">
+        <div data-field="comment.edit" data-field-type="wysiwyg" class="form-field ember-view">
+          <AppUi::ToastUi
+            @usersList={{@usersList}}
+            @issueSearch={{@issueSearch}}
+            @editType='wysiwyg'
+            @hide={{array 'footer'}}
+            @onContentChange={{this.handleEditContentChange}}
+            @initialValue={{this.comment.comment}}
+            @placeholder={{t "views.app.conversation.messagebox"}}
+          />
+          <FormFields::Label
+            @label={{t "views.app.conversation.comment.edit.comment"}}
+            @data-field="comment.edit"
+          />
+        </div>
+      </div>
+    {{/bootstrap-modal}}
+  {{/if}}
 
   {{#if this.showDeleteCommentModal}}
     {{#bootstrap-modal

@@ -171,7 +171,7 @@ export default Object.extend({
                     label: 'views.nav.menu.conversation.label',
                     icon: 'comments',
                     route: 'app.project.conversation',
-                    anchorRoute: 'conversation',
+                    anchorRoute: 'conversations',
                     projectRelated: true,
                     order: 5
                 },  

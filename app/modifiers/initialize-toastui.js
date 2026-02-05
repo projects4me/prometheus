@@ -371,7 +371,7 @@ export default class ToastEditor extends Modifier {
 
         editor.addHook('keydown', (data) => {
             let event = data.data;
-            if (event.key === 'Enter' && !event.shiftKey) {
+            if (event.key === 'Enter' && event.shiftKey) {
                 event.preventDefault();
                 return false;
             }
@@ -418,7 +418,7 @@ export default class ToastEditor extends Modifier {
             });
 
             this.keyboardHandler = (event) => {
-                if (event.key === 'Enter' && !event.shiftKey) {
+                if (event.key === 'Enter' && event.shiftKey) {
                     const tributeMenu = document.querySelector('.tribute-container');
                     const tributeVisible = tributeMenu && 
                         tributeMenu.style.display !== 'none' && 
