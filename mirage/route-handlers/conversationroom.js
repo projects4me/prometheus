@@ -14,4 +14,11 @@ export function register(server, ctx) {
         let conversationRoom = server.create('conversationroom', requestData.attributes);
         return conversationRoom;
     });
+
+    server.patch('/conversationroom/:id', (schema, request) => {
+        let requestData = getRequestData(request);
+        let conversationRoom = schema.conversationrooms.find(requestData.id);
+        conversationRoom.update(requestData.attributes);
+        return conversationRoom;
+    });
 }

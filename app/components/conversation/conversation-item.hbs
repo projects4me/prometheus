@@ -20,6 +20,18 @@
             <i class="fa fa-heart-o"></i>
           {{/if}}
         </span>
+        {{#if this.isOwnConversation}}
+          <AppUi::Button 
+            type="button" 
+            class="btn btn-box-tool" 
+            data-btn="edit-conversation"
+            @onClick={{this.showEditConversationDialog}}
+            data-toggle="tooltip" 
+            title="{{t 'global.form.edit'}}"
+          >
+            <i class="fa fa-pencil"></i>
+          </AppUi::Button>
+        {{/if}}
         <AppUi::Button type="button" class="btn btn-box-tool" data-widget="collapse">
           <i class="fa fa-minus"></i>
         </AppUi::Button>
@@ -133,4 +145,43 @@
       {{/if}}
     </div>
   </div>
+
+  {{#if this.showEditConversationModal}}
+    {{#bootstrap-modal
+      title="views.app.conversation.edit.title"
+      closeLabel="global.form.cancel"
+      confirmLabel="views.app.conversation.edit.update"
+      close=(action "removeEditConversationModal")
+      confirm=(action "updateConversation")
+    }}
+      <div class="edit-conversation-form">
+        <div class="form-group">
+          <FormFields::FieldText
+            @placeholder={{t "views.app.conversation.fields.subject"}}
+            @label={{t "views.app.conversation.fields.subject"}}
+            @type="text"
+            @value={{this.editedSubject}}
+            @data-field="conversation.subject"
+            @length="255"
+            @onInput={{fn this.handleSubjectChange}}
+          />
+        </div>
+        <div data-field="conversation.description" data-field-type="wysiwyg" class="form-field ember-view">
+          <AppUi::ToastUi
+            @usersList={{@membersList}}
+            @issueSearch={{perform @search}}
+            @editType='wysiwyg'
+            @hide={{array 'footer'}}
+            @onContentChange={{this.handleDescriptionChange}}
+            @initialValue={{this.editedDescription}}
+            @placeholder={{t "views.app.conversation.fields.description"}}
+          />
+          <FormFields::Label
+            @label={{t "views.app.conversation.fields.description"}}
+            @data-field="conversation.description"
+          />
+        </div>
+      </div>
+    {{/bootstrap-modal}}
+  {{/if}}
 </div>

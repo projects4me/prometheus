@@ -653,6 +653,14 @@
         "refreshing": "Refreshing conversations...",
         "refreshed": "Conversations refreshed successfully",
         "refreshError": "Failed to refresh conversations, please try again later",
+        "edit": {
+          "title": "Edit Conversation",
+          "update": "Update",
+          "updating": "Updating conversation...",
+          "updated": "Conversation has been updated successfully",
+          "error": "Failed to update conversation. Please try again.",
+          "subjectEmpty": "Subject cannot be empty"
+        },
         "comment": {
           "delete": {
             "title": "Delete Comment",
