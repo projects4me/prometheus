@@ -1269,7 +1269,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         let _self = this;
         let projectId = this.trackedProject.getProjectId();
         let options = {
-            fields: 'Issue.id,Issue.issueNumber,Issue.subject,Issue.status,Issue.priority,Issue.projectId',
+            fields: 'Issue.id,Issue.issueNumber,Issue.subject,Issue.status,Issue.priority,Issue.projectShortcode',
             query: '((Issue.issueNumber CONTAINS ' + query +') AND (Issue.projectId : '+ projectId +'))',
             limit: 5,
             sort:'Issue.issueNumber',

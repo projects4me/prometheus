@@ -27,6 +27,16 @@ export default class MessageBoxComponent extends Component{
     @tracked comment;
 
     /**
+     * This property is used to keep track of the saving state
+     *
+     * @property isSaving
+     * @type Boolean
+     * @for MessageBoxComponent
+     * @private
+     */
+    @tracked isSaving = false;
+
+    /**
      * This function is used to set comment property
      *
      * @method setContent
@@ -45,13 +55,15 @@ export default class MessageBoxComponent extends Component{
      * @for MessageBoxComponent
      * @public
      */
-    @action handleKeyboardSubmit(content, shouldSave = true) {
-        if (!content) {
+    @action async handleKeyboardSubmit(content, shouldSave = true) {
+        if (!content || this.isSaving) {
             return;
         }
 
         if (this.args.save && this.args.entity && shouldSave) {
-            this.args.save(this.args.entity, content);
+            this.isSaving = true;
+            await this.args.save(this.args.entity, content);
+            this.isSaving = false;
         }
     }
 }
