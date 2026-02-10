@@ -156,6 +156,16 @@ export default class ToastEditor extends Modifier {
         return this.args.named.onKeyboardSubmit;
     }
 
+    /**
+     * This property is used to keep track of the mentioned issues
+     *
+     * @property mentionedIssues
+     * @type Array
+     * @for ToastEditor
+     * @private
+     */
+    mentionedIssues = [];
+
     //Called when the modifier is installed on the DOM element
     didInstall() {
         let emojiList = {
@@ -269,7 +279,94 @@ export default class ToastEditor extends Modifier {
 
         let _self = this;
         // Initializing tribute object
-        _self.tribute = new Tribute({
+        _self.tribute = _self.setupTribute();
+
+        let elementSelectors = {
+            toolbar: '.te-toolbar-section',
+            footer: '.te-mode-switch-section'
+        }
+        //Creating Editor object of toastui 
+        const editor = new Editor({
+            el: _self.element,
+            previewStyle: 'vertical',
+            initialValue: _self.initialValue,
+            initialEditType: _self.editType,
+            useDefaultHTMLSanitizer: true,
+            placeholder: _self.placeholder,
+            events: {
+                change: () => {
+                    _self.onContentChange(editor.getHtml(), _self.mentionedIssues);
+                },
+                load: () => {
+                    if (this.hide) {
+                        this.hide.forEach((element) => {
+                            let selector = elementSelectors[element];
+                            $(selector).css('display', 'none');
+                        });
+                    }
+                },
+                blur: () => {
+                    _self.onBlur();
+                }
+            }
+        });
+
+        editor.addHook('keydown', (data) => {
+            let event = data.data;
+            if (event.key === 'Enter' && event.ctrlKey) {
+                event.preventDefault();
+                return false;
+            }
+          });
+
+        _self.pubSub.on('clearContents', () => {
+            editor.reset();
+            this.mentionedIssues = [];
+        })
+        //Getting element in order to attach tribute to it
+        this.targetElement = this.element.querySelector('div.tui-editor-contents[contenteditable="true"]');
+        this.tribute.attach(this.targetElement);
+        this.attachTributeEvents();
+        
+        if (_self.onKeyboardSubmit) {
+            // Track if Tribute menu is currently active
+            let isTributeActive = false;
+            this.targetElement.addEventListener('tribute-active-true', () => {
+                isTributeActive = true;
+            });
+            this.targetElement.addEventListener('tribute-active-false', () => {
+                isTributeActive = false;
+            });
+
+            this.keyboardHandler = (event) => {
+                if (event.key === 'Enter' && event.ctrlKey) {
+                    const tributeMenu = document.querySelector('.tribute-container');
+                    const tributeVisible = tributeMenu && 
+                        tributeMenu.style.display !== 'none' && 
+                        tributeMenu.offsetParent !== null;
+
+                    const content = editor.getHtml();
+                    if (content && _self.onKeyboardSubmit) {
+                        _self.onKeyboardSubmit(content, !isTributeActive && !tributeVisible);
+                    }
+                }
+            };
+            this.targetElement.addEventListener('keydown', this.keyboardHandler);
+        }
+        this.element.value = this.contents;
+    }
+
+    /**
+     * This function sets up the tribute object
+     *
+     * @method setupTribute
+     * @returns Tribute
+     * @for ToastEditor
+     * @private
+     */
+    setupTribute() {
+        let _self = this;
+        return new Tribute({
             collection: [{
                 trigger: '@',
                 values: _self.usersList,
@@ -338,45 +435,7 @@ export default class ToastEditor extends Modifier {
             }
             ]
         });
-
-        let elementSelectors = {
-            toolbar: '.te-toolbar-section',
-            footer: '.te-mode-switch-section'
-        }
-        //Creating Editor object of toastui 
-        const editor = new Editor({
-            el: _self.element,
-            previewStyle: 'vertical',
-            initialValue: _self.initialValue,
-            initialEditType: _self.editType,
-            useDefaultHTMLSanitizer: true,
-            placeholder: _self.placeholder,
-            events: {
-                change: () => {
-                    _self.onContentChange(editor.getHtml());
-                },
-                load: () => {
-                    if (this.hide) {
-                        this.hide.forEach((element) => {
-                            let selector = elementSelectors[element];
-                            $(selector).css('display', 'none');
-                        });
-                    }
-                },
-                blur: () => {
-                    _self.onBlur();
-                }
-            }
-        });
-
-        editor.addHook('keydown', (data) => {
-            let event = data.data;
-            if (event.key === 'Enter' && event.ctrlKey) {
-                event.preventDefault();
-                return false;
-            }
-          });
-
+        
         function remoteSearch(text, cb) {
             var result = _self.issueSearch(text);
             let map = {
@@ -391,15 +450,10 @@ export default class ToastEditor extends Modifier {
                 console.log(data);
                 cb((new format(_self)).getSelectList(data, map));
             });
-        }
-        _self.pubSub.on('clearContents', () => {
-            editor.reset();
-        })
-        //Getting element in order to attach tribute to it
-        this.targetElement = this.element.querySelector('div.tui-editor-contents[contenteditable="true"]');
-        this.tribute.attach(this.targetElement);
+        }        
+    }
 
-        //Adding an event on opening of menu and after that appyling style and class on 'ul'
+    attachTributeEvents() {
         this.targetElement.addEventListener("tribute-active-true", function () {
             let listElement = document.querySelectorAll('div.tribute-container > ul');
             listElement.forEach((list) => {
@@ -408,32 +462,12 @@ export default class ToastEditor extends Modifier {
             })
         });
 
-        if (_self.onKeyboardSubmit) {
-            // Track if Tribute menu is currently active
-            let isTributeActive = false;
-            this.targetElement.addEventListener('tribute-active-true', () => {
-                isTributeActive = true;
-            });
-            this.targetElement.addEventListener('tribute-active-false', () => {
-                isTributeActive = false;
-            });
-
-            this.keyboardHandler = (event) => {
-                if (event.key === 'Enter' && event.ctrlKey) {
-                    const tributeMenu = document.querySelector('.tribute-container');
-                    const tributeVisible = tributeMenu && 
-                        tributeMenu.style.display !== 'none' && 
-                        tributeMenu.offsetParent !== null;
-
-                    const content = editor.getHtml();
-                    if (content && _self.onKeyboardSubmit) {
-                        _self.onKeyboardSubmit(content, !isTributeActive && !tributeVisible);
-                    }
-                }
-            };
-            this.targetElement.addEventListener('keydown', this.keyboardHandler);
-        }
-        this.element.value = this.contents;
+        this.targetElement.addEventListener('tribute-replaced', (e) => {
+            let issueNumber = e.detail.item.original.number;
+            if(issueNumber && !this.mentionedIssues.includes(issueNumber)) {
+                this.mentionedIssues.push(issueNumber);
+            }
+          });
     }
 
     //Removing tribute from element and keyboard event listener

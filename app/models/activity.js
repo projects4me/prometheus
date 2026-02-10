@@ -128,6 +128,16 @@ export default Model.extend({
     relatedActivityModule: attr('string'),
 
     /**
+     * The context of the activity
+     *
+     * @property context
+     * @type Json
+     * @for Activity
+     * @private
+     */
+    context: attr('json'),
+
+    /**
      * The object of the user who created te activity
      *
      * @property createdBy

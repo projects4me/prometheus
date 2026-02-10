@@ -12,7 +12,7 @@
     type="button" 
     class="btn btn-primary" 
     @content={{this.comment}}
-    @onClick={{fn @save @entity this.comment}}
+    @onClick={{fn @save @entity this.comment this.mentionedIssues}}
     @disableOnEmpty={{true}}>
     {{t "views.app.conversation.post"}}
   </AppUi::Button>

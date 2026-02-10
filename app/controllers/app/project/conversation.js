@@ -232,9 +232,10 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @method saveComment
      * @param {String} relatedId
      * @param {String} contents
+     * @param {Array} mentionedIssues
      * @public
      */
-    @action saveComment(relatedId, contents) {
+    @action saveComment(relatedId, contents, mentionedIssues) {
         Logger.debug('AppProjectConversationController::save()');
         if (contents == undefined) {
             return false;
@@ -247,7 +248,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             comment: contents,
         });
 
-        return comment.save().then(function (comment) {
+        return comment.save({adapterOptions: {mentionedIssues: mentionedIssues}}).then(function (comment) {
             if(_self.selectedConversation?.id === relatedId) {
                 _self.selectedConversation.comments.pushObject(comment);
             } else {
