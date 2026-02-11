@@ -272,10 +272,11 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      *
      * @param issue
      * @param comment
+     * @param mentionedIssues
      * @return {Promise}
      * @private
      */
-    _createComment(issue, content) {
+    async _createComment(issue, content, mentionedIssues) {
         Logger.debug('Prometheus.Controllers.App.Project.Issue.Page::_createComment');
 
         let _self = this;
@@ -287,7 +288,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
 
         Logger.debug('-Prometheus.Controllers.App.Project.Issue.Page::_createComment');
 
-        return comment.save().then(function (savedComment) {
+        return comment.save({adapterOptions: {mentionedIssues: mentionedIssues}}).then(function (savedComment) {
             issue.get('comments').pushObject(savedComment);
             _self.pubSub.trigger('clearContents');
         });
@@ -685,7 +686,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @return {Promise} - A promise that resolves when the comment is successfully saved.
      * @public
      */    
-    @action saveComment(issue, comment) {
+    @action saveComment(issue, comment, mentionedIssues) {
         Logger.debug('Prometheus.Controller.App.Project.Issue.Page::saveComment');
 
         if (comment == undefined) {
@@ -709,11 +710,11 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             Logger.debug('-Prometheus.Controller.App.Project.Issue.Page::saveComment');
             return newConversation.save().then(function (conversation) {
                 issue.set('conversationRoomId', conversation.get('id'))
-               return _self._createComment(issue, comment);
+               return _self._createComment(issue, comment, mentionedIssues);
             });
         } else {
             Logger.debug('-Prometheus.Controller.App.Project.Issue.Page::saveComment');
-            return _self._createComment(issue, comment);
+            return _self._createComment(issue, comment, mentionedIssues);
         }
     }
 

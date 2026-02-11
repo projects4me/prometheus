@@ -1125,6 +1125,8 @@
         "closed": "closed the",
         "updated": "updated the",
         "deleted": "deleted the",
+        "mentioned": "mentioned the",
+        "conversation": "conversation",
         "related": {
           "created": "created a",
           "updated": "updated a",

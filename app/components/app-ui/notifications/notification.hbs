@@ -6,8 +6,10 @@
         </LinkTo>
       </span>
       <span class="notification-content" data-notification-content>
-        <AppUi::Notifications::NotificationTagParser
-          @notification={{@notification}}
+        <AppUi::TagParser
+          @content={{@notification.description}}
+          @context={{@notification.context}}
+          @createdUserName={{@notification.createdUserName}}
         />
         <div class="notification-timestamp" data-notification-timestamp>
           {{format-date-time date=@notification.dateCreated humanize=true}}

@@ -37,13 +37,24 @@ export default class MessageBoxComponent extends Component{
     @tracked isSaving = false;
 
     /**
+     * This property is used to keep track of the mentioned issues
+     *
+     * @property mentionedIssues
+     * @type Array
+     * @for MessageBoxComponent
+     * @private
+     */
+    @tracked mentionedIssues = [];
+
+    /**
      * This function is used to set comment property
      *
      * @method setContent
      * @for MessageBoxComponent
      * @public
      */
-    @action setContent(content) {
+    @action setContent(content, mentionedIssues) {
+        this.mentionedIssues = mentionedIssues;
         this.comment = content;
     }
 
@@ -59,10 +70,9 @@ export default class MessageBoxComponent extends Component{
         if (!content || this.isSaving) {
             return;
         }
-
         if (this.args.save && this.args.entity && shouldSave) {
             this.isSaving = true;
-            await this.args.save(this.args.entity, content);
+            await this.args.save(this.args.entity, content, this.mentionedIssues);
             this.isSaving = false;
         }
     }

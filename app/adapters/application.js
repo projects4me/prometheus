@@ -57,6 +57,29 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
     }
 
     /**
+     * This function is called when a new record is created. It is extended to add the adapter options to the request payload.
+     * 
+     * @method createRecord
+     * @param {*} store 
+     * @param {Object} type - The type of the record to be created
+     * @param {Object} snapshot - The snapshot of the record to be created
+     * @returns {Object} The data of the created record
+     */
+    createRecord(store, type, snapshot) {
+        const url = this.buildURL(type.modelName, null, snapshot, 'createRecord');
+        const serializer = store.serializerFor(type.modelName);
+        let data = {};
+        serializer.serializeIntoHash(data, type.modelName, snapshot, { includeId: true });
+        if (snapshot.adapterOptions) {
+            data.meta = {
+                ...data.meta,
+                ...snapshot.adapterOptions
+            };
+        }
+        return this.ajax(url, 'POST', { data });
+    }    
+
+    /**
      * This function is called when an exisiting record is updated (PATCH). By default on PATCH call, ember data sends attributes
      * to the server which are not even updated. We are overriding this function in order to just add updated attributes
      * of a model to request payload.

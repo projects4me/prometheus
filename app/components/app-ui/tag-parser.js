@@ -2,38 +2,30 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import AppComponent from '../../app';
+import AppComponent from '../app';
 import { htmlSafe } from '@ember/template';
-import { tracked } from '@glimmer/tracking';
 
 /**
- * This component is responsible for parsing notification content and replacing special tags
+ * This component is responsible for parsing content and replacing special tags
  * with formatted HTML content. It handles two types of tags:
  * 1. Module tags in format {{ModuleName@id}} - Replaces with module data
  * 2. Field tags in format {{fieldName:value}} - Replaces with formatted field display
  *
- * @class AppUiNotificationsNotificationTagParserComponent
+ * This component can be used for notifications, activities, or any other content
+ * that contains these special tags.
+ *
+ * @class AppUiTagParserComponent
  * @namespace Prometheus.Components
  * @extends AppComponent
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default class AppUiNotificationsNotificationTagParserComponent extends AppComponent {
-	/**
-	 * This property contains the parsed content.
-	 *
-	 * @property parsedContent
-	 * @type String
-	 * @for AppUiNotificationsNotificationTagParserComponent
-	 * @public
-	 */
-	@tracked parsedContent;
-
+export default class AppUiTagParserComponent extends AppComponent {
 	/**
 	 * Map of module handlers - each handler function generates HTML for a specific module type
 	 *
 	 * @property moduleHandlers
 	 * @type Object
-	 * @for AppUiNotificationsNotificationTagParserComponent
+	 * @for AppUiTagParserComponent
 	 * @public
 	 */
 	moduleHandlers = {
@@ -42,7 +34,8 @@ export default class AppUiNotificationsNotificationTagParserComponent extends Ap
 		issue: this.renderIssueModule,
 		comment: this.renderCommentModule,
 		timelog: this.renderTimelogModule,
-		milestone: this.renderMilestoneModule
+		milestone: this.renderMilestoneModule,
+        conversationroom: this.renderConversationRoomModule
 	};
 
 	/**
@@ -50,7 +43,7 @@ export default class AppUiNotificationsNotificationTagParserComponent extends Ap
 	 *
 	 * @property fieldHandlers
 	 * @type Object
-	 * @for AppUiNotificationsNotificationTagParserComponent
+	 * @for AppUiTagParserComponent
 	 * @public
 	 */
 	fieldHandlers = {
@@ -59,47 +52,47 @@ export default class AppUiNotificationsNotificationTagParserComponent extends Ap
 		createdUser: this.renderCreatedUserField
 	};
 
-	constructor() {
-		super(...arguments);
-		this.parseContent();
-	}
-
 	/**
-	 * Parses the notification content by replacing module and field tags
-	 * with their corresponding HTML representations.
+	 * This property contains the parsed content.
+	 * It's computed reactively based on the content and context arguments.
 	 *
-	 * @method parseContent
+	 * @property parsedContent
+	 * @type String
+	 * @for AppUiTagParserComponent
 	 * @public
 	 */
-	parseContent() {
-		let content = this.replaceModuleTags(this.args.notification);
+	get parsedContent() {
+		let content = this.replaceModuleTags(this.args.content || '');
 		content = this.replaceFieldTags(content);
-
-		this.parsedContent = htmlSafe(content);
+		return htmlSafe(content);
 	}
 
 	/**
 	 * Replaces module tags (e.g. {{User@123}}) with formatted HTML content
 	 *
 	 * @method replaceModuleTags
-	 * @param {Prometheus.Models.Systemnotification} notification The notification to parse.
+	 * @param {String} content The content to parse.
 	 * @return {String} Content with module tags replaced
 	 * @public
 	 */
-	replaceModuleTags(notification) {
-		let content = notification.description || '';
+	replaceModuleTags(content) {
 		const modulePattern = /\{\{([A-Za-z]+)@([A-Za-z0-9\-_]+)\}\}/g;
 		let matches = [...content.matchAll(modulePattern)];
+		const context = this.args.context || {};
+
 		for (const match of matches) {
 			const [fullMatch, moduleName, id] = match;
 			const moduleType = moduleName.toLowerCase();
 
 			try {
-				const handler =
-					this.moduleHandlers[moduleType] ||
-					this.moduleHandlers.default;
-				const replacementHtml = handler.call(this, notification);
-				content = content.replace(fullMatch, replacementHtml);
+				const handler = this.moduleHandlers[moduleType];
+				if (handler) {
+					const replacementHtml = handler.call(this, context);
+					content = content.replace(fullMatch, replacementHtml);
+				} else {
+					// If module handler not found, replace with module name and ID
+					content = content.replace(fullMatch, `${moduleName} ${id}`);
+				}
 			} catch (error) {
 				// If module not found, leave as is or replace with ID
 				content = content.replace(fullMatch, `${moduleName} ${id}`);
@@ -133,72 +126,105 @@ export default class AppUiNotificationsNotificationTagParserComponent extends Ap
 	 * Renders user module HTML
 	 *
 	 * @method renderUserModule
-	 * @param {Prometheus.Models.Systemnotification} notification The notification to parse.
+	 * @param {Object} context The context object containing data for rendering.
 	 * @return {String} HTML representation of user
 	 * @public
 	 */
-	renderUserModule(notification) {
-		return `<a href="/app/user/${notification.context.userId}">${notification.context.userName}</a>`;
+	renderUserModule(context) {
+		if (!context.userId || !context.userName) {
+			return '';
+		}
+		return `<a href="/app/user/${context.userId}">${context.userName}</a>`;
 	}
 
 	/**
 	 * Renders project module HTML
 	 *
 	 * @method renderProjectModule
-	 * @param {Prometheus.Models.Systemnotification} notification The notification to parse.
+	 * @param {Object} context The context object containing data for rendering.
 	 * @return {String} HTML representation of project
 	 * @public
 	 */
-	renderProjectModule(notification) {
-		return `<a href="/app/project/${notification.context.projectShortcode.toLowerCase()}">${notification.context.projectName}</a>`;
+	renderProjectModule(context) {
+		if (!context.projectShortcode || !context.projectName) {
+			return '';
+		}
+		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}">${context.projectName}</a>`;
 	}
 
 	/**
 	 * Renders issue module HTML
 	 *
 	 * @method renderIssueModule
-	 * @param {Prometheus.Models.Systemnotification} notification The notification to parse.
+	 * @param {Object} context The context object containing data for rendering.
 	 * @return {String} HTML representation of issue
 	 * @public
 	 */
-	renderIssueModule(notification) {
-		return `<a href="/app/project/${notification.context.projectShortcode.toLowerCase()}/issue/${notification.context.issueNumber}">#${notification.context.issueNumber}</a>`;
+	renderIssueModule(context) {
+		if (!context.projectShortcode || !context.issueNumber) {
+			return '';
+		}
+		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/issue/${context.issueNumber}">#${context.issueNumber}</a>`;
 	}
 
 	/**
 	 * Renders comment module HTML
 	 *
 	 * @method renderCommentModule
-	 * @param {Prometheus.Models.Systemnotification} notification The notification to parse.
+	 * @param {Object} context The context object containing data for rendering.
 	 * @return {String} HTML representation of comment
 	 * @public
 	 */
-	renderCommentModule(notification) {
-		return `<a href="/app/project/${notification.context.projectShortcode.toLowerCase()}/issue/${notification.context.issueNumber}?s_id=${notification.context.commentId}">commented</a>`;
+	renderCommentModule(context) {
+		if (!context.projectShortcode || !context.issueNumber || !context.commentId) {
+			return '';
+		}
+		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/issue/${context.issueNumber}?s_id=${context.commentId}">commented</a>`;
 	}
 
 	/**
 	 * Renders timelog module HTML
 	 *
 	 * @method renderTimelogModule
-	 * @param {Prometheus.Models.Systemnotification} notification The notification to parse.
+	 * @param {Object} context The context object containing data for rendering.
 	 * @return {String} HTML representation of timelog
 	 * @public
 	 */
-	renderTimelogModule(notification) {
-		return `<a href="/app/project/${notification.context.projectShortcode.toLowerCase()}/issue/${notification.context.issueNumber}?s_id=${notification.context.timelogId}">${notification.context.timelogType}</a>`;
+	renderTimelogModule(context) {
+		if (!context.projectShortcode || !context.issueNumber || !context.timelogId || !context.timelogType) {
+			return '';
+		}
+		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/issue/${context.issueNumber}?s_id=${context.timelogId}">${context.timelogType}</a>`;
 	}
 
 	/**
 	 * Renders milestone module HTML
 	 *
 	 * @method renderMilestoneModule
-	 * @param {Prometheus.Models.Systemnotification} notification The notification to parse.
+	 * @param {Object} context The context object containing data for rendering.
 	 * @return {String} HTML representation of milestone
 	 * @public
 	 */
-	renderMilestoneModule(notification) {
-		return `<a href="/app/project/${notification.context.projectShortcode.toLowerCase()}/milestone/${notification.context.milestoneId}">${notification.context.milestoneName}</a>`;
+	renderMilestoneModule(context) {
+		if (!context.projectShortcode || !context.milestoneId || !context.milestoneName) {
+			return '';
+		}
+		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/milestone/${context.milestoneId}">${context.milestoneName}</a>`;
+	}
+
+	/**
+	 * Renders conversation room module HTML
+	 *
+	 * @method renderConversationRoomModule
+	 * @param {Object} context The context object containing data for rendering.
+	 * @return {String} HTML representation of conversation room
+	 * @public
+	 */
+	renderConversationRoomModule(context) {
+		if (!context.projectShortcode || !context.conversationId) {
+			return '';
+		}
+		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/conversations?c_id=${context.conversationId}">${this.intl.t('views.app.activity.conversation')}</a>`;
 	}
 
 	/**
@@ -236,7 +262,24 @@ export default class AppUiNotificationsNotificationTagParserComponent extends Ap
 	 * @public
 	 */
 	renderCreatedUserField(value) {
-		let notification = this.args.notification;
-		return `<a href="/app/user/${value}">${notification.createdUserName}</a>`;
+		const createdUserName = this.args.createdUserName || '';
+		if (!value || !createdUserName) {
+			return '';
+		}
+		return `<a href="/app/user/${value}">${createdUserName}</a>`;
+	}
+
+	/**
+	 * Renders default field HTML for unknown field types
+	 *
+	 * @method renderDefaultField
+	 * @param {String} fieldName The name of the field
+	 * @param {String} value The value of the field
+	 * @return {String} HTML representation of the field
+	 * @public
+	 */
+	renderDefaultField(fieldName, value) {
+		return `<span class="field-tag ${fieldName}">${value}</span>`;
 	}
 }
+
