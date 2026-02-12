@@ -178,4 +178,64 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
         
         return baseUrl;
     }
+
+    /**
+     * This method is overridden to handle the token refresh. If the token is about to expire in less than 60 seconds,
+     * we will refresh the token.
+     *
+     * @param {String} url - The URL to make the request to
+     * @param {String} type - The type of the request
+     * @param {Object} options - The options for the request
+     * @returns {Promise} The response from the server
+     * @method ajax
+     */
+    async ajax(url, type, options) {
+        if (this.session.isAuthenticated) {
+            const now = Date.now();
+      
+            // Token is about to expire in less than 60s
+            if (this.session.get('data.authenticated.expires_at') - now < 60000 && this.session.get('data.authenticated.refresh_token')) {
+              try {
+                const fetchResponse = await fetch(ENV.api.host + '/api/v' + ENV.api.version + "/token", {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    grant_type: 'refresh_token',
+                    refresh_token: this.session.get('data.authenticated.refresh_token'),
+                    client_id: ENV.api.clientId,
+                    client_secret: ENV.api.clientSecret,
+                  }),
+                });
+
+                if (!fetchResponse.ok) {
+                  throw new Error(`Token refresh failed: ${fetchResponse.statusText}`);
+                }
+
+                const response = await fetchResponse.json();
+                const expiresAt = new Date(now + response.expires_in * 1000).getTime();
+                this.session.set('data.authenticated.access_token', response.access_token);
+                this.session.set('data.authenticated.expires_at', expiresAt);
+                this.session.set('data.authenticated.refresh_token', response.refresh_token);
+                this.session.store.persist({
+                    authenticated: {
+                        authenticator: 'authenticator:oauth2',
+                        access_token: response.access_token,
+                        expires_at: expiresAt,
+                        refresh_token: response.refresh_token,
+                        scope: response.scope,
+                        token_type: response.token_type,
+                    }
+                });
+              } catch (err) {
+                // Refresh failed → log out user
+                this.session.invalidate();
+                throw err;
+              }
+            }
+          }
+          
+          return super.ajax(url, type, options);
+      }   
 }
