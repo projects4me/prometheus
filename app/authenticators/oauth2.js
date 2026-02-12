@@ -150,7 +150,7 @@ export default OAuth2PasswordGrant.extend({
      * @returns {Promise}
      */
     _refreshAccessToken(expiresIn, refreshToken, scope) {
-        const data = { grant_type: 'refresh_token', refresh_token: refreshToken, client_id: this.apiClientId, client_secret: this.apiClientSecret };
+        const data = { grant_type: 'refresh_token', refresh_token: this.getUpdatedRefreshToken(refreshToken), client_id: this.apiClientId, client_secret: this.apiClientSecret };
         const refreshAccessTokensWithScope = this.get('refreshAccessTokensWithScope');
         if (refreshAccessTokensWithScope && !isEmpty(scope)) {
             data.scope = scope;
@@ -191,4 +191,18 @@ export default OAuth2PasswordGrant.extend({
             )
         });
     },
+    /**
+     * This method is used to get the updated refresh token from the session.
+     * @method getUpdatedRefreshToken
+     * @param {String} refreshToken 
+     * @returns {String} The updated refresh token
+     */
+    getUpdatedRefreshToken(refreshToken) {
+        if(this.session.get('data.authenticated.refresh_token')
+            &&
+            this.session.get('data.authenticated.refresh_token') !== refreshToken) {
+            return this.session.get('data.authenticated.refresh_token');
+        }
+        return refreshToken;
+    }
 });
