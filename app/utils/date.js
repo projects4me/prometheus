@@ -74,4 +74,16 @@ export default class DateUtils {
 		const minutes = duration.minutes();
 		return { hours, minutes };
 	}
+
+	/**
+	 * Returns the current date and time in 'YYYY-MM-DD HH:mm:ss.0' format.
+	 *
+	 * @method getNow
+	 * @static
+	 * @returns {string} The current date and time in 'YYYY-MM-DD HH:mm:ss.0' format.
+	 * @public
+	 */
+	static getNow() {
+		return moment().utc().format('YYYY-MM-DD HH:mm:ss');
+	}
 }

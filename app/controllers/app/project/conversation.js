@@ -442,7 +442,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                 order: "DESC",
                 sort: "Conversationroom.dateModified",
                 rels: 'votes',
-                query: "(Conversationroom.projectId : " + projectId + ")",
+                query: `(Conversationroom.projectId : ${projectId}) AND (Conversationroom.dateModified <: ${this.now})`,
                 limit: this.pageSize,
                 page: this.page + 1
             };
@@ -451,7 +451,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
 
             for(let conversation of newConversations.toArray()) {
                 let comments = await this.store.query('comment', {
-                    query: `(Comment.relatedId : ${conversation.id})`,
+                    query: `(Comment.relatedId : ${conversation.id}) AND (Comment.dateCreated <: ${this.now})`,
                     sort: 'Comment.dateCreated',
                     order: 'ASC',
                     limit: -1
