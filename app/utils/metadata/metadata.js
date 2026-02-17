@@ -438,7 +438,7 @@ export default Object.extend({
                 recentIssues: {
                     model: 'issue',
                     options: {
-                        query: "((Issue.projectId CONTAINS ```MY_PROJECTS```))",
+                        query: "((Issue.projectId CONTAINS ```MY_PROJECTS```) AND (Issue.dateModified <: ```NOW```))",
                         rels : 'project',
                         sort: "Issue.dateModified",
                         order: 'DESC',

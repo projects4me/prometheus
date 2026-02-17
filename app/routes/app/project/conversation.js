@@ -4,6 +4,7 @@
 
 import App from "prometheus/routes/app";
 import { inject } from '@ember/service';
+import DateUtils from 'prometheus/utils/date';
 
 /**
  * This is the route to load the conversations for a project
@@ -57,6 +58,16 @@ export default App.extend({
     trackedProject: inject(),
 
     /**
+     * The current date and time in 'YYYY-MM-DD HH:mm:ss.0' format.
+     *
+     * @property now
+     * @type string
+     * @for Conversation
+     * @private
+     */
+    now : DateUtils.getNow(),
+    
+    /**
      * The model hook for this route. This is used load the conversations that we have in the system.
      * 
      * @method model
@@ -72,7 +83,7 @@ export default App.extend({
             order: "DESC",
             sort: "Conversationroom.dateModified",
             rels: 'votes',
-            query: "(Conversationroom.projectId : " + projectId + ")",
+            query: `(Conversationroom.projectId : ${projectId}) AND (Conversationroom.dateModified <: ${this.now})`,
             limit: 10,
             page: 1
         }
@@ -87,7 +98,7 @@ export default App.extend({
 
         for(let conversation of conversations.toArray()) {
             let comments = await this.store.query('comment', {
-                query: `(Comment.relatedId : ${conversation.id})`,
+                query: `(Comment.relatedId : ${conversation.id}) AND (Comment.dateCreated <: ${this.now})`,
                 sort: 'Comment.dateCreated',
                 order: 'ASC',
                 limit: -1
@@ -141,5 +152,6 @@ export default App.extend({
         controller.set('projectId', this.trackedProject.getProjectId());
         controller.set('projectShortcode', this.trackedProject.shortCode);
         controller.set('hasMoreConversations', model.conversations.length >= controller.pageSize);
+        controller.set('now', this.now);
     },
 });
