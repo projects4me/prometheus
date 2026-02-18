@@ -98,9 +98,35 @@ export default class NavBarComponent extends AppComponent {
         this.projectId = project.value;
         this.trackedProject.setProjectId(project.value);
         let selectedProject = this.trackedProject.getProject();
-
+        let lastSelectedProject = this.trackedProject.lastSelectedProject;
         if(selectedProject.shortCode !== undefined){
-            this.router.transitionTo('app.project', { shortcode: selectedProject.shortCode.toLowerCase() });
+            let url = this.getTransitionUrl(selectedProject, lastSelectedProject);
+            this.router.transitionTo(url);
+        }
+    }
+
+    /**
+     * This function is used to get the url when a project is changed
+     *
+     * @method getTransitionUrl
+     * @param {Object} selectedProject The selected project
+     * @param {Object} lastSelectedProject The last selected project
+     * @return {String} The url to transition to
+     */
+    getTransitionUrl(selectedProject, lastSelectedProject) {
+        let notAllowedTransitions = ['app.project.index', 'app.project.issue.page', 'app.project.wiki.page'];
+        if(notAllowedTransitions.includes(this.router.currentRouteName)){
+            return `/app/project/${selectedProject.shortCode.toLowerCase()}`;
+        }
+        let currentUrl = this.router.currentURL;
+        if(lastSelectedProject && currentUrl.includes(lastSelectedProject.shortCode.toLowerCase())){
+            let url = currentUrl.replace(lastSelectedProject.shortCode.toLowerCase(), selectedProject.shortCode.toLowerCase());
+            if(url.includes('?')){
+                url = url.split('?')[0];
+            }
+            return url;
+        } else {
+            return `/app/project/${selectedProject.shortCode.toLowerCase()}`;
         }
     }
 

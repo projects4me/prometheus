@@ -270,6 +270,7 @@ export default App.extend({
         controller.set('issueTypes',this.issueTypes);
         controller.set('issueStatuses',this.issueStatuses);
         controller.set('milestones',this.milestones);
+        controller.set('selectedIssue', null);
         
         if(controller.searchId && this.savedsearches) {
             controller.set('activeSearch', this.savedsearches.find(search => search.id === controller.searchId) || null);
