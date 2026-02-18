@@ -28,6 +28,16 @@ export default class TrackedProjectService extends Service {
 	@tracked id = this.getProjectId();
 
 	/**
+	 * The last selected project
+	 *
+	 * @property lastSelectedProject
+	 * @type Object
+	 * @for TrackedProject
+	 * @public
+	 */
+	@tracked lastSelectedProject = null;
+
+	/**
 	 * The store service.
 	 *
 	 * @property store
@@ -55,6 +65,7 @@ export default class TrackedProjectService extends Service {
 	 * @public
 	 */
 	setProjectId(projectId) {
+		this.lastSelectedProject = this.getProject();
 		this.id = projectId;
 		sessionStorage.setItem('projectId', projectId);
 	}
