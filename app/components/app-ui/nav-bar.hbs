@@ -17,7 +17,7 @@
     <PowerSelect
         class="form-control"
         @options={{this.projectsList}}
-        @selected={{find-by "value" this.projectId this.projectsList}}
+        @selected={{find-by "value" this.trackedProject.id this.projectsList}}
         @placeholder={{t "views.nav.selectproject"}}
         searchField="label"
         @onChange={{this.projectChanged}}

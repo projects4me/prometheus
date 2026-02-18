@@ -205,6 +205,7 @@ export default App.extend({
         controller.set('issueStatuses', model.issueStatuses);
         controller.set('savedSearches', model.savedSearches);
         controller.set('query', this.query);
+        controller.set('selectedIssue', null);
     },
 
     /**

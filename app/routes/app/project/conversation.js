@@ -102,7 +102,7 @@ export default App.extend({
         let selectedConversation = null;
         if(params.c_id) {
             selectedConversation = await this.store.query('conversationroom', {
-                query: `(Conversationroom.id : ${params.c_id})`,
+                query: `((Conversationroom.id : ${params.c_id}) AND (Conversationroom.projectId : ${projectId}))`,
                 rels: 'votes,comments',
                 limit: -1
             }).catch((error) => {
@@ -142,4 +142,17 @@ export default App.extend({
         controller.set('projectShortcode', this.trackedProject.shortCode);
         controller.set('hasMoreConversations', model.conversations.length >= controller.pageSize);
     },
+    /**
+     * This function is called when the route is exited.
+     *
+     * @method resetController
+     * @param {Prometheus.Controller.Conversation} controller The controller object for this route
+     * @param {boolean} isExiting Whether the route is exiting
+     * @private
+     */
+    resetController: function (controller, isExiting) {
+        if (isExiting) {
+            controller.selectedConversation = null;
+        }
+    }
 });
