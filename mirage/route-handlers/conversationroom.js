@@ -1,12 +1,15 @@
 import getRequestData from "../helpers/parse-request";
+import Context from "../yadda-context/context";
 
 export function register(server, ctx) {
     server.get('/conversationroom', (schema, request) => {
-        return schema.conversationrooms.all();
-    });
-
-    server.get('/conversations', (schema, request) => {
-        return schema.conversationrooms.all();
+        let ctx = new Context();
+        let model = schema.conversationrooms.all();
+        let customCallback = ctx.get('cbConversationRoom');
+        if (customCallback) {
+            return customCallback(model);
+        }
+        return model;
     });
 
     server.post('/conversationroom', (schema, request) => {

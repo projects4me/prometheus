@@ -86,4 +86,66 @@ export default class DateUtils {
 	static getNow() {
 		return moment().utc().format('YYYY-MM-DD HH:mm:ss');
 	}
+
+	/**
+	 * Returns a date range based on the given context.
+	 *
+	 * @method getRangeByContext
+	 * @static
+	 * @param {string} context - One of:
+	 *  'today' | 'thisWeek' | 'thisMonth' | 'lastMonth' | 'last3Months' | 'thisYear'
+	 * @returns {Object} An object with `startDate` and `endDate`
+	 * @public
+	 *
+	 * @example
+	 * DateUtils.getRangeByContext('today');
+	 * DateUtils.getRangeByContext('thisWeek');
+	 */
+	static getRangeByContext(context) {
+		const now = moment().utc();
+
+		let start;
+		let end;
+
+		switch (context) {
+			case 'today':
+				start = now.clone().startOf('day');
+				end = now.clone().endOf('day');
+				break;
+
+			case 'thisWeek':
+				start = now.clone().startOf('isoWeek');
+				end = now.clone().endOf('isoWeek');
+				break;
+
+			case 'thisMonth':
+				start = now.clone().startOf('month');
+				end = now.clone().endOf('month');
+				break;
+
+			case 'lastMonth':
+				start = now.clone().subtract(1, 'month').startOf('month');
+				end = now.clone().subtract(1, 'month').endOf('month');
+				break;
+
+			case 'last3Months':
+				start = now.clone().subtract(2, 'months').startOf('month');
+				end = now.clone().endOf('month');
+				break;
+
+			case 'thisYear':
+				start = now.clone().startOf('year');
+				end = now.clone().endOf('year');
+				break;
+
+			default:
+				start = now.clone().startOf('day');
+				end = now.clone().endOf('day');
+		}
+
+		return {
+			startDate: start.format('YYYY-MM-DD HH:mm:ss.0'),
+			endDate: end.format('YYYY-MM-DD HH:mm:ss.0')
+		};
+	}	
 }

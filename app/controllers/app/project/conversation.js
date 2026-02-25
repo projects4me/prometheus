@@ -9,6 +9,8 @@ import $ from "jquery";
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import DateUtils from 'prometheus/utils/date';
+
 /**
  * This is the controller for the conversation controller route
  *
@@ -98,7 +100,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @for AppProjectConversationController
      * @public
      */
-    queryParams = ['c_id'];
+    queryParams = ['c_id', 'query', 'filter', 'date', 'q'];
 
     /**
      * This function is called on the initialization of the controller. In this function
@@ -164,6 +166,15 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     @service pubSub;
 
     /**
+     * Current user
+     * @property currentUser
+     * @type Ember.Service
+     * @for Conversation
+     * @public
+     */
+    @service currentUser;
+
+    /**
      * Available room types
      *
      * @property roomTypes
@@ -225,6 +236,137 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @public
      */
     @tracked conversations = [];
+
+    /**
+     * The query for the filtered conversations
+     * @property filterQuery
+     * @type {string}
+     * @public
+     */
+    @tracked filterQuery = null;
+
+    /**
+     * This is used to identify the module to which filter will be applied.
+     * 
+     * @property filterRelatedTo
+     * @type {string}
+     * @public
+     */
+    @tracked filterRelatedTo = '';
+
+    /**
+     * The date range for the filtered conversations
+     * @property range
+     * @type {string}
+     * @public
+     */
+    @tracked dateRange = null;
+
+    /**
+     * Static list of filters for conversations
+     * @property conversationFilters
+     * @type {Array}
+     * @public
+     */
+    conversationFilters = [
+        { name: 'myLikes', label: 'My Likes', 
+          query: () => `(votes.createdUser : ${this.currentUser.user.id})`
+        },
+        { name: 'votes', label: 'Votes',
+            query: () => `(Conversationroom.roomType : vote)`,
+         },
+        { name: 'discussion', label: 'Discussion',
+          query: () => `(Conversationroom.roomType : discussion)`,
+        },
+        { name: 'linkedWithIssues', label: 'Linked With Issues',
+          query: () => `(Conversationroom.issueNumber !NULL)`,
+        },
+        { name: 'unlinked', label: 'Unlinked',
+          query: () => `(Conversationroom.issueNumber NULL)`,
+        }
+    ];
+
+    /**
+     * Active filter (single select)
+     * @property activeFilter
+     * @type {string|null}
+     * @public
+     */
+    @tracked activeFilter = null;
+
+    /**
+     * Computed property that returns filters with active state
+     * @property filters
+     * @type {Array}
+     * @public
+     */
+    get filters() {
+        return this.conversationFilters.map((filter) => {
+            return {
+                label: filter.label,
+                value: filter.name,
+                query: filter?.query?.() || '',
+                isActive: this.activeFilter === filter.name
+            };
+        });
+    }
+
+    /**
+     * Static list of date filters for conversations
+     * @property conversationDateFilters
+     * @type {Array}
+     * @public
+     */
+    conversationDateFilters = [
+        { name: 'today', label: 'Today' },
+        { name: 'thisWeek', label: 'This Week' },
+        { name: 'thisMonth', label: 'This Month' },
+        { name: 'lastMonth', label: 'Last Month' },
+        { name: 'last3Months', label: 'Last 3 Months' },
+        { name: 'thisYear', label: 'This Year' }
+    ];
+
+    /**
+     * Active date filter (single select)
+     * @property activeDateFilter
+     * @type {string|null}
+     * @public
+     */
+    @tracked activeDateFilter = null;
+
+    /**
+     * Computed property that returns date filters with active state
+     * @property dateFilters
+     * @type {Array}
+     * @public
+     */
+    get dateFilters() {
+        return this.conversationDateFilters.map((filter) => {
+            return {
+                label: filter.label,
+                value: filter.name,
+                isActive: this.activeDateFilter === filter.name,
+                startDate: DateUtils.getRangeByContext(filter.name).startDate,
+                endDate: DateUtils.getRangeByContext(filter.name).endDate
+            };
+        });
+    }
+
+    /**
+     * The search query that will be used to filter the conversations
+     * @property searchQuery
+     * @type {string}
+     * @public
+     */
+    @tracked searchQuery = null;
+
+    /**
+     * The current search keywords entered by the user
+     * @property searchText
+     * @type {string}
+     * @public
+     */
+    @tracked searchText = '';
 
     /**
      * This function is used to create a comment on the conversation.
@@ -436,31 +578,19 @@ export default class AppProjectConversationController extends PrometheusCreateCo
 
         try {
             this.isLoadingConversations = true;
-            
-            let projectId = this.trackedProject.getProjectId();
+            let newConversations = [];
             let _conversationOptions = {
                 order: "DESC",
                 sort: "Conversationroom.dateModified",
                 rels: 'votes',
-                query: `(Conversationroom.projectId : ${projectId}) AND (Conversationroom.dateModified <: ${this.now})`,
                 limit: this.pageSize,
                 page: this.page + 1
-            };
-
-            let newConversations = await this.store.query('conversationroom', _conversationOptions);
-
-            for(let conversation of newConversations.toArray()) {
-                let comments = await this.store.query('comment', {
-                    query: `(Comment.relatedId : ${conversation.id}) AND (Comment.dateCreated <: ${this.now})`,
-                    sort: 'Comment.dateCreated',
-                    order: 'ASC',
-                    limit: -1
-                }).catch((error) => {
-                    this.errorManager.handleError(error, {
-                        moduleName: 'conversationroom'
-                    });
-                });
-                conversation.comments = comments;
+            }
+            if(!this.query) {
+                newConversations = await this.fetchAllConversations(_conversationOptions);
+            } else {
+                _conversationOptions.query = `(Conversationroom.projectId : ${this.projectId}) AND (Conversationroom.dateModified <: ${this.now}) AND (${this.query})`;
+                newConversations = await this.fetchFilteredConversations(_conversationOptions);
             }
             // Check if we've reached the end
             if (newConversations.length < this.pageSize) {
@@ -484,6 +614,73 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         } finally {
             this.isLoadingConversations = false;
         }
+    }
+
+    /**
+     * Fetches all conversations for the project.
+     * 
+     * @method fetchAllConversations
+     * @param {Object} options - The options for the query
+     * @public
+     * @async
+     * @returns {Promise<Array>} Returns an array of conversations
+     */
+    async fetchAllConversations(options) {
+        let newConversations = await this.store.query('conversationroom', options).catch((error) => {
+            this.errorManager.handleError(error, {
+                moduleName: 'conversationroom'
+            });
+        });
+        newConversations = await this.fetchAndLinkComments(newConversations);
+        return newConversations;
+    }
+
+    /**
+     * This function is used to fetch the conversations that match the filter criteria.
+     * 
+     * @method fetchFilteredConversations
+     * @param {Object} options - The options for the query
+     * @returns {Promise<Array>} Returns an array of conversations
+     */
+    async fetchFilteredConversations(options) {
+        let conversations = await this.store.query('conversationroom', options)
+            .catch((error) => {
+                this.errorManager.handleError(error, {
+                    moduleName: 'conversationroom'
+                })
+            });
+        conversations = await this.fetchAndLinkComments(conversations).catch((error) => {
+            this.errorManager.handleError(error, {
+                moduleName: 'conversationroom'
+            });
+        });
+        return conversations;
+    }
+
+    /**
+     * This function is used to fetch the comments for the conversations and link them to the conversations.
+     * 
+     * @method fetchAndLinkComments
+     * @param {Array} conversations - Array of conversations
+     * @public
+     * @async
+     * @returns {Promise<Array>} Returns an array of conversations with comments linked
+     */
+    async fetchAndLinkComments(conversations) {
+        for(let conversation of conversations.toArray()) {
+            let comments = await this.store.query('comment', {
+                query: `(Comment.relatedId : ${conversation.id}) AND (Comment.dateCreated <: ${this.now})`,
+                sort: 'Comment.dateCreated',
+                order: 'ASC',
+                limit: -1
+            }).catch((error) => {
+                this.errorManager.handleError(error, {
+                    moduleName: 'conversationroom'
+                });
+            });
+            conversation.comments = comments;
+        }
+        return conversations;
     }
 
     /**
@@ -534,5 +731,168 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      */
     @action scrollToTop() {
         window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    /**
+     * Handles the filter toggle functionality for conversations
+     * Toggles the filter on/off
+     *
+     * @method handleFilterToggle
+     * @param {string} filterName - The name of the filter to toggle
+     * @public
+     * @action
+     */
+    @action
+    handleFilterToggle(filterName) {
+        if (this.activeFilter === filterName) {
+            this.activeFilter = null;
+            this.filterQuery = null;
+        } else {
+            this.activeFilter = filterName;
+            const match = this.filters.find((f) => f.value === filterName);
+            this.filterQuery = match ? match.query : null;
+        }
+    }
+
+    /**
+     * Handles the date filter toggle functionality for conversations
+     * Single select: one date filter at a time
+     *
+     * @method handleDateToggle
+     * @param {string} dateFilterName - The name of the date filter to toggle
+     * @public
+     * @action
+     */
+    @action
+    handleDateToggle(dateFilterName) {
+        if (this.activeDateFilter === dateFilterName) {
+            this.activeDateFilter = null;
+            this.dateRange = null;
+        } else {
+            this.activeDateFilter = dateFilterName;
+            const dateFilter = this.dateFilters.find((f) => f.value === dateFilterName);
+            this.dateRange = dateFilter
+                ? `((Conversationroom.dateModified >: ${dateFilter.startDate}) AND (Conversationroom.dateModified <: ${dateFilter.endDate}))`
+                : null;
+        }
+    }
+
+    /**
+     * Handles the search functionality for conversations
+     * Search functionality will be implemented in next iteration
+     *
+     * @method handleSearch
+     * @public
+     * @action
+     */
+    @action
+    handleSearch() {
+        let query = this.filterQuery ? String(this.filterQuery) : null;
+
+        if (this.dateRange) {
+            query = query ? query + ' AND ' + this.dateRange : this.dateRange;
+        }
+        if (this.searchQuery) {
+            query = query ? query + ' AND ' + this.searchQuery : this.searchQuery;
+        }
+
+        this.set('query', query);
+        this.set('filter', this.activeFilter);
+        this.set('date', this.activeDateFilter);
+        this.set('q', this.searchText || '');
+    }
+
+    /**
+     * Handles Enter key press in the search input field
+     * Triggers the search action when Enter is pressed
+     *
+     * @method handleEnterKey
+     * @param {Event} event - The keyboard event
+     * @public
+     * @action
+     */
+    @action
+    handleEnterKey(event) {
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            event.preventDefault();
+            this.handleSearch();
+        }
+    }
+
+    /**
+     * Updates the search query in the search input field
+     * @method updateSearchQuery
+     * @param {Event} event - The keyboard event
+     * @public
+     * @action
+     */
+    @action
+    updateSearchQuery(event) {
+        let query = event.target.value;
+        this.searchText = query;
+        let searchQuery = `((Conversationroom.subject CONTAINS ${query}) OR (Conversationroom.description CONTAINS ${query}))`;
+        this.searchQuery = searchQuery;
+    }
+
+    /**
+     * Restores dropdown and search state from URL query params (filter, date, q).
+     * Called when the route loads so dropdowns reflect applied filters on reload.
+     *
+     * @method restoreStateFromQueryParams
+     * @public
+     */
+    restoreStateFromQueryParams() {
+        const filterParam = this.filter;
+        const dateParam = this.date;
+        const qParam = this.q;
+
+        if (filterParam && this.conversationFilters.some((f) => f.name === filterParam)) {
+            this.activeFilter = filterParam;
+            const match = this.conversationFilters.find((f) => f.name === filterParam);
+            this.filterQuery = match?.query?.() ?? null;
+        } else {
+            this.activeFilter = null;
+            this.filterQuery = null;
+        }
+
+        if (dateParam && this.conversationDateFilters.some((f) => f.name === dateParam)) {
+            this.activeDateFilter = dateParam;
+            const range = DateUtils.getRangeByContext(dateParam);
+            this.dateRange = `(Conversationroom.dateModified >: ${range.startDate}) AND (Conversationroom.dateModified <: ${range.endDate})`;
+        } else {
+            this.activeDateFilter = null;
+            this.dateRange = null;
+        }
+
+        if (qParam && String(qParam).trim()) {
+            this.searchText = String(qParam).trim();
+            const q = this.searchText;
+            this.searchQuery = `((Conversationroom.subject CONTAINS ${q}) OR (Conversationroom.description CONTAINS ${q}))`;
+        } else {
+            this.searchText = '';
+            this.searchQuery = null;
+        }
+    }    
+
+    /**
+     * Clears the search query in the search input field
+     * @method clearSearch
+     * @public
+     * @action
+     */
+    @action
+    clearSearch() {
+        this.set('query', null);
+        this.set('filter', null);
+        this.set('date', null);
+        this.set('q', null);
+        this.dateRange = null;
+        this.searchText = '';
+        this.filterQuery = null;
+        this.searchQuery = null;
+        this.hasMoreConversations = true;
+        this.page = 1;
+        this.activeFilter = null;
+        this.activeDateFilter = null;
     }
 }

@@ -6,28 +6,28 @@ export const when = function () {
     return [
         {
             "User clicks on add button to create conversation": (assert) => async function () {
-                let addBtn = document.querySelector('div[data-btn="addConversation"]');
+                let addBtn = document.querySelector('[data-btn="addConversation"]');
                 await click(addBtn);
                 assert.ok(true, "User clicks on add button to create conversation")
             }
         },
         {
             "User enters $subject in subject of conversation": (assert) => async function (subject) {
-                let subjectInputEl = document.querySelector('div[data-field="newConversation.subject"] input');
+                let subjectInputEl = document.querySelector('[data-field="newConversation.subject"] input');
                 await fillIn(subjectInputEl, subject);
                 assert.ok(true, `User enters ${subject} in subject of conversation`)
             }
         },
         {
             "User enters $topic in topic of conversation": (assert) => async function (topic) {
-                let topicInputEl = document.querySelector('div[data-field="newConversation.description"] textarea');
+                let topicInputEl = document.querySelector('[data-field="newConversation.description"] textarea');
                 await fillIn(topicInputEl, topic);
                 assert.ok(true, `User enters ${topic} in topic of conversation`);
             }
         },
         {
             "User selects type of conversation": (assert) => async function () {
-                let selectEl = document.querySelector(`div[data-field="newConversation.roomType"] > div.input-group`);
+                let selectEl = document.querySelector(`[data-field="newConversation.roomType"] > div.input-group`);
                 await selectChoose(selectEl.querySelector('div'), '.ember-power-select-option', 1);
                 assert.ok(true, `User selects type of conversation`);
             }

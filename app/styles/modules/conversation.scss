@@ -337,3 +337,60 @@
     margin-left: 0.5rem;
   }
 }
+
+/*=====  Conversation Search Bar  ======*/
+.conversation-search-bar {
+  .conversation-search-bar__button-col {
+    background: white;
+    padding: 1rem;
+    margin-right: 1rem;
+  }
+
+  .conversation-search-bar__body {
+    width: 100%;
+    background: white;
+  }
+
+  .conversation-search-container {
+    #conversation-search {
+      height: 3rem;
+    }
+    .app-dropdown-btn {
+      border: 1px solid #ddd;
+      height: 3rem;
+    }
+    .box-tools {
+      gap: 0.5rem;
+
+      .fa {
+        margin-right: 0.3rem;
+      }
+
+      .badge {
+        top: 0;
+        margin-right: 0.1rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 1492px) {
+  .conversation-search-container {
+    display: block;
+  }
+
+  .conversation-search-container .search-buttons {
+    margin-top: 1rem;
+  }
+}
+
+/*=====  End of Conversation Search Bar  ======*/
+
+/*=====  Conversation Empty State  ======*/
+.conversation-grid {
+  .no-content {
+    background-color: $backgroundColor;
+  }
+}
+
+/*=====  End of Conversation Empty State  ======*/
