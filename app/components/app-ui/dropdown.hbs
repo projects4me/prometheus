@@ -5,7 +5,7 @@
 >
   <button
     type="button"
-    class="btn btn-primary app-dropdown-btn"
+    class="btn {{if @isPrimary 'btn-primary' 'btn-default'}} app-dropdown-btn"
     {{on "click" this.toggleDropdown}}
     aria-haspopup="true"
     aria-expanded={{this.isOpen}}

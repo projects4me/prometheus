@@ -648,11 +648,30 @@
             }
           ]
         },
+        "emptyStateMessage": "No conversations found",
         "loading": "Loading more conversations...",
         "noMore": "No more conversations to load",
         "refreshing": "Refreshing conversations...",
         "refreshed": "Conversations refreshed successfully",
         "refreshError": "Failed to refresh conversations, please try again later",
+        "searchPlaceholder": "Enter search term...",
+        "filters": {
+          "discussion": "Discussion",
+          "vote": "Vote",
+          "linkedWithIssues": "Linked With Issues",
+          "unlinked": "Unlinked",
+          "myLikes": "My Likes",
+          "votes": "Votes"
+        },
+        "dateFilters": {
+          "label": "Dates",
+          "today": "Today",
+          "thisWeek": "This Week",
+          "thisMonth": "This Month",
+          "lastMonth": "Last Month",
+          "last3Months": "Last 3 Months",
+          "thisYear": "This Year"
+        },
         "edit": {
           "title": "Edit Conversation",
           "update": "Update",

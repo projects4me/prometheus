@@ -18,38 +18,126 @@
       >
         <:default>
           <div class="conversation-grid">
-            {{!-- Sections that lets us create a new conversation --}}
-            <div class="conversation-item">
-              <div class="box box-widget">
+            {{!-- Search bar for conversations --}}
+            <div class="conversation-item conversation-search-bar">
+              <div class="flex-row flex-ai-c">
+                <div class="conversation-search-bar__button-col">
+                  <AppUi::Button
+                    type="button"
+                    class="btn btn-default"
+                    data-btn="addConversation"
+                    @onClick={{action "showDialog"}}
+                  >
+                    <i class="fa fa-plus"></i>
+                  </AppUi::Button>                      
+                </div>
+                <div class="box-body conversation-search-bar__body">
+                  <div class="conversation-search-container flex-row flex-ai-c flex-jc-sb">
+                    <div class="box-tools filters flex-row flex-ai-c">
+                      {{!-- Search keywords input --}}
+                      <div class="search-container">
+                        <Input
+                          {{on "keyup" this.updateSearchQuery}}
+                          {{on "keypress" this.handleEnterKey}}
+                          @value={{this.searchText}}
+                          name="query"
+                          id="conversation-search"
+                          autocomplete="off"
+                          placeholder={{t "views.app.conversation.searchPlaceholder"}}
+                          class="form-control"
+                        />
+                      </div>
 
-                <div class="box-start">
-                  <img class="img-responsive img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
-                  {{!-- .img-push is used to add margin to elements next to floating images --}}
-                  <div class="img-push">
-                    <a href="javascript:void(0);" {{action "showDialog"}}>
-                      <span class="disabled-text new-conversation">
-                        {{t "views.app.conversation.create"}}
-                        <div class="pull-right" data-btn="addConversation">
-                          <i class="fa fa-plus btn"></i>
-                        </div>
-                      </span>
-                    </a>
+                      {{!-- Date filters dropdown --}}
+                      {{#if this.dateFilters}}
+                        <AppUi::Dropdown>
+                          <:button>
+                            <i class="fa fa-calendar"></i>
+                            {{#if this.activeDateFilter}}
+                              <span>{{t (concat "views.app.conversation.dateFilters." this.activeDateFilter)}}</span>
+                              {{else}}
+                                <span>{{t "views.app.conversation.dateFilters.label"}}</span>
+                            {{/if}}
+                          </:button>
+                          <:content>
+                            {{#each this.dateFilters as |dateFilter|}}
+                              <a href="#" {{on "click" (fn this.handleDateToggle dateFilter.value)}} data-date-filter-name="{{dateFilter.value}}">
+                                {{dateFilter.label}}
+                                {{#if dateFilter.isActive}}
+                                  <i class="fa fa-check pull-right"></i>
+                                {{/if}}
+                              </a>
+                            {{/each}}
+                          </:content>
+                        </AppUi::Dropdown>
+                      {{/if}}
+
+                      {{!-- Filter dropdown --}}
+                      {{#if this.filters}}
+                        <AppUi::Dropdown>
+                          <:button>
+                            <i class="fa fa-filter"></i>
+                            {{#if this.activeFilter}}
+                              <span>{{t (concat "views.app.conversation.filters." this.activeFilter)}}</span>
+                              {{else}}
+                                <span>{{t "views.app.components.table.filters"}}</span>
+                            {{/if}}
+                          </:button>
+                          <:content>
+                            {{#each this.filters as |filter|}}
+                              <a href="#" {{on "click" (fn this.handleFilterToggle filter.value)}} data-filter-name="{{filter.value}}">
+                                {{filter.label}}
+                                {{#if filter.isActive}}
+                                  <i class="fa fa-check pull-right"></i>
+                                {{/if}}
+                              </a>
+                            {{/each}}
+                          </:content>
+                        </AppUi::Dropdown>
+                      {{/if}}
+                    </div>
+
+                      <div class="search-buttons">
+                          {{!-- Search button --}}
+                          <AppUi::Button
+                            type="button"
+                            class="btn btn-default"
+                            data-btn="search"
+                            @onClick={{this.handleSearch}}
+                          >
+                            <i class="fa fa-search"></i>
+                            {{t "global.form.search"}}
+                          </AppUi::Button>
+                          <AppUi::Button
+                            type="button"
+                            class="btn btn-default"
+                            data-btn="clearSearch"
+                            disabled={{not this.query}}
+                            @onClick={{this.clearSearch}}
+                          >
+                            <i class="fa fa-times"></i>
+                            {{t "global.form.clear"}}
+                          </AppUi::Button>
+                      </div>
                   </div>
                 </div>
-                {{!-- /.box-footer --}}
               </div>
             </div>
-            {{#each this.conversations as |entity|}}
-              <Conversation::ConversationItem
-                @entity={{entity}}
-                @membersList={{this.membersList}}
-                @currentUser={{this.currentUser}}
-                @upvote={{this.upvote}}
-                @saveComment={{this.saveComment}}
-                @search={{this.search}}
-                @vote={{this.vote}}
-              />
-            {{/each}}
+            {{#if this.conversations.length}}
+              {{#each this.conversations as |entity|}}
+                <Conversation::ConversationItem
+                  @entity={{entity}}
+                  @membersList={{this.membersList}}
+                  @currentUser={{this.currentUser}}
+                  @upvote={{this.upvote}}
+                  @saveComment={{this.saveComment}}
+                  @search={{this.search}}
+                  @vote={{this.vote}}
+                />
+              {{/each}}
+            {{else}}
+              <Exceptions::NothingFound @description={{t "views.app.conversation.emptyStateMessage"}} />
+            {{/if}}
           </div>
         </:default>
       </InfiniteScroll>

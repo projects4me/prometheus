@@ -83,7 +83,9 @@ module('Integration | Component | app-ui/dropdown', function (hooks) {
 
 	test('dropdown button has proper styling classes', async function (assert) {
 		await render(hbs`
-        <AppUi::Dropdown>
+        <AppUi::Dropdown
+        @isPrimary={{true}}
+        >
             <:button>
             <span>Menu</span>
             </:button>

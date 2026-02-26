@@ -3,6 +3,7 @@
  */
 
 import Component from '@glimmer/component';
+import { action } from '@ember/object';
 
 /**
  * This component is used to an exception, if there is no content to display.
@@ -21,5 +22,18 @@ export default class ExceptionsNothingFoundComponent extends Component {
      */
     get infoIconRequired() {
         return this.args.infoIcon === true || this.args.infoIcon === undefined;
+    }
+
+    /**
+     * Updates the font style of the element.
+     * @method updateFontStyle
+     * @param {Element} element - The element to update the font style of.
+     * @public
+     */
+    @action
+    updateFontStyle(element) {
+        if (this.args.fontStyle) {
+            element.style.fontStyle = this.args.fontStyle;
+        }
     }
 }

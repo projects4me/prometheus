@@ -66,7 +66,12 @@ export default App.extend({
      * @private
      */
     now : DateUtils.getNow(),
-    
+
+    queryParams: {
+        query: {
+            refreshModel: true
+        }
+    },
     /**
      * The model hook for this route. This is used load the conversations that we have in the system.
      * 
@@ -77,37 +82,11 @@ export default App.extend({
         Logger.debug('AppProjectConversationRoute::model');
         let _self = this;
         let projectId = this.trackedProject.getProjectId();
-
-        // Initial load with pagination - load first 15 conversations
-        let _conversationOptions = {
-            order: "DESC",
-            sort: "Conversationroom.dateModified",
-            rels: 'votes',
-            query: `(Conversationroom.projectId : ${projectId}) AND (Conversationroom.dateModified <: ${this.now})`,
-            limit: 10,
-            page: 1
-        }
-
-        Logger.debug('-AppProjectConversationRoute::model');
-        let conversations = await this.store.query(this.module, _conversationOptions)
-            .catch((error) => {
-                _self.errorManager.handleError(error, {
-                    moduleName: 'conversationroom'
-                })
-            });
-
-        for(let conversation of conversations.toArray()) {
-            let comments = await this.store.query('comment', {
-                query: `(Comment.relatedId : ${conversation.id}) AND (Comment.dateCreated <: ${this.now})`,
-                sort: 'Comment.dateCreated',
-                order: 'ASC',
-                limit: -1
-            }).catch((error) => {
-                _self.errorManager.handleError(error, {
-                    moduleName: 'conversationroom'
-                })
-            });
-            conversation.comments = comments;
+        let conversations = [];
+        if(params.query || params.range) {
+            conversations = await this.fetchFilteredConversations(projectId, params);
+        } else {
+            conversations = await this.fetchAllConversations(projectId);
         }
 
         let selectedConversation = null;
@@ -121,8 +100,7 @@ export default App.extend({
                     moduleName: 'conversationroom'
                 })
             });
-        }
-
+        }        
         return {
             "conversations": conversations,
             "selectedConversation": selectedConversation
@@ -153,6 +131,52 @@ export default App.extend({
         controller.set('projectShortcode', this.trackedProject.shortCode);
         controller.set('hasMoreConversations', model.conversations.length >= controller.pageSize);
         controller.set('now', this.now);
+        controller.restoreStateFromQueryParams?.();
+    },
+    /**
+     * This function is used to fetch all conversations for the project.
+     * 
+     * @method fetchAllConversations
+     * @param {string} projectId - The id of the project
+     * @returns {Promise<Array>} Returns an array of conversations
+     */
+    fetchAllConversations: async function(projectId) {
+        let _conversationOptions = {
+            order: "DESC",
+            sort: "Conversationroom.dateModified",
+            rels: 'votes',
+            query: `(Conversationroom.projectId : ${projectId}) AND (Conversationroom.dateModified <: ${this.now})`,
+            limit: 10,
+            page: 1
+        }
+        let controller = this.controllerFor('app.project.conversation');
+        controller.set('now', this.now);
+        return await controller.fetchAllConversations(_conversationOptions);
+    },
+    /**
+     * This function is used to fetch filtered conversations for the project.
+     * 
+     * @method fetchFilteredConversations
+     * @param {string} projectId - The id of the project
+     * @param {Object} params - The parameters for the query
+     * @returns {Promise<Array>} Returns an array of conversations
+     */
+    fetchFilteredConversations: async function(projectId, params) {
+        let query = params.query;
+        let _conversationOptions = {
+            order: "DESC",
+            sort: "Conversationroom.dateModified",
+            rels: 'votes',
+            query: `(Conversationroom.projectId : ${projectId}) AND (Conversationroom.dateModified <: ${this.now})`,
+            limit: 10,
+            page: 1
+        };
+        if (query) {
+            _conversationOptions.query += ` AND ${query}`;
+        }
+        let controller = this.controllerFor('app.project.conversation');
+        controller.set('now', this.now);
+        return await controller.fetchFilteredConversations(_conversationOptions);
     },
     /**
      * This function is called when the route is exited.

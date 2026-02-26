@@ -5,7 +5,7 @@
     {{/if}}
     <div class="box-tools pull-right filters">
       {{#if this.filters}}
-        <AppUi::Dropdown>
+        <AppUi::Dropdown @isPrimary={{true}}>
           <:button>
             <i class="fa fa-filter"></i>
             <span>{{t "views.app.components.table.filters"}}</span>
