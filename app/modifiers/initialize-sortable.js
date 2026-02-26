@@ -5,6 +5,7 @@
 import Modifier from 'ember-modifier';
 import Sortable from 'sortablejs';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 /**
  * This modifier is called on the initialization of taskboard component and SortableJS
@@ -193,6 +194,26 @@ export default class InitializeSortable extends Modifier {
      */
     draggedItem = null;
 
+    /**
+     * The trackedProject service provides id of the selected project.
+     *
+     * @property trackedProject
+     * @type Ember.Service
+     * @for InitializeSortable
+     * @private
+     */
+    @service trackedProject;
+
+
+    /**
+     * This property is used to keep in track the project id.
+     *
+     * @property projectId
+     * @type String
+     * @private
+     */
+    projectId = this.trackedProject.getProjectId();
+
     //Called when the modifier is installed on the DOM element
     didInstall() {
         this._attachSortableToLanes();
@@ -261,15 +282,22 @@ export default class InitializeSortable extends Modifier {
 
     //Called when the arguments provided to modifier are updated
     didUpdateArguments() {
-        let _self = this;
-        if(this.args.named.newMilestoneAdded) {
-            _self._attachSortableToLanes();
+        // Only update the sortable to lanes if the project id has changed
+        let lastProjectId = this.trackedProject.getProjectId();
+        if(this.projectId !== lastProjectId) {
+            this._attachSortableToLanes();
+            this.projectId = lastProjectId;
         }
-        _self._cleanupMilestoneTabSortables();
-        _self._setupMilestoneTabsAsSortable();
-        _self._setupTabSwitching();
-        let milestoneEls = _self._getOrderedMilestoneElements();
-        _self.reRenderView(milestoneEls, true);
+
+        // Only update the sortable to lanes if a new milestone has been added
+        if(this.args.named.newMilestoneAdded) {
+            this._attachSortableToLanes();
+        }
+        this._cleanupMilestoneTabSortables();
+        this._setupMilestoneTabsAsSortable();
+        this._setupTabSwitching();
+        let milestoneEls = this._getOrderedMilestoneElements();
+        this.reRenderView(milestoneEls, true);
     }
 
     /**
@@ -291,7 +319,8 @@ export default class InitializeSortable extends Modifier {
             _self.applySlimScrollToMilestoneItems(milestoneEl);
         });
         let milestoneIndex = (autoSelectFirstMilestone) ? 0 : 1;
-        document.querySelector(`[data-milestone-id="${milestoneIds[milestoneIndex]}"] a`).click();
+        let milestoneId = milestoneIds[milestoneIndex];
+        milestoneId && document.querySelector(`[data-milestone-id="${milestoneId}"] a`).click();
 
     }
 
