@@ -133,6 +133,8 @@
                   @saveComment={{this.saveComment}}
                   @search={{this.search}}
                   @vote={{this.vote}}
+                  @linkIssueSearch={{this.linkIssueSearch}}
+                  @onLinkedIssueChange={{this.updateConversationLinkedIssue}}
                 />
               {{/each}}
             {{else}}
@@ -155,6 +157,8 @@
             @saveComment={{this.saveComment}}
             @search={{this.search}}
             @vote={{this.vote}}
+            @linkIssueSearch={{this.linkIssueSearch}}
+            @onLinkedIssueChange={{this.updateConversationLinkedIssue}}
           />
         </div>
         {{/if}}
@@ -240,6 +244,24 @@
             @v-output='message'
             @aclContext='App.Project.Conversation.Create.Type'
         />
+
+        <div class="form-group form-field ember-view" data-field="conversation.linkedIssue">
+          <div data-form-field="label">
+            <label class="floating-label">{{t "views.app.conversation.linkIssue"}}</label>
+          </div>
+          <PowerSelect
+            @placeholder={{t "views.app.conversation.linkIssuePlaceholder"}}
+            @searchEnabled={{true}}
+            @search={{perform this.linkIssueSearch}}
+            @selected={{this.newConversationLinkedIssue}}
+            @onChange={{this.setNewConversationLinkedIssue}}
+            @disabled={{not (eq this.newConversation.roomType "discussion")}}
+            @allowClear={{true}}
+            as |issue|
+          >
+            <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
+          </PowerSelect>
+        </div>
 
       </div>
     {{/bootstrap-modal}}
