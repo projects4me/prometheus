@@ -8,7 +8,13 @@
       </div>
       {{!-- /.user-block --}}
       <div class="box-tools">
-        <span class="upvotes">
+        <button
+          type="button"
+          class="upvotes btn btn-box-tool"
+          data-btn="toggle-vote"
+          title={{if (user-created @entity.votes @currentUser.user.id) (t "views.app.conversation.downvote") (t "views.app.conversation.upvote")}}
+          {{on "click" (fn @toggleVote @entity.id)}}
+        >
           {{@entity.votes.length}}
           {{#if @entity.votes}}
             {{#if (user-created @entity.votes @currentUser.user.id)}}
@@ -19,7 +25,7 @@
           {{else}}
             <i class="fa fa-heart-o"></i>
           {{/if}}
-        </span>
+        </button>
         {{#if this.isOwnConversation}}
           <AppUi::Button 
             type="button" 
@@ -43,14 +49,6 @@
       {{!-- post text --}}
       <p>{{translate-comment @entity.description}}</p>
       {{!-- /.attachment-block --}}
-      {{!-- Social sharing buttons --}}
-      {{#if (user-created @entity.votes @currentUser.user.id)}}
-        {{t "views.app.conversation.you"}} <i class="fa fa-heart"></i>
-      {{else}}
-        <AppUi::Button type="button" class="btn btn-default btn-xs" @onClick={{fn @upvote @entity.id}} @aclContext="App.Project.Conversation.Upvote">
-          <i class="fa fa-heart-o"></i> {{t "views.app.conversation.upvote"}}
-        </AppUi::Button>
-      {{/if}}
       <span class="pull-right text-muted">
         {{@entity.comments.length}}
         {{#if (eq @entity.roomType "discussion")}}
