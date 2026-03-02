@@ -41,3 +41,18 @@ Feature: Conversation | search conversation
     Then conversation search filters are applied
     Then There should be 0 conversations in the list
     Then No conversations found message is displayed
+
+  Scenario: Conversation linked with issue shows issue badge
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 selects Project 1
+    And Project has following details
+    -----------------------------------
+    | conversations(conversationroom) |
+    | 1                               |
+    -----------------------------------
+    And conversation 1 is linked with issue 1
+    When User navigates to app/project/PROJECT_1/conversations
+    Then the first conversation should display linked issue badge

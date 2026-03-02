@@ -3,7 +3,19 @@
     <div class="box-header with-border">
       <div class="user-block">
         <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{@entity.createdUser}}" alt="{{t "global.form.image"}}">
-        <span class="subject"><a href="#">{{@entity.subject}}</a></span>
+        <span class="subject">
+          <a href="#">{{@entity.subject}}</a>
+          {{#if @entity.issue}}
+            <span class="conversation-issue-badge">
+              <a
+                class="{{@entity.issue.status}} badge"
+                href="/app/project/{{@entity.issue.projectShortcode}}/issue/{{@entity.issue.issueNumber}}"
+              >
+                #{{@entity.issue.issueNumber}} - {{@entity.issue.subject}}
+              </a>
+            </span>
+          {{/if}}
+        </span>
         <span class="description"><a href="/app/user/{{@entity.createdBy.id}}">{{@entity.createdBy.name}}</a> - {{format-date-time date=@entity.dateModified}}</span>
       </div>
       {{!-- /.user-block --}}
@@ -179,6 +191,24 @@
             @data-field="conversation.description"
           />
         </div>
+        {{#if @linkIssueSearch}}
+          <div class="form-group form-field ember-view" data-field="conversation.linkedIssue">
+            <div data-form-field="label">
+              <label class="floating-label">{{t "views.app.conversation.linkIssue"}}</label>
+            </div>
+            <PowerSelect
+              @placeholder={{t "views.app.conversation.linkIssuePlaceholder"}}
+              @searchEnabled={{true}}
+              @search={{perform @linkIssueSearch}}
+              @selected={{this.editedLinkedIssue}}
+              @onChange={{this.setEditedLinkedIssue}}
+              @allowClear={{true}}
+              as |issue|
+            >
+              <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
+            </PowerSelect>
+          </div>
+        {{/if}}
       </div>
     {{/bootstrap-modal}}
   {{/if}}

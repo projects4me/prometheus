@@ -10,6 +10,8 @@ import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import DateUtils from 'prometheus/utils/date';
+import { task, timeout } from 'ember-concurrency';
+import format from 'prometheus/utils/data/format';
 
 /**
  * This is the controller for the conversation controller route
@@ -369,6 +371,53 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     @tracked searchText = '';
 
     /**
+     * Current page for link-issue dropdown search results.
+     * @property linkedIssuePage
+     * @type {number}
+     * @public
+     */
+    @tracked linkedIssuePage = 1;
+
+    /**
+     * Selected issue for linking to a new conversation (create modal).
+     * @property newConversationLinkedIssue
+     * @type {Object|null}
+     * @public
+     */
+    @tracked newConversationLinkedIssue = null;
+
+    /**
+     * Task to load issue options for the Link Issue dropdown (create/edit modals).
+     * Returns issues in the current project that are not already linked to a conversation.
+     *
+     * @property linkIssueSearch
+     * @type {Task}
+     * @public
+     */
+    @(task(function* (query) {
+        yield timeout(300);
+        let projectId = this.projectId;
+        let baseQuery = `(Issue.projectId : ${projectId}) AND (Issue.conversationRoomId NULL)`;
+        let searchClause = query && String(query).trim()
+            ? ` AND ((Issue.issueNumber CONTAINS ${query}) OR (Issue.subject CONTAINS ${query}) OR (Issue.description CONTAINS ${query}))`
+            : '';
+        let options = {
+            query: baseQuery + searchClause,
+            limit: 5,
+            page: this.linkedIssuePage
+        };
+        let data = yield this.store.query('issue', options);
+        let map = {
+            id: 'id',
+            name: 'subject',
+            number: 'issueNumber',
+            status: 'status',
+            project: 'project'
+        };
+        return (new format(this)).getSelectList(data, map);
+    })) linkIssueSearch;
+
+    /**
      * This function is used to create a comment on the conversation.
      *
      * @method saveComment
@@ -562,7 +611,16 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         this.validate(newConversation, 'conversationCreate')
             .then((validation) => {
                 if (validation.isValid) {
-                    // Save it
+                    let linkedIssue = _self.newConversationLinkedIssue;
+                    if (linkedIssue && linkedIssue.id) {
+                        newConversation.set('issueId', linkedIssue.id);
+                        let issue = _self.store.peekRecord('issue', linkedIssue.id);
+                        if (issue) newConversation.set('issue', issue);
+                        issue.set('conversationRoomId', newConversation.id);
+                        issue.save().then(function (issue) {
+                            Logger.debug('The issue has been linked to the conversation');
+                        });
+                    }
                     newConversation.save().then(function (conversation) {
                         Logger.debug('A new conversation has been saved');
 
@@ -574,7 +632,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                         });
 
                         _self.send('removeModal');
-
+                        _self.set('newConversationLinkedIssue', null);
                         _self.set('newConversation',
                             _self.get('store').createRecord('conversationroom', {
                                 projectShortcode: _self.get('projectShortcode')
@@ -609,6 +667,48 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     }
 
     /**
+     * Sets the selected issue for linking to the new conversation (create modal).
+     *
+     * @method setNewConversationLinkedIssue
+     * @param {Object|null} issue Option object with id, number, name
+     * @public
+     */
+    @action setNewConversationLinkedIssue(issue) {
+        this.newConversationLinkedIssue = issue;
+    }
+
+    /**
+     * Persists the linked issue for a conversation (edit modal). Called from ConversationItem on save.
+     *
+     * @method updateConversationLinkedIssue
+     * @param {Object} conversation Conversation model
+     * @param {Object|null} selectedIssue Option object with id, number, name
+     * @public
+     */
+    @action async updateConversationLinkedIssue(conversation, selectedIssue) {
+        let issueId = selectedIssue && selectedIssue.id ? selectedIssue.id : null;
+        let issueNumber = selectedIssue && selectedIssue.number ? selectedIssue.number : null;
+        if (selectedIssue) {
+            let issue = this.store.peekRecord('issue', issueId);
+            issue.conversationRoomId = conversation.id;
+            conversation.issueNumber = issueNumber;
+            conversation.issueId = issueId;
+            conversation.issue = issue;
+            await issue.save();
+        } else if (conversation.issueId) {
+            let issue = await this.store.findRecord('issue', conversation.issueId);
+            if (issue) {
+                issue.conversationRoomId = null;
+                conversation.issueNumber = null;
+                conversation.issueId = null;
+                conversation.issue = null;
+                await issue.save();
+            }
+        }
+        await conversation.save();
+    }
+
+    /**
      * This function is used to show the add modal dialog box
      *
      * @method showDialog
@@ -627,6 +727,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     @action removeModal() {
         if (this.isDestroyed || this.isDestroying) return;
         this.set('addConversationDialog', false);
+        this.set('newConversationLinkedIssue', null);
         $('.modal').modal('hide');
     }
 
@@ -662,7 +763,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             let _conversationOptions = {
                 order: "DESC",
                 sort: "Conversationroom.dateModified",
-                rels: 'votes',
+                rels: 'votes,issue',
                 limit: this.pageSize,
                 page: this.page + 1
             }

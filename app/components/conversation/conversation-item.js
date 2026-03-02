@@ -39,6 +39,15 @@ export default class ConversationConversationItemComponent extends AppComponent 
     @tracked editedDescription = '';
 
     /**
+     * The selected issue for linking in the edit modal ({ id, number, name } or null).
+     *
+     * @property editedLinkedIssue
+     * @type {Object|null}
+     * @private
+     */
+    @tracked editedLinkedIssue = null;
+
+    /**
      * Computed property to check if the current user is the owner of the conversation
      *
      * @property isOwnConversation
@@ -62,6 +71,10 @@ export default class ConversationConversationItemComponent extends AppComponent 
         Logger.debug('ConversationConversationItemComponent::showEditConversationDialog');
         this.editedSubject = this.args.entity.subject || '';
         this.editedDescription = this.args.entity.description || '';
+        let issue = this.args.entity.issue;
+        if(issue.get('id')) {
+            this.editedLinkedIssue = { id: issue.get('id'), number: issue.get('issueNumber'), name: issue.get('subject') };
+        }
         this.showEditConversationModal = true;
     }
 
@@ -77,6 +90,7 @@ export default class ConversationConversationItemComponent extends AppComponent 
         this.showEditConversationModal = false;
         this.editedSubject = '';
         this.editedDescription = '';
+        this.editedLinkedIssue = null;
         $('.modal').modal('hide');
     }
 
@@ -100,6 +114,17 @@ export default class ConversationConversationItemComponent extends AppComponent 
      */
     @action handleDescriptionChange(content) {
         this.editedDescription = content;
+    }
+
+    /**
+     * Updates the selected linked issue in the edit form.
+     *
+     * @method setEditedLinkedIssue
+     * @param {Object|null} issue Option object with id, number, name
+     * @public
+     */
+    @action setEditedLinkedIssue(issue) {
+        this.editedLinkedIssue = issue;
     }
 
     /**
@@ -134,6 +159,11 @@ export default class ConversationConversationItemComponent extends AppComponent 
             conversation.set('description', this.editedDescription);
 
             await conversation.save();
+
+            if (typeof this.args.onLinkedIssueChange === 'function') {
+                await this.args.onLinkedIssueChange(conversation, this.editedLinkedIssue);
+            }
+
             messenger.update({
                 message: this.intl.t("views.app.conversation.edit.updated"),
                 type: 'success',

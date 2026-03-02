@@ -276,6 +276,7 @@
   .conversation-scroll-container {
     height: calc(100vh - 150px);
     
+
     .conversation-grid {
       padding: 0 1.5rem;
     }
@@ -394,3 +395,11 @@
 }
 
 /*=====  End of Conversation Empty State  ======*/
+
+/*=====  Conversation New Conversation Form  ======*/
+[data-field="conversation.linkedIssue"] {
+  .floating-label {
+    color: $primaryColor !important;
+  }
+}
+/*=====  End of Conversation New Conversation Form  ======*/

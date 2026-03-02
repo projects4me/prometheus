@@ -93,7 +93,7 @@ export default App.extend({
         if(params.c_id) {
             selectedConversation = await this.store.query('conversationroom', {
                 query: `((Conversationroom.id : ${params.c_id}) AND (Conversationroom.projectId : ${projectId}))`,
-                rels: 'votes,comments',
+                rels: 'votes,comments,issue',
                 limit: -1
             }).catch((error) => {
                 _self.errorManager.handleError(error, {
@@ -144,7 +144,7 @@ export default App.extend({
         let _conversationOptions = {
             order: "DESC",
             sort: "Conversationroom.dateModified",
-            rels: 'votes',
+            rels: 'votes,issue',
             query: `(Conversationroom.projectId : ${projectId}) AND (Conversationroom.dateModified <: ${this.now})`,
             limit: 10,
             page: 1
@@ -166,7 +166,7 @@ export default App.extend({
         let _conversationOptions = {
             order: "DESC",
             sort: "Conversationroom.dateModified",
-            rels: 'votes',
+            rels: 'votes,issue',
             query: `(Conversationroom.projectId : ${projectId}) AND (Conversationroom.dateModified <: ${this.now})`,
             limit: 10,
             page: 1

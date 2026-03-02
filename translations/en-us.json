@@ -656,6 +656,8 @@
           ]
         },
         "emptyStateMessage": "No conversations found",
+        "linkIssue": "Link Issue",
+        "linkIssuePlaceholder": "Search issue to link...",
         "loading": "Loading more conversations...",
         "noMore": "No more conversations to load",
         "refreshing": "Refreshing conversations...",
