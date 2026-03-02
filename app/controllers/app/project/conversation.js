@@ -438,7 +438,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @param {String} conversationId
      * @public
      */
-    @action upvote(conversationId) {
+    @action async upvote(conversationId) {
         Logger.debug("AppProjectConversationController:upvote(" + conversationId + ")");
 
         let _self = this;
@@ -448,12 +448,22 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             relatedId: conversationId
         });
 
-        return vote.save().then(function (data) {
+        let messenger = new Messenger().post({
+            message: _self.intl.t("views.app.conversation.addingVote"),
+            type: 'info',
+            showCloseButton: true,
+            hideAfter: false
+        });
+
+        try {   
+            let data = await vote.save();
             if (data.get('id') !== undefined) {
-                new Messenger().post({
-                    message: _self.intl.t("views.app.conversation.voted"),
+                messenger.update({
+                    message: _self.intl.t("views.app.conversation.addedVote"),
                     tpye: 'success',
-                    showCloseButton: true
+                    showCloseButton: true,
+                    hideAfter: 3
+
                 });
 
                 if(_self.selectedConversation?.id === conversationId) {
@@ -462,7 +472,77 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                     _self.conversations.find((conversation) => conversation.id === conversationId).votes.addObject(data);
                 }
             }
+        } catch(error) {
+            messenger.update({
+                message: _self.intl.t("views.app.conversation.addVoteError"),
+                type: 'error',
+                showCloseButton: true,
+                hideAfter: 3
+            });
+            Logger.error('Error adding vote:', error);
+        }
+    }
+
+    /**
+     * Removes the current user's vote from a conversation.
+     *
+     * @method removeVote
+     * @param {String} conversationId
+     * @param {Object} voteRecord The vote model to destroy
+     * @public
+     */
+    @action async removeVote(conversationId, voteRecord) {
+        let _self = this;
+        let messenger = new Messenger().post({
+            message: _self.intl.t("views.app.conversation.removingVote"),
+            type: 'info',
+            showCloseButton: true,
+            hideAfter: false
         });
+        try {
+            await voteRecord.destroyRecord();
+            messenger.update({
+                message: _self.intl.t("views.app.conversation.removedVote"),
+                type: 'success',
+                showCloseButton: true,
+                hideAfter: 3
+            });
+            let conversation = _self.selectedConversation?.id === conversationId
+                ? _self.selectedConversation
+                : _self.conversations.find((c) => c.id === conversationId);
+            if (conversation && conversation.votes) {
+                conversation.votes.removeObject(voteRecord);
+            }
+        } catch (error) {
+            messenger.update({
+                message: _self.intl.t("views.app.conversation.removeVoteError"),
+                type: 'error',
+                showCloseButton: true,
+                hideAfter: 3
+            });
+            Logger.error('Error removing vote:', error);
+        }
+    }
+
+    /**
+     * Toggles the current user's vote: adds vote if not voted, removes vote if already voted.
+     *
+     * @method toggleVote
+     * @param {String} conversationId
+     * @public
+     */
+    @action toggleVote(conversationId) {
+        let conversation = this.selectedConversation?.id === conversationId
+            ? this.selectedConversation
+            : this.conversations.find((c) => c.id === conversationId);
+        if (!conversation || !conversation.votes) return;
+
+        let userVote = conversation.votes.find((v) => v.createdUser === this.currentUser.user.id);
+        if (userVote) {
+            this.removeVote(conversationId, userVote);
+        } else {
+            this.upvote(conversationId);
+        }
     }
 
     /**
