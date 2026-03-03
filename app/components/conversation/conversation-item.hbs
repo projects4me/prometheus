@@ -20,12 +20,11 @@
       </div>
       {{!-- /.user-block --}}
       <div class="box-tools">
-        <button
-          type="button"
+        <AppUi::Button
           class="upvotes btn btn-box-tool"
           data-btn="toggle-vote"
           title={{if (user-created @entity.votes @currentUser.user.id) (t "views.app.conversation.downvote") (t "views.app.conversation.upvote")}}
-          {{on "click" (fn @toggleVote @entity.id)}}
+          @onClick={{fn @toggleVote @entity.id}}
         >
           {{@entity.votes.length}}
           {{#if @entity.votes}}
@@ -37,7 +36,7 @@
           {{else}}
             <i class="fa fa-heart-o"></i>
           {{/if}}
-        </button>
+        </AppUi::Button>
         {{#if this.isOwnConversation}}
           <AppUi::Button 
             type="button" 
