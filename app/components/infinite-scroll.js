@@ -202,7 +202,7 @@ export default class InfiniteScrollComponent extends Component {
 	 * @private
 	 */
 	checkScrollPosition(event) {
-		if (this.isLoading || this.hasReachedEnd) return;
+		if ((this.isLoading || this.hasReachedEnd) && !this.args.loadMore) return;
 
 		const { scrollTop, scrollHeight, clientHeight } = this.scrollContainer;
 		const scrollRemaining = scrollHeight - scrollTop - clientHeight;
@@ -219,7 +219,7 @@ export default class InfiniteScrollComponent extends Component {
 	 * @private
 	 */
 	checkBrowserScrollPosition(event) {
-		if (this.isLoading || this.hasReachedEnd) return;
+		if ((this.isLoading || this.hasReachedEnd) && !this.args.loadMore) return;
 
 		const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 		const windowHeight = window.innerHeight;
@@ -251,7 +251,7 @@ export default class InfiniteScrollComponent extends Component {
 	 */
 	@action
 	async loadMore(event) {
-		if (this.isLoading || this.hasReachedEnd) return;
+		if ((this.isLoading || this.hasReachedEnd) && !this.args.loadMore) return;
 		
 		const loadMoreBtnClicked = event.type !== 'scroll';
 		

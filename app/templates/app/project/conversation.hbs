@@ -8,6 +8,7 @@
       <InfiniteScroll
         @useBrowserScroll={{true}}
         @onLoadMore={{this.loadMoreConversations}}
+        @loadMore={{this.hasMoreConversations}}
         @threshold={{200}}
         @loadingText={{t "views.app.conversation.loading"}}
         @endMessageText={{t "views.app.conversation.noMore"}}
@@ -32,10 +33,10 @@
                   </AppUi::Button>                      
                 </div>
                 <div class="box-body conversation-search-bar__body">
-                  <div class="conversation-search-container flex-row flex-ai-c flex-jc-sb">
+                  <div class="conversation-search-container flex-row flex-ai-c flex-jc-c">
                     <div class="box-tools filters flex-row flex-ai-c">
                       {{!-- Search keywords input --}}
-                      <div class="search-container">
+                      <div class="search-container flex-row">
                         <Input
                           {{on "keyup" this.updateSearchQuery}}
                           {{on "keypress" this.handleEnterKey}}
@@ -46,6 +47,14 @@
                           placeholder={{t "views.app.conversation.searchPlaceholder"}}
                           class="form-control"
                         />
+                        <AppUi::Button
+                          type="button"
+                          class="btn btn-default search-icon-button"
+                          data-btn="search"
+                          @onClick={{this.handleSearch}}
+                        >
+                          <i class="fa fa-search"></i>
+                        </AppUi::Button>
                       </div>
 
                       {{!-- Date filters dropdown --}}
@@ -61,12 +70,12 @@
                           </:button>
                           <:content>
                             {{#each this.dateFilters as |dateFilter|}}
-                              <a href="#" {{on "click" (fn this.handleDateToggle dateFilter.value)}} data-date-filter-name="{{dateFilter.value}}">
+                              <div {{on "click" (fn this.handleDateToggle dateFilter.value)}} data-date-filter-name="{{dateFilter.value}}">
                                 {{dateFilter.label}}
                                 {{#if dateFilter.isActive}}
                                   <i class="fa fa-check pull-right"></i>
                                 {{/if}}
-                              </a>
+                              </div>
                             {{/each}}
                           </:content>
                         </AppUi::Dropdown>
@@ -85,40 +94,28 @@
                           </:button>
                           <:content>
                             {{#each this.filters as |filter|}}
-                              <a href="#" {{on "click" (fn this.handleFilterToggle filter.value)}} data-filter-name="{{filter.value}}">
+                              <div {{on "click" (fn this.handleFilterToggle filter.value)}} data-filter-name="{{filter.value}}">
                                 {{filter.label}}
                                 {{#if filter.isActive}}
                                   <i class="fa fa-check pull-right"></i>
                                 {{/if}}
-                              </a>
+                              </div>
                             {{/each}}
                           </:content>
                         </AppUi::Dropdown>
                       {{/if}}
+
+                      <AppUi::Button
+                        type="button"
+                        class="btn btn-default"
+                        data-btn="clearSearch"
+                        disabled={{not this.query}}
+                        @onClick={{this.clearSearch}}
+                      >
+                        <i class="fa fa-times"></i>
+                      </AppUi::Button>                      
                     </div>
 
-                      <div class="search-buttons">
-                          {{!-- Search button --}}
-                          <AppUi::Button
-                            type="button"
-                            class="btn btn-default"
-                            data-btn="search"
-                            @onClick={{this.handleSearch}}
-                          >
-                            <i class="fa fa-search"></i>
-                            {{t "global.form.search"}}
-                          </AppUi::Button>
-                          <AppUi::Button
-                            type="button"
-                            class="btn btn-default"
-                            data-btn="clearSearch"
-                            disabled={{not this.query}}
-                            @onClick={{this.clearSearch}}
-                          >
-                            <i class="fa fa-times"></i>
-                            {{t "global.form.clear"}}
-                          </AppUi::Button>
-                      </div>
                   </div>
                 </div>
               </div>
