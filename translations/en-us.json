@@ -124,7 +124,7 @@
       "firstPage": "First Page",
       "last": "Last Page",
       "searchbox": "Toggle search box",
-      "selectedCount": "<strong>(Selected : {count})</strong> "
+      "selectedCount": "(Selected : {count})"
     },
     "noentry": "No entry found..",
     "blank": "<span class=''disabled-text''>-- blank --</span>",
@@ -519,7 +519,8 @@
           "name": "Name",
           "type": "Type",
           "status": "Status",
-          "shortCode": "Short Code"
+          "shortCode": "Short Code",
+          "manager": "Manager"
         },
         "edit": {
           "header": "Edit Project"
@@ -579,7 +580,8 @@
           "manager": "Manager",
           "description": "Description",
           "status": "Status",
-          "date": "Date"
+          "date": "Date",
+          "members": "Members"
         },
         "lists": {
           "status.": "Loading ..",

@@ -46,7 +46,12 @@ export default class AppProjectsIndexController extends PrometheusListController
                 input: 'select',
                 values: (new format(this)).getTranslation('views.app.project.lists.status'),
                 operators: ['equal']
-            }            
+            },
+            {
+                id: 'manager.name',
+                label: this.intl.t("views.app.project.filter.manager"),
+                type: 'string',
+            }
         ]
     }
 

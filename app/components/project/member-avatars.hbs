@@ -1,0 +1,16 @@
+<div class="member-avatars">
+  {{#each this.visibleMembers as |member|}}
+    <img
+      src="{{this.apiHost}}/userimage/get/{{member.id}}"
+      class="member-avatar img-circle"
+      alt="{{member.name}}"
+      title="{{member.name}}"
+      data-toggle="tooltip"
+    >
+  {{/each}}
+  {{#if this.overflowCount}}
+    <span class="member-avatars-overflow" title="{{this.overflowCount}} more members" data-toggle="tooltip">
+      +{{this.overflowCount}}
+    </span>
+  {{/if}}
+</div>
