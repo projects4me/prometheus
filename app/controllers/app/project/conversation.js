@@ -580,7 +580,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @param {String} conversationId
      * @public
      */
-    @action toggleVote(conversationId) {
+    @action async toggleVote(conversationId) {
         let conversation = this.selectedConversation?.id === conversationId
             ? this.selectedConversation
             : this.conversations.find((c) => c.id === conversationId);
@@ -588,10 +588,11 @@ export default class AppProjectConversationController extends PrometheusCreateCo
 
         let userVote = conversation.votes.find((v) => v.createdUser === this.currentUser.user.id);
         if (userVote) {
-            this.removeVote(conversationId, userVote);
+            await this.removeVote(conversationId, userVote);
         } else {
-            this.upvote(conversationId);
+            await this.upvote(conversationId);
         }
+        return true;
     }
 
     /**
