@@ -9,12 +9,6 @@
 */
 
 .project-manager {
-  text-align: center;
-
-  h4 {
-    text-align: left;
-  }
-
   img {
     width: 100%;
   }
@@ -281,6 +275,42 @@
 
 .member-item:hover {
   cursor: pointer;
+}
+
+.member-avatars {
+  display: flex;
+  align-items: center;
+
+  .member-avatar {
+    width: 4rem;
+    height: 4rem;
+    margin-left: -0.25rem;
+    transition: transform 0.15s ease;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      z-index: 1;
+      position: relative;
+    }
+  }
+
+  .member-avatars-overflow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background-color: #e4e7ea;
+    border: 2px solid #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: default;
+  }
 }
 
 .projects {
