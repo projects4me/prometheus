@@ -129,7 +129,7 @@ export default App.extend({
         controller.set('module', this.module);
         controller.set('projectId', this.trackedProject.getProjectId());
         controller.set('projectShortcode', this.trackedProject.shortCode);
-        controller.set('hasMoreConversations', model.conversations.length >= controller.pageSize);
+        controller.setHasMoreFlag();
         controller.set('now', this.now);
         controller.restoreStateFromQueryParams?.();
     },

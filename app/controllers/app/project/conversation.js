@@ -934,6 +934,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             const match = this.filters.find((f) => f.value === filterName);
             this.filterQuery = match ? match.query : null;
         }
+        this.handleSearch();
     }
 
     /**
@@ -957,6 +958,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                 ? `((Conversationroom.dateModified >: ${dateFilter.startDate}) AND (Conversationroom.dateModified <: ${dateFilter.endDate}))`
                 : null;
         }
+        this.handleSearch();
     }
 
     /**
@@ -978,10 +980,11 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             query = query ? query + ' AND ' + this.searchQuery : this.searchQuery;
         }
 
-        this.set('query', query);
+        (this.query !== query) && this.set('query', query);
         this.set('filter', this.activeFilter);
         this.set('date', this.activeDateFilter);
-        this.set('q', this.searchText || '');
+        this.set('q', this.searchText || null);
+        this.setHasMoreFlag();
     }
 
     /**
@@ -1011,9 +1014,13 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     @action
     updateSearchQuery(event) {
         let query = event.target.value;
-        this.searchText = query;
-        let searchQuery = `((Conversationroom.subject CONTAINS ${query}) OR (Conversationroom.description CONTAINS ${query}))`;
-        this.searchQuery = searchQuery;
+        if(!_.isEmpty(query)) {
+            this.searchText = query;
+            this.searchQuery = `((Conversationroom.subject CONTAINS ${query}) OR (Conversationroom.description CONTAINS ${query}))`;
+        } else {
+            this.searchText = '';
+            this.searchQuery = null;
+        }
     }
 
     /**
@@ -1027,6 +1034,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         const filterParam = this.filter;
         const dateParam = this.date;
         const qParam = this.q;
+        this.page = 1;
 
         if (filterParam && this.conversationFilters.some((f) => f.name === filterParam)) {
             this.activeFilter = filterParam;
@@ -1055,6 +1063,17 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             this.searchQuery = null;
         }
     }    
+
+    /**
+     * Sets the has more flag for the conversations
+     * @method setHasMoreFlag
+     * @public
+     */
+    @action
+    setHasMoreFlag() {
+        let hasMore = (this.conversations.length >= this.pageSize) || this.activeFilter || this.activeDateFilter || this.searchQuery;
+        this.hasMoreConversations = hasMore;
+    }
 
     /**
      * Clears the search query in the search input field
