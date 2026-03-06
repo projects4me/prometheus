@@ -237,6 +237,11 @@
       }
     }
   }
+  [data-form-field="label"] {
+    label {
+      color: $primaryColor;
+    }
+  }
 }
 
 .issue-list{

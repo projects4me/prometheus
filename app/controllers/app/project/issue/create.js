@@ -6,6 +6,8 @@ import PrometheusCreateController from "prometheus/controllers/prometheus/create
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { inject as controller } from '@ember/controller';
 import { computed, action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { task, timeout } from 'ember-concurrency';
 import format from "prometheus/utils/data/format";
 import _ from "lodash";
 import { htmlSafe } from '@ember/template';
@@ -314,27 +316,76 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
     }
 
     /**
-     * This function is used to allow search on both the issues name and
-     * the issue number
+     * Selected parent issue option for the PowerSelect (id, name, number, status).
      *
-     * @method parentMatcher
-     * @param issue
-     * @param term
-     * @return {Number}
+     * @property selectedParentIssue
+     * @type {Object|null}
+     * @public
      */
-    parentMatcher(issue, term) {
-        return `#${issue.number} - ${issue.name}`.toLowerCase().indexOf(term);
+    @tracked selectedParentIssue = null;
+
+    /**
+     * Task to load issue options for the Parent dropdown. Queries issues in the current project.
+     *
+     * @property parentIssueSearch
+     * @type {Task}
+     * @public
+     */
+    @(task(function* (query) {
+        yield timeout(300);
+        let projectId = this.project?.id;
+        if (!projectId) return [];
+        let baseQuery = `((Issue.projectId : ${projectId}) AND (Issue.issueNumber !: ${this.model.issueNumber}))`;
+        let searchClause = query && String(query).trim()
+            ? ` AND ((Issue.issueNumber CONTAINS ${query}) OR (Issue.subject CONTAINS ${query}) OR (Issue.description CONTAINS ${query}))`
+            : '';
+        let options = {
+            query: baseQuery + searchClause,
+            limit: 10,
+            sort: 'Issue.issueNumber',
+            order: 'DESC'
+        };
+        let data = yield this.store.query('issue', options);
+        let map = {
+            id: 'id',
+            name: 'subject',
+            number: 'issueNumber',
+            status: 'status',
+            project: 'project'
+        };
+        return (new format(this)).getSelectList(data, map);
+    })) parentIssueSearch;
+
+    /**
+     * Sets the parent issue from the PowerSelect selection.
+     *
+     * @method setParentIssue
+     * @param {Object|null} option Option with id, name, number, status
+     * @public
+     */
+    @action setParentIssue(option) {
+        this.selectedParentIssue = option;
+        this.model.parentId = option ? option.id : null;
+        this.model.parentissue = option ? this.store.peekRecord('issue', option.id) : null;
     }
 
     /**
-     * This function is used to set the parent for the issue
-     *
-     * @param model
-     * @param field
-     * @param target
+     * This function is used to set the parent issue as selected
+     * @method setParentIssueAsSelected
+     * @public
      */
-    @action changedParent(model, field, target) {
-        model.set(field, target.id);
+    @action async setParentIssueAsSelected() {
+        let parentissue = await this.model.parentissue;
+        if(parentissue) {
+            this.selectedParentIssue = {
+                id: parentissue.id,
+                name: parentissue.subject,
+                number: parentissue.issueNumber,
+                status: parentissue.status
+            };
+        } else {
+            this.selectedParentIssue = null;
+        }
     }
 
     /**

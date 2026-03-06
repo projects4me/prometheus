@@ -204,24 +204,26 @@
             <h3 class="box-title">{{t "views.app.issue.create.parent"}}</h3>
           </div>
           {{!-- /.box-header --}}
-          <div class="box-body no-padding">
-
-            <FormFields::FieldRelate
+          <div class="box-body no-padding" {{did-insert this.setParentIssueAsSelected}}>
+            <div class="form-field ember-view" data-field="issue.parentId">
+              <div data-form-field="label">
+                <label class="floating-label">{{t "views.app.issue.create.parentId"}}</label>
+              </div>
+              <PowerSelect
                 @placeholder={{t "views.app.issue.create.selectparent"}}
-                @label={{t "views.app.issue.create.parentId"}}
-                @value={{this.model.parentId}}
-                @options={{this.issuesList}}
-                @matcher={{this.parentMatcher}}
-                @selected={{find-by "id" this.model.parentId this.issuesList}}
-                @searchField="number"
-                @onchange={{action "changedParent" this.model 'parentId'}}
-                @relateType="relate-issue"
-                @data-field="issue.parentId"
-                @validate={{action this.validateField "issueCreate" (hash name="parentId" value=this.model.parentId)}}
-                @message={{this.message.issueCreate.parentId}}
-                @aclContext="App.Project.Issue.Create.Parent"
-            />
-
+                @searchEnabled={{true}}
+                @search={{perform this.parentIssueSearch}}
+                @selected={{this.selectedParentIssue}}
+                @onChange={{this.setParentIssue}}
+                @allowClear={{true}}
+                as |issue|
+              >
+                <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
+              </PowerSelect>
+              {{#if this.message.issueCreate.parentId}}
+                <span class="help-block text-danger">{{this.message.issueCreate.parentId}}</span>
+              {{/if}}
+            </div>
           </div>
         </div>
       </AccessControl>

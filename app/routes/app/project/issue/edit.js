@@ -51,6 +51,7 @@ export default App.extend({
 		let issueOptions = {
 			query: '(Issue.issueNumber : ' + issueNumber + ')',
 			sort: 'Issue.issueNumber',
+			rels: 'parentissue',
 			order: 'ASC',
 			limit: -1
 		};

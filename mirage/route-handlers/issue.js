@@ -71,11 +71,7 @@ export function register(server, ctx) {
         * issue again
         */
         requestData.attributes["issueNumber"] = issue.issueNumber;
-        issue.update(requestData.attributes);
-        issue.update({
-            issuetype: schema.issuetypes.find(requestData.attributes.typeId),
-            status: schema.issuestatuses.find(issue.statusId).name
-        });
+        setIssueAttributes(schema, issue, requestData.attributes);
 
         let customCallback = ctx.get('customCallback');
         if(customCallback) {
@@ -92,4 +88,17 @@ export function register(server, ctx) {
         issue.destroy();
         return issue;
     });
+
+    function setIssueAttributes(schema, issue, attributes) {
+        issue.update(attributes);
+        issue.update({
+            issuetype: schema.issuetypes.find(attributes.typeId),
+            status: schema.issuestatuses.find(issue.statusId).name,
+        });
+        if(attributes.parentId) {
+            issue.update({
+                parentissue: schema.issues.find(attributes.parentId)
+            });
+        }
+    }
 }

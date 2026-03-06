@@ -371,14 +371,6 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     @tracked searchText = '';
 
     /**
-     * Current page for link-issue dropdown search results.
-     * @property linkedIssuePage
-     * @type {number}
-     * @public
-     */
-    @tracked linkedIssuePage = 1;
-
-    /**
      * Selected issue for linking to a new conversation (create modal).
      * @property newConversationLinkedIssue
      * @type {Object|null}
@@ -403,8 +395,9 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             : '';
         let options = {
             query: baseQuery + searchClause,
-            limit: 5,
-            page: this.linkedIssuePage
+            limit: 10,
+            sort: 'Issue.issueNumber',
+            order: 'DESC'
         };
         let data = yield this.store.query('issue', options);
         let map = {
