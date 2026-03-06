@@ -559,3 +559,13 @@ span[id="#"]{
     }
   }
 }
+
+/* Timeline */
+.timeline {
+  li {
+    .timeline-item {
+      box-shadow: rgba(14, 30, 37, .12) 0 .2rem .4rem 0, rgba(14, 30, 37, .32) 0 .2rem 1.6rem 0;
+      background: #f7f7f7;
+    }
+  }
+}
