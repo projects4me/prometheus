@@ -197,7 +197,7 @@ export default App.extend({
         // Prepare the options
         let options = {
             query: query,
-            rels: 'ownedBy,assignedTo,issuemilestone,project,createdBy,modifiedBy,reportedBy,issuetype,issuestatus',
+            rels: 'ownedBy,assignedTo,issuemilestone,project,createdBy,modifiedBy,reportedBy,issuetype,issuestatus,parentissue',
             sort: this.sort,
             order: this.order,
             page: this.page,

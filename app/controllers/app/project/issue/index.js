@@ -44,11 +44,11 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
             },
             {
                 id: 'Issue.status',
-                label: this.intl.t("views.app.issue.fields.statusId"),
+                label: this.intl.t("views.app.issue.fields.status"),
                 type: 'string',
                 input: 'select',
                 get values() {
-                    return this._controller.statuses;
+                    return this._controller.statusOptionsByName;
                 },
                 _controller: this,
             },
@@ -60,7 +60,12 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
             {
                 id: 'issuetype.name',
                 label: this.intl.t("views.app.issue.fields.typeId"),
-                type: 'string'
+                type: 'string',
+                input: 'select',
+                get values() {
+                    return this._controller.issueTypeOptions;
+                },
+                _controller: this,
             },                                
             {
                 id: 'Issue.priority',
@@ -92,6 +97,26 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
                     todayHighlight: true,
                     autoclose: true
                 }
+            },
+            {
+                id: 'parentissue.issueNumber',
+                label: this.intl.t("views.app.issue.fields.parent"),
+                type: 'string'
+            },
+            {
+                id: 'assignedTo.name',
+                label: this.intl.t("views.app.issue.fields.assignee"),
+                type: 'string'
+            },
+            {
+                id: 'ownedBy.name',
+                label: this.intl.t("views.app.issue.fields.owner"),
+                type: 'string'
+            },
+            {
+                id: 'reportedBy.name',
+                label: this.intl.t("views.app.issue.fields.reportedBy"),
+                type: 'string'
             }
         ]
     }    
@@ -135,15 +160,6 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      * @for AppProjectIssueIndexController
      */
     @tracked isLoadingIssueDetails = false;    
-
-    /**
-     * The project controller
-     *
-     * @property projectController
-     * @type Ember.Controller
-     * @for AppProjectIssueIndexController
-     */
-    @controller('app.project') projectController;
 
     /**
      * The project data loaded for the selected issue
@@ -321,7 +337,40 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      * @public
      */
     get statusOptions() {
-        return (new format(this)).getTranslatedModelList(this.issueStatuses, 'views.app.issue.lists.status');
+        return (new format(this)).getTranslatedModelList(this.appProjectController.issueStatuses, 'views.app.issue.lists.status');
+    }
+
+    /**
+     * This property returns a list of issue statuses by their name.
+     *
+     * @property statusOptionsByName
+     * @type {Object}
+     * @for AppProjectIssueIndexController
+     * @public
+     */
+    get statusOptionsByName() {
+        return (new format(this)).getTranslatedModelList(this.appProjectController.issueStatuses, 'views.app.issue.lists.status', 'name');
+    }
+
+    /**
+     * This is a computed property that returns a formatted list of issue types.
+     *
+     * @property issueTypeOptions
+     * @type {Array}
+     * @for AppProjectIssueIndexController
+     * @public
+     */
+    get issueTypeOptions() {
+        let map = {
+            name: 'name',
+        };
+        let list = (new format(this)).getSelectList(this.appProjectController.issuetypes, map);
+        return list.map(item => {
+            return {
+                label: htmlSafe(item.name).toHTML(),
+                value: htmlSafe(item.name).toHTML(),
+            };
+        });
     }
 
     /**
