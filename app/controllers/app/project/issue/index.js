@@ -92,6 +92,26 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
                     todayHighlight: true,
                     autoclose: true
                 }
+            },
+            {
+                id: 'parentissue.issueNumber',
+                label: this.intl.t("views.app.issue.fields.parent"),
+                type: 'string'
+            },
+            {
+                id: 'assignedTo.name',
+                label: this.intl.t("views.app.issue.fields.assignee"),
+                type: 'string'
+            },
+            {
+                id: 'ownedBy.name',
+                label: this.intl.t("views.app.issue.fields.owner"),
+                type: 'string'
+            },
+            {
+                id: 'reportedBy.name',
+                label: this.intl.t("views.app.issue.fields.reportedBy"),
+                type: 'string'
             }
         ]
     }    
