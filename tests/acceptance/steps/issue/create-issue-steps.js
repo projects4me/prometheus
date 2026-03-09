@@ -1,5 +1,5 @@
 import { fillIn, currentURL, visit, click } from '@ember/test-helpers';
-import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
+import { clickTrigger, selectChoose, selectSearch } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
 import Collection from 'ember-cli-mirage/orm/collection';
 
@@ -69,6 +69,14 @@ export const when = function () {
             }
         },
         {
+            "User selects issue #$issueNumber as parent issue": (assert) => async function (issueNumber) {
+                await clickTrigger('div[data-field="issue.parentId"]');
+                await selectSearch('div[data-field="issue.parentId"]', issueNumber);
+                await selectChoose('div[data-field="issue.parentId"]', `.ember-power-select-option`, issueNumber);
+                assert.ok(true, `User selects issue #${issueNumber} as parent issue`);
+            }
+        },
+        {
             "User clicks on save button": (assert) => async function () {
                 let btn = document.querySelector('button[data-btn="save"]');
                 await click(btn);
@@ -104,6 +112,12 @@ export const then = function () {
             "Issue description is $content": (assert) => async function (content) {
                 let el = document.querySelector('div[data-field="issue.description"] > p');
                 assert.equal(content, el.innerText, 'description matched');
+            }
+        },
+        {
+            "Issue parent issue is #$issueNumber": (assert) => async function (issueNumber) {
+                let parentIssue = server.schema.issues.findBy({issueNumber: parseInt(issueNumber, 10)});
+                assert.dom(`div[data-field="issue.parentissue"] a`).hasText(`#${parentIssue.issueNumber} - ${parentIssue.subject}`);
             }
         }
     ];
