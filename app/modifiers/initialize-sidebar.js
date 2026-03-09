@@ -14,14 +14,47 @@ import $ from 'jquery';
  */
 export default modifier(function initializeSidebar() {
     let o = $.AdminLTE.options;
+
+    $.AdminLTE.tree = function (menu) {
+        let animationSpeed = $.AdminLTE.options.animationSpeed;
+        $(document).off('click', menu + ' li a')
+            .on('click', menu + ' li a', function (e) {
+                let $this = $(this);
+                let checkElement = $this.next();
+
+                // Collapsing a visible treeview-menu
+                if (checkElement.is('.treeview-menu') && checkElement.is(':visible') && !$('body').hasClass('sidebar-collapse')) {
+                    checkElement.parent('li').removeClass('menu-open');
+                    checkElement.slideUp(animationSpeed, function () {
+                        checkElement.removeClass('menu-open');
+                    });
+                // Expanding a hidden treeview-menu
+                } else if (checkElement.is('.treeview-menu') && !checkElement.is(':visible')) {
+                    let parentUl = $this.parents('ul').first();
+                    parentUl.find('ul:visible').each(function () {
+                        $(this).parent('li').removeClass('menu-open');
+                    });
+                    parentUl.find('ul:visible').slideUp(animationSpeed).removeClass('menu-open');
+
+                    checkElement.parent('li').addClass('menu-open');
+                    checkElement.slideDown(animationSpeed, function () {
+                        checkElement.addClass('menu-open');
+                    });
+                }
+
+                if (checkElement.is('.treeview-menu')) {
+                    e.preventDefault();
+                }
+            });
+    };
+
     $.AdminLTE.tree('.sidebar');
-    //Add slimscroll to navbar dropdown
+
     $(".navbar .menu").slimscroll({
         height: o.navbarMenuHeight,
         alwaysVisible: false,
         size: o.navbarMenuSlimscrollWidth
     }).css("width", "100%");
 
-    //Activate sidebar push menu
     $.AdminLTE.pushMenu.activate(o.sidebarToggleSelector);
 });
