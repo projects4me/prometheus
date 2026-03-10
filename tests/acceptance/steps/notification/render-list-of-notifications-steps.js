@@ -7,7 +7,6 @@ export const given = function () {
 			'There are $count systemnotifications in system with unread status':
 				(assert, ctx) =>
 					async function (count) {
-						// Create notifications with unread status
 						server.createList(
 							'systemnotification',
 							parseInt(count),
@@ -46,7 +45,8 @@ export const given = function () {
 									]
 								});
 							});
-
+						
+						ctx.set('unreadNotificationCount', count);
 						assert.ok(
 							true,
 							`Created ${count} unread systemnotifications`

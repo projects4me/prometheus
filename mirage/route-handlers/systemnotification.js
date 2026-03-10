@@ -36,9 +36,11 @@ export function register(server, ctx) {
 		const end = start + pageSize;
 
 		const paginatedCollection = new Collection('systemnotification', notifications.models.slice(start, end));
+		const unreadCount = ctx.get('unreadNotificationCount') ?? 10;
 		paginatedCollection.meta = {
-			unreadCount: 10
+			unreadCount: unreadCount
 		}
+		debugger;
 		return paginatedCollection;
 	});
 
