@@ -2,9 +2,6 @@
   .box-tools {
     .app-dropdown {
       margin-right: 0.5rem;
-      span {
-        margin-left: 0.1rem;
-      }
     }
     @include flexbox($alignItems: center);
     .fa-filter {
