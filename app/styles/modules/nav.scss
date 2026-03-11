@@ -10,8 +10,20 @@
 
 
 
-.sidebar-menu>li:hover>a, .sidebar-menu>li.active>a{
+.sidebar-menu>li.active>a{
   border-left-color: $primaryColor;
+}
+
+.sidebar-menu .treeview > a .fa-angle-left {
+  transition: transform 0.3s ease;
+}
+
+.sidebar-menu .treeview.menu-open > a .fa-angle-left {
+  transform: rotate(-90deg);
+}
+
+.sidebar-menu .treeview.active:not(.menu-open) > a .fa-angle-left {
+  transform: rotate(0deg) !important;
 }
 
 .sidebar-form .input-group{

@@ -1,6 +1,6 @@
 {{#each-in @meta as |module definition|}}
 {{#if definition.actions}}
-  <li class="treeview" data-navigation-module={{module}}>
+  <li class="treeview {{if (is-active-route definition.route) 'active menu-open'}}" data-navigation-module={{module}}>
     {{#if definition.projectRelated}}
       <a href="/{{@appPrefix}}/project/{{@trackedProject.shortCode}}/{{definition.anchorRoute}}">
         <i class="fa fa-{{definition.icon}}"></i>
@@ -40,7 +40,7 @@
     </ul>
   </li>
 {{else}}
-  <li class="treeview" data-navigation-module={{module}}>
+  <li class="treeview {{if (is-active-route definition.route) 'active'}}" data-navigation-module={{module}}>
     {{#if definition.projectRelated}}
       <a href="/{{@appPrefix}}/project/{{@trackedProject.shortCode}}/{{definition.anchorRoute}}" {{action @navigate definition.route definition.projectRelated @trackedProject.shortCode}}>
         <i class="fa fa-{{definition.icon}}"></i>
