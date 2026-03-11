@@ -1,72 +1,70 @@
-<section class="content">
-  <div class="board row">
-    <div class="col-md-{{if this.selectedIssue '8' '12'}}">
-      <AppUi::TaskBoard
-        @milestones={{this.milestoneList}}
-        @statuses={{this.statuses}}
-        @statusClass={{this.statusClass}}
-        @backlog={{this.backlog}}
-        @group="milestones"
-        @scroll={{true}}
-        @scrollSensitivity={{200}}
-        @scrollSpeed = {{10}}
-        @sort={{true}}
-        @forceFallback={{true}}
-        @disableSortable={{false}}
-        @dragClass="curr-item"
-        @chosenClass="curr-item"
-        @updateIssue={{this.updateIssue}}
-        @openIssue={{this.openIssue}}
-        @selectIssue={{this.selectIssue}}
-        @savedSearches={{this.savedSearches}}
-        @applySearch={{this.applySearch}}
-        @paramsQuery={{this.query}}
-        @selectedSearchId={{this.searchId}}
-        @validateField={{this.validateField}}
-        @selectStatic={{this.selectStatic}}
-        @selectRelated={{this.selectRelated}}
-        @issueTypes={{this.projectController.issuetypes}}
-        @save={{this.save}}
-        @message={{this.message}}
-        @membersList={{this.projectController.membersList}}
-        @search={{this.search}}
-        @markMilestoneAsComplete={{this.markMilestoneAsComplete}}
-        @getMilestoneProgress={{this.getMilestoneProgress}}
-        @getCompletedIssuesCount={{this.getCompletedIssuesCount}}
-      />
-    </div>
-
-    {{#if this.selectedIssue}}
-      <div class="col-md-4 issue-details-container">
-        {{#if this.isLoadingIssueDetails}}
-          <div class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title">{{t "views.app.board.issue.loading"}}</h3>
-            </div>
-            <div class="box-body flex-row flex-jc-c flex-ai-c">
-              <div class="dot-pulse"></div>
-            </div>
-          </div>
-        {{else if this.selectedIssueDetails}}
-          <div class="box">
-            <div class="box-body">
-              <Issue::IssueDetails 
-                @issue={{this.selectedIssueDetails}}
-                @activities={{null}}
-                @selectStatic={{this.selectStatic}}
-                @projectController={{this}}
-                @issueTypes={{this.issueTypes}}
-                @s_id={{null}}
-                @projectController={{this.projectController}}
-                @scrollAndHighlight={{this.scrollAndHighlight}}
-                @quickView={{true}}
-                @closeIssueDetails={{this.closeIssueDetails}}
-                @postUpdateAssignee={{this.postUpdateAssignee}}
-              />
-            </div>
-          </div>
-        {{/if}}
-      </div>
-    {{/if}}
+<div class="board row">
+  <div class="col-md-{{if this.selectedIssue '8' '12'}}">
+    <AppUi::TaskBoard
+      @milestones={{this.milestoneList}}
+      @statuses={{this.statuses}}
+      @statusClass={{this.statusClass}}
+      @backlog={{this.backlog}}
+      @group="milestones"
+      @scroll={{true}}
+      @scrollSensitivity={{200}}
+      @scrollSpeed = {{10}}
+      @sort={{true}}
+      @forceFallback={{true}}
+      @disableSortable={{false}}
+      @dragClass="curr-item"
+      @chosenClass="curr-item"
+      @updateIssue={{this.updateIssue}}
+      @openIssue={{this.openIssue}}
+      @selectIssue={{this.selectIssue}}
+      @savedSearches={{this.savedSearches}}
+      @applySearch={{this.applySearch}}
+      @paramsQuery={{this.query}}
+      @selectedSearchId={{this.searchId}}
+      @validateField={{this.validateField}}
+      @selectStatic={{this.selectStatic}}
+      @selectRelated={{this.selectRelated}}
+      @issueTypes={{this.projectController.issuetypes}}
+      @save={{this.save}}
+      @message={{this.message}}
+      @membersList={{this.projectController.membersList}}
+      @search={{this.search}}
+      @markMilestoneAsComplete={{this.markMilestoneAsComplete}}
+      @getMilestoneProgress={{this.getMilestoneProgress}}
+      @getCompletedIssuesCount={{this.getCompletedIssuesCount}}
+    />
   </div>
-</section>
+
+  {{#if this.selectedIssue}}
+    <div class="col-md-4 issue-details-container">
+      {{#if this.isLoadingIssueDetails}}
+        <div class="box box-primary">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.board.issue.loading"}}</h3>
+          </div>
+          <div class="box-body flex-row flex-jc-c flex-ai-c">
+            <div class="dot-pulse"></div>
+          </div>
+        </div>
+      {{else if this.selectedIssueDetails}}
+        <div class="box">
+          <div class="box-body">
+            <Issue::IssueDetails 
+              @issue={{this.selectedIssueDetails}}
+              @activities={{null}}
+              @selectStatic={{this.selectStatic}}
+              @projectController={{this}}
+              @issueTypes={{this.issueTypes}}
+              @s_id={{null}}
+              @projectController={{this.projectController}}
+              @scrollAndHighlight={{this.scrollAndHighlight}}
+              @quickView={{true}}
+              @closeIssueDetails={{this.closeIssueDetails}}
+              @postUpdateAssignee={{this.postUpdateAssignee}}
+            />
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>
