@@ -71,8 +71,18 @@ export default App.extend({
         if (project.objectAt(0) != undefined &&
             project.objectAt(0).get('members') != undefined) {
             _self.set('members', project.objectAt(0).get('members'));
-            _self.set('issuestatuses', project.objectAt(0).get('issuestatuses'));
             _self.set('issuetypes', project.objectAt(0).get('issuetypes'));
+        }
+
+        if (project.objectAt(0) != undefined &&
+            project.objectAt(0).get('issuestatuses').length !== 0) {
+            _self.set('issuestatuses', project.objectAt(0).get('issuestatuses'));
+        } else {
+            let issueStatuses = await this.store.query('issuestatus', {
+                query: `(Issuestatus.system : 1)`,
+                limit: -1,
+            });
+            _self.set('issuestatuses', issueStatuses);
         }
 
         // set projectId in trackedProject service

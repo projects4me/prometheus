@@ -99,12 +99,12 @@ export default class Format {
      * @param locale
      * @return {Array}
      */
-    getTranslatedModelList(model, listPath) {
+    getTranslatedModelList(model, listPath, identifier = 'id') {
         let _self = this;
         
         const translatedModels = model?.map(item => {
             return {
-                id: item.id,
+                id: item[identifier],
                 name: _self.intl.t(`${listPath}.${item.name}`),
             };
         }) || [];
