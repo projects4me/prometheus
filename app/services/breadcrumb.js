@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import { inject as service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 
 /**
  * This service provides the breadcrumb for a given route.
@@ -37,6 +38,16 @@ export default class BreadCrumbService extends Service {
      * @public
      */
     @service intl;
+
+	/**
+	 * Tracks dynamic titles set at runtime by record-detail routes (e.g. "#3518",
+	 * a user's name).
+	 *
+	 * @property _dynamicTitles
+	 * @type Object
+	 * @private
+	 */
+	@tracked _dynamicTitles = {};
 
 	/**
 	 * Route metadata mapping for automatic breadcrumb generation
@@ -163,6 +174,12 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app.project'
 		},
+		'app.project.gantt': {
+			title: 'views.nav.menu.gantt.label',
+			icon: 'gantt',
+			linkable: true,
+			parent: 'app.project'
+		},
 		'app.role.index': {
 			title: 'global.module.plural.role',
 			icon: 'key',
@@ -285,11 +302,81 @@ export default class BreadCrumbService extends Service {
 		};
 	}
 
+	/**
+	 * Set the title for a given route
+	 *
+	 * @method setTitle
+	 * @param {String} route - Route name
+	 * @param {String} title - Title
+	 * @public
+	 */
 	setTitle(route, title) {
 		this.routeMetadata[route].title = title;
+		this._dynamicTitles = { ...this._dynamicTitles, [route]: title };
 	}
 
+	/**
+	 * Set the icon for a given route
+	 *
+	 * @method setIcon
+	 * @param {String} route - Route name
+	 * @param {String} icon - Icon name
+	 * @public
+	 */
 	setIcon(route, icon) {		
 		this.routeMetadata[route].icon = icon;
+	}
+
+	/**
+	 * Returns the human-readable label for the currently active route.
+	 * Reactive to route changes (reads router.currentRouteName) and to dynamic
+	 * title updates from record-detail routes (reads _dynamicTitles).
+	 *
+	 * @property currentPageLabel
+	 * @type String|null
+	 * @public
+	 */
+	/**
+	 * Returns true when the current route lives under the project context
+	 * (i.e. the URL carries a project shortcode such as app.project.issue.index).
+	 * Routes like app.user.*, app.role.*, app.projects.* and app itself are
+	 * NOT project-related and return false.
+	 *
+	 * @property isProjectRelatedRoute
+	 * @type Boolean
+	 * @public
+	 */
+	get isProjectRelatedRoute() {
+		const routeName = this.router.currentRouteName;
+		return routeName === 'app.project' || routeName?.startsWith('app.project.');
+	}
+
+	get currentPageLabel() {
+		const routeName = this.router.currentRouteName;
+		const config = this.routeMetadata[routeName];
+
+		if (!config) {
+			return null;
+		}
+
+		const dynamicTitle = this._dynamicTitles[routeName];
+		if (dynamicTitle) {
+			return dynamicTitle;
+		}
+
+		const key = config.title;
+		if (!key) {
+			return null;
+		}
+
+		if (key.includes('.')) {
+			try {
+				return this.intl.t(key);
+			} catch (e) {
+				return key;
+			}
+		}
+
+		return key;
 	}
 }
