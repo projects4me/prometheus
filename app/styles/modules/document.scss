@@ -551,6 +551,9 @@ span[id="#"]{
 
 /* Breadcrumb */
 .content-header {
+  h1 small {
+    font-weight: 500;
+  }
   .breadcrumb {
     li {
       a {

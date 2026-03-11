@@ -1,7 +1,6 @@
 <section class="content-header">
   {{#if this.projectId}}
     <h1>
-      {{t "views.app.project.label"}}
       <small><LinkTo @route="app.project" @model={{this.model.shortCode}}>{{this.model.name}}</LinkTo></small>
     </h1>
   {{else}}
