@@ -59,6 +59,14 @@ export default class WidgetsWeeklyConversationsComponent extends WidgetsComponen
 	@tracked comments = this.args.data || [];
 
 	/**
+	 * Whether a refresh operation is currently in progress
+	 * @property isRefreshing
+	 * @type {boolean}
+	 * @public
+	 */
+	@tracked isRefreshing = false;
+
+	/**
 	 * Internal cache for comments grouped by conversation subject.
 	 * @property commentsByConversationSubject
 	 * @type {Object}
@@ -124,6 +132,43 @@ export default class WidgetsWeeklyConversationsComponent extends WidgetsComponen
 	}
 
 	/**
+	 * Queries the store for comments within the given week range.
+	 * Single source of truth for the comment fetch used by both
+	 * onPageChange and refresh.
+	 *
+	 * @method fetchComments
+	 * @param {String} startWeek - Start of the week range
+	 * @param {String} endWeek - End of the week range
+	 * @returns {Promise<Array>}
+	 * @private
+	 */
+	async fetchComments(startWeek, endWeek) {
+		let commentOptions = this.baseOptions();
+		commentOptions.query = `(Comment.dateCreated BETWEEN ${startWeek} AND ${endWeek})`;
+		return await this.store.query('comment', commentOptions);
+	}
+
+	/**
+	 * Refreshes the widget by re-fetching comments for the currently
+	 * displayed week.
+	 *
+	 * @method refresh
+	 * @public
+	 * @action
+	 */
+	@action
+	async refresh() {
+		this.isRefreshing = true;
+		try {
+			this.comments = await this.fetchComments(this.startWeek, this.endWeek);
+		} catch (error) {
+			console.error('Error refreshing conversations:', error);
+		} finally {
+			this.isRefreshing = false;
+		}
+	}
+
+	/**
 	 * Handles pagination changes, fetching comments for the selected week.
 	 * Updates the week range and queries the store for comments within the date range.
 	 *
@@ -141,12 +186,9 @@ export default class WidgetsWeeklyConversationsComponent extends WidgetsComponen
 			);
 			this.startWeek = startOfWeek;
 			this.endWeek = endOfWeek;
-			let commentOptions = _.cloneDeep(this.args.widgetSettings.options);
-			commentOptions.query = `(Comment.dateCreated BETWEEN ${this.startWeek} AND ${this.endWeek})`;
-			let comments = await this.store.query('comment', commentOptions);
-			this.comments = comments;
+			this.comments = await this.fetchComments(this.startWeek, this.endWeek);
 			return {
-				items: comments
+				items: this.comments
 			};
 		} catch (error) {
 			console.error('Error fetching comments:', error);

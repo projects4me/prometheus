@@ -77,6 +77,28 @@ export default class WidgetsWeeklyIssueTimelogsComponent extends WidgetsComponen
 	@tracked endWeek = DateUtils.getWeekRangeForPage(1).endOfWeek;
 
 	/**
+	 * Queries the store for issues (timelogs) within the given week range.
+	 * Single source of truth for the timelog fetch used by both
+	 * onPaginate and refresh.
+	 *
+	 * @method fetchTimelogs
+	 * @param {String} startWeek - Start of the week range
+	 * @param {String} endWeek - End of the week range
+	 * @returns {Promise<Array>}
+	 * @private
+	 */
+	async fetchTimelogs(startWeek, endWeek) {
+		let { limit = -1, rels = 'spent,estimated', sort = 'Issue.dateModified', order = 'DESC' } = this.baseOptions();
+		return await this.store.query('issue', {
+			query: `(Issue.startDate <: ${endWeek}) AND (Issue.endDate >: ${startWeek})`,
+			limit,
+			rels,
+			sort,
+			order
+		});
+	}
+
+	/**
 	 * Handles pagination changes, fetching timelogs for the selected week.
 	 *
 	 * @method onPaginate
@@ -92,14 +114,22 @@ export default class WidgetsWeeklyIssueTimelogsComponent extends WidgetsComponen
 		);
 		this.startWeek = startOfWeek;
 		this.endWeek = endOfWeek;
-		let { limit = -1, rels = 'spent,estimated', sort = 'Issue.dateModified', order = 'DESC' } = this.args.widgetSettings.options;
-		const data = await this.store.query('issue', {
-			query: `(Issue.startDate <: ${endOfWeek}) AND (Issue.endDate >: ${startOfWeek})`,
-			limit: limit,
-			rels: rels,
-			sort: sort,
-			order: order
-		});
+		const data = await this.fetchTimelogs(this.startWeek, this.endWeek);
+		this.data = data;
+		this.filteredData = data;
+	}
+
+	/**
+	 * Refreshes the widget by re-fetching timelogs for the currently displayed
+	 * week using the same query as onPaginate.
+	 *
+	 * @method refresh
+	 * @public
+	 * @action
+	 */
+	@action
+	async refresh() {
+		const data = await this.fetchTimelogs(this.startWeek, this.endWeek);
 		this.data = data;
 		this.filteredData = data;
 	}

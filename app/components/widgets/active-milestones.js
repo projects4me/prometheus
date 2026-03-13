@@ -47,6 +47,22 @@ export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 	}
 
 	/**
+	 * Refreshes the widget by re-fetching milestones using the original widget
+	 * options. Resets filtered and original data.
+	 *
+	 * @method refresh
+	 * @public
+	 * @action
+	 */
+	@action
+	async refresh() {
+		let milestoneOptions = this.baseOptions();
+		let milestones = await this.store.query('milestone', milestoneOptions);
+		this.originalData = milestones;
+		this.filteredData = milestones;
+	}
+
+	/**
 	 * Loads more milestones.
 	 *
 	 * @method onLoadMore
@@ -55,7 +71,7 @@ export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 	 */
 	@action
 	async onLoadMore(paginationInfo = {}) {
-		let milestoneOptions = _.cloneDeep(this.args.widgetSettings.options);
+		let milestoneOptions = this.baseOptions();
 		milestoneOptions.page = paginationInfo.page;
 		milestoneOptions.limit = paginationInfo.pageSize;
 		let milestones = await this.store.query('milestone', milestoneOptions);

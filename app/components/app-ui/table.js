@@ -69,6 +69,25 @@ export default class AppUiTableComponent extends Component {
 	@tracked activeFilters = [];
 
 	/**
+	 * Whether a refresh operation is currently in progress
+	 * @property isRefreshing
+	 * @type {boolean}
+	 * @public
+	 */
+	@tracked isRefreshing = false;
+
+	/**
+	 * Holds the reset function registered by the InfiniteScroll child component.
+	 * Populated via @onRegisterReset. Called during handleRefresh to restore the
+	 * load-more component to its initial state after data is re-fetched.
+	 *
+	 * @property _resetPagination
+	 * @type {Function|null}
+	 * @private
+	 */
+	_resetPagination = null;
+
+	/**
 	 * Determines whether the search input should be displayed
 	 * @property showSearch
 	 * @type {boolean}
@@ -154,6 +173,49 @@ export default class AppUiTableComponent extends Component {
 		this.activeFilters = [];
 		if(this.args.onPaginate) {
 			await this.args.onPaginate(page);
+		}
+	}
+
+	/**
+	 * Receives and stores the resetPagination function from the InfiniteScroll
+	 * child component. Passed as @onRegisterReset to InfiniteScroll so it can
+	 * register itself once on mount.
+	 *
+	 * @method registerPaginationReset
+	 * @param {Function} resetFn - The reset function from InfiniteScroll
+	 * @public
+	 * @action
+	 */
+	@action
+	registerPaginationReset(resetFn) {
+		this._resetPagination = resetFn;
+	}
+
+	/**
+	 * Handles the refresh button click. Delegates to the @onRefresh callback
+	 * while managing the isRefreshing loading state. After the data is
+	 * re-fetched, resets InfiniteScroll state so Load More starts from page 2.
+	 *
+	 * @method handleRefresh
+	 * @public
+	 * @action
+	 */
+	@action
+	async handleRefresh() {
+		if (!this.args.onRefresh) return;
+		this.isRefreshing = true;
+		try {
+			await this.args.onRefresh();
+			this._resetPagination?.();
+		} catch (error) {
+			new Messenger().post({
+				message: this.intl.t("views.app.components.table.refreshError"),
+				type: 'error',
+				showCloseButton: true,
+				hideAfter: 3
+			});
+		} finally {
+			this.isRefreshing = false;
 		}
 	}
 

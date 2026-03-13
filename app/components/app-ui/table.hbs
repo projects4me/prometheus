@@ -1,7 +1,19 @@
 <div class="box box-primary list-view table-container" ...attributes>
   <div class="box-header with-border">
     {{#if @header}}
+      <div class="box-title-container">
       <h3 class="box-title">{{@header}}</h3>
+      {{#if @onRefresh}}
+        <AppUi::Button
+          class="btn btn-default btn-sm btn-no-outline"
+          title={{t "global.form.refresh"}}
+          @onClick={{this.handleRefresh}}
+          data-refresh-button
+        >
+          <i class="fa {{if this.isRefreshing "fa-spin fa-spinner" "fa-refresh"}}"></i>
+        </AppUi::Button>
+      {{/if}}      
+      </div>
     {{/if}}
     <div class="box-tools pull-right filters">
       {{#if this.filters}}
@@ -95,6 +107,7 @@
       {{#if @useLazyLoading}}
         <InfiniteScroll
           @onLoadMore={{this.loadMore}}
+          @onRegisterReset={{this.registerPaginationReset}}
           @threshold={{150}}
           @containerClass="table-responsive list-view"
           @loadingText={{t "views.app.components.table.loadingText"}}

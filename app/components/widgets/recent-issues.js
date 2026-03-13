@@ -120,6 +120,27 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 	}
 
 	/**
+	 * Refreshes the widget by re-fetching issues from the beginning using
+	 * the original widget options. Resets filtered and original data.
+	 *
+	 * @method refresh
+	 * @public
+	 * @action
+	 */
+	@action
+	async refresh() {
+		let issueOptions = this.baseOptions();
+		let query = issueOptions.query;
+		let matches = query.match(/\([^()]+\)/g);
+		let now = moment.utc().format('YYYY-MM-DD HH:mm:ss');
+		let updatedQuery = `(${matches[0]} AND (Issue.dateModified <: ${now}))`;
+		issueOptions.query = updatedQuery;
+		let issues = await this.store.query('issue', issueOptions);
+		this.originalData = issues;
+		this.filteredData = issues;
+	}
+
+	/**
 	 * Loads more issues.
 	 * 
 	 * @method onLoadMore
@@ -128,7 +149,7 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 	 */
 	@action 
 	async onLoadMore(paginationInfo = {}, activeFilters) {
-		let issueOptions = _.cloneDeep(this.args.widgetSettings.options);
+		let issueOptions = this.baseOptions();
 		issueOptions.page = paginationInfo.page;
 		issueOptions.limit = paginationInfo.pageSize;
 		let issues = await this.store.query('issue', issueOptions);
