@@ -141,6 +141,8 @@ export default App.extend({
         const milestoneOptions = {
             query: `(projectId : ${projectId})`,
             fields: 'Milestone.name',
+            sort: 'Milestone.dateCreated',
+            order: 'DESC',
             limit: -1
         };
 
@@ -271,7 +273,7 @@ export default App.extend({
         controller.set('issueStatuses',this.issueStatuses);
         controller.set('milestones',this.milestones);
         controller.set('selectedIssue', null);
-        
+
         if(controller.searchId && this.savedsearches) {
             controller.set('activeSearch', this.savedsearches.find(search => search.id === controller.searchId) || null);
         }
