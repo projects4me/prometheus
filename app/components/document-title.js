@@ -59,14 +59,14 @@ export default class DocumentTitleComponent extends Component {
      * @public
      */
     get title() {
-        const label      = this.breadcrumb.currentPageLabel;
-        const bell       = this.notifications.unreadCount > 0 ? `(${this.notifications.unreadCount}) ` : '';
+        const label = this.breadcrumb.currentPageLabel;
+        const notificationCount = this.notifications.unreadCount > 0 ? `(${this.notifications.unreadCount}) ` : '';
 
         if (this.breadcrumb.isProjectRelatedRoute) {
             const project = this.trackedProject.shortCode?.toUpperCase();
-            return label ? `${bell}${label} - ${project}` : `${bell}${project}`;
+            return label ? `${notificationCount}${label} - ${project}` : `${notificationCount}${project}`;
         }
 
-        return label ? `${bell}${label}` : null;
+        return label ? `${notificationCount}${label}` : `${notificationCount}Projects4Me`;
     }
 }
