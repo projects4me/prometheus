@@ -63,7 +63,7 @@ export default class DocumentTitleComponent extends Component {
         const bell       = this.notifications.unreadCount > 0 ? `(${this.notifications.unreadCount}) ` : '';
 
         if (this.breadcrumb.isProjectRelatedRoute) {
-            const project = this.trackedProject.shortCode?.toUpperCase() ?? 'Prometheus';
+            const project = this.trackedProject.shortCode?.toUpperCase();
             return label ? `${bell}${label} - ${project}` : `${bell}${project}`;
         }
 
