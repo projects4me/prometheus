@@ -83,10 +83,13 @@ export default class NotificationsService extends Service {
 	}
 
 	/**
-	 * Constructor - sets up route change listener
+	 * Constructor - initializes the BroadcastChannel for cross-tab sync
 	 */
 	constructor() {
 		super(...arguments);
+		this._broadcastChannel = new BroadcastChannel('notifications_sync');
+		this._broadcastChannel.onmessage = (event) =>
+			this._handleCrossTabMessage(event.data);
 	}
 
 	/**
@@ -275,12 +278,18 @@ export default class NotificationsService extends Service {
 					.querySelector(
 						`[data-notification-id="${notification.id}"]`
 					)
-					.classList.remove('unread-notification');
+					?.classList.remove('unread-notification');
 				await recipientRecord.save();
 				let response = this.store.adapterFor(
 					'systemnotificationrecipient'
 				).lastResponseMeta;
 				this.unreadCount = response.unreadCount;
+
+				this._broadcastChannel.postMessage({
+					type: 'MARK_AS_READ',
+					notificationId: notification.id,
+					unreadCount: this.unreadCount
+				});
 			}
 		} catch (error) {
 			console.error('Error marking notification as read:', error);
@@ -352,6 +361,8 @@ export default class NotificationsService extends Service {
 
 			// Update the unread count
 			this.unreadCount = 0;
+
+			this._broadcastChannel.postMessage({ type: 'MARK_ALL_AS_READ' });
 
 			messenger.update({
 				message: htmlSafe(
@@ -444,5 +455,65 @@ export default class NotificationsService extends Service {
 		} catch (error) {
 			console.error('Error polling for unread notifications:', error);
 		}
+	}
+
+	/**
+	 * Handles messages received from other tabs via BroadcastChannel.
+	 * Mirrors state updates locally without re-calling the API.
+	 *
+	 * @method _handleCrossTabMessage
+	 * @private
+	 * @param {Object} data - Message payload from another tab
+	 */
+	_handleCrossTabMessage(data) {
+		if (data.type === 'MARK_ALL_AS_READ') {
+			this.notifications.forEach((notification) => {
+				const recipientRecord = notification.recipientRecords.find(
+					(un) => un.userId === this.currentUser.user?.id
+				);
+				if (recipientRecord) {
+					recipientRecord.isRead = '1';
+				}
+			});
+
+			document.querySelectorAll('.unread-notification').forEach((el) => {
+				el.classList.remove('unread-notification');
+			});
+
+			this.unreadCount = 0;
+		} else if (data.type === 'MARK_AS_READ') {
+			const notification = this.notifications.find(
+				(n) => n.id === data.notificationId
+			);
+
+			if (notification) {
+				const recipientRecord = notification.recipientRecords.find(
+					(un) => un.userId === this.currentUser.user?.id
+				);
+				if (recipientRecord) {
+					recipientRecord.isRead = '1';
+				}
+
+				document
+					.querySelector(
+						`[data-notification-id="${data.notificationId}"]`
+					)
+					?.classList.remove('unread-notification');
+			}
+
+			this.unreadCount = data.unreadCount ?? Math.max(0, this.unreadCount - 1);
+		}
+	}
+
+	/**
+	 * Cleans up the BroadcastChannel and polling timer when the service is destroyed
+	 *
+	 * @method willDestroy
+	 * @public
+	 */
+	willDestroy() {
+		super.willDestroy(...arguments);
+		this._broadcastChannel?.close();
+		this.stopNotificationPolling();
 	}
 }

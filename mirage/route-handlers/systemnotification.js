@@ -40,7 +40,6 @@ export function register(server, ctx) {
 		paginatedCollection.meta = {
 			unreadCount: unreadCount
 		}
-		debugger;
 		return paginatedCollection;
 	});
 
