@@ -132,6 +132,7 @@ export default class InfiniteScrollComponent extends Component {
 		super(...arguments);
 		this._boundHandleScroll = this.handleScroll.bind(this);
 		this._boundHandleBrowserScroll = this.handleBrowserScroll.bind(this);
+		this.args.onRegisterReset?.(this.resetPagination);
 	}
 
 	/**
@@ -233,13 +234,16 @@ export default class InfiniteScrollComponent extends Component {
 	}
 
 	/**
-	 * Resets pagination state
+	 * Resets pagination state back to the initial load-more starting point.
+	 * Page is reset to 2 because page 1 is always pre-loaded externally by
+	 * the widget/route before the component mounts.
+	 *
 	 * @method resetPagination
 	 * @public
 	 */
 	@action
 	resetPagination() {
-		this.page = 1;
+		this.page = 2;
 		this.hasReachedEnd = false;
 	}
 

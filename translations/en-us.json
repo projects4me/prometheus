@@ -1446,7 +1446,8 @@
         "table": {
           "searchPlaceholder": "Search...",
           "loadingText": "Loading more items...",
-          "filters": "Filters"
+          "filters": "Filters",
+          "refreshError": "Failed to refresh data. Please try again."
         },
         "timeline": {
           "noActivitiesFound": "No activities found"

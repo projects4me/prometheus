@@ -44,6 +44,19 @@ export default class WidgetsComponent extends Component {
 	@service currentUser;
 
 	/**
+	 * Returns a deep clone of the widget's options from widgetSettings.
+	 * Use this as the starting point for any store query to avoid mutating
+	 * the shared settings object across calls.
+	 *
+	 * @method baseOptions
+	 * @returns {Object} - A deep-cloned copy of widgetSettings.options
+	 * @public
+	 */
+	baseOptions() {
+		return _.cloneDeep(this.args.widgetSettings.options);
+	}
+
+	/**
 	 * Processes and formats the fields configuration from widgetSettings
 	 * Translates field labels using the provided translationKey
 	 *

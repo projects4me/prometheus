@@ -3,6 +3,15 @@
     <h3 class="box-title">
       {{t "views.app.widgets.weeklyConversations.title"}}
     </h3>
+      <button
+        type="button"
+        class="btn btn-default btn-sm btn-no-outline"
+        title={{t "global.form.refresh"}}
+        {{on "click" this.refresh}}
+        data-refresh-button
+      >
+        <i class="fa {{if this.isRefreshing "fa-spin fa-spinner" "fa-refresh"}}"></i>
+      </button>
   </div>
   <Pagination
     @onPageChange={{this.onPageChange}}

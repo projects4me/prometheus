@@ -33,6 +33,14 @@ export default class WidgetsWeeklyActivitiesComponent extends WidgetsComponent {
 	@tracked activities = this.args.data || [];
 
 	/**
+	 * Whether a refresh operation is currently in progress
+	 * @property isRefreshing
+	 * @type {boolean}
+	 * @public
+	 */
+	@tracked isRefreshing = false;
+
+	/**
 	 * The start date of the currently selected week.
 	 * @property startWeek
 	 * @type {String|Date}
@@ -73,6 +81,42 @@ export default class WidgetsWeeklyActivitiesComponent extends WidgetsComponent {
 	}
 
 	/**
+	 * Queries the store for activities within the given week range.
+	 * Single source of truth for the activity fetch used by both
+	 * onPageChange and refresh.
+	 *
+	 * @method fetchActivities
+	 * @param {String} startWeek - Start of the week range
+	 * @param {String} endWeek - End of the week range
+	 * @returns {Promise<Array>}
+	 * @private
+	 */
+	async fetchActivities(startWeek, endWeek) {
+		let activityOptions = this.baseOptions();
+		activityOptions.query = `(Activity.dateCreated BETWEEN ${startWeek} AND ${endWeek})`;
+		activityOptions.rels = 'issue,project';
+		return await this.store.query('activity', activityOptions);
+	}
+
+	/**
+	 * Refreshes the widget by re-fetching activities for the currently
+	 * displayed week.
+	 *
+	 * @method refresh
+	 * @public
+	 * @action
+	 */
+	@action
+	async refresh() {
+		this.isRefreshing = true;
+		try {
+			this.activities = await this.fetchActivities(this.startWeek, this.endWeek);
+		} finally {
+			this.isRefreshing = false;
+		}
+	}
+
+	/**
 	 * Handles pagination changes, fetching activities for the selected week.
 	 *
 	 * @method onPageChange
@@ -88,13 +132,9 @@ export default class WidgetsWeeklyActivitiesComponent extends WidgetsComponent {
 		);
 		this.startWeek = startOfWeek;
 		this.endWeek = endOfWeek;
-		let activityOptions = _.cloneDeep(this.args.widgetSettings.options);
-		activityOptions.query = `(Activity.dateCreated BETWEEN ${this.startWeek} AND ${this.endWeek})`;
-		activityOptions.rels = 'issue,project';
-		let activities = await this.store.query('activity', activityOptions);
-		this.activities = activities;
+		this.activities = await this.fetchActivities(this.startWeek, this.endWeek);
 		return {
-			items: activities
+			items: this.activities
 		};
 	}
 }

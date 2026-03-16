@@ -1,8 +1,7 @@
 .table-container {
   .box-tools {
-    .app-dropdown {
-      margin-right: 0.5rem;
-    }
+    gap: 0.5rem;
+    
     @include flexbox($alignItems: center);
     .fa-filter {
       font-size: 1.2rem;

@@ -50,4 +50,24 @@
       }
     }
   }
+
+  [data-refresh-button] {
+    padding: 0.2rem 0.6rem;
+    background-color: transparent;
+    color: #333;
+    font-size: 1.2rem;
+    line-height: 0;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    &:hover {
+      background-color: transparent;
+      color: #333;
+    }
+  }  
+
+  [data-refresh-button]:active {
+    background-color: transparent;
+    box-shadow: none;
+  }  
 }
