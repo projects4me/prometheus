@@ -40,7 +40,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
             {
                 id: 'Issue.subject',
                 label: this.intl.t("views.app.issue.fields.subject"),
-                type: 'string',
+                type: 'string'
             },
             {
                 id: 'Issue.status',
@@ -50,12 +50,17 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
                 get values() {
                     return this._controller.statusOptionsByName;
                 },
-                _controller: this,
+                _controller: this
             },
             {
                 id: 'issuemilestone.name',
                 label: this.intl.t("views.app.issue.fields.milestoneId"),
-                type: 'string'
+                type: 'string',
+                input: 'select',
+                get values() {
+                    return this._controller.milestonesOptions;
+                },
+                _controller: this,
             },
             {
                 id: 'issuetype.name',
@@ -106,17 +111,32 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
             {
                 id: 'assignedTo.name',
                 label: this.intl.t("views.app.issue.fields.assignee"),
-                type: 'string'
+                type: 'string',
+                input: 'select',
+                get values() {
+                    return this._controller.usersOptions;
+                },
+                _controller: this
             },
             {
                 id: 'ownedBy.name',
                 label: this.intl.t("views.app.issue.fields.owner"),
-                type: 'string'
+                type: 'string',
+                input: 'select',
+                get values() {
+                    return this._controller.usersOptions;
+                },
+                _controller: this
             },
             {
                 id: 'reportedBy.name',
                 label: this.intl.t("views.app.issue.fields.reportedBy"),
-                type: 'string'
+                type: 'string',
+                input: 'select',
+                get values() {
+                    return this._controller.usersOptions;
+                },
+                _controller: this
             }
         ]
     }    
@@ -350,6 +370,42 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      */
     get statusOptionsByName() {
         return (new format(this)).getTranslatedModelList(this.appProjectController.issueStatuses, 'views.app.issue.lists.status', 'name');
+    }
+
+    /**
+     * This property contains a formatted list of milestones.
+     *
+     * @property milestonesOptions
+     * @type {Array}
+     * @for AppProjectIssueIndexController
+     * @public
+     */
+    get milestonesOptions() {
+        let milestones = (new format(this)).getSelectList(this.milestones, {name: 'name'});
+        return milestones.map(item => {
+            return {
+                label: htmlSafe(item.name).toHTML(),
+                value: htmlSafe(item.name).toHTML(),
+            };
+        });
+    }
+
+    /**
+     * This property contains a formatted list of users.
+     *
+     * @property usersOptions
+     * @type {Array}
+     * @for AppProjectIssueIndexController
+     * @public
+     */
+    get usersOptions() {
+        let users = (new format(this)).getSelectList(this.appProjectController.members, {name: 'name'});
+        return users.map(item => {
+            return {
+                label: htmlSafe(item.name).toHTML(),
+                value: htmlSafe(item.name).toHTML(),
+            };
+        });
     }
 
     /**
