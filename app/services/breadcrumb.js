@@ -328,15 +328,6 @@ export default class BreadCrumbService extends Service {
 	}
 
 	/**
-	 * Returns the human-readable label for the currently active route.
-	 * Reactive to route changes (reads router.currentRouteName) and to dynamic
-	 * title updates from record-detail routes (reads _dynamicTitles).
-	 *
-	 * @property currentPageLabel
-	 * @type String|null
-	 * @public
-	 */
-	/**
 	 * Returns true when the current route lives under the project context
 	 * (i.e. the URL carries a project shortcode such as app.project.issue.index).
 	 * Routes like app.user.*, app.role.*, app.projects.* and app itself are
@@ -351,6 +342,15 @@ export default class BreadCrumbService extends Service {
 		return routeName === 'app.project' || routeName?.startsWith('app.project.');
 	}
 
+	/**
+	 * Returns the human-readable label for the currently active route.
+	 * Reactive to route changes (reads router.currentRouteName) and to dynamic
+	 * title updates from record-detail routes (reads _dynamicTitles).
+	 *
+	 * @property currentPageLabel
+	 * @type String|null
+	 * @public
+	 */
 	get currentPageLabel() {
 		const routeName = this.router.currentRouteName;
 		const config = this.routeMetadata[routeName];
