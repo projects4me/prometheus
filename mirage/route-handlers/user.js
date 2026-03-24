@@ -28,6 +28,9 @@ export function register(server, ctx) {
             model = schema.users.where({ [field]: value });
         }
 
+        if(ctx.get('userCustomCallback')) {
+            return ctx.get('userCustomCallback')(model, userQuery);
+        }
         return model;
     });
 

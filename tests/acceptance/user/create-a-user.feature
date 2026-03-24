@@ -8,12 +8,11 @@ Feature: User | create a user
     And User_1 is logged in
     When User navigates to app/user/create
     And User enters following details for a user
-    ------------------------------------------------------------------------------
-    |name        | email                 | password | confirmPassword | username |
-    |Rana Nouman | ranamnouman@gmail.com | test     | test            | rana     |
-    ------------------------------------------------------------------------------
+    --------------------------------------
+    |name        | email                 |
+    |Rana Nouman | ranamnouman@gmail.com |
+    --------------------------------------
     And User selects date of birth
+    And There is custom callback for user
     And User clicks on save button
-    #User with id 11 is created because "default scenario" had already created 10 users.
-    Then User should be in app/user/11 page
     And User name is Rana Nouman

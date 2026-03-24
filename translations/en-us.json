@@ -327,7 +327,7 @@
     "signin": {
       "message": "Please sign in to proceed",
       "workspaceTitle": "The complete workspace to manage your projects",
-      "username": "Username",
+      "email": "Email",
       "password": "Password",
       "facebook": "Sign in using Facebook",
       "google": "Sign in using Google+",
@@ -335,9 +335,9 @@
       "or": "- OR -",
       "forgot": "Forgot Password?",
       "title": "<b>Projects</b>4<b>Me</b>",
-      "invalid_grant": "Invalid username or password",
+      "invalid_grant": "Invalid email or password",
       "resourceLocked": "Your account has been locked, please contact the system administrator",
-      "error": "Invalid username or password",
+      "error": "Invalid email or password",
       "sessionExpired": "Your <b>session</b> has expired. Please sign in again to continue",
       "forgetPassword": {
         "title": "<b>Forgot Password</b>",
@@ -1068,56 +1068,42 @@
           "title": "Create User",
           "userInfo": "User Information",
           "name": "Full Name",
-          "username": "Username",
           "email": "Email Address",
-          "password": "Password",
           "dateofbirth": "Date Of Birth",
           "language": "Language",
           "timezone": "Timezone",
-          "confirmpassword": "Confirm Password",
           "nameplaceholder": "Enter full name",
-          "usernameplaceholder": "Enter username",
           "emailplaceholder": "Enter email address",
           "dobplaceholder": "Select your date of birth",
-          "passwordplaceholder": "Enter password",
-          "confirmpasswordplaceholder": "Confirm password",
           "languageplaceholder": "Select Language",
           "languagelabel": "Select your preferred language",
           "timezoneplaceholder": "Select time zone",
           "timezonelabel": "Select your preferred time zone",
           "validation": {
-            "usernameTaken": "Username already taken!",
-            "usernameAvailable": "Username available",
-            "usernameTakenByYou": "Username already taken by yourself",
-            "passwordMatch": "Password must matches"
+            "invalidEmailFormat": "Please enter a valid email address",
+            "emailAvailable": "Email address is available",
+            "emailTaken": "Email address is already taken"
+          },
+          "profilePicture": {
+            "imageSizeError": "Image size exceeds the {limit} limit. Please choose a smaller file.",
+            "imageTypeError": "Invalid file type. Allowed types: {types}."
           }
         },
         "edit": {
           "title": "Edit User",
           "userInfo": "User Information",
           "name": "Full Name",
-          "username": "Username",
           "email": "Email Address",
-          "password": "Password",
           "dateofbirth": "Date Of Birth",
           "language": "Language",
           "timezone": "Timezone",
-          "profilePicture": "Profile Picture",
-          "confirmpassword": "Confirm Password",
           "nameplaceholder": "Enter full name",
-          "usernameplaceholder": "Enter username",
           "emailplaceholder": "Enter email address",
           "dobplaceholder": "Select your date of birth",
-          "passwordplaceholder": "Enter password",
-          "confirmpasswordplaceholder": "Confirm password",
           "languageplaceholder": "Select Language",
           "languagelabel": "Select your preferred language",
           "timezoneplaceholder": "Select time zone",
-          "timezonelabel": "Select your preferred time zone",
-          "validation": {
-            "usernameTaken": "Username already taken!",
-            "usernameAvailable": "Username available"
-          }
+          "timezonelabel": "Select your preferred time zone"
         },
         "created": "User {name} is created successfully!",
         "updated": "User {name} is updated successfully!",
@@ -1128,8 +1114,7 @@
           "password": "Password",
           "dateOfBirth": "Date Of Birth",
           "language": "Language",
-          "timezone": "Timezone",
-          "passwordConfirmation": "Confirm Password"
+          "timezone": "Timezone"
         },
         "accountStatus": {
           "inactive": "Inactive",

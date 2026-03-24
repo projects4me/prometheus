@@ -1,5 +1,7 @@
 import steps from '../steps';
 import { fillIn, click } from '@ember/test-helpers';
+import Context from '../../../../mirage/yadda-context/context';
+import Collection from 'ember-cli-mirage/orm/collection';
 
 export const when = function () {
     return [
@@ -18,7 +20,18 @@ export const when = function () {
                 await click(dateOfBirthEl);
                 assert.ok(true, "Date of birth selected");
             }
-        }
+        },
+        {
+            "There is custom callback for user": (assert) => async function () {
+                let ctx = new Context();
+                ctx.set('userCustomCallback', function (users, userQuery) {
+                    if(userQuery.includes('ranamnouman@gmail.com')) {
+                        return new Collection('user', []);
+                    }
+                    return users;
+                });
+            }
+        },
     ];
 }
 

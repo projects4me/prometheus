@@ -38,8 +38,8 @@ export const when = function () {
 					let userId = 1;
 					// For correct username/password case
 					if (
-						document.querySelector('input#username').value ===
-							'username' &&
+						document.querySelector('input#email').value ===
+							'email' &&
 						document.querySelector('input#password').value ===
 							'password'
 					) {

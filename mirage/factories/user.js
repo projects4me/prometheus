@@ -20,9 +20,6 @@ export default Factory.extend({
     modifiedUser() {
         return (_.random(1, 10)).toString();
     },
-    username() {
-        return faker.internet.userName();
-    },
     email() {
         return faker.internet.email();
     },
@@ -31,9 +28,6 @@ export default Factory.extend({
     },
     language() {
         return faker.locales[faker.random.arrayElement(["en", "de", "az", "fr"])].title;
-    },
-    password() {
-        return faker.internet.password();
     },
     timezone() {
         return moment.tz.guess();

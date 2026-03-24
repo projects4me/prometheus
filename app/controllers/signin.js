@@ -49,7 +49,7 @@ export default class SignInController extends PrometheusCreateController {
     @tracked forgetPassword = false;
 
     /**
-     * This property is used to store user's email.
+     * This property is used to store user's forget password email.
      *
      * @property email
      * @type String
@@ -59,14 +59,14 @@ export default class SignInController extends PrometheusCreateController {
     @tracked email = "";
 
     /**
-     * This property is used to store user's name.
+     * This property is used to store user's signin email.
      *
-     * @property username
+     * @property signinEmail
      * @type String
      * @for SigninController
      * @public
      */
-    @tracked username = "";
+    @tracked signinEmail = "";
 
     /**
      * The property is used to store user's password.
@@ -168,11 +168,11 @@ export default class SignInController extends PrometheusCreateController {
      */
     @action async authenticate() {
         let _self = this;
-        let username = _self.username;
+        let email = _self.signinEmail;
         let password = _self.password;
 
         await _self.session
-            .authenticate("authenticator:oauth2", username, password)
+            .authenticate("authenticator:oauth2", email, password)
             .then(
                 () => {
                     if (_self.session.isAuthenticated) {

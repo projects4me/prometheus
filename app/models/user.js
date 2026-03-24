@@ -4,6 +4,15 @@
 
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { computed } from '@ember/object';
+import { imagePathToBase64 } from 'prometheus/utils/image-to-base64';
+
+/**
+ * Eagerly fetch the default profile picture and cache it as a base64 data URI.
+ */
+let defaultProfilePicture = '/img/default.png';
+imagePathToBase64('/img/default.png').then((base64) => {
+    defaultProfilePicture = base64;
+});
 
 /**
  * The user model
@@ -16,16 +25,6 @@ import { computed } from '@ember/object';
 export default Model.extend({
 
     /**
-     * Username
-     *
-     * @property username
-     * @type String
-     * @for User
-     * @private
-     */
-    username: attr('string'),
-
-    /**
      * Email Address
      *
      * @property email
@@ -34,6 +33,16 @@ export default Model.extend({
      * @private
      */
     email: attr('string'),
+
+    /**
+     * Profile picture of the user stored as a base64 encoded string.
+     *
+     * @property profilePicture
+     * @type String
+     * @for User
+     * @private
+     */
+    profilePicture: attr('string', { defaultValue: () => defaultProfilePicture }),
 
     /**
      * Status
@@ -178,16 +187,6 @@ export default Model.extend({
      * @private
      */
     title: attr('string'),
-
-    /**
-     * Password of the user.
-     *
-     * @property password
-     * @type String
-     * @for User
-     * @private
-     */
-    password: attr('string'),
 
     /**
      * Date of birth of the user.

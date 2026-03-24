@@ -70,7 +70,7 @@ export default OAuth2PasswordGrant.extend({
      * and optional `scope`; issues a `POST` request to the
      *
      * @method authenticate
-     * @param {String} identification The resource owner username
+     * @param {String} email The resource owner email
      * @param {String} password The resource owner password
      * @param {String|Array} scope The scope of the access request (see [RFC 6749, section 3.3](http://tools.ietf.org/html/rfc6749#section-3.3))
      * @param {Object} headers Optional headers that particular backends may require (for example sending 2FA challenge responses)
@@ -80,7 +80,7 @@ export default OAuth2PasswordGrant.extend({
     authenticate(identification, password, scope = [], headers = {}) {
         Logger.debug('in session authentication');
         return new RSVP.Promise((resolve, reject) => {
-            const data = { 'grant_type': 'password', username: identification, password, 'client_id': this.apiClientId, 'client_secret': this.apiClientSecret, remember_me: localStorage.getItem('remember_me') };
+            const data = { 'grant_type': 'password', email: identification, password, 'client_id': this.apiClientId, 'client_secret': this.apiClientSecret, remember_me: localStorage.getItem('remember_me') };
             const serverTokenEndpoint = this.serverTokenEndpoint;
             const useResponse = this.rejectWithResponse;
             const scopesString = makeArray(scope).join(' ');

@@ -36,7 +36,11 @@ module.exports = function(environment) {
                 enableNav: true // Controls whether clicking notifications navigates to their links
             },
             upload: {
-                maxFileSize: 2097152 // 2MB
+                maxFileSize: 2097152, // 2MB (general uploads)
+                profilePicture: {
+                    maxFileSize: 2097152, // 2MB
+                    allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+                }
             }
         },
         chat:{

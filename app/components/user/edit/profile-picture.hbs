@@ -3,7 +3,7 @@
   <div class="profile-picture" data-field="user.image">
 
       <a href="#" {{action this.selectImage}}>
-        <img class="user-profile-img img-responsive" src="{{this.apiHost}}/userimage/get/{{@model.id}}" alt="{{@model.name}}">
+        <img class="user-profile-img img-responsive" src="{{if @model.profilePicture @model.profilePicture (if @model.id (concat this.apiHost "/userimage/get/" @model.id) "/img/default.png")}}" alt="{{@model.name}}">
         <i class="fa fa-edit"></i>
       </a>
     
