@@ -379,6 +379,7 @@ export default class ToastEditor extends Modifier {
                         "</a>"
                     );
                 },
+                lookup: 'label',
                 //template appears on selection of an list item
                 selectTemplate: function (item) {
                     return (
