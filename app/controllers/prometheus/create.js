@@ -120,7 +120,7 @@ export default class PrometheusCreateController extends PrometheusController {
      * @param {Object} field
      * @protected
      */
-    @action validateField(schemaName, field) {
+    @action async validateField(schemaName, field) {
         //use model if passed otherwise use default "this.model"
         let model = field.model ?? this.model;
 
@@ -128,7 +128,7 @@ export default class PrometheusCreateController extends PrometheusController {
         if (this[schemaName].fields[field.name]) {
             try {
                 this.beforeValidate(model);
-                this[schemaName].validateSyncAt(field.name, model);
+                await this[schemaName].validateAt(field.name, model);
 
                 //If validation is passed then remove previous message of field (if exists)
                 _.set(this.message, `${schemaName}.${field.name}`, "");
@@ -269,10 +269,10 @@ export default class PrometheusCreateController extends PrometheusController {
      * @protected
      */
     validate(model, schemaName) {
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
             try {
                 this.beforeValidate(model);
-                this[schemaName].validateSync(model, { abortEarly: false });
+                await this[schemaName].validate(model, { abortEarly: false });
 
                 resolve({
                     isValid: true,

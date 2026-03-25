@@ -3,8 +3,6 @@
 */
 
 import AppUserCreateController from "prometheus/controllers/app/user/create";
-import { action } from '@ember/object';
-import { task } from 'ember-concurrency';
 import { htmlSafe } from '@ember/template';
 
 /**
@@ -57,25 +55,12 @@ export default class AppUserEditController extends AppUserCreateController {
                                         name: "email"
                                     }
                                 ]
-                            }
-                        }
-                    },
-                    {
-                        name: "username",
-                        validations: {
-                            default: {
-                                type: "string",
-                                rules: [
-                                    {
-                                        name: "required"
-                                    }
-                                ]
                             },
-                            custom: [
-                                {
-                                    action: "checkUsernameAvailabilityTask"
-                                }
-                            ]
+                            tests: {
+                                name: "email-exists",
+                                action: this.checkUserEmailAvailability,
+                                message: this.intl.t('views.app.user.create.validation.emailTaken')
+                            }
                         }
                     },
                     {
@@ -135,59 +120,6 @@ export default class AppUserEditController extends AppUserCreateController {
         super(...arguments);
         this.setupSchema();
     }
-
-    /**
-     * This function is used to upload the user's profile image.
-     * 
-     * @param {String} imageElementClass 
-     * @param {Object} file 
-     */
-    @action
-    async uploadImage(imageElementClass, file) {
-
-        let options = {
-            url: this.store.adapterFor('user').buildURL('userimage'),
-            headers: this.store.adapterFor('user').headers,
-            data: {
-                id: this.model.id
-            }
-        }
-
-        await file.upload(options);
-
-        //Create a static src object for image
-        $(`.${imageElementClass}`).attr('src', URL.createObjectURL(file.file));
-    }
-
-    /**
-     * This is the task that is used to perform the a username search. It also sets proper validation message
-     * based on username availability.
-     *
-     * @property checkUsernameAvailabilityTask
-     * @type task
-     * @for AppUserCreateController
-     * @public
-     */
-    @(task(function* (username) {
-        let _userOptions = {
-            field: 'username',
-            query: `((User.username : ${username} ))`
-        };
-
-        if (username !== '') {
-            let users = yield this.store.query('user', _userOptions);
-            let isUsernameAvailable = (users.length === 0);
-
-            this.validationMessage =
-                (isUsernameAvailable)
-                    ? this.intl.t("views.app.user.create.validation.usernameAvailable")
-                    : ((users.objectAt(0).username === this.username) ? this.intl.t("views.app.user.create.validation.usernameTakenByYou") : this.intl.t("views.app.user.create.validation.usernameTaken"));
-
-            this.isSuccessful = isUsernameAvailable;
-        } else {
-            this.validationMessage = '';
-        }
-    })) checkUsernameAvailabilityTask
 
     /**
      * This function returns the success message

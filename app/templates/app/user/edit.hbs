@@ -41,24 +41,12 @@
                 @data-field="user.email" 
                 @lengthRequired={{false}} 
                 @mask="email"
-                @validate={{action this.validateField "userEdit" (hash name="email" value=this.model.email)}}
-                @message={{this.message.userEdit.email}}
-                @aclContext="App.User.Edit.Email"
-              />
-
-              <FormFields::FieldText 
-                @placeholder={{t "views.app.user.edit.usernameplaceholder"}}
-                @label={{t "views.app.user.edit.username"}} 
-                @type="text" 
-                @value={{this.model.username}}
-                @data-field="user.username" 
-                @lengthRequired={{false}}
                 @onInput={{this.onInput}}
                 @validationMessage={{this.validationMessage}}
                 @isSuccessful={{this.isSuccessful}}
-                @validate={{action this.validateField "userEdit" (hash name="username" value=this.model.username)}}
-                @message={{this.message.userEdit.username}}
-                @aclContext="App.User.Edit.UserName"             
+                @validate={{action this.validateField "userEdit" (hash name="email" value=this.model.email)}}
+                @message={{this.message.userEdit.email}}
+                @aclContext="App.User.Edit.Email"
               />
 
               <FormFields::FieldDate 

@@ -20,6 +20,12 @@
             </div>
 
             <div class="form box-body no-padding">
+
+              <User::Edit::ProfilePicture
+                @model={{this.model}}
+                @uploadImage={{this.uploadImage}}
+              />
+
               <FormFields::FieldText 
                 @placeholder={{t "views.app.user.create.nameplaceholder" }}
                 @label={{t "views.app.user.create.name" }} 
@@ -46,21 +52,6 @@
                 @aclContext="App.User.Create.Email"         
               />
 
-              <FormFields::FieldText 
-                @placeholder={{t "views.app.user.create.usernameplaceholder"}}
-                @label={{t "views.app.user.create.username"}} 
-                @type="text" 
-                @value={{@model.username}}
-                @data-field="user.username" 
-                @lengthRequired={{false}}
-                @onInput={{this.onInput}}
-                @validationMessage={{this.validationMessage}}
-                @isSuccessful={{this.isSuccessful}}
-                @validate={{action this.validateField "userCreate" (hash name="username" value=this.model.username)}}
-                @message={{this.message.userCreate.username}}       
-                @aclContext="App.User.Create.UserName"      
-              />
-
               <FormFields::FieldDate 
                 @placeholder={{t "views.app.user.create.dobplaceholder" }}
                 @label={{t "views.app.user.create.dateofbirth" }} 
@@ -84,29 +75,6 @@
                 @aclContext="App.User.Create.DateOfBirth"
               />
 
-              <FormFields::FieldText 
-                @placeholder={{t "views.app.user.create.passwordplaceholder" }}
-                @label={{t "views.app.user.create.password" }}
-                @type="password" 
-                @value={{this.model.password}}
-                @data-field="user.password" 
-                @lengthRequired={{false}}
-                @validate={{action this.validateField "userCreate" (hash name="password" value=this.model.password)}}
-                @message={{this.message.userCreate.password}}
-                @aclContext="App.User.Create.Password"
-              />
-
-              <FormFields::FieldText 
-                @placeholder={{t "views.app.user.create.confirmpasswordplaceholder" }}
-                @label={{t "views.app.user.create.confirmpassword" }}
-                @type="password" 
-                @value={{this.model.passwordConfirmation}}
-                @data-field="user.confirmPassword" 
-                @lengthRequired={{false}} 
-                @validate={{action this.validateField "userCreate" (hash name="passwordConfirmation" value=this.model.passwordConfirmation)}}
-                @message={{this.message.userCreate.passwordConfirmation}}
-                @aclContext="App.User.Create.ConfirmPassword"
-              />                        
 
             </div>
           </div>

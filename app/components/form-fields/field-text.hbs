@@ -37,12 +37,6 @@
       <span class="form-control-feedback revert">
         <i class="fa fa-close" data-btn="close" {{on "mousedown" @reset}}></i>
       </span>
-    {{/if}}    
-
-    <FormFields::ValidationMessages
-      @isSuccessful={{@isSuccessful}}
-      @message={{@validationMessage}}
-    />
-
+    {{/if}}
   </div>
 </AccessControl>

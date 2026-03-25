@@ -58,7 +58,7 @@ export default class AppUserManagementRoute extends App {
 
         let _userOptions = {
             limit: 20,
-            fields: "name,title,email,accountStatus,username",
+            fields: "name,title,email,accountStatus",
             query: query,
             page: page,
             sort: sort,
