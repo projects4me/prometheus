@@ -16,16 +16,6 @@ import { computed } from '@ember/object';
 export default Model.extend({
 
     /**
-     * Username
-     *
-     * @property username
-     * @type String
-     * @for User
-     * @private
-     */
-    username: attr('string'),
-
-    /**
      * Email Address
      *
      * @property email

@@ -327,7 +327,7 @@
     "signin": {
       "message": "Please sign in to proceed",
       "workspaceTitle": "The complete workspace to manage your projects",
-      "username": "Username",
+      "email": "Email",
       "password": "Password",
       "facebook": "Sign in using Facebook",
       "google": "Sign in using Google+",
@@ -335,9 +335,9 @@
       "or": "- OR -",
       "forgot": "Forgot Password?",
       "title": "<b>Projects</b>4<b>Me</b>",
-      "invalid_grant": "Invalid username or password",
+      "invalid_grant": "Invalid email or password",
       "resourceLocked": "Your account has been locked, please contact the system administrator",
-      "error": "Invalid username or password",
+      "error": "Invalid email or password",
       "sessionExpired": "Your <b>session</b> has expired. Please sign in again to continue",
       "forgetPassword": {
         "title": "<b>Forgot Password</b>",
