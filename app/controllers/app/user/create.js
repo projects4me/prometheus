@@ -82,6 +82,11 @@ export default class AppUserCreateController extends PrometheusCreateController 
 							name: "email-exists",
 							action: this.checkUserEmailAvailability,
 							message: this.intl.t('views.app.user.create.validation.emailTaken')
+						},
+						tests: {
+							name: "email-validated",
+							action: this.validateEmail,
+							message: this.intl.t('views.app.user.create.validation.invalidEmailFormat')
 						}
 					}
 				},
@@ -273,5 +278,18 @@ export default class AppUserCreateController extends PrometheusCreateController 
 
 		let users = await this.store.query('user', _userOptions);
 		return users.length === 0;
+	}
+
+	/**
+	 * This method is used to validate the email format.
+	 *
+	 * @method validateEmail
+	 * @param {String} email
+	 * @return {Boolean}
+	 * @for AppUserCreateController
+	 * @public
+	 */
+	@action async validateEmail(email) {
+		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 	}
 }
