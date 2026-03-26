@@ -1,0 +1,29 @@
+<div class="profile-picture-cropper-overlay">
+  <div class="modal-dialog">
+    <div class="modal-content box box-primary">
+
+      <div class="modal-header">
+        <h4 class="modal-title">{{t "views.app.user.profilePicture.cropTitle"}}</h4>
+      </div>
+
+      <div class="profile-picture-cropper-body">
+        <img
+          class="profile-picture-cropper-img"
+          src={{@imageSrc}}
+          alt="crop-preview"
+          {{initialize-cropper onInit=this.setCropper}}
+        >
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" {{on "click" this.cancel}}>
+          {{t "global.form.cancel"}}
+        </button>
+        <button type="button" class="btn btn-primary" {{on "click" this.apply}}>
+          {{t "global.form.apply"}}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
