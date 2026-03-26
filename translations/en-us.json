@@ -63,6 +63,7 @@
     },
     "form": {
       "save": "Save",
+      "apply": "Apply",
       "refresh": "Refresh",
       "massupdate": "Mass Update",
       "share": "Share",
@@ -1083,10 +1084,6 @@
             "invalidEmailFormat": "Please enter a valid email address",
             "emailAvailable": "Email address is available",
             "emailTaken": "Email address is already taken"
-          },
-          "profilePicture": {
-            "imageSizeError": "Image size exceeds the {limit} limit. Please choose a smaller file.",
-            "imageTypeError": "Invalid file type. Allowed types: {types}."
           }
         },
         "edit": {
@@ -1104,6 +1101,11 @@
           "languagelabel": "Select your preferred language",
           "timezoneplaceholder": "Select time zone",
           "timezonelabel": "Select your preferred time zone"
+        },
+        "profilePicture": {
+          "imageSizeError": "Image size exceeds the {limit} limit. Please choose a smaller file.",
+          "imageTypeError": "Invalid file type. Allowed types: {types}.",
+          "cropTitle": "Crop Profile Picture"
         },
         "created": "User {name} is created successfully!",
         "updated": "User {name} is updated successfully!",

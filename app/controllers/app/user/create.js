@@ -5,6 +5,7 @@
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { htmlSafe } from '@ember/template';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import { fileToBase64 } from 'prometheus/utils/image-to-base64';
 import ENV from 'prometheus/config/environment';
 
@@ -186,6 +187,18 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	module = 'user';
 
 	/**
+	 * Holds the temporary data URL of the image selected by the user before
+	 * cropping. When non-null, the cropper modal is shown. Cleared after the
+	 * user confirms or cancels the crop.
+	 *
+	 * @property cropImageSrc
+	 * @type {String|null}
+	 * @for AppUserCreateController
+	 * @public
+	 */
+	@tracked cropImageSrc = null;
+
+	/**
 	 * This function returns the success message
 	 *
 	 * @method getSuccessMessage
@@ -210,13 +223,14 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	}
 
 	/**
-	 * This function is called when a user selects a profile picture. It reads the selected
-	 * file as a base64 string, stores it directly on model.profilePicture, and updates the
-	 * preview image immediately — no separate API call is made.
+	 * Called when the user selects a file from the profile-picture component.
+	 * Validates the file type and size, then converts it to a data URL and
+	 * stores it in cropImageSrc to trigger the cropper modal. The image is
+	 * NOT saved to the model until the user confirms the crop.
 	 *
 	 * @method uploadImage
-	 * @param {String} imageElementClass
-	 * @param {Object} file
+	 * @param {String} imageElementClass - CSS class of the preview img element
+	 * @param {Object} file - ember-file-upload file object
 	 * @for AppUserCreateController
 	 * @public
 	 */
@@ -227,7 +241,7 @@ export default class AppUserCreateController extends PrometheusCreateController 
 		if (!allowedTypes.includes(file.file.type)) {
 			new Messenger().post({
 				message: this.intl.t(
-					'views.app.user.create.profilePicture.imageTypeError',
+					'views.app.user.profilePicture.imageTypeError',
 					{ types: allowedTypes.map((t) => t.split('/')[1]).join(', ') }
 				).toString(),
 				type: 'error',
@@ -240,7 +254,7 @@ export default class AppUserCreateController extends PrometheusCreateController 
 		if (file.file.size > maxFileSize) {
 			new Messenger().post({
 				message: this.intl.t(
-					'views.app.user.create.profilePicture.imageSizeError',
+					'views.app.user.profilePicture.imageSizeError',
 					{ limit: `${maxFileSize / (1024 * 1024)}MB` }
 				).toString(),
 				type: 'error',
@@ -250,9 +264,37 @@ export default class AppUserCreateController extends PrometheusCreateController 
 			return;
 		}
 
-		let base64 = await fileToBase64(file);
-		this.model.profilePicture = base64;
-		$(`.${imageElementClass}`).attr('src', base64);
+		this.cropImageSrc = await fileToBase64(file);
+	}
+
+	/**
+	 * Called by the cropper modal when the user clicks Apply. Stores the
+	 * cropped base64 string on the model, updates the preview img, and
+	 * closes the cropper overlay.
+	 *
+	 * @method applyCrop
+	 * @param {String} croppedBase64 - JPEG base64 data URI from Cropper.js
+	 * @for AppUserCreateController
+	 * @public
+	 */
+	@action
+	applyCrop(croppedBase64) {
+		this.model.profilePicture = croppedBase64;
+		$('.user-profile-img').attr('src', croppedBase64);
+		this.cropImageSrc = null;
+	}
+
+	/**
+	 * Called by the cropper modal when the user clicks Cancel. Discards the
+	 * selected image and closes the cropper overlay without changing the model.
+	 *
+	 * @method cancelCrop
+	 * @for AppUserCreateController
+	 * @public
+	 */
+	@action
+	cancelCrop() {
+		this.cropImageSrc = null;
 	}
 
 	/**
