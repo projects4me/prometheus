@@ -21,6 +21,15 @@ jobs:
         path: node_modules
         key: npm-cache
 
+    - name: Fix EOL Debian Buster repos
+      run: |
+        sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list
+        sed -i 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list
+        apt-get update -o Acquire::Check-Valid-Until=false
+
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3        
+
     - name: Install Node modules
       if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       run: |
@@ -29,8 +38,8 @@ jobs:
 
     - name: Run Ember test
       run: |
-        COVERAGE=true ember test
-        
+        COVERAGE=true ember test    
+
     - name: Upload Code coverage report
       uses: actions/upload-artifact@v4
       with:
