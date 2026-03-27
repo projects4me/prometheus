@@ -13,9 +13,6 @@ module.exports = function (defaults) {
         sassOptions: {
             implementation: sass
         },
-        babel: {
-            sourceMaps: 'inline'
-        },
         sourcemaps: {
             enabled: true,
             extensions: ['js']
@@ -58,5 +55,9 @@ module.exports = function (defaults) {
     app.import("vendor/summernote/summernote.js");
     app.import("vendor/custom-charts/doughnut-chart.js");
     app.import("vendor/AdminLTE/dist/js/app.js");
+
+
+    // CSS Imports
+    app.import("node_modules/cropperjs/dist/cropper.min.css");
     return app.toTree();
 };

@@ -3,6 +3,7 @@
  */
 
 import Modifier from 'ember-modifier';
+import Cropper from 'cropperjs';
 
 /**
  * Attaches Cropper.js (v1) to an <img> element when it is inserted into the DOM.
