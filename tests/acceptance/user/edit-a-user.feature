@@ -8,10 +8,10 @@ Feature: User | edit a user
     And User_1 is logged in
     When User navigates to app/user/edit/1
     And User enters following details for a user
-    --------------------------------------
-    |name        | email                 |
-    |Rana Nouman | ranamnouman@gmail.com |
-    --------------------------------------
+    --------------
+    |name        |
+    |Rana Nouman |
+    --------------
     And User selects date of birth
     And There is custom callback for user
     And User clicks on save button

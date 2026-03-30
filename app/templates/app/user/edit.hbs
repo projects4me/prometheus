@@ -20,6 +20,14 @@
             </div>
             <div class="form box-body no-padding">
 
+              <User::Edit::ProfilePicture
+                @model={{this.model}}
+                @uploadImage={{this.uploadImage}}
+                @cropImageSrc={{this.cropImageSrc}}
+                @onApplyCrop={{this.applyCrop}}
+                @onCancelCrop={{this.cancelCrop}}
+              />
+
               <FormFields::FieldText 
                 @placeholder={{t "views.app.user.edit.nameplaceholder" }}
                 @label={{t "views.app.user.edit.name" }} 
@@ -31,22 +39,6 @@
                 @message={{this.message.userEdit.name}}
                 @aclContext="App.User.Edit.Name"
                 {{autofocus}} 
-              />
-
-              <FormFields::FieldText 
-                @placeholder={{t "views.app.user.edit.emailplaceholder" }}
-                @label={{t "views.app.user.edit.email" }}
-                @type="text" 
-                @value={{this.model.email}}
-                @data-field="user.email" 
-                @lengthRequired={{false}} 
-                @mask="email"
-                @onInput={{this.onInput}}
-                @validationMessage={{this.validationMessage}}
-                @isSuccessful={{this.isSuccessful}}
-                @validate={{action this.validateField "userEdit" (hash name="email" value=this.model.email)}}
-                @message={{this.message.userEdit.email}}
-                @aclContext="App.User.Edit.Email"
               />
 
               <FormFields::FieldDate 
@@ -79,26 +71,6 @@
       </AccessControl>
 
       <div class="col-md-4">
-        <AccessControl @aclContext="App.User.Edit.ProfilePicture.Edit">
-          <div class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title">
-                {{t "views.app.user.edit.profilePicture"}}
-              </h3>
-
-              <div class="box-body">
-                <User::Edit::ProfilePicture
-                  @model={{this.model}}
-                  @uploadImage={{this.uploadImage}}
-                  @cropImageSrc={{this.cropImageSrc}}
-                  @onApplyCrop={{this.applyCrop}}
-                  @onCancelCrop={{this.cancelCrop}}
-                />
-              </div>
-            </div>
-          </div>
-        </AccessControl>
-
         <AccessControl @aclContext="App.User.Edit.Language.Edit">
           <div class="box box-primary">
             <div class="box-header with-border">
