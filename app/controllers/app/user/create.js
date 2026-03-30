@@ -8,6 +8,7 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { fileToBase64 } from 'prometheus/utils/image-to-base64';
 import ENV from 'prometheus/config/environment';
+import { parse as parseTld } from 'tldts';
 
 /**
  * The controller for user create page.
@@ -79,16 +80,16 @@ export default class AppUserCreateController extends PrometheusCreateController 
 								}
 							]
 						},
-						tests: {
+						tests: [{
 							name: "email-exists",
 							action: this.checkUserEmailAvailability,
 							message: this.intl.t('views.app.user.create.validation.emailTaken')
 						},
-						tests: {
+						{	
 							name: "email-validated",
 							action: this.validateEmail,
 							message: this.intl.t('views.app.user.create.validation.invalidEmailFormat')
-						}
+						}]
 					}
 				},
 					{
@@ -399,7 +400,9 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	}
 
 	/**
-	 * This method is used to validate the email format.
+	 * Validates the TLD of the given email address using the tldts library.
+	 * The domain portion (after @) is parsed and checked against the ICANN
+	 * public suffix list. Any unrecognised or private TLD returns false.
 	 *
 	 * @method validateEmail
 	 * @param {String} email
@@ -408,7 +411,15 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	 * @public
 	 */
 	@action async validateEmail(email) {
-		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+		const atIndex = email.lastIndexOf('@');
+		if (atIndex === -1) {
+			return false;
+		}
+
+		const domain = email.slice(atIndex + 1);
+		const { isIcann, publicSuffix } = parseTld(domain);
+
+		return isIcann === true && publicSuffix !== null;
 	}
 
 	/**

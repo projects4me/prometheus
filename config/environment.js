@@ -41,7 +41,7 @@ module.exports = function(environment) {
                     maxFileSize: 2097152, // 2MB
                     allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
                 }
-            }
+            },
         },
         chat:{
             host:'localhost',
