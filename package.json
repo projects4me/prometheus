@@ -73,7 +73,8 @@
     "qunit-dom": "^2.0.0",
     "qunit-parameterize": "^0.4.0",
     "webpack": "^5.65.0",
-    "yuidoc-lucid-theme": "0.1.2"
+    "yuidoc-lucid-theme": "0.1.2",
+    "testem": "3.18.0"
   },
   "dependencies": {
     "@cucumber/cucumber": "^7.3.1",
