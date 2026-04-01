@@ -105,6 +105,7 @@
                 @validate={{action this.validateField "userCreate" (hash name="language" value=this.model.language)}}
                 @message={{this.message.language}}
                 @aclContext="App.User.Create.Language"
+                @disabled={{true}}
               />
             </div>            
           </div>
