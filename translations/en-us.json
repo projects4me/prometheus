@@ -1080,6 +1080,15 @@
           "languagelabel": "Select your preferred language",
           "timezoneplaceholder": "Select time zone",
           "timezonelabel": "Select your preferred time zone",
+          "membership": {
+            "title": "Membership",
+            "project": "Project",
+            "projectplaceholder": "Select a project",
+            "role": "Role",
+            "roleplaceholder": "Select a role",
+            "projectRequired": "A project must be selected when a role is assigned.",
+            "roleRequired": "A role must be selected for the chosen project."
+          },
           "validation": {
             "invalidEmailFormat": "Please enter a valid email address",
             "emailAvailable": "Email address is available",
