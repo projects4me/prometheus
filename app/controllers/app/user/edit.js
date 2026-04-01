@@ -43,27 +43,6 @@ export default class AppUserEditController extends AppUserCreateController {
                         }
                     },
                     {
-                        name: "email",
-                        validations: {
-                            default: {
-                                type: "string",
-                                rules: [
-                                    {
-                                        name: "required"
-                                    },
-                                    {
-                                        name: "email"
-                                    }
-                                ]
-                            },
-                            tests: {
-                                name: "email-exists",
-                                action: this.checkUserEmailAvailability,
-                                message: this.intl.t('views.app.user.create.validation.emailTaken')
-                            }
-                        }
-                    },
-                    {
                         name: "dateOfBirth",
                         validations: {
                             default: {
@@ -144,5 +123,4 @@ export default class AppUserEditController extends AppUserCreateController {
         let userId = this.currentUser.user.id;
         this.router.transitionTo('app.user.page', userId);
     }
-
 }
