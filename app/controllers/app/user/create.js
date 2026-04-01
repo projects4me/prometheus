@@ -192,6 +192,56 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	module = 'user';
 
 	/**
+	 * Holds the project option `{label, value}` selected in the Membership
+	 * section. Null until the user picks a project.
+	 *
+	 * @property selectedProject
+	 * @type {Object|null}
+	 * @for AppUserCreateController
+	 * @public
+	 */
+	@tracked selectedProject = null;
+
+	/**
+	 * Holds the role option `{label, value}` selected in the Membership
+	 * section. Null until the user picks a role.
+	 *
+	 * @property selectedRole
+	 * @type {Object|null}
+	 * @for AppUserCreateController
+	 * @public
+	 */
+	@tracked selectedRole = null;
+
+	/**
+	 * Returns the formatted project select list sourced from the app
+	 * controller so the Membership project dropdown is always in sync with
+	 * the globally loaded project list.
+	 *
+	 * @property projectsList
+	 * @type {Array}
+	 * @for AppUserCreateController
+	 * @public
+	 */
+	get projectsList() {
+		return this.appController.projectsList;
+	}
+
+	/**
+	 * Returns the formatted role select list sourced from the app controller
+	 * so the Membership role dropdown is always in sync with the globally
+	 * loaded roles.
+	 *
+	 * @property rolesList
+	 * @type {Array}
+	 * @for AppUserCreateController
+	 * @public
+	 */
+	get rolesList() {
+		return this.appController.rolesList;
+	}
+
+	/**
 	 * Holds the temporary data URL of the image selected by the user before
 	 * cropping. When non-null, the cropper modal is shown. Cleared after the
 	 * user confirms or cancels the crop.
@@ -218,13 +268,39 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	}
 
 	/**
-	 * This function navigate to user's profile page.
+	 * Navigation is handled inside afterSave (after the optional membership
+	 * record has been persisted), so this hook is intentionally left empty.
 	 *
 	 * @method navigateToSuccess
-	 * @param model
 	 */
-	navigateToSuccess(model) {
-		this.router.transitionTo('app.user.page', model.get('id'));
+	navigateToSuccess() {}
+
+	/**
+	 * Called by the base _save flow after the user record has been persisted.
+	 * If both a project and a role were selected in the Membership section a
+	 * membership record is created and saved before navigating to the user
+	 * profile page. When no membership was chosen the navigation happens
+	 * immediately.
+	 *
+	 * @method afterSave
+	 * @param {Prometheus.Models.User} savedUser - The newly saved user record
+	 * @for AppUserCreateController
+	 * @public
+	 */
+	async afterSave(savedUser) {
+		if (this.selectedProject && this.selectedRole) {
+			let membership = this.store.createRecord('membership', {
+				relatedId: this.selectedProject.value,
+				relatedTo: 'project',
+				userId: savedUser.get('id'),
+				roleId: this.selectedRole.value
+			});
+
+			await membership.save();
+			this.router.transitionTo('app.user.page', savedUser.get('id'));
+		}
+
+		this.router.transitionTo('app.user.page', savedUser.get('id'));
 	}
 
 	/**
@@ -333,5 +409,63 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	 */
 	@action async validateEmail(email) {
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+	}
+
+	/**
+	 * Validates the cross-field dependency between the Membership project and
+	 * role dropdowns. Both fields must be either both filled or both empty —
+	 * selecting one without the other is not allowed. Violations are reported
+	 * via Messenger so the save button stays enabled for the user to correct.
+	 *
+	 * @method validateMembership
+	 * @return {Boolean} true when the membership section is valid
+	 * @for AppUserCreateController
+	 * @public
+	 */
+	validateMembership() {
+		const hasProject = Boolean(this.selectedProject);
+		const hasRole = Boolean(this.selectedRole);
+
+		if (hasProject && !hasRole) {
+			new Messenger().post({
+				message: this.intl.t(
+					'views.app.user.create.membership.roleRequired'
+				).toString(),
+				type: 'error',
+				showCloseButton: true,
+				hideAfter: 3
+			});
+			return false;
+		}
+
+		if (hasRole && !hasProject) {
+			new Messenger().post({
+				message: this.intl.t(
+					'views.app.user.create.membership.projectRequired'
+				).toString(),
+				type: 'error',
+				showCloseButton: true,
+				hideAfter: 3
+			});
+			return false;
+		}
+
+		return true;
+	}
+	/**
+	 * Overrides the base save action to run the membership cross-field
+	 * validation before delegating to the parent save flow. Returns a rejected
+	 * Promise on failure so the button's catch path re-enables it for retry.
+	 *
+	 * @method save
+	 * @param {String} schemaName
+	 * @for AppUserCreateController
+	 * @public
+	 */
+	@action save(schemaName) {
+		if (!this.validateMembership()) {
+			return Promise.reject();
+		}
+		return super.save(schemaName);
 	}
 }

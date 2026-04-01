@@ -86,6 +86,42 @@
       </AccessControl>
 
       <div class="col-md-4">
+        <AccessControl @aclContext="App.User.Create.Membership.Create">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">
+                {{t "views.app.user.create.membership.title"}}
+              </h3>
+            </div>
+
+            <div class="box-body">
+              <FormFields::FieldRelate
+                @placeholder={{t "views.app.user.create.membership.projectplaceholder"}}
+                @label={{t "views.app.user.create.membership.project"}}
+                @options={{this.projectsList}}
+                @selected={{this.selectedProject}}
+                @onchange={{fn (mut this.selectedProject)}}
+                @relateType="relate-simple"
+                @searchEnabled={{false}}
+                @data-field="user.membership.project"
+                @aclContext="App.User.Create.Membership.Project"
+              />
+
+              <FormFields::FieldRelate
+                @placeholder={{t "views.app.user.create.membership.roleplaceholder"}}
+                @label={{t "views.app.user.create.membership.role"}}
+                @options={{this.rolesList}}
+                @selected={{this.selectedRole}}
+                @onchange={{fn (mut this.selectedRole)}}
+                @relateType="relate-simple"
+                @searchEnabled={{false}}
+                @data-field="user.membership.role"
+                @aclContext="App.User.Create.Membership.Role"
+              />
+            </div>
+          </div>
+        </AccessControl>
+
         <AccessControl @aclContext="App.User.Create.Language.Create">
           <div class="box box-primary">
             <div class="box-header with-border">
