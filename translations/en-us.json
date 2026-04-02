@@ -1075,6 +1075,7 @@
           "timezone": "Timezone",
           "nameplaceholder": "Enter full name",
           "emailplaceholder": "Enter email address",
+          "emailPasswordHint": "A system generated password will be sent to this email address.",
           "dobplaceholder": "Select your date of birth",
           "languageplaceholder": "Select Language",
           "languagelabel": "Select your preferred language",
