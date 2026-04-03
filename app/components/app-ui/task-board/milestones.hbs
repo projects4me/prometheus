@@ -51,10 +51,15 @@
               {{#each issues as |issue|}}
                 {{#if (eq issue.status status.name)}}
                   <div class="board-issue-item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}">
-                    <div class="flex-row flex-jc-sb flex-ai-c">
+
+                    <div class="issue-card-header">
                       <h4>{{priority-icon priority=(readonly issue.priority)}} <LinkTo @route="app.project.issue.page" @disabledClass="navigate-issue-quick-view" @disabled={{true}} @model={{issue.issueNumber}} {{on "click" (fn @selectIssue issue)}}>#{{issue.issueNumber}} - {{issue.subject}}</LinkTo></h4>
                     </div>
-                    <p class="description">{{safe-html issue.description}}</p>
+
+                    <div class="issue-card-body">
+                      <p class="description">{{safe-html issue.description}}</p>
+                    </div>
+
                     <div class="flex-row flex-jc-sb flex-ai-c issue-card-footer">
                       {{#if issue.infoTag}}
                         <div class="badge info-tag">{{issue.infoTag}}</div>
@@ -63,7 +68,7 @@
                       {{/if}}
                       <div><img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></div>
                     </div>
-                    
+
                     {{#if issue.isSaving}}
                       <div class="item-overlay" {{lock-item}}>
                         <div class="dot-pulse"></div>

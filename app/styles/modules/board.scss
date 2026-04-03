@@ -189,7 +189,7 @@
     position: relative;
     cursor: move;
     margin: 0.3rem;
-    padding: 0.1rem 1rem 0.1rem 1rem;
+    padding: 0;
     border: 0.1rem solid #eee;
     border-left: 0.5rem solid #eee;
     background-color: $backgroundColor;
@@ -198,6 +198,24 @@
     border-bottom: 0.1rem solid #ccc;
     user-select: none;
     width: 27rem;
+
+    .issue-card-header {
+      padding: 0.6rem 1rem;
+      border-bottom: 0.1rem solid $borderColor;
+
+      h4 {
+        margin: 0;
+      }
+    }
+
+    .issue-card-body {
+      padding: 0.5rem 1rem;
+    }
+
+    .issue-card-footer {
+      padding: 0.5rem 1rem;
+      border-top: 0.1rem solid $borderColor;
+    }
 
     // Quick view icon styles
     .issue-quick-view-icon {
@@ -221,7 +239,7 @@
 
     .description {
       word-wrap: break-word;
-      margin-bottom: 2rem;
+      margin: 0;
       height: 10rem;
       overflow: auto;
       padding-right: 0.5rem;
@@ -276,10 +294,6 @@
       right: 0%;
     }
 
-    .issue-card-footer {
-      margin-top: 1rem;
-      margin-bottom: 0.5rem;
-    }
   }
 
   .item-closed {
