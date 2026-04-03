@@ -14,7 +14,7 @@
     .nav-tabs-custom {
       position: relative;
 
-      .box {
+      .milestone.box {
         border-top: none;
       }
 
@@ -63,54 +63,56 @@
   }
 
   .box {
-    .milestone.box-body {
-      display: flex;
-      overflow-x: auto;
-      scrollbar-width: thin;
-    }
-    .box-body {
-      .lane {
-        height: inherit;
-        width: 28rem;
-        margin-right: 0.5rem;
+    margin-bottom: 0rem;
+  }
 
-        .box-header {
-          height: 4rem;
+  .milestone.box-body {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .box-body {
+    padding: 0rem;
+
+    .lane {
+      height: inherit;
+      width: 28rem;
+      margin-right: 0.5rem;
+
+      .box-header {
+        height: 4rem !important;
+        position: relative;
+        z-index: 999;
+        background-color: $backgroundColor;
+      }
+
+      .dotted-circle-add {
+        height: 2rem;
+        width: 2rem;
+
+        .ion-md-add {
+          font-size: 1.5rem;
         }
+      }
 
-        .dotted-circle-add {
-          height: 2rem;
-          width: 2rem;
+      .milestone, .box-body {
+        min-height: 45rem;
+        height: calc(100% - 4rem);
+        padding: 0rem;
+        border: 0.25rem solid $backgroundColor;
+      }
 
-          .ion-md-add {
-            font-size: 1.5rem;
-          }
-        }
+      .box-body-border {
+        border: 0.25rem dashed $blackColor;
+      }
 
-        .milestone, .box {
-          height: 100%;
-          box-shadow: none;
-          
-          .milestone, .box-body {
-            min-height: 45rem;
-            height: calc(100% - 4rem);
-            padding: 0rem;
-            border: 0.25rem solid $backgroundColor;
-          }
+      .box-body-color {
+        border-color: $primaryColor;
+      }
 
-          .box-body-border {
-            border: 0.25rem dashed $blackColor;
-          }
-
-          .box-body-color {
-            border-color: $primaryColor;
-          }
-
-          .curr-lane {
-            border-color: $backgroundColor !important;
-          }
-
-        }
+      .curr-lane {
+        border-color: $backgroundColor !important;
       }
     }
   }
