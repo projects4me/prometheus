@@ -477,7 +477,8 @@ span[id="#"]{
   background-color: $primaryColor;
 }
 
-.navbar .navbar-custom-menu .navbar-nav > li > button {
+.navbar .navbar-custom-menu .navbar-nav > li > button,
+.navbar .navbar-custom-menu .navbar-nav > li > div {
   border-left: 1px solid #eee;
   border-right-width: 0;
   border-bottom: none;

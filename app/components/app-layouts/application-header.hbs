@@ -22,20 +22,22 @@
     </PowerSelect> 
   </div>
 
-    {{!-- Create Modules e.g. Project,Issue,Conversation (START) --}}
-    <div class="create-modules">
-      <button class="create-module-btn">{{t "global.form.new"}}<i class="fa fa-plus"></i></button>
-      <div class="create-module-dropdown-content">
-        <LinkTo @route="app.project.issue.create" @model={{this.trackedProject.shortCode}} class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.issue"}}</LinkTo>
-        <LinkTo @route="app.project.conversation" @model={{this.trackedProject.shortCode}} class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.conversation"}}</LinkTo>
-        <LinkTo @route="app.projects.create">{{t "global.module.singular.project"}}</LinkTo>
-      </div>
-    </div>
-    {{!-- Create Modules e.g. Project,Issue,Conversation (END) --}}
-
   {{!-- Navbar Right Menu --}}
   <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
+
+      {{!-- Create Modules e.g. Project,Issue,Conversation --}}
+      <li>
+        <div class="create-modules">
+          <button class="create-module-btn btn btn-primary" {{on "click" this.toggleCreateDropdown}}>{{t "global.form.new"}}<i class="fa fa-caret-down"></i>
+          <div class="create-module-dropdown-content {{if this.isCreateDropdownOpen 'show'}}"  {{on "click" (fn (mut this.isCreateDropdownOpen) false)}}>
+            <LinkTo @route="app.project.issue.create" @model={{this.trackedProject.shortCode}} class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.issue"}}</LinkTo>
+            <LinkTo @route="app.project.conversation" @model={{this.trackedProject.shortCode}} class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.conversation"}}</LinkTo>
+            <LinkTo @route="app.projects.create">{{t "global.module.singular.project"}}</LinkTo>
+          </div>            
+          </button>          
+        </div>
+      </li>
 
       {{!-- Notifications Menu --}}
       <li class="dropdown notifications-menu">

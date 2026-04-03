@@ -26,46 +26,54 @@
 }
 
 .create-modules {
-  position: absolute;
-  display: inline-block;
-  top: 1.2rem;
-
+  padding: 1.2rem !important;
   .create-module-btn {
-    background-color: $primaryColor;
-    color: white;
+    padding: 0.3rem 0.8rem;
     border: none;
-    height: 2.5rem;
+    cursor: pointer;
+    position: relative;
 
     i {
-      margin-left: 0.3rem;
+      margin-left: 0.5rem;
       font-size: 1.2rem;
     }
   }
 
   .create-module-dropdown-content {
     display: none;
+    top: 100%;
+    right: 0;
     position: absolute;
     background-color: white;
-    min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
+    min-width: 14rem;
 
     a {
       color: black;
-      padding: 0.8rem 1rem;
+      padding: 0.4rem 0.6rem;
       text-decoration: none;
       display: block;
+      font-size: 1.4rem;
+      width: 100%;
+      text-align: left;
+
+      &:hover {
+        background-color: $primaryColor;
+        color: white;
+      }
     }
 
     .pointer-none {
       color: $mediumColor;
+
+      &:hover {
+        background-color: transparent;
+        color: $mediumColor;
+        cursor: default;
+      }
     }
   }
 }
 
-.create-modules:hover .create-module-dropdown-content {display: block;}
-
-.create-modules a:hover {
-  background-color: $primaryColor;
-  color: white;
-}
+.create-module-dropdown-content.show { display: block; }
