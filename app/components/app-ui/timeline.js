@@ -27,12 +27,14 @@ export default class AppUiTimelineComponent extends Component {
 		let { activities, dataKey } = this.args;
 		let result = {};
 
-		Object.entries(activities).forEach(([key, activityCont]) => {
+		if (activities) {
+			Object.entries(activities).forEach(([key, activityCont]) => {
 			result[key] =
 				dataKey && activityCont[dataKey]
-					? activityCont[dataKey]
-					: activityCont;
-		});
+						? activityCont[dataKey]
+						: activityCont;
+			});
+		}
 		return result;
 	}
 
