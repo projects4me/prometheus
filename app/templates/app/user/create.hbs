@@ -54,6 +54,10 @@
                 @message={{this.message.userCreate.email}}     
                 @aclContext="App.User.Create.Email"         
               />
+              <p class="help-block email-password-hint">
+                <i class="fa fa-info-circle"></i>
+                {{t "views.app.user.create.emailPasswordHint"}}
+              </p>
 
               <FormFields::FieldDate 
                 @placeholder={{t "views.app.user.create.dobplaceholder" }}
