@@ -55,12 +55,17 @@ export default App.extend({
         Logger.debug(projectId);
 
         let _projectOptions = {
-            //      fields: "Project.id,Project.name",
             query: "(Project.id : " + projectId + ")",
-            rels: 'members,conversations,createdBy,memberships,roles,manager',
-            sort: "conversations.dateModified",
+            rels: 'members,createdBy,memberships,roles,manager',
             order: 'ASC',
             limit: -1
+        };
+
+        let _conversationOptions = {
+            query: `(Conversationroom.projectId : ${projectId})`,
+            sort: "Conversationroom.dateModified",
+            order: 'DESC',
+            limit: 5
         };
 
         let _activityOptions = {
@@ -91,7 +96,8 @@ export default App.extend({
             project: _self.store.query('project', _projectOptions),
             milestones: _self.store.query('milestone', _milestoneOptions),
             activities: _self.store.query('activity', _activityOptions),
-            issues: _self.store.query('issue', _issueOptions)
+            issues: _self.store.query('issue', _issueOptions),
+            conversations: _self.store.query('conversationroom', _conversationOptions)
         })
             .then((data) => {
                 return extractHashSettled(data, 'project');
@@ -130,6 +136,7 @@ export default App.extend({
         this.loadMilestones(model.milestones, model.issues, controller);
 
         controller.send('resetNewMilestone');
+        controller.set('conversations', model.conversations);
     },
 
     /**
