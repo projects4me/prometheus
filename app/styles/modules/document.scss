@@ -7,7 +7,9 @@
 /**
   This contains the CSS related to the entire document
 */
-
+.wrapper {
+  overflow: unset;
+}
 
 .box.box-primary{
   border-top-color: $primaryColor !important;
