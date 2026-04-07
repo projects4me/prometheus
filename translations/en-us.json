@@ -1257,6 +1257,9 @@
         }
       },
       "board": {
+        "taskBoard": "Task Board",
+        "collapseBoard": "Collapse board",
+        "expandBoard": "Expand board",
         "backlog": "Backlog",
         "quickView": "Quick View",
         "hours": "h",

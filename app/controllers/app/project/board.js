@@ -327,6 +327,15 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
     @tracked isLoadingIssueDetails = false;
 
     /**
+     * Whether the board panel is collapsed to give the issue detail panel more space.
+     *
+     * @property isBoardCollapsed
+     * @type Boolean
+     * @for Board
+     */
+    @tracked isBoardCollapsed = false;
+
+    /**
      * The project data loaded for the selected issue
      *
      * @property projectData
@@ -554,7 +563,47 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
         this.selectedIssue = null;
         this.selectedIssueDetails = null;
         this.isLoadingIssueDetails = false;
+        this.isBoardCollapsed = false;
         Logger.debug("-AppProjectBoardController::closeIssueDetails");
+    }
+
+    /**
+     * Returns the Bootstrap column class for the board panel.
+     * Collapses to a narrow strip (col-md-1) when isBoardCollapsed is true.
+     *
+     * @property boardColumnClass
+     * @type String
+     * @for Board
+     */
+    get boardColumnClass() {
+        if (this.selectedIssue && this.isBoardCollapsed) {
+            return 'board-column board-column--collapsed col-md-1';
+        }
+        return `board-column col-md-${this.selectedIssue ? '8' : '12'}`;
+    }
+
+    /**
+     * Returns the Bootstrap column class for the issue detail panel.
+     * Expands to col-md-11 when the board is collapsed.
+     *
+     * @property issueColumnClass
+     * @type String
+     * @for Board
+     */
+    get issueColumnClass() {
+        return this.isBoardCollapsed ? 'col-md-11' : 'col-md-4';
+    }
+
+    /**
+     * Toggles the board between its expanded and collapsed states.
+     *
+     * @method toggleBoardCollapse
+     * @public
+     */
+    @action toggleBoardCollapse() {
+        Logger.debug("AppProjectBoardController::toggleBoardCollapse");
+        this.isBoardCollapsed = !this.isBoardCollapsed;
+        Logger.debug("-AppProjectBoardController::toggleBoardCollapse");
     }
 
     /**

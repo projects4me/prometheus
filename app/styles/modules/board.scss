@@ -379,6 +379,94 @@
         }
       }
     }
-    
+
+  }
+
+  .box-body--board-collapsed {
+    background-color: #ecf0f5;
+  }
+
+  .board-column {
+    position: relative;
+  }
+
+  .board-column--collapsed {
+    width: 4rem;
+    flex: 0 0 4rem;
+    max-width: 4rem;
+    padding: 0;
+  }
+
+  .board-collapsed-strip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.2rem 0;
+    height: 100%;
+    min-height: 60rem;
+    background-color: #f4f4f4;
+    border-right: 0.1rem solid $borderColor;
+    border-radius: 0 0.4rem 0.4rem 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(179, 36, 79, 0.08);
+
+      .board-strip-icon,
+      .board-strip-label {
+        color: $primaryColor;
+      }
+    }
+
+    .board-strip-icon {
+      font-size: 1.2rem;
+      color: $mediumColor;
+      margin-bottom: 1.5rem;
+      transition: color 0.2s ease;
+    }
+
+    .board-strip-label {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: $mediumColor;
+      letter-spacing: 0.15rem;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+  }
+
+  // Circular toggle button floating on the right edge of the expanded board
+  .board-collapse-btn {
+    position: absolute;
+    right: -1.4rem;
+    top: 10rem;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    border: 0.1rem solid $borderColor;
+    background-color: $backgroundColor;
+    color: $mediumColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.12);
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      background-color: $primaryColor;
+      color: $backgroundColor;
+      border-color: $primaryColor;
+      box-shadow: 0 0.2rem 0.8rem rgba(179, 36, 79, 0.3);
+    }
+
+    i {
+      font-size: 1.1rem;
+    }
   }
 }
