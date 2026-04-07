@@ -24,7 +24,7 @@
 
     {{!-- Create Modules e.g. Project,Issue,Conversation (START) --}}
     <div class="create-modules">
-      <button class="create-module-btn"><i class="fa fa-plus"></i></button>
+      <button class="create-module-btn">{{t "global.form.new"}}<i class="fa fa-plus"></i></button>
       <div class="create-module-dropdown-content">
         <LinkTo @route="app.project.issue.create" @model={{this.trackedProject.shortCode}} class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.issue"}}</LinkTo>
         <LinkTo @route="app.project.conversation" @model={{this.trackedProject.shortCode}} class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.conversation"}}</LinkTo>

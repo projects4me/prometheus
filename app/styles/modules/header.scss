@@ -34,11 +34,10 @@
     background-color: $primaryColor;
     color: white;
     border: none;
-    border-radius: 1.5rem;
-    width: 2.5rem;
     height: 2.5rem;
 
     i {
+      margin-left: 0.3rem;
       font-size: 1.2rem;
     }
   }
