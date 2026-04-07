@@ -50,6 +50,16 @@ export default class ApplicationHeaderComponent extends AppComponent {
     @tracked selected;
 
     /**
+     * Controls the visibility of the create-module dropdown
+     *
+     * @property isCreateDropdownOpen
+     * @type Boolean
+     * @for ApplicationHeader
+     * @private
+     */
+    @tracked isCreateDropdownOpen = false;
+
+    /**
      * The pub-sub service
      *
      * @property pubSub
@@ -68,6 +78,20 @@ export default class ApplicationHeaderComponent extends AppComponent {
      * @private
      */
     page = 0;
+
+    /**
+     * This function is called when the component is initialized
+     * It sets up the click event listener to close the create-module dropdown
+     *
+     * @method constructor
+     * @for ApplicationHeader
+     * @public
+     */
+    constructor() {
+        super(...arguments);
+        this._handleOutsideClick = () => { this.isCreateDropdownOpen = false; };
+        document.addEventListener('click', this._handleOutsideClick);
+    }
 
     /**
      * This function returns session object
@@ -168,6 +192,19 @@ export default class ApplicationHeaderComponent extends AppComponent {
 
 
     /**
+     * Toggles the create-module dropdown open/closed.
+     * stopPropagation prevents the document click listener from immediately closing it.
+     *
+     * @method toggleCreateDropdown
+     * @for ApplicationHeader
+     * @public
+     */
+    @action toggleCreateDropdown(event) {
+        event.stopPropagation();
+        this.isCreateDropdownOpen = !this.isCreateDropdownOpen;
+    }
+
+    /**
      * This function is used to forward the signOut function
      *
      * @method signOut
@@ -215,5 +252,18 @@ export default class ApplicationHeaderComponent extends AppComponent {
     @action
     toggleNotificationsSidebar() {
         this.pubSub.trigger('toggle-notifications-sidebar');
+    }
+
+    /**
+     * This function is called when the component is destroyed
+     * It removes the click event listener to close the create-module dropdown
+     *
+     * @method willDestroy
+     * @for ApplicationHeader
+     * @public
+     */
+    willDestroy() {
+        super.willDestroy(...arguments);
+        document.removeEventListener('click', this._handleOutsideClick);
     }
 }
