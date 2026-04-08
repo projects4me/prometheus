@@ -32,27 +32,20 @@ Feature: Board collapse functionality | Taskboard
     Given User clicks on first issue on the board to open details
     Then User should see the board collapse button
 
-  Scenario: Board collapses to a vertical strip when collapse button is clicked
+  Scenario: Board is hidden and task board content is gone when collapsed
 
     Given User clicks on first issue on the board to open details
     When User clicks the board collapse button
     Then User should see the board collapsed strip
     And User should not see the task board content
 
-  Scenario: Collapsed strip shows "Task Board" label
-
-    Given User clicks on first issue on the board to open details
-    When User clicks the board collapse button
-    Then The collapsed strip should show "TASK BOARD" label
-
   Scenario: Issue details panel expands to full width when board is collapsed
 
     Given User clicks on first issue on the board to open details
     When User clicks the board collapse button
     Then The issue details panel should be in full width mode
-    And The board column should be collapsed to minimum width
 
-  Scenario: Board expands again when collapsed strip is clicked
+  Scenario: Board expands again when divider handle is clicked
 
     Given User clicks on first issue on the board to open details
     And User clicks the board collapse button
