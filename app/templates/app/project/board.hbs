@@ -1,26 +1,7 @@
 <div class="board row">
 
-  {{!-- Board panel: full width when no issue open, col-8 expanded, or collapsed strip --}}
-  <div class={{this.boardColumnClass}}>
-
-    {{#if (and this.selectedIssue this.isBoardCollapsed)}}
-      <div class="board-collapsed-strip" role="button" {{on "click" this.toggleBoardCollapse}} title={{t "views.app.board.expandBoard"}}>
-        <i class="fa fa-chevron-right board-strip-icon"></i>
-        <span class="board-strip-label">{{t "views.app.board.taskBoard"}}</span>
-      </div>
-
-    {{else}}
-      {{#if this.selectedIssue}}
-        <button
-          class="board-collapse-btn"
-          type="button"
-          title={{t "views.app.board.collapseBoard"}}
-          {{on "click" this.toggleBoardCollapse}}
-        >
-          <i class="fa fa-chevron-left"></i>
-        </button>
-      {{/if}}
-
+  {{#unless (and this.selectedIssue this.isBoardCollapsed)}}
+    <div class={{this.boardColumnClass}}>
       <AppUi::TaskBoard
         @milestones={{this.milestoneList}}
         @statuses={{this.statuses}}
@@ -54,13 +35,22 @@
         @getMilestoneProgress={{this.getMilestoneProgress}}
         @getCompletedIssuesCount={{this.getCompletedIssuesCount}}
       />
-    {{/if}}
-
-  </div>
+    </div>
+  {{/unless}}
 
   {{!-- Issue detail panel --}}
   {{#if this.selectedIssue}}
     <div class="{{this.issueColumnClass}} issue-details-container">
+      <button
+        class="board-panel-divider"
+        type="button"
+        title={{if this.isBoardCollapsed (t "views.app.board.expandBoard") (t "views.app.board.collapseBoard")}}
+        {{on "click" this.toggleBoardCollapse}}
+      >
+        <span class="divider-handle">
+          <i class="fa fa-angle-{{if this.isBoardCollapsed "right" "left"}}"></i>
+        </span>
+      </button>
       {{#if this.isLoadingIssueDetails}}
         <div class="box box-primary">
           <div class="box-header with-border">

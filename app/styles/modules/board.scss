@@ -70,50 +70,47 @@
     display: flex;
     overflow-x: auto;
     scrollbar-width: thin;
+    padding: 0rem;
   }
 
-  .box-body {
-    padding: 0rem;
+  .lane {
+    height: inherit;
+    width: 28rem;
+    margin-right: 0.5rem;
 
-    .lane {
-      height: inherit;
-      width: 28rem;
-      margin-right: 0.5rem;
+    .box-header {
+      height: 4rem !important;
+      position: relative;
+      z-index: 999;
+      background-color: $backgroundColor;
+    }
 
-      .box-header {
-        height: 4rem !important;
-        position: relative;
-        z-index: 999;
-        background-color: $backgroundColor;
+    .dotted-circle-add {
+      height: 2rem;
+      width: 2rem;
+
+      .ion-md-add {
+        font-size: 1.5rem;
       }
+    }
 
-      .dotted-circle-add {
-        height: 2rem;
-        width: 2rem;
+    .milestone, .box-body {
+      min-height: 45rem;
+      height: calc(100% - 4rem);
+      padding: 0rem;
+      border: 0.25rem solid $backgroundColor;
+    }
 
-        .ion-md-add {
-          font-size: 1.5rem;
-        }
-      }
+    .box-body-border {
+      border: 0.25rem dashed $blackColor;
+    }
 
-      .milestone, .box-body {
-        min-height: 45rem;
-        height: calc(100% - 4rem);
-        padding: 0rem;
-        border: 0.25rem solid $backgroundColor;
-      }
+    .box-body-color {
+      border-color: $primaryColor;
+    }
 
-      .box-body-border {
-        border: 0.25rem dashed $blackColor;
-      }
-
-      .box-body-color {
-        border-color: $primaryColor;
-      }
-
-      .curr-lane {
-        border-color: $backgroundColor !important;
-      }
+    .curr-lane {
+      border-color: $backgroundColor !important;
     }
   }
 
@@ -387,83 +384,52 @@
     position: relative;
   }
 
-  .board-column--collapsed {
-    width: 4rem;
-    flex: 0 0 4rem;
-    max-width: 4rem;
-    padding: 0;
+
+  .issue-details-container {
+    position: relative;
+    border-left: 0.2rem solid $borderColor;
+
+    &.col-md-12 .board-panel-divider {
+      left: 0.2rem;
+    }
+
+    &.col-md-4 .board-panel-divider {
+      left: -0.1rem;
+    }
   }
 
-  .board-collapsed-strip {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1.2rem 0;
-    height: 100%;
-    min-height: 60rem;
-    background-color: #f4f4f4;
-    border-right: 0.1rem solid $borderColor;
-    border-radius: 0 0.4rem 0.4rem 0;
+  .board-panel-divider {
+    position: absolute;
+    left: -0.1rem;
+    top: 8rem;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: none;
+    border: none;
+    padding: 0;
     cursor: pointer;
-    transition: background-color 0.2s ease;
 
-    &:hover {
-      background-color: rgba(179, 36, 79, 0.08);
+    .divider-handle {
+      width: 1.6rem;
+      height: 3.2rem;
+      background-color: $primaryColor;
+      border: 0.1rem solid $primaryColor;
+      border-radius: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
 
-      .board-strip-icon,
-      .board-strip-label {
-        color: $primaryColor;
+      i {
+        font-size: 1rem;
+        color: $backgroundColor;
+        transition: color 0.2s ease;
       }
     }
 
-    .board-strip-icon {
-      font-size: 1.2rem;
-      color: $mediumColor;
-      margin-bottom: 1.5rem;
-      transition: color 0.2s ease;
-    }
-
-    .board-strip-label {
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: $mediumColor;
-      letter-spacing: 0.15rem;
-      text-transform: uppercase;
-      transition: color 0.2s ease;
-    }
-  }
-
-  // Circular toggle button floating on the right edge of the expanded board
-  .board-collapse-btn {
-    position: absolute;
-    right: -1.4rem;
-    top: 10rem;
-    transform: translateY(-50%);
-    z-index: 20;
-    width: 2.8rem;
-    height: 2.8rem;
-    border-radius: 50%;
-    border: 0.1rem solid $borderColor;
-    background-color: $backgroundColor;
-    color: $mediumColor;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.12);
-    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-
-    &:hover {
-      background-color: $primaryColor;
-      color: $backgroundColor;
-      border-color: $primaryColor;
-      box-shadow: 0 0.2rem 0.8rem rgba(179, 36, 79, 0.3);
-    }
-
-    i {
-      font-size: 1.1rem;
+    &:hover .divider-handle {
+      background-color: darken($primaryColor, 10%);
+      border-color: darken($primaryColor, 10%);
     }
   }
 }

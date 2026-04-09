@@ -569,29 +569,24 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 
     /**
      * Returns the Bootstrap column class for the board panel.
-     * Collapses to a narrow strip (col-md-1) when isBoardCollapsed is true.
      *
      * @property boardColumnClass
      * @type String
      * @for Board
      */
     get boardColumnClass() {
-        if (this.selectedIssue && this.isBoardCollapsed) {
-            return 'board-column board-column--collapsed col-md-1';
-        }
         return `board-column col-md-${this.selectedIssue ? '8' : '12'}`;
     }
 
     /**
      * Returns the Bootstrap column class for the issue detail panel.
-     * Expands to col-md-11 when the board is collapsed.
      *
      * @property issueColumnClass
      * @type String
      * @for Board
      */
     get issueColumnClass() {
-        return this.isBoardCollapsed ? 'col-md-11' : 'col-md-4';
+        return this.isBoardCollapsed ? 'col-md-12' : 'col-md-4';
     }
 
     /**
