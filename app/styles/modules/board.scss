@@ -190,15 +190,12 @@
   .board-issue-item {
     position: relative;
     cursor: move;
-    margin: 0.3rem;
+    margin: 0.3rem 0.3rem 1.2rem 0.3rem;
     padding: 0.1rem 1rem 0.1rem 1rem;
-    border: 0.1rem solid #eee;
     border-left: 0.5rem solid #eee;
     background-color: $backgroundColor;
-    border-right: 0.1rem solid #ccc;
-    border-top: 0.1rem solid #ccc;
-    border-bottom: 0.1rem solid #ccc;
     user-select: none;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 8px, rgba(0, 0, 0, 0.2) 0px 0px 0px 0.3px;
     width: 27rem;
 
     // Quick view icon styles
