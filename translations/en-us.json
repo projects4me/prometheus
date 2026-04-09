@@ -138,7 +138,7 @@
         "project": "Project",
         "issue": "Issue",
         "wiki": "Wiki",
-        "conversation": "Conversation",
+        "conversation": "Thread",
         "report": "Report",
         "timelog": "Time Log",
         "activity": "Activity",
@@ -156,7 +156,7 @@
         "project": "Projects",
         "issue": "Issues",
         "wiki": "Wiki",
-        "conversation": "Conversations",
+        "conversation": "Threads",
         "report": "Reports",
         "timelog": "Time Logs",
         "activity": "Activities",
@@ -175,7 +175,7 @@
           "createdBy": "Created By",
           "modifiedBy": "Modified By",
           "members": "Members",
-          "conversations": "Conversations",
+          "conversations": "Threads",
           "issues": "Issues",
           "roles": "Roles",
           "memberships": "Memberships",
@@ -195,7 +195,7 @@
           "project": "Project",
           "issuemilestone": "Milestone",
           "parentissue": "Parent Issue",
-          "conversationroom": "Conversation Room",
+          "conversationroom": "Thread",
           "issuetype": "Issue Type",
           "issuestatus": "Issue Status",
           "estimated": "Estimated",
@@ -455,9 +455,9 @@
           "estimatedBudget": "Budget Estimated",
           "spentBudget": "Budget Spent",
           "issueratio": "Issue Distribution Ratio",
-          "latestConversations": "Latest Conversations",
-          "noLatestConversations": "No conversations found for the project",
-          "viewallconversations": "View all conversations",
+          "latestConversations": "Latest Threads",
+          "noLatestConversations": "No threads found for the project",
+          "viewallconversations": "View all threads",
           "latestissues": "Latest Issues",
           "noLatestIssues": "No issues found for the project",
           "viewallissues": "View all issues",
@@ -617,11 +617,11 @@
           "roomType": "Type",
           "projectId": "Project"
         },
-        "label": "Conversations",
-        "create": "Start a new conversation ..",
-        "start": "Start a new conversation",
+        "label": "Threads",
+        "create": "Start a new thread ..",
+        "start": "Start a new thread",
         "messagebox": "Write a comment ..",
-        "created": "A new conversation by the name {name} has been added",
+        "created": "A new thread by the name {name} has been added",
         "comments": "comments",
         "upvote": "Upvote",
         "downvote": "Downvote",
@@ -633,7 +633,7 @@
         "removingVote": "Removing vote ..",
         "removedVote": "Vote removed successfully",
         "removeVoteError": "Failed to remove vote. Please try again later",
-        "downvoted": "You downvoted the conversation",
+        "downvoted": "You downvoted the thread",
         "you": "You ",
         "vote": {
           "upvote": "Upvotes",
@@ -659,14 +659,14 @@
             }
           ]
         },
-        "emptyStateMessage": "No conversations found",
+        "emptyStateMessage": "No threads found",
         "linkIssue": "Link Issue",
         "linkIssuePlaceholder": "Search issue to link...",
-        "loading": "Loading more conversations...",
-        "noMore": "No more conversations to load",
-        "refreshing": "Refreshing conversations...",
-        "refreshed": "Conversations refreshed successfully",
-        "refreshError": "Failed to refresh conversations, please try again later",
+        "loading": "Loading more threads...",
+        "noMore": "No more threads to load",
+        "refreshing": "Refreshing threads...",
+        "refreshed": "Threads refreshed successfully",
+        "refreshError": "Failed to refresh threads, please try again later",
         "searchPlaceholder": "Enter search term...",
         "filters": {
           "discussion": "Discussion",
@@ -686,11 +686,11 @@
           "thisYear": "This Year"
         },
         "edit": {
-          "title": "Edit Conversation",
+          "title": "Edit Thread",
           "update": "Update",
-          "updating": "Updating conversation...",
-          "updated": "Conversation has been updated successfully",
-          "error": "Failed to update conversation. Please try again.",
+          "updating": "Updating thread...",
+          "updated": "Thread has been updated successfully",
+          "error": "Failed to update thread. Please try again.",
           "subjectEmpty": "Subject cannot be empty"
         },
         "comment": {
@@ -823,8 +823,8 @@
           "endDate": "End Date",
           "overview": "Overview",
           "selectedCount": "(Selected : {count}) ",
-          "startConversation": "Start Conversation",
-          "openConversation": "Open Conversation"
+          "startConversation": "Start Thread",
+          "openConversation": "Open Thread"
         },
         "detail": {
           "issueNumber": "Issue Number",
@@ -849,7 +849,7 @@
           "reportedBy": "Reported User",
           "parent": "Parent",
           "files": "Files",
-          "conversation": "Conversation",
+          "conversation": "Thread",
           "hierarchy": "Issue Hierarchy",
           "estimates": "Estimates",
           "selectfile": "select a file to upload",
@@ -1154,7 +1154,7 @@
         "updated": "updated the",
         "deleted": "deleted the",
         "mentioned": "mentioned the",
-        "conversation": "conversation",
+        "conversation": "thread",
         "related": {
           "created": "created a",
           "updated": "updated a",
@@ -1207,11 +1207,11 @@
           "nextPage": "Next Week"
         },
         "weeklyConversations": {
-          "title": "Weekly Conversations",
+          "title": "Weekly Threads",
           "fields": {
             "comment": "Comment"
           },
-          "noConversationsFound": "No conversations found for this week"
+          "noConversationsFound": "No threads found for this week"
         }
       },
       "milestone": {
@@ -1323,7 +1323,7 @@
               "allow": "Allow",
               "none": "None",
               "project": "Project",
-              "conversation": "Conversation"
+              "conversation": "Thread"
             },
             "updated": "Permissions Updated"
           },
@@ -1519,7 +1519,7 @@
           "export": "Export Issues"
         },
         "conversation": {
-          "label": "Conversations"
+          "label": "Threads"
         },
         "user": {
           "label": "Users",
