@@ -7,6 +7,34 @@ import Component from '@ember/component';
 import { inject } from '@ember/service';
 
 /**
+ * Maps issue status keys to their app-wide hex colors, mirroring issue-status.scss.
+ * Used to keep chart colors consistent with the rest of the application.
+ */
+const STATUS_COLORS = {
+    new:        '#80b5d3',
+    in_review:  '#80b5d3',
+    in_progress:'#B3244F',
+    closed:     '#e98a7e',
+    pending:    '#f7bf65',
+    feedback:   '#f7bf65',
+    complete:   '#5ac594',
+};
+
+/**
+ * Converts a hex color string to an rgba() string with the given alpha.
+ *
+ * @param {String} hex   e.g. '#B3244F'
+ * @param {Number} alpha e.g. 0.8
+ * @return {String}      e.g. 'rgba(179, 36, 79, 0.8)'
+ */
+function hexToRgba(hex, alpha) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+/**
  * This component is used to render the issue ratio chart in the application
  *
  * @class ChartIssueratio
@@ -106,7 +134,8 @@ export default Component.extend({
                 borderWidth: 1
             }]
         };
-        let statuses = _.uniqBy(issues.getEach('status'));
+        const excludedStatuses = ['done', 'deferred', 'wont_fix'];
+        let statuses = _.uniqBy(issues.getEach('status')).filter(status => !excludedStatuses.includes(status));
         let count = 0;
         let ch = new ColorHash();
 
@@ -114,9 +143,15 @@ export default Component.extend({
             data.labels[count] = intl.t("views.app.issue.lists.status."+status);
             data.datasets[0].data[count] = issues.filterBy('status',status).length;
 
-            var color = ch.rgb(data.labels[count]);
-            data.datasets[0].backgroundColor[count] = 'rgba('+color[0]+', '+color[1]+', '+color[2]+', 0.8)';
-            data.datasets[0].borderColor[count] = 'rgba('+color[0]+', '+color[1]+', '+color[2]+', 0.8)';
+            let rgba;
+            if (STATUS_COLORS[status]) {
+                rgba = hexToRgba(STATUS_COLORS[status], 1);
+            } else {
+                var color = ch.rgb(String(data.labels[count]));
+                rgba = 'rgba('+color[0]+', '+color[1]+', '+color[2]+', 0.8)';
+            }
+            data.datasets[0].backgroundColor[count] = rgba;
+            data.datasets[0].borderColor[count] = rgba;
             count++;
         });
 
