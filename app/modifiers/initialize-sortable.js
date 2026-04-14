@@ -315,13 +315,11 @@ export default class InitializeSortable extends Modifier {
         milestoneEls.forEach((milestoneEl) => {
             let milestoneId = milestoneEl.dataset.fieldMilestoneId || 'backlog';
             milestoneIds.push(milestoneId);
-            document.querySelector(`[data-milestone-id="${milestoneId}"] a`).click();
+            let milestoneTab = document.querySelector(`#tab_${milestoneId}`);
+            milestoneTab.style.display = 'block';
             _self.applySlimScrollToMilestoneItems(milestoneEl);
+            milestoneTab.style.display = '';
         });
-        let milestoneIndex = (autoSelectFirstMilestone) ? 0 : 1;
-        let milestoneId = milestoneIds[milestoneIndex];
-        milestoneId && document.querySelector(`[data-milestone-id="${milestoneId}"] a`).click();
-
     }
 
     /**
