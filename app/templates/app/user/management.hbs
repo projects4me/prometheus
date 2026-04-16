@@ -1,55 +1,46 @@
-<div class="user-management list-view">
-  
-    <section class="content-header">
-    <h1>
-      {{t "views.app.user.management.title"}}
-    </h1>
-    
-    <BreadCrumb/>
-  </section>
+<section class="content-header">
+  <h1>
+    {{t "views.app.user.management.title"}}
+  </h1>
+  <BreadCrumb/>
+</section>
 
-  <section class="content">
+<section class="content user-management">
+  <div class="row module users">
+    <div class="col-md-12">
+      <AccessControl @aclContext="App.User.List">
+        <div class="box box-primary list-view">
+            <div class="box-header with-border">
+              <div class="search">
+                <div class="has-feedback user-management-search">
+                  <FormFields::FieldSearch
+                    @placeholder={{t "views.app.user.management.search"}}
+                    @data-module="user-management"
+                    @searchFunction={{this.searchUserByName}}
+                    @aclContext="App.User.Management.SearchUser"
+                  />
+                </div>
+              </div>
+            </div>
 
-    <div class="row">
-
-      <div class="col-md-12">
-
-        <AccessControl @aclContext="App.User.List">
-          <div class="box box-primary list-view">
-            <div class="box-body">
-
-              <div class="header">
-                {{!++Search box++}}
-                <FormFields::FieldSearch
-                  @placeholder={{t "views.app.user.management.search"}}
-                  @data-module="user-management"
-                  @searchFunction={{this.searchUserByName}}
-                  @aclContext="App.User.Management.SearchUser"
-                />
-
-              </div>     
-                {{!--Search box--}}
-              <hr>
-              
+            <div class="box-body no-padding">
               <div class="list-controls">
-
-                {{!++MASS Actions++}}
-                <div class="user-mass-actions">
-
+                <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
                   <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="App.User.Management.SelectAllUsers"/>
-                  
+                </span>
+
+                <div class="btn-group">
+                  <AppUi::Button data-btn="delete" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.User.Delete">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </AppUi::Button>
+                </div>
+                <div class="user-mass-actions">
                   <FormFields::FieldSwitch
                     @callBack={{this.changeMultipleUserStatus}}
                     @aclContext="App.User.Management.ChangeUsersStatuses"
                   />
-
-                  <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @aclContext="App.User.Delete">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                  </AppUi::Button>       
                 </div>
-                {{!--MASS Actions--}}
 
-                {{!++Paginate++}}
                 <div class="pull-right">
                   <span class="list-view-count">{{t "views.app.issue.list.selectedCount" count=this.checkboxCount}}</span>
                   {{add (mult (sub this.page 1) 20) 1}}-{{add (mult (sub this.page 1) 20) this.model.length}} / {{add (mult (sub this.page 1) 20) this.model.length}}
@@ -66,17 +57,11 @@
                       <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></AppUi::Button>
                     {{/if}}
                   </div>
-
                 </div>
-                {{!--Paginate--}}
               </div>
 
-              <hr>
-
-              {{! +User List Container }}
-              <div class="table-responsive users">
+              <div class="table-responsive list-view users">
                 <table class="table table-hover table-striped">
-
                   <thead>
                     <tr>
                       <th class="select-box"></th>
@@ -87,60 +72,91 @@
                   </thead>
 
                   <tbody>
-                  {{#each this.model as |user|}}
-                      <tr data-user-id={{user.id}}>
-                        
-                      <td>
-                        <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{user.id}} @aclContext="App.User.Management.SelectUser"/>
-                      </td>
+                    {{#if this.model.length}}
+                      {{#each this.model as |user|}}
+                        <tr data-user-id={{user.id}}>
+                          <td>
+                            <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{user.id}} @aclContext="App.User.Management.SelectUser"/>
+                          </td>
 
-                        <td class="user-profile" data-user-field="profile">
-                          <img class="user-img" src="{{this.apiHost}}/userimage/get/{{user.id}}" alt="user-img">
-              
-                          <div>
-                            <LinkTo @route="app.user.page" @model={{user.id}}> 
-                              <div data-user-field="name">{{user.name}}</div> 
-                            </LinkTo>
-                            <div class="title">{{user.title}}</div>
-                          </div>                      
+                          <td class="user-profile" data-user-field="profile">
+                            <img class="user-img" src="{{this.apiHost}}/userimage/get/{{user.id}}" alt="user-img">
+
+                            <div>
+                              <LinkTo @route="app.user.page" @model={{user.id}}>
+                                <div data-user-field="name">{{user.name}}</div>
+                              </LinkTo>
+                              <div class="title">{{user.title}}</div>
+                            </div>
+                          </td>
+
+                          <td data-user-field="email">{{user.email}}</td>
+                          <td data-user-field="account-status" class={{concat "account-status-" user.accountStatus}}>{{t (concat "views.app.user.accountStatus." user.accountStatus)}}</td>
+
+                          <td class="pull-right actions">
+                            <AppUi::Button data-btn="delete" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @onClick={{fn this.deleteModel user 'name'}} @aclContext="App.User.Delete">
+                              <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            </AppUi::Button>
+
+                            <UserManagement::AccountStatus
+                              @user={{user}}
+                              @changeUserStatus={{action this.changeUserStatus user}}
+                              @aclContext="App.User.Management.AccountStatus"
+                              @switchSize="sm"
+                            />
+                          </td>
+                        </tr>
+                      {{/each}}
+                    {{else}}
+                      <tr>
+                        <td colspan="100%">
+                          <Exceptions::NothingFound
+                            @description={{t "views.app.user.management.list.noUsersFound"}}
+                          />
                         </td>
-
-                        <td data-user-field="email">{{user.email}}</td>
-                        <td data-user-field="account-status" class={{user.accountStatus}}>{{t (concat "views.app.user.accountStatus." user.accountStatus)}}</td>
-
-                        {{!++ actions ++}}
-                        <td class="pull-right actions">
-                          <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @onClick={{fn this.deleteModel user 'name'}} @aclContext="App.User.Delete">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                          </AppUi::Button>
-
-                        <UserManagement::AccountStatus
-                          @user={{user}}
-                          @changeUserStatus={{action this.changeUserStatus user}}
-                          @aclContext="App.User.Management.AccountStatus"
-                        />
-                        {{!-- actions --}}
-                        </td>
-
                       </tr>
-                      
-                  {{/each}}
-                  
+                    {{/if}}
                   </tbody>
                 </table>
-
               </div>
-              {{! -User List Container}}
-
             </div>
-
+            <div class="box-footer no-padding">
+              <div class="list-controls">
+                <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
+                  <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="App.User.Management.SelectAllUsers"/>
+                </span>
+                <div class="btn-group">
+                  <AppUi::Button data-btn="delete" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.User.Delete">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </AppUi::Button>
+                </div>
+                <div class="user-mass-actions">
+                  <FormFields::FieldSwitch
+                    @callBack={{this.changeMultipleUserStatus}}
+                    @aclContext="App.User.Management.ChangeUsersStatuses"
+                  />
+                </div>
+                <div class="pull-right">
+                  <span class="list-view-count">{{t "views.app.issue.list.selectedCount" count=this.checkboxCount}}</span>
+                  {{add (mult (sub this.page 1) 20) 1}}-{{add (mult (sub this.page 1) 20) this.model.length}} / {{add (mult (sub this.page 1) 20) this.model.length}}
+                  {{#if this.model.meta.links.next}}+{{/if}}
+                  <div class="btn-group">
+                    {{#if this.model.meta.links.prev}}
+                      <AppUi::Button data-btn="prev-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="App.User.Read"><i class="fa fa-chevron-left"></i></AppUi::Button>
+                    {{else}}
+                      <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}} "><i class="fa fa-chevron-left"></i></AppUi::Button>
+                    {{/if}}
+                    {{#if this.model.meta.links.next}}
+                      <AppUi::Button data-btn="next-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="App.User.Read"><i class="fa fa-chevron-right"></i></AppUi::Button>
+                    {{else}}
+                      <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></AppUi::Button>
+                    {{/if}}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </AccessControl>
-
       </div>
-
-    </div>
-
-  </section>
-
-</div>
+  </div>
+</section>

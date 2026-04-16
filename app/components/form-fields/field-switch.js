@@ -20,7 +20,23 @@ export default class FormFieldsFieldSwitchComponent extends Component {
      * @method get
      */
     get checked() {
-        return (this.args.checkedValue) ? 'checked' : null;
+        return Boolean(this.args.checkedValue);
+    }
+
+    /**
+     * This function returns size class for switch variants.
+     *
+     * @method get
+     */
+    get sizeClass() {
+        let validSizes = ['sm', 'md', 'lg'];
+        let size = this.args.size;
+
+        if (!validSizes.includes(size)) {
+            return 'switch-control--md';
+        }
+
+        return `switch-control--${size}`;
     }
 
 }

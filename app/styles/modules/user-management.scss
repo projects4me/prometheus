@@ -9,57 +9,64 @@
 */
 
 .user-management {
-  .content {
-    .users {
-      min-height: 30rem;
+  .users {
+    min-height: 30rem;
 
-      [data-sort="User.accountStatus"] {
-        width: 8rem;
+    [data-sort="User.accountStatus"] {
+      width: 8rem;
+    }
+
+    .user-profile {
+      @include flexbox;
+
+      .title {
+        font-size: 1.1rem;
+        font-style: italic;
+        font-weight: 300;
       }
 
-      .user-profile {
-        @include flexbox;
+      .user-img {
+        margin-right: 1rem;
+      }
+    }
 
-        .title {
-          font-size: 1.1rem;
-          font-style: italic;
-          font-weight: 300;
-        }
+    .account-status-active {
+      color: $successColor;
+      background-color: inherit;
+    }
 
-        .user-img {
-          margin-right: 1rem;
-        }
+    .account-status-inactive {
+      color: $dangerColor;
+      background-color: inherit;
+    }
+
+    .account-status-disabled {
+      color: $lightColor;
+      background-color: inherit;
+    }
+
+    [data-user-field="email"],
+    [data-user-field="account-status"] {
+      line-height: 4rem;
+    }
+
+    .actions {
+      @include flexbox;
+      align-items: center;
+
+      button {
+        margin-right: 0.5rem;
+        padding-top: 0.1rem;
+        background: none;
       }
 
-      .active {
-        color: $successColor;
-        background-color: inherit;
+      button:hover {
+        box-shadow: none;
       }
 
-      .inactive {
-        color: $dangerColor;
-      }
-
-      .disabled {
-        color: $lightColor;
-      }
-
-      [data-user-field="email"],
-      [data-user-field="account-status"] {
-        line-height: 4rem;
-      }
-
-      .actions {
-        @include flexbox;
-
-        button {
-          margin-right: 1rem;
-          @include button-no-style;
-        }
-
-        i {
-          @include custom-i(black, 2rem);
-        }
+      i {
+        color: #444;
+        font-size: 1.5rem;
       }
     }
   }
@@ -67,18 +74,10 @@
   .user-mass-actions {
     @include flexbox($display: inline-flex, $justifyContent: space-between, $alignItems: baseline);
     margin-left: 0.5rem;
-    width: 8.5rem;
+    width: auto;
 
     .switch-control {
-      top: -1.4rem;
-    }
-
-    button {
-      @include button-no-style;
-    }
-
-    i {
-      @include custom-i(black, 2rem);
+      margin-top: 0.2rem;
     }
   }
 

@@ -26,7 +26,7 @@ export const then = function () {
                 let userStatusEls = document.querySelectorAll('tbody > tr [data-user-field="account-status"]');
 
                 userStatusEls.forEach((userStatusEl) => {
-                    assert.dom(userStatusEl).hasClass(accountStatus);
+                    assert.dom(userStatusEl).hasClass(`account-status-${accountStatus}`);
                 });
             }
         }

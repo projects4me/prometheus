@@ -366,21 +366,19 @@
 #search-field {
   position: relative;
 
-  input[type="text"] {
-    width: 40rem;
-    max-width: 40rem;
-    padding: 0.5rem;
-    border-radius: 14px;
-  }
+  .search-container {
+    .input-group {
+      max-width: 40rem;
 
-  input[type="text"]:focus {
-    outline: none;
-  }
+      .form-control {
+        height: 3rem;
+        border-radius: 0;
+      }
 
-  i {
-    position: absolute;
-    top: 1rem;
-    margin-left: -2rem;
+      .input-group-addon {
+        padding: 0 0.75rem;
+      }
+    }
   }
 }
 
@@ -394,23 +392,25 @@
 }
 
 //++++++SWITCH CONTROL+++++++
-$toggle-width: 30px;
-$toggle-height: 15px;
-$toggle-gutter: 1px;
-$toggle-radius: 50%;
 $toggle-control-speed: 0.15s;
 $toggle-control-ease: ease-in;
 
-$toggle-radius: $toggle-height / 2;
-$toggle-control-size: $toggle-height - ($toggle-gutter * 3);
-
 .switch-control {
+  --toggle-width: 30px;
+  --toggle-height: 15px;
+  --toggle-gutter: 1px;
+  --toggle-radius: calc(var(--toggle-height) / 2);
+  --toggle-control-size: calc(var(--toggle-height) - (2 * var(--toggle-gutter)));
+  --toggle-translate-x: calc(var(--toggle-width) - var(--toggle-control-size) - (2 * var(--toggle-gutter)));
+
   display: block;
   position: relative;
-  padding-left: $toggle-width;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+  padding-left: var(--toggle-width);
   padding-bottom: 0;
   cursor: pointer;
-  top: 0.8rem;
+  top: 0;
   user-select: none;
 
   input {
@@ -425,7 +425,7 @@ $toggle-control-size: $toggle-height - ($toggle-gutter * 3);
     background-color: $secondaryColor;
 
     &:after {
-      left: $toggle-width - $toggle-control-size - $toggle-gutter;
+      transform: translateX(var(--toggle-translate-x));
     }
   }
 
@@ -433,24 +433,40 @@ $toggle-control-size: $toggle-height - ($toggle-gutter * 3);
     position: absolute;
     top: 0;
     left: 0;
-    height: $toggle-height;
-    width: $toggle-width;
-    border-radius: $toggle-radius;
+    height: var(--toggle-height);
+    width: var(--toggle-width);
+    border-radius: var(--toggle-radius);
     background-color: $mediumColor;
     transition: background-color $toggle-control-speed $toggle-control-ease;
 
     &:after {
       content: "";
       position: absolute;
-      left: $toggle-gutter;
-      top: $toggle-gutter;
-      width: $toggle-control-size;
-      height: $toggle-control-size;
-      border-radius: $toggle-radius;
+      left: var(--toggle-gutter);
+      top: var(--toggle-gutter);
+      width: var(--toggle-control-size);
+      height: var(--toggle-control-size);
+      border-radius: var(--toggle-radius);
       background: $backgroundColor;
-      transition: left $toggle-control-speed $toggle-control-ease;
+      transform: translateX(0);
+      transition: transform $toggle-control-speed $toggle-control-ease;
     }
   }
+}
+
+.switch-control--sm {
+  --toggle-width: 24px;
+  --toggle-height: 12px;
+}
+
+.switch-control--md {
+  --toggle-width: 30px;
+  --toggle-height: 15px;
+}
+
+.switch-control--lg {
+  --toggle-width: 36px;
+  --toggle-height: 18px;
 }
 
 /* Inline Edit Input & Textarea Field ======================================= */

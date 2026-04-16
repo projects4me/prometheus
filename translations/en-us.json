@@ -1063,7 +1063,8 @@
           "list": {
             "profile": "Profile",
             "accountStatus": "Status",
-            "emailaddress": "Email Address"
+            "emailaddress": "Email Address",
+            "noUsersFound": "No users found"
           }
         },
         "create": {
