@@ -17,7 +17,7 @@ module('Integration | Component | widgets/active-milestones', function (hooks) {
         let milestones = this.server.createList('milestone', 3);
         let project = this.server.create('project');
         let metadata = {
-            fields: ['name', 'project', 'status', 'startDate', 'endDate'],
+            fields: ['name', 'project', 'status', 'overview'],
             translationKey: 'views.app.milestone.fields',
             searchFields: ['name', 'project.name']
         }   
@@ -47,8 +47,7 @@ module('Integration | Component | widgets/active-milestones', function (hooks) {
             assert.dom(`${row} td:nth-child(1)`).hasText(milestone.name, `Row ${index + 1} has correct name`);
             assert.dom(`${row} td:nth-child(2)`).hasText(project.name, `Row ${index + 1} has correct project name`);
             assert.dom(`${row} td:nth-child(3) span.badge`).hasText(statusMap[milestone.status], `Row ${index + 1} has correct status`);
-            assert.dom(`${row} td:nth-child(4)`).hasText(moment(milestone.startDate).format("DD MMM 'YY"), `Row ${index + 1} has correct start date`);
-            assert.dom(`${row} td:nth-child(5)`).hasText(moment(milestone.endDate).format("DD MMM 'YY"), `Row ${index + 1} has correct end date`);
+            assert.dom(`${row} td:nth-child(4) [data-active-milestone-overview="${milestone.id}"]`).exists(`Row ${index + 1} has overview cell`);
         });
 	});
 });

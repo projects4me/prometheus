@@ -461,7 +461,7 @@ export default Object.extend({
                         limit: 5
                     },
                     pageSize: 5,
-                    fields: ['name', {label: 'project', valueKey: 'project.name'}, 'status', 'startDate', 'endDate'],
+                    fields: ['name', {label: 'project', valueKey: 'project.name'}, 'status', 'overview'],
                     translationKey: 'views.app.milestone.fields',
                     searchFields: ['name', 'project.name'],
                     useLazyLoading: true
