@@ -179,7 +179,16 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      * @type Boolean
      * @for AppProjectIssueIndexController
      */
-    @tracked isLoadingIssueDetails = false;    
+    @tracked isLoadingIssueDetails = false;
+
+    /**
+     * Whether the issue list panel is collapsed to give the issue detail panel full width.
+     *
+     * @property isListCollapsed
+     * @type Boolean
+     * @for AppProjectIssueIndexController
+     */
+    @tracked isListCollapsed = false;
 
     /**
      * The project data loaded for the selected issue
@@ -189,6 +198,18 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      * @for AppProjectIssueIndexController
      */
     @tracked projectData = null;
+
+    /**
+     * Returns the Bootstrap column class for the issue detail panel.
+     * Expands to full col-md-12 when the list is collapsed.
+     *
+     * @property issueColumnClass
+     * @type String
+     * @for AppProjectIssueIndexController
+     */
+    get issueColumnClass() {
+        return this.isListCollapsed ? 'col-md-12' : 'col-md-4';
+    }
 
     /**
      * This function is used to navigate the user to the detail page for the issues
@@ -570,7 +591,20 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
         this.selectedIssue = null;
         this.selectedIssueDetails = null;
         this.isLoadingIssueDetails = false;
+        this.isListCollapsed = false;
         Logger.debug("-AppProjectIssueIndexController::closeIssueDetails");
+    }
+
+    /**
+     * Toggles the issue list panel between its expanded and collapsed states.
+     *
+     * @method toggleListCollapse
+     * @public
+     */
+    @action toggleListCollapse() {
+        Logger.debug("AppProjectIssueIndexController::toggleListCollapse");
+        this.isListCollapsed = !this.isListCollapsed;
+        Logger.debug("-AppProjectIssueIndexController::toggleListCollapse");
     }
 
     /**

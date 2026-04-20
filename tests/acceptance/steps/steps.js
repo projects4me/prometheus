@@ -71,6 +71,7 @@ import * as filterIssuesRecentIssues from './dashboard/recent-issues/filter-issu
 import * as loadMoreIssues from './dashboard/recent-issues/load-more-issues-steps';
 import * as yaddaContextSteps from './common-steps/yadda-context-steps';
 import * as widgets from './common-steps/widgets';
+import * as issueDetailsPanel from './common-steps/issue-details-panel-steps';
 
 export default function (assert) {
 	let modules = new Array(
@@ -78,7 +79,7 @@ export default function (assert) {
 		formField,
 		navigation,
 		issueCreate,
-		date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, navigateToUser, changeUserAccountStatus, createUser, editUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData, createRole, renderPermissions, renderRoleUsers, setRequestQuery, searchUserAssociatedWithRole, deleteUserMembership, createMembershipFromRole, editAProjectMember, deleteMemberFromProject, timezoneChange, massUpdateIssues, listSteps, renderListOfNotifications, markReadNotifications, filterIssuesRecentIssues, loadMoreIssues, yaddaContextSteps, widgets);
+		date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, navigateToUser, changeUserAccountStatus, createUser, editUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData, createRole, renderPermissions, renderRoleUsers, setRequestQuery, searchUserAssociatedWithRole, deleteUserMembership, createMembershipFromRole, editAProjectMember, deleteMemberFromProject, timezoneChange, massUpdateIssues, listSteps, renderListOfNotifications, markReadNotifications, filterIssuesRecentIssues, loadMoreIssues, yaddaContextSteps, widgets, issueDetailsPanel);
 	let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()
