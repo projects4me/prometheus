@@ -5,9 +5,12 @@
 import { modifier } from 'ember-modifier';
 import $ from 'jquery';
 
+const SIDEBAR_STORAGE_KEY = 'sidebar-collapsed';
+
 /**
  * This modifier will be called on the initialization of side bar component to attach slim scroll
- * to it and activate AdminLTE's sidebar push menu
+ * to it and activate AdminLTE's sidebar push menu. It also persists the sidebar collapsed/expanded
+ * state to localStorage so the user's preference is restored across sessions.
  *
  * @namespace Prometheus.Modifiers
  * @author Rana Nouman <ranamnouman@gmail.com>
@@ -57,4 +60,21 @@ export default modifier(function initializeSidebar() {
     }).css("width", "100%");
 
     $.AdminLTE.pushMenu.activate(o.sidebarToggleSelector);
+
+    if (localStorage.getItem(SIDEBAR_STORAGE_KEY) === 'true') {
+        $('body').addClass('sidebar-collapse');
+    }
+
+    $('body').on('collapsed.pushMenu', function () {
+        localStorage.setItem(SIDEBAR_STORAGE_KEY, 'true');
+    });
+
+    $('body').on('expanded.pushMenu', function () {
+        localStorage.setItem(SIDEBAR_STORAGE_KEY, 'false');
+    });
+
+    return () => {
+        $('body').off('collapsed.pushMenu');
+        $('body').off('expanded.pushMenu');
+    };
 });

@@ -375,6 +375,7 @@
       "allnotifications": "View all",
       "allmessages": "View all messages",
       "togglenav": "Toggle Navigation",
+      "toggleSidebarTooltip": "Toggle Sidebar",
       "support": "Support",
       "reportissue": "Report Issue",
       "theme": "Theme <a href='https://github.com/almasaeed2010/AdminLTE'>AdminLTE</a> made with ♥ by <a href='https://almsaeedstudio.com/'>Almsaeed</a>",
