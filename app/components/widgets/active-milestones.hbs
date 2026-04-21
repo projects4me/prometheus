@@ -38,11 +38,13 @@
               (concat "views.app.milestone.lists.status." item.status)
             }}</span>
         </td>
-        <td>
-          {{format-date date=item.startDate}}
-        </td>
-        <td>
-          {{format-date date=item.endDate}}
+        <td class="active-milestone-overview-cell">
+          <AppUi::MilestoneOverview
+            @payload={{get this.milestoneOverviews item.id}}
+            @milestone={{item}}
+            @compact={{true}}
+            data-active-milestone-overview={{item.id}}
+          />
         </td>
       </tr>
     {{/each}}

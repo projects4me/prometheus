@@ -1,0 +1,49 @@
+<div
+  class="milestone-overview {{if @compact "milestone-overview--compact"}}"
+  data-milestone-overview
+  ...attributes
+>
+
+  <div class="milestone-header-content flex-row">
+    {{#if this.showCompactView}}
+      <div class="milestone-icon {{this.milestoneBgClass}} flex-row jc-c">
+        <i class="{{this.milestoneIcon}}"></i>
+      </div>
+    {{/if}}
+    <div class="milestone-progress-section {{unless this.showCompactView "milestone-progress-section--full"}}">
+      <div class="milestone-progress-info flex-row flex-jc-sb flex-ai-c">
+        <strong class="progress-description">{{this.progressPercent}}% ({{this.overview.closedIssues}}/{{this.totalIssues}} {{t "global.module.plural.issue"}})</strong>
+        <div class="flex-row milestone-overview-times">
+          <div data-milestone-time="spent">{{t "views.app.board.spent"}}
+            {{this.spentDisplay.hours}}
+            {{t "views.app.board.hours"}}
+            {{this.spentDisplay.minutes}}
+            {{t "views.app.board.minutes"}}</div>
+          <div>&nbsp;|&nbsp;</div>
+          <div data-milestone-time="estimated">{{t "views.app.board.estimated"}}
+            {{this.estimatedDisplay.hours}}
+            {{t "views.app.board.hours"}}
+            {{this.estimatedDisplay.minutes}}
+            {{t "views.app.board.minutes"}}</div>
+        </div>
+        <div class="milestone-overview-dates-row" data-milestone="dates">
+          {{moment-format @milestone.startDate "Do MMM. YYYY"}}
+          -
+          {{moment-format @milestone.endDate "Do MMM. YYYY"}}
+        </div>          
+      </div>
+      <div class="progress">
+        <div
+          class="progress-bar"
+          style={{progress-width this.progressPercent}}
+          data-toggle="tooltip"
+          title={{t
+            "views.app.project.detail.milestone.progress"
+            closed=this.overview.closedIssues
+            total=this.totalIssues
+          }}
+        ></div>
+      </div>
+    </div>
+  </div>  
+</div>

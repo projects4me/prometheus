@@ -5,6 +5,25 @@
 import WidgetsComponent from '../widgets';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
+import Logger from 'js-logger';
+import { fetchMilestoneOverviewsBulk } from 'prometheus/utils/milestone-overview-api';
+
+/**
+ * Normalizes milestone data from args, RecordArray, or plain array into a plain array.
+ *
+ * @param {*} data
+ * @return {Array}
+ */
+function toMilestoneArray(data) {
+	if (!data) {
+		return [];
+	}
+	if (typeof data.toArray === 'function') {
+		return data.toArray();
+	}
+	return Array.isArray(data) ? data : [];
+}
 
 /**
  * A widget component that displays active milestones in a table format.
@@ -15,6 +34,15 @@ import { tracked } from '@glimmer/tracking';
  * @extends WidgetsComponent
  */
 export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
+
+	/**
+	 * The session service used to retrieve the auth token for raw fetch calls.
+	 * @property session
+	 * @type {Ember.Service}
+	 * @private
+	 */
+	@service session;
+
 	/**
 	 * The filtered data based on search criteria
 	 * @property filteredData
@@ -32,12 +60,67 @@ export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 	@tracked originalData = this.args.data || [];
 
 	/**
+	 * A map of milestoneId → raw milestone overview API response (or null on failure).
+	 * Key missing = still loading. Uses shared milestone-overview-api util.
+	 *
+	 * @property milestoneOverviews
+	 * @type {Object}
+	 * @public
+	 */
+	@tracked milestoneOverviews = {};
+
+	constructor() {
+		super(...arguments);
+		this.fetchMilestoneOverviews(this.args.data);
+	}
+
+	/**
+	 * Fetches milestone overview for every milestone in the given list in parallel.
+	 *
+	 * @method fetchMilestoneOverviews
+	 * @param {*} milestonesSource
+	 * @param {Object} [options]
+	 * @param {boolean} [options.merge=false]
+	 * @return {Promise<void>}
+	 * @private
+	 */
+	async fetchMilestoneOverviews(milestonesSource, { merge = false } = {}) {
+		let milestones = toMilestoneArray(milestonesSource);
+
+		if (milestones.length === 0) {
+			if (!merge) {
+				this.milestoneOverviews = {};
+			}
+			return;
+		}
+
+		if (!merge) {
+			this.milestoneOverviews = {};
+		}
+
+		let token = this.session.data.authenticated.access_token;
+
+		try {
+			let results = await fetchMilestoneOverviewsBulk(milestones, token);
+			let overviewsMap = {};
+			results.forEach(({ id, overview }) => {
+				overviewsMap[id] = overview;
+			});
+
+			if (merge) {
+				this.milestoneOverviews = { ...this.milestoneOverviews, ...overviewsMap };
+			} else {
+				this.milestoneOverviews = overviewsMap;
+			}
+		} catch (error) {
+			Logger.error('WidgetsActiveMilestonesComponent: fetchMilestoneOverviews failed', error);
+		}
+	}
+
+	/**
 	 * Handles the search functionality for the milestones table
-	 * Updates the filteredData property with the filtered results
 	 *
 	 * @method handleSearch
-	 * @param {string} query - The search query
-	 * @param {Array} filteredDataByTableComponent - The filtered data from the table component
 	 * @public
 	 * @action
 	 */
@@ -47,8 +130,7 @@ export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 	}
 
 	/**
-	 * Refreshes the widget by re-fetching milestones using the original widget
-	 * options. Resets filtered and original data.
+	 * Refreshes the widget by re-fetching milestones using the original widget options.
 	 *
 	 * @method refresh
 	 * @public
@@ -60,6 +142,7 @@ export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 		let milestones = await this.store.query('milestone', milestoneOptions);
 		this.originalData = milestones;
 		this.filteredData = milestones;
+		await this.fetchMilestoneOverviews(milestones);
 	}
 
 	/**
@@ -83,6 +166,7 @@ export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 			...this.originalData.toArray(),
 			...milestones.toArray()
 		];
+		await this.fetchMilestoneOverviews(milestones, { merge: true });
 		return {
 			items: milestones
 		};

@@ -1,0 +1,98 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/**
+ * Shared milestone overview strip (dashboard widget + task board header).
+ */
+.milestone-overview {
+  .milestone-overview-dates-row {
+    font-style: italic;
+    font-size: 1.4rem;
+    color: #555;
+  }
+
+  .milestone-icon {
+    display: flex;
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+
+    i {
+      text-align: center;
+      padding: 0.4rem;
+      font-size: 2.2rem;
+    }
+  }
+
+  .milestone-progress-section {
+    flex: 1;
+
+    &.milestone-progress-section--full {
+      padding-left: 0;
+      width: 100%;
+    }
+
+    .progress {
+      height: 0.6rem;
+      margin-bottom: 0;
+      background-color: $primaryColorLight;
+
+      .progress-bar {
+        background-color: $primaryColor;
+      }
+    }
+
+    .milestone-progress-info {
+      font-style: italic;
+      font-size: 1.4rem;
+      line-height: 1.35;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+
+      .progress-description {
+        margin-right: 0.8rem;
+      }
+    }
+  }
+
+  &--compact {
+    .milestone-overview-dates-row {
+      font-size: 1.2rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .milestone-icon i {
+      font-size: 1.8rem;
+      padding: 0.25rem;
+    }
+
+    .milestone-progress-section{
+      font-size: 1.2rem;
+
+      .milestone-progress-info {
+        font-size: 1.2rem;
+      }
+
+      padding-left: 0.8rem;
+    }
+  }
+}
+
+.active-milestone-overview-cell {
+  vertical-align: middle;
+}
+
+/* Match legacy board header sizing when used on the task board */
+.board .box-header .milestone-overview {
+  .milestone-icon i {
+    font-size: 3.5rem;
+    padding: 5px;
+  }
+
+  .milestone-progress-section {
+    .milestone-progress-info {
+      margin-left: 1rem;
+    }
+  }
+}

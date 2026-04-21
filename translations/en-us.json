@@ -1229,7 +1229,8 @@
           "modifiedUser": "Modified By",
           "startDate": "Start Date",
           "endDate": "End Date",
-          "project": "Project"
+          "project": "Project",
+          "overview": "Overview"
         },
         "lists": {
           "status.": "Loading ..",
