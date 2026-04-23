@@ -9,6 +9,6 @@ export default function (assert) {
 		let issues = server.schema.issues.all().models;
 		let recentIssue = issues[issues.length - 1];
 		assert.dom(`[data-field-issue-id="${recentIssue.id}"]`).exists();
-		assert.dom(`[data-field-issue-id="${recentIssue.id}"] h4`).hasText(`#${recentIssue.issueNumber} - ${issueSubject}`);
+		assert.dom(`[data-field-issue-id="${recentIssue.id}"] .issue-card-subject a`).hasText(issueSubject);
 	});
 }

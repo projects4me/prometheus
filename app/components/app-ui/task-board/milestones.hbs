@@ -49,17 +49,83 @@
             {{#each issues as |issue|}}
               {{#if (eq issue.status status.name)}}
                 <div class="board-issue-item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}">
-                  <div class="flex-row flex-jc-sb flex-ai-c">
-                    <h4>{{priority-icon priority=(readonly issue.priority)}} <LinkTo @route="app.project.issue.page" @disabledClass="navigate-issue-quick-view" @disabled={{true}} @model={{issue.issueNumber}} {{on "click" (fn @selectIssue issue)}}>#{{issue.issueNumber}} - {{issue.subject}}</LinkTo></h4>
+                  <div class="flex-row flex-ai-c issue-card-meta flex-jc-sb">
+                    <span class="issue-number">#{{issue.issueNumber}}</span>
+                    <span class="issue-priority badge priority-{{issue.priority}}">
+                      {{priority-icon priority=(readonly issue.priority)}}
+                      {{t (concat "views.app.issue.lists.priority." issue.priority)}}
+                    </span>
                   </div>
-                  <p class="description">{{safe-html issue.description}}</p>
-                  <div class="flex-row flex-jc-sb flex-ai-c issue-card-footer">
-                    {{#if issue.infoTag}}
-                      <div class="badge info-tag">{{issue.infoTag}}</div>
-                    {{else}}
-                      <div></div>
+
+                  {{!-- Issue card subject --}}
+                  <div class="issue-card-subject">
+                    <LinkTo @route="app.project.issue.page" @disabledClass="navigate-issue-quick-view" @disabled={{true}} @model={{issue.issueNumber}} {{on "click" (fn @selectIssue issue)}}>
+                      {{issue.subject}}
+                    </LinkTo>
+                  </div>
+
+                  {{#if issue.parentissue}}
+                    <div class="issue-parent-reference">
+                      <span>{{t "views.app.issue.create.parentIssue"}}:</span>
+                      <LinkTo
+                        @route="app.project.issue.page"
+                        @disabledClass="navigate-issue-quick-view"
+                        @disabled={{true}}
+                        @model={{issue.parentissue.issueNumber}}
+                        {{on "click" (fn @selectIssue issue.parentissue)}}
+                      >
+                        #{{issue.parentissue.issueNumber}}
+                      </LinkTo>
+                    </div>
+                  {{/if}}
+
+                  {{!-- Issue card effort --}}
+                  <div class="flex-row flex-ai-c flex-jc-sb issue-card-effort">
+                    <span><i class="fa fa-clock-o"></i> {{t "views.app.board.estimated"}}: {{call (fn this.getIssueTimeLabel issue "estimated")}}</span>
+                    <span><i class="fa fa-hourglass-half"></i> {{t "views.app.board.spent"}}: {{call (fn this.getIssueTimeLabel issue "spent")}}</span>
+                  </div>
+
+                  {{!-- Issue card time left --}}
+                  {{#let (call (fn this.getIssueTimeLeftMeta issue)) as |timeLeftMeta|}}
+                    {{#if timeLeftMeta.isVisible}}
+                      <div class="issue-card-time-left-wrap">
+                        <div class="issue-card-time-left {{if (eq timeLeftMeta.state "warning") "is-warning"}} {{if (eq timeLeftMeta.state "overdue") "is-overdue"}}">
+                          <i class="fa {{if (eq timeLeftMeta.state "overdue") "fa-calendar-times-o" "fa-calendar-o"}}"></i>
+                          {{timeLeftMeta.label}}
+                        </div>
+                      </div>
                     {{/if}}
-                    <div><img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></div>
+                  {{/let}}                  
+
+                  {{!-- Issue card footer --}}
+                  <div class="flex-row flex-jc-sb flex-ai-c issue-card-footer">
+                    <div class="issue-card-tags">
+                      {{#if issue.issuetype.name}}
+                        <span class="badge issue-type-tag" style={{call (fn this.getIssueTypeTagStyle issue)}}>
+                          {{issue.issuetype.name}}
+                        </span>
+                      {{/if}}
+                      {{#if issue.infoTag}}
+                        <span class="badge info-tag">{{issue.infoTag}}</span>
+                      {{/if}}
+                    </div>
+                  
+                      <div class="flex-row flex-ai-c flex-jc-sb issue-card-right-meta">
+                        {{#if issue.files.length}}
+                          <div class="issue-card-files-count">
+                            <i class="fa fa-paperclip"></i> {{issue.files.length}}
+                          </div>
+                        {{/if}}
+
+                        {{#if issue.comments.length}}
+                          <div class="issue-card-comments-count">
+                            <i class="fa fa-comments-o"></i> {{issue.comments.length}}
+                          </div>
+                        {{/if}}
+                        <div class="issue-card-assignee">
+                          <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}">
+                        </div>
+                      </div>
                   </div>
                   
                   {{#if issue.isSaving}}

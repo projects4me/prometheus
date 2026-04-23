@@ -220,7 +220,6 @@ export default class InitializeSortable extends Modifier {
         this._setupMilestoneTabsAsSortable();
         this._setupTabSwitching();
         let milestoneEls = document.querySelectorAll('div.milestone.box-body');
-        this.reRenderView(milestoneEls, true);
     }
 
     /**
@@ -240,9 +239,6 @@ export default class InitializeSortable extends Modifier {
 
         _self._setupMilestoneTabsAsSortable();
         _self._setupTabSwitching();
-        
-        let milestoneEls = document.querySelectorAll('div.milestone.box-body');
-        _self.reRenderView(milestoneEls, true);
     }
 
     /**
@@ -296,32 +292,6 @@ export default class InitializeSortable extends Modifier {
         this._cleanupMilestoneTabSortables();
         this._setupMilestoneTabsAsSortable();
         this._setupTabSwitching();
-        let milestoneEls = this._getOrderedMilestoneElements();
-        this.reRenderView(milestoneEls, true);
-    }
-
-    /**
-     * This function is used to re-render the view by adjusting the heights of 
-     * milestone container elements and applying slim scroll to issue items.
-     * 
-     * @method reRenderView
-     * @param {HTMLCollection} milestoneEls List of milestone container elements
-     * @param {boolean} autoSelectFirstMilestone Whether to auto select the first milestone
-     * @public
-     */
-    @action reRenderView(milestoneEls, autoSelectFirstMilestone = false) {
-        let _self = this;
-        let milestoneIds = [];
-        milestoneEls.forEach((milestoneEl) => {
-            let milestoneId = milestoneEl.dataset.fieldMilestoneId || 'backlog';
-            milestoneIds.push(milestoneId);
-            document.querySelector(`[data-milestone-id="${milestoneId}"] a`).click();
-            _self.applySlimScrollToMilestoneItems(milestoneEl);
-        });
-        let milestoneIndex = (autoSelectFirstMilestone) ? 0 : 1;
-        let milestoneId = milestoneIds[milestoneIndex];
-        milestoneId && document.querySelector(`[data-milestone-id="${milestoneId}"] a`).click();
-
     }
 
     /**
@@ -375,7 +345,7 @@ export default class InitializeSortable extends Modifier {
                     }
                 }
             } else {
-                _self.updateIssue(evt.item, evt.to, evt.from, _self.reRenderView);
+                _self.updateIssue(evt.item, evt.to, evt.from);
             }
         }
         
@@ -472,7 +442,7 @@ export default class InitializeSortable extends Modifier {
                 }
             });
         }
-        _self.updateIssue(evt.item, newMilestoneLane, evt.from, _self.reRenderView);
+        _self.updateIssue(evt.item, newMilestoneLane, evt.from);
     }
 
     /**

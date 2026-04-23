@@ -943,6 +943,7 @@
           "selectassignee": "Select an assignee",
           "reportedBy": "Reported User",
           "parentId": "Parent Issue",
+          "parentIssue": "Parent Issue",
           "parent": "Parent",
           "selectparent": "Select the issue parent",
           "people": "People",
@@ -1269,12 +1270,14 @@
         "quickView": "Quick View",
         "hours": "h",
         "minutes": "m",
+        "timeLeft": "{hoursLeft}{hours} left",
+        "overdue": "Overdue!",
+        "notAvailable": "--",
         "spent": "Spent",
         "estimated": "Estimated",
         "savedSearches": "Saved Searches",
         "infoTags": {
           "blocked": "Blocked",
-          "overdue": "Overdue",
           "reopened": "Reopened",
           "noTimelogs": "No Timelogs",
           "missingDescription": "Missing Description"
