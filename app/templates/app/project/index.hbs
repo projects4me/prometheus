@@ -164,28 +164,53 @@
 
       <div class="row">
 
-        {{!-- This is the project time estimated vs spent --}}
+        {{!-- This is the project time estimated vs spent (filtered by milestone) --}}
         <div class="col-md-12">
           <div class="box box-default project-estimated-spent-section">
+            {{#if this.estimatedSpentMilestoneOptions.length}}
+            <div class="box-header with-border box-header-flex box-header-no-content">
+              <h3 class="box-title">{{t "views.app.project.detail.estimatedspent"}}</h3>
+              <div class="project-estimated-spent-filter">
+                <FormFields::FieldRelate
+                  @data-field="project.estimated-spent-milestone"
+                  @label={{t "views.app.project.detail.charts.milestoneFilter"}}
+                  @placeholder={{t "views.app.project.detail.charts.milestoneFilterPlaceholder"}}
+                  @options={{this.estimatedSpentMilestoneOptions}}
+                  @selected={{find-by "value" this.selectedMilestoneId this.estimatedSpentMilestoneOptions}}
+                  @onchange={{this.onEstimatedSpentMilestoneChange}}
+                  @relateType="relate-simple"
+                  @searchField="label"
+                  @aclContext="App.Project.Read"
+                />
+              </div>
+            </div>
+            {{else}}
             <div class="box-header with-border">
               <h3 class="box-title">{{t "views.app.project.detail.estimatedspent"}}</h3>
-
             </div>
+            {{/if}}
             {{!-- /.box-header --}}
             <div class="box-body no-padding">
               <ul class="project-estimated-spent">
-                {{chart-estimatedspent
-                    issues=this.issuetime
-                    height="100"
-                }}
+                {{#if this.estimatedSpentMilestoneOptions.length}}
+                  {{#if this.hasEstimatedSpentChartData}}
+                    {{chart-estimatedspent
+                        issues=this.estimatedSpentChartIssues
+                    }}
+                  {{else}}
+                    <Exceptions::NothingFound
+                      @description={{t "views.app.project.detail.charts.noIssuesForEstimatedSpent"}}
+                    />
+                  {{/if}}
+                {{else}}
+                  <Exceptions::NothingFound
+                    @description={{t "views.app.project.detail.milestone.noentry"}}
+                  />
+                {{/if}}
               </ul>
               {{!-- /.users-list --}}
             </div>
             {{!-- /.box-body --}}
-            <div class="box-footer text-center">
-              <a href="javascript:void(0)" class="uppercase">{{t "views.app.project.detail.viewallconversations"}}</a>
-            </div>
-            {{!-- /.box-footer --}}
           </div>
         </div>
         {{!-- end of project time estimated vs spent --}}

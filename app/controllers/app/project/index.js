@@ -10,6 +10,7 @@ import { computed, action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import $ from "jquery";
 import { htmlSafe } from "@ember/template";
+import { A } from '@ember/array';
 
 /**
  * This is the index page of the project, index page for the project is
@@ -239,6 +240,108 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
         { "label": "Deferred", "value": "deferred" },
         { "label": "Failed", "value": "failed" },
     ];
+
+    /**
+     * Selected milestone id for the estimated vs spent chart (newest by dateCreated is default).
+     *
+     * @property selectedMilestoneId
+     * @type {string|null}
+     * @for AppProjectIndexController
+     * @public
+     */
+    @tracked selectedMilestoneId = null;
+
+    /**
+     * Milestones ordered by `dateCreated` descending (newest first).
+     *
+     * @property milestonesByDateCreatedDesc
+     * @for AppProjectIndexController
+     * @public
+     */
+    get milestonesByDateCreatedDesc() {
+        let list = this.get('milestones');
+        if (!list?.length) {
+            return [];
+        }
+        return [...list].sort((a, b) => {
+            let da = a.get('dateCreated') || '';
+            let db = b.get('dateCreated') || '';
+            return db.localeCompare(da);
+        });
+    }
+
+    /**
+     * Options for the estimated vs spent milestone filter (relate field shape).
+     *
+     * @property estimatedSpentMilestoneOptions
+     * @for AppProjectIndexController
+     * @public
+     */
+    get estimatedSpentMilestoneOptions() {
+        return this.milestonesByDateCreatedDesc.map((m) => ({
+            value: m.get('id'),
+            label: m.get('name') || m.get('id'),
+        }));
+    }
+
+    /**
+     * Issues for the selected milestone (ChartEstimatedspent expects an Ember array-like with get/objectAt).
+     *
+     * @property estimatedSpentChartIssues
+     * @for AppProjectIndexController
+     * @public
+     */
+    get estimatedSpentChartIssues() {
+        if (!this.selectedMilestoneId) {
+            return A();
+        }
+        let list = this.get('milestones');
+        if (!list?.length) {
+            return A();
+        }
+        let milestone = list.find((m) => m.get('id') === this.selectedMilestoneId);
+        if (!milestone) {
+            return A();
+        }
+        return milestone.get('issues');
+    }
+
+    /**
+     * Whether the chart has at least one issue to plot.
+     *
+     * @property hasEstimatedSpentChartData
+     * @for AppProjectIndexController
+     * @public
+     */
+    get hasEstimatedSpentChartData() {
+        let issues = this.estimatedSpentChartIssues;
+        if (!issues) {
+            return false;
+        }
+        let len = typeof issues.get === 'function' ? issues.get('length') : issues.length;
+        return len > 0;
+    }
+
+    /**
+     * Sets the default milestone for the chart to the most recently created milestone.
+     *
+     * @method setDefaultMilestoneForEstimatedSpentChart
+     * @public
+     */
+    setDefaultMilestoneForEstimatedSpentChart() {
+        let sorted = this.milestonesByDateCreatedDesc;
+        this.selectedMilestoneId = sorted[0] ? sorted[0].get('id') : null;
+    }
+
+    /**
+     * @action onEstimatedSpentMilestoneChange
+     * @param {Object} option
+     * @public
+     */
+    @action
+    onEstimatedSpentMilestoneChange(option) {
+        this.selectedMilestoneId = option?.value ?? null;
+    }
 
     /**
      * This action is used to allow navigation to a user to a project related
