@@ -373,10 +373,9 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
      * @param {HTMLElement} issueEl The issue element that is dragged
      * @param {HTMLElement} elTo Lane from which issue is dragged
      * @param {HTMLElement} elFrom Lane on which issue is dropped
-     * @param {Function} reRenderViewCb
      * @public
      */
-    @action updateIssue(issueEl, elTo, elFrom, reRenderViewCb) {
+    @action updateIssue(issueEl, elTo, elFrom) {
         Logger.debug("AppProjectBoardController::updateIssue");
         Logger.debug('The element that was dragged is', issueEl);
         let _self = this;
@@ -396,7 +395,7 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
         issue.set('milestoneId', laneMilestoneId);
         issue.set('statusId', newStatusId);
         issue.save().then(() => {
-            _self.postUpdateProcessing(issueId, elTo, elFrom, reRenderViewCb);
+            _self.postUpdateProcessing(issueId, elTo, elFrom);
         });
         Logger.debug("-AppProjectBoardController::updateIssue");
     }
@@ -413,10 +412,9 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
      * @param {String} issueId Id of updated issue
      * @param {HTMLElement} elTo Lane from which issue is dragged
      * @param {HTMLElement} elFrom Lane on which issue is dropped
-     * @param {Function} reRenderViewCb 
      * @public
      */
-    postUpdateProcessing(issueId, elTo, elFrom, reRenderViewCb) {
+    postUpdateProcessing(issueId, elTo, elFrom) {
         Logger.debug("AppProjectBoardController::postUpdateProcessing");
         let milestoneEls = [];
         let milestoneEl1 = elTo.closest('div.milestone.box-body');
@@ -425,7 +423,6 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
         item.style.pointerEvents = "auto";
         (milestoneEl1 !== milestoneEl2) && (milestoneEls.pushObject(milestoneEl1));
         milestoneEls.pushObject(milestoneEl2);
-        reRenderViewCb(milestoneEls);
         Logger.debug("-AppProjectBoardController::postUpdateProcessing");
     }
 
@@ -611,9 +608,10 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
     async loadIssueDetails(issue) {
         Logger.debug("AppProjectBoardController::loadIssueDetails");
         let projectId = this.trackedProject.getProjectId();
+        let issueNumber = issue.get('issueNumber');
         
         let options = {
-            query: `((Issue.issueNumber : ${issue.issueNumber}) AND (Issue.projectId : ${projectId}))`,
+            query: `((Issue.issueNumber : ${issueNumber}) AND (Issue.projectId : ${projectId}))`,
             sort: 'Issue.issueNumber,comments.dateCreated',
             order: 'ASC',
             rels: 'comments,parentissue,assignedTo,ownedBy,modifiedBy,reportedBy,issuetype,files,spent,estimated,conversationroom,childissues,watchers',

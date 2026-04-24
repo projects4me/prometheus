@@ -188,7 +188,7 @@
     position: relative;
     cursor: move;
     margin: 0.3rem 0.3rem 1.2rem 0.3rem;
-    padding: 0.1rem 1rem 0.1rem 1rem;
+    padding: 1rem;
     border-left: 0.5rem solid #eee;
     background-color: $backgroundColor;
     user-select: none;
@@ -215,21 +215,133 @@
       opacity: 1;
     }
 
-    .description {
-      word-wrap: break-word;
-      margin-bottom: 2rem;
-      height: 10rem;
-      overflow: auto;
-      padding-right: 0.5rem;
-    }
-
     p > img {
       width: 10rem !important;
       height: 10rem !important;
     }
 
     .img-circle {
-      width: 4rem;
+      width: 3rem;
+      height: 3rem;
+      object-fit: cover;
+      border: 0.1rem solid #ddd;
+    }
+
+    .issue-card-meta {
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+
+      .issue-number {
+        color: #646262;
+        font-size: 1.8rem;
+        font-weight: 600;
+      }
+
+      .issue-priority {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: #f6f7f8;
+        color: #4b5563;
+        border: 0.1rem solid #d8dde3;
+        font-weight: 600;
+
+        &.priority-low {
+          background-color: #e8f8f1;
+          color: #2f9367;
+          border-color: #b9e8d2;
+        }
+
+        &.priority-medium {
+          background-color: #e9f2ff;
+          color: #2f6fbe;
+          border-color: #bfd8fb;
+        }
+
+        &.priority-high {
+          background-color: #fdeeea;
+          color: #cf614e;
+          border-color: #f4c7bf;
+        }
+
+        &.priority-critical {
+          background-color: #fdeaea;
+          color: #c0392b;
+          border-color: #edc4c4;
+        }
+
+        &.priority-blocker {
+          background-color: #fbe7e5;
+          color: #a42a1f;
+          border-color: #e8bab5;
+        }
+      }
+    }
+
+    .issue-card-subject {
+      margin-bottom: 1.5rem;
+
+      a {
+        font-size: 1.8rem;
+        line-height: 1.1;
+        text-decoration: none;
+        display: block;
+      }
+    }
+
+    .issue-parent-reference {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+
+      a {
+        font-size: 1.2rem;
+        font-weight: 600;
+        display: inline;
+      }
+    }    
+
+    .issue-card-effort {
+      gap: 1.2rem;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+
+      span {
+        white-space: nowrap;
+      }
+    }
+
+    .issue-card-time-left-wrap {
+      margin-bottom: 1.2rem;
+    }
+
+    .issue-card-time-left {
+      border: 0.1rem solid #e2e4e8;
+      background-color: #f5f6f8;
+      color: #4b5563;
+      border-radius: 0.8rem;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      padding: 0.5rem 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+
+      &.is-warning {
+        border-color: #f0d8ad;
+        background-color: #fff4df;
+        color: #a76700;
+      }
+
+      &.is-overdue {
+        border-color: #edc4c4;
+        background-color: #fdeaea;
+        color: #c0392b;
+      }
     }
 
     .fa-ban {
@@ -273,8 +385,52 @@
     }
 
     .issue-card-footer {
-      margin-top: 1rem;
-      margin-bottom: 0.5rem;
+      margin-top: 0.6rem;
+      margin-bottom: 0;
+      border-top: 0.1rem solid #ddd;
+      padding-top: 0.8rem;
+      min-height: 4.6rem;
+    }
+
+    .issue-card-right-meta {
+      gap: 0.5rem;
+    }
+
+    .issue-card-comments-count, .issue-card-files-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      min-width: 3.4rem;
+      height: 2.2rem;
+      padding: 0 0.8rem;
+      border: 0.1rem solid #e3e6ea;
+      border-radius: 0.6rem;
+      background-color: #f6f7f9;
+      color: #626b76;
+      font-size: 1.2rem;
+      line-height: 1;
+
+      i {
+        color: #7c8794;
+        font-size: 1.2rem;
+      }
+    }
+
+    .issue-card-tags {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .issue-type-tag {
+      border: 0.1rem solid transparent;
+      font-weight: 600;
+    }
+
+    .info-tag {
+      border: 0.1rem solid #8f1f3f;
     }
   }
 

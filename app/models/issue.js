@@ -512,27 +512,22 @@ export default Model.extend({
                 return this.intl.t('views.app.board.infoTags.blocked');
             }
 
-            // Priority 2: Overdue (when issue status is 'new' or 'in_progress' AND issue is past endDate)
-            if ((this.status === 'new' || this.status === 'in_progress') && this.isIssueOverdue()) {
-                return this.intl.t('views.app.board.infoTags.overdue');
-            }
-            // Priority 3: Reopened (in all statuses - simplified logic for now)
+            // Priority 2: Reopened (in all statuses - simplified logic for now)
             if (this.isReopened) {
                 return this.intl.t('views.app.board.infoTags.reopened');
             }
 
-            // Priority 4: No Timelogs (when issue status is 'done' AND no spent timelogs exist)
+            // Priority 3: No Timelogs (when issue status is 'done' AND no spent timelogs exist)
             if (this.status === 'done' && !this.hasTimelogs()) {
                 return this.intl.t('views.app.board.infoTags.noTimelogs');
             }
 
-            // Priority 5: Missing Description (when issue status is 'new' or 'in_progress' AND description is empty)
+            // Priority 4: Missing Description (when issue status is 'new' or 'in_progress' AND description is empty)
             if ((this.status === 'new' || this.status === 'in_progress') && !this.hasDescription()) {
                 return this.intl.t('views.app.board.infoTags.missingDescription');
             }
 
-            // Priority 6: Show Issue Type
-            return this.issuetype?.get('name');
+            return null;
         }
     ),
 

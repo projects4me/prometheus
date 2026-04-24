@@ -5,8 +5,12 @@
 import AppComponent from '../../app';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { htmlSafe } from '@ember/template';
 import DateUtils from 'prometheus/utils/date';
 import format from 'prometheus/utils/data/format';
+
+const TIME_LEFT_WARNING_THRESHOLD_HOURS = 8;
+const TIME_LEFT_HIDDEN_STATUSES = ['done', 'deferred', 'wont_fix'];
 
 /**
  * This component is used to render milestones of selected project.
@@ -202,31 +206,15 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 	 * @public
 	 */
 	calculateTimeForContext(context) {
-		let totalHours = 0;
-		let totalMinutes = 0;
+		let timelogs = [];
 
 		this.milestone.issues.forEach((issue) => {
 			issue[context]?.forEach((timelog) => {
-				// Convert days to hours (8 hours per day)
-				let daysToHours = timelog.days * 8;
-				let hours =
-					parseInt(timelog.hours, 10) + parseInt(daysToHours, 10);
-				let minutes = parseInt(timelog.minutes, 10);
-
-				totalHours += hours;
-				totalMinutes += minutes;
+				timelogs.push(timelog);
 			});
 		});
 
-		// Normalize minutes to ensure they don't exceed 60
-		const normalized = DateUtils.normalizeMinutes(totalMinutes);
-		totalHours += normalized.hours;
-		totalMinutes = normalized.minutes;
-
-		return {
-			hours: totalHours,
-			minutes: totalMinutes
-		};
+		return this.getNormalizedTimeFromTimelogs(timelogs);
 	}
 
 	/**
@@ -365,5 +353,166 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 			return new Date(b.dateModified) - new Date(a.dateModified);
 		});
 		return issues;
+	}
+
+	/**
+	 * Returns total time for issue context.
+	 *
+	 * @method getIssueTime
+	 * @param {Object} issue
+	 * @param {String} context
+	 * @returns {Object}
+	 * @public
+	 */
+	getIssueTime(issue, context) {
+		let timelogs = issue?.[context] || [];
+
+		return this.getNormalizedTimeFromTimelogs(timelogs);
+	}
+
+	/**
+	 * Aggregates timelogs and normalizes total minutes.
+	 *
+	 * @method getNormalizedTimeFromTimelogs
+	 * @param {Array} timelogs
+	 * @returns {Object}
+	 * @public
+	 */
+	getNormalizedTimeFromTimelogs(timelogs = []) {
+		let totalHours = 0;
+		let totalMinutes = 0;
+
+		timelogs.forEach((timelog) => {
+			let daysToHours = (parseInt(timelog?.days, 10) || 0) * 8;
+			let hours = (parseInt(timelog?.hours, 10) || 0) + daysToHours;
+			let minutes = parseInt(timelog?.minutes, 10) || 0;
+
+			totalHours += hours;
+			totalMinutes += minutes;
+		});
+
+		let normalized = DateUtils.normalizeMinutes(totalMinutes);
+		totalHours += normalized.hours;
+		totalMinutes = normalized.minutes;
+
+		return {
+			hours: totalHours,
+			minutes: totalMinutes
+		};
+	}
+
+	/**
+	 * Returns compact display label for issue timelogs.
+	 *
+	 * @method getIssueTimeLabel
+	 * @param {Object} issue
+	 * @param {String} context
+	 * @returns {String}
+	 * @public
+	 */
+	@action getIssueTimeLabel(issue, context) {
+		let issueTime = this.getIssueTime(issue, context);
+		let hoursLabel = this.intl.t('views.app.board.hours');
+		let minutesLabel = this.intl.t('views.app.board.minutes');
+
+		if (!issueTime.hours && !issueTime.minutes) {
+			return `0${hoursLabel}`;
+		}
+
+		if (!issueTime.minutes) {
+			return `${issueTime.hours}${hoursLabel}`;
+		}
+
+		return `${issueTime.hours}${hoursLabel} ${issueTime.minutes}${minutesLabel}`;
+	}
+
+	/**
+	 * Returns time-left display metadata for issue card.
+	 *
+	 * @method getIssueTimeLeftMeta
+	 * @param {Object} issue
+	 * @returns {Object}
+	 * @public
+	 */
+	@action getIssueTimeLeftMeta(issue) {
+		if (TIME_LEFT_HIDDEN_STATUSES.includes(issue?.status)) {
+			return { label: '', state: 'normal', hoursLeft: null, isVisible: false };
+		}
+
+		if (!issue?.startDate || !issue?.endDate) {
+			return {
+				label: this.intl.t('views.app.board.notAvailable'),
+				state: 'normal',
+				hoursLeft: null,
+				isVisible: true
+			};
+		}
+
+		let now = moment();
+		let startDate = moment(issue.startDate);
+		let endDate = moment(issue.endDate);
+
+		if (!startDate.isValid() || !endDate.isValid() || endDate.isBefore(startDate)) {
+			return {
+				label: this.intl.t('views.app.board.notAvailable'),
+				state: 'normal',
+				hoursLeft: null,
+				isVisible: true
+			};
+		}
+
+		let hoursLeft = 0;
+		if (now.isBefore(startDate)) {
+			hoursLeft = endDate.diff(startDate, 'hours');
+		} else {
+			hoursLeft = endDate.diff(now, 'hours');
+		}
+
+		if (hoursLeft <= 0) {
+			return {
+				label: this.intl.t('views.app.board.overdue'),
+				state: 'overdue',
+				hoursLeft,
+				isVisible: true
+			};
+		}
+
+		if (hoursLeft <= TIME_LEFT_WARNING_THRESHOLD_HOURS) {
+			return {
+				label: this.intl.t('views.app.board.timeLeft', {
+					hoursLeft,
+					hours: this.intl.t('views.app.board.hours')
+				}),
+				state: 'warning',
+				hoursLeft,
+				isVisible: true
+			};
+		}
+
+		return {
+			label: this.intl.t('views.app.board.timeLeft', {
+				hoursLeft,
+				hours: this.intl.t('views.app.board.hours')
+			}),
+			state: 'normal',
+			hoursLeft,
+			isVisible: true
+		};
+	}
+
+	/**
+	 * Returns issue type color styles for tag.
+	 *
+	 * @method getIssueTypeTagStyle
+	 * @param {Object} issue
+	 * @returns {String}
+	 * @public
+	 */
+	@action getIssueTypeTagStyle(issue) {
+		let issueTypeName = issue.issuetype.get('name');
+		let colorHash = new ColorHash();
+		let color = colorHash.rgb(issueTypeName);
+
+		return htmlSafe(`border-color: rgba(${color[0]}, ${color[1]}, ${color[2]}, 1); background-color: rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.16); color: rgba(${color[0]}, ${color[1]}, ${color[2]}, 1);`);
 	}
 }
