@@ -494,7 +494,10 @@
           },
           "charts": {
             "estimatedspent": "Estimated vs Spent (Time in %)",
-            "efficiency": "Efficiency"
+            "efficiency": "Efficiency",
+            "milestoneFilter": "Milestone",
+            "milestoneFilterPlaceholder": "Select a milestone",
+            "noIssuesForEstimatedSpent": "No issues in this milestone to chart estimated vs spent time."
           },
           "milestone": {
             "overdue": "overdue",

@@ -44,8 +44,6 @@ export default Component.extend({
      * @for ChartIssueratio
      * @private
      */
-    attributeBindings: ["width","height"],
-
     /**
      * The tag name of this component
      *
@@ -86,7 +84,33 @@ export default Component.extend({
             var estimatedspent = new Chart(self.get('element'),{
                 type:"bar",
                 data: self.getDatasets(issues),
-                options: {}
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            bottom: 8
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                autoSkip: true,
+                                maxRotation: 45,
+                                minRotation: 0
+                            }
+                        },
+                        y: {
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                callback: function (value) {
+                                    return `${value}%`;
+                                }
+                            }
+                        }
+                    }
+                }
             });
             self.set('estimatedspent',estimatedspent);
         }
@@ -149,11 +173,21 @@ export default Component.extend({
 
             data.labels[i] = "#"+issue.get('issueNumber');
 
-            data.datasets[0]['data'][i] = _.round((spentHours/estimatedHours) * 100);
+            let spentVsEstimatedPercentage = 0;
+            if (estimatedHours > 0) {
+                spentVsEstimatedPercentage = _.round((spentHours / estimatedHours) * 100);
+            }
 
-            data.datasets[1]['data'][i] = (100 - data.datasets[0]['data'][i]);
-            if (data.datasets[0]['data'][i] === undefined || data.datasets[0]['data'][i] === 0)
-            {
+            // Protect chart scale from invalid values (NaN/Infinity) when estimates are missing.
+            if (!Number.isFinite(spentVsEstimatedPercentage)) {
+                spentVsEstimatedPercentage = 0;
+            }
+
+            spentVsEstimatedPercentage = _.clamp(spentVsEstimatedPercentage, 0, 100);
+            data.datasets[0]['data'][i] = spentVsEstimatedPercentage;
+            data.datasets[1]['data'][i] = _.clamp(100 - spentVsEstimatedPercentage, 0, 100);
+
+            if (data.datasets[0]['data'][i] === 0) {
                 data.datasets[1]['data'][i] = 0;
             }
 

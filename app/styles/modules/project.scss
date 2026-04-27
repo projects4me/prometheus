@@ -92,6 +92,14 @@
   min-height: 35rem;
 }
 
+.project-estimated-spent-section {
+  .project-estimated-spent-filter {
+    flex: 1 1 18rem;
+    max-width: 28rem;
+    min-width: 14rem;
+  }
+}
+
 .project-estimated-spent {
   height: 35rem;
 }
