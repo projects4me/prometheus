@@ -22,9 +22,9 @@
                     {{#each @issueStatuses as |issuestatus|}}
                       {{#if (not-eq issuestatus.name this.issue.status)}}
                         <li>
-                          <a href="#" {{on "click" (fn this.updateStatus this.issue issuestatus.name)}}>
+                          <div {{on "click" (fn this.updateStatus this.issue issuestatus.name)}}>
                             <span class="badge {{issuestatus.name}}">{{t (concat "views.app.issue.lists.status." issuestatus.name)}}</span>
-                          </a>
+                          </div>
                         </li>
                       {{/if}}
                     {{/each}}
