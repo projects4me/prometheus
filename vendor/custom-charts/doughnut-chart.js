@@ -46,7 +46,11 @@ class DoughnutChart extends Chart.DoughnutController {
                 let diagonalLineX = x + arcSection.innerRadius * Math.cos(centerAngle);
                 let diagonalLineY = y + arcSection.innerRadius * Math.sin(centerAngle);
                 let legend = _self.chart.legend.legendItems[i];
-                let text = `${legend.text} - ${arcSection.$context.parsed}`;
+                let displayVals = _self.chart.data.datasets[0].displayValues;
+                let shown = (displayVals && displayVals[i] !== undefined)
+                    ? displayVals[i]
+                    : arcSection.$context.parsed;
+                let text = `${legend.text} - ${shown}`;
                 //creating new shapes
                 ctx.strokeStyle = arcSection.options.backgroundColor;
                 ctx.lineWidth = 1;

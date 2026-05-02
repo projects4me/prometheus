@@ -48,34 +48,36 @@ export default class InitializeDoughnutChartModifier extends Modifier {
      */
     initializeChart() {
         let _self = this;
-        let renderChart = true;
 
-        let dataArray = _self.data.datasets[0].data;
-        // If value for both open and close is 0 then there is no need to render empty chart
-        if (dataArray[0] === '0'
-            && dataArray[1] === '0') {
-            renderChart = false;
-        }
-
-
-        if (renderChart) {
-            _self.chart = new Chart(_self.element, {
-                type: 'customizedDoughnut',
-                data: _self.data,
-                options: {
-                    responsive: true,
-                    layout: {
-                        padding: 30
+        _self.chart = new Chart(_self.element, {
+            type: 'customizedDoughnut',
+            data: _self.data,
+            options: {
+                responsive: true,
+                layout: {
+                    padding: 30
+                },
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
                     },
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
+                    tooltip: {
+                        callbacks: {
+                            label(context) {
+                                let dataset = context.dataset;
+                                let displayVals = dataset.displayValues;
+                                let value = (displayVals && displayVals[context.dataIndex] !== undefined)
+                                    ? displayVals[context.dataIndex]
+                                    : context.parsed;
+                                let label = context.label || '';
+                                return label ? `${label}: ${value}` : `${value}`;
+                            },
+                        },
+                    },
                 }
-            });
-        }
+            }
+        });
     }
 
     /** Called when user routed to another page. In this function we're destroying chart*/

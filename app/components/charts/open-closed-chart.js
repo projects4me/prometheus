@@ -22,23 +22,21 @@ export default class ChartsOpenClosedChartComponent extends Component {
      * @public
      */
     get data() {
-        let _self = this;
-        let labels =['closed', 'open'];
-        let colors = ['#508874', '#A2EDD2']
-        let data = {
-            labels: [],
-            datasets: [{
-                data: [],
-                backgroundColor: []
-            }],
-        }
-        let counts = [_self.args.closedCount ?? '0', _self.args.openCount ?? '0'];
+        let closed = Number(this.args.closedCount ?? 0);
+        let open = Number(this.args.openCount ?? 0);
+        let labels = ['closed', 'open'];
+        let colors = ['#508874', '#A2EDD2'];
+        let bothZero = closed === 0 && open === 0;
 
-        counts.forEach((count, i) =>{
-            data.labels.push(labels[i]);
-            data.datasets[0].data.push(count);
-            data.datasets[0].backgroundColor.push(colors[i]);
-        })
-        return data;
+        let segmentValues = bothZero ? [1, 1] : [closed, open];
+
+        return {
+            labels,
+            datasets: [{
+                data: segmentValues,
+                backgroundColor: colors,
+                ...(bothZero ? { displayValues: [0, 0] } : {}),
+            }],
+        };
     }
 }
