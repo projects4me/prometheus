@@ -48,6 +48,22 @@ export default Service.extend({
             const user = await this.store.queryRecord('user', { include: 'dashboard,aclPermissions,projects', me: true });
             // Set the retrieved user in the current object
             this.set('user', user);
+
+            this.setUserDateJoined(user);
+        }
+    },
+
+    /**
+     * This function is used to set the date joined for the user
+     *
+     * @method setUserDateJoined
+     * @param {Object} user - The user object
+     * @public
+     */
+    setUserDateJoined: async function (user) {
+        if(!user.dateJoined) {
+            user.dateJoined = moment().format('YYYY-MM-DD HH:mm:ss');
+            await user.save();
         }
     }
 

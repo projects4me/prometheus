@@ -68,6 +68,8 @@
                       <th data-sort="User.name">{{t "views.app.user.management.list.profile"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'User.name')}}><i class="fa fa-sort"></i></AppUi::Button></th>
                       <th data-sort="User.email">{{t "views.app.user.management.list.emailaddress"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'User.email')}}><i class="fa fa-sort"></i></AppUi::Button></th>
                       <th data-sort="User.accountStatus">{{t "views.app.user.management.list.accountStatus"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'User.accountStatus')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                      <th data-sort="User.lastActivityAt">{{t "views.app.user.management.list.lastActivityAt"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'User.lastActivityAt')}}><i class="fa fa-sort"></i></AppUi::Button></th>
+                      <th data-sort="User.dateJoined">{{t "views.app.user.management.list.dateJoined"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData 'User.dateJoined')}}><i class="fa fa-sort"></i></AppUi::Button></th>
                     </tr>
                   </thead>
 
@@ -92,6 +94,21 @@
 
                           <td data-user-field="email">{{user.email}}</td>
                           <td data-user-field="account-status" class={{concat "account-status-" user.accountStatus}}>{{t (concat "views.app.user.accountStatus." user.accountStatus)}}</td>
+
+                          <td data-user-field="last-activity-at">
+                            {{#if user.lastActivityAt}}
+                              {{format-date-time date=user.lastActivityAt humanize=true}}
+                            {{else}}
+                              {{t "views.app.user.management.list.noLastActivity"}}
+                            {{/if}}
+                          </td>
+                          <td data-user-field="date-joined">
+                            {{#if user.dateJoined}}
+                              {{format-date date=user.dateJoined}}
+                            {{else}}
+                              {{t "views.app.user.management.list.notJoinedYet"}}
+                            {{/if}}
+                          </td>
 
                           <td class="pull-right actions">
                             <AppUi::Button data-btn="delete" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @onClick={{fn this.deleteModel user 'name'}} @aclContext="App.User.Delete">

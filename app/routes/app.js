@@ -174,19 +174,6 @@ export default Route.extend({
     },
 
     /**
-     * This function catches any issue thrown by the _loadCurrentUser function and
-     * invalidates the session
-     *
-     * @method sessionAuthenticated
-     * @protected
-     */
-    sessionAuthenticated() {
-        this._super(...arguments);
-        this.loadCurrentUser().catch(() => this.session.invalidate());
-    },
-
-
-    /**
      * The setup controller function that will be called every time the user visits
      * the route, this function is responsible for loading the required data
      *
