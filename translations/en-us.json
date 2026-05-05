@@ -1071,7 +1071,11 @@
             "profile": "Profile",
             "accountStatus": "Status",
             "emailaddress": "Email Address",
-            "noUsersFound": "No users found"
+            "noUsersFound": "No users found",
+            "lastActivityAt": "Last Activity",
+            "dateJoined": "Date Joined",
+            "noLastActivity": "No activity recorded",
+            "notJoinedYet": "Not joined yet"
           }
         },
         "create": {

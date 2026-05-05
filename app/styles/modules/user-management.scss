@@ -46,7 +46,9 @@
     }
 
     [data-user-field="email"],
-    [data-user-field="account-status"] {
+    [data-user-field="account-status"],
+    [data-user-field="last-activity-at"],
+    [data-user-field="date-joined"] {
       line-height: 4rem;
     }
 

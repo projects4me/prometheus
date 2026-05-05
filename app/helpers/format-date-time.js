@@ -47,8 +47,7 @@ export default class FormatDateTimeHelper extends Helper {
 		format = format || this.format; // prefer the format passed in, otherwise use the default
 		let userTimezone = this.currentUser.user.timezone;
 		let momentDate;
-
-		if (date !== undefined) {
+		if (date) {
 			momentDate = moment.utc(date).tz(userTimezone);
 			formattedDate = humanize
 				? momentDate.fromNow()

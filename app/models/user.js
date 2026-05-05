@@ -279,6 +279,26 @@ export default Model.extend({
     skills: attr('string'),
 
     /**
+     * Date on which the user was last active
+     *
+     * @property lastActivityAt
+     * @type String
+     * @for User
+     * @private
+     */
+    lastActivityAt: attr('string'),
+
+    /**
+     * Date on which the user was joined
+     *
+     * @property dateJoined
+     * @type String
+     * @for User
+     * @private
+     */
+    dateJoined: attr('string'),
+
+    /**
      * The users's dashboard
      *
      * @property dashboard
