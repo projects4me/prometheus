@@ -94,7 +94,7 @@ export default OAuth2PasswordGrant.extend({
                     }
 
                     const expiresAt = this._absolutizeExpirationTime(response['expires_in']);
-                    this._scheduleAccessTokenRefresh(response['expires_in'], expiresAt, response['refresh_token']);
+                    // this._scheduleAccessTokenRefresh(response['expires_in'], expiresAt, response['refresh_token']);
                     if (!isEmpty(expiresAt)) {
                         response = assign(response, { 'expires_at': expiresAt });
                     }
@@ -173,7 +173,7 @@ export default OAuth2PasswordGrant.extend({
                         if (refreshAccessTokensWithScope && !isEmpty(scope)) {
                             data.scope = scope;
                         }
-                        (this._scheduleAccessTokenRefresh(expiresIn, null, refreshToken));
+                        // (this._scheduleAccessTokenRefresh(expiresIn, null, refreshToken));
                         this.trigger('sessionDataUpdated', data);
                         resolve(data);
                     });
