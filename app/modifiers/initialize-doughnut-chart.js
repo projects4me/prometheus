@@ -55,7 +55,7 @@ export default class InitializeDoughnutChartModifier extends Modifier {
             options: {
                 responsive: true,
                 layout: {
-                    padding: 30
+                    padding: 20
                 },
                 maintainAspectRatio: false,
                 plugins: {

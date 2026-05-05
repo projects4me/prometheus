@@ -80,68 +80,64 @@
 
         <AccessControl @aclContext="App.User.Read.Statistics.Read">
           {{!-- User Stats Section starts --}}
-          <div class="box box-primary">
-            <div class="box-body">
-              <div class="col-md-12">
-                <div class="col-md-3 col-sm-3">
-                  <div class="user-stats-card">
-
-                    <div class="stats-label"> 
-                      {{t "views.app.user.page.stats.projects"}}
-                    </div>
-
-                    <Charts::OpenClosedChart
-                      @openCount={{this.model.openClosedProject.openProjects}}
-                      @closedCount={{this.model.openClosedProject.closedProjects}}
-                      @for="projects"
-                    />
-
-                  </div>            
+          <div class="row">
+            <div class="col-md-3">
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">{{t "views.app.user.page.stats.projects"}}</h3>
                 </div>
-                <div class="col-md-3 col-sm-3">
-                  <div class="user-stats-card">
-
-                    <div class="stats-label">
-                      {{t "views.app.user.page.stats.issues"}} 
-                    </div>
-
-                    <Charts::OpenClosedChart
-                      @openCount={{this.model.openClosedIssue.openIssues}}
-                      @closedCount={{this.model.openClosedIssue.closedIssues}}
-                      @for="issues"
-                    />          
-
-                  </div>            
+                <div class="box-body">
+                  <Charts::OpenClosedChart
+                    class="user-stats-card"
+                    @openCount={{this.model.openClosedProject.openProjects}}
+                    @closedCount={{this.model.openClosedProject.closedProjects}}
+                    @for="projects"
+                  />
                 </div>
-                <div class="col-md-3 col-sm-3">
-                  <div class="user-stats-card">
-                    
-                    <div class="stats-label">
-                      {{t "views.app.user.page.stats.timespent.label"}}
-                      <span class="time-spent-sub-label">
-                        ({{t "views.app.user.page.stats.timespent.sublabel"}})
-                      </span>
-                    </div>
-
-                    <UserProfile::TimeSpent
-                      @timeSpent={{this.model.timeSpent.totalMinutes}}
-                    />
-
-                  </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">{{t "views.app.user.page.stats.issues"}}</h3>
                 </div>
-                <div class="col-md-3 col-sm-3">
-                  <div class="user-stats-card">
-
-                    <div class="stats-label">
-                      {{t "views.app.user.page.stats.collaboration"}} 
-                    </div>
-
-                    <UserProfile::Collaboration
-                      @collaboration={{this.model.collaboration.collaboration}}
-                    />
-
-                  </div>                                              
-                </div>                                          
+                <div class="box-body">
+                  <Charts::OpenClosedChart
+                    class="user-stats-card"
+                    @openCount={{this.model.openClosedIssue.openIssues}}
+                    @closedCount={{this.model.openClosedIssue.closedIssues}}
+                    @for="issues"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">
+                    {{t "views.app.user.page.stats.timespent.label"}}
+                    <span class="time-spent-sub-label">
+                      ({{t "views.app.user.page.stats.timespent.sublabel"}})
+                    </span>
+                  </h3>
+                </div>
+                <div class="box-body">
+                  <UserProfile::TimeSpent
+                    @timeSpent={{this.model.timeSpent.totalMinutes}}
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">{{t "views.app.user.page.stats.collaboration"}}</h3>
+                </div>
+                <div class="box-body">
+                  <UserProfile::Collaboration
+                    @collaboration={{this.model.collaboration.collaboration}}
+                  />
+                </div>
               </div>
             </div>
           </div>
