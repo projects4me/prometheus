@@ -1144,7 +1144,8 @@
         "accountStatus": {
           "inactive": "Inactive",
           "active": "Active",
-          "disabled": "Disabled"
+          "disabled": "Disabled",
+          "invited": "Invited"
         }
       },
       "membership": {
