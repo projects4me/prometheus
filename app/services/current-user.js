@@ -49,22 +49,29 @@ export default Service.extend({
             // Set the retrieved user in the current object
             this.set('user', user);
 
-            this.setUserDateJoined(user);
+            this.setUserAttributes(user);
         }
     },
 
     /**
-     * This function is used to set the date joined for the user
+     * This function is used to set the date joined and account status for the user
+     * if the user is invited, then set the account status to active
+     * if the user is not joined yet, then set the date joined to the current date and time
      *
-     * @method setUserDateJoined
+     * @method setUserAttributes
      * @param {Object} user - The user object
      * @public
      */
-    setUserDateJoined: async function (user) {
+    setUserAttributes: async function (user) {
         if(!user.dateJoined) {
             user.dateJoined = moment().format('YYYY-MM-DD HH:mm:ss');
-            await user.save();
         }
+
+        if(user.accountStatus === 'invited') {
+            user.accountStatus = 'active';
+        }
+
+        await user.save();
     }
 
 });
