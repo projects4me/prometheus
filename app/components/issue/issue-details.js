@@ -1201,7 +1201,8 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         }
 
         return this.projectController.model.members.filter(member => 
-            member.get('id') !== this.issue.assignedTo?.get('id')
+            member.get('id') !== this.issue.assignedTo?.get('id') &&
+            member.get('accountStatus') === 'active'
         );
     }
 

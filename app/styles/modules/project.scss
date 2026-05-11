@@ -275,6 +275,36 @@
     right: 0;
     position: absolute;
   }
+
+  .member-avatar-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  .member-account-status {
+    display: inline-flex;
+    align-items: center;
+    position: absolute;
+    right: -1.6rem;
+    bottom: -0.2rem;
+    z-index: 1;
+    padding: 0 0.45rem;
+    border-radius: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+    white-space: nowrap;
+  }
+
+  .member-account-status-inactive {
+    color: $dangerColor;
+    background-color: rgba($dangerColor, 0.12);
+  }
+
+  .member-account-status-invited {
+    color: $warningColor;
+    background-color: rgba($warningColor, 0.12);
+  }
 }
 
 .member-item:hover {

@@ -269,7 +269,19 @@
                     <i class="fa fa-times"></i>
                   </AppUi::Button>
 
-                  <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
+                  <div class="member-avatar-wrap">
+                    <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
+                    {{#if (eq member.accountStatus "inactive")}}
+                      <span class="member-account-status member-account-status-inactive">
+                        {{t "views.app.user.accountStatus.inactive"}}
+                      </span>
+                    {{/if}}
+                    {{#if (eq member.accountStatus "invited")}}
+                      <span class="member-account-status member-account-status-invited">
+                        {{t "views.app.user.accountStatus.invited"}}
+                      </span>
+                    {{/if}}
+                  </div>
                   <LinkTo @route="app.user.page" @model={{member.id}} class="users-list-name">{{member.name}}</LinkTo>
                   <span class="users-list-date" data-member-role>
                     {{get-role member.id this.appController.roles this.model.memberships}}

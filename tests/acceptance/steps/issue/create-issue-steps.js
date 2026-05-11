@@ -20,6 +20,13 @@ export const given = function () {
                 ctx.set('currentProject', project);
                 assert.equal(project.id, projectId);
             }
+        },
+        {
+            "$userName account status is $accountStatus": (assert, ctx) => async function (userName, accountStatus) {
+                let user = server.schema.users.findBy({name: userName});
+                user.update({ accountStatus: accountStatus });
+                assert.equal(user.accountStatus, accountStatus);
+            }
         }
     ];
 }

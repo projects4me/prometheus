@@ -168,8 +168,8 @@
                 @placeholder={{t "views.app.issue.create.selectassignee"}}
                 @label={{t "views.app.issue.create.assignedTo"}}
                 @value={{this.model.assignee}}
-                @options={{this.membersList}}
-                @selected={{find-by "value" this.model.assignee this.membersList}}
+                @options={{this.activeMembersList}}
+                @selected={{find-by "value" this.model.assignee this.activeMembersList}}
                 @searchField="label"
                 @onchange={{action "selectRelated" this.model 'assignee'}}
                 @relateType="relate-user"
@@ -183,8 +183,8 @@
                 @placeholder={{t "views.app.issue.create.selectowner"}}
                 @label={{t "views.app.issue.create.ownedBy"}}
                 @value={{this.model.owner}}
-                @options={{this.membersList}}
-                @selected={{find-by "value" this.model.owner this.membersList}}
+                @options={{this.activeMembersList}}
+                @selected={{find-by "value" this.model.owner this.activeMembersList}}
                 @searchField="label"
                 @onchange={{action "selectRelated" this.model 'owner'}}
                 @relateType="relate-user"

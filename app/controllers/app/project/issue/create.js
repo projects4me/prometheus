@@ -249,6 +249,20 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
     }
 
     /**
+     * Active project members list for assignment fields.
+     * Invited and inactive users are intentionally excluded.
+     *
+     * @property activeMembersList
+     * @type Array
+     * @public
+     */
+    get activeMembersList() {
+        let members = this.project?.members ?? [];
+        let activeMembers = members.filter((member) => member?.accountStatus === 'active');
+        return (new format(this)).getSelectList(activeMembers);
+    }
+
+    /**
      * This estimates for this issue
      *
      * @property estimates

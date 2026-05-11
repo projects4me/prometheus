@@ -7,6 +7,7 @@ Feature: Issue | issue create
     And default scenario is loaded
     And User_4 is logged in
     And User_4 selects Project 1
+    And User_4 account status is active
     When User navigates to issue create page 
     Then User_4 should be assignee
     And User_4 should be owner
@@ -17,6 +18,7 @@ Feature: Issue | issue create
     And default scenario is loaded
     And User_4 is logged in
     And User_4 selects Project 1
+    And User_4 account status is active
     And There are 2 issues in system
     And Project has following details
     ---------------------------------------
