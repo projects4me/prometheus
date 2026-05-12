@@ -159,14 +159,16 @@
               </h3>
             </div>
 
-            <User::Create::Timezones
-              @value={{this.model.timezone}}
-              @model={{this.model}}
-              @selectRelated={{this.selectRelated}}
-              @validate={{action this.validateField "userCreate" (hash name="timezone" value=this.model.timezone)}}
-              @message={{this.message.timezone}}
-              @aclContext="App.User.Create.Timezone"
-            />            
+            <div class="box-body">
+              <User::Create::Timezones
+                @value={{this.model.timezone}}
+                @model={{this.model}}
+                @selectRelated={{this.selectRelated}}
+                @validate={{action this.validateField "userCreate" (hash name="timezone" value=this.model.timezone)}}
+                @message={{this.message.timezone}}
+                @aclContext="App.User.Create.Timezone"
+              />
+            </div>
             
           </div>
         </AccessControl>

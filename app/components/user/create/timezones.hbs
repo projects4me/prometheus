@@ -1,18 +1,15 @@
-<div class="box-body">
-  <FormFields::FieldRelate
-    @placeholder={{t "views.app.user.create.timezoneplaceholder"}}
-    @label={{t "views.app.user.create.timezonelabel"}}
-    @selected={{find-by "value" @value this.timezonesList}}
-    @value={{@value}}
-    @options={{this.timezonesList}}
-    @data-field="select-timezone"
-    @searchField="label"
-    @selected={{find-by "value" @value this.timezonesList}}
-    @onchange={{action @selectRelated @model 'timezone'}}
-    @relateType="relate-simple"
-    @data-field="user.timezone"
-    @validate={{@validate}}
-    @message={{@message}}         
-    @aclContext={{@aclContext}}     
-  />  
-</div>
+<FormFields::FieldRelate
+  @placeholder={{or @placeholder (t "views.app.user.create.timezoneplaceholder")}}
+  @label={{or @label (t "views.app.user.create.timezonelabel")}}
+  @selected={{find-by "value" @value this.timezonesList}}
+  @value={{@value}}
+  @options={{this.timezonesList}}
+  @data-field={{or @data-field "user.timezone"}}
+  @searchField="label"
+  @searchEnabled={{true}}
+  @onchange={{action @selectRelated @model "timezone"}}
+  @relateType="relate-simple"
+  @validate={{@validate}}
+  @message={{@message}}
+  @aclContext={{@aclContext}}
+/>

@@ -66,8 +66,51 @@
 
     .profile-picture {
         padding-left: 1rem;
+    }
+}
+
+.user-page {
+    .user-dob,
+    .user-language,
+    .user-timezone {
+        margin-top: 1rem;
+        font-size: 1.2rem;
+        color: #555;
+
+        .fa-birthday-cake,
+        .fa-language,
+        .fa-clock-o {
+            margin-right: 6px;
+            color: #aaa;
+        }
+
+        .user-meta-label {
+            margin-right: 4px;
+            font-weight: 600;
+        }
+    }
+
+    // DOB and timezone are flex rows: icon + label + inline-editable side by side.
+    .user-dob,
+    .user-timezone {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .user-info {
+        height: auto;
+        min-height: 5.7rem;
+    }
+}
+
+.user-create,
+.user-edit,
+.user-page {
+    .profile-picture {
         a {
             position: relative;
+
             img {
                 transition: 0.5s ease;
             }
@@ -85,7 +128,7 @@
 
         a:hover {
             cursor: pointer;
-            
+
             img {
                 opacity: 0.3;
             }

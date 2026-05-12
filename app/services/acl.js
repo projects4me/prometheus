@@ -108,10 +108,6 @@ export default class AclService extends Service {
             map: 'App.User.List'
         },
         {
-            name: 'app.user.edit',
-            map: 'App.User.Edit'
-        },
-        {
             name: 'app.user.management',
             map: 'App.User.Management'
         },

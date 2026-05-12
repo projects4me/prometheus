@@ -57,13 +57,4 @@ export default class FieldTextComponent extends FormFieldsComponent {
     get focusIn() {
         return this.args.focusIn ?? (() => true);
     }
-
-    /**
-     * This method returns onInput function.
-     * 
-     * @method get
-     */
-    get onInput() {
-        return this.args.onInput ?? (() => true);
-    }
 }

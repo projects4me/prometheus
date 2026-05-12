@@ -398,4 +398,48 @@ export default class PrometheusCreateController extends PrometheusController {
     @action resetModelAttributes(model) {
         model.rollbackAttributes();
     }
+
+    /**
+     * Validates a single value against a named field in one of the controller's
+     * Yup schemas and updates `this.message` accordingly — identical bookkeeping
+     * to `validateField` but accepts the raw value instead of reading from the
+     * model. This is used by `AppUi::InlineEditable` so that draft values (which
+     * live in the component, not on the model yet) can be validated through the
+     * same Yup schema pipeline.
+     *
+     * @method validateInlineField
+     * @param {String} schemaName  The schema key set on this controller (section name).
+     * @param {String} fieldName   The model attribute name (must exist in the schema).
+     * @param {*}      value       The current draft value to validate.
+     * @public
+     */
+    @action async validateInlineField(schemaName, fieldName, value) {
+        if (!this[schemaName] || !this[schemaName].fields[fieldName]) {
+            return;
+        }
+
+        let tempModel = { [fieldName]: value };
+
+        try {
+            await this[schemaName].validateAt(fieldName, tempModel);
+            _.set(this.message, `${schemaName}.${fieldName}`, "");
+            this.message = { ...this.message };
+        } catch (e) {
+            this.setValidationMessages(e, schemaName, { name: fieldName });
+        }
+    }
+
+    /**
+     * Clears the validation message for a specific field so that inline-edit
+     * components can reset error state when the user re-enters edit mode.
+     *
+     * @method clearFieldMessage
+     * @param {String} schemaName
+     * @param {String} fieldName
+     * @public
+     */
+    @action clearFieldMessage(schemaName, fieldName) {
+        _.set(this.message, `${schemaName}.${fieldName}`, "");
+        this.message = { ...this.message };
+    }
 }
