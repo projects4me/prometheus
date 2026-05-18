@@ -13,6 +13,7 @@ Feature: App | navigation guard
     When User enters test@test.com in email field
     And User clicks on dashboard from the sidebar
     Then User should be in app/user/create page
+    And User clicks on stay on page button
 
   Scenario: User should be able to navigate away from a clean form
 
