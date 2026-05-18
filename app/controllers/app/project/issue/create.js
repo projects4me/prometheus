@@ -419,4 +419,15 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
             }
         });
     }
+
+    /**
+     * This function checks if the model has changed
+     *
+     * @method isDirty
+     * @return {boolean}
+     * @public
+     */
+    get isDirty() {
+        return (_.size(this.model.changedAttributes()) > 6 || this.model.description !== '');
+    }
 }

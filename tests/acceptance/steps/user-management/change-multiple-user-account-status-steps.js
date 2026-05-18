@@ -1,6 +1,18 @@
 import steps from '../steps';
 import { click } from '@ember/test-helpers';
 
+export const given = function () {
+    return [
+        {
+            "User_$userId account status is $accountStatus": (assert) => async function (userId, accountStatus) {
+                let user = server.schema.users.find(parseInt(userId));
+                user.update({ accountStatus: accountStatus });
+                assert.equal(user.accountStatus, accountStatus);
+            }
+        }
+    ];
+}
+
 export const when = function () {
     return [
         {

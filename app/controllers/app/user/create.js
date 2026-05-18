@@ -479,4 +479,15 @@ export default class AppUserCreateController extends PrometheusCreateController 
 		}
 		return super.save(schemaName);
 	}
+
+	/**
+	 * This function checks if the model has changed
+	 *
+	 * @method isDirty
+	 * @return {boolean}
+	 * @public
+	 */
+	get isDirty() {
+		return (_.size(this.model.changedAttributes()) > 0);
+	}
 }

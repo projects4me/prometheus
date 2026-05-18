@@ -6,6 +6,7 @@ Feature: User Management | change multiple user account status
     Given There is no pre-existing data
     And default scenario is loaded 
     And User_1 is logged in
+    And User_2 account status is inactive
     When User navigates to app/user/management
     And User update account status of all users to active
     Then Account status of all users are set to active

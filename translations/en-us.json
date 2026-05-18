@@ -98,6 +98,9 @@
       "confirmcancel": "Yes",
       "deletecancel": "Deletion cancelled",
       "onsecondthought": "Take me back",
+      "navigationBlocked": "You have made changes, navigating away will discard them. Are you sure?",
+      "leaveAnyway": "Leave Anyway",
+      "stayOnPage": "Stay on Page",
       "upload": {
         "drop": "Drop to upload",
         "invalid": "Invalid file, cannot upload",
