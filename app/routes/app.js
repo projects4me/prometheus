@@ -168,7 +168,7 @@ export default Route.extend({
      * @protected
      */
     registerRouteEvent() {
-        if (this.router.has('routeWillChange')) {
+        if (this.router.has('routeWillChange') || this.router.has('routeDidChange')) {
             return;
         }
 
@@ -177,13 +177,14 @@ export default Route.extend({
                 return;
             }
 
-            if (this.navigationGuard._bypassOnce) {
-                this.navigationGuard._bypassOnce = false;
-                return;
-            }
-
             if (this._isNavigationBlocked(transition)) {
                 this.navigationGuard.confirmTransition(transition);
+            }
+        });
+
+        this.router.on('routeDidChange', () => {
+            if (this.navigationGuard.isConfirmingLeave) {
+                this.navigationGuard.finishConfirmedLeave();
             }
         });
     },
@@ -202,6 +203,14 @@ export default Route.extend({
      * @private
      */
     _isNavigationBlocked(transition) {
+        if (this.navigationGuard.isConfirmingLeave) {
+            return false;
+        }
+
+        if (this.navigationGuard.isSameRouteTransition(transition)) {
+            return false;
+        }
+
         let controllerIsDirty = false;
         try {
             let controller = this.controllerFor(transition.from.name);

@@ -22,8 +22,8 @@ import { tracked } from '@glimmer/tracking';
  *     AI streaming, etc.) use the register/clear API below.
  *
  * If either source is truthy, the service aborts the transition and shows a
- * Messenger prompt. Confirming retries the transition; cancelling keeps the user
- * on the current page.
+ * Messenger prompt. Confirming retries the aborted transition; cancelling
+ * keeps the user on the current page.
  *
  * ## Usage in a component or service
  *
@@ -66,14 +66,15 @@ export default class NavigationGuardService extends Service {
     @tracked _isBlockedFn = null;
 
     /**
-     * Set to true just before retrying an aborted transition so the resulting
-     * routeWillChange event is skipped, preventing an infinite prompt loop.
+     * Set when the user confirms "Leave anyway". While true, the App route
+     * does not block navigation (controller `isDirty` and registered checks
+     * are ignored) until `finishConfirmedLeave()` runs on `routeDidChange`.
      *
-     * @property _bypassOnce
+     * @property _isConfirmingLeave
      * @type {Boolean}
      * @private
      */
-    _bypassOnce = false;
+    _isConfirmingLeave = false;
 
     /**
      * True while the Messenger prompt is open. Prevents stacking multiple dialogs
@@ -86,14 +87,25 @@ export default class NavigationGuardService extends Service {
     _isPrompting = false;
 
     /**
-     * The last aborted transition. Updated on every routeWillChange call so the
-     * confirm action always retries the most recent one.
+     * The first real route transition for the current prompt (must have intent).
+     * Kept stable while `_isPrompting` so nested handlers do not replace it.
      *
      * @property _pendingTransition
      * @type {Transition|null}
      * @private
      */
     _pendingTransition = null;
+
+    /**
+     * True while the user has confirmed leaving; read by the App route.
+     *
+     * @property isConfirmingLeave
+     * @type {Boolean}
+     * @public
+     */
+    get isConfirmingLeave() {
+        return this._isConfirmingLeave;
+    }
 
     /**
      * Register a live check function that returns `true` when navigation should
@@ -121,6 +133,16 @@ export default class NavigationGuardService extends Service {
     }
 
     /**
+     * Called from the App route on `routeDidChange` after a confirmed leave.
+     *
+     * @method finishConfirmedLeave
+     * @public
+     */
+    finishConfirmedLeave() {
+        this._isConfirmingLeave = false;
+    }
+
+    /**
      * True when the registered check function returns truthy. Read by the App
      * route's routeWillChange handler alongside `controller.isDirty`.
      *
@@ -133,6 +155,34 @@ export default class NavigationGuardService extends Service {
     }
 
     /**
+     * Returns true when the user is navigating to the same route with the same
+     * dynamic segment params (for example clicking issue create while already
+     * on issue create).
+     *
+     * @method isSameRouteTransition
+     * @param {Transition} transition
+     * @return {Boolean}
+     * @public
+     */
+    isSameRouteTransition(transition) {
+        const from = transition.from;
+        const to = transition.to;
+
+        if (!from?.name || !to?.name || from.name !== to.name) {
+            return false;
+        }
+
+        if (transition.queryParamsOnly) {
+            return true;
+        }
+
+        const fromParams = from.params ?? {};
+        const toParams = to.params ?? {};
+
+        return JSON.stringify(fromParams) === JSON.stringify(toParams);
+    }
+
+    /**
      * Aborts the transition and shows a Messenger "Leave / Stay" prompt.
      * Called by the App route — not needed directly in components or controllers.
      *
@@ -141,51 +191,57 @@ export default class NavigationGuardService extends Service {
      * @public
      */
     confirmTransition(transition) {
+        this._storePendingTransition(transition);
         transition.abort();
 
-        this._pendingTransition = transition;
-
-        // Only one prompt at a time. Subsequent calls update _pendingTransition
-        // above and return so no extra Messenger dialogs are stacked.
         if (this._isPrompting) {
             return;
         }
         this._isPrompting = true;
 
-        let _self = this;
-        let intl = this.intl;
-
-        let message = new Messenger().post({
-            message: intl.t('global.form.navigationBlocked').toString(),
+        const message = new Messenger().post({
+            message: this.intl.t('global.form.navigationBlocked').toString(),
             type: 'warning',
             showCloseButton: false,
-            hideAfter: 3,
+            hideAfter: false,
             actions: {
                 confirm: {
-                    label: intl.t('global.form.leaveAnyway').toString(),
-                    action: function () {
-                        let pendingTransition = _self._pendingTransition;
+                    label: this.intl.t('global.form.leaveAnyway').toString(),
+                    action: () => {
+                        const pendingTransition = this._pendingTransition;
 
                         message.cancel();
-                        _self._isPrompting = false;
-                        _self._pendingTransition = null;
-                        _self.clear();
+                        this._isPrompting = false;
+                        this._pendingTransition = null;
+                        this.clear();
+                        this._isConfirmingLeave = true;
 
-                        if (pendingTransition) {
-                            _self._bypassOnce = true;
-                            pendingTransition.retry();
-                        }
+                        pendingTransition?.retry();
                     },
                 },
                 cancel: {
-                    label: intl.t('global.form.stayOnPage').toString(),
-                    action: function () {
+                    label: this.intl.t('global.form.stayOnPage').toString(),
+                    action: () => {
                         message.cancel();
-                        _self._isPrompting = false;
-                        _self._pendingTransition = null;
+                        this._isPrompting = false;
+                        this._pendingTransition = null;
                     },
                 },
             },
         });
+    }
+
+    /**
+     * Stores the first transition that has a router intent. Real navigations
+     * always have intent; synthetic transitions from `abort()` do not.
+     *
+     * @method _storePendingTransition
+     * @param {Transition} transition
+     * @private
+     */
+    _storePendingTransition(transition) {
+        if (!this._pendingTransition && transition.intent) {
+            this._pendingTransition = transition;
+        }
     }
 }

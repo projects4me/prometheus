@@ -36,4 +36,8 @@ export default function (assert) {
             await click('[data-navigation-module="Dashboard"] a');
             assert.ok(true, 'User clicked the "Dashboard" link');
         })
+        .then('User clicks on stay on page button', async function () {
+            await click(document.querySelector('[data-action="cancel"] a'));
+            assert.ok(true, 'User clicked the "Stay on Page" button');
+        })
 }
