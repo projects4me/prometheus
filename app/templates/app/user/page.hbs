@@ -17,17 +17,146 @@
           {{!-- User profile info section starts--}}
           <div class="box box-primary">
             <div class="box-body box-profile">
-              <img class="user-profile-img img-responsive" src="{{this.apiHost}}/userimage/get/{{this.model.id}}" alt="{{this.model.name}}">
+              <User::Edit::ProfilePicture
+                @model={{this.model}}
+                @uploadImage={{this.uploadImage}}
+                @cropImageSrc={{this.cropImageSrc}}
+                @onApplyCrop={{this.applyCrop}}
+                @onCancelCrop={{this.cancelCrop}}
+              />
 
               <div class="user-info">
-                  <h3 class="user-name">{{this.model.name}}</h3>
-                  <span class="user-designation">{{this.model.title}}</span>
+                  <h3 class="user-name flex-row flex-ai-c">
+                    <AppUi::InlineEditable
+                      @value={{this.model.name}}
+                      @onSave={{fn this.saveModelAttribute this.model "name"}}
+                      @aclContext="App.User.Management"
+                      @validate={{fn this.validateInlineField "userPage" "name"}}
+                      @message={{this.message.userPage.name}}
+                      @onClearMessage={{fn this.clearFieldMessage "userPage" "name"}}
+                    >
+                      <:display>{{this.model.name}}</:display>
+                      <:edit as |f|>
+                        <FormFields::FieldText
+                          @value={{f.value}}
+                          @type="text"
+                          @onInput={{f.update}}
+                          @validate={{fn this.validateField "userPage" (hash name="name" model=(hash name=f.value))}}
+                          @message={{f.message}}
+                          @data-field="user-page.name"
+                          @lengthRequired={{false}}
+                          autofocus
+                          {{on "keydown" f.onKeydown}}
+                        />
+                      </:edit>
+                    </AppUi::InlineEditable>
+                  </h3>
+                  <span class="user-designation flex-row flex-ai-c">
+                    <AppUi::InlineEditable
+                      @value={{this.model.title}}
+                      @onSave={{fn this.saveModelAttribute this.model "title"}}
+                      @aclContext="App.User.Management"
+                      @label={{t "views.app.user.create.designation"}}
+                      @validate={{fn this.validateInlineField "userPage" "title"}}
+                      @message={{this.message.userPage.title}}
+                      @onClearMessage={{fn this.clearFieldMessage "userPage" "title"}}
+                    >
+                      <:display>{{this.model.title}}</:display>
+                      <:edit as |f|>
+                        <FormFields::FieldText
+                          @value={{f.value}}
+                          @type="text"
+                          @onInput={{f.update}}
+                          @validate={{fn this.validateField "userPage" (hash name="title" model=(hash title=f.value))}}
+                          @message={{f.message}}
+                          @data-field="user-page.title"
+                          @lengthRequired={{false}}
+                          autofocus
+                          {{on "keydown" f.onKeydown}}
+                        />
+                      </:edit>
+                    </AppUi::InlineEditable>
+                  </span>
               </div>
 
               <UserProfile::SocialLinks
                 @user={{this.model}}
                 @redirect={{fn this.redirectToSocialLink}}
               />
+
+              <div class="user-dob">    
+                <i class="fa fa-birthday-cake"></i>
+                <span class="user-meta-label">{{t "views.app.user.create.dateofbirth"}}:</span>
+                <AppUi::InlineEditable
+                  @value={{this.model.dateOfBirth}}
+                  @onSave={{fn this.saveModelAttribute this.model "dateOfBirth"}}
+                  @aclContext="App.User.Management"
+                  @validate={{fn this.validateInlineField "userPage" "dateOfBirth"}}
+                  @message={{this.message.userPage.dateOfBirth}}
+                  @onClearMessage={{fn this.clearFieldMessage "userPage" "dateOfBirth"}}
+                  @submitOnEnter={{false}}
+                >
+                  <:display>
+                    <span class="user-meta-value">{{or this.model.dateOfBirth "-"}}</span>
+                  </:display>
+                  <:edit as |f|>
+                    <FormFields::FieldDate
+                      @placeholder={{t "views.app.user.create.dobplaceholder"}}
+                      @value="{{readonly f.value}}"
+                      @update={{f.updateDirect}}
+                      @validate={{fn this.validateField "userPage" (hash name="dateOfBirth" model=(hash dateOfBirth=f.value))}}
+                      @message={{f.message}}
+                      @mask="alphanumeric"
+                      @data-field="user-page.dateOfBirth"
+                      @format="DD-MM"
+                      @singleDatePicker={{true}}
+                      @showDropdowns={{true}}
+                      @positionX="right"
+                      @positionY="down"
+                      @autoApply={{true}}
+                      @minDate="01-01"
+                      @startDate={{if f.value f.value "01-01"}}
+                      @parentEl='[data-field="user-page.dateOfBirth"]'
+                      @endDate="31-12"
+                      @maxDate="31-12"
+                    />
+                  </:edit>
+                </AppUi::InlineEditable>
+              </div>
+
+              <div class="user-language">
+                <i class="fa fa-language"></i>
+                <span class="user-meta-label">{{t "views.app.user.create.language"}}:</span>
+                <span class="user-meta-value">{{or this.userLanguageLabel "-"}}</span>
+              </div>
+
+              <div class="user-timezone">
+                <i class="fa fa-clock-o"></i>
+                <span class="user-meta-label">{{t "views.app.user.create.timezone"}}:</span>
+                <AppUi::InlineEditable
+                  @value={{this.model.timezone}}
+                  @onSave={{fn this.saveModelAttribute this.model "timezone"}}
+                  @aclContext="App.User.Management"
+                  @validate={{fn this.validateInlineField "userPage" "timezone"}}
+                  @message={{this.message.userPage.timezone}}
+                  @onClearMessage={{fn this.clearFieldMessage "userPage" "timezone"}}
+                  @submitOnEnter={{false}}
+                >
+                  <:display>
+                    <span class="user-meta-value">{{or this.userTimezoneLabel "-"}}</span>
+                  </:display>
+                  <:edit as |f|>
+                    <User::Create::Timezones
+                      @value={{f.value}}
+                      @model={{f.model}}
+                      @selectRelated={{this.selectRelated}}
+                      @validate={{fn this.validateField "userPage" (hash name="timezone" model=(hash timezone=f.value))}}
+                      @message={{f.message}}
+                      @data-field="user-page.timezone"
+                    />
+                  </:edit>
+                </AppUi::InlineEditable>
+              </div>
 
             </div>
           </div>

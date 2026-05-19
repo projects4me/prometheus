@@ -71,4 +71,20 @@ export default class LanguageService extends Service {
     setLanguage(language) {
         this.selectedLanguage = language;
     }
+
+
+    /**
+     * This function returns human-friendly language label for the given language code.
+     * 
+     * @method getLanguageLabel
+     * @for LanguageService
+     * @public
+     * @param {String} languageCode
+     * @returns {String}
+     */
+    getLanguageLabel(languageCode) {
+        return this.languagesList.find(
+            (item) => item.value === languageCode
+        )?.label ?? null;
+    }
 }

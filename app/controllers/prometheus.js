@@ -133,6 +133,82 @@ export default class PrometheusController extends Controller {
 	}
 
 	/**
+	 * Persists a single attribute change on a model. This is primarily used by
+	 * inline-editable UIs so page controllers do not need bespoke save actions
+	 * for each model/field pair.
+	 *
+	 * Controllers can optionally override `getSaveModelAttributeSuccessMessage()`
+	 * to show a contextual success toast, while error handling is derived from
+	 * the model name by default.
+	 *
+	 * @method saveModelAttribute
+	 * @param {Prometheus.Models} model
+	 * @param {String} field
+	 * @param {*} value
+	 * @public
+	 */
+	@action async saveModelAttribute(model, field, value) {
+		let previous = model.get(field);
+		model.set(field, value);
+
+		try {
+			let savedModel = await model.save();
+			let message = this.getSaveModelAttributeSuccessMessage(
+				savedModel,
+				field,
+				value
+			);
+
+			if (message) {
+				new Messenger().post({
+					message: message,
+					type: 'success',
+					showCloseButton: true,
+					hideAfter: 3,
+				});
+			}
+
+			return savedModel;
+		} catch (error) {
+			model.set(field, previous);
+
+			let moduleName = this.getSaveModelAttributeModuleName(model, field);
+			if (moduleName) {
+				this.errorManager.handleError(error, {
+					moduleName: moduleName,
+				});
+			}
+
+			throw error;
+		}
+	}
+
+	/**
+	 * Returns the module name used by `errorManager` when a single-attribute save
+	 * fails. By default we derive this from the Ember Data model name.
+	 *
+	 * @method getSaveModelAttributeModuleName
+	 * @param {Prometheus.Models} model
+	 * @return {String|undefined}
+	 * @protected
+	 */
+	getSaveModelAttributeModuleName(model) {
+		return model?.constructor?.modelName ?? model?.modelName;
+	}
+
+	/**
+	 * Optional hook for controllers that want a contextual success message after
+	 * `saveModelAttribute()` succeeds.
+	 *
+	 * @method getSaveModelAttributeSuccessMessage
+	 * @return {String|null}
+	 * @protected
+	 */
+	getSaveModelAttributeSuccessMessage() {
+		return null;
+	}
+
+	/**
 	 * This function builds human readable error messages.
 	 *
 	 * @method _buildMessages

@@ -1085,6 +1085,7 @@
           "email": "Email Address",
           "dateofbirth": "Date Of Birth",
           "language": "Language",
+          "designation": "Designation",
           "timezone": "Timezone",
           "nameplaceholder": "Enter full name",
           "emailplaceholder": "Enter email address",
@@ -1128,7 +1129,8 @@
         "profilePicture": {
           "imageSizeError": "Image size exceeds the {limit} limit. Please choose a smaller file.",
           "imageTypeError": "Invalid file type. Allowed types: {types}.",
-          "cropTitle": "Crop Profile Picture"
+          "cropTitle": "Crop Profile Picture",
+          "updated": "Profile picture updated successfully"
         },
         "created": "User {name} is created successfully!",
         "updated": "User {name} is updated successfully!",

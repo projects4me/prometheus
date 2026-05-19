@@ -1,0 +1,128 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+.app-ui-inline-editable {
+  flex: 1;
+  min-width: 0;
+
+  .form-field {
+    margin: 0;
+
+    .bar,
+    .highlight,
+    label {
+      display: none;
+    }
+  }
+
+  &__display-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-width: 0;
+
+    &--interactive {
+      .app-ui-inline-editable__surface {
+        &:hover,
+        &:focus {
+          border-radius: 3px;
+
+          .app-ui-inline-editable__edit-hint {
+            opacity: 1;
+          }
+        }
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 1px rgba($primaryColor, 0.35);
+        }
+      }
+    }
+  }
+
+  &__surface {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+    padding: 2px 4px;
+    margin: -2px -4px;
+    text-align: inherit;
+  }
+
+  &__display-value {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__empty-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  &__empty-label {
+    color: #666;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  &__empty-hint {
+    color: #999;
+    font-style: italic;
+    min-width: 0;
+  }
+
+  &__edit-hint {
+    flex-shrink: 0;
+    margin-left: 6px;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    color: #999;
+    font-size: 12px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  &__edit-row {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  &__edit-slot {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__toolbar {
+    flex-shrink: 0;
+    display: inline-flex;
+    gap: 2px;
+    align-items: center;
+
+    .btn-link {
+      padding: 2px 6px;
+    }
+  }
+
+  &__trigger {
+    opacity: 0.65;
+
+    &:hover,
+    &:focus {
+      opacity: 1;
+    }
+  }
+}

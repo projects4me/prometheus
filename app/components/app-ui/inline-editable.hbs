@@ -1,0 +1,63 @@
+<div class="app-ui-inline-editable" ...attributes>
+  {{#if this.isEditing}}
+    <div class="app-ui-inline-editable__edit-row">
+      <div class="app-ui-inline-editable__edit-slot">
+        {{yield this.editFields to="edit"}}
+      </div>
+      <span class="app-ui-inline-editable__toolbar">
+        <button
+          type="button"
+          class="btn btn-link btn-xs app-ui-inline-editable__trigger"
+          aria-label={{t "global.form.save"}}
+          disabled={{this.isSaving}}
+          {{on "click" this.commitSave}}
+        >
+          <i class="fa fa-check text-success"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-link btn-xs app-ui-inline-editable__trigger"
+          aria-label={{t "global.form.cancel"}}
+          disabled={{this.isSaving}}
+          {{on "click" this.cancelEdit}}
+        >
+          <i class="fa fa-times text-muted"></i>
+        </button>
+      </span>
+    </div>
+  {{else}}
+    <div class="app-ui-inline-editable__display-row {{if this.canEdit 'app-ui-inline-editable__display-row--interactive'}}">
+      {{!--
+        Always render __surface so the display content is never duplicated.
+        Interactive attributes (role, tabindex, aria-label) are added only when
+        the user can actually edit; the click/keydown handlers guard themselves.
+      --}}
+      <div
+        class="app-ui-inline-editable__surface"
+        role={{if this.canEdit "button"}}
+        tabindex={{if this.canEdit "0"}}
+        aria-label={{if this.canEdit (t "global.form.edit")}}
+        {{on "click" this.startEditFromDisplay}}
+        {{on "keydown" this.handleDisplayKeydown}}
+      >
+        <span class="app-ui-inline-editable__display-value">
+          {{#if this.shouldShowEmptyState}}
+            <span class="app-ui-inline-editable__empty-state">
+              {{#if @label}}
+                <span class="app-ui-inline-editable__empty-label">{{@label}}</span>
+              {{/if}}
+              <span class="app-ui-inline-editable__empty-hint">{{this.emptyText}}</span>
+            </span>
+          {{else}}
+            {{yield to="display"}}
+          {{/if}}
+        </span>
+        {{#if this.canEdit}}
+          <span class="app-ui-inline-editable__edit-hint" aria-hidden="true">
+            <i class="fa fa-pencil"></i>
+          </span>
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
+</div>

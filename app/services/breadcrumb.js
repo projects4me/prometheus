@@ -150,12 +150,6 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app'
 		},
-		'app.user.edit': {
-			title: 'views.nav.menu.user.edit',
-			icon: 'edit',
-			linkable: true,
-			parent: 'app.user.page'
-		},
 		'app.project.board': {
 			title: 'views.nav.menu.board.label',
 			icon: 'columns',

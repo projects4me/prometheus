@@ -17,6 +17,6 @@ module('Integration | Component | user/create/timezones', function (hooks) {
             />
         `);
 
-        assert.dom('[data-field="select-timezone"]').exists();
+        assert.dom('[data-field="user.timezone"]').exists();
     });
 });

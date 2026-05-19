@@ -318,6 +318,18 @@ export default class FormFieldsComponent extends Component {
     }
 
     /**
+     * Callback fired on every native `input` event. Used by text-like fields
+     * (FieldText, FieldTextArea) to propagate keystroke changes to the parent —
+     * including `AppUi::InlineEditable` which passes `f.update` here.
+     *
+     * @property onInput
+     * @for FormFieldsComponent
+     */
+    get onInput() {
+        return this.args.onInput ?? (() => true);
+    }
+
+    /**
      * Handles keydown events for power select component.
      * 
      * @method handlePowerSelectKeydown

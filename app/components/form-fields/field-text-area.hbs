@@ -6,6 +6,7 @@
       @value={{@value}} 
       placeholder={{@placeholder}}
       @label={{@label}}
+      {{on "input" this.onInput}}
       {{on "blur" this.validate}}
       {{on "blur" this.onBlur}}
       {{on "focusout" (action (mut this.shouldValidate) true) }}
