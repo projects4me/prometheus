@@ -127,6 +127,17 @@ export default Route.extend({
      * @private
      */
     breadcrumb: inject(),
+
+    /**
+     * Blocks transitions when a controller is dirty or an async operation is
+     * in progress. See NavigationGuardService for full usage docs.
+     *
+     * @property navigationGuard
+     * @type Prometheus.Services.NavigationGuard
+     * @for App
+     * @private
+     */
+    navigationGuard: inject(),
     
     /**
      * This function is called by EmberJs before it retrieves the model. In this method
@@ -145,32 +156,61 @@ export default Route.extend({
             this.router.transitionTo('app.loading-assets');
         }
 
-        // this.registerRouteEvent();
+        this.registerRouteEvent();
     },
 
     /**
-     * This function is used to register router service event which will be used to
-     * check user access on the route on which they are trying to enter. If the user
-     * will have accesss to that route then the transition will continue and if not then
-     * the user is routed to access-denied route.
-     * 
+     * Registers a single `routeWillChange` listener (once per session) that
+     * acts as the application-wide navigation guard. Delegates the blocked-state
+     * check to `_isNavigationBlocked` and hands off prompting to the service.
+     *
      * @method registerRouteEvent
      * @protected
      */
     registerRouteEvent() {
-        let _self = this;
-        let eventName = 'routeWillChange';
-        let isEventRegistered = (_self.router.has(eventName));
-        let loadingAssetsController = this.controllerFor('app.loading-assets');
-
-        if (!isEventRegistered) {
-            _self.router.on(eventName, (transition) => {
-                if (loadingAssetsController.get('dataLoaded')
-                    && !_self.acl.hasRouteAccess(transition.to.name)) {
-                    _self.router.transitionTo('app.access-denied');
-                }
-            });
+        if (this.router.has('routeWillChange')) {
+            return;
         }
+
+        this.router.on('routeWillChange', (transition) => {
+            if (!transition.from || transition.isAborted) {
+                return;
+            }
+
+            if (this.navigationGuard._bypassOnce) {
+                this.navigationGuard._bypassOnce = false;
+                return;
+            }
+
+            if (this._isNavigationBlocked(transition)) {
+                this.navigationGuard.confirmTransition(transition);
+            }
+        });
+    },
+
+    /**
+     * Returns true when the transition should be blocked. Checks two sources:
+     * the `isDirty` flag on the departing route's controller, and the
+     * navigationGuard service (async ops registered via navigationGuard.register).
+     *
+     * controllerFor() may throw for routes with no explicit controller — treat
+     * that as clean state.
+     *
+     * @method _isNavigationBlocked
+     * @param {Transition} transition
+     * @return {Boolean}
+     * @private
+     */
+    _isNavigationBlocked(transition) {
+        let controllerIsDirty = false;
+        try {
+            let controller = this.controllerFor(transition.from.name);
+            controllerIsDirty = Boolean(controller?.isDirty);
+        } catch (_e) {
+            // route has no controller — treat as clean
+        }
+
+        return controllerIsDirty || this.navigationGuard.isDirty;
     },
 
     /**
