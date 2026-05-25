@@ -1,0 +1,114 @@
+<div class="box box-primary user-skills-section">
+  <div class="box-header with-border box-header-flex box-header-no-content">
+    <h3 class="box-title">{{t "views.app.user.page.skills"}}</h3>
+    {{#if this.showAddControl}}
+      <AppUi::DottedAddButton
+        @title={{t "views.app.user.page.skill.add"}}
+        @onClick={{this.startAdding}}
+        @class="pull-right"
+        @aclContext="App.User.Edit"
+        @data-add="user.skills"
+      />
+    {{/if}}
+  </div>
+
+  <div class="box-body">
+    {{#if @user.skills.length}}
+      <div class="user-skills-tags">
+        {{#each @user.skills as |skill|}}
+          <span
+            class="user-skill-chip user-skill-chip-{{skill.proficiencyLevel}}"
+            data-skill-item={{skill.id}}
+          >
+            <span class="user-skill-chip-name">{{skill.name}}</span>
+            {{#if skill.proficiencyLevel}}
+              <span
+                class="user-skill-chip-level"
+                title={{get this.proficiencyLabels skill.proficiencyLevel}}
+              >
+                {{get this.proficiencyShortLabels skill.proficiencyLevel}}
+              </span>
+            {{/if}}
+            {{#if this.canEdit}}
+              <button
+                type="button"
+                class="user-skill-chip-remove"
+                title={{t "views.app.user.page.skill.remove"}}
+                aria-label={{t "views.app.user.page.skill.remove"}}
+                disabled={{this.isSaving}}
+                {{on "click" (fn this.removeItem skill)}}
+              >
+                <i class="fa fa-times"></i>
+              </button>
+            {{/if}}
+          </span>
+        {{/each}}
+      </div>
+    {{else}}
+      {{#unless this.isAdding}}
+        <p class="user-skill-empty text-muted">{{t "views.app.user.page.skill.none"}}</p>
+      {{/unless}}
+    {{/if}}
+
+    {{#if this.isAdding}}
+      <div
+        class="profile-inline-form user-skills-form {{if @user.skills.length 'user-skills-form--with-tags'}}"
+        data-user-skills-form
+      >
+        <FormFields::FieldText
+          @placeholder={{t "views.app.user.page.skill.namePlaceholder"}}
+          @label={{t "views.app.user.page.skill.name"}}
+          @type="text"
+          @value={{this.newSkill.name}}
+          @onInput={{fn this.updateDraftField "name"}}
+          @lengthRequired={{false}}
+          @required={{true}}
+          @disabled={{this.isSaving}}
+          @data-field="user-skill.name"
+          @validate={{fn @validateField "userSkill" (hash name="name" value=this.newSkill.name model=this.newSkill)}}
+          @message={{@message.userSkill.name}}
+          @aclContext="App.User.Edit"
+        />
+
+        <FormFields::FieldRelate
+          @placeholder={{t "views.app.user.page.skill.proficiencyPlaceholder"}}
+          @label={{t "views.app.user.page.skill.proficiency"}}
+          @options={{this.proficiencyOptions}}
+          @selected={{this.selectedProficiency}}
+          @searchField="label"
+          @onchange={{fn @selectRelated this.newSkill "proficiencyLevel"}}
+          @relateType="relate-simple"
+          @searchEnabled={{false}}
+          @required={{true}}
+          @disabled={{this.isSaving}}
+          @data-field="user-skill.proficiencyLevel"
+          @validate={{fn @validateField "userSkill" (hash name="proficiencyLevel" value=this.newSkill.proficiencyLevel model=this.newSkill)}}
+          @message={{@message.userSkill.proficiencyLevel}}
+          @aclContext="App.User.Edit"
+        />
+
+        <div class="profile-inline-form-actions user-skills-form-actions">
+          <AppUi::Button
+            type="button"
+            class="btn btn-primary btn-sm"
+            disabled={{this.isSaving}}
+            data-btn="save"
+            @onClick={{this.saveDraft}}
+            @aclContext="App.User.Edit"
+          >
+            {{t "global.form.save"}}
+          </AppUi::Button>
+          <AppUi::Button
+            type="button"
+            class="btn btn-default btn-sm"
+            disabled={{this.isSaving}}
+            data-btn="close"
+            @onClick={{this.cancelAdding}}
+          >
+            {{t "global.form.cancel"}}
+          </AppUi::Button>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</div>

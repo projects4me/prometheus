@@ -1035,8 +1035,46 @@
       "user": {
         "page": {
           "aboutme": "About Me",
-          "education": "Education",
+          "qualifications": "Qualifications",
+          "qualification": {
+            "add": "Add qualification",
+            "remove": "Remove qualification",
+            "none": "No qualifications added yet",
+            "saved": "Qualification saved",
+            "saveFailed": "Could not save qualification",
+            "required": "Type, title, institution, and completion year are required",
+            "type": "Type",
+            "typePlaceholder": "Select type",
+            "typeEducation": "Education",
+            "typeCertification": "Certification",
+            "title": "Title",
+            "titlePlaceholder": "Degree or certification title",
+            "institution": "Institution",
+            "institutionPlaceholder": "School or issuing institution",
+            "completionYear": "Completion year",
+            "completionYearPlaceholder": "Select year"
+          },
           "skills": "Skills",
+          "skill": {
+            "add": "Add skill",
+            "remove": "Remove skill",
+            "none": "No skills added yet",
+            "saved": "Skill saved",
+            "saveFailed": "Could not save skill",
+            "duplicate": "This skill has already been added",
+            "name": "Skill name",
+            "namePlaceholder": "Enter skill name",
+            "proficiency": "Proficiency",
+            "proficiencyPlaceholder": "Select proficiency",
+            "proficiencyBeginner": "Beginner",
+            "proficiencyIntermediate": "Intermediate",
+            "proficiencyAdvanced": "Advanced",
+            "proficiencyExpert": "Expert",
+            "proficiencyBeginnerShort": "Beg",
+            "proficiencyIntermediateShort": "Int",
+            "proficiencyAdvancedShort": "Adv",
+            "proficiencyExpertShort": "Exp"
+          },
           "badges": "Badges",
           "title": "Profile",
           "stats": {
@@ -1144,13 +1182,25 @@
           "password": "Password",
           "dateOfBirth": "Date Of Birth",
           "language": "Language",
-          "timezone": "Timezone"
+          "timezone": "Timezone",
+          "type": "Type",
+          "title": "Title",
+          "institution": "Institution",
+          "completionYear": "Completion year",
+          "skillName": "Skill Name",
+          "proficiencyLevel": "Proficiency Level"
         },
         "accountStatus": {
           "inactive": "Inactive",
           "active": "Active",
           "disabled": "Disabled",
           "invited": "Invited"
+        }
+      },
+      "userskill": {
+        "fields": {
+          "name": "Skill Name",
+          "proficiencyLevel": "Proficiency Level"
         }
       },
       "membership": {
