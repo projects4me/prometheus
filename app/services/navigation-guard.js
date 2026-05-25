@@ -159,7 +159,7 @@ export default class NavigationGuardService extends Service {
             message: intl.t('global.form.navigationBlocked').toString(),
             type: 'warning',
             showCloseButton: false,
-            hideAfter: 3,
+            hideAfter: false,
             actions: {
                 confirm: {
                     label: intl.t('global.form.leaveAnyway').toString(),
