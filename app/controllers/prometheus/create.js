@@ -97,12 +97,12 @@ export default class PrometheusCreateController extends PrometheusController {
      * @todo Handle the situation where we are not using validations
      */
     @action save(schemaName, module, model, showDefaultSuccessMessage = true) {
-        model = this.model || model;
+        const record = model ?? this.model;
         const promise = new Promise((resolve, reject) => {
-            this.validate(model, schemaName).then((validation) => {
+            this.validate(record, schemaName).then((validation) => {
                 if (validation.isValid) {
-                    this.beforeSave(model);
-                    this._save(model, resolve, reject, showDefaultSuccessMessage);
+                    this.beforeSave(record);
+                    this._save(record, resolve, reject, showDefaultSuccessMessage);
                 } else {
                     this._showError(validation.errors, module);
                     reject();

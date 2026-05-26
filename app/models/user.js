@@ -209,16 +209,6 @@ export default Model.extend({
     phone: attr('string'),
 
     /**
-     * A user's education
-     *
-     * @property education
-     * @type String
-     * @for User
-     * @private
-     */
-    education: attr('string'),
-
-    /**
      * Github url of the User
      *
      * @property githubUrl
@@ -267,16 +257,6 @@ export default Model.extend({
      * @private
      */
     slackUrl: attr('string'),
-
-    /**
-    * Skills of the User
-    *
-    * @property skills
-    * @type String
-    * @for User
-    * @private
-    */
-    skills: attr('string'),
 
     /**
      * Date on which the user was last active
@@ -437,6 +417,26 @@ export default Model.extend({
      * @private
      */
     badgeLevels: hasMany('badgelevel'),
+
+    /**
+     * Skills associated with this user.
+     *
+     * @property skills
+     * @type {Prometheus.Models.Userskill}
+     * @for User
+     * @private
+     */
+    skills: hasMany('userskill'),
+
+    /**
+     * Qualification entries (education or certification) for this user.
+     *
+     * @property qualifications
+     * @type {Prometheus.Models.Userqualification}
+     * @for User
+     * @private
+     */
+    qualifications: hasMany('userqualification'),
 
     /**
      * This computed property is used in order to prepare an array of 

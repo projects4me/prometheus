@@ -3,7 +3,8 @@
  */
 
 import App from "prometheus/routes/app";
-import { hash } from 'rsvp';
+import { hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 /**
  * The user page
@@ -16,23 +17,43 @@ import { hash } from 'rsvp';
  */
 export default App.extend({
     model(params) {
-        Logger.debug('+Prometheus.Routes.App.User::afterModel()');
+        Logger.debug('+Prometheus.Routes.App.User::model()');
         let _self = this;
+        const userId = params.user_id;
+
         let _userOptions = {
-            query: `(User.id : ${params.user_id})`,
+            query: `(User.id : ${userId})`,
             rels: 'badgeLevels,badges,timeSpent,projects,openClosedProject,openClosedIssue,collaboration,latestProjects,latestIssues,mostWorkedMembers,recentActivities',
             limit: -1
-        }
+        };
 
-        Logger.debug('-Prometheus.Routes.App.User::afterModel()');
-        return hash({
-            user: _self.store.query('user', _userOptions)
+        let _skillOptions = {
+            query: `(Userskill.userId : ${userId})`,
+            limit: -1
+        };
+
+        let _qualificationOptions = {
+            query: `(Userqualification.userId : ${userId})`,
+            sort: 'completionYear',
+            order: 'DESC',
+            limit: -1
+        };
+
+        Logger.debug('-Prometheus.Routes.App.User::model()');
+
+        return hashSettled({
+            user: _self.store.query('user', _userOptions),
+            skills: _self.store.query('userskill', _skillOptions),
+            qualifications: _self.store.query('userqualification', _qualificationOptions)
+        }).then((results) => {
+            return extractHashSettled(results, 'user');
         }).catch((error) => {
             _self.errorManager.handleError(error, {
                 moduleName: 'user'
             });
         });
     },
+
     /**
      * The setupController hook.
      *
@@ -42,8 +63,17 @@ export default App.extend({
      */
     setupController: function (controller, model) {
         Logger.debug('+Prometheus.Routes.App.User::setupController()');
-        controller.set('model', model.user.objectAt(0));
-        this.breadcrumb.setTitle(this.routeName, model.user.objectAt(0).get('name'));
+
+        const user = model.user.objectAt(0);
+        const skills = model.skills?.toArray?.() ?? model.skills ?? [];
+        const qualifications = model.qualifications?.toArray?.() ?? model.qualifications ?? [];
+
+        user.skills.pushObjects(skills);
+        user.qualifications.pushObjects(qualifications);
+
+        controller.set('model', user);
+        this.breadcrumb.setTitle(this.routeName, user.get('name'));
+
         Logger.debug('-Prometheus.Routes.App.User::setupController()');
     }
 });

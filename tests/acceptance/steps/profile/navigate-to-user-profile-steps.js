@@ -1,5 +1,24 @@
 import steps from '../steps';
 
+export const given = function () {
+    return [
+        {
+            "User has qualification with title $title": (assert, ctx) =>
+                async function (title) {
+                    const user = ctx.get('currentUser');
+
+                    server.create('userqualification', {
+                        userId: user.id,
+                        title,
+                        type: 'education',
+                    });
+
+                    assert.ok(true, `User has qualification with title ${title}`);
+                },
+        },
+    ];
+};
+
 export const then = function () {
     return [
         {
@@ -7,7 +26,7 @@ export const then = function () {
                 let selectors = {
                     name: "div.user-info .user-name",
                     designation: "div.user-info .user-designation",
-                    education: "div.user-education .education",
+                    qualification: "div.user-qualification-section .qualification-title",
                     githubUrl: 'div[data-social-name="github"] a',
                     gitlabUrl: 'div[data-social-name="gitlab"] a',
                     skypeUrl: 'div[data-social-name="skype"] a',
@@ -18,7 +37,7 @@ export const then = function () {
         },
         {
             "User has $totalSkills skills": (assert) => async function (totalSkills) {
-                let skillEls = document.querySelectorAll('div.user-skills span.skill-item');
+                let skillEls = document.querySelectorAll('.user-skill-chip[data-skill-item]');
                 assert.equal(skillEls.length, totalSkills, `User has ${totalSkills} skills`);
             }
         }

@@ -75,6 +75,75 @@ export default class AppUserPageController extends PrometheusCreateController {
                     },
                 ],
             },
+            {
+                name: "userQualification",
+                fields: [
+                    {
+                        name: "type",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [{ name: "required" }],
+                            },
+                        },
+                    },
+                    {
+                        name: "title",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [{ name: "required" }],
+                            },
+                        },
+                    },
+                    {
+                        name: "institution",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [{ name: "required" }],
+                            },
+                        },
+                    },
+                    {
+                        name: "completionYear",
+                        validations: {
+                            default: {
+                                type: "number",
+                                rules: [{ name: "required" }],
+                            },
+                        },
+                    },
+                ],
+            },
+            {
+                name: "userSkill",
+                fields: [
+                    {
+                        name: "name",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [{ name: "required" }],
+                            },
+                            tests: [{
+                                name: "skill-name-unique",
+                                action: this.isSkillNameAvailable,
+                                message: this.intl.t("views.app.user.page.skill.duplicate"),
+                            }],
+                        },
+                    },
+                    {
+                        name: "proficiencyLevel",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [{ name: "required" }],
+                            },
+                        },
+                    },
+                ],
+            },
         ],
     };
 
@@ -88,6 +157,31 @@ export default class AppUserPageController extends PrometheusCreateController {
     constructor() {
         super(...arguments);
         this.setupSchema();
+    }
+
+    /**
+     * Returns whether the skill name is not already on the profile user.
+     * Used by the userSkill Yup schema test (true = valid / available).
+     *
+     * @method isSkillNameAvailable
+     * @param {String} name
+     * @return {Boolean}
+     * @public
+     */
+    @action
+    async isSkillNameAvailable(name) {
+        const normalized = name?.trim().toLowerCase();
+
+        if (!normalized) {
+            return true;
+        }
+
+        const skills =
+            this.model?.skills?.toArray?.() ?? this.model?.skills ?? [];
+
+        return !skills.some(
+            (skill) => skill.name?.trim().toLowerCase() === normalized
+        );
     }
 
     /**
@@ -303,5 +397,5 @@ export default class AppUserPageController extends PrometheusCreateController {
      @computed('issues')
      get closedIssues() {
          return (this.issues.filter((issue) => (issue.issuestatus.get('done') === "1"))).length;
-     }     
+     }
 }

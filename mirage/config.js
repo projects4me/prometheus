@@ -30,6 +30,8 @@ import * as Permission from './route-handlers/permission';
 import * as Systemsetting from './route-handlers/systemsetting';
 import * as Issueplanning from './route-handlers/issueplanning';
 import * as Issuewatcher from './route-handlers/issuewatcher';
+import * as Userskill from './route-handlers/userskill';
+import * as Userqualification from './route-handlers/userqualification';
 
 export function makeServer(config) {
     let finalConfig = {
@@ -76,4 +78,6 @@ function routes() {
     Systemsetting.register(this, ctx);
     Issueplanning.register(this, ctx);
     Issuewatcher.register(this, ctx);
+    Userskill.register(this);
+    Userqualification.register(this);
 }

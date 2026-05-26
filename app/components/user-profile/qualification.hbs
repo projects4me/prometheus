@@ -1,0 +1,154 @@
+<div class="box box-primary user-qualification-section">
+  <div class="box-header with-border box-header-flex box-header-no-content">
+    <h3 class="box-title">{{t "views.app.user.page.qualifications"}}</h3>
+    {{#if this.showAddControl}}
+      <AppUi::DottedAddButton
+        @title={{t "views.app.user.page.qualification.add"}}
+        @onClick={{this.startAdding}}
+        @class="pull-right"
+        @aclContext="App.User.Edit"
+        @data-add="user.qualification"
+      />
+    {{/if}}
+  </div>
+
+  <div class="box-body">
+    {{#if this.sortedQualifications.length}}
+      <ul class="user-qualification-list">
+        {{#each this.sortedQualifications as |entry|}}
+          <li class="user-qualification-item" data-qualification-item={{entry.id}}>
+            <span
+              class="qualification-type-icon qualification-type-icon-{{entry.type}}"
+              title={{get this.typeLabels entry.type}}
+              aria-label={{get this.typeLabels entry.type}}
+            >
+              <i class="fa {{or (get this.typeIcons entry.type) "fa-file-text-o"}}" aria-hidden="true"></i>
+            </span>
+            <div class="user-qualification-item-content">
+              <p class="qualification-title">{{entry.title}}</p>
+              {{#if (or entry.institution entry.completionYear)}}
+                <p class="qualification-meta">
+                  {{#if entry.institution}}
+                    <span class="qualification-institution">{{entry.institution}}</span>
+                  {{/if}}
+                  {{#if (and entry.institution entry.completionYear)}}
+                    <span class="qualification-meta-separator" aria-hidden="true">·</span>
+                  {{/if}}
+                  {{#if entry.completionYear}}
+                    <span class="qualification-year">{{entry.completionYear}}</span>
+                  {{/if}}
+                </p>
+              {{/if}}
+            </div>
+            {{#if this.canEdit}}
+              <button
+                type="button"
+                class="profile-collection-remove"
+                title={{t "views.app.user.page.qualification.remove"}}
+                aria-label={{t "views.app.user.page.qualification.remove"}}
+                disabled={{this.isSaving}}
+                {{on "click" (fn this.removeItem entry)}}
+              >
+                <i class="fa fa-times"></i>
+              </button>
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      {{#unless this.isAdding}}
+        <p class="user-qualification-empty text-muted">{{t "views.app.user.page.qualification.none"}}</p>
+      {{/unless}}
+    {{/if}}
+
+    {{#if this.isAdding}}
+      <div class="profile-inline-form user-qualification-form" data-user-qualification-form>
+        <FormFields::FieldRelate
+          @placeholder={{t "views.app.user.page.qualification.typePlaceholder"}}
+          @label={{t "views.app.user.page.qualification.type"}}
+          @options={{this.typeOptions}}
+          @selected={{this.selectedType}}
+          @searchField="label"
+          @onchange={{fn @selectRelated this.newQualification "type"}}
+          @relateType="relate-simple"
+          @searchEnabled={{false}}
+          @required={{true}}
+          @disabled={{this.isSaving}}
+          @data-field="user-qualification.type"
+          @validate={{fn @validateField "userQualification" (hash name="type" value=this.newQualification.type model=this.newQualification)}}
+          @message={{@message.userQualification.type}}
+          @aclContext="App.User.Edit"
+        />
+
+        <FormFields::FieldText
+          @placeholder={{t "views.app.user.page.qualification.titlePlaceholder"}}
+          @label={{t "views.app.user.page.qualification.title"}}
+          @type="text"
+          @value={{this.newQualification.title}}
+          @onInput={{fn this.updateDraftField "title"}}
+          @lengthRequired={{false}}
+          @required={{true}}
+          @disabled={{this.isSaving}}
+          @data-field="user-qualification.title"
+          @validate={{fn @validateField "userQualification" (hash name="title" value=this.newQualification.title model=this.newQualification)}}
+          @message={{@message.userQualification.title}}
+          @aclContext="App.User.Edit"
+        />
+
+        <FormFields::FieldText
+          @placeholder={{t "views.app.user.page.qualification.institutionPlaceholder"}}
+          @label={{t "views.app.user.page.qualification.institution"}}
+          @type="text"
+          @value={{this.newQualification.institution}}
+          @onInput={{fn this.updateDraftField "institution"}}
+          @lengthRequired={{false}}
+          @required={{true}}
+          @disabled={{this.isSaving}}
+          @data-field="user-qualification.institution"
+          @validate={{fn @validateField "userQualification" (hash name="institution" value=this.newQualification.institution model=this.newQualification)}}
+          @message={{@message.userQualification.institution}}
+          @aclContext="App.User.Edit"
+        />
+
+        <FormFields::FieldRelate
+          @placeholder={{t "views.app.user.page.qualification.completionYearPlaceholder"}}
+          @label={{t "views.app.user.page.qualification.completionYear"}}
+          @options={{this.completionYearOptions}}
+          @selected={{this.selectedCompletionYear}}
+          @searchField="label"
+          @onchange={{fn @selectRelated this.newQualification "completionYear"}}
+          @relateType="relate-simple"
+          @searchEnabled={{false}}
+          @required={{true}}
+          @disabled={{this.isSaving}}
+          @data-field="user-qualification.completionYear"
+          @validate={{fn @validateField "userQualification" (hash name="completionYear" value=this.newQualification.completionYear model=this.newQualification)}}
+          @message={{@message.userQualification.completionYear}}
+          @aclContext="App.User.Edit"
+        />
+
+        <div class="profile-inline-form-actions user-qualification-form-actions">
+          <AppUi::Button
+            type="button"
+            class="btn btn-primary btn-sm"
+            disabled={{this.isSaving}}
+            data-btn="save"
+            @onClick={{this.saveDraft}}
+            @aclContext="App.User.Edit"
+          >
+            {{t "global.form.save"}}
+          </AppUi::Button>
+          <AppUi::Button
+            type="button"
+            class="btn btn-default btn-sm"
+            disabled={{this.isSaving}}
+            data-btn="close"
+            @onClick={{this.cancelAdding}}
+          >
+            {{t "global.form.cancel"}}
+          </AppUi::Button>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</div>
