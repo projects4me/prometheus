@@ -3,16 +3,6 @@
     <h1>
       <small><LinkTo @route="app.project" @model={{this.model.shortCode}}>{{this.model.name}}</LinkTo></small>
     </h1>
-  {{else}}
-    <div class="callout callout-warning no-project-selected">
-      <h4>
-        <span class="fa-stack fa-lg">
-          <i class="fa fa-briefcase fa-stack-1x fa-inverse"></i>
-          <i class="fa fa-ban fa-stack-2x text-danger"></i>
-        </span> {{t "views.app.project.noproject"}}
-      </h4>
-      {{t "views.app.project.select"}}
-    </div>
   {{/if}}
   <BreadCrumb/>
 </section>

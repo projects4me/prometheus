@@ -22,6 +22,7 @@ Feature: render milestone
     | new | in_progress | in_review | done | feedback | pending | deferred |
     | 1   | 0           | 0         | 0    |  1       | 0       | 0        |
     ------------------------------------------------------------------------    
+    And There is custom callback for board issues
     When User navigates to app/project/project_1/board
     Then User should see 1 issues in new status
     And User should see 1 issues in in_progress status
@@ -53,6 +54,7 @@ Feature: render milestone
     ------------------------------------------------------------------------
     And Each issue has 5 hours and 45 minutes of spent time
     And Each issue has 3 hours and 15 minutes of estimated time
+    And There is custom callback for board issues
     When User navigates to app/project/project_1/board
     Then User should see 28 hours and 45 minutes of spent time of first milestone
     And User should see 16 hours and 15 minutes of estimated time of first milestone
@@ -78,6 +80,7 @@ Feature: render milestone
     | new | in_progress | in_review | done | feedback | pending | deferred |
     | 1   | 0           | 0         | 0    |  1       | 0       | 0        |
     ------------------------------------------------------------------------
+    And There is custom callback for board issues
     When User navigates to app/project/project_1/board
     And User clicks on first issue quick view
     Then User should see issue details section with issue subject

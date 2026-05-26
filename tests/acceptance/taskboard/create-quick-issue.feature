@@ -22,6 +22,7 @@ Feature: create quick issue | Taskboard
     | new | in_progress | in_review | done | feedback | pending | deferred |
     | 1   | 0           | 0         | 0    |  1       | 0       | 0        |
     ------------------------------------------------------------------------  
+    And There is custom callback for board issues
     When User navigates to app/project/project_1/board
     And User clicks on add issue button in new status
     And User enters test subject in subject
@@ -29,5 +30,6 @@ Feature: create quick issue | Taskboard
     And User selects option 3 of issue type
     And User selects start date of issue
     And User selects end date of issue
+    And There is no custom callback
     And User clicks on save button
     Then There is a new issue created with test subject inside lane of new status

@@ -1,0 +1,59 @@
+<div class="gantt-view gantt-skeleton" data-test-skeleton-gantt>
+  <div class="box box-primary">
+    <div class="gantt-container">
+
+    {{!-- Left task-list panel --}}
+    <div class="gantt-task-list skeleton-gantt-task-list">
+      <div class="skeleton-gantt-task-header">
+        <span class="skeleton-line skeleton-line--subtitle" style="width: 55%;"></span>
+        <span class="skeleton-line skeleton-line--xs" style="width: 7rem;"></span>
+      </div>
+
+      {{!-- Milestone rows + indented task rows --}}
+      {{#each (array 1 2 3)}}
+        <div class="skeleton-gantt-milestone-row">
+          <span class="skeleton-circle skeleton-circle--sm" style="height: 1.2rem; width: 1.2rem; border-radius: 0.2rem;"></span>
+          <div class="skeleton-list-row__content" style="flex: 1;">
+            <span class="skeleton-line skeleton-line--short" style="width: 70%;"></span>
+          </div>
+        </div>
+
+        {{#each (array 1 2 3 4)}}
+          <div class="skeleton-gantt-task-row">
+            <span class="skeleton-line skeleton-line--xs" style="width: 60%; margin-left: 2rem;"></span>
+          </div>
+        {{/each}}
+      {{/each}}
+    </div>
+
+    {{!-- Right timeline panel --}}
+    <div class="skeleton-gantt-timeline">
+      {{!-- Header rows: year/month/day strips --}}
+      <div class="skeleton-gantt-header-row" style="height: 2rem;">
+        {{#each (array 1 2 3 4 5 6 7 8 9 10 11 12)}}
+          <span class="skeleton-line skeleton-line--xs" style="min-width: 6rem; flex: 1; height: 100%; border-radius: 0; margin-bottom: 0;"></span>
+        {{/each}}
+      </div>
+      <div class="skeleton-gantt-header-row" style="height: 1.6rem; margin-top: 0.2rem;">
+        {{#each (array 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)}}
+          <span class="skeleton-line skeleton-line--xs" style="min-width: 3rem; flex: 1; height: 100%; border-radius: 0; margin-bottom: 0;"></span>
+        {{/each}}
+      </div>
+
+      {{!-- Milestone bars + task bars --}}
+      {{#each (array 1 2 3)}}
+        <div class="skeleton-gantt-bar-row" style="display: flex; align-items: center; padding: 0.5rem 0;">
+          <span class="skeleton-rect" style="height: 1.4rem; width: 35%; border-radius: 0.6rem; margin: 0;"></span>
+        </div>
+
+        {{#each (array 1 2 3 4)}}
+          <div class="skeleton-gantt-bar-row" style="display: flex; align-items: center; padding: 0.4rem 0 0.4rem 2rem;">
+            <span class="skeleton-rect" style="height: 1rem; width: 22%; border-radius: 0.4rem; margin: 0; margin-left: 10%;"></span>
+          </div>
+        {{/each}}
+      {{/each}}
+    </div>
+
+    </div>
+  </div>
+</div>

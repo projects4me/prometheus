@@ -4,6 +4,8 @@
 
 import steps from '../steps';
 import { click } from '@ember/test-helpers';
+import Context from '../../../../mirage/yadda-context/context';
+import Collection from 'ember-cli-mirage/orm/collection';
 
 /**
  * Step definitions specific to the Task Board collapse / expand feature.

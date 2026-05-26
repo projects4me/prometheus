@@ -1,0 +1,39 @@
+<section class="content">
+  <div class="conversations conversation-skeleton" data-test-skeleton-conversation-grid>
+    <div class="row">
+
+      {{!-- Spacer col (mirrors the real layout offset) --}}
+      <div class="col-sm-3"></div>
+
+      {{!-- Conversation card grid --}}
+      <div class="col-sm-6">
+
+        {{!-- Search bar card --}}
+        <div class="conversation-item conversation-search-bar" style="margin-bottom: 1rem;">
+          <div class="flex-row flex-ai-c" style="gap: 0.75rem;">
+            <span class="skeleton-circle skeleton-circle--sm" style="height: 3.2rem; width: 3.2rem;"></span>
+            <span class="skeleton-line skeleton-line--medium" style="flex: 1;"></span>
+            <span class="skeleton-line skeleton-line--xs" style="width: 8rem;"></span>
+          </div>
+        </div>
+
+        {{!-- Conversation cards --}}
+        {{#each (array 1 2 3 4 5 6 7 8)}}
+          <div class="box" style="margin-bottom: 1rem; padding: 1rem 1.25rem; display: flex; gap: 1rem; align-items: flex-start;">
+            <span class="skeleton-circle skeleton-circle--sm"></span>
+            <div style="flex: 1;">
+              <span class="skeleton-line skeleton-line--short" style="width: 80%;"></span>
+              <span class="skeleton-line skeleton-line--medium"></span>
+              <div style="display: flex; gap: 1rem; margin-top: 0.4rem;">
+                <span class="skeleton-line skeleton-line--xs" style="width: 6rem;"></span>
+                <span class="skeleton-line skeleton-line--xs" style="width: 5rem;"></span>
+              </div>
+            </div>
+          </div>
+        {{/each}}
+
+      </div>
+
+    </div>
+  </div>
+</section>

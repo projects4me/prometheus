@@ -1,0 +1,69 @@
+<div class="kanban-skeleton" data-test-skeleton-kanban-board>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="box box-primary list-view">
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="skeleton-kanban-column">
+                <div class="box-header with-border">
+                  <span class="skeleton-line skeleton-line--subtitle"></span>
+                </div>
+                <div class="box-body no-padding">
+                  {{#each (array 1 2 3 4)}}
+                    <div class="skeleton-list-row">
+                      <span class="skeleton-circle skeleton-circle--sm"></span>
+                      <div class="skeleton-list-row__content">
+                        <span class="skeleton-line skeleton-line--short"></span>
+                        <span class="skeleton-line skeleton-line--medium"></span>
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="skeleton-kanban-column">
+                <div class="box-header with-border">
+                  <span class="skeleton-line skeleton-line--subtitle"></span>
+                </div>
+                <div class="box-body no-padding">
+                  {{#each (array 1 2 3 4 5)}}
+                    <div class="skeleton-list-row">
+                      <span class="skeleton-circle skeleton-circle--sm"></span>
+                      <div class="skeleton-list-row__content">
+                        <span class="skeleton-line skeleton-line--short"></span>
+                        <span class="skeleton-line skeleton-line--medium"></span>
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="skeleton-kanban-column">
+                <div class="box-header with-border">
+                  <span class="skeleton-line skeleton-line--subtitle"></span>
+                </div>
+                <div class="box-body no-padding">
+                  {{#each (array 1 2 3)}}
+                    <div class="skeleton-list-row">
+                      <span class="skeleton-circle skeleton-circle--sm"></span>
+                      <div class="skeleton-list-row__content">
+                        <span class="skeleton-line skeleton-line--short"></span>
+                        <span class="skeleton-line skeleton-line--medium"></span>
+                      </div>
+                    </div>
+                  {{/each}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

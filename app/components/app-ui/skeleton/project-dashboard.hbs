@@ -1,0 +1,173 @@
+<div class="page-skeleton page-skeleton--project-dashboard" data-test-skeleton-project-dashboard>
+  {{!-- Top: project identity + 2 main cards --}}
+  <div class="row">
+    <div class="col-md-8">
+      <div class="box box-primary project-details">
+        <div class="skeleton-box-header with-border">
+          <span class="skeleton-line skeleton-line--title"></span>
+          <span class="skeleton-line skeleton-line--subtitle"></span>
+        </div>
+
+        <div class="skeleton-box-body">
+          <div class="row">
+            <div class="col-xs-3 col-md-2">
+              <span class="skeleton-circle skeleton-circle--sm"></span>
+              <span class="skeleton-line skeleton-line--short"></span>
+            </div>
+            <div class="col-xs-9 col-md-10">
+              <span class="skeleton-line skeleton-line--heading"></span>
+              <span class="skeleton-line"></span>
+              <span class="skeleton-line skeleton-line--medium"></span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <span class="skeleton-line skeleton-line--xs"></span>
+              <span class="skeleton-line skeleton-line--short"></span>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <span class="skeleton-line skeleton-line--xs"></span>
+              <span class="skeleton-line skeleton-line--short"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Conversations + latest issues --}}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="box box-info project-conversations-section">
+            <div class="box-header with-border">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+            </div>
+            <div class="box-body no-padding">
+              {{#each (array 1 2 3 4 5)}}
+                <div class="skeleton-list-row">
+                  <span class="skeleton-circle skeleton-circle--sm"></span>
+                  <div class="skeleton-list-row__content">
+                    <span class="skeleton-line skeleton-line--short"></span>
+                    <span class="skeleton-line skeleton-line--medium"></span>
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="box box-success issue-overview-section">
+            <div class="box-header with-border">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+            </div>
+            <div class="box-body no-padding">
+              {{#each (array 1 2 3 4 5)}}
+                <div class="skeleton-list-row">
+                  <span class="skeleton-circle skeleton-circle--sm"></span>
+                  <div class="skeleton-list-row__content">
+                    <span class="skeleton-line skeleton-line--short"></span>
+                    <span class="skeleton-line skeleton-line--medium"></span>
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Main estimated/spent chart --}}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box box-default project-estimated-spent-section">
+            <div class="box-header with-border">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+            </div>
+            <div class="box-body no-padding">
+              <span class="skeleton-rect skeleton-rect--content" style="height: 12rem;"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Activities timeline --}}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box box-primary project-activities-section">
+            <div class="box-header with-border">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+            </div>
+            <div class="box-body no-padding">
+              {{#each (array 1 2 3 4)}}
+                <div class="skeleton-list-row">
+                  <span class="skeleton-circle skeleton-circle--sm"></span>
+                  <div class="skeleton-list-row__content">
+                    <span class="skeleton-line skeleton-line--short"></span>
+                    <span class="skeleton-line skeleton-line--medium"></span>
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{!-- Right column: members + milestones + stats --}}
+    <div class="col-md-4">
+      <div class="box box-warning project-members-section">
+        <div class="box-header with-border box-header-flex box-header-no-content">
+          <span class="skeleton-line skeleton-line--subtitle"></span>
+        </div>
+        <div class="box-body no-padding">
+          {{#each (array 1 2 3 4 5)}}
+            <div class="skeleton-list-row">
+              <span class="skeleton-circle skeleton-circle--sm"></span>
+              <div class="skeleton-list-row__content">
+                <span class="skeleton-line skeleton-line--short"></span>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="box box-info project-milestones-section">
+        <div class="box-header with-border">
+          <span class="skeleton-line skeleton-line--subtitle"></span>
+        </div>
+        <div class="box-body no-padding">
+          {{#each (array 1 2 3)}}
+            <div class="skeleton-list-row">
+              <span class="skeleton-line skeleton-line--short"></span>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="box box-danger">
+        <div class="box-header with-border">
+          <span class="skeleton-line skeleton-line--subtitle"></span>
+        </div>
+        <div class="box-body no-padding">
+          <span class="skeleton-rect skeleton-rect--content" style="height: 8rem;"></span>
+        </div>
+      </div>
+
+      <div class="box box-info">
+        <div class="box-header with-border">
+          <span class="skeleton-line skeleton-line--subtitle"></span>
+        </div>
+        <div class="box-body no-padding">
+          <div class="row">
+            {{#each (array 1 2 3 4)}}
+              <div class="col-xs-6">
+                <span class="skeleton-line skeleton-line--xs" style="width: 6rem;"></span>
+                <span class="skeleton-line skeleton-line--short" style="width: 8rem;"></span>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

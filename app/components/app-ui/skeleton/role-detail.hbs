@@ -1,0 +1,55 @@
+<div class="col-lg-10 col-md-12 col-sm-12 col-xs-12 role-details role-detail-skeleton" data-test-skeleton-role-detail>
+
+  {{!-- Name + description inline-edit fields --}}
+  <div class="field-group" style="margin-bottom: 1.5rem;">
+    <div style="margin-bottom: 1.25rem;">
+      <span class="skeleton-line skeleton-line--xs" style="width: 5rem;"></span>
+      <span class="skeleton-line skeleton-line--medium" style="width: 55%;"></span>
+    </div>
+    <div>
+      <span class="skeleton-line skeleton-line--xs" style="width: 8rem;"></span>
+      <span class="skeleton-line skeleton-line--short"></span>
+      <span class="skeleton-line skeleton-line--medium"></span>
+    </div>
+  </div>
+
+  {{!-- Tabs: Permissions / Users --}}
+  <div class="nav-tabs-custom">
+    <ul class="nav nav-tabs" style="display: flex; gap: 0; border-bottom: 1px solid #f4f4f4;">
+      <li style="padding: 0.75rem 1.25rem;">
+        <span class="skeleton-line skeleton-line--xs" style="width: 7rem;"></span>
+      </li>
+      <li style="padding: 0.75rem 1.25rem;">
+        <span class="skeleton-line skeleton-line--xs" style="width: 5rem;"></span>
+      </li>
+    </ul>
+
+    <div class="tab-content" style="padding: 1rem;">
+      {{!-- Accordion groups: module name + permission rows --}}
+      {{#each (array 1 2 3 4 5)}}
+        <div class="panel" style="margin-bottom: 1rem;">
+          <div class="panel-heading" style="padding: 0.85rem 1rem; background: #f9f9f9; border-radius: 0.3rem; display: flex; align-items: center; gap: 0.75rem;">
+            <span class="skeleton-circle skeleton-circle--sm" style="height: 1.2rem; width: 1.2rem; border-radius: 0.2rem;"></span>
+            <span class="skeleton-line skeleton-line--subtitle" style="width: 40%;"></span>
+          </div>
+          <div class="panel-body" style="padding: 0.75rem 1rem 0.25rem;">
+            {{#each (array 1 2 3 4)}}
+              <div class="skeleton-list-row" style="padding: 0.5rem 0;">
+                <span class="skeleton-line skeleton-line--xs" style="width: 2rem;"></span>
+                <div class="skeleton-list-row__content">
+                  <span class="skeleton-line skeleton-line--short" style="width: 60%;"></span>
+                </div>
+                <div style="display: flex; gap: 0.75rem; flex-shrink: 0;">
+                  <span class="skeleton-line skeleton-line--xs" style="width: 3.5rem;"></span>
+                  <span class="skeleton-line skeleton-line--xs" style="width: 3.5rem;"></span>
+                  <span class="skeleton-line skeleton-line--xs" style="width: 3.5rem;"></span>
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+
+</div>
