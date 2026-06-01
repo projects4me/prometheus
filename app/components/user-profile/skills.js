@@ -114,6 +114,30 @@ export default class UserProfileSkillsComponent extends UserProfileBaseInlineSec
 	}
 
 	/**
+	 * intl key for remove skill success.
+	 *
+	 * @property toastRemoveSuccessKey
+	 * @type String
+	 * @for UserProfileSkillsComponent
+	 * @protected
+	 */
+	get toastRemoveSuccessKey() {
+		return 'views.app.user.page.skill.removed';
+	}
+
+	/**
+	 * intl key for remove skill failure.
+	 *
+	 * @property toastRemoveFailedKey
+	 * @type String
+	 * @for UserProfileSkillsComponent
+	 * @protected
+	 */
+	get toastRemoveFailedKey() {
+		return 'views.app.user.page.skill.removeFailed';
+	}	
+
+	/**
 	 * Alias of `draft` for the skill form template.
 	 *
 	 * @property newSkill
