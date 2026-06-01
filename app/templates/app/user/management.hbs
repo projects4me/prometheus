@@ -11,15 +11,25 @@
       <AccessControl @aclContext="App.User.List">
         <div class="box box-primary list-view">
             <div class="box-header with-border">
-              <div class="search">
-                <div class="has-feedback user-management-search">
-                  <FormFields::FieldSearch
-                    @placeholder={{t "views.app.user.management.search"}}
-                    @data-module="user-management"
-                    @searchFunction={{this.searchUserByName}}
-                    @aclContext="App.User.Management.SearchUser"
-                  />
+              <div class="header">
+                <div class="search">
+                  <div class="has-feedback user-management-search">
+                    <FormFields::FieldSearch
+                      @placeholder={{t "views.app.user.management.search"}}
+                      @data-module="user-management"
+                      @searchFunction={{this.searchUserByName}}
+                      @aclContext="App.User.Management.SearchUser"
+                    />
+                  </div>
                 </div>
+                <AccessControl @aclContext="App.User.Create">
+                  <LinkTo @route="app.user.create" class="user-management-create">
+                    <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="create-user">
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                      {{t "views.nav.menu.user.create"}}
+                    </AppUi::Button>
+                  </LinkTo>
+                </AccessControl>
               </div>
             </div>
 

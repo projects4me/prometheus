@@ -9,6 +9,26 @@
 */
 
 .user-management {
+  .box-header .header {
+    @include flexbox($justifyContent: space-between, $alignItems: center);
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+
+    .search {
+      flex: 1;
+      min-width: 0;
+      width: auto;
+    }
+
+    .user-management-create {
+      flex-shrink: 0;
+
+      i {
+        margin-right: 0.2rem;
+      }
+    }
+  }
+
   .users {
     min-height: 30rem;
 
@@ -86,9 +106,5 @@
     .switch-control {
       margin-top: 0.2rem;
     }
-  }
-
-  .header {
-    @include flexbox($justifyContent: space-between);
   }
 }
