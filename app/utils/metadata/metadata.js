@@ -105,20 +105,6 @@ export default Object.extend({
                                 anchorRoute: 'project/create',
                                 projectRelated: false,
                             }
-                        },
-                        section2:{
-                            import:{
-                                label: 'views.nav.menu.project.import',
-                                route: 'app.import',
-                                anchorRoute: 'project/import',
-                                projectRelated: false,
-                            },
-                            export:{
-                                label: 'views.nav.menu.project.export',
-                                route: 'app.export',
-                                anchorRoute: 'project/export',
-                                projectRelated: false,
-                            }
                         }
                     },
                     order: 6
@@ -144,22 +130,6 @@ export default Object.extend({
                                 route: 'app.project.issue.create',
                                 className: 'text-red',
                                 anchorRoute: 'issue/create',
-                                projectRelated: true,
-        
-                            }
-                        },
-                        section2:{
-                            import:{
-                                label: 'views.nav.menu.issue.import',
-                                route: 'app.import',
-                                anchorRoute: 'issue/import',
-                                projectRelated: true,
-        
-                            },
-                            export:{
-                                label: 'views.nav.menu.issue.export',
-                                route: 'app.export',
-                                anchorRoute: 'issue/export',
                                 projectRelated: true,
         
                             }
@@ -190,95 +160,6 @@ export default Object.extend({
                     anchorRoute: 'gantt',
                     projectRelated: true,
                     order: 4
-                },
-                Report:{
-                    label: 'views.nav.menu.report.label',
-                    icon: 'bar-chart',
-                    route: 'app.module',
-                    anchorRoute: 'report',
-                    projectRelated: false,
-                    actions:{
-                        section1:{
-                            list:{
-                                label: 'views.nav.menu.report.list',
-                                route: 'app.module',
-                                className: 'text-teal',
-                                anchorRoute: 'report',
-                                projectRelated: false,
-        
-                            },
-                            create:{
-                                label: 'views.nav.menu.report.create',
-                                route: 'app.create',
-                                className: 'text-red',
-                                anchorRoute: 'report/create',
-                                projectRelated: false,
-        
-                            }
-                        },
-                        section2:{
-                            export:{
-                                label: 'views.nav.menu.report.export',
-                                route: 'app.export',
-                                anchorRoute: 'report/export',
-                                projectRelated: false,
-        
-                            }
-                        }
-                    },
-                    order: 9
-                },
-                Timelog:{
-                    label: 'views.nav.menu.timelog.label',
-                    icon: 'clock-o',
-                    route: 'app.module',
-                    anchorRoute: 'timelog',
-                    projectRelated: false,
-                    actions:{
-                        section1:{
-                            list:{
-                                label: 'views.nav.menu.timelog.list',
-                                route: 'app.module',
-                                className:"text-teal",
-                                anchorRoute: 'timelog',
-                                projectRelated: false,
-        
-                            },
-                            create:{
-                                label: 'views.nav.menu.timelog.create',
-                                route: 'app.create',
-                                className: "text-red",
-                                anchorRoute: 'timelog/create',
-                                projectRelated: false,
-        
-                            }
-                        },
-                        section2:{
-                            import:{
-                                label: 'views.nav.menu.timelog.import',
-                                route: 'app.import',
-                                anchorRoute: 'timelog/import',
-                                projectRelated: false,
-        
-                            },
-                            export:{
-                                label: 'views.nav.menu.timelog.export',
-                                route: 'app.export',
-                                anchorRoute: 'timelog/export',
-                                projectRelated: false,
-        
-                            }
-                        }
-                    },
-                    order: 8
-                },
-                Wiki:{
-                    label: 'views.nav.menu.wiki.label',
-                    icon: 'book',
-                    route: 'app.project.wiki',
-                    anchorRoute: 'wiki',
-                    projectRelated: true,
-                    order: 7
                 }
             },
             adminItems: {
