@@ -331,7 +331,7 @@ export default class UserProfileBaseInlineSectionComponent extends Component {
 			this.isAdding = false;
 			this.draft = null;
 		} catch {
-			// Validation and API errors are handled by the controller save flow.
+			postToast(this.intl, this.toastSaveFailedKey, 'error');
 		} finally {
 			this.isSaving = false;
 		}
@@ -350,13 +350,13 @@ export default class UserProfileBaseInlineSectionComponent extends Component {
 
 		try {
 			await record.destroyRecord();
-			postToast(this.intl, this.toastSavedKey);
+			postToast(this.intl, this.toastRemoveSuccessKey);
 		} catch {
 			record.rollbackAttributes();
-			postToast(this.intl, this.toastSaveFailedKey, 'error');
+			postToast(this.intl, this.toastRemoveFailedKey);
 		} finally {
 			this.isSaving = false;
-		}
+		}		
 	}
 
 	/**

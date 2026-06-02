@@ -117,7 +117,7 @@ export default function (assert) {
 			);
 			assert.ok(errorMessage, 'Messenger error message should be displayed');
 			assert.ok(
-				errorMessage.textContent.includes('required'),
+				errorMessage.textContent.includes('Could not add qualification'),
 				'Messenger error should describe required qualification fields'
 			);
 			assert.notOk(

@@ -106,6 +106,30 @@ export default class UserProfileQualificationComponent extends UserProfileBaseIn
 	}
 
 	/**
+	 * intl key for remove qualification success.
+	 *
+	 * @property toastRemoveSuccessKey
+	 * @type String
+	 * @for UserProfileQualificationComponent
+	 * @protected
+	 */
+	get toastRemoveSuccessKey() {
+		return 'views.app.user.page.qualification.removed';
+	}
+
+	/**
+	 * intl key for remove qualification failure.
+	 *
+	 * @property toastRemoveFailedKey
+	 * @type String
+	 * @for UserProfileQualificationComponent
+	 * @protected
+	 */
+	get toastRemoveFailedKey() {
+		return 'views.app.user.page.qualification.removeFailed';
+	}
+
+	/**
 	 * Alias of `draft` for the qualification form and list template.
 	 *
 	 * @property newQualification
