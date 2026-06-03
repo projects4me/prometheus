@@ -60,28 +60,28 @@ export default class AppUserManagementController extends PrometheusListControlle
      * @param {Event} evt
      * @public
      */
-    @action changeMultipleUserStatus(evt) {
-        let accountStatus = (evt.target.checked) ? 'active' : 'inactive';
-        let _self = this;
-        let selectedUsers = _self.getSelectedUsers();
+    @action
+    async changeMultipleUserStatus(evt) {
+        let accountStatus = evt.target.checked ? 'active' : 'inactive';
+        let selectedUsers = this.getSelectedUsers();
+        let usersToUpdate = selectedUsers.filter((user) => user.accountStatus !== accountStatus);
 
-        if (selectedUsers) {
-            let switchEl = evt.target;
-            //disable switch element until the models are updated 
-            switchEl.disabled = true;
-            _self.toggleCursorStyle(evt.target.nextElementSibling, 'wait', 'wait');
+        if (!usersToUpdate.length) {
+            return;
+        }
 
-            selectedUsers.forEach(async (user, index) => {
-                if (user.accountStatus !== accountStatus) {
-                    user.set('accountStatus', accountStatus)
+        this.setMassSwitchesLoading(true);
+
+        try {
+            await Promise.all(
+                usersToUpdate.map(async (user) => {
+                    user.set('accountStatus', accountStatus);
                     await user.save();
-
-                    if (selectedUsers.length - 1 === index) {
-                        switchEl.disabled = false;
-                        _self.toggleCursorStyle(evt.target.nextElementSibling, 'pointer', 'auto');
-                    }
-                }
-            });
+                })
+            );
+        } finally {
+            this.setMassSwitchesLoading(false);
+            this.syncMassSwitchState();
         }
     }
 
@@ -112,15 +112,57 @@ export default class AppUserManagementController extends PrometheusListControlle
      */
     toggleMassSwitch(evt) {
         let users = this.getSelectedUsers();
-        let allUsersActive = users.every((user) => {
-            return user.accountStatus === 'active';
-        });
+        let allUsersActive = users.every((user) => user.accountStatus === 'active');
+        let checked = allUsersActive && evt.target.checked;
 
-        if (allUsersActive && evt.target.checked) {
-            $('.user-mass-actions [data-input-type=switch]').prop('checked', true);
-        } else {
-            $('.user-mass-actions [data-input-type=switch]').prop('checked', false);
-        }
+        this.syncMassSwitches(checked);
+    }
+
+    /**
+     * Returns all mass status switch inputs (header and footer).
+     *
+     * @returns {NodeListOf<HTMLInputElement>}
+     */
+    getMassSwitchElements() {
+        return document.querySelectorAll('.user-mass-actions [data-input-type=switch]');
+    }
+
+    /**
+     * Keeps header and footer mass switches in the same checked state.
+     *
+     * @param {Boolean} checked
+     */
+    syncMassSwitches(checked) {
+        this.getMassSwitchElements().forEach((switchEl) => {
+            switchEl.checked = checked;
+        });
+    }
+
+    /**
+     * Updates both mass switches to reflect the current status of selected users.
+     */
+    syncMassSwitchState() {
+        let selectedUsers = this.getSelectedUsers();
+        let allUsersActive = selectedUsers.length > 0
+            && selectedUsers.every((user) => user.accountStatus === 'active');
+
+        this.syncMassSwitches(allUsersActive);
+    }
+
+    /**
+     * Applies loading state to all mass switches (header and footer).
+     *
+     * @param {Boolean} loading
+     */
+    setMassSwitchesLoading(loading) {
+        this.getMassSwitchElements().forEach((switchEl) => {
+            switchEl.disabled = loading;
+            this.toggleCursorStyle(
+                switchEl.nextElementSibling,
+                loading ? 'wait' : 'pointer',
+                loading ? 'wait' : 'auto'
+            );
+        });
     }
 
     /**
