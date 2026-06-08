@@ -1,0 +1,217 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/**
+ * Facebook-style skeleton placeholders with shimmer animation
+ */
+
+$skeleton-base: #e9ecef;
+$skeleton-highlight: #f5f6f7;
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@mixin skeleton-shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    $skeleton-base 0%,
+    $skeleton-highlight 50%,
+    $skeleton-base 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton-block {
+  @include skeleton-shimmer-bg;
+  border-radius: 0.4rem;
+  display: block;
+}
+
+.skeleton-line {
+  @extend .skeleton-block;
+  height: 1.2rem;
+  margin-bottom: 0.8rem;
+  width: 100%;
+
+  &--title {
+    height: 2.4rem;
+    width: 35%;
+    margin-bottom: 1rem;
+  }
+
+  &--subtitle {
+    height: 1.4rem;
+    width: 30%;
+  }
+
+  &--heading {
+    height: 1.4rem;
+    width: 25%;
+    margin-bottom: 1rem;
+  }
+
+  &--short {
+    width: 55%;
+  }
+
+  &--medium {
+    width: 75%;
+  }
+
+  &--xs {
+    height: 1rem;
+    width: 8rem;
+    margin-bottom: 0.6rem;
+  }
+}
+
+.skeleton-circle {
+  @extend .skeleton-block;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &--sm {
+    height: 3.6rem;
+    width: 3.6rem;
+  }
+}
+
+.skeleton-rect {
+  @extend .skeleton-block;
+
+  &--content {
+    height: 16rem;
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+}
+
+.skeleton-list-row {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #f4f4f4;
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+    padding-top: 0.2rem;
+  }
+}
+
+.page-skeleton-header {
+  padding: 1.5rem 1.5rem 0;
+}
+
+.page-skeleton-breadcrumb {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.page-skeleton {
+  .box {
+    margin-bottom: 2rem;
+  }
+
+  .skeleton-box-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .skeleton-toolbar {
+    border-bottom: 1px solid #f4f4f4;
+    display: flex;
+    gap: 1rem;
+    padding: 0 1.5rem 1.2rem;
+  }
+
+  .skeleton-box-body {
+    padding: 1.5rem;
+  }
+
+  .skeleton-box-body--flush {
+    padding-bottom: 0.5rem;
+  }
+}
+
+// ── Gantt skeleton ────────────────────────────────────────────────────────────
+.gantt-skeleton {
+  .box {
+    background: #fff;
+    border: 1px solid #f4f4f4;
+    border-radius: 0.4rem;
+    margin-bottom: 0;
+  }
+
+  .gantt-container {
+    display: flex;
+    overflow: hidden;
+    background: #fff;
+    min-height: 42rem;
+  }
+
+  .skeleton-gantt-task-list {
+    flex: 0 0 22rem;
+    border-right: 1px solid #f4f4f4;
+    background: #fff;
+    padding: 0.5rem 0;
+  }
+
+  .skeleton-gantt-task-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f4f4f4;
+    margin-bottom: 0.5rem;
+  }
+
+  .skeleton-gantt-milestone-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+    background: #f9f9f9;
+  }
+
+  .skeleton-gantt-task-row {
+    padding: 0.45rem 1rem;
+  }
+
+  .skeleton-gantt-timeline {
+    flex: 1;
+    overflow: hidden;
+    background: #fff;
+    padding: 0.5rem 0;
+  }
+
+  .skeleton-gantt-header-row {
+    display: flex;
+    gap: 0.2rem;
+    padding: 0 0.5rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .skeleton-gantt-bar-row {
+    padding: 0 0.5rem;
+  }
+}
+
+// ── Kanban skeleton ───────────────────────────────────────────────────────────
+.skeleton-kanban-column {
+  border: 1px solid #f4f4f4;
+  border-radius: 0.4rem;
+  margin-bottom: 1rem;
+}

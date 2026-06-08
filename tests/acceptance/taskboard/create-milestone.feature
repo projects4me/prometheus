@@ -21,6 +21,7 @@ Feature: Create milestone | Taskboard
     | new | in_progress | in_review | done | feedback | pending | deferred |
     | 1   | 0           | 0         | 0    |  0       | 0       | 0        |
     ------------------------------------------------------------------------
+    And There is custom callback for board issues
     When User navigates to app/project/project_1/board
     And User clicks create milestone button
     And User enters "v0.4.9" in milestone name input field

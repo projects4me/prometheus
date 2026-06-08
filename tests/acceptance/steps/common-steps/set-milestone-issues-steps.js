@@ -9,7 +9,7 @@ export const given = function () {
                 let milestones = ctx.get('currentProject').milestones;
 
                 milestones.models.forEach((milestone) => {
-                    let issues = _getIssues(issuesCount, statuses, ctx.get('currentProject'), milestone)
+                    let issues = _createIssues(issuesCount, statuses, ctx.get('currentProject'))
 
                     /** Linking milestone with issues */
                     milestone.update({
@@ -23,12 +23,24 @@ export const given = function () {
         {
             "backlog has $issuesCount issues\n$table": (assert, ctx) => async function (issuesCount, table) {
                 let statuses = _getStatuses(table[0]);
-                server["customIssues"] = () => {
-                    let issueCollection = new Collection('issue');
-                    let issues = _getIssues(issuesCount, statuses, ctx.get('project'), null)
-                    issueCollection.models = issues;
-                    return issueCollection;
-                }
+                let issueCollection = new Collection('issue');
+                let issues = _createIssues(issuesCount, statuses, ctx.get('project'))
+                issueCollection.models = issues;
+                ctx.set('backlogIssues', issueCollection);
+            }
+        },
+        {
+            "There is custom callback for board issues": (assert, ctx) => async function () {
+                ctx.set('customCallback', function (issues, request) {
+                    let queryParams = request.queryParams.query;
+                    if(!queryParams.includes('NULL')) { 
+                        let milestone = server.schema.milestones.find(1);
+                        issues = milestone.issues.models;
+                        return new Collection('issue', issues);
+                    } else {
+                        return ctx.get('backlogIssues');
+                    }
+                });
             }
         }
     ];
@@ -44,7 +56,7 @@ function _getStatuses(statusArray) {
     return statuses;
 }
 
-function _getIssues(issuesCount, statuses, project, milestone) {
+function _createIssues(issuesCount, statuses, project) {
     let issues = server.createList('issue', parseInt(issuesCount));
     let i = 0;
     issues.forEach((issue) => {

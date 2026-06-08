@@ -1,0 +1,17 @@
+{{#if @showHeader}}
+  <section class="content-header page-skeleton-header">
+    <span class="skeleton-line skeleton-line--title"></span>
+    <div class="page-skeleton-breadcrumb">
+      <span class="skeleton-line skeleton-line--xs"></span>
+      <span class="skeleton-line skeleton-line--xs"></span>
+    </div>
+  </section>
+{{/if}}
+
+{{#if @bodyOnly}}
+  <AppUi::Skeleton::PageLoadingBody />
+{{else}}
+  <section class="content">
+    <AppUi::Skeleton::PageLoadingBody />
+  </section>
+{{/if}}

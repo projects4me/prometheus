@@ -1,0 +1,50 @@
+<section class="content-header">
+  <h1>
+    <span class="skeleton-line skeleton-line--heading"></span>
+  </h1>
+  <div class="page-skeleton-breadcrumb">
+    <span class="skeleton-line skeleton-line--xs"></span>
+    <span class="skeleton-line skeleton-line--xs"></span>
+  </div>
+</section>
+
+<section class="content user-management" data-test-skeleton-user-management>
+  <div class="row module users">
+    <div class="col-md-12">
+      <div class="box box-primary list-view">
+
+        {{!-- Search toolbar --}}
+        <div class="box-header with-border">
+          <div class="skeleton-toolbar">
+            <span class="skeleton-line skeleton-line--medium" style="flex: 1; max-width: 28rem;"></span>
+          </div>
+        </div>
+
+        {{!-- Controls bar --}}
+        <div class="box-body no-padding">
+          <div class="list-controls">
+            <div style="display: flex; gap: 0.75rem; align-items: center; padding: 0.75rem 1rem;">
+              <span class="skeleton-line skeleton-line--xs" style="width: 2.5rem;"></span>
+              <span class="skeleton-line skeleton-line--xs" style="width: 3rem;"></span>
+              <span class="skeleton-line skeleton-line--xs" style="width: 7rem;"></span>
+            </div>
+          </div>
+
+          {{!-- User rows: avatar + name + email + status + actions --}}
+          {{#each (array 1 2 3 4 5 6 7 8)}}
+            <div class="skeleton-list-row">
+              <span class="skeleton-circle skeleton-circle--sm"></span>
+              <div class="skeleton-list-row__content">
+                <span class="skeleton-line skeleton-line--short" style="width: 45%;"></span>
+                <span class="skeleton-line skeleton-line--xs" style="width: 55%;"></span>
+              </div>
+              <span class="skeleton-line skeleton-line--xs" style="width: 5.5rem; flex-shrink: 0;"></span>
+              <span class="skeleton-line skeleton-line--xs" style="width: 4rem; flex-shrink: 0;"></span>
+            </div>
+          {{/each}}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

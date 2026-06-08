@@ -18,6 +18,7 @@ Feature: Mark milestone as complete | Taskboard
     | new | in_progress | in_review | done | feedback | pending | deferred |
     | 1   | 0           | 0         | 0    | 1        | 0       | 0        |
     ------------------------------------------------------------------------
+    And There is custom callback for board issues
     When User navigates to app/project/project_1/board
     And User activates the "backlog" tab
     Then Mark as complete checkbox is not visible

@@ -13,15 +13,16 @@ Feature: Taskboard | filter issues board
     | 1                     | 7                          |
     ------------------------------------------------------ 
     And Each milestone has 4 issues and there status are
-    ------------------------------------------------------------
+    ------------------------------------------------------------------------
     | new | in_progress | in_review | done | feedback | pending | deferred |
     | 1   | 1           | 1         | 2    |  0       | 0       | 0        |
     ------------------------------------------------------------
     And backlog has 2 issues
-    ------------------------------------------------------------
+    ------------------------------------------------------------------------
     | new | in_progress | in_review | done | feedback | pending | deferred |
     | 1   | 0           | 0         | 0    |  1       | 0       | 0        |
-    ------------------------------------------------------------
+    ------------------------------------------------------------------------
+    And There is custom callback for board issues
     When User navigates to app/project/project_1/board
     And User search Issue Test 4 from milestone 1
     Then There should be only issue 4 present inside milestone 1

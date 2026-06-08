@@ -1,0 +1,38 @@
+<div class="page-skeleton" data-test-skeleton-form>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="box box-primary issues-details">
+        <div class="skeleton-box-header with-border">
+          <span class="skeleton-line skeleton-line--heading"></span>
+        </div>
+
+        <div class="skeleton-box-body">
+          {{#each (array 1 2 3 4 5 6 7)}}
+            <div style="margin-bottom: 1.2rem;">
+              <span class="skeleton-line skeleton-line--xs" style="width: 8rem;"></span>
+              <span class="skeleton-line"></span>
+            </div>
+          {{/each}}
+
+          <div style="margin-top: 1.5rem;">
+            <span class="skeleton-line skeleton-line--xs" style="width: 10rem;"></span>
+            <span class="skeleton-rect skeleton-rect--content" style="height: 10rem;"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="box box-default">
+        <div class="skeleton-box-header with-border">
+          <span class="skeleton-line skeleton-line--subtitle"></span>
+        </div>
+        <div class="skeleton-box-body">
+          {{#each (array 1 2 3 4)}}
+            <span class="skeleton-line skeleton-line--short"></span>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

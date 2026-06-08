@@ -1,0 +1,200 @@
+<div class="issue">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="box box-primary issue-details">
+        <div class="box-header with-border box-header-no-content flex-row flex-jc-sb flex-ai-c">
+          <div>
+            <span class="skeleton-line skeleton-line--heading"></span>
+            <span class="skeleton-line skeleton-line--subtitle" style="width: 55%;"></span>
+          </div>
+          <div class="flex-row" style="gap: 0.75rem; align-items: center;">
+            <span class="skeleton-line skeleton-line--xs" style="width: 7.5rem;"></span>
+            <span class="skeleton-line skeleton-line--xs" style="width: 6rem;"></span>
+            <span class="skeleton-circle skeleton-circle--sm" style="height: 2.8rem; width: 2.8rem;"></span>
+          </div>
+        </div>
+
+        <div class="box-body">
+          <div class="row">
+            <div class="col-xs-3 col-md-2">
+              <div class="project-manager">
+                <span class="skeleton-circle skeleton-circle--sm"></span>
+                <span class="skeleton-line skeleton-line--short" style="width: 10rem;"></span>
+              </div>
+            </div>
+            <div class="col-xs-9 col-md-10 issue-description">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+              <span class="skeleton-line skeleton-line--medium"></span>
+              <span class="skeleton-line skeleton-line--short"></span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-6 col-md-4">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+              <span class="skeleton-line skeleton-line--short" style="width: 80%;"></span>
+            </div>
+            <div class="col-xs-6 col-md-4">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+              <span class="skeleton-line skeleton-line--short" style="width: 70%;"></span>
+            </div>
+            <div class="col-xs-6 col-md-4">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+              <span class="skeleton-line skeleton-line--short" style="width: 65%;"></span>
+            </div>
+            <div class="col-xs-6 col-md-4">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+              <span class="skeleton-line skeleton-line--short" style="width: 75%;"></span>
+            </div>
+            <div class="col-xs-6 col-md-4">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+              <span class="skeleton-line skeleton-line--short" style="width: 60%;"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="box-footer no-padding"></div>
+      </div>
+
+      {{!-- Conversations --}}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box box-info conversations issue-conversation-section">
+            <div class="box-header with-border">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+            </div>
+            <div class="box-body box-footer box-comments">
+              {{#each (array 1 2 3 4)}}
+                <div class="skeleton-list-row">
+                  <span class="skeleton-circle skeleton-circle--sm"></span>
+                  <div class="skeleton-list-row__content">
+                    <span class="skeleton-line skeleton-line--short"></span>
+                    <span class="skeleton-line skeleton-line--medium"></span>
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Activities --}}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box box-primary issue-activities-section">
+            <div class="box-header with-border">
+              <span class="skeleton-line skeleton-line--subtitle"></span>
+            </div>
+            <div class="box-body no-padding">
+              {{#each (array 1 2 3 4 5)}}
+                <div class="skeleton-list-row">
+                  <span class="skeleton-circle skeleton-circle--sm" style="height: 1.8rem; width: 1.8rem;"></span>
+                  <div class="skeleton-list-row__content">
+                    <span class="skeleton-line skeleton-line--short"></span>
+                    <span class="skeleton-line skeleton-line--xs" style="width: 11rem;"></span>
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{!-- Right rail: members, files, estimates, timelogs, hierarchy --}}
+    <div class="col-md-4">
+      {{!-- Members --}}
+      <div class="box box-warning project-members-list">
+        <div class="box-header with-border">
+          <span class="skeleton-line skeleton-line--subtitle"></span>
+        </div>
+        <div class="box-body no-padding">
+          {{#each (array 1 2 3 4 5)}}
+            <div class="skeleton-list-row">
+              <span class="skeleton-circle skeleton-circle--sm"></span>
+              <div class="skeleton-list-row__content">
+                <span class="skeleton-line skeleton-line--short"></span>
+                <span class="skeleton-line skeleton-line--xs" style="width: 7rem;"></span>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+
+      {{!-- Files --}}
+      <div class="box box-info issue-files-section">
+        <div class="box-header with-border">
+          <span class="skeleton-line skeleton-line--subtitle"></span>
+        </div>
+        <div class="box-body no-padding">
+          {{#each (array 1 2 3 4)}}
+            <div class="skeleton-list-row">
+              <span class="skeleton-circle skeleton-circle--sm" style="border-radius: 0.4rem;"></span>
+              <div class="skeleton-list-row__content">
+                <span class="skeleton-line skeleton-line--short"></span>
+                <span class="skeleton-line skeleton-line--xs" style="width: 8rem;"></span>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+
+      {{!-- Estimates --}}
+      <div class="box box-info issue-estimates-section">
+        <div class="box-header with-border">
+          <span class="skeleton-line skeleton-line--subtitle"></span>
+        </div>
+        <div class="box-body no-padding">
+          {{#each (array 1 2 3)}}
+            <div class="skeleton-list-row">
+              <span class="skeleton-circle skeleton-circle--sm"></span>
+              <div class="skeleton-list-row__content">
+                <span class="skeleton-line skeleton-line--short"></span>
+                <span class="skeleton-line skeleton-line--xs" style="width: 10rem;"></span>
+              </div>
+              <span class="skeleton-line skeleton-line--xs" style="width: 5rem; margin-top: 0.5rem;"></span>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+
+      {{!-- Timelogs --}}
+      <div class="box box-info issue-timelog-section">
+        <div class="box-header with-border">
+          <span class="skeleton-line skeleton-line--subtitle"></span>
+        </div>
+        <div class="box-body no-padding">
+          {{#each (array 1 2 3)}}
+            <div class="skeleton-list-row">
+              <span class="skeleton-circle skeleton-circle--sm"></span>
+              <div class="skeleton-list-row__content">
+                <span class="skeleton-line skeleton-line--short"></span>
+                <span class="skeleton-line skeleton-line--xs" style="width: 11rem;"></span>
+              </div>
+              <span class="skeleton-line skeleton-line--xs" style="width: 5rem; margin-top: 0.5rem;"></span>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+
+      {{!-- Issue hierarchy --}}
+      <div class="box box-info issue-hierarchy">
+        <div class="box-header with-border">
+          <span class="skeleton-line skeleton-line--subtitle"></span>
+        </div>
+        <div class="box-body">
+          <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.8rem;">
+            <span class="skeleton-circle skeleton-circle--sm" style="height: 1.2rem; width: 1.2rem; border-radius: 0.2rem;"></span>
+            <span class="skeleton-line skeleton-line--short" style="width: 65%; margin-bottom: 0;"></span>
+          </div>
+          {{#each (array 1 2 3 4 5 6)}}
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin: 0.5rem 0 0.5rem 1.5rem;">
+              <span class="skeleton-circle skeleton-circle--sm" style="height: 0.9rem; width: 0.9rem; border-radius: 0.2rem;"></span>
+              <span class="skeleton-line skeleton-line--xs" style="width: 70%; margin-bottom: 0;"></span>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

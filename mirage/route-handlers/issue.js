@@ -10,7 +10,6 @@ export function register(server, ctx) {
         let field = ctx.get('fieldSearched');
         field = field ? field : 'Issue.issueNumber';
         let value = getValueFromQuery(field, issueQuery);
-        let customIssues = server['customIssues'];
 
         /**
          * First IF will work for global search where user searched an issue using field "subject"
@@ -22,8 +21,6 @@ export function register(server, ctx) {
             pushObjectInModel(model, schema.issues.find(value));
         } else if (issueQuery.indexOf("savedsearch") >= 0) {
             pushObjectInModel(model, schema.issues.find(1));
-        } else if (customIssues) {
-            model = customIssues();
         }
 
         if(ctx.get(`paginateIssues`)) {
@@ -32,7 +29,7 @@ export function register(server, ctx) {
         }
 
         if(ctx.get('customCallback')) {
-            return ctx.get('customCallback')(model);
+            return ctx.get('customCallback')(model, request);
         }        
         return model;
     });
