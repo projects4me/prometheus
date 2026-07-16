@@ -5,7 +5,7 @@
     <div class="col-md-8">
 
       {{!-- This are the project details --}}
-      <AccessControl @aclContext="App.Project.Read">
+      <AccessControl @aclContext="Project.read">
         <div class="box box-primary project-details">
           <div class="box-header with-border">
             <h2 class="box-title">
@@ -16,7 +16,7 @@
 
             <div class="box-tools pull-right">
               <span class="project-status"><span class="badge {{this.model.status}}">{{t (concat "views.app.project.lists.status." this.model.status)}}</span></span>
-              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" @onClick={{fn this.editProject this.model.shortCode}} @aclContext="App.Project.Edit"><i class="fa fa-pencil"></i></AppUi::Button>
+              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" @onClick={{fn this.editProject this.model.shortCode}} @aclContext="Project.update"><i class="fa fa-pencil"></i></AppUi::Button>
             </div>
             {{!-- /.box-tools --}}
           </div>
@@ -72,7 +72,7 @@
       <div class="row">
 
         {{!-- This is the project conversations --}}
-        <AccessControl @aclContext="App.Project.Read.Conversations.Read">
+        <AccessControl @aclContext="Project.read">
           <div class="col-md-6">
             <div class="box box-info  project-conversations-section">
               <div class="box-header with-border">
@@ -114,7 +114,7 @@
         {{!-- end of project conversations --}}
 
         {{!-- These are the lastest 5 open issues in this project --}}
-        <AccessControl @aclContext="App.Project.Read.Issues.Read">
+        <AccessControl @aclContext="Project.read">
           <div class="col-md-6">
             <div class="box box-success issue-overview-section">
               <div class="box-header with-border">
@@ -180,7 +180,7 @@
                   @onchange={{this.onEstimatedSpentMilestoneChange}}
                   @relateType="relate-simple"
                   @searchField="label"
-                  @aclContext="App.Project.Read"
+                  @aclContext="Project.read"
                 />
               </div>
             </div>
@@ -221,7 +221,7 @@
       <div class="row">
 
         {{!-- This is the project activities section --}}
-        <AccessControl @aclContext="App.Project.Read.Activities.Read">
+        <AccessControl @aclContext="Project.read">
           <div class="col-md-12">
             <div class="box box-primary project-activities-section">
               <div class="box-header with-border">
@@ -246,7 +246,7 @@
     <div class="col-md-4">
 
       {{!-- Project Members --}}
-      <AccessControl @aclContext="App.Project.Read.Members.Read">
+      <AccessControl @aclContext="Project.read">
         <div class="box box-warning">
           <div class="box-header with-border box-header-flex box-header-no-content">
             <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
@@ -254,7 +254,7 @@
               @title={{t "views.app.project.detail.membership.add"}}
               @onClick={{this.showAddMemberDialog}}
               @class="pull-right"
-              @aclContext="App.Project.Read.Membership.Create.Milestone"
+              @aclContext="Membership.create"
               @data-add="members"
             />
           </div>
@@ -265,7 +265,7 @@
               {{#each this.model.members as |member|}}
                 <li data-member-id={{member.id}} class="member-item">
                   {{!-- Delete Member --}}
-                  <AppUi::Button data-delete-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.removeMember"}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="App.Project.Read.Membership.Delete.User">
+                  <AppUi::Button data-delete-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.removeMember"}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="Membership.delete">
                     <i class="fa fa-times"></i>
                   </AppUi::Button>
 
@@ -286,7 +286,7 @@
                   <span class="users-list-date" data-member-role>
                     {{get-role member.id this.appController.roles this.model.memberships}}
                   {{!-- Edit Member's Role --}}
-                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.editRole"}} @onClick={{fn this.showEditMemberDialog member}} @aclContext="App.Project.Read.Membership.Edit.User">
+                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.editRole"}} @onClick={{fn this.showEditMemberDialog member}} @aclContext="Membership.update">
                     <i class="fa fa-pencil"></i>
                   </AppUi::Button>                    
                   </span>
@@ -315,7 +315,7 @@
                           @searchField="label"
                           @onchange={{action "selectStatic" this 'selectedUsers'}}
                           @relateType="relate-user"
-                          @aclContext="App.Project.Read.Membership.Create.User"
+                          @aclContext="Membership.create"
                           @closeOnSelect={{false}}
                       />
 
@@ -329,7 +329,7 @@
                         @searchField="label"
                         @onchange={{action "selectRole"}}
                         @relateType="relate-simple"
-                        @aclContext="App.Project.Read.Membership.Create.Role"
+                        @aclContext="Membership.create"
                     />
                   </div>
               {{/bootstrap-modal}}
@@ -350,7 +350,7 @@
                           @selected={{find-by "value" this.selectedUser.id this.currentMembers}}
                           @searchField="label"
                           @relateType="relate-user"
-                          @aclContext="App.Project.Read.Membership.Create.User"
+                          @aclContext="Membership.create"
                           @closeOnSelect={{false}}
                           @disabled={{true}}
                       />
@@ -364,7 +364,7 @@
                         @searchField="label"
                         @onchange={{action "selectRole"}}
                         @relateType="relate-simple"
-                        @aclContext="App.Project.Read.Membership.Create.Role"
+                        @aclContext="Membership.create"
                     />
                   </div>
               {{/bootstrap-modal}}
@@ -390,7 +390,7 @@
                           @selected={{find-by "value" this.selectedUser.id this.currentMembers}}
                           @searchField="label"
                           @relateType="relate-user"
-                          @aclContext="App.Project.Read.Membership.Delete.User"
+                          @aclContext="Membership.delete"
                           @closeOnSelect={{false}}
                           @disabled={{true}}
                       />
@@ -403,7 +403,7 @@
                           @onchange={{action "selectStatic" this 'selectedNewIssuesAssignee'}}
                           @searchField="label"
                           @relateType="relate-user"
-                          @aclContext="App.Project.Read.Membership.Delete.User"
+                          @aclContext="Membership.delete"
                           @closeOnSelect={{false}}
                           @validate={{action this.validateField "memberDelete" (hash name="reAssignIssues" model=this.reAssignIssuesModel)}}
                           @message={{this.message.memberDelete.reAssignIssues}}
@@ -419,7 +419,7 @@
       {{!-- /. Project Members --}}
 
       {{!-- Project Milestones --}}
-      <AccessControl @aclContext="App.Project.Read.Milestones.Read">
+      <AccessControl @aclContext="Project.read">
         <div class="box box-info project-milestones-section">
           <div class="box-header with-border box-header-flex box-header-no-content">
             <h3 class="box-title">{{t "views.app.project.detail.milestones"}}</h3>
@@ -428,7 +428,7 @@
               @onClick={{this.showMilestoneDialog}}
               @class="pull-right"
               @data-add="milestone"
-              @aclContext="App.Project.Read.Membership.Create.Milestone"
+              @aclContext="Membership.create"
             />
           </div>
 
@@ -462,7 +462,6 @@
                   @placeholder={{t "views.app.project.detail.milestone.inputname"}}
                   @label={{t "views.app.project.detail.milestone.name"}}
                   @value={{this.newMilestone.name}}
-                  @aclContext="App.Project.Read.Milestone.Create.Name"
               />
 
               <FormFields::FieldDate
@@ -479,7 +478,6 @@
                   @positionY="down"
                   @autoApply={{true}}
                   @minDate='1990'
-                  @aclContext="App.Project.Read.Milestone.Create.StartDate"
               />
 
               <FormFields::FieldDate
@@ -496,7 +494,6 @@
                   @positionY="down"
                   @autoApply={{true}}
                   @minDate='1990'
-                  @aclContext="App.Project.Read.Milestone.Create.EndDate"
               />
 
               <FormFields::FieldRelate
@@ -508,7 +505,6 @@
                   @searchField="label"
                   @onchange={{action "selectMilestoneType"}}
                   @relateType="relate-simple"
-                  @aclContext="App.Project.Read.Milestone.Create.Type"
               />
 
               <FormFields::FieldRelate
@@ -520,14 +516,12 @@
                   @searchField="label"
                   @onchange={{action "selectMilestoneStatus"}}
                   @relateType="relate-simple"
-                  @aclContext="App.Project.Read.Milestone.Create.Status"
               />
 
               <FormFields::FieldTextArea
                   @placeholder={{t "views.app.project.detail.milestone.inputdescription"}}
                   @label={{t "views.app.project.detail.milestone.description"}}
                   @value={{this.newMilestone.description}}
-                  @aclContext="App.Project.Read.Milestone.Create.Description"
               />
 
             {{/bootstrap-modal}}

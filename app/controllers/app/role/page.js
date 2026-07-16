@@ -174,16 +174,16 @@ export default class AppRolePageController extends AppRoleController {
     @computed('model.permissions')
     get permissions() {
         let rolesPermissions = {};
-        let permissions = this.model.permissions;
+        let permissions = this.model.permissions || [];
         let modelsList = permissions.reduce((models, permission) => {
-            if (!permission.resourceName.includes('.')) {
+            if (permission.resourceName && !permission.resourceName.includes('.')) {
                 models.push(permission.resourceName);
             }
             return models;
         }, []);
 
 
-        //add childs (fields, relationships) inside the parent.
+// Attach fields/relationships under each model module.
         modelsList.forEach((modelName) => {
             let modelPermissions = permissions.filter((permission) => {
                 let [model, fieldName] = permission.resourceName.split('.');
@@ -335,7 +335,9 @@ export default class AppRolePageController extends AppRoleController {
         let showSuccess = true;
         for (let [key, value] of Object.entries(this.permissionsState[moduleName])) {
             if (value.isErrored) {
-                let permission = this.model.permissions.findBy('resourceName', `${moduleName}.${key}`);
+                let permission = this.model.permissions.findBy('resourceName', key)
+                || this.model.permissions.findBy('resourceName', `${moduleName}.${key}`)
+                || this.model.permissions.findBy('resourceName', moduleName);
                 new Messenger().post({
                     message: `${moduleName} (${key}) | ${permission.adapterError.detail.suggestion}`,
                     type: 'error',
@@ -364,7 +366,9 @@ export default class AppRolePageController extends AppRoleController {
     scrollToLatestCancelledPermission(moduleEl, moduleName) {
         for (let [key, value] of Object.entries(this.permissionsState[moduleName])) {
             if (value.isErrored) {
-                let permissionEl = moduleEl.querySelector(`[data-module-resource="${moduleName}.${key}"]`);
+                let permissionEl = moduleEl.querySelector(`[data-module-resource="${key}"]`)
+                || moduleEl.querySelector(`[data-module-resource="${moduleName}.${key}"]`)
+                || moduleEl.querySelector(`[data-module-resource="${moduleName}"]`);
                 this.scrollToPermission(permissionEl);
                 return;
             }

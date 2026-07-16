@@ -18,6 +18,7 @@
             <th>{{t "views.app.role.tabs.permission.flags.delete"}}</th>
             <th>{{t "views.app.role.tabs.permission.flags.import"}}</th>
             <th>{{t "views.app.role.tabs.permission.flags.export"}}</th>
+            <th></th>
             </tr>
         </thead>
         <tbody>
@@ -36,19 +37,10 @@
             </td>
             {{/each}}
             
-            {{!-- Permission Update State --}}
             <td>
                 <span data-module="permission-state">
 
-                {{!-- If condition in concat required because the permissions states are maintained in object as of the
-                following structure e.g.
-                Issue 
-                    Issue (Model)
-                    Subject (field)
-
-                And the resourceName property has the format of Issue.field or Issue.relationship. So what if the 
-                the resourceName is "Issue" and I have to access Issue >> Issue, so for that purpose we have to add
-                moduleName infront of resourceName to make get helper access of "Issue.Issue" property. --}}
+{{!-- Model row state is stored as Module.Module.*; field rows as Module.field.* --}}
                 {{#if (get @permissionsState (concat (if (eq permission.resourceName
                 permission.moduleName) (concat permission.moduleName '.')) permission.resourceName
                 '.isRunning'))}}
@@ -66,7 +58,6 @@
                 '.isErrored'))}}
                     <i class="fa fa-times-circle"></i>
                 {{/if}}                             
-                            
                 </span>
             </td>                        
             </tr>

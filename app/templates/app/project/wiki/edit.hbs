@@ -1,4 +1,4 @@
-<AccessControl @aclContext="App.Project.Wiki.Edit">
+<AccessControl @aclContext="Wiki.update">
   <div class="wiki-detail box box-primary">
     {{#if this.model}}
       {{#if (eq this.model.locked "0")}}
@@ -16,7 +16,6 @@
                 @data-field="wiki.name"
                 @validate={{action this.validateField "wikiCreate" (hash name="name" value=this.model.name)}}
                 @message={{this.message.wikiCreate.name}}
-                @aclContext="App.Project.Wiki.Edit.Name"
                 {{autofocus}}
             />
           </div>
@@ -34,7 +33,6 @@
                 @data-field="wiki.parent"
                 @validate={{action this.validateField "wikiCreate" (hash name="parentId" value=this.model.parentId)}}
                 @message={{this.message.wikiCreate.parentId}}
-                @aclContext="App.Project.Wiki.Edit.Parent"
             />
           </div>
 
@@ -54,7 +52,7 @@
         </div>
 
         <div class="box-footer">
-          <AppUi::Button type="button" class="btn btn-primary" @onClick={{fn this.save "wikiCreate"}} @aclContext="App.Project.Wiki.Edit">{{t "global.form.save"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-primary" @onClick={{fn this.save "wikiCreate"}} @aclContext="Wiki.update">{{t "global.form.save"}}</AppUi::Button>
           <AppUi::Button type="button" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
 
           <div class="pull-right wiki-tags">
@@ -67,10 +65,9 @@
                 @searchField="label"
                 @onchange={{action "tagSelected"}}
                 @relateType="relate-simple"
-                @aclContext="App.Project.Wiki.Edit.Tags"
             />
 
-            <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.showDialog}} @aclContext="App.Project.Wiki.Edit.Tags.Create">{{t "views.app.wiki.tag.add"}}</AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.showDialog}} @aclContext="Wiki.create">{{t "views.app.wiki.tag.add"}}</AppUi::Button>
             {{#if this.addTagDialog}}
               {{#bootstrap-modal
                   title="views.app.wiki.tag.create"

@@ -19,7 +19,7 @@
         />
         <h1>{{safe-html (t "views.app.welcome")}}</h1>
 
-        <AccessControl @aclContext="App.Project.Create">
+        <AccessControl @aclContext="Project.create">
           <:default>
             <p>{{t "views.app.createNewProjectDescription"}}</p>
             <LinkTo @route="app.projects.create">

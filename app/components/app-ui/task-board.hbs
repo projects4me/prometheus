@@ -16,7 +16,7 @@
           @onClick={{this.showCreateMilestoneDialog}}
           @title={{t "views.app.board.milestone.create"}}
           @data-add="milestone-create"
-          @aclContext="App.Project.Milestone.Create"
+          @aclContext="Project.create"
         />
       </li>
 
@@ -26,7 +26,6 @@
           <AppUi::Button
             class="milestone-mark-complete-button"
             @onClick={{this.toggleMarkMilestoneAsComplete}}
-            @aclContext="App.Project.Milestone.Update"
             title={{t "views.app.board.milestone.markComplete.confirm"}}
           >
             <i class="fa fa-check"></i>
@@ -108,7 +107,6 @@
         @length="255"
         @validate={{action @validateField "milestoneCreate" (hash name="name" value=this.newMilestone.name model=this.newMilestone)}}
         @message={{@message.milestoneCreate.name}}
-        @aclContext="App.Project.Milestone.Create.Name"
         {{autofocus}}
       />
 
@@ -127,7 +125,6 @@
         @minDate='1990'
         @validate={{action @validateField "milestoneCreate" (hash name="startDate" value=this.newMilestone.startDate model=this.newMilestone)}}                
         @message={{@message.milestoneCreate.startDate}}
-        @aclContext="App.Project.Milestone.Create.StartDate"
       />
 
       <FormFields::FieldDate
@@ -145,7 +142,6 @@
         @minDate='1990'
         @validate={{action @validateField "milestoneCreate" (hash name="endDate" value=this.newMilestone.endDate model=this.newMilestone)}}                
         @message={{@message.milestoneCreate.endDate}}
-        @aclContext="App.Project.Milestone.Create.EndDate"
       />
 
       <FormFields::FieldRelate
@@ -160,7 +156,6 @@
         @data-field="milestone.type"
         @validate={{action @validateField "milestoneCreate" (hash name="milestoneType" value=this.newMilestone.milestoneType model=this.newMilestone)}}
         @message={{@message.milestoneCreate.milestoneType}}
-        @aclContext="App.Project.Milestone.Create.Type"
       />
 
       <FormFields::FieldRelate
@@ -175,7 +170,6 @@
         @data-field="milestone.status"
         @validate={{action @validateField "milestoneCreate" (hash name="status" value=this.newMilestone.status model=this.newMilestone)}}
         @message={{@message.milestoneCreate.status}}
-        @aclContext="App.Project.Milestone.Create.Status"
       />
 
       <FormFields::FieldTextArea
@@ -185,7 +179,6 @@
         @data-field="milestone.description"
         @validate={{action @validateField "milestoneCreate" (hash name="description" value=this.newMilestone.description model=this.newMilestone)}}
         @message={{@message.milestoneCreate.description}}
-        @aclContext="App.Project.Milestone.Create.Description"
       />
     </div>
   {{/bootstrap-modal}}

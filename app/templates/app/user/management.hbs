@@ -8,7 +8,7 @@
 <section class="content user-management">
   <div class="row module users">
     <div class="col-md-12">
-      <AccessControl @aclContext="App.User.List">
+      <AccessControl @aclContext="User.read">
         <div class="box box-primary list-view">
             <div class="box-header with-border">
               <div class="header">
@@ -18,11 +18,11 @@
                       @placeholder={{t "views.app.user.management.search"}}
                       @data-module="user-management"
                       @searchFunction={{this.searchUserByName}}
-                      @aclContext="App.User.Management.SearchUser"
+                      @aclContext="User.read"
                     />
                   </div>
                 </div>
-                <AccessControl @aclContext="App.User.Create">
+                <AccessControl @aclContext="User.create">
                   <LinkTo @route="app.user.create" class="user-management-create">
                     <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="create-user">
                       <i class="fa fa-plus" aria-hidden="true"></i>
@@ -36,18 +36,18 @@
             <div class="box-body no-padding">
               <div class="list-controls">
                 <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-                  <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="App.User.Management.SelectAllUsers"/>
+                  <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="User.update"/>
                 </span>
 
                 <div class="btn-group">
-                  <AppUi::Button data-btn="delete" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.User.Delete">
+                  <AppUi::Button data-btn="delete" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="User.delete">
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                   </AppUi::Button>
                 </div>
                 <div class="user-mass-actions">
                   <FormFields::FieldSwitch
                     @callBack={{this.changeMultipleUserStatus}}
-                    @aclContext="App.User.Management.ChangeUsersStatuses"
+                    @aclContext="User.update"
                   />
                 </div>
 
@@ -57,12 +57,12 @@
                   {{#if this.model.meta.links.next}}+{{/if}}
                   <div class="btn-group">
                     {{#if this.model.meta.links.prev}}
-                      <AppUi::Button data-btn="prev-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="App.User.Read"><i class="fa fa-chevron-left"></i></AppUi::Button>
+                      <AppUi::Button data-btn="prev-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="User.read"><i class="fa fa-chevron-left"></i></AppUi::Button>
                     {{else}}
                       <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}} "><i class="fa fa-chevron-left"></i></AppUi::Button>
                     {{/if}}
                     {{#if this.model.meta.links.next}}
-                      <AppUi::Button data-btn="next-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="App.User.Read"><i class="fa fa-chevron-right"></i></AppUi::Button>
+                      <AppUi::Button data-btn="next-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="User.read"><i class="fa fa-chevron-right"></i></AppUi::Button>
                     {{else}}
                       <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></AppUi::Button>
                     {{/if}}
@@ -88,7 +88,7 @@
                       {{#each this.model as |user|}}
                         <tr data-user-id={{user.id}}>
                           <td>
-                            <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{user.id}} @aclContext="App.User.Management.SelectUser"/>
+                            <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{user.id}} @aclContext="User.update"/>
                           </td>
 
                           <td class="user-profile" data-user-field="profile">
@@ -121,14 +121,14 @@
                           </td>
 
                           <td class="pull-right actions">
-                            <AppUi::Button data-btn="delete" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @onClick={{fn this.deleteModel user 'name'}} @aclContext="App.User.Delete">
+                            <AppUi::Button data-btn="delete" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @onClick={{fn this.deleteModel user 'name'}} @aclContext="User.delete">
                               <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </AppUi::Button>
 
                             <UserManagement::AccountStatus
                               @user={{user}}
                               @changeUserStatus={{action this.changeUserStatus user}}
-                              @aclContext="App.User.Management.AccountStatus"
+                              @aclContext="User.update"
                               @switchSize="sm"
                             />
                           </td>
@@ -150,17 +150,17 @@
             <div class="box-footer no-padding">
               <div class="list-controls">
                 <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-                  <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="App.User.Management.SelectAllUsers"/>
+                  <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="User.update"/>
                 </span>
                 <div class="btn-group">
-                  <AppUi::Button data-btn="delete" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="App.User.Delete">
+                  <AppUi::Button data-btn="delete" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="User.delete">
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                   </AppUi::Button>
                 </div>
                 <div class="user-mass-actions">
                   <FormFields::FieldSwitch
                     @callBack={{this.changeMultipleUserStatus}}
-                    @aclContext="App.User.Management.ChangeUsersStatuses"
+                    @aclContext="User.update"
                   />
                 </div>
                 <div class="pull-right">
@@ -169,12 +169,12 @@
                   {{#if this.model.meta.links.next}}+{{/if}}
                   <div class="btn-group">
                     {{#if this.model.meta.links.prev}}
-                      <AppUi::Button data-btn="prev-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="App.User.Read"><i class="fa fa-chevron-left"></i></AppUi::Button>
+                      <AppUi::Button data-btn="prev-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="User.read"><i class="fa fa-chevron-left"></i></AppUi::Button>
                     {{else}}
                       <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}} "><i class="fa fa-chevron-left"></i></AppUi::Button>
                     {{/if}}
                     {{#if this.model.meta.links.next}}
-                      <AppUi::Button data-btn="next-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="App.User.Read"><i class="fa fa-chevron-right"></i></AppUi::Button>
+                      <AppUi::Button data-btn="next-record" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="User.read"><i class="fa fa-chevron-right"></i></AppUi::Button>
                     {{else}}
                       <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></AppUi::Button>
                     {{/if}}

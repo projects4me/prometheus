@@ -1,27 +1,21 @@
 import { Factory } from 'ember-cli-mirage';
-import faker from 'faker';
 import _ from 'lodash';
 
+/**
+ * Default to full access (1) so acceptance tests can render ACL-gated UI.
+ * Scenarios override `entity` per resource.
+ */
 export default Factory.extend({
     userId() {
         return (_.random(1, 10)).toString();
     },
     entity() {
-        return 'App';
+        return 'Project';
     },
-    readF() {
-        return faker.random.arrayElement(["0", "9"]);
-    },
-    updateF() {
-        return faker.random.arrayElement(["0", "9"]);
-    },
-    deleteF() {
-        return faker.random.arrayElement(["0", "9"]);
-    },
-    importF() {
-        return faker.random.arrayElement(["0", "9"]);
-    },
-    exportF() {
-        return faker.random.arrayElement(["0", "9"]);
-    }
+    readF: '1',
+    createF: '1',
+    updateF: '1',
+    deleteF: '1',
+    importF: '1',
+    exportF: '1'
 });

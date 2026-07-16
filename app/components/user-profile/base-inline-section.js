@@ -186,7 +186,7 @@ export default class UserProfileBaseInlineSectionComponent extends Component {
 	 * @public
 	 */
 	get canEdit() {
-		return this.acl.checkAccess('App.User.Edit');
+		return this.acl.checkAccess('User.update');
 	}
 
 	/**
