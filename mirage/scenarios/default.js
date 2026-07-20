@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import createFullAcl from '../helpers/create-full-acl';
 
 export default function (server) {
     // server.createList('activity', 5);
@@ -20,7 +21,7 @@ export default function (server) {
     // server.createList('token', 1);
     // server.createList('upload', 5);
     server.createList('user', 10);
-    server.createList('userpermission', 1);
+    createFullAcl(server);
     // server.createList('vote', 5);
     // server.createList('wiki', 5);
 

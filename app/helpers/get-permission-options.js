@@ -6,7 +6,7 @@ import Helper from '@ember/component/helper';
 import { inject as service } from '@ember/service';
 
 /**
- * This template helper class is used to return different permission options.
+ * Returns binary permission options (None / Allow) for model or field resources.
  *
  * @class GetPermissionOptions
  * @extends Ember.Component.Helper
@@ -15,65 +15,53 @@ import { inject as service } from '@ember/service';
 export default Helper.extend({
 
     /**
-     * The settings service maintains all of the system level configurations.
-     * 
      * @property settings
      * @type Ember.Service
-     * @for Prometheus.Helpers.GetPermissionOptions
      * @private
      */
     settings: service(),
 
     /**
-     * The intl library service that is used in order to get the translations
-     *
      * @property intl
      * @type Ember.Service
-     * @for Prometheus.Helpers.GetPermissionOptions
      * @private
      */
     intl: service(),
 
     /**
-     * This method returns the permission options of the requested module of the system.
-     * 
-     * @param {string} type The name of the module e.g. API, frontend.
-     * @param {Prometheus.Models.Permission} permission The permission model.
-     * @param {string} flag The name of the permission flag e.g. readF.
-     * @returns {Object} List of options
+     * @param {string} type
+     * @param {Prometheus.Models.Permission} permission
+     * @param {string} flag
+     * @returns {Object[]}
      */
-    compute([type, permission, flag, ...rest], hash) {
-        let resourceType = 'field',
-            modelDependentGroups = [];
+    compute([type, permission /*, flag */]) {
+        let aclSettings = this.settings.get('aclSettings') || {};
+            let apiOptions = aclSettings[type] || {};
+            let resourceType = 'field';
+            // Model-level row uses model options; field/rel rows use field options.
+            if (permission && permission.moduleName === permission.resourceName) {
+            resourceType = 'model';
+            }
+            let options = Object.assign(
+            {},
+            apiOptions[resourceType] || apiOptions.field || apiOptions.model || {
+            allow: '1',
+            none: '0'
+            }
+            );
 
-        // Default options.
-        let options = {};
-        options = (this.settings.get('aclSettings')[type][resourceType]);
         let optionsList = [{
             label: this.intl.t("views.app.role.tabs.permission.options.notset"),
             value: ""
         }];
 
-        // Set options if the resource is model.
-        if (permission.moduleName === permission.resourceName && flag === 'readF') {
-            resourceType = 'model';
-            modelDependentGroups = this.settings.get('aclSettings')['modelGroups'][permission.resourceName];
-            options = _.clone(this.settings.get('aclSettings')[type][resourceType]);
-
-            modelDependentGroups.forEach((group) => {
-                let apiOptions = this.settings.get('aclSettings')['apiOptions'];
-                group = group.toLowerCase();
-                options[group] = apiOptions['groups'][group];
-            });
-        }
-
-        //format list of options
         for (let [key, value] of Object.entries(options)) {
             optionsList.push({
                 label: this.intl.t(`views.app.role.tabs.permission.options.${key}`),
                 value: value
-            })
+            });
         }
+
         return optionsList;
     }
 });

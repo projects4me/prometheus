@@ -6,7 +6,7 @@ import Service, { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 
 /**
- * The acl service maintain resources on which user has access to.
+ * ACL service: model + action flag checks against the current user's permissions.
  *
  * @class AclService
  * @namespace Prometheus.Services
@@ -25,120 +25,43 @@ export default class AclService extends Service {
     @service currentUser;
 
     /**
-     * This contains the mapping of the acl resources against route names (ember specific). 
+     * Map of Ember route names to Model.action ACL contexts.
+     *
      * @property routeMaps
      * @type array
      * @public
      */
     routeMaps = [
-        {
-            name: 'app.index', // the route name, user is transiting to.
-            map: 'App' // acl map
-        },
-        {
-            name: 'app.projects.index',
-            map: 'App.Project.List'
-        },
-        {
-            name: 'app.projects.create',
-            map: 'App.Project.Create'
-        },
-        {
-            name: 'app.projects.edit',
-            map: 'App.Project.Edit'
-        },
-        {
-            name: 'app.project.index',
-            map: 'App.Project.Read'
-        },
-        {
-            name: 'app.project.wiki.index',
-            map: 'App.Project.Wiki.List'
-        },
-        {
-            name: 'app.project.wiki.create',
-            map: 'App.Project.Wiki.Create'
-        },
-        {
-            name: 'app.project.wiki.page',
-            map: 'App.Project.Wiki.Read'
-        },
-        {
-            name: 'app.project.wiki.edit',
-            map: 'App.Project.Wiki.Edit'
-        },
-        {
-            name: 'app.project.conversation',
-            map: 'App.Project.Conversation'
-        },
-        {
-            name: 'app.project.board',
-            map: 'App.Project.Board'
-        },
-        {
-            name: 'app.project.calendar',
-            map: 'App.Project.Calendar'
-        },
-        {
-            name: 'app.project.issue.index',
-            map: 'App.Project.Issue.List'
-        },
-        {
-            name: 'app.project.issue.create',
-            map: 'App.Project.Issue.Create'
-        },
-        {
-            name: 'app.project.issue.page',
-            map: 'App.Project.Issue.Read'
-        },
-        {
-            name: 'app.project.issue.edit',
-            map: 'App.Project.Issue.Edit'
-        },
-        {
-            name: 'app.user.page',
-            map: 'App.User.Read'
-        },
-        {
-            name: 'app.user.create',
-            map: 'App.User.Create'
-        },
-        {
-            name: 'app.user.index',
-            map: 'App.User.List'
-        },
-        {
-            name: 'app.user.management',
-            map: 'App.User.Management'
-        },
-        {
-            name: 'app.admin.index',
-            map: 'App.Admin.List'
-        },
-        {
-            name: 'app.admin.create',
-            map: 'App.Admin.Create'
-        },
-        {
-            name: 'app.admin.page',
-            map: 'App.Admin.Read'
-        },
-        {
-            name: 'app.admin.edit',
-            map: 'App.Admin.Edit'
-        },
-        {
-            name: 'app.role.index',
-            map: 'App.Role.List'
-        },
-        {
-            name: 'app.role.page',
-            map: 'App.Role.Page'
-        }
+        { name: 'app.index', map: null },
+        { name: 'app.projects.index', map: 'Project.read' },
+        { name: 'app.projects.create', map: 'Project.create' },
+        { name: 'app.projects.edit', map: 'Project.update' },
+        { name: 'app.project.index', map: 'Project.read' },
+        { name: 'app.project.wiki.index', map: 'Wiki.read' },
+        { name: 'app.project.wiki.create', map: 'Wiki.create' },
+        { name: 'app.project.wiki.page', map: 'Wiki.read' },
+        { name: 'app.project.wiki.edit', map: 'Wiki.update' },
+        { name: 'app.project.conversation', map: 'Conversationroom.read' },
+        { name: 'app.project.board', map: 'Issue.read' },
+        { name: 'app.project.calendar', map: 'Issue.read' },
+        { name: 'app.project.issue.index', map: 'Issue.read' },
+        { name: 'app.project.issue.create', map: 'Issue.create' },
+        { name: 'app.project.issue.page', map: 'Issue.read' },
+        { name: 'app.project.issue.edit', map: 'Issue.update' },
+        { name: 'app.user.page', map: 'User.read' },
+        { name: 'app.user.create', map: 'User.create' },
+        { name: 'app.user.index', map: 'User.read' },
+        { name: 'app.user.management', map: 'User.update' },
+        { name: 'app.admin.index', map: 'User.read' },
+        { name: 'app.admin.create', map: 'User.create' },
+        { name: 'app.admin.page', map: 'User.read' },
+        { name: 'app.admin.edit', map: 'User.update' },
+        { name: 'app.role.index', map: 'Role.read' },
+        { name: 'app.role.page', map: 'Role.read' }
     ];
 
     /**
-     * The list of routes on which acl is not required.
+     * Routes that skip ACL checks.
      * 
      * @property explicitRoutes
      * @type array
@@ -149,71 +72,96 @@ export default class AclService extends Service {
     ];
 
     /**
-     * This method return list of the resources of the application on which 
-     * user has access.
-     * 
-     * @method allowedResources
-     * @returns array
+     * Action name → permission flag column.
      */
+    actionFlagMap = {
+        read: 'readF',
+        create: 'createF',
+        update: 'updateF',
+        delete: 'deleteF',
+        import: 'importF',
+        export: 'exportF'
+    };
+    /**
+    * Current user's ACL permissions (model entity + flags).
+    * 
+    * @method aclPermissions
+    * @returns {Array}
+    */
     @computed('this.currentUser.user')
-    get allowedResources() {
-        let permissions = this.currentUser.user.aclPermissions;
-        return permissions.map(permission => permission.entity);
+    get aclPermissions() {
+        let user = this.currentUser.user;
+        if (!user || !user.aclPermissions) {
+            return [];
+        }
+        return user.aclPermissions.toArray ? user.aclPermissions.toArray() : user.aclPermissions;
     }
 
     /**
-     * This method check the user access on the given Route.
+     * Check access for an Ember route name.
      * 
      * @param {string} routeName 
-     * @returns boolen
+     * @returns {boolean}
      */
     hasRouteAccess(routeName) {
-        let route = null,
-            hasAccess = null;
+        if (this.explicitRoutes.includes(routeName)) {
+            return true;
+        }
 
-        route = this.explicitRoutes.find(route => route === routeName)
+        let route = this.routeMaps.find(f => f.name === routeName);
         if (!route) {
-            route = this.routeMaps.find(f => f.name === routeName);
-            hasAccess = this.checkAccess(route?.map);
-        } else if (route) {
-            hasAccess = true;
+            return true;
         }
 
-        return hasAccess;
+        if (route.map === null) {
+            return this.aclPermissions.some(p => this.isAllowedFlag(p, 'readF'));
+        }
+        return this.checkAccess(route.map);
     }
 
     /**
-     * This function is used to user access on the given resource.
+     * Check access for a Model.action context (e.g. Issue.create).
+     * Undefined context is treated as allowed.
      * 
-     * @param {string} resource
-     * @returns boolean
+     * @param {string} context
+     * @returns {boolean}
      */
-    checkAccess(resource) {
-        let hasAccess = this.allowedResources.includes(resource);
-        return (!hasAccess && resource !== undefined) ? this.checkParentAccess(resource) : hasAccess;
+    checkAccess(context) {
+        if (context === undefined || context === null || context === '') {
+            return true;
+        }
+
+        let [model, action] = String(context).split('.');
+        if (!model || !action) {
+            return false;
+        }
+
+        let flag = this.actionFlagMap[action];
+        if (!flag) {
+            return false;
+        }
+
+        let permission = this.aclPermissions.find(p => {
+            let entity = p.get ? p.get('entity') : p.entity;
+            return entity === model;
+        });
+
+        if (!permission) {
+            return false;
+        }
+
+        return this.isAllowedFlag(permission, flag);
     }
 
     /**
-     * If the user doesn't have access then this function will iteratively check the resource's 
-     * parent access also and if user will have access on its parent resource then
-     * access will be given to user on the specific resource.
+     * Check if the permission is allowed for a given flag.
      * 
-     * @param {string} childResource 
-     * @returns boolean
+     * @param {Object} permission
+     * @param {string} flag
+     * @returns {boolean}
      */
-    checkParentAccess(childResource) {
-        let resources = childResource.includes('.') ? childResource.split('.') : childResource.split('');
-        let hasAccess = false;
-
-        while (resources.length > 1) {
-            resources.pop();
-            let parentResource = (resources.length !== 1) ? resources.join('.') : resources.join('');
-            if (this.allowedResources.includes(parentResource)) {
-                hasAccess = true;
-                break;
-            }
-        }
-
-        return hasAccess;
+    isAllowedFlag(permission, flag) {
+        let value = permission.get ? permission.get(flag) : permission[flag];
+        return value === 1 || value === '1' || value === true;
     }
 }

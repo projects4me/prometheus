@@ -9,7 +9,7 @@
 <section class="content">
   <div class="create-project">
     <div class="row">
-      <AccessControl @aclContext="App.Project.Create">
+      <AccessControl @aclContext="Project.create">
         <div class="col-md-8">
 
           <div class="box box-primary issues-details">
@@ -29,7 +29,6 @@
                     @data-field="project.name"
                     @validate={{action this.validateField "projectCreate" (hash name="name" value=this.model.name)}}
                     @message={{this.message.projectCreate.name}}
-                    @aclContext="App.Project.Create.Name"
                     {{autofocus}}
                   />
                 </div>
@@ -68,7 +67,6 @@
                   @showDropdowns={{true}}
                   @validate={{action this.validateField "projectCreate" (hash name="startDate" value=this.model.startDate)}}
                   @message={{this.message.projectCreate.startDate}}
-                  @aclContext="App.Project.Create.StartDate"
                 />
 
                 <FormFields::FieldDate
@@ -87,7 +85,6 @@
                   @showDropdowns={{true}}
                   @validate={{action this.validateField "projectCreate" (hash name="endDate" value=this.model.endDate)}}
                   @message={{this.message.projectCreate.endDate}}
-                  @aclContext="App.Project.Create.EndDate"
                   @showFieldInfo={{this.showFieldInfo}}
                   @info={{t "views.app.project.create.endDateInfo"}}                                     
                 />
@@ -104,7 +101,6 @@
                   @data-field="project.status"
                   @validate={{action this.validateField "projectCreate" (hash name="status" value=this.model.status)}}
                   @message={{this.message.projectCreate.status}}
-                  @aclContext="App.Project.Create.Status"
                   @showFieldInfo={{this.showFieldInfo}}
                   @info={{t "views.app.project.create.statusInfo"}}
                 />
@@ -114,7 +110,6 @@
                   @label={{t "views.app.project.create.vision"}}
                   @value={{this.model.vision}}
                   @data-field="project.vision"
-                  @aclContext="App.Project.Create.Vision"
                 />
 
                 <FormFields::FieldTextArea            
@@ -122,7 +117,6 @@
                   @label={{t "views.app.project.create.scope"}}
                   @value={{this.model.scope}}
                   @data-field="project.scope"
-                  @aclContext="App.Project.Create.Scope"
                 />
 
               </div>
@@ -134,7 +128,7 @@
       </AccessControl>
 
       <div class="col-md-4">
-        <AccessControl @aclContext="App.Project.Create.ProjectManager.Create">
+        <AccessControl @aclContext="Project.create">
           <div class="box box-warning project-people">
             <div class="box-header with-border">
               <h3 class="box-title">{{t "views.app.project.create.projectmanager"}}</h3>
@@ -154,7 +148,6 @@
                   @data-field="project.projectManager"
                   @validate={{action this.validateField "projectCreate" (hash name="projectManager" value=this.model.projectManager)}}
                   @message={{this.message.projectCreate.projectManager}}
-                  @aclContext="App.Project.Create.ProjectManager"
               />
 
             </div>
@@ -162,7 +155,7 @@
         </AccessControl>
 
         {{#if (eq this.layoutName "create")}}
-          <AccessControl @aclContext="App.Project.Create.IssueTypes.Create">
+          <AccessControl @aclContext="Project.create">
             <div class="box box-danger project-issue-types">
               <div class="box-header with-border">
                 <h3 class="box-title">{{t "views.app.project.create.issuetypes"}}</h3>
@@ -183,7 +176,6 @@
                   @data-field="project.issuetypes"
                   @validate={{action this.validateField "projectCreate" (hash name="hasIssuetypes" value=this.model.hasIssuetypes)}}
                   @message={{this.message.projectCreate.hasIssuetypes}}
-                  @aclContext="App.Project.Create.IssueTypes"
                   @searchEnabled={{true}}
                   @search={{this.searchIssueTypes}}  
                   @showFieldInfo={{this.showFieldInfo}}
@@ -198,7 +190,7 @@
       </div>
 
       <div class="col-sm-12">
-        <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "projectCreate"}} @disableOnSuccess={{true}} @aclContext="App.Project.Create">{{t "global.form.save"}}</AppUi::Button>
+        <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "projectCreate"}} @disableOnSuccess={{true}} @aclContext="Project.create">{{t "global.form.save"}}</AppUi::Button>
         <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
       </div>
 

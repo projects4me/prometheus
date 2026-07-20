@@ -6,7 +6,7 @@
         @title={{t "views.app.user.page.skill.add"}}
         @onClick={{this.startAdding}}
         @class="pull-right"
-        @aclContext="App.User.Edit"
+        @aclContext="User.update"
         @data-add="user.skills"
       />
     {{/if}}
@@ -67,7 +67,7 @@
           @data-field="user-skill.name"
           @validate={{fn @validateField "userSkill" (hash name="name" value=this.newSkill.name model=this.newSkill)}}
           @message={{@message.userSkill.name}}
-          @aclContext="App.User.Edit"
+          @aclContext="User.update"
         />
 
         <FormFields::FieldRelate
@@ -84,7 +84,7 @@
           @data-field="user-skill.proficiencyLevel"
           @validate={{fn @validateField "userSkill" (hash name="proficiencyLevel" value=this.newSkill.proficiencyLevel model=this.newSkill)}}
           @message={{@message.userSkill.proficiencyLevel}}
-          @aclContext="App.User.Edit"
+          @aclContext="User.update"
         />
 
         <div class="profile-inline-form-actions user-skills-form-actions">
@@ -94,7 +94,7 @@
             disabled={{this.isSaving}}
             data-btn="save"
             @onClick={{this.saveDraft}}
-            @aclContext="App.User.Edit"
+            @aclContext="User.update"
           >
             {{t "global.form.save"}}
           </AppUi::Button>

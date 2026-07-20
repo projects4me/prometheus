@@ -59,11 +59,11 @@
             @placeholder={{t "views.app.role.tabs.user.search"}}
             @data-module={{concat "role-" this.model.name}}
             @data-search="user"
-            @aclContext="App.Role.SearchUser"
+            @aclContext="Role.read"
             @value={{this.userSearchQuery}}
           />
 
-          <AppUi::Button data-btn="create-membership" type="button" class="btn btn-primary" @onClick={{this.showAddMembershipDialog}} @aclContext="App.Role.User.Membership.Create">
+          <AppUi::Button data-btn="create-membership" type="button" class="btn btn-primary" @onClick={{this.showAddMembershipDialog}} @aclContext="Membership.create">
             {{t "views.app.role.tabs.user.createMembership"}}
           </AppUi::Button>
         </div>
@@ -91,7 +91,7 @@
               @relateType="relate-user"
               @validate={{action this.validateField "membershipCreate" (hash name="userId" value=this.newMembership.userId model=this.newMembership)}}
               @message={{this.message.membershipCreate.userId}}
-              @aclContext="App.Role.Membership.Create.User"
+              @aclContext="Membership.create"
             />
 
             <FormFields::FieldRelate
@@ -107,7 +107,7 @@
               @relateType="relate-simple"
               @validate={{action this.validateField "membershipCreate" (hash name="relatedTo" value=this.newMembership.relatedTo model=this.newMembership)}}              
               @message={{this.message.membershipCreate.relatedTo}}
-              @aclContext="App.Role.Membership.Create.RelatedTo"
+              @aclContext="Membership.create"
             />            
 
             {{#if (eq this.newMembership.relatedTo 'project')}}
@@ -123,7 +123,7 @@
                 @relateType="relate-simple"
                 @validate={{action this.validateField "membershipCreate" (hash name="hasProjects" value=this.newMembership.hasProjects model=this.newMembership)}}              
                 @message={{this.message.membershipCreate.hasProjects}}
-                @aclContext="App.Role.Membership.Create.Project"
+                @aclContext="Membership.create"
               />
             {{/if}}
           </div>
@@ -148,7 +148,7 @@
                 <td>{{membership.project.name}}</td>
                 <td>{{membership.project.shortCode}}</td>
                 <td>
-                  <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @onClick={{fn this.deleteMembership membership}} @aclContext="App.Role.User.Delete">
+                  <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @onClick={{fn this.deleteMembership membership}} @aclContext="User.delete">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                   </AppUi::Button>
                 </td>

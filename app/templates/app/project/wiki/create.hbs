@@ -1,4 +1,4 @@
-<AccessControl @aclContext="App.Project.Wiki.Create">
+<AccessControl @aclContext="Wiki.create">
   <div class="wiki-detail box box-primary">
 
     <div class="box-header with-border">
@@ -17,7 +17,6 @@
             @data-field="wiki.name"
             @validate={{action this.validateField "wikiCreate" (hash name="name" value=this.model.name)}}
             @message={{this.message.wikiCreate.name}}
-            @aclContext="App.Project.Wiki.Create.Name"
             {{autofocus}}
           />
         </div>
@@ -35,7 +34,6 @@
             @data-field="wiki.parent"
             @validate={{action this.validateField "wikiCreate" (hash name="parentId" value=this.model.parentId)}}
             @message={{this.message.wikiCreate.parentId}}
-            @aclContext="App.Project.Wiki.Create.Parent"
           />
         </div>
 
@@ -56,7 +54,7 @@
     </div>
 
     <div class="box-footer">
-      <AppUi::Button type="button" class="btn btn-primary" @onClick={{fn this.save "wikiCreate"}} @aclContext="App.Project.Wiki.Create">{{t "global.form.save"}}</AppUi::Button>
+      <AppUi::Button type="button" class="btn btn-primary" @onClick={{fn this.save "wikiCreate"}} @aclContext="Wiki.create">{{t "global.form.save"}}</AppUi::Button>
       <AppUi::Button type="button" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
     </div>
   </div>

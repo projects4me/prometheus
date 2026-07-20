@@ -9,7 +9,7 @@
   <section class="content">
 
     <div class="row">
-      <AccessControl @aclContext="App.User.Create">
+      <AccessControl @aclContext="User.create">
         <div class="col-md-8">
 
           <div class="box box-primary">
@@ -39,7 +39,6 @@
                     @lengthRequired={{false}}
                     @validate={{action this.validateField "userCreate" (hash name="name" value=this.model.name)}}
                     @message={{this.message.userCreate.name}}
-                    @aclContext="App.User.Create.Name"
                     {{autofocus}} 
                   />
 
@@ -53,7 +52,6 @@
                     @mask="email"
                     @validate={{action this.validateField "userCreate" (hash name="email" value=this.model.email)}}
                     @message={{this.message.userCreate.email}}     
-                    @aclContext="App.User.Create.Email"         
                   />
                   <p class="help-block email-password-hint">
                     <i class="fa fa-info-circle"></i>
@@ -80,7 +78,6 @@
                     @maxDate="31-12"
                     @validate={{action this.validateField "userCreate" (hash name="dateOfBirth" value=this.model.dateOfBirth)}}
                     @message={{this.message.userCreate.dateOfBirth}}     
-                    @aclContext="App.User.Create.DateOfBirth"
                   />
                 </div>
               </div>
@@ -89,7 +86,7 @@
             </div>
           </div>
 
-        <AccessControl @aclContext="App.User.Create.Membership.Create">
+        <AccessControl @aclContext="Membership.create">
           <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">
@@ -107,7 +104,6 @@
                 @relateType="relate-simple"
                 @searchEnabled={{false}}
                 @data-field="user.membership.project"
-                @aclContext="App.User.Create.Membership.Project"
               />
 
               <FormFields::FieldRelate
@@ -119,7 +115,6 @@
                 @relateType="relate-simple"
                 @searchEnabled={{false}}
                 @data-field="user.membership.role"
-                @aclContext="App.User.Create.Membership.Role"
               />
             </div>
           </div>
@@ -129,7 +124,7 @@
       </AccessControl>      
 
       <div class="col-md-4">
-        <AccessControl @aclContext="App.User.Create.Language.Create">
+        <AccessControl @aclContext="User.create">
           <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">
@@ -147,14 +142,13 @@
                 @data-field="user.language"
                 @validate={{action this.validateField "userCreate" (hash name="language" value=this.model.language)}}
                 @message={{this.message.language}}
-                @aclContext="App.User.Create.Language"
                 @disabled={{true}}
               />
             </div>
           </div>
         </AccessControl>
 
-        <AccessControl @aclContext="App.User.Create.Timezone.Create">
+        <AccessControl @aclContext="User.create">
           <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">
@@ -169,7 +163,6 @@
                 @selectRelated={{this.selectRelated}}
                 @validate={{action this.validateField "userCreate" (hash name="timezone" value=this.model.timezone)}}
                 @message={{this.message.timezone}}
-                @aclContext="App.User.Create.Timezone"
               />
             </div>
             
@@ -178,7 +171,7 @@
       </div>
 
     <div class="col-sm-12">
-      <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "userCreate"}} @disableOnSuccess={{true}} @aclContext="App.User.Create">{{t "global.form.save"}}</AppUi::Button>
+      <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "userCreate"}} @disableOnSuccess={{true}} @aclContext="User.create">{{t "global.form.save"}}</AppUi::Button>
       <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
     </div>
         

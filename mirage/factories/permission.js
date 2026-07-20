@@ -1,8 +1,10 @@
 import { Factory } from 'ember-cli-mirage';
-import faker from 'faker';
 import * as date from '../helpers/getDate';
 import _ from 'lodash';
 
+/**
+ * Role permission rows for the role page. Default all flags to allow (1).
+ */
 export default Factory.extend({
     resourceName() {
         return 'Issue';
@@ -13,21 +15,12 @@ export default Factory.extend({
     dateModified() {
         return date.modifiedDate(5, 7);
     },
-    readF() {
-        return faker.random.arrayElement(['0', '1', '2', '9']);
-    },
-    updateF() {
-        return faker.random.arrayElement(['0', '1', '2', '9']);
-    },
-    deleteF() {
-        return faker.random.arrayElement(['0', '1', '2', '9']);
-    },
-    importF() {
-        return faker.random.arrayElement(['0', '1', '2', '9']);
-    },
-    exportF() {
-        return faker.random.arrayElement(['0', '1', '2', '9']);
-    },
+    readF: '1',
+    createF: '1',
+    updateF: '1',
+    deleteF: '1',
+    importF: '1',
+    exportF: '1',
     roleId() {
         return (_.random(1, 10)).toString();
     }

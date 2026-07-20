@@ -1382,6 +1382,7 @@
         "tabs": {
           "permission": {
             "title": "Permissions",
+            "resource": "Resource",
             "flags": {
               "read": "Read",
               "create": "Create",
@@ -1392,13 +1393,8 @@
             },
             "options": {
               "notset": "Not set",
-              "assignment": "Assignment",
-              "group": "Group",
-              "all": "All",
               "allow": "Allow",
-              "none": "None",
-              "project": "Project",
-              "conversation": "Thread"
+              "none": "None"
             },
             "updated": "Permissions Updated"
           },
