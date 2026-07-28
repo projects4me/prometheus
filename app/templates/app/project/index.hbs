@@ -5,7 +5,7 @@
     <div class="col-md-8">
 
       {{!-- This are the project details --}}
-      <AccessControl @aclContext="Project.read">
+      <AccessControl @aclContext="project.read">
         <div class="box box-primary project-details">
           <div class="box-header with-border">
             <h2 class="box-title">
@@ -16,7 +16,7 @@
 
             <div class="box-tools pull-right">
               <span class="project-status"><span class="badge {{this.model.status}}">{{t (concat "views.app.project.lists.status." this.model.status)}}</span></span>
-              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" @onClick={{fn this.editProject this.model.shortCode}} @aclContext="Project.update"><i class="fa fa-pencil"></i></AppUi::Button>
+              <AppUi::Button data-btn="edit" type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.edit"}}" @onClick={{fn this.editProject this.model.shortCode}} @aclContext="project.update"><i class="fa fa-pencil"></i></AppUi::Button>
             </div>
             {{!-- /.box-tools --}}
           </div>
@@ -72,7 +72,7 @@
       <div class="row">
 
         {{!-- This is the project conversations --}}
-        <AccessControl @aclContext="Project.read">
+        <AccessControl @aclContext="project.read">
           <div class="col-md-6">
             <div class="box box-info  project-conversations-section">
               <div class="box-header with-border">
@@ -114,7 +114,7 @@
         {{!-- end of project conversations --}}
 
         {{!-- These are the lastest 5 open issues in this project --}}
-        <AccessControl @aclContext="Project.read">
+        <AccessControl @aclContext="project.read">
           <div class="col-md-6">
             <div class="box box-success issue-overview-section">
               <div class="box-header with-border">
@@ -180,7 +180,7 @@
                   @onchange={{this.onEstimatedSpentMilestoneChange}}
                   @relateType="relate-simple"
                   @searchField="label"
-                  @aclContext="Project.read"
+                  @aclContext="project.read"
                 />
               </div>
             </div>
@@ -221,7 +221,7 @@
       <div class="row">
 
         {{!-- This is the project activities section --}}
-        <AccessControl @aclContext="Project.read">
+        <AccessControl @aclContext="project.read">
           <div class="col-md-12">
             <div class="box box-primary project-activities-section">
               <div class="box-header with-border">
@@ -246,7 +246,7 @@
     <div class="col-md-4">
 
       {{!-- Project Members --}}
-      <AccessControl @aclContext="Project.read">
+      <AccessControl @aclContext="project.read">
         <div class="box box-warning">
           <div class="box-header with-border box-header-flex box-header-no-content">
             <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
@@ -254,7 +254,7 @@
               @title={{t "views.app.project.detail.membership.add"}}
               @onClick={{this.showAddMemberDialog}}
               @class="pull-right"
-              @aclContext="Membership.create"
+              @aclContext="membership.create"
               @data-add="members"
             />
           </div>
@@ -265,7 +265,7 @@
               {{#each this.model.members as |member|}}
                 <li data-member-id={{member.id}} class="member-item">
                   {{!-- Delete Member --}}
-                  <AppUi::Button data-delete-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.removeMember"}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="Membership.delete">
+                  <AppUi::Button data-delete-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.removeMember"}} @onClick={{fn this.showDeleteMemberDialog member}} @aclContext="membership.delete">
                     <i class="fa fa-times"></i>
                   </AppUi::Button>
 
@@ -286,7 +286,7 @@
                   <span class="users-list-date" data-member-role>
                     {{get-role member.id this.appController.roles this.model.memberships}}
                   {{!-- Edit Member's Role --}}
-                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.editRole"}} @onClick={{fn this.showEditMemberDialog member}} @aclContext="Membership.update">
+                  <AppUi::Button data-edit-member class="btn btn-box-tool" data-toggle="tooltip" title={{t "views.app.project.detail.membership.editRole"}} @onClick={{fn this.showEditMemberDialog member}} @aclContext="membership.update">
                     <i class="fa fa-pencil"></i>
                   </AppUi::Button>                    
                   </span>
@@ -315,7 +315,7 @@
                           @searchField="label"
                           @onchange={{action "selectStatic" this 'selectedUsers'}}
                           @relateType="relate-user"
-                          @aclContext="Membership.create"
+                          @aclContext="membership.create"
                           @closeOnSelect={{false}}
                       />
 
@@ -329,7 +329,7 @@
                         @searchField="label"
                         @onchange={{action "selectRole"}}
                         @relateType="relate-simple"
-                        @aclContext="Membership.create"
+                        @aclContext="membership.create"
                     />
                   </div>
               {{/bootstrap-modal}}
@@ -350,7 +350,7 @@
                           @selected={{find-by "value" this.selectedUser.id this.currentMembers}}
                           @searchField="label"
                           @relateType="relate-user"
-                          @aclContext="Membership.create"
+                          @aclContext="membership.create"
                           @closeOnSelect={{false}}
                           @disabled={{true}}
                       />
@@ -364,7 +364,7 @@
                         @searchField="label"
                         @onchange={{action "selectRole"}}
                         @relateType="relate-simple"
-                        @aclContext="Membership.create"
+                        @aclContext="membership.create"
                     />
                   </div>
               {{/bootstrap-modal}}
@@ -390,7 +390,7 @@
                           @selected={{find-by "value" this.selectedUser.id this.currentMembers}}
                           @searchField="label"
                           @relateType="relate-user"
-                          @aclContext="Membership.delete"
+                          @aclContext="membership.delete"
                           @closeOnSelect={{false}}
                           @disabled={{true}}
                       />
@@ -403,7 +403,7 @@
                           @onchange={{action "selectStatic" this 'selectedNewIssuesAssignee'}}
                           @searchField="label"
                           @relateType="relate-user"
-                          @aclContext="Membership.delete"
+                          @aclContext="membership.delete"
                           @closeOnSelect={{false}}
                           @validate={{action this.validateField "memberDelete" (hash name="reAssignIssues" model=this.reAssignIssuesModel)}}
                           @message={{this.message.memberDelete.reAssignIssues}}
@@ -419,7 +419,7 @@
       {{!-- /. Project Members --}}
 
       {{!-- Project Milestones --}}
-      <AccessControl @aclContext="Project.read">
+      <AccessControl @aclContext="project.read">
         <div class="box box-info project-milestones-section">
           <div class="box-header with-border box-header-flex box-header-no-content">
             <h3 class="box-title">{{t "views.app.project.detail.milestones"}}</h3>
@@ -428,7 +428,7 @@
               @onClick={{this.showMilestoneDialog}}
               @class="pull-right"
               @data-add="milestone"
-              @aclContext="Membership.create"
+              @aclContext="membership.create"
             />
           </div>
 

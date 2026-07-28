@@ -1,4 +1,4 @@
-<AccessControl @aclContext="Wiki.update">
+<AccessControl @aclContext="wiki.update">
   <div class="wiki-detail box box-primary">
     {{#if this.model}}
       {{#if (eq this.model.locked "0")}}
@@ -52,7 +52,7 @@
         </div>
 
         <div class="box-footer">
-          <AppUi::Button type="button" class="btn btn-primary" @onClick={{fn this.save "wikiCreate"}} @aclContext="Wiki.update">{{t "global.form.save"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-primary" @onClick={{fn this.save "wikiCreate"}} @aclContext="wiki.update">{{t "global.form.save"}}</AppUi::Button>
           <AppUi::Button type="button" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
 
           <div class="pull-right wiki-tags">
@@ -67,7 +67,7 @@
                 @relateType="relate-simple"
             />
 
-            <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.showDialog}} @aclContext="Wiki.create">{{t "views.app.wiki.tag.add"}}</AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.showDialog}} @aclContext="wiki.create">{{t "views.app.wiki.tag.add"}}</AppUi::Button>
             {{#if this.addTagDialog}}
               {{#bootstrap-modal
                   title="views.app.wiki.tag.create"

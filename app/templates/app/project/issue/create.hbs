@@ -1,7 +1,7 @@
 <div class="create-issue">
 
   <div class="row">
-    <AccessControl @aclContext="Issue.create">
+    <AccessControl @aclContext="issue.create">
       <div class="col-md-8">
 
         <div class="box box-primary issues-details">
@@ -76,7 +76,7 @@
                 @data-field="issue.milestone"
                 @validate={{action this.validateField "issueCreate" (hash name="milestoneId" value=this.model.milestoneId)}}
                 @message={{this.message.issueCreate.milestoneId}}
-                @aclContext="Issue.create"
+                @aclContext="issue.create"
               />              
 
               <FormFields::FieldDate
@@ -223,7 +223,7 @@
     </div>
 
     <div class="col-sm-12">
-      <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "issueCreate"}} @disableOnSuccess={{true}} @aclContext="Issue.create">{{t "global.form.save"}}</AppUi::Button>
+      <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "issueCreate"}} @disableOnSuccess={{true}} @aclContext="issue.create">{{t "global.form.save"}}</AppUi::Button>
       <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
     </div>
 

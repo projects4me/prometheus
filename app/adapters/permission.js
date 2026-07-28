@@ -16,16 +16,14 @@ import PermissionAdapterError from './errors/permission-adapter-error';
 export default class PermissionAdapter extends ApplicationAdapter {
 
     /**
-     * This function is called when an exisiting record of permission is updated. There are two types of permissions
-     * fetched from the API, the first one is the default permission of the resource which is not created and the second
-     * one is the permission of the resource fetched from the database. This function handles a save() call in a way
-     * it make POST request call for the permission which is going to be created and make the PATCH call for the permission
-     * which is already created and a patch of it is yet to be updated.
-     * 
+     * Handles save() for both new grants (POST) and existing grants (PATCH).
+     * Creates are detected via the ephemeral shouldCreate flag set on the
+     * role page before roleId is assigned.
+     *
      * @method updateRecord
-     * @param {*} store 
-     * @param {*} schema 
-     * @param {*} snapshot 
+     * @param {*} store
+     * @param {*} schema
+     * @param {*} snapshot
      * @returns {Promise}
      */
     updateRecord(store, schema, snapshot) {
@@ -38,34 +36,37 @@ export default class PermissionAdapter extends ApplicationAdapter {
         serializer.serializeIntoHash(data, type, snapshot, { includeId: true });
         const id = snapshot.id;
 
-        if (data.data.attributes.resourceId.includes('new')) {
-            // For POST CALL
+        if (snapshot.record.shouldCreate) {
             requestMethod = 'POST';
-            adapterMethod = 'createRecord'
+            adapterMethod = 'createRecord';
         }
-        
+
         let updatedAttributes = _.pick(data.data.attributes, Object.keys(snapshot.changedAttributes()));
-        // Resource id and name is required by server to create or update permission.
-        updatedAttributes['resourceId'] = data.data.attributes.resourceId;
+        // resourceName, roleId, and allowed are required by server to create or update permission.
         updatedAttributes['resourceName'] = data.data.attributes.resourceName;
-        data.data.attributes = updatedAttributes
+        updatedAttributes['roleId'] = data.data.attributes.roleId;
+        updatedAttributes['allowed'] = data.data.attributes.allowed;
+        data.data.attributes = updatedAttributes;
         if (_.isEmpty(updatedAttributes)) {
             return false;
         }
         const url = this.buildURL(type, id, snapshot, adapterMethod);
-        return this.ajax(url, requestMethod, { data: data });
+        return this.ajax(url, requestMethod, { data: data }).then((response) => {
+            snapshot.record.shouldCreate = false;
+            return response;
+        });
     }
 
     /**
      * This hook is triggered when user got response against an API call. We're using this hook for getting an error
-     * object (by default we're only allow to get a plain string as an error). So if we'll get an status code of 422 
+     * object (by default we're only allow to get a plain string as an error). So if we'll get an status code of 422
      * against an POST/PATCH call we'll return an error of PermissionAdapterError type to get a customized error
      * message.
-     * 
-     * @param {*} status 
-     * @param {*} headers 
-     * @param {*} payload 
-     * @param {*} requestData 
+     *
+     * @param {*} status
+     * @param {*} headers
+     * @param {*} payload
+     * @param {*} requestData
      * @returns {Object}
      */
     handleResponse(status, headers, payload, requestData) {

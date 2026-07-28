@@ -129,7 +129,7 @@ export default class AppLoadingAssetsRoute extends Route {
      * @protected
      */
     afterModel() {
-        this.notifications.startNotificationPolling();
+        // this.notifications.startNotificationPolling();
         return super.afterModel(...arguments);
     }
 

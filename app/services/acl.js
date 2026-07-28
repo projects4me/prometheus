@@ -6,7 +6,19 @@ import Service, { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
 
 /**
- * ACL service: model + action flag checks against the current user's permissions.
+ * Template action → catalog action. `read` is the UI/permission verb;
+ * the backend stores it as `get`.
+ */
+const ACTION_MAP = {
+    read: 'get',
+    get: 'get',
+    create: 'create',
+    update: 'update',
+    delete: 'delete'
+};
+
+/**
+ * ACL service: action-based checks against the current user's permissions.
  *
  * @class AclService
  * @namespace Prometheus.Services
@@ -25,7 +37,9 @@ export default class AclService extends Service {
     @service currentUser;
 
     /**
-     * Map of Ember route names to Model.action ACL contexts.
+     * Map of Ember route names to {module}.{action} ACL contexts.
+     * Uses `read` for read-only routes; normalizeContext maps it to `get`
+     * before matching the backend catalog identity.
      *
      * @property routeMaps
      * @type array
@@ -33,36 +47,36 @@ export default class AclService extends Service {
      */
     routeMaps = [
         { name: 'app.index', map: null },
-        { name: 'app.projects.index', map: 'Project.read' },
-        { name: 'app.projects.create', map: 'Project.create' },
-        { name: 'app.projects.edit', map: 'Project.update' },
-        { name: 'app.project.index', map: 'Project.read' },
-        { name: 'app.project.wiki.index', map: 'Wiki.read' },
-        { name: 'app.project.wiki.create', map: 'Wiki.create' },
-        { name: 'app.project.wiki.page', map: 'Wiki.read' },
-        { name: 'app.project.wiki.edit', map: 'Wiki.update' },
-        { name: 'app.project.conversation', map: 'Conversationroom.read' },
-        { name: 'app.project.board', map: 'Issue.read' },
-        { name: 'app.project.calendar', map: 'Issue.read' },
-        { name: 'app.project.issue.index', map: 'Issue.read' },
-        { name: 'app.project.issue.create', map: 'Issue.create' },
-        { name: 'app.project.issue.page', map: 'Issue.read' },
-        { name: 'app.project.issue.edit', map: 'Issue.update' },
-        { name: 'app.user.page', map: 'User.read' },
-        { name: 'app.user.create', map: 'User.create' },
-        { name: 'app.user.index', map: 'User.read' },
-        { name: 'app.user.management', map: 'User.update' },
-        { name: 'app.admin.index', map: 'User.read' },
-        { name: 'app.admin.create', map: 'User.create' },
-        { name: 'app.admin.page', map: 'User.read' },
-        { name: 'app.admin.edit', map: 'User.update' },
-        { name: 'app.role.index', map: 'Role.read' },
-        { name: 'app.role.page', map: 'Role.read' }
+        { name: 'app.projects.index', map: 'project.read' },
+        { name: 'app.projects.create', map: 'project.create' },
+        { name: 'app.projects.edit', map: 'project.update' },
+        { name: 'app.project.index', map: 'project.read' },
+        { name: 'app.project.wiki.index', map: 'wiki.read' },
+        { name: 'app.project.wiki.create', map: 'wiki.create' },
+        { name: 'app.project.wiki.page', map: 'wiki.read' },
+        { name: 'app.project.wiki.edit', map: 'wiki.update' },
+        { name: 'app.project.conversation', map: 'conversationroom.read' },
+        { name: 'app.project.board', map: 'issue.read' },
+        { name: 'app.project.calendar', map: 'issue.read' },
+        { name: 'app.project.issue.index', map: 'issue.read' },
+        { name: 'app.project.issue.create', map: 'issue.create' },
+        { name: 'app.project.issue.page', map: 'issue.read' },
+        { name: 'app.project.issue.edit', map: 'issue.update' },
+        { name: 'app.user.page', map: 'user.read' },
+        { name: 'app.user.create', map: 'user.create' },
+        { name: 'app.user.index', map: 'user.read' },
+        { name: 'app.user.management', map: 'user.update' },
+        { name: 'app.admin.index', map: 'user.read' },
+        { name: 'app.admin.create', map: 'user.create' },
+        { name: 'app.admin.page', map: 'user.read' },
+        { name: 'app.admin.edit', map: 'user.update' },
+        { name: 'app.role.index', map: 'role.read' },
+        { name: 'app.role.page', map: 'role.read' }
     ];
 
     /**
      * Routes that skip ACL checks.
-     * 
+     *
      * @property explicitRoutes
      * @type array
      * @public
@@ -72,22 +86,11 @@ export default class AclService extends Service {
     ];
 
     /**
-     * Action name → permission flag column.
+     * Current user's ACL permissions (entity = resourceName + allowed).
+     *
+     * @method aclPermissions
+     * @returns {Array}
      */
-    actionFlagMap = {
-        read: 'readF',
-        create: 'createF',
-        update: 'updateF',
-        delete: 'deleteF',
-        import: 'importF',
-        export: 'exportF'
-    };
-    /**
-    * Current user's ACL permissions (model entity + flags).
-    * 
-    * @method aclPermissions
-    * @returns {Array}
-    */
     @computed('this.currentUser.user')
     get aclPermissions() {
         let user = this.currentUser.user;
@@ -98,9 +101,34 @@ export default class AclService extends Service {
     }
 
     /**
+     * Normalize an ACL context to catalog identity ({module}.{action}).
+     * Templates use `read`; this maps it to `get` to match the backend catalog.
+     *
+     * @param {string} context
+     * @returns {string|null}
+     */
+    normalizeContext(context) {
+        if (context === undefined || context === null || context === '') {
+            return null;
+        }
+
+        let [module, action] = String(context).split('.');
+        if (!module || !action) {
+            return null;
+        }
+
+        let catalogAction = ACTION_MAP[action.toLowerCase()];
+        if (!catalogAction) {
+            return null;
+        }
+
+        return `${module.toLowerCase()}.${catalogAction}`;
+    }
+
+    /**
      * Check access for an Ember route name.
-     * 
-     * @param {string} routeName 
+     *
+     * @param {string} routeName
      * @returns {boolean}
      */
     hasRouteAccess(routeName) {
@@ -114,15 +142,21 @@ export default class AclService extends Service {
         }
 
         if (route.map === null) {
-            return this.aclPermissions.some(p => this.isAllowedFlag(p, 'readF'));
+            return this.aclPermissions.some(permission => {
+                let entity = permission.get ? permission.get('entity') : permission.entity;
+                let allowed = permission.get ? permission.get('allowed') : permission.allowed;
+                return typeof entity === 'string'
+                    && entity.endsWith('.get')
+                    && (allowed === 1 || allowed === '1' || allowed === true);
+            });
         }
         return this.checkAccess(route.map);
     }
 
     /**
-     * Check access for a Model.action context (e.g. Issue.create).
+     * Check access for a {module}.{action} context (e.g. issue.create).
      * Undefined context is treated as allowed.
-     * 
+     *
      * @param {string} context
      * @returns {boolean}
      */
@@ -131,37 +165,21 @@ export default class AclService extends Service {
             return true;
         }
 
-        let [model, action] = String(context).split('.');
-        if (!model || !action) {
-            return false;
-        }
-
-        let flag = this.actionFlagMap[action];
-        if (!flag) {
+        let resourceName = this.normalizeContext(context);
+        if (!resourceName) {
             return false;
         }
 
         let permission = this.aclPermissions.find(p => {
             let entity = p.get ? p.get('entity') : p.entity;
-            return entity === model;
+            return entity === resourceName;
         });
 
         if (!permission) {
             return false;
         }
 
-        return this.isAllowedFlag(permission, flag);
-    }
-
-    /**
-     * Check if the permission is allowed for a given flag.
-     * 
-     * @param {Object} permission
-     * @param {string} flag
-     * @returns {boolean}
-     */
-    isAllowedFlag(permission, flag) {
-        let value = permission.get ? permission.get(flag) : permission[flag];
-        return value === 1 || value === '1' || value === true;
+        let allowed = permission.get ? permission.get('allowed') : permission.allowed;
+        return allowed === 1 || allowed === '1' || allowed === true;
     }
 }

@@ -35,13 +35,13 @@
             />
             <span class="glyphicon glyphicon-search form-control-feedback"></span>
           </div>
-          <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.searchByRules}}  @aclContext="Issue.read">{{t "global.form.search"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.searchByRules}}  @aclContext="issue.read">{{t "global.form.search"}}</AppUi::Button>
           <AppUi::Button type="button" class="btn" @onClick={{this.clearSearch}}>{{t "global.form.clear"}}</AppUi::Button>
                  
         </div>
         <div class="list-view-filters collapse">
           {{query-builder module="issue" query=this.query}}
-          <AppUi::Button type="button" class="btn btn-primary pull-right" @onClick={{this.showSaveSearchDialog}} @aclContext="Issue.create">{{t "global.form.savesearch"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-primary pull-right" @onClick={{this.showSaveSearchDialog}} @aclContext="issue.create">{{t "global.form.savesearch"}}</AppUi::Button>
           {{#if this.saveSearchDialog}}
             {{#bootstrap-modal
                 title="global.form.savesearch"
@@ -72,11 +72,11 @@
         <div class="list-controls">
 
           <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-            <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="Issue.read"/>
+            <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="issue.read"/>
           </span>
           <div class="btn-group">
-            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="Issue.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
-            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.massupdate"}}" @onClick={{this.showMassUpdateDialog}} @aclContext="Issue.update"><i class="fa fa-pencil"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="issue.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.massupdate"}}" @onClick={{this.showMassUpdateDialog}} @aclContext="issue.update"><i class="fa fa-pencil"></i></AppUi::Button>
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.export"}}" @onClick={{this.showExportDialog}}><i class="fa fa-download"></i></AppUi::Button>
           </div>
           <div class="pull-right">
@@ -85,12 +85,12 @@
             {{#if this.model.meta.links.next}}+{{/if}}
             <div class="btn-group">
               {{#if this.model.meta.links.prev}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="Issue.read"><i class="fa fa-chevron-left"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="issue.read"><i class="fa fa-chevron-left"></i></AppUi::Button>
               {{else}}
                 <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}}"><i class="fa fa-chevron-left"></i></AppUi::Button>
               {{/if}}
               {{#if this.model.meta.links.next}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="Issue.read"><i class="fa fa-chevron-right"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="issue.read"><i class="fa fa-chevron-right"></i></AppUi::Button>
               {{else}}
                 <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></AppUi::Button>
               {{/if}}
@@ -163,7 +163,7 @@
                         {{!-- More Actions Dropdown --}}
                         <ul class="dropdown-menu" role="menu">
                           <li>
-                            <AppUi::Button data-btn="delete" type="button" @onClick={{fn this.deleteModel issue "issueNumber"}} class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="Issue.delete">
+                            <AppUi::Button data-btn="delete" type="button" @onClick={{fn this.deleteModel issue "issueNumber"}} class="btn btn-box-tool" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="issue.delete">
                               <i class="fa fa-trash"></i> {{t "global.form.delete"}}
                             </AppUi::Button>
                           </li>
@@ -192,12 +192,12 @@
         <div class="list-controls">
 
           <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-            <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="Issue.read"/>
+            <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="issue.read"/>
           </span>
           <div class="btn-group">
-            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="Issue.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="issue.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.share"}}"><i class="fa fa-share-alt"></i></AppUi::Button>
-            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="mass-update-issues" title="{{t "global.form.massupdate"}}" @onClick={{this.showMassUpdateDialog}} @aclContext="Issue.update"><i class="fa fa-pencil"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="mass-update-issues" title="{{t "global.form.massupdate"}}" @onClick={{this.showMassUpdateDialog}} @aclContext="issue.update"><i class="fa fa-pencil"></i></AppUi::Button>
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.discuss"}}"><i class="fa fa-comments-o"></i></AppUi::Button>
             <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.export"}}" @onClick={{this.showExportDialog}}><i class="fa fa-download"></i></AppUi::Button>
           </div>
@@ -208,12 +208,12 @@
             {{#if this.model.meta.links.next}}+{{/if}}
             <div class="btn-group">
               {{#if this.model.meta.links.prev}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="Issue.read"><i class="fa fa-chevron-left"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="issue.read"><i class="fa fa-chevron-left"></i></AppUi::Button>
               {{else}}
                 <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}}"><i class="fa fa-chevron-left"></i></AppUi::Button>
               {{/if}}
               {{#if this.model.meta.links.next}}
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="Issue.read"><i class="fa fa-chevron-right"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="issue.read"><i class="fa fa-chevron-right"></i></AppUi::Button>
               {{else}}
                 <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></AppUi::Button>
               {{/if}}
@@ -335,7 +335,7 @@
             @onchange={{action "selectRelated" this.massUpdateModel 'milestoneId'}}
             @relateType="relate-simple"
             @data-field="issue.milestone"
-            @aclContext="Issue.create"
+            @aclContext="issue.create"
           />          
         </div>
      {{/bootstrap-modal}}

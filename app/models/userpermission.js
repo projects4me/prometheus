@@ -16,7 +16,7 @@ export default class UserpermissionModel extends Model {
 
     /**
      * Identifier of user.
-     * 
+     *
      * @property userId
      * @type String
      * @for Userpermission
@@ -25,8 +25,8 @@ export default class UserpermissionModel extends Model {
     @attr('string') userId;
 
     /**
-     * Entity/Resource name on which permission is applied.
-     * 
+     * Full resource name on which permission is applied (e.g. issue.get).
+     *
      * @property entity
      * @type String
      * @for Userpermission
@@ -35,62 +35,12 @@ export default class UserpermissionModel extends Model {
     @attr('string') entity;
 
     /**
-     * Read action value.
-     * 
-     * @property _read
+     * Whether the action is allowed ('1') or denied ('0').
+     *
+     * @property allowed
      * @type String
      * @for Userpermission
      * @private
-     */    
-    @attr('string') readF;
-
-    /**
-     * Create action value.
-     * 
-     * @property _create
-     * @type String
-     * @for Userpermission
-     * @private
-     */    
-    @attr('string') createF;
-
-    /**
-     * Update action value.
-     * 
-     * @property _update
-     * @type String
-     * @for Userpermission
-     * @private
-     */    
-    @attr('string') updateF;
-
-    /**
-     * Delete action value
-     * 
-     * @property _delete
-     * @type String
-     * @for Userpermission
-     * @private
-     */    
-    @attr('string') deleteF;
-
-    /**
-     * Import action value.
-     * 
-     * @property _import
-     * @type String
-     * @for Userpermission
-     * @private
-     */    
-    @attr('string') importF;
-
-    /**
-     * Export action value.
-     * 
-     * @property _export
-     * @type String
-     * @for Userpermission
-     * @private
-     */    
-    @attr('string') exportF;
+     */
+    @attr('string') allowed;
 }

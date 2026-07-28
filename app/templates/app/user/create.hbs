@@ -9,7 +9,7 @@
   <section class="content">
 
     <div class="row">
-      <AccessControl @aclContext="User.create">
+      <AccessControl @aclContext="user.create">
         <div class="col-md-8">
 
           <div class="box box-primary">
@@ -86,7 +86,7 @@
             </div>
           </div>
 
-        <AccessControl @aclContext="Membership.create">
+        <AccessControl @aclContext="membership.create">
           <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">
@@ -124,7 +124,7 @@
       </AccessControl>      
 
       <div class="col-md-4">
-        <AccessControl @aclContext="User.create">
+        <AccessControl @aclContext="user.create">
           <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">
@@ -148,7 +148,7 @@
           </div>
         </AccessControl>
 
-        <AccessControl @aclContext="User.create">
+        <AccessControl @aclContext="user.create">
           <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">
@@ -171,7 +171,7 @@
       </div>
 
     <div class="col-sm-12">
-      <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "userCreate"}} @disableOnSuccess={{true}} @aclContext="User.create">{{t "global.form.save"}}</AppUi::Button>
+      <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "userCreate"}} @disableOnSuccess={{true}} @aclContext="user.create">{{t "global.form.save"}}</AppUi::Button>
       <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
     </div>
         

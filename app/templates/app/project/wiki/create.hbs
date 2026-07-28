@@ -1,4 +1,4 @@
-<AccessControl @aclContext="Wiki.create">
+<AccessControl @aclContext="wiki.create">
   <div class="wiki-detail box box-primary">
 
     <div class="box-header with-border">
@@ -54,7 +54,7 @@
     </div>
 
     <div class="box-footer">
-      <AppUi::Button type="button" class="btn btn-primary" @onClick={{fn this.save "wikiCreate"}} @aclContext="Wiki.create">{{t "global.form.save"}}</AppUi::Button>
+      <AppUi::Button type="button" class="btn btn-primary" @onClick={{fn this.save "wikiCreate"}} @aclContext="wiki.create">{{t "global.form.save"}}</AppUi::Button>
       <AppUi::Button type="button" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
     </div>
   </div>

@@ -14,18 +14,8 @@ import Model, { attr } from '@ember-data/model';
  */
 export default class PermissionModel extends Model {
     /**
-     * The identifier of the resource on which permission is applied.
-     * 
-     * @property resourceId
-     * @type String
-     * @for PermissionModel
-     * @private
-     */
-    @attr('string') resourceId;
-
-    /**
-     * The name of the resource on which permission is applied.
-     * 
+     * The name of the resource on which permission is applied (e.g. issue.get).
+     *
      * @property resourceName
      * @type String
      * @for PermissionModel
@@ -34,8 +24,8 @@ export default class PermissionModel extends Model {
     @attr('string') resourceName;
 
     /**
-     * The identifier of the roleId against which permission is created.
-     * 
+     * The identifier of the role against which permission is created.
+     *
      * @property roleId
      * @type String
      * @for PermissionModel
@@ -44,68 +34,18 @@ export default class PermissionModel extends Model {
     @attr('string') roleId;
 
     /**
-     * The value of the read flag.
-     * 
-     * @property readF
+     * Whether the action is allowed ('1') or denied ('0').
+     *
+     * @property allowed
      * @type String
      * @for PermissionModel
      * @private
      */
-    @attr('string') readF;
-
-    /**
-     * The value of the create flag.
-     * 
-     * @property createF
-     * @type String
-     * @for PermissionModel
-     * @private
-     */
-    @attr('string') createF;
-
-    /**
-     * The value of the update flag.
-     * 
-     * @property updateF
-     * @type String
-     * @for PermissionModel
-     * @private
-     */
-    @attr('string') updateF;
-
-    /**
-     * The value of the delete flag.
-     * 
-     * @property deleteF
-     * @type String
-     * @for PermissionModel
-     * @private
-     */
-    @attr('string') deleteF;
-
-    /**
-     * The value of the import flag.
-     * 
-     * @property importF
-     * @type String
-     * @for PermissionModel
-     * @private
-     */
-    @attr('string') importF;
-
-    /**
-     * The value of the export flag.
-     * 
-     * @property exportF
-     * @type String
-     * @for PermissionModel
-     * @private
-     */
-    @attr('string') exportF;
+    @attr('string') allowed;
 
     /**
      * Creation date of permission.
-     * 
+     *
      * @property dateCreated
      * @type String
      * @for PermissionModel
@@ -115,7 +55,7 @@ export default class PermissionModel extends Model {
 
     /**
      * Modified date of permission.
-     * 
+     *
      * @property dateModified
      * @type String
      * @for PermissionModel

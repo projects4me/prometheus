@@ -13,7 +13,7 @@
     <div class="row">
       <div class="col-md-3 col-sm-3">
 
-        <AccessControl @aclContext="User.read"> 
+        <AccessControl @aclContext="user.read"> 
           {{!-- User profile info section starts--}}
           <div class="box box-primary">
             <div class="box-body box-profile">
@@ -30,7 +30,7 @@
                     <AppUi::InlineEditable
                       @value={{this.model.name}}
                       @onSave={{fn this.saveModelAttribute this.model "name"}}
-                      @aclContext="User.update"
+                      @aclContext="user.update"
                       @validate={{fn this.validateInlineField "userPage" "name"}}
                       @message={{this.message.userPage.name}}
                       @onClearMessage={{fn this.clearFieldMessage "userPage" "name"}}
@@ -55,7 +55,7 @@
                     <AppUi::InlineEditable
                       @value={{this.model.title}}
                       @onSave={{fn this.saveModelAttribute this.model "title"}}
-                      @aclContext="User.update"
+                      @aclContext="user.update"
                       @label={{t "views.app.user.create.designation"}}
                       @validate={{fn this.validateInlineField "userPage" "title"}}
                       @message={{this.message.userPage.title}}
@@ -90,7 +90,7 @@
                 <AppUi::InlineEditable
                   @value={{this.model.dateOfBirth}}
                   @onSave={{fn this.saveModelAttribute this.model "dateOfBirth"}}
-                  @aclContext="User.update"
+                  @aclContext="user.update"
                   @validate={{fn this.validateInlineField "userPage" "dateOfBirth"}}
                   @message={{this.message.userPage.dateOfBirth}}
                   @onClearMessage={{fn this.clearFieldMessage "userPage" "dateOfBirth"}}
@@ -136,7 +136,7 @@
                 <AppUi::InlineEditable
                   @value={{this.model.timezone}}
                   @onSave={{fn this.saveModelAttribute this.model "timezone"}}
-                  @aclContext="User.update"
+                  @aclContext="user.update"
                   @validate={{fn this.validateInlineField "userPage" "timezone"}}
                   @message={{this.message.userPage.timezone}}
                   @onClearMessage={{fn this.clearFieldMessage "userPage" "timezone"}}
@@ -190,7 +190,7 @@
 
       <div class="col-md-9">
 
-        <AccessControl @aclContext="User.read">
+        <AccessControl @aclContext="user.read">
           {{!-- User Stats Section starts --}}
           <div class="row">
             <div class="col-md-3">
@@ -258,7 +258,7 @@
 
       {{!-- User Latest Modules Sections --}}
         <div class="row">       
-          <AccessControl @aclContext="User.read">
+          <AccessControl @aclContext="user.read">
             {{!-- User latest Projects Section starts --}}
             <div class="col-md-6">
               <div class="box box-primary">
@@ -276,7 +276,7 @@
           {{!-- User latest Projects Section ends --}}
           </AccessControl>
 
-          <AccessControl @aclContext="User.read">
+          <AccessControl @aclContext="user.read">
             {{!-- User latest Issues Section starts --}}
             <div class="col-md-6">
               <div class="box box-primary">
@@ -293,7 +293,7 @@
             {{!-- User latest Issues Section ends --}}
           </AccessControl>
 
-          <AccessControl @aclContext="User.read">
+          <AccessControl @aclContext="user.read">
             {{!-- User Recent Activities Section starts --}}
             <div class="col-md-8">
               <div class="box box-primary">
@@ -310,7 +310,7 @@
             {{!-- User Recent Activities Section ends --}}
           </AccessControl>
           
-          <AccessControl @aclContext="User.read">
+          <AccessControl @aclContext="user.read">
             {{!-- User Works most With Section starts --}}
             <div class="col-md-4">
               <div class="box box-primary">

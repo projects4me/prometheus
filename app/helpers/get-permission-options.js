@@ -6,7 +6,7 @@ import Helper from '@ember/component/helper';
 import { inject as service } from '@ember/service';
 
 /**
- * Returns binary permission options (None / Allow) for model or field resources.
+ * Returns binary permission options (Not set / Allow / None) from flat apiOptions.
  *
  * @class GetPermissionOptions
  * @extends Ember.Component.Helper
@@ -30,25 +30,20 @@ export default Helper.extend({
 
     /**
      * @param {string} type
-     * @param {Prometheus.Models.Permission} permission
-     * @param {string} flag
      * @returns {Object[]}
      */
-    compute([type, permission /*, flag */]) {
+    compute([type /*, permission, flag */]) {
         let aclSettings = this.settings.get('aclSettings') || {};
-            let apiOptions = aclSettings[type] || {};
-            let resourceType = 'field';
-            // Model-level row uses model options; field/rel rows use field options.
-            if (permission && permission.moduleName === permission.resourceName) {
-            resourceType = 'model';
-            }
-            let options = Object.assign(
+        let apiOptions = aclSettings[type] || {};
+        let options = Object.assign(
             {},
-            apiOptions[resourceType] || apiOptions.field || apiOptions.model || {
-            allow: '1',
-            none: '0'
-            }
-            );
+            (apiOptions.allow !== undefined || apiOptions.none !== undefined)
+                ? apiOptions
+                : {
+                    allow: '1',
+                    none: '0'
+                }
+        );
 
         let optionsList = [{
             label: this.intl.t("views.app.role.tabs.permission.options.notset"),

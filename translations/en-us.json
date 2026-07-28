@@ -1382,14 +1382,174 @@
         "tabs": {
           "permission": {
             "title": "Permissions",
-            "resource": "Resource",
+            "resource": "Action",
             "flags": {
               "read": "Read",
+              "get": "Get",
               "create": "Create",
               "update": "Update",
               "delete": "Delete",
               "import": "Import",
               "export": "Export"
+            },
+            "modules": {
+              "project": "Project",
+              "issue": "Issue",
+              "wiki": "Wiki",
+              "user": "User",
+              "role": "Role",
+              "membership": "Membership",
+              "conversationroom": "Conversation",
+              "comment": "Comment",
+              "milestone": "Milestone",
+              "tag": "Tag",
+              "savedsearch": "Saved Search",
+              "upload": "Upload",
+              "activity": "Activity",
+              "timelog": "Time Log",
+              "chatroom": "Chat",
+              "issuetype": "Issue Type",
+              "issuestatus": "Issue Status",
+              "userqualification": "User Qualification",
+              "userskill": "User Skill",
+              "permission": "Permission",
+              "vote": "Vote",
+              "issueplanning": "Issue Planning",
+              "milestoneoverview": "Milestone Overview"
+            },
+            "labels": {
+              "project": {
+                "get": "Get Project",
+                "create": "Create Project",
+                "update": "Update Project",
+                "delete": "Delete Project"
+              },
+              "issue": {
+                "get": "Get Issue",
+                "create": "Create Issue",
+                "update": "Update Issue",
+                "delete": "Delete Issue"
+              },
+              "wiki": {
+                "get": "Get Wiki",
+                "create": "Create Wiki",
+                "update": "Update Wiki",
+                "delete": "Delete Wiki"
+              },
+              "user": {
+                "get": "Get User",
+                "create": "Create User",
+                "update": "Update User",
+                "delete": "Delete User"
+              },
+              "role": {
+                "get": "Get Role",
+                "create": "Create Role",
+                "update": "Update Role",
+                "delete": "Delete Role"
+              },
+              "membership": {
+                "get": "Get Membership",
+                "create": "Create Membership",
+                "update": "Update Membership",
+                "delete": "Delete Membership"
+              },
+              "conversationroom": {
+                "get": "Get Conversation",
+                "create": "Create Conversation",
+                "update": "Update Conversation",
+                "delete": "Delete Conversation"
+              },
+              "comment": {
+                "get": "Get Comment",
+                "create": "Create Comment",
+                "update": "Update Comment",
+                "delete": "Delete Comment"
+              },
+              "milestone": {
+                "get": "Get Milestone",
+                "create": "Create Milestone",
+                "update": "Update Milestone",
+                "delete": "Delete Milestone"
+              },
+              "tag": {
+                "get": "Get Tag",
+                "create": "Create Tag",
+                "update": "Update Tag",
+                "delete": "Delete Tag"
+              },
+              "savedsearch": {
+                "get": "Get Saved Search",
+                "create": "Create Saved Search",
+                "update": "Update Saved Search",
+                "delete": "Delete Saved Search"
+              },
+              "upload": {
+                "get": "Get Upload",
+                "create": "Create Upload",
+                "update": "Update Upload",
+                "delete": "Delete Upload"
+              },
+              "activity": {
+                "get": "Get Activity",
+                "create": "Create Activity",
+                "update": "Update Activity",
+                "delete": "Delete Activity"
+              },
+              "timelog": {
+                "get": "Get Time Log",
+                "create": "Create Time Log",
+                "update": "Update Time Log",
+                "delete": "Delete Time Log"
+              },
+              "chatroom": {
+                "get": "Get Chat",
+                "create": "Create Chat",
+                "update": "Update Chat",
+                "delete": "Delete Chat"
+              },
+              "issuetype": {
+                "get": "Get Issue Type",
+                "create": "Create Issue Type",
+                "update": "Update Issue Type",
+                "delete": "Delete Issue Type"
+              },
+              "issuestatus": {
+                "get": "Get Issue Status",
+                "create": "Create Issue Status",
+                "update": "Update Issue Status",
+                "delete": "Delete Issue Status"
+              },
+              "userqualification": {
+                "get": "Get User Qualification",
+                "create": "Create User Qualification",
+                "update": "Update User Qualification",
+                "delete": "Delete User Qualification"
+              },
+              "userskill": {
+                "get": "Get User Skill",
+                "create": "Create User Skill",
+                "update": "Update User Skill",
+                "delete": "Delete User Skill"
+              },
+              "permission": {
+                "get": "Get Permission",
+                "create": "Create Permission",
+                "update": "Update Permission",
+                "delete": "Delete Permission"
+              },
+              "vote": {
+                "get": "Get Vote",
+                "create": "Create Vote",
+                "update": "Update Vote",
+                "delete": "Delete Vote"
+              },
+              "issueplanning": {
+                "create": "Create Issue Plan"
+              },
+              "milestoneoverview": {
+                "get": "Get Milestone Overview"
+              }
             },
             "options": {
               "notset": "Not set",

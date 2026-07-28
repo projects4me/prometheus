@@ -203,7 +203,7 @@
             @v-model={{this.newConversation}}
             @v-field='subject'
             @v-output='message'
-            @aclContext='Conversationroom.create'
+            @aclContext='conversationroom.create'
         />
 
         <div data-field="newConversation.description" class="form-field ember-view">
@@ -239,7 +239,7 @@
             @v-model={{this.newConversation}}
             @v-field='roomType'
             @v-output='message'
-            @aclContext='Conversationroom.create'
+            @aclContext='conversationroom.create'
         />
 
         <div class="form-group form-field ember-view" data-field="conversation.linkedIssue">

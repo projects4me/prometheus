@@ -165,9 +165,8 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
-     * This method returns the role permissions by creating the associative array containing the key
-     * as the module name and there permissions.
-     * 
+     * Role permissions grouped by module from resourceName (e.g. issue.get → module issue).
+     *
      * @property permissions
      * @protected
      */
@@ -175,38 +174,24 @@ export default class AppRolePageController extends AppRoleController {
     get permissions() {
         let rolesPermissions = {};
         let permissions = this.model.permissions || [];
-        let modelsList = permissions.reduce((models, permission) => {
-            if (permission.resourceName && !permission.resourceName.includes('.')) {
-                models.push(permission.resourceName);
+
+        permissions.forEach((permission) => {
+            if (!permission.resourceName || !permission.resourceName.includes('.')) {
+                return;
             }
-            return models;
-        }, []);
 
+            let [moduleName, ...actionParts] = permission.resourceName.split('.');
+            let action = actionParts.join('.');
+            permission.moduleName = moduleName;
+            permission.resourceAlias = action;
 
-// Attach fields/relationships under each model module.
-        modelsList.forEach((modelName) => {
-            let modelPermissions = permissions.filter((permission) => {
-                let [model, fieldName] = permission.resourceName.split('.');
-                if (modelName === model) {
-                    permission.resourceAlias = fieldName ?? model;
-                    permission.moduleName = modelName;
-                    return permission;
-                }
-            });
-
-            rolesPermissions[modelName] = modelPermissions;
+            if (!rolesPermissions[moduleName]) {
+                rolesPermissions[moduleName] = [];
+            }
+            rolesPermissions[moduleName].push(permission);
         });
-        return rolesPermissions;
-    }
 
-    /**
-     * This returns the all of the permission flags.
-     * 
-     * @property permissionFlags
-     * @protected
-     */
-    get permissionFlags() {
-        return (this.settings.get('aclSettings')).permissionFlags;
+        return rolesPermissions;
     }
 
     /**
@@ -236,13 +221,18 @@ export default class AppRolePageController extends AppRoleController {
         let moduleEl = document.querySelector(`[data-permission-module="${moduleName}"]`);
         let permissions = this.getChangedPermissions(moduleName);
 
+        if (!permissions.length) {
+            return;
+        }
+
+        this.permissionsState[moduleName] = this.permissionsState[moduleName] || {};
+
         for (let i = 0; i < permissions.length; i++) {
             let permission = permissions.objectAt(i);
 
             let permissionEl = moduleEl.querySelector(`[data-module-resource="${permission.resourceName}"]`);
             permissionEl.classList.add("light-gray");
 
-            this.permissionsState[moduleName] = this.permissionsState[moduleName] || {};
             this.scrollToPermission(permissionEl)
             this.permissionsState[moduleName][permission.resourceAlias] = this.updatePermissionTask.perform(permission, moduleName, permissions.length);
 
@@ -282,8 +272,10 @@ export default class AppRolePageController extends AppRoleController {
         let delay = this.getDelay(permissionsCount);
         try {
             yield timeout(delay);
-            !(permission.roleId)
-                && (permission.roleId = this.model.id);
+            permission.shouldCreate = !permission.roleId;
+            if (!permission.roleId) {
+                permission.roleId = this.model.id;
+            }
             yield permission.save();
             yield timeout(delay);
         } catch (e) {
@@ -333,7 +325,8 @@ export default class AppRolePageController extends AppRoleController {
      */
     showMessages(moduleName) {
         let showSuccess = true;
-        for (let [key, value] of Object.entries(this.permissionsState[moduleName])) {
+        let moduleState = this.permissionsState[moduleName] || {};
+        for (let [key, value] of Object.entries(moduleState)) {
             if (value.isErrored) {
                 let permission = this.model.permissions.findBy('resourceName', key)
                 || this.model.permissions.findBy('resourceName', `${moduleName}.${key}`)
@@ -364,7 +357,8 @@ export default class AppRolePageController extends AppRoleController {
      * @returns {null}
      */
     scrollToLatestCancelledPermission(moduleEl, moduleName) {
-        for (let [key, value] of Object.entries(this.permissionsState[moduleName])) {
+        let moduleState = this.permissionsState[moduleName] || {};
+        for (let [key, value] of Object.entries(moduleState)) {
             if (value.isErrored) {
                 let permissionEl = moduleEl.querySelector(`[data-module-resource="${key}"]`)
                 || moduleEl.querySelector(`[data-module-resource="${moduleName}.${key}"]`)
@@ -578,7 +572,7 @@ export default class AppRolePageController extends AppRoleController {
         Logger.debug('AppRolePageController:addMembership()');
         let _self = this;
         let newMembership = _self.newMembership;
-        this.validate(newMembership, 'membershipCreate')
+        return this.validate(newMembership, 'membershipCreate')
             .then(async (validation) => {
                 if (validation.isValid) {
                     if (this.newMembership.relatedTo === 'system') {
@@ -603,8 +597,10 @@ export default class AppRolePageController extends AppRoleController {
                         showCloseButton: true
                     });
                 }
+            })
+            .finally(() => {
+                Logger.debug('-AppRolePageController:addMembership()');
             });
-        Logger.debug('-AppRolePageController:addMembership()');
     }
 
     /**
@@ -629,8 +625,11 @@ export default class AppRolePageController extends AppRoleController {
             }
             _self.memberships.pushObject(membership);
 
+            let messageName = membership.relatedTo === 'system'
+                ? undefined
+                : membership.project?.get('name');
             new Messenger().post({
-                message: _self.intl.t(`views.app.role.tabs.user.membership.created.${membership.relatedTo}`, { name: membership.project.get('name') }),
+                message: _self.intl.t(`views.app.role.tabs.user.membership.created.${membership.relatedTo}`, { name: messageName }),
                 type: 'success',
                 showCloseButton: true
             });

@@ -9,7 +9,7 @@
 <section class="content">
   <div class="create-project">
     <div class="row">
-      <AccessControl @aclContext="Project.create">
+      <AccessControl @aclContext="project.create">
         <div class="col-md-8">
 
           <div class="box box-primary issues-details">
@@ -128,7 +128,7 @@
       </AccessControl>
 
       <div class="col-md-4">
-        <AccessControl @aclContext="Project.create">
+        <AccessControl @aclContext="project.create">
           <div class="box box-warning project-people">
             <div class="box-header with-border">
               <h3 class="box-title">{{t "views.app.project.create.projectmanager"}}</h3>
@@ -155,7 +155,7 @@
         </AccessControl>
 
         {{#if (eq this.layoutName "create")}}
-          <AccessControl @aclContext="Project.create">
+          <AccessControl @aclContext="project.create">
             <div class="box box-danger project-issue-types">
               <div class="box-header with-border">
                 <h3 class="box-title">{{t "views.app.project.create.issuetypes"}}</h3>
@@ -190,7 +190,7 @@
       </div>
 
       <div class="col-sm-12">
-        <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "projectCreate"}} @disableOnSuccess={{true}} @aclContext="Project.create">{{t "global.form.save"}}</AppUi::Button>
+        <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "projectCreate"}} @disableOnSuccess={{true}} @aclContext="project.create">{{t "global.form.save"}}</AppUi::Button>
         <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
       </div>
 

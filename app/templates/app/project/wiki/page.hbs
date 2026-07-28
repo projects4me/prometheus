@@ -1,5 +1,5 @@
 {{#if this.model}}
-  <AccessControl @aclContext="Wiki.read">
+  <AccessControl @aclContext="wiki.read">
     <div class="wiki-detail box box-primary">
       <div class="box-header with-border">
         {{#if (eq this.model.createdUser this.currentUser.user.id)}}
@@ -52,8 +52,8 @@
 
       <div class="box-footer">
         {{#if (eq this.model.locked "0")}}
-          <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.edit}} @aclContext="Wiki.update"><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</AppUi::Button>
-          <AppUi::Button type="button" class="btn btn-default" @onClick={{this.delete}} @aclContext="Wiki.delete"><i class="fa fa-trash"></i> {{t "global.form.delete"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.edit}} @aclContext="wiki.update"><i class="fa fa-pencil"></i> {{t "global.form.edit"}}</AppUi::Button>
+          <AppUi::Button type="button" class="btn btn-default" @onClick={{this.delete}} @aclContext="wiki.delete"><i class="fa fa-trash"></i> {{t "global.form.delete"}}</AppUi::Button>
         {{/if}}
 
         <div class="pull-right">
@@ -73,7 +73,7 @@
 
   <div class="clearfix"></div>
 
-  <AccessControl @aclContext="Wiki.read">
+  <AccessControl @aclContext="wiki.read">
     {{!-- Issue Files--}}
     <div class="box box-info wiki-files-section">
 

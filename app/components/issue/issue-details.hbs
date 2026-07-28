@@ -4,7 +4,7 @@
     <div class="col-md-{{if (and @quickView this.renderSingleColumn) '12' '8'}}">
 
       {{!-- This are the issue details --}}
-      <AccessControl @aclContext="Issue.read">
+      <AccessControl @aclContext="issue.read">
         <div class="box box-primary issue-details" data-field="issue.subject">
           <div class="box-header with-border box-header-no-content flex-row flex-jc-sb flex-ai-c">
             {{#unless @quickView}}
@@ -64,7 +64,7 @@
                     data-toggle="tooltip" 
                     title="{{t 'global.form.edit'}}" 
                     @onClick={{fn this.editIssue this.issue.issueNumber}} 
-                    @aclContext="Issue.update"
+                    @aclContext="issue.update"
                   >
                     <i class="fa fa-pencil"></i>
                   </AppUi::Button>
@@ -193,7 +193,7 @@
       <div class="row">
 
         {{!-- This is the issue conversations --}}
-        <AccessControl @aclContext="Issue.read">
+        <AccessControl @aclContext="issue.read">
           <div class="col-md-12" {{did-insert this.scrollToElement 'conversation'}}>
             <div class="box box-info conversations issue-conversation-section" data-conversation-id="{{this.issue.conversationroom.id}}">
               <div class="box-header with-border">
@@ -241,7 +241,7 @@
       <div class="row">
         {{#unless @quickView}}
         {{!-- This is the project activities section --}}
-        <AccessControl @aclContext="Issue.read">
+        <AccessControl @aclContext="issue.read">
           <div class="col-md-12">
             <div class="box box-primary issue-activities-section">
               <div class="box-header with-border">
@@ -268,7 +268,7 @@
     <div class="col-md-{{if (and @quickView this.renderSingleColumn) '12' '4'}}">
 
       {{!-- Project Members --}}
-      <AccessControl @aclContext="Issue.read">
+      <AccessControl @aclContext="issue.read">
         <div class="box box-warning">
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.project.detail.members"}}</h3>
@@ -323,7 +323,7 @@
       </AccessControl>
       {{!-- /. Project Members --}}
 
-      <AccessControl @aclContext="Issue.read">
+      <AccessControl @aclContext="issue.read">
       {{!-- Issue Files--}}
         <div class="box box-info issue-files-section">
 
@@ -386,7 +386,7 @@
       </AccessControl>
       {{!-- Issue Files --}}
 
-      <AccessControl @aclContext="Issue.read">
+      <AccessControl @aclContext="issue.read">
         <div class="box box-success issues-details">
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.issue.detail.estimates"}}</h3>
@@ -499,7 +499,7 @@
         </div>
       </AccessControl>
 
-      <AccessControl @aclContext="Issue.read">
+      <AccessControl @aclContext="issue.read">
       {{!-- Issue Timelogs --}}
         <div class="box box-danger">
           <div class="box-header with-border">
@@ -646,7 +646,7 @@
         </div>
       </AccessControl>
 
-      <AccessControl @aclContext="Issue.read">
+      <AccessControl @aclContext="issue.read">
         <div class="box box-info issue-hierarchy">
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.issue.detail.hierarchy"}}</h3>
