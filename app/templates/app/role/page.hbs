@@ -40,7 +40,6 @@
                 @setPermissions={{this.setPermissions}}
                 @modulePermissions={{this.modulePermissions}}
                 @permissionsState={{this.permissionsState}}
-                @permissionFlags={{this.permissionFlags}}
                 @updatePermission={{this.updatePermission}}
                 @getChangedPermissions={{this.getChangedPermissions}}
               />
@@ -59,11 +58,11 @@
             @placeholder={{t "views.app.role.tabs.user.search"}}
             @data-module={{concat "role-" this.model.name}}
             @data-search="user"
-            @aclContext="Role.read"
+            @aclContext="role.read"
             @value={{this.userSearchQuery}}
           />
 
-          <AppUi::Button data-btn="create-membership" type="button" class="btn btn-primary" @onClick={{this.showAddMembershipDialog}} @aclContext="Membership.create">
+          <AppUi::Button data-btn="create-membership" type="button" class="btn btn-primary" @onClick={{this.showAddMembershipDialog}} @aclContext="membership.create">
             {{t "views.app.role.tabs.user.createMembership"}}
           </AppUi::Button>
         </div>
@@ -91,7 +90,7 @@
               @relateType="relate-user"
               @validate={{action this.validateField "membershipCreate" (hash name="userId" value=this.newMembership.userId model=this.newMembership)}}
               @message={{this.message.membershipCreate.userId}}
-              @aclContext="Membership.create"
+              @aclContext="membership.create"
             />
 
             <FormFields::FieldRelate
@@ -107,7 +106,7 @@
               @relateType="relate-simple"
               @validate={{action this.validateField "membershipCreate" (hash name="relatedTo" value=this.newMembership.relatedTo model=this.newMembership)}}              
               @message={{this.message.membershipCreate.relatedTo}}
-              @aclContext="Membership.create"
+              @aclContext="membership.create"
             />            
 
             {{#if (eq this.newMembership.relatedTo 'project')}}
@@ -123,7 +122,7 @@
                 @relateType="relate-simple"
                 @validate={{action this.validateField "membershipCreate" (hash name="hasProjects" value=this.newMembership.hasProjects model=this.newMembership)}}              
                 @message={{this.message.membershipCreate.hasProjects}}
-                @aclContext="Membership.create"
+                @aclContext="membership.create"
               />
             {{/if}}
           </div>
@@ -148,7 +147,7 @@
                 <td>{{membership.project.name}}</td>
                 <td>{{membership.project.shortCode}}</td>
                 <td>
-                  <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @onClick={{fn this.deleteMembership membership}} @aclContext="User.delete">
+                  <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @onClick={{fn this.deleteMembership membership}} @aclContext="user.delete">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                   </AppUi::Button>
                 </td>

@@ -6,7 +6,7 @@
         @title={{t "views.app.user.page.qualification.add"}}
         @onClick={{this.startAdding}}
         @class="pull-right"
-        @aclContext="User.update"
+        @aclContext="user.update"
         @data-add="user.qualification"
       />
     {{/if}}
@@ -77,7 +77,7 @@
           @data-field="user-qualification.type"
           @validate={{fn @validateField "userQualification" (hash name="type" value=this.newQualification.type model=this.newQualification)}}
           @message={{@message.userQualification.type}}
-          @aclContext="User.update"
+          @aclContext="user.update"
         />
 
         <FormFields::FieldText
@@ -92,7 +92,7 @@
           @data-field="user-qualification.title"
           @validate={{fn @validateField "userQualification" (hash name="title" value=this.newQualification.title model=this.newQualification)}}
           @message={{@message.userQualification.title}}
-          @aclContext="User.update"
+          @aclContext="user.update"
         />
 
         <FormFields::FieldText
@@ -107,7 +107,7 @@
           @data-field="user-qualification.institution"
           @validate={{fn @validateField "userQualification" (hash name="institution" value=this.newQualification.institution model=this.newQualification)}}
           @message={{@message.userQualification.institution}}
-          @aclContext="User.update"
+          @aclContext="user.update"
         />
 
         <FormFields::FieldRelate
@@ -124,7 +124,7 @@
           @data-field="user-qualification.completionYear"
           @validate={{fn @validateField "userQualification" (hash name="completionYear" value=this.newQualification.completionYear model=this.newQualification)}}
           @message={{@message.userQualification.completionYear}}
-          @aclContext="User.update"
+          @aclContext="user.update"
         />
 
         <div class="profile-inline-form-actions user-qualification-form-actions">
@@ -134,7 +134,7 @@
             disabled={{this.isSaving}}
             data-btn="save"
             @onClick={{this.saveDraft}}
-            @aclContext="User.update"
+            @aclContext="user.update"
           >
             {{t "global.form.save"}}
           </AppUi::Button>

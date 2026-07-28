@@ -2,7 +2,7 @@
     <div class="panel-heading">
     <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" href={{concat "#" @name}} {{on "click" (fn
-        @setPermissions @name)}}>{{@name}}</a>
+        @setPermissions @name)}}>{{t (concat "views.app.role.tabs.permission.modules." @name)}}</a>
     </h4>
     </div>
     <div id={{@name}} class="panel-collapse collapse">
@@ -11,55 +11,40 @@
         <table class="table table-hover table-striped">
         <thead>
             <tr>
-            <th></th>
-            <th>{{t "views.app.role.tabs.permission.flags.read"}}</th>
-            <th>{{t "views.app.role.tabs.permission.flags.create"}}</th>
-            <th>{{t "views.app.role.tabs.permission.flags.update"}}</th>
-            <th>{{t "views.app.role.tabs.permission.flags.delete"}}</th>
-            <th>{{t "views.app.role.tabs.permission.flags.import"}}</th>
-            <th>{{t "views.app.role.tabs.permission.flags.export"}}</th>
+            <th>{{t "views.app.role.tabs.permission.resource"}}</th>
+            <th>{{t "views.app.role.tabs.permission.options.allow"}}</th>
             <th></th>
             </tr>
         </thead>
         <tbody>
             {{#each @modulePermissions as |permission|}}
             <tr data-module-resource={{permission.resourceName}}>
-            <td>{{permission.resourceAlias}}</td>
-            {{#each @permissionFlags as |flag|}}
+            <td>{{t (concat "views.app.role.tabs.permission.labels." permission.resourceName)}}</td>
             <td>
-                <Role::PermissionOptions 
-                @options={{get-permission-options 'apiOptions' permission flag}}
-                @value={{get permission flag}}
+                <Role::PermissionOptions
+                @options={{get-permission-options 'apiOptions' permission}}
+                @value={{permission.allowed}}
                 @permission={{permission}}
-                @flag={{flag}}
+                @flag="allowed"
                 @updateDisableState={{this.updateDisableState}}
                 />
             </td>
-            {{/each}}
             
             <td>
                 <span data-module="permission-state">
-
-{{!-- Model row state is stored as Module.Module.*; field rows as Module.field.* --}}
-                {{#if (get @permissionsState (concat (if (eq permission.resourceName
-                permission.moduleName) (concat permission.moduleName '.')) permission.resourceName
-                '.isRunning'))}}
+                {{#if (get @permissionsState (concat permission.moduleName '.' permission.resourceAlias '.isRunning'))}}
                     <i class="fa fa-spinner fa-spin"></i>
                 {{/if}}
 
-                {{#if (get @permissionsState (concat (if (eq permission.resourceName
-                permission.moduleName) (concat permission.moduleName '.')) permission.resourceName
-                '.isSuccessful'))}}
+                {{#if (get @permissionsState (concat permission.moduleName '.' permission.resourceAlias '.isSuccessful'))}}
                     <i class="fa fa-check-circle"></i>
                 {{/if}}
 
-                {{#if (get @permissionsState (concat (if (eq permission.resourceName
-                permission.moduleName) (concat permission.moduleName '.')) permission.resourceName
-                '.isErrored'))}}
+                {{#if (get @permissionsState (concat permission.moduleName '.' permission.resourceAlias '.isErrored'))}}
                     <i class="fa fa-times-circle"></i>
-                {{/if}}                             
+                {{/if}}
                 </span>
-            </td>                        
+            </td>
             </tr>
             {{/each}}
         </tbody>

@@ -39,7 +39,7 @@
               @onClick={{fn this.showAddIssueDialog status.name}}
               @title={{t "views.app.board.issue.create"}}
               @data-add={{concat "issue-" status.name}}
-              @aclContext="Issue.create"
+              @aclContext="issue.create"
             />
           </div>
         </div>
@@ -165,7 +165,7 @@
         @length="255"
         @validate={{action @validateField "issueCreate" (hash name="subject" value=this.newIssue.subject model=this.newIssue)}}
         @message={{@message.issueCreate.subject}}
-        @aclContext="Issue.create"
+        @aclContext="issue.create"
         {{autofocus}}
       />
 

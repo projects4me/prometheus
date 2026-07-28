@@ -85,7 +85,11 @@ export const when = function () {
         },
         {
             "User clicks on save button": (assert) => async function () {
-                let btn = document.querySelector('button[data-btn="save"]');
+                // Prefer an open modal's confirm button over other page saves
+                let btn = document.querySelector('.modal.in .modal-footer button[data-btn="save"]')
+                    || document.querySelector('.modal.show .modal-footer button[data-btn="save"]')
+                    || document.querySelector('.modal-footer button[data-btn="save"]')
+                    || document.querySelector('button[data-btn="save"]');
                 await click(btn);
                 assert.ok(true, "User clicks on save button");
             }

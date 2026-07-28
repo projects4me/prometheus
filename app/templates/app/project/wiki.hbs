@@ -1,7 +1,7 @@
 <div class="wiki-project-wrapper">
   <div class="wiki-project row">
 
-    <AccessControl @aclContext="Wiki.read">
+    <AccessControl @aclContext="wiki.read">
       <div class="wiki-list-wrapper col-md-2">
         <div class="wiki-list">
 
@@ -26,7 +26,7 @@
       </div>
     </AccessControl>
 
-    <AccessControl @aclContext="Wiki.read">
+    <AccessControl @aclContext="wiki.read">
       <div class="wiki-detail-wrapper col-md-10">
         {{outlet}}
       </div>

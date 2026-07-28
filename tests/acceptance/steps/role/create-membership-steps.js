@@ -6,6 +6,7 @@ export const when = function () {
         {
             "User clicks on create membership button": (assert) => async function () {
                 await click('[data-btn="create-membership"]');
+                assert.ok(true, 'User clicks on create membership button');
             }
         }
     ];

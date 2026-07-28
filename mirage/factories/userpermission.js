@@ -2,20 +2,15 @@ import { Factory } from 'ember-cli-mirage';
 import _ from 'lodash';
 
 /**
- * Default to full access (1) so acceptance tests can render ACL-gated UI.
- * Scenarios override `entity` per resource.
+ * Default to full access so acceptance tests can render ACL-gated UI.
+ * Scenarios override `entity` per resource action.
  */
 export default Factory.extend({
     userId() {
         return (_.random(1, 10)).toString();
     },
     entity() {
-        return 'Project';
+        return 'project.get';
     },
-    readF: '1',
-    createF: '1',
-    updateF: '1',
-    deleteF: '1',
-    importF: '1',
-    exportF: '1'
+    allowed: '1'
 });

@@ -65,16 +65,11 @@ const authenticateUser = async function (id, ctx) {
 	let user = server.schema.users.find(id);
 	let userPermissions = server.schema.userpermissions.all();
 
-	// Ensure every resource allows all actions so ACL-gated UI renders in tests.
+	// Ensure every action is allowed so ACL-gated UI renders in tests.
 	userPermissions.models.forEach((permission) => {
 		permission.update({
 			userId: id,
-			readF: '1',
-			createF: '1',
-			updateF: '1',
-			deleteF: '1',
-			importF: '1',
-			exportF: '1'
+			allowed: '1'
 		});
 	});
 

@@ -3,11 +3,11 @@ import * as date from '../helpers/getDate';
 import _ from 'lodash';
 
 /**
- * Role permission rows for the role page. Default all flags to allow (1).
+ * Role permission rows for the role page (one row per module.action).
  */
 export default Factory.extend({
     resourceName() {
-        return 'Issue';
+        return 'issue.get';
     },
     dateCreated() {
         return date.createdDate(10, 30);
@@ -15,12 +15,7 @@ export default Factory.extend({
     dateModified() {
         return date.modifiedDate(5, 7);
     },
-    readF: '1',
-    createF: '1',
-    updateF: '1',
-    deleteF: '1',
-    importF: '1',
-    exportF: '1',
+    allowed: '1',
     roleId() {
         return (_.random(1, 10)).toString();
     }
