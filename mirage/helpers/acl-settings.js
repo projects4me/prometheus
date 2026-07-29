@@ -7,6 +7,7 @@ const MODULES = [
     'user',
     'role',
     'membership',
+    'userrole',
     'conversationroom',
     'comment',
     'milestone',

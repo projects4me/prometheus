@@ -52,7 +52,7 @@
       {{!-- Users to which this role is assigned --}}
       <div class="tab-pane" id="users">
 
-        <div data-role="user-membership-actions">
+        <div data-role="user-userrole-actions">
           {{!-- User Search component --}}
           <FormFields::FieldSearch
             @placeholder={{t "views.app.role.tabs.user.search"}}
@@ -62,92 +62,55 @@
             @value={{this.userSearchQuery}}
           />
 
-          <AppUi::Button data-btn="create-membership" type="button" class="btn btn-primary" @onClick={{this.showAddMembershipDialog}} @aclContext="membership.create">
-            {{t "views.app.role.tabs.user.createMembership"}}
+          <AppUi::Button data-btn="create-userrole" type="button" class="btn btn-primary" @onClick={{this.showAddUserroleDialog}} @aclContext="userrole.create">
+            {{t "views.app.role.tabs.user.createUserrole"}}
           </AppUi::Button>
         </div>
 
-        {{!-- Modal for creating new memberships for the user against project --}}
-        {{#if this.addMembershipDialog}}
+        {{!-- Modal for assigning this role to a user --}}
+        {{#if this.addUserroleDialog}}
           {{#bootstrap-modal
-            title="views.app.role.tabs.user.membership.title"
+            title="views.app.role.tabs.user.userrole.title"
             confirmLabel="global.form.save"
             closeLabel="global.form.cancel"
-            confirm=(action "addMembership")
+            confirm=(action "addUserrole")
             close=(action "removeModal")
           }}
           <div class="box-body">
             <FormFields::FieldRelate
               @searchEnabled={{true}}
               @searchField="label"
-              @placeholder={{t "views.app.role.tabs.user.membership.selectuser"}}
-              @label={{t "views.app.role.tabs.user.membership.user"}}
-              @value={{this.newMembership.userId}}
-              @data-field="membership.user"
+              @placeholder={{t "views.app.role.tabs.user.userrole.selectuser"}}
+              @label={{t "views.app.role.tabs.user.userrole.user"}}
+              @value={{this.newUserrole.userId}}
+              @data-field="userrole.user"
               @options={{this.usersList}}
-              @onchange={{action "selectRelated" this.newMembership 'userId'}}
-              @selected={{find-by "value" this.newMembership.userId this.usersList}}              
+              @onchange={{action "selectRelated" this.newUserrole 'userId'}}
+              @selected={{find-by "value" this.newUserrole.userId this.usersList}}              
               @relateType="relate-user"
-              @validate={{action this.validateField "membershipCreate" (hash name="userId" value=this.newMembership.userId model=this.newMembership)}}
-              @message={{this.message.membershipCreate.userId}}
-              @aclContext="membership.create"
+              @validate={{action this.validateField "userroleCreate" (hash name="userId" value=this.newUserrole.userId model=this.newUserrole)}}
+              @message={{this.message.userroleCreate.userId}}
+              @aclContext="userrole.create"
             />
-
-            <FormFields::FieldRelate
-              @searchEnabled={{true}}
-              @searchField="label"            
-              @placeholder={{t "views.app.role.tabs.user.membership.selectrelatedto"}}
-              @label={{t "views.app.role.tabs.user.membership.relatedTo.title"}}
-              @value={{this.newMembership.relatedTo}}
-              @data-field="membership.relatedTo"
-              @options={{this.relatedToList}}
-              @selected={{find-by "value" this.newMembership.relatedTo this.relatedToList}}
-              @onchange={{action "selectRelated" this.newMembership 'relatedTo'}}
-              @relateType="relate-simple"
-              @validate={{action this.validateField "membershipCreate" (hash name="relatedTo" value=this.newMembership.relatedTo model=this.newMembership)}}              
-              @message={{this.message.membershipCreate.relatedTo}}
-              @aclContext="membership.create"
-            />            
-
-            {{#if (eq this.newMembership.relatedTo 'project')}}
-              <FormFields::FieldRelateMulti
-                @searchEnabled={{true}}
-                @searchField="label"
-                @selected={{this.selectedProjects}}     
-                @placeholder={{t "views.app.role.tabs.user.membership.selectprojects"}}
-                @label={{t "views.app.role.tabs.user.membership.projects"}}
-                @data-field="membership.project"
-                @options={{this.projectsList}}
-                @onchange={{action "selectStatic" this 'selectedProjects'}}
-                @relateType="relate-simple"
-                @validate={{action this.validateField "membershipCreate" (hash name="hasProjects" value=this.newMembership.hasProjects model=this.newMembership)}}              
-                @message={{this.message.membershipCreate.hasProjects}}
-                @aclContext="membership.create"
-              />
-            {{/if}}
           </div>
           {{/bootstrap-modal}}
         {{/if}}        
 
-        <div data-role="user-memberships">
+        <div data-role="user-userroles">
           <table class="table table-hover table-striped">
             <thead>
               <tr>
                 <th>{{t "views.app.role.tabs.user.name"}}</th>
                 <th>{{t "views.app.role.tabs.user.emailaddress"}}</th>
-                <th>{{t "views.app.role.tabs.user.project.title"}}</th>
-                <th>{{t "views.app.role.tabs.user.project.shortcode"}}</th>
               </tr>
             </thead>
             <tbody>
-              {{#each this.filteredMemberships as |membership|}}
-              <tr data-role-membership-id={{membership.id}}>
-                <td>{{membership.user.name}}</td>
-                <td>{{membership.user.email}}</td>
-                <td>{{membership.project.name}}</td>
-                <td>{{membership.project.shortCode}}</td>
+              {{#each this.filteredUserroles as |userrole|}}
+              <tr data-role-userrole-id={{userrole.id}}>
+                <td>{{userrole.user.name}}</td>
+                <td>{{userrole.user.email}}</td>
                 <td>
-                  <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @onClick={{fn this.deleteMembership membership}} @aclContext="user.delete">
+                  <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @onClick={{fn this.deleteUserrole userrole}} @aclContext="userrole.delete">
                     <i class="fa fa-trash" aria-hidden="true"></i>
                   </AppUi::Button>
                 </td>

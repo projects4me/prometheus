@@ -153,7 +153,8 @@
         "role": "Role",
         "milestone": "Milestone",
         "file": "File",
-        "membership": "Membership"
+        "membership": "Membership",
+        "userrole": "User Role"
       },
       "plural": {
         "project": "Projects",
@@ -170,7 +171,9 @@
         "comment": "Comments",
         "role": "Roles",
         "milestone": "Milestones",
-        "file": "Files"
+        "file": "Files",
+        "membership": "Memberships",
+        "userrole": "User Roles"
       },
       "project": {
         "relationships": {
@@ -180,7 +183,6 @@
           "members": "Members",
           "conversations": "Threads",
           "issues": "Issues",
-          "roles": "Roles",
           "memberships": "Memberships",
           "milestones": "Milestones",
           "issuetypes": "Issue Types",
@@ -479,18 +481,13 @@
           "noMembers": "No members found for the project, please add some",
           "membership": {
             "add": "Add a new member",
-            "update": "Update member role",
             "delete": "Remove member",
-            "selectrole": "Select a role",
-            "editRole": "Edit Role",
             "removeMember": "Remove Member",
-            "role": "Role of the new member",
             "selectuser": "Select a new member",
             "reAssignIssues": "Reassign Issues To",
             "user": "Member",
-            "added": "<strong>{user}</strong> has been added to the project as <strong>{role}</strong>",
-            "updated":"<strong>{user}'s</strong> role has been updated to <strong>{role}</strong>",
-            "missing": "Both the user and role selection is required",
+            "added": "<strong>{user}</strong> has been added to the project",
+            "missing": "User selection is required",
             "deleted": "Member <strong>{user}</strong> has been removed from the project",
             "deleteWarning": "You are about to remove the member <strong>{user}</strong> from the project, once removed the member will lose access to the project and all the issues assigned to the member will be unassigned. Are you sure?",
             "reAssignIssuesPlaceholder": "Select a member to whom the open issues will be reassigned"
@@ -1140,14 +1137,12 @@
           "languagelabel": "Select your preferred language",
           "timezoneplaceholder": "Select time zone",
           "timezonelabel": "Select your preferred time zone",
-          "membership": {
-            "title": "Membership",
-            "project": "Project",
+          "access": {
+            "title": "Access",
+            "project": "Project membership",
             "projectplaceholder": "Select a project",
-            "role": "Role",
-            "roleplaceholder": "Select a role",
-            "projectRequired": "A project must be selected when a role is assigned.",
-            "roleRequired": "A role must be selected for the chosen project."
+            "role": "Application role",
+            "roleplaceholder": "Select a role"
           },
           "validation": {
             "invalidEmailFormat": "Please enter a valid email address",
@@ -1210,8 +1205,13 @@
       "membership": {
         "fields": {
           "userId": "User",
-          "hasProjects": "Projects",
-          "relatedTo": "Related To"
+          "projectId": "Project"
+        }
+      },
+      "userrole": {
+        "fields": {
+          "userId": "User",
+          "roleId": "Role"
         }
       },
       "chat": {
@@ -1399,6 +1399,7 @@
               "user": "User",
               "role": "Role",
               "membership": "Membership",
+              "userrole": "User Role",
               "conversationroom": "Conversation",
               "comment": "Comment",
               "milestone": "Milestone",
@@ -1453,6 +1454,12 @@
                 "create": "Create Membership",
                 "update": "Update Membership",
                 "delete": "Delete Membership"
+              },
+              "userrole": {
+                "get": "Get User Role",
+                "create": "Create User Role",
+                "update": "Update User Role",
+                "delete": "Delete User Role"
               },
               "conversationroom": {
                 "get": "Get Conversation",
@@ -1563,29 +1570,14 @@
             "search": "Search User..",
             "name": "Name",
             "emailaddress": "Email Address",
-            "project": {
-              "title": "Project",
-              "shortcode": "Short Code"
-            },
-            "membership": {
-              "title": "Add a new membership",
-              "selectuser": "Select a new user",
-              "selectprojects": "Select one or more projects",
-              "selectrelatedto": "Select one or more projects",
+            "userrole": {
+              "title": "Assign role to a user",
+              "selectuser": "Select a user",
               "user": "User",
-              "projects": "Projects",
-              "relatedTo": {
-                "title": "Related To",
-                "project": "Project",
-                "system": "System"
-              },
-              "created": {
-                "system": "Membership created for system",
-                "project": "Membership created for project <strong>{name}</strong>"
-              }
+              "created": "Role assigned to <strong>{user}</strong>"
             },
-            "createMembership": "Create Membership",
-            "confirmdelete": "Yes, delete the <strong>{user}</strong> membership on <strong>{project}</strong>"
+            "createUserrole": "Assign Role",
+            "confirmdelete": "Yes, remove role assignment for <strong>{user}</strong>"
           }
         },
         "create": {

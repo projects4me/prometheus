@@ -3,8 +3,8 @@ import steps from '../steps';
 export default function (assert) {
     return steps(assert)
         .given(
-            'User $userId is a project $projectId member with account status $status and role $roleId',
-            async function (userId, projectId, status, roleId) {
+            'User $userId is a project $projectId member with account status $status',
+            async function (userId, projectId, status) {
                 let user = server.schema.users.find(parseInt(userId, 10));
                 let project = server.schema.projects.find(parseInt(projectId, 10));
 
@@ -15,13 +15,14 @@ export default function (assert) {
 
                 server.create('membership', {
                     project: project,
-                    modifiedUser: parseInt(userId, 10),
-                    roleId: parseInt(roleId, 10)
+                    projectId: String(projectId),
+                    userId: String(userId),
+                    modifiedUser: parseInt(userId, 10)
                 });
 
                 assert.ok(
                     true,
-                    `User ${userId} is a project ${projectId} member with account status ${status} and role ${roleId}`
+                    `User ${userId} is a project ${projectId} member with account status ${status}`
                 );
             }
         )

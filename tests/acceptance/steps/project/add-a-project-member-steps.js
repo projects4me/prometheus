@@ -5,18 +5,32 @@ import { click } from '@ember/test-helpers';
 export const given = function () {
     return [
         {
-            "User $userId is added as a member of project $projectId": (assert, ctx) => async function (userId, projectId) {
-                let project = server.schema.projects.find(projectId);
-                let members = project.members.add(server.schema.users.find(userId));
+            "User $userId is added as a member of project $projectId": (assert) => async function (userId, projectId) {
+                let user = server.schema.users.find(parseInt(userId, 10));
+                let project = server.schema.projects.findBy({ shortCode: `PROJECT_${projectId}` });
+                if (!project) {
+                    project = server.schema.projects.find(parseInt(projectId, 10))
+                        || server.create('project', {
+                            id: String(projectId),
+                            shortCode: `PROJECT_${projectId}`
+                        });
+                }
+
+                let members = project.members.add(user);
                 project.update({
+                    id: String(projectId),
+                    shortCode: `PROJECT_${projectId}`,
                     members: members
                 });
 
                 server.create('membership', {
                     project: project,
-                    modifiedUser: userId,
-                    roleId: server.schema.roles.find(1).id
+                    projectId: String(projectId),
+                    userId: String(userId),
+                    modifiedUser: parseInt(userId, 10)
                 });
+
+                assert.ok(true, `User ${userId} is added as a member of project ${projectId}`);
             }
         }
     ];
@@ -34,12 +48,6 @@ export const when = function () {
             "User selects $userName as a member of project": (assert, ctx) => async function (userName) {
                 await selectChoose('div[data-field="select-member"] div.input-group', `${userName}`);
                 assert.ok(true, `${userName} selected`);
-            }
-        },
-        {
-            "User selects a role $roleIndex for that member": (assert, ctx) => async function (roleIndex) {
-                await selectChoose('div[data-field="select-role"] div.input-group', '.ember-power-select-option', parseInt(roleIndex - 1));
-                assert.ok(true, `role selected`);
             }
         }
     ];

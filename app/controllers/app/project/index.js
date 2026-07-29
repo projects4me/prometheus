@@ -90,17 +90,6 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     addMemberDialog = false;
 
     /**
-     * This flag is used to show or hide the modal dialog box
-     * for editing existing member.
-     *
-     * @property addMemberDialog
-     * @type bool
-     * @for Index
-     * @private
-     */
-    @tracked editMemberDialog = false;
-    
-    /**
      * This field is used to show or hide the modal dialog box
      * for deleting a member
      *
@@ -132,17 +121,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     milestoneDialog = false;
 
     /**
-     * This field stores the selected role in the add/edit member dialog.
-     *
-     * @property selectedRole
-     * @type int
-     * @for Index
-     * @public
-     */
-    @tracked selectedRole = null;
-
-    /**
-     * This field stores the selected user in the edit member dialog.
+     * This field stores the selected user in the delete member dialog.
      *
      * @property selectedUser
      * @type string
@@ -154,7 +133,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     /**
      * This field stores the selected users in the add members dialog
      *
-     * @property selectedUser
+     * @property selectedUsers
      * @type array
      * @for Index
      * @public
@@ -171,16 +150,6 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
      * @private
      */
     @controller('app') appController;
-
-    /**
-     * This is the list of roles fetched by the app controller
-     *
-     * @property rolesList
-     * @type array
-     * @for Index
-     * @private
-     */
-    @tracked rolesList = this.appController.rolesList;
 
     /**
      * This is the list of users fetched by the app controller
@@ -385,63 +354,43 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     }
 
     /**
-     * This method is used to set the selectedRole property
-     *
-     * @method selectRole
-     * @param role
-     * @public
-     */
-    @action selectRole(role) {
-        Logger.debug('Prometheus.App.Project.Controller->selectRole');
-        this.set('selectedRole', role.value);
-        Logger.debug('-Prometheus.App.Project.Controller->selectRole');
-    }
-
-    /**
      * This function is used to add a new member to the project
      *
      * @method addMembers
      */
-    @action addMembers() {
+    @action async addMembers() {
         Logger.debug('AppProjectIndexController:addMembers');
         let _self = this;
 
-        let selectedRole = _self.get('selectedRole');
-        let selectedUsers = _self.get('selectedUsers');
+        let selectedUsers = _self.selectedUsers;
 
-        if (selectedUsers !== null && selectedRole !== null) {
-            let role = _self.get('store').peekRecord('role', selectedRole);
+        if (selectedUsers !== null && selectedUsers.length > 0) {
+            try {
+                await Promise.all(selectedUsers.map(async (selectedUser) => {
+                    let user = _self.store.peekRecord('user', selectedUser.value);
 
-            selectedUsers.forEach(function (selectedUser) {
-                let user = _self.get('store').peekRecord('user', selectedUser.value);
+                    let membership = _self.store.createRecord('membership', {
+                        userId: user.id,
+                        projectId: _self.model.id,
+                        user,
+                        project: _self.model
+                    });
 
-                let membership = _self.get('store').createRecord('membership', {
-                    roleId: role.id,
-                    userId: user.id,
-                    projectId: _self.model.id,
-                    relatedTo: 'project',
-                    relatedId: _self.projectId
-                });
-
-                // Add membership to the system
-                membership.save().then(function (data) {
-                    _self.get('model.memberships').pushObject(data);
-
-                    // Create a dummy record of roles and push in model.roles
-                    _self.get('model.roles').pushObject(role);
-                    // Add a dummy record of users and push in model.members
-                    _self.get('model.members').pushObject(user);
+                    let data = await membership.save();
+                    _self.model.memberships.pushObject(data);
+                    _self.model.members.pushObject(user);
 
                     new Messenger().post({
-                        message: htmlSafe(_self.intl.t("views.app.project.detail.membership.added", { role: role.get('name'), user: user.get('name') })),
+                        message: htmlSafe(_self.intl.t("views.app.project.detail.membership.added", { user: user.get('name') })),
                         type: 'success',
                         showCloseButton: true
                     });
-                });
-            });
+                }));
+            } catch (error) {
+                _self.errorManager.handleError(error);
+            }
 
             _self.selectedUsers = [];
-            _self.selectedRole = null;
         } else {
             new Messenger().post({
                 message: _self.intl.t("views.app.project.detail.membership.missing"),
@@ -584,20 +533,6 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     }
 
     /**
-     * This function is used to show the edit member dialog box.
-     *
-     * @method showEditMemberDialog
-     * @public
-     */
-    @action showEditMemberDialog(member) {
-        let _self = this;
-        this.editMemberDialog = true;
-        this.selectedUser = member;
-        let role = this.appController.roles.filterBy('id',_self.model.memberships.filterBy('userId',member.id)[0]?.get('roleId'));
-        this.selectedRole = role[0].id;
-    }
-
-    /**
      * This function is used to show the delete member dialog box.
      *
      * @method showDeleteMemberDialog
@@ -680,20 +615,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     }
     
     /**
-     * This function is used to hide the edit member modal.
-     *
-     * @method removeEditMemberModal
-     * @public
-     */
-    @action removeEditMemberModal() {
-        if (this.isDestroyed || this.isDestroying) return;
-        this.set('editMemberDialog', false);
-        $('.modal').modal('hide');
-        this.selectedRole = null;
-    }    
-
-    /**
-     * This function is used to hide the add tag modal
+     * This function is used to hide the add member modal
      *
      * @method removeAddMemberModal
      * @public
@@ -702,7 +624,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
         if (this.isDestroyed || this.isDestroying) return;
         this.set('addMemberDialog', false);
         $('.modal').modal('hide');
-        this.selectedRole = null;
+        this.selectedUsers = [];
     }
 
     /**
@@ -752,44 +674,6 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
         _self.set('newMilestone', newMilestone);
     }
     
-    /**
-     * This function is used to update member's role in the project.
-     * 
-     * @method updateMember
-     * @public
-     */
-    @action 
-    async updateMember() {
-        let membership = this.model.memberships.find((membership) => membership.userId === this.selectedUser.id);
-        let _self = this;
-        
-        if(membership.roleId !== this.selectedRole) {
-            let role = this.store.peekRecord('role', this.selectedRole);
-
-            membership.roleId = role.id;
-
-            try {
-                await membership.save();
-
-                this.model.memberships = this.model.memberships.map((membership) => {
-                    if(membership.userId === this.selectedUser.id) {
-                        membership.roleId = role.id;
-                    }
-                    return membership;
-                });
-
-                new Messenger().post({
-                    message: htmlSafe(this.intl.t("views.app.project.detail.membership.updated", { role: role.get('name'), user: this.selectedUser.name})),
-                    type: 'success',
-                    showCloseButton: true
-                });
-            this.removeEditMemberModal();
-            } catch (error) {
-                _self.errorManager.handleError(error);
-            }
-        }
-    }
-
     /**
      * Gets the warning message for deleting a project member
      * @type {SafeString}

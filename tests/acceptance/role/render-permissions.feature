@@ -8,7 +8,7 @@ Feature: Role | render permissions
     And There are 10 roles in system
     And There are catalog permissions for role 2
     And There are 10 projects in system
-    And There are 10 memberships for role 2
+    And There are 10 userroles for role 2
     And User_1 is logged in
     When User navigates to app/role
     And User selects role 2

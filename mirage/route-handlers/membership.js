@@ -16,8 +16,30 @@ export function register(server, ctx) {
 
     server.post('membership', (schema, request) => {
         let requestData = getRequestData(request);
-        let membership = server.create('membership', requestData.attributes);
-        return membership
+        let attrs = { ...(requestData.attributes || {}) };
+
+        let userRel = requestData.relationships?.user?.data;
+        let projectRel = requestData.relationships?.project?.data;
+        if (userRel?.id && !attrs.userId) {
+            attrs.userId = String(userRel.id);
+        }
+        if (projectRel?.id && !attrs.projectId) {
+            attrs.projectId = String(projectRel.id);
+        }
+
+        let membership = server.create('membership', attrs);
+
+        let project = schema.projects.find(membership.projectId);
+        let user = schema.users.find(membership.userId);
+        if (project && user) {
+            let members = project.members;
+            if (members && typeof members.add === 'function') {
+                project.update({ members: members.add(user) });
+            }
+            membership.update({ project, user });
+        }
+
+        return membership;
     });
 
     server.patch('/membership/:id', (schema, request) => {

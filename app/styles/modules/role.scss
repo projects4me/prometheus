@@ -27,7 +27,7 @@
             width: 25rem;
           }
 
-          [data-role="user-memberships"] {
+          [data-role="user-userroles"] {
             margin-top: 3rem;
 
             i {
@@ -36,7 +36,7 @@
             }
           }
 
-          [data-role="user-membership-actions"] {
+          [data-role="user-userrole-actions"] {
             @include flexbox($justifyContent: space-between);
           }
         }

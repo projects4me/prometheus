@@ -1,7 +1,7 @@
 @setupApplicationTest
-Feature: Role | search user
+Feature: Role | delete userrole
 
-  Scenario: Search a user from given list of users
+  Scenario: Delete user's role assignment
 
     Given There is no pre-existing data
     And default scenario is loaded
@@ -12,5 +12,5 @@ Feature: Role | search user
     And User_1 is logged in
     When User navigates to app/role/2
     And User clicks on user tab
-    And User search for user having userrole 4
-    Then There should some users exists
+    And User delete userrole 1
+    Then There should 9 userroles exists
