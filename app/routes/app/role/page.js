@@ -28,16 +28,16 @@ export default class AppRolePageRoute extends AppRoute {
             roleId: params.role_id
         }
 
-        let membershipOptions = {
+        let userroleOptions = {
             query: `((roleId : ${params.role_id}))`,
-            rels: 'project,user',
+            rels: 'user',
             limit: -1
         }
 
         return hashSettled({
             role: this.store.findRecord('role', params.role_id),
             permissions: this.store.query('permission', permissionOptions),
-            memberships: this.store.query('membership', membershipOptions)
+            userroles: this.store.query('userrole', userroleOptions)
         }).then((results) => {
             return extractHashSettled(results, 'role');
         }).catch((error) => {
@@ -56,15 +56,14 @@ export default class AppRolePageRoute extends AppRoute {
      * @public
      */
     setupController(controller, model) {
-        let newMembership = this.store.createRecord('membership', {
+        let newUserrole = this.store.createRecord('userrole', {
             roleId: model.role.id,
-            relatedTo: "system",
         });
 
         controller.set('model', model.role);
         controller.set('model.permissions', model.permissions);
-        controller.set('memberships', model.memberships.toArray());
-        controller.set('newMembership', newMembership);
+        controller.set('userroles', model.userroles.toArray());
+        controller.set('newUserrole', newUserrole);
         this.breadcrumb.setTitle(this.routeName, model.role.get('name'));
     }
 }

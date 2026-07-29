@@ -5,7 +5,8 @@
 import Model, { attr, belongsTo } from '@ember-data/model';
 
 /**
- * The membership model
+ * The membership model — project membership only (userId + projectId).
+ * Application-wide role assignment is handled by the userrole resource.
  *
  * @class Membership
  * @namespace Prometheus.Models
@@ -15,27 +16,17 @@ import Model, { attr, belongsTo } from '@ember-data/model';
 export default Model.extend({
 
     /**
-     * The identifier of the module for which the membership is created.
+     * The identifier of the project this membership grants access to.
      *
-     * @property relatedId
+     * @property projectId
      * @type String
      * @for Membership
      * @private
      */
-    relatedId: attr('string'),
+    projectId: attr('string'),
 
     /**
-     * The name of the module for which the membership is created e.g. project.
-     *
-     * @property relatedTo
-     * @type String
-     * @for Membership
-     * @private
-     */
-    relatedTo: attr('string'),
-
-    /**
-     * The identifier of the for whom this membership rule is defined
+     * The identifier of the user who is a member of the project.
      *
      * @property userId
      * @type String
@@ -43,17 +34,6 @@ export default Model.extend({
      * @private
      */
     userId: attr('string'),
-
-    /**
-     * The identifier of the role which is assigned to the user under the projectId
-     * that this rule is defined for
-     *
-     * @property roleId
-     * @type String
-     * @for Membership
-     * @private
-     */
-    roleId: attr('string'),
 
     /**
      * The soft deletion flag for the membership
@@ -66,7 +46,7 @@ export default Model.extend({
     deleted: attr('string'),
 
     /**
-     * The date on which this membership rule was created
+     * The date on which this membership was created
      *
      * @property dateCreated
      * @type String
@@ -76,7 +56,7 @@ export default Model.extend({
     dateCreated: attr('string'),
 
     /**
-     * The date on which this membership rule was last modified
+     * The date on which this membership was last modified
      *
      * @property dateModified
      * @type String
@@ -86,7 +66,7 @@ export default Model.extend({
     dateModified: attr('string'),
 
     /**
-     * The identifier of the user who created the membership rule
+     * The identifier of the user who created the membership
      *
      * @property createdUser
      * @type String
@@ -96,7 +76,7 @@ export default Model.extend({
     createdUser: attr('string'),
 
     /**
-     * The identifier of the user who last modified the membership rule
+     * The identifier of the user who last modified the membership
      *
      * @property modifiedUser
      * @type String
@@ -107,7 +87,7 @@ export default Model.extend({
 
     /**
      * The project to which this membership belongs.
-     * 
+     *
      * @property project
      * @type {Prometheus.Model.Project}
      * @for Membership
@@ -117,7 +97,7 @@ export default Model.extend({
 
     /**
      * The user to which this membership belongs.
-     * 
+     *
      * @property user
      * @type {Prometheus.Model.User}
      * @for Membership

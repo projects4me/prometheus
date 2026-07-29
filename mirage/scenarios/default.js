@@ -115,7 +115,6 @@ export default function (server) {
     //         modifiedBy: server.schema.users.find(_.random(1, 10)),
     //         members: server.schema.users.all(),
     //         conversations: server.schema.conversationrooms.all(),
-    //         roles: server.schema.roles.all(),
     //         memberships: server.schema.memberships.all(),
     //         milestones: server.schema.milestones.all(),
     //         issuetypes: server.schema.issuetypes.all(),

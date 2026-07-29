@@ -56,7 +56,7 @@ export default App.extend({
 
         let _projectOptions = {
             query: "(Project.id : " + projectId + ")",
-            rels: 'members,createdBy,memberships,roles,manager',
+            rels: 'members,createdBy,memberships,manager',
             order: 'ASC',
             limit: -1
         };

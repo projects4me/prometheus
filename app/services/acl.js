@@ -155,7 +155,8 @@ export default class AclService extends Service {
 
     /**
      * Check access for a {module}.{action} context (e.g. issue.create).
-     * Undefined context is treated as allowed.
+     * Missing or empty context, and resources with no ACL entry, are allowed.
+     * When a permission exists for the resource, access follows its `allowed` flag.
      *
      * @param {string} context
      * @returns {boolean}
@@ -167,7 +168,7 @@ export default class AclService extends Service {
 
         let resourceName = this.normalizeContext(context);
         if (!resourceName) {
-            return false;
+            return true;
         }
 
         let permission = this.aclPermissions.find(p => {
@@ -175,8 +176,9 @@ export default class AclService extends Service {
             return entity === resourceName;
         });
 
+        // No ACL for this resource / context — allow by default.
         if (!permission) {
-            return false;
+            return true;
         }
 
         let allowed = permission.get ? permission.get('allowed') : permission.allowed;

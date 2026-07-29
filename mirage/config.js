@@ -12,6 +12,7 @@ import * as Issue from './route-handlers/issue';
 import * as Issuestatus from './route-handlers/issuestatus';
 import * as Issuetype from './route-handlers/issuetype';
 import * as Membership from './route-handlers/membership';
+import * as Userrole from './route-handlers/userrole';
 import * as Milestone from './route-handlers/milestone';
 import * as Project from './route-handlers/project';
 import * as Role from './route-handlers/role';
@@ -60,6 +61,7 @@ function routes() {
     Issuestatus.register(this, ctx);
     Issuetype.register(this, ctx);
     Membership.register(this, ctx);
+    Userrole.register(this, ctx);
     Milestone.register(this, ctx);
     Project.register(this, ctx);
     Role.register(this, ctx);

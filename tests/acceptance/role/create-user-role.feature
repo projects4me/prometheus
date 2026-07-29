@@ -1,7 +1,7 @@
 @setupApplicationTest
-Feature: Role | search user
+Feature: Role | assign userrole
 
-  Scenario: Search a user from given list of users
+  Scenario: Assign a role to a user
 
     Given There is no pre-existing data
     And default scenario is loaded
@@ -12,5 +12,8 @@ Feature: Role | search user
     And User_1 is logged in
     When User navigates to app/role/2
     And User clicks on user tab
-    And User search for user having userrole 4
-    Then There should some users exists
+    And User clicks on create userrole button
+    And User selects option 1 of userrole user
+    And User clicks on save button
+    Then There should 11 userroles exists
+    And Userrole is created for user

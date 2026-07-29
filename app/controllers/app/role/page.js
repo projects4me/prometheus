@@ -4,7 +4,6 @@
 
 import AppRoleController from 'prometheus/controllers/app/role';
 import { action, computed } from '@ember/object';
-import * as Yup from 'yup';
 import { inject as controller } from '@ember/controller';
 import { htmlSafe } from '@ember/template';
 import { tracked } from '@glimmer/tracking';
@@ -46,15 +45,15 @@ export default class AppRolePageController extends AppRoleController {
     @tracked permissionsState = {};
 
     /**
-     * This flag is used to show or hide the modal dialog box for adding new memberships
-     * in the system.
+     * This flag is used to show or hide the modal dialog box for assigning
+     * this role to a user via userrole.
      *
-     * @property addRoleDialog
+     * @property addUserroleDialog
      * @type bool
-     * @for AppRoleController
+     * @for AppRolePageController
      * @private
      */
-    @tracked addMembershipDialog = false;
+    @tracked addUserroleDialog = false;
 
     /**
      * The app controller.
@@ -67,14 +66,6 @@ export default class AppRolePageController extends AppRoleController {
     @controller('app') appController;
 
     /**
-     * This property maintain the list of projects that user selects.
-     * 
-     * @property selectedProjects
-     * @type Array
-     */
-    @tracked selectedProjects = [];
-
-    /**
      * This object holds all of the information that we need to create our schema and also need to 
      * render the template (in future).
      * @property metadata
@@ -85,7 +76,7 @@ export default class AppRolePageController extends AppRoleController {
     metadata = {
         sections: [
             {
-                name: "membershipCreate",
+                name: "userroleCreate",
                 fields: [
                     {
                         name: "userId",
@@ -99,29 +90,7 @@ export default class AppRolePageController extends AppRoleController {
                                 ]
                             }
                         }
-                    },
-                    {
-                        name: "hasProjects",
-                        validations: {
-                            default: {
-                                type: "lazy",
-                                cb: this.validateMembershipField()
-                            }
-                        }
-                    },
-                    {
-                        name: "relatedTo",
-                        validations: {
-                            default: {
-                                type: "string",
-                                rules: [
-                                    {
-                                        name: "required"
-                                    }
-                                ]
-                            }
-                        }
-                    },
+                    }
                 ]
             }
         ]
@@ -401,33 +370,32 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
-     * This property return list of memberships against the query given by the user.
+     * This property return list of userroles against the query given by the user.
      * 
-     * @property filteredRoles
+     * @property filteredUserroles
      * @return Array
      */
-    @computed('memberships.length', 'userSearchQuery')
-    get filteredMemberships() {
-        return this.memberships.filter((membership) => {
-            return membership.user?.get('name')?.toLowerCase()?.includes(this.userSearchQuery)
-                || membership.user?.get('name')?.includes(this.userSearchQuery);
+    @computed('userroles.length', 'userSearchQuery')
+    get filteredUserroles() {
+        return this.userroles.filter((userrole) => {
+            return userrole.user?.get('name')?.toLowerCase()?.includes(this.userSearchQuery)
+                || userrole.user?.get('name')?.includes(this.userSearchQuery);
         });
     }
 
     /**
-     * This method is used to remove user's membership associated with role.
+     * This method is used to remove a user's role assignment.
      * 
-     * @method removeMembership
-     * @param {Prometheus.Model.Membership} membership
+     * @method deleteUserrole
+     * @param {Prometheus.Model.Userrole} userrole
      */
-    @action deleteMembership(membership) {
-        Logger.debug('App.Role.Page->deleteMembership');
+    @action deleteUserrole(userrole) {
+        Logger.debug('App.Role.Page->deleteUserrole');
         let _self = this;
 
         let deleting = new Messenger().post({
             message: htmlSafe(_self.intl.t("views.app.role.tabs.user.confirmdelete", {
-                user: membership.user.get('name'),
-                project: membership.project.get('name')
+                user: userrole.user.get('name')
             })),
             type: 'warning',
             showCloseButton: true,
@@ -435,10 +403,8 @@ export default class AppRolePageController extends AppRoleController {
                 confirm: {
                     label: htmlSafe(_self.intl.t("global.form.confirmcancel")).toString(),
                     action: function () {
-
-                        // destroy the membership record
-                        membership.destroyRecord().then(function () {
-                            _self.memberships.removeObject(membership);
+                        userrole.destroyRecord().then(function () {
+                            _self.userroles.removeObject(userrole);
                             return deleting.update({
                                 message: htmlSafe(_self.intl.t("global.form.deleted")).toString(),
                                 type: 'success',
@@ -461,135 +427,49 @@ export default class AppRolePageController extends AppRoleController {
             }
         });
 
-        Logger.debug('App.Role.Page->deleteMembership');
+        Logger.debug('App.Role.Page->deleteUserrole');
     }
 
     /**
-     * This function is used to show the add membership modal dialog box by setting
-     * the addMembershipDialog flag to true.
+     * This function is used to show the add userrole modal dialog box by setting
+     * the addUserroleDialog flag to true.
      *
-     * @method showAddMembershipDialog
+     * @method showAddUserroleDialog
      * @protected
      */
-    @action showAddMembershipDialog() {
-        this.addMembershipDialog = true;
+    @action showAddUserroleDialog() {
+        this.addUserroleDialog = true;
     }
 
     /**
-     * This function is used to hide the add membership modal
+     * This function is used to hide the add userrole modal
      *
      * @method removeModal
      * @protected
      */
     @action removeModal() {
         if (this.isDestroyed || this.isDestroying) return;
-        this.addMembershipDialog = false;
+        this.addUserroleDialog = false;
         $('.modal').modal('hide');
     }
 
     /**
-     * This is a computed property which gets list of projects from the App controller.
+     * This function is used to assign this role to a user via userrole.
      *
-     * @property projectsList
-     * @type Array
-     * @for AppRolePageController
-     * @private
-     */
-    @computed('appController.projectsList')
-    get projectsList() {
-        return this.appController.get('projectsList');
-    }
-
-    /**
-     * This get property returns list of relatedTo objects.
-     * 
-     * @property relatedToList
-     * @returns Array
-     * @for AppRolePageController
-     * @private
-     */
-    get relatedToList() {
-        return [
-            {
-                label: this.intl.t("views.app.role.tabs.user.membership.relatedTo.system"),
-                value: "system"
-            },
-            {
-                label: this.intl.t("views.app.role.tabs.user.membership.relatedTo.project"),
-                value: "project"
-            }
-        ]
-    }
-
-    /**
-     * This function is triggered before the validation is performed against the model.
-     * 
-     * @method beforeValidate
-     * @param {Prometheus.Models.*} model 
-     */
-    beforeValidate(model) {
-        let modelType = model.get('constructor.modelName');
-
-        if (modelType === 'membership') {
-            if (!(this.selectedProjects != undefined &&
-                this.selectedProjects.length > 0)) {
-                this.newMembership.set('hasProjects', '');
-            } else {
-                this.newMembership.set('hasProjects', true);
-            }
-        }
-    }
-
-    /**
-     * This function is used when validation is performed against the relatedId and hasProjects property
-     * of Membership model. If the relatedTo property value is set to "system" then relatedId and hasProjects
-     * property of Membership is not required.
-     * 
-     * @method validateMembershipField
-     * @protected
-     * @returns {function} Validation callback.
-     */
-    validateMembershipField() {
-        return () => {
-            let validationRule = null;
-            validationRule = (this.newMembership.relatedTo === 'system')
-                ? Yup['string']()['notRequired']()
-                : Yup['string']()['required']()
-
-            return validationRule;
-        }
-    }
-
-    /**
-     * This function is used to add one or more memberships in the system. If the relatedTo property of membership model is set to
-     * system then a single membership is created. When relatedTo is set to project then there is possibility that user has selected
-     * multiple projects, so in this case we'll create multiple memberships.
-     *
-     * @method addMembership
+     * @method addUserrole
      * @protected
      */
-    @action addMembership() {
-        Logger.debug('AppRolePageController:addMembership()');
+    @action addUserrole() {
+        Logger.debug('AppRolePageController:addUserrole()');
         let _self = this;
-        let newMembership = _self.newMembership;
-        return this.validate(newMembership, 'membershipCreate')
+        let newUserrole = _self.newUserrole;
+        return this.validate(newUserrole, 'userroleCreate')
             .then(async (validation) => {
                 if (validation.isValid) {
-                    if (this.newMembership.relatedTo === 'system') {
-                        await this._addMembership(this.newMembership);
-                    } else {
-                        for (const project of this.selectedProjects) {
-                            // Project contains label and value | a value from <option>
-                            let membership = this.newMembership;
-                            membership.relatedId = project.value;
-                            await this._addMembership(membership);
-                        }
-                    }
-
+                    await this._addUserrole(this.newUserrole);
                     _self.removeModal();
-                    _self.selectedProjects = [];
                 } else {
-                    let messages = _self._buildMessages(validation.errors, 'membership');
+                    let messages = _self._buildMessages(validation.errors, 'userrole');
 
                     new Messenger().post({
                         message: messages,
@@ -599,45 +479,37 @@ export default class AppRolePageController extends AppRoleController {
                 }
             })
             .finally(() => {
-                Logger.debug('-AppRolePageController:addMembership()');
+                Logger.debug('-AppRolePageController:addUserrole()');
             });
     }
 
     /**
-     * This function is used to add a new membership in the system.
+     * This function is used to create a new userrole assignment.
      * 
-     * @param {Prometheus.Models.Membership} newMembership 
+     * @param {Prometheus.Models.Userrole} newUserrole 
      */
-    async _addMembership(newMembership) {
+    async _addUserrole(newUserrole) {
         let _self = this;
 
         try {
-            const membership = await newMembership.save();
-            Logger.debug('A new membership has been saved');
+            const userrole = await newUserrole.save();
+            Logger.debug('A new userrole has been saved');
 
-            let user = _self.store.peekRecord('user', membership.userId);
-            membership.user = user;
+            let user = _self.store.peekRecord('user', userrole.userId);
+            userrole.user = user;
+            _self.userroles.pushObject(userrole);
 
-            // Setting project relationship for membership model.
-            if (membership.relatedTo !== 'system') {
-                let relatedModel = _self.store.peekRecord(membership.relatedTo, membership.relatedId);
-                membership.project = relatedModel;
-            }
-            _self.memberships.pushObject(membership);
-
-            let messageName = membership.relatedTo === 'system'
-                ? undefined
-                : membership.project?.get('name');
             new Messenger().post({
-                message: _self.intl.t(`views.app.role.tabs.user.membership.created.${membership.relatedTo}`, { name: messageName }),
+                message: _self.intl.t('views.app.role.tabs.user.userrole.created', {
+                    user: user?.get('name')
+                }),
                 type: 'success',
                 showCloseButton: true
             });
 
-            _self.set('newMembership', _self.store.createRecord('membership', {
-                roleId: membership.roleId,
-                relatedTo: membership.relatedTo,
-                userId: membership.userId
+            _self.set('newUserrole', _self.store.createRecord('userrole', {
+                roleId: userrole.roleId,
+                userId: userrole.userId
             }));
         } catch (e) {
             e.errors?.forEach((message) => {
