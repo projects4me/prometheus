@@ -259,20 +259,7 @@ export default Model.extend({
     issues: hasMany('issue'),
 
     /**
-     * The roles related to the members of this project, please note that these
-     * roles are not related to the users directly. The API simply returns all
-     * the roles as well as the membership rules. The application has to relate the
-     * user to the role via the code.
-     *
-     * @property roles
-     * @type RoleModel
-     * @for Project
-     * @private
-     */
-    roles: hasMany('role'),
-
-    /**
-     * The membership rules for this project.
+     * Project memberships
      *
      * @property memberships
      * @type MembershipModel

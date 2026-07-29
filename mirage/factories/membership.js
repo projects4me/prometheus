@@ -15,16 +15,16 @@ export default Factory.extend({
     modifiedUser() {
         return (_.random(1, 10)).toString();
     },
+    userId() {
+        return (_.random(1, 10)).toString();
+    },
+    projectId() {
+        return (_.random(1, 10)).toString();
+    },
     afterCreate(membership) {
         membership.update({
             "createdUserName": `User_${membership.createdUser}`,
             "modifiedUserName": `User_${membership.modifiedUser}`
         })
-    },
-    roleId() {
-        return (_.random(1, 5)).toString();
-    },
-    userId() {
-        return (_.random(1, 10)).toString();
     }
 });

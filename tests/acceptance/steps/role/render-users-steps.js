@@ -4,15 +4,18 @@ import { click } from '@ember/test-helpers';
 export const given = function () {
     return [
         {
-            "There are $count memberships for role $roleId": (assert, ctx) => async function (count, roleId) {
-                let memberships = server.createList('membership', parseInt(count, 10));
+            "There are $count userroles for role $roleId": (assert, ctx) => async function (count, roleId) {
+                let userroles = server.createList('userrole', parseInt(count, 10));
 
-                memberships.forEach((membership) => {
-                    membership.update({
+                userroles.forEach((userrole, index) => {
+                    let user = server.schema.users.find(String((index % 10) + 1));
+                    userrole.update({
                         roleId: roleId,
-                    })
+                        userId: user.id,
+                        user: user
+                    });
                 });
-                assert.ok(true, `${count} memberships given to role ${roleId}`);
+                assert.ok(true, `${count} userroles given to role ${roleId}`);
             }
         }
     ];
@@ -31,8 +34,8 @@ export const when = function () {
 export const then = function () {
     return [
         {
-            "There should $count memberships exists": (assert) => async function (count) {
-                assert.dom('[data-role="user-memberships"] tbody tr').exists({ count: parseInt(count, 10) });
+            "There should $count userroles exists": (assert) => async function (count) {
+                assert.dom('[data-role="user-userroles"] tbody tr').exists({ count: parseInt(count, 10) });
             }
         }
     ];
