@@ -421,13 +421,55 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
     }
 
     /**
-     * This function checks if the model has changed
+     * This function checks if the form has unsaved changes that should block navigation.
      *
      * @method isDirty
      * @return {boolean}
      * @public
      */
     get isDirty() {
-        return (_.size(this.model.changedAttributes()) > 6 || this.model.description !== '');
+        let dirtyFns = {
+            'edit' : 'isEditDirty',
+            'create' : 'isCreateDirty',
+        }
+        if (!this.model) {
+            return false;
+        }
+
+        return this[dirtyFns[this.layoutName]](this.model);
+    }
+
+    /**
+     * This function checks if the model has changed for edit layout
+     *
+     * @method isEditDirty
+     * @param model
+     * @return {boolean}
+     * @public
+     */
+    isEditDirty(model) {
+        return _.size(model.changedAttributes()) > 0;
+    }
+
+    /**
+     * This function checks if the model has changed for create layout
+     *
+     * @method isCreateDirty
+     * @param model
+     * @return {boolean}
+     * @public
+     */
+    isCreateDirty(model) {
+        let modelKeys = _.keys(model.changedAttributes());
+        let dirtyFields = ['subject', 'description', 'typeId', 'milestoneId'];
+        let cantEmptyFields = ['description', 'subject'];
+
+        cantEmptyFields.forEach(field => {
+            if (modelKeys.includes(field) && model[field] === '') {
+                modelKeys.splice(modelKeys.indexOf(field), 1);
+            }
+        });
+
+        return modelKeys.some(key => dirtyFields.includes(key));
     }
 }

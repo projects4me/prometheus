@@ -426,13 +426,30 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	}
 
 	/**
-	 * This function checks if the model has changed
+	 * This function checks if the form has unsaved changes that should block navigation.
+	 * After a successful save Ember Data clears dirty attributes, so
+	 * post-save navigation is not blocked.
 	 *
 	 * @method isDirty
 	 * @return {boolean}
 	 * @public
 	 */
 	get isDirty() {
-		return (_.size(this.model.changedAttributes()) > 0);
+		let modelKeys = _.keys(this.model.changedAttributes());
+		let dirtyFields = ['name', 'email', 'dateOfBirth'];
+		let cantEmptyFields = ['name', 'email'];
+
+		cantEmptyFields.forEach(field => {
+			if (modelKeys.includes(field) && this.model[field] === '') {
+				modelKeys.splice(modelKeys.indexOf(field), 1);
+			}
+		});
+
+		// If the user has selected a project or role, we should block navigation
+		if(this.selectedProject || this.selectedRole) {
+			return true;
+		}
+
+		return modelKeys.some(key => dirtyFields.includes(key));
 	}
 }

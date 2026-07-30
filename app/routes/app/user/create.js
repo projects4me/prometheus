@@ -36,4 +36,18 @@ export default class AppUserCreateRoute extends App {
     setupController(controller, model) {
         controller.set('model', model);
     }
+
+    /**
+     * This function is triggered on route exit.
+     *
+     * @method resetController
+     * @param {AppUserCreateController} controller The controller object for this route
+     * @param {boolean} isExiting Whether the route is exiting
+     */
+    resetController(controller, isExiting) {
+        if (isExiting) {
+            controller.selectedProject = null;
+            controller.selectedRole = null;
+        }
+    }
 }
