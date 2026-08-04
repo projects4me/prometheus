@@ -13,4 +13,5 @@ Feature: Role | render permissions
     When User navigates to app/role
     And User selects role 2
     And User clicks on first module to check permissions
-    Then There are 4 permissions for that module
+    Then There are 4 action permissions for that module
+    And There are 6 field permissions for that module

@@ -101,7 +101,8 @@ export default class AclService extends Service {
     }
 
     /**
-     * Normalize an ACL context to catalog identity ({module}.{action}).
+     * Normalize an ACL context to catalog identity.
+     * Supports `{module}.{action}` and `{module}.{field}.{action}`.
      * Templates use `read`; this maps it to `get` to match the backend catalog.
      *
      * @param {string} context
@@ -112,17 +113,29 @@ export default class AclService extends Service {
             return null;
         }
 
-        let [module, action] = String(context).split('.');
-        if (!module || !action) {
+        let parts = String(context).split('.');
+        if (parts.length < 2) {
             return null;
         }
 
+        let action = parts[parts.length - 1];
         let catalogAction = ACTION_MAP[action.toLowerCase()];
         if (!catalogAction) {
             return null;
         }
 
-        return `${module.toLowerCase()}.${catalogAction}`;
+        if (parts.length === 2) {
+            return `${parts[0].toLowerCase()}.${catalogAction}`;
+        }
+
+        // module.field.action (field may theoretically contain dots — join middle)
+        let module = parts[0].toLowerCase();
+        let field = parts.slice(1, -1).join('.');
+        if (!field) {
+            return null;
+        }
+
+        return `${module}.${field}.${catalogAction}`;
     }
 
     /**
@@ -147,6 +160,7 @@ export default class AclService extends Service {
                 let allowed = permission.get ? permission.get('allowed') : permission.allowed;
                 return typeof entity === 'string'
                     && entity.endsWith('.get')
+                    && entity.split('.').length === 2
                     && (allowed === 1 || allowed === '1' || allowed === true);
             });
         }
@@ -154,7 +168,8 @@ export default class AclService extends Service {
     }
 
     /**
-     * Check access for a {module}.{action} context (e.g. issue.create).
+     * Check access for `{module}.{action}` or `{module}.{field}.{action}`.
+     * Field contexts require the matching module action first.
      * Missing or empty context, and resources with no ACL entry, are allowed.
      * When a permission exists for the resource, access follows its `allowed` flag.
      *
@@ -171,12 +186,43 @@ export default class AclService extends Service {
             return true;
         }
 
+        let parts = resourceName.split('.');
+        if (parts.length === 3) {
+            let moduleAction = `${parts[0]}.${parts[2]}`;
+            if (!this._isResourceAllowed(moduleAction)) {
+                return false;
+            }
+        }
+
+        return this._isResourceAllowed(resourceName);
+    }
+
+    /**
+     * Convenience helper for field ACL checks.
+     *
+     * @param {string} module
+     * @param {string} field
+     * @param {string} action read|get|create|update
+     * @returns {boolean}
+     */
+    canField(module, field, action) {
+        return this.checkAccess(`${module}.${field}.${action}`);
+    }
+
+    /**
+     * Resolve allow/deny for a catalog resource name against aclPermissions.
+     * Missing entry → allow (matches backend permissive default).
+     *
+     * @param {string} resourceName
+     * @returns {boolean}
+     * @private
+     */
+    _isResourceAllowed(resourceName) {
         let permission = this.aclPermissions.find(p => {
             let entity = p.get ? p.get('entity') : p.entity;
             return entity === resourceName;
         });
 
-        // No ACL for this resource / context — allow by default.
         if (!permission) {
             return true;
         }

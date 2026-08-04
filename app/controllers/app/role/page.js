@@ -200,9 +200,12 @@ export default class AppRolePageController extends AppRoleController {
             let permission = permissions.objectAt(i);
 
             let permissionEl = moduleEl.querySelector(`[data-module-resource="${permission.resourceName}"]`);
-            permissionEl.classList.add("light-gray");
+            if (permissionEl) {
+                yield this.activateTabForPermission(permissionEl);
+                permissionEl.classList.add("light-gray");
+                this.scrollToPermission(permissionEl);
+            }
 
-            this.scrollToPermission(permissionEl)
             this.permissionsState[moduleName][permission.resourceAlias] = this.updatePermissionTask.perform(permission, moduleName, permissions.length);
 
             this.updatePermissionState(moduleName, permission.resourceAlias, null, null);
@@ -219,13 +222,15 @@ export default class AppRolePageController extends AppRoleController {
 
             // To remove success (check) icon.
             this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
-            permissionEl.classList.remove("light-gray");
+            if (permissionEl) {
+                permissionEl.classList.remove("light-gray");
+            }
 
             // Destroy resource's permission state
             _.unset(this.permissionsState[moduleName], permission.resourceAlias);
         }
 
-        this.scrollToLatestCancelledPermission(moduleEl, moduleName);
+        yield this.scrollToLatestCancelledPermission(moduleEl, moduleName);
         this.showMessages(moduleName);
     })) updatePermission
 
@@ -323,7 +328,7 @@ export default class AppRolePageController extends AppRoleController {
      * 
      * @param {HTMLElement} moduleEl
      * @param {String} moduleName
-     * @returns {null}
+     * @returns {Promise}
      */
     scrollToLatestCancelledPermission(moduleEl, moduleName) {
         let moduleState = this.permissionsState[moduleName] || {};
@@ -332,10 +337,57 @@ export default class AppRolePageController extends AppRoleController {
                 let permissionEl = moduleEl.querySelector(`[data-module-resource="${key}"]`)
                 || moduleEl.querySelector(`[data-module-resource="${moduleName}.${key}"]`)
                 || moduleEl.querySelector(`[data-module-resource="${moduleName}"]`);
-                this.scrollToPermission(permissionEl);
-                return;
+                if (permissionEl) {
+                    return this.activateTabForPermission(permissionEl).then(() => {
+                        this.scrollToPermission(permissionEl);
+                    });
+                }
+                return Promise.resolve();
             }
         }
+        return Promise.resolve();
+    }
+
+    /**
+     * Ensure the Actions/Fields tab that owns the permission row is active
+     * before scroll/highlight. Waits for Bootstrap's fade transition
+     * (`shown.bs.tab`) so scroll uses the final layout.
+     *
+     * @param {HTMLElement} permissionEl
+     * @method activateTabForPermission
+     * @returns {Promise}
+     */
+    activateTabForPermission(permissionEl) {
+        return new Promise((resolve) => {
+            if (!permissionEl) {
+                resolve();
+                return;
+            }
+
+            let $pane = $(permissionEl).closest('.tab-pane');
+            if (!$pane.length || $pane.hasClass('active')) {
+                resolve();
+                return;
+            }
+
+            let paneId = $pane.attr('id');
+            if (!paneId) {
+                resolve();
+                return;
+            }
+
+            let $tab = $(permissionEl)
+                .closest('[data-permission-module]')
+                .find(`.nav-tabs a[href="#${paneId}"]`);
+
+            if (!$tab.length) {
+                resolve();
+                return;
+            }
+
+            $tab.one('shown.bs.tab', () => resolve());
+            $tab.tab('show');
+        });
     }
 
     /**
@@ -362,8 +414,17 @@ export default class AppRolePageController extends AppRoleController {
      * @method scrollToPermission
      */
     scrollToPermission(permissionEl) {
-        let position = ($(permissionEl).offset().top)
-            - ($(permissionEl).height() * 1) - 10;
+        if (!permissionEl) {
+            return;
+        }
+
+        let $el = $(permissionEl);
+        let offset = $el.offset();
+        if (!offset) {
+            return;
+        }
+
+        let position = offset.top - ($el.height() * 1) - 10;
         $("html, body").animate({
             scrollTop: position
         }, 500);

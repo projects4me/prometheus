@@ -6,7 +6,10 @@ import Helper from '@ember/component/helper';
 import { inject as service } from '@ember/service';
 
 /**
- * Returns binary permission options (Not set / Allow / None) from flat apiOptions.
+ * Returns binary permission options (Allow / None, plus Not set only while unset)
+ * from flat apiOptions.
+ *
+ * Pass the current allowed value as the 2nd arg so the list recomputes when it changes.
  *
  * @class GetPermissionOptions
  * @extends Ember.Component.Helper
@@ -29,10 +32,11 @@ export default Helper.extend({
     intl: service(),
 
     /**
-     * @param {string} type
+     * @param {string} type aclSettings key (e.g. apiOptions)
+     * @param {*} [currentValue] current permission.allowed (or similar); hides Not set when set
      * @returns {Object[]}
      */
-    compute([type /*, permission, flag */]) {
+    compute([type, currentValue]) {
         let aclSettings = this.settings.get('aclSettings') || {};
         let apiOptions = aclSettings[type] || {};
         let options = Object.assign(
@@ -45,10 +49,19 @@ export default Helper.extend({
                 }
         );
 
-        let optionsList = [{
-            label: this.intl.t("views.app.role.tabs.permission.options.notset"),
-            value: ""
-        }];
+        let isUnset = currentValue === null
+            || currentValue === undefined
+            || currentValue === '';
+
+        let optionsList = [];
+
+        // Only offer "Not set" while the permission has no applied value.
+        if (isUnset) {
+            optionsList.push({
+                label: this.intl.t("views.app.role.tabs.permission.options.notset"),
+                value: ""
+            });
+        }
 
         for (let [key, value] of Object.entries(options)) {
             optionsList.push({

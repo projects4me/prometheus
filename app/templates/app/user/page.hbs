@@ -87,10 +87,11 @@
               <div class="user-dob">    
                 <i class="fa fa-birthday-cake"></i>
                 <span class="user-meta-label">{{t "views.app.user.create.dateofbirth"}}:</span>
+                <AccessControl @aclContext="user.dateOfBirth.read">
                 <AppUi::InlineEditable
                   @value={{this.model.dateOfBirth}}
                   @onSave={{fn this.saveModelAttribute this.model "dateOfBirth"}}
-                  @aclContext="user.update"
+                  @aclContext="user.dateOfBirth.update"
                   @validate={{fn this.validateInlineField "userPage" "dateOfBirth"}}
                   @message={{this.message.userPage.dateOfBirth}}
                   @onClearMessage={{fn this.clearFieldMessage "userPage" "dateOfBirth"}}
@@ -122,6 +123,7 @@
                     />
                   </:edit>
                 </AppUi::InlineEditable>
+                </AccessControl>
               </div>
 
               <div class="user-language">
