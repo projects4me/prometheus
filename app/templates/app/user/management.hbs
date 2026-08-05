@@ -102,7 +102,11 @@
                             </div>
                           </td>
 
-                          <td data-user-field="email">{{user.email}}</td>
+                          <td data-user-field="email">
+                            <AccessControl @aclContext="user.email.read">
+                              {{user.email}}
+                            </AccessControl>
+                          </td>
                           <td data-user-field="account-status" class={{concat "account-status-" user.accountStatus}}>{{t (concat "views.app.user.accountStatus." user.accountStatus)}}</td>
 
                           <td data-user-field="last-activity-at">

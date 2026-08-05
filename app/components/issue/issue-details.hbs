@@ -9,7 +9,9 @@
           <div class="box-header with-border box-header-no-content flex-row flex-jc-sb flex-ai-c">
             {{#unless @quickView}}
             <h2 class="box-title issue-title">{{this.issue.issuetype.name}} - #{{this.issue.issueNumber}} | 
-              <span class="issue-subject">{{this.issue.subject}}</span>
+              <AccessControl @aclContext="issue.subject.read">
+                <span class="issue-subject">{{this.issue.subject}}</span>
+              </AccessControl>
 
               {{!-- Issue status dropdown --}}
               <span class="issue-status">
@@ -386,7 +388,7 @@
       </AccessControl>
       {{!-- Issue Files --}}
 
-      <AccessControl @aclContext="issue.read">
+      <AccessControl @aclContext="timelog.read">
         <div class="box box-success issues-details">
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.issue.detail.estimates"}}</h3>
@@ -499,7 +501,7 @@
         </div>
       </AccessControl>
 
-      <AccessControl @aclContext="issue.read">
+      <AccessControl @aclContext="timelog.read">
       {{!-- Issue Timelogs --}}
         <div class="box box-danger">
           <div class="box-header with-border">

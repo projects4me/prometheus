@@ -50,6 +50,7 @@
                     @data-field="user.email" 
                     @lengthRequired={{false}} 
                     @mask="email"
+                    @aclContext="user.email.create"
                     @validate={{action this.validateField "userCreate" (hash name="email" value=this.model.email)}}
                     @message={{this.message.userCreate.email}}     
                   />
@@ -76,6 +77,7 @@
                     @parentEl='[data-field="user.dateOfBirth"]'
                     @endDate="31-12"
                     @maxDate="31-12"
+                    @aclContext="user.dateOfBirth.create"
                     @validate={{action this.validateField "userCreate" (hash name="dateOfBirth" value=this.model.dateOfBirth)}}
                     @message={{this.message.userCreate.dateOfBirth}}     
                   />

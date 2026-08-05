@@ -952,7 +952,7 @@
           "people": "People",
           "estimates": "Estimates",
           "validations": {
-            "endDateGreaterThanStartDate" : "End date should be after start date"
+            "endDateGreaterThanStartDate": "End date should be after start date"
           }
         },
         "filter": {
@@ -1411,6 +1411,7 @@
               "chatroom": "Chat",
               "issuetype": "Issue Type",
               "issuestatus": "Issue Status",
+              "issuewatcher": "Issue Watcher",
               "userqualification": "User Qualification",
               "userskill": "User Skill",
               "permission": "Permission",
@@ -1423,133 +1424,288 @@
                 "get": "Get Project",
                 "create": "Create Project",
                 "update": "Update Project",
-                "delete": "Delete Project"
+                "delete": "Delete Project",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "description": "Project Summary",
+                "done": "Done",
+                "endDate": "End Date",
+                "estimatedBudget": "Estimated Budget",
+                "scope": "Scope",
+                "shortCode": "Short Code",
+                "spentBudget": "Spent Budget",
+                "startDate": "Start Date",
+                "status": "Status",
+                "type": "Type",
+                "vision": "Vision"
               },
               "issue": {
                 "get": "Get Issue",
                 "create": "Create Issue",
                 "update": "Update Issue",
-                "delete": "Delete Issue"
+                "delete": "Delete Issue",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "description": "Description",
+                "endDate": "End Date",
+                "isPlanned": "Is Planned",
+                "isReopened": "Is Reopened",
+                "lastActivityDate": "Last Activity Date",
+                "priority": "Priority",
+                "projectShortcode": "Project Short Code",
+                "startDate": "Start Date",
+                "status": "Status",
+                "subject": "Subject"
               },
               "wiki": {
                 "get": "Get Wiki",
                 "create": "Create Wiki",
                 "update": "Update Wiki",
-                "delete": "Delete Wiki"
+                "delete": "Delete Wiki",
+                "status": "Status",
+                "locked": "Locked",
+                "markUp": "Wiki",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "upvotes": "Upvotes"
               },
               "user": {
                 "get": "Get User",
                 "create": "Create User",
                 "update": "Update User",
-                "delete": "Delete User"
+                "delete": "Delete User",
+                "email": "Email Address",
+                "dateOfBirth": "Date Of Birth",
+                "phone": "Phone",
+                "accountStatus": "Account Status",
+                "title": "Title",
+                "timezone": "Timezone",
+                "language": "Language",
+                "dateCreated": "Date Created",
+                "dateJoined": "Date Joined",
+                "dateModified": "Date Modified",
+                "description": "Description",
+                "education": "Education",
+                "githubUrl": "GitHub URL",
+                "gitlabUrl": "GitLab URL",
+                "lastActivityAt": "Last Activity",
+                "linkedinUrl": "LinkedIn URL",
+                "profilePicture": "Profile Picture",
+                "skills": "Skills",
+                "skypeUrl": "Skype URL",
+                "slackUrl": "Slack URL",
+                "status": "Status"
               },
               "role": {
                 "get": "Get Role",
                 "create": "Create Role",
                 "update": "Update Role",
-                "delete": "Delete Role"
+                "delete": "Delete Role",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "description": "Description",
+                "groupEntity": "Group Entity"
               },
               "membership": {
                 "get": "Get Membership",
                 "create": "Create Membership",
                 "update": "Update Membership",
-                "delete": "Delete Membership"
+                "delete": "Delete Membership",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "lastActivityDate": "Last Activity Date"
               },
               "userrole": {
                 "get": "Get User Role",
                 "create": "Create User Role",
                 "update": "Update User Role",
-                "delete": "Delete User Role"
+                "delete": "Delete User Role",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified"
               },
               "conversationroom": {
                 "get": "Get Conversation",
                 "create": "Create Conversation",
                 "update": "Update Conversation",
-                "delete": "Delete Conversation"
+                "delete": "Delete Conversation",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "description": "Description",
+                "issueNumber": "Issue Number",
+                "projectShortcode": "Project Short Code",
+                "roomType": "Type",
+                "subject": "Subject"
               },
               "comment": {
                 "get": "Get Comment",
                 "create": "Create Comment",
                 "update": "Update Comment",
-                "delete": "Delete Comment"
+                "delete": "Delete Comment",
+                "comment": "Comment",
+                "relatedName": "Related Name",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified"
               },
               "milestone": {
                 "get": "Get Milestone",
                 "create": "Create Milestone",
                 "update": "Update Milestone",
-                "delete": "Delete Milestone"
+                "delete": "Delete Milestone",
+                "name": "Name",
+                "description": "Description",
+                "status": "Status",
+                "milestoneType": "Type",
+                "startDate": "Start Date",
+                "endDate": "End Date",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified"
               },
               "tag": {
                 "get": "Get Tag",
                 "create": "Create Tag",
                 "update": "Update Tag",
-                "delete": "Delete Tag"
+                "delete": "Delete Tag",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "tag": "Tag Name"
               },
               "savedsearch": {
                 "get": "Get Saved Search",
                 "create": "Create Saved Search",
                 "update": "Update Saved Search",
-                "delete": "Delete Saved Search"
+                "delete": "Delete Saved Search",
+                "dateCreated": "Date Created",
+                "name": "Name",
+                "public": "Public",
+                "relatedTo": "Related To",
+                "searchquery": "Search Query"
               },
               "upload": {
                 "get": "Get Upload",
                 "create": "Create Upload",
                 "update": "Update Upload",
-                "delete": "Delete Upload"
+                "delete": "Delete Upload",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "fileDestination": "File Destination",
+                "fileMime": "File MIME Type",
+                "filePath": "File Path",
+                "fileSize": "File Size",
+                "fileThumbnail": "File Thumbnail",
+                "fileType": "File Type",
+                "name": "Name",
+                "status": "Status"
               },
               "activity": {
                 "get": "Get Activity",
                 "create": "Create Activity",
                 "update": "Update Activity",
-                "delete": "Delete Activity"
+                "delete": "Delete Activity",
+                "context": "Context",
+                "dateCreated": "Date Created",
+                "description": "Description",
+                "relatedActivity": "Related Activity",
+                "relatedActivityModule": "Related Activity Module",
+                "type": "Type"
               },
               "timelog": {
                 "get": "Get Time Log",
                 "create": "Create Time Log",
                 "update": "Update Time Log",
-                "delete": "Delete Time Log"
+                "delete": "Delete Time Log",
+                "days": "Days",
+                "hours": "Hours",
+                "minutes": "Minutes",
+                "description": "Description",
+                "spentOn": "Spent On",
+                "context": "Context",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "projectShortcode": "Project Short Code"
               },
               "chatroom": {
                 "get": "Get Chat",
                 "create": "Create Chat",
                 "update": "Update Chat",
-                "delete": "Delete Chat"
+                "delete": "Delete Chat",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "status": "Status",
+                "subject": "Subject",
+                "type": "Type"
               },
               "issuetype": {
                 "get": "Get Issue Type",
                 "create": "Create Issue Type",
                 "update": "Update Issue Type",
-                "delete": "Delete Issue Type"
+                "delete": "Delete Issue Type",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "description": "Description",
+                "name": "Name",
+                "system": "System"
               },
               "issuestatus": {
                 "get": "Get Issue Status",
                 "create": "Create Issue Status",
                 "update": "Update Issue Status",
-                "delete": "Delete Issue Status"
+                "delete": "Delete Issue Status",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "description": "Description",
+                "done": "Done",
+                "name": "Name",
+                "system": "System"
+              },
+              "issuewatcher": {
+                "get": "Get Issue Watcher",
+                "create": "Create Issue Watcher",
+                "update": "Update Issue Watcher",
+                "delete": "Delete Issue Watcher",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified"
               },
               "userqualification": {
                 "get": "Get User Qualification",
                 "create": "Create User Qualification",
                 "update": "Update User Qualification",
-                "delete": "Delete User Qualification"
+                "delete": "Delete User Qualification",
+                "completionYear": "Completion Year",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "institution": "Institution",
+                "title": "Title",
+                "type": "Type"
               },
               "userskill": {
                 "get": "Get User Skill",
                 "create": "Create User Skill",
                 "update": "Update User Skill",
-                "delete": "Delete User Skill"
+                "delete": "Delete User Skill",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "name": "Skill Name",
+                "proficiencyLevel": "Proficiency Level"
               },
               "permission": {
                 "get": "Get Permission",
                 "create": "Create Permission",
                 "update": "Update Permission",
-                "delete": "Delete Permission"
+                "delete": "Delete Permission",
+                "allowed": "Allowed",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "resourceName": "Resource Name"
               },
               "vote": {
                 "get": "Get Vote",
                 "create": "Create Vote",
                 "update": "Update Vote",
-                "delete": "Delete Vote"
+                "delete": "Delete Vote",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "relatedName": "Related Name",
+                "vote": "Vote"
               },
               "issueplanning": {
                 "create": "Create Issue Plan"
@@ -1561,8 +1717,14 @@
             "options": {
               "notset": "Not set",
               "allow": "Allow",
-              "none": "None"
+              "none": "None",
+              "readOnly": "Read Only",
+              "writeRead": "Write + Read"
             },
+            "actions": "Actions",
+            "fields": "Fields",
+            "field": "Field",
+            "fieldPermissions": "Field permissions",
             "updated": "Permissions Updated"
           },
           "user": {
