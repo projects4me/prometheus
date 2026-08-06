@@ -1,5 +1,4 @@
 import steps from '../steps';
-import { click } from '@ember/test-helpers';
 
 export const given = function () {
     return [
@@ -22,20 +21,16 @@ export const given = function () {
 }
 
 export const when = function () {
-    return [
-        {
-            "User clicks on user tab": (assert) => async function () {
-                await click('ul.nav.nav-tabs li a[href="#users"]');
-            }
-        }
-    ];
+    return [];
 }
 
 export const then = function () {
     return [
         {
             "There should $count userroles exists": (assert) => async function (count) {
-                assert.dom('[data-role="user-userroles"] tbody tr').exists({ count: parseInt(count, 10) });
+                assert.dom('[data-role="user-userroles"] li[data-role-userrole-id]').exists({
+                    count: parseInt(count, 10)
+                });
             }
         }
     ];

@@ -11,6 +11,5 @@ Feature: Role | delete userrole
     And User fetch userrole against roleId
     And User_1 is logged in
     When User navigates to app/role/2
-    And User clicks on user tab
     And User delete userrole 1
     Then There should 9 userroles exists

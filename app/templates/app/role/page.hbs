@@ -1,4 +1,17 @@
 <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12 role-details">
+  <div class="role-details__toolbar">
+    <AppUi::Button
+      data-btn="close-role"
+      type="button"
+      class="btn btn-box-tool"
+      data-toggle="tooltip"
+      title={{t "global.form.close"}}
+      @onClick={{this.closeRoleDetail}}
+    >
+      <i class="fa fa-times"></i>
+    </AppUi::Button>
+  </div>
+
   <div class="field-group">
     <FormFields::FieldText @placeholder={{t "views.app.role.create.nameplaceholder" }}
       @label={{t "views.app.role.create.name" }} @value={{this.model.name}} @data-field="role.name" @validate={{action
@@ -14,60 +27,55 @@
       this.editRole 'description' }} />
   </div>
 
-  {{!-- Permissions and Users tab --}}
-  <div class="nav-tabs-custom">
-    <ul class="nav nav-tabs">
-      {{!-- Permissions tab --}}
-      <li class="active"><a href="#permissions" data-toggle="tab">{{t "views.app.role.tabs.permission.title"}}</a></li>
-
-      {{!-- Users tab --}}
-      <li><a href="#users" data-toggle="tab">{{t "views.app.role.tabs.user.title"}}</a></li>
-    </ul>
-
-    <div class="tab-content">
-
-      {{!-- Role Permissions --}}
-      <div class="tab-pane active" id="permissions">
-
-        {{!-- Accordion --}}
-        <div class="box-body">
-          <div class="panel-group" id="accordion">
-
-            {{#each-in this.permissions as |name permissions|}}
-              <Role::ModulePermissions
-                @name={{name}}
-                @permissions={{permissions}}
-                @setPermissions={{this.setPermissions}}
-                @modulePermissions={{this.modulePermissions}}
-                @permissionsState={{this.permissionsState}}
-                @updatePermission={{this.updatePermission}}
-                @getChangedPermissions={{this.getChangedPermissions}}
-              />
-            {{/each-in}}
-
-          </div>
-        </div>
-
+  {{!-- Role members (inline, project-members pattern) --}}
+  <AccessControl @aclContext="role.read">
+    <div class="box box-warning role-members" data-role="role-members">
+      <div class="box-header with-border box-header-flex box-header-no-content">
+        <h3 class="box-title">{{t "views.app.role.tabs.user.members"}}</h3>
+        <AppUi::DottedAddButton
+          @title={{t "views.app.role.tabs.user.add"}}
+          @onClick={{this.showAddUserroleDialog}}
+          @class="pull-right"
+          @aclContext="userrole.create"
+          @data-add="userrole"
+        />
       </div>
-      {{!-- Users to which this role is assigned --}}
-      <div class="tab-pane" id="users">
+      <div class="box-body no-padding">
+        <ul class="users-list clearfix" data-role="user-userroles">
+          {{#if this.userroles.length}}
+            {{#each this.userroles as |userrole|}}
+              <li data-role-userrole-id={{userrole.id}} class="member-item">
+                <AppUi::Button
+                  data-btn="delete"
+                  data-delete-member
+                  type="button"
+                  class="btn btn-box-tool"
+                  data-toggle="tooltip"
+                  title={{t "views.app.role.tabs.user.removeMember"}}
+                  @onClick={{fn this.deleteUserrole userrole}}
+                  @aclContext="userrole.delete"
+                >
+                  <i class="fa fa-times"></i>
+                </AppUi::Button>
 
-        <div data-role="user-userrole-actions">
-          {{!-- User Search component --}}
-          <FormFields::FieldSearch
-            @placeholder={{t "views.app.role.tabs.user.search"}}
-            @data-module={{concat "role-" this.model.name}}
-            @data-search="user"
-            @aclContext="role.read"
-            @value={{this.userSearchQuery}}
-          />
+                <div class="member-avatar-wrap">
+                  <img
+                    src="{{this.apiHost}}/userimage/get/{{userrole.user.id}}"
+                    alt="{{userrole.user.name}}"
+                  >
+                </div>
+                <LinkTo @route="app.user.page" @model={{userrole.user.id}} class="users-list-name">
+                  {{userrole.user.name}}
+                </LinkTo>
+              </li>
+            {{/each}}
+          {{else}}
+            <Exceptions::NothingFound
+              @description={{t "views.app.role.tabs.user.noMembers"}}
+            />
+          {{/if}}
+        </ul>
 
-          <AppUi::Button data-btn="create-userrole" type="button" class="btn btn-primary" @onClick={{this.showAddUserroleDialog}} @aclContext="userrole.create">
-            {{t "views.app.role.tabs.user.createUserrole"}}
-          </AppUi::Button>
-        </div>
-
-        {{!-- Modal for assigning this role to a user --}}
         {{#if this.addUserroleDialog}}
           {{#bootstrap-modal
             title="views.app.role.tabs.user.userrole.title"
@@ -86,7 +94,7 @@
               @data-field="userrole.user"
               @options={{this.usersList}}
               @onchange={{action "selectRelated" this.newUserrole 'userId'}}
-              @selected={{find-by "value" this.newUserrole.userId this.usersList}}              
+              @selected={{find-by "value" this.newUserrole.userId this.usersList}}
               @relateType="relate-user"
               @validate={{action this.validateField "userroleCreate" (hash name="userId" value=this.newUserrole.userId model=this.newUserrole)}}
               @message={{this.message.userroleCreate.userId}}
@@ -94,34 +102,22 @@
             />
           </div>
           {{/bootstrap-modal}}
-        {{/if}}        
-
-        <div data-role="user-userroles">
-          <table class="table table-hover table-striped">
-            <thead>
-              <tr>
-                <th>{{t "views.app.role.tabs.user.name"}}</th>
-                <th>{{t "views.app.role.tabs.user.emailaddress"}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{#each this.filteredUserroles as |userrole|}}
-              <tr data-role-userrole-id={{userrole.id}}>
-                <td>{{userrole.user.name}}</td>
-                <td>{{userrole.user.email}}</td>
-                <td>
-                  <AppUi::Button data-btn="delete" type="button" class="btn btn-box-tool" @onClick={{fn this.deleteUserrole userrole}} @aclContext="userrole.delete">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                  </AppUi::Button>
-                </td>
-              </tr>
-              {{/each}}
-            </tbody>
-          </table>
-        </div>
-
+        {{/if}}
       </div>
+    </div>
+  </AccessControl>
 
+  {{!-- Role permissions (flat Actions / Fields) --}}
+  <div class="box box-info role-permissions-section" data-role="role-permissions">
+    <div class="box-header with-border box-header-flex box-header-no-content">
+      <h3 class="box-title">{{t "views.app.role.tabs.permission.title"}}</h3>
+    </div>
+    <div class="box-body">
+      <Role::Permissions
+        @permissionsByModule={{this.permissions}}
+        @permissionsState={{this.permissionsState}}
+        @updatePermission={{this.updatePermission}}
+      />
     </div>
   </div>
 </div>
