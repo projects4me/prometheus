@@ -5,6 +5,8 @@
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { tracked } from '@glimmer/tracking';
 import { action, computed } from '@ember/object';
+import { inject as controller } from '@ember/controller';
+import { htmlSafe } from '@ember/template';
 
 /**
  * The role list controller.
@@ -15,6 +17,17 @@ import { action, computed } from '@ember/object';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppRoleController extends PrometheusCreateController {
+
+    /**
+     * The role list controller. Delete is triggered from app.role.page, which
+     * extends this class but does not own the roles array — the parent route does.
+     *
+     * @property roleListController
+     * @type Prometheus.Controller.App.Role
+     * @for AppRoleController
+     * @private
+     */
+    @controller('app.role') roleListController;
 
     /**
      * This flag is used to show or hide the modal dialog box for adding new roles
@@ -209,5 +222,94 @@ export default class AppRoleController extends PrometheusCreateController {
                 }
             });
         return false;
+    }
+
+    /**
+     * Delete a role after Messenger confirmation. Used from the role
+     * detail page toolbar (page controller extends this controller).
+     *
+     * @method deleteRole
+     * @param {Prometheus.Models.Role} role
+     * @protected
+     */
+    @action deleteRole(role) {
+        Logger.debug('App.Role->deleteRole');
+        let _self = this;
+        let moduleTranslated = _self.intl.t('global.module.singular.role');
+
+        let deleting = new Messenger().post({
+            message: htmlSafe(_self.intl.t('views.app.module.list.delete.message', {
+                moduleName: moduleTranslated,
+                name: role.name
+            })),
+            type: 'warning',
+            showCloseButton: true,
+            actions: {
+                confirm: {
+                    label: htmlSafe(_self.intl.t('views.app.module.list.delete.confirmDelete', {
+                        moduleName: moduleTranslated
+                    })).toString(),
+                    action: function () {
+                        deleting.update({
+                            message: _self.intl.t('views.app.module.list.delete.deleting', {
+                                moduleName: moduleTranslated
+                            }),
+                            type: 'info',
+                            actions: false,
+                            hideAfter: false
+                        });
+
+                        return role.destroyRecord().then(function () {
+                            // Roles live on app.role (list), not on the page controller instance.
+                            let roles = _self.roleListController.roles;
+                            if (roles) {
+                                roles.removeObject(role);
+                            }
+
+                            if (_self.isRolePage
+                                && String(_self.model?.id) === String(role.id)) {
+                                _self.router.transitionTo('app.role');
+                            }
+
+                            return deleting.update({
+                                message: _self.intl.t('views.app.module.list.delete.deleted', {
+                                    moduleName: moduleTranslated
+                                }),
+                                type: 'success',
+                                actions: false,
+                                hideAfter: 3
+                            });
+                        }).catch(function (error) {
+                            let detail = error.detail || {};
+                            let errorMessage = detail.error || error.message;
+                            let suggestion = detail.suggestion;
+                            let message = suggestion
+                                ? `${errorMessage} | ${suggestion}`
+                                : errorMessage;
+
+                            return deleting.update({
+                                message: message,
+                                type: 'error',
+                                actions: false,
+                                showCloseButton: true
+                            });
+                        });
+                    }
+                },
+                cancel: {
+                    label: htmlSafe(_self.intl.t('views.app.module.list.delete.onsecondthought')).toString(),
+                    action: function () {
+                        return deleting.update({
+                            message: _self.intl.t('views.app.module.list.delete.deletecancel'),
+                            type: 'success',
+                            actions: false,
+                            hideAfter: 3
+                        });
+                    }
+                }
+            }
+        });
+
+        Logger.debug('-App.Role->deleteRole');
     }
 }
