@@ -11,7 +11,6 @@ Feature: Role | assign userrole
     And User fetch userrole against roleId
     And User_1 is logged in
     When User navigates to app/role/2
-    And User clicks on user tab
     And User clicks on create userrole button
     And User selects option 1 of userrole user
     And User clicks on save button

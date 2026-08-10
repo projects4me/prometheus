@@ -1725,10 +1725,22 @@
             "fields": "Fields",
             "field": "Field",
             "fieldPermissions": "Field permissions",
-            "updated": "Permissions Updated"
+            "noActions": "No action permissions available",
+            "noFields": "No field permissions available",
+            "updated": "Permissions Updated",
+            "actionLabels": {
+              "get": "Get",
+              "create": "Create",
+              "update": "Update",
+              "delete": "Delete"
+            }
           },
           "user": {
             "title": "Users",
+            "members": "Members",
+            "add": "Assign user to this role",
+            "removeMember": "Remove role assignment",
+            "noMembers": "No users assigned to this role",
             "search": "Search User..",
             "name": "Name",
             "emailaddress": "Email Address",

@@ -7,44 +7,49 @@
 */
 
 .roles {
-  .box {
-    .box-header {
-      padding-bottom: 2.5rem;
-
-      .box-tools {
-        input {
-          width: 30rem;
-        }
-      }
-    }
-
-    .box-body {
-      .tab-content {
-        .tab-pane#users {
-          min-height: 10rem;
-
-          input.ember-text-field {
-            width: 25rem;
-          }
-
-          [data-role="user-userroles"] {
-            margin-top: 3rem;
-
-            i {
-              color: black;
-              font-size: 1.5rem;
-            }
-          }
-
-          [data-role="user-userrole-actions"] {
-            @include flexbox($justifyContent: space-between);
-          }
-        }
-      }
+  .role-box-body--detail-open {
+    &::after {
+      content: "";
+      display: table;
+      clear: both;
     }
   }
 
   .role-cards {
+    .role-cards__search {
+      display: block;
+      float: none;
+      clear: both;
+      width: 100%;
+      margin: 0 0 1.5rem;
+      padding: 0 1rem;
+
+      .input-group {
+        width: 100%;
+      }
+
+      .input-group-addon {
+        background-color: #fff;
+        border-color: #d2d6de;
+        color: #999;
+      }
+
+      input,
+      input.form-control {
+        display: block;
+        width: 100%;
+        height: 3.4rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid #d2d6de;
+        border-radius: 0 0.3rem 0.3rem 0;
+        box-shadow: none;
+      }
+
+      .input-group-addon:first-child {
+        border-radius: 0.3rem 0 0 0.3rem;
+      }
+    }
+
     .role-card-container {
       height: 15rem;
       padding-left: 1rem;
@@ -104,10 +109,83 @@
     }
   }
 
+  // List view: own block row so cards don't wrap around it, but input group is constrained.
+  &:not(.roles--detail-open) .role-cards .role-cards__search .input-group {
+    width: 30rem;
+    max-width: 100%;
+    margin-left: auto;
+  }
+
   .role-details {
+    position: relative;
     border: 1px solid #bebebe;
     border-radius: 1rem;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+    padding: 1.5rem;
+
+    .role-details__toolbar {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      z-index: 2;
+
+      .btn-box-tool {
+        padding: 0.35rem 0.6rem;
+
+        i.fa-times {
+          font-size: 1.6rem;
+          color: #666;
+        }
+
+        &:hover i.fa-times {
+          color: #333;
+        }
+      }
+    }
+
+    .field-group {
+      padding-right: 3rem;
+    }
+
+    .role-members {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+
+      // Match project members avatar sizing (project sidebar col-md-4 users-list cells).
+      // Role detail is much wider, so AdminLTE's 25% li width grows avatars too large.
+      .users-list {
+        > li.member-item {
+          width: auto;
+          float: left;
+          padding: 1rem;
+        }
+
+        .member-avatar-wrap img {
+          width: 7rem;
+          height: 7rem;
+          max-width: none;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+
+        .no-content {
+          padding: 1.5rem;
+        }
+      }
+    }
+
+    .role-permissions-section {
+      margin-bottom: 0;
+
+      .box-body {
+        padding-top: 0.5rem;
+      }
+
+      .nav-tabs-custom {
+        margin-bottom: 0;
+        box-shadow: none;
+      }
+    }
 
     .nav-tabs-custom {
       .nav-tabs {
@@ -122,37 +200,106 @@
       }
     }
 
-    div.table-responsive {
-      table {
-        tbody {
-          td {
-            div.form-field {
-              margin: 0;
-            }
-          }
+    .role-permissions {
+      .permission-module-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
 
-          .light-gray {
-            background-color: lightgray;
-          }
+      .permission-module-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem 0.5rem;
+        border-bottom: 1px solid #e6e6e6;
 
-          [data-module="permission-state"] {
-            display: block;
-            width: 1.5rem;
-            height: 1.5rem;
-
-            i.fa-spinner {
-              color: black;
-            }
-
-            i.fa-check-circle {
-              color: green;
-            }
-
-            i.fa-times-circle {
-              color: red;
-            }
-          }
+        &:last-child {
+          border-bottom: none;
         }
+      }
+
+      .permission-module-row__label {
+        flex: 0 0 12rem;
+        max-width: 12rem;
+        padding-right: 1rem;
+        margin-right: 0.25rem;
+        font-weight: 600;
+        word-break: break-word;
+        border-right: 1px solid #d8d8d8;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+      }
+
+      .permission-module-row__controls {
+        flex: 1 1 auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: 0.75rem 1rem;
+        min-width: 0;
+        padding-left: 0.75rem;
+      }
+
+      .permission-module-row__status {
+        flex: 0 0 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+        min-height: 2rem;
+        width: 2rem;
+
+        i.fa-spinner {
+          color: black;
+        }
+
+        i.fa-check-circle {
+          color: green;
+        }
+
+        i.fa-times-circle {
+          color: red;
+        }
+      }
+
+      .permission-control {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.25rem;
+        min-width: 11rem;
+        padding: 0.35rem 0.45rem;
+        border-radius: 0.3rem;
+        scroll-margin-top: 12rem;
+
+        &.light-gray {
+          background-color: lightgray;
+        }
+      }
+
+      .permission-control__label {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #555;
+        white-space: nowrap;
+      }
+
+      .permission-control__input {
+        div.form-field {
+          margin: 0;
+        }
+
+        select {
+          min-width: 10rem;
+          max-width: 14rem;
+        }
+      }
+
+      .role-permissions__actions {
+        margin-top: 1.25rem;
       }
     }
   }

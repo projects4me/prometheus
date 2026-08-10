@@ -13,37 +13,45 @@
     </div>
   </div>
 
-  {{!-- Tabs: Permissions / Users --}}
-  <div class="nav-tabs-custom">
-    <ul class="nav nav-tabs" style="display: flex; gap: 0; border-bottom: 1px solid #f4f4f4;">
-      <li style="padding: 0.75rem 1.25rem;">
-        <span class="skeleton-line skeleton-line--xs" style="width: 7rem;"></span>
-      </li>
-      <li style="padding: 0.75rem 1.25rem;">
-        <span class="skeleton-line skeleton-line--xs" style="width: 5rem;"></span>
-      </li>
-    </ul>
+  {{!-- Members box --}}
+  <div class="box box-warning" style="margin-bottom: 1.5rem;">
+    <div class="box-header" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem;">
+      <span class="skeleton-line skeleton-line--xs" style="width: 7rem;"></span>
+      <span class="skeleton-circle skeleton-circle--sm"></span>
+    </div>
+    <div class="box-body" style="padding: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+      {{#each (array 1 2 3 4)}}
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+          <span class="skeleton-circle" style="height: 4.5rem; width: 4.5rem;"></span>
+          <span class="skeleton-line skeleton-line--xs" style="width: 4rem;"></span>
+        </div>
+      {{/each}}
+    </div>
+  </div>
 
-    <div class="tab-content" style="padding: 1rem;">
-      {{!-- Accordion groups: module name + permission rows --}}
+  {{!-- Permission box --}}
+  <div class="box box-info">
+    <div class="box-header" style="display: flex; align-items: center; padding: 0.75rem 1rem;">
+      <span class="skeleton-line skeleton-line--xs" style="width: 8rem;"></span>
+    </div>
+    <div class="box-body" style="padding: 0.5rem 1rem 1rem;">
+      <ul class="nav nav-tabs" style="display: flex; gap: 0; border-bottom: 1px solid #f4f4f4; margin-bottom: 0.75rem;">
+        <li style="padding: 0.75rem 1.25rem;">
+          <span class="skeleton-line skeleton-line--xs" style="width: 5rem;"></span>
+        </li>
+        <li style="padding: 0.75rem 1.25rem;">
+          <span class="skeleton-line skeleton-line--xs" style="width: 5rem;"></span>
+        </li>
+      </ul>
+
       {{#each (array 1 2 3 4 5)}}
-        <div class="panel" style="margin-bottom: 1rem;">
-          <div class="panel-heading" style="padding: 0.85rem 1rem; background: #f9f9f9; border-radius: 0.3rem; display: flex; align-items: center; gap: 0.75rem;">
-            <span class="skeleton-circle skeleton-circle--sm" style="height: 1.2rem; width: 1.2rem; border-radius: 0.2rem;"></span>
-            <span class="skeleton-line skeleton-line--subtitle" style="width: 40%;"></span>
-          </div>
-          <div class="panel-body" style="padding: 0.75rem 1rem 0.25rem;">
+        <div class="skeleton-list-row" style="padding: 0.75rem 0; align-items: flex-start;">
+          <span class="skeleton-line skeleton-line--xs" style="width: 8rem; flex-shrink: 0; margin-top: 0.5rem;"></span>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; flex: 1;">
             {{#each (array 1 2 3 4)}}
-              <div class="skeleton-list-row" style="padding: 0.5rem 0;">
-                <span class="skeleton-line skeleton-line--xs" style="width: 2rem;"></span>
-                <div class="skeleton-list-row__content">
-                  <span class="skeleton-line skeleton-line--short" style="width: 60%;"></span>
-                </div>
-                <div style="display: flex; gap: 0.75rem; flex-shrink: 0;">
-                  <span class="skeleton-line skeleton-line--xs" style="width: 3.5rem;"></span>
-                  <span class="skeleton-line skeleton-line--xs" style="width: 3.5rem;"></span>
-                  <span class="skeleton-line skeleton-line--xs" style="width: 3.5rem;"></span>
-                </div>
+              <div style="display: flex; flex-direction: column; gap: 0.35rem; min-width: 8rem;">
+                <span class="skeleton-line skeleton-line--xs" style="width: 4rem;"></span>
+                <span class="skeleton-line skeleton-line--xs" style="width: 8rem;"></span>
               </div>
             {{/each}}
           </div>

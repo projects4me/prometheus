@@ -20,25 +20,8 @@ import $ from 'jquery';
  */
 export default class AppRolePageController extends AppRoleController {
     /**
-     * This array contains the permissions of the selected module from the accordion
-     * e.g. Project.
-     * 
-     * @property modulePermissions
-     * @protected
-     */
-    @tracked modulePermissions = [];
-
-    /**
-     * This maintains the query for searching the user associated with the current role.
-     * 
-     * @property userSearchQuery
-     * @protected
-     */
-    @tracked userSearchQuery = '';
-
-    /**
      * This object maintains all of the permissions state that are updated by the user.
-     * 
+     *
      * @property permissionsState
      * @protected
      */
@@ -57,7 +40,7 @@ export default class AppRolePageController extends AppRoleController {
 
     /**
      * The app controller.
-     * 
+     *
      * @property appController
      * @type Prometheus.Controller.App
      * @for AppRolePageController
@@ -66,7 +49,7 @@ export default class AppRolePageController extends AppRoleController {
     @controller('app') appController;
 
     /**
-     * This object holds all of the information that we need to create our schema and also need to 
+     * This object holds all of the information that we need to create our schema and also need to
      * render the template (in future).
      * @property metadata
      * @type Object
@@ -110,10 +93,20 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
+     * Close the role detail panel and return to the roles list.
+     *
+     * @method closeRoleDetail
+     * @protected
+     */
+    @action closeRoleDetail() {
+        this.router.transitionTo('app.role');
+    }
+
+    /**
      * This method update the given field's value and save the role model.
-     * 
-     * @param {String} fieldToEdit 
-     * @param {String} value 
+     *
+     * @param {String} fieldToEdit
+     * @param {String} value
      * @method editRole
      */
     @action editRole(fieldToEdit) {
@@ -164,42 +157,28 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
-     * This action is triggered when user selects a module from the accordion, to set all of
-     * the permissions related to that module.
-     * 
-     * @method setPermissions
-     * @param {string} resourceName
-     * @protected
-     */
-    @action setPermissions(resourceName) {
-        this.modulePermissions = this.permissions[resourceName];
-    }
-
-    /**
-     * This task calls updatePermissionTask task to update the given permission model.
-     * 
+     * Save all dirty / errored permissions for the role.
+     *
      * @method updatePermission
-     * @param {Prometheus.Models.Permission} permission
-     * @param {String} moduleName
-     * @param {String} flag
-     * @param {String} roleId
-     * @param {Event} evt
      * @protected
      */
-    @(task(function* (moduleName) {
-        let moduleEl = document.querySelector(`[data-permission-module="${moduleName}"]`);
-        let permissions = this.getChangedPermissions(moduleName);
+    @(task(function* () {
+        let listEl = document.querySelector('[data-role="permissions"]');
+        let permissions = this.getChangedPermissions();
 
         if (!permissions.length) {
             return;
         }
 
-        this.permissionsState[moduleName] = this.permissionsState[moduleName] || {};
-
         for (let i = 0; i < permissions.length; i++) {
             let permission = permissions.objectAt(i);
+            let moduleName = permission.moduleName;
 
-            let permissionEl = moduleEl.querySelector(`[data-module-resource="${permission.resourceName}"]`);
+            this.permissionsState[moduleName] = this.permissionsState[moduleName] || {};
+
+            let permissionEl = listEl
+                ? listEl.querySelector(`[data-module-resource="${permission.resourceName}"]`)
+                : null;
             if (permissionEl) {
                 yield this.activateTabForPermission(permissionEl);
                 permissionEl.classList.add("light-gray");
@@ -211,32 +190,28 @@ export default class AppRolePageController extends AppRoleController {
             this.updatePermissionState(moduleName, permission.resourceAlias, null, null);
             yield this.permissionsState[moduleName][permission.resourceAlias];
 
-            // If got an error while updating the permission, update its template state.
             if (this.permissionsState[moduleName][permission.resourceAlias].isErrored) {
                 this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
             }
 
-            // On success, check icon will be showed in template for 0.5 sec.
             let delay = this.getDelay(permissions.length)
             yield timeout(delay);
 
-            // To remove success (check) icon.
             this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
             if (permissionEl) {
                 permissionEl.classList.remove("light-gray");
             }
 
-            // Destroy resource's permission state
             _.unset(this.permissionsState[moduleName], permission.resourceAlias);
         }
 
-        yield this.scrollToLatestCancelledPermission(moduleEl, moduleName);
-        this.showMessages(moduleName);
+        yield this.scrollToLatestCancelledPermission(listEl);
+        this.showMessages();
     })) updatePermission
 
     /**
      * This task is used to update the permission model.
-     * 
+     *
      * @param {Prometheus.Model.Permission} permission
      * @param {String} moduleName
      * @param {Number} permissionsCount Count of permissions that are to be updated.
@@ -260,7 +235,7 @@ export default class AppRolePageController extends AppRoleController {
 
     /**
      * This function update the state of the permission by checking the result of the permission.
-     * 
+     *
      * @param {String} moduleName
      * @param {String} resourceAlias
      * @param {boolean} isError
@@ -274,45 +249,44 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
-     * This function is used to return the permissions that are changed by user and to be updated in the next step.
-     * 
+     * Changed permissions that should be persisted on save.
+     *
      * @method getChangedPermissions
-     * @param {String} moduleName The name of module.
      * @returns {Array}
      */
-    getChangedPermissions(moduleName) {
-        const permissions = this.model.permissions.reduce((permissions, permission) => {
-            if ((permission.dirtyType === 'updated' || permission.isError)
-                && permission.moduleName === moduleName) {
-                permissions.push(permission);
+    getChangedPermissions() {
+        const permissions = this.model.permissions.reduce((changed, permission) => {
+            if (permission.dirtyType === 'updated' || permission.isError) {
+                changed.push(permission);
             }
-            return permissions;
+            return changed;
         }, []);
         return permissions;
     }
 
     /**
-     * This function shows success or failure messages once all of the (changed) permissions are updated.
-     * 
-     * @param {String} moduleName
+     * Show success or failure messages once all changed permissions are updated.
+     *
      * @method showMessages
      */
-    showMessages(moduleName) {
+    showMessages() {
         let showSuccess = true;
-        let moduleState = this.permissionsState[moduleName] || {};
-        for (let [key, value] of Object.entries(moduleState)) {
-            if (value.isErrored) {
-                let permission = this.model.permissions.findBy('resourceName', key)
-                || this.model.permissions.findBy('resourceName', `${moduleName}.${key}`)
-                || this.model.permissions.findBy('resourceName', moduleName);
-                new Messenger().post({
-                    message: `${moduleName} (${key}) | ${permission.adapterError.detail.suggestion}`,
-                    type: 'error',
-                    showCloseButton: true
-                });
-                showSuccess = false;
-            }
-        }
+
+        Object.entries(this.permissionsState).forEach(([moduleName, moduleState]) => {
+            Object.entries(moduleState || {}).forEach(([key, value]) => {
+                if (value.isErrored) {
+                    let permission = this.model.permissions.findBy('resourceName', key)
+                        || this.model.permissions.findBy('resourceName', `${moduleName}.${key}`)
+                        || this.model.permissions.findBy('resourceName', moduleName);
+                    new Messenger().post({
+                        message: `${moduleName} (${key}) | ${permission.adapterError.detail.suggestion}`,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                    showSuccess = false;
+                }
+            });
+        });
 
         if (showSuccess) {
             new Messenger().post({
@@ -324,25 +298,29 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
-     * This function is used to scroll the page to the first permission which got error on update.
-     * 
-     * @param {HTMLElement} moduleEl
-     * @param {String} moduleName
+     * Scroll to the first permission that failed to update.
+     *
+     * @param {HTMLElement} listEl
      * @returns {Promise}
      */
-    scrollToLatestCancelledPermission(moduleEl, moduleName) {
-        let moduleState = this.permissionsState[moduleName] || {};
-        for (let [key, value] of Object.entries(moduleState)) {
-            if (value.isErrored) {
-                let permissionEl = moduleEl.querySelector(`[data-module-resource="${key}"]`)
-                || moduleEl.querySelector(`[data-module-resource="${moduleName}.${key}"]`)
-                || moduleEl.querySelector(`[data-module-resource="${moduleName}"]`);
-                if (permissionEl) {
-                    return this.activateTabForPermission(permissionEl).then(() => {
-                        this.scrollToPermission(permissionEl);
-                    });
+    scrollToLatestCancelledPermission(listEl) {
+        if (!listEl) {
+            return Promise.resolve();
+        }
+
+        for (let [moduleName, moduleState] of Object.entries(this.permissionsState || {})) {
+            for (let [key, value] of Object.entries(moduleState || {})) {
+                if (value.isErrored) {
+                    let permissionEl = listEl.querySelector(`[data-module-resource="${key}"]`)
+                        || listEl.querySelector(`[data-module-resource="${moduleName}.${key}"]`)
+                        || listEl.querySelector(`[data-module-resource="${moduleName}"]`);
+                    if (permissionEl) {
+                        return this.activateTabForPermission(permissionEl).then(() => {
+                            this.scrollToPermission(permissionEl);
+                        });
+                    }
+                    return Promise.resolve();
                 }
-                return Promise.resolve();
             }
         }
         return Promise.resolve();
@@ -377,7 +355,7 @@ export default class AppRolePageController extends AppRoleController {
             }
 
             let $tab = $(permissionEl)
-                .closest('[data-permission-module]')
+                .closest('[data-role="permissions"]')
                 .find(`.nav-tabs a[href="#${paneId}"]`);
 
             if (!$tab.length) {
@@ -391,10 +369,8 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
-     * This function is used to calculate the delay time according to the number of permissions being updated. If the
-     * permissions count is closer to threshold e.g. 28, then delay time will be decreased to 0.1 -0.2 sec and if the permissions
-     * count is far away from threshold e.g. 2 then delay time will be around 0.9 - 1 sec.
-     * 
+     * Calculate the delay time according to the number of permissions being updated.
+     *
      * @param {Number} permissionsCount Count of permissions that are to be updated.
      * @method getDelay
      * @returns {Number}
@@ -408,9 +384,10 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
-     * This function is used to scroll the page to the given permission element.
-     * 
-     * @param {HTMLElement} permissionEl 
+     * Scroll the page to the given permission element.
+     * Leaves extra space above so the highlight is not clipped by the sticky header.
+     *
+     * @param {HTMLElement} permissionEl
      * @method scrollToPermission
      */
     scrollToPermission(permissionEl) {
@@ -424,29 +401,16 @@ export default class AppRolePageController extends AppRoleController {
             return;
         }
 
-        let position = offset.top - ($el.height() * 1) - 10;
+        let topClearance = 120;
+        let position = Math.max(offset.top - ($el.outerHeight() || 0) - topClearance, 0);
         $("html, body").animate({
             scrollTop: position
         }, 500);
     }
 
     /**
-     * This property return list of userroles against the query given by the user.
-     * 
-     * @property filteredUserroles
-     * @return Array
-     */
-    @computed('userroles.length', 'userSearchQuery')
-    get filteredUserroles() {
-        return this.userroles.filter((userrole) => {
-            return userrole.user?.get('name')?.toLowerCase()?.includes(this.userSearchQuery)
-                || userrole.user?.get('name')?.includes(this.userSearchQuery);
-        });
-    }
-
-    /**
-     * This method is used to remove a user's role assignment.
-     * 
+     * Remove a user's role assignment.
+     *
      * @method deleteUserrole
      * @param {Prometheus.Model.Userrole} userrole
      */
@@ -492,18 +456,20 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
-     * This function is used to show the add userrole modal dialog box by setting
-     * the addUserroleDialog flag to true.
+     * Show the add userrole modal dialog box.
      *
      * @method showAddUserroleDialog
      * @protected
      */
-    @action showAddUserroleDialog() {
+    @action showAddUserroleDialog(event) {
+        if (event && typeof event.preventDefault === 'function') {
+            event.preventDefault();
+        }
         this.addUserroleDialog = true;
     }
 
     /**
-     * This function is used to hide the add userrole modal
+     * Hide the add userrole modal.
      *
      * @method removeModal
      * @protected
@@ -515,7 +481,7 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
-     * This function is used to assign this role to a user via userrole.
+     * Assign this role to a user via userrole.
      *
      * @method addUserrole
      * @protected
@@ -545,9 +511,9 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
-     * This function is used to create a new userrole assignment.
-     * 
-     * @param {Prometheus.Models.Userrole} newUserrole 
+     * Create a new userrole assignment.
+     *
+     * @param {Prometheus.Models.Userrole} newUserrole
      */
     async _addUserrole(newUserrole) {
         let _self = this;

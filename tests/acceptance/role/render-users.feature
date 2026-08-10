@@ -11,5 +11,4 @@ Feature: Role | render users
     And User fetch userrole against roleId
     And User_1 is logged in
     When User navigates to app/role/2
-    And User clicks on user tab
     Then There should 10 userroles exists

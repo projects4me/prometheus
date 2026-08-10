@@ -109,14 +109,16 @@ export default class AppRoleController extends PrometheusCreateController {
     }
 
     /**
-     * This function checks whether the current route is of role.page or not and then
-     * return boolean value.
-     * 
+     * Whether the role detail pane (or its loading/error state) is active.
+     * Must be true while page is loading so the cards column stays narrow
+     * and the skeleton renders beside it, not below the full-width grid.
+     *
      * @property isRolePage
      * @return Boolean
      */
     get isRolePage() {
-        return this.router.currentRoute.localName === 'page';
+        let routeName = this.router.currentRouteName || '';
+        return routeName.includes('role.page');
     }
 
     /**

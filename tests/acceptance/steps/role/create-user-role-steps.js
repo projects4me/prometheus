@@ -4,7 +4,7 @@ import { click } from '@ember/test-helpers';
 export default function (assert) {
     return steps(assert)
         .when('User clicks on create userrole button', async function () {
-            await click('[data-btn="create-userrole"]');
+            await click('[data-add="userrole"]');
             assert.ok(true, 'User clicks on create userrole button');
         })
         .then('Userrole is created for user', function () {

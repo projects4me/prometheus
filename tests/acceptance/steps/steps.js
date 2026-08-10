@@ -56,7 +56,6 @@ import * as checkFieldData from './form-fields/check-field-data';
 import * as renderPermissions from './role/render-permissions-steps';
 import * as renderRoleUsers from './role/render-users-steps';
 import * as setRequestQuery from './common-steps/set-request-query-steps';
-import * as searchUserAssociatedWithRole from './role/search-user-steps';
 import * as deleteMemberFromProject from './project/delete-member-from-project-steps';
 import * as timezoneChange from './user/timezone-change-steps';
 import * as massUpdateIssues from './issue/mass-update-issues-steps';
@@ -75,7 +74,7 @@ export default function (assert) {
 		formField,
 		navigation,
 		issueCreate,
-		date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, navigateToUser, changeUserAccountStatus, createUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData, createRole, renderPermissions, renderRoleUsers, setRequestQuery, searchUserAssociatedWithRole, deleteMemberFromProject, timezoneChange, massUpdateIssues, listSteps, renderListOfNotifications, markReadNotifications, filterIssuesRecentIssues, loadMoreIssues, yaddaContextSteps, widgets, issueDetailsPanel);
+		date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, navigateToUser, changeUserAccountStatus, createUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData, createRole, renderPermissions, renderRoleUsers, setRequestQuery, deleteMemberFromProject, timezoneChange, massUpdateIssues, listSteps, renderListOfNotifications, markReadNotifications, filterIssuesRecentIssues, loadMoreIssues, yaddaContextSteps, widgets, issueDetailsPanel);
 	let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()

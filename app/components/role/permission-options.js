@@ -40,6 +40,8 @@ export default class RolePermissionOptionsComponent extends Component {
      */
     @action updatePermission(permission, flag, updateDisableState, evt) {
         this.updateAccessLevel(permission, flag, evt);
-        updateDisableState(permission);
+        if (typeof updateDisableState === 'function') {
+            updateDisableState(permission);
+        }
     }
 }

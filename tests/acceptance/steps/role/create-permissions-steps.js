@@ -20,39 +20,39 @@ export default function (assert) {
     return steps(assert)
         .when('User sets action permission $resourceName to $allowed', async function (resourceName, allowed) {
             let select = document.querySelector(
-                `[data-permission-module="issue"] [data-module-resource="${resourceName}"] select`
+                `[data-role="permission-actions"] [data-module-resource="${resourceName}"] select`
             );
             assert.ok(select, `Action permission select for ${resourceName} exists`);
             await selectNativeOption(select, allowed);
             assert.strictEqual(select.value, allowed, `Action select value is ${allowed}`);
             assert.ok(true, `User sets action permission ${resourceName} to ${allowed}`);
         })
-        .when('User opens fields tab for issue module', async function () {
-            let $tab = $('[data-permission-module="issue"] a[href="#issue-fields"]');
-            assert.ok($tab.length, 'Issue fields tab link exists');
+        .when('User opens fields permissions tab', async function () {
+            let $tab = $('[data-role="permissions"] a[href="#role-permission-fields"]');
+            assert.ok($tab.length, 'Fields permissions tab link exists');
             await new Promise((resolve) => {
                 $tab.one('shown.bs.tab', () => resolve());
                 $tab.tab('show');
             });
             await settled();
             assert.ok(
-                document.querySelector('#issue-fields.active, #issue-fields.in.active'),
-                'Issue fields tab pane is active'
+                document.querySelector('#role-permission-fields.active, #role-permission-fields.in.active'),
+                'Fields permissions tab pane is active'
             );
-            assert.ok(true, 'User opens fields tab for issue module');
+            assert.ok(true, 'User opens fields permissions tab');
         })
         .when('User sets field $field access to $mode', async function (field, mode) {
             let select = document.querySelector(
-                `[data-permission-module="issue"] select[data-field-access-select="${field}"]`
+                `[data-role="permission-fields"] [data-permission-module="issue"] select[data-field-access-select="${field}"]`
             );
             assert.ok(select, `Field access select for ${field} exists`);
             await selectNativeOption(select, mode);
             assert.strictEqual(select.value, mode, `Field select value is ${mode}`);
             assert.ok(true, `User sets field ${field} access to ${mode}`);
         })
-        .when('User saves issue module permissions', async function () {
-            await click('[data-permission-module="issue"] [data-btn="save"]');
-            assert.ok(true, 'User saves issue module permissions');
+        .when('User saves role permissions', async function () {
+            await click('[data-role="permissions"] [data-btn="save"]');
+            assert.ok(true, 'User saves role permissions');
         })
         .then('Action permission $resourceName is created for role $roleId with allowed $allowed', function (resourceName, roleId, allowed) {
             let permission = server.schema.permissions.where({
@@ -103,7 +103,7 @@ export default function (assert) {
         })
         .then('Field $field access mode is $mode', function (field, mode) {
             let row = document.querySelector(
-                `[data-permission-module="issue"] tr[data-field-group="${field}"]`
+                `[data-role="permission-fields"] [data-permission-module="issue"] [data-field-group="${field}"]`
             );
             assert.ok(row, `Field row for ${field} exists`);
             assert.strictEqual(

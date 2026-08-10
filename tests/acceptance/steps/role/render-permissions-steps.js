@@ -23,27 +23,24 @@ export const given = function () {
 }
 
 export const when = function () {
-    return [
-        {
-            "User clicks on first module to check permissions": (assert) => async function () {
-                await click('[data-permission-module="issue"] a');
-                assert.ok(true, 'Issue module accordion opened');
-            }
-        }
-    ];
+    return [];
 }
 
 export const then = function () {
     return [
         {
-            "There are $permissionCount action permissions for that module": (assert) => async function (permissionCount) {
-                assert.dom('[data-permission-module="issue"] #issue-actions tbody tr').exists({ count: parseInt(permissionCount, 10) });
+            "There are $permissionCount action permissions for issue module": (assert) => async function (permissionCount) {
+                assert.dom('[data-role="permission-actions"] [data-permission-module="issue"] [data-module-resource]').exists({
+                    count: parseInt(permissionCount, 10)
+                });
             }
         },
         {
-            "There are $permissionCount field permissions for that module": (assert) => async function (permissionCount) {
-                await click('[data-permission-module="issue"] a[href="#issue-fields"]');
-                assert.dom('[data-permission-module="issue"] #issue-fields tbody tr').exists({ count: parseInt(permissionCount, 10) });
+            "There are $permissionCount field permissions for issue module": (assert) => async function (permissionCount) {
+                await click('[data-role="permissions"] a[href="#role-permission-fields"]');
+                assert.dom('[data-role="permission-fields"] [data-permission-module="issue"] [data-module-resource]').exists({
+                    count: parseInt(permissionCount, 10)
+                });
             }
         }
     ];
