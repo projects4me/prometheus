@@ -8,6 +8,7 @@ module('Integration | Component | role/card', function (hooks) {
 
     test('it renders', async function (assert) {
         let role = {
+            id: '1',
             name: "admin",
             description: "this is the admin role",
             dateCreated: "2016-09-21 01:15:32"
@@ -24,5 +25,6 @@ module('Integration | Component | role/card', function (hooks) {
         assert.dom('[data-role-field="name"]').hasText('admin');
         assert.dom('[data-role-field="description"] h5').hasText('this is the admin role');
         assert.dom('[data-role-field="dateCreated"]').hasText('21st Sep, 2016');
+        assert.dom('[data-btn="delete-role"]').doesNotExist();
     });
 });
