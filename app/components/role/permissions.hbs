@@ -109,7 +109,18 @@
 
   <div class="role-permissions__actions">
     <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{this.updatePermission}}>
-      {{t "global.form.save"}}
+      {{t "views.app.role.tabs.permission.save"}}
     </AppUi::Button>
+    {{#if @onDelete}}
+      <AppUi::Button
+        data-btn="delete-role"
+        type="button"
+        class="btn btn-primary"
+        @onClick={{@onDelete}}
+        @aclContext="role.delete"
+      >
+        {{t "views.app.role.tabs.permission.deleteRole"}}
+      </AppUi::Button>
+    {{/if}}
   </div>
 </div>

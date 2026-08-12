@@ -1,17 +1,6 @@
 <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12 role-details">
   <div class="role-details__toolbar">
     <AppUi::Button
-      data-btn="delete-role"
-      type="button"
-      class="btn btn-box-tool"
-      data-toggle="tooltip"
-      title={{t "global.form.delete"}}
-      @onClick={{fn this.deleteRole this.model}}
-      @aclContext="role.delete"
-    >
-      <i class="fa fa-trash"></i>
-    </AppUi::Button>
-    <AppUi::Button
       data-btn="close-role"
       type="button"
       class="btn btn-box-tool"
@@ -201,6 +190,7 @@
         @permissionsByModule={{this.permissions}}
         @permissionsState={{this.permissionsState}}
         @updatePermission={{this.updatePermission}}
+        @onDelete={{fn this.deleteRole this.model}}
       />
     </div>
   </div>
