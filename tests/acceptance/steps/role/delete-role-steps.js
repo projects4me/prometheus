@@ -16,7 +16,7 @@ export default function (assert) {
             let deleteBtn = document.querySelector(
                 '.role-details [data-btn="delete-role"]'
             );
-            assert.ok(deleteBtn, 'Delete button on role detail toolbar exists');
+            assert.ok(deleteBtn, 'Labeled Delete button on role detail exists');
             await click(deleteBtn);
 
             let confirmBtn = document.querySelector('[data-action="confirm"] a');

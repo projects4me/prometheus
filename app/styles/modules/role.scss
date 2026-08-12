@@ -133,18 +133,13 @@
       .btn-box-tool {
         padding: 0.35rem 0.6rem;
 
-        i.fa-times,
-        i.fa-trash {
+        i.fa-times {
           font-size: 1.6rem;
           color: #666;
         }
 
         &:hover i.fa-times {
           color: #333;
-        }
-
-        &:hover i.fa-trash {
-          color: #dd4b39;
         }
       }
     }
@@ -363,6 +358,10 @@
 
       .role-permissions__actions {
         margin-top: 1.25rem;
+
+        .btn + .btn {
+          margin-left: 0.5rem;
+        }
       }
     }
   }

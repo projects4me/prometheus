@@ -1728,6 +1728,8 @@
             "noActions": "No action permissions available",
             "noFields": "No field permissions available",
             "updated": "Permissions Updated",
+            "save": "Save Permissions",
+            "deleteRole": "Delete Role",
             "actionLabels": {
               "get": "Get",
               "create": "Create",

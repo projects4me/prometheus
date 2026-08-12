@@ -226,7 +226,7 @@ export default class AppRoleController extends PrometheusCreateController {
 
     /**
      * Delete a role after Messenger confirmation. Used from the role
-     * detail page toolbar (page controller extends this controller).
+     * detail page (page controller extends this controller).
      *
      * @method deleteRole
      * @param {Prometheus.Models.Role} role
