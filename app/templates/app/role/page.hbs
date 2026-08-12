@@ -54,7 +54,7 @@
       <div class="box-body no-padding">
         <ul class="users-list clearfix" data-role="user-userroles">
           {{#if this.userroles.length}}
-            {{#each this.userroles as |userrole|}}
+            {{#each this.previewUserroles as |userrole|}}
               <li data-role-userrole-id={{userrole.id}} class="member-item">
                 <AppUi::Button
                   data-btn="delete"
@@ -87,6 +87,19 @@
           {{/if}}
         </ul>
 
+        {{#if this.showViewAllMembers}}
+          <div class="box-footer text-center">
+            <a
+              href="javascript:void(0)"
+              class="uppercase"
+              data-btn="view-all-members"
+              {{on "click" this.showViewAllMembersDialog}}
+            >
+              {{t "views.app.role.tabs.user.viewallmembers"}}
+            </a>
+          </div>
+        {{/if}}
+
         {{#if this.addUserroleDialog}}
           {{#bootstrap-modal
             title="views.app.role.tabs.user.userrole.title"
@@ -112,6 +125,66 @@
               @aclContext="userrole.create"
             />
           </div>
+          {{/bootstrap-modal}}
+        {{/if}}
+
+        {{#if this.viewAllMembersDialog}}
+          {{#bootstrap-modal
+            title="views.app.role.tabs.user.viewallmembers"
+            closeLabel="global.form.close"
+            close=(action "removeViewAllMembersModal")
+          }}
+            <div class="role-members-view-all" data-role="role-members-view-all">
+              <div class="role-members-view-all__search">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                  </span>
+                  <Input
+                    data-field="search role members"
+                    @value={{this.membersSearchQuery}}
+                    name="membersQuery"
+                    class="form-control"
+                    autocomplete="off"
+                    placeholder={{t "views.app.role.tabs.user.search"}}
+                  />
+                </div>
+              </div>
+              <ul class="role-members-view-all__list" data-role="role-members-view-all-list">
+                {{#if this.filteredModalUserroles.length}}
+                  {{#each this.filteredModalUserroles as |userrole|}}
+                    <li
+                      data-role-userrole-id={{userrole.id}}
+                      class="role-members-view-all__item"
+                    >
+                      <img
+                        class="role-members-view-all__avatar"
+                        src="{{this.apiHost}}/userimage/get/{{userrole.user.id}}"
+                        alt="{{userrole.user.name}}"
+                      >
+                      <div class="role-members-view-all__info">
+                        <LinkTo
+                          @route="app.user.page"
+                          @model={{userrole.user.id}}
+                          class="role-members-view-all__name"
+                        >
+                          {{userrole.user.name}}
+                        </LinkTo>
+                        {{#if userrole.user.email}}
+                          <span class="role-members-view-all__email">
+                            {{userrole.user.email}}
+                          </span>
+                        {{/if}}
+                      </div>
+                    </li>
+                  {{/each}}
+                {{else}}
+                  <Exceptions::NothingFound
+                    @description={{t "views.app.role.tabs.user.noMembersMatch"}}
+                  />
+                {{/if}}
+              </ul>
+            </div>
           {{/bootstrap-modal}}
         {{/if}}
       </div>

@@ -39,6 +39,36 @@ export default class AppRolePageController extends AppRoleController {
     @tracked addUserroleDialog = false;
 
     /**
+     * Whether the View All role members modal is open.
+     *
+     * @property viewAllMembersDialog
+     * @type bool
+     * @for AppRolePageController
+     * @private
+     */
+    @tracked viewAllMembersDialog = false;
+
+    /**
+     * Client-side search query for filtering members in the View All modal.
+     *
+     * @property membersSearchQuery
+     * @type String
+     * @for AppRolePageController
+     * @private
+     */
+    @tracked membersSearchQuery = '';
+
+    /**
+     * Max members shown in the compact inline list before View All is offered.
+     *
+     * @property membersPreviewLimit
+     * @type Number
+     * @for AppRolePageController
+     * @private
+     */
+    membersPreviewLimit = 10;
+
+    /**
      * The app controller.
      *
      * @property appController
@@ -47,6 +77,52 @@ export default class AppRolePageController extends AppRoleController {
      * @private
      */
     @controller('app') appController;
+
+    /**
+     * First N userroles for the inline members preview.
+     *
+     * @property previewUserroles
+     * @return {Array}
+     */
+    @computed('userroles.[]', 'userroles.length', 'membersPreviewLimit')
+    get previewUserroles() {
+        let userroles = this.userroles || [];
+        return userroles.slice(0, this.membersPreviewLimit);
+    }
+
+    /**
+     * Whether membership exceeds the inline preview limit.
+     *
+     * @property showViewAllMembers
+     * @return {Boolean}
+     */
+    @computed('userroles.length', 'membersPreviewLimit')
+    get showViewAllMembers() {
+        return (this.userroles?.length || 0) > this.membersPreviewLimit;
+    }
+
+    /**
+     * Userroles listed in the View All modal, filtered by name/email search.
+     *
+     * @property filteredModalUserroles
+     * @return {Array}
+     */
+    @computed('userroles.[]', 'userroles.length', 'membersSearchQuery')
+    get filteredModalUserroles() {
+        let userroles = this.userroles || [];
+        let query = (this.membersSearchQuery || '').trim().toLowerCase();
+
+        if (!query) {
+            return userroles;
+        }
+
+        return userroles.filter((userrole) => {
+            let user = userrole.user;
+            let name = (user?.get?.('name') || user?.name || '').toLowerCase();
+            let email = (user?.get?.('email') || user?.email || '').toLowerCase();
+            return name.includes(query) || email.includes(query);
+        });
+    }
 
     /**
      * This object holds all of the information that we need to create our schema and also need to
@@ -469,6 +545,20 @@ export default class AppRolePageController extends AppRoleController {
     }
 
     /**
+     * Open the View All members modal with a cleared search field.
+     *
+     * @method showViewAllMembersDialog
+     * @protected
+     */
+    @action showViewAllMembersDialog(event) {
+        if (event && typeof event.preventDefault === 'function') {
+            event.preventDefault();
+        }
+        this.membersSearchQuery = '';
+        this.viewAllMembersDialog = true;
+    }
+
+    /**
      * Hide the add userrole modal.
      *
      * @method removeModal
@@ -477,6 +567,19 @@ export default class AppRolePageController extends AppRoleController {
     @action removeModal() {
         if (this.isDestroyed || this.isDestroying) return;
         this.addUserroleDialog = false;
+        $('.modal').modal('hide');
+    }
+
+    /**
+     * Hide the View All members modal and clear search.
+     *
+     * @method removeViewAllMembersModal
+     * @protected
+     */
+    @action removeViewAllMembersModal() {
+        if (this.isDestroyed || this.isDestroying) return;
+        this.viewAllMembersDialog = false;
+        this.membersSearchQuery = '';
         $('.modal').modal('hide');
     }
 
