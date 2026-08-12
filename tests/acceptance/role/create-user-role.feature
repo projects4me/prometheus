@@ -14,5 +14,6 @@ Feature: Role | assign userrole
     And User clicks on create userrole button
     And User selects option 1 of userrole user
     And User clicks on save button
-    Then There should 11 userroles exists
+    Then There should 10 userroles exists
+    And View All members control should be visible
     And Userrole is created for user

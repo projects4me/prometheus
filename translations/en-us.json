@@ -1741,6 +1741,8 @@
             "add": "Assign user to this role",
             "removeMember": "Remove role assignment",
             "noMembers": "No users assigned to this role",
+            "noMembersMatch": "No matching members found",
+            "viewallmembers": "View all members",
             "search": "Search User..",
             "name": "Name",
             "emailaddress": "Email Address",

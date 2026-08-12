@@ -5,6 +5,29 @@ import Settings from '../../../../mirage/helpers/acl-settings';
 export const given = function () {
     return [
         {
+            "There are $count userroles for role $roleId": (assert) => async function (count, roleId) {
+                let total = parseInt(count, 10);
+                let existingUsers = server.schema.users.all().models;
+                let needed = Math.max(total - existingUsers.length, 0);
+                if (needed > 0) {
+                    server.createList('user', needed);
+                }
+
+                let users = server.schema.users.all().models;
+                let userroles = server.createList('userrole', total);
+
+                userroles.forEach((userrole, index) => {
+                    let user = users[index % users.length];
+                    userrole.update({
+                        roleId: roleId,
+                        userId: user.id,
+                        user: user
+                    });
+                });
+                assert.ok(true, `${count} userroles given to role ${roleId}`);
+            }
+        },
+        {
             "There are catalog permissions for role $roleId": (assert) => async function (roleId) {
                 let moduleActions = JSON.parse(Settings.aclSettings.moduleActions);
                 moduleActions.forEach((moduleEntry) => {
