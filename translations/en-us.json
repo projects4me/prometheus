@@ -1752,7 +1752,9 @@
               "title": "Assign role to a user",
               "selectuser": "Select a user",
               "user": "User",
-              "created": "Role assigned to <strong>{user}</strong>"
+              "created": "Role assigned to <strong>{user}</strong>",
+              "missing": "User selection is required",
+              "noEligibleUsers": "All available users are already assigned to this role"
             },
             "createUserrole": "Assign Role",
             "confirmdelete": "Yes, remove role assignment for <strong>{user}</strong>"

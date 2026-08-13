@@ -96,23 +96,30 @@
             closeLabel="global.form.cancel"
             confirm=(action "addUserrole")
             close=(action "removeModal")
+            disableSaveBtn=(or this.isAddingUserroles (not this.usersList.length))
           }}
-          <div class="box-body">
-            <FormFields::FieldRelate
-              @searchEnabled={{true}}
-              @searchField="label"
-              @placeholder={{t "views.app.role.tabs.user.userrole.selectuser"}}
-              @label={{t "views.app.role.tabs.user.userrole.user"}}
-              @value={{this.newUserrole.userId}}
-              @data-field="userrole.user"
-              @options={{this.usersList}}
-              @onchange={{action "selectRelated" this.newUserrole 'userId'}}
-              @selected={{find-by "value" this.newUserrole.userId this.usersList}}
-              @relateType="relate-user"
-              @validate={{action this.validateField "userroleCreate" (hash name="userId" value=this.newUserrole.userId model=this.newUserrole)}}
-              @message={{this.message.userroleCreate.userId}}
-              @aclContext="userrole.create"
-            />
+          <div class="form-group" data-role="add-userrole-form">
+            {{#if this.usersList.length}}
+              <FormFields::FieldRelateMulti
+                @searchEnabled={{true}}
+                @searchField="label"
+                @placeholder={{t "views.app.role.tabs.user.userrole.selectuser"}}
+                @label={{t "views.app.role.tabs.user.userrole.user"}}
+                @data-field="userrole.user"
+                @options={{this.usersList}}
+                @selected={{this.selectedUsers}}
+                @onchange={{action "selectStatic" this 'selectedUsers'}}
+                @relateType="relate-user"
+                @closeOnSelect={{false}}
+                @aclContext="userrole.create"
+              />
+            {{else}}
+              <div data-role="add-userrole-empty">
+                <Exceptions::NothingFound
+                  @description={{t "views.app.role.tabs.user.userrole.noEligibleUsers"}}
+                />
+              </div>
+            {{/if}}
           </div>
           {{/bootstrap-modal}}
         {{/if}}
