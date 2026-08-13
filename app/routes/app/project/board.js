@@ -192,8 +192,8 @@ export default App.extend({
     },
 
     /**
-     * This function is used to setup the controller for this
-     * route
+     * Sets board model data on the controller and registers Hermes intents
+     * for this project's live board events.
      *
      * @method setupController
      * @param {Prometheus.Controllers.Board} controller the controller object for this route
@@ -206,10 +206,11 @@ export default App.extend({
         controller.set('savedSearches', model.savedSearches);
         controller.set('query', this.query);
         controller.set('selectedIssue', null);
+        controller.registerHermesIntents(this.trackedProject.getProjectId());
     },
 
     /**
-     * This function is triggered on route exit.
+     * On exit, dispose Hermes intents and clear board UI state.
      *
      * @method resetController
      * @param {Prometheus.Controllers.Board} controller The controller object for this route
@@ -218,6 +219,7 @@ export default App.extend({
      */
     resetController: function (controller, isExiting) {
         if (isExiting) {
+            controller.unregisterHermesIntents();
             controller.query = null;
             controller.searchId = null;
             controller.projectData = null;

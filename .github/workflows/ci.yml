@@ -19,7 +19,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: node_modules
-        key: npm-cache   
+        key: npm-cache
 
     - name: Install Node modules
       if: ${{ steps.cache.outputs.cache-hit != 'true' }}

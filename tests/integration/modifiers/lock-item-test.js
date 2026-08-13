@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Modifier | lock-item', function (hooks) {
@@ -19,5 +19,25 @@ module('Integration | Modifier | lock-item', function (hooks) {
 
         let el = document.querySelector('div.item');
         assert.equal(el.style.pointerEvents, "none");
+    });
+
+    test('restores parent pointer-events when overlay is removed', async function (assert) {
+        this.set('isLocked', true);
+
+        await render(hbs`
+            <div class="item">
+                {{#if this.isLocked}}
+                    <div class="overlay" {{lock-item}}></div>
+                {{/if}}
+            </div>
+        `);
+
+        let el = document.querySelector('div.item');
+        assert.equal(el.style.pointerEvents, "none", "parent is locked while overlay is present");
+
+        this.set('isLocked', false);
+        await settled();
+
+        assert.equal(el.style.pointerEvents, "", "parent pointer-events restored after overlay is removed");
     });
 });

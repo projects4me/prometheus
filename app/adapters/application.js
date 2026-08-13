@@ -38,6 +38,17 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
     @service session;
 
     /**
+     * Hermes client used to mark REST writes so this tab can drop its own
+     * domain:event echo.
+     *
+     * @property hermes
+     * @type Ember.Service
+     * @for Application
+     * @public
+     */
+    @service hermes;
+
+    /**
      * Last response meta
      * @type {Object}
      * @public
@@ -57,7 +68,8 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
     }
 
     /**
-     * This function is called when a new record is created. It is extended to add the adapter options to the request payload.
+     * Creates a record and notes the local write (before and after the XHR)
+     * so Hermes can drop this tab's domain:event echo.
      * 
      * @method createRecord
      * @param {*} store 
@@ -76,14 +88,18 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
                 ...snapshot.adapterOptions
             };
         }
-        return this.ajax(url, 'POST', { data });
+        this.noteLocalWrite(type.modelName, snapshot.id);
+        return this.ajax(url, 'POST', { data }).then((payload) => {
+            this.noteLocalWrite(type.modelName, snapshot.id || payload?.data?.id);
+            return payload;
+        });
     }    
 
     /**
-     * This function is called when an exisiting record is updated (PATCH). By default on PATCH call, ember data sends attributes
-     * to the server which are not even updated. We are overriding this function in order to just add updated attributes
-     * of a model to request payload.
+     * Updates a record with only changed attributes (PATCH). Notes the local
+     * write so Hermes can drop this tab's domain:event echo.
      * 
+     * @method updateRecord
      * @param {*} store 
      * @param {*} schema 
      * @param {*} snapshot 
@@ -110,7 +126,10 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
 
         if (moreUpdatedAttributes) {
             updatedAttributes = _.assign(updatedAttributes, moreUpdatedAttributes);
-        }        
+            data.data.attributes = updatedAttributes;
+        }
+
+        this.noteLocalWrite(type, id);
         return this.ajax(url, 'PATCH', { data: data });
     }
 
@@ -177,6 +196,36 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
         }
         
         return baseUrl;
+    }
+
+    /**
+     * Note the delete before the request so the live echo cannot beat the XHR.
+     *
+     * @method deleteRecord
+     * @param {Object} store Ember Data store
+     * @param {Object} type Model class / type info
+     * @param {Object} snapshot Record snapshot being deleted
+     * @returns {Promise}
+     * @public
+     */
+    deleteRecord(store, type, snapshot) {
+        this.noteLocalWrite(type.modelName, snapshot.id);
+        return super.deleteRecord(store, type, snapshot);
+    }
+
+    /**
+     * Record a REST write this tab originated so hermes can drop the echo.
+     *
+     * @method noteLocalWrite
+     * @param {String} type Ember Data model name
+     * @param {String} id Record id
+     * @returns {void}
+     * @private
+     */
+    noteLocalWrite(type, id) {
+        if (type && id) {
+            this.hermes?.noteLocalWrite(type, id);
+        }
     }
 
     /**

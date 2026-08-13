@@ -138,10 +138,23 @@ export default Route.extend({
      * @private
      */
     navigationGuard: inject(),
-    
+
+    /**
+     * Hermes Socket.IO client. Connected here when assets are already loaded
+     * (e.g. soft navigation back into app) so live intents stay active.
+     *
+     * @property hermes
+     * @type Ember.Service
+     * @for App
+     * @private
+     */
+    hermes: inject(),
+
     /**
      * This function is called by EmberJs before it retrieves the model. In this method
      * we're redirecting user to loading assets route if the intial data is not loaded.
+     * When assets are already loaded it also (re)connects Hermes and starts
+     * notification live sync.
      *
      * @method beforeModel
      * @public
@@ -157,6 +170,10 @@ export default Route.extend({
         }
 
         this.registerRouteEvent();
+        this.hermes.connect();
+        if (loadingAssetsController.get('dataLoaded')) {
+            this.notifications.startLiveSync();
+        }
     },
 
     /**
