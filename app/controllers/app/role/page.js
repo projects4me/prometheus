@@ -39,6 +39,26 @@ export default class AppRolePageController extends AppRoleController {
     @tracked addUserroleDialog = false;
 
     /**
+     * Users selected in the add-member multi-select picker.
+     *
+     * @property selectedUsers
+     * @type Array
+     * @for AppRolePageController
+     * @private
+     */
+    @tracked selectedUsers = [];
+
+    /**
+     * True while batch userrole assignments are being persisted.
+     *
+     * @property isAddingUserroles
+     * @type Boolean
+     * @for AppRolePageController
+     * @private
+     */
+    @tracked isAddingUserroles = false;
+
+    /**
      * Whether the View All role members modal is open.
      *
      * @property viewAllMembersDialog
@@ -84,6 +104,43 @@ export default class AppRolePageController extends AppRoleController {
      * @property previewUserroles
      * @return {Array}
      */
+    /**
+     * Users eligible for role assignment (excludes current members).
+     *
+     * @property usersList
+     * @return {Array}
+     */
+    @computed('userroles.[]', 'appController.usersList')
+    get usersList() {
+        let usersList = this.appController.usersList;
+        return _.differenceWith(usersList, this.currentMembers, _.isEqual);
+    }
+
+    /**
+     * Current role members formatted for relate field comparison.
+     *
+     * @property currentMembers
+     * @return {Array}
+     */
+    get currentMembers() {
+        let assignedUserIds = new Set(
+            (this.userroles || [])
+                .map((userrole) => {
+                    let userId = userrole.userId ?? userrole.get?.('userId');
+                    if (userId) {
+                        return String(userId);
+                    }
+
+                    let user = userrole.user;
+                    let resolvedUserId = user?.get?.('id') ?? user?.id;
+                    return resolvedUserId ? String(resolvedUserId) : null;
+                })
+                .filter(Boolean)
+        );
+
+        return this.appController.usersList.filter((user) => assignedUserIds.has(String(user.value)));
+    }
+
     @computed('userroles.[]', 'userroles.length', 'membersPreviewLimit')
     get previewUserroles() {
         let userroles = this.userroles || [];
@@ -567,6 +624,7 @@ export default class AppRolePageController extends AppRoleController {
     @action removeModal() {
         if (this.isDestroyed || this.isDestroying) return;
         this.addUserroleDialog = false;
+        this.selectedUsers = [];
         $('.modal').modal('hide');
     }
 
@@ -589,66 +647,84 @@ export default class AppRolePageController extends AppRoleController {
      * @method addUserrole
      * @protected
      */
-    @action addUserrole() {
+    @action async addUserrole() {
         Logger.debug('AppRolePageController:addUserrole()');
         let _self = this;
-        let newUserrole = _self.newUserrole;
-        return this.validate(newUserrole, 'userroleCreate')
-            .then(async (validation) => {
-                if (validation.isValid) {
-                    await this._addUserrole(this.newUserrole);
-                    _self.removeModal();
-                } else {
-                    let messages = _self._buildMessages(validation.errors, 'userrole');
+        let selectedUsers = _self.selectedUsers;
 
-                    new Messenger().post({
-                        message: messages,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            })
-            .finally(() => {
-                Logger.debug('-AppRolePageController:addUserrole()');
+        if (selectedUsers?.length > 0) {
+            await _self._addUserroles(selectedUsers);
+            _self.selectedUsers = [];
+        } else {
+            new Messenger().post({
+                message: _self.intl.t('views.app.role.tabs.user.userrole.missing'),
+                type: 'error',
+                showCloseButton: true
             });
+        }
+
+        _self.removeModal();
+        Logger.debug('-AppRolePageController:addUserrole()');
     }
 
     /**
-     * Create a new userrole assignment.
+     * Persist one or more userrole assignments.
      *
-     * @param {Prometheus.Models.Userrole} newUserrole
+     * @param {Array} selectedUsers
      */
-    async _addUserrole(newUserrole) {
+    async _addUserroles(selectedUsers) {
         let _self = this;
+        _self.isAddingUserroles = true;
 
         try {
-            const userrole = await newUserrole.save();
-            Logger.debug('A new userrole has been saved');
+            const results = await Promise.allSettled(
+                selectedUsers.map(async (selectedUser) => {
+                    let userrole = _self.store.createRecord('userrole', {
+                        roleId: _self.model.id,
+                        userId: selectedUser.value
+                    });
 
-            let user = _self.store.peekRecord('user', userrole.userId);
-            userrole.user = user;
-            _self.userroles.pushObject(userrole);
+                    try {
+                        let data = await userrole.save();
+                        Logger.debug('A new userrole has been saved');
 
-            new Messenger().post({
-                message: _self.intl.t('views.app.role.tabs.user.userrole.created', {
-                    user: user?.get('name')
-                }),
-                type: 'success',
-                showCloseButton: true
+                        let user = _self.store.peekRecord('user', data.userId);
+                        data.user = user;
+                        _self.userroles.pushObject(data);
+
+                        new Messenger().post({
+                            message: _self.intl.t('views.app.role.tabs.user.userrole.created', {
+                                user: user?.get('name')
+                            }),
+                            type: 'success',
+                            showCloseButton: true
+                        });
+                    } catch (error) {
+                        userrole.unloadRecord();
+                        throw error;
+                    }
+                })
+            );
+
+            results.forEach((result) => {
+                if (result.status === 'rejected') {
+                    let error = result.reason;
+
+                    if (error?.errors) {
+                        error.errors.forEach((message) => {
+                            new Messenger().post({
+                                message: message,
+                                type: 'error',
+                                showCloseButton: true
+                            });
+                        });
+                    } else {
+                        _self.errorManager.handleError(error);
+                    }
+                }
             });
-
-            _self.set('newUserrole', _self.store.createRecord('userrole', {
-                roleId: userrole.roleId,
-                userId: userrole.userId
-            }));
-        } catch (e) {
-            e.errors?.forEach((message) => {
-                new Messenger().post({
-                    message: message,
-                    type: 'error',
-                    showCloseButton: true
-                });
-            });
+        } finally {
+            _self.isAddingUserroles = false;
         }
     }
 }
