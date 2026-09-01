@@ -6,10 +6,13 @@ import PrometheusController from 'prometheus/controllers/prometheus';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as controller } from '@ember/controller';
+import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
+import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
 
 /**
- * This is the controller for the Gantt chart view
+ * Gantt chart controller, including Hermes live handlers for dates,
+ * dependencies, assignee, and issue-created events on the tracked project.
  *
  * @class AppProjectGanttController
  * @namespace Prometheus.Controllers
@@ -18,6 +21,77 @@ import { htmlSafe } from '@ember/template';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppProjectGanttController extends PrometheusController {
+
+	/**
+	 * Hermes socket client used to register gantt live events.
+	 *
+	 * @property hermes
+	 * @type Ember.Service
+	 * @for AppProjectGanttController
+	 * @private
+	 */
+	@service hermes;
+
+	/**
+	 * Reload prompt shown when a live event cannot be applied in place.
+	 *
+	 * @property liveReloadPrompt
+	 * @type Ember.Service
+	 * @for AppProjectGanttController
+	 * @private
+	 */
+	@service liveReloadPrompt;
+
+	/**
+	 * Disposer returned by hermes.register() for this screen.
+	 *
+	 * @property hermesDisposer
+	 * @type Function|null
+	 * @for AppProjectGanttController
+	 * @private
+	 */
+	hermesDisposer = null;
+
+	/**
+	 * Milestone rows currently drawn on the chart.
+	 *
+	 * @property milestones
+	 * @type Array
+	 * @for AppProjectGanttController
+	 * @public
+	 */
+	@tracked milestones = [];
+
+	/**
+	 * Timeline window start date (YYYY-MM-DD).
+	 *
+	 * @property timelineStart
+	 * @type String|null
+	 * @for AppProjectGanttController
+	 * @public
+	 */
+	@tracked timelineStart = null;
+
+	/**
+	 * Timeline window end date (YYYY-MM-DD).
+	 *
+	 * @property timelineEnd
+	 * @type String|null
+	 * @for AppProjectGanttController
+	 * @public
+	 */
+	@tracked timelineEnd = null;
+
+	/**
+	 * Incremented when live patches need the gantt to redraw.
+	 *
+	 * @property liveSyncRevision
+	 * @type Number
+	 * @for AppProjectGanttController
+	 * @public
+	 */
+	@tracked liveSyncRevision = 0;
+
 	/**
 	 * The project controller
 	 *
@@ -80,6 +154,196 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * @for AppProjectGanttController
 	 */
 	@tracked expandedMilestones = new Set();
+
+	/**
+	 * Registers the gantt's Hermes intents for the tracked project.
+	 *
+	 * @method registerHermesIntents
+	 * @param {String} projectId Tracked project id
+	 * @returns {void}
+	 * @public
+	 */
+	registerHermesIntents(projectId) {
+		this.unregisterHermesIntents();
+		if (!projectId) {
+			return;
+		}
+		this.hermesDisposer = this.hermes.register(this, projectId, {
+			'issue.dates.changed': this.handleIssueDatesChanged.bind(this),
+			'issue.dependency.created': this.handleIssueDependencyCreated.bind(this),
+			'issue.dependency.deleted': this.handleIssueDependencyDeleted.bind(this),
+			'issue.assignee.changed': this.handleIssueAssigneeChanged.bind(this),
+			'issue.created': this.handleIssueCreated.bind(this)
+		});
+	}
+
+	/**
+	 * Disposes the gantt's Hermes registration and clears the reload prompt.
+	 *
+	 * @method unregisterHermesIntents
+	 * @returns {void}
+	 * @public
+	 */
+	unregisterHermesIntents() {
+		this.hermesDisposer?.();
+		this.hermesDisposer = null;
+		this.liveReloadPrompt.clear(this);
+	}
+
+	/**
+	 * Finds an issue on the loaded milestones, then in the store.
+	 *
+	 * @method findIssueById
+	 * @param {String} issueId Issue id
+	 * @returns {Object|null}
+	 * @private
+	 */
+	findIssueById(issueId) {
+		for (let milestone of this.milestones || []) {
+			let issue = milestone.issues?.findBy('id', issueId);
+			if (issue) {
+				return issue;
+			}
+		}
+		return this.store.peekRecord('issue', issueId);
+	}
+
+	/**
+	 * Applies issue.dates.changed and redraws the chart.
+	 *
+	 * @method handleIssueDatesChanged
+	 * @param {Object} envelope V2 domain-event envelope
+	 * @returns {void}
+	 * @public
+	 */
+	handleIssueDatesChanged(envelope) {
+		let issue = this.findIssueById(envelope.resource.id);
+		if (!issue) {
+			return;
+		}
+		let changes = envelope.changes || {};
+		['startDate', 'endDate'].forEach((key) => {
+			if (key in changes && issue.get(key) !== changes[key]) {
+				issue.set(key, changes[key]);
+			}
+		});
+		this.refreshGantt();
+	}
+
+	/**
+	 * Applies issue.dependency.created onto the successor issue.
+	 *
+	 * @method handleIssueDependencyCreated
+	 * @param {Object} envelope V2 domain-event envelope
+	 * @returns {void}
+	 * @public
+	 */
+	handleIssueDependencyCreated(envelope) {
+		this.applyDependencyEvent(envelope, false);
+	}
+
+	/**
+	 * Applies issue.dependency.deleted onto the successor issue.
+	 *
+	 * @method handleIssueDependencyDeleted
+	 * @param {Object} envelope V2 domain-event envelope
+	 * @returns {void}
+	 * @public
+	 */
+	handleIssueDependencyDeleted(envelope) {
+		this.applyDependencyEvent(envelope, true);
+	}
+
+	/**
+	 * Patches parentId / parentissue from a dependency envelope and redraws.
+	 *
+	 * @method applyDependencyEvent
+	 * @param {Object} envelope V2 domain-event envelope
+	 * @param {Boolean} deleted True when the dependency was removed
+	 * @returns {void}
+	 * @private
+	 */
+	applyDependencyEvent(envelope, deleted) {
+		let changes = envelope.changes || {};
+		let issueId = changes.issueId
+			|| changes.successorId
+			|| envelope.meta?.successorIssueId
+			|| envelope.resource.id;
+		let issue = this.findIssueById(issueId);
+		if (!issue) {
+			return;
+		}
+		let parentId = deleted
+			? null
+			: changes.parentId
+				|| changes.predecessorId
+				|| envelope.meta?.parentIssueId
+				|| envelope.meta?.predecessorIssueId
+				|| null;
+		let parent = parentId ? this.findIssueById(parentId) : null;
+		if (issue.get('parentId') !== parentId) {
+			issue.set('parentId', parentId);
+		}
+		if (issue.get('parentissue') !== parent) {
+			issue.set('parentissue', parent);
+		}
+		this.refreshGantt();
+	}
+
+	/**
+	 * Applies issue.assignee.changed and redraws the chart.
+	 *
+	 * @method handleIssueAssigneeChanged
+	 * @param {Object} envelope V2 domain-event envelope
+	 * @returns {void}
+	 * @public
+	 */
+	handleIssueAssigneeChanged(envelope) {
+		let issue = this.findIssueById(envelope.resource.id);
+		applyIssueAssigneeChange(this.store, issue, envelope);
+		if (issue) {
+			this.refreshGantt();
+		}
+	}
+
+	/**
+	 * Prompts a reload when a new issue cannot be placed without a refresh.
+	 *
+	 * @method handleIssueCreated
+	 * @returns {void}
+	 * @public
+	 */
+	handleIssueCreated() {
+		this.liveReloadPrompt.show(this, () => this.router.refresh());
+	}
+
+	/**
+	 * Recalculates the timeline window and bumps liveSyncRevision so the
+	 * chart redraws.
+	 *
+	 * @method refreshGantt
+	 * @returns {void}
+	 * @private
+	 */
+	refreshGantt() {
+		let start = moment().startOf('day');
+		let end = moment().add(3, 'months').endOf('day');
+		(this.milestones || []).forEach((milestone) => {
+			[milestone].concat(milestone.issues?.toArray?.() || milestone.issues || [])
+				.forEach((item) => {
+					if (item.startDate && moment(item.startDate).isBefore(start)) {
+						start = moment(item.startDate);
+					}
+					if (item.endDate && moment(item.endDate).isAfter(end)) {
+						end = moment(item.endDate);
+					}
+				});
+		});
+		this.timelineStart = start.subtract(1, 'week').startOf('week').format('YYYY-MM-DD');
+		this.timelineEnd = end.add(2, 'weeks').endOf('week').format('YYYY-MM-DD');
+		this.liveSyncRevision++;
+		this.milestones = [...this.milestones];
+	}
 
 	/**
 	 * Auto-expand the first milestone (latest/top one) if no milestones are expanded

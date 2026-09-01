@@ -7,10 +7,11 @@ import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
-import ENV from 'prometheus/config/environment';
+import { peekOrPush, pushIfMissing } from 'prometheus/utils/live/collection';
 
 /**
- * Service for managing user notifications
+ * Service for managing user notifications, including Hermes live sync for
+ * `notification.created` scoped to `user:<currentUser.id>`.
  *
  * @class NotificationsService
  * @extends Service
@@ -47,6 +48,13 @@ export default class NotificationsService extends Service {
 	@service intl;
 
 	/**
+	 * Hermes service for V2 intent-based live events.
+	 * @type {Service}
+	 * @public
+	 */
+	@service hermes;
+
+	/**
 	 * Array of user notifications
 	 * @type {Array}
 	 * @public
@@ -68,19 +76,18 @@ export default class NotificationsService extends Service {
 	@tracked pageSize = 15;
 
 	/**
-	 * Timer ID for the notification polling interval
-	 * @type {Number}
+	 * Whether the V2 intent registration is active.
+	 * @type {Boolean}
 	 * @private
 	 */
-	_pollingTimerId = null;
+	_liveStarted = false;
 
 	/**
-	 * Default interval for polling unread notifications (in milliseconds)
-	 * @type {Number}
+	 * Disposer returned by hermes.register(); call to unsubscribe.
+	 * @type {Function|null}
+	 * @private
 	 */
-	get pollingInterval() {
-		return ENV.app.notifications?.pollingInterval || 30000; // fallback to 30 seconds if not configured
-	}
+	_hermesDisposer = null;
 
 	/**
 	 * Constructor - initializes the BroadcastChannel for cross-tab sync
@@ -386,75 +393,113 @@ export default class NotificationsService extends Service {
 	}
 
 	/**
-	 * Starts polling for new unread notifications at regular intervals
+	 * Registers a V2 Hermes intent for `notification.created` scoped to the
+	 * current user. The scope key `user:<userId>` is placed in the projectId
+	 * field so that the existing room convention routes only to this socket.
 	 *
-	 * @method startNotificationPolling
-	 * @param {Number} interval Polling interval in milliseconds (defaults to this.pollingInterval)
+	 * @method startLiveSync
 	 * @public
 	 */
 	@action
-	startNotificationPolling(interval = this.pollingInterval) {
-		// Clear any existing timer first to prevent duplicates
-		this.stopNotificationPolling();
-
-		// Set up a new polling interval
-		this._pollingTimerId = setInterval(() => {
-			this.pollUnreadNotifications();
-		}, interval);
-	}
-
-	/**
-	 * Stops polling for new notifications
-	 *
-	 * @method stopNotificationPolling
-	 * @public
-	 */
-	@action
-	stopNotificationPolling() {
-		if (this._pollingTimerId !== null) {
-			clearInterval(this._pollingTimerId);
-			this._pollingTimerId = null;
-		}
-	}
-
-	/**
-	 * Polls for unread notifications and merges them with existing ones
-	 * This is called at regular intervals when polling is active
-	 *
-	 * @method pollUnreadNotifications
-	 * @public
-	 * @async
-	 */
-	@action
-	async pollUnreadNotifications() {
-		if (!this.currentUser.user) {
+	startLiveSync() {
+		if (this._liveStarted) {
 			return;
 		}
 
-		try {
-			// Load only unread notifications
-			const result = await this.loadUnreadNotifications();
-			const unreadNotifications = result.notifications;
+		let userId = this.currentUser.user?.id;
+		if (!userId) {
+			return;
+		}
 
-			if (unreadNotifications.length > 0) {
-				// Update unread count from meta
-				this.unreadCount = result.meta.unreadCount;
-
-				// Add unique notifications to the list
-				const uniqueNotifications =
-					this.deduplicateNotifications(unreadNotifications);
-
-				if (uniqueNotifications.length > 0) {
-					this.notifications = [
-						...uniqueNotifications,
-						...this.notifications
-					];
-					this.sortNotificationsByDate();
+		this._hermesDisposer = this.hermes.register(
+			this,
+			'user:' + userId,
+			{
+				'notification.created': (envelope) => {
+					this.onNotificationCreated(envelope);
 				}
 			}
-		} catch (error) {
-			console.error('Error polling for unread notifications:', error);
+		);
+		this._liveStarted = true;
+	}
+
+	/**
+	 * Disposes the V2 intent registration.
+	 *
+	 * @method stopLiveSync
+	 * @public
+	 */
+	@action
+	stopLiveSync() {
+		if (this._hermesDisposer) {
+			this._hermesDisposer();
+			this._hermesDisposer = null;
 		}
+		this._liveStarted = false;
+	}
+
+	/**
+	 * Handles an incoming V2 `notification.created` domain event from Hermes.
+	 * Maps the V2 envelope fields to the existing prepend/unread logic.
+	 *
+	 * Envelope shape:
+	 *   { schemaVersion, eventId, eventName, projectId, resource: { type, id },
+	 *     changes, meta: { recipientId, recipientUserId, actorName }, actorId }
+	 *
+	 * @method onNotificationCreated
+	 * @param {Object} envelope
+	 * @public
+	 */
+	onNotificationCreated(envelope) {
+		if (!envelope || !envelope.resource?.id) {
+			return;
+		}
+
+		let notificationId = envelope.resource.id;
+
+		if (this.notifications.find((existing) => existing.id === notificationId)) {
+			return;
+		}
+
+		// backend stores context as a JSON string; REST loads parse it via @attr('json'),
+		// but live peekOrPush bypasses the serializer — normalize here so TagParser
+		// can resolve {{User@}} / {{Issue@}} from userName / issueNumber.
+		let changes = Object.assign({}, envelope.changes || {});
+		if (typeof changes.context === 'string') {
+			try {
+				changes.context = JSON.parse(changes.context);
+			} catch (e) {
+				// leave as-is if malformed
+			}
+		}
+
+		let notification = peekOrPush(
+			this.store,
+			'systemnotification',
+			notificationId,
+			changes
+		);
+		if (!notification) {
+			return;
+		}
+
+		let recipientId = envelope.meta?.recipientId;
+		if (recipientId) {
+			let recipient = peekOrPush(
+				this.store,
+				'systemnotificationrecipient',
+				recipientId,
+				{
+					systemNotificationId: notificationId,
+					userId: this.currentUser.user?.id,
+					isRead: '0'
+				}
+			);
+			pushIfMissing(notification.recipientRecords, recipient);
+		}
+
+		this.notifications = [notification, ...this.notifications];
+		this.unreadCount = this.unreadCount + 1;
 	}
 
 	/**
@@ -506,7 +551,7 @@ export default class NotificationsService extends Service {
 	}
 
 	/**
-	 * Cleans up the BroadcastChannel and polling timer when the service is destroyed
+	 * Cleans up the BroadcastChannel and live listener when the service is destroyed
 	 *
 	 * @method willDestroy
 	 * @public
@@ -514,6 +559,6 @@ export default class NotificationsService extends Service {
 	willDestroy() {
 		super.willDestroy(...arguments);
 		this._broadcastChannel?.close();
-		this.stopNotificationPolling();
+		this.stopLiveSync();
 	}
 }

@@ -89,6 +89,16 @@ export default class AppLoadingAssetsRoute extends Route {
     @service notifications;
 
     /**
+     * Hermes socket service.
+     *
+     * @property hermes
+     * @type Ember.Service
+     * @for AppLoadingAssetsRoute
+     * @protected
+     */
+    @service hermes;
+
+    /**
      * This method is called by ember when we enter this route and returns
      * resolved promises to the setupController function. In this method we're
      * fetching loggedin user model by using currentUser service. We'll fetch
@@ -122,23 +132,12 @@ export default class AppLoadingAssetsRoute extends Route {
     }
 
     /**
-     * After model hook to start notification polling.
-     * 
-     * @method afterModel
-     * @param {Object} model
-     * @protected
-     */
-    afterModel() {
-        // this.notifications.startNotificationPolling();
-        return super.afterModel(...arguments);
-    }
-
-    /**
-     * This function is used to set property to controller. We are setting dataLoaded
-     * property to true and after that transitioning user to app route.
+     * Sets dataLoaded on the controller, opens the Hermes session socket,
+     * starts notification live sync, then transitions into the app route.
      *
      * @method setupController
      * @param {Prometheus.Controllers.LoadingAssets} controller
+     * @param {Object} model Resolved loading-assets model
      * @protected
      */
     setupController(controller, model) {
@@ -148,6 +147,9 @@ export default class AppLoadingAssetsRoute extends Route {
         controller.set('users', model.users);
         controller.set('roles', model.roles);
         controller.set('projects', model.projects);
+
+        this.hermes.connect();
+        this.notifications.startLiveSync();
 
         let url = getCurrentUrl(this.router);
 

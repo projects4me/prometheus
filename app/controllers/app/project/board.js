@@ -6,17 +6,52 @@ import PrometheusCreateController from "prometheus/controllers/prometheus/create
 import { computed, action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import {inject as controller } from '@ember/controller';
+import { inject as service } from '@ember/service';
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
+import { peekOrPush } from 'prometheus/utils/live/collection';
+import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
 
 /**
- * This is the controller for the board controller
+ * Board controller: kanban columns plus Hermes live handlers for status,
+ * assignee, milestone, and issue-created events on the tracked project.
  *
  * @class AppProjectBoardController
  * @namespace Prometheus.Controllers
  * @module App.Project
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
- */export default class AppProjectBoardController extends PrometheusCreateController.extend(ProjectRelated) {
+ */
+export default class AppProjectBoardController extends PrometheusCreateController.extend(ProjectRelated) {
+
+    /**
+     * Hermes socket client used to register board live events.
+     *
+     * @property hermes
+     * @type Ember.Service
+     * @for AppProjectBoardController
+     * @private
+     */
+    @service hermes;
+
+    /**
+     * Reload prompt shown when a live event cannot be applied in place.
+     *
+     * @property liveReloadPrompt
+     * @type Ember.Service
+     * @for AppProjectBoardController
+     * @private
+     */
+    @service liveReloadPrompt;
+
+    /**
+     * Disposer returned by hermes.register() for this screen.
+     *
+     * @property hermesDisposer
+     * @type Function|null
+     * @for AppProjectBoardController
+     * @private
+     */
+    hermesDisposer = null;
 
     /**
      * This object holds all of the information that we need to create our schema and also need to 
@@ -386,10 +421,25 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
         let issueMilestoneId = issueEl.getAttribute('data-field-issue-milestone');
 
         (issueMilestoneId == "") && (issueMilestoneId = null);
-        let milestone = this.milestones.findBy('id', issueMilestoneId);
-        let issue = milestone.issues.findBy('id', issueId);
-        let targetMilestone = this.milestones.findBy('id', laneMilestoneId);
-        targetMilestone.issues.pushObject(issue);
+        (laneMilestoneId == "" || laneMilestoneId === "backlog") && (laneMilestoneId = null);
+
+        let milestone = this.findMilestoneById(issueMilestoneId);
+        let issue = milestone?.issues?.findBy('id', issueId)
+            || this.findIssueAcrossMilestones(issueId)
+            || this.store.peekRecord('issue', issueId);
+        let targetMilestone = this.findMilestoneById(laneMilestoneId);
+
+        if (!issue || !targetMilestone) {
+            Logger.error('AppProjectBoardController::updateIssue - missing issue or target milestone');
+            return;
+        }
+
+        if (milestone && milestone !== targetMilestone) {
+            milestone.issues.removeObject(issue);
+        }
+        if (!targetMilestone.issues.includes(issue)) {
+            targetMilestone.issues.pushObject(issue);
+        }
 
         issue.set('status', status);
         issue.set('milestoneId', laneMilestoneId);
@@ -398,6 +448,228 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
             _self.postUpdateProcessing(issueId, elTo, elFrom);
         });
         Logger.debug("-AppProjectBoardController::updateIssue");
+    }
+
+    /**
+     * Resolves a milestone from the board list. Empty / null / "backlog" maps to the backlog tab.
+     *
+     * @method findMilestoneById
+     * @param {String|null} milestoneId
+     * @returns {Object|null}
+     * @private
+     */
+    findMilestoneById(milestoneId) {
+        if (milestoneId == null || milestoneId === '' || milestoneId === 'backlog') {
+            return this.milestones.findBy('milestoneType', 'backlog')
+                || this.milestones.findBy('id', null);
+        }
+        return this.milestones.findBy('id', milestoneId);
+    }
+
+    /**
+     * Finds an issue across all milestone issue lists on the board.
+     *
+     * @method findIssueAcrossMilestones
+     * @param {String} issueId
+     * @returns {Object|null}
+     * @private
+     */
+    findIssueAcrossMilestones(issueId) {
+        for (let milestone of this.milestones || []) {
+            let issue = milestone.issues?.findBy('id', issueId);
+            if (issue) {
+                return issue;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Registers the board's Hermes intents for the tracked project.
+     *
+     * @method registerHermesIntents
+     * @param {String} projectId Tracked project id
+     * @returns {void}
+     * @public
+     */
+    registerHermesIntents(projectId) {
+        this.unregisterHermesIntents();
+        if (!projectId) {
+            return;
+        }
+        this.hermesDisposer = this.hermes.register(this, projectId, {
+            'issue.status.changed': this.handleIssueStatusChanged.bind(this),
+            'issue.assignee.changed': this.handleIssueAssigneeChanged.bind(this),
+            'milestone.created': this.handleMilestoneCreated.bind(this),
+            'milestone.completed': this.handleMilestoneCompleted.bind(this),
+            'issue.created': this.handleIssueCreated.bind(this)
+        });
+    }
+
+    /**
+     * Disposes the board's Hermes registration and clears the reload prompt.
+     *
+     * @method unregisterHermesIntents
+     * @returns {void}
+     * @public
+     */
+    unregisterHermesIntents() {
+        this.hermesDisposer?.();
+        this.hermesDisposer = null;
+        this.liveReloadPrompt.clear(this);
+    }
+
+    /**
+     * Applies issue.status.changed onto the matching board issue.
+     *
+     * @method handleIssueStatusChanged
+     * @param {Object} envelope V2 domain-event envelope
+     * @returns {void}
+     * @public
+     */
+    handleIssueStatusChanged(envelope) {
+        let issue = this.findIssueAcrossMilestones(envelope.resource.id)
+            || this.store.peekRecord('issue', envelope.resource.id);
+        if (!issue) {
+            return;
+        }
+        let changes = envelope.changes || {};
+        ['status', 'statusId', 'milestoneId'].forEach((key) => {
+            if (key in changes && issue.get(key) !== changes[key]) {
+                issue.set(key, changes[key]);
+            }
+        });
+        this.applyRemoteIssueLaneMove(envelope);
+    }
+
+    /**
+     * Applies issue.assignee.changed onto the matching board issue.
+     *
+     * @method handleIssueAssigneeChanged
+     * @param {Object} envelope V2 domain-event envelope
+     * @returns {void}
+     * @public
+     */
+    handleIssueAssigneeChanged(envelope) {
+        let issue = this.findIssueAcrossMilestones(envelope.resource.id)
+            || this.store.peekRecord('issue', envelope.resource.id);
+        applyIssueAssigneeChange(this.store, issue, envelope);
+    }
+
+    /**
+     * Inserts a newly created milestone ahead of the backlog lane.
+     *
+     * @method handleMilestoneCreated
+     * @param {Object} envelope V2 domain-event envelope
+     * @returns {void}
+     * @public
+     */
+    handleMilestoneCreated(envelope) {
+        let milestone = peekOrPush(
+            this.store,
+            'milestone',
+            envelope.resource.id,
+            envelope.changes
+        );
+        if (!milestone || this.milestones?.findBy('id', milestone.id)) {
+            return;
+        }
+        let backlog = this.milestones.findBy('milestoneType', 'backlog');
+        let index = backlog ? this.milestones.indexOf(backlog) : this.milestones.length;
+        this.milestones.insertAt(index, milestone);
+    }
+
+    /**
+     * Removes a completed milestone from the board.
+     *
+     * @method handleMilestoneCompleted
+     * @param {Object} envelope V2 domain-event envelope
+     * @returns {void}
+     * @public
+     */
+    handleMilestoneCompleted(envelope) {
+        let milestone = this.milestones?.findBy('id', envelope.resource.id);
+        if (milestone) {
+            this.milestones.removeObject(milestone);
+        }
+    }
+
+    /**
+     * Prompts a reload when a new issue cannot be placed without a refresh.
+     *
+     * @method handleIssueCreated
+     * @returns {void}
+     * @public
+     */
+    handleIssueCreated() {
+        this.liveReloadPrompt.show(this, () => this.router.refresh());
+    }
+
+    /**
+     * Removes an issue from every milestone issue list on the board.
+     *
+     * @method removeIssueFromBoard
+     * @param {String} issueId
+     * @private
+     */
+    removeIssueFromBoard(issueId) {
+        for (let milestone of this.milestones || []) {
+            let issue = milestone.issues?.findBy('id', issueId);
+            if (issue) {
+                milestone.issues.removeObject(issue);
+            }
+        }
+    }
+
+    /**
+     * Moves a remotely updated issue between milestone lanes and shows a toast.
+     *
+     * @method applyRemoteIssueLaneMove
+     * @param {Object} payload
+     * @public
+     */
+    applyRemoteIssueLaneMove(payload) {
+        let issueId = payload.resource?.id || payload.id;
+        let issue = this.findIssueAcrossMilestones(issueId)
+            || this.store.peekRecord('issue', issueId);
+
+        if (!issue) {
+            Logger.warn('AppProjectBoardController::applyRemoteIssueLaneMove - issue not on board', payload);
+            return;
+        }
+
+        let milestoneId = issue.get('milestoneId');
+        (milestoneId == "" || milestoneId === "backlog") && (milestoneId = null);
+
+        let targetMilestone = this.findMilestoneById(milestoneId);
+        if (!targetMilestone) {
+            Logger.warn('AppProjectBoardController::applyRemoteIssueLaneMove - missing target milestone', payload);
+            return;
+        }
+
+        for (let milestone of this.milestones || []) {
+            if (milestone !== targetMilestone && milestone.issues?.includes(issue)) {
+                milestone.issues.removeObject(issue);
+            }
+        }
+        if (!targetMilestone.issues.includes(issue)) {
+            targetMilestone.issues.pushObject(issue);
+        }
+
+        if (payload.actorId && payload.actorId === this.currentUser.user?.id) {
+            return;
+        }
+
+        let issueNumber = payload.meta?.issueNumber || issue.get('issueNumber');
+        let actorName = payload.meta?.actorName || 'Someone';
+        let status = this.intl.t(`views.app.issue.lists.status.${issue.get('status')}`);
+
+        new Messenger().post({
+            message: `<strong>#${issueNumber}</strong> moved to <strong>${status}</strong> by ${actorName}`,
+            type: 'info',
+            showCloseButton: true,
+            hideAfter: 3
+        });
     }
 
     /**
@@ -419,8 +691,6 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
         let milestoneEls = [];
         let milestoneEl1 = elTo.closest('div.milestone.box-body');
         let milestoneEl2 = elFrom.closest('div.milestone.box-body');
-        let item = document.querySelector(`[data-field-issue-id="${issueId}"]`);
-        item.style.pointerEvents = "auto";
         (milestoneEl1 !== milestoneEl2) && (milestoneEls.pushObject(milestoneEl1));
         milestoneEls.pushObject(milestoneEl2);
         Logger.debug("-AppProjectBoardController::postUpdateProcessing");
@@ -654,16 +924,15 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
     }
 
     /**
-     * This action is used to enable the pointer events of an issue after the assignee is updated.
+     * Callback invoked after an assignee update from the issue details panel.
+     * Pointer-events cleanup is handled by the lock-item modifier.
      *
      * @method postUpdateAssignee
-     * @param {Object} issue The issue to enable the pointer events for
+     * @param {Object} issue The issue that was updated
      * @public
      */
     @action postUpdateAssignee(issue) {
-        Logger.debug("AppProjectBoardController::postUpdateAssignee");
-        let issueEl = document.querySelector(`[data-field-issue-id="${issue.id}"]`);
-        issueEl.style.setProperty('pointer-events', 'auto');
+        Logger.debug("AppProjectBoardController::postUpdateAssignee", issue?.id);
         Logger.debug("-AppProjectBoardController::postUpdateAssignee");
     }
 

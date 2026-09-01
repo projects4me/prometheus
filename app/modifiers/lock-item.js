@@ -19,7 +19,29 @@ import Modifier from 'ember-modifier';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class LockItemModifier extends Modifier {
+    /**
+     * Disable pointer events on the parent card while the save overlay is shown.
+     * Stores the previous value so willRemove can restore it.
+     *
+     * @method didInstall
+     * @public
+     */
     didInstall() {
-        this.element.parentElement.style.pointerEvents = "none";
+        this.parent = this.element.parentElement;
+        this.previousPointerEvents = this.parent.style.pointerEvents;
+        this.parent.style.pointerEvents = "none";
+    }
+
+    /**
+     * Restore the parent's pointer-events when the overlay is removed so the
+     * issue card remains interactive after save completes.
+     *
+     * @method willRemove
+     * @public
+     */
+    willRemove() {
+        if (this.parent) {
+            this.parent.style.pointerEvents = this.previousPointerEvents || "";
+        }
     }
 }

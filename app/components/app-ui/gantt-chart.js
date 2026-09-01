@@ -86,6 +86,19 @@ export default class GanttChartComponent extends AppComponent {
 	@tracked barRegistryVersion = 0;
 
 	/**
+	 * Combined bar + live-sync stamp used to redraw dependency lines after a
+	 * remote patch bumps `@liveSyncRevision` without a local drag.
+	 *
+	 * @property dependencyRegistryVersion
+	 * @type String
+	 * @for GanttChartComponent
+	 * @private
+	 */
+	get dependencyRegistryVersion() {
+		return `${this.barRegistryVersion}-${this.args.liveSyncRevision || 0}`;
+	}
+
+	/**
 	 * Tracks the element of the scrollable timeline body for coordinate mapping
 	 *
 	 * @property timelineBodyElement
@@ -596,7 +609,9 @@ export default class GanttChartComponent extends AppComponent {
 	}	
 
 	/**
-	 * Flatten all milestone issues into a single array for convenience
+	 * Flatten all milestone issues into a single array for convenience.
+	 * Reads `@liveSyncRevision` so Glimmer invalidates this getter (and
+	 * dependents like `dependencies`) when a Hermes live patch lands.
 	 *
 	 * @property allIssues
 	 * @type Array
@@ -604,6 +619,7 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	get allIssues() {
+		void this.args.liveSyncRevision;
 		let issues = [];
 		(this.args.milestones || []).forEach((milestone) => {
 			if (milestone?.issues) {

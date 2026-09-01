@@ -40,16 +40,6 @@ export default class AppController extends PrometheusController {
     @tracked users = {};
 
     /**
-     * These are the chatrooms of users in the system
-     *
-     * @property chatrooms
-     * @type Prometheus.Model.User
-     * @for App
-     * @public
-     */
-    @tracked chatrooms = [];
-
-    /**
      * This service holds current authenticated user permissions on different resources of
      * the application.
      *
@@ -58,6 +48,24 @@ export default class AppController extends PrometheusController {
      * @for AppController
      */
     @service acl;
+
+    /**
+     * Hermes socket client.
+     *
+     * @property hermes
+     * @type Ember.Service
+     * @for AppController
+     */
+    @service hermes;
+
+    /**
+     * In-app notifications (live via Hermes intents).
+     *
+     * @property notifications
+     * @type Ember.Service
+     * @for AppController
+     */
+    @service notifications;
 
 
     /**
@@ -99,13 +107,16 @@ export default class AppController extends PrometheusController {
     }
 
     /**
-     * This function invalidates the session which effectively logs the user out
-     * of the application
+     * Logs the user out: stops notification live sync, clears Hermes
+     * registrations, disconnects the socket, then invalidates the session.
      *
      * @method invalidateSession
      * @public
      */
     @action invalidateSession() {
+        this.notifications.stopLiveSync();
+        this.hermes.clearRegistrations();
+        this.hermes.disconnect();
         this.session.invalidate();
     }
 
@@ -137,53 +148,6 @@ export default class AppController extends PrometheusController {
         _self.transitionToRoute('app.project', selected.project.get('shortCode'));
         _self.transitionToRoute('app.project.issue.page', selected.number);
         Logger.debug('-Prometheus.Controllers.App::itemSearched');
-    }
-
-    /**
-     * This function is used to start a private chat with another user
-     *
-     * @method startChat
-     * @param Prometheus.Models.User user
-     */
-    @action startChat(user) {
-        Logger.debug('Prometheus.Controllers.App::startChat');
-        let _self = this;
-        Logger.debug(user);
-        Logger.debug(_self);
-
-        let options = {
-            query: '((Chatroom.type : private) AND (((ownedby.id : ' + _self.get('currentUser.user.id') + ') AND (conversers.id : ' + user.id + ')) OR ((ownedby.id : ' + user.id + ') AND (conversers.id : ' + _self.get('currentUser.user.id') + '))))'
-        };
-
-        _self.get('store').query('chatroom', options).then(function (data) {
-            Logger.debug(data);
-            let chatrooms = _self.get('chatrooms');
-            Logger.debug(chatrooms);
-            if (chatrooms === undefined) {
-                Logger.debug('Initing chatrooms');
-                _self.set('chatrooms', data);
-            } else {
-                Logger.debug('Adding room');
-                chatrooms.pushObject(data.get('firstObject'));
-                _self.set('chatrooms', chatrooms);
-            }
-        });
-        // If no chatroom was found then create one
-
-        Logger.debug(options);
-        Logger.debug('-Prometheus.Controllers.App::startChat');
-    }
-
-    /**
-     * This function is called when a new message arrives for a user
-     *
-     * @method newMessage
-     * @param message
-     */
-    @action newMessage(message) {
-        Logger.debug('Prometheus.Controllers.App::newMessage');
-        Logger.debug(message);
-        Logger.debug('-Prometheus.Controllers.App::newMessage');
     }
 
     /**

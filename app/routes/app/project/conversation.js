@@ -81,6 +81,7 @@ export default App.extend({
     async model(params) {
         Logger.debug('AppProjectConversationRoute::model');
         let _self = this;
+        this.now = DateUtils.getNow();
         let projectId = this.trackedProject.getProjectId();
         let conversations = [];
         if(params.query || params.range) {
@@ -108,7 +109,8 @@ export default App.extend({
     },
 
     /**
-     * This controller is used to load the conversations that we have in the system
+     * Loads conversations onto the controller and registers Hermes intents
+     * for this project's live conversation events.
      *
      * @method setupController
      * @param {Prometheus.Controller.Conversation} controller the controller object for this route
@@ -132,6 +134,7 @@ export default App.extend({
         controller.setHasMoreFlag();
         controller.set('now', this.now);
         controller.restoreStateFromQueryParams?.();
+        controller.registerHermesIntents(this.trackedProject.getProjectId());
     },
     /**
      * This function is used to fetch all conversations for the project.
@@ -179,7 +182,7 @@ export default App.extend({
         return await controller.fetchFilteredConversations(_conversationOptions);
     },
     /**
-     * This function is called when the route is exited.
+     * On exit, dispose Hermes intents and clear the selected conversation.
      *
      * @method resetController
      * @param {Prometheus.Controller.Conversation} controller The controller object for this route
@@ -188,6 +191,7 @@ export default App.extend({
      */
     resetController: function (controller, isExiting) {
         if (isExiting) {
+            controller.unregisterHermesIntents();
             controller.selectedConversation = null;
         }
     }

@@ -3,6 +3,7 @@ import { skip } from 'qunit';
 import { setupApplicationTest, setupRenderingTest, setupTest } from 'ember-qunit';
 import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
 import { setupWindowMock } from 'ember-window-mock/test-support';
+import { installFakeHermes } from './hermes-fake';
 
 // this logic could be anything, but in this case...
 // if @ignore, then return skip (for backwards compatibility)
@@ -67,6 +68,10 @@ function setupYaddaTest(annotations) {
         setupApplicationTest(hooks);
         setupMirage(hooks);
         setupWindowMock(hooks);
+        // @setupHermesFake — FakeSocket so live features never open real io()
+        if (annotations.setuphermesfake) {
+          installFakeHermes(hooks);
+        }
     };
   }
   if (annotations.setuprenderingtest) {

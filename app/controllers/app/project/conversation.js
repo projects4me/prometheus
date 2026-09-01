@@ -12,9 +12,11 @@ import { tracked } from '@glimmer/tracking';
 import DateUtils from 'prometheus/utils/date';
 import { task, timeout } from 'ember-concurrency';
 import format from 'prometheus/utils/data/format';
+import { peekOrPush, pushIfMissing, removeById } from 'prometheus/utils/live/collection';
 
 /**
- * This is the controller for the conversation controller route
+ * Conversation rooms controller, including Hermes live handlers for comments,
+ * votes, and conversation-created events on the tracked project.
  *
  * @class AppProjectConversationController
  * @namespace Prometheus.Controllers
@@ -166,6 +168,36 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @private
      */
     @service pubSub;
+
+    /**
+     * Hermes socket client used to register conversation live events.
+     *
+     * @property hermes
+     * @type Ember.Service
+     * @for Conversation
+     * @private
+     */
+    @service hermes;
+
+    /**
+     * Reload prompt shown when a live event cannot be applied in place.
+     *
+     * @property liveReloadPrompt
+     * @type Ember.Service
+     * @for Conversation
+     * @private
+     */
+    @service liveReloadPrompt;
+
+    /**
+     * Disposer returned by hermes.register() for this screen.
+     *
+     * @property hermesDisposer
+     * @type Function|null
+     * @for AppProjectConversationController
+     * @private
+     */
+    hermesDisposer = null;
 
     /**
      * Current user
@@ -434,9 +466,12 @@ export default class AppProjectConversationController extends PrometheusCreateCo
 
         return comment.save({adapterOptions: {mentionedIssues: mentionedIssues}}).then(function (comment) {
             if(_self.selectedConversation?.id === relatedId) {
-                _self.selectedConversation.comments.pushObject(comment);
+                pushIfMissing(_self.selectedConversation.comments, comment);
             } else {
-                _self.conversations.find((conversation) => conversation.id === relatedId).comments.pushObject(comment);
+                pushIfMissing(
+                    _self.conversations.find((conversation) => conversation.id === relatedId).comments,
+                    comment
+                );
             }
             _self.pubSub.trigger('clearContents');
         });
@@ -466,9 +501,12 @@ export default class AppProjectConversationController extends PrometheusCreateCo
 
         comment.save().then(function (savedComment) {
             if(_self.selectedConversation?.id === relatedId) {
-                _self.selectedConversation.comments.pushObject(savedComment);
+                pushIfMissing(_self.selectedConversation.comments, savedComment);
             } else {
-                _self.conversations.find((conversation) => conversation.id === relatedId).comments.pushObject(savedComment);
+                pushIfMissing(
+                    _self.conversations.find((conversation) => conversation.id === relatedId).comments,
+                    savedComment
+                );
             }
         });
     }
@@ -1088,5 +1126,222 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         this.page = 1;
         this.activeFilter = null;
         this.activeDateFilter = null;
+    }
+
+    /**
+     * Registers the conversation screen's Hermes intents for the tracked project.
+     *
+     * @method registerHermesIntents
+     * @param {String} projectId Tracked project id
+     * @returns {void}
+     * @public
+     */
+    registerHermesIntents(projectId) {
+        this.unregisterHermesIntents();
+        if (!projectId) {
+            return;
+        }
+        this.hermesDisposer = this.hermes.register(this, projectId, {
+            'conversation.comment.created': this.handleCommentCreated.bind(this),
+            'conversation.comment.updated': this.handleCommentUpdated.bind(this),
+            'conversation.comment.deleted': this.handleCommentDeleted.bind(this),
+            'conversation.vote.added': this.handleVoteAdded.bind(this),
+            'conversation.vote.removed': this.handleVoteRemoved.bind(this),
+            'conversation.created': this.handleConversationCreated.bind(this)
+        });
+    }
+
+    /**
+     * Disposes the conversation screen's Hermes registration and clears the
+     * reload prompt.
+     *
+     * @method unregisterHermesIntents
+     * @returns {void}
+     * @public
+     */
+    unregisterHermesIntents() {
+        this.hermesDisposer?.();
+        this.hermesDisposer = null;
+        this.liveReloadPrompt.clear(this);
+    }
+
+    /**
+     * Appends a newly created comment onto its conversation room.
+     *
+     * @method handleCommentCreated
+     * @param {Object} envelope V2 domain-event envelope
+     * @returns {void}
+     * @public
+     */
+    handleCommentCreated(envelope) {
+        let room = this.findConversationForEvent(envelope);
+        if (!room) {
+            return;
+        }
+        let comment = peekOrPush(
+            this.store,
+            'comment',
+            envelope.resource.id,
+            envelope.changes
+        );
+        pushIfMissing(room.comments, comment);
+    }
+
+    /**
+     * Applies conversation.comment.updated and attaches the comment to its room.
+     *
+     * @method handleCommentUpdated
+     * @param {Object} envelope V2 domain-event envelope
+     * @returns {void}
+     * @public
+     */
+    handleCommentUpdated(envelope) {
+        let comment = peekOrPush(
+            this.store,
+            'comment',
+            envelope.resource.id,
+            envelope.changes
+        );
+        if (!comment) {
+            return;
+        }
+        let room = this.findConversationForEvent(envelope)
+            || this.findConversationContaining('comments', comment.id);
+        pushIfMissing(room?.comments, comment);
+    }
+
+    /**
+     * Removes a deleted comment from its conversation room.
+     *
+     * @method handleCommentDeleted
+     * @param {Object} envelope V2 domain-event envelope
+     * @returns {void}
+     * @public
+     */
+    handleCommentDeleted(envelope) {
+        let room = this.findConversationForEvent(envelope);
+        if (room) {
+            removeById(room.comments, envelope.resource.id);
+        } else {
+            this.removeCommentFromConversations(envelope.resource.id);
+        }
+    }
+
+    /**
+     * Appends a newly added vote onto its conversation room.
+     *
+     * @method handleVoteAdded
+     * @param {Object} envelope V2 domain-event envelope
+     * @returns {void}
+     * @public
+     */
+    handleVoteAdded(envelope) {
+        let room = this.findConversationForEvent(envelope);
+        if (!room) {
+            return;
+        }
+        let vote = peekOrPush(this.store, 'vote', envelope.resource.id, envelope.changes);
+        pushIfMissing(room.votes, vote);
+    }
+
+    /**
+     * Removes a vote from its conversation room.
+     *
+     * @method handleVoteRemoved
+     * @param {Object} envelope V2 domain-event envelope
+     * @returns {void}
+     * @public
+     */
+    handleVoteRemoved(envelope) {
+        let room = this.findConversationForEvent(envelope);
+        if (room) {
+            removeById(room.votes, envelope.resource.id);
+            return;
+        }
+        let containingRoom = this.findConversationContaining('votes', envelope.resource.id);
+        removeById(containingRoom?.votes, envelope.resource.id);
+    }
+
+    /**
+     * Prompts a reload when a new conversation cannot be placed without a refresh.
+     * Skips the prompt for the creating user (local echo can beat noteLocalWrite).
+     *
+     * @method handleConversationCreated
+     * @param {Object} envelope V2 domain-event envelope
+     * @returns {void}
+     * @public
+     */
+    handleConversationCreated(envelope) {
+        if (envelope?.actorId && envelope.actorId === this.currentUser.user?.id) {
+            return;
+        }
+        this.liveReloadPrompt.show(this, () => this.router.refresh());
+    }
+
+    /**
+     * Resolves the conversation room for a comment or vote envelope.
+     *
+     * @method findConversationForEvent
+     * @param {Object} envelope V2 domain-event envelope
+     * @returns {Object|null}
+     * @private
+     */
+    findConversationForEvent(envelope) {
+        let conversationId = envelope.changes?.relatedId
+            || envelope.changes?.conversationId
+            || envelope.meta?.conversationId
+            || envelope.meta?.relatedId;
+        return this.findConversationById(conversationId);
+    }
+
+    /**
+     * Finds a loaded room that already contains the given comment or vote.
+     *
+     * @method findConversationContaining
+     * @param {String} collectionName comments or votes
+     * @param {String} resourceId Comment or vote id
+     * @returns {Object|null}
+     * @private
+     */
+    findConversationContaining(collectionName, resourceId) {
+        let rooms = this.selectedConversation
+            ? [this.selectedConversation, ...(this.conversations || [])]
+            : (this.conversations || []);
+        return rooms.find((room) => room[collectionName]?.findBy('id', resourceId)) || null;
+    }
+
+    /**
+     * Finds a conversation by id from the selected room or the loaded list.
+     *
+     * @method findConversationById
+     * @param {String} id Conversation room id
+     * @returns {Object|null}
+     * @private
+     */
+    findConversationById(id) {
+        if (!id) {
+            return null;
+        }
+        if (this.selectedConversation?.id === id) {
+            return this.selectedConversation;
+        }
+        return (this.conversations || []).find((conversation) => conversation.id === id) || null;
+    }
+
+    /**
+     * Removes a comment from the selected room and every loaded room.
+     *
+     * @method removeCommentFromConversations
+     * @param {String} commentId Comment id
+     * @returns {void}
+     * @private
+     */
+    removeCommentFromConversations(commentId) {
+        if (this.selectedConversation) {
+            removeById(this.selectedConversation.comments, commentId);
+        }
+        (this.conversations || []).forEach((room) => {
+            removeById(room.comments, commentId);
+        });
     }
 }

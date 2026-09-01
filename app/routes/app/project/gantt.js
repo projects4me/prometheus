@@ -161,7 +161,8 @@ export default class GanttRoute extends App {
 	}
 
 	/**
-	 * This function is used to setup the controller for this route.
+	 * Sets gantt model data on the controller and registers Hermes intents
+	 * for this project's live gantt events.
 	 *
 	 * @method setupController
 	 * @param {Prometheus.Controllers.Gantt} controller The controller object for this route
@@ -177,10 +178,11 @@ export default class GanttRoute extends App {
 		controller.set('selectedIssue', null);
 		controller.set('isIssuePanelOpen', false);
 		controller.autoExpandFirstMilestone();
+		controller.registerHermesIntents(this.trackedProject.getProjectId());
 	}
 
 	/**
-	 * This function is triggered on route exit.
+	 * On exit, dispose Hermes intents and clear gantt UI state.
 	 *
 	 * @method resetController
 	 * @param {Prometheus.Controllers.Gantt} controller The controller object for this route
@@ -189,6 +191,7 @@ export default class GanttRoute extends App {
 	 */
 	resetController(controller, isExiting) {
 		if (isExiting) {
+			controller.unregisterHermesIntents();
 			controller.query = null;
 			controller.selectedIssue = null;
 			this.query = null;

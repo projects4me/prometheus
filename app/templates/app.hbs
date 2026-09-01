@@ -23,18 +23,10 @@
   <AppLayouts::NotificationsSidebar/>  
 
   {{!-- Control Sidebar --}}
-  {{application-controlbar
-      initChat=(action 'startChat')
-      gotMessage=(action 'newMessage')
-  }}
+  {{application-controlbar}}
   {{!-- /.control-sidebar --}}
 
   {{!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar --}}
   <div class="control-sidebar-bg"></div>
 </AppLayouts::ApplicationWrapper>
-{{#each this.chatrooms as |chatroom|}}
-  {{chat-box
-      chatroom=chatroom
-      currentUser=this.currentUser}}
-{{/each}}
