@@ -265,7 +265,7 @@ export default class HermesService extends Service {
     }
 
     /**
-     * Register the V2 events owned by one mounted route. Registering the same
+     * Register the events owned by one mounted route. Registering the same
      * owner again replaces its previous registration. The returned disposer is
      * safe to invoke more than once and cannot remove a newer registration.
      *
@@ -360,7 +360,7 @@ export default class HermesService extends Service {
         this.socket.emit(
             "intents:set",
             {
-                protocolVersion: 2,
+                protocolVersion: 1,
                 revision,
                 intents,
             },
@@ -425,7 +425,7 @@ export default class HermesService extends Service {
      * Returns true when this envelope matches a recent local write.
      *
      * @method isLocalEcho
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {Boolean}
      * @private
      */
@@ -451,14 +451,14 @@ export default class HermesService extends Service {
      * Fan one validated domain event out only to matching route owners.
      *
      * @method dispatchDomainEvent
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @private
      */
     dispatchDomainEvent(envelope) {
         if (
             !envelope ||
-            envelope.schemaVersion !== 2 ||
+            envelope.schemaVersion !== 1 ||
             !envelope.projectId ||
             !envelope.eventName
         ) {

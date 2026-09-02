@@ -523,7 +523,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      * Applies issue.status.changed onto the matching board issue.
      *
      * @method handleIssueStatusChanged
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @public
      */
@@ -546,7 +546,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      * Applies issue.assignee.changed onto the matching board issue.
      *
      * @method handleIssueAssigneeChanged
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @public
      */
@@ -560,7 +560,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      * Inserts a newly created milestone ahead of the backlog lane.
      *
      * @method handleMilestoneCreated
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @public
      */
@@ -583,7 +583,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      * Removes a completed milestone from the board.
      *
      * @method handleMilestoneCompleted
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @public
      */

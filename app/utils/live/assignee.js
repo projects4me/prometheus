@@ -10,7 +10,7 @@ import { peekOrPush } from "prometheus/utils/live/collection";
  * @method applyIssueAssigneeChange
  * @param {Object} store Ember Data store
  * @param {Object} issue Issue record to patch
- * @param {Object} envelope V2 domain-event envelope
+ * @param {Object} envelope Domain-event envelope
  * @returns {Object|null} The issue, or null when none was passed
  * @public
  */
