@@ -84,7 +84,7 @@ module('Integration | Service | notifications', function (hooks) {
 		};
 
 		service.onNotificationCreated({
-			schemaVersion: 2,
+			schemaVersion: 1,
 			eventId: 'notif-1',
 			eventName: 'notification.created',
 			projectId: 'user:user-1',
@@ -131,7 +131,7 @@ module('Integration | Service | notifications', function (hooks) {
 		});
 
 		service.onNotificationCreated({
-			schemaVersion: 2,
+			schemaVersion: 1,
 			eventId: 'notif-status',
 			eventName: 'notification.created',
 			projectId: 'user:user-1',
@@ -172,7 +172,7 @@ module('Integration | Service | notifications', function (hooks) {
 		};
 
 		service.onNotificationCreated({
-			schemaVersion: 2,
+			schemaVersion: 1,
 			eventId: 'notif-1',
 			eventName: 'notification.created',
 			projectId: 'user:user-1',
@@ -230,7 +230,7 @@ module('Integration | Service | notifications', function (hooks) {
 		service.startLiveSync();
 
 		hermes.dispatchDomainEvent({
-			schemaVersion: 2,
+			schemaVersion: 1,
 			eventId: 'other-user',
 			eventName: 'notification.created',
 			projectId: 'user:user-other',

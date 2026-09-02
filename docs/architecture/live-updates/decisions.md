@@ -90,7 +90,7 @@ and Hermes room keys are out of scope here.
 | | |
 |---|---|
 | Status | Accepted |
-| Decision | Every `register` / dispose rebuilds the desired set and emits `intents:set` with `protocolVersion: 2` and an incremented `revision`. Reconnect forces a resend. |
+| Decision | Every `register` / dispose rebuilds the desired set and emits `intents:set` with `protocolVersion: 1` and an incremented `revision`. Reconnect forces a resend. |
 | Rationale | Hermes replaces the socket’s rooms from the snapshot. Deltas would desync on dropped acks. Hermes stores intents per connection, so a new socket starts empty. |
 | Implications | Unregistering a screen must dispose, not “leave” individual events by name. Stale acks for older revisions are ignored. |
 
@@ -126,7 +126,7 @@ and Hermes room keys are out of scope here.
 | | |
 |---|---|
 | Status | Accepted |
-| Decision | Prometheus live-update tests run inside `ember test` only: Mirage for REST, a FakeSocket for Hermes (`tests/helpers/hermes-fake.js`, `@setupHermesFake`). QUnit covers service/handler rules; Yadda covers thin per-screen smokes. Remote updates are injected as V2 envelopes (no second browser). |
+| Decision | Prometheus live-update tests run inside `ember test` only: Mirage for REST, a FakeSocket for Hermes (`tests/helpers/hermes-fake.js`, `@setupHermesFake`). QUnit covers service/handler rules; Yadda covers thin per-screen smokes. Remote updates are injected as domain-event envelopes (no second browser). |
 | Rationale | Gaia already covers publish rules and real REST→Hermes wiring via PHPUnit and api-tester `--mode live`. Duplicating that stack in Prometheus would couple CI to Gaia/Hermes compose and slow acceptance. Mirage already owns REST in Yadda; Socket.IO is a different channel Mirage cannot answer. |
 | Implications | Do not point acceptance tests at `hermes-test` or Gaia for live coverage. Do not replace the whole `hermes` service in acceptance (keep real register/dispatch/echo). True dual-session A→B E2E (Playwright/Cypress + Gaia) is a separate track if needed later. Operator detail: `architecture.md` § Testing. |
 

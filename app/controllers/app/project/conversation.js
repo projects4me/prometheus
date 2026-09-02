@@ -1169,7 +1169,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * Appends a newly created comment onto its conversation room.
      *
      * @method handleCommentCreated
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @public
      */
@@ -1191,7 +1191,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * Applies conversation.comment.updated and attaches the comment to its room.
      *
      * @method handleCommentUpdated
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @public
      */
@@ -1214,7 +1214,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * Removes a deleted comment from its conversation room.
      *
      * @method handleCommentDeleted
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @public
      */
@@ -1231,7 +1231,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * Appends a newly added vote onto its conversation room.
      *
      * @method handleVoteAdded
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @public
      */
@@ -1248,7 +1248,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * Removes a vote from its conversation room.
      *
      * @method handleVoteRemoved
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @public
      */
@@ -1267,7 +1267,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * Skips the prompt for the creating user (local echo can beat noteLocalWrite).
      *
      * @method handleConversationCreated
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @public
      */
@@ -1282,7 +1282,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * Resolves the conversation room for a comment or vote envelope.
      *
      * @method findConversationForEvent
-     * @param {Object} envelope V2 domain-event envelope
+     * @param {Object} envelope Domain-event envelope
      * @returns {Object|null}
      * @private
      */
