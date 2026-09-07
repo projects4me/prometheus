@@ -1,6 +1,7 @@
 FROM rananoman/prometheus:env
 
 ENV API_HOST_PRODUCTION='http://devapi.projects4.me'
+ENV HERMES_URL_PRODUCTION='http://hermes.projects4.me'
 
 RUN mkdir temp
 

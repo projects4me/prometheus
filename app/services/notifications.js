@@ -48,7 +48,7 @@ export default class NotificationsService extends Service {
 	@service intl;
 
 	/**
-	 * Hermes service for V2 intent-based live events.
+	 * Hermes service for intent-based live events.
 	 * @type {Service}
 	 * @public
 	 */
@@ -76,7 +76,7 @@ export default class NotificationsService extends Service {
 	@tracked pageSize = 15;
 
 	/**
-	 * Whether the V2 intent registration is active.
+	 * Whether the intent registration is active.
 	 * @type {Boolean}
 	 * @private
 	 */
@@ -393,7 +393,7 @@ export default class NotificationsService extends Service {
 	}
 
 	/**
-	 * Registers a V2 Hermes intent for `notification.created` scoped to the
+	 * Registers a Hermes intent for `notification.created` scoped to the
 	 * current user. The scope key `user:<userId>` is placed in the projectId
 	 * field so that the existing room convention routes only to this socket.
 	 *
@@ -424,7 +424,7 @@ export default class NotificationsService extends Service {
 	}
 
 	/**
-	 * Disposes the V2 intent registration.
+	 * Disposes the intent registration.
 	 *
 	 * @method stopLiveSync
 	 * @public
@@ -439,8 +439,8 @@ export default class NotificationsService extends Service {
 	}
 
 	/**
-	 * Handles an incoming V2 `notification.created` domain event from Hermes.
-	 * Maps the V2 envelope fields to the existing prepend/unread logic.
+	 * Handles an incoming `notification.created` domain event from Hermes.
+	 * Maps the envelope fields to the existing prepend/unread logic.
 	 *
 	 * Envelope shape:
 	 *   { schemaVersion, eventId, eventName, projectId, resource: { type, id },

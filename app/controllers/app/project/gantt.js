@@ -212,7 +212,7 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * Applies issue.dates.changed and redraws the chart.
 	 *
 	 * @method handleIssueDatesChanged
-	 * @param {Object} envelope V2 domain-event envelope
+	 * @param {Object} envelope Domain-event envelope
 	 * @returns {void}
 	 * @public
 	 */
@@ -234,7 +234,7 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * Applies issue.dependency.created onto the successor issue.
 	 *
 	 * @method handleIssueDependencyCreated
-	 * @param {Object} envelope V2 domain-event envelope
+	 * @param {Object} envelope Domain-event envelope
 	 * @returns {void}
 	 * @public
 	 */
@@ -246,7 +246,7 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * Applies issue.dependency.deleted onto the successor issue.
 	 *
 	 * @method handleIssueDependencyDeleted
-	 * @param {Object} envelope V2 domain-event envelope
+	 * @param {Object} envelope Domain-event envelope
 	 * @returns {void}
 	 * @public
 	 */
@@ -258,7 +258,7 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * Patches parentId / parentissue from a dependency envelope and redraws.
 	 *
 	 * @method applyDependencyEvent
-	 * @param {Object} envelope V2 domain-event envelope
+	 * @param {Object} envelope Domain-event envelope
 	 * @param {Boolean} deleted True when the dependency was removed
 	 * @returns {void}
 	 * @private
@@ -294,7 +294,7 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * Applies issue.assignee.changed and redraws the chart.
 	 *
 	 * @method handleIssueAssigneeChanged
-	 * @param {Object} envelope V2 domain-event envelope
+	 * @param {Object} envelope Domain-event envelope
 	 * @returns {void}
 	 * @public
 	 */

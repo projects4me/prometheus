@@ -55,7 +55,7 @@ module("Integration | Service | hermes", function (hooks) {
     );
 
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventId: "event-1",
       eventName: "issue.created",
       projectId: "project-1",
@@ -86,17 +86,17 @@ module("Integration | Service | hermes", function (hooks) {
     });
 
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventName: "issue.status.changed",
       projectId: "project-2",
     });
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventName: "issue.created",
       projectId: "project-1",
     });
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventName: "issue.status.changed",
       projectId: "project-1",
     });
@@ -113,7 +113,7 @@ module("Integration | Service | hermes", function (hooks) {
     });
 
     let envelope = {
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventId: "evt-dup",
       eventName: "issue.created",
       projectId: "project-1",
@@ -163,21 +163,21 @@ module("Integration | Service | hermes", function (hooks) {
 
     service.noteLocalWrite("issue", "issue-1");
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventId: "echo-1",
       eventName: "issue.status.changed",
       projectId: "project-1",
       resource: { type: "issue", id: "issue-1" },
     });
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventId: "echo-2",
       eventName: "issue.status.changed",
       projectId: "project-1",
       resource: { type: "issue", id: "issue-1" },
     });
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventId: "peer-1",
       eventName: "issue.status.changed",
       projectId: "project-1",
@@ -197,7 +197,7 @@ module("Integration | Service | hermes", function (hooks) {
 
     service.noteLocalWrite("issue", "issue-1", -1);
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventId: "after-ttl",
       eventName: "issue.status.changed",
       projectId: "project-1",
@@ -217,16 +217,16 @@ module("Integration | Service | hermes", function (hooks) {
 
     service.dispatchDomainEvent(null);
     service.dispatchDomainEvent({
-      schemaVersion: 1,
+      schemaVersion: 0,
       eventName: "issue.created",
       projectId: "project-1",
     });
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventName: "issue.created",
     });
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       projectId: "project-1",
     });
 
@@ -241,7 +241,7 @@ module("Integration | Service | hermes", function (hooks) {
     });
 
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventId: "unknown-1",
       eventName: "issue.deleted",
       projectId: "project-1",
@@ -264,7 +264,7 @@ module("Integration | Service | hermes", function (hooks) {
     });
 
     service.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventId: "throw-1",
       eventName: "issue.created",
       projectId: "project-1",
@@ -376,7 +376,7 @@ module("Integration | Service | hermes reconnect", function (hooks) {
     hermes.socket.simulateConnect();
 
     hermes.dispatchDomainEvent({
-      schemaVersion: 2,
+      schemaVersion: 1,
       eventId: "after-up",
       eventName: "issue.status.changed",
       projectId: "project-1",

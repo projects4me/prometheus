@@ -230,7 +230,7 @@ export function rowFromDomainEventTable(table) {
 }
 
 /**
- * Build a V2 domain-event envelope for tests.
+ * Build a domain-event envelope for tests.
  *
  * @method buildDomainEvent
  * @param {Object} options
@@ -246,7 +246,7 @@ export function buildDomainEvent(options = {}) {
 		changes = {},
 		meta = {},
 		eventId = `evt-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-		schemaVersion = 2,
+		schemaVersion = 1,
 	} = options;
 
 	return {

@@ -1,6 +1,6 @@
 /**
  * Shared Yadda steps for Hermes live-update features (board, gantt,
- * conversation, notifications). Injects V2 domain:event envelopes via the
+ * conversation, notifications). Injects domain:event envelopes via the
  * FakeSocket helpers without opening a real Socket.IO connection.
  */
 import steps from '../steps';

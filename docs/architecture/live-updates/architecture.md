@@ -5,7 +5,7 @@ connection. Each mounted screen (and the notifications service) registers only
 the events it can apply. Prometheus does not publish domain events and does
 not name Hermes rooms.
 
-Hermes relay contract: sibling repo `hermes/ARCHITECTURE.md`.
+Hermes relay contract: sibling repo `hermes/docs/architecture/`.
 Gaia publishing: sibling repo `gaia/docs/architecture/live-updates/`.
 
 ```
@@ -72,7 +72,7 @@ Handshake: Socket.IO `auth.token` (OAuth access token).
 
 ```json
 {
-  "protocolVersion": 2,
+  "protocolVersion": 1,
   "revision": 7,
   "intents": [
     { "projectId": "project-uuid", "eventName": "issue.status.changed" }
@@ -159,7 +159,7 @@ Feature: Live | …
 Shared steps: `tests/acceptance/steps/live/hermes-live-steps.js`
 (registered from `tests/acceptance/steps/steps.js`).
 
-**Remote update** = inject a V2 envelope via `hermes.dispatchDomainEvent`
+**Remote update** = inject a domain-event envelope via `hermes.dispatchDomainEvent`
 with `actorId` ≠ the signed-in user and **without** `noteLocalWrite`. That
 is the consumer path for “User A produced, User B sees.” There is no second
 browser session in these tests.
