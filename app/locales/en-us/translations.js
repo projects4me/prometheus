@@ -941,6 +941,7 @@ export default {
         "nav":{
             "mainnav": "Main Navigation",
             "selectproject":"Select a project..",
+            "noprojectsfound":"No project found",
             "menu":{
                 "app": {
                     "label": "Dashboard",

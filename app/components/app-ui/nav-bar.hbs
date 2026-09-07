@@ -19,7 +19,9 @@
         @options={{this.projectsList}}
         @selected={{find-by "value" this.trackedProject.id this.projectsList}}
         @placeholder={{t "views.nav.selectproject"}}
-        searchField="label"
+        @searchField="label"
+        @searchEnabled={{true}}
+        @noMatchesMessage={{t "views.nav.noprojectsfound"}}
         @onChange={{this.projectChanged}}
         as |project|>
         {{project.label}}
