@@ -17,6 +17,9 @@
 /testem.log
 /yarn-error.log
 
+# Cursor skill local secrets
+.cursor/skills/
+
 # ember-try
 /.node_modules.ember-try/
 /bower.json.ember-try

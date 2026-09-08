@@ -268,17 +268,21 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	}
 
 	/**
-	 * Navigation is handled inside afterSave (after optional membership /
-	 * userrole records have been persisted), so this hook is intentionally left empty.
+	 * Navigates to the newly created user's profile page after a successful save.
+	 * Called by the base _save flow after afterSave completes and the success
+	 * toast is shown, matching projects/issue create.
 	 *
 	 * @method navigateToSuccess
+	 * @param {Prometheus.Models.User} savedUser - The newly saved user record
 	 */
-	navigateToSuccess() {}
+	navigateToSuccess(savedUser) {
+		this.router.transitionTo('app.user.page', savedUser.get('id'));
+	}
 
 	/**
 	 * Called by the base _save flow after the user record has been persisted.
 	 * Optionally creates a project membership and/or a global application
-	 * role assignment (userrole) before navigating to the user profile page.
+	 * role assignment (userrole), then clears selection UI state.
 	 *
 	 * @method afterSave
 	 * @param {Prometheus.Models.User} savedUser - The newly saved user record
@@ -304,7 +308,18 @@ export default class AppUserCreateController extends PrometheusCreateController 
 			await userrole.save();
 		}
 
-		this.router.transitionTo('app.user.page', userId);
+		this.selectedProject = null;
+		this.selectedRole = null;
+	}
+
+	/**
+	 * Navigates back to the user management list when the user cancels.
+	 *
+	 * @method afterCancel
+	 * @protected
+	 */
+	afterCancel() {
+		this.transitionToRoute('app.user.management');
 	}
 
 	/**
@@ -427,14 +442,16 @@ export default class AppUserCreateController extends PrometheusCreateController 
 
 	/**
 	 * This function checks if the form has unsaved changes that should block navigation.
-	 * After a successful save Ember Data clears dirty attributes, so
-	 * post-save navigation is not blocked.
 	 *
 	 * @method isDirty
 	 * @return {boolean}
 	 * @public
 	 */
 	get isDirty() {
+		if (!this.model) {
+			return false;
+		}
+
 		let modelKeys = _.keys(this.model.changedAttributes());
 		let dirtyFields = ['name', 'email', 'dateOfBirth'];
 		let cantEmptyFields = ['name', 'email'];
@@ -444,11 +461,6 @@ export default class AppUserCreateController extends PrometheusCreateController 
 				modelKeys.splice(modelKeys.indexOf(field), 1);
 			}
 		});
-
-		// If the user has selected a project or role, we should block navigation
-		if(this.selectedProject || this.selectedRole) {
-			return true;
-		}
 
 		return modelKeys.some(key => dirtyFields.includes(key));
 	}
