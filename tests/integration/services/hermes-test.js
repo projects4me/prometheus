@@ -187,6 +187,33 @@ module("Integration | Service | hermes", function (hooks) {
     assert.deepEqual(calls, ["peer-1"]);
   });
 
+  test("drops matching milestone domain events after noteLocalWrite", function (assert) {
+    let service = this.owner.lookup("service:hermes");
+    attachConnectedSocket(service, { connected: false });
+    let calls = [];
+    service.register({}, "project-1", {
+      "milestone.created": (event) => calls.push(event.eventId),
+    });
+
+    service.noteLocalWrite("milestone", "milestone-1");
+    service.dispatchDomainEvent({
+      schemaVersion: 1,
+      eventId: "milestone-echo-1",
+      eventName: "milestone.created",
+      projectId: "project-1",
+      resource: { type: "milestone", id: "milestone-1" },
+    });
+    service.dispatchDomainEvent({
+      schemaVersion: 1,
+      eventId: "milestone-peer-1",
+      eventName: "milestone.created",
+      projectId: "project-1",
+      resource: { type: "milestone", id: "milestone-2" },
+    });
+
+    assert.deepEqual(calls, ["milestone-peer-1"]);
+  });
+
   test("dispatches a local write after its echo window expires", function (assert) {
     let service = this.owner.lookup("service:hermes");
     attachConnectedSocket(service, { connected: false });
