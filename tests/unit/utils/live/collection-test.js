@@ -1,7 +1,25 @@
 import { module, test } from "qunit";
-import { peekOrPush, pushIfMissing, removeById } from "prometheus/utils/live/collection";
+import { peekOrPush, pushIfMissing, removeById, insertAtIfMissing } from "prometheus/utils/live/collection";
 
 module("Unit | Utility | live/collection", function () {
+  test("insertAtIfMissing is idempotent by record id", function (assert) {
+    let list = {
+      items: [],
+      findBy(key, value) {
+        return this.items.find((item) => item[key] === value);
+      },
+      insertAt(index, record) {
+        this.items.splice(index, 0, record);
+      },
+    };
+    let record = { id: "m1" };
+
+    assert.true(insertAtIfMissing(list, record, 0));
+    assert.false(insertAtIfMissing(list, record, 0));
+    assert.strictEqual(list.items.length, 1);
+    assert.strictEqual(list.items[0].id, "m1");
+  });
+
   test("pushIfMissing is idempotent and removeById removes the record", function (assert) {
     let list = {
       items: [],

@@ -8,7 +8,7 @@ import { tracked } from '@glimmer/tracking';
 import {inject as controller } from '@ember/controller';
 import { inject as service } from '@ember/service';
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
-import { peekOrPush } from 'prometheus/utils/live/collection';
+import { peekOrPush, insertAtIfMissing } from 'prometheus/utils/live/collection';
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
 
 /**
@@ -565,18 +565,21 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      * @public
      */
     handleMilestoneCreated(envelope) {
+        if (envelope?.actorId && envelope.actorId === this.currentUser.user?.id) {
+            return;
+        }
         let milestone = peekOrPush(
             this.store,
             'milestone',
             envelope.resource.id,
             envelope.changes
         );
-        if (!milestone || this.milestones?.findBy('id', milestone.id)) {
+        if (!milestone) {
             return;
         }
         let backlog = this.milestones.findBy('milestoneType', 'backlog');
         let index = backlog ? this.milestones.indexOf(backlog) : this.milestones.length;
-        this.milestones.insertAt(index, milestone);
+        insertAtIfMissing(this.milestones, milestone, index);
     }
 
     /**
