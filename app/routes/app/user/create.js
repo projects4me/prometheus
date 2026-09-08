@@ -46,6 +46,9 @@ export default class AppUserCreateRoute extends App {
      */
     resetController(controller, isExiting) {
         if (isExiting) {
+            if (!controller.model?.id) {
+                controller.model.destroyRecord();
+            }
             controller.selectedProject = null;
             controller.selectedRole = null;
         }
