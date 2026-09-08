@@ -798,6 +798,103 @@ export default class PrometheusListController extends PrometheusController {
     }
 
     /**
+     * Deletes all currently selected list records after confirmation.
+     *
+     * @method deleteSelected
+     * @public
+     * @action
+     */
+    @action
+    deleteSelected() {
+        Logger.debug('Prometheus.Controllers.List::deleteSelected');
+        let _self = this;
+        let moduleName = this.model.modelName;
+        let modulePlural = _self.intl.t(`global.module.plural.${moduleName.toLowerCase()}`);
+        let selectedIds = this.getSelectedIds();
+
+        if (this.checkboxCount === 0) {
+            new Messenger().post({
+                message: this.intl.t('views.app.module.list.noModuleSelected', {moduleName: `${moduleName}s`}),
+                type: 'error',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        let count = selectedIds.length;
+        let messenger = new Messenger().post({
+            message: htmlSafe(_self.intl.t("views.app.module.list.delete.messageSelected", {
+                moduleName: modulePlural,
+                count
+            })),
+            type: 'warning',
+            showCloseButton: true,
+            actions: {
+                confirm: {
+                    label: htmlSafe(_self.intl.t("views.app.module.list.delete.confirmDeleteSelected", {
+                        moduleName: modulePlural
+                    })).string,
+                    action: async function () {
+                        messenger.update({
+                            message: _self.intl.t("views.app.module.list.delete.deleting", {
+                                moduleName: modulePlural
+                            }),
+                            type: 'info',
+                            actions: false,
+                            hideAfter: false
+                        });
+
+                        try {
+                            for (let id of selectedIds) {
+                                let record = _self.store.peekRecord(moduleName, id);
+                                if (record) {
+                                    await record.destroyRecord();
+                                }
+                            }
+
+                            _self.selectedIds = {};
+                            _self.selectedCount = 0;
+                            _self.isAllSelected = false;
+
+                            messenger.update({
+                                message: htmlSafe(_self.intl.t("views.app.module.list.delete.deletedSelected", {
+                                    moduleName: modulePlural,
+                                    count
+                                })),
+                                type: 'success',
+                                actions: false,
+                                hideAfter: 3
+                            });
+                        } catch (error) {
+                            messenger.update({
+                                message: _self.intl.t("views.app.module.list.delete.error", {
+                                    moduleName: modulePlural
+                                }),
+                                type: 'error',
+                                actions: false,
+                                hideAfter: 4
+                            });
+                        }
+                    }
+                },
+                cancel: {
+                    label: htmlSafe(_self.intl.t("views.app.module.list.delete.onsecondthought")).string,
+                    action: function () {
+                        return messenger.update({
+                            message: _self.intl.t("views.app.module.list.delete.deletecancel"),
+                            type: 'success',
+                            actions: false,
+                            hideAfter: 3
+                        });
+                    }
+                },
+            }
+        });
+
+        Logger.debug('-Prometheus.Controllers.List::deleteSelected');
+    }
+
+    /**
      * This function returns all the selected ids from all the pages.
      * 
      * @method getSelectedIds

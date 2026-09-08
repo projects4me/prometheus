@@ -45,4 +45,10 @@ export function register(server, ctx) {
         ctx.set('latestCreatedProject', project);
         return project;
     });
+
+    server.delete('/project/:id', (schema, request) => {
+        let project = schema.projects.find(request.params.id);
+        project.destroy();
+        return project;
+    });
 }
