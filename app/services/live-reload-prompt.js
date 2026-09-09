@@ -1,4 +1,5 @@
 import Service from "@ember/service";
+import { isTransitionAborted } from "prometheus/utils/live/reload";
 
 /* global Messenger */
 
@@ -53,6 +54,13 @@ export default class LiveReloadPromptService extends Service {
               await refresh();
               this.clear(owner);
             } catch (error) {
+              if (isTransitionAborted(error)) {
+                console.info(
+                  "Live reload: transition aborted; clearing prompt after successful refresh"
+                );
+                this.clear(owner);
+                return;
+              }
               messenger.update({
                 message: "Reload failed. Please try again.",
                 type: "error",

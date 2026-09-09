@@ -45,6 +45,37 @@ module("Integration | Service | live-reload-prompt", function (hooks) {
     assert.notOk(service.prompts.has(owner));
   });
 
+  test("treats TransitionAborted as a successful reload", async function (assert) {
+    let service = this.owner.lookup("service:live-reload-prompt");
+    let owner = {};
+    let prompt = service.show(owner, async () => {
+      throw { name: "TransitionAborted", message: "TransitionAborted" };
+    });
+
+    await prompt.options.actions.reload.action();
+
+    assert.true(prompt.cancelled, "TransitionAborted clears the prompt");
+    assert.notOk(service.prompts.has(owner));
+  });
+
+  test("shows an error when reload genuinely fails", async function (assert) {
+    let service = this.owner.lookup("service:live-reload-prompt");
+    let owner = {};
+    let updated = null;
+    let prompt = service.show(owner, async () => {
+      throw new Error("Network request failed");
+    });
+    prompt.update = (options) => {
+      updated = options;
+    };
+
+    await prompt.options.actions.reload.action();
+
+    assert.strictEqual(updated?.message, "Reload failed. Please try again.");
+    assert.strictEqual(updated?.type, "error");
+    assert.ok(service.prompts.has(owner), "prompt stays open for retry");
+  });
+
   test("dismiss clears the route prompt", function (assert) {
     let service = this.owner.lookup("service:live-reload-prompt");
     let owner = {};

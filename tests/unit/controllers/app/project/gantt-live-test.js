@@ -124,7 +124,7 @@ module("Unit | Controller | app/project/gantt live events", function (hooks) {
     assert.strictEqual(issue.get("assignee"), "user-9");
   });
 
-  test("issue created shows reload prompt", function (assert) {
+  test("issue created shows reload prompt for remote actor", function (assert) {
     let controller = this.owner.lookup("controller:app.project.gantt");
     let shown = 0;
     controller.liveReloadPrompt = {
@@ -134,9 +134,36 @@ module("Unit | Controller | app/project/gantt live events", function (hooks) {
       clear() {},
     };
     controller.router = { refresh() {} };
+    Object.defineProperty(controller, "currentUser", {
+      configurable: true,
+      get() {
+        return { user: { id: "user-1" } };
+      },
+    });
 
-    controller.handleIssueCreated();
+    controller.handleIssueCreated({ actorId: "user-2" });
     assert.strictEqual(shown, 1);
+  });
+
+  test("issue created skips reload prompt for creating user", function (assert) {
+    let controller = this.owner.lookup("controller:app.project.gantt");
+    let shown = 0;
+    controller.liveReloadPrompt = {
+      show() {
+        shown++;
+      },
+      clear() {},
+    };
+    controller.router = { refresh() {} };
+    Object.defineProperty(controller, "currentUser", {
+      configurable: true,
+      get() {
+        return { user: { id: "user-1" } };
+      },
+    });
+
+    controller.handleIssueCreated({ actorId: "user-1" });
+    assert.strictEqual(shown, 0);
   });
 
   test("unknown issue dates change is a safe no-op", function (assert) {
