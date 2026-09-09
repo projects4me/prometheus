@@ -4,6 +4,7 @@
 
 import EmberRouter from '@ember/routing/router';
 import $ from 'jquery';
+import { applyPaceTransportExclusions } from 'prometheus/utils/ui/pace-config';
 
 /* Maintain some global variables to keep a track of what has happened */
 var alreadyRun = false;
@@ -43,6 +44,9 @@ export default {
         } else {
             alreadyRun = true;
         }
+
+        applyPaceTransportExclusions();
+
         EmberRouter.reopen({
             // startProgress:function(){
             //     Pace.restart();
