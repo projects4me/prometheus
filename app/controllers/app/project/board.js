@@ -10,6 +10,7 @@ import { inject as service } from '@ember/service';
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { peekOrPush } from 'prometheus/utils/live/collection';
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
+import { refreshView } from 'prometheus/utils/live/reload';
 
 /**
  * Board controller: kanban columns plus Hermes live handlers for status,
@@ -596,13 +597,19 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
 
     /**
      * Prompts a reload when a new issue cannot be placed without a refresh.
+     * Skips the prompt for the creating user (local echo can beat noteLocalWrite).
      *
      * @method handleIssueCreated
+     * @param {Object} envelope Domain-event envelope
      * @returns {void}
      * @public
      */
-    handleIssueCreated() {
-        this.liveReloadPrompt.show(this, () => this.router.refresh());
+    handleIssueCreated(envelope) {
+        if (envelope?.actorId && envelope.actorId === this.currentUser.user?.id) {
+            Logger.debug('AppProjectBoardController::handleIssueCreated - suppressed self-origin reload prompt');
+            return;
+        }
+        this.liveReloadPrompt.show(this, () => refreshView(this.router));
     }
 
     /**

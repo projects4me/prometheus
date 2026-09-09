@@ -143,7 +143,7 @@ module("Unit | Controller | app/project/board live events", function (hooks) {
     assert.strictEqual(controller.milestones.length, 0);
   });
 
-  test("issue created shows live reload prompt", function (assert) {
+  test("issue created shows live reload prompt for remote actor", function (assert) {
     let controller = this.owner.lookup("controller:app.project.board");
     let shown = [];
     controller.liveReloadPrompt = {
@@ -153,10 +153,37 @@ module("Unit | Controller | app/project/board live events", function (hooks) {
       clear() {},
     };
     controller.router = { refresh() {} };
+    Object.defineProperty(controller, "currentUser", {
+      configurable: true,
+      get() {
+        return { user: { id: "user-1" } };
+      },
+    });
 
-    controller.handleIssueCreated();
+    controller.handleIssueCreated({ actorId: "user-2" });
 
     assert.strictEqual(shown.length, 1);
+  });
+
+  test("issue created skips reload prompt for creating user", function (assert) {
+    let controller = this.owner.lookup("controller:app.project.board");
+    let shown = 0;
+    controller.liveReloadPrompt = {
+      show() {
+        shown++;
+      },
+      clear() {},
+    };
+    controller.router = { refresh() {} };
+    Object.defineProperty(controller, "currentUser", {
+      configurable: true,
+      get() {
+        return { user: { id: "user-1" } };
+      },
+    });
+
+    controller.handleIssueCreated({ actorId: "user-1" });
+    assert.strictEqual(shown, 0);
   });
 
   test("unknown issue status change is a safe no-op", function (assert) {
