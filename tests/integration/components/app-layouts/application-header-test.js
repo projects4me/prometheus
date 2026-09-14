@@ -45,6 +45,8 @@ module('Integration | Component | application-header', function (hooks) {
         `);
 
         assert.dom('div#btn-signin > a').hasText('Sign In', 'signin button exists');
+        assert.dom('div#btn-signin > a').hasAttribute('aria-disabled', 'true');
+        assert.dom('div#btn-signin > a').hasClass('disabled');
     });
 
     test('it renders component with logged in user name and created date of that user', async function (assert) {
