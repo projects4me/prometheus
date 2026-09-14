@@ -177,15 +177,7 @@ export default class SignInController extends PrometheusCreateController {
                 () => {
                     if (_self.session.isAuthenticated) {
                         localStorage.removeItem("projectId");
-                        //getting requested url when user was unauthenticated
-                        let oldRequestedUrl = _self.session.oldRequestedUrl;
-                        //if requested url is present then route to that url otherwise route user to /app
-                        let urlToRoute =
-                            oldRequestedUrl && oldRequestedUrl != "/"
-                                ? oldRequestedUrl
-                                : "app";
-
-                        _self.session.handleAuthentication(urlToRoute);
+                        _self.session.handleAuthentication();
                     }
                 },
                 (response) => {
