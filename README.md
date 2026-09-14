@@ -50,6 +50,10 @@ You will need the following things properly installed on your computer.
 
 
 
+## Authentication (OAuth refresh)
+
+Ember Data API calls go through `ApplicationAdapter`, which awaits `session.ensureFreshToken()` so concurrent and multi-tab refresh attempts stay coordinated. Code paths that call `fetch()` directly (for example exports, wiki, or milestone overview helpers) do not use that flow yet; a follow-up should route them through the same session refresh or a shared helper.
+
 ## Further Reading / Useful Links
 
 * [ember.js](http://emberjs.com/)
