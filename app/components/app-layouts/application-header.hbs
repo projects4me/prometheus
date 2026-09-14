@@ -80,7 +80,13 @@
                 </div>
               {{else}}
                 <div id="btn-signin">
-                  <a class="btn btn-default btn-flat" href="javascript:void(0)" {{action 'signIn'}}>{{t "global.form.signin"}}</a>
+                  <a
+                    class="btn btn-default btn-flat {{unless this.isHeaderSignInEnabled 'disabled'}}"
+                    href="javascript:void(0)"
+                    aria-disabled={{if this.isHeaderSignInEnabled "false" "true"}}
+                    tabindex={{if this.isHeaderSignInEnabled "0" "-1"}}
+                    {{action 'signIn'}}
+                  >{{t "global.form.signin"}}</a>
                 </div>
               {{/if}}
             </div>

@@ -39,6 +39,16 @@ export default class SignInController extends PrometheusCreateController {
     @service("session") session;
 
     /**
+     * Coordinates Sign-In availability with routing and auth lifecycle.
+     *
+     * @property signInControl
+     * @type Ember.Service
+     * @for SigninController
+     * @public
+     */
+    @service("sign-in-control") signInControl;
+
+    /**
      * This property is used to toggle the forget password form.
      *
      * @property forgetPassword
@@ -159,43 +169,61 @@ export default class SignInController extends PrometheusCreateController {
     }
 
     /**
-     * This function invalidates the session which effectively logs the user out
-     * of the application and if user is authenticated then we'll route user to
-     * "app" route
+     * Whether the sign-in form may submit credentials (derived from sign-in-control).
+     *
+     * @property canSubmitSignIn
+     * @type Boolean
+     */
+    get canSubmitSignIn() {
+        return this.signInControl.canSubmitSignIn;
+    }
+
+    /**
+     * Authenticates the user and routes into the app shell when credentials are valid.
      *
      * @method authenticate
      * @public
      */
     @action async authenticate() {
+        if (!this.signInControl.canSubmitSignIn) {
+            return;
+        }
+
         let _self = this;
         let email = _self.signinEmail;
         let password = _self.password;
 
-        await _self.session
-            .authenticate("authenticator:oauth2", email, password)
-            .then(
-                () => {
-                    if (_self.session.isAuthenticated) {
-                        localStorage.removeItem("projectId");
-                        //getting requested url when user was unauthenticated
-                        let oldRequestedUrl = _self.session.oldRequestedUrl;
-                        //if requested url is present then route to that url otherwise route user to /app
-                        let urlToRoute =
-                            oldRequestedUrl && oldRequestedUrl != "/"
-                                ? oldRequestedUrl
-                                : "app";
+        _self.signInControl.beginAuthentication();
 
-                        _self.session.handleAuthentication(urlToRoute);
-                    }
-                },
-                (response) => {
-                    new Messenger().post({
-                        message: _self.intl.t(`views.signin.${response.error}`),
-                        type: "error",
-                        showCloseButton: true,
-                    });
-                }
+        try {
+            await _self.session.authenticate(
+                "authenticator:oauth2",
+                email,
+                password
             );
+
+            if (!_self.session.isAuthenticated) {
+                _self.signInControl.endAuthentication();
+                return;
+            }
+
+            localStorage.removeItem("projectId");
+            let oldRequestedUrl = _self.session.oldRequestedUrl;
+            let urlToRoute =
+                oldRequestedUrl && oldRequestedUrl != "/"
+                    ? oldRequestedUrl
+                    : "app";
+
+            _self.signInControl.markAwaitingPostAuthNavigation();
+            _self.session.handleAuthentication(urlToRoute);
+        } catch (response) {
+            _self.signInControl.endAuthentication();
+            new Messenger().post({
+                message: _self.intl.t(`views.signin.${response.error}`),
+                type: "error",
+                showCloseButton: true,
+            });
+        }
     }
 
     /**
