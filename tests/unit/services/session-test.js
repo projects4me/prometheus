@@ -120,4 +120,55 @@ module('Unit | Service | session', function (hooks) {
             window.fetch = originalFetch;
         }
     });
+
+    test('handleAuthentication sends passive tabs to app instead of index', async function (assert) {
+        assert.expect(2);
+
+        await authenticateSession(nearExpirySession());
+
+        let session = this.owner.lookup('service:session');
+        let router = this.owner.lookup('service:router');
+        let capturedRoute = null;
+        let originalTransitionTo = router.transitionTo;
+
+        // Unit tests do not boot a full router; capture the destination only.
+        router.transitionTo = function (route) {
+            capturedRoute = route;
+        };
+
+        try {
+            session.oldRequestedUrl = '/signin';
+            session.handleAuthentication('index');
+
+            assert.strictEqual(capturedRoute, 'app', 'maps ESA index default to app');
+            assert.strictEqual(session.oldRequestedUrl, undefined, 'clears stale sign-in redirect');
+        } finally {
+            router.transitionTo = originalTransitionTo;
+        }
+    });
+
+    test('handleAuthentication keeps a valid deep link from oldRequestedUrl', async function (assert) {
+        assert.expect(1);
+
+        await authenticateSession(nearExpirySession());
+
+        let session = this.owner.lookup('service:session');
+        let router = this.owner.lookup('service:router');
+        let capturedRoute = null;
+        let originalTransitionTo = router.transitionTo;
+
+        // Unit tests do not boot a full router; capture the destination only.
+        router.transitionTo = function (route) {
+            capturedRoute = route;
+        };
+
+        try {
+            session.oldRequestedUrl = '/app/project/acme';
+            session.handleAuthentication();
+
+            assert.strictEqual(capturedRoute, '/app/project/acme');
+        } finally {
+            router.transitionTo = originalTransitionTo;
+        }
+    });
 });
