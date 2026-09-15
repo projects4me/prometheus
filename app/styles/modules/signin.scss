@@ -49,6 +49,12 @@
             @include flexbox($alignItems: center);
         }
 
+        [data-signin-submit]:disabled,
+        [data-signin-submit].disabled {
+            cursor: not-allowed;
+            opacity: 0.65;
+        }
+
         .login-box-body {
             [data-field="select-language"] {
                 margin: 1rem 0;
