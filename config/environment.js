@@ -69,7 +69,11 @@ module.exports = function(environment) {
             enabled: false
         },
         
-        publicRoutes: ['reset-password']
+        publicRoutes: ['reset-password'],
+
+        'ember-simple-auth': {
+            routeAfterAuthentication: 'app',
+        },
     };
 
     if (environment === 'development') {

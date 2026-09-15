@@ -3,8 +3,14 @@
  */
 
 import ESASession from 'ember-simple-auth/services/session';
+import Configuration from 'ember-simple-auth/configuration';
 import ENV from 'prometheus/config/environment';
 import { run } from '@ember/runloop';
+import Logger from 'js-logger';
+import {
+    DEFAULT_POST_AUTH_ROUTE,
+    resolvePostAuthDestination,
+} from 'prometheus/utils/auth/post-auth-destination';
 
 /** Refresh when the access token expires within this window (ms). */
 export const REFRESH_WINDOW_MS = 60 * 1000;
@@ -34,6 +40,82 @@ const LS_LOCK_POLL_MS = 50;
  */
 export default ESASession.extend({
     _inFlightRefresh: null,
+    _localAuthenticationInProgress: false,
+
+    init() {
+        this._super(...arguments);
+        this._subscribeCrossTabAuthSyncDiagnostics();
+    },
+
+    authenticate() {
+        this._localAuthenticationInProgress = true;
+
+        return this._super(...arguments).finally(() => {
+            this._localAuthenticationInProgress = false;
+        });
+    },
+
+    /**
+     * Routes the user after sign-in. Cross-tab session sync uses the same
+     * destination rules as the sign-in form (default {@link DEFAULT_POST_AUTH_ROUTE}).
+     *
+     * @method handleAuthentication
+     * @param {String} [routeAfterAuthentication]
+     * @public
+     */
+    handleAuthentication(routeAfterAuthentication) {
+        const fallbackRoute =
+            routeAfterAuthentication ||
+            Configuration.routeAfterAuthentication ||
+            DEFAULT_POST_AUTH_ROUTE;
+        const oldRequestedUrl = this.oldRequestedUrl;
+        const destination = resolvePostAuthDestination({
+            fallbackRoute,
+            oldRequestedUrl,
+        });
+
+        if (oldRequestedUrl) {
+            delete this.oldRequestedUrl;
+        }
+
+        if (!this._localAuthenticationInProgress) {
+            Logger.debug(
+                'Prometheus.Services.Session: applying post-auth navigation after cross-tab session sync',
+                { destination }
+            );
+        }
+
+        return this._super(destination);
+    },
+
+    _subscribeCrossTabAuthSyncDiagnostics() {
+        const internalSession = this.get('session');
+        const store = internalSession?.store;
+
+        if (!store || typeof store.on !== 'function') {
+            return;
+        }
+
+        store.on('sessionDataUpdated', () => {
+            this._crossTabAuthSyncPending = !this._localAuthenticationInProgress;
+        });
+
+        internalSession.on('invalidationSucceeded', () => {
+            if (this._crossTabAuthSyncPending && !this.get('isAuthenticated')) {
+                Logger.warn(
+                    'Prometheus.Services.Session: cross-tab auth sync failed; session could not be restored'
+                );
+            }
+
+            this._crossTabAuthSyncPending = false;
+        });
+
+        internalSession.on('authenticationSucceeded', () => {
+            if (this._crossTabAuthSyncPending) {
+                this._crossTabAuthSyncPending = false;
+            }
+        });
+    },
 
     /**
      * Ensures the access token is fresh enough for API calls. Refreshes when
