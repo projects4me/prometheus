@@ -131,6 +131,71 @@ module("Unit | Controller | app/project/board live events", function (hooks) {
     assert.strictEqual(controller.milestones.objectAt(1).id, "backlog");
   });
 
+  test("milestone created ignores events from the current user", function (assert) {
+    let controller = this.owner.lookup("controller:app.project.board");
+    let backlog = EmberObject.create({
+      id: "backlog",
+      milestoneType: "backlog",
+      issues: A([]),
+    });
+    controller.set("milestones", A([backlog]));
+    controller.set("currentUser", { user: { id: "user-creator" } });
+
+    controller.handleMilestoneCreated({
+      actorId: "user-creator",
+      resource: { id: "m-new" },
+      changes: { name: "Sprint 2" },
+    });
+
+    assert.strictEqual(controller.milestones.length, 1);
+    assert.strictEqual(controller.milestones.objectAt(0).id, "backlog");
+  });
+
+  test("duplicate milestone created events do not add a second tab", function (assert) {
+    let controller = this.owner.lookup("controller:app.project.board");
+    let existing = EmberObject.create({
+      id: "m-new",
+      name: "Sprint 2",
+      issues: A([]),
+    });
+    let backlog = EmberObject.create({
+      id: "backlog",
+      milestoneType: "backlog",
+      issues: A([]),
+    });
+    controller.set("milestones", A([existing, backlog]));
+    controller.set("currentUser", { user: { id: "user-b" } });
+
+    let store = {
+      peekRecord(modelName, id) {
+        return modelName === "milestone" && id === "m-new" ? existing : null;
+      },
+    };
+    Object.defineProperty(controller, "store", {
+      configurable: true,
+      get() {
+        return store;
+      },
+    });
+
+    controller.handleMilestoneCreated({
+      actorId: "user-a",
+      resource: { id: "m-new" },
+      changes: { name: "Sprint 2" },
+    });
+    controller.handleMilestoneCreated({
+      actorId: "user-a",
+      resource: { id: "m-new" },
+      changes: { name: "Sprint 2" },
+    });
+
+    assert.strictEqual(controller.milestones.length, 2);
+    assert.strictEqual(
+      controller.milestones.filter((milestone) => milestone.id === "m-new").length,
+      1
+    );
+  });
+
   test("milestone completed removes from board", function (assert) {
     let controller = this.owner.lookup("controller:app.project.board");
     let milestone = EmberObject.create({ id: "m1", issues: A([]) });

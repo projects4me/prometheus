@@ -5,6 +5,7 @@
 import AppComponent from 'prometheus/components/app';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { insertAtIfMissing } from 'prometheus/utils/live/collection';
 
 /**
  * This component is used to render milestones of selected project.
@@ -250,7 +251,7 @@ export default class TaskBoardComponent extends AppComponent {
 			await this.args.save('milestoneCreate', 'milestone', this.newMilestone, false);
 			// Add the newly created milestone to the beginning of the milestones list
 			// This will make it appear as the first tab
-			this.args.milestones.unshiftObject(this.newMilestone);
+			insertAtIfMissing(this.args.milestones, this.newMilestone, 0);
 			this.switchToMilestoneTab(this.newMilestone.id);
 			
 			messenger.update({

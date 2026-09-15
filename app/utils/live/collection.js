@@ -31,6 +31,30 @@ export function peekOrPush(store, modelName, id, attributes) {
 }
 
 /**
+ * Insert a record at index when no item with the same id is present.
+ *
+ * @method insertAtIfMissing
+ * @param {Object} list MutableArray or array-like with insertAt/findBy
+ * @param {Object} record Record to insert
+ * @param {Number} index Target index
+ * @returns {Boolean} True when the record was inserted
+ * @public
+ */
+export function insertAtIfMissing(list, record, index) {
+    if (!list || !record) {
+        return false;
+    }
+    if (typeof list.findBy === 'function' && list.findBy('id', record.id)) {
+        return false;
+    }
+    if (typeof list.insertAt === 'function') {
+        list.insertAt(index, record);
+        return true;
+    }
+    return false;
+}
+
+/**
  * Append a record to a hasMany / MutableArray if it is not already there.
  *
  * @method pushIfMissing
