@@ -66,6 +66,18 @@ export default class AppProjectsIndexController extends PrometheusListController
     sort = 'Project.dateModified';
 
     /**
+     * Formatted project status options for the mass update dialog.
+     *
+     * @property statusOptions
+     * @type {Array}
+     * @for AppProjectsIndexController
+     * @public
+     */
+    get statusOptions() {
+        return (new format(this)).getList('views.app.project.lists.status');
+    }
+
+    /**
      * This function is used to navigate the user to the detail page
      * for the project
      *
@@ -77,6 +89,51 @@ export default class AppProjectsIndexController extends PrometheusListController
         Logger.debug("Prometheus.Controllers.Projects.Index::openDetail");
         this.transitionToRoute('app.project.index', { shortcode: project.shortCode });
         Logger.debug("-Prometheus.Controllers.Projects.Index::openDetail");
+    }
+
+    /**
+     * Updates selected projects with values from the mass update model.
+     *
+     * @method massUpdateProject
+     * @for AppProjectsIndexController
+     * @public
+     * @action
+     */
+    @action
+    async massUpdateProject() {
+        Logger.debug('AppProjectsIndexController::massUpdateProject');
+        let selectedIds = this.getSelectedIds();
+        let messenger = new Messenger().post({
+            message: this.intl.t('views.app.module.list.massUpdate.updating', {moduleName: 'projects'}),
+            type: 'info',
+            showCloseButton: false,
+            hideAfter: false
+        });
+
+        try {
+            for (let id of selectedIds) {
+                let project = this.store.peekRecord('project', id);
+                if (this.massUpdateModel.get('status')) {
+                    project.set('status', this.massUpdateModel.get('status'));
+                }
+                await project.save();
+            }
+            messenger.update({
+                message: this.intl.t('views.app.module.list.massUpdate.updated', {moduleName: 'Projects', count: selectedIds.length}),
+                type: 'success',
+                showCloseButton: true,
+                hideAfter: 4
+            });
+        } catch (error) {
+            messenger.update({
+                message: this.intl.t('views.app.module.list.massUpdate.error', {moduleName: 'projects'}),
+                type: 'error',
+                showCloseButton: false,
+                hideAfter: 4
+            });
+        }
+        this.removeMassUpdateDialog();
+        Logger.debug('-AppProjectsIndexController::massUpdateProject');
     }
 
     /**

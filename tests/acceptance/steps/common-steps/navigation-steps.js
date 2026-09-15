@@ -44,6 +44,9 @@ export const when = function () {
                 const buttonMapping = {
                     "mass update issues": "button[data-btn='mass-update-issues']",
                     "select all issues": "[data-select='all']",
+                    "mass update projects": ".box-body .list-controls button[data-btn='mass-update-projects']",
+                    "select all projects": ".box-body .list-controls [data-select='all']",
+                    "delete projects": ".box-body .list-controls button[data-btn='delete-projects']",
                 };
                 const selector = buttonMapping[buttonLabel];
                 await click(selector);

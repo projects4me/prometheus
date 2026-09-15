@@ -418,11 +418,15 @@
           },
           "delete": {
             "message": "You are about to delete the {moduleName} <strong>{name}</strong>, once deleted it <strong>cannot be recovered</strong>.",
+            "messageSelected": "You are about to delete <strong>{count}</strong> {moduleName}, once deleted they <strong>cannot be recovered</strong>.",
             "confirmDelete": "<strong>Yes, delete the {moduleName}!</strong>",
+            "confirmDeleteSelected": "<strong>Yes, delete the selected {moduleName}!</strong>",
             "deleting": "Deleting {moduleName} ..",
             "deletecancel": "Deletion cancelled",
             "onsecondthought": "Hmm, I will just keep it.",
-            "deleted": "{moduleName} has been deleted"
+            "deleted": "{moduleName} has been deleted",
+            "deletedSelected": "<strong>{count} {moduleName}</strong> have been deleted",
+            "error": "An error occurred while deleting the {moduleName}. Please try again."
           }
         }
       },
