@@ -1,4 +1,5 @@
 import Service from "@ember/service";
+import { isTransitionAborted } from "prometheus/utils/live/reload";
 
 /* global Messenger */
 
@@ -11,96 +12,104 @@ import Service from "@ember/service";
  * @class LiveReloadPromptService
  * @namespace Prometheus.Services
  * @extends Ember.Service
+ * @author Rana Nouman <ranamnouman@gmail.com>
  * @public
  */
 export default class LiveReloadPromptService extends Service {
-  /**
-   * Active Messenger instances keyed by owner (controller / service).
-   *
-   * @property prompts
-   * @type Map
-   * @for LiveReloadPromptService
-   * @private
-   */
-  prompts = new Map();
+    /**
+     * Active Messenger instances keyed by owner (controller / service).
+     *
+     * @property prompts
+     * @type Map
+     * @for LiveReloadPromptService
+     * @private
+     */
+    prompts = new Map();
 
-  /**
-   * Show a persistent "Reload" / "Dismiss" Messenger for this owner. No-ops
-   * when a prompt is already open for the same owner.
-   *
-   * @method show
-   * @param {Object} owner Controller or service that owns the prompt
-   * @param {Function} refresh Async callback invoked when the user clicks Reload
-   * @param {String} [message] Messenger body text
-   * @returns {Object|undefined} The Messenger instance, or the existing one
-   * @public
-   */
-  show(owner, refresh, message = "New data is available. Reload this view?") {
-    if (!owner || typeof refresh !== "function" || this.prompts.has(owner)) {
-      return this.prompts.get(owner);
+    /**
+     * Show a persistent "Reload" / "Dismiss" Messenger for this owner. No-ops
+     * when a prompt is already open for the same owner.
+     *
+     * @method show
+     * @param {Object} owner Controller or service that owns the prompt
+     * @param {Function} refresh Async callback invoked when the user clicks Reload
+     * @param {String} [message] Messenger body text
+     * @returns {Object|undefined} The Messenger instance, or the existing one
+     * @public
+     */
+    show(owner, refresh, message = "New data is available. Reload this view?") {
+        if (!owner || typeof refresh !== "function" || this.prompts.has(owner)) {
+            return this.prompts.get(owner);
+        }
+
+        let messenger = new Messenger().post({
+            message,
+            type: "info",
+            showCloseButton: false,
+            hideAfter: false,
+            actions: {
+                reload: {
+                    label: "Reload",
+                    action: async () => {
+                        try {
+                            await refresh();
+                            this.clear(owner);
+                        } catch (error) {
+                            if (isTransitionAborted(error)) {
+                                console.info(
+                                    "Live reload: transition aborted; clearing prompt after successful refresh"
+                                );
+                                this.clear(owner);
+                                return;
+                            }
+                            messenger.update({
+                                message: "Reload failed. Please try again.",
+                                type: "error",
+                            });
+                            console.error("Live reload failed", error);
+                        }
+                    },
+                },
+                dismiss: {
+                    label: "Dismiss",
+                    action: () => {
+                        this.clear(owner);
+                    },
+                },
+            },
+        });
+
+        this.prompts.set(owner, messenger);
+        return messenger;
     }
 
-    let messenger = new Messenger().post({
-      message,
-      type: "info",
-      showCloseButton: false,
-      hideAfter: false,
-      actions: {
-        reload: {
-          label: "Reload",
-          action: async () => {
-            try {
-              await refresh();
-              this.clear(owner);
-            } catch (error) {
-              messenger.update({
-                message: "Reload failed. Please try again.",
-                type: "error",
-              });
-              console.error("Live reload failed", error);
-            }
-          },
-        },
-        dismiss: {
-          label: "Dismiss",
-          action: () => {
-            this.clear(owner);
-          },
-        },
-      },
-    });
-
-    this.prompts.set(owner, messenger);
-    return messenger;
-  }
-
-  /**
-   * Cancel and remove the prompt for the given owner, if any.
-   *
-   * @method clear
-   * @param {Object} owner Controller or service that owns the prompt
-   * @returns {void}
-   * @public
-   */
-  clear(owner) {
-    let messenger = this.prompts.get(owner);
-    if (!messenger) {
-      return;
+    /**
+     * Cancel and remove the prompt for the given owner, if any.
+     *
+     * @method clear
+     * @param {Object} owner Controller or service that owns the prompt
+     * @returns {void}
+     * @public
+     */
+    clear(owner) {
+        let messenger = this.prompts.get(owner);
+        if (!messenger) {
+            return;
+        }
+        this.prompts.delete(owner);
+        messenger.cancel();
     }
-    this.prompts.delete(owner);
-    messenger.cancel();
-  }
 
-  /**
-   * Cancel every open prompt when the service is destroyed.
-   *
-   * @method willDestroy
-   * @returns {void}
-   * @public
-   */
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.prompts.forEach((messenger) => messenger.cancel());
-    this.prompts.clear();
-  }
+    /**
+     * Cancel every open prompt when the service is destroyed.
+     *
+     * @method willDestroy
+     * @returns {void}
+     * @public
+     */
+    willDestroy() {
+        super.willDestroy(...arguments);
+        this.prompts.forEach((messenger) => messenger.cancel());
+        this.prompts.clear();
+    }
 }

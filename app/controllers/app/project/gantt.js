@@ -9,6 +9,7 @@ import { inject as controller } from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
+import { refreshView } from 'prometheus/utils/live/reload';
 
 /**
  * Gantt chart controller, including Hermes live handlers for dates,
@@ -308,13 +309,19 @@ export default class AppProjectGanttController extends PrometheusController {
 
 	/**
 	 * Prompts a reload when a new issue cannot be placed without a refresh.
+	 * Skips the prompt for the creating user (local echo can beat noteLocalWrite).
 	 *
 	 * @method handleIssueCreated
+	 * @param {Object} envelope Domain-event envelope
 	 * @returns {void}
 	 * @public
 	 */
-	handleIssueCreated() {
-		this.liveReloadPrompt.show(this, () => this.router.refresh());
+	handleIssueCreated(envelope) {
+		if (envelope?.actorId && envelope.actorId === this.currentUser.user?.id) {
+			Logger.debug('AppProjectGanttController::handleIssueCreated - suppressed self-origin reload prompt');
+			return;
+		}
+		this.liveReloadPrompt.show(this, () => refreshView(this.router));
 	}
 
 	/**
