@@ -82,7 +82,8 @@ export default App.extend({
             owner: _self.currentUser.user.id,
             project: _self.get('project'),
             projectId: _self.get('project').id,
-            projectShortcode: _self.get('project').shortCode
+            projectShortcode: _self.get('project').shortCode,
+            milestoneId: ''
         });
 
         const issueDescription = _.clone(issue.description);
