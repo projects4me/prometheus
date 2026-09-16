@@ -1721,6 +1721,8 @@
             "options": {
               "notset": "Not set",
               "allow": "Allow",
+              "all": "All",
+              "members": "Members",
               "none": "None",
               "readOnly": "Read Only",
               "writeRead": "Write + Read"
