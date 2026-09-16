@@ -138,6 +138,14 @@ export default {
             allow: '1',
             none: '0'
         }),
+        scopedApiOptions: JSON.stringify({
+            all: '1',
+            members: '2',
+            none: '0'
+        }),
+        scopedResources: JSON.stringify([
+            'project.get'
+        ]),
         moduleActions: JSON.stringify(buildModuleActions()),
         moduleFields: JSON.stringify(buildModuleFields()),
         modelGroups: JSON.stringify({
