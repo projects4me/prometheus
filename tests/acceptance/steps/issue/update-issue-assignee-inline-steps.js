@@ -26,7 +26,7 @@ export default function (assert) {
             });
         })
         .when('User selects User_2 from assignee dropdown', async function () {
-            await click('[data-issue-assignee-dropdown] li:nth-child(1) a');
+            await click('[data-issue-assignee-dropdown] [data-issue-assignee-option]');
         })
 		.when('User clicks on assignee dropdown', async function () {
             await click('[data-issue-assignee-dropdown] [data-toggle="dropdown"]');

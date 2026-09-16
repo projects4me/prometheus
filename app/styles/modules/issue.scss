@@ -462,24 +462,30 @@
     .dropdown-menu {
       padding: 0;
       li {
-        a {
-          display: flex;
-          align-items: center;
-          padding: 0.5rem 1rem;
-          color: $darkColor;
-          text-decoration: none;
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        color: $darkColor;
+        text-decoration: none;
+        cursor: pointer;
 
-          &:hover {
-            background-color: $primaryColor;
-            color: white;
-          }
+        &:hover,
+        &:focus {
+          background-color: $primaryColor;
+          color: white;
+          outline: none;
+        }
 
-          img {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            margin-right: 0.5rem;
-          }
+        &:focus-visible {
+          outline: 2px solid $primaryColor;
+          outline-offset: -2px;
+        }
+
+        img {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          margin-right: 0.5rem;
         }
       }
     }

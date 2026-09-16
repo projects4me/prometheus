@@ -1207,6 +1207,22 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     }
 
     /**
+     * Handles keyboard activation for assignee dropdown options.
+     *
+     * @method handleAssigneeOptionKeydown
+     * @param {Prometheus.Models.Issue} issue The issue to update
+     * @param {Prometheus.Models.User} newAssignee The new assignee to set
+     * @param {KeyboardEvent} event The keyboard event
+     * @public
+     */
+    @action handleAssigneeOptionKeydown(issue, newAssignee, event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.updateAssignee(issue, newAssignee);
+        }
+    }
+
+    /**
      * Updates the assignee of an issue
      * 
      * @method updateAssignee
