@@ -32,6 +32,7 @@ module.exports = function (defaults) {
     // please specify an object with the list of modules as keys
     // along with the exports of each module as its value.
 
+    app.import("vendor/pace/pace-options.js");
     app.import("vendor/pace/pace.min.js");
     app.import("vendor/jquery-ui/jquery-ui.min.js");
     app.import('node_modules/js-logger/src/logger.min.js');
