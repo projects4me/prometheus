@@ -214,7 +214,6 @@ export default class AppLoadingAssetsRoute extends Route {
 
         let projectOptions = {
             fields: "Project.id,Project.name,Project.shortCode",
-            query: "((Project.name STARTS A) OR (Project.name STARTS P))",
             sort: 'Project.name',
             order: 'ASC',
             limit: 200
