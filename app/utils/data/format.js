@@ -43,12 +43,20 @@ export default class Format {
      * @return {Array} list The array list of name and values
      */
     getSelectList(model = {}, map, blankOptions= {}) {
-        if (_.keys(model).length === 0) {
-            return [];
-        }
-        let count = model.length;
+        let count = model.length ?? 0;
         let list = [];
         let temp = null;
+
+        if (count === 0) {
+            if (blankOptions.isRequired) {
+                let blankPlaceholder = this.intl.t('global.blank');
+                if (blankOptions.placeholder) {
+                    blankPlaceholder = htmlSafe(blankPlaceholder.replace('blank', blankOptions.placeholder));
+                }
+                list.unshift({ label: blankPlaceholder, value: '' });
+            }
+            return list;
+        }
 
         for (let i = 0; i < count; i++) {
             temp = model.objectAt(i);
