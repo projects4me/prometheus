@@ -23,7 +23,7 @@
             <p class="login-box-msg">{{t "views.signin.message"}}</p>
           {{/if}}
 
-          <form {{action 'authenticate' on='submit'}} method="post">
+          <form {{action 'authenticate' on='submit'}} method="post" data-signin-form>
             <div class="form-group has-feedback">
               <Input id='email' class='form-control' placeholder={{t "views.signin.email"}} @value={{this.signinEmail}}/>
               <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -42,7 +42,15 @@
               </div>
 
               <div class="col-xs-12">
-                <button type="submit" class="btn btn-primary btn-block btn-flat">{{t "global.form.signin"}}</button>
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-block btn-flat {{unless this.canSubmitSignIn 'disabled'}}"
+                  disabled={{not this.canSubmitSignIn}}
+                  aria-disabled={{if this.canSubmitSignIn "false" "true"}}
+                  data-signin-submit
+                >
+                  {{t "global.form.signin"}}
+                </button>
               </div>
 
             </div>

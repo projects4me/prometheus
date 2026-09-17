@@ -68,6 +68,16 @@ export default class ApplicationHeaderComponent extends AppComponent {
      * @public
      */
     @service('pub-sub') pubSub;
+
+    /**
+     * Sign-In eligibility shared with the sign-in route.
+     *
+     * @property signInControl
+     * @type Ember.Service
+     * @for ApplicationHeader
+     * @private
+     */
+    @service('sign-in-control') signInControl;
     
     /**
      * We are using the store service to retrieve data for global search
@@ -232,14 +242,28 @@ export default class ApplicationHeaderComponent extends AppComponent {
     }
 
     /**
-     * This function should not be triggered
+     * Whether the header Sign-In control is interactive.
+     *
+     * @property isHeaderSignInEnabled
+     * @type Boolean
+     */
+    get isHeaderSignInEnabled() {
+        return this.signInControl.isHeaderSignInEnabled;
+    }
+
+    /**
+     * Routes to the sign-in page when the control is enabled.
      *
      * @method signIn
      * @for ApplicationHeader
      * @public
      */
-    signIn() {
+    @action signIn() {
+        if (!this.signInControl.isHeaderSignInEnabled) {
+            return;
+        }
 
+        this.router.transitionTo('signin');
     }
 
     /**
