@@ -6,6 +6,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { getModuleScope } from 'prometheus/utils/acl/module-types';
 
 /**
  * Field ACL modes administered in the role UI. API stores one row per field
@@ -36,6 +37,30 @@ const FIELD_LABEL_MODULE_ALIASES = {
 };
 
 /**
+ * Ordered scopes rendered as sections on the role permissions page.
+ *
+ * @constant PERMISSION_SCOPES
+ * @type {Array<{name: string, icon: string, hintKey: string|null}>}
+ */
+const PERMISSION_SCOPES = [
+    {
+        name: 'system',
+        icon: 'fa-cog',
+        hintKey: 'views.app.role.tabs.permission.scope.systemHint'
+    },
+    {
+        name: 'user',
+        icon: 'fa-user',
+        hintKey: null
+    },
+    {
+        name: 'project',
+        icon: 'fa-folder-open',
+        hintKey: null
+    }
+];
+
+/**
  * Renders Actions / Fields permission lists as dense module rows.
  * Each module is one horizontal row with its action or field controls inline.
  *
@@ -57,9 +82,18 @@ export default class RolePermissionsComponent extends Component {
     @tracked fieldAccessRevision = 0;
 
     /**
-     * Action permissions grouped as one row per module.
+     * Scope section metadata for Actions / Fields tabs.
      *
-     * @returns {Array<{name: string, label: string, controls: Array}>}
+     * @property permissionScopes
+     * @type {Array<{name: string, icon: string, hintKey: string|null}>}
+     */
+    permissionScopes = PERMISSION_SCOPES;
+
+    /**
+     * All action permissions grouped as one row per module, each annotated with
+     * its scope ('system' | 'user' | 'project').
+     *
+     * @returns {Array<{name: string, label: string, scope: string, controls: Array}>}
      */
     get actionPermissionModules() {
         return this.groupPermissionsByModule(
@@ -70,9 +104,10 @@ export default class RolePermissionsComponent extends Component {
     }
 
     /**
-     * Field-mode permissions grouped as one row per module.
+     * All field-mode permissions grouped as one row per module, each annotated
+     * with its scope ('system' | 'user' | 'project').
      *
-     * @returns {Array<{name: string, label: string, controls: Array}>}
+     * @returns {Array<{name: string, label: string, scope: string, controls: Array}>}
      */
     get fieldPermissionModules() {
         void this.fieldAccessRevision;
@@ -95,6 +130,23 @@ export default class RolePermissionsComponent extends Component {
             },
             (a, b) => a.field.localeCompare(b.field)
         );
+    }
+
+    /**
+     * Permission module rows for a given scope and tab type.
+     * Used from the template via `(call (fn this.getPermissionModules scope type))`.
+     *
+     * @method getPermissionModules
+     * @param {string} scope 'system' | 'user' | 'project'
+     * @param {string} type 'actions' | 'fields'
+     * @returns {Array}
+     */
+    @action getPermissionModules(scope, type = 'actions') {
+        let modules = type === 'fields'
+            ? this.fieldPermissionModules
+            : this.actionPermissionModules;
+
+        return modules.filter((moduleGroup) => moduleGroup.scope === scope);
     }
 
     /**
@@ -164,6 +216,7 @@ export default class RolePermissionsComponent extends Component {
             .map((moduleName) => ({
                 name: moduleName,
                 label: this.resolveModuleLabel(moduleName),
+                scope: getModuleScope(moduleName),
                 controls: byModule[moduleName].sort(sortControls)
             }));
     }

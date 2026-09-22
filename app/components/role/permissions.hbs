@@ -9,46 +9,63 @@
   </ul>
 
   <div class="tab-content">
+
+    {{!-- ── Actions tab ────────────────────────────────────────────────────── --}}
     <div class="tab-pane fade in active" id="role-permission-actions" data-role="permission-actions">
       {{#if this.actionPermissionModules.length}}
-        <div class="permission-module-list">
-          {{#each this.actionPermissionModules as |moduleGroup|}}
-            <div class="permission-module-row" data-permission-module={{moduleGroup.name}}>
-              <div class="permission-module-row__label">{{moduleGroup.label}}</div>
-              <div class="permission-module-row__controls">
-                {{#each moduleGroup.controls as |control|}}
-                  <div
-                    class="permission-control"
-                    data-module-resource={{control.resourceName}}
-                  >
-                    <label class="permission-control__label">{{control.displayLabel}}</label>
-                    <div class="permission-control__input">
-                      <Role::PermissionOptions
-                        @options={{get-permission-options control.permission.resourceName control.permission.allowed}}
-                        @value={{control.permission.allowed}}
-                        @permission={{control.permission}}
-                        @flag="allowed"
-                      />
+        {{#each this.permissionScopes as |scopeConfig|}}
+          {{#let (call (fn this.getPermissionModules scopeConfig.name "actions")) as |modules|}}
+            {{#if modules.length}}
+              <div class="permission-scope-section permission-scope-section--{{scopeConfig.name}}">
+                <div
+                  class="permission-scope-section__header"
+                  title={{if scopeConfig.hintKey (t scopeConfig.hintKey)}}
+                >
+                  <i class="fa {{scopeConfig.icon}}"></i>
+                  {{t (concat "views.app.role.tabs.permission.scope." scopeConfig.name)}}
+                </div>
+                <div class="permission-module-list">
+                  {{#each modules as |moduleGroup|}}
+                    <div class="permission-module-row" data-permission-module={{moduleGroup.name}}>
+                      <div class="permission-module-row__label">{{moduleGroup.label}}</div>
+                      <div class="permission-module-row__controls">
+                        {{#each moduleGroup.controls as |control|}}
+                          <div
+                            class="permission-control"
+                            data-module-resource={{control.resourceName}}
+                          >
+                            <label class="permission-control__label">{{control.displayLabel}}</label>
+                            <div class="permission-control__input">
+                              <Role::PermissionOptions
+                                @options={{get-permission-options control.permission.resourceName control.permission.allowed}}
+                                @value={{control.permission.allowed}}
+                                @permission={{control.permission}}
+                                @flag="allowed"
+                              />
+                            </div>
+                          </div>
+                        {{/each}}
+                      </div>
+                      <span class="permission-module-row__status" data-module="permission-state">
+                        {{#each moduleGroup.controls as |control|}}
+                          {{#if (get @permissionsState (concat control.moduleName '.' control.resourceAlias '.isRunning'))}}
+                            <i class="fa fa-spinner fa-spin"></i>
+                          {{/if}}
+                          {{#if (get @permissionsState (concat control.moduleName '.' control.resourceAlias '.isSuccessful'))}}
+                            <i class="fa fa-check-circle"></i>
+                          {{/if}}
+                          {{#if (get @permissionsState (concat control.moduleName '.' control.resourceAlias '.isErrored'))}}
+                            <i class="fa fa-times-circle"></i>
+                          {{/if}}
+                        {{/each}}
+                      </span>
                     </div>
-                  </div>
-                {{/each}}
+                  {{/each}}
+                </div>
               </div>
-              <span class="permission-module-row__status" data-module="permission-state">
-                {{#each moduleGroup.controls as |control|}}
-                  {{#if (get @permissionsState (concat control.moduleName '.' control.resourceAlias '.isRunning'))}}
-                    <i class="fa fa-spinner fa-spin"></i>
-                  {{/if}}
-                  {{#if (get @permissionsState (concat control.moduleName '.' control.resourceAlias '.isSuccessful'))}}
-                    <i class="fa fa-check-circle"></i>
-                  {{/if}}
-                  {{#if (get @permissionsState (concat control.moduleName '.' control.resourceAlias '.isErrored'))}}
-                    <i class="fa fa-times-circle"></i>
-                  {{/if}}
-                {{/each}}
-              </span>
-            </div>
-          {{/each}}
-        </div>
+            {{/if}}
+          {{/let}}
+        {{/each}}
       {{else}}
         <Exceptions::NothingFound
           @description={{t "views.app.role.tabs.permission.noActions"}}
@@ -56,55 +73,72 @@
       {{/if}}
     </div>
 
+    {{!-- ── Fields tab ─────────────────────────────────────────────────────── --}}
     <div class="tab-pane fade" id="role-permission-fields" data-role="permission-fields">
       {{#if this.fieldPermissionModules.length}}
-        <div class="permission-module-list">
-          {{#each this.fieldPermissionModules as |moduleGroup|}}
-            <div class="permission-module-row" data-permission-module={{moduleGroup.name}}>
-              <div class="permission-module-row__label">{{moduleGroup.label}}</div>
-              <div class="permission-module-row__controls">
-                {{#each moduleGroup.controls as |control|}}
-                  <div
-                    class="permission-control"
-                    data-field-group={{control.field}}
-                    data-field-access={{control.accessMode}}
-                    data-module-resource={{control.permission.resourceName}}
-                  >
-                    <label class="permission-control__label">{{control.displayLabel}}</label>
-                    <div class="permission-control__input">
-                      <select data-field-access-select={{control.field}} {{on "change" (fn this.setFieldAccessMode control)}}>
-                        {{#each this.fieldAccessOptions as |optionObject|}}
-                          <option value={{optionObject.value}} selected={{eq control.accessMode optionObject.value}}>{{optionObject.label}}</option>
+        {{#each this.permissionScopes as |scopeConfig|}}
+          {{#let (call (fn this.getPermissionModules scopeConfig.name "fields")) as |modules|}}
+            {{#if modules.length}}
+              <div class="permission-scope-section permission-scope-section--{{scopeConfig.name}}">
+                <div
+                  class="permission-scope-section__header"
+                  title={{if scopeConfig.hintKey (t scopeConfig.hintKey)}}
+                >
+                  <i class="fa {{scopeConfig.icon}}"></i>
+                  {{t (concat "views.app.role.tabs.permission.scope." scopeConfig.name)}}
+                </div>
+                <div class="permission-module-list">
+                  {{#each modules as |moduleGroup|}}
+                    <div class="permission-module-row" data-permission-module={{moduleGroup.name}}>
+                      <div class="permission-module-row__label">{{moduleGroup.label}}</div>
+                      <div class="permission-module-row__controls">
+                        {{#each moduleGroup.controls as |control|}}
+                          <div
+                            class="permission-control"
+                            data-field-group={{control.field}}
+                            data-field-access={{control.accessMode}}
+                            data-module-resource={{control.permission.resourceName}}
+                          >
+                            <label class="permission-control__label">{{control.displayLabel}}</label>
+                            <div class="permission-control__input">
+                              <select data-field-access-select={{control.field}} {{on "change" (fn this.setFieldAccessMode control)}}>
+                                {{#each this.fieldAccessOptions as |optionObject|}}
+                                  <option value={{optionObject.value}} selected={{eq control.accessMode optionObject.value}}>{{optionObject.label}}</option>
+                                {{/each}}
+                              </select>
+                            </div>
+                          </div>
                         {{/each}}
-                      </select>
+                      </div>
+                      <span class="permission-module-row__status" data-module="permission-state">
+                        {{#each moduleGroup.controls as |control|}}
+                          {{#if control.permission}}
+                            {{#if (get @permissionsState (concat control.permission.moduleName '.' control.permission.resourceAlias '.isRunning'))}}
+                              <i class="fa fa-spinner fa-spin"></i>
+                            {{/if}}
+                            {{#if (get @permissionsState (concat control.permission.moduleName '.' control.permission.resourceAlias '.isSuccessful'))}}
+                              <i class="fa fa-check-circle"></i>
+                            {{/if}}
+                            {{#if (get @permissionsState (concat control.permission.moduleName '.' control.permission.resourceAlias '.isErrored'))}}
+                              <i class="fa fa-times-circle"></i>
+                            {{/if}}
+                          {{/if}}
+                        {{/each}}
+                      </span>
                     </div>
-                  </div>
-                {{/each}}
+                  {{/each}}
+                </div>
               </div>
-              <span class="permission-module-row__status" data-module="permission-state">
-                {{#each moduleGroup.controls as |control|}}
-                  {{#if control.permission}}
-                    {{#if (get @permissionsState (concat control.permission.moduleName '.' control.permission.resourceAlias '.isRunning'))}}
-                      <i class="fa fa-spinner fa-spin"></i>
-                    {{/if}}
-                    {{#if (get @permissionsState (concat control.permission.moduleName '.' control.permission.resourceAlias '.isSuccessful'))}}
-                      <i class="fa fa-check-circle"></i>
-                    {{/if}}
-                    {{#if (get @permissionsState (concat control.permission.moduleName '.' control.permission.resourceAlias '.isErrored'))}}
-                      <i class="fa fa-times-circle"></i>
-                    {{/if}}
-                  {{/if}}
-                {{/each}}
-              </span>
-            </div>
-          {{/each}}
-        </div>
+            {{/if}}
+          {{/let}}
+        {{/each}}
       {{else}}
         <Exceptions::NothingFound
           @description={{t "views.app.role.tabs.permission.noFields"}}
         />
       {{/if}}
     </div>
+
   </div>
 
   <div class="role-permissions__actions">
