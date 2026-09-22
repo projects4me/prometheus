@@ -1719,7 +1719,6 @@
               }
             },
             "options": {
-              "notset": "Not set",
               "allow": "Allow",
               "all": "All",
               "members": "Members",
