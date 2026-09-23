@@ -363,6 +363,77 @@
           margin-left: 0.5rem;
         }
       }
+
+      // ── Scope sections (System / Project / Other) ──────────────────────────
+      .permission-scope-section {
+        margin-bottom: 1.5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        // Divider between adjacent scope sections
+        & + .permission-scope-section {
+          border-top: 2px solid #e2e2e2;
+          padding-top: 1rem;
+        }
+      }
+
+      .permission-scope-section__header {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 0.3rem 0.9rem 0.3rem 0.7rem;
+        border-radius: 0.3rem;
+        margin-bottom: 0.9rem;
+
+        i.fa {
+          font-size: 1.1rem;
+        }
+      }
+
+      // System section — amber / warning palette (AdminLTE box-warning)
+      .permission-scope-section--system {
+        .permission-scope-section__header {
+          background-color: #fef9ec;
+          border: 1px solid #f0ad4e;
+          color: #8a6d3b;
+
+          i.fa {
+            color: #f0ad4e;
+          }
+        }
+      }
+
+      // User section — green / success palette
+      .permission-scope-section--user {
+        .permission-scope-section__header {
+          background-color: #eef9f0;
+          border: 1px solid #5cb85c;
+          color: #3c763d;
+
+          i.fa {
+            color: #5cb85c;
+          }
+        }
+      }
+
+      // Project section — blue / info palette (AdminLTE box-info)
+      .permission-scope-section--project {
+        .permission-scope-section__header {
+          background-color: #eaf4fb;
+          border: 1px solid #5bc0de;
+          color: #31708f;
+
+          i.fa {
+            color: #5bc0de;
+          }
+        }
+      }
     }
   }
 }
