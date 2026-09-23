@@ -6,10 +6,13 @@ import Helper from '@ember/component/helper';
 import { inject as service } from '@ember/service';
 
 /**
- * Returns binary permission options (Allow / None, plus Not set only while unset)
- * from flat apiOptions.
+ * Returns permission select options for a module-action resource.
  *
- * Pass the current allowed value as the 2nd arg so the list recomputes when it changes.
+ * Uses `scopedApiOptions` (all/members/none → 1/2/0) for resources listed in
+ * `aclSettings.scopedResources` (e.g. project.get); otherwise `apiOptions`
+ * (allow/none → 1/0).
+ *
+ * Pass the resource name and current allowed value so the list recomputes.
  *
  * @class GetPermissionOptions
  * @extends Ember.Component.Helper
@@ -32,21 +35,20 @@ export default Helper.extend({
     intl: service(),
 
     /**
-     * @param {string} type aclSettings key (e.g. apiOptions)
-     * @param {*} [currentValue] current permission.allowed (or similar); hides Not set when set
+     * @param {string} resourceOrType resourceName (e.g. project.get) or legacy options key
+     * @param {*} [currentValue] current permission.allowed; hides Not set when set
      * @returns {Object[]}
      */
-    compute([type, currentValue]) {
+    compute([resourceOrType, currentValue]) {
         let aclSettings = this.settings.get('aclSettings') || {};
-        let apiOptions = aclSettings[type] || {};
+        let optionsKey = this.resolveOptionsKey(resourceOrType, aclSettings);
+        let apiOptions = aclSettings[optionsKey] || {};
+
         let options = Object.assign(
             {},
-            (apiOptions.allow !== undefined || apiOptions.none !== undefined)
+            (Object.keys(apiOptions).length > 0)
                 ? apiOptions
-                : {
-                    allow: '1',
-                    none: '0'
-                }
+                : this.defaultOptions(optionsKey)
         );
 
         let isUnset = currentValue === null
@@ -71,5 +73,54 @@ export default Helper.extend({
         }
 
         return optionsList;
+    },
+
+    /**
+     * @param {string} resourceOrType
+     * @param {Object} aclSettings
+     * @returns {string}
+     * @private
+     */
+    resolveOptionsKey(resourceOrType, aclSettings) {
+        if (resourceOrType === 'apiOptions' || resourceOrType === 'scopedApiOptions') {
+            return resourceOrType;
+        }
+
+        let scopedResources = aclSettings.scopedResources || [];
+        if (typeof scopedResources === 'string') {
+            try {
+                scopedResources = JSON.parse(scopedResources);
+            } catch (e) {
+                scopedResources = [];
+            }
+        }
+        if (!Array.isArray(scopedResources)) {
+            scopedResources = [];
+        }
+
+        if (scopedResources.includes(resourceOrType)) {
+            return 'scopedApiOptions';
+        }
+
+        return 'apiOptions';
+    },
+
+    /**
+     * @param {string} optionsKey
+     * @returns {Object}
+     * @private
+     */
+    defaultOptions(optionsKey) {
+        if (optionsKey === 'scopedApiOptions') {
+            return {
+                all: '1',
+                members: '2',
+                none: '0'
+            };
+        }
+        return {
+            allow: '1',
+            none: '0'
+        };
     }
 });

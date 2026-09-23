@@ -91,7 +91,7 @@ export default class AclService extends Service {
      * @method aclPermissions
      * @returns {Array}
      */
-    @computed('this.currentUser.user')
+    @computed('currentUser.user', 'currentUser.user.aclPermissions.[]')
     get aclPermissions() {
         let user = this.currentUser.user;
         if (!user || !user.aclPermissions) {
@@ -161,7 +161,7 @@ export default class AclService extends Service {
                 return typeof entity === 'string'
                     && entity.endsWith('.get')
                     && entity.split('.').length === 2
-                    && (allowed === 1 || allowed === '1' || allowed === true);
+                    && (allowed === 1 || allowed === '1' || allowed === 2 || allowed === '2' || allowed === true);
             });
         }
         return this.checkAccess(route.map);
@@ -228,6 +228,11 @@ export default class AclService extends Service {
         }
 
         let allowed = permission.get ? permission.get('allowed') : permission.allowed;
-        return allowed === 1 || allowed === '1' || allowed === true;
+        // 1 = allow/all, 2 = members (scoped resources such as project.get)
+        return allowed === 1
+            || allowed === '1'
+            || allowed === 2
+            || allowed === '2'
+            || allowed === true;
     }
 }
