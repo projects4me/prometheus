@@ -37,7 +37,7 @@
                             <label class="permission-control__label">{{control.displayLabel}}</label>
                             <div class="permission-control__input">
                               <Role::PermissionOptions
-                                @options={{get-permission-options control.permission.resourceName control.permission.allowed}}
+                                @options={{get-permission-options control.permission.resourceName}}
                                 @value={{control.permission.allowed}}
                                 @permission={{control.permission}}
                                 @flag="allowed"

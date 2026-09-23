@@ -12,7 +12,7 @@ import { inject as service } from '@ember/service';
  * `aclSettings.scopedResources` (e.g. project.get); otherwise `apiOptions`
  * (allow/none → 1/0).
  *
- * Pass the resource name and current allowed value so the list recomputes.
+ * Pass the resource name so the list recomputes when the resource changes.
  *
  * @class GetPermissionOptions
  * @extends Ember.Component.Helper
@@ -36,10 +36,9 @@ export default Helper.extend({
 
     /**
      * @param {string} resourceOrType resourceName (e.g. project.get) or legacy options key
-     * @param {*} [currentValue] current permission.allowed; hides Not set when set
      * @returns {Object[]}
      */
-    compute([resourceOrType, currentValue]) {
+    compute([resourceOrType]) {
         let aclSettings = this.settings.get('aclSettings') || {};
         let optionsKey = this.resolveOptionsKey(resourceOrType, aclSettings);
         let apiOptions = aclSettings[optionsKey] || {};
@@ -51,19 +50,7 @@ export default Helper.extend({
                 : this.defaultOptions(optionsKey)
         );
 
-        let isUnset = currentValue === null
-            || currentValue === undefined
-            || currentValue === '';
-
         let optionsList = [];
-
-        // Only offer "Not set" while the permission has no applied value.
-        if (isUnset) {
-            optionsList.push({
-                label: this.intl.t("views.app.role.tabs.permission.options.notset"),
-                value: ""
-            });
-        }
 
         for (let [key, value] of Object.entries(options)) {
             optionsList.push({
