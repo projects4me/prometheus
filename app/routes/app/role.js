@@ -3,6 +3,33 @@
  */
 
 import App from "prometheus/routes/app";
+import { allSettled, hashSettled } from 'rsvp';
+import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
+
+/**
+ * Flatten a permission query result into plain coverage entries keyed to the
+ * role that was requested. Defaults from the API have empty roleId, so we must
+ * stamp the requested roleId ourselves.
+ *
+ * @param {string} roleId
+ * @param {*} recordArray Ember Data RecordArray, array, or null
+ * @returns {Array<{roleId: string, resourceName: string, allowed: string}>}
+ */
+function toCoverageEntries(roleId, recordArray) {
+    if (!recordArray) {
+        return [];
+    }
+
+    let list = typeof recordArray.toArray === 'function'
+        ? recordArray.toArray()
+        : Array.from(recordArray);
+
+    return list.map((permission) => ({
+        roleId: String(roleId),
+        resourceName: permission.resourceName || '',
+        allowed: permission.allowed
+    }));
+}
 
 /**
  *  This is the route to load the list of roles.
@@ -15,9 +42,10 @@ import App from "prometheus/routes/app";
  */
 export default class AppRoleRoute extends App {
     /**
-     * The model hook for this route. In this function we fetch and return the list of roles.
+     * Load roles, permissions (per role for coverage), and all userroles with
+     * users (for member avatars on cards).
      *
-     * @method model;
+     * @method model
      * @returns Promise
      * @protected
      */
@@ -29,7 +57,44 @@ export default class AppRoleRoute extends App {
             limit: -1
         };
 
-        return this.store.query('role', rolesOptions).catch((error) =>{
+        return hashSettled({
+            roles: this.store.query('role', rolesOptions),
+            userroles: this.store.query('userrole', {
+                rels: 'user',
+                limit: -1
+            })
+        }).then((results) => {
+            let model = extractHashSettled(results, 'roles');
+            let roleList = model.roles && typeof model.roles.toArray === 'function'
+                ? model.roles.toArray()
+                : (model.roles || []);
+
+            return allSettled(
+                roleList.map((role) =>
+                    _self.store.query('permission', { roleId: role.id })
+                )
+            ).then((settled) => {
+                let allPermissions = [];
+
+                settled.forEach((result, index) => {
+                    if (result.state === 'fulfilled') {
+                        allPermissions = allPermissions.concat(
+                            toCoverageEntries(roleList[index].id, result.value)
+                        );
+                    }
+                });
+
+                let userroles = model.userroles && typeof model.userroles.toArray === 'function'
+                    ? model.userroles.toArray()
+                    : (model.userroles || []);
+
+                return {
+                    roles: roleList,
+                    permissions: allPermissions,
+                    userroles
+                };
+            });
+        }).catch((error) => {
             _self.errorManager.handleError(error, {
                 moduleName: "role"
             });
@@ -47,7 +112,17 @@ export default class AppRoleRoute extends App {
     setupController(controller, model) {
         let newRole = this.store.createRecord('role', {});
 
-        controller.set('roles', model.toArray());
+        if (!model) {
+            controller.set('roles', []);
+            controller.set('allPermissions', []);
+            controller.set('allUserroles', []);
+            controller.set('newRole', newRole);
+            return;
+        }
+
+        controller.set('roles', model.roles || []);
+        controller.set('allPermissions', model.permissions || []);
+        controller.set('allUserroles', model.userroles || []);
         controller.set('newRole', newRole);
     }
 }

@@ -1381,7 +1381,8 @@
       },
       "role": {
         "list": {
-          "updated": "Role {field} updated"
+          "updated": "Role {field} updated",
+          "add": "Add role"
         },
         "tabs": {
           "permission": {
@@ -1769,6 +1770,24 @@
             },
             "createUserrole": "Assign Role",
             "confirmdelete": "Yes, remove role assignment for <strong>{user}</strong>"
+          }
+        },
+        "card": {
+          "coverage": "Permission Coverage",
+          "access": "{percent}% ACCESS",
+          "accessGranted": "{percent}% access granted",
+          "accessDenied": "{percent}% access denied",
+          "accessUnknown": "Access unknown",
+          "noDescription": "No description",
+          "noMembers": "No members",
+          "modified": "Modified:",
+          "open": "Currently open",
+          "tier": {
+            "high": "High",
+            "elevated": "Elevated",
+            "medium": "Medium",
+            "low": "Basic",
+            "none": "—"
           }
         },
         "create": {

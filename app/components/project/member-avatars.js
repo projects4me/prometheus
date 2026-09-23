@@ -17,13 +17,20 @@ export default class ProjectMemberAvatarsComponent extends AppComponent {
 
     /**
      * Maximum number of avatars to display before showing the overflow badge.
+     * Override via `@maxVisible` (defaults to 4).
      *
      * @property maxVisible
      * @type Number
      * @for ProjectMemberAvatarsComponent
      * @private
      */
-    maxVisible = 4;
+    get maxVisible() {
+        let value = this.args.maxVisible;
+        if (value === undefined || value === null) {
+            return 4;
+        }
+        return Number(value);
+    }
 
     /**
      * The slice of members that will be rendered as individual avatars.
