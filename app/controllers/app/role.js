@@ -4,7 +4,7 @@
 
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { tracked } from '@glimmer/tracking';
-import { action, computed } from '@ember/object';
+import { action, get } from '@ember/object';
 import { inject as controller } from '@ember/controller';
 import { htmlSafe } from '@ember/template';
 
@@ -52,6 +52,31 @@ export default class AppRoleController extends PrometheusCreateController {
         super(...arguments);
         this.setupSchema();
     }
+
+    /**
+     * Roles shown on the list. Reassign the array (do not mutate in place) so
+     * autotracking invalidates dependent getters.
+     *
+     * @property roles
+     * @type {Array}
+     */
+    @tracked roles = [];
+
+    /**
+     * Plain coverage entries `{ roleId, resourceName, allowed }` for all roles.
+     *
+     * @property allPermissions
+     * @type {Array}
+     */
+    @tracked allPermissions = [];
+
+    /**
+     * Userrole records (with user) used to build member avatars on cards.
+     *
+     * @property allUserroles
+     * @type {Array}
+     */
+    @tracked allUserroles = [];
 
     /**
      * This property is used to keep track the query for searching the role.
@@ -108,17 +133,162 @@ export default class AppRoleController extends PrometheusCreateController {
     }
 
     /**
-     * This function return list of roles against the query given by the user.
-     * 
+     * Roles matching the current search query.
+     *
      * @property filteredRoles
-     * @return Array
+     * @return {Array}
      */
-    @computed('roles.length', 'searchQuery')
     get filteredRoles() {
-        return this.roles.filter((role) => {
-            return role.name.toLowerCase().includes(this.searchQuery)
-                || role.name.includes(this.searchQuery);
+        let query = (this.searchQuery || '').toLowerCase();
+        let roles = this.roles || [];
+
+        if (!query) {
+            return roles;
+        }
+
+        return roles.filter((role) => {
+            let name = (role.name || '').toLowerCase();
+            return name.includes(query);
         });
+    }
+
+    /**
+     * Action-level permission resource names (e.g. "issue.get", "role.delete") are
+     * those whose second dot-segment is one of the four CRUD verbs. Field-mode
+     * permissions ("issue.subject", "issue.name") are excluded so the denominator
+     * reflects meaningful privilege surface rather than schema width.
+     */
+    _ACTION_VERBS = new Set(['get', 'create', 'update', 'delete']);
+
+    /**
+     * Whether an action permission counts as granted for coverage.
+     *
+     * Matches product ACL semantics: unset / empty allowed is the permissive
+     * default (grant). Explicit denies are '0'. Explicit grants are '1' (all)
+     * or '2' (members, for scoped resources).
+     *
+     * @method isActionAllowed
+     * @param {*} allowed
+     * @returns {boolean}
+     */
+    isActionAllowed(allowed) {
+        if (allowed === '0' || allowed === 0) {
+            return false;
+        }
+        // Permissive default (not yet saved / empty string)
+        if (allowed === '' || allowed === null || allowed === undefined) {
+            return true;
+        }
+        return allowed === '1'
+            || allowed === 1
+            || allowed === '2'
+            || allowed === 2
+            || allowed === true;
+    }
+
+    /**
+     * Permission-coverage percentage for every role.
+     * Reads `@tracked` `allPermissions` / `roles` so autotracking invalidates
+     * this getter when those arrays are reassigned.
+     *
+     * @property coverageByRole
+     * @type {Object}
+     */
+    get coverageByRole() {
+        let statsByRole = {};
+        let actionVerbs = this._ACTION_VERBS;
+
+        (this.allPermissions || []).forEach((permission) => {
+            let parts = (permission.resourceName || '').split('.');
+            if (parts.length !== 2 || !actionVerbs.has(parts[1])) {
+                return;
+            }
+
+            let roleId = String(permission.roleId);
+            if (!statsByRole[roleId]) {
+                statsByRole[roleId] = { total: 0, allowed: 0 };
+            }
+            statsByRole[roleId].total++;
+            if (this.isActionAllowed(permission.allowed)) {
+                statsByRole[roleId].allowed++;
+            }
+        });
+
+        let coverage = {};
+        (this.roles || []).forEach((role) => {
+            let stats = statsByRole[String(role.id)];
+            coverage[role.id] = (stats && stats.total)
+                ? Math.round((stats.allowed / stats.total) * 100)
+                : 0;
+        });
+
+        return coverage;
+    }
+
+    /**
+     * Users assigned to each role, keyed by roleId.
+     *
+     * @property membersByRole
+     * @type {Object}
+     */
+    get membersByRole() {
+        let byRole = {};
+
+        (this.allUserroles || []).forEach((userrole) => {
+            let roleId = String(get(userrole, 'roleId') || '');
+            if (!roleId) {
+                return;
+            }
+
+            // belongsTo may be a PromiseProxy — always use Ember.get, never `.id`
+            let user = get(userrole, 'user');
+            let userId = user ? get(user, 'id') : null;
+            if (!userId) {
+                return;
+            }
+
+            if (!byRole[roleId]) {
+                byRole[roleId] = [];
+            }
+
+            // Plain objects so avatar templates never hit proxy `.id` asserts
+            byRole[roleId].push({
+                id: userId,
+                name: get(user, 'name') || ''
+            });
+        });
+
+        return byRole;
+    }
+
+    /**
+     * Replace coverage entries for one role and reassign `allPermissions` so
+     * `coverageByRole` autotracks.
+     *
+     * @method syncRoleCoverage
+     * @param {string} roleId
+     * @param {Array} permissions Ember Data permission records or plain entries
+     */
+    syncRoleCoverage(roleId, permissions) {
+        let roleIdStr = String(roleId);
+        let retained = (this.allPermissions || []).filter(
+            (entry) => String(entry.roleId) !== roleIdStr
+        );
+
+        let list = [];
+        if (permissions) {
+            list = typeof permissions.toArray === 'function'
+                ? permissions.toArray()
+                : Array.from(permissions);
+        }
+
+        let fresh = list.map((permission) => ({
+            roleId: roleIdStr,
+            resourceName: get(permission, 'resourceName') || '',
+            allowed: get(permission, 'allowed')
+        })).filter((entry) => entry.resourceName);
+
+        this.allPermissions = [...retained, ...fresh];
     }
 
     /**
@@ -199,7 +369,27 @@ export default class AppRoleController extends PrometheusCreateController {
                 if (validation.isValid) {
                     newRole.save().then(function (role) {
                         Logger.debug('A new role has been saved');
-                        _self.roles.pushObject(role);
+                        // Reassign tracked arrays (in-place pushObject would not invalidate getters)
+                        _self.roles = [...(_self.roles || []), role];
+
+                        // Load this role's permission catalog so coverage % is correct
+                        // immediately (permission list API requires roleId).
+                        _self.store.query('permission', { roleId: role.id }).then((perms) => {
+                            let entries = (typeof perms.toArray === 'function'
+                                ? perms.toArray()
+                                : Array.from(perms || [])
+                            ).map((permission) => ({
+                                roleId: String(role.id),
+                                resourceName: permission.resourceName || '',
+                                allowed: permission.allowed
+                            }));
+                            _self.allPermissions = [
+                                ...(_self.allPermissions || []),
+                                ...entries
+                            ];
+                        }).catch(() => {
+                            // Coverage stays 0 until next full list reload — non-fatal.
+                        });
 
                         new Messenger().post({
                             message: _self.intl.t("views.app.role.created", { name: role.name }),
@@ -261,9 +451,21 @@ export default class AppRoleController extends PrometheusCreateController {
 
                         return role.destroyRecord().then(function () {
                             // Roles live on app.role (list), not on the page controller instance.
-                            let roles = _self.roleListController.roles;
-                            if (roles) {
-                                roles.removeObject(role);
+                            let listController = _self.roleListController;
+                            if (listController.roles) {
+                                listController.roles = listController.roles.filter(
+                                    (entry) => String(entry.id) !== String(role.id)
+                                );
+                            }
+                            if (listController.allPermissions) {
+                                listController.allPermissions = listController.allPermissions.filter(
+                                    (entry) => String(entry.roleId) !== String(role.id)
+                                );
+                            }
+                            if (listController.allUserroles) {
+                                listController.allUserroles = listController.allUserroles.filter(
+                                    (entry) => String(get(entry, 'roleId')) !== String(role.id)
+                                );
                             }
 
                             if (_self.isRolePage
