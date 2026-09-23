@@ -485,6 +485,12 @@ span[id="#"]{
   color: #999;
 }
 
+#btn-signin a.disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
 .tui-editor-defaultUI {
   .tui-editor-contents {
     font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
