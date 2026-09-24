@@ -54,10 +54,8 @@ export const then = function () {
 					} else {
 						assert.ok(false, 'Success message is not displayed');
 					}
-					// Remove messenger to avoid affecting other test cases
-					let messenger = document.querySelector('.messenger-fixed');
-					if (messenger) {
-						messenger.remove();
+					if (typeof Messenger !== 'undefined') {
+						Messenger().hideAll();
 					}
 				}
 		},
@@ -75,11 +73,14 @@ export const then = function () {
 		{
 			'User should not see timezone change prompt': (assert) =>
 				async function () {
-					let prompt = document.querySelector(
+					let prompts = document.querySelectorAll(
 						'.messenger-message.message-info'
 					);
+					let visiblePrompt = [...prompts].find(
+						(el) => !el.classList.contains('messenger-hidden')
+					);
 					assert.ok(
-						!prompt,
+						!visiblePrompt,
 						'User should not see timezone change prompt'
 					);
 				}

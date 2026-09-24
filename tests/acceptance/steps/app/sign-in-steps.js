@@ -3,7 +3,7 @@ import {
 	currentSession,
 	authenticateSession
 } from 'ember-simple-auth/test-support';
-import { currentURL, visit, click, fillIn } from '@ember/test-helpers';
+import { currentURL, visit } from '@ember/test-helpers';
 
 export const given = function () {
 	return [

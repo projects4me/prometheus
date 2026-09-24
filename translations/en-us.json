@@ -343,6 +343,7 @@
       "forgot": "Forgot Password?",
       "title": "<b>Projects</b>4<b>Me</b>",
       "invalid_grant": "Invalid email or password",
+      "account_inactive": "This account is inactive. Please contact your administrator.",
       "resourceLocked": "Your account has been locked, please contact the system administrator",
       "error": "Invalid email or password",
       "sessionExpired": "Your <b>session</b> has expired. Please sign in again to continue",
@@ -1121,7 +1122,8 @@
             "lastActivityAt": "Last Activity",
             "dateJoined": "Date Joined",
             "noLastActivity": "No activity recorded",
-            "notJoinedYet": "Not joined yet"
+            "notJoinedYet": "Not joined yet",
+            "statusUpdateFailed": "Unable to update account status. Please try again."
           }
         },
         "create": {
