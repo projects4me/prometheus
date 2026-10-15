@@ -71,7 +71,10 @@ export default class AclService extends Service {
         { name: 'app.admin.page', map: 'user.read' },
         { name: 'app.admin.edit', map: 'user.update' },
         { name: 'app.role.index', map: 'role.read' },
-        { name: 'app.role.page', map: 'role.read' }
+        { name: 'app.role.page', map: 'role.read' },
+        { name: 'app.settings', map: 'setting.read' },
+        { name: 'app.settings.index', map: 'setting.read' },
+        { name: 'app.settings.users', map: 'user.read' }
     ];
 
     /**

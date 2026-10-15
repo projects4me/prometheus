@@ -1,11 +1,13 @@
+{{#unless this.embedded}}
 <section class="content-header">
   <h1>
     {{t "views.app.user.management.title"}}
   </h1>
   <BreadCrumb/>
 </section>
+{{/unless}}
 
-<section class="content user-management">
+<section class="user-management {{unless this.embedded "content"}}">
   <div class="row module users">
     <div class="col-md-12">
       <AccessControl @aclContext="user.read">

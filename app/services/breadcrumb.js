@@ -174,6 +174,18 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app.project'
 		},
+		'app.settings': {
+			title: 'views.nav.menu.settings.label',
+			icon: 'cogs',
+			linkable: true,
+			parent: 'app'
+		},
+		'app.settings.users': {
+			title: 'views.nav.menu.user.label',
+			icon: 'users',
+			linkable: true,
+			parent: 'app.settings'
+		},
 		'app.role.index': {
 			title: 'global.module.plural.role',
 			icon: 'key',
