@@ -56,6 +56,7 @@ Router.map(function() {
     this.route('settings', function() {
       this.route('users');
       this.route('issue-types');
+      this.route('issue-statuses');
     });
     this.route('access-denied');
     this.route('role', function() {
