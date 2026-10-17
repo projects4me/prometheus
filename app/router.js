@@ -55,6 +55,7 @@ Router.map(function() {
     this.route('loading-assets', {path: '/loading-assets'});
     this.route('settings', function() {
       this.route('users');
+      this.route('issue-types');
     });
     this.route('access-denied');
     this.route('role', function() {

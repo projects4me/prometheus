@@ -14,7 +14,7 @@ module('Unit | Route | app/settings', function (hooks) {
     };
 
     test('model lists the settings pages the user may access', function (assert) {
-        this.owner.register('service:acl', stubAcl(['role.read']));
+        this.owner.register('service:acl', stubAcl(['role.read', 'setting.read']));
         let route = this.owner.lookup('route:app/settings');
 
         let groups = route.model();
@@ -24,7 +24,7 @@ module('Unit | Route | app/settings', function (hooks) {
     });
 
     test('model drops groups left without pages', function (assert) {
-        this.owner.register('service:acl', stubAcl(['user.read', 'role.read']));
+        this.owner.register('service:acl', stubAcl(['user.read', 'role.read', 'setting.read']));
         let route = this.owner.lookup('route:app/settings');
 
         assert.deepEqual(route.model(), []);

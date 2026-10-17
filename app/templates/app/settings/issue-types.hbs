@@ -1,0 +1,88 @@
+<section class="settings-issue-types">
+  <div class="row module issue-types">
+    <div class="col-md-12">
+      <AccessControl @aclContext="setting.read">
+        <div class="box box-primary list-view">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.settings.issueTypes.title"}}</h3>
+            <div class="box-tools pull-right">
+              <AccessControl @aclContext="setting.update">
+                <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="add-issue-type" @onClick={{this.showAddDialog}}>
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                  {{t "views.app.settings.issueTypes.add"}}
+                </AppUi::Button>
+              </AccessControl>
+            </div>
+          </div>
+
+          <div class="box-body no-padding">
+            <div class="callout callout-info" data-issue-types-info>
+              <p>{{t "views.app.settings.issueTypes.info"}}</p>
+            </div>
+
+            <table class="table table-hover" data-issue-types-table>
+              <thead>
+                <tr>
+                  <th>{{t "views.app.settings.issueTypes.name"}}</th>
+                  <th>{{t "views.app.settings.issueTypes.description"}}</th>
+                  <th>{{t "views.app.settings.issueTypes.projectsUsing"}}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each this.issueTypes as |issueType|}}
+                  <tr data-issue-type={{issueType.id}}>
+                    <td data-column="name">{{issueType.name}}</td>
+                    <td data-column="description">{{issueType.description}}</td>
+                    <td data-column="projectCount">{{if issueType.projectCount issueType.projectCount 0}}</td>
+                    <td class="text-right">
+                      <AccessControl @aclContext="setting.update">
+                        <AppUi::Button type="button" class="btn btn-box-tool" data-btn="edit-issue-type" title={{t "global.form.edit"}} @onClick={{fn this.showEditDialog issueType}}>
+                          <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </AppUi::Button>
+                        <AppUi::Button type="button" class="btn btn-box-tool" data-btn="delete-issue-type" title={{t "global.form.delete"}} @onClick={{fn this.deleteIssueType issueType}}>
+                          <i class="fa fa-trash" aria-hidden="true"></i>
+                        </AppUi::Button>
+                      </AccessControl>
+                    </td>
+                  </tr>
+                {{else}}
+                  <tr>
+                    <td colspan="4" class="text-muted">{{t "views.app.settings.issueTypes.empty"}}</td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </AccessControl>
+    </div>
+  </div>
+
+  {{#if this.editing}}
+    {{#bootstrap-modal
+      title=(if this.editing.isNew "views.app.settings.issueTypes.add" "views.app.settings.issueTypes.edit")
+      confirmLabel="global.form.save"
+      closeLabel="global.form.cancel"
+      confirm=(action "saveIssueType")
+      close=(action "removeModal")
+    }}
+      <div class="box-body">
+        <FormFields::FieldText
+          @placeholder={{t "views.app.settings.issueTypes.namePlaceholder"}}
+          @label={{t "views.app.settings.issueTypes.name"}}
+          @value={{this.editing.name}}
+          @data-field="issuetype.name"
+          @validate={{action this.validateField "issueTypeForm" (hash name="name" value=this.editing.name model=this.editing)}}
+          @message={{this.message.issueTypeForm.name}}
+        />
+        <FormFields::FieldText
+          @placeholder={{t "views.app.settings.issueTypes.descriptionPlaceholder"}}
+          @label={{t "views.app.settings.issueTypes.description"}}
+          @value={{this.editing.description}}
+          @data-field="issuetype.description"
+        />
+      </div>
+    {{/bootstrap-modal}}
+  {{/if}}
+</section>
