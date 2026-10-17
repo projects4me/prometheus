@@ -144,6 +144,9 @@ export default App.extend({
             let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions).catch(() => true);
             model.issueStatuses = issueStatuses;
         }
+
+        //Board columns follow the order configured in Settings
+        model.issueStatuses = [...model.issueStatuses.toArray()].sort((a, b) => a.sortOrder - b.sortOrder);
         return model;
     },
 

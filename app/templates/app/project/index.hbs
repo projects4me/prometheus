@@ -136,7 +136,7 @@
                           <div class="data-block">
                             <span class="subject"><LinkTo @route="app.project.issue.page" @model={{issue.issueNumber}}>{{issue.issueNumber}}</LinkTo> - {{issue.subject}}</span>
                             <span class="description">{{translate-comment issue.description}}</span>
-                            <span class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+                            <span class="badge {{issue.status}}" style={{status-style issue.status}}>{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
                           </div>
                         </div>
                       </li>
