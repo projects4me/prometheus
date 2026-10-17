@@ -1379,6 +1379,27 @@
           }
         }
       },
+      "settings": {
+        "issueTypes": {
+          "title": "Issue Types",
+          "singular": "issue type",
+          "fields": {
+            "name": "Name"
+          },
+          "info": "Default issue types are copied into new projects. Changes here do not affect existing projects.",
+          "add": "Add Issue Type",
+          "edit": "Edit Issue Type",
+          "name": "Name",
+          "namePlaceholder": "Name of the issue type",
+          "description": "Description",
+          "descriptionPlaceholder": "What is this issue type used for?",
+          "projectsUsing": "Projects using",
+          "empty": "There are no default issue types.",
+          "created": "Issue type <strong>{name}</strong> has been added",
+          "updated": "Issue type <strong>{name}</strong> has been updated",
+          "saveFailed": "The issue type could not be saved. Please try again."
+        }
+      },
       "role": {
         "list": {
           "updated": "Role {field} updated"
@@ -1948,7 +1969,11 @@
         "settings": {
           "label": "Settings",
           "group": {
-            "access": "Access"
+            "access": "Access",
+            "projects": "Projects"
+          },
+          "issueTypes": {
+            "label": "Issue Types"
           }
         },
         "board": {

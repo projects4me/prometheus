@@ -186,6 +186,12 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app.settings'
 		},
+		'app.settings.issue-types': {
+			title: 'views.nav.menu.settings.issueTypes.label',
+			icon: 'tags',
+			linkable: true,
+			parent: 'app.settings'
+		},
 		'app.role.index': {
 			title: 'global.module.plural.role',
 			icon: 'key',

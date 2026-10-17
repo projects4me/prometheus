@@ -189,6 +189,17 @@ export default Object.extend({
                             aclContext: 'role.read'
                         }
                     }
+                },
+                projects: {
+                    label: 'views.nav.menu.settings.group.projects',
+                    items: {
+                        IssueTypes: {
+                            label: 'views.nav.menu.settings.issueTypes.label',
+                            icon: 'tags',
+                            route: 'app.settings.issue-types',
+                            aclContext: 'setting.read'
+                        }
+                    }
                 }
             }
         },

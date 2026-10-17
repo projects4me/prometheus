@@ -105,4 +105,15 @@ export default Model.extend({
      */
     system: attr('string'),
 
+    /**
+     * The number of projects using an issue type of this name. Only returned
+     * when the list is requested with projectCount.
+     *
+     * @property projectCount
+     * @type Number
+     * @for Issuetype
+     * @private
+     */
+    projectCount: attr('number'),
+
 });
