@@ -8,7 +8,7 @@
           {{#if @entity.issue}}
             <span class="conversation-issue-badge">
               <a
-                class="{{@entity.issue.status}} badge"
+                class="{{@entity.issue.status}} badge" style={{status-style @entity.issue.status}}
                 href="/app/project/{{@entity.issue.projectShortcode}}/issue/{{@entity.issue.issueNumber}}"
               >
                 #{{@entity.issue.issueNumber}} - {{@entity.issue.subject}}

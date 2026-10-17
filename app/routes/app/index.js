@@ -64,6 +64,9 @@ export default App.extend({
 
         let widgetResults = {};
 
+        //Load the issue statuses so the status labels of the widgets can use their configured colours
+        await _self.store.query('issuestatus', { query: `(Issuestatus.system : 1)`, limit: -1 }).catch(() => []);
+
         for (let widget of widgets) {
             widgetResults[widget] = await _self.store.query(widgetSettings[widget].model,widgetSettings[widget].options)
         }

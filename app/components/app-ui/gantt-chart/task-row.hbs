@@ -41,7 +41,7 @@
           <span class="subject">
             #{{this.issueNumber}} - {{this.issueSubject}}
           </span>
-          <span class="badge {{@issue.status}}">
+          <span class="badge {{@issue.status}}" style={{status-style @issue.status}}>
             {{t (concat "views.app.issue.lists.status." @issue.status)}}
           </span>
         </div>

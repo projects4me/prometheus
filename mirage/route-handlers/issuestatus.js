@@ -10,7 +10,7 @@ export function register(server, ctx) {
             return schema.issuestatuses.where({ system: '1' }).sort((a, b) => a.sortOrder - b.sortOrder);
         }
 
-        return schema.issuestatuses.all();
+        return schema.issuestatuses.all().sort((a, b) => a.sortOrder - b.sortOrder);
     });
 
     server.get('/issuestatus/:id', (schema, request) => {

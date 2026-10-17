@@ -126,7 +126,7 @@
                           <div data-field="issue.priority" data-toggle="tooltip" data-priority="{{issue.priority}}" title="{{t (concat "views.app.issue.lists.priority." issue.priority)}}" class="priority"><AppUi::PriorityIcon @priority={{issue.priority}}/></div>
                           <div class="data-block">
                             <span class="subject"><LinkTo data-field="issue.number" @route="app.project.issue.page" @disabledClass="navigate-issue-quick-view" @disabled={{true}} @model={{issue.issueNumber}} {{on "click" (fn this.selectIssue issue)}}>{{issue.issueNumber}}</LinkTo> - <span data-field="issue.subject"> {{issue.subject}} </span></span>
-                            <span data-field="issue.status" class="badge {{issue.status}}">{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
+                            <span data-field="issue.status" class="badge {{issue.status}}" style={{status-style issue.status}}>{{t (concat "views.app.issue.lists.status." issue.status)}}</span>
                           </div>
                         </div>
                       </li>
