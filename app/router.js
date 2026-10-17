@@ -53,6 +53,9 @@ Router.map(function() {
         this.route('edit',{path:'/edit/:user_id'});
     });
     this.route('loading-assets', {path: '/loading-assets'});
+    this.route('settings', function() {
+      this.route('users');
+    });
     this.route('access-denied');
     this.route('role', function() {
       this.route('page', {path: '/:role_id'});

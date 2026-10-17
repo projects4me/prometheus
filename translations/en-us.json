@@ -1945,6 +1945,12 @@
         "role": {
           "label": "Roles"
         },
+        "settings": {
+          "label": "Settings",
+          "group": {
+            "access": "Access"
+          }
+        },
         "board": {
           "label": "Task Board"
         },

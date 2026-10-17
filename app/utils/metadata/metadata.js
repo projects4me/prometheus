@@ -163,38 +163,33 @@ export default Object.extend({
                 }
             },
             adminItems: {
-                User:{
-                    label: 'views.nav.menu.user.label',
-                    icon: 'users',
-                    route: 'app.user',
-                    anchorRoute: 'user',
+                Settings: {
+                    label: 'views.nav.menu.settings.label',
+                    icon: 'cogs',
+                    route: 'app.settings',
+                    anchorRoute: 'settings',
+                    aclContext: 'setting.read',
                     projectRelated: false,
-                    actions:{
-                        section1:{
-                            create:{
-                                label: 'views.nav.menu.user.create',
-                                route: 'app.user.create',
-                                className: 'text-red',
-                                anchorRoute: 'user/create',
-                                projectRelated: false,
-                            },
-                            management:{
-                                label: 'views.nav.menu.user.management',
-                                route: 'app.user.management',
-                                className: 'text-teal',
-                                anchorRoute: 'user/management',
-                                projectRelated: false,
-                            },
+                }
+            },
+            settingsItems: {
+                access: {
+                    label: 'views.nav.menu.settings.group.access',
+                    items: {
+                        Users: {
+                            label: 'views.nav.menu.user.label',
+                            icon: 'users',
+                            route: 'app.settings.users',
+                            aclContext: 'user.read'
+                        },
+                        Roles: {
+                            label: 'views.nav.menu.role.label',
+                            icon: 'key',
+                            route: 'app.role',
+                            aclContext: 'role.read'
                         }
-                    },
-                },
-                Role: {
-                    label: 'views.nav.menu.role.label',
-                    icon: 'key',
-                    route: 'app.role',
-                    anchorRoute: 'role',
-                    projectRelated: false,
-                }            
+                    }
+                }
             }
         },
         Project:{

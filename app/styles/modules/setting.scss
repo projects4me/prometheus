@@ -1,0 +1,44 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/**
+  This contains the CSS related to the settings area in the application.
+*/
+
+.settings-nav {
+  .box-body {
+    padding: 0 0 10px;
+  }
+
+  .settings-nav__group {
+    padding: 12px 15px 4px;
+    color: $mediumColor;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  .nav-stacked > li > a {
+    border-radius: 0;
+    border-left: 3px solid transparent;
+    color: $darkColor;
+    padding: 8px 15px;
+
+    > .fa {
+      width: 20px;
+      color: $mediumColor;
+    }
+  }
+
+  .nav-stacked > li.active > a,
+  .nav-stacked > li.active > a:hover {
+    background: #f4f4f4;
+    border-left-color: $primaryColor;
+    color: $primaryColor;
+    font-weight: 600;
+
+    > .fa {
+      color: $primaryColor;
+    }
+  }
+}

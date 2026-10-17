@@ -41,6 +41,16 @@ export default class NavBarComponent extends AppComponent {
     @service trackedProject;
 
     /**
+     * The acl service decides which admin entries the user may see.
+     *
+     * @property acl
+     * @type Ember.Service
+     * @for NavBar
+     * @private
+     */
+    @service acl;
+
+    /**
      * This function fetches the navigation metaData and makes it available for display
      *
      * @method constructor
@@ -154,6 +164,9 @@ export default class NavBarComponent extends AppComponent {
      * @for NavBar
      */
     get adminNavigationMeta() {
-        return MD.create().getViewMeta('Navigation', 'adminItems');
+        let adminItems = MD.create().getViewMeta('Navigation', 'adminItems');
+        return Object.fromEntries(
+            Object.entries(adminItems).filter(([, item]) => this.acl.checkAccess(item.aclContext))
+        );
     }
 }
