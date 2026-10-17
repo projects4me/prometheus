@@ -145,7 +145,7 @@ export default class AppSettingsIssueTypesController extends PrometheusCreateCon
                 new Messenger().post({
                     message: this.intl.t(
                         isNew ? 'views.app.settings.issueTypes.created' : 'views.app.settings.issueTypes.updated',
-                        { name: record.name }
+                        { name: record.name, htmlSafe: true }
                     ),
                     type: 'success',
                     showCloseButton: true
@@ -174,10 +174,11 @@ export default class AppSettingsIssueTypesController extends PrometheusCreateCon
         let moduleName = this.intl.t('views.app.settings.issueTypes.singular');
 
         let deleting = new Messenger().post({
-            message: htmlSafe(this.intl.t('views.app.module.list.delete.message', {
+            message: this.intl.t('views.app.module.list.delete.message', {
                 moduleName,
-                name: issueType.name
-            })),
+                name: issueType.name,
+                htmlSafe: true
+            }),
             type: 'warning',
             showCloseButton: true,
             actions: {
