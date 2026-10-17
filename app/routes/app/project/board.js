@@ -141,7 +141,7 @@ export default App.extend({
                 limit: -1
             };
 
-            let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions).catch(() => true);
+            let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions).catch(() => []);
             model.issueStatuses = issueStatuses;
         }
 

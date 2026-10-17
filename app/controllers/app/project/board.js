@@ -739,7 +739,9 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
             statusList[i] = issueStatus;
         });
 
-        return statusList;
+        //Board columns follow the order configured in Settings
+        let sortOrderOf = (status) => _self.issueStatuses.findBy('name', status.name).sortOrder;
+        return statusList.sort((a, b) => sortOrderOf(a) - sortOrderOf(b));
     }
 
     /**

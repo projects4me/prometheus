@@ -9,12 +9,14 @@ import { htmlSafe } from '@ember/template';
 /**
  * Returns the inline style that paints a status label with the colour of the issue status
  * of the given name. When the status is unknown or has no colour it returns an empty string
- * so the CSS class of the status stays as the fallback.
+ * so the CSS class of the status stays as the fallback. Colours that are not a plain colour value are ignored, since the style is rendered as HTML-safe.
  *
  * @class StatusStyle
  * @namespace Prometheus.Helpers
  * @extends Ember.Helper
  */
+const SAFE_COLOR = /^(#[0-9a-f]{3,8}|[a-z]+|(rgb|hsl)a?\([\d\s.,%]+\))$/i;
+
 export default class StatusStyleHelper extends Helper {
     @service store;
 
@@ -24,7 +26,7 @@ export default class StatusStyleHelper extends Helper {
      * @return {String} The style attribute value
      */
     compute([statusName, property = 'background-color']) {
-        let status = this.store.peekAll('issuestatus').find((item) => item.name === statusName && item.color);
+        let status = this.store.peekAll('issuestatus').find((item) => item.name === statusName && SAFE_COLOR.test(item.color || ''));
 
         return status ? htmlSafe(`${property}: ${status.color} !important`) : htmlSafe('');
     }
