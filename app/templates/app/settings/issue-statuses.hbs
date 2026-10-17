@@ -1,0 +1,116 @@
+<section class="settings-issue-statuses">
+  <div class="row module issue-statuses">
+    <div class="col-md-12">
+      <AccessControl @aclContext="setting.read">
+        <div class="box box-primary list-view">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.settings.issueStatuses.title"}}</h3>
+            <div class="box-tools pull-right">
+              <span class="text-muted" data-issue-statuses-info><i class="fa fa-info-circle" aria-hidden="true"></i> {{t "views.app.settings.issueStatuses.info"}}</span>
+              <AccessControl @aclContext="setting.update">
+                <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="add-issue-status" @onClick={{this.showAddDialog}}>
+                  <i class="fa fa-plus" aria-hidden="true"></i>
+                  {{t "views.app.settings.issueStatuses.add"}}
+                </AppUi::Button>
+              </AccessControl>
+            </div>
+          </div>
+
+          <div class="box-body no-padding">
+            <table class="table table-hover" data-issue-statuses-table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>{{t "views.app.settings.issueStatuses.status"}}</th>
+                  <th>{{t "views.app.settings.issueStatuses.key"}}</th>
+                  <th>{{t "views.app.settings.issueStatuses.countsAsDone"}}</th>
+                  <th>{{t "views.app.settings.issueStatuses.issues"}}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody {{sortable-rows handle=".drag-handle" onMove=this.moveStatus}}>
+                {{#each this.rows as |row|}}
+                  <tr data-issue-status={{row.status.id}}>
+                    <td>
+                      <AccessControl @aclContext="setting.update">
+                        <span class="drag-handle text-muted" title={{t "views.app.settings.issueStatuses.drag"}}><i class="fa fa-bars" aria-hidden="true"></i></span>
+                      </AccessControl>
+                    </td>
+                    <td data-column="label"><span class="label" style={{row.style}}>{{row.label}}</span></td>
+                    <td data-column="key"><code>{{row.status.name}}</code></td>
+                    <td data-column="done">
+                      {{#if (eq row.status.done "1")}}
+                        <i class="fa fa-check text-green" aria-hidden="true"></i> {{t "views.app.settings.issueStatuses.yes"}}
+                      {{else}}
+                        <span class="text-muted">{{t "views.app.settings.issueStatuses.no"}}</span>
+                      {{/if}}
+                    </td>
+                    <td data-column="issueCount">{{if row.status.issueCount row.status.issueCount 0}}</td>
+                    <td class="text-right">
+                      <AccessControl @aclContext="setting.update">
+                        <AppUi::Button type="button" class="btn btn-box-tool" data-btn="edit-issue-status" title={{t "global.form.edit"}} @onClick={{fn this.showEditDialog row.status}}>
+                          <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </AppUi::Button>
+                        {{#if row.isUsed}}
+                          <button type="button" class="btn btn-box-tool" data-btn="delete-issue-status" disabled title={{t "views.app.settings.issueStatuses.deleteBlocked" count=row.status.issueCount}}>
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                          </button>
+                        {{else}}
+                          <AppUi::Button type="button" class="btn btn-box-tool" data-btn="delete-issue-status" title={{t "global.form.delete"}} @onClick={{fn this.deleteIssueStatus row.status}}>
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                          </AppUi::Button>
+                        {{/if}}
+                      </AccessControl>
+                    </td>
+                  </tr>
+                {{else}}
+                  <tr>
+                    <td colspan="6" class="text-muted">{{t "views.app.settings.issueStatuses.empty"}}</td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </AccessControl>
+    </div>
+  </div>
+
+  {{#if this.editing}}
+    {{#bootstrap-modal
+      title=(if this.editing.isNew "views.app.settings.issueStatuses.add" "views.app.settings.issueStatuses.edit")
+      confirmLabel="global.form.save"
+      closeLabel="global.form.cancel"
+      confirm=(action "saveIssueStatus")
+      close=(action "removeModal")
+    }}
+      <div class="box-body">
+        <FormFields::FieldText
+          @placeholder={{t "views.app.settings.issueStatuses.namePlaceholder"}}
+          @label={{t "views.app.settings.issueStatuses.name"}}
+          @value={{this.editing.name}}
+          @data-field="issuestatus.name"
+          @validate={{action this.validateField "issueStatusForm" (hash name="name" value=this.editing.name model=this.editing)}}
+          @message={{this.message.issueStatusForm.name}}
+        />
+        <div class="form-field issue-status-colors" data-field="issuestatus.color">
+          <label>{{t "views.app.settings.issueStatuses.color"}}</label>
+          <div>
+            {{#each this.colors as |color|}}
+              <label class="color-swatch">
+                <input type="radio" name="issuestatus-color" value={{color.value}} checked={{eq this.editing.color color.value}} {{on "change" (fn this.selectColor color.value)}}>
+                <span class="label" style={{color.style}}>{{t (concat "views.app.settings.issueStatuses.colors." color.name)}}</span>
+              </label>
+            {{/each}}
+          </div>
+        </div>
+        <div class="form-field" data-field="issuestatus.done">
+          <label>
+            <input type="checkbox" checked={{eq this.editing.done "1"}} {{on "change" this.toggleDone}}>
+            {{t "views.app.settings.issueStatuses.countsAsDoneHelp"}}
+          </label>
+        </div>
+      </div>
+    {{/bootstrap-modal}}
+  {{/if}}
+</section>

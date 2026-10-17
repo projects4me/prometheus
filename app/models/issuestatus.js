@@ -116,4 +116,34 @@ export default class IssuestatusModel extends Model {
      * @private
      */
     @attr('string') done;
+
+    /**
+     * Colour of the issue status, one of the status palette
+     *
+     * @property color
+     * @type String
+     * @for Issuestatus
+     * @public
+     */
+    @attr('string') color;
+
+    /**
+     * Position of the issue status, it drives the order of the task board columns
+     *
+     * @property sortOrder
+     * @type Number
+     * @for Issuestatus
+     * @public
+     */
+    @attr('number') sortOrder;
+
+    /**
+     * Number of issues using the status, read-only and returned by Gaia on request
+     *
+     * @property issueCount
+     * @type Number
+     * @for Issuestatus
+     * @public
+     */
+    @attr('number') issueCount;
 }

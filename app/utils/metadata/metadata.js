@@ -198,6 +198,12 @@ export default Object.extend({
                             icon: 'tags',
                             route: 'app.settings.issue-types',
                             aclContext: 'setting.read'
+                        },
+                        IssueStatuses: {
+                            label: 'views.nav.menu.settings.issueStatuses.label',
+                            icon: 'flag',
+                            route: 'app.settings.issue-statuses',
+                            aclContext: 'setting.read'
                         }
                     }
                 }

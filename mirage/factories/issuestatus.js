@@ -25,6 +25,10 @@ export default Factory.extend({
         return (_.random(1, 10)).toString();
     },
     "system": "0",
+    color: "#80b5d3",
+    sortOrder(i) {
+        return i + 1;
+    },
     done() {
         return (_.random(0, 1)).toString();
     },

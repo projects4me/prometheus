@@ -1398,6 +1398,40 @@
           "created": "Issue type <strong>{name}</strong> has been added",
           "updated": "Issue type <strong>{name}</strong> has been updated",
           "saveFailed": "The issue type could not be saved. Please try again."
+        },
+        "issueStatuses": {
+          "title": "Issue Statuses",
+          "singular": "issue status",
+          "fields": {
+            "name": "Name"
+          },
+          "info": "Shared by every project. Drag rows to set the task board column order.",
+          "add": "Add Issue Status",
+          "edit": "Edit Issue Status",
+          "status": "Status",
+          "key": "Key",
+          "countsAsDone": "Counts as done",
+          "countsAsDoneHelp": "Counts as done (closes the issue)",
+          "issues": "Issues",
+          "yes": "Yes",
+          "no": "No",
+          "drag": "Drag to reorder",
+          "name": "Name",
+          "namePlaceholder": "Enter the status name ..",
+          "color": "Colour",
+          "colors": {
+            "blue": "Blue",
+            "crimson": "Crimson",
+            "amber": "Amber",
+            "green": "Green",
+            "salmon": "Salmon"
+          },
+          "deleteBlocked": "This status cannot be deleted: {count} issue(s) use it. Move them to another status first.",
+          "empty": "There are no issue statuses.",
+          "created": "Issue status <strong>{name}</strong> has been added",
+          "updated": "Issue status <strong>{name}</strong> has been updated",
+          "saveFailed": "The issue status could not be saved. Please try again.",
+          "reorderFailed": "The new order could not be saved. Please try again."
         }
       },
       "role": {
@@ -1974,6 +2008,9 @@
           },
           "issueTypes": {
             "label": "Issue Types"
+          },
+          "issueStatuses": {
+            "label": "Issue Statuses"
           }
         },
         "board": {

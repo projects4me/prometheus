@@ -42,3 +42,23 @@
     }
   }
 }
+
+.settings-issue-statuses {
+  .drag-handle {
+    display: inline-block;
+    width: 30px;
+    cursor: move;
+  }
+
+  .issue-status-colors {
+    margin-bottom: 15px;
+
+    label {
+      font-weight: normal;
+    }
+
+    .color-swatch {
+      margin-right: 12px;
+    }
+  }
+}
