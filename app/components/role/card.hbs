@@ -1,11 +1,65 @@
 <div class="role-card-container {{@class}}" data-role={{@role.id}}>
-  <div class="role-card ">
-    <h5 data-role-field="name"> {{@role.name}} </h5>
+  <div class="role-card {{this.coverageColorClass}}">
 
-    <div data-role-field="description" {{initialize-slimscroll width='2'}}>
-      <h5>{{@role.description}}</h5>
+    <div class="role-card__header">
+      <div class="role-card__icon" aria-hidden="true">
+        {{this.initials}}
+      </div>
+
+      <div class="role-card__title-block">
+        <div class="role-card__title-row">
+          <h5 class="role-card__name" data-role-field="name">{{@role.name}}</h5>
+          <span class="role-card__open-cue" aria-hidden="true" title={{t "views.app.role.card.open"}}>
+            <i class="fa fa-angle-right"></i>
+          </span>
+        </div>
+
+        <div class="role-card__access-row" data-role-field="coverage">
+          {{#if this.hasCoverage}}
+            <span class="role-card__access role-card__access--granted">
+              {{t "views.app.role.card.accessGranted" percent=this.grantedPercent}}
+            </span>
+            {{#if this.deniedPercent}}
+              <span class="role-card__access role-card__access--denied">
+                {{t "views.app.role.card.accessDenied" percent=this.deniedPercent}}
+              </span>
+            {{/if}}
+          {{else}}
+            <span class="role-card__access role-card__access--unknown">
+              {{t "views.app.role.card.accessUnknown"}}
+            </span>
+          {{/if}}
+        </div>
+      </div>
     </div>
-    
-    <h5 data-role-field="dateCreated">{{moment-format @role.dateCreated 'Do MMM, YYYY'}}</h5>
+
+    <div
+      class="role-card__description {{unless this.hasDescription "role-card__description--empty"}}"
+      data-role-field="description"
+    >
+      {{#if this.hasDescription}}
+        {{@role.description}}
+      {{else}}
+        {{t "views.app.role.card.noDescription"}}
+      {{/if}}
+    </div>
+
+    <div class="role-card__footer">
+      <div class="role-card__members" data-role-field="members">
+        {{#if this.members.length}}
+          <Project::MemberAvatars @members={{this.members}} @maxVisible={{2}} />
+        {{else}}
+          <span class="role-card__members-empty">{{t "views.app.role.card.noMembers"}}</span>
+        {{/if}}
+      </div>
+
+      {{#if this.modifiedDate}}
+        <span class="role-card__modified" data-role-field="dateModified">
+          {{t "views.app.role.card.modified"}}
+          {{moment-format this.modifiedDate 'DD MMM YYYY'}}
+        </span>
+      {{/if}}
+    </div>
+
   </div>
 </div>

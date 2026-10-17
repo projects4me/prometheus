@@ -29,20 +29,26 @@
               </div>
 
               {{#each this.filteredRoles as |role|}}
-                <LinkTo @route="app.role.page" @model={{role.id}}>
+                <LinkTo
+                  @route="app.role.page"
+                  @model={{role.id}}
+                  class="role-card-link {{this.roleCardClass}}"
+                >
                   <Role::Card
-                    @class={{this.roleCardClass}}
                     @role={{role}}
+                    @coverage={{get this.coverageByRole role.id}}
+                    @members={{get this.membersByRole role.id}}
                   />
                 </LinkTo>
-              {{/each}}            
-              
+              {{/each}}
+
               {{!-- +Role Add Button --}}
               <div class="role-card-container {{this.roleCardClass}}">
-                <div class="role-card role-add-card">
-                  <div class="role-add" data-toggle="tooltip" title="{{t "views.app.role.list.add"}}" {{on "click" this.showAddRoleDialog}} data-btn="role-add">
+                <div class="role-card role-add-card" {{on "click" this.showAddRoleDialog}} data-btn="role-add" role="button" tabindex="0">
+                  <div class="role-add">
                     <ion class="ion-md-add"></ion>
                   </div>
+                  <span class="role-add-card__label">{{t "views.app.role.list.add"}}</span>
                 </div>
               </div>
               {{!-- Role Add Button --}}

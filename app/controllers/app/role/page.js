@@ -338,9 +338,28 @@ export default class AppRolePageController extends AppRoleController {
             _.unset(this.permissionsState[moduleName], permission.resourceAlias);
         }
 
+        // Refresh list-card access % from the role's current permission catalog.
+        this.syncListCardCoverage();
+
         yield this.scrollToLatestCancelledPermission(listEl);
         this.showMessages();
     })) updatePermission
+
+    /**
+     * Push this role's permissions into the list controller so card coverage
+     * updates without leaving the detail view.
+     *
+     * @method syncListCardCoverage
+     * @private
+     */
+    syncListCardCoverage() {
+        let listController = this.roleListController;
+        let role = this.model;
+        if (!listController || !role || typeof listController.syncRoleCoverage !== 'function') {
+            return;
+        }
+        listController.syncRoleCoverage(role.id, role.permissions);
+    }
 
     /**
      * This task is used to update the permission model.
