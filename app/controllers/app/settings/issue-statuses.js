@@ -122,6 +122,19 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
     }
 
     /**
+     * The sort order that places a new status after every existing one.
+     *
+     * @property nextSortOrder
+     * @type Number
+     * @public
+     */
+    get nextSortOrder() {
+        let highest = this.issueStatuses.reduce((max, status) => Math.max(max, Number(status.sortOrder) || 0), 0);
+
+        return highest + 1;
+    }
+
+    /**
      * Opens the modal on a new global issue status, placed last.
      *
      * @method showAddDialog
@@ -133,7 +146,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             system: '1',
             color: STATUS_COLORS[0].value,
             done: '0',
-            sortOrder: this.issueStatuses.length + 1,
+            sortOrder: this.nextSortOrder,
             issueCount: 0
         });
     }
@@ -257,14 +270,28 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             status.sortOrder = list.indexOf(status) + 1;
         });
 
-        Promise.all(changed.map((status) => status.save())).catch(() => {
-            changed.forEach((status) => status.rollbackAttributes());
-            this.issueStatuses = [...this.issueStatuses].sort((a, b) => a.sortOrder - b.sortOrder);
+        Promise.allSettled(changed.map((status) => status.save())).then((results) => {
+            if (results.every((result) => result.status === 'fulfilled')) {
+                return;
+            }
 
-            new Messenger().post({
-                message: this.intl.t('views.app.settings.issueStatuses.reorderFailed'),
-                type: 'error',
-                showCloseButton: true
+            // Some saves may have gone through, so show what the server stored.
+            changed.forEach((status) => status.rollbackAttributes());
+
+            return this.store.query('issuestatus', {
+                query: '(Issuestatus.system : 1)',
+                issueCount: true,
+                sort: 'Issuestatus.sortOrder',
+                order: 'ASC',
+                limit: -1
+            }).then((statuses) => {
+                this.issueStatuses = statuses.toArray();
+            }).finally(() => {
+                new Messenger().post({
+                    message: this.intl.t('views.app.settings.issueStatuses.reorderFailed'),
+                    type: 'error',
+                    showCloseButton: true
+                });
             });
         });
     }
