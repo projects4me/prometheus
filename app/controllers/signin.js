@@ -218,8 +218,16 @@ export default class SignInController extends PrometheusCreateController {
             _self.session.handleAuthentication(urlToRoute);
         } catch (response) {
             _self.signInControl.endAuthentication();
+            let payload = response?.responseJSON || response;
+            let errorKey = payload?.error || 'error';
+            let message;
+            try {
+                message = _self.intl.t(`views.signin.${errorKey}`);
+            } catch (e) {
+                message = _self.intl.t('views.signin.error');
+            }
             new Messenger().post({
-                message: _self.intl.t(`views.signin.${response.error}`),
+                message,
                 type: "error",
                 showCloseButton: true,
             });

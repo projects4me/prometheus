@@ -41,16 +41,23 @@ export default class AppUserManagementController extends PrometheusListControlle
     @action
     async changeUserStatus(user, evt) {
         let accountStatus = (evt.target.checked) ? 'active' : 'inactive';
+        let previousStatus = user.accountStatus;
 
         //disable switch element until the model is updated
         evt.target.disabled = true;
         this.toggleCursorStyle(evt.target.nextElementSibling, 'wait', 'wait');
 
-        user.set('accountStatus', accountStatus);
-        await user.save();
-
-        evt.target.disabled = false;
-        this.toggleCursorStyle(evt.target.nextElementSibling, 'pointer', 'auto');
+        try {
+            user.set('accountStatus', accountStatus);
+            await user.save();
+        } catch (error) {
+            user.rollbackAttributes();
+            evt.target.checked = previousStatus === 'active';
+            this.showStatusUpdateError(error);
+        } finally {
+            evt.target.disabled = false;
+            this.toggleCursorStyle(evt.target.nextElementSibling, 'pointer', 'auto');
+        }
     }
 
     /**
@@ -65,6 +72,10 @@ export default class AppUserManagementController extends PrometheusListControlle
         let accountStatus = evt.target.checked ? 'active' : 'inactive';
         let selectedUsers = this.getSelectedUsers();
         let usersToUpdate = selectedUsers.filter((user) => user.accountStatus !== accountStatus);
+        let previousStatuses = usersToUpdate.map((user) => ({
+            user,
+            accountStatus: user.accountStatus,
+        }));
 
         if (!usersToUpdate.length) {
             return;
@@ -79,10 +90,57 @@ export default class AppUserManagementController extends PrometheusListControlle
                     await user.save();
                 })
             );
+        } catch (error) {
+            previousStatuses.forEach(({ user, accountStatus: priorStatus }) => {
+                if (user.accountStatus !== priorStatus) {
+                    user.rollbackAttributes();
+                }
+            });
+            this.showStatusUpdateError(error);
         } finally {
             this.setMassSwitchesLoading(false);
             this.syncMassSwitchState();
         }
+    }
+
+    /**
+     * Show a toast for a failed account-status update.
+     *
+     * @param {Object} error
+     */
+    showStatusUpdateError(error) {
+        let message = this.extractStatusUpdateErrorMessage(error)
+            || this.intl.t('views.app.user.management.list.statusUpdateFailed');
+
+        new Messenger().post({
+            message: htmlSafe(message),
+            type: 'error',
+            showCloseButton: true,
+        });
+    }
+
+    /**
+     * Prefer the backend error string when present.
+     *
+     * @param {Object} error
+     * @returns {String|null}
+     */
+    extractStatusUpdateErrorMessage(error) {
+        if (!error) {
+            return null;
+        }
+
+        if (typeof error.errors === 'string' && error.errors) {
+            return error.errors;
+        }
+
+        if (typeof error.message === 'string'
+            && error.message
+            && error.message !== 'Adapter operation failed') {
+            return error.message;
+        }
+
+        return null;
     }
 
     /**

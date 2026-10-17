@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../stub-services/acl-stub';
 
@@ -22,7 +22,9 @@ module('Integration | Modifier | autofocus', function (hooks) {
                 {{autofocus}}
             />
         `);
-        assert.true($("input.form-control").is(":focus"), 'Field is focused');
+        await settled();
+        let input = document.querySelector('input.form-control');
+        assert.strictEqual(document.activeElement, input, 'Field is focused');
         
     });
 });
