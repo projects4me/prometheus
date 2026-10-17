@@ -3,7 +3,6 @@
  */
 
 import AppRoute from 'prometheus/routes/app';
-import { inject as service } from '@ember/service';
 
 /**
  * Redirects /app/settings to the first settings page the user can see.
@@ -16,15 +15,6 @@ import { inject as service } from '@ember/service';
 export default class AppSettingsIndexRoute extends AppRoute {
 
     /**
-     * Provides the first page the user can see.
-     *
-     * @property settingsNavigation
-     * @type Ember.Service
-     * @private
-     */
-    @service settingsNavigation;
-
-    /**
      * @method beforeModel
      * @param {Transition} transition
      * @public
@@ -35,6 +25,7 @@ export default class AppSettingsIndexRoute extends AppRoute {
         if (!this.controllerFor('app.loading-assets').get('dataLoaded')) {
             return;
         }
-        this.router.transitionTo(this.settingsNavigation.firstRoute ?? 'app.access-denied');
+        let groups = this.modelFor('app.settings') ?? [];
+        this.router.transitionTo(groups[0]?.items[0].route ?? 'app.access-denied');
     }
 }

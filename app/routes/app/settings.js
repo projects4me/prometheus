@@ -3,6 +3,7 @@
  */
 
 import AppRoute from 'prometheus/routes/app';
+import MD from 'prometheus/utils/metadata/metadata';
 
 /**
  * The Settings area shell. Guards the whole area with the route ACL so a user
@@ -33,10 +34,36 @@ export default class AppSettingsRoute extends AppRoute {
     }
 
     /**
-     * The shell has no model or controller state of its own; the pages set up theirs.
+     * The settings navigation groups from the Navigation metadata, holding only
+     * the pages the user can access. Groups left without pages are dropped.
      *
-     * @method setupController
+     * @method model
+     * @returns {Array}
      * @public
      */
-    setupController() {}
+    model() {
+        let settingsItems = MD.create().getViewMeta('Navigation', 'settingsItems');
+
+        return Object.entries(settingsItems)
+            .map(([key, group]) => ({
+                key,
+                label: group.label,
+                items: Object.entries(group.items)
+                    .filter(([, item]) => this.acl.checkAccess(item.aclContext))
+                    .map(([name, item]) => ({ name, ...item }))
+            }))
+            .filter(group => group.items.length > 0);
+    }
+
+    /**
+     * The shell has no controller state of its own besides the navigation.
+     *
+     * @method setupController
+     * @param {Controller} controller
+     * @param {Array} model
+     * @public
+     */
+    setupController(controller, model) {
+        controller.set('model', model);
+    }
 }

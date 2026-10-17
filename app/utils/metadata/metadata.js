@@ -171,6 +171,25 @@ export default Object.extend({
                     aclContext: 'setting.read',
                     projectRelated: false,
                 }
+            },
+            settingsItems: {
+                access: {
+                    label: 'views.nav.menu.settings.group.access',
+                    items: {
+                        Users: {
+                            label: 'views.nav.menu.user.label',
+                            icon: 'users',
+                            route: 'app.settings.users',
+                            aclContext: 'user.read'
+                        },
+                        Roles: {
+                            label: 'views.nav.menu.role.label',
+                            icon: 'key',
+                            route: 'app.role',
+                            aclContext: 'role.read'
+                        }
+                    }
+                }
             }
         },
         Project:{

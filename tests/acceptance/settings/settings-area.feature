@@ -11,9 +11,9 @@ Feature: Settings | area shell
     Then User lands on app/settings/users
     And The sidebar shows the Settings entry
     And The sidebar does not show the Users and Roles entries
-    And The settings navigation shows the users page
-    And The settings navigation shows the roles page
-    And The settings navigation highlights the users page
+    And The settings navigation shows the Users page
+    And The settings navigation shows the Roles page
+    And The settings navigation highlights the Users page
     And The breadcrumb reads Dashboard > Settings > Users
 
   Scenario: A user without the setting permission cannot reach the Settings area
