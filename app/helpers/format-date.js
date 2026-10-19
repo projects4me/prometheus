@@ -5,6 +5,11 @@
 import Helper from '@ember/component/helper';
 
 /**
+ * Text shown in place of an empty date.
+ */
+export const EMPTY_VALUE = '-';
+
+/**
  * Formats a date string according to the specified format.
  *
  * @class FormatDateHelper
@@ -29,18 +34,15 @@ export default class FormatDateHelper extends Helper {
 	 * @param {Object} options - The options object.
 	 * @param {string|Date} options.date - The date to format.
 	 * @param {string} [options.format] - The format string to use (follows Moment.js format).
-	 * @returns {string} The formatted date string or empty string if date is undefined.
+	 * @returns {string} The formatted date string or '-' if the date is empty.
 	 */
 	compute([], { date, format }) {
-		let formattedDate = '';
 		format = format || this.format; // prefer the format passed in, otherwise use the default
-		let momentDate;
 
-		if (date !== undefined) {
-			momentDate = moment(date);
-			formattedDate = momentDate.format(format);
+		if (date === undefined || date === null || date === '') {
+			return EMPTY_VALUE;
 		}
 
-		return formattedDate;
+		return moment(date).format(format);
 	}
 }

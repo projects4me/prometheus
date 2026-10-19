@@ -22,10 +22,10 @@ module('Integration | Helper | format-date', function (hooks) {
         assert.dom(this.element).hasText('2024-04-04 09:12:56');
     });
 
-    test('it returns empty string when date is undefined', async function (assert) {
+    test('it returns a dash when date is undefined', async function (assert) {
         this.set('inputDate', undefined);
         await render(hbs`{{format-date date=this.inputDate}}`);
-        assert.dom(this.element).hasText('');
+        assert.dom(this.element).hasText('-');
     });
 
     test('it handles Date object', async function (assert) {
