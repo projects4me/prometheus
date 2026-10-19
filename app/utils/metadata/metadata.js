@@ -206,6 +206,17 @@ export default Object.extend({
                             aclContext: 'setting.read'
                         }
                     }
+                },
+                system: {
+                    label: 'views.nav.menu.settings.group.system',
+                    items: {
+                        Email: {
+                            label: 'views.nav.menu.settings.email.label',
+                            icon: 'envelope',
+                            route: 'app.settings.email',
+                            aclContext: 'setting.read'
+                        }
+                    }
                 }
             }
         },
