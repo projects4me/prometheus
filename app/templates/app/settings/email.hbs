@@ -89,8 +89,39 @@
 
       <div class="col-sm-12">
         <AppUi::Button type="button" data-btn="save-email" class="btn btn-primary" @onClick={{this.saveEmail}} @aclContext="setting.update">{{t "global.form.save"}}</AppUi::Button>
+        <AppUi::Button type="button" data-btn="test-email" class="btn btn-default" @onClick={{this.openTest}} @aclContext="setting.update">{{t "views.app.settings.email.test.button"}}</AppUi::Button>
         <AppUi::Button type="button" data-btn="cancel-email" class="btn btn-default" @onClick={{this.cancelEmail}}>{{t "global.form.cancel"}}</AppUi::Button>
       </div>
     </div>
   </AccessControl>
+
+  {{#if this.testOpen}}
+    <div class="settings-email-test-overlay" data-email-test-modal>
+      <div class="modal-dialog">
+        <div class="modal-content box box-primary">
+          <div class="modal-header">
+            <h4 class="modal-title">{{t "views.app.settings.email.test.title"}}</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group" data-field="test.recipient">
+              <label>{{t "views.app.settings.email.test.recipient"}}</label>
+              <input type="email" class="form-control" value={{this.recipient}} {{on "input" this.updateRecipient}}>
+            </div>
+            {{#if this.testResult}}
+              <div class="callout {{if (eq this.testResult "TEST_EMAIL_SENT") "callout-success" "callout-danger"}}" data-test-result={{this.testResult}}>
+                <p>{{t (concat "views.app.settings.email.test." this.testResult)}}</p>
+              </div>
+            {{/if}}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-btn="close-test" {{on "click" this.closeTest}}>{{t "global.form.cancel"}}</button>
+            <button type="button" class="btn btn-primary" data-btn="submit-test" disabled={{or (not this.recipientValid) this.testing}} {{on "click" this.runTest}}>
+              {{#if this.testing}}<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>{{/if}}
+              {{t "views.app.settings.email.test.send"}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/if}}
 </section>

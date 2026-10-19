@@ -5,6 +5,8 @@
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
+import { testSettings } from 'prometheus/utils/setting-test-api';
 
 /**
  * The form fields of the Email page and the setting that stores each of them.
@@ -65,6 +67,69 @@ export default class AppSettingsEmailController extends PrometheusCreateControll
     @tracked saving = false;
 
     /**
+     * The current user, whose email is the default recipient of the test.
+     *
+     * @property currentUser
+     * @type Ember.Service
+     * @public
+     */
+    @service currentUser;
+
+    /**
+     * The session, which holds the access token.
+     *
+     * @property session
+     * @type Ember.Service
+     * @public
+     */
+    @service session;
+
+    /**
+     * Whether the Test Settings modal is open.
+     *
+     * @property testOpen
+     * @type Boolean
+     * @public
+     */
+    @tracked testOpen = false;
+
+    /**
+     * The address the test email is sent to.
+     *
+     * @property recipient
+     * @type String
+     * @public
+     */
+    @tracked recipient = '';
+
+    /**
+     * Whether the recipient is a valid email address.
+     *
+     * @property recipientValid
+     * @type Boolean
+     * @public
+     */
+    @tracked recipientValid = false;
+
+    /**
+     * Whether a test is in progress.
+     *
+     * @property testing
+     * @type Boolean
+     * @public
+     */
+    @tracked testing = false;
+
+    /**
+     * The result code of the last test, shown in the modal.
+     *
+     * @property testResult
+     * @type String
+     * @public
+     */
+    @tracked testResult = null;
+
+    /**
      * The encryption choices of the power-select.
      *
      * @property encryptions
@@ -122,6 +187,17 @@ export default class AppSettingsEmailController extends PrometheusCreateControll
                         name: 'fromEmail',
                         validations: {
                             default: { type: 'string', rules: [{ name: 'email' }] }
+                        }
+                    }
+                ]
+            },
+            {
+                name: 'testForm',
+                fields: [
+                    {
+                        name: 'recipient',
+                        validations: {
+                            default: { type: 'string', rules: [{ name: 'required' }, { name: 'email' }] }
                         }
                     }
                 ]
@@ -241,6 +317,64 @@ export default class AppSettingsEmailController extends PrometheusCreateControll
     }
 
     /**
+     * Opens the Test Settings modal with the current user's email as recipient.
+     *
+     * @method openTest
+     * @protected
+     */
+    @action openTest() {
+        this.testResult = null;
+        this.testOpen = true;
+        this.setRecipient(this.currentUser.user?.email ?? '');
+    }
+
+    /**
+     * Closes the Test Settings modal.
+     *
+     * @method closeTest
+     * @protected
+     */
+    @action closeTest() {
+        this.testOpen = false;
+    }
+
+    /**
+     * Sets the recipient from the input and checks it.
+     *
+     * @method updateRecipient
+     * @param {Event} event
+     * @protected
+     */
+    @action updateRecipient(event) {
+        this.setRecipient(event.target.value);
+    }
+
+    /**
+     * Sends the draft, saved or not, to the server to test it. Nothing is
+     * saved and the draft, the records and the dirty state stay as they are.
+     * A blank password is sent blank, so the server uses the stored one.
+     *
+     * @method runTest
+     * @protected
+     */
+    @action async runTest() {
+        if (!this.recipientValid || this.testing) {
+            return false;
+        }
+
+        let collection = Object.entries(SETTING_KEYS)
+            .filter(([field]) => this.records[field])
+            .map(([field]) => ({ id: this.records[field].id, settingValue: this.draft[field] ?? '' }));
+
+        this.testing = true;
+        this.testResult = null;
+        this.testResult = await testSettings(collection, this.recipient, this.session.data.authenticated.access_token);
+        this.testing = false;
+
+        return false;
+    }
+
+    /**
      * Discards the unsaved changes.
      *
      * @method cancelEmail
@@ -248,6 +382,20 @@ export default class AppSettingsEmailController extends PrometheusCreateControll
      */
     @action cancelEmail() {
         this.loadSettings(Object.values(this.records).filter(Boolean));
+    }
+
+    /**
+     * Sets the recipient and validates it with the form's email validation.
+     *
+     * @method setRecipient
+     * @param {string} value
+     * @private
+     */
+    setRecipient(value) {
+        this.recipient = value;
+        this.validate({ recipient: value }, 'testForm').then((validation) => {
+            this.recipientValid = validation.isValid;
+        });
     }
 
     /**
