@@ -1406,7 +1406,18 @@
           "sentWelcome": "Welcome email with the account password, sent when a user is created.",
           "sentReset": "Reset password email, sent when a user asks to reset their password.",
           "saved": "The email settings have been saved",
-          "saveFailed": "The email settings could not be saved. Please try again."
+          "saveFailed": "The email settings could not be saved. Please try again.",
+          "test": {
+            "button": "Test Settings",
+            "title": "Test the email settings",
+            "recipient": "Send a test email to",
+            "send": "Send test email",
+            "TEST_EMAIL_SENT": "The test email was sent.",
+            "INVALID_RECIPIENT": "The recipient is not a valid email address.",
+            "SMTP_AUTH_FAILED": "The mail server rejected the username or password.",
+            "SMTP_CONNECTION_FAILED": "Could not connect to the mail server. Check the host, port and encryption.",
+            "UNKNOWN_ERROR": "The test email could not be sent. Please try again."
+          }
         },
         "issueTypes": {
           "title": "Issue Types",
