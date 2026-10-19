@@ -29,6 +29,7 @@ import * as Vote from './route-handlers/vote';
 import * as Wiki from './route-handlers/wiki';
 import * as Permission from './route-handlers/permission';
 import * as Systemsetting from './route-handlers/systemsetting';
+import * as Setting from './route-handlers/setting';
 import * as Issueplanning from './route-handlers/issueplanning';
 import * as Issuewatcher from './route-handlers/issuewatcher';
 import * as Userskill from './route-handlers/userskill';
@@ -78,6 +79,7 @@ function routes() {
     Wiki.register(this, ctx);
     Permission.register(this, ctx);
     Systemsetting.register(this, ctx);
+    Setting.register(this, ctx);
     Issueplanning.register(this, ctx);
     Issuewatcher.register(this, ctx);
     Userskill.register(this);

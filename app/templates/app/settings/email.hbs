@@ -1,0 +1,96 @@
+<section class="settings-email">
+  <AccessControl @aclContext="setting.read">
+    <div class="row module email">
+      <div class="col-md-8">
+        <div class="box box-primary" data-email-smtp>
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.settings.email.title"}}</h3>
+          </div>
+          <div class="box-body">
+            <div class="callout callout-info">
+              <p>{{t "views.app.settings.email.info"}}</p>
+            </div>
+            <FormFields::FieldText
+              @placeholder={{t "views.app.settings.email.hostPlaceholder"}}
+              @label={{t "views.app.settings.email.host"}}
+              @value={{this.draft.host}}
+              @data-field="setting.host"
+              @validate={{action this.validateField "emailForm" (hash name="host" value=this.draft.host model=this.draft)}}
+              @message={{this.message.emailForm.host}}
+            />
+            <FormFields::FieldText
+              @placeholder={{t "views.app.settings.email.portPlaceholder"}}
+              @label={{t "views.app.settings.email.port"}}
+              @value={{this.draft.port}}
+              @data-field="setting.port"
+              @validate={{action this.validateField "emailForm" (hash name="port" value=this.draft.port model=this.draft)}}
+              @message={{this.message.emailForm.port}}
+            />
+            <div class="form-group" data-field="setting.encryption">
+              <label>{{t "views.app.settings.email.encryption.label"}}</label>
+              <PowerSelect
+                @options={{this.encryptions}}
+                @selected={{this.selectedEncryption}}
+                @onChange={{this.setEncryption}}
+                @searchEnabled={{false}}
+                as |encryption|
+              >
+                {{t encryption.label}}
+              </PowerSelect>
+            </div>
+            <FormFields::FieldText
+              @label={{t "views.app.settings.email.username"}}
+              @value={{this.draft.username}}
+              @data-field="setting.username"
+            />
+            <FormFields::FieldText
+              @type="password"
+              @placeholder={{if this.passwordIsSet (t "views.app.settings.email.passwordPlaceholder")}}
+              @label={{t "views.app.settings.email.password"}}
+              @value={{this.draft.password}}
+              @data-field="setting.password"
+              autocomplete="new-password"
+            />
+            {{#if this.passwordIsSet}}
+              <p class="help-block" data-password-saved>
+                <i class="fa fa-lock" aria-hidden="true"></i>
+                {{t "views.app.settings.email.passwordSaved"}}
+              </p>
+            {{/if}}
+            <FormFields::FieldText
+              @label={{t "views.app.settings.email.fromName"}}
+              @value={{this.draft.fromName}}
+              @data-field="setting.fromName"
+            />
+            <FormFields::FieldText
+              @label={{t "views.app.settings.email.fromEmail"}}
+              @value={{this.draft.fromEmail}}
+              @data-field="setting.fromEmail"
+              @validate={{action this.validateField "emailForm" (hash name="fromEmail" value=this.draft.fromEmail model=this.draft)}}
+              @message={{this.message.emailForm.fromEmail}}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="box box-default" data-email-sent>
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.settings.email.sentTitle"}}</h3>
+          </div>
+          <div class="box-body">
+            <ul class="list-unstyled">
+              <li><i class="fa fa-envelope-o" aria-hidden="true"></i> {{t "views.app.settings.email.sentWelcome"}}</li>
+              <li><i class="fa fa-envelope-o" aria-hidden="true"></i> {{t "views.app.settings.email.sentReset"}}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+        <AppUi::Button type="button" data-btn="save-email" class="btn btn-primary" @onClick={{this.saveEmail}} @aclContext="setting.update">{{t "global.form.save"}}</AppUi::Button>
+        <AppUi::Button type="button" data-btn="cancel-email" class="btn btn-default" @onClick={{this.cancelEmail}}>{{t "global.form.cancel"}}</AppUi::Button>
+      </div>
+    </div>
+  </AccessControl>
+</section>

@@ -1382,6 +1382,32 @@
         }
       },
       "settings": {
+        "email": {
+          "title": "Outgoing mail (SMTP)",
+          "info": "Leave a value blank to use the server configuration.",
+          "host": "Host",
+          "hostPlaceholder": "smtp.example.com",
+          "port": "Port",
+          "portPlaceholder": "587",
+          "portInvalid": "Enter a port between 1 and 65535",
+          "encryption": {
+            "label": "Encryption",
+            "tls": "TLS (STARTTLS)",
+            "ssl": "SSL",
+            "none": "None"
+          },
+          "username": "Username",
+          "password": "Password",
+          "passwordSaved": "A password is saved. Leave this blank to keep it.",
+          "passwordPlaceholder": "Enter a new password",
+          "fromName": "From name",
+          "fromEmail": "From email",
+          "sentTitle": "Emails sent by the system",
+          "sentWelcome": "Welcome email with the account password, sent when a user is created.",
+          "sentReset": "Reset password email, sent when a user asks to reset their password.",
+          "saved": "The email settings have been saved",
+          "saveFailed": "The email settings could not be saved. Please try again."
+        },
         "issueTypes": {
           "title": "Issue Types",
           "singular": "issue type",
@@ -2025,7 +2051,11 @@
           "label": "Settings",
           "group": {
             "access": "Access",
-            "projects": "Projects"
+            "projects": "Projects",
+            "system": "System"
+          },
+          "email": {
+            "label": "Email"
           },
           "issueTypes": {
             "label": "Issue Types"
