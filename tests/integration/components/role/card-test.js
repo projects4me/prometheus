@@ -23,8 +23,8 @@ module('Integration | Component | role/card', function (hooks) {
         `);
 
         assert.dom('[data-role-field="name"]').hasText('admin');
-        assert.dom('[data-role-field="description"] h5').hasText('this is the admin role');
-        assert.dom('[data-role-field="dateCreated"]').hasText('21st Sep, 2016');
+        assert.dom('[data-role-field="description"]').hasText('this is the admin role');
+        assert.dom('[data-role-field="dateModified"]').hasText('Modified: 21 Sep 2016');
         assert.dom('[data-btn="delete-role"]').doesNotExist();
     });
 });
