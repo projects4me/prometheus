@@ -1402,9 +1402,6 @@
           "passwordPlaceholder": "Enter a new password",
           "fromName": "From name",
           "fromEmail": "From email",
-          "sentTitle": "Emails sent by the system",
-          "sentWelcome": "Welcome email with the account password, sent when a user is created.",
-          "sentReset": "Reset password email, sent when a user asks to reset their password.",
           "saved": "The email settings have been saved",
           "saveFailed": "The email settings could not be saved. Please try again.",
           "test": {
