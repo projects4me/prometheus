@@ -3,7 +3,7 @@
  */
 
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
-import { tracked } from '@glimmer/tracking';
+import { tracked, cached } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { testSettings } from 'prometheus/utils/setting-test-api';
@@ -136,7 +136,10 @@ export default class AppSettingsEmailController extends PrometheusCreateControll
      * @type Array
      * @public
      */
+    @cached
     get encryptions() {
+        // reading the locale makes the cache recompute when it changes
+        this.intl.locale;
         return ['tls', 'ssl', 'none'].map((value) => ({
             value,
             label: this.intl.t(`views.app.settings.email.encryption.${value}`)
