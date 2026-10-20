@@ -1,4 +1,5 @@
 import { click, fillIn, settled } from '@ember/test-helpers';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
 
 const KEYS = {
@@ -77,6 +78,12 @@ export const when = function () {
             "User fills the email field $field with $value": (assert) => async function (field, value) {
                 await fillIn(`[data-field="setting.${field}"] input`, value);
                 assert.ok(true, `User fills ${field} with ${value}`);
+            }
+        },
+        {
+            "User chooses the email encryption $value": (assert) => async function (value) {
+                await selectChoose('[data-field="setting.encryption"]', value.toUpperCase());
+                assert.ok(true, `User chooses the encryption ${value}`);
             }
         },
         {

@@ -23,18 +23,16 @@
               @validate={{action this.validateField "emailForm" (hash name="port" value=this.draft.port model=this.draft)}}
               @message={{this.message.emailForm.port}}
             />
-            <div class="form-group" data-field="setting.encryption">
-              <label>{{t "views.app.settings.email.encryption.label"}}</label>
-              <PowerSelect
-                @options={{this.encryptions}}
-                @selected={{this.selectedEncryption}}
-                @onChange={{this.setEncryption}}
-                @searchEnabled={{false}}
-                as |encryption|
-              >
-                {{t encryption.label}}
-              </PowerSelect>
-            </div>
+            <FormFields::FieldRelate
+              @label={{t "views.app.settings.email.encryption.label"}}
+              @options={{this.encryptions}}
+              @selected={{this.selectedEncryption}}
+              @searchField="label"
+              @onchange={{this.setEncryption}}
+              @relateType="relate-simple"
+              @searchEnabled={{false}}
+              @data-field="setting.encryption"
+            />
             <FormFields::FieldText
               @label={{t "views.app.settings.email.username"}}
               @value={{this.draft.username}}

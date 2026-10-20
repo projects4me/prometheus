@@ -3,7 +3,7 @@
  */
 
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
-import { tracked } from '@glimmer/tracking';
+import { tracked, cached } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { testSettings } from 'prometheus/utils/setting-test-api';
@@ -130,17 +130,21 @@ export default class AppSettingsEmailController extends PrometheusCreateControll
     @tracked testResult = null;
 
     /**
-     * The encryption choices of the power-select.
+     * The encryption choices of the power-select, with translated labels.
      *
      * @property encryptions
      * @type Array
      * @public
      */
-    encryptions = [
-        { value: 'tls', label: 'views.app.settings.email.encryption.tls' },
-        { value: 'ssl', label: 'views.app.settings.email.encryption.ssl' },
-        { value: 'none', label: 'views.app.settings.email.encryption.none' }
-    ];
+    @cached
+    get encryptions() {
+        // reading the locale makes the cache recompute when it changes
+        this.intl.locale;
+        return ['tls', 'ssl', 'none'].map((value) => ({
+            value,
+            label: this.intl.t(`views.app.settings.email.encryption.${value}`)
+        }));
+    }
 
     /**
      * The setting records of the email group, by form field.
