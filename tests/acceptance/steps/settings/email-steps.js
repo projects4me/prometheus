@@ -139,11 +139,6 @@ export const then = function () {
             }
         },
         {
-            "The sent emails box is shown": (assert) => async function () {
-                assert.dom('[data-email-sent]').exists();
-            }
-        },
-        {
             "The email setting $field is stored as $value": (assert) => async function (field, value) {
                 assert.equal(storedValue(field), value);
             }

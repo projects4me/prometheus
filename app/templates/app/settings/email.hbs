@@ -1,7 +1,7 @@
 <section class="settings-email">
   <AccessControl @aclContext="setting.read">
     <div class="row module email">
-      <div class="col-md-8">
+      <div class="col-sm-12">
         <div class="box box-primary" data-email-smtp>
           <div class="box-header with-border">
             <h3 class="box-title">{{t "views.app.settings.email.title"}}</h3>
@@ -69,20 +69,6 @@
               @validate={{action this.validateField "emailForm" (hash name="fromEmail" value=this.draft.fromEmail model=this.draft)}}
               @message={{this.message.emailForm.fromEmail}}
             />
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="box box-default" data-email-sent>
-          <div class="box-header with-border">
-            <h3 class="box-title">{{t "views.app.settings.email.sentTitle"}}</h3>
-          </div>
-          <div class="box-body">
-            <ul class="list-unstyled">
-              <li><i class="fa fa-envelope-o" aria-hidden="true"></i> {{t "views.app.settings.email.sentWelcome"}}</li>
-              <li><i class="fa fa-envelope-o" aria-hidden="true"></i> {{t "views.app.settings.email.sentReset"}}</li>
-            </ul>
           </div>
         </div>
       </div>

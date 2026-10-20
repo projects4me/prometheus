@@ -19,7 +19,6 @@ Feature: Settings | email
     And The email field username shows mailer
     And The email field fromEmail shows no-reply@example.com
     And The email password field is empty and shows that a password is saved
-    And The sent emails box is shown
     And The breadcrumb reads Dashboard > Settings > Email
 
   Scenario: An admin saves the SMTP settings
