@@ -4,6 +4,7 @@
 
 import PrometheusController from "prometheus/controllers/prometheus";
 import { action } from '@ember/object';
+import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
 /**
  * This is the controller for the calendar controller route
@@ -91,7 +92,7 @@ export default class AppProjectCalendarController extends PrometheusController {
         if (event.className) {
             let tooltip = _self.intl.t("views.app.issue.lists.priority." + event.priority);
             tooltip += ' ' + _self.intl.t("views.app.issue.priority");
-            tooltip += ' - ' + _self.intl.t("views.app.issue.lists.status." + event.className);
+            tooltip += ' - ' + issueStatusLabel(_self.intl, event.className);
             eventElement.find('div.fc-content').attr('data-toggle', 'tooltip');
             eventElement.find('div.fc-content').attr('title', tooltip);
             //eventElement.find('td.fc-list-item-title').prepend(this.getPriorityHTML(event.priority));

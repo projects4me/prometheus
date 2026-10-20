@@ -33,7 +33,7 @@
         <div class="box-header with-border box {{get-prop @statusClass status.name}}" style={{if status.color (status-style status.name "border-top-color")}} data-field-status="{{status.name}}">
           <div class="flex-row flex-jc-sb flex-ai-c">
             <div>
-              {{t (concat "views.app.issue.lists.status." status.name)}} ({{call (fn this.getIssuesCountForStatus status.name)}})
+              {{status-label status.name}} ({{call (fn this.getIssuesCountForStatus status.name)}})
             </div>
             <AppUi::DottedAddButton 
               @onClick={{fn this.showAddIssueDialog status.name}}

@@ -226,10 +226,7 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 	 */
 	@computed('issueStatuses')
 	get issueStatusList() {
-		return new format(this).getTranslatedModelList(
-			this.issueStatuses,
-			'views.app.issue.lists.status'
-		);
+		return new format(this).getIssueStatusList(this.issueStatuses);
 	}
 
 	/**

@@ -4,6 +4,8 @@
 
 import AppComponent from '../app';
 import { htmlSafe } from '@ember/template';
+import _ from 'lodash';
+import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
 /**
  * This component is responsible for parsing content and replacing special tags
@@ -236,8 +238,9 @@ export default class AppUiTagParserComponent extends AppComponent {
 	 * @public
 	 */
 	renderStatusField(value) {
-		let translatedStatus = this.intl.t(`views.app.issue.lists.status.${value}`);
-		return `<span class="badge ${value}">${translatedStatus}</span>`;
+		// Status names come from Settings, so both the class and the label are escaped
+		let translatedStatus = _.escape(issueStatusLabel(this.intl, value));
+		return `<span class="badge ${_.escape(value)}">${translatedStatus}</span>`;
 	}
 
 	/**

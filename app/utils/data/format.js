@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { inject as service } from '@ember/service';
 import { getOwner, setOwner } from '@ember/application';
 import { htmlSafe } from '@ember/template';
+import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
 /* global require */
 
@@ -118,6 +119,28 @@ export default class Format {
         }) || [];
         
         return this.getSelectList(translatedModels);
+    }
+
+    /**
+     * This function prepares the select list of issue statuses, labelled with the translated
+     * status name or the name itself for a status that has no translation (one added in Settings).
+     *
+     * @method getIssueStatusList
+     * @param statuses
+     * @param identifier
+     * @return {Array}
+     */
+    getIssueStatusList(statuses, identifier = 'id') {
+        let _self = this;
+
+        const labelledStatuses = statuses?.map(status => {
+            return {
+                id: status[identifier],
+                name: issueStatusLabel(_self.intl, status.name),
+            };
+        }) || [];
+
+        return this.getSelectList(labelledStatuses);
     }
 
     /**

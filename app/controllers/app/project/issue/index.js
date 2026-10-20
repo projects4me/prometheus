@@ -8,6 +8,7 @@ import { htmlSafe } from '@ember/template';
 import format from "prometheus/utils/data/format";
 import { inject as controller } from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
+import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
 /**
  * This controller is used to provide the interaction between the template and
@@ -362,7 +363,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      */
     get statuses() {
         return this.issueStatuses?.reduce((acc, status) => {
-            acc[status.name] = this.intl.t(`views.app.issue.lists.status.${status.name}`);
+            acc[status.name] = issueStatusLabel(this.intl, status.name);
             return acc;
         }, {});
     }
@@ -378,7 +379,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      * @public
      */
     get statusOptions() {
-        return (new format(this)).getTranslatedModelList(this.appProjectController.issueStatuses, 'views.app.issue.lists.status');
+        return (new format(this)).getIssueStatusList(this.appProjectController.issueStatuses);
     }
 
     /**
@@ -390,7 +391,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      * @public
      */
     get statusOptionsByName() {
-        return (new format(this)).getTranslatedModelList(this.appProjectController.issueStatuses, 'views.app.issue.lists.status', 'name');
+        return (new format(this)).getIssueStatusList(this.appProjectController.issueStatuses, 'name');
     }
 
     /**
