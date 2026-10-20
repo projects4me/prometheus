@@ -1384,7 +1384,6 @@
       "settings": {
         "email": {
           "title": "Outgoing mail (SMTP)",
-          "info": "Leave a value blank to use the server configuration.",
           "host": "Host",
           "hostPlaceholder": "smtp.example.com",
           "port": "Port",
