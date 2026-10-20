@@ -130,17 +130,18 @@ export default class AppSettingsEmailController extends PrometheusCreateControll
     @tracked testResult = null;
 
     /**
-     * The encryption choices of the power-select.
+     * The encryption choices of the power-select, with translated labels.
      *
      * @property encryptions
      * @type Array
      * @public
      */
-    encryptions = [
-        { value: 'tls', label: 'views.app.settings.email.encryption.tls' },
-        { value: 'ssl', label: 'views.app.settings.email.encryption.ssl' },
-        { value: 'none', label: 'views.app.settings.email.encryption.none' }
-    ];
+    get encryptions() {
+        return ['tls', 'ssl', 'none'].map((value) => ({
+            value,
+            label: this.intl.t(`views.app.settings.email.encryption.${value}`)
+        }));
+    }
 
     /**
      * The setting records of the email group, by form field.
