@@ -50,7 +50,7 @@ export default class RenderMarkdown extends Modifier {
      * @private
      */
     willRemove() {
-        this.viewer?.destroy?.();
+        this.viewer?.remove?.();
         this.viewer = null;
     }
 }

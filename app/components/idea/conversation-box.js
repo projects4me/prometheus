@@ -79,6 +79,10 @@ export default class IdeaConversationBoxComponent extends Component {
     @action
     async confirmArchive() {
         this.showArchiveModal = false;
-        await this.args.onToggleArchive();
+        try {
+            await this.args.onToggleArchive();
+        } catch (error) {
+            // Already reported and rolled back by the controller.
+        }
     }
 }

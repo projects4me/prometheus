@@ -73,6 +73,8 @@ export default class IdeaComposerComponent extends Component {
         try {
             await this.args.onSend(body);
             this.body = '';
+        } catch (error) {
+            // Already reported by the controller. Keep the text so the user can retry.
         } finally {
             this.isSending = false;
         }
@@ -87,6 +89,9 @@ export default class IdeaComposerComponent extends Component {
      */
     @action
     handleKeydown(event) {
+        if (event.isComposing || event.keyCode === 229) {
+            return;
+        }
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             this.send();

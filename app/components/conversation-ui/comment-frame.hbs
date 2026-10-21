@@ -1,9 +1,13 @@
 <div class="box-comment" data-comment-id={{@commentId}} ...attributes>
-  <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{@userId}}" alt="{{@userName}}">
+  {{#if @userId}}
+    <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{@userId}}" alt="{{@userName}}">
+  {{/if}}
 
   <div class="comment-text" {{modify-links}}>
     <span class="username">
-      <a href="/app/user/{{@userId}}">{{@userName}}</a>
+      {{#if @userId}}
+        <a href="/app/user/{{@userId}}">{{@userName}}</a>
+      {{/if}}
       <span class="text-muted pull-right">
         {{format-date-time date=@date}}
         {{yield to="tools"}}

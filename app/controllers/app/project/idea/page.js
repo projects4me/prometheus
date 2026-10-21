@@ -43,6 +43,15 @@ export default class AppProjectIdeaPageController extends Controller {
     @tracked messages = [];
 
     /**
+     * The id of the idea whose messages are in the list
+     *
+     * @property loadedIdeaId
+     * @type String
+     * @private
+     */
+    loadedIdeaId = null;
+
+    /**
      * Loads the messages of the idea, also used by the refresh box-tool
      *
      * @method loadMessages
@@ -56,12 +65,18 @@ export default class AppProjectIdeaPageController extends Controller {
             this.messages = [];
             return;
         }
+        if (this.loadedIdeaId !== idea.id) {
+            this.messages = [];
+            this.loadedIdeaId = idea.id;
+        }
         try {
             let messages = await this.store.query('ideamessage', {
                 query: `(Ideamessage.ideaId : ${idea.id})`,
                 limit: -1
             });
-            this.messages = messages.toArray();
+            if (this.model?.id === idea.id) {
+                this.messages = messages.toArray();
+            }
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });
         }
