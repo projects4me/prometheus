@@ -19,6 +19,7 @@ export default Factory.extend({
     createdUser() {
         return (_.random(1, 10)).toString();
     },
+    createdUserName: 'User',
     dateCreated() {
         return date.createdDate(10, 20);
     }

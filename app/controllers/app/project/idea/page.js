@@ -52,6 +52,15 @@ export default class AppProjectIdeaPageController extends Controller {
     loadedIdeaId = null;
 
     /**
+     * Sequence of the latest message query, so a slower earlier query cannot overwrite a newer list
+     *
+     * @property loadSequence
+     * @type Number
+     * @private
+     */
+    loadSequence = 0;
+
+    /**
      * Loads the messages of the idea, also used by the refresh box-tool
      *
      * @method loadMessages
@@ -69,12 +78,13 @@ export default class AppProjectIdeaPageController extends Controller {
             this.messages = [];
             this.loadedIdeaId = idea.id;
         }
+        let sequence = ++this.loadSequence;
         try {
             let messages = await this.store.query('ideamessage', {
                 query: `(Ideamessage.ideaId : ${idea.id})`,
                 limit: -1
             });
-            if (this.model?.id === idea.id) {
+            if (this.model?.id === idea.id && sequence === this.loadSequence) {
                 this.messages = messages.toArray();
             }
         } catch (error) {
