@@ -79,6 +79,24 @@ export default class AppProjectIdeaPageController extends Controller {
     loadSequence = 0;
 
     /**
+     * The id of the idea whose plans are in the plan boxes
+     *
+     * @property loadedPlansIdeaId
+     * @type String
+     * @private
+     */
+    loadedPlansIdeaId = null;
+
+    /**
+     * Sequence of the latest plan query, so a slower earlier query cannot overwrite a newer one
+     *
+     * @property planSequence
+     * @type Number
+     * @private
+     */
+    planSequence = 0;
+
+    /**
      * Loads the messages of the idea, also used by the refresh box-tool
      *
      * @method loadMessages
@@ -123,14 +141,21 @@ export default class AppProjectIdeaPageController extends Controller {
         if (!idea) {
             this.plans = [];
             this.planIssues = [];
+            this.loadedPlansIdeaId = null;
             return;
         }
+        if (this.loadedPlansIdeaId !== idea.id) {
+            this.plans = [];
+            this.planIssues = [];
+            this.loadedPlansIdeaId = idea.id;
+        }
+        let sequence = ++this.planSequence;
         try {
             let [plans, links] = await Promise.all([
                 this.store.query('ideaplan', { query: `(Ideaplan.ideaId : ${idea.id})`, limit: -1 }),
                 this.store.query('ideaplanissue', { query: `(Ideaplanissue.ideaId : ${idea.id})`, limit: -1 })
             ]);
-            if (this.model?.id === idea.id) {
+            if (this.model?.id === idea.id && sequence === this.planSequence) {
                 this.plans = plans.toArray();
                 this.planIssues = links.toArray();
             }
