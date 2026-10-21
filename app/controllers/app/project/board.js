@@ -733,6 +733,11 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
     get milestoneList() {
         let statusList = this.statuses.map((status) => status.name);
 
+        // No statuses loaded: leave the issues alone, clearing them here would lose them for good.
+        if (statusList.length === 0) {
+            return this.milestones;
+        }
+
         let priorities = {
             low: 1,
             medium: 2,
