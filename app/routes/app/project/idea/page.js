@@ -56,5 +56,7 @@ export default class AppProjectIdeaPageRoute extends App {
         this.controllerFor('app.project.idea').selectedIdeaId = model?.id ?? null;
         this.breadcrumb.setTitle(this.routeName, model?.title);
         this.breadcrumb.setIcon(this.routeName, 'lightbulb-o');
+        controller.model = model;
+        controller.loadMessages();
     }
 }

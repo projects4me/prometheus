@@ -1,4 +1,15 @@
 <div class="row idea-page">
-  <div class="col-md-8" data-idea-main></div>
+  <div class="col-md-8" data-idea-main>
+    {{#if this.model}}
+      <Idea::ConversationBox
+        @idea={{this.model}}
+        @messages={{this.messages}}
+        @onRefresh={{this.loadMessages}}
+        @onRename={{this.rename}}
+        @onToggleArchive={{this.toggleArchive}}
+        @onSend={{this.send}}
+      />
+    {{/if}}
+  </div>
   <div class="col-md-4" data-idea-side></div>
 </div>

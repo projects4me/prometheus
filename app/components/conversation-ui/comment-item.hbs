@@ -1,39 +1,38 @@
 <div class="comment-item-wrapper">
-  <div class="box-comment" data-comment-id="{{@comment.id}}">
-    <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{@comment.createdUser}}" alt="{{@comment.createdUserName}}">
-
-    <div class="comment-text" {{modify-links}}>
-      <span class="username">
-        <a href="/app/user/{{@comment.createdUser}}">{{@comment.createdUserName}}</a>
-        <span class="text-muted pull-right">
-          {{format-date-time date=@comment.dateModified}}
-          {{#if this.isOwnComment}}
-            <AppUi::Button 
-              data-btn="edit" 
-              type="button" 
-              class="btn btn-box-tool"
-              @onClick={{this.showEditCommentDialog}}
-              data-toggle="tooltip" 
-              title="{{t 'global.form.edit'}}"
-            >
-              <i class="fa fa-pencil"></i>
-            </AppUi::Button>
-            <AppUi::Button 
-              data-btn="delete" 
-              type="button" 
-              class="btn btn-box-tool"
-              @onClick={{this.showDeleteCommentDialog}}
-              data-toggle="tooltip" 
-              title="{{t 'global.form.delete'}}"
-            >
-              <i class="fa fa-trash-o"></i>
-            </AppUi::Button>
-          {{/if}}
-        </span>
-      </span>
-      {{translate-comment @comment.comment}}    
-    </div>
-  </div>
+  <ConversationUi::CommentFrame
+    @commentId={{@comment.id}}
+    @userId={{@comment.createdUser}}
+    @userName={{@comment.createdUserName}}
+    @date={{@comment.dateModified}}
+  >
+    <:tools>
+      {{#if this.isOwnComment}}
+        <AppUi::Button
+          data-btn="edit"
+          type="button"
+          class="btn btn-box-tool"
+          @onClick={{this.showEditCommentDialog}}
+          data-toggle="tooltip"
+          title="{{t 'global.form.edit'}}"
+        >
+          <i class="fa fa-pencil"></i>
+        </AppUi::Button>
+        <AppUi::Button
+          data-btn="delete"
+          type="button"
+          class="btn btn-box-tool"
+          @onClick={{this.showDeleteCommentDialog}}
+          data-toggle="tooltip"
+          title="{{t 'global.form.delete'}}"
+        >
+          <i class="fa fa-trash-o"></i>
+        </AppUi::Button>
+      {{/if}}
+    </:tools>
+    <:body>
+      {{translate-comment @comment.comment}}
+    </:body>
+  </ConversationUi::CommentFrame>
 
   {{#if this.showEditCommentModal}}
     {{#bootstrap-modal
