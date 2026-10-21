@@ -3,9 +3,10 @@
  */
 
 import App from 'prometheus/routes/app';
+import { inject as service } from '@ember/service';
 
 /**
- * The route of the new idea page, its form is built by a separate issue
+ * The route of the new idea page, it prepares the idea that the form fills
  *
  * @class Create
  * @namespace Prometheus.Routes
@@ -14,12 +15,39 @@ import App from 'prometheus/routes/app';
  */
 export default class AppProjectIdeaCreateRoute extends App {
     /**
-     * Clears the selection in the idea browser
+     * The trackedProject service provides id of the selected project.
+     *
+     * @property trackedProject
+     * @type Ember.Service
+     * @public
+     */
+    @service trackedProject;
+
+    /**
+     * Clears the selection in the idea browser and hands a new idea to the form
      *
      * @method setupController
+     * @param {Controller} controller
      * @private
      */
-    setupController() {
+    setupController(controller) {
         this.controllerFor('app.project.idea').selectedIdeaId = null;
+        controller.model = this.store.createRecord('idea', {
+            projectId: this.trackedProject.getProjectId(),
+            status: 'open'
+        });
+    }
+
+    /**
+     * Drops the idea that was never started
+     *
+     * @method resetController
+     * @param {Controller} controller
+     * @private
+     */
+    resetController(controller) {
+        if (controller.model?.isNew) {
+            controller.model.rollbackAttributes();
+        }
     }
 }
