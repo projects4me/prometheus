@@ -1,0 +1,22 @@
+<div class="idea-composer" data-idea-composer>
+  <FormFields::FieldTextArea
+    @placeholder={{t "views.app.idea.conversation.placeholder"}}
+    @value={{this.body}}
+    @onInput={{this.updateBody}}
+    @data-field="ideamessage.body"
+    @aclContext="ideamessage.create"
+    disabled={{this.isDisabled}}
+    rows="2"
+    {{on "keydown" this.handleKeydown}}
+  />
+  <AppUi::Button
+    type="button"
+    class="btn btn-primary btn-sm"
+    @onClick={{this.send}}
+    @aclContext="ideamessage.create"
+    disabled={{this.isDisabled}}
+    data-idea-send
+  >
+    <i class="fa fa-paper-plane"></i> {{t "views.app.idea.conversation.send"}}
+  </AppUi::Button>
+</div>

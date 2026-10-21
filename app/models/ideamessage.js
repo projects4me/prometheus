@@ -63,6 +63,13 @@ export default class IdeamessageModel extends Model {
     @attr('string') createdUser;
 
     /**
+     * @property createdUserName
+     * @for Ideamessage
+     * @public
+     */
+    @attr('string') createdUserName;
+
+    /**
      * @property dateCreated
      * @for Ideamessage
      * @public

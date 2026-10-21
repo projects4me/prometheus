@@ -1,0 +1,37 @@
+{{#if this.isNotice}}
+  <div class="idea-message-notice text-center text-muted {{if this.isError "text-red"}}" data-idea-message={{@message.id}} data-kind={{@message.kind}}>
+    <i class="fa {{if this.isError "fa-exclamation-triangle" "fa-info-circle"}}"></i>
+    <span data-idea-message-body {{render-markdown @message.body}}></span>
+  </div>
+{{else}}
+  <ConversationUi::CommentFrame
+    @commentId={{@message.id}}
+    @userId={{@message.createdUser}}
+    @userName={{@message.createdUserName}}
+    @date={{@message.dateCreated}}
+    data-idea-message={{@message.id}}
+    data-kind={{@message.kind}}
+  >
+    <:body>
+      <div class="idea-message-body" data-idea-message-body {{render-markdown @message.body}}></div>
+      {{#if this.steps.length}}
+        <button type="button" class="btn btn-link btn-xs" {{on "click" this.toggleSteps}} data-idea-steps-toggle>
+          <i class="fa {{if this.showSteps "fa-caret-down" "fa-caret-right"}}"></i>
+          {{t "views.app.idea.conversation.steps" count=this.steps.length}}
+        </button>
+        {{#if this.showSteps}}
+          <ol class="idea-message-steps" data-idea-steps>
+            {{#each this.steps as |step|}}
+              <li>{{step}}</li>
+            {{/each}}
+          </ol>
+        {{/if}}
+      {{/if}}
+      {{#if @message.ideaplanId}}
+        <a href="#ideaplan-{{@message.ideaplanId}}" class="btn btn-link btn-xs" data-idea-plan-link>
+          <i class="fa fa-file-text-o"></i> {{t "views.app.idea.conversation.plan"}}
+        </a>
+      {{/if}}
+    </:body>
+  </ConversationUi::CommentFrame>
+{{/if}}

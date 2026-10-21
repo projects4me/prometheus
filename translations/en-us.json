@@ -756,6 +756,20 @@
           "title": "Brainstorm an idea",
           "hint": "Pick an idea on the left, or start a new one.",
           "start": "Start an idea"
+        },
+        "conversation": {
+          "empty": "No messages yet",
+          "placeholder": "Write a message",
+          "send": "Send",
+          "refresh": "Refresh",
+          "archive": "Archive",
+          "unarchive": "Unarchive",
+          "archiveTitle": "Archive idea",
+          "unarchiveTitle": "Unarchive idea",
+          "archiveMessage": "This idea will be archived and its conversation will be read only.",
+          "unarchiveMessage": "This idea will be opened again.",
+          "steps": "{count, plural, one {# step} other {# steps}}",
+          "plan": "View the plan"
         }
       },
       "wiki": {

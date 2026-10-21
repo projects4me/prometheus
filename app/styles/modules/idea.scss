@@ -14,3 +14,25 @@
     }
   }
 }
+
+.idea-page {
+  .idea-conversation {
+    .box-title .app-ui-inline-editable {
+      display: inline-block;
+    }
+
+    .box-header > .label {
+      margin-left: 0.5rem;
+    }
+
+    .idea-message-notice {
+      margin: 0.5rem 0;
+      font-size: 0.9em;
+    }
+
+    .idea-message-steps {
+      margin: 0.25rem 0 0.5rem;
+      padding-left: 1.5rem;
+    }
+  }
+}

@@ -1,0 +1,61 @@
+<div class="box box-primary idea-conversation" data-idea-conversation>
+  <div class="box-header with-border">
+    <h3 class="box-title" data-idea-title>
+      <AppUi::InlineEditable
+        @value={{@idea.title}}
+        @onSave={{@onRename}}
+        @aclContext="idea.update"
+        @disabled={{this.isArchived}}
+      >
+        <:display>{{@idea.title}}</:display>
+        <:edit as |f|>
+          <FormFields::FieldText
+            @value={{f.value}}
+            @type="text"
+            @onInput={{f.update}}
+            @data-field="idea.title"
+            autofocus
+            {{on "keydown" f.onKeydown}}
+          />
+        </:edit>
+      </AppUi::InlineEditable>
+    </h3>
+    <span class="label {{if this.isArchived "deferred" "new"}}" data-idea-status>{{t (concat "views.app.idea.status." @idea.status)}}</span>
+    <div class="box-tools pull-right">
+      <AppUi::Button type="button" class="btn btn-box-tool" @onClick={{@onRefresh}} title={{t "views.app.idea.conversation.refresh"}} data-idea-refresh>
+        <i class="fa fa-refresh"></i>
+      </AppUi::Button>
+      <AppUi::Button type="button" class="btn btn-box-tool" @onClick={{this.askArchive}} @aclContext="idea.update"
+        title={{t (if this.isArchived "views.app.idea.conversation.unarchive" "views.app.idea.conversation.archive")}} data-idea-archive>
+        <i class="fa {{if this.isArchived "fa-undo" "fa-archive"}}"></i>
+      </AppUi::Button>
+    </div>
+  </div>
+
+  <div class="box-footer box-comments idea-thread" data-idea-thread>
+    {{#each this.orderedMessages as |message|}}
+      <Idea::MessageItem @message={{message}} />
+    {{else}}
+      <p class="text-muted text-center" data-idea-no-messages>{{t "views.app.idea.conversation.empty"}}</p>
+    {{/each}}
+  </div>
+
+  <div class="box-footer">
+    <Idea::Composer @onSend={{@onSend}} @disabled={{this.isArchived}} />
+  </div>
+
+  {{#if this.showArchiveModal}}
+    {{#bootstrap-modal
+      title=(if this.isArchived "views.app.idea.conversation.unarchiveTitle" "views.app.idea.conversation.archiveTitle")
+      closeLabel="global.form.cancel"
+      confirmLabel=(if this.isArchived "views.app.idea.conversation.unarchive" "views.app.idea.conversation.archive")
+      close=(action this.closeArchive)
+      confirm=(action this.confirmArchive)
+    }}
+      <div class="alert alert-warning flex-row flex-ai-c" data-idea-archive-confirm>
+        <i class="fa fa-exclamation-triangle"></i>
+        <p>{{t (if this.isArchived "views.app.idea.conversation.unarchiveMessage" "views.app.idea.conversation.archiveMessage")}}</p>
+      </div>
+    {{/bootstrap-modal}}
+  {{/if}}
+</div>
