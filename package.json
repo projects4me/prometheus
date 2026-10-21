@@ -110,7 +110,7 @@
     "lodash": "^4.17.21",
     "miragejs": "^0.1.45",
     "moment-timezone": "^0.5.43",
-    "sass": "^1.32.5",
+    "sass": "1.105.2",
     "socket.io-client": "^4.8.1",
     "sortablejs": "^1.14.0",
     "tippy.js": "^6.3.7",
