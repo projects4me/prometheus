@@ -1,0 +1,13 @@
+<div class="box box-primary idea-empty" data-idea-empty>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.idea.brainstorm.title"}}</h3>
+  </div>
+  <div class="box-body">
+    <p class="no-entry"><i class="fa fa-info-circle"></i> {{t "views.app.idea.brainstorm.hint"}}</p>
+  </div>
+  <AccessControl @aclContext="idea.create">
+    <div class="box-footer text-center">
+      <LinkTo @route="app.project.idea.create"><i class="fa fa-plus"></i> {{t "views.app.idea.brainstorm.start"}}</LinkTo>
+    </div>
+  </AccessControl>
+</div>
