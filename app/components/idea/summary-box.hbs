@@ -1,0 +1,12 @@
+<div class="box box-info idea-summary" data-idea-summary>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.idea.summary.title"}}</h3>
+  </div>
+  <div class="box-body">
+    <h4 data-idea-summary-created>{{t "views.app.idea.summary.created"}} <small>{{if @createdUserName (concat @createdUserName " ")}}{{format-date-time date=@idea.dateCreated}}</small></h4>
+    <h4 data-idea-summary-updated>{{t "views.app.idea.summary.updated"}} <small>{{format-date-time date=@idea.dateModified}}</small></h4>
+    <h4 data-idea-summary-messages>{{t "views.app.idea.summary.messages"}} <small>{{this.messageCount}}</small></h4>
+    <h4 data-idea-summary-versions>{{t "views.app.idea.summary.versions"}} <small>{{this.versionCount}}</small></h4>
+    <h4 data-idea-summary-cost>{{t "views.app.idea.summary.cost"}} <small>{{this.totalCost}}</small></h4>
+  </div>
+</div>

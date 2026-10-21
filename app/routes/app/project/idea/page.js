@@ -58,5 +58,6 @@ export default class AppProjectIdeaPageRoute extends App {
         this.breadcrumb.setIcon(this.routeName, 'lightbulb-o');
         controller.model = model;
         controller.loadMessages();
+        controller.loadPlans();
     }
 }
