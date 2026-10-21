@@ -1,0 +1,47 @@
+<div class="row idea-wrapper">
+  <AccessControl @aclContext="idea.read">
+    <div class="col-md-3">
+      <div class="box box-primary idea-browser" data-idea-browser>
+        <div class="box-header with-border">
+          <h3 class="box-title">{{t "views.app.idea.browser.title"}}</h3>
+          <div class="box-tools pull-right">
+            <AccessControl @aclContext="idea.create">
+              <LinkTo @route="app.project.idea.create" class="btn btn-primary btn-sm" data-new-idea>
+                <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
+              </LinkTo>
+            </AccessControl>
+          </div>
+        </div>
+        <div class="box-body no-padding">
+          <ul class="nav nav-pills nav-stacked">
+            {{#each this.listedIdeas as |idea|}}
+              <li class={{if (eq idea.id this.selectedIdeaId) "active"}} data-idea={{idea.id}}>
+                <LinkTo @route="app.project.idea.page" @model={{idea.id}}>
+                  <span data-idea-title>{{idea.title}}</span>
+                  <span class="label pull-right {{if (eq idea.status "open") "new" "deferred"}}" data-idea-status>{{t (concat "views.app.idea.status." idea.status)}}</span>
+                </LinkTo>
+              </li>
+            {{else}}
+              <li class="no-entry">{{t "views.app.idea.browser.empty"}}</li>
+            {{/each}}
+          </ul>
+        </div>
+        {{#if this.archivedIdeas.length}}
+          <div class="box-footer text-center">
+            <button type="button" class="btn btn-link" {{on "click" this.toggleArchived}} data-toggle-archived>
+              {{#if this.showArchived}}
+                {{t "views.app.idea.browser.hideArchived" count=this.archivedIdeas.length}}
+              {{else}}
+                {{t "views.app.idea.browser.showArchived" count=this.archivedIdeas.length}}
+              {{/if}}
+            </button>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      {{outlet}}
+    </div>
+  </AccessControl>
+</div>

@@ -161,6 +161,7 @@
         "issue": "Issues",
         "wiki": "Wiki",
         "conversation": "Threads",
+        "idea": "Ideas",
         "report": "Reports",
         "timelog": "Time Logs",
         "activity": "Activities",
@@ -720,6 +721,24 @@
             "error": "Failed to update comment. Please try again.",
             "empty": "Comment cannot be empty"
           }
+        }
+      },
+      "idea": {
+        "browser": {
+          "title": "Ideas",
+          "new": "New idea",
+          "empty": "No open ideas",
+          "showArchived": "Show archived ({count})",
+          "hideArchived": "Hide archived ({count})"
+        },
+        "status": {
+          "open": "Open",
+          "archived": "Archived"
+        },
+        "brainstorm": {
+          "title": "Brainstorm an idea",
+          "hint": "Pick an idea on the left, or start a new one.",
+          "start": "Start an idea"
         }
       },
       "wiki": {
@@ -2041,6 +2060,11 @@
           "edit": "Edit Issue",
           "import": "Import Issues",
           "export": "Export Issues"
+        },
+        "idea": {
+          "label": "Ideas",
+          "list": "List Ideas",
+          "create": "New Idea"
         },
         "conversation": {
           "label": "Threads"

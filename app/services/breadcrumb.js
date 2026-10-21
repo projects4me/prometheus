@@ -103,6 +103,24 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app.project.issue.page'
 		},
+		'app.project.idea.index': {
+			title: 'views.nav.menu.idea.label',
+			icon: 'lightbulb-o',
+			linkable: true,
+			parent: 'app.project'
+		},
+		'app.project.idea.create': {
+			title: 'views.nav.menu.idea.create',
+			icon: 'plus',
+			linkable: true,
+			parent: 'app.project.idea.index'
+		},
+		'app.project.idea.page': {
+			title: null, // Dynamic from route
+			icon: 'lightbulb-o',
+			linkable: true,
+			parent: 'app.project.idea.index'
+		},
 		'app.project.wiki.index': {
 			title: 'views.nav.menu.wiki.label',
 			icon: 'book',

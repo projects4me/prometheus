@@ -34,6 +34,10 @@ import * as Issueplanning from './route-handlers/issueplanning';
 import * as Issuewatcher from './route-handlers/issuewatcher';
 import * as Userskill from './route-handlers/userskill';
 import * as Userqualification from './route-handlers/userqualification';
+import * as Idea from './route-handlers/idea';
+import * as Ideamessage from './route-handlers/ideamessage';
+import * as Ideaplan from './route-handlers/ideaplan';
+import * as Ideaplanissue from './route-handlers/ideaplanissue';
 
 export function makeServer(config) {
     let finalConfig = {
@@ -84,4 +88,8 @@ function routes() {
     Issuewatcher.register(this, ctx);
     Userskill.register(this);
     Userqualification.register(this);
+    Idea.register(this, ctx);
+    Ideamessage.register(this, ctx);
+    Ideaplan.register(this, ctx);
+    Ideaplanissue.register(this, ctx);
 }

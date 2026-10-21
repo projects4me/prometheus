@@ -33,6 +33,11 @@ Router.map(function() {
         this.route('board');
         this.route('calendar');
         this.route('gantt');
+        this.route('idea',function(){
+            this.route('index',{path:'/'});
+            this.route('create');
+            this.route('page',{path:'/:idea_id'});
+        });
         this.route('issue',function(){
             this.route('index',{path:'/'});
             this.route('create');

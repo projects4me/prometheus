@@ -141,7 +141,8 @@ export default class NavBarComponent extends AppComponent {
     }
 
     /**
-     * This property contains the metadata for navigation. It first get the metadata and then sorts it by order.
+     * This property contains the metadata for navigation. It first get the metadata, drops the entries the user
+     * has no access to and then sorts it by order.
      * 
      * @property navigationMeta
      * @for NavBar
@@ -149,6 +150,7 @@ export default class NavBarComponent extends AppComponent {
     get navigationMeta() {
         let navigationMeta = MD.create().getViewMeta('Navigation', 'items');
         let sortedNavigationMeta = Object.entries(navigationMeta)
+        .filter(([, item]) => this.acl.checkAccess(item.aclContext))
         .sort((a, b) => a[1].order - b[1].order)
         .reduce((acc, [key, value]) => {
           acc[key] = value;
