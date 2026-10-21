@@ -1,0 +1,22 @@
+<div class="box box-info idea-created-issues" data-idea-created-issues>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.idea.createdIssues.title"}}</h3>
+  </div>
+  <div class="box-body">
+    {{#each this.groups as |group|}}
+      <h5 data-idea-created-group={{group.version}}>{{t "views.app.idea.createdIssues.version" version=group.version}}</h5>
+      <ul class="list-unstyled">
+        {{#each group.links as |link|}}
+          <li data-idea-created-issue={{link.id}}>
+            <LinkTo @route="app.project.issue.page" @models={{array (lowercase link.issue.projectShortcode) link.issue.issueNumber}}>
+              {{link.issue.projectShortcode}}-{{link.issue.issueNumber}}
+            </LinkTo>
+            {{link.issue.subject}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p class="text-muted text-center" data-idea-created-empty>{{t "views.app.idea.createdIssues.empty"}}</p>
+    {{/each}}
+  </div>
+</div>

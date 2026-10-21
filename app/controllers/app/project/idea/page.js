@@ -43,6 +43,24 @@ export default class AppProjectIdeaPageController extends Controller {
     @tracked messages = [];
 
     /**
+     * The plan versions of the idea
+     *
+     * @property plans
+     * @type Array
+     * @public
+     */
+    @tracked plans = [];
+
+    /**
+     * The links between the idea and the issues created from its plans
+     *
+     * @property planIssues
+     * @type Array
+     * @public
+     */
+    @tracked planIssues = [];
+
+    /**
      * The id of the idea whose messages are in the list
      *
      * @property loadedIdeaId
@@ -89,6 +107,67 @@ export default class AppProjectIdeaPageController extends Controller {
             }
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });
+        }
+    }
+
+    /**
+     * Loads the plan versions and the created issues of the idea
+     *
+     * @method loadPlans
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async loadPlans() {
+        let idea = this.model;
+        if (!idea) {
+            this.plans = [];
+            this.planIssues = [];
+            return;
+        }
+        try {
+            let [plans, links] = await Promise.all([
+                this.store.query('ideaplan', { query: `(Ideaplan.ideaId : ${idea.id})`, limit: -1 }),
+                this.store.query('ideaplanissue', { query: `(Ideaplanissue.ideaId : ${idea.id})`, limit: -1 })
+            ]);
+            if (this.model?.id === idea.id) {
+                this.plans = plans.toArray();
+                this.planIssues = links.toArray();
+            }
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'idea' });
+        }
+    }
+
+    /**
+     * The name of the user who created the idea, taken from the first message of that user
+     *
+     * @property createdUserName
+     * @type String
+     * @public
+     */
+    get createdUserName() {
+        let author = this.messages.find(message => message.createdUser === this.model?.createdUser);
+        return author?.createdUserName ?? '';
+    }
+
+    /**
+     * Approves a plan version
+     *
+     * @method approvePlan
+     * @param {Prometheus.Models.Ideaplan} plan
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async approvePlan(plan) {
+        plan.status = 'approved';
+        try {
+            await plan.save();
+        } catch (error) {
+            plan.rollbackAttributes();
+            this.errorManager.handleError(error, { moduleName: 'idea' });
+            throw error;
         }
     }
 

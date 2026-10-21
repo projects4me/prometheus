@@ -770,6 +770,41 @@
           "unarchiveMessage": "This idea will be opened again.",
           "steps": "{count, plural, one {# step} other {# steps}}",
           "plan": "View the plan"
+        },
+        "plan": {
+          "title": "Plan",
+          "empty": "No plan yet",
+          "project": "Project",
+          "subject": "Subject",
+          "priority": "Priority",
+          "type": "Type",
+          "complexity": "Complexity",
+          "dependsOn": "Depends on",
+          "approve": "Approve v{version}",
+          "approveTitle": "Approve plan",
+          "approveConfirm": "Approve",
+          "approveMessage": "Version {version} of the plan will be approved and its issues created.",
+          "status": {
+            "proposed": "Proposed",
+            "approved": "Approved",
+            "creating": "Creating",
+            "created": "Created",
+            "failed": "Failed",
+            "superseded": "Superseded"
+          }
+        },
+        "createdIssues": {
+          "title": "Created Issues",
+          "empty": "No issues created yet",
+          "version": "Plan v{version}"
+        },
+        "summary": {
+          "title": "Summary",
+          "created": "Created by",
+          "updated": "Updated",
+          "messages": "Messages",
+          "versions": "Plan versions",
+          "cost": "Total cost"
         }
       },
       "wiki": {

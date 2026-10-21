@@ -74,6 +74,7 @@ import * as emailSettings from './settings/email-steps';
 import * as ideaBrowser from './ideas/idea-browser-steps';
 import * as ideaCreate from './ideas/idea-create-steps';
 import * as ideaConversation from './ideas/idea-conversation-steps';
+import * as ideaPlan from './ideas/idea-plan-steps';
 
 export default function (assert) {
 	let modules = new Array(
@@ -81,7 +82,7 @@ export default function (assert) {
 		formField,
 		navigation,
 		issueCreate,
-		date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, navigateToUser, changeUserAccountStatus, createUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData, createRole, renderPermissions, setRequestQuery, deleteMemberFromProject, timezoneChange, massUpdateIssues, listSteps, renderListOfNotifications, markReadNotifications, filterIssuesRecentIssues, loadMoreIssues, yaddaContextSteps, widgets, issueDetailsPanel, hermesLive, settingsArea, issueTypes, issueStatuses, emailSettings, ideaBrowser, ideaCreate, ideaConversation);
+		date, updateIssueStatus, mirageServerConfig, createListOfFactory, signout, globalSearch, filterIssuesBoard, redirectToSocialLinks, checkIssuesListIssueToday, searchIssueFromIssueToday, selectIssueFromIssueToday, projectCreate, projectSearchFromList, selectAndNavigateToProject, renderListOfIssues, issueSearchFromList, commentOnIssue, createConversation, addCommentOnConversation, setModel, navigateToUserProfile, selectProjectFromSidebar, addAProjectMember, editIssue, setMilestoneIssues, logTimeForIssue, estimateTimeForIssue, verifyLatestProjects, verifyLatestIssues, navigateToLatestProject, navigateToLatestIssue, navigateToMostWorkedMember, verifyRecentActivities, renderListOfUsers, searchUserFromList, navigateToUser, changeUserAccountStatus, createUser, changeMultipleUserAccountStatus, checkPaginationFunctionalityOfUser, sortUsers, renderRoles, updateFactoryField, searchRole, editRoleFields, inlineEditing, enterDataIntoDifferentFields, checkFieldData, createRole, renderPermissions, setRequestQuery, deleteMemberFromProject, timezoneChange, massUpdateIssues, listSteps, renderListOfNotifications, markReadNotifications, filterIssuesRecentIssues, loadMoreIssues, yaddaContextSteps, widgets, issueDetailsPanel, hermesLive, settingsArea, issueTypes, issueStatuses, emailSettings, ideaBrowser, ideaCreate, ideaConversation, ideaPlan);
 	let assertion = assert;
     let ctx = new Context();
     let dictionary = new yadda.Dictionary()

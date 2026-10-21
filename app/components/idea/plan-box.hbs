@@ -1,0 +1,84 @@
+<div class="box box-success idea-plan" data-idea-plan>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.idea.plan.title"}}</h3>
+    {{#if this.selected}}
+      <span class="label pull-right {{this.statusClass}}" data-idea-plan-status>{{t (concat "views.app.idea.plan.status." this.selected.status)}}</span>
+    {{/if}}
+  </div>
+  {{#if this.selected}}
+    <div class="box-body">
+      <ul class="nav nav-tabs" data-idea-plan-tabs>
+        {{#each this.versions as |plan|}}
+          <li class={{if (eq plan.id this.selected.id) "active"}}>
+            <a href="#" {{on "click" (fn this.pick plan.version)}} data-idea-plan-version={{plan.version}}>v{{plan.version}}</a>
+          </li>
+        {{/each}}
+      </ul>
+      {{#if this.selected.error}}
+        <div class="alert alert-danger idea-plan-error" data-idea-plan-error>{{this.selected.error}}</div>
+      {{/if}}
+      <p class="idea-plan-summary" data-idea-plan-summary>{{this.body.summary}}</p>
+      {{#if this.body.issues.length}}
+        <table class="table table-condensed idea-plan-issues" data-idea-plan-issues>
+          <thead>
+            <tr>
+              <th>{{t "views.app.idea.plan.project"}}</th>
+              <th>{{t "views.app.idea.plan.subject"}}</th>
+              <th>{{t "views.app.idea.plan.priority"}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each this.body.issues as |issue|}}
+              <tr class="clickable" {{on "click" (fn this.toggle issue.key)}} data-idea-plan-issue={{issue.key}}>
+                <td>{{issue.project}}</td>
+                <td>{{issue.subject}}</td>
+                <td><AppUi::PriorityIcon @priority={{issue.priority}} /></td>
+              </tr>
+              {{#if (eq this.expandedKey issue.key)}}
+                <tr class="idea-plan-issue-detail" data-idea-plan-issue-detail={{issue.key}}>
+                  <td colspan="3">
+                    <dl class="dl-horizontal">
+                      <dt>{{t "views.app.idea.plan.type"}}</dt>
+                      <dd>{{issue.type}}</dd>
+                      <dt>{{t "views.app.idea.plan.complexity"}}</dt>
+                      <dd>{{issue.complexity}}</dd>
+                      <dt>{{t "views.app.idea.plan.dependsOn"}}</dt>
+                      <dd>{{issue.dependsOn}}</dd>
+                    </dl>
+                    <div class="idea-plan-description" data-idea-plan-description>{{sanitize-html issue.description}}</div>
+                  </td>
+                </tr>
+              {{/if}}
+            {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
+    </div>
+    {{#if this.canApprove}}
+      <div class="box-footer">
+        <AppUi::Button type="button" class="btn btn-success" @onClick={{this.askApprove}} @aclContext="ideaplan.update" data-idea-plan-approve>
+          {{t "views.app.idea.plan.approve" version=this.selected.version}}
+        </AppUi::Button>
+      </div>
+    {{/if}}
+  {{else}}
+    <div class="box-body">
+      <p class="text-muted text-center" data-idea-plan-empty>{{t "views.app.idea.plan.empty"}}</p>
+    </div>
+  {{/if}}
+
+  {{#if this.showApproveModal}}
+    {{#bootstrap-modal
+      title="views.app.idea.plan.approveTitle"
+      closeLabel="global.form.cancel"
+      confirmLabel="views.app.idea.plan.approveConfirm"
+      close=(action this.closeApprove)
+      confirm=(action this.confirmApprove)
+    }}
+      <div class="alert alert-warning flex-row flex-ai-c" data-idea-plan-approve-confirm>
+        <i class="fa fa-exclamation-triangle"></i>
+        <p>{{t "views.app.idea.plan.approveMessage" version=this.selected.version}}</p>
+      </div>
+    {{/bootstrap-modal}}
+  {{/if}}
+</div>
