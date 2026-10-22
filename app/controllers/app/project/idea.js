@@ -27,6 +27,13 @@ export default class AppProjectIdeaController extends Controller {
     @service hermes;
 
     /**
+     * @property currentUser
+     * @type Ember.Service
+     * @public
+     */
+    @service currentUser;
+
+    /**
      * Disposer of the Hermes registration
      *
      * @property hermesDisposer
@@ -132,9 +139,40 @@ export default class AppProjectIdeaController extends Controller {
             return;
         }
         this.hermesDisposer = this.hermes.register(this, projectId, {
-            'idea.created': () => this.reloadIdeas(loadIdeas),
+            'idea.created': envelope => this.handleIdeaCreated(envelope, loadIdeas),
             'idea.updated': () => this.reloadIdeas(loadIdeas)
         });
+    }
+
+    /**
+     * Reloads the ideas when someone else created one. An idea created here is added by the create page
+     * once it is saved, so its own event is skipped, as the Task Board does for issue.created.
+     *
+     * @method handleIdeaCreated
+     * @param {Object} envelope Domain-event envelope
+     * @param {Function} loadIdeas
+     * @returns {Promise|void}
+     * @public
+     */
+    handleIdeaCreated(envelope, loadIdeas) {
+        if (envelope?.actorId && envelope.actorId === this.currentUser.user?.id) {
+            return;
+        }
+        return this.reloadIdeas(loadIdeas);
+    }
+
+    /**
+     * Adds an idea to the list unless it is listed already (a reload may have brought it in first)
+     *
+     * @method addIdea
+     * @param {Prometheus.Models.Idea} idea
+     * @returns {void}
+     * @public
+     */
+    addIdea(idea) {
+        if (!this.ideas.some(listed => listed.id === idea.id)) {
+            this.ideas = [...this.ideas, idea];
+        }
     }
 
     /**

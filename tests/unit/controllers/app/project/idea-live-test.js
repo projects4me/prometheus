@@ -101,6 +101,40 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.equal(loads, 2);
   });
 
+  test("browser skips its own idea.created: the create page adds that idea", async function (assert) {
+    let controller = this.owner.lookup("controller:app.project.idea");
+    this.owner.lookup("service:current-user").user = { id: "u1" };
+    let loads = 0;
+    controller.registerHermesIntents("p1", async () => {
+      loads++;
+      return { toArray: () => [] };
+    });
+
+    emitDomainEvent(this.owner, event("idea.created", "i1", { resourceType: "idea", resourceId: "i1", actorId: "u1" }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    assert.equal(loads, 0, "own event");
+
+    emitDomainEvent(this.owner, event("idea.created", "i2", { resourceType: "idea", resourceId: "i2", actorId: "u2",
+                                                              eventId: "e2" }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    assert.equal(loads, 1, "someone else's");
+  });
+
+  test("a saved idea is listed once, also when a reload brought it in first", function (assert) {
+    let browser = this.owner.lookup("controller:app.project.idea");
+    let create = this.owner.lookup("controller:app.project.idea.create");
+    create.transitionToRoute = () => {};
+    let idea = EmberObject.create({ id: "i1" });
+    browser.ideas = [EmberObject.create({ id: "i0" }), EmberObject.create({ id: "i1" })];
+
+    create.navigateToSuccess(idea);
+    assert.deepEqual(browser.ideas.map((i) => i.id), ["i0", "i1"]);
+
+    browser.ideas = [EmberObject.create({ id: "i0" })];
+    create.navigateToSuccess(idea);
+    assert.deepEqual(browser.ideas.map((i) => i.id), ["i0", "i1"]);
+  });
+
   test("no subscriptions are left after unregistering", function (assert) {
     let hermes = this.owner.lookup("service:hermes");
     let page = this.owner.lookup("controller:app.project.idea.page");

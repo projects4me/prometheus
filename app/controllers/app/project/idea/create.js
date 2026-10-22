@@ -106,7 +106,7 @@ export default class AppProjectIdeaCreateController extends PrometheusCreateCont
      * @protected
      */
     navigateToSuccess(idea) {
-        this.ideaController.ideas = [...this.ideaController.ideas, idea];
+        this.ideaController.addIdea(idea);
         this.transitionToRoute('app.project.idea.page', idea.id);
     }
 
