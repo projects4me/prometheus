@@ -173,6 +173,22 @@ export default class IdeaPlanBoxComponent extends Component {
     }
 
     /**
+     * Toggles a planned issue from the keyboard (Enter or Space)
+     *
+     * @method toggleOnKey
+     * @param {String} key
+     * @param {KeyboardEvent} event
+     * @public
+     */
+    @action
+    toggleOnKey(key, event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.toggle(key);
+        }
+    }
+
+    /**
      * @method askApprove
      * @public
      */

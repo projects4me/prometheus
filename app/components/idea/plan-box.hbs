@@ -24,7 +24,7 @@
         <ul class="issue-overview clearfix idea-plan-issues" data-idea-plan-issues>
           {{#each this.body.issues as |issue|}}
             <li>
-              <div class="issue-block clickable" {{on "click" (fn this.toggle issue.key)}} data-idea-plan-issue={{issue.key}}>
+              <div class="issue-block clickable" role="button" tabindex="0" aria-expanded={{if (eq this.expandedKey issue.key) "true" "false"}} {{on "click" (fn this.toggle issue.key)}} {{on "keydown" (fn this.toggleOnKey issue.key)}} data-idea-plan-issue={{issue.key}}>
                 <div class="priority"><AppUi::PriorityIcon @priority={{issue.priority}} /></div>
                 <div class="data-block">
                   <span class="subject">{{issue.subject}}</span>
