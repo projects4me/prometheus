@@ -34,13 +34,14 @@
 				<:default>
 					<ul class='notifications-list' data-notifications-list>
 						{{#if this.notifications.notifications.length}}
-							{{#each
-								this.notifications.notifications
-								as |notification|
-							}}
-								<AppUi::Notifications::Notification
-									@notification={{notification}}
-								/>
+							{{#each this.notifications.groupedNotifications as |entry|}}
+								{{#if entry.isGroup}}
+									<AppUi::Notifications::Group @group={{entry}} />
+								{{else}}
+									<AppUi::Notifications::Notification
+										@notification={{entry.notification}}
+									/>
+								{{/if}}
 							{{/each}}
 						{{else}}
 							<li class='empty-notifications' data-empty-notifications>

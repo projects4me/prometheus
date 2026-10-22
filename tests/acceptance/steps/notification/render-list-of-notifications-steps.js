@@ -4,6 +4,20 @@ import { find, findAll, scrollTo } from '@ember/test-helpers';
 export const given = function () {
 	return [
 		{
+			'User has $count notifications for one issue': (assert, ctx) =>
+				async function (count) {
+					server.createList('systemnotification', parseInt(count), {
+						description: 'Issue updated',
+						context: {
+							projectShortcode: 'TST',
+							issueNumber: '7',
+							relatedTo: 'issue'
+						}
+					});
+					assert.ok(true, this.step);
+				}
+		},
+		{
 			'There are $count systemnotifications in system with unread status':
 				(assert, ctx) =>
 					async function (count) {
@@ -93,6 +107,19 @@ export const then = function () {
 						`${expectedCount} notifications are present inside the sidebar`
 					);
 				}
+		},
+		{
+			'There is $groups notification group with $items notifications collapsed':
+				(assert, ctx) =>
+					async function (groups, items) {
+						assert
+							.dom('[data-notification-group]')
+							.exists({ count: parseInt(groups) });
+						assert.dom('[data-notification]').doesNotExist();
+						assert
+							.dom('[data-notification-group-count]')
+							.includesText(items);
+					}
 		},
 		{
 			'More notifications should be loaded': (assert, ctx) =>

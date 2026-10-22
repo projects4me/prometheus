@@ -7,6 +7,7 @@ import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
+import groupByIssue from 'prometheus/utils/notifications/group-by-issue';
 import { peekOrPush, pushIfMissing } from 'prometheus/utils/live/collection';
 
 /**
@@ -302,6 +303,18 @@ export default class NotificationsService extends Service {
 			console.error('Error marking notification as read:', error);
 			throw error;
 		}
+	}
+
+	/**
+	 * Notifications grouped by issue, in display order. Recomputed whenever the
+	 * tracked notifications array is replaced.
+	 *
+	 * @property groupedNotifications
+	 * @type {Array}
+	 * @public
+	 */
+	get groupedNotifications() {
+		return groupByIssue(this.notifications);
 	}
 
 	/**

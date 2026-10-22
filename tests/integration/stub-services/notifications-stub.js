@@ -1,4 +1,5 @@
 import Service from '@ember/service';
+import groupByIssue from 'prometheus/utils/notifications/group-by-issue';
 
 /**
  * @class NotificationsServiceStub
@@ -12,6 +13,10 @@ export default class NotificationsStub extends Service {
 	unreadCount = 0;
 	hasUnreadNotifications = false;
 	isLoading = false;
+
+	get groupedNotifications() {
+		return groupByIssue(this.notifications);
+	}
 
 	loadNotifications() {
 		return Promise.resolve(true);
