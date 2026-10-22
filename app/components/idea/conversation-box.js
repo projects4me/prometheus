@@ -2,6 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import jQuery from 'jquery';
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
@@ -73,16 +74,16 @@ export default class IdeaConversationBoxComponent extends Component {
      * Archives or unarchives the idea after the confirmation
      *
      * @method confirmArchive
-     * @returns {Promise}
+     * @returns {void}
      * @public
      */
     @action
-    async confirmArchive() {
-        this.showArchiveModal = false;
-        try {
-            await this.args.onToggleArchive();
-        } catch (error) {
+    confirmArchive() {
+        Promise.resolve(this.args.onToggleArchive()).catch(() => {
             // Already reported and rolled back by the controller.
-        }
+        });
+        // as the other confirmations do: Bootstrap hides the dialog with its backdrop, then bootstrap-modal calls
+        // close; taking the modal off the page instead would leave the backdrop behind
+        jQuery('.modal').modal('hide');
     }
 }

@@ -774,8 +774,13 @@
         "plan": {
           "title": "Plan",
           "empty": "No plan yet",
-          "complexity": "Complexity",
-          "dependsOn": "Depends on",
+          "complexities": {
+            "simple": "simple",
+            "complex": "complex"
+          },
+          "after": "after {keys}",
+          "newMilestone": " (new)",
+          "newMilestoneTitle": "Created in the project on approval",
           "approve": "Approve v{version}",
           "approveTitle": "Approve plan",
           "approveConfirm": "Approve",

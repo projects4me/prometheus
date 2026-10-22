@@ -2,8 +2,9 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import jQuery from 'jquery';
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
+import { action, get } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 const STATUS_LABELS = {
@@ -117,7 +118,9 @@ export default class IdeaPlanBoxComponent extends Component {
             issues: issues.map((issue, index) => ({
                 ...issue,
                 key: issue.key ?? `issue-${index}`,
-                dependsOn: Array.isArray(issue.dependsOn) ? issue.dependsOn.join(', ') : (issue.dependsOn ?? '')
+                projectLabel: issue.projectCode ?? issue.project,
+                dependsOn: Array.isArray(issue.dependsOn) ? issue.dependsOn.join(', ') : (issue.dependsOn ?? ''),
+                screens: Array.isArray(issue.screens) ? issue.screens.join(', ') : ''
             }))
         };
     }
@@ -129,6 +132,29 @@ export default class IdeaPlanBoxComponent extends Component {
      * @type String
      * @public
      */
+    /**
+     * The issues created from the shown version, by the key of the plan issue they came from
+     *
+     * @property createdIssues
+     * @type Object
+     * @public
+     */
+    get createdIssues() {
+        let created = {};
+        (this.args.planIssues ?? [])
+            .filter(link => link.ideaplanId === this.selected?.id)
+            .forEach(link => {
+                let issueNumber = get(link, 'issue.issueNumber');
+                if (issueNumber) {
+                    created[link.key] = {
+                        projectShortcode: String(get(link, 'issue.projectShortcode') ?? '').toLowerCase(),
+                        issueNumber
+                    };
+                }
+            });
+        return created;
+    }
+
     get statusClass() {
         return STATUS_LABELS[this.selected?.status] ?? 'new';
     }
@@ -210,16 +236,17 @@ export default class IdeaPlanBoxComponent extends Component {
      * Approves the selected plan after the confirmation
      *
      * @method confirmApprove
-     * @returns {Promise}
+     * @returns {void}
      * @public
      */
     @action
-    async confirmApprove() {
-        this.showApproveModal = false;
-        try {
-            await this.args.onApprove(this.selected);
-        } catch (error) {
+    confirmApprove() {
+        let plan = this.selected;
+        Promise.resolve(this.args.onApprove(plan)).catch(() => {
             // Already reported and rolled back by the controller.
-        }
+        });
+        // as the other confirmations do: Bootstrap hides the dialog with its backdrop, then bootstrap-modal calls
+        // close; taking the modal off the page instead would leave the backdrop behind
+        jQuery('.modal').modal('hide');
     }
 }

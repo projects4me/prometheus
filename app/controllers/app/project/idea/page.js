@@ -173,7 +173,7 @@ export default class AppProjectIdeaPageController extends Controller {
         try {
             let [plans, links] = await Promise.all([
                 this.store.query('ideaplan', { query: `(Ideaplan.ideaId : ${idea.id})`, limit: -1 }),
-                this.store.query('ideaplanissue', { query: `(Ideaplanissue.ideaId : ${idea.id})`, limit: -1 })
+                this.store.query('ideaplanissue', { query: `(Ideaplanissue.ideaId : ${idea.id})`, rels: 'issue', limit: -1 })
             ]);
             if (this.model?.id === idea.id && sequence === this.planSequence) {
                 this.plans = plans.toArray();
