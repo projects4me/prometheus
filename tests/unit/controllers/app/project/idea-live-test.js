@@ -101,9 +101,9 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.equal(loads, 2);
   });
 
-  test("browser skips its own idea.created: the create page adds that idea", async function (assert) {
+  test("browser skips an idea.created for an idea it lists already, and reloads for one it does not", async function (assert) {
     let controller = this.owner.lookup("controller:app.project.idea");
-    this.owner.lookup("service:current-user").user = { id: "u1" };
+    controller.ideas = [EmberObject.create({ id: "i1" })];
     let loads = 0;
     controller.registerHermesIntents("p1", async () => {
       loads++;
@@ -112,12 +112,12 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
 
     emitDomainEvent(this.owner, event("idea.created", "i1", { resourceType: "idea", resourceId: "i1", actorId: "u1" }));
     await new Promise((resolve) => setTimeout(resolve, 0));
-    assert.equal(loads, 0, "own event");
+    assert.equal(loads, 0, "listed already");
 
-    emitDomainEvent(this.owner, event("idea.created", "i2", { resourceType: "idea", resourceId: "i2", actorId: "u2",
+    emitDomainEvent(this.owner, event("idea.created", "i2", { resourceType: "idea", resourceId: "i2", actorId: "u1",
                                                               eventId: "e2" }));
     await new Promise((resolve) => setTimeout(resolve, 0));
-    assert.equal(loads, 1, "someone else's");
+    assert.equal(loads, 1, "created in another tab by the same user");
   });
 
   test("a saved idea is listed once, also when a reload brought it in first", function (assert) {

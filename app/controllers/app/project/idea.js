@@ -27,13 +27,6 @@ export default class AppProjectIdeaController extends Controller {
     @service hermes;
 
     /**
-     * @property currentUser
-     * @type Ember.Service
-     * @public
-     */
-    @service currentUser;
-
-    /**
      * Disposer of the Hermes registration
      *
      * @property hermesDisposer
@@ -145,8 +138,9 @@ export default class AppProjectIdeaController extends Controller {
     }
 
     /**
-     * Reloads the ideas when someone else created one. An idea created here is added by the create page
-     * once it is saved, so its own event is skipped, as the Task Board does for issue.created.
+     * Reloads the ideas when an idea is created, unless it is listed already. An idea created here is added
+     * by the create page once it is saved, so its event finds it listed; the same user creating one in
+     * another tab is not listed, so that event reloads.
      *
      * @method handleIdeaCreated
      * @param {Object} envelope Domain-event envelope
@@ -155,7 +149,8 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     handleIdeaCreated(envelope, loadIdeas) {
-        if (envelope?.actorId && envelope.actorId === this.currentUser.user?.id) {
+        let resourceId = envelope?.resource?.id;
+        if (resourceId && this.ideas.some(listed => String(listed.id) === String(resourceId))) {
             return;
         }
         return this.reloadIdeas(loadIdeas);
