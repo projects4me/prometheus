@@ -34,6 +34,24 @@ export default class AppProjectIdeaPageController extends Controller {
     @service errorManager;
 
     /**
+     * The Hermes service pushes the events of the idea
+     *
+     * @property hermes
+     * @type Ember.Service
+     * @public
+     */
+    @service hermes;
+
+    /**
+     * Disposer of the Hermes registration
+     *
+     * @property hermesDisposer
+     * @type Function
+     * @private
+     */
+    hermesDisposer = null;
+
+    /**
      * The messages of the idea
      *
      * @property messages
@@ -121,7 +139,9 @@ export default class AppProjectIdeaPageController extends Controller {
                 limit: -1
             });
             if (this.model?.id === idea.id && sequence === this.loadSequence) {
-                this.messages = messages.toArray();
+                let loaded = messages.toArray();
+                let appended = this.messages.filter(item => !loaded.some(message => message.id === item.id));
+                this.messages = [...loaded, ...appended];
             }
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });
@@ -158,6 +178,95 @@ export default class AppProjectIdeaPageController extends Controller {
             if (this.model?.id === idea.id && sequence === this.planSequence) {
                 this.plans = plans.toArray();
                 this.planIssues = links.toArray();
+            }
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'idea' });
+        }
+    }
+
+    /**
+     * Registers the idea events of the tracked project with Hermes
+     *
+     * @method registerHermesIntents
+     * @param {String} projectId
+     * @returns {void}
+     * @public
+     */
+    registerHermesIntents(projectId) {
+        this.unregisterHermesIntents();
+        if (!projectId) {
+            return;
+        }
+        this.hermesDisposer = this.hermes.register(this, projectId, {
+            'idea.updated': envelope => this.onOpenIdea(envelope, () => this.reloadIdea()),
+            'idea.message.created': envelope => this.onOpenIdea(envelope, () => this.appendMessage(envelope)),
+            'idea.plan.created': envelope => this.onOpenIdea(envelope, () => this.loadPlans()),
+            'idea.plan.status.changed': envelope => this.onOpenIdea(envelope, () => this.loadPlans()),
+            'idea.planissue.created': envelope => this.onOpenIdea(envelope, () => this.loadPlans())
+        });
+    }
+
+    /**
+     * Disposes the Hermes registration
+     *
+     * @method unregisterHermesIntents
+     * @returns {void}
+     * @public
+     */
+    unregisterHermesIntents() {
+        this.hermesDisposer?.();
+        this.hermesDisposer = null;
+    }
+
+    /**
+     * Runs the handler only for events of the open idea
+     *
+     * @method onOpenIdea
+     * @param {Object} envelope Domain-event envelope
+     * @param {Function} handler
+     * @returns {void}
+     * @private
+     */
+    onOpenIdea(envelope, handler) {
+        let ideaId = envelope?.meta?.ideaId;
+        if (this.model && ideaId && String(ideaId) === String(this.model.id)) {
+            handler();
+        }
+    }
+
+    /**
+     * Reloads the idea header
+     *
+     * @method reloadIdea
+     * @returns {Promise}
+     * @private
+     */
+    async reloadIdea() {
+        try {
+            await this.model.reload();
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'idea' });
+        }
+    }
+
+    /**
+     * Loads the message of an event and appends it unless the thread has it already
+     *
+     * @method appendMessage
+     * @param {Object} envelope Domain-event envelope
+     * @returns {Promise}
+     * @private
+     */
+    async appendMessage(envelope) {
+        let idea = this.model;
+        let id = envelope.resource?.id;
+        if (!id || this.messages.some(message => message.id === String(id))) {
+            return;
+        }
+        try {
+            let message = await this.store.findRecord('ideamessage', id);
+            if (this.model === idea && !this.messages.some(item => item.id === message.id)) {
+                this.messages = [...this.messages, message];
             }
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });

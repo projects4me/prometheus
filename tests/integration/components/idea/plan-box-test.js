@@ -35,6 +35,12 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         assert.dom('[data-idea-plan-issue="a"]').includesText('Old issue');
         assert.dom('[data-idea-plan-status]').hasClass('deferred');
         assert.dom('[data-idea-plan-approve]').doesNotExist('an earlier version cannot be approved');
+
+        this.set('plans', [
+            ...this.plans,
+            { id: '3', version: 3, status: 'proposed', body: body('Third plan', 'Newest issue') }
+        ]);
+        assert.dom('[data-idea-plan-summary]').hasText('Third plan', 'a newer plan replaces the picked version');
     });
 
     test('a row expands to the details and the description is sanitized', async function (assert) {

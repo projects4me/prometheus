@@ -4,6 +4,7 @@
 
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
 const OPEN = 'open';
@@ -18,6 +19,22 @@ const ARCHIVED = 'archived';
  * @extends Controller
  */
 export default class AppProjectIdeaController extends Controller {
+    /**
+     * @property hermes
+     * @type Ember.Service
+     * @public
+     */
+    @service hermes;
+
+    /**
+     * Disposer of the Hermes registration
+     *
+     * @property hermesDisposer
+     * @type Function
+     * @private
+     */
+    hermesDisposer = null;
+
     /**
      * The ideas of the selected project, loaded by the route
      *
@@ -87,6 +104,66 @@ export default class AppProjectIdeaController extends Controller {
      */
     get listedIdeas() {
         return this.showArchived ? [...this.openIdeas, ...this.archivedIdeas] : this.openIdeas;
+    }
+
+    /**
+     * Sequence of the latest reload; leaving the route or registering for another project also bumps it,
+     * so a slower reload of an earlier project or request cannot overwrite the list
+     *
+     * @property reloadSequence
+     * @type Number
+     * @private
+     */
+    reloadSequence = 0;
+
+    /**
+     * Registers the events that change the idea list
+     *
+     * @method registerHermesIntents
+     * @param {String} projectId
+     * @param {Function} loadIdeas Loads the ideas of the project, supplied by the route
+     * @returns {void}
+     * @public
+     */
+    registerHermesIntents(projectId, loadIdeas) {
+        this.unregisterHermesIntents();
+        this.reloadSequence++;
+        if (!projectId) {
+            return;
+        }
+        this.hermesDisposer = this.hermes.register(this, projectId, {
+            'idea.created': () => this.reloadIdeas(loadIdeas),
+            'idea.updated': () => this.reloadIdeas(loadIdeas)
+        });
+    }
+
+    /**
+     * Disposes the Hermes registration
+     *
+     * @method unregisterHermesIntents
+     * @returns {void}
+     * @public
+     */
+    unregisterHermesIntents() {
+        this.reloadSequence++;
+        this.hermesDisposer?.();
+        this.hermesDisposer = null;
+    }
+
+    /**
+     * Reloads the ideas of the project
+     *
+     * @method reloadIdeas
+     * @param {Function} loadIdeas
+     * @returns {Promise}
+     * @public
+     */
+    async reloadIdeas(loadIdeas) {
+        let sequence = ++this.reloadSequence;
+        let ideas = await loadIdeas();
+        if (ideas && sequence === this.reloadSequence) {
+            this.ideas = ideas.toArray();
+        }
     }
 
     /**
