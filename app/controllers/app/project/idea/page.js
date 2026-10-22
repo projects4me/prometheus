@@ -139,7 +139,9 @@ export default class AppProjectIdeaPageController extends Controller {
                 limit: -1
             });
             if (this.model?.id === idea.id && sequence === this.loadSequence) {
-                this.messages = messages.toArray();
+                let loaded = messages.toArray();
+                let appended = this.messages.filter(item => !loaded.some(message => message.id === item.id));
+                this.messages = [...loaded, ...appended];
             }
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });

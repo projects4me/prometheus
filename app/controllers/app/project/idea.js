@@ -107,6 +107,16 @@ export default class AppProjectIdeaController extends Controller {
     }
 
     /**
+     * Sequence of the latest reload; leaving the route or registering for another project also bumps it,
+     * so a slower reload of an earlier project or request cannot overwrite the list
+     *
+     * @property reloadSequence
+     * @type Number
+     * @private
+     */
+    reloadSequence = 0;
+
+    /**
      * Registers the events that change the idea list
      *
      * @method registerHermesIntents
@@ -117,6 +127,7 @@ export default class AppProjectIdeaController extends Controller {
      */
     registerHermesIntents(projectId, loadIdeas) {
         this.unregisterHermesIntents();
+        this.reloadSequence++;
         if (!projectId) {
             return;
         }
@@ -134,6 +145,7 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     unregisterHermesIntents() {
+        this.reloadSequence++;
         this.hermesDisposer?.();
         this.hermesDisposer = null;
     }
@@ -147,8 +159,9 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     async reloadIdeas(loadIdeas) {
+        let sequence = ++this.reloadSequence;
         let ideas = await loadIdeas();
-        if (ideas) {
+        if (ideas && sequence === this.reloadSequence) {
             this.ideas = ideas.toArray();
         }
     }
