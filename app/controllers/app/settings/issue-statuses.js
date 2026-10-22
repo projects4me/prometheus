@@ -7,6 +7,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import $ from 'jquery';
+import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
 /**
  * The colours an issue status may use, the palette Gaia accepts.
@@ -107,15 +108,13 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
      */
     get rows() {
         return this.issueStatuses.map((status) => {
-            let key = `views.app.issue.lists.status.${status.name}`;
-
             // The colour is only used as a style when it is one of the palette, it comes from the server.
             let color = STATUS_COLORS.find((swatch) => swatch.value === status.color);
 
             return {
                 status,
                 style: color ? color.style : '',
-                label: this.intl.exists(key) ? this.intl.t(key) : status.name,
+                label: issueStatusLabel(this.intl, status.name),
                 isUsed: status.issueCount > 0
             };
         });

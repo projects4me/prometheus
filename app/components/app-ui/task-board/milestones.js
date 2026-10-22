@@ -313,10 +313,7 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 	 * @public
 	 */
 	get issueStatusList() {
-		return new format(this).getTranslatedModelList(
-			this.args.statuses,
-			'views.app.issue.lists.status'
-		);
+		return new format(this).getIssueStatusList(this.args.statuses);
 	}
 
 	/**

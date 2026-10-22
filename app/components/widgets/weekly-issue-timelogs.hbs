@@ -74,9 +74,7 @@
           </td>
           {{! Issue Status }}
           <td>
-            <span class="badge {{timelog.issueStatus}}" style={{status-style timelog.issueStatus}}>{{t
-                (concat "views.app.issue.lists.status." timelog.issueStatus)
-              }}</span>
+            <span class="badge {{timelog.issueStatus}}" style={{status-style timelog.issueStatus}}>{{status-label timelog.issueStatus}}</span>
           </td>
           {{! Project }}
           <td>

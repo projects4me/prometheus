@@ -5,6 +5,7 @@
 import _ from "lodash";
 import Component from '@ember/component';
 import { inject } from '@ember/service';
+import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
 /**
  * Maps issue status keys to their app-wide hex colors, mirroring issue-status.scss.
@@ -204,7 +205,7 @@ export default Component.extend({
         let borderColors = [];
 
         _.forEach(statuses, (statusKey) => {
-            let translatedLabel = this.intl.t('views.app.issue.lists.status.' + statusKey);
+            let translatedLabel = issueStatusLabel(this.intl, statusKey);
             let count = issues.filterBy('status', statusKey).length;
             let rgba;
             if (this.statusColorMap[statusKey]) {

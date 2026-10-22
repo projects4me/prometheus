@@ -11,6 +11,7 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { peekOrPush, insertAtIfMissing } from 'prometheus/utils/live/collection';
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
 import { refreshView } from 'prometheus/utils/live/reload';
+import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
 /**
  * Board controller: kanban columns plus Hermes live handlers for status,
@@ -672,7 +673,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
 
         let issueNumber = payload.meta?.issueNumber || issue.get('issueNumber');
         let actorName = payload.meta?.actorName || 'Someone';
-        let status = this.intl.t(`views.app.issue.lists.status.${issue.get('status')}`);
+        let status = issueStatusLabel(this.intl, issue.get('status'));
 
         new Messenger().post({
             message: `<strong>#${issueNumber}</strong> moved to <strong>${status}</strong> by ${actorName}`,
@@ -707,7 +708,8 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
     }
 
     /**
-     * This is the list of issue statuses related to the current project.
+     * This is the list of issue statuses related to the current project, one board column each,
+     * in the order configured in Settings.
      *
      * @property statuses
      * @returns array
@@ -715,33 +717,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      * @public
      */
     get statuses() {
-        let statusList = [
-            'new',
-            'in_progress',
-            'in_review',
-            'done',
-            'feedback',
-            'pending',
-            'deferred'
-        ];
-
-        let _self = this;
-
-        statusList.forEach((status, i) => {
-            let issueStatusModel = _self.issueStatuses.findBy('name', status);
-
-            //create new object of issueStatus with its id and name.
-            let issueStatus = {
-                name: status,
-                id: issueStatusModel.id
-            }
-
-            statusList[i] = issueStatus;
-        });
-
-        //Board columns follow the order configured in Settings
-        let sortOrderOf = (status) => _self.issueStatuses.findBy('name', status.name).sortOrder;
-        return statusList.sort((a, b) => sortOrderOf(a) - sortOrderOf(b));
+        return [...(this.issueStatuses || [])].sort((a, b) => a.sortOrder - b.sortOrder);
     }
 
     /**
@@ -753,17 +729,14 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      * @method get
      * @public
      */
-    @computed('milestones.issues')
+    @computed('milestones.issues', 'issueStatuses.@each.sortOrder')
     get milestoneList() {
-        let statusList = [
-            'new',
-            'in_progress',
-            'done',
-            'feedback',
-            'pending',
-            'deferred',
-            'in_review'
-        ];
+        let statusList = this.statuses.map((status) => status.name);
+
+        // No statuses loaded: leave the issues alone, clearing them here would lose them for good.
+        if (statusList.length === 0) {
+            return this.milestones;
+        }
 
         let priorities = {
             low: 1,

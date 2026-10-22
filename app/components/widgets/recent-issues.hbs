@@ -35,9 +35,7 @@
           {{item.subject}}
         </td>
         <td>
-          <span class="badge {{item.status}}" style={{status-style item.status}}>{{t
-              (concat "views.app.issue.lists.status." item.status)
-            }}</span>
+          <span class="badge {{item.status}}" style={{status-style item.status}}>{{status-label item.status}}</span>
         </td>
         <td>
           <LinkTo

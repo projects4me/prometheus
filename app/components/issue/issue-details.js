@@ -5,6 +5,7 @@ import { htmlSafe } from "@ember/template";
 import { tracked } from '@glimmer/tracking';
 import AppComponent from 'prometheus/components/app';
 import RSVP from 'rsvp';
+import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
 /**
  * This component is used to render the issue details.
@@ -887,7 +888,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     @action updateStatus(issue, newStatus) {
         Logger.debug('IssueIssueDetailsComponent::updateStatus');
         let _self = this;
-        let translatedStatus = _self.intl.t(`views.app.issue.lists.status.${newStatus}`);
+        let translatedStatus = issueStatusLabel(_self.intl, newStatus);
         let messenger = new Messenger().post({
             message: _self.intl.t("views.app.issue.detail.statusUpdating", { status: translatedStatus }),
             type: 'info',
