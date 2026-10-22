@@ -48,9 +48,15 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         this.set('plans', [{ id: '1', version: 1, status: 'approved', body: body('S', 'Subject', '<p>Safe</p><img src=x onerror="window.ideaPlanXss = true"><script>window.ideaPlanXss = true</script>') }]);
         await render(hbs`<Idea::PlanBox @plans={{this.plans}} @onApprove={{this.onApprove}} />`);
 
+        assert.dom('[data-idea-plan-issue="a"] .fa-arrow-up').exists('the priority icon');
+        assert.dom('[data-idea-plan-issue-priority]').hasText('High', 'and its translated name');
+        assert.dom('[data-idea-plan-issue-meta]').includesText('APROM');
+        assert.dom('[data-idea-plan-issue-meta]').includesText('task');
         await click('[data-idea-plan-issue="a"]');
         assert.dom('[data-idea-plan-issue-detail="a"]').includesText('simple');
         assert.dom('[data-idea-plan-description]').includesText('Safe');
+        await click('[data-idea-plan-description]');
+        assert.dom('[data-idea-plan-issue-detail="a"]').exists('a click in the details keeps them open');
         assert.dom('[data-idea-plan-description] script').doesNotExist();
         assert.dom('[data-idea-plan-description] [onerror]').doesNotExist();
         assert.false(window.ideaPlanXss);

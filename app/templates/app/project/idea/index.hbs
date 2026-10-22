@@ -3,11 +3,6 @@
     <h3 class="box-title">{{t "views.app.idea.brainstorm.title"}}</h3>
   </div>
   <div class="box-body">
-    <p class="no-entry"><i class="fa fa-info-circle"></i> {{t "views.app.idea.brainstorm.hint"}}</p>
+    <p class="text-muted" data-idea-empty-hint><i class="fa fa-info-circle"></i> {{t "views.app.idea.brainstorm.hint"}}</p>
   </div>
-  <AccessControl @aclContext="idea.create">
-    <div class="box-footer text-center">
-      <LinkTo @route="app.project.idea.create"><i class="fa fa-plus"></i> {{t "views.app.idea.brainstorm.start"}}</LinkTo>
-    </div>
-  </AccessControl>
 </div>

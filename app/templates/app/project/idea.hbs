@@ -13,7 +13,7 @@
           </div>
         </div>
         <div class="box-body no-padding">
-          <ul class="nav nav-pills nav-stacked">
+          <ul class="nav nav-stacked idea-list" data-idea-list>
             {{#each this.listedIdeas as |idea|}}
               <li class={{if (eq idea.id this.selectedIdeaId) "active"}} data-idea={{idea.id}}>
                 <LinkTo @route="app.project.idea.page" @model={{idea.id}}>
