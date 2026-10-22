@@ -9,8 +9,53 @@
       white-space: nowrap;
     }
 
+    // the selected idea is marked like the selected row of the Gantt task list (gantt.scss)
+    .idea-list > li {
+      border-bottom: 1px solid #f4f4f4;
+
+      > a {
+        color: inherit;
+        border-radius: 0;
+      }
+
+      > a:hover,
+      > a:focus {
+        background: #f5f9ff;
+      }
+
+      &.active > a {
+        background: #e3f2fd;
+        box-shadow: inset 4px 0 0 #1d4ed8;
+      }
+    }
+
     .label {
       margin-left: 0.5rem;
+    }
+  }
+}
+
+.idea-plan {
+  // the global issue overview is a fixed-height scroll area; here it is as tall as the plan
+  .idea-plan-issues {
+    min-height: 0;
+    max-height: none;
+
+    .idea-plan-issue-detail {
+      margin: 0.5rem 0 0 3rem;   // under the subject, past the priority icon
+
+      .dl-horizontal {
+        margin-bottom: 0.5rem;
+
+        dt {
+          width: 8rem;
+          text-align: left;
+        }
+
+        dd {
+          margin-left: 8rem;
+        }
+      }
     }
   }
 }

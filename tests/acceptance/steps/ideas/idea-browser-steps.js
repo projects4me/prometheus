@@ -93,6 +93,8 @@ export const then = function () {
             "The empty idea box is shown": (assert) => async function () {
                 assert.dom('[data-idea-empty]').exists();
                 assert.ok(document.querySelector('.idea-wrapper .col-md-9 [data-idea-empty]'), 'it fills the col-md-9');
+                assert.dom('[data-idea-empty-hint]').hasClass('text-muted', 'the hint is readable');
+                assert.dom('[data-idea-empty] a[href$="/idea/create"]').doesNotExist('the browser\'s New idea is the only start');
             }
         },
         {

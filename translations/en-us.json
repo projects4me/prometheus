@@ -754,8 +754,7 @@
         },
         "brainstorm": {
           "title": "Brainstorm an idea",
-          "hint": "Pick an idea on the left, or start a new one.",
-          "start": "Start an idea"
+          "hint": "Pick an idea on the left, or start a new one."
         },
         "conversation": {
           "empty": "No messages yet",
@@ -775,10 +774,6 @@
         "plan": {
           "title": "Plan",
           "empty": "No plan yet",
-          "project": "Project",
-          "subject": "Subject",
-          "priority": "Priority",
-          "type": "Type",
           "complexity": "Complexity",
           "dependsOn": "Depends on",
           "approve": "Approve v{version}",

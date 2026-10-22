@@ -18,42 +18,38 @@
         <div class="alert alert-danger idea-plan-error" data-idea-plan-error>{{this.selected.error}}</div>
       {{/if}}
       <p class="idea-plan-summary" data-idea-plan-summary>{{this.body.summary}}</p>
-      {{#if this.body.issues.length}}
-        <table class="table table-condensed idea-plan-issues" data-idea-plan-issues>
-          <thead>
-            <tr>
-              <th>{{t "views.app.idea.plan.project"}}</th>
-              <th>{{t "views.app.idea.plan.subject"}}</th>
-              <th>{{t "views.app.idea.plan.priority"}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each this.body.issues as |issue|}}
-              <tr class="clickable" {{on "click" (fn this.toggle issue.key)}} data-idea-plan-issue={{issue.key}}>
-                <td>{{issue.project}}</td>
-                <td>{{issue.subject}}</td>
-                <td><AppUi::PriorityIcon @priority={{issue.priority}} /></td>
-              </tr>
-              {{#if (eq this.expandedKey issue.key)}}
-                <tr class="idea-plan-issue-detail" data-idea-plan-issue-detail={{issue.key}}>
-                  <td colspan="3">
-                    <dl class="dl-horizontal">
-                      <dt>{{t "views.app.idea.plan.type"}}</dt>
-                      <dd>{{issue.type}}</dd>
-                      <dt>{{t "views.app.idea.plan.complexity"}}</dt>
-                      <dd>{{issue.complexity}}</dd>
-                      <dt>{{t "views.app.idea.plan.dependsOn"}}</dt>
-                      <dd>{{issue.dependsOn}}</dd>
-                    </dl>
-                    <div class="idea-plan-description" data-idea-plan-description>{{sanitize-html issue.description}}</div>
-                  </td>
-                </tr>
-              {{/if}}
-            {{/each}}
-          </tbody>
-        </table>
-      {{/if}}
     </div>
+    {{#if this.body.issues.length}}
+      <div class="box-body no-padding">
+        <ul class="issue-overview clearfix idea-plan-issues" data-idea-plan-issues>
+          {{#each this.body.issues as |issue|}}
+            <li>
+              <div class="issue-block clickable" role="button" tabindex="0" aria-expanded={{if (eq this.expandedKey issue.key) "true" "false"}} {{on "click" (fn this.toggle issue.key)}} {{on "keydown" (fn this.toggleOnKey issue.key)}} data-idea-plan-issue={{issue.key}}>
+                <div class="priority"><AppUi::PriorityIcon @priority={{issue.priority}} /></div>
+                <div class="data-block">
+                  <span class="subject">{{issue.subject}}</span>
+                  <span class="description" data-idea-plan-issue-meta>
+                    {{issue.project}} &middot; {{issue.type}} &middot;
+                    <span data-idea-plan-issue-priority>{{t (concat "views.app.issue.lists.priority." issue.priority)}}</span>
+                  </span>
+                </div>
+              </div>
+              {{#if (eq this.expandedKey issue.key)}}
+                <div class="idea-plan-issue-detail" data-idea-plan-issue-detail={{issue.key}}>
+                  <dl class="dl-horizontal">
+                    <dt>{{t "views.app.idea.plan.complexity"}}</dt>
+                    <dd>{{issue.complexity}}</dd>
+                    <dt>{{t "views.app.idea.plan.dependsOn"}}</dt>
+                    <dd>{{issue.dependsOn}}</dd>
+                  </dl>
+                  <div class="idea-plan-description" data-idea-plan-description>{{sanitize-html issue.description}}</div>
+                </div>
+              {{/if}}
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
     {{#if this.canApprove}}
       <div class="box-footer">
         <AppUi::Button type="button" class="btn btn-success" @onClick={{this.askApprove}} @aclContext="ideaplan.update" data-idea-plan-approve>
