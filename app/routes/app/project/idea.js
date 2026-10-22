@@ -31,6 +31,17 @@ export default class AppProjectIdeaRoute extends App {
      */
     async model() {
         Logger.debug('AppProjectIdeaRoute::model');
+        return this.loadIdeas();
+    }
+
+    /**
+     * Queries the ideas of the selected project, the newest updated first.
+     *
+     * @method loadIdeas
+     * @returns {Promise}
+     * @public
+     */
+    async loadIdeas() {
         let projectId = this.trackedProject.getProjectId();
         try {
             return await this.store.query('idea', {
@@ -54,5 +65,20 @@ export default class AppProjectIdeaRoute extends App {
      */
     setupController(controller, model) {
         controller.ideas = model ? model.toArray() : [];
+        controller.registerHermesIntents(this.trackedProject.getProjectId(), () => this.loadIdeas());
+    }
+
+    /**
+     * Disposes the Hermes registration when leaving the ideas
+     *
+     * @method resetController
+     * @param {Controller} controller
+     * @param {Boolean} isExiting
+     * @private
+     */
+    resetController(controller, isExiting) {
+        if (isExiting) {
+            controller.unregisterHermesIntents();
+        }
     }
 }

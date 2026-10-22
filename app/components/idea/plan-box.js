@@ -34,6 +34,15 @@ export default class IdeaPlanBoxComponent extends Component {
     @tracked pickedVersion = null;
 
     /**
+     * The latest version when the user picked, a newer version cancels the pick
+     *
+     * @property pickedAtLatest
+     * @type Number
+     * @private
+     */
+    @tracked pickedAtLatest = null;
+
+    /**
      * The key of the planned issue that is expanded
      *
      * @property expandedKey
@@ -81,7 +90,8 @@ export default class IdeaPlanBoxComponent extends Component {
      * @public
      */
     get selected() {
-        return this.versions.find(plan => Number(plan.version) === this.pickedVersion) ?? this.latest;
+        let picked = this.pickedAtLatest === Number(this.latest?.version) ? this.pickedVersion : null;
+        return this.versions.find(plan => Number(plan.version) === picked) ?? this.latest;
     }
 
     /**
@@ -146,6 +156,7 @@ export default class IdeaPlanBoxComponent extends Component {
     pick(version, event) {
         event?.preventDefault();
         this.pickedVersion = Number(version);
+        this.pickedAtLatest = Number(this.latest?.version);
         this.expandedKey = null;
     }
 

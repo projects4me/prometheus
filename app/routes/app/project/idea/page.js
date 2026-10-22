@@ -59,5 +59,20 @@ export default class AppProjectIdeaPageRoute extends App {
         controller.model = model;
         controller.loadMessages();
         controller.loadPlans();
+        controller.registerHermesIntents(this.trackedProject.getProjectId());
+    }
+
+    /**
+     * Disposes the Hermes registration when leaving the idea
+     *
+     * @method resetController
+     * @param {Controller} controller
+     * @param {Boolean} isExiting
+     * @private
+     */
+    resetController(controller, isExiting) {
+        if (isExiting) {
+            controller.unregisterHermesIntents();
+        }
     }
 }

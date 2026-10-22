@@ -62,6 +62,8 @@ shared event catalog.
 | Board controller | tracked project id | `issue.status.changed`, `issue.assignee.changed`, `milestone.created`, `milestone.completed`, `issue.created` |
 | Gantt controller | tracked project id | `issue.dates.changed`, `issue.dependency.created`, `issue.dependency.deleted`, `issue.assignee.changed`, `issue.created` |
 | Conversation controller | tracked project id | `conversation.comment.created/updated/deleted`, `conversation.vote.added/removed`, `conversation.created` |
+| Ideas controller (browser) | tracked project id | `idea.created`, `idea.updated` (reload the list) |
+| Idea page controller | tracked project id | only events whose `meta.ideaId` is the open idea: `idea.message.created` (loads and appends the message, no duplicate), `idea.plan.created` and `idea.plan.status.changed` (reload plans, Plan box shows the latest version), `idea.planissue.created` (reload Created Issues), `idea.updated` (reload the header) |
 | Notifications service | `user:<currentUser.id>` | `notification.created` |
 
 Issue list, issue detail, wiki, and issue comments are not live.
