@@ -132,9 +132,42 @@ export default class AppProjectIdeaController extends Controller {
             return;
         }
         this.hermesDisposer = this.hermes.register(this, projectId, {
-            'idea.created': () => this.reloadIdeas(loadIdeas),
+            'idea.created': envelope => this.handleIdeaCreated(envelope, loadIdeas),
             'idea.updated': () => this.reloadIdeas(loadIdeas)
         });
+    }
+
+    /**
+     * Reloads the ideas when an idea is created, unless it is listed already. An idea created here is added
+     * by the create page once it is saved, so its event finds it listed; the same user creating one in
+     * another tab is not listed, so that event reloads.
+     *
+     * @method handleIdeaCreated
+     * @param {Object} envelope Domain-event envelope
+     * @param {Function} loadIdeas
+     * @returns {Promise|void}
+     * @public
+     */
+    handleIdeaCreated(envelope, loadIdeas) {
+        let resourceId = envelope?.resource?.id;
+        if (resourceId && this.ideas.some(listed => String(listed.id) === String(resourceId))) {
+            return;
+        }
+        return this.reloadIdeas(loadIdeas);
+    }
+
+    /**
+     * Adds an idea to the list unless it is listed already (a reload may have brought it in first)
+     *
+     * @method addIdea
+     * @param {Prometheus.Models.Idea} idea
+     * @returns {void}
+     * @public
+     */
+    addIdea(idea) {
+        if (!this.ideas.some(listed => listed.id === idea.id)) {
+            this.ideas = [...this.ideas, idea];
+        }
     }
 
     /**
