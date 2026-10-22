@@ -14,6 +14,9 @@ export default Factory.extend({
     steps() {
         return [];
     },
+    screens() {
+        return [];
+    },
     ideaplanId: null,
     costUsd: 0,
     createdUser() {

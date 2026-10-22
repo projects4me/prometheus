@@ -42,6 +42,15 @@ export default class IdeamessageModel extends Model {
     @attr steps;
 
     /**
+     * The screens of the message, a JSON array of {uploadId, key, title, version, width, height}
+     *
+     * @property screens
+     * @for Ideamessage
+     * @public
+     */
+    @attr screens;
+
+    /**
      * @property ideaplanId
      * @for Ideamessage
      * @public

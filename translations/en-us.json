@@ -769,7 +769,8 @@
           "archiveMessage": "This idea will be archived and its conversation will be read only.",
           "unarchiveMessage": "This idea will be opened again.",
           "steps": "{count, plural, one {# step} other {# steps}}",
-          "plan": "View the plan"
+          "plan": "View the plan",
+          "screenVersion": "v{version}"
         },
         "plan": {
           "title": "Plan",
