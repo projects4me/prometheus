@@ -1,4 +1,4 @@
-<div class="issue">
+<div class="issue" {{did-insert this.markNotificationsAsRead}} {{did-update this.markNotificationsAsRead @issue.id}}>
   <div class="row">
     {{!-- The first Column that contains the issue details,etc --}}
     <div class="col-md-{{if (and @quickView this.renderSingleColumn) '12' '8'}}">

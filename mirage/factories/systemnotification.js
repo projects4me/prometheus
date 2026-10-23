@@ -22,6 +22,12 @@ export default Factory.extend({
 		};
 	},
 
+	relatedTo: 'project',
+
+	relatedId() {
+		return faker.random.number({ min: 1, max: 10 }).toString();
+	},
+
 	createdUser() {
 		return faker.random.number({ min: 1, max: 10 }).toString();
 	},

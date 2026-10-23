@@ -104,6 +104,28 @@ export default class SystemnotificationModel extends Model {
 	@attr('json') context;
 
 	/**
+	 * The parent entity type the notification belongs to (for example `issue`
+	 * for the notifications of an issue's comments and time logs). Separate
+	 * from `context.relatedTo`, which the link generators use.
+	 *
+	 * @property relatedTo
+	 * @type String
+	 * @for Systemnotification
+	 * @public
+	 */
+	@attr('string') relatedTo;
+
+	/**
+	 * The identifier of the parent entity the notification belongs to
+	 *
+	 * @property relatedId
+	 * @type String
+	 * @for Systemnotification
+	 * @public
+	 */
+	@attr('string') relatedId;
+
+	/**
 	 * The name of the user who last modified the notification
 	 *
 	 * @property modifiedUserName
