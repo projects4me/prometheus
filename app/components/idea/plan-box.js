@@ -3,7 +3,7 @@
  */
 
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
+import { action, get } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 const STATUS_LABELS = {
@@ -117,7 +117,9 @@ export default class IdeaPlanBoxComponent extends Component {
             issues: issues.map((issue, index) => ({
                 ...issue,
                 key: issue.key ?? `issue-${index}`,
-                dependsOn: Array.isArray(issue.dependsOn) ? issue.dependsOn.join(', ') : (issue.dependsOn ?? '')
+                projectLabel: issue.projectCode ?? issue.project,
+                dependsOn: Array.isArray(issue.dependsOn) ? issue.dependsOn.join(', ') : (issue.dependsOn ?? ''),
+                screens: Array.isArray(issue.screens) ? issue.screens.join(', ') : ''
             }))
         };
     }
@@ -129,6 +131,30 @@ export default class IdeaPlanBoxComponent extends Component {
      * @type String
      * @public
      */
+    /**
+     * The issues created from the shown version, by the key of the plan issue they came from
+     *
+     * @property createdIssues
+     * @type Object
+     * @public
+     */
+    get createdIssues() {
+        let created = {};
+        (this.args.planIssues ?? [])
+            .filter(link => link.ideaplanId === this.selected?.id)
+            .forEach(link => {
+                let issueNumber = get(link, 'issue.issueNumber');
+                let projectShortcode = String(get(link, 'issue.projectShortcode') ?? '').toLowerCase();
+                if (issueNumber && projectShortcode) {
+                    created[link.key] = {
+                        projectShortcode,
+                        issueNumber
+                    };
+                }
+            });
+        return created;
+    }
+
     get statusClass() {
         return STATUS_LABELS[this.selected?.status] ?? 'new';
     }
@@ -182,6 +208,9 @@ export default class IdeaPlanBoxComponent extends Component {
      */
     @action
     toggleOnKey(key, event) {
+        if (event.target !== event.currentTarget) {
+            return;
+        }
         if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
             this.toggle(key);
@@ -210,16 +239,15 @@ export default class IdeaPlanBoxComponent extends Component {
      * Approves the selected plan after the confirmation
      *
      * @method confirmApprove
-     * @returns {Promise}
+     * @returns {Boolean} true, for bootstrap-modal to hide the dialog
      * @public
      */
     @action
-    async confirmApprove() {
-        this.showApproveModal = false;
-        try {
-            await this.args.onApprove(this.selected);
-        } catch (error) {
+    confirmApprove() {
+        let plan = this.selected;
+        Promise.resolve(this.args.onApprove(plan)).catch(() => {
             // Already reported and rolled back by the controller.
-        }
+        });
+        return true;
     }
 }
