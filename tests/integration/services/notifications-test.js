@@ -243,72 +243,66 @@ module('Integration | Service | notifications', function (hooks) {
 		assert.strictEqual(service.unreadCount, 0);
 	});
 
-	function relatedFixture(service, calls, response) {
+	function relatedFixture(service, saves, meta, failSave = false) {
 		service.currentUser = { user: { id: 'user-1' } };
 		service.store = {
 			adapterFor() {
-				return {
-					host: 'h',
-					namespace: 'api/v1',
-					ajax(url, type, options) {
-						calls.push({ url, type, options });
-						return Promise.resolve(response);
-					}
-				};
+				return { lastResponseMeta: meta };
 			}
 		};
-		const rec = () => ({ userId: 'user-1', isRead: '0' });
-		const mine = { id: 'n1', relatedTo: 'issue', relatedId: '7', recipientRecords: [rec()] };
-		const other = { id: 'n2', relatedTo: 'issue', relatedId: '8', recipientRecords: [rec()] };
+		const rec = (id) => ({
+			id,
+			userId: 'user-1',
+			isRead: '0',
+			save() {
+				saves.push(id);
+				return failSave ? Promise.reject(new Error('boom')) : Promise.resolve();
+			}
+		});
+		const mine = { id: 'n1', relatedTo: 'issue', relatedId: '7', recipientRecords: [rec('r1')] };
+		const other = { id: 'n2', relatedTo: 'issue', relatedId: '8', recipientRecords: [rec('r2')] };
 		service.notifications = [mine, other];
 		service.unreadCount = 2;
 		return { mine, other };
 	}
 
-	test('markRelatedAsRead does not call the API without unread notifications', async function (assert) {
+	test('markRelatedAsRead saves nothing without unread notifications', async function (assert) {
 		let service = this.owner.lookup('service:notifications');
-		let calls = [];
-		relatedFixture(service, calls, {});
+		let saves = [];
+		relatedFixture(service, saves, {});
 		service.unreadCount = 0;
 		await service.markRelatedAsRead('issue', '7');
-		assert.strictEqual(calls.length, 0);
+		assert.strictEqual(saves.length, 0);
 		assert.false(service.isBellRinging);
 	});
 
-	test('markRelatedAsRead marks matching notifications read and rings the bell', async function (assert) {
+	test('markRelatedAsRead saves matching records through the store and rings the bell', async function (assert) {
 		let service = this.owner.lookup('service:notifications');
-		let calls = [];
-		let { mine, other } = relatedFixture(service, calls, {
-			success: true,
-			markedCount: 1,
-			meta: { unreadCount: 1 }
-		});
+		let saves = [];
+		let { mine, other } = relatedFixture(service, saves, { unreadCount: 1 });
 		await service.markRelatedAsRead('issue', '7');
-		assert.deepEqual(calls[0].options, { data: { relatedTo: 'issue', relatedId: '7' } });
-		assert.strictEqual(calls[0].type, 'POST');
+		assert.deepEqual(saves, ['r1']);
 		assert.strictEqual(service.unreadCount, 1);
 		assert.strictEqual(mine.recipientRecords[0].isRead, '1');
 		assert.strictEqual(other.recipientRecords[0].isRead, '0');
 		assert.true(service.isBellRinging);
 	});
 
-	test('markRelatedAsRead does not ring the bell when nothing was marked', async function (assert) {
+	test('markRelatedAsRead does not ring the bell when nothing matched', async function (assert) {
 		let service = this.owner.lookup('service:notifications');
-		relatedFixture(service, [], { success: true, markedCount: 0, meta: { unreadCount: 2 } });
+		let saves = [];
+		relatedFixture(service, saves, { unreadCount: 2 });
 		await service.markRelatedAsRead('issue', '99');
+		assert.strictEqual(saves.length, 0);
 		assert.false(service.isBellRinging);
 	});
 
 	test('markRelatedAsRead swallows failures', async function (assert) {
 		let service = this.owner.lookup('service:notifications');
-		relatedFixture(service, [], {});
-		service.store.adapterFor = () => ({
-			host: 'h',
-			namespace: 'n',
-			ajax: () => Promise.reject(new Error('boom'))
-		});
+		relatedFixture(service, [], {}, true);
 		await service.markRelatedAsRead('issue', '7');
 		assert.strictEqual(service.unreadCount, 2);
+		assert.false(service.isBellRinging);
 	});
 
 	test('MARK_RELATED_AS_READ from another tab updates local state', function (assert) {
@@ -316,6 +310,7 @@ module('Integration | Service | notifications', function (hooks) {
 		let { mine, other } = relatedFixture(service, [], {});
 		service._handleCrossTabMessage({
 			type: 'MARK_RELATED_AS_READ',
+			userId: 'user-1',
 			relatedTo: 'issue',
 			relatedId: '7',
 			unreadCount: 1
@@ -323,5 +318,19 @@ module('Integration | Service | notifications', function (hooks) {
 		assert.strictEqual(mine.recipientRecords[0].isRead, '1', 'mine read');
 		assert.strictEqual(other.recipientRecords[0].isRead, '0', 'other unread');
 		assert.strictEqual(service.unreadCount, 1, 'count');
+	});
+
+	test('MARK_RELATED_AS_READ for another user is ignored', function (assert) {
+		let service = this.owner.lookup('service:notifications');
+		let { mine } = relatedFixture(service, [], {});
+		service._handleCrossTabMessage({
+			type: 'MARK_RELATED_AS_READ',
+			userId: 'user-2',
+			relatedTo: 'issue',
+			relatedId: '7',
+			unreadCount: 0
+		});
+		assert.strictEqual(mine.recipientRecords[0].isRead, '0');
+		assert.strictEqual(service.unreadCount, 2);
 	});
 });

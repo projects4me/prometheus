@@ -426,30 +426,60 @@ export default class NotificationsService extends Service {
 	 * @returns {Promise<void>}
 	 */
 	@action
-	async markRelatedAsRead(relatedTo, relatedId) {
-		if (!relatedTo || !relatedId || this.unreadCount === 0) return;
+	markRelatedAsRead(relatedTo, relatedId) {
+		if (!relatedTo || !relatedId || this.unreadCount === 0) {
+			return Promise.resolve();
+		}
 
+		// Serialize the saves so a slow earlier response cannot restore an older unread count
+		this._relatedReadQueue = (this._relatedReadQueue ?? Promise.resolve()).then(
+			() => this._saveRelatedAsRead(relatedTo, relatedId)
+		);
+		return this._relatedReadQueue;
+	}
+
+	/**
+	 * Saves the loaded unread recipient records of a parent entity through the store.
+	 *
+	 * @method _saveRelatedAsRead
+	 * @private
+	 * @async
+	 * @param {String} relatedTo
+	 * @param {String} relatedId
+	 * @returns {Promise<void>}
+	 */
+	async _saveRelatedAsRead(relatedTo, relatedId) {
 		try {
-			const adapter = this.store.adapterFor('systemnotificationrecipient');
-			const response = await adapter.ajax(
-				`${adapter.host}/${adapter.namespace}/systemnotificationrecipient`,
-				'POST',
-				{ data: { relatedTo, relatedId } }
-			);
+			const userId = this.currentUser.user?.id;
+			const unreadRecords = this.notifications
+				.filter(
+					(n) =>
+						n.relatedTo === relatedTo &&
+						String(n.relatedId) === String(relatedId)
+				)
+				.map((n) => n.recipientRecords.find((r) => r.userId === userId))
+				.filter((r) => r && r.isRead === '0');
 
-			this.unreadCount = response?.meta?.unreadCount ?? this.unreadCount;
+			if (unreadRecords.length === 0) return;
+
+			for (const record of unreadRecords) {
+				record.isRead = '1';
+				await record.save();
+				this.unreadCount =
+					this.store.adapterFor('systemnotificationrecipient')
+						.lastResponseMeta?.unreadCount ?? this.unreadCount;
+			}
 			this._applyRelatedAsRead(relatedTo, relatedId);
 
 			this._broadcastChannel?.postMessage({
 				type: 'MARK_RELATED_AS_READ',
+				userId,
 				relatedTo,
 				relatedId,
 				unreadCount: this.unreadCount
 			});
 
-			if (response?.markedCount > 0) {
-				this._ringBell();
-			}
+			this._ringBell();
 		} catch (error) {
 			console.error('Error marking related notifications as read:', error);
 		}
@@ -654,6 +684,7 @@ export default class NotificationsService extends Service {
 
 			this.unreadCount = data.unreadCount ?? Math.max(0, this.unreadCount - 1);
 		} else if (data.type === 'MARK_RELATED_AS_READ') {
+			if (data.userId !== this.currentUser.user?.id) return;
 			this._applyRelatedAsRead(data.relatedTo, data.relatedId);
 			this.unreadCount = data.unreadCount ?? this.unreadCount;
 		}

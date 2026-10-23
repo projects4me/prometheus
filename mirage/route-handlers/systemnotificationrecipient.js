@@ -18,29 +18,6 @@ export function register(server, ctx) {
 			return { success: true };
 		}
 
-		// Mark the current user's notifications about one entity as read
-		if (attrs.relatedTo && attrs.relatedId) {
-			const userId = schema.users.first()?.id || '1';
-			const notificationIds = schema.systemnotifications
-				.where({ relatedTo: attrs.relatedTo, relatedId: attrs.relatedId })
-				.models.map((n) => n.id);
-			const unread = schema.systemnotificationrecipients
-				.where({ userId, isRead: '0' })
-				.models.filter((r) => notificationIds.includes(r.systemnotificationId));
-			unread.forEach((recipient) => recipient.update({ isRead: '1' }));
-
-			return {
-				success: true,
-				markedCount: unread.length,
-				meta: {
-					unreadCount: schema.systemnotificationrecipients.where({
-						userId,
-						isRead: '0'
-					}).length
-				}
-			};
-		}
-
 		return schema.systemnotificationrecipients.create(attrs);
 	});
 
