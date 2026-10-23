@@ -73,16 +73,14 @@ export default class IdeaConversationBoxComponent extends Component {
      * Archives or unarchives the idea after the confirmation
      *
      * @method confirmArchive
-     * @returns {Promise}
+     * @returns {Boolean} true, for bootstrap-modal to hide the dialog
      * @public
      */
     @action
-    async confirmArchive() {
-        this.showArchiveModal = false;
-        try {
-            await this.args.onToggleArchive();
-        } catch (error) {
+    confirmArchive() {
+        Promise.resolve(this.args.onToggleArchive()).catch(() => {
             // Already reported and rolled back by the controller.
-        }
+        });
+        return true;
     }
 }

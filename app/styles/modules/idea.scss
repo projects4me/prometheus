@@ -9,23 +9,12 @@
       white-space: nowrap;
     }
 
-    // the selected idea is marked like the selected row of the Gantt task list (gantt.scss)
     .idea-list > li {
       border-bottom: 1px solid #f4f4f4;
 
       > a {
         color: inherit;
         border-radius: 0;
-      }
-
-      > a:hover,
-      > a:focus {
-        background: #f5f9ff;
-      }
-
-      &.active > a {
-        background: #e3f2fd;
-        box-shadow: inset 4px 0 0 #1d4ed8;
       }
     }
 
@@ -35,28 +24,62 @@
   }
 }
 
+// plan issues as in the first Nestor UI (dev-tools/nestor): a collapsed row per issue, details on a click
 .idea-plan {
-  // the global issue overview is a fixed-height scroll area; here it is as tall as the plan
   .idea-plan-issues {
-    min-height: 0;
-    max-height: none;
+    margin: 0;
+  }
 
-    .idea-plan-issue-detail {
-      margin: 0.5rem 0 0 3rem;   // under the subject, past the priority icon
+  .idea-plan-issue {
+    border-top: 1px solid #f4f4f4;
+  }
 
-      .dl-horizontal {
-        margin-bottom: 0.5rem;
+  .idea-plan-issue-head {
+    display: block;
+    padding: 0.8rem 1rem;
 
-        dt {
-          width: 8rem;
-          text-align: left;
-        }
+    .subject {
+      display: block;
+      font-weight: 600;
 
-        dd {
-          margin-left: 8rem;
-        }
+      .fa {
+        width: 1rem;
+        color: #777;
       }
     }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1rem;
+      margin: 0.4rem 0 0 1.4rem;
+      font-size: 1.2rem;
+      color: #666;
+    }
+
+    .project {
+      color: $primaryColor;
+      font-weight: 600;
+    }
+  }
+
+  .priority-blocker,
+  .priority-critical,
+  .priority-high {
+    color: $dangerColor;
+  }
+
+  .priority-medium {
+    color: $primaryColor;
+  }
+
+  .priority-low {
+    color: $successColor;
+  }
+
+  .idea-plan-description {
+    padding: 0 1rem 1rem 2.4rem;
+    font-size: 1.3rem;
   }
 }
 

@@ -20,35 +20,40 @@
       <p class="idea-plan-summary" data-idea-plan-summary>{{this.body.summary}}</p>
     </div>
     {{#if this.body.issues.length}}
-      <div class="box-body no-padding">
-        <ul class="issue-overview clearfix idea-plan-issues" data-idea-plan-issues>
-          {{#each this.body.issues as |issue|}}
-            <li>
-              <div class="issue-block clickable" role="button" tabindex="0" aria-expanded={{if (eq this.expandedKey issue.key) "true" "false"}} {{on "click" (fn this.toggle issue.key)}} {{on "keydown" (fn this.toggleOnKey issue.key)}} data-idea-plan-issue={{issue.key}}>
-                <div class="priority"><AppUi::PriorityIcon @priority={{issue.priority}} /></div>
-                <div class="data-block">
-                  <span class="subject">{{issue.subject}}</span>
-                  <span class="description" data-idea-plan-issue-meta>
-                    {{issue.project}} &middot; {{issue.type}} &middot;
-                    <span data-idea-plan-issue-priority>{{t (concat "views.app.issue.lists.priority." issue.priority)}}</span>
-                  </span>
-                </div>
-              </div>
-              {{#if (eq this.expandedKey issue.key)}}
-                <div class="idea-plan-issue-detail" data-idea-plan-issue-detail={{issue.key}}>
-                  <dl class="dl-horizontal">
-                    <dt>{{t "views.app.idea.plan.complexity"}}</dt>
-                    <dd>{{issue.complexity}}</dd>
-                    <dt>{{t "views.app.idea.plan.dependsOn"}}</dt>
-                    <dd>{{issue.dependsOn}}</dd>
-                  </dl>
-                  <div class="idea-plan-description" data-idea-plan-description>{{sanitize-html issue.description}}</div>
-                </div>
-              {{/if}}
-            </li>
-          {{/each}}
-        </ul>
-      </div>
+      <ul class="list-unstyled idea-plan-issues" data-idea-plan-issues>
+        {{#each this.body.issues as |issue|}}
+          <li class="idea-plan-issue">
+            <div class="idea-plan-issue-head clickable" role="button" tabindex="0" aria-expanded={{if (eq this.expandedKey issue.key) "true" "false"}} {{on "click" (fn this.toggle issue.key)}} {{on "keydown" (fn this.toggleOnKey issue.key)}} data-idea-plan-issue={{issue.key}}>
+              <span class="subject"><i class="fa {{if (eq this.expandedKey issue.key) "fa-caret-down" "fa-caret-right"}}"></i> {{issue.subject}}</span>
+              <span class="meta" data-idea-plan-issue-meta>
+                <span class="project" data-idea-plan-issue-project>{{issue.projectLabel}}</span>
+                <span>{{issue.type}}</span>
+                <span class="priority-{{issue.priority}}" data-idea-plan-issue-priority><AppUi::PriorityIcon @priority={{issue.priority}} /> {{t (concat "views.app.issue.lists.priority." issue.priority)}}</span>
+                <span data-idea-plan-issue-complexity><i class="fa {{if (eq issue.complexity "complex") "fa-cogs" "fa-cog"}}"></i> {{t (concat "views.app.idea.plan.complexities." issue.complexity)}}</span>
+                <span title={{if issue.newMilestone (t "views.app.idea.plan.newMilestoneTitle")}} data-idea-plan-issue-milestone><i class="fa fa-flag-o"></i> {{issue.milestone}}{{if issue.newMilestone (t "views.app.idea.plan.newMilestone")}}</span>
+                {{#if issue.dependsOn}}
+                  <span data-idea-plan-issue-depends><i class="fa fa-level-up"></i> {{t "views.app.idea.plan.after" keys=issue.dependsOn}}</span>
+                {{/if}}
+                {{#if issue.screens}}
+                  <span><i class="fa fa-picture-o"></i> {{issue.screens}}</span>
+                {{/if}}
+                {{#let (get this.createdIssues issue.key) as |created|}}
+                  {{#if created}}
+                    <LinkTo @route="app.project.issue.page" @models={{array created.projectShortcode created.issueNumber}} data-idea-plan-issue-link>
+                      <i class="fa fa-external-link"></i> {{created.projectShortcode}}-{{created.issueNumber}}
+                    </LinkTo>
+                  {{else}}
+                    <span class="text-muted">{{issue.key}}</span>
+                  {{/if}}
+                {{/let}}
+              </span>
+            </div>
+            {{#if (eq this.expandedKey issue.key)}}
+              <div class="idea-plan-description" data-idea-plan-issue-detail={{issue.key}} data-idea-plan-description>{{sanitize-html issue.description}}</div>
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
     {{/if}}
     {{#if this.canApprove}}
       <div class="box-footer">
