@@ -466,20 +466,27 @@ export default class NotificationsService extends Service {
 			if (targets.length === 0) return;
 
 			const savedIds = [];
-			for (const { notificationId, record } of targets) {
-				record.isRead = '1';
-				try {
-					await record.save();
-				} catch (error) {
-					// Restore the unread state so a later view can retry
-					record.isRead = '0';
-					throw error;
+			try {
+				for (const { notificationId, record } of targets) {
+					record.isRead = '1';
+					try {
+						await record.save();
+					} catch (error) {
+						// Restore the unread state so a later view can retry
+						record.isRead = '0';
+						throw error;
+					}
+					savedIds.push(notificationId);
+					this.unreadCount =
+						this.store.adapterFor('systemnotificationrecipient')
+							.lastResponseMeta?.unreadCount ?? this.unreadCount;
 				}
-				savedIds.push(notificationId);
-				this.unreadCount =
-					this.store.adapterFor('systemnotificationrecipient')
-						.lastResponseMeta?.unreadCount ?? this.unreadCount;
+			} catch (error) {
+				console.error('Error marking related notifications as read:', error);
 			}
+
+			// Reconcile what was saved, even when a later save failed
+			if (savedIds.length === 0) return;
 			this._applyRelatedAsRead(relatedTo, relatedId, savedIds);
 
 			this._broadcastChannel?.postMessage({
