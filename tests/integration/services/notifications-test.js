@@ -242,4 +242,110 @@ module('Integration | Service | notifications', function (hooks) {
 		assert.strictEqual(service.notifications.length, 0);
 		assert.strictEqual(service.unreadCount, 0);
 	});
+
+	function relatedFixture(service, saves, meta, failSave = false) {
+		service.currentUser = { user: { id: 'user-1' } };
+		service.store = {
+			adapterFor() {
+				return { lastResponseMeta: meta };
+			}
+		};
+		const rec = (id) => ({
+			id,
+			userId: 'user-1',
+			isRead: '0',
+			save() {
+				saves.push(id);
+				return failSave ? Promise.reject(new Error('boom')) : Promise.resolve();
+			}
+		});
+		const mine = { id: 'n1', relatedTo: 'issue', relatedId: '7', recipientRecords: [rec('r1')] };
+		const other = { id: 'n2', relatedTo: 'issue', relatedId: '8', recipientRecords: [rec('r2')] };
+		service.notifications = [mine, other];
+		service.unreadCount = 2;
+		return { mine, other };
+	}
+
+	test('markRelatedAsRead saves nothing without unread notifications', async function (assert) {
+		let service = this.owner.lookup('service:notifications');
+		let saves = [];
+		relatedFixture(service, saves, {});
+		service.unreadCount = 0;
+		await service.markRelatedAsRead('issue', '7');
+		assert.strictEqual(saves.length, 0);
+		assert.false(service.isBellRinging);
+	});
+
+	test('markRelatedAsRead saves matching records through the store and rings the bell', async function (assert) {
+		let service = this.owner.lookup('service:notifications');
+		let saves = [];
+		let { mine, other } = relatedFixture(service, saves, { unreadCount: 1 });
+		await service.markRelatedAsRead('issue', '7');
+		assert.deepEqual(saves, ['r1']);
+		assert.strictEqual(service.unreadCount, 1);
+		assert.strictEqual(mine.recipientRecords[0].isRead, '1');
+		assert.strictEqual(other.recipientRecords[0].isRead, '0');
+		assert.true(service.isBellRinging);
+	});
+
+	test('markRelatedAsRead does not ring the bell when nothing matched', async function (assert) {
+		let service = this.owner.lookup('service:notifications');
+		let saves = [];
+		relatedFixture(service, saves, { unreadCount: 2 });
+		await service.markRelatedAsRead('issue', '99');
+		assert.strictEqual(saves.length, 0);
+		assert.false(service.isBellRinging);
+	});
+
+	test('markRelatedAsRead swallows failures', async function (assert) {
+		let service = this.owner.lookup('service:notifications');
+		let { mine } = relatedFixture(service, [], {}, true);
+		await service.markRelatedAsRead('issue', '7');
+		assert.strictEqual(service.unreadCount, 2);
+		assert.strictEqual(mine.recipientRecords[0].isRead, '0');
+		assert.false(service.isBellRinging);
+	});
+
+	test('MARK_RELATED_AS_READ from another tab updates local state', function (assert) {
+		let service = this.owner.lookup('service:notifications');
+		let { mine, other } = relatedFixture(service, [], {});
+		service._handleCrossTabMessage({
+			type: 'MARK_RELATED_AS_READ',
+			userId: 'user-1',
+			relatedTo: 'issue',
+			relatedId: '7',
+			unreadCount: 1
+		});
+		assert.strictEqual(mine.recipientRecords[0].isRead, '1', 'mine read');
+		assert.strictEqual(other.recipientRecords[0].isRead, '0', 'other unread');
+		assert.strictEqual(service.unreadCount, 1, 'count');
+	});
+
+	test('MARK_RELATED_AS_READ only flips the notifications named in the message', function (assert) {
+		let service = this.owner.lookup('service:notifications');
+		let { mine } = relatedFixture(service, [], {});
+		service._handleCrossTabMessage({
+			type: 'MARK_RELATED_AS_READ',
+			userId: 'user-1',
+			relatedTo: 'issue',
+			relatedId: '7',
+			notificationIds: ['other-id'],
+			unreadCount: 1
+		});
+		assert.strictEqual(mine.recipientRecords[0].isRead, '0');
+	});
+
+	test('MARK_RELATED_AS_READ for another user is ignored', function (assert) {
+		let service = this.owner.lookup('service:notifications');
+		let { mine } = relatedFixture(service, [], {});
+		service._handleCrossTabMessage({
+			type: 'MARK_RELATED_AS_READ',
+			userId: 'user-2',
+			relatedTo: 'issue',
+			relatedId: '7',
+			unreadCount: 0
+		});
+		assert.strictEqual(mine.recipientRecords[0].isRead, '0');
+		assert.strictEqual(service.unreadCount, 2);
+	});
 });

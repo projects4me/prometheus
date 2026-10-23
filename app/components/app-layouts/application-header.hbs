@@ -43,7 +43,7 @@
       <li class="dropdown notifications-menu">
         {{!-- Add a button to toggle the sidebar instead of dropdown --}}
         <AppUi::Button type="button" class="toggle-notifications-sidebar" @onClick={{this.toggleNotificationsSidebar}}>
-          <i class="fa {{if this.notifications.hasUnreadNotifications 'fa-bell notification-bell-unread' 'fa-bell-o'}}"></i>
+          <i class="fa {{if this.notifications.hasUnreadNotifications 'fa-bell notification-bell-unread' 'fa-bell-o'}} {{if this.notifications.isBellRinging 'notification-bell-ring'}}"></i>
         </AppUi::Button>
       </li>
 

@@ -70,6 +70,13 @@ export default class NotificationsService extends Service {
 	@tracked unreadCount = 0;
 
 	/**
+	 * True briefly after notifications were marked read, so the header bell rings
+	 * @type {Boolean}
+	 * @public
+	 */
+	@tracked isBellRinging = false;
+
+	/**
 	 * Track the page size
 	 * @type {Number}
 	 * @public
@@ -406,6 +413,144 @@ export default class NotificationsService extends Service {
 	}
 
 	/**
+	 * Marks the current user's unread notifications about one parent entity
+	 * (for example an issue that is being viewed) as read. Does nothing when
+	 * there are no unread notifications. Failures are logged and swallowed,
+	 * because viewing an entity must never show an error for this.
+	 *
+	 * @method markRelatedAsRead
+	 * @public
+	 * @async
+	 * @param {String} relatedTo - The parent entity type, e.g. `issue`
+	 * @param {String} relatedId - The parent entity id
+	 * @returns {Promise<void>}
+	 */
+	@action
+	markRelatedAsRead(relatedTo, relatedId) {
+		if (!relatedTo || !relatedId || this.unreadCount === 0) {
+			return Promise.resolve();
+		}
+
+		// Serialize the saves so a slow earlier response cannot restore an older unread count
+		this._relatedReadQueue = (this._relatedReadQueue ?? Promise.resolve()).then(
+			() => this._saveRelatedAsRead(relatedTo, relatedId)
+		);
+		return this._relatedReadQueue;
+	}
+
+	/**
+	 * Saves the loaded unread recipient records of a parent entity through the store.
+	 *
+	 * @method _saveRelatedAsRead
+	 * @private
+	 * @async
+	 * @param {String} relatedTo
+	 * @param {String} relatedId
+	 * @returns {Promise<void>}
+	 */
+	async _saveRelatedAsRead(relatedTo, relatedId) {
+		try {
+			const userId = this.currentUser.user?.id;
+			const targets = this.notifications
+				.filter(
+					(n) =>
+						n.relatedTo === relatedTo &&
+						String(n.relatedId) === String(relatedId)
+				)
+				.map((n) => ({
+					notificationId: n.id,
+					record: n.recipientRecords.find((r) => r.userId === userId)
+				}))
+				.filter((t) => t.record && t.record.isRead === '0');
+
+			if (targets.length === 0) return;
+
+			const savedIds = [];
+			try {
+				for (const { notificationId, record } of targets) {
+					record.isRead = '1';
+					try {
+						await record.save();
+					} catch (error) {
+						// Restore the unread state so a later view can retry
+						record.isRead = '0';
+						throw error;
+					}
+					savedIds.push(notificationId);
+					this.unreadCount =
+						this.store.adapterFor('systemnotificationrecipient')
+							.lastResponseMeta?.unreadCount ?? this.unreadCount;
+				}
+			} catch (error) {
+				console.error('Error marking related notifications as read:', error);
+			}
+
+			// Reconcile what was saved, even when a later save failed
+			if (savedIds.length === 0) return;
+			this._applyRelatedAsRead(relatedTo, relatedId, savedIds);
+
+			this._broadcastChannel?.postMessage({
+				type: 'MARK_RELATED_AS_READ',
+				userId,
+				relatedTo,
+				relatedId,
+				notificationIds: savedIds,
+				unreadCount: this.unreadCount
+			});
+
+			this._ringBell();
+		} catch (error) {
+			console.error('Error marking related notifications as read:', error);
+		}
+	}
+
+	/**
+	 * Flips the loaded notifications of a parent entity to read and removes
+	 * their unread class from the sidebar.
+	 *
+	 * @method _applyRelatedAsRead
+	 * @private
+	 * @param {String} relatedTo
+	 * @param {String} relatedId
+	 * @param {Array<String>} [notificationIds] - Only these notifications are flipped when given
+	 */
+	_applyRelatedAsRead(relatedTo, relatedId, notificationIds) {
+		const only = notificationIds?.map(String);
+		this.notifications
+			.filter(
+				(n) =>
+					n.relatedTo === relatedTo &&
+					String(n.relatedId) === String(relatedId) &&
+					(!only || only.includes(String(n.id)))
+			)
+			.forEach((notification) => {
+				const recipientRecord = notification.recipientRecords.find(
+					(un) => un.userId === this.currentUser.user?.id
+				);
+				if (recipientRecord) {
+					recipientRecord.isRead = '1';
+				}
+				document
+					.querySelector(`[data-notification-id="${notification.id}"]`)
+					?.classList.remove('unread-notification');
+			});
+	}
+
+	/**
+	 * Sets `isBellRinging` for about a second so the header bell can animate.
+	 *
+	 * @method _ringBell
+	 * @private
+	 */
+	_ringBell() {
+		this.isBellRinging = true;
+		clearTimeout(this._bellTimer);
+		this._bellTimer = setTimeout(() => {
+			this.isBellRinging = false;
+		}, 1000);
+	}
+
+	/**
 	 * Registers a Hermes intent for `notification.created` scoped to the
 	 * current user. The scope key `user:<userId>` is placed in the projectId
 	 * field so that the existing room convention routes only to this socket.
@@ -560,6 +705,14 @@ export default class NotificationsService extends Service {
 			}
 
 			this.unreadCount = data.unreadCount ?? Math.max(0, this.unreadCount - 1);
+		} else if (data.type === 'MARK_RELATED_AS_READ') {
+			if (data.userId !== this.currentUser.user?.id) return;
+			this._applyRelatedAsRead(
+				data.relatedTo,
+				data.relatedId,
+				data.notificationIds
+			);
+			this.unreadCount = data.unreadCount ?? this.unreadCount;
 		}
 	}
 
@@ -572,6 +725,7 @@ export default class NotificationsService extends Service {
 	willDestroy() {
 		super.willDestroy(...arguments);
 		this._broadcastChannel?.close();
+		clearTimeout(this._bellTimer);
 		this.stopLiveSync();
 	}
 }

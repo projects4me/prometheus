@@ -87,7 +87,16 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @for IssueIssueDetailsComponent
      * @protected
      */
-    @service pubSub;   
+    @service pubSub;
+
+    /**
+     * The notifications service
+     *
+     * @property notifications
+     * @type Prometheus.Services.Notifications
+     * @public
+     */
+    @service notifications;   
     
     /**
      * Query params that the controller support.
@@ -148,6 +157,20 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     constructor() {
         super(...arguments);
         this.newTimeLog = this.store.createRecord('timelog');
+    }
+
+    /**
+     * Marks the current user's notifications about the displayed issue as read.
+     * Runs when the issue is first rendered and when it changes to another one.
+     *
+     * @method markNotificationsAsRead
+     * @public
+     */
+    @action markNotificationsAsRead() {
+        const issueId = this.issue?.id;
+        if (issueId) {
+            this.notifications.markRelatedAsRead('issue', issueId);
+        }
     }
 
     /**
