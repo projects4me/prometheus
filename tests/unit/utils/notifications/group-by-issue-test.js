@@ -63,6 +63,20 @@ module('Unit | Utility | notifications/group-by-issue', function () {
 		);
 	});
 
+	test('a group with an old oldest but very recent latest notification comes first', function (assert) {
+		const now = Date.now();
+		const iso = (ms) => new Date(now - ms).toISOString();
+		let result = groupByIssue([
+			issue('b1', iso(60 * 60 * 1000), 'ABC', '2'),
+			issue('a1', iso(24 * 60 * 60 * 1000), 'ABC', '1'),
+			issue('a2', iso(3 * 60 * 1000), 'ABC', '1')
+		]);
+		assert.deepEqual(
+			result.map((e) => e.issueNumber),
+			['1', '2']
+		);
+	});
+
 	test('empty input', function (assert) {
 		assert.deepEqual(groupByIssue([]), []);
 		assert.deepEqual(groupByIssue(), []);

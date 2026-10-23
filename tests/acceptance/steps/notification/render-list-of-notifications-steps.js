@@ -109,16 +109,18 @@ export const then = function () {
 				}
 		},
 		{
-			'There is $groups notification group with $items notifications collapsed':
+			'There is $groups notification group with $items notifications listed':
 				(assert, ctx) =>
 					async function (groups, items) {
 						assert
 							.dom('[data-notification-group]')
 							.exists({ count: parseInt(groups) });
-						assert.dom('[data-notification]').doesNotExist();
 						assert
-							.dom('[data-notification-group-count]')
-							.includesText(items);
+							.dom('[data-notification-group-heading]')
+							.exists({ count: parseInt(groups) });
+						assert
+							.dom('[data-notification-group] [data-notification]')
+							.exists({ count: parseInt(items) });
 					}
 		},
 		{
