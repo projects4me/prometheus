@@ -41,12 +41,32 @@ export default class AppUiNotificationsGroupComponent extends AppComponent {
 	 */
 	@action
 	async goToIssue(event) {
-		event.preventDefault();
-		for (const notification of this.args.group.notifications) {
-			await this.notifications.markAsRead(notification);
+		if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button > 0) {
+			// Let the browser open the link in a new tab or window; the group is read in the background
+			this._markGroupAsRead();
+			return;
 		}
+		event.preventDefault();
+		await this._markGroupAsRead();
 		if (this.config.app.notifications.enableNav) {
 			this.router.transitionTo(this.issueUrl);
+		}
+	}
+
+	/**
+	 * Marks every notification of the group as read, carrying on when one of them fails
+	 *
+	 * @method _markGroupAsRead
+	 * @private
+	 * @async
+	 */
+	async _markGroupAsRead() {
+		for (const notification of this.args.group.notifications) {
+			try {
+				await this.notifications.markAsRead(notification);
+			} catch (error) {
+				console.error('Error marking notification as read:', error);
+			}
 		}
 	}
 }
