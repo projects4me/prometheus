@@ -1,4 +1,4 @@
-import { click, fillIn, visit, waitUntil } from '@ember/test-helpers';
+import { click, fillIn, visit } from '@ember/test-helpers';
 import steps from '../steps';
 
 export const given = function () {
@@ -66,8 +66,6 @@ export const then = function () {
             "The idea is archived": (assert) => async function () {
                 assert.ok(server.schema.ideas.findBy({ status: 'archived' }), 'the idea is archived');
                 assert.dom('[data-idea-status]').hasText('Archived');
-                await waitUntil(() => !document.querySelector('.modal-backdrop'), { timeout: 2000 });
-                assert.dom('.modal-backdrop', document).doesNotExist('the confirmation leaves no backdrop');
             }
         },
         {

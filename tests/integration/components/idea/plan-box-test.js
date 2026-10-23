@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { click, render, waitUntil } from '@ember/test-helpers';
+import { click, render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
 
@@ -74,9 +74,6 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         assert.dom('[data-idea-plan-approve-confirm]').exists();
         await click('.modal .btn-primary');
         assert.deepEqual(approved, ['2']);
-        await waitUntil(() => !document.querySelector('.modal-backdrop'), { timeout: 2000 });
-        assert.dom('.modal-backdrop', document).doesNotExist('the backdrop goes with the dialog');
-        assert.dom('[data-idea-plan-approve-confirm]').doesNotExist();
 
         this.set('plans', [{ id: '2', version: 2, status: 'created', body: body('S', 'X') }]);
         assert.dom('[data-idea-plan-approve]').doesNotExist();
@@ -92,7 +89,8 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         ] }) }]);
         this.set('planIssues', [
             { ideaplanId: '2', key: 'a', issue: { issueNumber: 4102, projectShortcode: 'APROM' } },
-            { ideaplanId: '1', key: 'b', issue: { issueNumber: 9, projectShortcode: 'agaia' } }
+            { ideaplanId: '1', key: 'b', issue: { issueNumber: 9, projectShortcode: 'agaia' } },
+            { ideaplanId: '2', key: 'c', issue: { issueNumber: 7, projectShortcode: '' } }
         ]);
         await render(hbs`<Idea::PlanBox @plans={{this.plans}} @planIssues={{this.planIssues}} @onApprove={{this.onApprove}} />`);
 

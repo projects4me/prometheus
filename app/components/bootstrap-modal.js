@@ -16,18 +16,15 @@ import jQuery from 'jquery'
 export default Component.extend({
 
     /**
-     * Show the modal once it is on the page. Only once: showing it again on a re-render (its content changing
-     * while it hides) would bring the dialog and its backdrop back, and bind `close` once more.
+     * Show the modal
      *
-     * @method didInsertElement
+     * @method show
      * @private
      */
-    didInsertElement() {
-        this._super(...arguments);
-        jQuery(this.element).find('.modal').modal().on('hidden.bs.modal', () => {
-            if (!this.isDestroying && !this.isDestroyed) {
-                this.close();
-            }
+    didRender() {
+        let _self = this;
+        jQuery('.modal').modal().on('hidden.bs.modal', () => {
+            _self.close();
         });
     },
 

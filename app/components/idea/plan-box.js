@@ -2,7 +2,6 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import jQuery from 'jquery';
 import Component from '@glimmer/component';
 import { action, get } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
@@ -145,9 +144,10 @@ export default class IdeaPlanBoxComponent extends Component {
             .filter(link => link.ideaplanId === this.selected?.id)
             .forEach(link => {
                 let issueNumber = get(link, 'issue.issueNumber');
-                if (issueNumber) {
+                let projectShortcode = String(get(link, 'issue.projectShortcode') ?? '').toLowerCase();
+                if (issueNumber && projectShortcode) {
                     created[link.key] = {
-                        projectShortcode: String(get(link, 'issue.projectShortcode') ?? '').toLowerCase(),
+                        projectShortcode,
                         issueNumber
                     };
                 }
@@ -208,6 +208,9 @@ export default class IdeaPlanBoxComponent extends Component {
      */
     @action
     toggleOnKey(key, event) {
+        if (event.target !== event.currentTarget) {
+            return;
+        }
         if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
             this.toggle(key);
@@ -236,7 +239,7 @@ export default class IdeaPlanBoxComponent extends Component {
      * Approves the selected plan after the confirmation
      *
      * @method confirmApprove
-     * @returns {void}
+     * @returns {Boolean} true, for bootstrap-modal to hide the dialog
      * @public
      */
     @action
@@ -245,8 +248,6 @@ export default class IdeaPlanBoxComponent extends Component {
         Promise.resolve(this.args.onApprove(plan)).catch(() => {
             // Already reported and rolled back by the controller.
         });
-        // as the other confirmations do: Bootstrap hides the dialog with its backdrop, then bootstrap-modal calls
-        // close; taking the modal off the page instead would leave the backdrop behind
-        jQuery('.modal').modal('hide');
+        return true;
     }
 }
