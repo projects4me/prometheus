@@ -451,31 +451,43 @@ export default class NotificationsService extends Service {
 	async _saveRelatedAsRead(relatedTo, relatedId) {
 		try {
 			const userId = this.currentUser.user?.id;
-			const unreadRecords = this.notifications
+			const targets = this.notifications
 				.filter(
 					(n) =>
 						n.relatedTo === relatedTo &&
 						String(n.relatedId) === String(relatedId)
 				)
-				.map((n) => n.recipientRecords.find((r) => r.userId === userId))
-				.filter((r) => r && r.isRead === '0');
+				.map((n) => ({
+					notificationId: n.id,
+					record: n.recipientRecords.find((r) => r.userId === userId)
+				}))
+				.filter((t) => t.record && t.record.isRead === '0');
 
-			if (unreadRecords.length === 0) return;
+			if (targets.length === 0) return;
 
-			for (const record of unreadRecords) {
+			const savedIds = [];
+			for (const { notificationId, record } of targets) {
 				record.isRead = '1';
-				await record.save();
+				try {
+					await record.save();
+				} catch (error) {
+					// Restore the unread state so a later view can retry
+					record.isRead = '0';
+					throw error;
+				}
+				savedIds.push(notificationId);
 				this.unreadCount =
 					this.store.adapterFor('systemnotificationrecipient')
 						.lastResponseMeta?.unreadCount ?? this.unreadCount;
 			}
-			this._applyRelatedAsRead(relatedTo, relatedId);
+			this._applyRelatedAsRead(relatedTo, relatedId, savedIds);
 
 			this._broadcastChannel?.postMessage({
 				type: 'MARK_RELATED_AS_READ',
 				userId,
 				relatedTo,
 				relatedId,
+				notificationIds: savedIds,
 				unreadCount: this.unreadCount
 			});
 
@@ -493,13 +505,16 @@ export default class NotificationsService extends Service {
 	 * @private
 	 * @param {String} relatedTo
 	 * @param {String} relatedId
+	 * @param {Array<String>} [notificationIds] - Only these notifications are flipped when given
 	 */
-	_applyRelatedAsRead(relatedTo, relatedId) {
+	_applyRelatedAsRead(relatedTo, relatedId, notificationIds) {
+		const only = notificationIds?.map(String);
 		this.notifications
 			.filter(
 				(n) =>
 					n.relatedTo === relatedTo &&
-					String(n.relatedId) === String(relatedId)
+					String(n.relatedId) === String(relatedId) &&
+					(!only || only.includes(String(n.id)))
 			)
 			.forEach((notification) => {
 				const recipientRecord = notification.recipientRecords.find(
@@ -685,7 +700,11 @@ export default class NotificationsService extends Service {
 			this.unreadCount = data.unreadCount ?? Math.max(0, this.unreadCount - 1);
 		} else if (data.type === 'MARK_RELATED_AS_READ') {
 			if (data.userId !== this.currentUser.user?.id) return;
-			this._applyRelatedAsRead(data.relatedTo, data.relatedId);
+			this._applyRelatedAsRead(
+				data.relatedTo,
+				data.relatedId,
+				data.notificationIds
+			);
 			this.unreadCount = data.unreadCount ?? this.unreadCount;
 		}
 	}

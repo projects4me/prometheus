@@ -299,9 +299,10 @@ module('Integration | Service | notifications', function (hooks) {
 
 	test('markRelatedAsRead swallows failures', async function (assert) {
 		let service = this.owner.lookup('service:notifications');
-		relatedFixture(service, [], {}, true);
+		let { mine } = relatedFixture(service, [], {}, true);
 		await service.markRelatedAsRead('issue', '7');
 		assert.strictEqual(service.unreadCount, 2);
+		assert.strictEqual(mine.recipientRecords[0].isRead, '0');
 		assert.false(service.isBellRinging);
 	});
 
@@ -318,6 +319,20 @@ module('Integration | Service | notifications', function (hooks) {
 		assert.strictEqual(mine.recipientRecords[0].isRead, '1', 'mine read');
 		assert.strictEqual(other.recipientRecords[0].isRead, '0', 'other unread');
 		assert.strictEqual(service.unreadCount, 1, 'count');
+	});
+
+	test('MARK_RELATED_AS_READ only flips the notifications named in the message', function (assert) {
+		let service = this.owner.lookup('service:notifications');
+		let { mine } = relatedFixture(service, [], {});
+		service._handleCrossTabMessage({
+			type: 'MARK_RELATED_AS_READ',
+			userId: 'user-1',
+			relatedTo: 'issue',
+			relatedId: '7',
+			notificationIds: ['other-id'],
+			unreadCount: 1
+		});
+		assert.strictEqual(mine.recipientRecords[0].isRead, '0');
 	});
 
 	test('MARK_RELATED_AS_READ for another user is ignored', function (assert) {
