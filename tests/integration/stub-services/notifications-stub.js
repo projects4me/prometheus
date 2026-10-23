@@ -22,6 +22,16 @@ export default class NotificationsStub extends Service {
 		return Promise.resolve(true);
 	}
 
+	markAsRead(notification) {
+		notification.recipientRecords.forEach((record) => {
+			record.isRead = '1';
+		});
+		document
+			.querySelector(`[data-notification-id="${notification.id}"]`)
+			?.classList.remove('unread-notification');
+		return Promise.resolve();
+	}
+
 	markAllAsRead() {
 		this.unreadCount = 0;
 		this.hasUnreadNotifications = false;

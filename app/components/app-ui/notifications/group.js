@@ -2,78 +2,71 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
+import AppComponent from '../../app';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
+import issueLink from '../../../utils/notifications/issue-link';
 
 /**
- * Collapsible group of the notifications of one issue in the notifications sidebar
+ * Heading with the issue key and all the notifications of one issue in the notifications sidebar
  *
  * @class AppUiNotificationsGroupComponent
  * @namespace Prometheus.Components.AppUi.Notifications
- * @extends Glimmer.Component
+ * @extends AppComponent
  */
-export default class AppUiNotificationsGroupComponent extends Component {
-	/**
-	 * Whether the group is expanded, collapsed by default
-	 *
-	 * @property isExpanded
-	 * @type Boolean
-	 * @public
-	 */
-	@tracked isExpanded = false;
+export default class AppUiNotificationsGroupComponent extends AppComponent {
+	@service notifications;
 
 	/**
-	 * The newest notification of the group
+	 * URL of the issue the group belongs to
 	 *
-	 * @property newest
-	 * @type Object
+	 * @property issueUrl
+	 * @type String
 	 * @public
 	 */
-	get newest() {
-		return this.args.group.notifications[0];
+	get issueUrl() {
+		return issueLink({
+			projectShortcode: this.args.group.shortcode,
+			issueNumber: this.args.group.issueNumber
+		});
 	}
 
 	/**
-	 * Number of unread notifications in the group
+	 * Marks every unread notification of the issue as read and then navigates to the issue
 	 *
-	 * @property unreadCount
-	 * @type Number
+	 * @method goToIssue
+	 * @param {Event} event The click event
 	 * @public
-	 */
-	get unreadCount() {
-		return this.args.group.notifications.filter(
-			(notification) =>
-				notification.recipientRecords?.firstObject?.isRead === '0'
-		).length;
-	}
-
-	/**
-	 * Toggles the expanded state, never marks anything read
-	 *
-	 * @method toggle
-	 * @public
+	 * @async
 	 */
 	@action
-	toggle() {
-		this.isExpanded = !this.isExpanded;
-	}
-
-	/**
-	 * Lets keyboard users toggle the group with Enter or Space
-	 *
-	 * @method onKeyDown
-	 * @param {KeyboardEvent} event
-	 * @public
-	 */
-	@action
-	onKeyDown(event) {
-		if (event.target !== event.currentTarget) {
+	async goToIssue(event) {
+		if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button > 0) {
+			// Let the browser open the link in a new tab or window; the group is read in the background
+			this._markGroupAsRead();
 			return;
 		}
-		if (event.key === 'Enter' || event.key === ' ') {
-			event.preventDefault();
-			this.toggle();
+		event.preventDefault();
+		await this._markGroupAsRead();
+		if (this.config.app.notifications.enableNav) {
+			this.router.transitionTo(this.issueUrl);
+		}
+	}
+
+	/**
+	 * Marks every notification of the group as read, carrying on when one of them fails
+	 *
+	 * @method _markGroupAsRead
+	 * @private
+	 * @async
+	 */
+	async _markGroupAsRead() {
+		for (const notification of this.args.group.notifications) {
+			try {
+				await this.notifications.markAsRead(notification);
+			} catch (error) {
+				console.error('Error marking notification as read:', error);
+			}
 		}
 	}
 }

@@ -2032,9 +2032,7 @@
         "markAllAsReadError": "An error occurred while marking all notifications as read",
         "loading": "Loading more notifications...",
         "noMore": "No more notifications to display",
-        "scrollToLoad": "Scroll down to load more",
-        "updateCount": "{count, plural, one {# update} other {# updates}}",
-        "unreadCount": "{count} unread"
+        "scrollToLoad": "Scroll down to load more"
       },
       "components": {
         "intervalselector": {

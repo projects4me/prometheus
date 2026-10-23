@@ -5,6 +5,7 @@
 import AppComponent from '../../app';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+import issueLink from '../../../utils/notifications/issue-link';
 
 /**
  * Component for rendering individual notification items in the notifications sidebar
@@ -83,12 +84,7 @@ export default class AppUiNotificationsNotificationComponent extends AppComponen
 	 * @public
 	 */
 	generateIssueLink(context) {
-		if (!context.projectShortcode || !context.issueNumber) {
-			return null;
-		}
-		return `/app/project/${context.projectShortcode.toLowerCase()}/issue/${
-			context.issueNumber
-		}`;
+		return issueLink(context);
 	}
 
 	/**

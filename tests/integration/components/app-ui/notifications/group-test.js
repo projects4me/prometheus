@@ -35,43 +35,22 @@ module(
 			});
 		});
 
-		test('collapsed by default with key, counts and unread style', async function (assert) {
+		test('shows the issue key heading and all notifications without interaction', async function (assert) {
 			await render(
 				hbs`<AppUi::Notifications::Group @group={{this.group}} />`
 			);
+			assert.dom('h5.notification-group-heading').exists();
 			assert.dom('[data-notification-group-key]').hasText('TEST-5');
-			assert.dom('[data-notification-group-count]').includesText('2');
-			assert.dom('[data-notification-group-unread]').includesText('1');
-			assert
-				.dom('[data-notification-group-header]')
-				.hasClass('unread-notification');
-			assert.dom('[data-notification]').doesNotExist();
-		});
-
-		test('toggles expansion and lists the notifications', async function (assert) {
-			await render(
-				hbs`<AppUi::Notifications::Group @group={{this.group}} />`
-			);
-			await click('[data-notification-group-header]');
+			assert.dom('.notification-group-heading .fa-ticket').exists();
 			assert.dom('[data-notification]').exists({ count: 2 });
-			await click('[data-notification-group-header]');
-			assert.dom('[data-notification]').doesNotExist();
-		});
-
-		test('all read group has no unread style', async function (assert) {
-			this.group.notifications.forEach(
-				(x) => (x.recipientRecords[0].isRead = '1')
-			);
-			await render(
-				hbs`<AppUi::Notifications::Group @group={{this.group}} />`
-			);
-			assert
-				.dom('[data-notification-group-header]')
-				.doesNotHaveClass('unread-notification');
+			assert.dom('[data-notification-group-count]').doesNotExist();
 			assert.dom('[data-notification-group-unread]').doesNotExist();
+			assert
+				.dom('[data-notification-group-items]')
+				.hasClass('notifications-list');
 		});
 
-		test('single notification renders as a plain notification', async function (assert) {
+		test('single notification group still has a heading', async function (assert) {
 			this.set('group', {
 				...this.group,
 				notifications: [item('1', '0', new Date())]
@@ -79,8 +58,20 @@ module(
 			await render(
 				hbs`<AppUi::Notifications::Group @group={{this.group}} />`
 			);
-			assert.dom('[data-notification-group-header]').doesNotExist();
+			assert.dom('[data-notification-group-heading]').exists();
 			assert.dom('[data-notification]').exists({ count: 1 });
+		});
+
+		test('heading links to the issue and marks all its unread notifications read', async function (assert) {
+			await render(
+				hbs`<AppUi::Notifications::Group @group={{this.group}} />`
+			);
+			assert
+				.dom('[data-notification-group-link]')
+				.hasAttribute('href', '/app/project/test/issue/5');
+			assert.dom('.unread-notification').exists({ count: 1 });
+			await click('[data-notification-group-link]');
+			assert.dom('.unread-notification').doesNotExist();
 		});
 	}
 );
