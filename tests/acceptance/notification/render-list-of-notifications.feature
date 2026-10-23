@@ -10,6 +10,15 @@ Feature: Notificatoin | render list of notifications
     And User clicks on notifications icon
     Then There are 5 notifications present inside sidebar
 
+  Scenario: notifications of one issue are grouped
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_4 is logged in
+    And User has 3 notifications for one issue
+    When User navigates to app
+    And User clicks on notifications icon
+    Then There is 1 notification group with 3 notifications collapsed
+
   Scenario: loading more notifications with infinite scroll
     Given There is no pre-existing data
     And default scenario is loaded

@@ -159,6 +159,35 @@
           background-color: transparent;
       }
 
+      .notification-group-header {
+          display: flex;
+          align-items: flex-start;
+          padding: 1rem 0.5rem;
+          cursor: pointer;
+          color: #444444;
+          position: relative;
+
+          .notification-group-caret {
+              margin: 0.3rem 0.5rem 0 0;
+          }
+
+          .notification-content {
+              margin-left: 0;
+          }
+
+          .notification-timestamp {
+              margin-top: 0.2rem;
+              font-size: 1rem;
+              font-style: italic;
+          }
+      }
+
+      .notification-group-items {
+          list-style: none;
+          margin: 0;
+          padding: 0 0 0 1.5rem;
+      }
+
       .empty-notifications {
           display: flex;
           flex-direction: column;

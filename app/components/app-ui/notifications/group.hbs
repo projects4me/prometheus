@@ -1,0 +1,43 @@
+{{#if (eq @group.notifications.length 1)}}
+	<AppUi::Notifications::Notification @notification={{this.newest}} />
+{{else}}
+	<li data-notification-group={{@group.key}} class="notification-group">
+		<div
+			class="notification notification-group-header {{if this.unreadCount "unread-notification"}}"
+			data-notification-group-header
+			role="button"
+			tabindex="0"
+			aria-expanded={{if this.isExpanded "true" "false"}}
+			{{on "click" this.toggle}}
+			{{on "keydown" this.onKeyDown}}
+		>
+			<i class="fa {{if this.isExpanded "fa-caret-down" "fa-caret-right"}} notification-group-caret" data-notification-group-caret></i>
+			<span class="notification-content">
+				<strong data-notification-group-key>{{@group.shortcode}}-{{@group.issueNumber}}</strong>
+				<span data-notification-group-text>
+					<AppUi::TagParser
+						@content={{this.newest.description}}
+						@context={{this.newest.context}}
+						@createdUserName={{this.newest.createdUserName}}
+					/>
+				</span>
+				<div class="notification-timestamp">
+					<span data-notification-group-count>{{t "views.app.notifications.updateCount" count=@group.notifications.length}}</span>
+					{{#if this.unreadCount}}
+						&middot;
+						<span data-notification-group-unread>{{t "views.app.notifications.unreadCount" count=this.unreadCount}}</span>
+					{{/if}}
+					&middot;
+					<span data-notification-group-timestamp>{{format-date-time date=this.newest.dateCreated humanize=true}}</span>
+				</div>
+			</span>
+		</div>
+		{{#if this.isExpanded}}
+			<ul class="notification-group-items" data-notification-group-items>
+				{{#each @group.notifications as |notification|}}
+					<AppUi::Notifications::Notification @notification={{notification}} />
+				{{/each}}
+			</ul>
+		{{/if}}
+	</li>
+{{/if}}
