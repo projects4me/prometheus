@@ -62,15 +62,16 @@ module(
 			assert.dom('[data-notification]').exists({ count: 1 });
 		});
 
-		test('heading links to the issue and does not mark anything read', async function (assert) {
+		test('heading links to the issue and marks all its unread notifications read', async function (assert) {
 			await render(
 				hbs`<AppUi::Notifications::Group @group={{this.group}} />`
 			);
 			assert
 				.dom('[data-notification-group-link]')
 				.hasAttribute('href', '/app/project/test/issue/5');
-			await click('[data-notification-group-link]');
 			assert.dom('.unread-notification').exists({ count: 1 });
+			await click('[data-notification-group-link]');
+			assert.dom('.unread-notification').doesNotExist();
 		});
 	}
 );

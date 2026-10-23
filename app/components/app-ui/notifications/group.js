@@ -4,6 +4,7 @@
 
 import AppComponent from '../../app';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import issueLink from '../../../utils/notifications/issue-link';
 
 /**
@@ -14,6 +15,8 @@ import issueLink from '../../../utils/notifications/issue-link';
  * @extends AppComponent
  */
 export default class AppUiNotificationsGroupComponent extends AppComponent {
+	@service notifications;
+
 	/**
 	 * URL of the issue the group belongs to
 	 *
@@ -29,15 +32,19 @@ export default class AppUiNotificationsGroupComponent extends AppComponent {
 	}
 
 	/**
-	 * Navigates to the issue, never marks anything read
+	 * Marks every unread notification of the issue as read and then navigates to the issue
 	 *
 	 * @method goToIssue
 	 * @param {Event} event The click event
 	 * @public
+	 * @async
 	 */
 	@action
-	goToIssue(event) {
+	async goToIssue(event) {
 		event.preventDefault();
+		for (const notification of this.args.group.notifications) {
+			await this.notifications.markAsRead(notification);
+		}
 		if (this.config.app.notifications.enableNav) {
 			this.router.transitionTo(this.issueUrl);
 		}
