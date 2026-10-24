@@ -71,6 +71,15 @@ export default class IdeaPlanBoxComponent extends Component {
     @tracked showApproveModal = false;
 
     /**
+     * Whether the approval is being saved
+     *
+     * @property isApproving
+     * @type Boolean
+     * @private
+     */
+    @tracked isApproving = false;
+
+    /**
      * The plans, the oldest version first
      *
      * @property versions
@@ -287,18 +296,35 @@ export default class IdeaPlanBoxComponent extends Component {
     }
 
     /**
-     * Approves the selected plan after the confirmation
+     * Approves the selected plan after the confirmation. The modal shows its busy state until the
+     * approval is saved and closes then; a rejection keeps it open.
      *
      * @method confirmApprove
-     * @returns {Boolean} true, for bootstrap-modal to hide the dialog
+     * @returns {Promise<Boolean>} true once the approval is saved, false when it failed
      * @public
      */
     @action
-    confirmApprove() {
-        let plan = this.selected;
-        Promise.resolve(this.args.onApprove(plan)).catch(() => {
+    async confirmApprove() {
+        this.isApproving = true;
+        try {
+            await this.args.onApprove(this.selected);
+            return true;
+        } catch (error) {
             // Already reported and rolled back by the controller.
-        });
-        return true;
+            return false;
+        } finally {
+            this.isApproving = false;
+        }
+    }
+
+    /**
+     * Whether issues are being created from the selected plan
+     *
+     * @property isCreating
+     * @type Boolean
+     * @public
+     */
+    get isCreating() {
+        return ['approved', 'creating'].includes(this.selected?.status);
     }
 }

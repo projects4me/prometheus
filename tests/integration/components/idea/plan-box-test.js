@@ -84,6 +84,23 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         assert.dom('[data-idea-plan-error]').hasText('Boom');
     });
 
+    test('approve disables the button while saving, stays open and enabled on failure, spins while creating', async function (assert) {
+        let reject;
+        this.set('onApprove', () => new Promise((_, r) => { reject = r; }));
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @onApprove={{this.onApprove}} />`);
+        await click('[data-idea-plan-approve]');
+        await click('.modal .btn-primary');
+        assert.dom('[data-idea-plan-approve]').isDisabled('Approve is disabled while saving');
+        reject(new Error('no'));
+        await settled();
+        assert.dom('.modal').exists('the modal stays open when the approval fails');
+        assert.dom('[data-idea-plan-approve]').isNotDisabled('Approve is enabled again after a failure');
+
+        assert.dom('[data-idea-plan-creating]').doesNotExist();
+        this.set('plans', [{ id: '2', version: 2, status: 'approved', body: body('S', 'X') }]);
+        assert.dom('[data-idea-plan-creating]').exists('the status label spins while issues are created');
+    });
+
     test('an issue created from the plan links to it, the others show their key', async function (assert) {
         this.set('plans', [{ id: '2', version: 2, status: 'created', body: JSON.stringify({ summary: 'S', issues: [
             { key: 'a', project: 'A Prometheus', projectCode: 'aprom', subject: 'One', priority: 'high', type: 'Task', complexity: 'simple', milestone: 'Claude-v1' },
