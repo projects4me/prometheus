@@ -1,0 +1,34 @@
+<div
+  class="dropdown assignee-select {{if @compact "assignee-select-compact"}}"
+  data-issue-assignee-dropdown
+  {{on "click" this.stopPropagation}}
+  {{on "mousedown" this.stopPropagation}}
+  ...attributes
+>
+  {{#if @compact}}
+    <div data-toggle="dropdown" role="button" tabindex="0" data-issue-assignee-toggle>
+      <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{@issue.assignedTo.id}}" alt="{{@issue.assignedTo.name}}" title="{{@issue.assignedTo.name}}">
+    </div>
+  {{else}}
+    <div class="flex-row flex-ai-c flex-jc-c" data-toggle="dropdown" role="button" tabindex="0">
+      <span class="users-list-name" data-issue-assignee>
+        {{@issue.assignedTo.name}}
+      </span>
+      <i class="fa fa-caret-down"></i>
+    </div>
+  {{/if}}
+  <ul class="dropdown-menu {{if @compact "dropdown-menu-right"}}" role="menu">
+    {{#each this.availableAssignees as |member|}}
+      <li
+        role="menuitem"
+        tabindex="0"
+        data-issue-assignee-option
+        {{on "click" (fn this.updateAssignee member)}}
+        {{on "keydown" (fn this.handleAssigneeOptionKeydown member)}}
+      >
+        <img class="assignee-select-option-avatar" src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
+        {{member.name}}
+      </li>
+    {{/each}}
+  </ul>
+</div>

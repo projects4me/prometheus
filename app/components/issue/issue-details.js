@@ -1212,90 +1212,13 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     }
 
     /**
-     * Property to get available project members who can be assigned to the issue.
-     * Excludes the current assignee.
-     *
-     * @property availableAssignees
-     * @type {Array}
-     * @public
-     */
-    get availableAssignees() {
-        if (!this.projectController.model.members) {
-            return [];
-        }
-
-        return this.projectController.model.members.filter(member => 
-            member.get('id') !== this.issue.assignedTo?.get('id') &&
-            member.get('accountStatus') === 'active'
-        );
-    }
-
-    /**
-     * Handles keyboard activation for assignee dropdown options.
-     *
-     * @method handleAssigneeOptionKeydown
-     * @param {Prometheus.Models.Issue} issue The issue to update
-     * @param {Prometheus.Models.User} newAssignee The new assignee to set
-     * @param {KeyboardEvent} event The keyboard event
-     * @public
-     */
-    @action handleAssigneeOptionKeydown(issue, newAssignee, event) {
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            this.updateAssignee(issue, newAssignee);
-        }
-    }
-
-    /**
-     * Updates the assignee of an issue
-     * 
-     * @method updateAssignee
-     * @param {Prometheus.Models.Issue} issue The issue to update
-     * @param {Prometheus.Models.User} newAssignee The new assignee to set
-     * @public
-     */
-    @action updateAssignee(issue, newAssignee) {
-        Logger.debug('AppProjectIssuePageController::updateAssignee');
-        let _self = this;
-        let messenger = new Messenger().post({
-            message: htmlSafe(_self.intl.t("views.app.issue.detail.assigneeUpdating", { name: newAssignee.name })),
-            type: 'info',
-            showCloseButton: false,
-            hideAfter: false
-        });
-        
-        issue.assignedTo = newAssignee;
-        issue.assignee = newAssignee.id;
-        
-        issue.save().then(() => {
-            messenger.update({
-                message: htmlSafe(_self.intl.t("views.app.issue.detail.assigneeUpdated", { name: newAssignee.name })),
-                type: 'success',
-                showCloseButton: true,
-                hideAfter: 3
-            });
-            this.postUpdateAssignee(issue);
-        }).catch(() => {
-            messenger.update({
-                message: htmlSafe(_self.intl.t("views.app.issue.detail.assigneeUpdateFailed", { name: newAssignee.name })),
-                type: 'error',
-                showCloseButton: true,
-                hideAfter: 3
-            });
-            issue.rollbackAttributes();
-            this.postUpdateAssignee(issue);
-        });
-    }    
-
-
-    /**
      * This function is called after the assignee is updated.
      *
      * @method postUpdateAssignee
      * @param {Object} issue Issue Model
      * @public
      */
-    postUpdateAssignee(issue) {
+    @action postUpdateAssignee(issue) {
         if(this.args.postUpdateAssignee) {
             this.args.postUpdateAssignee(issue);
         }

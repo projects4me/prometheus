@@ -579,6 +579,8 @@ export default class InitializeSortable extends Modifier {
             forceFallback: _self.forceFallback,
             disableSortable: _self.disableSortable,
             animation: _self.animationSpeed,
+            filter: '[data-issue-assignee-dropdown]',
+            preventOnFilter: false,
             dragClass: _self.dragClass,
             chosenClass: _self.chosenClass,
             onStart: (evt) => {
