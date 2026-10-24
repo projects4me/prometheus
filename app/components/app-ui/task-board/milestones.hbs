@@ -123,7 +123,7 @@
                           </div>
                         {{/if}}
                         <div class="issue-card-assignee">
-                          <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}">
+                          <Issue::AssigneeSelect @issue={{issue}} @members={{@members}} @compact={{true}} />
                         </div>
                       </div>
                   </div>

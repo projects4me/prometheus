@@ -282,28 +282,7 @@
             <ul class="users-list clearfix">
               <li>
                 <img src="{{this.apiHost}}/userimage/get/{{this.issue.assignedTo.id}}" alt="{{this.issue.assignedTo.name}}">
-                <div class="dropdown" data-issue-assignee-dropdown>
-                  <div class="flex-row flex-ai-c flex-jc-c" data-toggle="dropdown">
-                    <span class="users-list-name" data-issue-assignee>
-                      {{this.issue.assignedTo.name}}
-                    </span>
-                      <i class="fa fa-caret-down"></i>
-                  </div>
-                  <ul class="dropdown-menu" role="menu">
-                    {{#each this.availableAssignees as |member|}}
-                      <li
-                        role="menuitem"
-                        tabindex="0"
-                        data-issue-assignee-option
-                        {{on "click" (fn this.updateAssignee this.issue member)}}
-                        {{on "keydown" (fn this.handleAssigneeOptionKeydown this.issue member)}}
-                      >
-                        <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}" style="width: 20px; height: 20px; border-radius: 50%; margin-right: 8px;">
-                        {{member.name}}
-                      </li>
-                    {{/each}}
-                  </ul>
-                </div>
+                <Issue::AssigneeSelect @issue={{this.issue}} @members={{this.projectController.model.members}} @onUpdated={{this.postUpdateAssignee}} />
                 <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
               </li>
               <li>

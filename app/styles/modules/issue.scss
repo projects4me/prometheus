@@ -606,3 +606,47 @@
     border-color: darken($primaryColor, 10%);
   }
 }
+
+// Shared assignee select (issue details and task board cards)
+.assignee-select {
+  .assignee-select-option-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+  .dropdown-menu {
+    padding: 0;
+    border-radius: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      color: $darkColor;
+      cursor: pointer;
+
+      &:hover,
+      &:focus {
+        background-color: $primaryColor;
+        color: white;
+        outline: none;
+      }
+    }
+  }
+
+  &.assignee-select-compact {
+    display: inline-block;
+
+    [data-toggle="dropdown"] {
+      cursor: pointer;
+    }
+
+    img.img-circle {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+    }
+  }
+}
