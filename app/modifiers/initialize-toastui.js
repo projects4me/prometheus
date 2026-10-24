@@ -145,6 +145,30 @@ export default class ToastEditor extends Modifier {
     }
 
     /**
+     * This function returns the format of the content emitted to the callbacks.
+     * 'markdown' emits markdown, anything else (the default) emits HTML
+     *
+     * @method get
+     * @returns String
+     * @public
+     */
+    get output() {
+        return this.args.named.output;
+    }
+
+    /**
+     * Returns the content of the editor in the requested output format
+     *
+     * @method getContent
+     * @param {Object} editor The toast ui editor
+     * @returns String
+     * @private
+     */
+    getContent(editor) {
+        return this.output === 'markdown' ? editor.getMarkdown() : editor.getHtml();
+    }
+
+    /**
      * This function returns onKeyboardSubmit callback which will be triggered
      * when user presses Enter key (without Shift) to submit content.
      *
@@ -154,6 +178,17 @@ export default class ToastEditor extends Modifier {
      */
     get onKeyboardSubmit() {
         return this.args.named.onKeyboardSubmit;
+    }
+
+    /**
+     * The pubSub event which clears this editor, so an editor can be cleared without clearing the others
+     *
+     * @method get
+     * @returns String
+     * @public
+     */
+    get clearEventName() {
+        return this.args.named.clearEvent ?? 'clearContents';
     }
 
     /**
@@ -186,7 +221,7 @@ export default class ToastEditor extends Modifier {
             placeholder: _self.placeholder,
             events: {
                 change: () => {
-                    _self.onContentChange(editor.getHtml(), _self.mentionedIssues);
+                    _self.onContentChange(_self.getContent(editor), _self.mentionedIssues);
                 },
                 load: () => {
                     if (this.hide) {
@@ -210,10 +245,12 @@ export default class ToastEditor extends Modifier {
             }
           });
 
-        _self.pubSub.on('clearContents', () => {
+        this.clearEvent = _self.clearEventName;
+        this.clearListener = () => {
             editor.reset();
             this.mentionedIssues = [];
-        })
+        };
+        _self.pubSub.on(this.clearEvent, this.clearListener);
         //Getting element in order to attach tribute to it
         this.targetElement = this.element.querySelector('div.tui-editor-contents[contenteditable="true"]');
         this.tribute.attach(this.targetElement);
@@ -236,7 +273,7 @@ export default class ToastEditor extends Modifier {
                         tributeMenu.style.display !== 'none' && 
                         tributeMenu.offsetParent !== null;
 
-                    const content = editor.getHtml();
+                    const content = _self.getContent(editor);
                     if (content && _self.onKeyboardSubmit) {
                         _self.onKeyboardSubmit(content, !isTributeActive && !tributeVisible);
                     }
@@ -368,7 +405,7 @@ export default class ToastEditor extends Modifier {
         return new Tribute({
             collection: [{
                 trigger: '@',
-                values: _self.usersList,
+                values: _self.usersList ?? [],
                 // template for showing list of items in menu
                 menuItemTemplate: function (item) {
                     return (
@@ -419,7 +456,7 @@ export default class ToastEditor extends Modifier {
                 lookup: 'number',
             }, {
                 trigger: ':',
-                values: this.translatedEmojis,
+                values: this.translatedEmojis ?? [],
                 menuItemTemplate: function (item) {
                     return (
                         '<a style="cursor:pointer"><span>' + emojiList[item.original.id] + '&#160;' + '</span>' + item.original.name + "</a>"
@@ -437,6 +474,10 @@ export default class ToastEditor extends Modifier {
         });
         
         function remoteSearch(text, cb) {
+            if (!_self.issueSearch) {
+                cb([]);
+                return;
+            }
             var result = _self.issueSearch(text);
             let map = {
                 id: 'id',
@@ -472,6 +513,9 @@ export default class ToastEditor extends Modifier {
 
     //Removing tribute from element and keyboard event listener
     willDestroy() {
+        if (this.clearListener) {
+            this.pubSub.off(this.clearEvent, this.clearListener);
+        }
         this.tribute.detach(this.targetElement);
         
         if (this.keyboardHandler && this.targetElement) {
