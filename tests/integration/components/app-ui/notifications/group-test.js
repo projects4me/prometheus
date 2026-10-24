@@ -73,5 +73,27 @@ module(
 			await click('[data-notification-group-link]');
 			assert.dom('.unread-notification').doesNotExist();
 		});
+
+		test('heading button marks the group read without leaving and hides when all are read', async function (assert) {
+			await render(
+				hbs`<AppUi::Notifications::Group @group={{this.group}} />`
+			);
+			assert
+				.dom('[data-notification-group-mark-read]')
+				.hasAttribute('title', 'Mark as read');
+			await click('[data-notification-group-mark-read]');
+			assert.dom('.unread-notification').doesNotExist();
+		});
+
+		test('no heading button when every notification is read', async function (assert) {
+			this.set('group', {
+				...this.group,
+				notifications: [item('1', '1', new Date())]
+			});
+			await render(
+				hbs`<AppUi::Notifications::Group @group={{this.group}} />`
+			);
+			assert.dom('[data-notification-group-mark-read]').doesNotExist();
+		});
 	}
 );

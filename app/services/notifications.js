@@ -294,7 +294,17 @@ export default class NotificationsService extends Service {
 						`[data-notification-id="${notification.id}"]`
 					)
 					?.classList.remove('unread-notification');
-				await recipientRecord.save();
+				try {
+					await recipientRecord.save();
+				} catch (error) {
+					recipientRecord.isRead = '0';
+					document
+						.querySelector(
+							`[data-notification-id="${notification.id}"]`
+						)
+						?.classList.add('unread-notification');
+					throw error;
+				}
 				let response = this.store.adapterFor(
 					'systemnotificationrecipient'
 				).lastResponseMeta;

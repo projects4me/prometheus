@@ -4,6 +4,11 @@
 			<i class="fa fa-ticket"></i>
 			<span data-notification-group-key>{{@group.shortcode}}-{{@group.issueNumber}}</span>
 		</a>
+		{{#if this.hasUnread}}
+			<button type="button" class="notification-group-mark-read" data-notification-group-mark-read title={{t "views.app.notifications.markGroupAsRead"}} disabled={{this.isSaving}} {{on "click" this.markGroupAsRead}}>
+				<i class="fa fa-check-circle"></i>
+			</button>
+		{{/if}}
 	</h5>
 	<ul class="notifications-list" data-notification-group-items>
 		{{#each @group.notifications as |notification|}}
