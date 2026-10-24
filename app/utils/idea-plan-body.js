@@ -7,7 +7,7 @@
  *
  * @method decodePlanBody
  * @param {String|Object} body
- * @returns {Object} the body object, with the summary text when the body is not JSON
+ * @returns {Object} the body object, with the summary text when the body is not JSON and without invalid issue entries
  * @public
  */
 export default function decodePlanBody(body) {
@@ -17,6 +17,12 @@ export default function decodePlanBody(body) {
         } catch (error) {
             body = { summary: body };
         }
+    }
+    if (body && typeof body === 'object' && Array.isArray(body.issues)) {
+        return {
+            ...body,
+            issues: body.issues.filter(issue => issue && typeof issue === 'object' && !Array.isArray(issue))
+        };
     }
     return body && typeof body === 'object' ? body : {};
 }
