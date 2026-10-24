@@ -134,3 +134,9 @@
     opacity: 0.6;
   }
 }
+
+.idea-create .form-field {
+  > #editor {
+    height: 18rem !important;
+  }
+}

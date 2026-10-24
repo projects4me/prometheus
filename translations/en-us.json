@@ -744,13 +744,7 @@
           "title": "Start an Idea",
           "titlePlaceholder": "Give your idea a short title",
           "descriptionPlaceholder": "What do you have in mind?",
-          "start": "Start",
-          "how": {
-            "title": "How it works",
-            "step1": "Describe your idea in a few words.",
-            "step2": "Discuss it and refine it in the conversation.",
-            "step3": "Turn the result into issues when it is ready."
-          }
+          "start": "Start"
         },
         "brainstorm": {
           "title": "Brainstorm an idea",
