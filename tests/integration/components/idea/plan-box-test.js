@@ -88,11 +88,11 @@ module('Integration | Component | idea/plan-box', function (hooks) {
             { key: 'b', project: 'A Gaia', projectCode: 'agaia', subject: 'Two', priority: 'low', type: 'Task', complexity: 'complex', milestone: 'Ideas', newMilestone: true }
         ] }) }]);
         this.set('planIssues', [
-            { ideaplanId: '2', key: 'a', issue: { issueNumber: 4102, projectShortcode: 'APROM' } },
-            { ideaplanId: '1', key: 'b', issue: { issueNumber: 9, projectShortcode: 'agaia' } },
-            { ideaplanId: '2', key: 'c', issue: { issueNumber: 7, projectShortcode: '' } }
+            { ideaplanId: '2', key: 'a', issue: { issueNumber: 4102, projectShortcode: 'APROM', projectId: '1' } },
+            { ideaplanId: '1', key: 'b', issue: { issueNumber: 9, projectShortcode: 'agaia', projectId: '2' } },
+            { ideaplanId: '2', key: 'c', issue: { issueNumber: 7, projectShortcode: '', projectId: '1' } }
         ]);
-        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @planIssues={{this.planIssues}} @onApprove={{this.onApprove}} />`);
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{array "1"}} @onApprove={{this.onApprove}} />`);
 
         assert.dom('[data-idea-plan-issue="a"] [data-idea-plan-issue-link]').hasText('aprom-4102');
         assert.dom('[data-idea-plan-issue="a"] [data-idea-plan-issue-project]').hasText('aprom');
@@ -100,6 +100,23 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         assert.dom('[data-idea-plan-issue="b"] [data-idea-plan-issue-meta]').includesText('b');
         assert.dom('[data-idea-plan-issue="b"] [data-idea-plan-issue-milestone]').hasText('Ideas (new)');
         assert.dom('[data-idea-plan-issue="b"] [data-idea-plan-issue-complexity] .fa-cogs').exists();
+    });
+
+    test('a created issue of an unreadable project or without an issue is not a link', async function (assert) {
+        this.set('plans', [{ id: '2', version: 2, status: 'created', body: JSON.stringify({ summary: 'S', issues: [
+            { key: 'a', subject: 'One', priority: 'high', type: 'Task', complexity: 'simple', milestone: 'M' },
+            { key: 'b', subject: 'Two', priority: 'low', type: 'Task', complexity: 'simple', milestone: 'M' }
+        ] }) }]);
+        this.set('planIssues', [
+            { ideaplanId: '2', key: 'a', issue: { issueNumber: 4, projectShortcode: 'agaia', projectId: '2' } },
+            { ideaplanId: '2', key: 'b' }
+        ]);
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{array "1"}} @onApprove={{this.onApprove}} />`);
+
+        assert.dom('[data-idea-plan-issue="a"] a').doesNotExist();
+        assert.dom('[data-idea-plan-issue="a"] [data-idea-plan-issue-unreadable]').hasText('agaia-4');
+        assert.dom('[data-idea-plan-issue="b"] a').doesNotExist();
+        assert.dom('[data-idea-plan-issue="b"] [data-idea-plan-issue-meta]').includesText('b');
     });
 
     test('the empty state shows when there is no plan', async function (assert) {

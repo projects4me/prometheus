@@ -8,10 +8,14 @@
       <ul class="list-unstyled">
         {{#each group.links as |link|}}
           <li data-idea-created-issue={{link.id}}>
-            <LinkTo @route="app.project.issue.page" @models={{array (lowercase link.issue.projectShortcode) link.issue.issueNumber}}>
-              {{link.issue.projectShortcode}}-{{link.issue.issueNumber}}
-            </LinkTo>
-            {{link.issue.subject}}
+            {{#if link.readable}}
+              <LinkTo @route="app.project.issue.page" @models={{array (lowercase link.projectShortcode) link.issueNumber}}>
+                {{link.label}}
+              </LinkTo>
+              {{link.subject}}
+            {{else}}
+              <span class="text-muted" data-idea-created-plain>{{link.label}} {{link.subject}}</span>
+            {{/if}}
           </li>
         {{/each}}
       </ul>

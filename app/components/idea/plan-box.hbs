@@ -38,10 +38,12 @@
                   <span><i class="fa fa-picture-o"></i> {{issue.screens}}</span>
                 {{/if}}
                 {{#let (get this.createdIssues issue.key) as |created|}}
-                  {{#if created}}
+                  {{#if created.readable}}
                     <LinkTo @route="app.project.issue.page" @models={{array created.projectShortcode created.issueNumber}} data-idea-plan-issue-link>
                       <i class="fa fa-external-link"></i> {{created.projectShortcode}}-{{created.issueNumber}}
                     </LinkTo>
+                  {{else if created}}
+                    <span class="text-muted" data-idea-plan-issue-unreadable>{{created.projectShortcode}}-{{created.issueNumber}}</span>
                   {{else}}
                     <span class="text-muted">{{issue.key}}</span>
                   {{/if}}

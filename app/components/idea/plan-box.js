@@ -4,6 +4,7 @@
 
 import Component from '@glimmer/component';
 import { action, get } from '@ember/object';
+import decodePlanBody, { isProjectReadable } from 'prometheus/utils/idea-plan-body';
 import { tracked } from '@glimmer/tracking';
 
 const STATUS_LABELS = {
@@ -102,15 +103,7 @@ export default class IdeaPlanBoxComponent extends Component {
      * @public
      */
     get body() {
-        let body = this.selected?.body;
-        if (typeof body === 'string') {
-            try {
-                body = JSON.parse(body);
-            } catch (error) {
-                body = { summary: body };
-            }
-        }
-        body = body && typeof body === 'object' ? body : {};
+        let body = decodePlanBody(this.selected?.body);
         let issues = Array.isArray(body.issues) ? body.issues : [];
         return {
             summary: body.summary ?? '',
@@ -148,11 +141,23 @@ export default class IdeaPlanBoxComponent extends Component {
                 if (issueNumber && projectShortcode) {
                     created[link.key] = {
                         projectShortcode,
-                        issueNumber
+                        issueNumber,
+                        readable: isProjectReadable(get(link, 'issue.projectId'), this.readableProjectIds)
                     };
                 }
             });
         return created;
+    }
+
+    /**
+     * The ids of the projects the user can read, passed by the idea page
+     *
+     * @property readableProjectIds
+     * @type Array
+     * @public
+     */
+    get readableProjectIds() {
+        return this.args.readableProjectIds ?? [];
     }
 
     get statusClass() {

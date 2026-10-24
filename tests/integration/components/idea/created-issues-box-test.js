@@ -11,12 +11,13 @@ module('Integration | Component | idea/created-issues-box', function (hooks) {
     setupRenderingTest(hooks);
 
     test('issues are grouped by plan version and show their short code and subject', async function (assert) {
+        this.set('readable', ['1']);
         this.set('plans', [{ id: '1', version: 1 }, { id: '2', version: 2 }]);
         this.set('planIssues', [
-            { id: '10', ideaplanId: '2', issue: { projectShortcode: 'APROM', issueNumber: '5', subject: 'Second' } },
-            { id: '11', ideaplanId: '1', issue: { projectShortcode: 'APROM', issueNumber: '4', subject: 'First' } }
+            { id: '10', ideaplanId: '2', issue: { projectId: '1', projectShortcode: 'APROM', issueNumber: '5', subject: 'Second' } },
+            { id: '11', ideaplanId: '1', issue: { projectId: '1', projectShortcode: 'APROM', issueNumber: '4', subject: 'First' } }
         ]);
-        await render(hbs`<Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} />`);
+        await render(hbs`<Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readable}} />`);
 
         assert.dom('[data-idea-created-group]').exists({ count: 2 });
         assert.dom('[data-idea-created-group="1"] + ul').includesText('APROM-4');
@@ -30,5 +31,22 @@ module('Integration | Component | idea/created-issues-box', function (hooks) {
         await render(hbs`<Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} />`);
 
         assert.dom('[data-idea-created-empty]').exists();
+    });
+
+    test('only issues of readable projects are links, the others and links without an issue are plain text', async function (assert) {
+        this.set('readable', ['1']);
+        this.set('plans', [{ id: '1', version: 1, body: JSON.stringify({ issues: [{ key: 'c', subject: 'Planned' }] }) }]);
+        this.set('planIssues', [
+            { id: '10', ideaplanId: '1', key: 'a', issue: { projectId: '1', projectShortcode: 'APROM', issueNumber: '4', subject: 'Mine' } },
+            { id: '11', ideaplanId: '1', key: 'b', issue: { projectId: '2', projectShortcode: 'AGAIA', issueNumber: '9', subject: 'Theirs' } },
+            { id: '12', ideaplanId: '1', key: 'c' }
+        ]);
+        await render(hbs`<Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readable}} />`);
+
+        assert.dom('[data-idea-created-issue="10"] a').exists();
+        assert.dom('[data-idea-created-issue="11"] a').doesNotExist();
+        assert.dom('[data-idea-created-issue="11"] .text-muted').hasText('AGAIA-9 Theirs');
+        assert.dom('[data-idea-created-issue="12"] a').doesNotExist();
+        assert.dom('[data-idea-created-issue="12"] .text-muted').hasText('c Planned');
     });
 });
