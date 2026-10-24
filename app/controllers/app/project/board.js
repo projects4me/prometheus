@@ -46,6 +46,26 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
     @service liveReloadPrompt;
 
     /**
+     * Sends issues opened from elsewhere (notifications) to the board's quick view.
+     *
+     * @property issuePreview
+     * @type Ember.Service
+     * @for AppProjectBoardController
+     * @private
+     */
+    @service issuePreview;
+
+    /**
+     * Disposer returned by issuePreview.register() for this screen.
+     *
+     * @property issuePreviewDisposer
+     * @type Function
+     * @for AppProjectBoardController
+     * @private
+     */
+    issuePreviewDisposer = null;
+
+    /**
      * Disposer returned by hermes.register() for this screen.
      *
      * @property hermesDisposer
@@ -519,6 +539,34 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
         this.hermesDisposer?.();
         this.hermesDisposer = null;
         this.liveReloadPrompt.clear(this);
+    }
+
+    /**
+     * Registers the board as the issue preview target: an issue in a lane on
+     * screen opens in the board's quick view.
+     *
+     * @method registerIssuePreview
+     * @returns {void}
+     * @public
+     */
+    registerIssuePreview() {
+        this.unregisterIssuePreview();
+        this.issuePreviewDisposer = this.issuePreview.register(this, {
+            hasIssue: (issueId) => Boolean(this.findIssueAcrossMilestones(issueId)),
+            open: (issueId) => this.selectIssue(this.findIssueAcrossMilestones(issueId))
+        });
+    }
+
+    /**
+     * Disposes the board's issue preview registration.
+     *
+     * @method unregisterIssuePreview
+     * @returns {void}
+     * @public
+     */
+    unregisterIssuePreview() {
+        this.issuePreviewDisposer?.();
+        this.issuePreviewDisposer = null;
     }
 
     /**
