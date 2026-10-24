@@ -3,7 +3,7 @@
     <h3 class="box-title">{{t "views.app.idea.plan.title"}}</h3>
     {{#if this.selected}}
       <div class="box-tools pull-right">
-        <span class="label {{this.statusClass}}" data-idea-plan-status>{{t (concat "views.app.idea.plan.status." this.selected.status)}}</span>
+        <span class="label {{this.statusClass}}" data-idea-plan-status>{{#if this.isCreating}}<i class="fa fa-spinner fa-spin" data-idea-plan-creating></i> {{/if}}{{t (concat "views.app.idea.plan.status." this.selected.status)}}</span>
       </div>
     {{/if}}
   </div>
@@ -72,7 +72,7 @@
     {{/if}}
     {{#if this.canApprove}}
       <div class="box-footer">
-        <AppUi::Button type="button" class="btn btn-success" @onClick={{this.askApprove}} @aclContext="ideaplan.update" data-idea-plan-approve>
+        <AppUi::Button type="button" class="btn btn-success" @onClick={{this.askApprove}} @aclContext="ideaplan.update" disabled={{this.isApproving}} data-idea-plan-approve>
           {{t "views.app.idea.plan.approve" version=this.selected.version}}
         </AppUi::Button>
       </div>
