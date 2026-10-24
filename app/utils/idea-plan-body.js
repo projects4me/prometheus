@@ -21,7 +21,7 @@ export default function decodePlanBody(body) {
     if (body && typeof body === 'object' && Array.isArray(body.issues)) {
         return {
             ...body,
-            issues: body.issues.filter(issue => issue && typeof issue === 'object')
+            issues: body.issues.filter(issue => issue && typeof issue === 'object' && !Array.isArray(issue))
         };
     }
     return body && typeof body === 'object' ? body : {};
