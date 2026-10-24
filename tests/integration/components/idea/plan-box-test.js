@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { click, render, settled } from '@ember/test-helpers';
+import { click, render, settled, waitUntil } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
 
@@ -74,6 +74,8 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         assert.dom('[data-idea-plan-approve-confirm]').exists();
         await click('.modal .btn-primary');
         assert.deepEqual(approved, ['2']);
+        await waitUntil(() => !document.querySelector('[data-idea-plan-approve-confirm]'), { timeout: 2000 });
+        assert.dom('.modal').doesNotExist('the approve modal closes after confirming');
 
         this.set('plans', [{ id: '2', version: 2, status: 'created', body: body('S', 'X') }]);
         assert.dom('[data-idea-plan-approve]').doesNotExist();
