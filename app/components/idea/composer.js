@@ -6,6 +6,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
+import { guidFor } from '@ember/object/internals';
 
 /**
  * The composer of the conversation of an idea. Ctrl+Enter or the Send button sends the message, Enter adds a new line.
@@ -24,6 +25,15 @@ export default class IdeaComposerComponent extends Component {
      * @private
      */
     @service pubSub;
+
+    /**
+     * The pubSub event which clears this composer's editor only
+     *
+     * @property clearEvent
+     * @type String
+     * @private
+     */
+    clearEvent = `clearContents-${guidFor(this)}`;
 
     /**
      * The text being written
@@ -98,7 +108,7 @@ export default class IdeaComposerComponent extends Component {
         try {
             await this.args.onSend(body);
             this.body = '';
-            this.pubSub.trigger('clearContents');
+            this.pubSub.trigger(this.clearEvent);
         } catch (error) {
             // Already reported by the controller. Keep the text so the user can retry.
         } finally {

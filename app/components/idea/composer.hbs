@@ -1,7 +1,8 @@
-<div class="idea-composer {{if this.isDisabled "idea-composer-disabled"}}" data-idea-composer>
+<div class="idea-composer {{if this.isDisabled "idea-composer-disabled"}}" data-idea-composer inert={{if this.isDisabled "inert"}}>
   <AppUi::ToastUi
     @editType="wysiwyg"
     @output="markdown"
+    @clearEvent={{this.clearEvent}}
     @hide={{array "footer"}}
     @placeholder={{t "views.app.idea.conversation.placeholder"}}
     @onContentChange={{this.updateBody}}

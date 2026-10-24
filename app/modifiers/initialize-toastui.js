@@ -181,6 +181,17 @@ export default class ToastEditor extends Modifier {
     }
 
     /**
+     * The pubSub event which clears this editor, so an editor can be cleared without clearing the others
+     *
+     * @method get
+     * @returns String
+     * @public
+     */
+    get clearEventName() {
+        return this.args.named.clearEvent ?? 'clearContents';
+    }
+
+    /**
      * This property is used to keep track of the mentioned issues
      *
      * @property mentionedIssues
@@ -234,10 +245,12 @@ export default class ToastEditor extends Modifier {
             }
           });
 
-        _self.pubSub.on('clearContents', () => {
+        this.clearEvent = _self.clearEventName;
+        this.clearListener = () => {
             editor.reset();
             this.mentionedIssues = [];
-        })
+        };
+        _self.pubSub.on(this.clearEvent, this.clearListener);
         //Getting element in order to attach tribute to it
         this.targetElement = this.element.querySelector('div.tui-editor-contents[contenteditable="true"]');
         this.tribute.attach(this.targetElement);
@@ -500,6 +513,9 @@ export default class ToastEditor extends Modifier {
 
     //Removing tribute from element and keyboard event listener
     willDestroy() {
+        if (this.clearListener) {
+            this.pubSub.off(this.clearEvent, this.clearListener);
+        }
         this.tribute.detach(this.targetElement);
         
         if (this.keyboardHandler && this.targetElement) {

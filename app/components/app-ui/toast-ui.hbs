@@ -1,6 +1,6 @@
 <div id="editor" {{initialize-toastui usersList=@usersList issueSearch=@issueSearch
     translatedEmojis=this.translatedEmojis contents=@contents onContentChange=@onContentChange onBlur=@onBlur editType=@editType
-    hide=@hide placeholder=@placeholder initialValue=@initialValue onKeyboardSubmit=@onKeyboardSubmit output=@output}} ...attributes>
+    hide=@hide placeholder=@placeholder initialValue=@initialValue onKeyboardSubmit=@onKeyboardSubmit output=@output clearEvent=@clearEvent}} ...attributes>
 </div>
 
 {{#if (and @message)}}
