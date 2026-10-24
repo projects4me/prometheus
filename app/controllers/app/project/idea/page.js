@@ -43,6 +43,15 @@ export default class AppProjectIdeaPageController extends Controller {
     @service hermes;
 
     /**
+     * The current user, whose projects decide which created issues are linked
+     *
+     * @property currentUser
+     * @type Ember.Service
+     * @public
+     */
+    @service currentUser;
+
+    /**
      * Disposer of the Hermes registration
      *
      * @property hermesDisposer
@@ -271,6 +280,18 @@ export default class AppProjectIdeaPageController extends Controller {
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });
         }
+    }
+
+    /**
+     * The ids of the projects the user can read: the project of the idea and the projects of the user
+     *
+     * @property readableProjectIds
+     * @type Array
+     * @public
+     */
+    get readableProjectIds() {
+        let projects = this.currentUser.user?.projects?.map(project => String(project.id)) ?? [];
+        return [...new Set([...(this.model?.projectId ? [String(this.model.projectId)] : []), ...projects])];
     }
 
     /**
