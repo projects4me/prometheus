@@ -30,7 +30,8 @@ export default class IdeaCreatedIssuesBoxComponent extends Component {
                 byVersion.set(version, []);
             }
             if (plan && !itemsByPlan.has(plan.id)) {
-                itemsByPlan.set(plan.id, decodePlanBody(plan.body).issues ?? []);
+                let issues = decodePlanBody(plan.body).issues;
+                itemsByPlan.set(plan.id, Array.isArray(issues) ? issues : []);
             }
             byVersion.get(version).push(this.describe(link, itemsByPlan.get(plan?.id) ?? []));
         });
