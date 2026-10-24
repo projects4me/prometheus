@@ -763,7 +763,13 @@
           "unarchiveMessage": "This idea will be opened again.",
           "steps": "{count, plural, one {# step} other {# steps}}",
           "plan": "View the plan",
-          "screenVersion": "v{version}"
+          "screenVersion": "v{version}",
+          "image": {
+            "uploading": "Uploading image ..",
+            "type": "Only PNG, JPG, GIF and WebP images can be added",
+            "size": "The image is larger than {size} MB",
+            "upload": "The image could not be uploaded, please try again"
+          }
         },
         "plan": {
           "title": "Plan",

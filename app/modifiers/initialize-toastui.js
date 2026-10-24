@@ -9,6 +9,7 @@ import format from "prometheus/utils/data/format";
 import Icon from "prometheus/utils/ui/priority-icon";
 import { inject as service } from "@ember/service";
 import $ from 'jquery';
+import Logger from 'js-logger';
 
 /**
  * This modifier will be called on the initialization of toast ui component to
@@ -192,6 +193,38 @@ export default class ToastEditor extends Modifier {
     }
 
     /**
+     * Optional, called with a pasted or dropped image. It resolves to `{ url, alt }` of the image to insert,
+     * or to nothing to insert none. Without it the editor keeps its default (a data URI).
+     *
+     * @method get
+     * @returns Function
+     * @public
+     */
+    get onImage() {
+        return this.args.named.onImage;
+    }
+
+    /**
+     * Inserts pasted or dropped images through onImage instead of as data URIs
+     *
+     * @method setupImageHook
+     * @param {Object} editor The toast ui editor
+     * @private
+     */
+    setupImageHook(editor) {
+        editor.addHook('addImageBlobHook', (blob, callback) => {
+            this.onImage(blob).then((image) => {
+                if (image) {
+                    callback(image.url, image.alt);
+                }
+            }).catch((e) => {
+                Logger.error('InitializeToastui->addImageBlobHook ' + e);
+            });
+            return false;
+        });
+    }
+
+    /**
      * This property is used to keep track of the mentioned issues
      *
      * @property mentionedIssues
@@ -236,6 +269,10 @@ export default class ToastEditor extends Modifier {
                 }
             }
         });
+
+        if (_self.onImage) {
+            _self.setupImageHook(editor);
+        }
 
         editor.addHook('keydown', (data) => {
             let event = data.data;

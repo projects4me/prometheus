@@ -41,7 +41,7 @@
   </div>
 
   <div class="box-footer">
-    <Idea::Composer @onSend={{@onSend}} @disabled={{this.isArchived}} />
+    <Idea::Composer @ideaId={{@idea.id}} @onSend={{@onSend}} @disabled={{this.isArchived}} />
   </div>
 
   {{#if this.showArchiveModal}}
