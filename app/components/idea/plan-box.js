@@ -128,6 +128,7 @@ export default class IdeaPlanBoxComponent extends Component {
                 key: issue.key ?? `issue-${index}`,
                 projectLabel: issue.projectCode ?? issue.project,
                 dependsOn: Array.isArray(issue.dependsOn) ? issue.dependsOn.join(', ') : (issue.dependsOn ?? ''),
+                screenKeys: Array.isArray(issue.screens) ? issue.screens : [],
                 screens: Array.isArray(issue.screens) ? issue.screens.join(', ') : ''
             }))
         };
@@ -152,7 +153,7 @@ export default class IdeaPlanBoxComponent extends Component {
         });
         let keys = [];
         (this.body.issues ?? []).forEach(issue => {
-            (Array.isArray(issue.screens) ? issue.screens : issue.screens ? issue.screens.split(', ') : []).forEach(key => {
+            issue.screenKeys.forEach(key => {
                 if (!keys.includes(key)) {
                     keys.push(key);
                 }
