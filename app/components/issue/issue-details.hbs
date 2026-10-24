@@ -354,7 +354,7 @@
                   {{#bootstrap-modal
                       title="views.app.issue.detail.file.preview"
                       closeLabel="global.form.close"
-                      close="removeModal"}}
+                      close=(action "removeModal")}}
                     <iframe title="{{t "views.app.issue.detail.file.preview"}}" id="file_preview"></iframe>
                   {{/bootstrap-modal}}
                 {{/if}}
