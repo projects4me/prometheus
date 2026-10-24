@@ -1,6 +1,6 @@
-<div class="row idea-create">
+<div class="idea-create">
   <AccessControl @aclContext="idea.create">
-    <div class="col-md-8" data-idea-main>
+    <div data-idea-main>
       <div class="box box-primary">
         <div class="box-header with-border">
           <h3 class="box-title">{{t "views.app.idea.create.title"}}</h3>
@@ -18,11 +18,18 @@
                 {{autofocus}}
               />
             </div>
-            <div class="form-field">
-              <FormFields::FieldTextArea
+            <div data-field="idea.description" class="form-field idea-create-description">
+              <AppUi::ToastUi
+                @editType="wysiwyg"
+                @output="markdown"
+                @hide={{array "footer"}}
                 @placeholder={{t "views.app.idea.create.descriptionPlaceholder"}}
+                @onContentChange={{action "selectStatic" this.model "description"}}
+              />
+              <span class="highlight"></span>
+              <span class="bar"></span>
+              <FormFields::Label
                 @label={{t "views.app.idea.fields.description"}}
-                @value={{this.model.description}}
                 @data-field="idea.description"
               />
             </div>
@@ -31,20 +38,6 @@
       </div>
       <AppUi::Button type="button" class="btn btn-primary" @onClick={{fn this.save "ideaCreate" "idea"}} @aclContext="idea.create" data-start-idea>{{t "views.app.idea.create.start"}}</AppUi::Button>
       <AppUi::Button type="button" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
-    </div>
-    <div class="col-md-4" data-idea-side>
-      <div class="box box-info">
-        <div class="box-header with-border">
-          <h3 class="box-title">{{t "views.app.idea.create.how.title"}}</h3>
-        </div>
-        <div class="box-body">
-          <ol>
-            <li>{{t "views.app.idea.create.how.step1"}}</li>
-            <li>{{t "views.app.idea.create.how.step2"}}</li>
-            <li>{{t "views.app.idea.create.how.step3"}}</li>
-          </ol>
-        </div>
-      </div>
     </div>
   </AccessControl>
 </div>

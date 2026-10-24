@@ -134,3 +134,9 @@
     opacity: 0.6;
   }
 }
+
+.idea-create-description {
+  > #editor {
+    height: 18rem !important;
+  }
+}

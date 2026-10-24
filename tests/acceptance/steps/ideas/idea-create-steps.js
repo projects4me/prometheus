@@ -18,7 +18,7 @@ export const when = function () {
         },
         {
             "User enters $content in the idea description": (assert) => async function (content) {
-                await fillIn('[data-field="idea.description"] textarea', content);
+                await fillIn(document.querySelector('div[data-field="idea.description"] div.tui-editor-contents.tui-editor-contents-placeholder'), content);
                 assert.ok(true, 'User enters the idea description');
             }
         },
