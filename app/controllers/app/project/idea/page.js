@@ -88,6 +88,15 @@ export default class AppProjectIdeaPageController extends Controller {
     @tracked planIssues = [];
 
     /**
+     * The request to show a plan version, a new object per request so the same plan can be requested again
+     *
+     * @property shownPlan
+     * @type Object
+     * @public
+     */
+    @tracked shownPlan = null;
+
+    /**
      * The id of the idea whose messages are in the list
      *
      * @property loadedIdeaId
@@ -324,6 +333,19 @@ export default class AppProjectIdeaPageController extends Controller {
             this.errorManager.handleError(error, { moduleName: 'idea' });
             throw error;
         }
+    }
+
+    /**
+     * Shows a plan version in the plan box and scrolls the box into view
+     *
+     * @method showPlan
+     * @param {String} planId
+     * @public
+     */
+    @action
+    showPlan(planId) {
+        this.shownPlan = { id: planId };
+        document.querySelector('[data-idea-plan]')?.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
     }
 
     /**

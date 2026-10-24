@@ -31,9 +31,9 @@
         {{/if}}
       {{/if}}
       {{#if @message.ideaplanId}}
-        <a href="#ideaplan-{{@message.ideaplanId}}" class="btn btn-link btn-xs" data-idea-plan-link>
+        <button type="button" class="btn btn-link btn-xs" {{on "click" (fn @onShowPlan @message.ideaplanId)}} data-idea-plan-link>
           <i class="fa fa-file-text-o"></i> {{t "views.app.idea.conversation.plan"}}
-        </a>
+        </button>
       {{/if}}
     </:body>
   </ConversationUi::CommentFrame>

@@ -8,12 +8,13 @@
         @onRename={{this.rename}}
         @onToggleArchive={{this.toggleArchive}}
         @onSend={{this.send}}
+        @onShowPlan={{this.showPlan}}
       />
     {{/if}}
   </div>
   <div class="col-md-4" data-idea-side>
     {{#if this.model}}
-      <Idea::PlanBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readableProjectIds}} @onApprove={{this.approvePlan}} />
+      <Idea::PlanBox @plans={{this.plans}} @messages={{this.messages}} @shownPlan={{this.shownPlan}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readableProjectIds}} @onApprove={{this.approvePlan}} />
       <Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readableProjectIds}} />
       <Idea::SummaryBox @idea={{this.model}} @messages={{this.messages}} @plans={{this.plans}} @createdUserName={{this.createdUserName}} />
     {{/if}}

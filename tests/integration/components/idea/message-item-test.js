@@ -52,9 +52,12 @@ module('Integration | Component | idea/message-item', function (hooks) {
 
     test('a message with a plan links to it', async function (assert) {
         this.set('message', { id: '4', kind: 'assistant', body: 'Plan', ideaplanId: '7' });
-        await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
+        let shown = [];
+        this.set('onShowPlan', id => shown.push(id));
+        await render(hbs`<Idea::MessageItem @message={{this.message}} @onShowPlan={{this.onShowPlan}} />`);
 
-        assert.dom('[data-idea-plan-link]').hasAttribute('href', '#ideaplan-7');
+        await click('[data-idea-plan-link]');
+        assert.deepEqual(shown, ['7']);
     });
 
     test('a message with screens shows a thumbnail, title and version for each', async function (assert) {

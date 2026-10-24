@@ -44,6 +44,15 @@ export default class IdeaPlanBoxComponent extends Component {
     @tracked pickedAtLatest = null;
 
     /**
+     * The request to show a plan that the user had already answered with a pick
+     *
+     * @property answeredShownPlan
+     * @type Object
+     * @private
+     */
+    @tracked answeredShownPlan = null;
+
+    /**
      * The key of the planned issue that is expanded
      *
      * @property expandedKey
@@ -91,6 +100,13 @@ export default class IdeaPlanBoxComponent extends Component {
      * @public
      */
     get selected() {
+        let request = this.args.shownPlan;
+        if (request && request !== this.answeredShownPlan) {
+            let shown = this.versions.find(plan => String(plan.id) === String(request.id));
+            if (shown) {
+                return shown;
+            }
+        }
         let picked = this.pickedAtLatest === Number(this.latest?.version) ? this.pickedVersion : null;
         return this.versions.find(plan => Number(plan.version) === picked) ?? this.latest;
     }
@@ -118,12 +134,44 @@ export default class IdeaPlanBoxComponent extends Component {
     }
 
     /**
+     * The screens the shown version lists, each key once, resolved to its latest version in the idea messages
+     *
+     * @property screens
+     * @type Array
+     * @public
+     */
+    get screens() {
+        let latest = {};
+        (this.args.messages ?? []).forEach(message => {
+            let screens = get(message, 'screens');
+            (Array.isArray(screens) ? screens : []).forEach(screen => {
+                if (screen?.uploadId && screen.key !== undefined && (!latest[screen.key] || Number(screen.version) >= Number(latest[screen.key].version))) {
+                    latest[screen.key] = screen;
+                }
+            });
+        });
+        let keys = [];
+        (this.body.issues ?? []).forEach(issue => {
+            (Array.isArray(issue.screens) ? issue.screens : issue.screens ? issue.screens.split(', ') : []).forEach(key => {
+                if (!keys.includes(key)) {
+                    keys.push(key);
+                }
+            });
+        });
+        return keys.map(key => ({ key, screen: latest[key] }));
+    }
+
+    /**
      * The status class of the selected plan, reusing the classes of the issue statuses
      *
      * @property statusClass
      * @type String
      * @public
      */
+    get statusClass() {
+        return STATUS_LABELS[this.selected?.status] ?? 'new';
+    }
+
     /**
      * The issues created from the shown version, by the key of the plan issue they came from
      *
@@ -160,10 +208,6 @@ export default class IdeaPlanBoxComponent extends Component {
         return this.args.readableProjectIds ?? [];
     }
 
-    get statusClass() {
-        return STATUS_LABELS[this.selected?.status] ?? 'new';
-    }
-
     /**
      * Whether the selected plan is the latest and can still be approved
      *
@@ -188,6 +232,7 @@ export default class IdeaPlanBoxComponent extends Component {
         event?.preventDefault();
         this.pickedVersion = Number(version);
         this.pickedAtLatest = Number(this.latest?.version);
+        this.answeredShownPlan = this.args.shownPlan ?? null;
         this.expandedKey = null;
     }
 

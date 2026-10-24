@@ -2,7 +2,9 @@
   <div class="box-header with-border">
     <h3 class="box-title">{{t "views.app.idea.plan.title"}}</h3>
     {{#if this.selected}}
-      <span class="label pull-right {{this.statusClass}}" data-idea-plan-status>{{t (concat "views.app.idea.plan.status." this.selected.status)}}</span>
+      <div class="box-tools pull-right">
+        <span class="label {{this.statusClass}}" data-idea-plan-status>{{t (concat "views.app.idea.plan.status." this.selected.status)}}</span>
+      </div>
     {{/if}}
   </div>
   {{#if this.selected}}
@@ -18,6 +20,17 @@
         <div class="alert alert-danger idea-plan-error" data-idea-plan-error>{{this.selected.error}}</div>
       {{/if}}
       <p class="idea-plan-summary" data-idea-plan-summary>{{this.body.summary}}</p>
+      {{#if this.screens.length}}
+        <ul class="idea-plan-screens list-inline" data-idea-plan-screens>
+          {{#each this.screens as |entry|}}
+            {{#if entry.screen}}
+              <Idea::MessageScreen @screen={{entry.screen}} />
+            {{else}}
+              <li class="text-muted" data-idea-plan-screen-missing={{entry.key}}><i class="fa fa-picture-o"></i> {{entry.key}}</li>
+            {{/if}}
+          {{/each}}
+        </ul>
+      {{/if}}
     </div>
     {{#if this.body.issues.length}}
       <ul class="list-unstyled idea-plan-issues" data-idea-plan-issues>
