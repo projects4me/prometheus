@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { click, render } from '@ember/test-helpers';
+import { click, render, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
 
@@ -125,5 +125,43 @@ module('Integration | Component | idea/plan-box', function (hooks) {
 
         assert.dom('[data-idea-plan-empty]').exists();
         assert.dom('[data-idea-plan-approve]').doesNotExist();
+    });
+
+    test('a requested plan is shown until the user picks a tab', async function (assert) {
+        this.set('shownPlan', { id: '1' });
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @shownPlan={{this.shownPlan}} @onApprove={{this.onApprove}} />`);
+
+        assert.dom('[data-idea-plan-summary]').hasText('First plan');
+        await click('[data-idea-plan-version="2"]');
+        assert.dom('[data-idea-plan-summary]').hasText('Second plan');
+        this.set('shownPlan', { id: '1' });
+        await settled();
+        assert.dom('[data-idea-plan-summary]').hasText('First plan');
+    });
+
+    test('the plan lists each screen once, at its latest version, and plain text when missing', async function (assert) {
+        this.owner.lookup('service:upload-preview').thumbnail = async () => '/thumb.png';
+        this.set('plans', [{
+            id: '1', version: 1, status: 'proposed',
+            body: JSON.stringify({ summary: 'S', issues: [
+                { key: 'a', subject: 'A', screens: ['home', 'ghost'] },
+                { key: 'b', subject: 'B', screens: ['home'] }
+            ] })
+        }]);
+        this.set('messages', [
+            { id: '1', screens: [{ uploadId: '10', key: 'home', title: 'Home', version: 1 }] },
+            { id: '2', screens: [{ uploadId: '11', key: 'home', title: 'Home', version: 2 }] }
+        ]);
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @messages={{this.messages}} @onApprove={{this.onApprove}} />`);
+
+        assert.dom('[data-idea-plan-screens] [data-idea-screen]').exists({ count: 1 });
+        assert.dom('[data-idea-plan-screens] [data-idea-screen="11"]').exists();
+        assert.dom('[data-idea-plan-screen-missing="ghost"]').exists();
+    });
+
+    test('the status label sits in the box tools', async function (assert) {
+        await render(hbs`<Idea::PlanBox @plans={{this.plans}} @onApprove={{this.onApprove}} />`);
+
+        assert.dom('.box-tools.pull-right [data-idea-plan-status]').exists();
     });
 });

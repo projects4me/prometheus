@@ -34,7 +34,7 @@
 
   <div class="box-footer box-comments idea-thread" data-idea-thread>
     {{#each this.orderedMessages as |message|}}
-      <Idea::MessageItem @message={{message}} />
+      <Idea::MessageItem @message={{message}} @onShowPlan={{@onShowPlan}} />
     {{else}}
       <p class="text-muted text-center" data-idea-no-messages>{{t "views.app.idea.conversation.empty"}}</p>
     {{/each}}
