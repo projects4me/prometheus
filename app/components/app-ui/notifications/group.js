@@ -18,6 +18,8 @@ import issueLink from '../../../utils/notifications/issue-link';
 export default class AppUiNotificationsGroupComponent extends AppComponent {
 	@service notifications;
 
+	@service issuePreview;
+
 	@tracked isSaving = false;
 
 	/**
@@ -49,7 +51,23 @@ export default class AppUiNotificationsGroupComponent extends AppComponent {
 	}
 
 	/**
-	 * Marks every unread notification of the issue as read and then navigates to the issue
+	 * Id of the issue the group belongs to, from the `relatedId` of its issue notifications
+	 *
+	 * @property issueId
+	 * @type String
+	 * @public
+	 */
+	get issueId() {
+		return this.args.group.notifications.find(
+			(notification) =>
+				notification.relatedTo === 'issue' && notification.relatedId
+		)?.relatedId;
+	}
+
+	/**
+	 * Marks every unread notification of the issue as read and then opens the
+	 * issue in the open screen's quick view, or on the issue page when no
+	 * screen took it
 	 *
 	 * @method goToIssue
 	 * @param {Event} event The click event
@@ -65,6 +83,9 @@ export default class AppUiNotificationsGroupComponent extends AppComponent {
 		}
 		event.preventDefault();
 		await this._markGroupAsRead();
+		if (this.issueId && this.issuePreview.open(this.issueId)) {
+			return;
+		}
 		if (this.config.app.notifications.enableNav) {
 			this.router.transitionTo(this.issueUrl);
 		}

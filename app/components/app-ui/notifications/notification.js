@@ -26,6 +26,15 @@ export default class AppUiNotificationsNotificationComponent extends AppComponen
 	@service notifications;
 
 	/**
+	 * Sends the notification's issue to the open screen's quick view
+	 *
+	 * @property issuePreview
+	 * @type Services
+	 * @public
+	 */
+	@service issuePreview;
+
+	/**
 	 * Map of module link generators - each generator function creates a link for a specific module type
 	 *
 	 * @property linkGenerators
@@ -157,7 +166,10 @@ export default class AppUiNotificationsNotificationComponent extends AppComponen
 	}
 
 	/**
-	 * Marks the notification as read and then navigates
+	 * Marks the notification as read and then opens what it points to. A
+	 * notification of an issue opens in the open screen's quick view when that
+	 * screen shows the issue, and on the issue page otherwise. A click on the
+	 * user avatar opens the user.
 	 *
 	 * @method markAsRead
 	 * @param {Event} event The click event
@@ -167,13 +179,55 @@ export default class AppUiNotificationsNotificationComponent extends AppComponen
 	async markAsRead(event) {
 		// Prevent default browser navigation
 		event.preventDefault();
+		let notification = this.args.notification;
 		let link = this.getLink(event.target);
-		await this.notifications.markAsRead(this.args.notification);
+		let opensIssue =
+			notification.relatedTo === 'issue' && !this.isUserClick(event.target);
+		await this.notifications.markAsRead(notification);
 
-        // In test environment, we don't want to navigate to the link
+		if (opensIssue) {
+			this.openIssue(notification);
+			return;
+		}
+
+		// In test environment, we don't want to navigate to the link
 		if (this.config.app.notifications.enableNav) {
 			this.router.transitionTo(link);
 		}
+	}
+
+	/**
+	 * Opens the issue a notification belongs to (`relatedId`) in the open
+	 * screen's quick view, or on the issue page when no screen took it. The
+	 * context only supplies the issue page's route parameters.
+	 *
+	 * @method openIssue
+	 * @param {Object} notification The notification of an issue
+	 * @public
+	 */
+	openIssue(notification) {
+		if (!notification.relatedId) {
+			return;
+		}
+		if (this.issuePreview.open(notification.relatedId)) {
+			return;
+		}
+		let link = issueLink(notification.context);
+		if (link && this.config.app.notifications.enableNav) {
+			this.router.transitionTo(link);
+		}
+	}
+
+	/**
+	 * Whether the click landed on the user avatar of the notification
+	 *
+	 * @method isUserClick
+	 * @param {HTMLElement} element The element that was clicked
+	 * @return {Boolean}
+	 * @public
+	 */
+	isUserClick(element) {
+		return Boolean(element?.closest?.('[data-notification-user-image]'));
 	}
 
 	/**

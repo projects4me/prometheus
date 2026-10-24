@@ -195,8 +195,9 @@ export default App.extend({
     },
 
     /**
-     * Sets board model data on the controller and registers Hermes intents
-     * for this project's live board events.
+     * Sets board model data on the controller, registers Hermes intents
+     * for this project's live board events and registers the board's quick
+     * view as the issue preview target.
      *
      * @method setupController
      * @param {Prometheus.Controllers.Board} controller the controller object for this route
@@ -210,10 +211,12 @@ export default App.extend({
         controller.set('query', this.query);
         controller.set('selectedIssue', null);
         controller.registerHermesIntents(this.trackedProject.getProjectId());
+        controller.registerIssuePreview();
     },
 
     /**
-     * On exit, dispose Hermes intents and clear board UI state.
+     * On exit, dispose Hermes intents and the issue preview registration, and
+     * clear board UI state.
      *
      * @method resetController
      * @param {Prometheus.Controllers.Board} controller The controller object for this route
@@ -223,6 +226,7 @@ export default App.extend({
     resetController: function (controller, isExiting) {
         if (isExiting) {
             controller.unregisterHermesIntents();
+            controller.unregisterIssuePreview();
             controller.query = null;
             controller.searchId = null;
             controller.projectData = null;
