@@ -118,6 +118,12 @@
       display: block;
     }
 
+    .idea-message-body img {
+      max-width: 100%;
+      border: 1px solid $borderColor;
+      cursor: pointer;
+    }
+
     .idea-message-steps {
       margin: 0.25rem 0 0.5rem;
       padding-left: 1.5rem;

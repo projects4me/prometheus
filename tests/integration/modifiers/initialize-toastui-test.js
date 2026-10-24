@@ -43,4 +43,25 @@ module('Integration | Modifier | initialize-toastui', function (hooks) {
         let md = markdown.pop();
         assert.ok(md.includes('## Title') && md.includes('**bold**'), 'markdown output');
     });
+
+    test('a pasted image is inserted from what onImage resolves to', async function (assert) {
+        let received = [];
+        this.set('onContentChange', () => {});
+        this.set('onImage', async (blob) => {
+            received.push(blob.name);
+            return { url: 'http://img/shot.png', alt: 'shot.png' };
+        });
+        await render(hbs`<div {{initialize-toastui editType="wysiwyg" onContentChange=this.onContentChange onImage=this.onImage}}></div>`);
+
+        let editable = document.querySelector('.tui-editor-contents[contenteditable="true"]');
+        editable.focus();
+        let data = new DataTransfer();
+        data.items.add(new File([new Uint8Array(10)], 'shot.png', { type: 'image/png' }));
+        editable.dispatchEvent(new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }));
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await settled();
+
+        assert.deepEqual(received, ['shot.png']);
+        assert.dom('.tui-editor-contents img').hasAttribute('src', 'http://img/shot.png');
+    });
 });

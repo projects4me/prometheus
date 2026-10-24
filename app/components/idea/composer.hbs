@@ -7,13 +7,21 @@
     @placeholder={{t "views.app.idea.conversation.placeholder"}}
     @onContentChange={{this.updateBody}}
     @onKeyboardSubmit={{this.handleKeyboardSubmit}}
+    @onImage={{this.addImage}}
+    @message={{this.imageError}}
+    @data-field="idea.composer.image"
   />
+  {{#if this.isUploading}}
+    <span class="text-muted" data-idea-image-uploading>
+      <i class="fa fa-spinner fa-spin"></i> {{t "views.app.idea.conversation.image.uploading"}}
+    </span>
+  {{/if}}
   <AppUi::Button
     type="button"
     class="btn btn-primary btn-sm"
     @onClick={{this.send}}
     @aclContext="ideamessage.create"
-    disabled={{this.isDisabled}}
+    disabled={{this.isSendDisabled}}
     data-idea-send
   >
     <i class="fa fa-paper-plane"></i> {{t "views.app.idea.conversation.send"}}

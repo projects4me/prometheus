@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { click, render } from '@ember/test-helpers';
+import { click, render, waitUntil } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import CurrentUserStub from '../../stub-services/current-user-stub';
 
@@ -100,5 +100,54 @@ module('Integration | Component | idea/message-item', function (hooks) {
         await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
 
         assert.dom('[data-idea-screens]').doesNotExist();
+    });
+
+    test('an image kept as an upload reference is shown from its address', async function (assert) {
+        let preview = this.owner.lookup('service:upload-preview');
+        let requested = [];
+        preview.previewUrl = async (id) => {
+            requested.push(id);
+            return `http://api/preview/get/tok-${id}`;
+        };
+        this.set('message', { id: '7', kind: 'user', body: 'Broken here ![shot.png](upload:42)' });
+        await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
+
+        await waitUntil(() => document.querySelector('[data-idea-message-body] img'));
+        assert.deepEqual(requested, ['42']);
+        assert.dom('[data-idea-message-body] img').hasAttribute('src', 'http://api/preview/get/tok-42', 'the address survives the sanitizer');
+        assert.dom('[data-idea-message-body] img').hasAttribute('alt', 'shot.png');
+    });
+
+    test('an upload that cannot be read shows its name', async function (assert) {
+        let preview = this.owner.lookup('service:upload-preview');
+        preview.previewUrl = async () => {
+            throw new Error('not found');
+        };
+        this.set('message', { id: '8', kind: 'user', body: 'Broken here ![shot.png](upload:42)' });
+        await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
+
+        assert.dom('[data-idea-message-body]').includesText('Broken here shot.png');
+        assert.dom('[data-idea-message-body] img').doesNotExist();
+    });
+
+    test('clicking an upload image opens the full size in a new tab', async function (assert) {
+        let preview = this.owner.lookup('service:upload-preview');
+        let tokens = 0;
+        preview.previewUrl = async () => `http://api/preview/get/tok-${++tokens}`;
+        let tab = { location: {}, close() {} };
+        let opened = [];
+        let original = window.open;
+        window.open = (...args) => { opened.push(args); return tab; };
+        try {
+            this.set('message', { id: '9', kind: 'user', body: '![shot.png](upload:42)' });
+            await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
+            await waitUntil(() => document.querySelector('[data-idea-message-body] img'));
+            await click('[data-idea-message-body] img');
+        } finally {
+            window.open = original;
+        }
+
+        assert.deepEqual(opened, [['', '_blank']]);
+        assert.strictEqual(tab.location.href, 'http://api/preview/get/tok-2', 'a fresh download address');
     });
 });
