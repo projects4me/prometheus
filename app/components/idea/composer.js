@@ -156,6 +156,7 @@ export default class IdeaComposerComponent extends Component {
 
     /**
      * Uploads a pasted or dropped image as an upload of the idea. The editor shows it from the local file.
+     * An upload that ends after the composer was destroyed is ignored.
      *
      * @method addImage
      * @param {Blob} blob
@@ -168,10 +169,17 @@ export default class IdeaComposerComponent extends Component {
         this.uploadingImages++;
         try {
             let image = await this.imageUpload.upload(blob, 'idea', this.args.ideaId);
+            // The composer may be gone by now; it would never free the local file nor the editor show the image
+            if (this.isDestroying || this.isDestroyed) {
+                return null;
+            }
             let url = URL.createObjectURL(blob);
             this.imageReferences.set(url, image.reference);
             return { url, alt: image.name.replace(/[[\]()]/g, '') };
         } catch (error) {
+            if (this.isDestroying || this.isDestroyed) {
+                return null;
+            }
             let key = IMAGE_ERROR_KEYS[error.reason] ?? IMAGE_ERROR_KEYS.upload;
             this.imageError = this.intl.t(key, {
                 size: Math.round(this.imageUpload.maxFileSize / 1024 / 1024)

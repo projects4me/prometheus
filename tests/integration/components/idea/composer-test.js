@@ -136,6 +136,35 @@ module('Integration | Component | idea/composer', function (hooks) {
         assert.dom('[data-idea-send]').isNotDisabled();
     });
 
+    test('an upload that ends after the composer is gone is ignored', async function (assert) {
+        let finish;
+        let imageUpload = this.owner.lookup('service:image-upload');
+        imageUpload.upload = () => new Promise(resolve => { finish = resolve; });
+        let createObjectURL = URL.createObjectURL;
+        let created = 0;
+        URL.createObjectURL = (blob) => {
+            created++;
+            return createObjectURL(blob);
+        };
+        this.set('onSend', () => {});
+        this.set('show', true);
+        try {
+            await render(hbs`{{#if this.show}}<Idea::Composer @ideaId="7" @onSend={{this.onSend}} />{{/if}}`);
+
+            pasteImage();
+            await waitUntil(() => document.querySelector('[data-idea-image-uploading]'));
+            this.set('show', false);
+            await settled();
+            finish({ reference: 'upload:42', name: 'shot.png' });
+            await new Promise(resolve => setTimeout(resolve, 50));
+            await settled();
+
+            assert.strictEqual(created, 0, 'no local file is kept for the destroyed composer');
+        } finally {
+            URL.createObjectURL = createObjectURL;
+        }
+    });
+
     test('a failed upload is reported and the text is kept', async function (assert) {
         let imageUpload = this.owner.lookup('service:image-upload');
         imageUpload.upload = async () => {
