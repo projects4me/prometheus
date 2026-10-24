@@ -5,9 +5,10 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
 
 /**
- * The composer of the conversation of an idea. Enter sends the message, Shift+Enter adds a new line.
+ * The composer of the conversation of an idea. Ctrl+Enter or the Send button sends the message, Enter adds a new line.
  * It only collects the text, @onSend creates the message.
  *
  * @class IdeaComposerComponent
@@ -15,6 +16,15 @@ import { tracked } from '@glimmer/tracking';
  * @extends Glimmer.Component
  */
 export default class IdeaComposerComponent extends Component {
+    /**
+     * PubSub service, used to clear the editor after a message was sent
+     *
+     * @property pubSub
+     * @type Ember.Service
+     * @private
+     */
+    @service pubSub;
+
     /**
      * The text being written
      *
@@ -45,15 +55,30 @@ export default class IdeaComposerComponent extends Component {
     }
 
     /**
-     * Keeps the text in step with the field
+     * Keeps the text in step with the editor, which emits markdown
      *
      * @method updateBody
-     * @param {InputEvent} event
+     * @param {String} markdown
      * @public
      */
     @action
-    updateBody(event) {
-        this.body = event.target.value;
+    updateBody(markdown) {
+        this.body = markdown;
+    }
+
+    /**
+     * Ctrl+Enter sends, unless it only picked an item of the editor's suggestion menu
+     *
+     * @method handleKeyboardSubmit
+     * @param {String} content
+     * @param {Boolean} canSubmit
+     * @public
+     */
+    @action
+    handleKeyboardSubmit(content, canSubmit) {
+        if (canSubmit) {
+            this.send();
+        }
     }
 
     /**
@@ -73,28 +98,11 @@ export default class IdeaComposerComponent extends Component {
         try {
             await this.args.onSend(body);
             this.body = '';
+            this.pubSub.trigger('clearContents');
         } catch (error) {
             // Already reported by the controller. Keep the text so the user can retry.
         } finally {
             this.isSending = false;
-        }
-    }
-
-    /**
-     * Enter sends, Shift+Enter keeps the new line
-     *
-     * @method handleKeydown
-     * @param {KeyboardEvent} event
-     * @public
-     */
-    @action
-    handleKeydown(event) {
-        if (event.isComposing || event.keyCode === 229) {
-            return;
-        }
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            this.send();
         }
     }
 }

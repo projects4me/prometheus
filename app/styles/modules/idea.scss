@@ -124,3 +124,14 @@
     }
   }
 }
+
+.idea-composer {
+  > #editor {
+    height: 18rem !important;
+  }
+
+  &.idea-composer-disabled > #editor {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}

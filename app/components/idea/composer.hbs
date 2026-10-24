@@ -1,13 +1,11 @@
-<div class="idea-composer" data-idea-composer>
-  <FormFields::FieldTextArea
+<div class="idea-composer {{if this.isDisabled "idea-composer-disabled"}}" data-idea-composer>
+  <AppUi::ToastUi
+    @editType="wysiwyg"
+    @output="markdown"
+    @hide={{array "footer"}}
     @placeholder={{t "views.app.idea.conversation.placeholder"}}
-    @value={{this.body}}
-    @onInput={{this.updateBody}}
-    @data-field="ideamessage.body"
-    @aclContext="ideamessage.create"
-    disabled={{this.isDisabled}}
-    rows="2"
-    {{on "keydown" this.handleKeydown}}
+    @onContentChange={{this.updateBody}}
+    @onKeyboardSubmit={{this.handleKeyboardSubmit}}
   />
   <AppUi::Button
     type="button"

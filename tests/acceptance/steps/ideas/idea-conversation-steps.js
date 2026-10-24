@@ -25,7 +25,11 @@ export const when = function () {
         },
         {
             "User sends the idea message $body": (assert) => async function (body) {
-                await fillIn('[data-idea-composer] textarea', body);
+                let editable = document.querySelector('[data-idea-composer] .tui-editor-contents[contenteditable="true"]');
+                editable.focus();
+                document.execCommand('insertText', false, body);
+                // toast ui reports changes after a short debounce
+                await new Promise(resolve => setTimeout(resolve, 400));
                 await click('[data-idea-send]');
                 assert.ok(true, 'User sends the message');
             }
@@ -70,7 +74,8 @@ export const then = function () {
         },
         {
             "The idea composer is disabled": (assert) => async function () {
-                assert.dom('[data-idea-composer] textarea').isDisabled();
+                assert.dom('[data-idea-composer]').hasClass('idea-composer-disabled');
+                assert.dom('[data-idea-send]').isDisabled();
             }
         }
     ];
