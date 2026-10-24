@@ -5,6 +5,7 @@
 import AppComponent from '../../app';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 import issueLink from '../../../utils/notifications/issue-link';
 
 /**
@@ -16,6 +17,22 @@ import issueLink from '../../../utils/notifications/issue-link';
  */
 export default class AppUiNotificationsGroupComponent extends AppComponent {
 	@service notifications;
+
+	@tracked isSaving = false;
+
+	/**
+	 * Whether at least one notification of the group is unread
+	 *
+	 * @property hasUnread
+	 * @type Boolean
+	 * @public
+	 */
+	get hasUnread() {
+		return this.args.group.notifications.some(
+			(notification) =>
+				notification.recipientRecords.firstObject?.isRead === '0'
+		);
+	}
 
 	/**
 	 * URL of the issue the group belongs to
@@ -50,6 +67,29 @@ export default class AppUiNotificationsGroupComponent extends AppComponent {
 		await this._markGroupAsRead();
 		if (this.config.app.notifications.enableNav) {
 			this.router.transitionTo(this.issueUrl);
+		}
+	}
+
+	/**
+	 * Marks every notification of the group as read without navigating
+	 *
+	 * @method markGroupAsRead
+	 * @param {Event} event The click event
+	 * @public
+	 * @async
+	 */
+	@action
+	async markGroupAsRead(event) {
+		event.preventDefault();
+		event.stopPropagation();
+		if (this.isSaving) {
+			return;
+		}
+		this.isSaving = true;
+		try {
+			await this._markGroupAsRead();
+		} finally {
+			this.isSaving = false;
 		}
 	}
 

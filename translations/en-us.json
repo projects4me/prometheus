@@ -2027,6 +2027,7 @@
         "empty": "No notifications yet",
         "emptyMessage": "New notifications will appear here.",
         "markAllAsRead": "Mark all as read",
+        "markGroupAsRead": "Mark as read",
         "markingAllAsRead": "Marking all notifications as read ...",
         "markAllAsReadSuccess": "All notifications have been marked as read",
         "markAllAsReadError": "An error occurred while marking all notifications as read",
