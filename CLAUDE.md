@@ -27,6 +27,7 @@
 ## Rules
 - New code: native classes, `@tracked`, `@action`, Glimmer components co-located in `app/components/<group>/`. No new `.extend()`, mixins or jQuery.
 - Use the store/adapter, not raw `fetch()` (raw fetch skips token refresh).
+- Don't load a hasMany relation (comments, time logs, activities, messages, files…) through `rels` in the parent's request. Gaia applies `limit` to the joined rows, not to the parent records. With a limit, the children are cut short silently; without one, the request is unbounded. Load the parent with its hasOne/belongsTo `rels` only, then query the children separately with their own query, sort and limit (e.g. `store.query('comment', { query: '(Comment.relatedId : <roomId>)', sort: 'Comment.dateCreated', order: 'DESC', limit: 10 })`), and page or "load more" from there. Existing screens that still pass hasMany `rels` aren't a pattern to copy.
 - Every user-facing string goes in `translations/en-us.json`.
 - YUIDoc on classes, properties and methods; keep the license header.
 - Every new route or component gets a Mirage handler plus an integration or acceptance test.
