@@ -49,7 +49,7 @@ Feature: Notification | open the issue of a notification
     When User navigates to app/project/project_1/board
     And User clicks on notifications icon
     And User clicks on the issue notification with navigation enabled
-    Then The issue page of the notification is opened
+    Then The issue page of the notification is opened at its comment
     And User should not see the panel divider handle
     And The issue notification is marked as read
 
@@ -60,4 +60,4 @@ Feature: Notification | open the issue of a notification
     And User navigates to app
     And User clicks on notifications icon
     And User clicks on the issue notification with navigation enabled
-    Then The issue page of the notification is opened
+    Then The issue page of the notification is opened at its comment

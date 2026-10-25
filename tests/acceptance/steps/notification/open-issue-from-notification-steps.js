@@ -154,11 +154,14 @@ export const then = function () {
 				}
 		},
 		{
-			'The issue page of the notification is opened': (assert, ctx) =>
+			'The issue page of the notification is opened at its comment': (
+				assert,
+				ctx
+			) =>
 				async function () {
 					let issue = ctx.get('notificationIssue');
 					assert.deepEqual(ctx.get('transitions'), [
-						[`/app/project/${issue.projectShortcode}/issue/${issue.issueNumber}`]
+						[`/app/project/${issue.projectShortcode}/issue/${issue.issueNumber}?s_id=1`]
 					]);
 				}
 		},

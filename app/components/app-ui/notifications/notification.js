@@ -199,7 +199,8 @@ export default class AppUiNotificationsNotificationComponent extends AppComponen
 	/**
 	 * Opens the issue a notification belongs to (`relatedId`) in the open
 	 * screen's quick view, or on the issue page when no screen took it. The
-	 * context only supplies the issue page's route parameters.
+	 * issue page link is the notification's own route URL, so a comment or
+	 * time log notification still points at its comment or time log.
 	 *
 	 * @method openIssue
 	 * @param {Object} notification The notification of an issue
@@ -212,7 +213,8 @@ export default class AppUiNotificationsNotificationComponent extends AppComponen
 		if (this.issuePreview.open(notification.relatedId)) {
 			return;
 		}
-		let link = issueLink(notification.context);
+		let link =
+			this.getRouteUrl(notification) || issueLink(notification.context);
 		if (link && this.config.app.notifications.enableNav) {
 			this.router.transitionTo(link);
 		}
