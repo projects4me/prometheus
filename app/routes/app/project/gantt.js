@@ -179,6 +179,7 @@ export default class GanttRoute extends App {
 		controller.set('isIssuePanelOpen', false);
 		controller.autoExpandFirstMilestone();
 		controller.registerHermesIntents(this.trackedProject.getProjectId());
+		controller.registerIssuePreview();
 	}
 
 	/**
@@ -192,6 +193,7 @@ export default class GanttRoute extends App {
 	resetController(controller, isExiting) {
 		if (isExiting) {
 			controller.unregisterHermesIntents();
+			controller.unregisterIssuePreview();
 			controller.query = null;
 			controller.selectedIssue = null;
 			this.query = null;

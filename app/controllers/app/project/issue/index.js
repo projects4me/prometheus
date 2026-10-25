@@ -7,6 +7,7 @@ import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import format from "prometheus/utils/data/format";
 import { inject as controller } from '@ember/controller';
+import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
@@ -579,6 +580,64 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
         await this.loadIssueDetails(issue);
         this.isLoadingIssueDetails = false;
         Logger.debug("-AppProjectIssueIndexController::selectIssue");
+    }
+
+    /**
+     * The issue preview service notification clicks are routed through.
+     *
+     * @property issuePreview
+     * @type Prometheus.Services.IssuePreviewService
+     * @public
+     */
+    @service issuePreview;
+
+    /**
+     * Disposer returned by issuePreview.register() for this screen.
+     *
+     * @property issuePreviewDisposer
+     * @type Function|null
+     * @private
+     */
+    issuePreviewDisposer = null;
+
+    /**
+     * Finds an issue among the rows currently loaded in the list.
+     *
+     * @method findLoadedIssue
+     * @param {String} issueId Issue id
+     * @returns {Object|undefined}
+     * @private
+     */
+    findLoadedIssue(issueId) {
+        return (this.model || []).find((issue) => String(issue.id) === String(issueId));
+    }
+
+    /**
+     * Registers the list as the issue preview target: an issue in a loaded
+     * row opens in the list's quick view.
+     *
+     * @method registerIssuePreview
+     * @returns {void}
+     * @public
+     */
+    registerIssuePreview() {
+        this.unregisterIssuePreview();
+        this.issuePreviewDisposer = this.issuePreview.register(this, {
+            hasIssue: (issueId) => Boolean(this.findLoadedIssue(issueId)),
+            open: (issueId) => this.selectIssue(this.findLoadedIssue(issueId))
+        });
+    }
+
+    /**
+     * Disposes the list's issue preview registration.
+     *
+     * @method unregisterIssuePreview
+     * @returns {void}
+     * @public
+     */
+    unregisterIssuePreview() {
+        this.issuePreviewDisposer?.();
+        this.issuePreviewDisposer = null;
     }
 
     /**
