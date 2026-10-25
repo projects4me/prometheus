@@ -273,6 +273,7 @@ export default App.extend({
         controller.set('issueStatuses',this.issueStatuses);
         controller.set('milestones',this.milestones);
         controller.set('selectedIssue', null);
+        controller.registerIssuePreview();
 
         if(controller.searchId && this.savedsearches) {
             controller.set('activeSearch', this.savedsearches.find(search => search.id === controller.searchId) || null);
@@ -289,6 +290,7 @@ export default App.extend({
      */
     resetController:function(controller, isExiting) {
         if (isExiting) {
+            controller.unregisterIssuePreview();
             controller.selectedIssue = null;
             controller.selectedIssueDetails = null;
             controller.isLoadingIssueDetails = false;

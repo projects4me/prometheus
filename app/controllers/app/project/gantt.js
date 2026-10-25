@@ -44,6 +44,24 @@ export default class AppProjectGanttController extends PrometheusController {
 	@service liveReloadPrompt;
 
 	/**
+	 * The issue preview service notification clicks are routed through.
+	 *
+	 * @property issuePreview
+	 * @type Prometheus.Services.IssuePreviewService
+	 * @public
+	 */
+	@service issuePreview;
+
+	/**
+	 * Disposer returned by issuePreview.register() for this screen.
+	 *
+	 * @property issuePreviewDisposer
+	 * @type Function|null
+	 * @private
+	 */
+	issuePreviewDisposer = null;
+
+	/**
 	 * Disposer returned by hermes.register() for this screen.
 	 *
 	 * @property hermesDisposer
@@ -207,6 +225,52 @@ export default class AppProjectGanttController extends PrometheusController {
 			}
 		}
 		return this.store.peekRecord('issue', issueId);
+	}
+
+	/**
+	 * Finds an issue among the gantt's loaded milestones (not the store).
+	 *
+	 * @method findLoadedIssue
+	 * @param {String} issueId Issue id
+	 * @returns {Object|null}
+	 * @private
+	 */
+	findLoadedIssue(issueId) {
+		for (let milestone of this.milestones || []) {
+			let issue = milestone.issues?.findBy('id', issueId);
+			if (issue) {
+				return issue;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Registers the gantt as the issue preview target: an issue on the chart
+	 * opens in the gantt's issue panel.
+	 *
+	 * @method registerIssuePreview
+	 * @returns {void}
+	 * @public
+	 */
+	registerIssuePreview() {
+		this.unregisterIssuePreview();
+		this.issuePreviewDisposer = this.issuePreview.register(this, {
+			hasIssue: (issueId) => Boolean(this.findLoadedIssue(issueId)),
+			open: (issueId) => this.openIssuePanel(this.findLoadedIssue(issueId))
+		});
+	}
+
+	/**
+	 * Disposes the gantt's issue preview registration.
+	 *
+	 * @method unregisterIssuePreview
+	 * @returns {void}
+	 * @public
+	 */
+	unregisterIssuePreview() {
+		this.issuePreviewDisposer?.();
+		this.issuePreviewDisposer = null;
 	}
 
 	/**
