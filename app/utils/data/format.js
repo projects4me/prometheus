@@ -8,8 +8,6 @@ import { getOwner, setOwner } from '@ember/application';
 import { htmlSafe } from '@ember/template';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
-/* global require */
-
 /**
  * This utility class is used to format data
  *
@@ -33,6 +31,16 @@ export default class Format {
      * @public
      */
     @service intl;
+
+    /**
+     * The translations service, which knows the default locale.
+     *
+     * @property translations
+     * @type Prometheus.Services.TranslationsService
+     * @for Prometheus.Utils.Data
+     * @public
+     */
+    @service translations;
 
     /**
      * This function converts model to tree
@@ -144,14 +152,25 @@ export default class Format {
     }
 
     /**
-     * This function is used to get the list from translations.
+     * This function is used to get a list from the merged translations (static bundle plus
+     * backend values) of the active locale, falling back to the default locale when the
+     * active locale has no such list.
      *
      * @method getTranslation
-     * @param list
-     * @return {Array}
+     * @param list The path of the list, e.g. `views.app.issue.lists.priority`
+     * @return {Object} The list as `{ value: label }`, or undefined when no locale has it
      */
     getTranslation(list) {
-        const translations = require("prometheus/locales/" + this.intl.locale + "/translations").default;
-        return _.head(_.at(translations, list));
+        const prefix = `${list}.`;
+        const locales = _.uniq([...this.intl.locale, this.translations.defaultLocale]);
+
+        for (const locale of locales) {
+            const messages = this.intl.translationsFor(locale) ?? {};
+            const keys = Object.keys(messages).filter((key) => key.startsWith(prefix));
+            if (keys.length) {
+                return _.fromPairs(keys.map((key) => [key.slice(prefix.length), messages[key]]));
+            }
+        }
+        return undefined;
     }
 }

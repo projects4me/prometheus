@@ -52,15 +52,26 @@ export default Route.extend({
     session: inject(),
 
     /**
-     * This function get triggered before a model fetch is called, this is
-     * called every time and we routing the user to the signin route if a user
-     * is not authenticated
+     * The translations service that loads the backend translations before the app renders
      *
-     * @method afterModel
+     * @property translations
+     * @type Ember.Service
+     * @for Application
+     * @public
+     */
+    translations: inject(),
+
+    /**
+     * This function get triggered before a model fetch is called, this is
+     * called every time. It loads the translations, then routes the user to the
+     * signin route if a user is not authenticated
+     *
+     * @method beforeModel
      * @private
      */
-    beforeModel: function () {
+    beforeModel: async function () {
         this._super(...arguments);
+        await this.translations.load();
         let route = '';
         let currentUrl = getCurrentUrl(this.router);
 
