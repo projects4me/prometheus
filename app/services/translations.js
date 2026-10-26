@@ -8,13 +8,6 @@ import Logger from 'js-logger';
 import { fetchLocales, fetchTranslations } from 'prometheus/utils/translations-api';
 
 /**
- * The locale the app falls back to: its static bundle ships with the app.
- *
- * @type String
- */
-export const DEFAULT_LOCALE = 'en-us';
-
-/**
  * Owns the app's translations: the locales Gaia supports and the active
  * locale. The static bundle (`translations/*.json`) is loaded first; the
  * backend document of a locale is merged over it, so backend values win.
@@ -36,6 +29,15 @@ export default class TranslationsService extends Service {
 	@service intl;
 
 	/**
+	 * The locale the app falls back to: its static bundle ships with the app.
+	 *
+	 * @property defaultLocale
+	 * @type String
+	 * @public
+	 */
+	defaultLocale = 'en-us';
+
+	/**
 	 * The locales Gaia supports, e.g. `['en-us']`. Forms that need a field
 	 * per locale read this list.
 	 *
@@ -43,7 +45,7 @@ export default class TranslationsService extends Service {
 	 * @type Array
 	 * @public
 	 */
-	@tracked locales = [DEFAULT_LOCALE];
+	@tracked locales = [this.defaultLocale];
 
 	/**
 	 * Sets the default locale, which the static bundle always provides.
@@ -52,7 +54,7 @@ export default class TranslationsService extends Service {
 	 * @public
 	 */
 	useDefaultLocale() {
-		this.intl.setLocale(DEFAULT_LOCALE);
+		this.intl.setLocale(this.defaultLocale);
 	}
 
 	/**
@@ -65,7 +67,7 @@ export default class TranslationsService extends Service {
 	 */
 	async load() {
 		this.useDefaultLocale();
-		await Promise.all([this.loadLocales(), this.loadLocale(DEFAULT_LOCALE)]);
+		await Promise.all([this.loadLocales(), this.loadLocale(this.defaultLocale)]);
 	}
 
 	/**
@@ -83,7 +85,7 @@ export default class TranslationsService extends Service {
 			return;
 		}
 
-		if (locale === DEFAULT_LOCALE || !(await this.loadLocale(locale))) {
+		if (locale === this.defaultLocale || !(await this.loadLocale(locale))) {
 			this.useDefaultLocale();
 			return;
 		}
@@ -103,13 +105,13 @@ export default class TranslationsService extends Service {
 	localeFor(language) {
 		let wanted = String(language ?? '').trim().toLowerCase();
 		if (!wanted) {
-			return DEFAULT_LOCALE;
+			return this.defaultLocale;
 		}
 
 		return (
 			this.locales.find((locale) => locale === wanted) ??
 			this.locales.find((locale) => locale.split('-')[0] === wanted.split('-')[0]) ??
-			DEFAULT_LOCALE
+			this.defaultLocale
 		);
 	}
 
@@ -123,7 +125,7 @@ export default class TranslationsService extends Service {
 	async loadLocales() {
 		try {
 			let locales = (await fetchLocales()).map((locale) => String(locale).toLowerCase());
-			this.locales = locales.includes(DEFAULT_LOCALE) ? locales : [DEFAULT_LOCALE, ...locales];
+			this.locales = locales.includes(this.defaultLocale) ? locales : [this.defaultLocale, ...locales];
 		} catch (error) {
 			Logger.warn('TranslationsService::loadLocales - keeping the default locale', error);
 		}

@@ -1,4 +1,5 @@
 @setupApplicationTest
+#UNCOMMON steps: tests/acceptance/steps/app/translations-steps.js
 Feature: App | translations
 
   Scenario: A backend translation overrides the static one
