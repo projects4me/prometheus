@@ -30,4 +30,35 @@ module("Unit | Utility | data/format", function (hooks) {
 
     assert.strictEqual(list.length, 0);
   });
+
+  test("getTranslation reads the list from the merged translations, so backend values win", function (assert) {
+    let intl = this.owner.lookup("service:intl");
+    intl.setLocale("en-us");
+    intl.addTranslations("en-us", { views: { app: { issue: { lists: { priority: { high: "Very High" } } } } } });
+
+    let list = createFormat(this.owner).getTranslation("views.app.issue.lists.priority");
+
+    assert.strictEqual(list.high, "Very High");
+    assert.strictEqual(list.low, "Low");
+  });
+
+  test("getTranslation reads a backend-only locale such as de-de", function (assert) {
+    let intl = this.owner.lookup("service:intl");
+    intl.addTranslations("de-de", { views: { app: { issue: { lists: { priority: { high: "Hoch" } } } } } });
+    intl.setLocale("de-de");
+
+    let list = createFormat(this.owner).getTranslation("views.app.issue.lists.priority");
+
+    assert.deepEqual(list, { high: "Hoch" });
+  });
+
+  test("getTranslation falls back to the default locale when the active locale lacks the list", function (assert) {
+    let intl = this.owner.lookup("service:intl");
+    intl.addTranslations("de-de", { global: { blank: "Leer" } });
+    intl.setLocale("de-de");
+
+    let list = createFormat(this.owner).getTranslation("views.app.issue.lists.priority");
+
+    assert.strictEqual(list.high, "High");
+  });
 });
