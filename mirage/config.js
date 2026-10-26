@@ -23,6 +23,7 @@ import * as Tag from './route-handlers/tag';
 import * as Tagged from './route-handlers/tagged';
 import * as Timelog from './route-handlers/timelog';
 import * as Token from './route-handlers/token';
+import * as Translation from './route-handlers/translation';
 import * as Upload from './route-handlers/upload';
 import * as User from './route-handlers/user';
 import * as Vote from './route-handlers/vote';
@@ -77,6 +78,7 @@ function routes() {
     Tagged.register(this, ctx);
     Timelog.register(this, ctx);
     Token.register(this, ctx);
+    Translation.register(this);
     Upload.register(this, ctx);
     User.register(this, ctx);
     Vote.register(this, ctx);

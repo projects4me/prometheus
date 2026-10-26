@@ -99,6 +99,16 @@ export default class AppLoadingAssetsRoute extends Route {
     @service hermes;
 
     /**
+     * The translations service, used to switch to the user's language.
+     *
+     * @property translations
+     * @type Ember.Service
+     * @for AppLoadingAssetsRoute
+     * @protected
+     */
+    @service translations;
+
+    /**
      * This method is called by ember when we enter this route and returns
      * resolved promises to the setupController function. In this method we're
      * fetching loggedin user model by using currentUser service. We'll fetch
@@ -116,6 +126,7 @@ export default class AppLoadingAssetsRoute extends Route {
 
         Logger.debug('-Prometheus.Route.App.LoadingAssets::model()');
         await this.currentUser.loadUser();
+        await this.translations.useLanguageOf(this.currentUser.user);
 
         return hashSettled({
             settings: this.settings.loadSettings(),
