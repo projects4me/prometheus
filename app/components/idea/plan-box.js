@@ -194,13 +194,14 @@ export default class IdeaPlanBoxComponent extends Component {
         (this.args.planIssues ?? [])
             .filter(link => link.ideaplanId === this.selected?.id)
             .forEach(link => {
-                let issueNumber = get(link, 'issue.issueNumber');
-                let projectShortcode = String(get(link, 'issue.projectShortcode') ?? '').toLowerCase();
+                let issue = link.loadedIssue;
+                let issueNumber = issue?.issueNumber;
+                let projectShortcode = String(issue?.projectShortcode ?? '').toLowerCase();
                 if (issueNumber && projectShortcode) {
                     created[link.key] = {
                         projectShortcode,
                         issueNumber,
-                        readable: isProjectReadable(get(link, 'issue.projectId'), this.readableProjectIds)
+                        readable: isProjectReadable(issue.projectId, this.readableProjectIds)
                     };
                 }
             });

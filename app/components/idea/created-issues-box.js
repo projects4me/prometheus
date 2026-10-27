@@ -51,7 +51,7 @@ export default class IdeaCreatedIssuesBoxComponent extends Component {
      * @private
      */
     describe(link, planItems) {
-        let issue = link.issue;
+        let issue = link.loadedIssue;
         if (!issue) {
             let item = planItems.find(candidate => candidate.key === link.key);
             return { id: link.id, label: link.key, subject: item?.subject, readable: false };
