@@ -74,4 +74,10 @@ module('Unit | Utility | issue-status/form', function () {
         form.labels[0].text = 'Working';
         assert.true(form.labelsChanged, 'a label changed');
     });
+
+    test('each label field gets the caption of its locale', function (assert) {
+        let form = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us', captionFor: (locale) => `Label ${locale}` });
+
+        assert.deepEqual(form.labels.map((field) => field.caption), ['Label en-us', 'Label de-de']);
+    });
 });

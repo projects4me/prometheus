@@ -102,4 +102,19 @@ module('Unit | Service | translations', function (hooks) {
 		assert.deepEqual(locales, ['en-us']);
 		assert.strictEqual(unsupported.status, 404);
 	});
+
+	test('every loaded locale is warmed up, and one that throws does not stop the others', async function (assert) {
+		this.server.get(translationsUrl(), () => ['en-us', 'de-de', 'fr-fr']);
+		let warmed = [];
+		this.intl.formatNumber = (value, { locale }) => {
+			warmed.push(locale);
+			if (locale === 'de-de') {
+				throw new Error('no formatter');
+			}
+		};
+
+		await this.service.loadLocales();
+
+		assert.deepEqual(warmed, ['en-us', 'de-de', 'fr-fr']);
+	});
 });
