@@ -8,6 +8,28 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 /**
+ * Pixels the pointer must travel after mousedown before SortableJS starts a fallback drag.
+ * The board uses forceFallback, and with the default of 0 a 1px move while clicking a card
+ * title starts a drag; SortableJS then swallows the following click, so the quick view
+ * never opens.
+ *
+ * @property FALLBACK_TOLERANCE
+ * @type {Number}
+ * @final
+ */
+const FALLBACK_TOLERANCE = 5;
+
+/**
+ * Milliseconds a touch must be held before a drag starts (touch only), so taps and scrolls
+ * are not mistaken for drags.
+ *
+ * @property TOUCH_DRAG_DELAY
+ * @type {Number}
+ * @final
+ */
+const TOUCH_DRAG_DELAY = 150;
+
+/**
  * This modifier is called on the initialization of taskboard component and SortableJS
  * is attached to every items inside that taskboard in order to make it draggable.
  *
@@ -104,7 +126,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get disableSortable() {
-        return this.args.named
+        return this.args.named.disableSortable;
     }
 
     /**
@@ -488,7 +510,11 @@ export default class InitializeSortable extends Modifier {
                     scrollSpeed: _self.scrollSpeed,
                     sort: false, // Don't allow sorting within tabs
                     forceFallback: _self.forceFallback,
-                    disableSortable: _self.disableSortable,
+                    disabled: !!_self.disableSortable,
+                    fallbackTolerance: FALLBACK_TOLERANCE,
+                    delay: TOUCH_DRAG_DELAY,
+                    delayOnTouchOnly: true,
+                    touchStartThreshold: FALLBACK_TOLERANCE,
                     animation: _self.animationSpeed,
                     dragClass: _self.dragClass,
                     chosenClass: _self.chosenClass,
@@ -551,7 +577,11 @@ export default class InitializeSortable extends Modifier {
                     scrollSpeed: _self.scrollSpeed,
                     sort: false,
                     forceFallback: _self.forceFallback,
-                    disableSortable: _self.disableSortable,
+                    disabled: !!_self.disableSortable,
+                    fallbackTolerance: FALLBACK_TOLERANCE,
+                    delay: TOUCH_DRAG_DELAY,
+                    delayOnTouchOnly: true,
+                    touchStartThreshold: FALLBACK_TOLERANCE,
                     animation: _self.animationSpeed,
                     dragClass: _self.dragClass,
                     chosenClass: _self.chosenClass,
@@ -577,7 +607,11 @@ export default class InitializeSortable extends Modifier {
             scrollSpeed: _self.scrollSpeed,
             sort: _self.sort,
             forceFallback: _self.forceFallback,
-            disableSortable: _self.disableSortable,
+            disabled: !!_self.disableSortable,
+            fallbackTolerance: FALLBACK_TOLERANCE,
+            delay: TOUCH_DRAG_DELAY,
+            delayOnTouchOnly: true,
+            touchStartThreshold: FALLBACK_TOLERANCE,
             animation: _self.animationSpeed,
             filter: '[data-issue-assignee-dropdown]',
             preventOnFilter: false,
