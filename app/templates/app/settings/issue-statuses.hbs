@@ -85,14 +85,40 @@
       close=(action "removeModal")
     }}
       <div class="box-body">
-        <FormFields::FieldText
-          @placeholder={{t "views.app.settings.issueStatuses.namePlaceholder"}}
-          @label={{t "views.app.settings.issueStatuses.name"}}
-          @value={{this.editing.name}}
-          @data-field="issuestatus.name"
-          @validate={{action this.validateField "issueStatusForm" (hash name="name" value=this.editing.name model=this.editing)}}
-          @message={{this.message.issueStatusForm.name}}
-        />
+        {{#each this.form.labels as |field|}}
+          <FormFields::FieldText
+            @placeholder={{t "views.app.settings.issueStatuses.labelPlaceholder"}}
+            @label={{t "views.app.settings.issueStatuses.label" locale=field.locale}}
+            @required={{field.required}}
+            @value={{field.text}}
+            @data-field={{concat "issuestatus.label." field.locale}}
+            @validate={{if field.required (action this.validateField "issueStatusForm" (hash name="defaultLabel" model=this.form))}}
+            @message={{if field.required this.message.issueStatusForm.defaultLabel}}
+          />
+        {{/each}}
+        {{#if this.form.isValueEditable}}
+          <FormFields::FieldText
+            @placeholder={{t "views.app.settings.issueStatuses.valuePlaceholder"}}
+            @label={{t "views.app.settings.issueStatuses.value"}}
+            @info={{t "views.app.settings.issueStatuses.valueInfo"}}
+            @showFieldInfo={{true}}
+            @required={{true}}
+            @value={{this.form.name}}
+            @onInput={{this.setValue}}
+            @data-field="issuestatus.name"
+            @validate={{action this.validateField "issueStatusForm" (hash name="name" model=this.form)}}
+            @message={{this.message.issueStatusForm.name}}
+          />
+        {{else}}
+          <FormFields::FieldText
+            @label={{t "views.app.settings.issueStatuses.value"}}
+            @info={{t "views.app.settings.issueStatuses.valueReadonly"}}
+            @showFieldInfo={{true}}
+            @readonly="readonly"
+            @value={{this.form.name}}
+            @data-field="issuestatus.name"
+          />
+        {{/if}}
         <div class="form-field issue-status-colors" data-field="issuestatus.color">
           <label>{{t "views.app.settings.issueStatuses.color"}}</label>
           <div>

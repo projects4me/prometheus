@@ -5,9 +5,11 @@
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
 import $ from 'jquery';
-import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
+import { addIssueStatusLabels, issueStatusLabel, ISSUE_STATUS_LABEL_PATH } from 'prometheus/utils/issue-status/label';
+import IssueStatusForm from 'prometheus/utils/issue-status/form';
 
 /**
  * The colours an issue status may use, the palette Gaia accepts.
@@ -35,6 +37,15 @@ export const STATUS_COLORS = [
 export default class AppSettingsIssueStatusesController extends PrometheusCreateController {
 
     /**
+     * The translations service, the supported locales
+     *
+     * @property translations
+     * @type Prometheus.Services.TranslationsService
+     * @private
+     */
+    @service translations;
+
+    /**
      * The global issue statuses listed on the page, in board order.
      *
      * @property issueStatuses
@@ -53,6 +64,15 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
     @tracked editing = null;
 
     /**
+     * The labels and value typed in the modal, null when it is closed.
+     *
+     * @property form
+     * @type Prometheus.Utils.IssueStatusForm
+     * @public
+     */
+    @tracked form = null;
+
+    /**
      * Validation schema definition of the issue status form.
      *
      * @property metadata
@@ -64,6 +84,15 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             {
                 name: 'issueStatusForm',
                 fields: [
+                    {
+                        name: 'defaultLabel',
+                        validations: {
+                            default: {
+                                type: 'string',
+                                rules: [{ name: 'required' }]
+                            }
+                        }
+                    },
                     {
                         name: 'name',
                         validations: {
@@ -141,6 +170,10 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
      */
     @action showAddDialog() {
         this.message.issueStatusForm = {};
+        this.form = new IssueStatusForm({
+            locales: this.translations.locales,
+            defaultLocale: this.translations.defaultLocale
+        });
         this.editing = this.store.createRecord('issuestatus', {
             system: '1',
             color: STATUS_COLORS[0].value,
@@ -159,7 +192,47 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
      */
     @action showEditDialog(issueStatus) {
         this.message.issueStatusForm = {};
+        this.form = new IssueStatusForm({
+            locales: this.translations.locales,
+            defaultLocale: this.translations.defaultLocale,
+            translations: this.savedLabels(issueStatus),
+            value: issueStatus.name,
+            isNew: false
+        });
         this.editing = issueStatus;
+    }
+
+    /**
+     * The saved labels of a status. A status saved without labels shows the label
+     * the app already has for it in the default locale, so it is not lost on save.
+     *
+     * @method savedLabels
+     * @param {Prometheus.Models.Issuestatus} issueStatus
+     * @return {Object} locale => label
+     * @private
+     */
+    savedLabels(issueStatus) {
+        let labels = { ...(issueStatus.translations ?? {}) };
+        let defaultLocale = this.translations.defaultLocale;
+        let key = `${ISSUE_STATUS_LABEL_PATH}.${issueStatus.name}`;
+
+        if (!labels[defaultLocale] && this.intl.exists(key, defaultLocale)) {
+            labels[defaultLocale] = this.intl.t(key, { locale: defaultLocale });
+        }
+
+        return labels;
+    }
+
+    /**
+     * Sets the status value as the user types it, shown the way it is saved.
+     *
+     * @method setValue
+     * @param {Event} event
+     * @protected
+     */
+    @action setValue(event) {
+        this.form.name = event.target.value;
+        event.target.value = this.form.name;
     }
 
     /**
@@ -180,6 +253,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             }
         }
         this.editing = null;
+        this.form = null;
         $('.modal').modal('hide');
     }
 
@@ -213,26 +287,37 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
      */
     @action saveIssueStatus() {
         let record = this.editing;
+        let form = this.form;
         let isNew = record.isNew;
 
-        this.validate(record, 'issueStatusForm').then((validation) => {
+        this.validate(form, 'issueStatusForm').then((validation) => {
             if (!validation.isValid) {
                 this._showError(validation.errors, 'settings.issueStatuses');
                 return;
             }
 
+            if (isNew) {
+                record.name = form.name;
+            }
+            if (form.labelsChanged) {
+                record.translations = form.translations;
+            }
+
             record.save().then(() => {
+                addIssueStatusLabels(this.intl, record.name, record.translations);
+
                 if (isNew) {
                     this.issueStatuses = [...this.issueStatuses, record];
                 }
 
                 this.editing = null;
+                this.form = null;
                 $('.modal').modal('hide');
 
                 new Messenger().post({
                     message: this.intl.t(
                         isNew ? 'views.app.settings.issueStatuses.created' : 'views.app.settings.issueStatuses.updated',
-                        { name: record.name, htmlSafe: true }
+                        { name: issueStatusLabel(this.intl, record.name), htmlSafe: true }
                     ),
                     type: 'success',
                     showCloseButton: true

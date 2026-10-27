@@ -26,3 +26,19 @@ export function issueStatusLabel(intl, name) {
 
     return intl.exists(key) ? intl.t(key) : (name || '');
 }
+
+/**
+ * Adds the saved labels of an issue status to the loaded translations so they show
+ * without a reload.
+ *
+ * @method addIssueStatusLabels
+ * @param {Ember.Service} intl The intl service
+ * @param {String} name Name of the issue status
+ * @param {Object} translations The labels, locale => label
+ * @public
+ */
+export function addIssueStatusLabels(intl, name, translations) {
+    Object.entries(translations ?? {}).forEach(([locale, label]) => {
+        intl.addTranslations(locale, { [`${ISSUE_STATUS_LABEL_PATH}.${name}`]: label });
+    });
+}
