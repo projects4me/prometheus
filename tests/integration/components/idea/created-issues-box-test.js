@@ -14,8 +14,8 @@ module('Integration | Component | idea/created-issues-box', function (hooks) {
         this.set('readable', ['1']);
         this.set('plans', [{ id: '1', version: 1 }, { id: '2', version: 2 }]);
         this.set('planIssues', [
-            { id: '10', ideaplanId: '2', issue: { projectId: '1', projectShortcode: 'APROM', issueNumber: '5', subject: 'Second' } },
-            { id: '11', ideaplanId: '1', issue: { projectId: '1', projectShortcode: 'APROM', issueNumber: '4', subject: 'First' } }
+            { id: '10', ideaplanId: '2', loadedIssue: { projectId: '1', projectShortcode: 'APROM', issueNumber: '5', subject: 'Second' } },
+            { id: '11', ideaplanId: '1', loadedIssue: { projectId: '1', projectShortcode: 'APROM', issueNumber: '4', subject: 'First' } }
         ]);
         await render(hbs`<Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readable}} />`);
 
@@ -37,8 +37,8 @@ module('Integration | Component | idea/created-issues-box', function (hooks) {
         this.set('readable', ['1']);
         this.set('plans', [{ id: '1', version: 1, body: JSON.stringify({ issues: [{ key: 'c', subject: 'Planned' }] }) }]);
         this.set('planIssues', [
-            { id: '10', ideaplanId: '1', key: 'a', issue: { projectId: '1', projectShortcode: 'APROM', issueNumber: '4', subject: 'Mine' } },
-            { id: '11', ideaplanId: '1', key: 'b', issue: { projectId: '2', projectShortcode: 'AGAIA', issueNumber: '9', subject: 'Theirs' } },
+            { id: '10', ideaplanId: '1', key: 'a', loadedIssue: { projectId: '1', projectShortcode: 'APROM', issueNumber: '4', subject: 'Mine' } },
+            { id: '11', ideaplanId: '1', key: 'b', loadedIssue: { projectId: '2', projectShortcode: 'AGAIA', issueNumber: '9', subject: 'Theirs' } },
             { id: '12', ideaplanId: '1', key: 'c' }
         ]);
         await render(hbs`<Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readable}} />`);
@@ -48,5 +48,25 @@ module('Integration | Component | idea/created-issues-box', function (hooks) {
         assert.dom('[data-idea-created-issue="11"] .text-muted').hasText('AGAIA-9 Theirs');
         assert.dom('[data-idea-created-issue="12"] a').doesNotExist();
         assert.dom('[data-idea-created-issue="12"] .text-muted').hasText('c Planned');
+    });
+
+    test('a record link shows the loaded issue and falls back to the plan item without fetching the unloaded one', async function (assert) {
+        let store = this.owner.lookup('service:store');
+        let requests = 0;
+        let adapter = store.adapterFor('issue');
+        adapter.findRecord = () => { requests++; return Promise.reject(new Error('unexpected fetch')); };
+        store.push({ data: [
+            { type: 'issue', id: '7', attributes: { projectId: '1', projectShortcode: 'APROM', issueNumber: '7', subject: 'Loaded' } },
+            { type: 'ideaplanissue', id: '10', attributes: { ideaplanId: '1', key: 'a' }, relationships: { issue: { data: { type: 'issue', id: '7' } } } },
+            { type: 'ideaplanissue', id: '11', attributes: { ideaplanId: '1', key: 'b' }, relationships: { issue: { data: { type: 'issue', id: '8' } } } }
+        ] });
+        this.set('readable', ['1']);
+        this.set('plans', [{ id: '1', version: 1 }]);
+        this.set('planIssues', [store.peekRecord('ideaplanissue', '10'), store.peekRecord('ideaplanissue', '11')]);
+        await render(hbs`<Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readable}} />`);
+
+        assert.dom('[data-idea-created-issue="10"] a').includesText('APROM-7');
+        assert.dom('[data-idea-created-issue="11"] .text-muted').hasText('b');
+        assert.strictEqual(requests, 0, 'the unloaded issue is not fetched');
     });
 });

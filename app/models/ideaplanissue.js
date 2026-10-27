@@ -47,4 +47,17 @@ export default class IdeaplanissueModel extends Model {
      * @public
      */
     @belongsTo('issue', { async: true, inverse: null }) issue;
+
+
+    /**
+     * The created issue when it is already in the store, null otherwise. Unlike `issue` (an async relation that
+     * fetches on access) reading it never triggers a request.
+     *
+     * @property loadedIssue
+     * @for Ideaplanissue
+     * @public
+     */
+    get loadedIssue() {
+        return this.belongsTo('issue').value() ?? null;
+    }
 }

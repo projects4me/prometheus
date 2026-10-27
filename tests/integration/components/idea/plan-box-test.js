@@ -107,9 +107,9 @@ module('Integration | Component | idea/plan-box', function (hooks) {
             { key: 'b', project: 'A Gaia', projectCode: 'agaia', subject: 'Two', priority: 'low', type: 'Task', complexity: 'complex', milestone: 'Ideas', newMilestone: true }
         ] }) }]);
         this.set('planIssues', [
-            { ideaplanId: '2', key: 'a', issue: { issueNumber: 4102, projectShortcode: 'APROM', projectId: '1' } },
-            { ideaplanId: '1', key: 'b', issue: { issueNumber: 9, projectShortcode: 'agaia', projectId: '2' } },
-            { ideaplanId: '2', key: 'c', issue: { issueNumber: 7, projectShortcode: '', projectId: '1' } }
+            { ideaplanId: '2', key: 'a', loadedIssue: { issueNumber: 4102, projectShortcode: 'APROM', projectId: '1' } },
+            { ideaplanId: '1', key: 'b', loadedIssue: { issueNumber: 9, projectShortcode: 'agaia', projectId: '2' } },
+            { ideaplanId: '2', key: 'c', loadedIssue: { issueNumber: 7, projectShortcode: '', projectId: '1' } }
         ]);
         await render(hbs`<Idea::PlanBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{array "1"}} @onApprove={{this.onApprove}} />`);
 
@@ -127,7 +127,7 @@ module('Integration | Component | idea/plan-box', function (hooks) {
             { key: 'b', subject: 'Two', priority: 'low', type: 'Task', complexity: 'simple', milestone: 'M' }
         ] }) }]);
         this.set('planIssues', [
-            { ideaplanId: '2', key: 'a', issue: { issueNumber: 4, projectShortcode: 'agaia', projectId: '2' } },
+            { ideaplanId: '2', key: 'a', loadedIssue: { issueNumber: 4, projectShortcode: 'agaia', projectId: '2' } },
             { ideaplanId: '2', key: 'b' }
         ]);
         await render(hbs`<Idea::PlanBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{array "1"}} @onApprove={{this.onApprove}} />`);
