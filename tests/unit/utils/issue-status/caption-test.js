@@ -25,4 +25,10 @@ module('Unit | Utility | issue-status/caption', function (hooks) {
     test('a missing translation falls back to the default caption with the locale code', function (assert) {
         assert.strictEqual(labelCaption(this.intl, 'fr-fr', 'en-us'), 'Label (fr-fr)');
     });
+
+    test('a default message with a locale placeholder is formatted with the requested locale', function (assert) {
+        this.intl.addTranslations('en-us', { views: { app: { settings: { issueStatuses: { label: 'Label ({locale})' } } } } });
+
+        assert.strictEqual(labelCaption(this.intl, 'fr-fr', 'en-us'), 'Label (fr-fr)');
+    });
 });

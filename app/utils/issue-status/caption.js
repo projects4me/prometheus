@@ -27,5 +27,7 @@ export function labelCaption(intl, locale, defaultLocale) {
         return intl.t(LABEL_CAPTION_KEY, { locale });
     }
 
-    return `${intl.t(LABEL_CAPTION_KEY, { locale: defaultLocale })} (${locale})`;
+    const message = intl.lookup(LABEL_CAPTION_KEY, defaultLocale);
+
+    return message.includes('{locale}') ? message.replace('{locale}', locale) : `${message} (${locale})`;
 }
