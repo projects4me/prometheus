@@ -16,7 +16,8 @@ Feature: Settings | issue statuses
     | done        | #5ac594 | 1    | 3         | 280        |
     ------------------------------------------------------------
     When User opens app/settings/issue-statuses
-    Then The issue statuses are listed in the order new, in_progress, done
+    Then The issue statuses table has the columns Status, Value, Counts as done, Issues
+    And The issue statuses are listed in the order new, in_progress, done
     And The issue status new is listed with colour #80b5d3, counting as done No and 220 issues
     And The issue status done is listed with colour #5ac594, counting as done Yes and 280 issues
     And The breadcrumb reads Dashboard > Settings > Issue Statuses

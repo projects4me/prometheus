@@ -6,15 +6,15 @@ import { translationsUrl } from 'prometheus/mirage/route-handlers/translation';
 const TABLE = '[data-issue-statuses-table]';
 
 /**
- * Finds the table row of the global issue status with the given key.
+ * Finds the table row of the global issue status with the given value.
  */
 function findRow(name) {
     return [...document.querySelectorAll(`${TABLE} tbody tr[data-issue-status]`)]
-        .find(row => row.querySelector('[data-column="key"]').textContent.trim() === name);
+        .find(row => row.querySelector('[data-column="value"]').textContent.trim() === name);
 }
 
-function listedKeys() {
-    return [...document.querySelectorAll(`${TABLE} tbody tr[data-issue-status] [data-column="key"]`)]
+function listedValues() {
+    return [...document.querySelectorAll(`${TABLE} tbody tr[data-issue-status] [data-column="value"]`)]
         .map(cell => cell.textContent.trim());
 }
 
@@ -210,7 +210,15 @@ export const then = function () {
     return [
         {
             "The issue statuses are listed in the order $names": (assert) => async function (names) {
-                assert.deepEqual(listedKeys(), splitNames(names), 'listed order');
+                assert.deepEqual(listedValues(), splitNames(names), 'listed order');
+            }
+        },
+        {
+            "The issue statuses table has the columns $headings": (assert) => async function (headings) {
+                let listed = [...document.querySelectorAll(`${TABLE} thead th`)]
+                    .map(cell => cell.textContent.trim())
+                    .filter(Boolean);
+                assert.deepEqual(listed, splitNames(headings), 'column headings');
             }
         },
         {

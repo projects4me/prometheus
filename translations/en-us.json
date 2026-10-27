@@ -1531,7 +1531,6 @@
           "add": "Add Issue Status",
           "edit": "Edit Issue Status",
           "status": "Status",
-          "key": "Key",
           "countsAsDone": "Counts as done",
           "countsAsDoneHelp": "Counts as done (closes the issue)",
           "issues": "Issues",
