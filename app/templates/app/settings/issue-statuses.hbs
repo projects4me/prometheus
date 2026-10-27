@@ -88,7 +88,7 @@
         {{#each this.form.labels as |field|}}
           <FormFields::FieldText
             @placeholder={{t "views.app.settings.issueStatuses.labelPlaceholder"}}
-            @label={{t "views.app.settings.issueStatuses.label" locale=field.locale}}
+            @label={{field.caption}}
             @required={{field.required}}
             @value={{field.text}}
             @data-field={{concat "issuestatus.label." field.locale}}

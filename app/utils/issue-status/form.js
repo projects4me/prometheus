@@ -40,8 +40,18 @@ export class IssueStatusLabelField {
      */
     @tracked text;
 
-    constructor(locale, text, required) {
+    /**
+     * The caption of the field, worked out when the dialog opens
+     *
+     * @property caption
+     * @type String
+     * @public
+     */
+    caption;
+
+    constructor(locale, text, required, caption = locale) {
         this.locale = locale;
+        this.caption = caption;
         this.text = text ?? '';
         this.required = required;
     }
@@ -101,11 +111,14 @@ export default class IssueStatusForm {
      * @param {Object} options.translations The saved labels, locale => label
      * @param {String} options.value The saved value, empty for a new status
      * @param {Boolean} options.isNew Whether the status is not created yet
+     * @param {Function} options.captionFor Gives the caption of a locale's field, the locale code by default
      */
-    constructor({ locales, defaultLocale, translations = {}, value = '', isNew = true }) {
+    constructor({ locales, defaultLocale, translations = {}, value = '', isNew = true, captionFor = (locale) => locale }) {
         let ordered = [defaultLocale, ...locales.filter((locale) => locale !== defaultLocale)];
 
-        this.labels = ordered.map((locale) => new IssueStatusLabelField(locale, translations[locale], locale === defaultLocale));
+        this.labels = ordered.map(
+            (locale) => new IssueStatusLabelField(locale, translations[locale], locale === defaultLocale, captionFor(locale))
+        );
         this.isValueEditable = isNew;
         this.savedTranslations = this.translations;
 

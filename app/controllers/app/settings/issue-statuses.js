@@ -9,6 +9,7 @@ import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
 import $ from 'jquery';
 import { addIssueStatusLabels, issueStatusRecordLabel, ISSUE_STATUS_LABEL_PATH } from 'prometheus/utils/issue-status/label';
+import { labelCaption } from 'prometheus/utils/issue-status/caption';
 import IssueStatusForm from 'prometheus/utils/issue-status/form';
 
 /**
@@ -172,7 +173,8 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
         this.message.issueStatusForm = {};
         this.form = new IssueStatusForm({
             locales: this.translations.locales,
-            defaultLocale: this.translations.defaultLocale
+            defaultLocale: this.translations.defaultLocale,
+            captionFor: this.captionFor
         });
         this.editing = this.store.createRecord('issuestatus', {
             system: '1',
@@ -197,10 +199,21 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             defaultLocale: this.translations.defaultLocale,
             translations: this.savedLabels(issueStatus),
             value: issueStatus.name,
-            isNew: false
+            isNew: false,
+            captionFor: this.captionFor
         });
         this.editing = issueStatus;
     }
+
+    /**
+     * The caption of a label field, worked out when the dialog opens (not while it renders).
+     *
+     * @method captionFor
+     * @param {String} locale
+     * @return {String}
+     * @private
+     */
+    captionFor = (locale) => labelCaption(this.intl, locale, this.translations.defaultLocale);
 
     /**
      * The saved labels of a status. A status saved without labels shows the label
