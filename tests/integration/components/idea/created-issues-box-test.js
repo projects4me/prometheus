@@ -53,7 +53,7 @@ module('Integration | Component | idea/created-issues-box', function (hooks) {
     test('a record link shows the loaded issue and falls back to the plan item without fetching the unloaded one', async function (assert) {
         let store = this.owner.lookup('service:store');
         let requests = 0;
-        let adapter = store.adapterFor('application');
+        let adapter = store.adapterFor('issue');
         adapter.findRecord = () => { requests++; return Promise.reject(new Error('unexpected fetch')); };
         store.push({ data: [
             { type: 'issue', id: '7', attributes: { projectId: '1', projectShortcode: 'APROM', issueNumber: '7', subject: 'Loaded' } },
