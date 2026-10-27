@@ -30,20 +30,6 @@ export default class IssueAssigneeSelectComponent extends AppComponent {
     }
 
     /**
-     * Keeps clicks and key presses on the dropdown from reaching the card
-     * (quick view, drag).
-     *
-     * @method stopPropagation
-     * @param {Event} event
-     * @public
-     */
-    @action stopPropagation(event) {
-        if (this.args.compact) {
-            event.stopPropagation();
-        }
-    }
-
-    /**
      * Handles keyboard activation for assignee dropdown options.
      *
      * @method handleAssigneeOptionKeydown

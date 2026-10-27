@@ -23,6 +23,8 @@ export default function (assert) {
 		})
 		.when('User clicks on the assignee avatar of the first card', async function () {
 			await click(card() + ' [data-issue-assignee-toggle]');
+			assert.dom(card() + ' [data-issue-assignee-dropdown]').hasClass('open', 'the dropdown opened');
+			assert.dom(card() + ' [data-issue-assignee-dropdown] .dropdown-menu').isVisible('the menu is visible');
 		})
 		.when('User selects User_2 from the card assignee menu of the first card', async function () {
 			await click(card() + ' [data-issue-assignee-option]');
