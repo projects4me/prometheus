@@ -1,7 +1,8 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import { addIssueStatusLabels } from 'prometheus/utils/issue-status/label';
 
 module('Integration | Helper | status-label', function (hooks) {
     setupRenderingTest(hooks);
@@ -16,5 +17,14 @@ module('Integration | Helper | status-label', function (hooks) {
         await render(hbs`<span>{{status-label "on_hold_upstream"}}</span>`);
 
         assert.dom('span').hasText('on_hold_upstream');
+    });
+
+    test('it shows a label as soon as it is added', async function (assert) {
+        await render(hbs`<span>{{status-label "on_hold_upstream"}}</span>`);
+
+        addIssueStatusLabels(this.owner.lookup('service:intl'), 'on_hold_upstream', { 'en-us': 'On Hold Upstream' });
+        await settled();
+
+        assert.dom('span').hasText('On Hold Upstream');
     });
 });

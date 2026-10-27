@@ -146,4 +146,15 @@ export default class IssuestatusModel extends Model {
      * @public
      */
     @attr('number') issueCount;
+
+    /**
+     * Labels of the issue status, locale => label, e.g. `{ "en-us": "In Progress" }`.
+     * Gaia returns them with the status and saves them with it.
+     *
+     * @property translations
+     * @type Object
+     * @for Issuestatus
+     * @public
+     */
+    @attr() translations;
 }

@@ -1,19 +1,20 @@
 import { click, fillIn, settled, waitUntil } from '@ember/test-helpers';
 import Sortable from 'sortablejs';
 import steps from '../steps';
+import { translationsUrl } from 'prometheus/mirage/route-handlers/translation';
 
 const TABLE = '[data-issue-statuses-table]';
 
 /**
- * Finds the table row of the global issue status with the given key.
+ * Finds the table row of the global issue status with the given value.
  */
 function findRow(name) {
     return [...document.querySelectorAll(`${TABLE} tbody tr[data-issue-status]`)]
-        .find(row => row.querySelector('[data-column="key"]').textContent.trim() === name);
+        .find(row => row.querySelector('[data-column="value"]').textContent.trim() === name);
 }
 
-function listedKeys() {
-    return [...document.querySelectorAll(`${TABLE} tbody tr[data-issue-status] [data-column="key"]`)]
+function listedValues() {
+    return [...document.querySelectorAll(`${TABLE} tbody tr[data-issue-status] [data-column="value"]`)]
         .map(cell => cell.textContent.trim());
 }
 
@@ -26,6 +27,54 @@ function splitNames(names) {
  */
 function waitForMessenger(selector) {
     return waitUntil(() => document.querySelector(selector));
+}
+
+function labelInput(locale) {
+    return `.modal [data-field="issuestatus.label.${locale}"] input`;
+}
+
+const VALUE_INPUT = '.modal [data-field="issuestatus.name"] input';
+
+/**
+ * The create and update requests the page sent for issue statuses, per Mirage server.
+ */
+const sentWrites = new WeakMap();
+
+/**
+ * Starts recording the create and update requests of issue statuses; Mirage doesn't
+ * keep them. The recorder is removed when the server shuts down.
+ */
+function recordWrites() {
+    if (sentWrites.has(server)) {
+        return;
+    }
+
+    let requests = [];
+    let pretender = server.pretender;
+    let handledRequest = pretender.handledRequest;
+    pretender.handledRequest = function (verb, path, request) {
+        if (['POST', 'PATCH'].includes(verb) && /\/issuestatus(\/[^/]+)?$/.test(path)) {
+            requests.push(request);
+        }
+        return handledRequest.apply(this, arguments);
+    };
+
+    let shutdown = server.shutdown;
+    server.shutdown = function () {
+        pretender.handledRequest = handledRequest;
+        server.shutdown = shutdown;
+        return shutdown.apply(this, arguments);
+    };
+
+    sentWrites.set(server, requests);
+}
+
+function sentRequests(verb) {
+    return (sentWrites.get(server) ?? []).filter(request => request.method === verb);
+}
+
+function createRequests() {
+    return sentRequests('POST');
 }
 
 async function submitModal() {
@@ -52,10 +101,17 @@ export const given = function () {
                         done: row.done,
                         sortOrder: parseInt(row.sortOrder),
                         issueCount: parseInt(row.issueCount),
-                        system: '1'
+                        system: '1',
+                        translations: row.label ? { 'en-us': row.label } : undefined
                     });
                 });
                 assert.ok(true, `${table.length} global issue statuses exist`);
+            }
+        },
+        {
+            "Gaia offers the locales $locales": (assert) => async function (locales) {
+                server.get(translationsUrl(), () => splitNames(locales));
+                assert.ok(true, `Gaia supports ${locales}`);
             }
         }
     ];
@@ -64,17 +120,59 @@ export const given = function () {
 export const when = function () {
     return [
         {
-            "User adds the issue status $name with colour $color counting as done": (assert) => async function (name, color) {
+            "User adds the issue status labelled $label with colour $color counting as done": (assert) => async function (label, color) {
+                recordWrites();
                 await click('[data-btn="add-issue-status"]');
-                await fillIn('.modal [data-field="issuestatus.name"] input', name);
+                await fillIn(labelInput('en-us'), label);
                 await click(`.modal [data-field="issuestatus.color"] input[value="${color}"]`);
                 await click('.modal [data-field="issuestatus.done"] input');
                 await submitModal();
-                assert.ok(true, `User adds the issue status ${name}`);
+                assert.ok(true, `User adds the issue status ${label}`);
+            }
+        },
+        {
+            "User creates the issue status $label": (assert) => async function (label) {
+                recordWrites();
+                await click('[data-btn="add-issue-status"]');
+                await fillIn(labelInput('en-us'), label);
+                await submitModal();
+                assert.ok(true, `User adds the issue status ${label}`);
+            }
+        },
+        {
+            "User starts adding an issue status": (assert) => async function () {
+                recordWrites();
+                await click('[data-btn="add-issue-status"]');
+                assert.ok(true, 'User opens the add dialog');
+            }
+        },
+        {
+            "User starts editing the issue status $name": (assert) => async function (name) {
+                await click(findRow(name).querySelector('[data-btn="edit-issue-status"]'));
+                assert.ok(true, `User opens the edit dialog of ${name}`);
+            }
+        },
+        {
+            "User types the $locale label $label": (assert) => async function (locale, label) {
+                await fillIn(labelInput(locale), label);
+                assert.ok(true, `User types the ${locale} label ${label}`);
+            }
+        },
+        {
+            "User types the value $value": (assert) => async function (value) {
+                await fillIn(VALUE_INPUT, value);
+                assert.ok(true, `User types the value ${value}`);
+            }
+        },
+        {
+            "User saves the issue status": (assert) => async function () {
+                await submitModal();
+                assert.ok(true, 'User saves the issue status');
             }
         },
         {
             "User changes the colour of the issue status $name to $color": (assert) => async function (name, color) {
+                recordWrites();
                 await click(findRow(name).querySelector('[data-btn="edit-issue-status"]'));
                 await click(`.modal [data-field="issuestatus.color"] input[value="${color}"]`);
                 await submitModal();
@@ -113,7 +211,15 @@ export const then = function () {
     return [
         {
             "The issue statuses are listed in the order $names": (assert) => async function (names) {
-                assert.deepEqual(listedKeys(), splitNames(names), 'listed order');
+                assert.deepEqual(listedValues(), splitNames(names), 'listed order');
+            }
+        },
+        {
+            "The issue statuses table has the columns $headings": (assert) => async function (headings) {
+                let listed = [...document.querySelectorAll(`${TABLE} thead th`)]
+                    .map(cell => cell.textContent.trim())
+                    .filter(Boolean);
+                assert.deepEqual(listed, splitNames(headings), 'column headings');
             }
         },
         {
@@ -137,6 +243,61 @@ export const then = function () {
                 await waitUntil(() => savedOrder().join() === expected.join(), { timeout: 2000 });
                 let saved = savedOrder();
                 assert.deepEqual(saved, expected, 'saved order');
+            }
+        },
+        {
+            "The dialog has a label field for $locales": (assert) => async function (locales) {
+                let fields = [...document.querySelectorAll('.modal [data-field^="issuestatus.label."]')]
+                    .map(field => field.dataset.field.replace('issuestatus.label.', ''));
+                assert.deepEqual(fields, splitNames(locales), 'label fields');
+            }
+        },
+        {
+            "The value reads $value": (assert) => async function (value) {
+                assert.dom(VALUE_INPUT).hasValue(value);
+            }
+        },
+        {
+            "The value is read-only": (assert) => async function () {
+                assert.dom(VALUE_INPUT).hasAttribute('readonly');
+            }
+        },
+        {
+            "The issue status is not saved and the dialog stays open": (assert) => async function () {
+                assert.dom('.modal [data-field="issuestatus.name"]').exists('the dialog is open');
+                assert.strictEqual(createRequests().length, 0, 'no create request');
+            }
+        },
+        {
+            "The issue status $name is listed with the label $label": (assert) => async function (name, label) {
+                let row = findRow(name);
+                assert.ok(row, `${name} is listed`);
+                assert.equal(row.querySelector('[data-column="label"]').textContent.trim(), label);
+            }
+        },
+        {
+            "One request created the issue status $name with the labels $labels": (assert) => async function (name, labels) {
+                let requests = createRequests();
+                assert.strictEqual(requests.length, 1, 'one create request');
+
+                let attributes = JSON.parse(requests[0].requestBody).data.attributes;
+                assert.strictEqual(attributes.name, name);
+                assert.deepEqual(attributes.translations, JSON.parse(labels));
+            }
+        },
+        {
+            "The issue status $name was saved with the labels $labels": (assert) => async function (name, labels) {
+                let status = server.schema.issuestatuses.findBy({ name });
+                assert.deepEqual(status.translations, JSON.parse(labels));
+            }
+        },
+        {
+            "The update of the issue status $name sent no labels": (assert) => async function () {
+                let requests = sentRequests('PATCH');
+                assert.strictEqual(requests.length, 1, 'one update request');
+
+                let attributes = JSON.parse(requests[0].requestBody).data.attributes;
+                assert.notOk('translations' in attributes, 'no labels sent');
             }
         },
         {
