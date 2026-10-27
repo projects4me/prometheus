@@ -3,6 +3,8 @@
  */
 
 import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { service } from '@ember/service';
 
 /**
  * This component renders label for the fields.
@@ -14,22 +16,41 @@ import Component from '@glimmer/component';
  */
 export default class FormFieldsLabelComponent extends Component {
 	/**
-	 * This function toggle the information of the label.
+	 * Remembers which info bubbles are hidden
 	 *
-	 * @method toggleLabelInfo
+	 * @property fieldInfo
+	 * @type FieldInfo
+	 * @for FormFieldsLabelComponent
 	 */
-	toggleLabelInfo(fieldName, event) {
-		let infoEl = document.querySelector(
-			`[data-field="${fieldName}"] [data-field-label="info"]`
-		);
-		let el = document.querySelector(
-			`[data-field="${fieldName}"] [data-field-label="info"]`
-		);
-		// data-label-info="btn"
-		if (infoEl.style.display === 'none') {
-			infoEl.style.display = 'inline-flex';
-		} else {
-			infoEl.style.display = 'none';
-		}
+	@service fieldInfo;
+
+	/**
+	 * Key that identifies this field's bubble: @infoKey, or else @data-field.
+	 *
+	 * @property infoKey
+	 * @type String
+	 */
+	get infoKey() {
+		return this.args.infoKey || this.args['data-field'];
+	}
+
+	/**
+	 * Whether the user has hidden the info bubble of this field.
+	 *
+	 * @property isInfoHidden
+	 * @type Boolean
+	 */
+	get isInfoHidden() {
+		return this.fieldInfo.isHidden(this.infoKey);
+	}
+
+	/**
+	 * This function toggles the information of the label and saves the choice.
+	 *
+	 * @method toggleInfo
+	 */
+	@action
+	toggleInfo() {
+		this.fieldInfo.toggle(this.infoKey);
 	}
 }
