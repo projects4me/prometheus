@@ -641,6 +641,11 @@
 
     [data-toggle="dropdown"] {
       cursor: pointer;
+
+      .fa-caret-down {
+        margin-left: 0.2rem;
+        color: $darkColor;
+      }
     }
 
     img.img-circle {
