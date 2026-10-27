@@ -8,7 +8,7 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
 import $ from 'jquery';
-import { addIssueStatusLabels, issueStatusLabel, ISSUE_STATUS_LABEL_PATH } from 'prometheus/utils/issue-status/label';
+import { addIssueStatusLabels, issueStatusRecordLabel, ISSUE_STATUS_LABEL_PATH } from 'prometheus/utils/issue-status/label';
 import IssueStatusForm from 'prometheus/utils/issue-status/form';
 
 /**
@@ -128,8 +128,8 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
     }
 
     /**
-     * The statuses with the label to display. The label is the translated name
-     * so the page is multi-lingual, statuses without a translation show their name.
+     * The statuses with the label to display: the label saved with the status in the
+     * current language, else its translated name, else its name.
      *
      * @property rows
      * @type Array
@@ -143,7 +143,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             return {
                 status,
                 style: color ? color.style : '',
-                label: issueStatusLabel(this.intl, status.name),
+                label: issueStatusRecordLabel(this.intl, status),
                 isUsed: status.issueCount > 0
             };
         });
@@ -317,7 +317,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
                 new Messenger().post({
                     message: this.intl.t(
                         isNew ? 'views.app.settings.issueStatuses.created' : 'views.app.settings.issueStatuses.updated',
-                        { name: issueStatusLabel(this.intl, record.name), htmlSafe: true }
+                        { name: issueStatusRecordLabel(this.intl, record), htmlSafe: true }
                     ),
                     type: 'success',
                     showCloseButton: true

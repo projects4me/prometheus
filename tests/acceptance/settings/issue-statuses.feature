@@ -97,6 +97,22 @@ Feature: Settings | issue statuses
     Then The issue status in_progress is listed with the label Working On It
     And The issue status in_progress was saved with the labels {"en-us": "Working On It"}
 
+  Scenario: A global issue status is listed with the label saved in Gaia
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 has setting.get permission set to 1
+    And The global issue statuses are
+    ------------------------------------------------------------------------
+    | name        | label        | color   | done | sortOrder | issueCount |
+    | awaiting_qa | Awaiting QA  | #b3244f | 0    | 1         | 0          |
+    | in_progress | Being Worked | #5ac594 | 0    | 2         | 1          |
+    ------------------------------------------------------------------------
+    When User opens app/settings/issue-statuses
+    Then The issue status awaiting_qa is listed with the label Awaiting QA
+    And The issue status in_progress is listed with the label Being Worked
+
   Scenario: An admin recolours a global issue status
 
     Given There is no pre-existing data

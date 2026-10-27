@@ -28,6 +28,22 @@ export function issueStatusLabel(intl, name) {
 }
 
 /**
+ * Returns the label of an issue status record in the current language: the label saved
+ * with the status, else its translated name, else its name.
+ *
+ * @method issueStatusRecordLabel
+ * @param {Ember.Service} intl The intl service
+ * @param {Prometheus.Models.Issuestatus} status The issue status
+ * @return {String} The label to display
+ * @public
+ */
+export function issueStatusRecordLabel(intl, status) {
+    let saved = status.translations?.[intl.primaryLocale];
+
+    return saved || issueStatusLabel(intl, status.name);
+}
+
+/**
  * Adds the saved labels of an issue status to the loaded translations so they show
  * without a reload.
  *

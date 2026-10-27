@@ -101,7 +101,8 @@ export const given = function () {
                         done: row.done,
                         sortOrder: parseInt(row.sortOrder),
                         issueCount: parseInt(row.issueCount),
-                        system: '1'
+                        system: '1',
+                        translations: row.label ? { 'en-us': row.label } : undefined
                     });
                 });
                 assert.ok(true, `${table.length} global issue statuses exist`);
