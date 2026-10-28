@@ -218,7 +218,7 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
      */
     @computed('types')
     get typeList() {
-        return (new format(this)).getSelectList(this.types);
+        return (new format(this)).getIssueTypeList(this.types);
     }
 
     /**

@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { inject as service } from '@ember/service';
 import { getOwner, setOwner } from '@ember/application';
 import { htmlSafe } from '@ember/template';
-import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
+import { issueStatusLabel, issueTypeRecordLabel } from 'prometheus/utils/issue-status/label';
 
 /**
  * This utility class is used to format data
@@ -149,6 +149,23 @@ export default class Format {
         }) || [];
 
         return this.getSelectList(labelledStatuses);
+    }
+
+    /**
+     * This function prepares the select list of issue types, labelled with the label saved with
+     * the type, else the translated name or the name itself.
+     *
+     * @method getIssueTypeList
+     * @param {Array|Ember.ArrayProxy} types
+     * @return {Array}
+     */
+    getIssueTypeList(types) {
+        const labelledTypes = (types?.toArray?.() ?? types ?? []).map((type) => ({
+            id: type.id,
+            name: issueTypeRecordLabel(this.intl, type)
+        }));
+
+        return this.getSelectList(labelledTypes);
     }
 
     /**

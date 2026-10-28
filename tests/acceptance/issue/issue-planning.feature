@@ -48,7 +48,7 @@ Feature: Issue Planning | AI-assisted plan and hierarchical creation
     | issue    |
     | 1        |
     --------------    
-    And Project has issue type of Sub Task and status of new
+    And Project has issue type of sub_task and status of new
     And There is custom callback for issue
     And Disable modal close for testing
     When User navigates to app/project/PROJECT_1/issue/1
@@ -70,7 +70,7 @@ Feature: Issue Planning | AI-assisted plan and hierarchical creation
     | issue    |
     | 1        |
     --------------
-    And Project has issue type of Sub Task and status of new
+    And Project has issue type of sub_task and status of new
     And There is custom callback for issue
     When User navigates to app/project/PROJECT_1/issue/1
     And There is custom callback for issue planning data    
@@ -92,7 +92,7 @@ Feature: Issue Planning | AI-assisted plan and hierarchical creation
     | issue    |
     | 1        |
     --------------
-    And Project has issue type of Sub Task and status of new
+    And Project has issue type of sub_task and status of new
     And There is custom callback for issue
     When User navigates to app/project/PROJECT_1/issue/1
     And There is custom callback for issue planning data    

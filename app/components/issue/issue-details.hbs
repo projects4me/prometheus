@@ -8,7 +8,7 @@
         <div class="box box-primary issue-details" data-field="issue.subject">
           <div class="box-header with-border box-header-no-content flex-row flex-jc-sb flex-ai-c">
             {{#unless @quickView}}
-            <h2 class="box-title issue-title">{{this.issue.issuetype.name}} - #{{this.issue.issueNumber}} | 
+            <h2 class="box-title issue-title">{{type-label this.issue.issuetype}} - #{{this.issue.issueNumber}} | 
               <AccessControl @aclContext="issue.subject.read">
                 <span class="issue-subject">{{this.issue.subject}}</span>
               </AccessControl>
@@ -158,7 +158,7 @@
               <div class="col-xs-6 col-md-4" data-field="issue.issuetype">
                 <h4>{{t "views.app.issue.detail.type"}}</h4>
                 <p>
-                  {{this.issue.issuetype.name}}
+                  {{type-label this.issue.issuetype}}
                 </p>
               </div>
 

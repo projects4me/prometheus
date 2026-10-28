@@ -3,7 +3,7 @@
  */
 
 import { tracked } from '@glimmer/tracking';
-import { toStatusValue } from 'prometheus/utils/issue-status/value';
+import { toLabelValue } from 'prometheus/utils/issue-status/value';
 
 /**
  * The label of an issue status in one locale, as typed in the form.
@@ -146,12 +146,12 @@ export default class IssueStatusForm {
      * @public
      */
     get name() {
-        return this.typedValue ?? toStatusValue(this.defaultLabel);
+        return this.typedValue ?? toLabelValue(this.defaultLabel);
     }
 
     set name(text) {
         if (this.isValueEditable) {
-            this.typedValue = toStatusValue(text);
+            this.typedValue = toLabelValue(text);
         }
     }
 

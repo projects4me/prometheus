@@ -5,9 +5,11 @@
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import format from '../../../utils/data/format';
 import { inject as controller } from '@ember/controller';
+import { inject as service } from '@ember/service';
 import { computed, action } from '@ember/object';
 import { hash } from 'rsvp';
 import _ from 'lodash';
+import { toLabelValue } from 'prometheus/utils/issue-status/value';
 import { htmlSafe } from '@ember/template';
 
 /**
@@ -23,6 +25,9 @@ import { htmlSafe } from '@ember/template';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class AppProjectsCreateController extends PrometheusCreateController {
+
+	@service translations;
+
 	/**
 	 * This object holds all of the information that we need to create our schema and also need to
 	 * render the template (in future).
@@ -212,7 +217,7 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 	 */
 	@computed('issuetypes')
 	get issuetypeList() {
-		return new format(this).getSelectList(this.issuetypes);
+		return new format(this).getIssueTypeList(this.issuetypes);
 	}
 
 	/**
@@ -277,10 +282,13 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 		let Promises = {};
 
 		_.forEach(selectedIssuetypes, function (issueType) {
+			// A type picked from the list is copied with its value and labels; a typed term becomes a new one
+			let source = _self.get('store').peekRecord('issuetype', issueType.value);
 			let newIssueType = _self.get('store').createRecord('issuetype', {
-				name: issueType.label,
+				name: source ? source.name : toLabelValue(issueType.label),
+				translations: source?.translations ?? { [_self.translations.defaultLocale]: issueType.label },
 				deleted: 0,
-				description: issueType.label,
+				description: source ? source.description : issueType.label,
 				system: 0,
 				projectId: model.get('id')
 			});

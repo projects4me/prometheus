@@ -1505,13 +1505,19 @@
           "title": "Issue Types",
           "singular": "issue type",
           "fields": {
-            "name": "Name"
+            "defaultLabel": "Label (en-us)",
+            "name": "Value"
           },
           "info": "Default issue types are copied into new projects. Changes here do not affect existing projects.",
           "add": "Add Issue Type",
           "edit": "Edit Issue Type",
-          "name": "Name",
-          "namePlaceholder": "Name of the issue type",
+          "labelColumn": "Label",
+          "label": "Label ({locale})",
+          "labelPlaceholder": "Enter the label ..",
+          "value": "Value",
+          "valuePlaceholder": "e.g. change_request",
+          "valueInfo": "Saved with the issues that use the type. Lowercase letters, digits and _ only, at most 30 characters. It can't be changed later.",
+          "valueReadonly": "The value can't be changed after the type is created.",
           "description": "Description",
           "descriptionPlaceholder": "What is this issue type used for?",
           "projectsUsing": "Projects using",

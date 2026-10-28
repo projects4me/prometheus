@@ -12,49 +12,68 @@
 export const ISSUE_STATUS_LABEL_PATH = 'views.app.issue.lists.status';
 
 /**
- * Returns the label of an issue status: the translated name so labels stay multi-lingual,
- * or the name itself for a status that has no translation (one added in Settings).
+ * Translation path of the issue type labels.
  *
- * @method issueStatusLabel
+ * @property ISSUE_TYPE_LABEL_PATH
+ * @type String
+ * @public
+ */
+export const ISSUE_TYPE_LABEL_PATH = 'views.app.issue.lists.type';
+
+/**
+ * Returns the label of a value kept under a translation path: the translated name so labels
+ * stay multi-lingual, or the value itself when it has no translation (one added in Settings).
+ *
+ * @method valueLabel
  * @param {Ember.Service} intl The intl service
- * @param {String} name Name of the issue status
+ * @param {String} path Translation path of the labels
+ * @param {String} name The value, e.g. `in_progress`
  * @return {String} The label to display
  * @public
  */
-export function issueStatusLabel(intl, name) {
-    let key = `${ISSUE_STATUS_LABEL_PATH}.${name}`;
+export function valueLabel(intl, path, name) {
+    let key = `${path}.${name}`;
 
     return intl.exists(key) ? intl.t(key) : (name || '');
 }
 
 /**
- * Returns the label of an issue status record in the current language: the label saved
- * with the status, else its translated name, else its name.
+ * Returns the label of a record in the current language: the label saved with the record,
+ * else its translated name, else its name.
  *
- * @method issueStatusRecordLabel
+ * @method recordLabel
  * @param {Ember.Service} intl The intl service
- * @param {Prometheus.Models.Issuestatus} status The issue status
+ * @param {String} path Translation path of the labels
+ * @param {Prometheus.Models.Object} record An issue status or an issue type
  * @return {String} The label to display
  * @public
  */
-export function issueStatusRecordLabel(intl, status) {
-    let saved = status.translations?.[intl.primaryLocale];
+export function recordLabel(intl, path, record) {
+    let saved = record.translations?.[intl.primaryLocale];
 
-    return saved || issueStatusLabel(intl, status.name);
+    return saved || valueLabel(intl, path, record.name);
 }
 
 /**
- * Adds the saved labels of an issue status to the loaded translations so they show
- * without a reload.
+ * Adds the saved labels of a value to the loaded translations so they show without a reload.
  *
- * @method addIssueStatusLabels
+ * @method addLabels
  * @param {Ember.Service} intl The intl service
- * @param {String} name Name of the issue status
+ * @param {String} path Translation path of the labels
+ * @param {String} name The value
  * @param {Object} translations The labels, locale => label
  * @public
  */
-export function addIssueStatusLabels(intl, name, translations) {
+export function addLabels(intl, path, name, translations) {
     Object.entries(translations ?? {}).forEach(([locale, label]) => {
-        intl.addTranslations(locale, { [`${ISSUE_STATUS_LABEL_PATH}.${name}`]: label });
+        intl.addTranslations(locale, { [`${path}.${name}`]: label });
     });
 }
+
+export const issueStatusLabel = (intl, name) => valueLabel(intl, ISSUE_STATUS_LABEL_PATH, name);
+export const issueStatusRecordLabel = (intl, status) => recordLabel(intl, ISSUE_STATUS_LABEL_PATH, status);
+export const addIssueStatusLabels = (intl, name, translations) => addLabels(intl, ISSUE_STATUS_LABEL_PATH, name, translations);
+
+export const issueTypeLabel = (intl, name) => valueLabel(intl, ISSUE_TYPE_LABEL_PATH, name);
+export const issueTypeRecordLabel = (intl, type) => recordLabel(intl, ISSUE_TYPE_LABEL_PATH, type);
+export const addIssueTypeLabels = (intl, name, translations) => addLabels(intl, ISSUE_TYPE_LABEL_PATH, name, translations);

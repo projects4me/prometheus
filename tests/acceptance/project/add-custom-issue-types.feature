@@ -18,4 +18,4 @@ Feature: Project | add custom issue types
     And User clicks on save button
     Then User should be in app/project/testp page
     And Project name is test project
-    And Project issuetypes are Issue Type 1, Issue Type 2
+    And Project issuetypes are issue_type_1, issue_type_2

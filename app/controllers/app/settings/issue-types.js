@@ -6,7 +6,11 @@ import PrometheusCreateController from 'prometheus/controllers/prometheus/create
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
+import { inject as service } from '@ember/service';
 import $ from 'jquery';
+import { addIssueTypeLabels, issueTypeRecordLabel, ISSUE_TYPE_LABEL_PATH } from 'prometheus/utils/issue-status/label';
+import { labelCaption, TYPE_LABEL_CAPTION_KEY } from 'prometheus/utils/issue-status/caption';
+import IssueStatusForm from 'prometheus/utils/issue-status/form';
 
 /**
  * The controller of the Issue Types page of the Settings area. Adds, edits and
@@ -29,6 +33,15 @@ export default class AppSettingsIssueTypesController extends PrometheusCreateCon
     @tracked issueTypes = [];
 
     /**
+     * The service that provides the locales of the labels.
+     *
+     * @property translations
+     * @type Prometheus.Services.Translations
+     * @public
+     */
+    @service translations;
+
+    /**
      * The issue type being added or edited in the modal, null when it is closed.
      *
      * @property editing
@@ -36,6 +49,15 @@ export default class AppSettingsIssueTypesController extends PrometheusCreateCon
      * @public
      */
     @tracked editing = null;
+
+    /**
+     * The label form of the issue type in the modal.
+     *
+     * @property form
+     * @type Prometheus.Utils.IssueStatusForm
+     * @public
+     */
+    @tracked form = null;
 
     /**
      * Validation schema definition of the issue type form.
@@ -49,6 +71,15 @@ export default class AppSettingsIssueTypesController extends PrometheusCreateCon
             {
                 name: 'issueTypeForm',
                 fields: [
+                    {
+                        name: 'defaultLabel',
+                        validations: {
+                            default: {
+                                type: 'string',
+                                rules: [{ name: 'required' }]
+                            }
+                        }
+                    },
                     {
                         name: 'name',
                         validations: {
@@ -82,6 +113,11 @@ export default class AppSettingsIssueTypesController extends PrometheusCreateCon
      */
     @action showAddDialog() {
         this.message.issueTypeForm = {};
+        this.form = new IssueStatusForm({
+            locales: this.translations.locales,
+            defaultLocale: this.translations.defaultLocale,
+            captionFor: this.captionFor
+        });
         this.editing = this.store.createRecord('issuetype', { system: '1' });
     }
 
@@ -94,7 +130,71 @@ export default class AppSettingsIssueTypesController extends PrometheusCreateCon
      */
     @action showEditDialog(issueType) {
         this.message.issueTypeForm = {};
+        this.form = new IssueStatusForm({
+            locales: this.translations.locales,
+            defaultLocale: this.translations.defaultLocale,
+            translations: this.savedLabels(issueType),
+            value: issueType.name,
+            isNew: false,
+            captionFor: this.captionFor
+        });
         this.editing = issueType;
+    }
+
+    /**
+     * The row view-models of the list, each with the label of the type.
+     *
+     * @property rows
+     * @type Array
+     * @public
+     */
+    get rows() {
+        return this.issueTypes.map((type) => ({
+            type,
+            label: issueTypeRecordLabel(this.intl, type)
+        }));
+    }
+
+    /**
+     * The caption of the label field of a locale.
+     *
+     * @method captionFor
+     * @param {String} locale
+     * @return {String}
+     * @protected
+     */
+    captionFor = (locale) => labelCaption(this.intl, locale, this.translations.defaultLocale, TYPE_LABEL_CAPTION_KEY);
+
+    /**
+     * The labels saved for the type, falling back to its built-in default label.
+     *
+     * @method savedLabels
+     * @param {Prometheus.Models.Issuetype} issueType
+     * @return {Object} The labels by locale
+     * @protected
+     */
+    savedLabels(issueType) {
+        let labels = { ...(issueType.translations ?? {}) };
+        let defaultLocale = this.translations.defaultLocale;
+        let key = `${ISSUE_TYPE_LABEL_PATH}.${issueType.name}`;
+
+        if (!labels[defaultLocale] && this.intl.exists(key, defaultLocale)) {
+            labels[defaultLocale] = this.intl.t(key, { locale: defaultLocale });
+        }
+
+        return labels;
+    }
+
+    /**
+     * Sets the value of the type from the input, keeping the input in the allowed format.
+     *
+     * @method setValue
+     * @param {Event} event
+     * @protected
+     */
+    @action setValue(event) {
+        this.form.name = event.target.value;
+        event.target.value = this.form.name;
     }
 
     /**
@@ -115,6 +215,7 @@ export default class AppSettingsIssueTypesController extends PrometheusCreateCon
             }
         }
         this.editing = null;
+        this.form = null;
         $('.modal').modal('hide');
     }
 
@@ -126,26 +227,37 @@ export default class AppSettingsIssueTypesController extends PrometheusCreateCon
      */
     @action saveIssueType() {
         let record = this.editing;
+        let form = this.form;
         let isNew = record.isNew;
 
-        this.validate(record, 'issueTypeForm').then((validation) => {
+        this.validate(form, 'issueTypeForm').then((validation) => {
             if (!validation.isValid) {
                 this._showError(validation.errors, 'settings.issueTypes');
                 return;
             }
 
+            if (isNew) {
+                record.name = form.name;
+            }
+            if (form.labelsChanged) {
+                record.translations = form.translations;
+            }
+
             record.save().then(() => {
+                addIssueTypeLabels(this.intl, record.name, record.translations);
+
                 if (isNew) {
                     this.issueTypes = [...this.issueTypes, record];
                 }
 
                 this.editing = null;
+                this.form = null;
                 $('.modal').modal('hide');
 
                 new Messenger().post({
                     message: this.intl.t(
                         isNew ? 'views.app.settings.issueTypes.created' : 'views.app.settings.issueTypes.updated',
-                        { name: record.name, htmlSafe: true }
+                        { name: issueTypeRecordLabel(this.intl, record), htmlSafe: true }
                     ),
                     type: 'success',
                     showCloseButton: true
@@ -176,7 +288,7 @@ export default class AppSettingsIssueTypesController extends PrometheusCreateCon
         let deleting = new Messenger().post({
             message: this.intl.t('views.app.module.list.delete.message', {
                 moduleName,
-                name: issueType.name,
+                name: issueTypeRecordLabel(this.intl, issueType),
                 htmlSafe: true
             }),
             type: 'warning',

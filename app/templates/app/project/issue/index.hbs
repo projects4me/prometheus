@@ -135,7 +135,7 @@
                       <span><img class="img-circle user-img" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
                       <span data-field="issue.assignee">{{issue.assignedTo.name}}</span>
                     </td>
-                    <td data-field="issuetype.name" class="issue-type">{{issue.issuetype.name}}</td>
+                    <td data-field="issuetype.name" class="issue-type">{{type-label issue.issuetype}}</td>
                     <td data-field="issue.milestone" class="issue-milestone"><a href="#">{{issue.issuemilestone.name}}</a></td>
                     <td data-field="issue.startDate" class="issue-start">{{format-date date=issue.startDate}}</td>
                     <td data-field="issue.endDate" class="issue-end">{{format-date date=issue.endDate}}</td>

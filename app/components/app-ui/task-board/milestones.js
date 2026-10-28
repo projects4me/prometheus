@@ -324,7 +324,7 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 	 * @for TaskBoardMilestones
 	 */
 	get typeList() {
-		return new format(this).getSelectList(this.args.issueTypes);
+		return new format(this).getIssueTypeList(this.args.issueTypes);
 	}
 
 	/**
