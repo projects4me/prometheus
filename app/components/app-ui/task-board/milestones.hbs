@@ -59,7 +59,7 @@
 
                   {{!-- Issue card subject --}}
                   <div class="issue-card-subject">
-                    <LinkTo @route="app.project.issue.page" @disabledClass="navigate-issue-quick-view" @disabled={{true}} @model={{issue.issueNumber}} {{on "click" (fn @selectIssue issue)}}>
+                    <LinkTo @route="app.project.issue.page" @disabledClass="navigate-issue-quick-view" @disabled={{true}} @model={{issue.issueNumber}} title={{issue.subject}} {{on "click" (fn @selectIssue issue)}}>
                       {{issue.subject}}
                     </LinkTo>
                   </div>
