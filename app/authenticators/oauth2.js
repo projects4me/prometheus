@@ -10,8 +10,6 @@ import { run } from '@ember/runloop';
 import { makeArray } from '@ember/array';
 import { assign } from '@ember/polyfills';
 import Logger from 'js-logger';
-import { cancel, later } from '@ember/runloop';
-import { warn } from '@ember/debug';
 import { inject } from '@ember/service';
 
 /**
@@ -66,6 +64,16 @@ export default OAuth2PasswordGrant.extend({
     session: inject(),
 
     /**
+     * Refreshing is done by services/session.js only (see restore).
+     *
+     * @property refreshAccessTokens
+     * @type Boolean
+     * @default false
+     * @public
+     */
+    refreshAccessTokens: false,
+
+    /**
      * Authenticates the session with the specified `identification`, `password`
      * and optional `scope`; issues a `POST` request to the
      *
@@ -94,7 +102,6 @@ export default OAuth2PasswordGrant.extend({
                     }
 
                     const expiresAt = this._absolutizeExpirationTime(response['expires_in']);
-                    // this._scheduleAccessTokenRefresh(response['expires_in'], expiresAt, response['refresh_token']);
                     if (!isEmpty(expiresAt)) {
                         response = assign(response, { 'expires_at': expiresAt });
                     }
@@ -108,101 +115,24 @@ export default OAuth2PasswordGrant.extend({
     },
 
     /**
-     * This method schedules refresh token API call according to the expiry time of the provided access token.
-     * 
-     * @method _scheduleAccessTokenRefresh
-     * @param {Number} expiresIn 
-     * @param {Date} expiresAt 
-     * @param {String} refreshToken 
+     * Restores the session data as is. Token refresh is owned by `services/session.js`
+     * (`ensureFreshToken`), which coordinates tabs with a lock. The authenticator must not
+     * schedule or perform its own refresh, because tabs would race and Gaia rotates the
+     * refresh token. An expired access token is resolved too, so that it is refreshed under
+     * the lock instead of logging the user out.
+     *
+     * @method restore
+     * @param {Object} data The persisted session data
+     * @return {Ember.RSVP.Promise} Resolves with the data when it holds an access token
+     * @public
      */
-    _scheduleAccessTokenRefresh(expiresIn, expiresAt, refreshToken) {
-        const refreshAccessTokens = this.get('refreshAccessTokens');
-        if (refreshAccessTokens) {
-            const now = new Date().getTime();
-            if (isEmpty(expiresAt) && !isEmpty(expiresIn)) {
-                expiresAt = new Date(now + expiresIn * 1000).getTime();
-            }
-            const offset = this.get('tokenRefreshOffset');
-            if (!isEmpty(refreshToken) && !isEmpty(expiresAt) && expiresAt > now - offset) {
-                cancel(this._refreshTokenTimeout);
-                delete this._refreshTokenTimeout;
-                if (!(ENV.environment === 'test')) {
-                    this._refreshTokenTimeout = later(
-                        this,
-                        this._refreshAccessToken,
-                        expiresIn,
-                        refreshToken,
-                        expiresAt - now - offset
-                    );
-                }
-            }
-        }
-    },
-
-    /**
-     * This method is scheduled by _scheduleAccessTokenRefresh method to make a call for grant type "refresh_token" to
-     * the backend when the given access token is expired.
-     * 
-     * @method _refreshAccessToken
-     * @param {Number} expiresIn 
-     * @param {String} refreshToken 
-     * @param {String} scope 
-     * @returns {Promise}
-     */
-    _refreshAccessToken(expiresIn, refreshToken, scope) {
-        const data = { grant_type: 'refresh_token', refresh_token: this.getUpdatedRefreshToken(refreshToken), client_id: this.apiClientId, client_secret: this.apiClientSecret };
-        const refreshAccessTokensWithScope = this.get('refreshAccessTokensWithScope');
-        if (refreshAccessTokensWithScope && !isEmpty(scope)) {
-            data.scope = scope;
-        }
-        let _self = this;
-        const serverTokenEndpoint = this.get('serverTokenEndpoint');
+    restore(data) {
         return new RSVP.Promise((resolve, reject) => {
-            this.makeRequest(serverTokenEndpoint, data).then(
-                response => {
-                    run(() => {
-                        expiresIn = response['expires_in'] || expiresIn;
-                        refreshToken = response['refresh_token'] || refreshToken;
-                        scope = response['scope'] || scope;
-                        const expiresAt = this._absolutizeExpirationTime(expiresIn);
-                        const data = Object.assign(response, {
-                            expires_in: expiresIn,
-                            expires_at: expiresAt,
-                            refresh_token: refreshToken,
-                        });
-                        if (refreshAccessTokensWithScope && !isEmpty(scope)) {
-                            data.scope = scope;
-                        }
-                        // (this._scheduleAccessTokenRefresh(expiresIn, null, refreshToken));
-                        this.trigger('sessionDataUpdated', data);
-                        resolve(data);
-                    });
-                },
-                response => {
-                    warn(
-                        `Access token could not be refreshed - server responded with ${response.responseJSON}.`,
-                        false,
-                        { id: 'ember-simple-auth.failedOAuth2TokenRefresh' }
-                    );
-                    reject();
-                    localStorage.setItem('sessionExpired', true);
-                    _self.session.invalidate();
-                }
-            )
+            if (this._validate(data)) {
+                resolve(data);
+            } else {
+                reject();
+            }
         });
-    },
-    /**
-     * This method is used to get the updated refresh token from the session.
-     * @method getUpdatedRefreshToken
-     * @param {String} refreshToken 
-     * @returns {String} The updated refresh token
-     */
-    getUpdatedRefreshToken(refreshToken) {
-        if(this.session.get('data.authenticated.refresh_token')
-            &&
-            this.session.get('data.authenticated.refresh_token') !== refreshToken) {
-            return this.session.get('data.authenticated.refresh_token');
-        }
-        return refreshToken;
     }
 });
