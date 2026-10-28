@@ -285,7 +285,12 @@
         font-size: 1.8rem;
         line-height: 1.1;
         text-decoration: none;
-        display: block;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
     }
 
