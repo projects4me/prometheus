@@ -4,8 +4,9 @@
 
 import App from "prometheus/routes/app";
 import MD from "prometheus/utils/metadata/metadata";
-import { hash } from 'rsvp';
 import _ from 'lodash';
+
+const DEFAULT_WIDGETS = ['recentIssues', 'activeMilestones', 'weeklyActivities', 'weeklyIssueTimelogs', 'weeklyConversations'];
 
 /**
  * The dashboard
@@ -53,12 +54,8 @@ export default App.extend({
         let _self = this;
 
         let widgetSettings = _self._getWidgetSettings();
-        let widgets = _.split(_self.get('currentUser.user.dashboard.widgets'),',');
         _self.set('availableWidgets', _.keys(widgetSettings));
-
-        _.forEach(widgets,function(widget,idx){
-            widgets[idx] = _.trim(widget);
-        });
+        let widgets = _self._getValidWidgets(widgetSettings);
 
         _self.set('widgets', widgets);
 
@@ -81,6 +78,32 @@ export default App.extend({
         } catch (error) {
             _self.errorManager.handleError(error);
         }
+    },
+
+    /**
+     * Returns the dashboard widgets of the current user, without blank or
+     * unknown names. Falls back to the default widgets when none are left.
+     *
+     * @method _getValidWidgets
+     * @param {Object} widgetSettings
+     * @return {Array}
+     * @private
+     */
+    _getValidWidgets(widgetSettings){
+        let configured = _.split(this.get('currentUser.user.dashboard.widgets') || '', ',');
+        let widgets = _.filter(_.map(configured, _.trim), function(widget){
+            if (widget === '' || !_.has(widgetSettings, [widget])) {
+                if (widget !== '') {
+                    Logger.debug('Dropping unknown dashboard widget: ' + widget);
+                }
+                return false;
+            }
+            return true;
+        });
+        if (widgets.length === 0) {
+            widgets = _.filter(DEFAULT_WIDGETS, function(widget){ return _.has(widgetSettings, widget); });
+        }
+        return widgets;
     },
 
     /**
