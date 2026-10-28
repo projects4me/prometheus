@@ -18,6 +18,14 @@ import { htmlSafe } from '@ember/template';
 const SUB_TASK_TYPE_VALUE = 'sub_task';
 
 /**
+ * Name stored by projects created before issue types got value names
+ *
+ * @property LEGACY_SUB_TASK_TYPE_NAME
+ * @type String
+ */
+const LEGACY_SUB_TASK_TYPE_NAME = 'Sub Task';
+
+/**
  * Component for rendering the issue planning modal and managing AI-generated task planning
  * This component handles the creation of sub-tasks and test cases from AI-generated task plans
  *
@@ -551,7 +559,9 @@ export default class IssueIssuePlanningComponent extends AppComponent {
 	getIssueType(messenger) {
 		try {
 			let issueType = this.args.issueTypes.find(
-				(type) => type.name === SUB_TASK_TYPE_VALUE
+				(type) =>
+					type.name === SUB_TASK_TYPE_VALUE ||
+					type.name === LEGACY_SUB_TASK_TYPE_NAME
 			);
 			if (issueType) {
 				return issueType;

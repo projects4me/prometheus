@@ -7,7 +7,7 @@ import format from '../../../utils/data/format';
 import { inject as controller } from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { computed, action } from '@ember/object';
-import { hash } from 'rsvp';
+import { all } from 'rsvp';
 import _ from 'lodash';
 import { toLabelValue } from 'prometheus/utils/issue-status/value';
 import { htmlSafe } from '@ember/template';
@@ -279,7 +279,7 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 	afterSave(model) {
 		let _self = this;
 		let selectedIssuetypes = _self.get('selectedIssuetypes');
-		let Promises = {};
+		let promises = [];
 
 		_.forEach(selectedIssuetypes, function (issueType) {
 			// A type picked from the list is copied with its value and labels; a typed term becomes a new one
@@ -292,9 +292,9 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 				system: 0,
 				projectId: model.get('id')
 			});
-			Promises[issueType.label] = newIssueType.save();
+			promises.push(newIssueType.save());
 		});
-		return hash(Promises);
+		return all(promises);
 	}
 
 	/**
