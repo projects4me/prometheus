@@ -12,7 +12,7 @@ import Model, { attr } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class IssuetypeModel extends Model {
 
     /**
      * Name of the issue type
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Issuetype
      * @private
      */
-    name: attr('string'),
+    @attr('string') name;
 
     /**
      * Date on which the issue type was created
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Issuetype
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * Date on which the issue type was last modified
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Issuetype
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * Soft deletion flag
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Issuetype
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * Description of the issue type
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Issuetype
      * @private
      */
-    description: attr('string'),
+    @attr('string') description;
 
     /**
      * Identifier of the create who created the issue type
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Issuetype
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The identifier of the user who last modified the issue type
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Issuetype
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * The identifier of the project the issue type belongs to
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Issuetype
      * @private
      */
-    projectId: attr('string'),
+    @attr('string') projectId;
 
     /**
      * The system flag, the issue types with system flag cannot be deleted and are
@@ -103,7 +103,7 @@ export default Model.extend({
      * @for Issuetype
      * @private
      */
-    system: attr('string'),
+    @attr('string') system;
 
     /**
      * The number of projects using an issue type of this name. Only returned
@@ -114,6 +114,16 @@ export default Model.extend({
      * @for Issuetype
      * @private
      */
-    projectCount: attr('number'),
+    @attr('number') projectCount;
 
-});
+
+    /**
+     * The label of the issue type per language, locale => label
+     *
+     * @property translations
+     * @type Object
+     * @for Issuetype
+     * @public
+     */
+    @attr() translations;
+}

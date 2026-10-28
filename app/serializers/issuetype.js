@@ -23,5 +23,13 @@ export default ApplicationSerializer.extend({
      */
     attrs: {
         projectCount: { serialize: false }
+    },
+
+    serializeAttribute(snapshot, json, key, attribute) {
+        if (key === 'translations' && !('translations' in snapshot.changedAttributes())) {
+            return;
+        }
+
+        this._super(...arguments);
     }
 });

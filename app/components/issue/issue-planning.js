@@ -10,6 +10,22 @@ import DateUtils from 'prometheus/utils/date';
 import { htmlSafe } from '@ember/template';
 
 /**
+ * The value of the issue type given to the sub-tasks created from a plan.
+ *
+ * @property SUB_TASK_TYPE_VALUE
+ * @type String
+ */
+const SUB_TASK_TYPE_VALUE = 'sub_task';
+
+/**
+ * Name stored by projects created before issue types got value names
+ *
+ * @property LEGACY_SUB_TASK_TYPE_NAME
+ * @type String
+ */
+const LEGACY_SUB_TASK_TYPE_NAME = 'Sub Task';
+
+/**
  * Component for rendering the issue planning modal and managing AI-generated task planning
  * This component handles the creation of sub-tasks and test cases from AI-generated task plans
  *
@@ -532,7 +548,7 @@ export default class IssueIssuePlanningComponent extends AppComponent {
 	}
 
 	/**
-	 * Gets the 'Sub Task' issue type for created sub-tasks
+	 * Gets the sub-task issue type for created sub-tasks
 	 *
 	 * @method getIssueType
 	 * @param {Object} messenger The messenger instance for error handling
@@ -543,12 +559,14 @@ export default class IssueIssuePlanningComponent extends AppComponent {
 	getIssueType(messenger) {
 		try {
 			let issueType = this.args.issueTypes.find(
-				(type) => type.name === 'Sub Task'
+				(type) =>
+					type.name === SUB_TASK_TYPE_VALUE ||
+					type.name === LEGACY_SUB_TASK_TYPE_NAME
 			);
 			if (issueType) {
 				return issueType;
 			} else {
-				throw new Error('Issue type "Sub Task" not found');
+				throw new Error('Issue type "sub_task" not found');
 			}
 		} catch (e) {
 			console.error(e);

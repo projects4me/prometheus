@@ -23,24 +23,26 @@
             <table class="table table-hover" data-issue-types-table>
               <thead>
                 <tr>
-                  <th>{{t "views.app.settings.issueTypes.name"}}</th>
+                  <th>{{t "views.app.settings.issueTypes.labelColumn"}}</th>
+                  <th>{{t "views.app.settings.issueTypes.value"}}</th>
                   <th>{{t "views.app.settings.issueTypes.description"}}</th>
                   <th>{{t "views.app.settings.issueTypes.projectsUsing"}}</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {{#each this.issueTypes as |issueType|}}
-                  <tr data-issue-type={{issueType.id}}>
-                    <td data-column="name">{{issueType.name}}</td>
-                    <td data-column="description">{{issueType.description}}</td>
-                    <td data-column="projectCount">{{if issueType.projectCount issueType.projectCount 0}}</td>
+                {{#each this.rows as |row|}}
+                  <tr data-issue-type={{row.type.id}}>
+                    <td data-column="label">{{row.label}}</td>
+                    <td data-column="value"><code>{{row.type.name}}</code></td>
+                    <td data-column="description">{{row.type.description}}</td>
+                    <td data-column="projectCount">{{if row.type.projectCount row.type.projectCount 0}}</td>
                     <td class="text-right">
                       <AccessControl @aclContext="setting.update">
-                        <AppUi::Button type="button" class="btn btn-box-tool" data-btn="edit-issue-type" title={{t "global.form.edit"}} @onClick={{fn this.showEditDialog issueType}}>
+                        <AppUi::Button type="button" class="btn btn-box-tool" data-btn="edit-issue-type" title={{t "global.form.edit"}} @onClick={{fn this.showEditDialog row.type}}>
                           <i class="fa fa-pencil" aria-hidden="true"></i>
                         </AppUi::Button>
-                        <AppUi::Button type="button" class="btn btn-box-tool" data-btn="delete-issue-type" title={{t "global.form.delete"}} @onClick={{fn this.deleteIssueType issueType}}>
+                        <AppUi::Button type="button" class="btn btn-box-tool" data-btn="delete-issue-type" title={{t "global.form.delete"}} @onClick={{fn this.deleteIssueType row.type}}>
                           <i class="fa fa-trash" aria-hidden="true"></i>
                         </AppUi::Button>
                       </AccessControl>
@@ -48,7 +50,7 @@
                   </tr>
                 {{else}}
                   <tr>
-                    <td colspan="4" class="text-muted">{{t "views.app.settings.issueTypes.empty"}}</td>
+                    <td colspan="5" class="text-muted">{{t "views.app.settings.issueTypes.empty"}}</td>
                   </tr>
                 {{/each}}
               </tbody>
@@ -68,14 +70,40 @@
       close=(action "removeModal")
     }}
       <div class="box-body">
-        <FormFields::FieldText
-          @placeholder={{t "views.app.settings.issueTypes.namePlaceholder"}}
-          @label={{t "views.app.settings.issueTypes.name"}}
-          @value={{this.editing.name}}
-          @data-field="issuetype.name"
-          @validate={{action this.validateField "issueTypeForm" (hash name="name" value=this.editing.name model=this.editing)}}
-          @message={{this.message.issueTypeForm.name}}
-        />
+        {{#each this.form.labels as |field|}}
+          <FormFields::FieldText
+            @placeholder={{t "views.app.settings.issueTypes.labelPlaceholder"}}
+            @label={{field.caption}}
+            @required={{field.required}}
+            @value={{field.text}}
+            @data-field={{concat "issuetype.label." field.locale}}
+            @validate={{if field.required (action this.validateField "issueTypeForm" (hash name="defaultLabel" model=this.form))}}
+            @message={{if field.required this.message.issueTypeForm.defaultLabel}}
+          />
+        {{/each}}
+        {{#if this.form.isValueEditable}}
+          <FormFields::FieldText
+            @placeholder={{t "views.app.settings.issueTypes.valuePlaceholder"}}
+            @label={{t "views.app.settings.issueTypes.value"}}
+            @info={{t "views.app.settings.issueTypes.valueInfo"}}
+            @showFieldInfo={{true}}
+            @required={{true}}
+            @value={{this.form.name}}
+            @onInput={{this.setValue}}
+            @data-field="issuetype.name"
+            @validate={{action this.validateField "issueTypeForm" (hash name="name" model=this.form)}}
+            @message={{this.message.issueTypeForm.name}}
+          />
+        {{else}}
+          <FormFields::FieldText
+            @label={{t "views.app.settings.issueTypes.value"}}
+            @info={{t "views.app.settings.issueTypes.valueReadonly"}}
+            @showFieldInfo={{true}}
+            @readonly="readonly"
+            @value={{this.form.name}}
+            @data-field="issuetype.name"
+          />
+        {{/if}}
         <FormFields::FieldText
           @placeholder={{t "views.app.settings.issueTypes.descriptionPlaceholder"}}
           @label={{t "views.app.settings.issueTypes.description"}}

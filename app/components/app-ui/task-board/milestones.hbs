@@ -102,7 +102,7 @@
                     <div class="issue-card-tags">
                       {{#if issue.issuetype.name}}
                         <span class="badge issue-type-tag" style={{call (fn this.getIssueTypeTagStyle issue)}}>
-                          {{issue.issuetype.name}}
+                          {{type-label issue.issuetype}}
                         </span>
                       {{/if}}
                       {{#if issue.infoTag}}

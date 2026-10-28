@@ -11,6 +11,14 @@
 export const LABEL_CAPTION_KEY = 'views.app.settings.issueStatuses.label';
 
 /**
+ * The translation key of the caption of a label field in the Add/Edit issue type dialog.
+ *
+ * @property TYPE_LABEL_CAPTION_KEY
+ * @type String
+ */
+export const TYPE_LABEL_CAPTION_KEY = 'views.app.settings.issueTypes.label';
+
+/**
  * The caption of the label field of a locale. Translating into another locale
  * writes to the intl service, so call this from an action, never while rendering.
  * A locale without the translation gets the default caption with the locale code,
@@ -20,14 +28,15 @@ export const LABEL_CAPTION_KEY = 'views.app.settings.issueStatuses.label';
  * @param {Service} intl The ember-intl service
  * @param {String} locale
  * @param {String} defaultLocale
+ * @param {String} key The translation key of the caption, the issue status one by default
  * @return {String}
  */
-export function labelCaption(intl, locale, defaultLocale) {
-    if (locale === defaultLocale || intl.exists(LABEL_CAPTION_KEY, locale)) {
-        return intl.t(LABEL_CAPTION_KEY, { locale });
+export function labelCaption(intl, locale, defaultLocale, key = LABEL_CAPTION_KEY) {
+    if (locale === defaultLocale || intl.exists(key, locale)) {
+        return intl.t(key, { locale });
     }
 
-    const message = intl.lookup(LABEL_CAPTION_KEY, defaultLocale);
+    const message = intl.lookup(key, defaultLocale);
 
     return message.includes('{locale}') ? message.replace('{locale}', locale) : `${message} (${locale})`;
 }
