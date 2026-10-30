@@ -7,17 +7,15 @@
         </div>
         <div class="box-body">
           <div class="form-group">
-            <div class="form-field">
-              <FormFields::FieldText
-                @placeholder={{t "views.app.idea.create.titlePlaceholder"}}
-                @label={{t "views.app.idea.fields.title"}}
-                @value={{this.model.title}}
-                @data-field="idea.title"
-                @validate={{action this.validateField "ideaCreate" (hash name="title" value=this.model.title)}}
-                @message={{this.message.ideaCreate.title}}
-                {{autofocus}}
-              />
-            </div>
+            <FormFields::FieldText
+              @placeholder={{t "views.app.idea.create.titlePlaceholder"}}
+              @label={{t "views.app.idea.fields.title"}}
+              @value={{this.model.title}}
+              @data-field="idea.title"
+              @validate={{action this.validateField "ideaCreate" (hash name="title" value=this.model.title)}}
+              @message={{this.message.ideaCreate.title}}
+              {{autofocus}}
+            />
             <div data-field="idea.description" class="form-field">
               <AppUi::ToastUi
                 @editType="wysiwyg"
