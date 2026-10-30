@@ -41,6 +41,60 @@ Feature: Settings | issue statuses
     And The issue status qa_review is listed with the label QA Review
     And One request created the issue status qa_review with the labels {"en-us": "QA Review"}
 
+  Scenario: An admin adds an issue status with a colour of their own
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 has setting.get permission set to 1
+    And User_1 has setting.update permission set to 1
+    When User opens app/settings/issue-statuses
+    And User starts adding an issue status
+    Then The colour picker and the hex field read #80b5d3
+    When User types the en-us label Blocked
+    And User types the colour #1A2B3C
+    Then The colour preview reads Blocked in colour #1a2b3c
+    When User picks the colour #6a3d9a with the colour picker
+    Then The colour picker and the hex field read #6a3d9a
+    When User saves the issue status
+    Then The issue status blocked is listed with colour #6a3d9a, counting as done No and 0 issues
+    And The issue status blocked is listed with light label text
+    And One request created the issue status blocked with the colour #6a3d9a
+
+  Scenario: An issue status can't be saved with a colour that is not a hex code
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 has setting.get permission set to 1
+    And User_1 has setting.update permission set to 1
+    When User opens app/settings/issue-statuses
+    And User starts adding an issue status
+    And User types the en-us label Blocked
+    And User types the colour #12345g
+    Then The colour field shows the message Enter the colour as a hex code, e.g. #80b5d3.
+    When User saves the issue status
+    Then The issue status is not saved and the dialog stays open
+
+  Scenario: A status with a light colour has dark label text
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 has setting.get permission set to 1
+    And User_1 has setting.update permission set to 1
+    And The global issue statuses are
+    ------------------------------------------------------------
+    | name    | color   | done | sortOrder | issueCount |
+    | new     | #fff3a0 | 0    | 1         | 3          |
+    | blocked | #1a2b3c | 0    | 2         | 1          |
+    ------------------------------------------------------------
+    When User opens app/settings/issue-statuses
+    Then The issue status new is listed with dark label text
+    And The issue status blocked is listed with light label text
+    When User starts editing the issue status new
+    Then The colour picker and the hex field read #fff3a0
+
   Scenario: The status value is derived from the label until it is typed
 
     Given There is no pre-existing data

@@ -1,4 +1,4 @@
-import { click, fillIn, settled, waitUntil } from '@ember/test-helpers';
+import { click, fillIn, settled, triggerEvent, waitUntil } from '@ember/test-helpers';
 import Sortable from 'sortablejs';
 import steps from '../steps';
 import { translationsUrl } from 'prometheus/mirage/route-handlers/translation';
@@ -34,6 +34,18 @@ function labelInput(locale) {
 }
 
 const VALUE_INPUT = '.modal [data-field="issuestatus.name"] input';
+const HEX_INPUT = '.modal [data-field="issuestatus.color.hex"] input';
+const PICKER_INPUT = '.modal [data-field="issuestatus.color.picker"] input';
+
+/**
+ * Types a colour in the hex field of the dialog and leaves the field, so it is validated.
+ */
+async function typeColor(color) {
+    await fillIn(HEX_INPUT, color);
+    // The modal keeps the focus elsewhere, so the leave events are sent directly.
+    await triggerEvent(HEX_INPUT, 'focusout');
+    await triggerEvent(HEX_INPUT, 'blur');
+}
 
 /**
  * The create and update requests the page sent for issue statuses, per Mirage server.
@@ -124,7 +136,7 @@ export const when = function () {
                 recordWrites();
                 await click('[data-btn="add-issue-status"]');
                 await fillIn(labelInput('en-us'), label);
-                await click(`.modal [data-field="issuestatus.color"] input[value="${color}"]`);
+                await typeColor(color);
                 await click('.modal [data-field="issuestatus.done"] input');
                 await submitModal();
                 assert.ok(true, `User adds the issue status ${label}`);
@@ -174,9 +186,21 @@ export const when = function () {
             "User changes the colour of the issue status $name to $color": (assert) => async function (name, color) {
                 recordWrites();
                 await click(findRow(name).querySelector('[data-btn="edit-issue-status"]'));
-                await click(`.modal [data-field="issuestatus.color"] input[value="${color}"]`);
+                await typeColor(color);
                 await submitModal();
                 assert.ok(true, `User recolours the issue status ${name}`);
+            }
+        },
+        {
+            "User types the colour $color": (assert) => async function (color) {
+                await typeColor(color);
+                assert.ok(true, `User types the colour ${color}`);
+            }
+        },
+        {
+            "User picks the colour $color with the colour picker": (assert) => async function (color) {
+                await fillIn(PICKER_INPUT, color);
+                assert.ok(true, `User picks the colour ${color}`);
             }
         },
         {
@@ -229,6 +253,41 @@ export const then = function () {
                 assert.equal(hexOf(row.querySelector('[data-column="label"] .label')), color);
                 assert.equal(row.querySelector('[data-column="done"]').textContent.trim(), done);
                 assert.equal(row.querySelector('[data-column="issueCount"]').textContent.trim(), count);
+            }
+        },
+        {
+            "The issue status $name is listed with $tone label text": (assert) => async function (name, tone) {
+                let label = findRow(name).querySelector('[data-column="label"] .label');
+                let expected = tone === 'dark' ? 'rgb(0, 0, 0)' : 'rgb(255, 255, 255)';
+                assert.equal(getComputedStyle(label).color, expected, `${name} has ${tone} label text`);
+            }
+        },
+        {
+            "The colour picker and the hex field read $color": (assert) => async function (color) {
+                assert.dom(PICKER_INPUT).hasValue(color);
+                assert.dom(HEX_INPUT).hasValue(color);
+            }
+        },
+        {
+            "The colour preview reads $label in colour $color": (assert) => async function (label, color) {
+                let preview = document.querySelector('.modal [data-field="issuestatus.color.preview"] .label');
+                assert.equal(preview.textContent.trim(), label);
+                assert.equal(hexOf(preview), color);
+            }
+        },
+        {
+            "The colour field shows the message $message": (assert) => async function (message) {
+                assert.dom('.modal [data-field="issuestatus.color.hex"] .error').hasText(message);
+            }
+        },
+        {
+            "One request created the issue status $name with the colour $color": (assert) => async function (name, color) {
+                let requests = createRequests();
+                assert.strictEqual(requests.length, 1, 'one create request');
+
+                let attributes = JSON.parse(requests[0].requestBody).data.attributes;
+                assert.strictEqual(attributes.name, name);
+                assert.strictEqual(attributes.color, color);
             }
         },
         {

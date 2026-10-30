@@ -80,4 +80,32 @@ module('Unit | Utility | issue-status/form', function () {
 
         assert.deepEqual(form.labels.map((field) => field.caption), ['Label en-us', 'Label de-de']);
     });
+
+    test('a new status starts with the default colour, an existing one with its saved colour', function (assert) {
+        let added = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us' });
+        let edited = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us', isNew: false, color: '#1A2B3C' });
+        let invalid = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us', isNew: false, color: 'red' });
+
+        assert.strictEqual(added.color, '#80b5d3');
+        assert.strictEqual(edited.color, '#1a2b3c');
+        assert.strictEqual(invalid.color, '#80b5d3');
+    });
+
+    test('the picker keeps the last valid colour while the typed colour is invalid', function (assert) {
+        let form = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us' });
+
+        form.color = '#1A2B3C';
+        assert.strictEqual(form.pickerColor, '#1a2b3c');
+        assert.strictEqual(form.colorValue, '#1a2b3c');
+
+        form.color = '#1a2b';
+        assert.strictEqual(form.color, '#1a2b');
+        assert.strictEqual(form.pickerColor, '#1a2b3c');
+        assert.strictEqual(form.colorValue, null);
+
+        form.pickerColor = '#6a3d9a';
+        assert.strictEqual(form.color, '#6a3d9a');
+        assert.strictEqual(form.colorValue, '#6a3d9a');
+    });
 });
+

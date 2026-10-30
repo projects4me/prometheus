@@ -11,20 +11,7 @@ import $ from 'jquery';
 import { addIssueStatusLabels, issueStatusRecordLabel, ISSUE_STATUS_LABEL_PATH } from 'prometheus/utils/issue-status/label';
 import { labelCaption } from 'prometheus/utils/issue-status/caption';
 import IssueStatusForm from 'prometheus/utils/issue-status/form';
-
-/**
- * The colours an issue status may use, the palette Gaia accepts.
- *
- * @property STATUS_COLORS
- * @type Array
- */
-export const STATUS_COLORS = [
-    { value: '#80b5d3', name: 'blue' },
-    { value: '#b3244f', name: 'crimson' },
-    { value: '#f7bf65', name: 'amber' },
-    { value: '#5ac594', name: 'green' },
-    { value: '#e98a7e', name: 'salmon' }
-].map((color) => ({ ...color, style: htmlSafe(`background:${color.value}`) }));
+import { HEX_COLOR, labelStyle } from 'prometheus/utils/color';
 
 /**
  * The controller of the Issue Statuses page of the Settings area. Adds, edits,
@@ -102,20 +89,23 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
                                 rules: [{ name: 'required' }]
                             }
                         }
+                    },
+                    {
+                        name: 'color',
+                        validations: {
+                            default: {
+                                type: 'string',
+                                rules: [
+                                    { name: 'required' },
+                                    { name: 'matches', value: [HEX_COLOR, this.intl.t('views.app.settings.issueStatuses.colorInvalid')] }
+                                ]
+                            }
+                        }
                     }
                 ]
             }
         ]
     };
-
-    /**
-     * The colour swatches offered in the modal.
-     *
-     * @property colors
-     * @type Array
-     * @public
-     */
-    colors = STATUS_COLORS;
 
     /**
      * Builds the validation schema from the metadata.
@@ -138,12 +128,10 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
      */
     get rows() {
         return this.issueStatuses.map((status) => {
-            // The colour is only used as a style when it is one of the palette, it comes from the server.
-            let color = STATUS_COLORS.find((swatch) => swatch.value === status.color);
-
             return {
                 status,
-                style: color ? color.style : '',
+                // Only a hex colour becomes a style, so the server's value can't inject CSS.
+                style: htmlSafe(labelStyle(status.color)),
                 label: issueStatusRecordLabel(this.intl, status),
                 isUsed: status.issueCount > 0
             };
@@ -164,6 +152,29 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
     }
 
     /**
+     * The style of the label preview in the modal, the colour being picked.
+     *
+     * @property previewStyle
+     * @type String
+     * @public
+     */
+    get previewStyle() {
+        return htmlSafe(labelStyle(this.form?.pickerColor));
+    }
+
+    /**
+     * The text of the label preview in the modal: the label of the default locale, else
+     * the value, else a placeholder.
+     *
+     * @property previewLabel
+     * @type String
+     * @public
+     */
+    get previewLabel() {
+        return this.form?.defaultLabel || this.form?.name || this.intl.t('views.app.settings.issueStatuses.colorPreview');
+    }
+
+    /**
      * Opens the modal on a new global issue status, placed last.
      *
      * @method showAddDialog
@@ -178,7 +189,6 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
         });
         this.editing = this.store.createRecord('issuestatus', {
             system: '1',
-            color: STATUS_COLORS[0].value,
             done: '0',
             sortOrder: this.nextSortOrder,
             issueCount: 0
@@ -200,6 +210,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             translations: this.savedLabels(issueStatus),
             value: issueStatus.name,
             isNew: false,
+            color: issueStatus.color,
             captionFor: this.captionFor
         });
         this.editing = issueStatus;
@@ -271,17 +282,6 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
     }
 
     /**
-     * Picks the colour of the status in the modal.
-     *
-     * @method selectColor
-     * @param {String} color
-     * @protected
-     */
-    @action selectColor(color) {
-        this.editing.color = color;
-    }
-
-    /**
      * Sets whether the status in the modal counts as done.
      *
      * @method toggleDone
@@ -312,6 +312,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             if (isNew) {
                 record.name = form.name;
             }
+            record.color = form.colorValue;
             if (form.labelsChanged) {
                 record.translations = form.translations;
             }

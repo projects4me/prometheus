@@ -4,6 +4,15 @@
 
 import { tracked } from '@glimmer/tracking';
 import { toLabelValue } from 'prometheus/utils/issue-status/value';
+import { isHexColor } from 'prometheus/utils/color';
+
+/**
+ * The colour a new status starts with.
+ *
+ * @property DEFAULT_STATUS_COLOR
+ * @type String
+ */
+export const DEFAULT_STATUS_COLOR = '#80b5d3';
 
 /**
  * The label of an issue status in one locale, as typed in the form.
@@ -58,8 +67,8 @@ export class IssueStatusLabelField {
 }
 
 /**
- * The draft of the Add/Edit issue status form: a label per supported locale and the
- * status value. Until the user edits it, the value of a new status is suggested from
+ * The draft of the Add/Edit issue status form: a label per supported locale, the
+ * status value and its colour. Until the user edits it, the value of a new status is suggested from
  * the label of the default locale.
  *
  * @class IssueStatusForm
@@ -104,6 +113,24 @@ export default class IssueStatusForm {
     savedTranslations;
 
     /**
+     * The colour as typed in the hex field
+     *
+     * @property typedColor
+     * @type String
+     * @private
+     */
+    @tracked typedColor;
+
+    /**
+     * The last valid colour, what the colour picker shows while the hex field holds an invalid one
+     *
+     * @property lastValidColor
+     * @type String
+     * @private
+     */
+    @tracked lastValidColor;
+
+    /**
      * @method constructor
      * @param {Object} options
      * @param {Array} options.locales The supported locales
@@ -111,9 +138,10 @@ export default class IssueStatusForm {
      * @param {Object} options.translations The saved labels, locale => label
      * @param {String} options.value The saved value, empty for a new status
      * @param {Boolean} options.isNew Whether the status is not created yet
+     * @param {String} options.color The saved colour, the default colour when it is empty or not a hex colour
      * @param {Function} options.captionFor Gives the caption of a locale's field, the locale code by default
      */
-    constructor({ locales, defaultLocale, translations = {}, value = '', isNew = true, captionFor = (locale) => locale }) {
+    constructor({ locales, defaultLocale, translations = {}, value = '', isNew = true, color = null, captionFor = (locale) => locale }) {
         let ordered = [defaultLocale, ...locales.filter((locale) => locale !== defaultLocale)];
 
         this.labels = ordered.map(
@@ -121,6 +149,7 @@ export default class IssueStatusForm {
         );
         this.isValueEditable = isNew;
         this.savedTranslations = this.translations;
+        this.color = isHexColor(color) ? color.toLowerCase() : DEFAULT_STATUS_COLOR;
 
         if (!isNew) {
             this.typedValue = value ?? '';
@@ -185,5 +214,50 @@ export default class IssueStatusForm {
         let locales = new Set([...Object.keys(saved), ...Object.keys(current)]);
 
         return [...locales].some((locale) => saved[locale] !== current[locale]);
+    }
+
+    /**
+     * The colour as typed in the hex field, e.g. `#80b5d3`. Setting it remembers it when it is valid.
+     *
+     * @property color
+     * @type String
+     * @public
+     */
+    get color() {
+        return this.typedColor;
+    }
+
+    set color(text) {
+        this.typedColor = (text ?? '').trim();
+        if (isHexColor(this.typedColor)) {
+            this.lastValidColor = this.typedColor.toLowerCase();
+        }
+    }
+
+    /**
+     * The colour the picker shows: the typed colour when it is valid, else the last valid one.
+     * Picking a colour types it in the hex field.
+     *
+     * @property pickerColor
+     * @type String
+     * @public
+     */
+    get pickerColor() {
+        return this.lastValidColor;
+    }
+
+    set pickerColor(color) {
+        this.color = color;
+    }
+
+    /**
+     * The colour to save, lowercase, null while the typed colour is not a hex colour
+     *
+     * @property colorValue
+     * @type String
+     * @public
+     */
+    get colorValue() {
+        return isHexColor(this.color) ? this.color.toLowerCase() : null;
     }
 }

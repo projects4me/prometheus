@@ -1537,7 +1537,8 @@
           "singular": "issue status",
           "fields": {
             "defaultLabel": "Label (en-us)",
-            "name": "Value"
+            "name": "Value",
+            "color": "Colour"
           },
           "info": "Shared by every project. Drag rows to set the task board column order.",
           "add": "Add Issue Status",
@@ -1556,13 +1557,9 @@
           "valueInfo": "Saved with the issues that use the status. Lowercase letters, digits and _ only, at most 30 characters. It can't be changed later.",
           "valueReadonly": "The value can't be changed after the status is created.",
           "color": "Colour",
-          "colors": {
-            "blue": "Blue",
-            "crimson": "Crimson",
-            "amber": "Amber",
-            "green": "Green",
-            "salmon": "Salmon"
-          },
+          "colorHex": "Hex code",
+          "colorInvalid": "Enter the colour as a hex code, e.g. #80b5d3.",
+          "colorPreview": "Preview",
           "deleteBlocked": "This status cannot be deleted: {count} issue(s) use it. Move them to another status first.",
           "empty": "There are no issue statuses.",
           "created": "Issue status <strong>{name}</strong> has been added",
