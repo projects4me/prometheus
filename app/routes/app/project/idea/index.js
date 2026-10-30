@@ -31,7 +31,7 @@ export default class AppProjectIdeaIndexRoute extends App {
      */
     redirect() {
         if (this.acl.checkAccess('idea.create')) {
-            this.replaceWith('app.project.idea.create');
+            this.transitionTo('app.project.idea.create');
         }
     }
 }

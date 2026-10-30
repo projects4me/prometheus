@@ -5,6 +5,8 @@
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { inject as controller } from '@ember/controller';
 import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import { htmlSafe } from '@ember/template';
 import { guidFor } from '@ember/object/internals';
 
@@ -91,6 +93,15 @@ export default class AppProjectIdeaCreateController extends PrometheusCreateCont
     clearEvent = `clearContents-${guidFor(this)}`;
 
     /**
+     * Whether the idea is being saved, the form can't be emptied meanwhile
+     *
+     * @property isSaving
+     * @type Boolean
+     * @public
+     */
+    @tracked isSaving = false;
+
+    /**
      * Builds the validation schema of the form
      *
      * @method constructor
@@ -135,6 +146,40 @@ export default class AppProjectIdeaCreateController extends PrometheusCreateCont
      */
     getSuccessMessage(idea) {
         return htmlSafe(this.intl.t('views.app.idea.created', { title: idea.title }));
+    }
+
+    /**
+     * Saves the idea and keeps track of it, so cancel can't empty the form while it is in flight
+     *
+     * @method _save
+     * @private
+     */
+    _save(model, resolve, reject, showDefaultSuccessMessage = true) {
+        this.isSaving = true;
+        return super._save(
+            model,
+            () => {
+                this.isSaving = false;
+                resolve();
+            },
+            () => {
+                this.isSaving = false;
+                reject();
+            },
+            showDefaultSuccessMessage
+        );
+    }
+
+    /**
+     * Ignores cancel while the idea is being saved
+     *
+     * @method cancel
+     * @public
+     */
+    @action cancel() {
+        if (!this.isSaving) {
+            super.cancel();
+        }
     }
 
     /**
