@@ -120,22 +120,25 @@
           />
         {{/if}}
         <div class="issue-status-color" data-field="issuestatus.color">
-          <FormFields::FieldText
-            @type="color"
-            @label={{t "views.app.settings.issueStatuses.color"}}
-            @value={{this.form.pickerColor}}
-            @data-field="issuestatus.color.picker"
-          />
-          <FormFields::FieldText
-            @label={{t "views.app.settings.issueStatuses.colorHex"}}
-            @required={{true}}
-            @length={{7}}
-            @value={{this.form.color}}
-            @data-field="issuestatus.color.hex"
-            @validate={{fn this.validateField "issueStatusForm" (hash name="color" model=this.form)}}
-            @message={{this.message.issueStatusForm.color}}
-          />
+          <div class="issue-status-color-fields">
+            <FormFields::FieldText
+              @type="color"
+              @label={{t "views.app.settings.issueStatuses.color"}}
+              @value={{this.form.pickerColor}}
+              @data-field="issuestatus.color.picker"
+            />
+            <FormFields::FieldText
+              @label={{t "views.app.settings.issueStatuses.colorHex"}}
+              @required={{true}}
+              @length={{7}}
+              @value={{this.form.color}}
+              @data-field="issuestatus.color.hex"
+              @validate={{fn this.validateField "issueStatusForm" (hash name="color" model=this.form)}}
+              @message={{this.message.issueStatusForm.color}}
+            />
+          </div>
           <div class="issue-status-color-preview" data-field="issuestatus.color.preview">
+            <span class="text-muted">{{t "views.app.settings.issueStatuses.colorPreview"}}:</span>
             <span class="label" style={{this.previewStyle}}>{{this.previewLabel}}</span>
           </div>
         </div>

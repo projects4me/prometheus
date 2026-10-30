@@ -50,14 +50,21 @@
     cursor: move;
   }
 
-  .issue-status-color {
+  .issue-status-color-fields {
     display: flex;
     align-items: flex-start;
 
     .form-field {
-      flex: 0 0 220px;
-      margin-right: 20px;
+      flex: 1 1 0;
+      min-width: 0;
     }
+
+    .form-field + .form-field {
+      margin-left: 20px;
+    }
+  }
+
+  .issue-status-color {
 
     input[type="color"] {
       padding: 0 2px;
@@ -75,7 +82,8 @@
     }
   }
 
+  // Lined up with the form fields above, which have a 3rem margin.
   .issue-status-color-preview {
-    padding-top: 30px;
+    margin: -1rem 3rem 2rem;
   }
 }
