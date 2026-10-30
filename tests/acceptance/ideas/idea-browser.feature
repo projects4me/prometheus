@@ -18,7 +18,7 @@ Feature: Ideas | idea browser
     Then The sidebar shows the Idea entry
     And The idea browser lists the ideas Newest idea, Older idea
     And The idea Newest idea is labelled Open
-    And The empty idea box is shown
+    And The idea browser opens on the new idea form
 
   Scenario: The archived ideas are shown and hidden from the footer link
 
@@ -68,3 +68,13 @@ Feature: Ideas | idea browser
     And User selects Project 1
     When User opens the ideas of the project
     Then The sidebar does not show the Idea entry
+
+  Scenario: A user who cannot create ideas sees the hint instead of the new idea form
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 has idea.create permission set to 0
+    And User selects Project 1
+    When User opens the ideas of the project
+    Then The empty idea box is shown

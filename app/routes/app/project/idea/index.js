@@ -22,4 +22,16 @@ export default class AppProjectIdeaIndexRoute extends App {
     setupController() {
         this.controllerFor('app.project.idea').selectedIdeaId = null;
     }
+
+    /**
+     * Opens the new idea page for the users who can start an idea, the others keep the hint
+     *
+     * @method redirect
+     * @private
+     */
+    redirect() {
+        if (this.acl.checkAccess('idea.create')) {
+            this.replaceWith('app.project.idea.create');
+        }
+    }
 }

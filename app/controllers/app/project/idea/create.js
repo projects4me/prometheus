@@ -4,7 +4,9 @@
 
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { inject as controller } from '@ember/controller';
+import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
+import { guidFor } from '@ember/object/internals';
 
 /**
  * The controller of the new idea page. It creates the idea with its first message
@@ -73,6 +75,22 @@ export default class AppProjectIdeaCreateController extends PrometheusCreateCont
     @controller('app.project.idea') ideaController;
 
     /**
+     * @property pubSub
+     * @type Ember.Service
+     * @public
+     */
+    @service pubSub;
+
+    /**
+     * The pubSub event which clears the description editor of the form
+     *
+     * @property clearEvent
+     * @type String
+     * @public
+     */
+    clearEvent = `clearContents-${guidFor(this)}`;
+
+    /**
      * Builds the validation schema of the form
      *
      * @method constructor
@@ -120,12 +138,15 @@ export default class AppProjectIdeaCreateController extends PrometheusCreateCont
     }
 
     /**
-     * Goes back to the idea browser
+     * Empties the form: the title, the description, the editor and the validation messages
      *
      * @method afterCancel
      * @protected
      */
     afterCancel() {
-        this.transitionToRoute('app.project.idea.index');
+        this.model.title = '';
+        this.model.description = '';
+        this.message = {};
+        this.pubSub.trigger(this.clearEvent);
     }
 }
