@@ -1,0 +1,27 @@
+{{#each this.pendingComments as |pending|}}
+  <ConversationUi::PendingComment
+    @comment={{pending}}
+    @userId={{this.currentUser.user.id}}
+    @userName={{this.currentUser.user.name}}
+    @onRetry={{fn this.retry pending}}
+    @onDiscard={{fn this.discard pending}}
+  />
+{{/each}}
+<div class="box-footer" ...attributes>
+  <form action="#" method="post">
+    <img class="img-responsive img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" alt="{{this.currentUser.user.name}}">
+    {{!-- .img-push is used to add margin to elements next to floating images --}}
+    <div class="img-push">
+      <div class="message-box" data-field={{@dataField}}>
+        <ConversationUi::MessageBox
+          @usersList={{@usersList}}
+          @issueSearch={{@issueSearch}}
+          @entity={{@entity}}
+          @placeholder={{@placeholder}}
+          @clearEvent={{this.clearEvent}}
+          @save={{this.post}}
+        />
+      </div>
+    </div>
+  </form>
+</div>

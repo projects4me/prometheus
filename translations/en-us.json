@@ -720,6 +720,12 @@
             "updated": "Comment has been updated successfully",
             "error": "Failed to update comment. Please try again.",
             "empty": "Comment cannot be empty"
+          },
+          "pending": {
+            "posting": "Posting",
+            "failed": "Not posted",
+            "retry": "Retry",
+            "discard": "Discard"
           }
         }
       },

@@ -24,3 +24,15 @@
     opacity: 1;
   }
 }
+
+/* The dots of a comment being posted fade in and out one after the other */
+@keyframes comment-posting-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+}

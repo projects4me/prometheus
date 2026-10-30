@@ -1,0 +1,41 @@
+{{!--
+  A comment that is being posted (@comment.failed false) or that was not saved (@comment.failed true).
+  @onRetry and @onDiscard act on a comment that was not saved.
+--}}
+<div
+  class="comment-item-wrapper comment-pending {{if @comment.failed "comment-pending-failed"}}"
+  data-pending-comment={{if @comment.failed "failed" "posting"}}
+>
+  <ConversationUi::CommentFrame @userId={{@userId}} @userName={{@userName}}>
+    <:tools>
+      {{#if @comment.failed}}
+        <span class="text-red" data-pending-comment-status>{{t "views.app.conversation.comment.pending.failed"}}</span>
+        <AppUi::Button
+          data-btn="retry"
+          type="button"
+          class="btn btn-box-tool"
+          @onClick={{@onRetry}}
+          title="{{t 'views.app.conversation.comment.pending.retry'}}"
+        >
+          <i class="fa fa-refresh"></i>
+        </AppUi::Button>
+        <AppUi::Button
+          data-btn="discard"
+          type="button"
+          class="btn btn-box-tool"
+          @onClick={{@onDiscard}}
+          title="{{t 'views.app.conversation.comment.pending.discard'}}"
+        >
+          <i class="fa fa-times"></i>
+        </AppUi::Button>
+      {{else}}
+        <span class="comment-posting" data-pending-comment-status>
+          {{t "views.app.conversation.comment.pending.posting"}}<span class="comment-posting-dots"><span>.</span><span>.</span><span>.</span></span>
+        </span>
+      {{/if}}
+    </:tools>
+    <:body>
+      {{translate-comment @comment.content}}
+    </:body>
+  </ConversationUi::CommentFrame>
+</div>

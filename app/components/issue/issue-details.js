@@ -80,16 +80,6 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     @tracked editingLog = null;
 
     /**
-     * PubSub service is used to provide DDAD.
-     *
-     * @property pubSub
-     * @type Ember.Service
-     * @for IssueIssueDetailsComponent
-     * @protected
-     */
-    @service pubSub;
-
-    /**
      * The notifications service
      *
      * @property notifications
@@ -314,7 +304,11 @@ export default class IssueIssueDetailsComponent extends AppComponent {
 
         return comment.save({adapterOptions: {mentionedIssues: mentionedIssues}}).then(function (savedComment) {
             issue.get('comments').pushObject(savedComment);
-            _self.pubSub.trigger('clearContents');
+        }).catch(function (error) {
+            if (comment.isNew) {
+                comment.unloadRecord();
+            }
+            throw error;
         });
     }
 
@@ -735,6 +729,11 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             return newConversation.save().then(function (conversation) {
                 issue.set('conversationRoomId', conversation.get('id'))
                return _self._createComment(issue, comment, mentionedIssues);
+            }).catch(function (error) {
+                if (newConversation.get('isNew')) {
+                    newConversation.unloadRecord();
+                }
+                throw error;
             });
         } else {
             Logger.debug('-Prometheus.Controller.App.Project.Issue.Page::saveComment');
