@@ -187,6 +187,29 @@
       border-bottom: 1px solid #eee !important;
     }
     
+    > .comment-pending {
+      > .box-comment {
+        opacity: 0.55;
+      }
+
+      &.comment-pending-failed > .box-comment {
+        opacity: 1;
+        border-left: 3px solid $dangerColor;
+      }
+
+      .comment-posting-dots > span {
+        animation: comment-posting-dot 1.4s infinite both;
+
+        &:nth-child(2) {
+          animation-delay: 0.2s;
+        }
+
+        &:nth-child(3) {
+          animation-delay: 0.4s;
+        }
+      }
+    }
+
     > .comment-item-wrapper {
       &:nth-child(even) > .box-comment {
         background-color: lighten($borderColor, 15%);

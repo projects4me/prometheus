@@ -72,8 +72,11 @@ export default class MessageBoxComponent extends Component{
         }
         if (this.args.save && this.args.entity && shouldSave) {
             this.isSaving = true;
-            await this.args.save(this.args.entity, content, this.mentionedIssues);
-            this.isSaving = false;
+            try {
+                await this.args.save(this.args.entity, content, this.mentionedIssues);
+            } finally {
+                this.isSaving = false;
+            }
         }
     }
 }

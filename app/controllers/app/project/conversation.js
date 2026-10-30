@@ -160,16 +160,6 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     addConversationDialog = false;
 
     /**
-     * PubSub service is used to provide DDAD 
-     *
-     * @property pubSub
-     * @type Ember.Service
-     * @for Conversation
-     * @private
-     */
-    @service pubSub;
-
-    /**
      * Hermes socket client used to register conversation live events.
      *
      * @property hermes
@@ -473,7 +463,11 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                     comment
                 );
             }
-            _self.pubSub.trigger('clearContents');
+        }).catch(function (error) {
+            if (comment.isNew) {
+                comment.unloadRecord();
+            }
+            throw error;
         });
     }
 
