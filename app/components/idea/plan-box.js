@@ -5,16 +5,8 @@
 import Component from '@glimmer/component';
 import { action, get } from '@ember/object';
 import decodePlanBody, { isProjectReadable } from 'prometheus/utils/idea-plan-body';
+import { planStatusClass } from 'prometheus/utils/idea/plan-status';
 import { tracked } from '@glimmer/tracking';
-
-const STATUS_LABELS = {
-    proposed: 'new',
-    approved: 'in_review',
-    creating: 'in_progress',
-    created: 'done',
-    failed: 'closed',
-    superseded: 'deferred'
-};
 
 /**
  * The plan box of an idea page: the versions of the plan as tabs, the summary and the planned issues of the
@@ -179,7 +171,7 @@ export default class IdeaPlanBoxComponent extends Component {
      * @public
      */
     get statusClass() {
-        return STATUS_LABELS[this.selected?.status] ?? 'new';
+        return planStatusClass(this.selected?.status);
     }
 
     /**

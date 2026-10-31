@@ -17,8 +17,30 @@ Feature: Ideas | idea browser
     When User opens the ideas of the project
     Then The sidebar shows the Idea entry
     And The idea browser lists the ideas Newest idea, Older idea
-    And The idea Newest idea is labelled Open
+    And The idea Newest idea is labelled Brainstorming
     And The idea browser opens on the new idea form
+
+  Scenario: The browser labels each idea with the status of its latest plan
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The ideas of the project are
+    ---------------------------------------------------------
+    | title        | status | dateModified        |
+    | Planned idea | open   | 2026-10-01 10:00:00 |
+    | Fresh idea   | open   | 2026-10-02 10:00:00 |
+    ---------------------------------------------------------
+    And The plans of the idea Planned idea are
+    ---------------------------
+    | version | status        |
+    | 2       | creating      |
+    | 1       | superseded    |
+    ---------------------------
+    When User opens the ideas of the project
+    Then The idea Planned idea is labelled Creating issues
+    And The idea Fresh idea is labelled Brainstorming
 
   Scenario: The archived ideas are shown and hidden from the footer link
 

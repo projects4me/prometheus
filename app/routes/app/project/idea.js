@@ -56,6 +56,27 @@ export default class AppProjectIdeaRoute extends App {
     }
 
     /**
+     * Queries the plans of the given ideas in one request.
+     *
+     * @method loadPlans
+     * @param {Array} ideaIds
+     * @returns {Promise}
+     * @public
+     */
+    async loadPlans(ideaIds) {
+        if (!ideaIds.length) {
+            return [];
+        }
+        let conditions = ideaIds.map(id => `(Ideaplan.ideaId : ${id})`).join(' OR ');
+        try {
+            return await this.store.query('ideaplan', { query: `(${conditions})`, limit: -1 });
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'idea' });
+            return [];
+        }
+    }
+
+    /**
      * Hands the ideas to the controller.
      *
      * @method setupController
@@ -65,7 +86,8 @@ export default class AppProjectIdeaRoute extends App {
      */
     setupController(controller, model) {
         controller.ideas = model ? model.toArray() : [];
-        controller.registerHermesIntents(this.trackedProject.getProjectId(), () => this.loadIdeas());
+        controller.loadPlanStatuses(controller.ideas, ids => this.loadPlans(ids));
+        controller.registerHermesIntents(this.trackedProject.getProjectId(), () => this.loadIdeas(), ids => this.loadPlans(ids));
     }
 
     /**
