@@ -159,7 +159,7 @@ module('Integration | Component | idea/plan-box', function (hooks) {
     });
 
     test('the plan lists each screen once, at its latest version, and plain text when missing', async function (assert) {
-        this.owner.lookup('service:upload-preview').thumbnail = async () => '/thumb.png';
+        this.owner.lookup('service:upload-preview').previewUrl = async () => '/full.png';
         this.set('plans', [{
             id: '1', version: 1, status: 'proposed',
             body: JSON.stringify({ summary: 'S', issues: [

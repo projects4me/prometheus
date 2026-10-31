@@ -9,8 +9,7 @@ import { tracked } from '@glimmer/tracking';
 import Logger from 'js-logger';
 
 /**
- * One screen of an idea message: the thumbnail of its upload with the title and version. A click
- * opens the full image in a new tab.
+ * One screen of an idea message: its full image with the title and version. A click opens the full image in a new tab.
  *
  * @class IdeaMessageScreenComponent
  * @namespace Prometheus.Components
@@ -20,31 +19,49 @@ export default class IdeaMessageScreenComponent extends Component {
     @service uploadPreview;
 
     /**
-     * The thumbnail address of the upload
+     * The address of the full image of the upload
      *
-     * @property thumbnail
+     * @property imageUrl
      * @type String
      * @private
      */
-    @tracked thumbnail = null;
+    @tracked imageUrl = null;
 
     constructor() {
         super(...arguments);
-        this.loadThumbnail();
+        this.loadImage();
     }
 
     /**
-     * Loads the thumbnail, without one the title is still shown
+     * Loads the full image, without it the placeholder and the title are still shown
      *
-     * @method loadThumbnail
+     * @method loadImage
      * @private
      */
-    async loadThumbnail() {
+    async loadImage() {
         try {
-            this.thumbnail = await this.uploadPreview.thumbnail(this.args.screen.uploadId);
+            let url = await this.uploadPreview.previewUrl(this.args.screen.uploadId);
+            if (this.isDestroying || this.isDestroyed) {
+                return;
+            }
+            this.imageUrl = url;
         } catch (e) {
-            Logger.error('IdeaMessageScreenComponent->loadThumbnail ' + e);
+            Logger.error('IdeaMessageScreenComponent->loadImage ' + e);
         }
+    }
+
+    /**
+     * Shows the placeholder when the image can't be loaded
+     *
+     * @method imageFailed
+     * @public
+     */
+    @action
+    imageFailed() {
+        if (this.isDestroying || this.isDestroyed) {
+            return;
+        }
+        this.imageUrl = null;
     }
 
     /**
