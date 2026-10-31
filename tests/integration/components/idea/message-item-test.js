@@ -60,9 +60,9 @@ module('Integration | Component | idea/message-item', function (hooks) {
         assert.deepEqual(shown, ['7']);
     });
 
-    test('a message with screens shows a thumbnail, title and version for each', async function (assert) {
+    test('a message with screens shows the full image, title and version for each', async function (assert) {
         let preview = this.owner.lookup('service:upload-preview');
-        preview.thumbnail = async () => '/thumb.png';
+        preview.previewUrl = async () => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
         this.set('message', { id: '5', kind: 'assistant', body: 'Screens', screens: [
             { uploadId: '11', key: 'home', title: 'Home', version: 2, width: 800, height: 600 },
             { uploadId: '12', key: 'board', title: 'Board', version: 1, width: 800, height: 600 }
@@ -70,14 +70,36 @@ module('Integration | Component | idea/message-item', function (hooks) {
         await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
 
         assert.dom('[data-idea-screen]').exists({ count: 2 });
-        assert.dom('[data-idea-screen="11"] img').hasAttribute('src', '/thumb.png');
+        assert.dom('[data-idea-screen="11"] img').hasAttribute('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
         assert.dom('[data-idea-screen="11"] [data-idea-screen-title]').includesText('Home');
         assert.dom('[data-idea-screen="11"] [data-idea-screen-title]').includesText('v2');
     });
 
+    test('a screen whose image cannot load shows the placeholder', async function (assert) {
+        let preview = this.owner.lookup('service:upload-preview');
+        preview.previewUrl = async () => { throw new Error('no token'); };
+        this.set('message', { id: '5', kind: 'assistant', body: 'Screens', screens: [{ uploadId: '11', title: 'Home', version: 1 }] });
+        await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
+
+        assert.dom('[data-idea-screen="11"] img').doesNotExist();
+        assert.dom('[data-idea-screen="11"] .fa-picture-o').exists();
+        assert.dom('[data-idea-screen="11"] [data-idea-screen-title]').includesText('Home');
+    });
+
+    test('a screen whose image fails to load falls back to the placeholder', async function (assert) {
+        let preview = this.owner.lookup('service:upload-preview');
+        preview.previewUrl = async () => '/missing.png';
+        this.set('message', { id: '5', kind: 'assistant', body: 'Screens', screens: [{ uploadId: '11', title: 'Home', version: 1 }] });
+        await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
+
+        await waitUntil(() => !document.querySelector('[data-idea-screen="11"] img'), { timeout: 3000 });
+
+        assert.dom('[data-idea-screen="11"] img').doesNotExist();
+        assert.dom('[data-idea-screen="11"] .fa-picture-o').exists();
+    });
+
     test('clicking a screen opens the full image in a new tab', async function (assert) {
         let preview = this.owner.lookup('service:upload-preview');
-        preview.thumbnail = async () => '/thumb.png';
         preview.previewUrl = async () => 'http://api/preview/get/tok';
         let tab = { location: {}, close() {} };
         let opened = [];

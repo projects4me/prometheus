@@ -1,7 +1,7 @@
 <li data-idea-screen={{@screen.uploadId}}>
   <a href="#" class="idea-message-screen" {{on "click" this.open}} data-idea-screen-open>
-    {{#if this.thumbnail}}
-      <img src={{this.thumbnail}} alt={{@screen.title}} class="idea-message-screen-image">
+    {{#if this.imageUrl}}
+      <img src={{this.imageUrl}} alt={{@screen.title}} class="idea-message-screen-image" loading="lazy" {{on "error" this.imageFailed}}>
     {{else}}
       <i class="fa fa-picture-o"></i>
     {{/if}}

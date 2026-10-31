@@ -6,7 +6,7 @@ import Service from '@ember/service';
 import { inject as service } from '@ember/service';
 
 /**
- * Resolves what is needed to show an upload: its thumbnail and the address of the full image.
+ * Resolves what is needed to show an upload: the address of its full image.
  * Components use this service instead of calling the API themselves.
  *
  * @class UploadPreviewService
@@ -15,20 +15,6 @@ import { inject as service } from '@ember/service';
  */
 export default class UploadPreviewService extends Service {
     @service store;
-
-    /**
-     * The thumbnail address of an upload, empty when the upload has none
-     *
-     * @method thumbnail
-     * @param {String} uploadId
-     * @return {Promise} resolves to the address or null
-     * @public
-     */
-    async thumbnail(uploadId) {
-        let upload = await this.store.findRecord('upload', uploadId);
-        let thumbnail = upload.fileThumbnail;
-        return thumbnail && thumbnail !== '0' ? thumbnail : null;
-    }
 
     /**
      * The address of the full image of an upload, it needs a download token from the API
