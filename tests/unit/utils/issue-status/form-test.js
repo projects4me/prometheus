@@ -80,4 +80,23 @@ module('Unit | Utility | issue-status/form', function () {
 
         assert.deepEqual(form.labels.map((field) => field.caption), ['Label en-us', 'Label de-de']);
     });
+
+    test('a new status starts with the default colour, an existing one with its saved colour', function (assert) {
+        let added = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us' });
+        let edited = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us', isNew: false, color: '#1A2B3C' });
+        let invalid = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us', isNew: false, color: 'red' });
+
+        assert.strictEqual(added.color, '#80b5d3');
+        assert.strictEqual(edited.color, '#1a2b3c');
+        assert.strictEqual(invalid.color, '#80b5d3');
+    });
+
+    test('the text colour is the saved one, light by default', function (assert) {
+        let added = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us' });
+        let edited = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us', isNew: false, textColor: 'dark' });
+
+        assert.strictEqual(added.textColor, 'light');
+        assert.strictEqual(edited.textColor, 'dark');
+    });
 });
+

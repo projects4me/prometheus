@@ -50,15 +50,40 @@
     cursor: move;
   }
 
-  .issue-status-colors {
-    margin-bottom: 15px;
+  .issue-status-color-fields {
+    display: flex;
+    align-items: flex-start;
 
-    label {
-      font-weight: normal;
+    .form-field {
+      flex: 1 1 0;
+      min-width: 0;
     }
 
-    .color-swatch {
-      margin-right: 12px;
+    .form-field + .form-field {
+      margin-left: 20px;
     }
+  }
+
+  .issue-status-color {
+
+    input[type="color"] {
+      padding: 0 2px;
+      cursor: pointer;
+
+      &::-webkit-color-swatch {
+        border: 0;
+        border-radius: 0;
+      }
+
+      &::-moz-color-swatch {
+        border: 0;
+        border-radius: 0;
+      }
+    }
+  }
+
+  // Lined up with the form fields above, which have a 3rem margin.
+  .issue-status-color-preview {
+    margin: -1rem 3rem 2rem;
   }
 }

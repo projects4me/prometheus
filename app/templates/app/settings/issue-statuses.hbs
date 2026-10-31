@@ -119,15 +119,27 @@
             @data-field="issuestatus.name"
           />
         {{/if}}
-        <div class="form-field issue-status-colors" data-field="issuestatus.color">
-          <label>{{t "views.app.settings.issueStatuses.color"}}</label>
-          <div>
-            {{#each this.colors as |color|}}
-              <label class="color-swatch">
-                <input type="radio" name="issuestatus-color" value={{color.value}} checked={{eq this.editing.color color.value}} {{on "change" (fn this.selectColor color.value)}}>
-                <span class="label" style={{color.style}}>{{t (concat "views.app.settings.issueStatuses.colors." color.name)}}</span>
-              </label>
-            {{/each}}
+        <div class="issue-status-color" data-field="issuestatus.color">
+          <div class="issue-status-color-fields">
+            <FormFields::FieldText
+              @type="color"
+              @label={{t "views.app.settings.issueStatuses.color"}}
+              @value={{this.form.color}}
+              @data-field="issuestatus.color.picker"
+            />
+            <FormFields::FieldRelate
+              @label={{t "views.app.settings.issueStatuses.textColor"}}
+              @options={{this.textColors}}
+              @selected={{this.selectedTextColor}}
+              @onchange={{this.selectTextColor}}
+              @relateType="relate-simple"
+              @searchEnabled={{false}}
+              @data-field="issuestatus.textColor"
+            />
+          </div>
+          <div class="issue-status-color-preview" data-field="issuestatus.color.preview">
+            <span class="text-muted">{{t "views.app.settings.issueStatuses.colorPreview"}}:</span>
+            <span class="label" style={{this.previewStyle}}>{{this.previewLabel}}</span>
           </div>
         </div>
         <div class="form-field" data-field="issuestatus.done">

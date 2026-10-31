@@ -1,4 +1,5 @@
 import { click, fillIn, settled, waitUntil } from '@ember/test-helpers';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 import Sortable from 'sortablejs';
 import steps from '../steps';
 import { translationsUrl } from 'prometheus/mirage/route-handlers/translation';
@@ -34,6 +35,16 @@ function labelInput(locale) {
 }
 
 const VALUE_INPUT = '.modal [data-field="issuestatus.name"] input';
+const PICKER_INPUT = '.modal [data-field="issuestatus.color.picker"] input';
+const TEXT_COLOR_FIELD = '.modal [data-field="issuestatus.textColor"]';
+const PREVIEW_LABEL = '.modal [data-field="issuestatus.color.preview"] .label';
+
+/**
+ * The colour of a text, rgb() as browsers report it, for a tone: dark or light.
+ */
+function toneColor(tone) {
+    return tone === 'dark' ? 'rgb(0, 0, 0)' : 'rgb(255, 255, 255)';
+}
 
 /**
  * The create and update requests the page sent for issue statuses, per Mirage server.
@@ -102,7 +113,8 @@ export const given = function () {
                         sortOrder: parseInt(row.sortOrder),
                         issueCount: parseInt(row.issueCount),
                         system: '1',
-                        translations: row.label ? { 'en-us': row.label } : undefined
+                        translations: row.label ? { 'en-us': row.label } : undefined,
+                        textColor: row.textColor && row.textColor !== '-' ? row.textColor : null
                     });
                 });
                 assert.ok(true, `${table.length} global issue statuses exist`);
@@ -124,7 +136,7 @@ export const when = function () {
                 recordWrites();
                 await click('[data-btn="add-issue-status"]');
                 await fillIn(labelInput('en-us'), label);
-                await click(`.modal [data-field="issuestatus.color"] input[value="${color}"]`);
+                await fillIn(PICKER_INPUT, color);
                 await click('.modal [data-field="issuestatus.done"] input');
                 await submitModal();
                 assert.ok(true, `User adds the issue status ${label}`);
@@ -174,9 +186,21 @@ export const when = function () {
             "User changes the colour of the issue status $name to $color": (assert) => async function (name, color) {
                 recordWrites();
                 await click(findRow(name).querySelector('[data-btn="edit-issue-status"]'));
-                await click(`.modal [data-field="issuestatus.color"] input[value="${color}"]`);
+                await fillIn(PICKER_INPUT, color);
                 await submitModal();
                 assert.ok(true, `User recolours the issue status ${name}`);
+            }
+        },
+        {
+            "User picks the text colour $label": (assert) => async function (label) {
+                await selectChoose(TEXT_COLOR_FIELD, label);
+                assert.ok(true, `User picks the text colour ${label}`);
+            }
+        },
+        {
+            "User picks the colour $color with the colour picker": (assert) => async function (color) {
+                await fillIn(PICKER_INPUT, color);
+                assert.ok(true, `User picks the colour ${color}`);
             }
         },
         {
@@ -229,6 +253,51 @@ export const then = function () {
                 assert.equal(hexOf(row.querySelector('[data-column="label"] .label')), color);
                 assert.equal(row.querySelector('[data-column="done"]').textContent.trim(), done);
                 assert.equal(row.querySelector('[data-column="issueCount"]').textContent.trim(), count);
+            }
+        },
+        {
+            "The issue status $name is listed with $tone label text": (assert) => async function (name, tone) {
+                let label = findRow(name).querySelector('[data-column="label"] .label');
+                assert.equal(getComputedStyle(label).color, toneColor(tone), `${name} has ${tone} label text`);
+            }
+        },
+        {
+            "The colour picker reads $color": (assert) => async function (color) {
+                assert.dom(PICKER_INPUT).hasValue(color);
+            }
+        },
+        {
+            "The text colour reads $label": (assert) => async function (label) {
+                assert.dom(`${TEXT_COLOR_FIELD} .ember-power-select-selected-item`).hasText(label);
+            }
+        },
+        {
+            "The colour preview has $tone text": (assert) => async function (tone) {
+                assert.equal(getComputedStyle(document.querySelector(PREVIEW_LABEL)).color, toneColor(tone), `the preview has ${tone} text`);
+            }
+        },
+        {
+            "The colour preview reads $label in colour $color": (assert) => async function (label, color) {
+                let preview = document.querySelector(PREVIEW_LABEL);
+                assert.equal(preview.textContent.trim(), label);
+                assert.equal(hexOf(preview), color);
+            }
+        },
+        {
+            "One request created the issue status $name with the colour $color and the text colour $textColor": (assert) => async function (name, color, textColor) {
+                let requests = createRequests();
+                assert.strictEqual(requests.length, 1, 'one create request');
+
+                let attributes = JSON.parse(requests[0].requestBody).data.attributes;
+                assert.strictEqual(attributes.name, name);
+                assert.strictEqual(attributes.color, color);
+                assert.strictEqual(attributes.textColor, textColor);
+            }
+        },
+        {
+            "The issue status $name was saved with the text colour $textColor": (assert) => async function (name, textColor) {
+                let status = server.schema.issuestatuses.findBy({ name });
+                assert.strictEqual(status.textColor, textColor);
             }
         },
         {
