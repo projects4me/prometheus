@@ -19,8 +19,8 @@
         </thead>
         <tbody>
           {{#each @runs as |run|}}
-            <tr class={{if (eq run @selected) "active"}} role="button" data-run={{run.id}} {{on "click" (fn @onSelect run)}}>
-              <td>{{run.startedAt}}</td>
+            <tr class={{if (eq run @selected) "active"}} data-run={{run.id}} {{on "click" (fn @onSelect run)}}>
+              <td><button type="button" class="btn btn-link btn-xs" aria-pressed={{if (eq run @selected) "true" "false"}}>{{run.startedAt}}</button></td>
               <td>{{run.entityType}} {{run.entityId}}</td>
               <td>{{run.status}}</td>
             </tr>

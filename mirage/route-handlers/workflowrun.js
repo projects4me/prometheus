@@ -34,7 +34,8 @@ function simulate(schema, workflowId) {
 
 export function register(server) {
 	server.get('/workflowrun', (schema, request) => {
-		return applyQuery(schema.workflowruns.all(), request);
+		// Gaia does not keep simulated runs; the mock saves them only to answer with an id
+		return applyQuery(schema.workflowruns.where(run => !run.test), request);
 	});
 
 	server.post('/workflowrun', (schema, request) => {

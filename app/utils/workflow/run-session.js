@@ -77,6 +77,7 @@ export default class RunSession {
     open(panel) {
         this.token++;
         this.panel = panel;
+        this.runs = [];
         this.shownRun = null;
         this.runSteps = [];
         this.isBusy = false;
@@ -142,7 +143,7 @@ export default class RunSession {
      * @private
      */
     async _guard(kind, request) {
-        let token = this.token;
+        let token = ++this.token;
         this.isBusy = true;
         try {
             let result = await request();
