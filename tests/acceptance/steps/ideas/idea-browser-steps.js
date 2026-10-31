@@ -90,6 +90,14 @@ export const then = function () {
             }
         },
         {
+            "The idea browser opens on the new idea form": (assert) => async function () {
+                assert.ok(/\/idea\/create$/.test(currentURL()), `on the new idea page: ${currentURL()}`);
+                assert.dom('[data-idea-main]').exists();
+                assert.dom('[data-idea-empty]').doesNotExist();
+                assert.dom(`${BROWSER} li`).exists();
+            }
+        },
+        {
             "The empty idea box is shown": (assert) => async function () {
                 assert.dom('[data-idea-empty]').exists();
                 assert.ok(document.querySelector('.idea-wrapper .col-md-9 [data-idea-empty]'), 'it fills the col-md-9');

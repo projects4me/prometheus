@@ -4,7 +4,11 @@
 
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { inject as controller } from '@ember/controller';
+import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import { htmlSafe } from '@ember/template';
+import { guidFor } from '@ember/object/internals';
 
 /**
  * The controller of the new idea page. It creates the idea with its first message
@@ -73,6 +77,31 @@ export default class AppProjectIdeaCreateController extends PrometheusCreateCont
     @controller('app.project.idea') ideaController;
 
     /**
+     * @property pubSub
+     * @type Ember.Service
+     * @public
+     */
+    @service pubSub;
+
+    /**
+     * The pubSub event which clears the description editor of the form
+     *
+     * @property clearEvent
+     * @type String
+     * @public
+     */
+    clearEvent = `clearContents-${guidFor(this)}`;
+
+    /**
+     * Whether the idea is being saved, the form can't be emptied meanwhile
+     *
+     * @property isSaving
+     * @type Boolean
+     * @public
+     */
+    @tracked isSaving = false;
+
+    /**
      * Builds the validation schema of the form
      *
      * @method constructor
@@ -120,12 +149,49 @@ export default class AppProjectIdeaCreateController extends PrometheusCreateCont
     }
 
     /**
-     * Goes back to the idea browser
+     * Saves the idea and keeps track of it, so cancel can't empty the form while it is in flight
+     *
+     * @method _save
+     * @private
+     */
+    _save(model, resolve, reject, showDefaultSuccessMessage = true) {
+        this.isSaving = true;
+        return super._save(
+            model,
+            () => {
+                this.isSaving = false;
+                resolve();
+            },
+            () => {
+                this.isSaving = false;
+                reject();
+            },
+            showDefaultSuccessMessage
+        );
+    }
+
+    /**
+     * Ignores cancel while the idea is being saved
+     *
+     * @method cancel
+     * @public
+     */
+    @action cancel() {
+        if (!this.isSaving) {
+            super.cancel();
+        }
+    }
+
+    /**
+     * Empties the form: the title, the description, the editor and the validation messages
      *
      * @method afterCancel
      * @protected
      */
     afterCancel() {
-        this.transitionToRoute('app.project.idea.index');
+        this.model.title = '';
+        this.model.description = '';
+        this.message = {};
+        this.pubSub.trigger(this.clearEvent);
     }
 }

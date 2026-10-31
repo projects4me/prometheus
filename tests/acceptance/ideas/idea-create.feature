@@ -25,3 +25,16 @@ Feature: Ideas | start a new idea
     And User clicks the start idea button
     Then No idea is created
     And User stays on the new idea page
+
+  Scenario: Cancel empties the form and stays on the new idea page
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    When User opens the ideas of the project
+    And User enters Dark mode in the idea title
+    And User clicks the cancel idea button
+    And User confirms cancelling the idea
+    Then The idea title is empty
+    And User stays on the new idea page
