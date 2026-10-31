@@ -1,0 +1,38 @@
+<div class="box box-info workflow-run-steps-section" data-workflow-run-steps>
+  <div class="box-header with-border">
+    <h3 class="box-title">
+      {{#if @test}}
+        {{t "views.app.workflow.runs.testResult"}}
+      {{else}}
+        {{t "views.app.workflow.runs.steps"}}
+      {{/if}}
+      {{#if @status}}<small data-run-status>{{@status}}</small>{{/if}}
+    </h3>
+  </div>
+  <div class="box-body">
+    {{#if @error}}
+      <p class="text-red" data-run-error><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{@error}}</p>
+    {{/if}}
+    {{#each @steps as |step|}}
+      <div class="workflow-run-step" data-run-step={{step.sequence}} data-step-kind={{step.kind}}>
+        <h4>
+          {{step.sequence}}. {{t (kind-label step.kind)}}
+          <small data-step-status>{{step.status}}</small>
+          {{#if step.port}}<small data-step-port>&rarr; {{step.port}}</small>{{/if}}
+        </h4>
+        {{#if step.error}}
+          <p class="text-red" data-step-error><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{step.error}}</p>
+        {{/if}}
+        <h5>{{t "views.app.workflow.runs.inputs"}}</h5>
+        <pre data-step-inputs>{{step.inputsText}}</pre>
+        <h5>{{t "views.app.workflow.runs.outputs"}}</h5>
+        <pre data-step-outputs>{{step.outputsText}}</pre>
+      </div>
+    {{else}}
+      <p class="text-center text-muted" data-no-steps>
+        <i class="fa fa-info-circle" aria-hidden="true"></i>
+        {{t "views.app.workflow.runs.noSteps"}}
+      </p>
+    {{/each}}
+  </div>
+</div>

@@ -1,10 +1,11 @@
 {{! Moving a node and drawing a connection start on the press. }}
 {{! template-lint-disable no-down-event-binding }}
 <div
-  class="workflow-node workflow-node-{{@node.category}} {{if @selected 'selected'}} {{if @node.errors.length 'has-errors'}}"
+  class="workflow-node workflow-node-{{@node.category}} {{if @selected 'selected'}} {{if this.step (concat 'ran ' this.step.status)}} {{if @node.errors.length 'has-errors'}}"
   style={{this.style}}
   data-workflow-node={{@node.key}}
   data-node-kind={{@node.kind}}
+  data-step-status={{this.step.status}}
 >
   <div
     class="workflow-node-header"

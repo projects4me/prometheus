@@ -192,3 +192,23 @@
     margin-top: -6px;
   }
 }
+
+.workflow-editor {
+  .workflow-edge.taken .workflow-edge-line {
+    stroke: $primaryColor;
+    stroke-width: 3px;
+  }
+
+  .workflow-node.ran {
+    border-color: $primaryColor;
+  }
+
+  .workflow-node.ran.failed {
+    border-color: $dangerColor;
+  }
+
+  .workflow-run-step pre {
+    max-height: 160px;
+    overflow: auto;
+  }
+}

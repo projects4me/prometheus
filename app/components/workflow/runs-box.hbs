@@ -1,0 +1,37 @@
+<div class="box box-info workflow-runs-section" data-workflow-runs-box>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.workflow.runs.title"}}</h3>
+    <div class="box-tools pull-right">
+      <button type="button" class="btn btn-box-tool" title={{t "views.app.workflow.runs.close"}} data-close-runs {{on "click" @onClose}}>
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="box-body no-padding">
+    {{#if @runs.length}}
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>{{t "views.app.workflow.runs.started"}}</th>
+            <th>{{t "views.app.workflow.runs.entity"}}</th>
+            <th>{{t "views.app.workflow.runs.status"}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each @runs as |run|}}
+            <tr class={{if (eq run @selected) "active"}} role="button" data-run={{run.id}} {{on "click" (fn @onSelect run)}}>
+              <td>{{run.startedAt}}</td>
+              <td>{{run.entityType}} {{run.entityId}}</td>
+              <td>{{run.status}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <p class="text-center text-muted" data-no-runs>
+        <i class="fa fa-info-circle" aria-hidden="true"></i>
+        {{t "views.app.workflow.runs.empty"}}
+      </p>
+    {{/if}}
+  </div>
+</div>

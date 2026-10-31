@@ -2216,10 +2216,10 @@
         },
         "editor": {
           "newTitle": "New workflow",
+          "saveFirst": "Save the workflow first",
           "version": "version {version}",
           "runs": "Runs",
           "testRun": "Test run",
-          "runsSoon": "Runs and test runs are not available yet",
           "save": "Save",
           "namePlaceholder": "Name the workflow",
           "scopeEveryProject": "Every project",
@@ -2229,6 +2229,28 @@
           "savedWithProblems": "The workflow is saved, but {count} of its steps or connections could not be saved. They are marked in red.",
           "saveFailed": "The workflow could not be saved.",
           "edgeNodeUnsaved": "Both steps must be saved before this connection can be saved."
+        },
+        "runs": {
+          "title": "Runs",
+          "close": "Close",
+          "started": "Started",
+          "entity": "Record",
+          "status": "Status",
+          "empty": "This workflow has not run yet.",
+          "steps": "Path of the run",
+          "testResult": "Simulated path",
+          "inputs": "Inputs",
+          "outputs": "Outputs",
+          "noSteps": "The run took no steps.",
+          "loadFailed": "The runs could not be loaded."
+        },
+        "testRun": {
+          "title": "Test run",
+          "entityId": "Record id",
+          "entityPlaceholder": "The id of the record the trigger is about",
+          "hint": "Simulates the workflow for the record. Nothing is written and no agent runs.",
+          "run": "Run test",
+          "failed": "The test run failed."
         },
         "palette": {
           "title": "Steps",

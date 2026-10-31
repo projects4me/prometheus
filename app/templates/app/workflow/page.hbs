@@ -11,6 +11,8 @@
             @onStatusChange={{this.changeStatus}}
             @onScopeChange={{this.changeScope}}
             @onSave={{this.save}}
+            @onShowRuns={{this.showRuns}}
+            @onShowTestRun={{this.showTestRun}}
           />
         </div>
       </div>
@@ -23,6 +25,7 @@
             @graph={{this.model.graph}}
             @selectedNode={{this.selectedNode}}
             @locked={{this.isGraphLocked}}
+            @trace={{this.trace}}
             @onAdd={{this.addNode}}
             @onMove={{this.moveNode}}
             @onSelect={{this.selectNode}}
@@ -38,6 +41,27 @@
           />
         </div>
       </div>
+      {{#if this.runSession.panel}}
+        <div class="row">
+          <div class="col-md-4">
+            {{#if (eq this.runSession.panel "runs")}}
+              <Workflow::RunsBox @runs={{this.runSession.runs}} @selected={{this.runSession.shownRun}} @onSelect={{this.selectRun}} @onClose={{this.closePanel}} />
+            {{else}}
+              <Workflow::TestRunBox @running={{this.runSession.isBusy}} @onRun={{this.runTest}} @onClose={{this.closePanel}} />
+            {{/if}}
+          </div>
+          <div class="col-md-8">
+            {{#if this.runSession.shownRun}}
+              <Workflow::RunStepsBox
+                @steps={{this.runSession.runSteps}}
+                @status={{this.runSession.shownRun.status}}
+                @error={{this.runSession.shownRun.error}}
+                @test={{this.runSession.shownRun.test}}
+              />
+            {{/if}}
+          </div>
+        </div>
+      {{/if}}
     {{/if}}
   </AccessControl>
 </section>
