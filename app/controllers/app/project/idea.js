@@ -8,6 +8,7 @@ import { inject as service } from '@ember/service';
 import { planStatusClass } from 'prometheus/utils/idea/plan-status';
 import { tracked } from '@glimmer/tracking';
 
+const STORAGE_KEY = 'ideaBrowserCollapsed';
 const OPEN = 'open';
 const ARCHIVED = 'archived';
 const PROGRESS_STATUSES = ['proposed', 'approved', 'creating', 'created', 'failed'];
@@ -45,6 +46,15 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     @tracked ideas = [];
+
+    /**
+     * Whether the idea browser is collapsed so the idea page uses the full width, remembered in localStorage
+     *
+     * @property browserCollapsed
+     * @type Boolean
+     * @public
+     */
+    @tracked browserCollapsed = localStorage.getItem(STORAGE_KEY) === 'true';
 
     /**
      * The identifier of the idea that is open on the page route, null on the others
@@ -306,5 +316,17 @@ export default class AppProjectIdeaController extends Controller {
     @action
     toggleArchived() {
         this.showArchived = !this.showArchived;
+    }
+
+    /**
+     * Collapses or expands the idea browser and remembers the choice
+     *
+     * @method toggleBrowser
+     * @public
+     */
+    @action
+    toggleBrowser() {
+        this.browserCollapsed = !this.browserCollapsed;
+        localStorage.setItem(STORAGE_KEY, this.browserCollapsed);
     }
 }

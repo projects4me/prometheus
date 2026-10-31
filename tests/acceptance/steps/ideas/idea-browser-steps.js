@@ -70,6 +70,18 @@ export const when = function () {
             }
         },
         {
+            "User collapses the idea browser": (assert) => async function () {
+                await click('[data-collapse-browser]');
+                assert.ok(true, 'User collapses the idea browser');
+            }
+        },
+        {
+            "User expands the idea browser": (assert) => async function () {
+                await click('[data-expand-browser]');
+                assert.ok(true, 'User expands the idea browser');
+            }
+        },
+        {
             "User selects the idea $title in the browser": (assert) => async function (title) {
                 await click(findIdea(title).querySelector('a'));
                 assert.ok(true, `User selects the idea ${title}`);
@@ -128,6 +140,25 @@ export const then = function () {
                 assert.dom('[data-idea-main]').exists();
                 assert.dom('[data-idea-empty]').doesNotExist();
                 assert.dom(`${BROWSER} li`).exists();
+            }
+        },
+        {
+            "The idea browser is hidden and the idea page spans the full width": (assert) => async function () {
+                assert.dom(BROWSER).doesNotExist();
+                assert.dom('.idea-wrapper > .col-md-12').exists();
+                assert.dom('[data-expand-browser]').exists();
+            }
+        },
+        {
+            "The idea browser is shown beside the idea page": (assert) => async function () {
+                assert.dom(BROWSER).exists();
+                assert.dom('.idea-wrapper > .col-md-9').exists();
+                assert.dom('[data-expand-browser]').doesNotExist();
+            }
+        },
+        {
+            "The collapsed state is remembered in the browser storage as $value": (assert) => async function (value) {
+                assert.equal(localStorage.getItem('ideaBrowserCollapsed'), value);
             }
         },
         {

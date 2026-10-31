@@ -733,6 +733,8 @@
         "browser": {
           "title": "Ideas",
           "new": "New idea",
+          "collapse": "Hide the ideas list",
+          "expand": "Show the ideas list",
           "empty": "No open ideas",
           "showArchived": "Show archived ({count})",
           "hideArchived": "Hide archived ({count})"
