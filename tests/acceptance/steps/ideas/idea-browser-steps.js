@@ -44,6 +44,14 @@ export const given = function () {
 export const when = function () {
     return [
         {
+            "The plan version $version of the idea $title is now $status": (assert) => async function (version, title, status) {
+                let idea = server.schema.ideas.findBy({ title });
+                let plan = server.schema.ideaplans.findBy({ ideaId: idea.id, version: Number(version) });
+                plan.update({ status });
+                assert.ok(true, `plan ${version} of ${title} is now ${status}`);
+            }
+        },
+        {
             "User opens the ideas of the project": (assert, ctx) => async function () {
                 let project = ctx.get('currentProject');
                 await visit(`/app/project/${project.shortCode}/idea`);
