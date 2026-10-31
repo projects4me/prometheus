@@ -72,7 +72,7 @@ export default class AppProjectIdeaRoute extends App {
             return await this.store.query('ideaplan', { query: `(${conditions})`, limit: -1 });
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });
-            return [];
+            return null;
         }
     }
 

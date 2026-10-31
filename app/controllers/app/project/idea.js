@@ -121,8 +121,11 @@ export default class AppProjectIdeaController extends Controller {
     async loadPlanStatuses(ideas, loadPlans) {
         let sequence = ++this.planSequence;
         let plans = await loadPlans(ideas.map(idea => idea.id));
+        if (!plans) {
+            return;
+        }
         let latest = {};
-        for (let plan of plans?.toArray?.() ?? plans ?? []) {
+        for (let plan of plans.toArray?.() ?? plans) {
             let known = latest[plan.ideaId];
             if (!known || Number(plan.version) > Number(known.version)) {
                 latest[plan.ideaId] = plan;
@@ -206,7 +209,9 @@ export default class AppProjectIdeaController extends Controller {
         }
         this.hermesDisposer = this.hermes.register(this, projectId, {
             'idea.created': envelope => this.handleIdeaCreated(envelope, loadIdeas, loadPlans),
-            'idea.updated': () => this.reloadIdeas(loadIdeas, loadPlans)
+            'idea.updated': () => this.reloadIdeas(loadIdeas, loadPlans),
+            'idea.plan.created': () => this.loadPlanStatuses(this.ideas, loadPlans),
+            'idea.plan.status.changed': () => this.loadPlanStatuses(this.ideas, loadPlans)
         });
     }
 
