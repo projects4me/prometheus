@@ -88,6 +88,7 @@ export default class AppWorkflowPageRoute extends App {
     setupController(controller, model) {
         controller.model = model;
         controller.selectedNode = null;
+        controller.closePanel();
         this.breadcrumb.setTitle(this.routeName, model?.workflow?.name);
     }
 }

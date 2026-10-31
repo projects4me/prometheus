@@ -48,6 +48,17 @@ export default class WorkflowCanvasNodeComponent extends Component {
     }
 
     /**
+     * The step of the run shown over the flow that ran this node, if any
+     *
+     * @property step
+     * @type Object
+     * @public
+     */
+    get step() {
+        return this.args.trace?.stepOf(this.args.node);
+    }
+
+    /**
      * @property icon
      * @type String
      * @public

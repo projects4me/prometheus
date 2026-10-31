@@ -47,7 +47,7 @@
       <div class="workflow-canvas-layer" style={{this.layerStyle}}>
         <svg class="workflow-edges" xmlns="http://www.w3.org/2000/svg">
           {{#each this.edgeViews as |edgeView|}}
-            <g class="workflow-edge {{if edgeView.selected 'selected'}} {{if edgeView.invalid 'invalid'}}" role="button" data-workflow-edge={{edgeView.edge.key}} data-edge-port={{edgeView.edge.port}} {{on "click" (fn this.selectEdge edgeView.edge)}}>
+            <g class="workflow-edge {{if edgeView.selected 'selected'}} {{if edgeView.invalid 'invalid'}} {{if edgeView.taken 'taken'}}" role="button" data-workflow-edge={{edgeView.edge.key}} data-edge-port={{edgeView.edge.port}} {{on "click" (fn this.selectEdge edgeView.edge)}}>
               <path class="workflow-edge-hit" d={{edgeView.path}}></path>
               <path class="workflow-edge-line" d={{edgeView.path}}></path>
             </g>
@@ -60,6 +60,7 @@
           <Workflow::CanvasNode
             @node={{node}}
             @selected={{eq node @selectedNode}}
+            @trace={{@trace}}
             @pendingPort={{if (eq node this.pending.node) this.pending.port}}
             @onHeaderDown={{this.pressNode}}
             @onPortDown={{this.pressPort}}

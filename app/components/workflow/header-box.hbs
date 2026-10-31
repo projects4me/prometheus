@@ -9,11 +9,11 @@
       {{/if}}
     </h3>
     <div class="box-tools pull-right">
-      <button type="button" class="btn btn-default btn-sm" disabled title={{t "views.app.workflow.editor.runsSoon"}} data-workflow-runs>
+      <button type="button" class="btn btn-default btn-sm" disabled={{@workflow.isNew}} title={{if @workflow.isNew (t "views.app.workflow.editor.saveFirst")}} data-workflow-runs {{on "click" @onShowRuns}}>
         <i class="fa fa-history" aria-hidden="true"></i>
         {{t "views.app.workflow.editor.runs"}}
       </button>
-      <button type="button" class="btn btn-default btn-sm" disabled title={{t "views.app.workflow.editor.runsSoon"}} data-workflow-test-run>
+      <button type="button" class="btn btn-default btn-sm" disabled={{@workflow.isNew}} title={{if @workflow.isNew (t "views.app.workflow.editor.saveFirst")}} data-workflow-test-run {{on "click" @onShowTestRun}}>
         <i class="fa fa-play" aria-hidden="true"></i>
         {{t "views.app.workflow.editor.testRun"}}
       </button>

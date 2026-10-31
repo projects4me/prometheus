@@ -112,7 +112,8 @@ export default class WorkflowFlowCanvasComponent extends Component {
                 edge,
                 path: edgePath(outputPoint(edge.from, index), inputPoint(edge.to)),
                 selected: edge === this.selectedEdge,
-                invalid: edge.errors.length > 0
+                invalid: edge.errors.length > 0,
+                taken: !!this.args.trace?.tookEdge(edge)
             };
         });
     }
