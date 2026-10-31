@@ -2225,6 +2225,7 @@
           "scopeEveryProject": "Every project",
           "nameRequired": "Name the workflow before saving it.",
           "saved": "The workflow is saved.",
+          "notActivated": "{count} of the steps or connections could not be saved, so the workflow is not activated yet. They are marked in red.",
           "savedWithProblems": "The workflow is saved, but {count} of its steps or connections could not be saved. They are marked in red.",
           "saveFailed": "The workflow could not be saved.",
           "edgeNodeUnsaved": "Both steps must be saved before this connection can be saved."

@@ -49,7 +49,8 @@ export default class WorkflowGraphService extends Service {
     /**
      * Saves a workflow and its graph. Gaia checks the whole graph when a workflow becomes Active and locks
      * the graph of an Active workflow, so an activation saves the graph first and any other status saves the
-     * workflow first.
+     * workflow first. An activation whose graph could not be fully saved leaves the status unsaved, so the
+     * graph stays editable.
      *
      * @method saveWorkflow
      * @param {Prometheus.Models.Workflow} workflow
@@ -63,7 +64,7 @@ export default class WorkflowGraphService extends Service {
             await workflow.save();
         }
         let problems = await this.save(workflow, graph);
-        if (activating && workflow.hasDirtyAttributes) {
+        if (activating && !problems && workflow.hasDirtyAttributes) {
             await workflow.save();
         }
         return problems;
@@ -233,7 +234,7 @@ export default class WorkflowGraphService extends Service {
      * @private
      */
     _messages(error) {
-        let messages = (error?.errors ?? []).map(entry => entry?.detail).filter(Boolean);
+        let messages = (Array.isArray(error?.errors) ? error.errors : []).map(entry => entry?.detail).filter(Boolean);
         return messages.length ? messages : [this.intl.t('views.app.workflow.editor.saveFailed')];
     }
 }

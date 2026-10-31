@@ -23,6 +23,23 @@ export default class AppWorkflowPageRoute extends App {
     @service workflowGraph;
 
     /**
+     * Sends the user to access denied when their role cannot open the route, once the app data (and so the
+     * user's permissions) have been loaded.
+     *
+     * @method beforeModel
+     * @param {Transition} transition
+     * @public
+     */
+    beforeModel(transition) {
+        super.beforeModel(transition);
+
+        if (this.controllerFor('app.loading-assets').get('dataLoaded')
+            && !this.acl.hasRouteAccess(this.routeName)) {
+            this.router.transitionTo('app.access-denied');
+        }
+    }
+
+    /**
      * Loads the workflow and its graph
      *
      * @method model

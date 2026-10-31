@@ -261,14 +261,16 @@ export default class AppWorkflowPageController extends Controller {
         this.isSaving = true;
         try {
             let problems = await this.workflowGraph.saveWorkflow(workflow, graph);
-            if (problems) {
+            if (problems && workflow.status === 'Active' && workflow.hasDirtyAttributes) {
+                this._post(this.intl.t('views.app.workflow.editor.notActivated', { count: problems }), 'error');
+            } else if (problems) {
                 this._post(this.intl.t('views.app.workflow.editor.savedWithProblems', { count: problems }), 'error');
             } else {
                 this._post(this.intl.t('views.app.workflow.editor.saved'), 'success');
             }
-            this.afterSave(workflow);
+            this.afterSave(workflow, problems);
         } catch (error) {
-            let messages = (error?.errors ?? []).map(entry => entry?.detail).filter(Boolean);
+            let messages = (Array.isArray(error?.errors) ? error.errors : []).map(entry => entry?.detail).filter(Boolean);
             this._post(messages.length ? messages.map(escapeHtml).join('<br>') : this.intl.t('views.app.workflow.editor.saveFailed'), 'error');
         } finally {
             if (!this.isDestroying && !this.isDestroyed) {
@@ -282,6 +284,7 @@ export default class AppWorkflowPageController extends Controller {
      *
      * @method afterSave
      * @param {Prometheus.Models.Workflow} workflow
+     * @param {Number} problems the steps and connections that could not be saved
      * @protected
      */
     afterSave(workflow) {

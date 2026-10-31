@@ -15,9 +15,13 @@ export default class AppWorkflowCreateController extends PageController {
     /**
      * @method afterSave
      * @param {Prometheus.Models.Workflow} workflow
+     * @param {Number} problems the steps and connections that could not be saved; the editor stays open so
+     * the marked ones can be fixed
      * @protected
      */
-    afterSave(workflow) {
-        this.router.transitionTo('app.workflow.page', workflow.id);
+    afterSave(workflow, problems) {
+        if (!problems) {
+            this.router.transitionTo('app.workflow.page', workflow.id);
+        }
     }
 }

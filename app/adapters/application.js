@@ -174,7 +174,7 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
                 // Gaia answers a rejected save with { status: 'ERROR', messages: [...] }; keep the messages
                 adapterError = Array.isArray(payload?.messages)
                     ? new AdapterError(payload.messages.map(message => ({ title: 'Unprocessable Entity', detail: message })))
-                    : new AdapterError(payload?.error);
+                    : new AdapterError(payload?.error ? [{ title: 'Unprocessable Entity', detail: String(payload.error) }] : undefined);
                 break;
             default:
                 adapterError = new AdapterError(payload.error);
