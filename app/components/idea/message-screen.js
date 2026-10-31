@@ -55,6 +55,15 @@ export default class IdeaMessageScreenComponent extends Component {
     previewRequest = 0;
 
     /**
+     * The link that opened the modal, focused again when the modal closes
+     *
+     * @property opener
+     * @type HTMLElement
+     * @private
+     */
+    opener = null;
+
+    /**
      * Whether the modal image could not be loaded
      *
      * @property previewFailed
@@ -111,6 +120,7 @@ export default class IdeaMessageScreenComponent extends Component {
     @action
     async open(event) {
         event.preventDefault();
+        this.opener = event.currentTarget;
         this.previewFailed = false;
         this.previewUrl = null;
         this.previewOpen = true;
@@ -158,5 +168,9 @@ export default class IdeaMessageScreenComponent extends Component {
         this.previewRequest++;
         this.previewOpen = false;
         this.previewUrl = null;
+        if (this.opener && this.opener.isConnected) {
+            this.opener.focus();
+        }
+        this.opener = null;
     }
 }

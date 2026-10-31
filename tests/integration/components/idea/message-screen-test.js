@@ -45,6 +45,28 @@ module('Integration | Component | idea/message-screen', function (hooks) {
         }
     });
 
+    test('each opening of the modal requests a fresh preview address and Close returns focus to the link', async function (assert) {
+        let calls = 0;
+        let preview = this.owner.lookup('service:upload-preview');
+        preview.previewUrl = async () => PIXEL + '#' + (++calls);
+
+        await render(hbs`<ul><Idea::MessageScreen @screen={{this.screen}} /></ul>`);
+
+        await click('[data-idea-screen-open]');
+        await waitUntil(() => document.querySelector('.idea-screen-modal [data-idea-screen-preview-image]'), { timeout: 3000 });
+        let firstSrc = document.querySelector('.idea-screen-modal [data-idea-screen-preview-image]').getAttribute('src');
+        let callsAfterFirst = calls;
+        await click('.idea-screen-modal [data-btn="cancel"]');
+        await waitUntil(() => !document.querySelector('.idea-screen-modal'), { timeout: 3000 });
+        assert.strictEqual(document.activeElement, document.querySelector('[data-idea-screen-open]'), 'focus is back on the link');
+
+        await click('[data-idea-screen-open]');
+        await waitUntil(() => document.querySelector('.idea-screen-modal [data-idea-screen-preview-image]'), { timeout: 3000 });
+
+        assert.strictEqual(calls, callsAfterFirst + 1, 'the reopening requests a new address');
+        assert.notStrictEqual(document.querySelector('.idea-screen-modal [data-idea-screen-preview-image]').getAttribute('src'), firstSrc, 'the reopened image uses a different address');
+    });
+
     test('a failed token shows the placeholder and a message in the modal', async function (assert) {
         let calls = 0;
         let preview = this.owner.lookup('service:upload-preview');
