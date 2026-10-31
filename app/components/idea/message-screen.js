@@ -7,6 +7,7 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import Logger from 'js-logger';
+import config from 'prometheus/config/environment';
 
 /**
  * One screen of an idea message: its full image with the title and version. A click opens the full image in a modal.
@@ -71,6 +72,17 @@ export default class IdeaMessageScreenComponent extends Component {
      * @private
      */
     @tracked previewFailed = false;
+
+    /**
+     * Where the modal is rendered: the app root, outside the conversation so no comment style reaches it
+     *
+     * @property modalRoot
+     * @type HTMLElement
+     * @private
+     */
+    get modalRoot() {
+        return document.querySelector(config.APP.rootElement || 'body');
+    }
 
     constructor() {
         super(...arguments);
