@@ -7,4 +7,25 @@
     {{/if}}
     <span class="idea-message-screen-title" data-idea-screen-title>{{@screen.title}} <small class="text-muted">{{t "views.app.idea.conversation.screenVersion" version=@screen.version}}</small></span>
   </a>
+  {{#if this.previewOpen}}
+    {{#bootstrap-modal
+      title="views.app.idea.screen.preview"
+      closeLabel="global.form.close"
+      containerClass="idea-screen-modal"
+      removeConfirmBtn=true
+      close=(action this.closePreview)
+    }}
+      <p data-idea-screen-preview-title>{{@screen.title}} <small class="text-muted">{{t "views.app.idea.conversation.screenVersion" version=@screen.version}}</small></p>
+      {{#if this.previewFailed}}
+        <div class="text-center text-muted" data-idea-screen-preview-failed>
+          <i class="fa fa-picture-o fa-3x"></i>
+          <p>{{t "views.app.idea.screen.previewFailed"}}</p>
+        </div>
+      {{else if this.previewUrl}}
+        <img src={{this.previewUrl}} alt={{@screen.title}} class="idea-screen-modal-image" data-idea-screen-preview-image {{on "error" this.previewImageFailed}}>
+      {{else}}
+        <div class="text-center" data-idea-screen-preview-loading><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+      {{/if}}
+    {{/bootstrap-modal}}
+  {{/if}}
 </li>

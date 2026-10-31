@@ -9,7 +9,7 @@ import { tracked } from '@glimmer/tracking';
 import Logger from 'js-logger';
 
 /**
- * One screen of an idea message: its full image with the title and version. A click opens the full image in a new tab.
+ * One screen of an idea message: its full image with the title and version. A click opens the full image in a modal.
  *
  * @class IdeaMessageScreenComponent
  * @namespace Prometheus.Components
@@ -26,6 +26,42 @@ export default class IdeaMessageScreenComponent extends Component {
      * @private
      */
     @tracked imageUrl = null;
+
+    /**
+     * Whether the full size modal is open
+     *
+     * @property previewOpen
+     * @type Boolean
+     * @private
+     */
+    @tracked previewOpen = false;
+
+    /**
+     * The address of the full image shown in the modal
+     *
+     * @property previewUrl
+     * @type String
+     * @private
+     */
+    @tracked previewUrl = null;
+
+    /**
+     * Counts the preview requests so a late answer to a closed or replaced one is ignored
+     *
+     * @property previewRequest
+     * @type Number
+     * @private
+     */
+    previewRequest = 0;
+
+    /**
+     * Whether the modal image could not be loaded
+     *
+     * @property previewFailed
+     * @type Boolean
+     * @private
+     */
+    @tracked previewFailed = false;
 
     constructor() {
         super(...arguments);
@@ -65,8 +101,8 @@ export default class IdeaMessageScreenComponent extends Component {
     }
 
     /**
-     * Opens the full image in a new tab. The tab is opened during the click, before the download
-     * token is fetched, so popup blockers allow it.
+     * Opens the full image in a modal on the page. Each opening gets a fresh address, the download
+     * tokens are single use and the inline image has used its own.
      *
      * @method open
      * @param {Event} event
@@ -75,13 +111,52 @@ export default class IdeaMessageScreenComponent extends Component {
     @action
     async open(event) {
         event.preventDefault();
-        let tab = window.open('', '_blank');
+        this.previewFailed = false;
+        this.previewUrl = null;
+        this.previewOpen = true;
+        let request = ++this.previewRequest;
         try {
             let url = await this.uploadPreview.previewUrl(this.args.screen.uploadId);
-            tab.location.href = url;
+            if (this.isDestroying || this.isDestroyed || request !== this.previewRequest) {
+                return;
+            }
+            this.previewUrl = url;
         } catch (e) {
-            tab.close();
             Logger.error('IdeaMessageScreenComponent->open ' + e);
+            if (this.isDestroying || this.isDestroyed || request !== this.previewRequest) {
+                return;
+            }
+            this.previewFailed = true;
         }
+    }
+
+    /**
+     * Shows the placeholder when the modal image can't be displayed
+     *
+     * @method previewImageFailed
+     * @public
+     */
+    @action
+    previewImageFailed() {
+        if (this.isDestroying || this.isDestroyed) {
+            return;
+        }
+        this.previewFailed = true;
+    }
+
+    /**
+     * Closes the modal
+     *
+     * @method closePreview
+     * @public
+     */
+    @action
+    closePreview() {
+        if (this.isDestroying || this.isDestroyed) {
+            return;
+        }
+        this.previewRequest++;
+        this.previewOpen = false;
+        this.previewUrl = null;
     }
 }

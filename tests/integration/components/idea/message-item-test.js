@@ -98,13 +98,12 @@ module('Integration | Component | idea/message-item', function (hooks) {
         assert.dom('[data-idea-screen="11"] .fa-picture-o').exists();
     });
 
-    test('clicking a screen opens the full image in a new tab', async function (assert) {
+    test('clicking a screen opens the full image in a modal', async function (assert) {
         let preview = this.owner.lookup('service:upload-preview');
         preview.previewUrl = async () => 'http://api/preview/get/tok';
-        let tab = { location: {}, close() {} };
         let opened = [];
         let original = window.open;
-        window.open = (...args) => { opened.push(args); return tab; };
+        window.open = (...args) => { opened.push(args); return null; };
         try {
             this.set('message', { id: '5', kind: 'assistant', body: 'Screens', screens: [{ uploadId: '11', title: 'Home', version: 1 }] });
             await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
@@ -113,8 +112,8 @@ module('Integration | Component | idea/message-item', function (hooks) {
             window.open = original;
         }
 
-        assert.deepEqual(opened, [['', '_blank']]);
-        assert.strictEqual(tab.location.href, 'http://api/preview/get/tok');
+        assert.deepEqual(opened, []);
+        assert.dom('[data-idea-screen-preview-image]').hasAttribute('src', 'http://api/preview/get/tok');
     });
 
     test('a message without screens shows none', async function (assert) {
