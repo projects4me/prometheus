@@ -62,7 +62,7 @@ module('Integration | Component | idea/message-item', function (hooks) {
 
     test('a message with screens shows the full image, title and version for each', async function (assert) {
         let preview = this.owner.lookup('service:upload-preview');
-        preview.previewUrl = async () => '/full.png';
+        preview.previewUrl = async () => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
         this.set('message', { id: '5', kind: 'assistant', body: 'Screens', screens: [
             { uploadId: '11', key: 'home', title: 'Home', version: 2, width: 800, height: 600 },
             { uploadId: '12', key: 'board', title: 'Board', version: 1, width: 800, height: 600 }
@@ -70,7 +70,7 @@ module('Integration | Component | idea/message-item', function (hooks) {
         await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
 
         assert.dom('[data-idea-screen]').exists({ count: 2 });
-        assert.dom('[data-idea-screen="11"] img').hasAttribute('src', '/full.png');
+        assert.dom('[data-idea-screen="11"] img').hasAttribute('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
         assert.dom('[data-idea-screen="11"] [data-idea-screen-title]').includesText('Home');
         assert.dom('[data-idea-screen="11"] [data-idea-screen-title]').includesText('v2');
     });
