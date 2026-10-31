@@ -23,6 +23,18 @@ export const when = function () {
             }
         },
         {
+            "User clicks the cancel idea button": (assert) => async function () {
+                await click('[data-idea-main] .btn-default');
+                assert.ok(true, 'User clicks the cancel idea button');
+            }
+        },
+        {
+            "User confirms cancelling the idea": (assert) => async function () {
+                await click(document.querySelector('[data-action="confirm"] a'));
+                assert.ok(true, 'User confirms cancelling the idea');
+            }
+        },
+        {
             "User clicks the start idea button": (assert) => async function () {
                 await click('[data-start-idea]');
                 assert.ok(true, 'User clicks the start idea button');
@@ -41,6 +53,11 @@ export const then = function () {
                 let message = server.schema.ideamessages.findBy({ ideaId: idea.id });
                 assert.ok(message, 'the first message exists');
                 assert.equal(message.body, body);
+            }
+        },
+        {
+            "The idea title is empty": (assert) => async function () {
+                assert.dom('[data-field="idea.title"] input').hasValue('');
             }
         },
         {
