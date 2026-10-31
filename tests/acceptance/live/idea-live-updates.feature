@@ -25,6 +25,7 @@ Feature: Live | idea browser plan status
       | key        | value              |
       | actorId    | user_a             |
       | projectId  | 1                  |
+      | resourceType | ideaplan         |
       | resourceId | 1                  |
       -----------------------------------
     Then The idea Planned idea is labelled Issues created
