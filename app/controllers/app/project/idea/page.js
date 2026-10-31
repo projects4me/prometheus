@@ -4,6 +4,7 @@
 
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
+import { inject as controller } from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
@@ -50,6 +51,15 @@ export default class AppProjectIdeaPageController extends Controller {
      * @public
      */
     @service currentUser;
+
+    /**
+     * The controller of the idea browser, whose progress badge follows the plan status
+     *
+     * @property ideaController
+     * @type Prometheus.Controllers.App.Project.Idea
+     * @public
+     */
+    @controller('app.project.idea') ideaController;
 
     /**
      * Disposer of the Hermes registration
@@ -328,6 +338,8 @@ export default class AppProjectIdeaPageController extends Controller {
         plan.status = 'approved';
         try {
             await plan.save();
+            // the adapter marks this write as local, so Hermes drops its event and the badge needs the refresh
+            this.ideaController.setPlanStatus(plan.ideaId, plan.status);
         } catch (error) {
             plan.rollbackAttributes();
             this.errorManager.handleError(error, { moduleName: 'idea' });

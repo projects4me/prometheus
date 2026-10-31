@@ -110,6 +110,19 @@ export default class AppProjectIdeaController extends Controller {
     }
 
     /**
+     * Sets the plan status of an idea, for a change saved here whose Hermes event is not delivered back
+     *
+     * @method setPlanStatus
+     * @param {String} ideaId
+     * @param {String} status
+     * @returns {void}
+     * @public
+     */
+    setPlanStatus(ideaId, status) {
+        this.planStatuses = { ...this.planStatuses, [ideaId]: status };
+    }
+
+    /**
      * Loads the plans of the ideas and keeps the status of the plan with the highest version of each
      *
      * @method loadPlanStatuses

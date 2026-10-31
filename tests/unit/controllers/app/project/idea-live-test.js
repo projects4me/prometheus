@@ -135,6 +135,18 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.deepEqual(browser.ideas.map((i) => i.id), ["i0", "i1"]);
   });
 
+  test("approving a plan locally refreshes the browser badge", async function (assert) {
+    let page = this.owner.lookup("controller:app.project.idea.page");
+    let browser = this.owner.lookup("controller:app.project.idea");
+    browser.ideas = [EmberObject.create({ id: "i1", status: "open" })];
+    browser.planStatuses = { i1: "proposed" };
+    page.errorManager = { handleError() {} };
+    await page.approvePlan(
+      EmberObject.create({ ideaId: "i1", status: "proposed", save: async () => {} }),
+    );
+    assert.equal(browser.planStatuses.i1, "approved");
+  });
+
   test("no subscriptions are left after unregistering", function (assert) {
     let hermes = this.owner.lookup("service:hermes");
     let page = this.owner.lookup("controller:app.project.idea.page");
