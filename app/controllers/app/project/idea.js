@@ -119,6 +119,8 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     setPlanStatus(ideaId, status) {
+        // an older plan query still in flight must not overwrite this status
+        this.planSequence++;
         this.planStatuses = { ...this.planStatuses, [ideaId]: status };
     }
 
