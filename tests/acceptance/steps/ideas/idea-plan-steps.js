@@ -1,4 +1,4 @@
-import { click } from '@ember/test-helpers';
+import { click, visit } from '@ember/test-helpers';
 import steps from '../steps';
 
 export const given = function () {
@@ -16,6 +16,20 @@ export const given = function () {
 export const when = function () {
     return [
         {
+            "User toggles the plan review mode": (assert) => async function () {
+                await click('[data-idea-plan-review]');
+                assert.ok(true, 'User toggles the plan review mode');
+            }
+        },
+        {
+            "User opens the idea $title in plan review mode": (assert, ctx) => async function (title) {
+                let project = ctx.get('currentProject');
+                let idea = server.schema.ideas.findBy({ title });
+                await visit(`/app/project/${project.shortCode}/idea/${idea.id}?view=plan`);
+                assert.ok(true, 'User opens the idea in plan review mode');
+            }
+        },
+        {
             "User approves the plan": (assert) => async function () {
                 await click('[data-idea-plan-approve]');
                 await click('.modal .btn-primary');
@@ -27,6 +41,20 @@ export const when = function () {
 
 export const then = function () {
     return [
+        {
+            "The plan has the wide column": (assert) => async function () {
+                assert.dom('[data-idea-side]').hasClass('col-md-8');
+                assert.dom('[data-idea-main]').hasClass('col-md-4');
+                assert.dom('[data-idea-plan-review] .fa-compress').exists();
+            }
+        },
+        {
+            "The conversation has the wide column": (assert) => async function () {
+                assert.dom('[data-idea-main]').hasClass('col-md-8');
+                assert.dom('[data-idea-side]').hasClass('col-md-4');
+                assert.dom('[data-idea-plan-review] .fa-expand').exists();
+            }
+        },
         {
             "The plan is approved": (assert) => async function () {
                 assert.ok(server.schema.ideaplans.findBy({ status: 'approved' }), 'the plan is approved');

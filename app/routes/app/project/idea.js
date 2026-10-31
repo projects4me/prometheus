@@ -100,6 +100,7 @@ export default class AppProjectIdeaRoute extends App {
      */
     resetController(controller, isExiting) {
         if (isExiting) {
+            controller.view = null;
             controller.unregisterHermesIntents();
         }
     }

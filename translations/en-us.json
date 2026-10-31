@@ -787,6 +787,8 @@
         },
         "plan": {
           "title": "Plan",
+          "reviewEnter": "Review the plan in the wide column",
+          "reviewExit": "Back to the conversation layout",
           "empty": "No plan yet",
           "complexities": {
             "simple": "simple",

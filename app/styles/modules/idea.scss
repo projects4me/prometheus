@@ -131,6 +131,24 @@
   }
 }
 
+// plan review mode: the plan has the wide column, so the screens and the issue rows spread out
+.idea-page.idea-review-mode {
+  .idea-plan {
+    .idea-message-screen {
+      width: 240px;
+    }
+
+    .idea-plan-issue-head .meta {
+      gap: 0.4rem 2rem;
+      font-size: 1.3rem;
+    }
+
+    .idea-plan-description {
+      padding-right: 3rem;
+    }
+  }
+}
+
 .idea-composer {
   > #editor {
     height: 18rem !important;

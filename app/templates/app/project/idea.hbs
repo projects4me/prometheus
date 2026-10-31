@@ -16,7 +16,7 @@
           <ul class="nav nav-stacked idea-list" data-idea-list>
             {{#each this.listedIdeas as |idea|}}
               <li class={{if (eq idea.id this.selectedIdeaId) "active menu-open"}} data-idea={{idea.id}}>
-                <LinkTo @route="app.project.idea.page" @model={{idea.id}}>
+                <LinkTo @route="app.project.idea.page" @model={{idea.id}} @query={{this.linkQuery}}>
                   <span data-idea-title>{{idea.title}}</span>
                   {{#let (get this.progressByIdea idea.id) as |progress|}}
                     <span class="label pull-right {{progress.class}}" data-idea-status>{{t progress.label}}</span>
