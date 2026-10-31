@@ -33,6 +33,7 @@ import * as Systemsetting from './route-handlers/systemsetting';
 import * as Setting from './route-handlers/setting';
 import * as Issueplanning from './route-handlers/issueplanning';
 import * as Issuewatcher from './route-handlers/issuewatcher';
+import * as Useridentity from './route-handlers/useridentity';
 import * as Userskill from './route-handlers/userskill';
 import * as Userqualification from './route-handlers/userqualification';
 import * as Idea from './route-handlers/idea';
@@ -88,6 +89,7 @@ function routes() {
     Setting.register(this, ctx);
     Issueplanning.register(this, ctx);
     Issuewatcher.register(this, ctx);
+    Useridentity.register(this);
     Userskill.register(this);
     Userqualification.register(this);
     Idea.register(this, ctx);

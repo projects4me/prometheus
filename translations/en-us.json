@@ -1166,6 +1166,31 @@
             "completionYear": "Completion year",
             "completionYearPlaceholder": "Select year"
           },
+          "identities": "Identities",
+          "identity": {
+            "add": "Add identity",
+            "remove": "Remove identity",
+            "none": "No identities added yet",
+            "saved": "Identity added",
+            "saveFailed": "Could not add identity. Please try again.",
+            "removed": "Identity removed",
+            "removeFailed": "Could not remove identity. Please try again.",
+            "verified": "Verified",
+            "unverified": "Unverified",
+            "provider": "Provider",
+            "providerPlaceholder": "Select provider",
+            "providerGit": "Git",
+            "providerGithub": "GitHub",
+            "providerGitlab": "GitLab",
+            "providerSlack": "Slack",
+            "providerSsh": "SSH",
+            "handle": "Handle",
+            "handlePlaceholder": "Enter handle",
+            "email": "Email",
+            "emailPlaceholder": "Enter email",
+            "fingerprint": "Key fingerprint",
+            "fingerprintPlaceholder": "Enter public key fingerprint"
+          },
           "skills": "Skills",
           "skill": {
             "add": "Add skill",
@@ -1308,6 +1333,15 @@
           "active": "Active",
           "disabled": "Disabled",
           "invited": "Invited"
+        }
+      },
+      "useridentity": {
+        "fields": {
+          "provider": "Provider",
+          "handle": "Handle",
+          "email": "Email",
+          "publicKeyFingerprint": "Key Fingerprint",
+          "verified": "Verified"
         }
       },
       "userskill": {
@@ -1626,6 +1660,7 @@
               "issuestatus": "Issue Status",
               "issuewatcher": "Issue Watcher",
               "userqualification": "User Qualification",
+              "useridentity": "User Identity",
               "userskill": "User Skill",
               "permission": "Permission",
               "vote": "Vote",
@@ -1889,6 +1924,19 @@
                 "institution": "Institution",
                 "title": "Title",
                 "type": "Type"
+              },
+              "useridentity": {
+                "get": "Get User Identity",
+                "create": "Create User Identity",
+                "update": "Update User Identity",
+                "delete": "Delete User Identity",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "provider": "Provider",
+                "handle": "Handle",
+                "email": "Email",
+                "publicKeyFingerprint": "Key Fingerprint",
+                "verified": "Verified"
               },
               "userskill": {
                 "get": "Get User Skill",

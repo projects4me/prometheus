@@ -499,3 +499,43 @@
         }
     }
 }
+
+.user-identities-section {
+    .box-header {
+        .dotted-circle-add {
+            height: 2rem;
+            width: 2rem;
+            border-width: 0.2rem;
+
+            ion.ion-md-add {
+                font-size: 1.4rem;
+            }
+        }
+    }
+
+    .user-identity-item {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid #f4f4f4;
+    }
+
+    .user-identity-title,
+    .user-identity-meta {
+        margin: 0;
+    }
+
+    .user-identity-provider {
+        font-weight: 600;
+        margin-right: 0.5rem;
+    }
+
+    .user-identity-handle {
+        margin-right: 0.5rem;
+    }
+
+    .user-identity-meta span + span {
+        margin-left: 0.75rem;
+    }
+}
