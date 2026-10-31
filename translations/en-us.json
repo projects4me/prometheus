@@ -741,6 +741,14 @@
           "open": "Open",
           "archived": "Archived"
         },
+        "progress": {
+          "brainstorming": "Brainstorming",
+          "proposed": "Plan proposed",
+          "approved": "Approved",
+          "creating": "Creating issues",
+          "created": "Issues created",
+          "failed": "Failed"
+        },
         "fields": {
           "title": "Title",
           "description": "Describe it"

@@ -18,7 +18,9 @@
               <li class={{if (eq idea.id this.selectedIdeaId) "active menu-open"}} data-idea={{idea.id}}>
                 <LinkTo @route="app.project.idea.page" @model={{idea.id}}>
                   <span data-idea-title>{{idea.title}}</span>
-                  <span class="label pull-right {{if (eq idea.status "open") "new" "deferred"}}" data-idea-status>{{t (concat "views.app.idea.status." idea.status)}}</span>
+                  {{#let (get this.progressByIdea idea.id) as |progress|}}
+                    <span class="label pull-right {{progress.class}}" data-idea-status>{{t progress.label}}</span>
+                  {{/let}}
                 </LinkTo>
               </li>
             {{else}}

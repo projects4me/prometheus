@@ -28,6 +28,15 @@ export const given = function () {
                 });
                 assert.ok(true, `${table.length} ideas exist`);
             }
+        },
+        {
+            "The plans of the idea $title are\n$table":(assert, ctx) => async function (title, table) {
+                let idea = server.schema.ideas.findBy({ title });
+                table.forEach(row => {
+                    server.create('ideaplan', { ideaId: idea.id, version: Number(row.version), status: row.status });
+                });
+                assert.ok(true, `${table.length} plans exist for ${title}`);
+            }
         }
     ];
 };

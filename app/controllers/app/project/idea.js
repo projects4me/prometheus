@@ -5,10 +5,12 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { planStatusClass } from 'prometheus/utils/idea/plan-status';
 import { tracked } from '@glimmer/tracking';
 
 const OPEN = 'open';
 const ARCHIVED = 'archived';
+const PROGRESS_STATUSES = ['proposed', 'approved', 'creating', 'created', 'failed'];
 
 /**
  * The controller of the idea browser. It decides which ideas of the project are listed.
@@ -61,6 +63,94 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     @tracked showArchived = false;
+
+    /**
+     * The status of the latest plan by idea id, empty for an idea without a plan
+     *
+     * @property planStatuses
+     * @type Object
+     * @private
+     */
+    @tracked planStatuses = {};
+
+    /**
+     * Counts the plan loads so that only the latest one fills planStatuses
+     *
+     * @property planSequence
+     * @type Number
+     * @private
+     */
+    planSequence = 0;
+
+    /**
+     * The progress label key and label class of every idea by idea id: archived, brainstorming without a plan,
+     * otherwise the status of the latest plan
+     *
+     * @property progressByIdea
+     * @type Object
+     * @public
+     */
+    get progressByIdea() {
+        let progress = {};
+        for (let idea of this.ideas) {
+            let status = this.planStatuses[idea.id];
+            if (idea.status === ARCHIVED) {
+                progress[idea.id] = { label: 'views.app.idea.status.archived', class: 'deferred' };
+            } else if (!status) {
+                progress[idea.id] = { label: 'views.app.idea.progress.brainstorming', class: 'new' };
+            } else {
+                let known = PROGRESS_STATUSES.includes(status);
+                progress[idea.id] = {
+                    label: known ? `views.app.idea.progress.${status}` : `views.app.idea.plan.status.${status}`,
+                    class: planStatusClass(status)
+                };
+            }
+        }
+        return progress;
+    }
+
+    /**
+     * Sets the plan status of an idea, for a change saved here whose Hermes event is not delivered back
+     *
+     * @method setPlanStatus
+     * @param {String} ideaId
+     * @param {String} status
+     * @returns {void}
+     * @public
+     */
+    setPlanStatus(ideaId, status) {
+        // an older plan query still in flight must not overwrite this status
+        this.planSequence++;
+        this.planStatuses = { ...this.planStatuses, [ideaId]: status };
+    }
+
+    /**
+     * Loads the plans of the ideas and keeps the status of the plan with the highest version of each
+     *
+     * @method loadPlanStatuses
+     * @param {Array} ideas
+     * @param {Function} loadPlans Loads the plans of idea ids, supplied by the route
+     * @returns {Promise}
+     * @public
+     */
+    async loadPlanStatuses(ideas, loadPlans) {
+        let sequence = ++this.planSequence;
+        let plans = await loadPlans(ideas.map(idea => idea.id));
+        if (!plans) {
+            return;
+        }
+        let latest = {};
+        for (let plan of plans.toArray?.() ?? plans) {
+            let known = latest[plan.ideaId];
+            if (!known || Number(plan.version) > Number(known.version)) {
+                latest[plan.ideaId] = plan;
+            }
+        }
+        if (this.isDestroying || this.isDestroyed || sequence !== this.planSequence) {
+            return;
+        }
+        this.planStatuses = Object.fromEntries(Object.entries(latest).map(([id, plan]) => [id, plan.status]));
+    }
 
     /**
      * The ideas sorted by the date they were last modified, newest first
@@ -122,18 +212,21 @@ export default class AppProjectIdeaController extends Controller {
      * @method registerHermesIntents
      * @param {String} projectId
      * @param {Function} loadIdeas Loads the ideas of the project, supplied by the route
+     * @param {Function} loadPlans Loads the plans of idea ids, supplied by the route
      * @returns {void}
      * @public
      */
-    registerHermesIntents(projectId, loadIdeas) {
+    registerHermesIntents(projectId, loadIdeas, loadPlans) {
         this.unregisterHermesIntents();
         this.reloadSequence++;
         if (!projectId) {
             return;
         }
         this.hermesDisposer = this.hermes.register(this, projectId, {
-            'idea.created': envelope => this.handleIdeaCreated(envelope, loadIdeas),
-            'idea.updated': () => this.reloadIdeas(loadIdeas)
+            'idea.created': envelope => this.handleIdeaCreated(envelope, loadIdeas, loadPlans),
+            'idea.updated': () => this.reloadIdeas(loadIdeas, loadPlans),
+            'idea.plan.created': () => this.loadPlanStatuses(this.ideas, loadPlans),
+            'idea.plan.status.changed': () => this.loadPlanStatuses(this.ideas, loadPlans)
         });
     }
 
@@ -145,15 +238,16 @@ export default class AppProjectIdeaController extends Controller {
      * @method handleIdeaCreated
      * @param {Object} envelope Domain-event envelope
      * @param {Function} loadIdeas
+     * @param {Function} loadPlans
      * @returns {Promise|void}
      * @public
      */
-    handleIdeaCreated(envelope, loadIdeas) {
+    handleIdeaCreated(envelope, loadIdeas, loadPlans) {
         let resourceId = envelope?.resource?.id;
         if (resourceId && this.ideas.some(listed => String(listed.id) === String(resourceId))) {
             return;
         }
-        return this.reloadIdeas(loadIdeas);
+        return this.reloadIdeas(loadIdeas, loadPlans);
     }
 
     /**
@@ -188,14 +282,18 @@ export default class AppProjectIdeaController extends Controller {
      *
      * @method reloadIdeas
      * @param {Function} loadIdeas
+     * @param {Function} loadPlans
      * @returns {Promise}
      * @public
      */
-    async reloadIdeas(loadIdeas) {
+    async reloadIdeas(loadIdeas, loadPlans) {
         let sequence = ++this.reloadSequence;
         let ideas = await loadIdeas();
         if (ideas && sequence === this.reloadSequence) {
             this.ideas = ideas.toArray();
+            if (loadPlans) {
+                await this.loadPlanStatuses(this.ideas, loadPlans);
+            }
         }
     }
 
