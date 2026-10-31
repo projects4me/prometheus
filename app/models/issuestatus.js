@@ -118,7 +118,7 @@ export default class IssuestatusModel extends Model {
     @attr('string') done;
 
     /**
-     * Colour of the issue status, one of the status palette
+     * Colour of the issue status, a hex colour `#rrggbb`
      *
      * @property color
      * @type String
@@ -126,6 +126,16 @@ export default class IssuestatusModel extends Model {
      * @public
      */
     @attr('string') color;
+
+    /**
+     * Text colour of the status label: `dark`, `light`, or null to pick it from the colour's brightness
+     *
+     * @property textColor
+     * @type String
+     * @for Issuestatus
+     * @public
+     */
+    @attr('string') textColor;
 
     /**
      * Position of the issue status, it drives the order of the task board columns

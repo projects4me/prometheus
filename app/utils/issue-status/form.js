@@ -113,22 +113,22 @@ export default class IssueStatusForm {
     savedTranslations;
 
     /**
-     * The colour as typed in the hex field
+     * The colour of the status, picked with the colour picker, e.g. `#80b5d3`
      *
-     * @property typedColor
+     * @property color
      * @type String
-     * @private
+     * @public
      */
-    @tracked typedColor;
+    @tracked color;
 
     /**
-     * The last valid colour, what the colour picker shows while the hex field holds an invalid one
+     * The label text colour: `dark`, `light`, or null to pick it from the colour's brightness
      *
-     * @property lastValidColor
+     * @property textColor
      * @type String
-     * @private
+     * @public
      */
-    @tracked lastValidColor;
+    @tracked textColor;
 
     /**
      * @method constructor
@@ -139,9 +139,10 @@ export default class IssueStatusForm {
      * @param {String} options.value The saved value, empty for a new status
      * @param {Boolean} options.isNew Whether the status is not created yet
      * @param {String} options.color The saved colour, the default colour when it is empty or not a hex colour
+     * @param {String} options.textColor The saved label text colour, null for automatic
      * @param {Function} options.captionFor Gives the caption of a locale's field, the locale code by default
      */
-    constructor({ locales, defaultLocale, translations = {}, value = '', isNew = true, color = null, captionFor = (locale) => locale }) {
+    constructor({ locales, defaultLocale, translations = {}, value = '', isNew = true, color = null, textColor = null, captionFor = (locale) => locale }) {
         let ordered = [defaultLocale, ...locales.filter((locale) => locale !== defaultLocale)];
 
         this.labels = ordered.map(
@@ -150,6 +151,7 @@ export default class IssueStatusForm {
         this.isValueEditable = isNew;
         this.savedTranslations = this.translations;
         this.color = isHexColor(color) ? color.toLowerCase() : DEFAULT_STATUS_COLOR;
+        this.textColor = textColor ?? null;
 
         if (!isNew) {
             this.typedValue = value ?? '';
@@ -214,50 +216,5 @@ export default class IssueStatusForm {
         let locales = new Set([...Object.keys(saved), ...Object.keys(current)]);
 
         return [...locales].some((locale) => saved[locale] !== current[locale]);
-    }
-
-    /**
-     * The colour as typed in the hex field, e.g. `#80b5d3`. Setting it remembers it when it is valid.
-     *
-     * @property color
-     * @type String
-     * @public
-     */
-    get color() {
-        return this.typedColor;
-    }
-
-    set color(text) {
-        this.typedColor = (text ?? '').trim();
-        if (isHexColor(this.typedColor)) {
-            this.lastValidColor = this.typedColor.toLowerCase();
-        }
-    }
-
-    /**
-     * The colour the picker shows: the typed colour when it is valid, else the last valid one.
-     * Picking a colour types it in the hex field.
-     *
-     * @property pickerColor
-     * @type String
-     * @public
-     */
-    get pickerColor() {
-        return this.lastValidColor;
-    }
-
-    set pickerColor(color) {
-        this.color = color;
-    }
-
-    /**
-     * The colour to save, lowercase, null while the typed colour is not a hex colour
-     *
-     * @property colorValue
-     * @type String
-     * @public
-     */
-    get colorValue() {
-        return isHexColor(this.color) ? this.color.toLowerCase() : null;
     }
 }

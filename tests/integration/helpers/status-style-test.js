@@ -12,7 +12,8 @@ module('Integration | Helper | status-style', function (hooks) {
             data: [
                 { id: '1', type: 'issuestatus', attributes: { name: 'wont_fix', color: '#123456', sortOrder: 9 } },
                 { id: '2', type: 'issuestatus', attributes: { name: 'uncoloured', color: null, sortOrder: 10 } },
-                { id: '3', type: 'issuestatus', attributes: { name: 'waiting', color: '#fff3a0', sortOrder: 11 } }
+                { id: '3', type: 'issuestatus', attributes: { name: 'waiting', color: '#fff3a0', sortOrder: 11 } },
+                { id: '4', type: 'issuestatus', attributes: { name: 'blocked', color: '#fff3a0', textColor: 'light', sortOrder: 12 } }
             ]
         });
     });
@@ -28,6 +29,12 @@ module('Integration | Helper | status-style', function (hooks) {
 
         assert.dom('span.dark').hasStyle({ color: 'rgb(255, 255, 255)' });
         assert.dom('span.light').hasStyle({ color: 'rgb(0, 0, 0)' });
+    });
+
+    test('it uses the text colour chosen for the status', async function (assert) {
+        await render(hbs`<span class="badge" style={{status-style "blocked"}}>x</span>`);
+
+        assert.dom('span.badge').hasStyle({ color: 'rgb(255, 255, 255)' });
     });
 
     test('it leaves the text colour alone when it paints another property', async function (assert) {

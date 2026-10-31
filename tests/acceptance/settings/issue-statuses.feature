@@ -50,33 +50,17 @@ Feature: Settings | issue statuses
     And User_1 has setting.update permission set to 1
     When User opens app/settings/issue-statuses
     And User starts adding an issue status
-    Then The colour picker and the hex field read #80b5d3
+    Then The colour picker reads #80b5d3
+    And The text colour reads Automatic
     When User types the en-us label Blocked
-    And User types the colour #1A2B3C
-    Then The colour preview reads Blocked in colour #1a2b3c
-    When User picks the colour #6a3d9a with the colour picker
-    Then The colour picker and the hex field read #6a3d9a
+    And User picks the colour #6a3d9a with the colour picker
+    Then The colour preview reads Blocked in colour #6a3d9a
     When User saves the issue status
     Then The issue status blocked is listed with colour #6a3d9a, counting as done No and 0 issues
     And The issue status blocked is listed with light label text
-    And One request created the issue status blocked with the colour #6a3d9a
+    And One request created the issue status blocked with the colour #6a3d9a and the text colour automatic
 
-  Scenario: An issue status can't be saved with a colour that is not a hex code
-
-    Given There is no pre-existing data
-    And default scenario is loaded
-    And User_1 is logged in
-    And User_1 has setting.get permission set to 1
-    And User_1 has setting.update permission set to 1
-    When User opens app/settings/issue-statuses
-    And User starts adding an issue status
-    And User types the en-us label Blocked
-    And User types the colour #12345g
-    Then The colour field shows the message Enter the colour as a hex code, e.g. #80b5d3.
-    When User saves the issue status
-    Then The issue status is not saved and the dialog stays open
-
-  Scenario: A status with a light colour has dark label text
+  Scenario: An admin chooses the label text colour of a status
 
     Given There is no pre-existing data
     And default scenario is loaded
@@ -85,15 +69,41 @@ Feature: Settings | issue statuses
     And User_1 has setting.update permission set to 1
     And The global issue statuses are
     ------------------------------------------------------------
-    | name    | color   | done | sortOrder | issueCount |
-    | new     | #fff3a0 | 0    | 1         | 3          |
-    | blocked | #1a2b3c | 0    | 2         | 1          |
+    | name | color   | done | sortOrder | issueCount |
+    | new  | #fff3a0 | 0    | 1         | 3          |
+    ------------------------------------------------------------
+    When User opens app/settings/issue-statuses
+    Then The issue status new is listed with dark label text
+    When User starts editing the issue status new
+    Then The colour picker reads #fff3a0
+    And The colour preview has dark text
+    When User picks the text colour Light
+    Then The colour preview has light text
+    When User saves the issue status
+    Then The issue status new is listed with light label text
+    And The issue status new was saved with the text colour light
+
+  Scenario: Label text follows the colour unless a text colour is chosen
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 has setting.get permission set to 1
+    And User_1 has setting.update permission set to 1
+    And The global issue statuses are
+    ------------------------------------------------------------
+    | name    | color   | textColor | done | sortOrder | issueCount |
+    | new     | #fff3a0 | -         | 0    | 1         | 3          |
+    | blocked | #1a2b3c | -         | 0    | 2         | 1          |
+    | waiting | #fff3a0 | light     | 0    | 3         | 0          |
     ------------------------------------------------------------
     When User opens app/settings/issue-statuses
     Then The issue status new is listed with dark label text
     And The issue status blocked is listed with light label text
-    When User starts editing the issue status new
-    Then The colour picker and the hex field read #fff3a0
+    And The issue status waiting is listed with light label text
+    When User starts editing the issue status waiting
+    Then The colour picker reads #fff3a0
+    And The text colour reads Light
 
   Scenario: The status value is derived from the label until it is typed
 

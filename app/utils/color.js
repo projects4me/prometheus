@@ -54,6 +54,14 @@ export function luminance(hex) {
 }
 
 /**
+ * The label text colours a status may choose; any other choice means automatic.
+ *
+ * @property TEXT_COLORS
+ * @type Object
+ */
+export const TEXT_COLORS = { dark: TEXT_DARK, light: TEXT_LIGHT };
+
+/**
  * The text colour readable on the given background: black on light colours, white on
  * dark ones, whichever has the higher contrast. Null when the background is not a hex colour.
  *
@@ -71,20 +79,41 @@ export function readableTextColor(background) {
 }
 
 /**
+ * The text colour of a label: the chosen one (`dark` or `light`), else the one readable
+ * on the background. Null when the background is not a hex colour.
+ *
+ * @method labelTextColor
+ * @param {String} background A 6-digit hex colour
+ * @param {String} choice `dark`, `light`, or null for automatic
+ * @return {String} `#000000`, `#ffffff` or null
+ */
+export function labelTextColor(background, choice = null) {
+    if (!isHexColor(background)) {
+        return null;
+    }
+
+    let chosen = Object.prototype.hasOwnProperty.call(TEXT_COLORS, choice) ? TEXT_COLORS[choice] : null;
+
+    return chosen ?? readableTextColor(background);
+}
+
+/**
  * The inline style of a label painted with a hex colour: the colour as background and
- * a readable text colour. Empty when the colour is not a hex colour.
+ * the label's text colour. Empty when the colour is not a hex colour.
  *
  * @method labelStyle
  * @param {String} background A 6-digit hex colour
- * @param {Boolean} important Whether the declarations override the stylesheet (`!important`)
+ * @param {Object} options
+ * @param {String} options.textColor `dark`, `light`, or null to pick it from the background
+ * @param {Boolean} options.important Whether the declarations override the stylesheet (`!important`)
  * @return {String}
  */
-export function labelStyle(background, important = false) {
+export function labelStyle(background, { textColor = null, important = false } = {}) {
     if (!isHexColor(background)) {
         return '';
     }
 
     let flag = important ? ' !important' : '';
 
-    return `background-color: ${background}${flag}; color: ${readableTextColor(background)}${flag}`;
+    return `background-color: ${background}${flag}; color: ${labelTextColor(background, textColor)}${flag}`;
 }

@@ -3,7 +3,7 @@
  */
 
 import { module, test } from 'qunit';
-import { isHexColor, labelStyle, readableTextColor } from 'prometheus/utils/color';
+import { isHexColor, labelStyle, labelTextColor, readableTextColor } from 'prometheus/utils/color';
 
 module('Unit | Utility | color', function () {
     test('it accepts only 6-digit hex colours', function (assert) {
@@ -24,9 +24,19 @@ module('Unit | Utility | color', function () {
         assert.strictEqual(readableTextColor('red'), null);
     });
 
+    test('a chosen text colour wins over the automatic one', function (assert) {
+        assert.strictEqual(labelTextColor('#1a2b3c', 'dark'), '#000000');
+        assert.strictEqual(labelTextColor('#fff3a0', 'light'), '#ffffff');
+        assert.strictEqual(labelTextColor('#1a2b3c', null), '#ffffff');
+        assert.strictEqual(labelTextColor('#fff3a0', null), '#000000');
+        assert.strictEqual(labelTextColor('#1a2b3c', 'toString'), '#ffffff', 'an unknown choice is automatic');
+        assert.strictEqual(labelTextColor('red', 'dark'), null);
+    });
+
     test('it builds a label style only from a hex colour', function (assert) {
         assert.strictEqual(labelStyle('#1a2b3c'), 'background-color: #1a2b3c; color: #ffffff');
-        assert.strictEqual(labelStyle('#1a2b3c', true), 'background-color: #1a2b3c !important; color: #ffffff !important');
+        assert.strictEqual(labelStyle('#1a2b3c', { important: true }), 'background-color: #1a2b3c !important; color: #ffffff !important');
+        assert.strictEqual(labelStyle('#1a2b3c', { textColor: 'dark' }), 'background-color: #1a2b3c; color: #000000');
         assert.strictEqual(labelStyle('red;position:fixed'), '');
         assert.strictEqual(labelStyle('#fff;background:url(x)'), '');
         assert.strictEqual(labelStyle('#fff'), '');

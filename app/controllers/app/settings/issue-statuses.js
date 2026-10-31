@@ -11,7 +11,7 @@ import $ from 'jquery';
 import { addIssueStatusLabels, issueStatusRecordLabel, ISSUE_STATUS_LABEL_PATH } from 'prometheus/utils/issue-status/label';
 import { labelCaption } from 'prometheus/utils/issue-status/caption';
 import IssueStatusForm from 'prometheus/utils/issue-status/form';
-import { HEX_COLOR, labelStyle } from 'prometheus/utils/color';
+import { labelStyle } from 'prometheus/utils/color';
 
 /**
  * The controller of the Issue Statuses page of the Settings area. Adds, edits,
@@ -89,18 +89,6 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
                                 rules: [{ name: 'required' }]
                             }
                         }
-                    },
-                    {
-                        name: 'color',
-                        validations: {
-                            default: {
-                                type: 'string',
-                                rules: [
-                                    { name: 'required' },
-                                    { name: 'matches', value: [HEX_COLOR, this.intl.t('views.app.settings.issueStatuses.colorInvalid')] }
-                                ]
-                            }
-                        }
                     }
                 ]
             }
@@ -131,7 +119,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             return {
                 status,
                 // Only a hex colour becomes a style, so the server's value can't inject CSS.
-                style: htmlSafe(labelStyle(status.color)),
+                style: htmlSafe(labelStyle(status.color, { textColor: status.textColor })),
                 label: issueStatusRecordLabel(this.intl, status),
                 isUsed: status.issueCount > 0
             };
@@ -159,7 +147,32 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
      * @public
      */
     get previewStyle() {
-        return htmlSafe(labelStyle(this.form?.pickerColor));
+        return htmlSafe(labelStyle(this.form?.color, { textColor: this.form?.textColor }));
+    }
+
+    /**
+     * The label text colours offered in the modal: automatic, dark and light.
+     *
+     * @property textColors
+     * @type Array
+     * @public
+     */
+    get textColors() {
+        return [null, 'dark', 'light'].map((value) => ({
+            value,
+            label: this.intl.t(`views.app.settings.issueStatuses.textColors.${value ?? 'auto'}`)
+        }));
+    }
+
+    /**
+     * The label text colour chosen in the modal, as one of `textColors`.
+     *
+     * @property selectedTextColor
+     * @type Object
+     * @public
+     */
+    get selectedTextColor() {
+        return this.textColors.find((option) => option.value === (this.form?.textColor ?? null));
     }
 
     /**
@@ -211,6 +224,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             value: issueStatus.name,
             isNew: false,
             color: issueStatus.color,
+            textColor: issueStatus.textColor,
             captionFor: this.captionFor
         });
         this.editing = issueStatus;
@@ -282,6 +296,17 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
     }
 
     /**
+     * Sets the label text colour of the status in the modal.
+     *
+     * @method selectTextColor
+     * @param {Object} option One of `textColors`
+     * @protected
+     */
+    @action selectTextColor(option) {
+        this.form.textColor = option?.value ?? null;
+    }
+
+    /**
      * Sets whether the status in the modal counts as done.
      *
      * @method toggleDone
@@ -312,7 +337,8 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             if (isNew) {
                 record.name = form.name;
             }
-            record.color = form.colorValue;
+            record.color = form.color;
+            record.textColor = form.textColor;
             if (form.labelsChanged) {
                 record.translations = form.translations;
             }
