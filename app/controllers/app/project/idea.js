@@ -43,6 +43,35 @@ export default class AppProjectIdeaController extends Controller {
     @service hermes;
 
     /**
+     * The query params of the idea area: view=plan opens the idea page in plan review mode
+     *
+     * @property queryParams
+     * @type Array
+     * @public
+     */
+    queryParams = ['view'];
+
+    /**
+     * The view of the idea page, plan for the review mode and null for the conversation layout
+     *
+     * @property view
+     * @type String
+     * @public
+     */
+    @tracked view = null;
+
+    /**
+     * The query params the browser links carry, so the review mode stays when another idea is opened
+     *
+     * @property linkQuery
+     * @type Object
+     * @public
+     */
+    get linkQuery() {
+        return { view: this.view };
+    }
+
+    /**
      * Disposer of the Hermes registration
      *
      * @property hermesDisposer
