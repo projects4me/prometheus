@@ -170,6 +170,12 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
             case 403:
                 adapterError = new ForbiddenError(payload.error);
                 break;
+            case 422:
+                // Gaia answers a rejected save with { status: 'ERROR', messages: [...] }; keep the messages
+                adapterError = Array.isArray(payload?.messages)
+                    ? new AdapterError(payload.messages.map(message => ({ title: 'Unprocessable Entity', detail: message })))
+                    : new AdapterError(payload?.error);
+                break;
             default:
                 adapterError = new AdapterError(payload.error);
                 break;

@@ -39,6 +39,9 @@ import * as Userqualification from './route-handlers/userqualification';
 import * as Idea from './route-handlers/idea';
 import * as Ideamessage from './route-handlers/ideamessage';
 import * as Ideaplan from './route-handlers/ideaplan';
+import * as Workflow from './route-handlers/workflow';
+import * as Workflownode from './route-handlers/workflownode';
+import * as Workflowedge from './route-handlers/workflowedge';
 import * as Ideaplanissue from './route-handlers/ideaplanissue';
 
 export function makeServer(config) {
@@ -95,5 +98,8 @@ function routes() {
     Idea.register(this, ctx);
     Ideamessage.register(this, ctx);
     Ideaplan.register(this, ctx);
+    Workflow.register(this, ctx);
+    Workflownode.register(this, ctx);
+    Workflowedge.register(this, ctx);
     Ideaplanissue.register(this, ctx);
 }

@@ -64,6 +64,10 @@ Router.map(function() {
       this.route('issue-statuses');
       this.route('email');
     });
+    this.route('workflow', function() {
+      this.route('create');
+      this.route('page', {path: '/:workflow_id'});
+    });
     this.route('access-denied');
     this.route('role', function() {
       this.route('page', {path: '/:role_id'});

@@ -2172,6 +2172,86 @@
           "twentyComplete": "20% Complete",
           "four": "4"
         }
+      },
+      "workflow": {
+        "status": {
+          "Draft": "Draft",
+          "Active": "Active",
+          "Disabled": "Disabled"
+        },
+        "categories": {
+          "trigger": "Triggers",
+          "condition": "Conditions",
+          "actor": "Actors",
+          "action": "Actions"
+        },
+        "kinds": {
+          "issue_created": "Issue created",
+          "issue_modified": "Issue modified",
+          "issue_assignee_changed": "Issue assignee changed",
+          "issue_status_changed": "Issue status changed",
+          "comment_added": "Comment added",
+          "wiki_created": "Wiki page created",
+          "wiki_modified": "Wiki page modified",
+          "time_logged": "Time logged",
+          "schedule": "Schedule",
+          "filter": "Filter",
+          "switch": "Switch",
+          "run_agent": "Run agent",
+          "ask_user": "Ask a user",
+          "assign": "Assign",
+          "set_field": "Set a field",
+          "set_status": "Set status",
+          "add_comment": "Add a comment",
+          "create_issue": "Create an issue",
+          "create_wiki": "Create a wiki page",
+          "notify": "Notify",
+          "call_tool": "Call a tool",
+          "end": "End"
+        },
+        "fields": {
+          "name": "Name",
+          "status": "Status",
+          "scope": "Projects"
+        },
+        "editor": {
+          "newTitle": "New workflow",
+          "version": "version {version}",
+          "runs": "Runs",
+          "testRun": "Test run",
+          "runsSoon": "Runs and test runs are not available yet",
+          "save": "Save",
+          "namePlaceholder": "Name the workflow",
+          "scopeEveryProject": "Every project",
+          "nameRequired": "Name the workflow before saving it.",
+          "saved": "The workflow is saved.",
+          "savedWithProblems": "The workflow is saved, but {count} of its steps or connections could not be saved. They are marked in red.",
+          "saveFailed": "The workflow could not be saved.",
+          "edgeNodeUnsaved": "Both steps must be saved before this connection can be saved."
+        },
+        "palette": {
+          "title": "Steps",
+          "hint": "Drag onto the canvas, or click to add"
+        },
+        "canvas": {
+          "title": "Flow",
+          "locked": "Active: set the workflow to Draft to change its steps",
+          "removeEdge": "Remove the connection",
+          "zoomIn": "Zoom in",
+          "zoomOut": "Zoom out",
+          "fit": "Fit to the canvas",
+          "empty": "Drag steps here from the list on the left",
+          "input": "Input",
+          "output": "Drag to a step input to connect",
+          "noPorts": "Ends the path"
+        },
+        "properties": {
+          "title": "Properties",
+          "remove": "Remove the step",
+          "name": "Name",
+          "kind": "Kind",
+          "empty": "Select a step to see its properties"
+        }
       }
     },
     "nav": {

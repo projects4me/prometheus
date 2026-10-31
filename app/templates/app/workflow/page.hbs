@@ -1,0 +1,43 @@
+<section class="workflow-editor" data-workflow-editor>
+  <AccessControl @aclContext="workflow.read">
+    {{#if this.model.workflow}}
+      <div class="row">
+        <div class="col-md-12">
+          <Workflow::HeaderBox
+            @workflow={{this.model.workflow}}
+            @statusOptions={{this.statusOptions}}
+            @projectOptions={{this.projectOptions}}
+            @selectedScope={{this.selectedScope}}
+            @onStatusChange={{this.changeStatus}}
+            @onScopeChange={{this.changeScope}}
+            @onSave={{this.save}}
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          <Workflow::NodePalette @disabled={{this.isGraphLocked}} @onAdd={{this.addNode}} />
+        </div>
+        <div class="col-md-7">
+          <Workflow::FlowCanvas
+            @graph={{this.model.graph}}
+            @selectedNode={{this.selectedNode}}
+            @locked={{this.isGraphLocked}}
+            @onAdd={{this.addNode}}
+            @onMove={{this.moveNode}}
+            @onSelect={{this.selectNode}}
+            @onConnect={{this.connect}}
+            @onRemoveEdge={{this.removeEdge}}
+          />
+        </div>
+        <div class="col-md-3">
+          <Workflow::PropertiesBox
+            @node={{this.selectedNode}}
+            @locked={{this.isGraphLocked}}
+            @onRemove={{this.removeNode}}
+          />
+        </div>
+      </div>
+    {{/if}}
+  </AccessControl>
+</section>

@@ -1,0 +1,72 @@
+<div class="box box-primary workflow-canvas-section" data-workflow-canvas>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.workflow.canvas.title"}}</h3>
+    {{#if @locked}}
+      <small class="text-muted" data-graph-locked>
+        <i class="fa fa-lock" aria-hidden="true"></i> {{t "views.app.workflow.canvas.locked"}}
+      </small>
+    {{/if}}
+    <div class="box-tools pull-right">
+      {{#if this.selectedEdge}}
+        <button type="button" class="btn btn-box-tool" disabled={{@locked}} title={{t "views.app.workflow.canvas.removeEdge"}} data-remove-edge {{on "click" this.removeSelectedEdge}}>
+          <i class="fa fa-chain-broken" aria-hidden="true"></i>
+        </button>
+      {{/if}}
+      <button type="button" class="btn btn-box-tool" title={{t "views.app.workflow.canvas.zoomOut"}} data-zoom-out {{on "click" this.zoomOut}}>
+        <i class="fa fa-search-minus" aria-hidden="true"></i>
+      </button>
+      <span class="text-muted" data-zoom-level>{{this.zoomPercent}}%</span>
+      <button type="button" class="btn btn-box-tool" title={{t "views.app.workflow.canvas.zoomIn"}} data-zoom-in {{on "click" this.zoomIn}}>
+        <i class="fa fa-search-plus" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="btn btn-box-tool" title={{t "views.app.workflow.canvas.fit"}} data-zoom-fit {{on "click" this.fit}}>
+        <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="box-body no-padding">
+    {{! Dragging starts on the press; the canvas also takes clicks and the zoom buttons. }}
+    {{! template-lint-disable no-down-event-binding }}
+    <div
+      class="workflow-canvas {{if this.pending 'connecting'}}"
+      data-canvas-viewport
+      {{on-insert this.setup}}
+      {{on "pointerdown" this.pressBackground}}
+      {{on "pointermove" this.movePointer}}
+      {{on "pointerup" this.releasePointer}}
+      {{on "wheel" this.zoomWithWheel}}
+      {{on "dragover" this.allowDrop}}
+      {{on "drop" this.drop}}
+    >
+      {{#unless @graph.nodes.length}}
+        <p class="workflow-canvas-empty text-muted" data-canvas-empty>
+          <i class="fa fa-info-circle" aria-hidden="true"></i>
+          {{t "views.app.workflow.canvas.empty"}}
+        </p>
+      {{/unless}}
+      <div class="workflow-canvas-layer" style={{this.layerStyle}}>
+        <svg class="workflow-edges" xmlns="http://www.w3.org/2000/svg">
+          {{#each this.edgeViews as |edgeView|}}
+            <g class="workflow-edge {{if edgeView.selected 'selected'}} {{if edgeView.invalid 'invalid'}}" role="button" data-workflow-edge={{edgeView.edge.key}} data-edge-port={{edgeView.edge.port}} {{on "click" (fn this.selectEdge edgeView.edge)}}>
+              <path class="workflow-edge-hit" d={{edgeView.path}}></path>
+              <path class="workflow-edge-line" d={{edgeView.path}}></path>
+            </g>
+          {{/each}}
+          {{#if this.pendingPath}}
+            <path class="workflow-edge-line workflow-edge-pending" d={{this.pendingPath}}></path>
+          {{/if}}
+        </svg>
+        {{#each @graph.nodes as |node|}}
+          <Workflow::CanvasNode
+            @node={{node}}
+            @selected={{eq node @selectedNode}}
+            @pendingPort={{if (eq node this.pending.node) this.pending.port}}
+            @onHeaderDown={{this.pressNode}}
+            @onPortDown={{this.pressPort}}
+            @onInputClick={{this.clickInput}}
+          />
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</div>

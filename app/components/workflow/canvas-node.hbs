@@ -1,0 +1,46 @@
+{{! Moving a node and drawing a connection start on the press. }}
+{{! template-lint-disable no-down-event-binding }}
+<div
+  class="workflow-node workflow-node-{{@node.category}} {{if @selected 'selected'}} {{if @node.errors.length 'has-errors'}}"
+  style={{this.style}}
+  data-workflow-node={{@node.key}}
+  data-node-kind={{@node.kind}}
+>
+  <div
+    class="workflow-node-header"
+    style={{this.headerStyle}}
+    data-node-header
+    {{on "pointerdown" (fn @onHeaderDown @node)}}
+  >
+    {{#if @node.hasInput}}
+      <span
+        class="workflow-port workflow-port-input"
+        role="button"
+        title={{t "views.app.workflow.canvas.input"}}
+        data-input-port={{@node.key}}
+        {{on "click" (fn @onInputClick @node)}}
+      ></span>
+    {{/if}}
+    <i class="fa fa-{{this.icon}}" aria-hidden="true"></i>
+    <span class="workflow-node-name">{{if @node.name @node.name (t (kind-label @node.kind))}}</span>
+    {{#if @node.errors.length}}
+      <i class="fa fa-exclamation-circle text-red pull-right" title={{join " " @node.errors}} aria-hidden="true" data-node-error></i>
+    {{/if}}
+  </div>
+  <ul class="list-unstyled workflow-node-ports">
+    {{#each @node.ports as |port|}}
+      <li class="workflow-node-port" style={{this.portStyle}}>
+        <span class="workflow-port-label">{{port}}</span>
+        <span
+          class="workflow-port workflow-port-output {{if (eq @pendingPort port) 'active'}}"
+          role="button"
+          title={{t "views.app.workflow.canvas.output"}}
+          data-output-port={{port}}
+          {{on "pointerdown" (fn @onPortDown @node port)}}
+        ></span>
+      </li>
+    {{else}}
+      <li class="workflow-node-port text-muted" style={{this.portStyle}}>{{t "views.app.workflow.canvas.noPorts"}}</li>
+    {{/each}}
+  </ul>
+</div>
