@@ -11,10 +11,6 @@
                 <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
               </LinkTo>
             </AccessControl>
-            <button type="button" class="btn btn-box-tool" title={{t "views.app.idea.browser.collapse"}} {{on "click" this.toggleBrowser}} data-collapse-browser>
-              <i class="fa fa-angle-double-left"></i>
-              <span class="idea-browser-toggle-label">{{t "views.app.idea.browser.collapse"}}</span>
-            </button>
           </div>
         </div>
         <div class="box-body no-padding">
@@ -49,14 +45,18 @@
     {{/unless}}
 
     <div class={{if this.browserCollapsed "col-md-12" "col-md-9"}}>
-      {{#if this.browserCollapsed}}
-        <div class="idea-browser-expand">
-          <button type="button" class="btn btn-box-tool" title={{t "views.app.idea.browser.expand"}} {{on "click" this.toggleBrowser}} data-expand-browser>
-            <i class="fa fa-angle-double-right"></i>
-            <span class="idea-browser-toggle-label">{{t "views.app.idea.browser.expand"}}</span>
-          </button>
-        </div>
-      {{/if}}
+      <button
+        class="board-panel-divider idea-browser-divider"
+        type="button"
+        title={{if this.browserCollapsed (t "views.app.idea.browser.expand") (t "views.app.idea.browser.collapse")}}
+        {{on "click" this.toggleBrowser}}
+        data-collapse-browser={{unless this.browserCollapsed "true"}}
+        data-expand-browser={{if this.browserCollapsed "true"}}
+      >
+        <span class="divider-handle">
+          <i class="fa fa-angle-{{if this.browserCollapsed "right" "left"}}"></i>
+        </span>
+      </button>
       {{outlet}}
     </div>
   </AccessControl>

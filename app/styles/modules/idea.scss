@@ -2,13 +2,9 @@
  * The idea browser of the project ideas section
  */
 .idea-wrapper {
-  .idea-browser-expand {
-    margin-bottom: 0.5rem;
-  }
-
-  .idea-browser-toggle-label {
-    margin-left: 0.25rem;
-    font-size: 0.85em;
+  .idea-browser-divider {
+    left: 0;
+    top: 1rem;
   }
 
   .idea-browser {
