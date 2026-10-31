@@ -51,6 +51,19 @@ export const when = function () {
             }
         },
         {
+            "User opens the board of the project": (assert, ctx) => async function () {
+                let project = ctx.get('currentProject');
+                await visit(`/app/project/${project.shortCode}/board`);
+                assert.ok(true, 'User opens the board of the project');
+            }
+        },
+        {
+            "User clicks the Ideas entry in the sidebar": (assert) => async function () {
+                await click('.sidebar-menu [data-navigation-module="Idea"] > a');
+                assert.ok(true, 'User clicks the Ideas entry in the sidebar');
+            }
+        },
+        {
             "User clicks the archived footer link": (assert) => async function () {
                 await click(`${BROWSER} [data-toggle-archived]`);
                 assert.ok(true, 'User clicks the archived footer link');
@@ -70,6 +83,17 @@ export const then = function () {
         {
             "The sidebar shows the Idea entry": (assert) => async function () {
                 assert.dom('.sidebar-menu [data-navigation-module="Idea"]').exists();
+            }
+        },
+        {
+            "The ideas page is open": (assert, ctx) => async function () {
+                let project = ctx.get('currentProject');
+                assert.ok(currentURL().toLowerCase().startsWith(`/app/project/${project.shortCode.toLowerCase()}/idea`), `ideas route is open: ${currentURL()}`);
+            }
+        },
+        {
+            "The Ideas sidebar entry has no submenu": (assert) => async function () {
+                assert.dom('.sidebar-menu [data-navigation-module="Idea"] .treeview-menu').doesNotExist();
             }
         },
         {

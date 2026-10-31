@@ -81,6 +81,17 @@ Feature: Ideas | idea browser
     When User selects the idea First one in the browser
     Then The idea First one is highlighted in the browser
 
+  Scenario: The Ideas nav item is a direct link without a submenu
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    When User opens the board of the project
+    And User clicks the Ideas entry in the sidebar
+    Then The ideas page is open
+    And The Ideas sidebar entry has no submenu
+
   Scenario: The Ideas entry is hidden when the user cannot list ideas
 
     Given There is no pre-existing data

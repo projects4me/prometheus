@@ -2155,7 +2155,6 @@
         },
         "idea": {
           "label": "Ideas",
-          "list": "List Ideas",
           "create": "New Idea"
         },
         "conversation": {
