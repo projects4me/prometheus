@@ -1,0 +1,43 @@
+<div class="box box-info workflow-properties-section" data-workflow-properties>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.workflow.properties.title"}}</h3>
+    {{#if @node}}
+      <div class="box-tools pull-right">
+        <button
+          type="button"
+          class="btn btn-box-tool"
+          disabled={{@locked}}
+          title={{t "views.app.workflow.properties.remove"}}
+          data-remove-node
+          {{on "click" (fn @onRemove @node)}}
+        >
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </button>
+      </div>
+    {{/if}}
+  </div>
+  <div class="box-body">
+    {{#if @node}}
+      <FormFields::FieldText
+        @label={{t "views.app.workflow.properties.name"}}
+        @placeholder={{t (kind-label @node.kind)}}
+        @value={{@node.name}}
+        @data-field="workflownode.name"
+      />
+      <h4>{{t "views.app.workflow.properties.kind"}}</h4>
+      <p data-selected-kind>{{t (concat "views.app.workflow.categories." @node.category)}} &middot; {{t (kind-label @node.kind)}}</p>
+      {{#if @node.errors.length}}
+        <ul class="list-unstyled text-red" data-node-errors>
+          {{#each @node.errors as |message|}}
+            <li><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{message}}</li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    {{else}}
+      <p class="text-center text-muted" data-no-node>
+        <i class="fa fa-info-circle" aria-hidden="true"></i>
+        {{t "views.app.workflow.properties.empty"}}
+      </p>
+    {{/if}}
+  </div>
+</div>

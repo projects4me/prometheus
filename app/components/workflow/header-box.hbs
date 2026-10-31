@@ -1,0 +1,68 @@
+<div class="box box-primary workflow-header-section" data-workflow-header>
+  <div class="box-header with-border">
+    <h3 class="box-title">
+      {{#if @workflow.isNew}}
+        {{t "views.app.workflow.editor.newTitle"}}
+      {{else}}
+        {{@workflow.name}}
+        <small data-workflow-version>{{t "views.app.workflow.editor.version" version=@workflow.version}}</small>
+      {{/if}}
+    </h3>
+    <div class="box-tools pull-right">
+      <button type="button" class="btn btn-default btn-sm" disabled title={{t "views.app.workflow.editor.runsSoon"}} data-workflow-runs>
+        <i class="fa fa-history" aria-hidden="true"></i>
+        {{t "views.app.workflow.editor.runs"}}
+      </button>
+      <button type="button" class="btn btn-default btn-sm" disabled title={{t "views.app.workflow.editor.runsSoon"}} data-workflow-test-run>
+        <i class="fa fa-play" aria-hidden="true"></i>
+        {{t "views.app.workflow.editor.testRun"}}
+      </button>
+      <AppUi::Button
+        type="button"
+        class="btn btn-primary btn-sm"
+        @onClick={{@onSave}}
+        @aclContext={{if @workflow.isNew "workflow.create" "workflow.update"}}
+        data-workflow-save
+      >
+        <i class="fa fa-floppy-o" aria-hidden="true"></i>
+        {{t "views.app.workflow.editor.save"}}
+      </AppUi::Button>
+    </div>
+  </div>
+  <div class="box-body">
+    <div class="row">
+      <div class="col-md-4">
+        <FormFields::FieldText
+          @label={{t "views.app.workflow.fields.name"}}
+          @placeholder={{t "views.app.workflow.editor.namePlaceholder"}}
+          @value={{@workflow.name}}
+          @data-field="workflow.name"
+        />
+      </div>
+      <div class="col-md-3">
+        <FormFields::FieldRelate
+          @label={{t "views.app.workflow.fields.status"}}
+          @options={{@statusOptions}}
+          @selected={{find-by "value" @workflow.status @statusOptions}}
+          @onchange={{@onStatusChange}}
+          @relateType="relate-simple"
+          @searchField="label"
+          @data-field="workflow.status"
+        />
+      </div>
+      <div class="col-md-5">
+        <FormFields::FieldRelateMulti
+          @label={{t "views.app.workflow.fields.scope"}}
+          @placeholder={{t "views.app.workflow.editor.scopeEveryProject"}}
+          @options={{@projectOptions}}
+          @selected={{@selectedScope}}
+          @onchange={{@onScopeChange}}
+          @relateType="relate-simple"
+          @searchField="label"
+          @searchEnabled={{true}}
+          @data-field="workflow.scope"
+        />
+      </div>
+    </div>
+  </div>
+</div>
