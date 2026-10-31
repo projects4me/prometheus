@@ -9,6 +9,11 @@ import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
 /**
+ * The view value of the plan review mode
+ */
+const REVIEW_VIEW = 'plan';
+
+/**
  * The controller of one idea. It loads the messages of the idea and saves what is written in the
  * conversation box: new messages, the new title and the archive status.
  *
@@ -105,6 +110,59 @@ export default class AppProjectIdeaPageController extends Controller {
      * @public
      */
     @tracked shownPlan = null;
+
+    /**
+     * The controller of the idea area, it owns the view query param
+     *
+     * @property ideaController
+     * @type Ember.Controller
+     * @private
+     */
+    @controller('app.project.idea') ideaController;
+
+    /**
+     * Whether the plan has the wide column; any view other than plan means the conversation layout
+     *
+     * @property isReviewMode
+     * @type Boolean
+     * @public
+     */
+    get isReviewMode() {
+        return this.ideaController.view === REVIEW_VIEW;
+    }
+
+    /**
+     * The classes of the conversation column
+     *
+     * @property mainClass
+     * @type String
+     * @public
+     */
+    get mainClass() {
+        return this.isReviewMode ? 'col-md-4 col-md-push-8' : 'col-md-8';
+    }
+
+    /**
+     * The classes of the plan column
+     *
+     * @property sideClass
+     * @type String
+     * @public
+     */
+    get sideClass() {
+        return this.isReviewMode ? 'col-md-8 col-md-pull-4' : 'col-md-4';
+    }
+
+    /**
+     * Switches between the conversation layout and the plan review mode
+     *
+     * @method toggleReviewMode
+     * @public
+     */
+    @action
+    toggleReviewMode() {
+        this.ideaController.view = this.isReviewMode ? null : REVIEW_VIEW;
+    }
 
     /**
      * The id of the idea whose messages are in the list
