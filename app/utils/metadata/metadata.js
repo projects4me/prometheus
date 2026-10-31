@@ -144,24 +144,6 @@ export default Object.extend({
                     anchorRoute: 'idea',
                     projectRelated: true,
                     aclContext: 'idea.read',
-                    actions:{
-                        section1:{
-                            list:{
-                                label: 'views.nav.menu.idea.list',
-                                route: 'app.project.idea',
-                                className: 'text-teal',
-                                anchorRoute: 'idea',
-                                projectRelated: true,
-                            },
-                            create:{
-                                label: 'views.nav.menu.idea.create',
-                                route: 'app.project.idea.create',
-                                className: 'text-red',
-                                anchorRoute: 'idea/create',
-                                projectRelated: true,
-                            }
-                        }
-                    },
                     order: 7
                 },
                 Conversation:{
