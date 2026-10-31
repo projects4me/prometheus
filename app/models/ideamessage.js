@@ -39,7 +39,7 @@ export default class IdeamessageModel extends Model {
      * @for Ideamessage
      * @public
      */
-    @attr steps;
+    @attr('json-list') steps;
 
     /**
      * The screens of the message, a JSON array of {uploadId, key, title, version, width, height}
@@ -48,7 +48,7 @@ export default class IdeamessageModel extends Model {
      * @for Ideamessage
      * @public
      */
-    @attr screens;
+    @attr('json-list') screens;
 
     /**
      * @property ideaplanId
