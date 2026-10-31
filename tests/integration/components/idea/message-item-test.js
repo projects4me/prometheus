@@ -100,7 +100,7 @@ module('Integration | Component | idea/message-item', function (hooks) {
 
     test('clicking a screen opens the full image in a modal', async function (assert) {
         let preview = this.owner.lookup('service:upload-preview');
-        preview.previewUrl = async () => 'http://api/preview/get/tok';
+        preview.previewUrl = async () => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
         let opened = [];
         let original = window.open;
         window.open = (...args) => { opened.push(args); return null; };
@@ -114,7 +114,7 @@ module('Integration | Component | idea/message-item', function (hooks) {
         }
 
         assert.deepEqual(opened, []);
-        assert.dom('[data-idea-screen-preview-image]').hasAttribute('src', 'http://api/preview/get/tok');
+        assert.dom('[data-idea-screen-preview-image]').hasAttribute('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
     });
 
     test('a message without screens shows none', async function (assert) {
