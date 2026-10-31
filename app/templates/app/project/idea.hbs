@@ -1,5 +1,6 @@
 <div class="row idea-wrapper">
   <AccessControl @aclContext="idea.read">
+    {{#unless this.browserCollapsed}}
     <div class="col-md-3">
       <div class="box box-primary idea-browser" data-idea-browser>
         <div class="box-header with-border">
@@ -10,6 +11,10 @@
                 <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
               </LinkTo>
             </AccessControl>
+            <button type="button" class="btn btn-box-tool" title={{t "views.app.idea.browser.collapse"}} {{on "click" this.toggleBrowser}} data-collapse-browser>
+              <i class="fa fa-angle-double-left"></i>
+              <span class="idea-browser-toggle-label">{{t "views.app.idea.browser.collapse"}}</span>
+            </button>
           </div>
         </div>
         <div class="box-body no-padding">
@@ -41,8 +46,17 @@
         {{/if}}
       </div>
     </div>
+    {{/unless}}
 
-    <div class="col-md-9">
+    <div class={{if this.browserCollapsed "col-md-12" "col-md-9"}}>
+      {{#if this.browserCollapsed}}
+        <div class="idea-browser-expand">
+          <button type="button" class="btn btn-box-tool" title={{t "views.app.idea.browser.expand"}} {{on "click" this.toggleBrowser}} data-expand-browser>
+            <i class="fa fa-angle-double-right"></i>
+            <span class="idea-browser-toggle-label">{{t "views.app.idea.browser.expand"}}</span>
+          </button>
+        </div>
+      {{/if}}
       {{outlet}}
     </div>
   </AccessControl>

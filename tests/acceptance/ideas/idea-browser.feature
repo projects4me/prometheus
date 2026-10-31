@@ -111,3 +111,24 @@ Feature: Ideas | idea browser
     And User selects Project 1
     When User opens the ideas of the project
     Then The empty idea box is shown
+
+  Scenario: Collapsing the idea browser widens the idea page and the choice is remembered
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And The collapsed state of the idea browser is cleared
+    And User selects Project 1
+    And The ideas of the project are
+    ---------------------------------------------------------
+    | title      | status | dateModified        |
+    | First idea | open   | 2026-10-01 10:00:00 |
+    ---------------------------------------------------------
+    When User opens the ideas of the project
+    And User collapses the idea browser
+    Then The idea browser is hidden and the idea page spans the full width
+    And The collapsed state is remembered in the browser storage as true
+    When User expands the idea browser
+    Then The idea browser is shown beside the idea page
+    And The collapsed state is remembered in the browser storage as false
+    Then The stored idea browser state is reset

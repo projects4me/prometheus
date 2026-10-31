@@ -30,6 +30,12 @@ export const given = function () {
             }
         },
         {
+            "The collapsed state of the idea browser is cleared": (assert) => async function () {
+                localStorage.removeItem('ideaBrowserCollapsed');
+                assert.ok(true, 'The stored state is cleared');
+            }
+        },
+        {
             "The plans of the idea $title are\n$table":(assert, ctx) => async function (title, table) {
                 let idea = server.schema.ideas.findBy({ title });
                 table.forEach(row => {
@@ -67,6 +73,18 @@ export const when = function () {
             "User clicks the archived footer link": (assert) => async function () {
                 await click(`${BROWSER} [data-toggle-archived]`);
                 assert.ok(true, 'User clicks the archived footer link');
+            }
+        },
+        {
+            "User collapses the idea browser": (assert) => async function () {
+                await click('[data-collapse-browser]');
+                assert.ok(true, 'User collapses the idea browser');
+            }
+        },
+        {
+            "User expands the idea browser": (assert) => async function () {
+                await click('[data-expand-browser]');
+                assert.ok(true, 'User expands the idea browser');
             }
         },
         {
@@ -128,6 +146,31 @@ export const then = function () {
                 assert.dom('[data-idea-main]').exists();
                 assert.dom('[data-idea-empty]').doesNotExist();
                 assert.dom(`${BROWSER} li`).exists();
+            }
+        },
+        {
+            "The idea browser is hidden and the idea page spans the full width": (assert) => async function () {
+                assert.dom(BROWSER).doesNotExist();
+                assert.dom('.idea-wrapper > .col-md-12').exists();
+                assert.dom('[data-expand-browser]').exists();
+            }
+        },
+        {
+            "The idea browser is shown beside the idea page": (assert) => async function () {
+                assert.dom(BROWSER).exists();
+                assert.dom('.idea-wrapper > .col-md-9').exists();
+                assert.dom('[data-expand-browser]').doesNotExist();
+            }
+        },
+        {
+            "The collapsed state is remembered in the browser storage as $value": (assert) => async function (value) {
+                assert.equal(localStorage.getItem('ideaBrowserCollapsed'), value);
+            }
+        },
+        {
+            "The stored idea browser state is reset": (assert) => async function () {
+                localStorage.removeItem('ideaBrowserCollapsed');
+                assert.ok(true, 'The stored state is cleared');
             }
         },
         {
