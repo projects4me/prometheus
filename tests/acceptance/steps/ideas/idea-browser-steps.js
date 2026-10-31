@@ -30,6 +30,12 @@ export const given = function () {
             }
         },
         {
+            "The collapsed state of the idea browser is cleared": (assert) => async function () {
+                localStorage.removeItem('ideaBrowserCollapsed');
+                assert.ok(true, 'The stored state is cleared');
+            }
+        },
+        {
             "The plans of the idea $title are\n$table":(assert, ctx) => async function (title, table) {
                 let idea = server.schema.ideas.findBy({ title });
                 table.forEach(row => {
@@ -159,6 +165,12 @@ export const then = function () {
         {
             "The collapsed state is remembered in the browser storage as $value": (assert) => async function (value) {
                 assert.equal(localStorage.getItem('ideaBrowserCollapsed'), value);
+            }
+        },
+        {
+            "The stored idea browser state is reset": (assert) => async function () {
+                localStorage.removeItem('ideaBrowserCollapsed');
+                assert.ok(true, 'The stored state is cleared');
             }
         },
         {

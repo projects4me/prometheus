@@ -13,6 +13,7 @@
             </AccessControl>
             <button type="button" class="btn btn-box-tool" title={{t "views.app.idea.browser.collapse"}} {{on "click" this.toggleBrowser}} data-collapse-browser>
               <i class="fa fa-angle-double-left"></i>
+              <span class="idea-browser-toggle-label">{{t "views.app.idea.browser.collapse"}}</span>
             </button>
           </div>
         </div>
@@ -52,6 +53,7 @@
         <div class="idea-browser-expand">
           <button type="button" class="btn btn-box-tool" title={{t "views.app.idea.browser.expand"}} {{on "click" this.toggleBrowser}} data-expand-browser>
             <i class="fa fa-angle-double-right"></i>
+            <span class="idea-browser-toggle-label">{{t "views.app.idea.browser.expand"}}</span>
           </button>
         </div>
       {{/if}}

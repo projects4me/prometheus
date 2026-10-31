@@ -14,6 +14,19 @@ const ARCHIVED = 'archived';
 const PROGRESS_STATUSES = ['proposed', 'approved', 'creating', 'created', 'failed'];
 
 /**
+ * Reads the remembered state of the idea browser, expanded when the storage is unavailable
+ *
+ * @return {boolean}
+ */
+function readCollapsed() {
+    try {
+        return localStorage.getItem(STORAGE_KEY) === 'true';
+    } catch (e) {
+        return false;
+    }
+}
+
+/**
  * The controller of the idea browser. It decides which ideas of the project are listed.
  *
  * @class Idea
@@ -54,7 +67,7 @@ export default class AppProjectIdeaController extends Controller {
      * @type Boolean
      * @public
      */
-    @tracked browserCollapsed = localStorage.getItem(STORAGE_KEY) === 'true';
+    @tracked browserCollapsed = readCollapsed();
 
     /**
      * The identifier of the idea that is open on the page route, null on the others
@@ -327,6 +340,10 @@ export default class AppProjectIdeaController extends Controller {
     @action
     toggleBrowser() {
         this.browserCollapsed = !this.browserCollapsed;
-        localStorage.setItem(STORAGE_KEY, this.browserCollapsed);
+        try {
+            localStorage.setItem(STORAGE_KEY, this.browserCollapsed);
+        } catch (e) {
+            // Storage is unavailable; the choice only lasts for this page.
+        }
     }
 }
