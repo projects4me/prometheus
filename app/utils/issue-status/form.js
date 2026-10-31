@@ -4,7 +4,7 @@
 
 import { tracked } from '@glimmer/tracking';
 import { toLabelValue } from 'prometheus/utils/issue-status/value';
-import { isHexColor } from 'prometheus/utils/color';
+import { DEFAULT_TEXT_COLOR, isHexColor } from 'prometheus/utils/color';
 
 /**
  * The colour a new status starts with.
@@ -122,7 +122,7 @@ export default class IssueStatusForm {
     @tracked color;
 
     /**
-     * The label text colour: `dark`, `light`, or null to pick it from the colour's brightness
+     * The label text colour: `dark` or `light`
      *
      * @property textColor
      * @type String
@@ -139,7 +139,7 @@ export default class IssueStatusForm {
      * @param {String} options.value The saved value, empty for a new status
      * @param {Boolean} options.isNew Whether the status is not created yet
      * @param {String} options.color The saved colour, the default colour when it is empty or not a hex colour
-     * @param {String} options.textColor The saved label text colour, null for automatic
+     * @param {String} options.textColor The saved label text colour, light when missing
      * @param {Function} options.captionFor Gives the caption of a locale's field, the locale code by default
      */
     constructor({ locales, defaultLocale, translations = {}, value = '', isNew = true, color = null, textColor = null, captionFor = (locale) => locale }) {
@@ -151,7 +151,7 @@ export default class IssueStatusForm {
         this.isValueEditable = isNew;
         this.savedTranslations = this.translations;
         this.color = isHexColor(color) ? color.toLowerCase() : DEFAULT_STATUS_COLOR;
-        this.textColor = textColor ?? null;
+        this.textColor = textColor ?? DEFAULT_TEXT_COLOR;
 
         if (!isNew) {
             this.typedValue = value ?? '';

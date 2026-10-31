@@ -291,7 +291,7 @@ export const then = function () {
                 let attributes = JSON.parse(requests[0].requestBody).data.attributes;
                 assert.strictEqual(attributes.name, name);
                 assert.strictEqual(attributes.color, color);
-                assert.strictEqual(attributes.textColor, textColor === 'automatic' ? null : textColor);
+                assert.strictEqual(attributes.textColor, textColor);
             }
         },
         {

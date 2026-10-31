@@ -1559,7 +1559,6 @@
           "colorPreview": "Preview",
           "textColor": "Text colour",
           "textColors": {
-            "auto": "Automatic",
             "dark": "Dark",
             "light": "Light"
           },

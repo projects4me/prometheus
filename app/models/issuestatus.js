@@ -128,7 +128,7 @@ export default class IssuestatusModel extends Model {
     @attr('string') color;
 
     /**
-     * Text colour of the status label: `dark`, `light`, or null to pick it from the colour's brightness
+     * Text colour of the status label: `dark` or `light`
      *
      * @property textColor
      * @type String

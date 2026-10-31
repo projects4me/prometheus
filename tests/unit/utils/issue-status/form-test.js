@@ -91,11 +91,11 @@ module('Unit | Utility | issue-status/form', function () {
         assert.strictEqual(invalid.color, '#80b5d3');
     });
 
-    test('the text colour is the saved one, automatic (null) by default', function (assert) {
+    test('the text colour is the saved one, light by default', function (assert) {
         let added = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us' });
         let edited = new IssueStatusForm({ locales: LOCALES, defaultLocale: 'en-us', isNew: false, textColor: 'dark' });
 
-        assert.strictEqual(added.textColor, null);
+        assert.strictEqual(added.textColor, 'light');
         assert.strictEqual(edited.textColor, 'dark');
     });
 });

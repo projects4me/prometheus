@@ -13,7 +13,7 @@ module('Integration | Helper | status-style', function (hooks) {
                 { id: '1', type: 'issuestatus', attributes: { name: 'wont_fix', color: '#123456', sortOrder: 9 } },
                 { id: '2', type: 'issuestatus', attributes: { name: 'uncoloured', color: null, sortOrder: 10 } },
                 { id: '3', type: 'issuestatus', attributes: { name: 'waiting', color: '#fff3a0', sortOrder: 11 } },
-                { id: '4', type: 'issuestatus', attributes: { name: 'blocked', color: '#fff3a0', textColor: 'light', sortOrder: 12 } }
+                { id: '4', type: 'issuestatus', attributes: { name: 'blocked', color: '#fff3a0', textColor: 'dark', sortOrder: 12 } }
             ]
         });
     });
@@ -24,17 +24,11 @@ module('Integration | Helper | status-style', function (hooks) {
         assert.dom('span.badge').hasStyle({ 'background-color': 'rgb(18, 52, 86)' });
     });
 
-    test('it picks a readable text colour for the background', async function (assert) {
-        await render(hbs`<span class="badge dark" style={{status-style "wont_fix"}}>x</span><span class="badge light" style={{status-style "waiting"}}>y</span>`);
+    test('it uses the text colour of the status, light when it has none', async function (assert) {
+        await render(hbs`<span class="badge dark" style={{status-style "blocked"}}>x</span><span class="badge light" style={{status-style "waiting"}}>y</span>`);
 
-        assert.dom('span.dark').hasStyle({ color: 'rgb(255, 255, 255)' });
-        assert.dom('span.light').hasStyle({ color: 'rgb(0, 0, 0)' });
-    });
-
-    test('it uses the text colour chosen for the status', async function (assert) {
-        await render(hbs`<span class="badge" style={{status-style "blocked"}}>x</span>`);
-
-        assert.dom('span.badge').hasStyle({ color: 'rgb(255, 255, 255)' });
+        assert.dom('span.dark').hasStyle({ color: 'rgb(0, 0, 0)' });
+        assert.dom('span.light').hasStyle({ color: 'rgb(255, 255, 255)' });
     });
 
     test('it leaves the text colour alone when it paints another property', async function (assert) {

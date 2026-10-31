@@ -11,8 +11,7 @@ import { labelStyle } from 'prometheus/utils/color';
  * Returns the inline style that paints a status label with the colour of the issue status
  * of the given name. When the status is unknown or has no colour it returns an empty string
  * so the CSS class of the status stays as the fallback. Colours that are not a plain colour value are ignored, since the style is rendered as HTML-safe.
- * When it paints the background with a hex colour it also sets the status's text colour: the chosen one,
- * else the one readable on the colour.
+ * When it paints the background with a hex colour it also sets the status's text colour, dark or light.
  *
  * @class StatusStyle
  * @namespace Prometheus.Helpers

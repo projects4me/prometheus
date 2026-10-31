@@ -11,7 +11,7 @@ import $ from 'jquery';
 import { addIssueStatusLabels, issueStatusRecordLabel, ISSUE_STATUS_LABEL_PATH } from 'prometheus/utils/issue-status/label';
 import { labelCaption } from 'prometheus/utils/issue-status/caption';
 import IssueStatusForm from 'prometheus/utils/issue-status/form';
-import { labelStyle } from 'prometheus/utils/color';
+import { labelStyle, TEXT_COLORS } from 'prometheus/utils/color';
 
 /**
  * The controller of the Issue Statuses page of the Settings area. Adds, edits,
@@ -151,16 +151,16 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
     }
 
     /**
-     * The label text colours offered in the modal: automatic, dark and light.
+     * The label text colours offered in the modal: dark and light.
      *
      * @property textColors
      * @type Array
      * @public
      */
     get textColors() {
-        return [null, 'dark', 'light'].map((value) => ({
+        return Object.keys(TEXT_COLORS).map((value) => ({
             value,
-            label: this.intl.t(`views.app.settings.issueStatuses.textColors.${value ?? 'auto'}`)
+            label: this.intl.t(`views.app.settings.issueStatuses.textColors.${value}`)
         }));
     }
 
@@ -172,7 +172,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
      * @public
      */
     get selectedTextColor() {
-        return this.textColors.find((option) => option.value === (this.form?.textColor ?? null));
+        return this.textColors.find((option) => option.value === this.form?.textColor);
     }
 
     /**
@@ -303,7 +303,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
      * @protected
      */
     @action selectTextColor(option) {
-        this.form.textColor = option?.value ?? null;
+        this.form.textColor = option.value;
     }
 
     /**

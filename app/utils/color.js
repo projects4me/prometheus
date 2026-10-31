@@ -11,7 +11,7 @@
 export const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 
 /**
- * The text colour on light backgrounds.
+ * The dark (black) label text colour.
  *
  * @property TEXT_DARK
  * @type String
@@ -19,7 +19,7 @@ export const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 export const TEXT_DARK = '#000000';
 
 /**
- * The text colour on dark backgrounds.
+ * The light (white) label text colour.
  *
  * @property TEXT_LIGHT
  * @type String
@@ -38,23 +38,7 @@ export function isHexColor(value) {
 }
 
 /**
- * The relative luminance of a hex colour, 0 (black) to 1 (white), as defined by WCAG 2.
- *
- * @method luminance
- * @param {String} hex A 6-digit hex colour
- * @return {Number}
- */
-export function luminance(hex) {
-    let [r, g, b] = [1, 3, 5].map((start) => {
-        let channel = parseInt(hex.slice(start, start + 2), 16) / 255;
-        return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
-    });
-
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
-/**
- * The label text colours a status may choose; any other choice means automatic.
+ * The label text colours a status may choose: `dark` (black) or `light` (white).
  *
  * @property TEXT_COLORS
  * @type Object
@@ -62,39 +46,22 @@ export function luminance(hex) {
 export const TEXT_COLORS = { dark: TEXT_DARK, light: TEXT_LIGHT };
 
 /**
- * The text colour readable on the given background: black on light colours, white on
- * dark ones, whichever has the higher contrast. Null when the background is not a hex colour.
+ * The label text colour of a status saved without one.
  *
- * @method readableTextColor
- * @param {String} background A 6-digit hex colour
- * @return {String} `#000000`, `#ffffff` or null
+ * @property DEFAULT_TEXT_COLOR
+ * @type String
  */
-export function readableTextColor(background) {
-    if (!isHexColor(background)) {
-        return null;
-    }
-
-    // Black and white give the same contrast ratio (about 4.58:1) at a luminance of about 0.179.
-    return luminance(background) > 0.179 ? TEXT_DARK : TEXT_LIGHT;
-}
+export const DEFAULT_TEXT_COLOR = 'light';
 
 /**
- * The text colour of a label: the chosen one (`dark` or `light`), else the one readable
- * on the background. Null when the background is not a hex colour.
+ * The text colour of a label: black for `dark`, white for `light` or anything else.
  *
  * @method labelTextColor
- * @param {String} background A 6-digit hex colour
- * @param {String} choice `dark`, `light`, or null for automatic
- * @return {String} `#000000`, `#ffffff` or null
+ * @param {String} choice `dark` or `light`
+ * @return {String} `#000000` or `#ffffff`
  */
-export function labelTextColor(background, choice = null) {
-    if (!isHexColor(background)) {
-        return null;
-    }
-
-    let chosen = Object.prototype.hasOwnProperty.call(TEXT_COLORS, choice) ? TEXT_COLORS[choice] : null;
-
-    return chosen ?? readableTextColor(background);
+export function labelTextColor(choice) {
+    return choice === 'dark' ? TEXT_DARK : TEXT_LIGHT;
 }
 
 /**
@@ -104,16 +71,16 @@ export function labelTextColor(background, choice = null) {
  * @method labelStyle
  * @param {String} background A 6-digit hex colour
  * @param {Object} options
- * @param {String} options.textColor `dark`, `light`, or null to pick it from the background
+ * @param {String} options.textColor `dark` or `light`, light when missing
  * @param {Boolean} options.important Whether the declarations override the stylesheet (`!important`)
  * @return {String}
  */
-export function labelStyle(background, { textColor = null, important = false } = {}) {
+export function labelStyle(background, { textColor = DEFAULT_TEXT_COLOR, important = false } = {}) {
     if (!isHexColor(background)) {
         return '';
     }
 
     let flag = important ? ' !important' : '';
 
-    return `background-color: ${background}${flag}; color: ${labelTextColor(background, textColor)}${flag}`;
+    return `background-color: ${background}${flag}; color: ${labelTextColor(textColor)}${flag}`;
 }
