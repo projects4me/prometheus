@@ -8,6 +8,7 @@
     <span class="idea-message-screen-title" data-idea-screen-title>{{@screen.title}} <small class="text-muted">{{t "views.app.idea.conversation.screenVersion" version=@screen.version}}</small></span>
   </a>
   {{#if this.previewOpen}}
+    {{#in-element this.modalRoot insertBefore=null}}
     {{#bootstrap-modal
       title="views.app.idea.screen.preview"
       closeLabel="global.form.close"
@@ -22,10 +23,11 @@
           <p>{{t "views.app.idea.screen.previewFailed"}}</p>
         </div>
       {{else if this.previewUrl}}
-        <img src={{this.previewUrl}} alt={{@screen.title}} class="idea-screen-modal-image" data-idea-screen-preview-image {{on "error" this.previewImageFailed}}>
+        <img src={{this.previewUrl}} alt={{@screen.title}} class="idea-screen-preview-image" data-idea-screen-preview-image {{on "error" this.previewImageFailed}}>
       {{else}}
         <div class="text-center" data-idea-screen-preview-loading><i class="fa fa-spinner fa-spin fa-2x"></i></div>
       {{/if}}
     {{/bootstrap-modal}}
+    {{/in-element}}
   {{/if}}
 </li>

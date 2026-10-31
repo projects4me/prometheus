@@ -85,4 +85,19 @@ module('Integration | Component | idea/message-screen', function (hooks) {
         assert.dom('[data-idea-screen-preview-image]').doesNotExist();
         assert.dom('[data-idea-screen-preview-failed]').includesText('could not be loaded');
     });
+
+    test('the modal renders outside the conversation comment so its image is not sized as an avatar', async function (assert) {
+        let preview = this.owner.lookup('service:upload-preview');
+        preview.previewUrl = async () => PIXEL;
+
+        await render(hbs`<div class="box-comments"><div class="box-comment" data-test-comment><ul><Idea::MessageScreen @screen={{this.screen}} /></ul></div></div>`);
+        await click('[data-idea-screen-open]');
+        await waitUntil(() => document.querySelector('.idea-screen-modal [data-idea-screen-preview-image]'), { timeout: 3000 });
+
+        let image = document.querySelector('.idea-screen-modal [data-idea-screen-preview-image]');
+        assert.strictEqual(image.closest('.box-comment'), null, 'not inside the comment');
+        assert.strictEqual(image.closest('.box-comments'), null, 'not inside the comment list');
+        assert.dom(image).hasClass('idea-screen-preview-image');
+        assert.dom(image).doesNotHaveClass('idea-message-screen-image');
+    });
 });
