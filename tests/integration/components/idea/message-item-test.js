@@ -108,6 +108,7 @@ module('Integration | Component | idea/message-item', function (hooks) {
             this.set('message', { id: '5', kind: 'assistant', body: 'Screens', screens: [{ uploadId: '11', title: 'Home', version: 1 }] });
             await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
             await click('[data-idea-screen-open]');
+            await waitUntil(() => document.querySelector('[data-idea-screen-preview-image]'), { timeout: 3000 });
         } finally {
             window.open = original;
         }
