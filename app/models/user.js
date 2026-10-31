@@ -429,6 +429,16 @@ export default Model.extend({
     skills: hasMany('userskill'),
 
     /**
+     * External identities (provider, handle, ...) of this user or agent.
+     *
+     * @property identities
+     * @type {Prometheus.Models.Useridentity}
+     * @for User
+     * @private
+     */
+    identities: hasMany('useridentity'),
+
+    /**
      * Qualification entries (education or certification) for this user.
      *
      * @property qualifications

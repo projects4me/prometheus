@@ -166,6 +166,17 @@
       {{!-- User profile info section ends--}}
 
         <AccessControl>
+          <UserProfile::Identities
+            @user={{this.model}}
+            @save={{this.save}}
+            @validateField={{this.validateField}}
+            @selectRelated={{this.selectRelated}}
+            @message={{this.message}}
+            @clearFieldMessage={{this.clearFieldMessage}}
+          />
+        </AccessControl>
+
+        <AccessControl>
           <UserProfile::Skills
             @user={{this.model}}
             @save={{this.save}}

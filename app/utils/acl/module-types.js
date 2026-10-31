@@ -48,10 +48,12 @@ export const MODULE_SCOPE = {
     /**
      * User profile extension modules (not tied to a project).
      *
+     * - useridentity    : user profile — external identities
      * - userqualification: user profile — education/qualifications
      * - userskill        : user profile — skills
      */
     user: [
+        'useridentity',
         'userqualification',
         'userskill'
     ],
