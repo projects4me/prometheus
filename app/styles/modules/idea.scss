@@ -135,7 +135,13 @@
 .idea-page.idea-review-mode {
   .idea-plan {
     .idea-message-screen {
+      display: block;
       width: 240px;
+      max-width: 100%;
+
+      .idea-message-screen-image {
+        width: 100%;
+      }
     }
 
     .idea-plan-issue-head .meta {
@@ -145,6 +151,19 @@
 
     .idea-plan-description {
       padding-right: 3rem;
+    }
+  }
+}
+
+// below the medium breakpoint the columns stack, so the review mode puts the plan above the conversation
+@media (max-width: 991px) {
+  .idea-page.idea-review-mode {
+    display: flex;
+    flex-direction: column-reverse;
+
+    &::before,
+    &::after {
+      display: none;
     }
   }
 }

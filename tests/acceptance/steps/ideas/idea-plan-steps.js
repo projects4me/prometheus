@@ -1,4 +1,4 @@
-import { click, visit } from '@ember/test-helpers';
+import { click, currentURL, visit } from '@ember/test-helpers';
 import steps from '../steps';
 
 export const given = function () {
@@ -46,6 +46,7 @@ export const then = function () {
                 assert.dom('[data-idea-side]').hasClass('col-md-8');
                 assert.dom('[data-idea-main]').hasClass('col-md-4');
                 assert.dom('[data-idea-plan-review] .fa-compress').exists();
+                assert.equal(new URL(currentURL(), window.location.origin).searchParams.get('view'), 'plan');
             }
         },
         {
@@ -53,6 +54,7 @@ export const then = function () {
                 assert.dom('[data-idea-main]').hasClass('col-md-8');
                 assert.dom('[data-idea-side]').hasClass('col-md-4');
                 assert.dom('[data-idea-plan-review] .fa-expand').exists();
+                assert.notOk(new URL(currentURL(), window.location.origin).searchParams.has('view'));
             }
         },
         {
