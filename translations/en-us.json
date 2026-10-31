@@ -787,6 +787,10 @@
             "upload": "The image could not be uploaded, please try again"
           }
         },
+        "screen": {
+          "preview": "Screen",
+          "previewFailed": "The screen could not be loaded"
+        },
         "plan": {
           "title": "Plan",
           "reviewEnter": "Review the plan in the wide column",

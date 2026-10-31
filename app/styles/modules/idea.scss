@@ -205,3 +205,21 @@
     height: 18rem !important;
   }
 }
+
+.idea-screen-modal {
+  .modal-dialog {
+    width: 90%;
+    max-width: 90vw;
+  }
+
+  .modal-body {
+    max-height: 75vh;
+    overflow: auto;
+  }
+
+  .idea-screen-modal-image {
+    display: block;
+    max-width: 100%;
+    border: 1px solid $borderColor;
+  }
+}
