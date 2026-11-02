@@ -110,3 +110,24 @@
 .agent-secret-modal pre {
   margin-top: 5px;
 }
+
+.agent-sponsor {
+  font-size: 12px;
+}
+
+.users-list .agent-avatar,
+.box-comment .agent-avatar,
+.time-log .agent-avatar {
+  vertical-align: middle;
+}
+
+.box-comment > .agent-avatar {
+  float: left;
+}
+
+.users-list .agent-avatar {
+  width: 128px;
+  height: 128px;
+  max-width: 100%;
+  font-size: 48px;
+}

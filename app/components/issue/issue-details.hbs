@@ -126,8 +126,9 @@
             <div class="row">
               <div class="col-xs-3 col-md-2" data-field="issue.assignee">
                 <div class="project-manager">
-                  <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{this.issue.assignedTo.id}}" alt="{{this.issue.assignedTo.name}}">
+                  <Agent::UserAvatar @class="img-circle" @userId={{this.issue.assignedTo.id}} @type={{this.issue.assignedTo.type}} @name={{this.issue.assignedTo.name}} />
                   <LinkTo @route="app.user.page" @model={{this.issue.assignedTo.id}} class="users-list-name">{{this.issue.assignedTo.name}}</LinkTo>
+                  <Agent::UserTag @userId={{this.issue.assignedTo.id}} @type={{this.issue.assignedTo.type}} />
                   <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
                 </div>
               </div>
@@ -271,23 +272,27 @@
           <div class="box-body no-padding">
             <ul class="users-list clearfix">
               <li>
-                <img src="{{this.apiHost}}/userimage/get/{{this.issue.assignedTo.id}}" alt="{{this.issue.assignedTo.name}}">
+                <Agent::UserAvatar @userId={{this.issue.assignedTo.id}} @type={{this.issue.assignedTo.type}} @name={{this.issue.assignedTo.name}} />
                 <Issue::AssigneeSelect @issue={{this.issue}} @members={{this.projectController.model.members}} @onUpdated={{this.postUpdateAssignee}} />
+                <Agent::UserTag @userId={{this.issue.assignedTo.id}} @type={{this.issue.assignedTo.type}} />
                 <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
               </li>
               <li>
-                <img src="{{this.apiHost}}/userimage/get/{{this.issue.ownedBy.id}}" alt="{{this.issue.ownedBy.name}}">
+                <Agent::UserAvatar @userId={{this.issue.ownedBy.id}} @type={{this.issue.ownedBy.type}} @name={{this.issue.ownedBy.name}} />
                 <LinkTo @route="app.user.page" @model={{this.issue.ownedBy.id}} class="users-list-name">{{this.issue.ownedBy.name}}</LinkTo>
+                <Agent::UserTag @userId={{this.issue.ownedBy.id}} @type={{this.issue.ownedBy.type}} />
                 <span class="users-list-date">{{t "views.app.issue.detail.ownedBy"}}</span>
               </li>
               <li>
-                <img src="{{this.apiHost}}/userimage/get/{{this.issue.modifiedBy.id}}" alt="{{this.issue.modifiedBy.name}}">
+                <Agent::UserAvatar @userId={{this.issue.modifiedBy.id}} @type={{this.issue.modifiedBy.type}} @name={{this.issue.modifiedBy.name}} />
                 <LinkTo @route="app.user.page" @model={{this.issue.modifiedBy.id}} class="users-list-name">{{this.issue.modifiedBy.name}}</LinkTo>
+                <Agent::UserTag @userId={{this.issue.modifiedBy.id}} @type={{this.issue.modifiedBy.type}} />
                 <span class="users-list-date">{{t "views.app.issue.detail.modifiedBy"}}</span>
               </li>
               <li>
-                <img src="{{this.apiHost}}/userimage/get/{{this.issue.reportedBy.id}}" alt="{{this.issue.reportedBy.name}}">
+                <Agent::UserAvatar @userId={{this.issue.reportedBy.id}} @type={{this.issue.reportedBy.type}} @name={{this.issue.reportedBy.name}} />
                 <LinkTo @route="app.user.page" @model={{this.issue.reportedBy.id}} class="users-list-name">{{this.issue.reportedBy.name}}</LinkTo>
+                <Agent::UserTag @userId={{this.issue.reportedBy.id}} @type={{this.issue.reportedBy.type}} />
                 <span class="users-list-date">{{t "views.app.issue.detail.reportedBy"}}</span>
               </li>
             </ul>
@@ -373,10 +378,11 @@
                 {{#each this.issue.estimated as |timelog|}}
                   <li class="item" data-issue-estimate-id={{timelog.id}}>
                     <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
-                      <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
+                      <Agent::UserAvatar @class="img-circle" @userId={{timelog.createdUser}} @name={{timelog.createdUserName}} />
                     </div>
                     <div class="log-info">
                       <LinkTo @route="app.user.page" @model={{timelog.createdUser}} class="user-title">{{timelog.createdUserName}}</LinkTo>
+                      <Agent::UserTag @userId={{timelog.createdUser}} />
                       <span>{{t "views.app.issue.detail.timelog.estimatedon"}}<strong>{{moment-format timelog.dateCreated 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
                       <span class="log-edit pull-right">
                         <a href="javascript:void(0);" {{action "showEditEstimateDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
@@ -487,10 +493,11 @@
                 {{#each this.issue.spent as |timelog|}}
                   <li class="item" data-issue-spent-id={{timelog.id}}>
                     <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
-                      <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{timelog.createdUser}}" alt="{{timelog.createdUserName}}">
+                      <Agent::UserAvatar @class="img-circle" @userId={{timelog.createdUser}} @name={{timelog.createdUserName}} />
                     </div>
                     <div class="log-info">
                       <LinkTo @route="app.user.page" @model={{timelog.createdUser}} class="user-title">{{timelog.createdUserName}}</LinkTo>
+                      <Agent::UserTag @userId={{timelog.createdUser}} />
                       <span>{{t "views.app.issue.detail.timelog.on"}}<strong>{{moment-format timelog.spentOn 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
                       <span class="log-edit pull-right">
                         <a href="javascript:void(0);" {{action "showEditLogDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;

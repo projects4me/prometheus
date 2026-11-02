@@ -1,0 +1,6 @@
+{{#if this.isAgent}}
+  <Agent::Badge />
+  {{#if this.sponsorName}}
+    <span class="agent-sponsor text-muted" data-agent-sponsor>{{t "views.app.agent.forSponsor" name=this.sponsorName}}</span>
+  {{/if}}
+{{/if}}

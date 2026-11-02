@@ -2390,6 +2390,7 @@
       },
       "agent": {
         "badge": "Agent",
+        "forSponsor": "for {name}",
         "autonomous": "Autonomous",
         "saved": "Agent {name} saved",
         "status": {
