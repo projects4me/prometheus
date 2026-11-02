@@ -84,7 +84,7 @@ export default class RunTrace {
     }
 
     /**
-     * The first step that ran a node, if the run reached it
+     * The last step that ran a node, if the run reached it: the one that decides how the node shows
      *
      * @method stepOf
      * @param {GraphNode} node
@@ -92,7 +92,7 @@ export default class RunTrace {
      * @public
      */
     stepOf(node) {
-        return this.stepsOf(node)[0];
+        return this.stepsOf(node).at(-1);
     }
 
     /**

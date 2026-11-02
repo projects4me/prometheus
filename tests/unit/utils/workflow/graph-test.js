@@ -79,4 +79,21 @@ module('Unit | Utility | workflow graph', function () {
     assert.deepEqual(bounds([node]), { minX: 0, minY: 0, maxX: 200, maxY: height });
     assert.strictEqual(bounds([]), null);
   });
+
+  test('reports changes that are not saved yet', function (assert) {
+    let graph = WorkflowGraph.fromRecords([
+      { id: '1', category: 'trigger', kind: 'issue.created', config: '{}', name: 'Start', positionX: 10, positionY: 20 }
+    ], []);
+    assert.false(graph.hasUnsavedChanges, 'a loaded graph is saved');
+    graph.nodes[0].name = 'Renamed';
+    assert.true(graph.hasUnsavedChanges, 'an edited node');
+    graph.nodes[0].name = 'Start';
+    assert.false(graph.hasUnsavedChanges);
+    graph.addNode('action', 'end', 1, 1);
+    assert.true(graph.hasUnsavedChanges, 'a new node');
+    graph.removeNode(graph.nodes[1]);
+    assert.false(graph.hasUnsavedChanges);
+    graph.removeNode(graph.nodes[0]);
+    assert.true(graph.hasUnsavedChanges, 'a removed saved node');
+  });
 });

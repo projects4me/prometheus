@@ -211,7 +211,25 @@ export default class WorkflowGraph {
      * @type Array
      * @public
      */
-    removedRecords = [];
+    @tracked removedRecords = [];
+
+    /**
+     * Whether the graph differs from what is saved: a node or edge not saved yet, a removal not deleted yet,
+     * or a node whose saved record has other values
+     *
+     * @property hasUnsavedChanges
+     * @type Boolean
+     * @public
+     */
+    get hasUnsavedChanges() {
+        return this.removedRecords.length > 0
+            || this.edges.some(edge => !edge.record)
+            || this.nodes.some(node => !node.record
+                || (node.record.name ?? '') !== node.name
+                || JSON.stringify(parseConfig(node.record.config)) !== JSON.stringify(node.config ?? {})
+                || (Number(node.record.positionX) || 0) !== node.x
+                || (Number(node.record.positionY) || 0) !== node.y);
+    }
 
     /**
      * Builds the graph of saved workflownode and workflowedge records
@@ -346,7 +364,7 @@ export default class WorkflowGraph {
      */
     _forget(item) {
         if (item.record) {
-            this.removedRecords.push(item.record);
+            this.removedRecords = [...this.removedRecords, item.record];
         }
     }
 }

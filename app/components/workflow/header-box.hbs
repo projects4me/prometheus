@@ -13,7 +13,7 @@
         <i class="fa fa-history" aria-hidden="true"></i>
         {{t "views.app.workflow.editor.runs"}}
       </button>
-      <button type="button" class="btn btn-default btn-sm" disabled={{@workflow.isNew}} title={{if @workflow.isNew (t "views.app.workflow.editor.saveFirst")}} data-workflow-test-run {{on "click" @onShowTestRun}}>
+      <button type="button" class="btn btn-default btn-sm" disabled={{or @workflow.isNew @graphUnsaved}} title={{if @workflow.isNew (t "views.app.workflow.editor.saveFirst") (if @graphUnsaved (t "views.app.workflow.editor.saveGraphFirst"))}} data-workflow-test-run {{on "click" @onShowTestRun}}>
         <i class="fa fa-play" aria-hidden="true"></i>
         {{t "views.app.workflow.editor.testRun"}}
       </button>

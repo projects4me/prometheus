@@ -49,4 +49,12 @@ module('Unit | Utility | workflow/run-trace', function () {
         assert.ok(trace.tookEdge({ from: a, port: 'done', to: c }));
         assert.equal(trace.stepsOf(a).length, 2);
     });
+
+    test('a node the run failed at on a later visit shows the latest status', function (assert) {
+        let trace = new RunTrace(normalizeSteps([
+            { sequence: 1, nodeId: 1, status: 'Completed', port: 'again' },
+            { sequence: 2, nodeId: 1, status: 'Failed' }
+        ]));
+        assert.equal(trace.stepOf({ record: { id: 1 } }).status, 'Failed');
+    });
 });

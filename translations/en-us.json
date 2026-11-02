@@ -2217,6 +2217,7 @@
         "editor": {
           "newTitle": "New workflow",
           "saveFirst": "Save the workflow first",
+          "saveGraphFirst": "Save the changes to the flow first",
           "version": "version {version}",
           "runs": "Runs",
           "testRun": "Test run",
