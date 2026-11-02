@@ -38,7 +38,8 @@ export default class AppAgentEditRoute extends AppAgentCreateRoute {
     }
 
     /**
-     * Loads the roles and projects to choose from, and the ones the agent's user already has.
+     * Loads the roles and projects to choose from, and the ones the agent's user already has. When any of these
+     * fails the form is not set up (`loadFailed`): saving it would delete the assignments it could not show.
      *
      * @method afterModel
      * @param {Prometheus.Models.Agent} agent the agent
@@ -49,12 +50,13 @@ export default class AppAgentEditRoute extends AppAgentCreateRoute {
         if (!agent) {
             return;
         }
-        this.options = await this.loadOptions();
         try {
-            let [userroles, memberships] = await Promise.all([
+            let [options, userroles, memberships] = await Promise.all([
+                this.queryOptions(),
                 this.store.query('userrole', { query: `(Userrole.userId : ${agent.userId})`, limit: -1 }),
                 this.store.query('membership', { query: `(Membership.userId : ${agent.userId})`, limit: -1 })
             ]);
+            this.options = options;
             this.current = { userroles: userroles.toArray(), memberships: memberships.toArray() };
         } catch (error) {
             this.errorManager.handleLoadError(error, { moduleName: 'agent' });

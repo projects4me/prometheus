@@ -45,6 +45,9 @@ export default function (assert) {
 		.given('Gaia fails to load user roles', function () {
 			server.get('/userrole', () => new Response(500, {}, { errors: [{ status: '500', title: 'Internal Server Error' }] }));
 		})
+		.given('Gaia denies access to roles', function () {
+			server.get('/role', () => new Response(403, {}, { error: 'Access denied to role' }));
+		})
 		.when('User opens the edit page of agent "$name"', async function (name) {
 			let agent = server.schema.agents.findBy({ name });
 			await visit(`/app/agent/edit/${agent.id}`);

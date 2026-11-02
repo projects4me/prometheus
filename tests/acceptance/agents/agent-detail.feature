@@ -95,3 +95,14 @@ Feature: Agents | detail
     When User opens the edit page of agent "Agent Achilles"
     Then The server error is shown
     And The agent form is not shown
+
+  Scenario: User sees an error instead of the edit form when the roles to choose from cannot be loaded
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And Agent "Agent Achilles" runs for "Sponsor One" with models "sonnet" and "opus"
+    And Gaia denies access to roles
+    When User opens the edit page of agent "Agent Achilles"
+    Then The server error is shown
+    And The agent form is not shown
