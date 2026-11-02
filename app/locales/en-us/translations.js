@@ -767,6 +767,8 @@ export default {
                     "assignedTo" : "Assignee",
                     "assignee" : "Assignee",
                     "selectassignee" : "Select an assignee",
+                    "agents" : "Agents",
+                    "runsFor" : "runs for {sponsor}",
                     "reportedBy" : "Reported User",
                     "parentId" : "Parent Issue",
                     "parent" : "Parent",

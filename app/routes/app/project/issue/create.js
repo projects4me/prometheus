@@ -53,10 +53,29 @@ export default App.extend({
                 projectData.issuestatuses = issueStatuses;
             }
             this.set('project', projectData);
+            this.set('agents', await this.loadAgents());
         } catch (error) {
             _self.errorManager.handleError(error, {
                 moduleName: 'project'
             })
+        }
+    },
+
+    /**
+     * Loads the agents with their sponsor, so the assignee picker can show who an agent runs for.
+     * A user who may not read agents gets the members without that detail.
+     *
+     * @method loadAgents
+     * @return {Promise<Array>}
+     * @private
+     */
+    async loadAgents() {
+        try {
+            let agents = await this.store.query('agent', { rels: 'user,sponsor', limit: -1 });
+            return agents.toArray();
+        } catch (error) {
+            Logger.debug('Prometheus.Routes.App.Project.Issue.Create::loadAgents() agents not available');
+            return [];
         }
     },
 
@@ -90,6 +109,7 @@ export default App.extend({
         controller.set('model', issue);
         controller.set('project', _self.get('project'));
         controller.set('types', _self.get('project').issuetypes);
+        controller.set('agents', _self.get('agents') ?? []);
         controller.set('statuses', _self.get('project').issuestatuses);
         controller.set('issueDescription', issueDescription);
 
