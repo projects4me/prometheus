@@ -31,9 +31,9 @@ export default class AppWorkflowCreateRoute extends PageRoute {
     async model() {
         Logger.debug('AppWorkflowCreateRoute::model');
         try {
-            let projects = await this.loadProjects();
+            let [projects, catalog] = await Promise.all([this.loadProjects(), this.workflowCatalog.load()]);
             let workflow = this.store.createRecord('workflow', { status: 'Draft' });
-            return { workflow, graph: new WorkflowGraph(), projects };
+            return { workflow, graph: new WorkflowGraph(), projects, catalog };
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'workflow' });
         }

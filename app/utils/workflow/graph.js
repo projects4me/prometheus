@@ -293,6 +293,24 @@ export default class WorkflowGraph {
     }
 
     /**
+     * Applies a step's name and settings; connections from ports the new settings no longer offer, such as a
+     * removed switch case, are removed
+     *
+     * @method updateNode
+     * @param {GraphNode} node
+     * @param {String} name
+     * @param {Object} config
+     * @public
+     */
+    updateNode(node, name, config) {
+        node.name = name ?? '';
+        node.config = config ?? {};
+        node.errors = [];
+        let ports = node.ports;
+        this.edges.filter(edge => edge.from === node && !ports.includes(edge.port)).forEach(edge => this.removeEdge(edge));
+    }
+
+    /**
      * Removes a node and the edges that touch it
      *
      * @method removeNode

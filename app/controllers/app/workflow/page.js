@@ -3,12 +3,13 @@
  */
 
 /* global Messenger */
-import Controller from '@ember/controller';
+import Controller, { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { bounds } from 'prometheus/utils/workflow/node-geometry';
 import RunSession from 'prometheus/utils/workflow/run-session';
+import { triggerFields } from 'prometheus/utils/workflow/node-config';
 
 /**
  * The statuses of a workflow
@@ -85,6 +86,15 @@ export default class AppWorkflowPageController extends Controller {
     @service workflowRuns;
 
     /**
+     * The app controller, for the users the actor pickers list
+     *
+     * @property appController
+     * @type Controller
+     * @private
+     */
+    @controller('app') appController;
+
+    /**
      * The runs panels and the run drawn on the flow
      *
      * @property runSession
@@ -111,6 +121,28 @@ export default class AppWorkflowPageController extends Controller {
      * @public
      */
     @tracked isSaving = false;
+
+    /**
+     * The payload paths the workflow's triggers offer to filters, field pickers and expressions
+     *
+     * @property payloadFields
+     * @type Array
+     * @public
+     */
+    get payloadFields() {
+        return triggerFields(this.model?.graph?.nodes ?? [], this.model?.catalog?.events ?? []);
+    }
+
+    /**
+     * The users the actor pickers list
+     *
+     * @property users
+     * @type Array
+     * @public
+     */
+    get users() {
+        return this.appController.usersList;
+    }
 
     /**
      * @property statusOptions
@@ -267,6 +299,23 @@ export default class AppWorkflowPageController extends Controller {
     }
 
     /**
+     * Applies the name and settings the step form drafted to the step
+     *
+     * @method applyNode
+     * @param {GraphNode} node
+     * @param {String} name
+     * @param {Object} config
+     * @public
+     */
+    @action applyNode(node, name, config) {
+        if (!this.isGraphLocked) {
+            this.model.graph.updateNode(node, name, config);
+        }
+    }
+
+    /**
+     * Moves a step on the canvas
+     *
      * @method moveNode
      * @param {GraphNode} node
      * @param {Number} x

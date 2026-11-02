@@ -23,6 +23,13 @@ export default class AppWorkflowPageRoute extends App {
     @service workflowGraph;
 
     /**
+     * @property workflowCatalog
+     * @type Service
+     * @private
+     */
+    @service workflowCatalog;
+
+    /**
      * Sends the user to access denied when their role cannot open the route, once the app data (and so the
      * user's permissions) have been loaded.
      *
@@ -49,12 +56,13 @@ export default class AppWorkflowPageRoute extends App {
     async model(params) {
         Logger.debug('AppWorkflowPageRoute::model');
         try {
-            let [workflow, graph, projects] = await Promise.all([
+            let [workflow, graph, projects, catalog] = await Promise.all([
                 this.store.findRecord('workflow', params.workflow_id, { reload: true }),
                 this.workflowGraph.load(params.workflow_id),
-                this.loadProjects()
+                this.loadProjects(),
+                this.workflowCatalog.load()
             ]);
-            return { workflow, graph, projects };
+            return { workflow, graph, projects, catalog };
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'workflow' });
         }

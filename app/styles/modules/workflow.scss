@@ -6,6 +6,26 @@
   The workflow editor: the node palette, the flow canvas with its nodes and edges, and the properties box
 */
 .workflow-editor {
+  .workflow-condition {
+    position: relative;
+    margin-bottom: 10px;
+    padding: 4px 8px;
+    border-left: 3px solid $borderColor;
+  }
+
+  .workflow-case-list .workflow-case {
+    margin-bottom: 10px;
+  }
+
+  [data-step-outputs] .label {
+    display: inline-block;
+    margin: 0 4px 4px 0;
+  }
+
+  .workflow-step-actions {
+    margin-top: 10px;
+  }
+
   .workflow-palette-group {
     border-bottom: 1px solid $borderColor;
 

@@ -1,0 +1,97 @@
+<div class="workflow-config-field" data-config-field={{@field.name}}>
+  {{#if this.isText}}
+    {{#if (eq this.type "longText")}}
+      <FormFields::FieldTextArea
+        @label={{t this.labelKey}}
+        @value={{this.text}}
+        @onInput={{this.input}}
+        @required={{@field.required}}
+        @showFieldInfo={{true}}
+        @info={{t (concat this.labelKey "Info")}}
+        @data-field={{concat "workflownode.config." @field.name}}
+        rows="5"
+        readonly={{@locked}}
+      />
+    {{else}}
+      <FormFields::FieldText
+        @label={{t this.labelKey}}
+        @value={{this.text}}
+        @onInput={{this.input}}
+        @readonly={{@locked}}
+        @required={{@field.required}}
+        @showFieldInfo={{true}}
+        @info={{t (concat this.labelKey "Info")}}
+        @data-field={{concat "workflownode.config." @field.name}}
+      />
+    {{/if}}
+    {{#if this.pathOptions.length}}
+      <FormFields::FieldRelate
+        @placeholder={{t "views.app.workflow.config.insertValue"}}
+        @options={{this.pathOptions}}
+        @selected={{null}}
+        @onchange={{this.insertExpression}}
+        @relateType="relate-simple"
+        @searchField="label"
+        @searchEnabled={{true}}
+        @disabled={{@locked}}
+        @data-field={{concat "workflownode.config." @field.name ".expression"}}
+      />
+    {{/if}}
+  {{else if (eq this.type "cron")}}
+    <FormFields::FieldText
+      @label={{t this.labelKey}}
+      @value={{this.text}}
+      @onInput={{this.input}}
+      @readonly={{@locked}}
+      @required={{true}}
+      @showFieldInfo={{true}}
+      @info={{t (concat this.labelKey "Info")}}
+      @data-field={{concat "workflownode.config." @field.name}}
+    />
+  {{else if (eq this.type "field")}}
+    <FormFields::FieldRelate
+      @label={{t this.labelKey}}
+      @options={{this.pathOptions}}
+      @selected={{this.selectedPath}}
+      @onchange={{this.pickPath}}
+      @relateType="relate-simple"
+      @searchField="label"
+      @searchEnabled={{true}}
+      @disabled={{@locked}}
+      @required={{@field.required}}
+      @showFieldInfo={{true}}
+      @info={{t (concat this.labelKey "Info")}}
+      @data-field={{concat "workflownode.config." @field.name}}
+    />
+  {{else if this.isActor}}
+    <Workflow::ActorPicker
+      @type={{this.type}}
+      @label={{t this.labelKey}}
+      @info={{t (concat this.labelKey "Info")}}
+      @name={{@field.name}}
+      @required={{@field.required}}
+      @value={{@value}}
+      @payloadFields={{@payloadFields}}
+      @users={{@users}}
+      @agents={{@agents}}
+      @locked={{@locked}}
+      @onChange={{this.change}}
+    />
+  {{else if (eq this.type "conditions")}}
+    <h4>{{t this.labelKey}}</h4>
+    <Workflow::ConditionList
+      @conditions={{@value}}
+      @payloadFields={{@payloadFields}}
+      @locked={{@locked}}
+      @onChange={{this.change}}
+    />
+  {{else if (eq this.type "cases")}}
+    <h4>{{t this.labelKey}}</h4>
+    <Workflow::CaseList
+      @cases={{@value}}
+      @payloadFields={{@payloadFields}}
+      @locked={{@locked}}
+      @onChange={{this.change}}
+    />
+  {{/if}}
+</div>

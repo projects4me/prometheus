@@ -1,0 +1,55 @@
+<div class="workflow-condition-list" data-condition-list>
+  {{#each this.rows key="index" as |row|}}
+    <div class="workflow-condition" data-condition={{row.index}}>
+      <div class="box-tools pull-right">
+        <button
+          type="button"
+          class="btn btn-box-tool"
+          disabled={{@locked}}
+          title={{t "views.app.workflow.config.removeCondition"}}
+          data-remove-condition
+          {{on "click" (fn this.remove row.index)}}
+        >
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+      </div>
+      <FormFields::FieldRelate
+        @label={{t "views.app.workflow.config.conditionField"}}
+        @options={{this.fieldOptions}}
+        @selected={{row.field}}
+        @onchange={{fn this.pickField row.index}}
+        @relateType="relate-simple"
+        @searchField="label"
+        @searchEnabled={{true}}
+        @disabled={{@locked}}
+        @showFieldInfo={{true}}
+        @info={{t "views.app.workflow.config.conditionFieldInfo"}}
+        @data-field="workflownode.condition.field"
+      />
+      <FormFields::FieldRelate
+        @label={{t "views.app.workflow.config.operator"}}
+        @options={{this.operatorOptions}}
+        @selected={{row.operator}}
+        @onchange={{fn this.pickOperator row.index}}
+        @relateType="relate-simple"
+        @searchField="label"
+        @disabled={{@locked}}
+        @data-field="workflownode.condition.operator"
+      />
+      {{#if row.takesValue}}
+        <FormFields::FieldText
+          @label={{t "views.app.workflow.config.conditionValue"}}
+          @value={{row.condition.value}}
+          @onInput={{fn this.changeValue row.index}}
+          @readonly={{@locked}}
+          @showFieldInfo={{true}}
+          @info={{t "views.app.workflow.config.conditionValueInfo"}}
+          @data-field="workflownode.condition.value"
+        />
+      {{/if}}
+    </div>
+  {{/each}}
+  <button type="button" class="btn btn-default btn-xs" disabled={{@locked}} data-add-condition {{on "click" this.add}}>
+    <i class="fa fa-plus" aria-hidden="true"></i> {{t "views.app.workflow.config.addCondition"}}
+  </button>
+</div>
