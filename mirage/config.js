@@ -46,6 +46,7 @@ import * as Workflow from './route-handlers/workflow';
 import * as Workflownode from './route-handlers/workflownode';
 import * as Workflowedge from './route-handlers/workflowedge';
 import * as Workflowrun from './route-handlers/workflowrun';
+import * as Workflowreference from './route-handlers/workflowreference';
 import * as Workflowevent from './route-handlers/workflowevent';
 import * as Ideaplanissue from './route-handlers/ideaplanissue';
 
@@ -110,6 +111,7 @@ function routes() {
     Workflownode.register(this, ctx);
     Workflowedge.register(this, ctx);
     Workflowrun.register(this, ctx);
+    Workflowreference.register(this, ctx);
     Workflowevent.register(this);
     Ideaplanissue.register(this, ctx);
 }

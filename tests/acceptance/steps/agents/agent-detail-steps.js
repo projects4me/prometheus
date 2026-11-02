@@ -7,6 +7,13 @@ const field = (name) => document.querySelector(`[data-agent-field="${name}"]`)?.
 
 export default function (assert) {
 	return agentFixtureSteps(steps(assert))
+		.given('The $status workflow "$name" triggers on $kind and runs the agent "$agent"', async function (status, name, kind, agent) {
+			let record = server.schema.agents.findBy({ name: agent });
+			let workflow = server.create('workflow', { name, status });
+			server.create('workflownode', { workflowId: workflow.id, category: 'trigger', kind });
+			let node = server.create('workflownode', { workflowId: workflow.id, category: 'actor', kind: 'run_agent', config: JSON.stringify({ agentId: record.id }) });
+			server.create('workflowreference', { workflowId: workflow.id, nodeId: node.id, entityType: 'Agent', entityId: record.id });
+		})
 		.when('User opens the detail page of agent "$name"', async function (name) {
 			let agent = server.schema.agents.findBy({ name });
 			await visit(`/app/agent/${agent.id}`);
@@ -20,6 +27,17 @@ export default function (assert) {
 			assert.equal(field('sponsor'), sponsor, 'sponsor');
 			assert.equal(field('model-simple'), simple, 'model simple');
 			assert.equal(field('model-complex'), complex, 'model complex');
+		})
+		.then('The workflows box lists "$name" as $place with trigger "$trigger" and status "$status"', function (name, place, trigger, status) {
+			let row = Array.from(document.querySelectorAll('[data-agent-workflow]')).find((el) => el.querySelector('[data-agent-workflow-field="name"]').textContent.trim() === name);
+			let text = (field) => row?.querySelector(`[data-agent-workflow-field="${field}"]`).textContent.replace(/\s+/g, ' ').trim();
+			assert.ok(row, `The workflows box lists ${name}`);
+			assert.equal(text('places'), place, 'referenced in');
+			assert.equal(text('trigger'), trigger, 'trigger');
+			assert.equal(text('status'), status, 'status');
+		})
+		.then('The workflows box says no workflow references the agent', function () {
+			assert.ok(document.querySelector('[data-agent-workflow-field="none"]'), 'The workflows box says no workflow references the agent');
 		})
 		.then('The credentials box says the agent has no credentials', function () {
 			assert.ok(document.querySelector('[data-credential-field="none"]'), 'The credentials box says the agent has no credentials');

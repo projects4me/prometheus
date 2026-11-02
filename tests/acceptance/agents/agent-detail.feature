@@ -28,3 +28,22 @@ Feature: Agents | detail
     When User closes the new secret
     And User revokes the credentials of the agent
     Then The credentials box says the agent has no credentials
+
+  Scenario: User sees the workflows that reference the agent
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And Agent "Agent Achilles" runs for "Sponsor One" with models "sonnet" and "opus"
+    And The Active workflow "Review issues" triggers on issue.created and runs the agent "Agent Achilles"
+    When User opens the detail page of agent "Agent Achilles"
+    Then The workflows box lists "Review issues" as Run agent with trigger "Issue · Created" and status "Active"
+
+  Scenario: User sees that no workflow references the agent
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And Agent "Agent Achilles" runs for "Sponsor One" with models "sonnet" and "opus"
+    When User opens the detail page of agent "Agent Achilles"
+    Then The workflows box says no workflow references the agent

@@ -1,0 +1,58 @@
+<AccessControl @aclContext="workflow.read">
+  <div class="box box-success agent-workflows" data-agent-box="workflows" {{did-insert this.load}}>
+    <div class="box-header with-border">
+      <h3 class="box-title">{{t "views.app.agent.workflows.title"}}</h3>
+    </div>
+    <div class="box-body no-padding">
+      {{#if this.rows.length}}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>{{t "views.app.workflow.list.name"}}</th>
+              <th>{{t "views.app.workflow.list.trigger"}}</th>
+              <th>{{t "views.app.agent.workflows.referencedIn"}}</th>
+              <th>{{t "views.app.workflow.list.scope"}}</th>
+              <th>{{t "views.app.agent.workflows.status"}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each this.rows as |row|}}
+              <tr data-agent-workflow={{row.workflow.id}}>
+                <td data-agent-workflow-field="name">
+                  <LinkTo @route="app.workflow.page" @model={{row.workflow.id}}>{{row.workflow.name}}</LinkTo>
+                </td>
+                <td data-agent-workflow-field="trigger">
+                  {{#if row.trigger}}
+                    <strong>{{row.trigger.entity}}</strong>{{#if row.trigger.event}} &middot; {{row.trigger.event}}{{/if}}
+                  {{else}}
+                    <em>{{t "views.app.workflow.list.noTrigger"}}</em>
+                  {{/if}}
+                </td>
+                <td data-agent-workflow-field="places">
+                  {{#each row.places as |place|}}
+                    <span class="label label-default">{{t (concat "views.app.agent.workflows.places." place.category)}}</span>
+                  {{/each}}
+                </td>
+                <td data-agent-workflow-field="scope">
+                  {{#if row.projects.length}}
+                    {{join ", " row.projects}}
+                  {{else}}
+                    {{t "views.app.workflow.list.allProjects"}}
+                  {{/if}}
+                </td>
+                <td data-agent-workflow-field="status">
+                  <span class="label {{if (eq row.workflow.status "Active") "label-success" (if (eq row.workflow.status "Disabled") "label-danger" "label-warning")}}">{{t (concat "views.app.workflow.status." row.workflow.status)}}</span>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{else if this.loaded}}
+        <p class="text-muted" data-agent-workflow-field="none">{{t "views.app.agent.workflows.none"}}</p>
+      {{/if}}
+    </div>
+    <div class="box-footer text-center">
+      <LinkTo @route="app.workflow.index" class="btn btn-link" data-btn="all-workflows">{{t "views.app.agent.workflows.all"}}</LinkTo>
+    </div>
+  </div>
+</AccessControl>
