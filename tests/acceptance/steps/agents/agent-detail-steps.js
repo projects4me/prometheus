@@ -1,5 +1,6 @@
 /* global server */
 import { visit, settled, click } from '@ember/test-helpers';
+import { Response } from 'miragejs';
 import steps from '../steps';
 import agentFixtureSteps from './agent-fixtures';
 
@@ -24,6 +25,29 @@ export default function (assert) {
 			server.create('workflownode', { workflowId: workflow.id, category: 'trigger', kind });
 			let node = server.create('workflownode', { workflowId: workflow.id, category: 'actor', kind: 'run_agent', config: JSON.stringify({ agentId: record.id }) });
 			server.create('workflowreference', { workflowId: workflow.id, nodeId: node.id, entityType: 'Agent', entityId: record.id });
+		})
+		.given('Gaia rejects an activity sort that carries its order', function () {
+			// Gaia builds the ORDER BY from `sort` and `order`; a direction inside `sort` is a PHQL syntax error.
+			server.get('/activity', (schema, request) => {
+				if (/\s/.test(request.queryParams.sort ?? '')) {
+					return new Response(404, { 'Content-Type': 'text/plain' }, 'PhalconException: Syntax error, unexpected token DESC');
+				}
+				return schema.activities.all();
+			});
+		})
+		.given('Gaia fails to load agents', function () {
+			server.get('/agent', () => new Response(500, {}, { errors: [{ status: '500', title: 'Internal Server Error' }] }));
+		})
+		.when('User opens the $page page of an agent that does not exist', async function (page) {
+			await visit(page === 'edit' ? '/app/agent/edit/no-such-agent' : '/app/agent/no-such-agent');
+		})
+		.then('The page not found error is shown', function () {
+			assert.ok(document.querySelector('.error-page .headline.text-warning'), 'The 404 error page is shown');
+			assert.notOk(document.querySelector('[data-agent-box="header"]'), 'No agent is shown');
+		})
+		.then('The server error is shown', function () {
+			assert.ok(document.querySelector('.error-page .headline.text-red'), 'The 500 error page is shown');
+			assert.notOk(document.querySelector('[data-agent-box="header"]'), 'No agent is shown');
 		})
 		.when('User opens the detail page of agent "$name"', async function (name) {
 			let agent = server.schema.agents.findBy({ name });
