@@ -223,7 +223,8 @@ export default class AppAgentCreateController extends PrometheusCreateController
     }
 
     /**
-     * Saves what lives on the agent's user: its status, role assignments and project memberships.
+     * Saves what lives on the agent's user: its status, role assignments and project memberships. When one of
+     * them fails it rejects with the names of the failed steps in `failedSteps` and the first failure in `cause`.
      *
      * @method afterSave
      * @param {Prometheus.Models.Agent} agent the saved agent
@@ -232,16 +233,23 @@ export default class AppAgentCreateController extends PrometheusCreateController
     async afterSave(agent) {
         let userId = agent.userId;
         let status = this.active ? 'active' : 'inactive';
-        let work = [];
+        let steps = {};
 
         if (agent.user && agent.user.accountStatus !== status) {
             agent.user.set('accountStatus', status);
-            work.push(agent.user.save());
+            steps.status = [agent.user.save()];
         }
-        work.push(...this.syncMembers('userrole', 'roleId', this.selectedRoles, this.current.userroles, userId));
-        work.push(...this.syncMembers('membership', 'projectId', this.selectedProjects, this.current.memberships, userId));
+        steps.roles = this.syncMembers('userrole', 'roleId', this.selectedRoles, this.current.userroles, userId);
+        steps.projects = this.syncMembers('membership', 'projectId', this.selectedProjects, this.current.memberships, userId);
 
-        await Promise.all(work);
+        let names = Object.keys(steps);
+        let results = await Promise.all(names.map((name) => Promise.allSettled(steps[name])));
+        let failedSteps = names.filter((name, index) => results[index].some((result) => result.status === 'rejected'));
+
+        if (failedSteps.length) {
+            let cause = results.flat().find((result) => result.status === 'rejected').reason;
+            throw Object.assign(new Error('afterSave failed'), { failedSteps, cause });
+        }
     }
 
     /**
@@ -261,7 +269,7 @@ export default class AppAgentCreateController extends PrometheusCreateController
         let removed = existing.filter((record) => !chosen.includes(record[field]));
 
         return [
-            ...added.map((id) => this.store.createRecord(modelName, { userId, [field]: id, deleted: '0' }).save()),
+            ...added.map((id) => this.store.createRecord(modelName, { userId, [field]: id }).save()),
             ...removed.map((record) => record.destroyRecord())
         ];
     }
@@ -273,6 +281,21 @@ export default class AppAgentCreateController extends PrometheusCreateController
      */
     getSuccessMessage(agent) {
         return htmlSafe(this.intl.t('views.app.agent.saved', { name: agent.name }));
+    }
+
+    /**
+     * @method getAfterSaveErrorMessage
+     * @param {Prometheus.Models.Agent} agent the saved agent
+     * @param {Object} error the error with the `failedSteps` of `afterSave`
+     * @return {String}
+     */
+    getAfterSaveErrorMessage(agent, error) {
+        let failedSteps = error?.failedSteps ?? [];
+        if (!failedSteps.length) {
+            return super.getAfterSaveErrorMessage(agent, error);
+        }
+        let steps = failedSteps.map((step) => this.intl.t(`views.app.agent.saveStep.${step}`)).join(', ');
+        return this.intl.t('views.app.agent.savedWithErrors', { name: agent.name, steps });
     }
 
     /**
