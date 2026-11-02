@@ -154,7 +154,8 @@
         "milestone": "Milestone",
         "file": "File",
         "membership": "Membership",
-        "userrole": "User Role"
+        "userrole": "User Role",
+        "workflow": "Workflow"
       },
       "plural": {
         "project": "Projects",
@@ -175,7 +176,8 @@
         "file": "Files",
         "membership": "Memberships",
         "userrole": "User Roles",
-        "agent": "Agents"
+        "agent": "Agents",
+        "workflow": "Workflows"
       },
       "project": {
         "relationships": {
@@ -2177,6 +2179,25 @@
         }
       },
       "workflow": {
+        "list": {
+          "subtitle": "Automations with users and agents as actors",
+          "savedsearch": "Saved Searches",
+          "search": "Search workflows ..",
+          "new": "New workflow",
+          "name": "Workflow",
+          "description": "Description",
+          "trigger": "Trigger",
+          "scope": "Scope",
+          "actors": "Actors",
+          "runs": "Runs (7 days)",
+          "lastRun": "Last run",
+          "noWorkflows": "No workflows found",
+          "noTrigger": "No trigger",
+          "allProjects": "All projects",
+          "neverRun": "never",
+          "unknownActor": "Unknown",
+          "sponsorOf": "{name}'s sponsor"
+        },
         "status": {
           "Draft": "Draft",
           "Active": "Active",

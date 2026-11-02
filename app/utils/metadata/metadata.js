@@ -172,6 +172,14 @@ export default Object.extend({
                 }
             },
             adminItems: {
+                Workflows: {
+                    label: 'views.nav.menu.workflow.label',
+                    icon: 'sitemap',
+                    route: 'app.workflow',
+                    anchorRoute: 'workflow',
+                    aclContext: 'workflow.read',
+                    projectRelated: false
+                },
                 Agents: {
                     label: 'global.module.plural.agent',
                     icon: 'android',
