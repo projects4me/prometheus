@@ -42,6 +42,7 @@ import * as Ideaplan from './route-handlers/ideaplan';
 import * as Workflow from './route-handlers/workflow';
 import * as Workflownode from './route-handlers/workflownode';
 import * as Workflowedge from './route-handlers/workflowedge';
+import * as Workflowrun from './route-handlers/workflowrun';
 import * as Ideaplanissue from './route-handlers/ideaplanissue';
 
 export function makeServer(config) {
@@ -101,5 +102,6 @@ function routes() {
     Workflow.register(this, ctx);
     Workflownode.register(this, ctx);
     Workflowedge.register(this, ctx);
+    Workflowrun.register(this, ctx);
     Ideaplanissue.register(this, ctx);
 }

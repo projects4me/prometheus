@@ -8,6 +8,7 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { bounds } from 'prometheus/utils/workflow/node-geometry';
+import RunSession from 'prometheus/utils/workflow/run-session';
 
 /**
  * The statuses of a workflow
@@ -77,6 +78,25 @@ export default class AppWorkflowPageController extends Controller {
     @service workflowGraph;
 
     /**
+     * @property workflowRuns
+     * @type Ember.Service
+     * @public
+     */
+    @service workflowRuns;
+
+    /**
+     * The runs panels and the run drawn on the flow
+     *
+     * @property runSession
+     * @type RunSession
+     * @public
+     */
+    runSession = new RunSession({
+        service: this.workflowRuns,
+        onFailure: (kind, error) => this._postRunFailure(kind, error)
+    });
+
+    /**
      * The node shown in the properties box
      *
      * @property selectedNode
@@ -142,6 +162,69 @@ export default class AppWorkflowPageController extends Controller {
         }
         let savedStatus = workflow.changedAttributes().status?.[0] ?? status;
         return savedStatus === 'Active';
+    }
+
+    /**
+     * The path of the shown run over the flow, null when no run is shown
+     *
+     * @property trace
+     * @type RunTrace
+     * @public
+     */
+    get trace() {
+        return this.runSession.trace;
+    }
+
+    /**
+     * Opens the list of the workflow's runs
+     *
+     * @method showRuns
+     * @public
+     */
+    @action showRuns() {
+        return this.runSession.showRuns(this.model.workflow.id);
+    }
+
+    /**
+     * Opens the test run form
+     *
+     * @method showTestRun
+     * @public
+     */
+    @action showTestRun() {
+        this.runSession.open('test');
+    }
+
+    /**
+     * Closes the open panel and the run drawn on the flow
+     *
+     * @method closePanel
+     * @public
+     */
+    @action closePanel() {
+        this.runSession.close();
+    }
+
+    /**
+     * Draws a stored run on the flow with its steps
+     *
+     * @method selectRun
+     * @param {Prometheus.Models.Workflowrun} run
+     * @public
+     */
+    @action selectRun(run) {
+        return this.runSession.selectRun(run);
+    }
+
+    /**
+     * Simulates the workflow for a record and draws the path it takes
+     *
+     * @method runTest
+     * @param {String} entityId
+     * @public
+     */
+    @action runTest(entityId) {
+        return this.runSession.testRun(this.model.workflow.id, entityId);
     }
 
     /**
@@ -270,8 +353,7 @@ export default class AppWorkflowPageController extends Controller {
             }
             this.afterSave(workflow, problems);
         } catch (error) {
-            let messages = (Array.isArray(error?.errors) ? error.errors : []).map(entry => entry?.detail).filter(Boolean);
-            this._post(messages.length ? messages.map(escapeHtml).join('<br>') : this.intl.t('views.app.workflow.editor.saveFailed'), 'error');
+            this._post(this._errorMessage(error, this.intl.t('views.app.workflow.editor.saveFailed')), 'error');
         } finally {
             if (!this.isDestroying && !this.isDestroyed) {
                 this.isSaving = false;
@@ -305,6 +387,36 @@ export default class AppWorkflowPageController extends Controller {
         } catch (e) {
             return [];
         }
+    }
+
+    /**
+     * Toasts a failed runs request
+     *
+     * @method _postRunFailure
+     * @param {String} kind 'load' or 'test'
+     * @param {Error} error
+     * @private
+     */
+    _postRunFailure(kind, error) {
+        if (kind === 'test') {
+            this._post(this._errorMessage(error, this.intl.t('views.app.workflow.testRun.failed')), 'error');
+        } else {
+            this._post(this.intl.t('views.app.workflow.runs.loadFailed'), 'error');
+        }
+    }
+
+    /**
+     * The escaped messages of a Gaia error response, or the fallback when it has none
+     *
+     * @method _errorMessage
+     * @param {Error} error
+     * @param {String} fallback
+     * @return {String}
+     * @private
+     */
+    _errorMessage(error, fallback) {
+        let messages = (Array.isArray(error?.errors) ? error.errors : []).map(entry => entry?.detail).filter(Boolean);
+        return messages.length ? messages.map(escapeHtml).join('<br>') : fallback;
     }
 
     /**
