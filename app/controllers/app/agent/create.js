@@ -290,7 +290,11 @@ export default class AppAgentCreateController extends PrometheusCreateController
      * @return {String}
      */
     getAfterSaveErrorMessage(agent, error) {
-        let steps = (error?.failedSteps ?? []).map((step) => this.intl.t(`views.app.agent.saveStep.${step}`)).join(', ');
+        let failedSteps = error?.failedSteps ?? [];
+        if (!failedSteps.length) {
+            return super.getAfterSaveErrorMessage(agent, error);
+        }
+        let steps = failedSteps.map((step) => this.intl.t(`views.app.agent.saveStep.${step}`)).join(', ');
         return this.intl.t('views.app.agent.savedWithErrors', { name: agent.name, steps });
     }
 
