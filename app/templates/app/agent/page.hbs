@@ -106,6 +106,49 @@
         </div>
 
         <Agent::Workflows @agent={{this.model}} />
+
+        <div class="box box-success" data-agent-box="tools">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.agent.detail.tools"}}</h3>
+            <div class="box-tools pull-right">
+              <LinkTo @route="app.agent.tools" class="btn btn-box-tool" title={{t "views.nav.menu.agent.tools"}}><i class="fa fa-wrench"></i></LinkTo>
+            </div>
+          </div>
+          <div class="box-body no-padding">
+            <table class="table">
+              <tbody>
+                {{#each this.grantedTools as |grant|}}
+                  <tr data-agent-tool={{grant.name}}>
+                    <td>
+                      <code>{{grant.name}}</code>
+                      {{#if grant.isServer}}<span class="label label-default">{{t "views.app.agent.detail.wholeServer"}}</span>{{/if}}
+                      {{#if grant.server}}<span class="text-muted small">{{grant.server}}</span>{{/if}}
+                    </td>
+                    <td><code>{{grant.permissionRule}}</code></td>
+                  </tr>
+                {{else}}
+                  <tr><td class="text-muted">{{t "views.app.agent.detail.noTools"}}</td></tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="box box-success" data-agent-box="skills">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.agent.detail.skills"}}</h3>
+            <div class="box-tools pull-right">
+              <LinkTo @route="app.agent.skills" class="btn btn-box-tool" title={{t "views.nav.menu.agent.skills"}}><i class="fa fa-book"></i></LinkTo>
+            </div>
+          </div>
+          <div class="box-body">
+            {{#each this.grantedSkills as |skill|}}
+              <span class="label label-default" data-agent-skill={{skill.name}}>{{skill.name}}{{#if skill.version}} v{{skill.version}}{{/if}}</span>
+            {{else}}
+              <span class="text-muted">{{t "views.app.agent.detail.noSkills"}}</span>
+            {{/each}}
+          </div>
+        </div>
       </div>
 
       <div class="col-md-4">

@@ -57,6 +57,22 @@ export default class AppAgentPageController extends PrometheusCreateController {
     memberships = [];
 
     /**
+     * The tools and tool servers granted to the agent.
+     *
+     * @property grantedTools
+     * @type Array
+     */
+    grantedTools = [];
+
+    /**
+     * The skills granted to the agent.
+     *
+     * @property grantedSkills
+     * @type Array
+     */
+    grantedSkills = [];
+
+    /**
      * Whether the whole role prompt is shown instead of its first lines.
      *
      * @property showWholePrompt

@@ -1,0 +1,139 @@
+<section class="content-header">
+  <h1>
+    {{t "views.app.agent.skills.title"}}
+    <small>{{t "views.app.agent.skills.subtitle"}}</small>
+  </h1>
+  <BreadCrumb/>
+</section>
+
+<section class="content">
+  <div class="row agent-catalog" data-catalog="skills">
+    <AccessControl @aclContext="agent.read">
+      <div class="col-md-4">
+        <div class="box box-primary" data-catalog-box="skill-list">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.agent.skills.title"}}</h3>
+            <div class="box-tools pull-right">
+              <AccessControl @aclContext="agent.update">
+                <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="new-skill" @onClick={{this.newSkill}}>
+                  <i class="fa fa-plus"></i> {{t "views.app.agent.skills.newSkill"}}
+                </AppUi::Button>
+              </AccessControl>
+            </div>
+          </div>
+          <div class="box-body no-padding">
+            <ul class="nav nav-stacked">
+              {{#each this.skillRows as |row|}}
+                <li class={{if row.isSelected "active"}} data-skill={{row.skill.name}}>
+                  <a href="#" data-btn="select-skill" {{on "click" (fn this.selectSkill row.skill)}}>
+                    <strong>{{row.skill.name}}</strong>
+                    <span class="pull-right text-muted small">
+                      {{#if row.skill.version}}v{{row.skill.version}} · {{/if}}{{t "views.app.agent.skills.agentCount" count=row.agentCount}}
+                    </span>
+                    <div class="text-muted small">{{row.skill.description}}</div>
+                  </a>
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        {{#if this.error}}
+          <div class="alert alert-danger" data-catalog-error={{this.error}}>{{t (concat "views.app.agent.skills.errors." this.error)}}</div>
+        {{/if}}
+
+        <div class="box box-info" data-catalog-box="skill-editor">
+          <div class="box-header with-border">
+            <h3 class="box-title">
+              {{#if this.selectedSkill}}
+                {{t "views.app.agent.skills.skillName" name=this.selectedSkill.name}}
+              {{else}}
+                {{t "views.app.agent.skills.newSkill"}}
+              {{/if}}
+            </h3>
+            {{#if this.selectedSkill.modifiedUserName}}
+              <div class="box-tools pull-right text-muted small">
+                {{t "views.app.agent.skills.edited" user=this.selectedSkill.modifiedUserName}}
+              </div>
+            {{/if}}
+          </div>
+          <form class="box-body" {{on "submit" this.save}}>
+            <div class="row">
+              <div class="col-md-8">
+                <FormFields::FieldText
+                  @label={{t "views.app.agent.skills.name"}}
+                  @value={{this.draft.name}}
+                  @data-field="skill.name"
+                  @length="100"
+                />
+              </div>
+              <div class="col-md-4">
+                <FormFields::FieldText
+                  @label={{t "views.app.agent.skills.version"}}
+                  @value={{this.draft.version}}
+                  @data-field="skill.version"
+                  @length="25"
+                />
+              </div>
+            </div>
+            <FormFields::FieldTextArea
+              @label={{t "views.app.agent.skills.description"}}
+              @value={{this.draft.description}}
+              @data-field="skill.description"
+            />
+            <FormFields::FieldTextArea
+              @label={{t "views.app.agent.skills.content"}}
+              @value={{this.draft.content}}
+              @data-field="skill.content"
+            />
+
+            <AccessControl @aclContext="agent.update">
+              <AppUi::Button type="button" class="btn btn-primary" data-btn="save-skill" @onClick={{this.save}}>{{t "global.form.save"}}</AppUi::Button>
+              <AppUi::Button type="button" class="btn btn-default" data-btn="cancel-skill" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
+            </AccessControl>
+          </form>
+        </div>
+
+        {{#if this.selectedSkill}}
+          <div class="box box-warning" data-catalog-box="skill-grants">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "views.app.agent.skills.usedBy"}}</h3>
+            </div>
+            <div class="box-body">
+              {{#each this.grantRows as |row|}}
+                <span class="label label-default agent-grant" data-grant={{row.agentName}}>
+                  {{row.agentName}}
+                  <AccessControl @aclContext="agent.update">
+                    <a href="#" data-btn="remove-grant" {{on "click" (fn this.removeGrant row.grant)}}><i class="fa fa-times"></i></a>
+                  </AccessControl>
+                </span>
+              {{else}}
+                <p class="text-muted">{{t "views.app.agent.skills.noGrants"}}</p>
+              {{/each}}
+
+              <AccessControl @aclContext="agent.update">
+                <div class="row">
+                  <div class="col-md-8">
+                    <FormFields::FieldRelate
+                      @label={{t "views.app.agent.tools.grantAgent"}}
+                      @options={{this.grantableAgents}}
+                      @selected={{find-by "value" this.grantAgentId this.grantableAgents}}
+                      @onchange={{this.selectGrantAgent}}
+                      @relateType="relate-simple"
+                      @data-field="agentskill.agentId"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="add-grant" @onClick={{this.addGrant}}>{{t "views.app.agent.tools.addGrant"}}</AppUi::Button>
+                  </div>
+                </div>
+              </AccessControl>
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    </AccessControl>
+  </div>
+</section>
