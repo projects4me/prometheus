@@ -134,6 +134,14 @@ module("Unit | Controller | app/project/issue/page live events", function (hooks
     assert.equal(toasts.length, 1, "no toast for a delete");
   });
 
+  test("a comment deleted while its lookup is pending is not added", async function (assert) {
+    let { comments } = setup(this.owner);
+    emitDomainEvent(this.owner, comment("conversation.comment.created", "c2", "room1"));
+    emitDomainEvent(this.owner, comment("conversation.comment.deleted", "c2", "room1"));
+    await tick();
+    assert.deepEqual(comments.map((c) => c.id), ["c1"]);
+  });
+
   test("a toast shows only for another actor", async function (assert) {
     let { issue } = setup(this.owner);
     emitDomainEvent(this.owner, status("i1", { status: "in_progress" }, "u1"));

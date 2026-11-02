@@ -71,6 +71,15 @@ export default class AppProjectIssuePageController extends PrometheusController 
     assigneeSequence = 0;
 
     /**
+     * Ids of comments deleted remotely, so a pending created lookup does not add them back
+     *
+     * @property deletedCommentIds
+     * @type Set
+     * @private
+     */
+    deletedCommentIds = new Set();
+
+    /**
      * Registers the events of the open issue with Hermes for the tracked project
      *
      * @method registerHermesIntents
@@ -80,6 +89,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
      */
     registerHermesIntents(projectId) {
         this.unregisterHermesIntents();
+        this.deletedCommentIds = new Set();
         if (!projectId) {
             return;
         }
@@ -272,12 +282,12 @@ export default class AppProjectIssuePageController extends PrometheusController 
     async applyCommentCreated(envelope) {
         let issue = this.issue;
         let id = String(envelope.resource.id);
-        if (issue.comments.findBy('id', id)) {
+        if (this.deletedCommentIds.has(id) || issue.comments.findBy('id', id)) {
             return;
         }
         try {
             let comment = await this.store.findRecord('comment', id);
-            if (!this.isStillOpen(issue)) {
+            if (!this.isStillOpen(issue) || this.deletedCommentIds.has(id)) {
                 return;
             }
             if (issue.comments.findBy('id', comment.id)) {
@@ -324,6 +334,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
      */
     applyCommentDeleted(envelope) {
         let id = String(envelope.resource.id);
+        this.deletedCommentIds.add(id);
         let comment = this.issue.comments.findBy('id', id);
         if (!comment) {
             return;

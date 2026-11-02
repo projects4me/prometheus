@@ -14,6 +14,15 @@ export default function (assert) {
 	let toasts = [];
 	let originalMessenger;
 
+	// Restore the real Messenger after every test, also when a step failed before the last one
+	QUnit.testDone(() => {
+		if (originalMessenger) {
+			window.Messenger = originalMessenger;
+			originalMessenger = null;
+		}
+		toasts.length = 0;
+	});
+
 	function pageController(context) {
 		return context.owner.lookup('controller:app.project.issue.page');
 	}
@@ -23,6 +32,7 @@ export default function (assert) {
 			let issue = server.schema.issues.findBy({ issueNumber: parseInt(number, 10) });
 			issue.update({ conversationRoomId: room });
 			originalMessenger = window.Messenger;
+			toasts.length = 0;
 			window.Messenger = function () {
 				return { post: (options) => toasts.push(options) };
 			};
@@ -47,6 +57,5 @@ export default function (assert) {
 		})
 		.then('$count toasts were shown', async function (count) {
 			assert.equal(toasts.length, parseInt(count, 10), 'One toast per remote change');
-			window.Messenger = originalMessenger;
 		});
 }
