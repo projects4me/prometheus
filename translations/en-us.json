@@ -2395,6 +2395,20 @@
           "copiedIt": "I have copied it",
           "forMachine": "For the machine that runs this agent",
           "orConfigure": "Or run dev-tools/installer/p4m configure and paste it when asked."
+        },
+        "workflows": {
+          "title": "Workflows",
+          "referencedIn": "Referenced in",
+          "status": "Status",
+          "none": "No workflow references this agent.",
+          "all": "All workflows",
+          "loadFailed": "The workflows could not be loaded",
+          "places": {
+            "trigger": "Trigger",
+            "condition": "Filter",
+            "actor": "Run agent",
+            "action": "Action"
+          }
         }
       }
     },
