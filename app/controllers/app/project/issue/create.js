@@ -263,6 +263,66 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
     }
 
     /**
+     * The agents of the system, to tell which members are agents and who they run for.
+     *
+     * @property agents
+     * @type Array
+     * @public
+     */
+    agents = [];
+
+    /**
+     * Active members grouped for the assignee picker: People, then Agents. An agent option carries
+     * `isAgent` and the name of the sponsor it runs for. An empty group is left out.
+     *
+     * @property assigneeGroups
+     * @type Array
+     * @public
+     */
+    get assigneeGroups() {
+        return this.assigneeGroupsFor(this.activeMembersList);
+    }
+
+    /**
+     * The options of `assigneeGroups` as one flat list, to find the selected option in.
+     *
+     * @property assigneeOptions
+     * @type Array
+     * @public
+     */
+    get assigneeOptions() {
+        return this.assigneeGroups.flatMap((group) => group.options);
+    }
+
+    /**
+     * Splits member options into the People and Agents groups.
+     *
+     * @method assigneeGroupsFor
+     * @param {Array} options the member options
+     * @return {Array}
+     * @private
+     */
+    assigneeGroupsFor(options) {
+        let sponsors = new Map((this.agents ?? []).map((agent) => [String(agent.userId), agent.sponsor?.name ?? null]));
+        let people = [];
+        let agents = [];
+
+        for (let option of options) {
+            let member = (this.project?.members ?? []).find((m) => m.id === option.value);
+            if (member?.type === 'agent') {
+                agents.push({ ...option, isAgent: true, sponsorName: sponsors.get(String(option.value)) ?? null });
+            } else {
+                people.push(option);
+            }
+        }
+
+        return [
+            { groupName: this.intl.t('views.app.issue.create.people'), options: people },
+            { groupName: this.intl.t('views.app.issue.create.agents'), options: agents }
+        ].filter((group) => group.options.length > 0);
+    }
+
+    /**
      * This estimates for this issue
      *
      * @property estimates

@@ -87,6 +87,20 @@
   }
 }
 
+.relate-user.relate-agent {
+  .agent-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0.2rem 0;
+    font-size: 1.4rem;
+  }
+
+  .agent-sponsor {
+    font-size: 11px;
+    line-height: 2.9rem;
+  }
+}
+
 .agent-credentials {
   .agent-credentials-actions .btn {
     margin-right: 5px;

@@ -1,6 +1,11 @@
-<span class="relate-user">
-  {{#if @data.value}}
+<span class="relate-user {{if @data.isAgent "relate-agent"}}">
+  {{#if @data.isAgent}}
+    <Agent::Avatar data-relate-agent-avatar />
+  {{else if @data.value}}
     <img src="{{this.apiHost}}/userimage/get/{{@data.value}}" class="user-relate-icon" alt="{{t "global.form.image"}}">
   {{/if}}
   <span class="username">{{@data.label}}</span>
+  {{#if @data.sponsorName}}
+    <span class="pull-right text-muted agent-sponsor" data-relate-agent-sponsor>{{t "views.app.issue.create.runsFor" sponsor=@data.sponsorName}}</span>
+  {{/if}}
 </span>
