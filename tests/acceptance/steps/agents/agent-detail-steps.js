@@ -29,14 +29,30 @@ export default function (assert) {
 		.given('Gaia rejects an activity sort that carries its order', function () {
 			// Gaia builds the ORDER BY from `sort` and `order`; a direction inside `sort` is a PHQL syntax error.
 			server.get('/activity', (schema, request) => {
-				if (/\s/.test(request.queryParams.sort ?? '')) {
+				let { sort, order } = request.queryParams;
+				if (/\s/.test(sort ?? '')) {
 					return new Response(404, { 'Content-Type': 'text/plain' }, 'PhalconException: Syntax error, unexpected token DESC');
+				}
+				if (sort !== 'Activity.dateCreated' || order !== 'DESC') {
+					return new Response(400, {}, { errors: [{ status: '400', title: 'Unexpected activity sort' }] });
 				}
 				return schema.activities.all();
 			});
 		})
 		.given('Gaia fails to load agents', function () {
 			server.get('/agent', () => new Response(500, {}, { errors: [{ status: '500', title: 'Internal Server Error' }] }));
+		})
+		.given('Gaia fails to load user roles', function () {
+			server.get('/userrole', () => new Response(500, {}, { errors: [{ status: '500', title: 'Internal Server Error' }] }));
+		})
+		.when('User opens the edit page of agent "$name"', async function (name) {
+			let agent = server.schema.agents.findBy({ name });
+			await visit(`/app/agent/edit/${agent.id}`);
+			await settled();
+			assert.ok(true, `User opened the edit page of ${name}`);
+		})
+		.then('The agent form is not shown', function () {
+			assert.notOk(document.querySelector('[data-field="agent.name"]'), 'The agent form is not shown');
 		})
 		.when('User opens the $page page of an agent that does not exist', async function (page) {
 			await visit(page === 'edit' ? '/app/agent/edit/no-such-agent' : '/app/agent/no-such-agent');

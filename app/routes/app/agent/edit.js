@@ -58,6 +58,7 @@ export default class AppAgentEditRoute extends AppAgentCreateRoute {
             this.current = { userroles: userroles.toArray(), memberships: memberships.toArray() };
         } catch (error) {
             this.errorManager.handleLoadError(error, { moduleName: 'agent' });
+            this.loadFailed = true;
         }
     }
 
@@ -70,7 +71,7 @@ export default class AppAgentEditRoute extends AppAgentCreateRoute {
         controller.set('notFound', !model && !this.loadFailed);
         controller.set('loadFailed', this.loadFailed);
         controller.set('model', model);
-        if (!model) {
+        if (!model || this.loadFailed) {
             return;
         }
         controller.setupForm(this.options, this.current);
