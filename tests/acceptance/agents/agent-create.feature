@@ -64,7 +64,9 @@ Feature: Agents | create
     When User picks "Alpha" in the agent projects field
     And User picks "Zeta" in the agent projects field
     And User removes "Zeta" from the agent projects field
-    And User picks "Reviewer" in the agent roles field
+    And User searches "rev" in the agent roles field
+    Then The agent roles list shows "Reviewer" in that order
+    When User picks "Reviewer" in the agent roles field
     Then The agent projects field shows "Mango, Alpha"
     And The agent roles field shows "Reviewer"
     When User saves the agent
