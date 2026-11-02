@@ -2,7 +2,7 @@
 
   <div class="profile-picture" data-field="user.image">
 
-    <a href="#" {{action this.selectImage}}>
+    <a href="#" aria-label={{t "views.app.user.profilePicture.edit"}} {{action this.selectImage}}>
       {{#if (has-block)}}
         {{yield}}
       {{else}}

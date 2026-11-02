@@ -66,8 +66,9 @@ export default class AppAgentPageController extends PrometheusCreateController {
      */
     @action
     async applyCrop(croppedBase64) {
-        await this.profilePicture.save(this.model.user, croppedBase64);
-        this.cropImageSrc = null;
+        if (await this.profilePicture.save(this.model.user, croppedBase64)) {
+            this.cropImageSrc = null;
+        }
     }
 
     /**
