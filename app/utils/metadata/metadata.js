@@ -172,6 +172,33 @@ export default Object.extend({
                 }
             },
             adminItems: {
+                Agents: {
+                    label: 'global.module.plural.agent',
+                    icon: 'android',
+                    route: 'app.agent',
+                    anchorRoute: 'agent',
+                    aclContext: 'agent.read',
+                    projectRelated: false,
+                    actions: {
+                        section1: {
+                            list: {
+                                label: 'views.nav.menu.agent.list',
+                                route: 'app.agent',
+                                className: 'text-teal',
+                                anchorRoute: 'agent',
+                                projectRelated: false,
+                            },
+                            create: {
+                                label: 'views.nav.menu.agent.create',
+                                route: 'app.agent.create',
+                                className: 'text-red',
+                                anchorRoute: 'agent/create',
+                                projectRelated: false,
+                                aclContext: 'agent.create',
+                            }
+                        }
+                    }
+                },
                 Settings: {
                     label: 'views.nav.menu.settings.label',
                     icon: 'cogs',

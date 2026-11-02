@@ -65,6 +65,16 @@ export default Model.extend({
     accountStatus: attr('string'),
 
     /**
+     * The kind of account: `human` or `agent`.
+     *
+     * @property type
+     * @type String
+     * @for User
+     * @private
+     */
+    type: attr('string', { defaultValue: 'human' }),
+
+    /**
      * User preferred language.
      *
      * @property language

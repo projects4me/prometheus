@@ -72,7 +72,8 @@ export default Component.extend({
      */
     controllerPaths: {
         'issue': 'app.project.issue.index',
-        'project': 'app.projects.index'
+        'project': 'app.projects.index',
+        'agent': 'app.agent.index'
     },
 
 
