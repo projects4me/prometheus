@@ -25,8 +25,8 @@ export default class AppAgentCreateRoute extends AppRoute {
             this.store.query('project', { limit: -1 })
         ]);
         return {
-            roles: roles.toArray().map((role) => ({ label: role.name, value: role.id })),
-            projects: projects.toArray().map((project) => ({ label: project.name, value: project.id }))
+            roles: this.toOptions(roles),
+            projects: this.toOptions(projects)
         };
     }
 
@@ -43,6 +43,20 @@ export default class AppAgentCreateRoute extends AppRoute {
             this.errorManager.handleError(error, { moduleName: 'agent' });
             return { roles: [], projects: [] };
         }
+    }
+
+    /**
+     * Maps records to select options, sorted by name. Sorted here rather than in the query so the order is
+     * case-insensitive.
+     *
+     * @method toOptions
+     * @param {Array} records the roles or projects
+     * @return {Array<Object>} `{ label, value }` options
+     */
+    toOptions(records) {
+        return records.toArray()
+            .map((record) => ({ label: record.name, value: record.id }))
+            .sort((a, b) => (a.label ?? '').localeCompare(b.label ?? '', undefined, { sensitivity: 'base' }));
     }
 
     /**

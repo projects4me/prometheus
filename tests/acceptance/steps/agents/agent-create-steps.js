@@ -1,8 +1,14 @@
 /* global server */
-import { click, currentURL, fillIn, settled } from '@ember/test-helpers';
+import { click, currentURL, fillIn, find, findAll, settled, visit } from '@ember/test-helpers';
 import { Response } from 'miragejs';
-import { selectChoose } from 'ember-power-select/test-support/helpers';
+import { clickTrigger, removeMultipleOption, selectChoose, selectSearch } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
+
+const FIELDS = { projects: '[data-field="agent.projects"]', roles: '[data-field="agent.roles"]' };
+
+const names = (list) => list.split(',').map((name) => name.trim());
+
+const texts = (selector) => findAll(selector).map((element) => element.textContent.trim());
 
 export default function (assert) {
 	return steps(assert)
@@ -20,6 +26,36 @@ export default function (assert) {
 			await selectChoose('[data-field="agent.projects"]', project);
 			assert.ok(true, `User selected the role ${role} and the project ${project}`);
 		})
+		.given('Projects "$items" exist', function (list) {
+			names(list).forEach((name) => server.create('project', { name }));
+			assert.ok(true, `Projects ${list} exist`);
+		})
+		.given('Roles "$items" exist', function (list) {
+			names(list).forEach((name) => server.create('role', { name }));
+			assert.ok(true, `Roles ${list} exist`);
+		})
+		.then('The agent $field list shows "$items" in that order', async function (field, list) {
+			if (find(`${FIELDS[field]} .ember-power-select-trigger`).getAttribute('aria-expanded') !== 'true') {
+				await clickTrigger(FIELDS[field]);
+			}
+			assert.deepEqual(texts('.ember-power-select-option'), names(list), `The ${field} list shows ${list}`);
+		})
+		.when('User searches "$query" in the agent $field field', async function (query, field) {
+			await selectSearch(FIELDS[field], query);
+			assert.ok(true, `User searched ${query} in the ${field} field`);
+		})
+		.when('User picks "$name" in the agent $field field', async function (name, field) {
+			await selectChoose(FIELDS[field], name);
+			assert.ok(true, `User picked ${name} in the ${field} field`);
+		})
+		.when('User removes "$name" from the agent $field field', async function (name, field) {
+			await removeMultipleOption(FIELDS[field], name);
+			assert.ok(true, `User removed ${name} from the ${field} field`);
+		})
+		.then('The agent $field field shows "$items"', function (field, list) {
+			let picked = texts(`${FIELDS[field]} .ember-power-select-multiple-option`).map((text) => text.replace('×', '').trim());
+			assert.deepEqual(picked, names(list), `The ${field} field shows ${list}`);
+		})
 		.when('User enters "$value" in agent name field', async function (value) {
 			await fillIn('[data-field="agent.name"] input', value);
 			assert.ok(true, `User entered ${value} in agent name field`);
@@ -27,6 +63,11 @@ export default function (assert) {
 		.when('User enters "$value" in agent email field', async function (value) {
 			await fillIn('[data-field="agent.email"] input', value);
 			assert.ok(true, `User entered ${value} in agent email field`);
+		})
+		.when('User opens the edit page of agent "$name"', async function (name) {
+			await visit(`/app/agent/edit/${server.schema.agents.findBy({ name }).id}`);
+			await settled();
+			assert.ok(true, `User opened the edit page of ${name}`);
 		})
 		.when('User saves the agent', async function () {
 			await click('[data-btn="save"]');
@@ -59,5 +100,15 @@ export default function (assert) {
 		.then('User is on the page of agent "$name"', function (name) {
 			let agent = server.schema.agents.findBy({ name });
 			assert.equal(currentURL(), `/app/agent/${agent.id}`, `User is on the page of agent ${name}`);
+		})
+		.then('Agent "$name" is a member of the projects "$items"', function (name, list) {
+			let userId = server.schema.agents.findBy({ name }).userId;
+			let projects = server.schema.memberships.where({ userId }).models.map((membership) => server.schema.projects.find(membership.projectId).name);
+			assert.deepEqual(projects.sort(), names(list), `Agent ${name} is a member of ${list}`);
+		})
+		.then('Agent "$name" has the roles "$items"', function (name, list) {
+			let userId = server.schema.agents.findBy({ name }).userId;
+			let roles = server.schema.userroles.where({ userId }).models.map((userrole) => server.schema.roles.find(userrole.roleId).name);
+			assert.deepEqual(roles.sort(), names(list), `Agent ${name} has the roles ${list}`);
 		});
 }
