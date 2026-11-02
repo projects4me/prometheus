@@ -120,6 +120,10 @@
           />
         {{/if}}
         <div class="issue-status-color" data-field="issuestatus.color">
+          <div class="issue-status-color-preview" data-field="issuestatus.color.preview">
+            <span class="text-muted">{{t "views.app.settings.issueStatuses.colorPreview"}}:</span>
+            <span class="label" style={{this.previewStyle}}>{{this.previewLabel}}</span>
+          </div>
           <div class="issue-status-color-fields">
             <FormFields::FieldText
               @type="color"
@@ -136,10 +140,6 @@
               @searchEnabled={{false}}
               @data-field="issuestatus.textColor"
             />
-          </div>
-          <div class="issue-status-color-preview" data-field="issuestatus.color.preview">
-            <span class="text-muted">{{t "views.app.settings.issueStatuses.colorPreview"}}:</span>
-            <span class="label" style={{this.previewStyle}}>{{this.previewLabel}}</span>
           </div>
         </div>
         <div class="form-field" data-field="issuestatus.done">
