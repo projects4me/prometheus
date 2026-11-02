@@ -7,6 +7,17 @@ const field = (name) => document.querySelector(`[data-agent-field="${name}"]`)?.
 
 export default function (assert) {
 	return agentFixtureSteps(steps(assert))
+		.given('Agent "$name" has $count activities', function (name, count) {
+			let agent = server.schema.agents.findBy({ name });
+			server.createList('activity', Number(count), { createdUser: agent.userId, relatedTo: 'agent', relatedId: agent.id, type: 'updated' });
+			assert.ok(true, `Agent ${name} has ${count} activities`);
+		})
+		.then('The Agent Activities box shows $count activities', function (count) {
+			let box = document.querySelector('[data-agent-box="activities"]');
+
+			assert.ok(box, 'The Agent Activities box is shown');
+			assert.equal(box.querySelectorAll('[data-activity-block-type]').length, Number(count), 'activities in the box');
+		})
 		.given('The $status workflow "$name" triggers on $kind and runs the agent "$agent"', async function (status, name, kind, agent) {
 			let record = server.schema.agents.findBy({ name: agent });
 			let workflow = server.create('workflow', { name, status });

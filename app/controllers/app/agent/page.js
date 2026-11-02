@@ -57,6 +57,33 @@ export default class AppAgentPageController extends PrometheusCreateController {
     memberships = [];
 
     /**
+     * The activities the agent did or that were done to it, newest first.
+     *
+     * @property activities
+     * @type Array
+     */
+    @tracked activities = [];
+
+    /**
+     * The activities grouped by the date they were created on, in the shape the timeline component expects.
+     *
+     * @property groupedActivities
+     * @type Object
+     */
+    get groupedActivities() {
+        let groups = {};
+
+        this.activities.forEach((activity) => {
+            let date = activity.dateCreated.substring(0, 10);
+
+            groups[date] = groups[date] || { dateCreated: date, data: [] };
+            groups[date].data.push(activity);
+        });
+
+        return groups;
+    }
+
+    /**
      * The tools and tool servers granted to the agent.
      *
      * @property grantedTools

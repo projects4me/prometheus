@@ -149,6 +149,17 @@
             {{/each}}
           </div>
         </div>
+
+        <div class="box box-danger" data-agent-box="activities">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.agent.detail.activities"}}</h3>
+          </div>
+          <div class="box-body agent-activities">
+            <AppUi::Timeline @activities={{this.groupedActivities}} @dataKey="data" as |key|>
+              {{moment-format key "Do MMM. YYYY"}}
+            </AppUi::Timeline>
+          </div>
+        </div>
       </div>
 
       <div class="col-md-4">
