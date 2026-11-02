@@ -220,21 +220,36 @@ export default class PrometheusCreateController extends PrometheusController {
      * @private
      */
     _save(model, resolve, reject, showDefaultSuccessMessage = true) {
-        let _self = this;
         return model
             .save()
-            .then(function (data) {
-                _self.afterSave(data).then(function () {
-                    if (showDefaultSuccessMessage) {
-                        _self.showSuccess(data);
-                    }
-                    _self.navigateToSuccess(data);
-                    resolve();
-                });
-            })
-            .catch((e) => {
-                reject();
-            });
+            .then(
+                (data) => this._finishSave(data, showDefaultSuccessMessage)
+                    .catch((error) => Logger.error('PrometheusCreateController::_finishSave failed', error))
+                    .then(() => resolve()),
+                () => reject()
+            );
+    }
+
+    /**
+     * Runs the follow-up saves of a saved record, then tells the user and moves on. The record is already
+     * saved, so a failed follow-up is reported and the page still goes to the success route.
+     *
+     * @method _finishSave
+     * @param {Object} data the saved record
+     * @param {boolean} showDefaultSuccessMessage Whether to show the default success message.
+     * @return {Promise}
+     * @private
+     */
+    async _finishSave(data, showDefaultSuccessMessage) {
+        try {
+            await this.afterSave(data);
+            if (showDefaultSuccessMessage) {
+                this.showSuccess(data);
+            }
+        } catch (error) {
+            this.showAfterSaveError(data, error);
+        }
+        this.navigateToSuccess(data);
     }
 
     /**
@@ -332,6 +347,43 @@ export default class PrometheusCreateController extends PrometheusController {
      */
     getSuccessMessage() {
         return "";
+    }
+
+    /**
+     * This function is called when the record was saved but one of its follow-up saves in
+     * `afterSave` failed. It lets `errorManager` handle the error, or its `cause` (e.g. an expired session),
+     * and tells the user what was not saved.
+     *
+     * @method showAfterSaveError
+     * @param {Object} model the saved record
+     * @param {Object} error the error `afterSave` failed with
+     * @protected
+     */
+    showAfterSaveError(model, error) {
+        try {
+            this.errorManager.handleError(error?.cause ?? error, { moduleName: this.module });
+        } catch (unhandled) {
+            Logger.error('PrometheusCreateController::afterSave failed', unhandled);
+        }
+        new Messenger().post({
+            message: this.getAfterSaveErrorMessage(model, error),
+            type: "error",
+            showCloseButton: true,
+        });
+    }
+
+    /**
+     * This is a placeholder function that returns the message shown when a follow-up save
+     * in `afterSave` failed.
+     *
+     * @method getAfterSaveErrorMessage
+     * @param {Object} model the saved record
+     * @param {Object} error the error `afterSave` failed with
+     * @return {String}
+     * @protected
+     */
+    getAfterSaveErrorMessage() {
+        return this.intl.t("views.app.afterSaveFailed");
     }
 
     /**
