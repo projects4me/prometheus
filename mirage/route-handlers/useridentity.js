@@ -6,14 +6,14 @@ import getValueFromQuery from '../helpers/get-value-from-query';
 
 export function register(server) {
 	server.get('/useridentity', (schema, request) => {
-		let useridentitys = schema.useridentitys.all();
+		let useridentitys = schema.useridentities.all();
 		let query = request.queryParams.query;
 		let userId =
 			getValueFromQuery('Useridentity.userId', query) ??
 			getValueFromQuery('userId', query);
 
 		if (userId) {
-			useridentitys = schema.useridentitys.where({ userId: userId.trim() });
+			useridentitys = schema.useridentities.where({ userId: userId.trim() });
 		}
 
 		return useridentitys;
@@ -30,7 +30,7 @@ export function register(server) {
 
 	server.patch('/useridentity/:id', (schema, request) => {
 		let requestData = JSON.parse(request.requestBody).data;
-		let useridentity = schema.useridentitys.find(requestData.id);
+		let useridentity = schema.useridentities.find(requestData.id);
 
 		useridentity.update(requestData.attributes);
 
@@ -38,7 +38,7 @@ export function register(server) {
 	});
 
 	server.delete('/useridentity/:id', (schema, request) => {
-		let useridentity = schema.useridentitys.find(request.params.id);
+		let useridentity = schema.useridentities.find(request.params.id);
 
 		useridentity.destroy();
 

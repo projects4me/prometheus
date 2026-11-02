@@ -174,7 +174,8 @@
         "milestone": "Milestones",
         "file": "Files",
         "membership": "Memberships",
-        "userrole": "User Roles"
+        "userrole": "User Roles",
+        "agent": "Agents"
       },
       "project": {
         "relationships": {
@@ -2253,6 +2254,76 @@
           "kind": "Kind",
           "empty": "Select a step to see its properties"
         }
+      },
+      "agent": {
+        "badge": "Agent",
+        "autonomous": "Autonomous",
+        "saved": "Agent {name} saved",
+        "status": {
+          "active": "Active",
+          "disabled": "Disabled"
+        },
+        "list": {
+          "subtitle": "AI team members",
+          "savedsearch": "Saved Searches",
+          "search": "Search agents ..",
+          "agent": "Agent",
+          "name": "Name",
+          "purpose": "Purpose",
+          "sponsor": "Sponsor",
+          "models": "Models",
+          "projects": "Projects",
+          "grants": "Grants",
+          "lastActive": "Last active",
+          "noAgents": "No agents found"
+        },
+        "create": {
+          "title": "Create Agent"
+        },
+        "edit": {
+          "title": "Edit Agent"
+        },
+        "form": {
+          "name": "Name",
+          "namePlaceholder": "Agent name",
+          "email": "Email",
+          "emailPlaceholder": "agent@projects4.me",
+          "emailInfo": "The agent's login. It never has a password: it signs in with client credentials.",
+          "purpose": "Purpose",
+          "purposePlaceholder": "What the agent does",
+          "rolePrompt": "Role prompt",
+          "modelAndLimits": "Model and limits",
+          "modelSimple": "Model for simple issues",
+          "modelComplex": "Model for complex issues",
+          "escalation": "Escalate to",
+          "maxTurns": "Max turns per run",
+          "maxRunsPerIssue": "Max runs per issue",
+          "permissionMode": "Permission mode",
+          "sponsorBox": "Sponsor",
+          "onBehalfOf": "On behalf of",
+          "selectSponsor": "Select a user",
+          "sponsorInfo": "The user the agent acts on behalf of. Leave empty for an autonomous agent.",
+          "accessBox": "Access",
+          "roles": "Roles",
+          "rolesPlaceholder": "Select roles",
+          "projects": "Projects",
+          "projectsPlaceholder": "Select projects",
+          "status": "Status"
+        },
+        "detail": {
+          "title": "Agent",
+          "heading": "Agent - {name}",
+          "sponsor": "Sponsor",
+          "maxTurns": "Max turns",
+          "limits": "{turns} per run · {runs} runs per issue",
+          "modelSimple": "Model: simple",
+          "modelComplex": "Model: complex",
+          "escalatesTo": "Escalates to",
+          "showPrompt": "Show the whole prompt",
+          "hidePrompt": "Show less",
+          "rolesProjects": "Roles & Projects",
+          "memberOf": "Member of"
+        }
       }
     },
     "nav": {
@@ -2376,6 +2447,11 @@
         },
         "edit": {
           "label": "Edit"
+        },
+        "agent": {
+          "label": "Agents",
+          "list": "List Agents",
+          "create": "Create Agent"
         }
       }
     },

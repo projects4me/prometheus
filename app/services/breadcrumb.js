@@ -145,6 +145,30 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app.project.wiki.page'
 		},
+		'app.agent.index': {
+			title: 'global.module.plural.agent',
+			icon: 'android',
+			linkable: true,
+			parent: 'app'
+		},
+		'app.agent.create': {
+			title: 'views.nav.menu.agent.create',
+			icon: 'plus',
+			linkable: true,
+			parent: 'app.agent.index'
+		},
+		'app.agent.page': {
+			title: null, // Dynamic from route
+			icon: 'android',
+			linkable: true,
+			parent: 'app.agent.index'
+		},
+		'app.agent.edit': {
+			title: 'global.form.edit',
+			icon: 'edit',
+			linkable: true,
+			parent: 'app.agent.page'
+		},
 		'app.user.index': {
 			title: 'global.module.plural.user',
 			icon: 'user',

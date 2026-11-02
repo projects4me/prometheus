@@ -7,6 +7,7 @@ const MODULES = [
     'wiki',
     'user',
     'role',
+    'agent',
     'membership',
     'userrole',
     'conversationroom',

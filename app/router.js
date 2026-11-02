@@ -51,6 +51,12 @@ Router.map(function() {
       this.route('page',{path:'/:user_id'});
       this.route('management');
     });
+    this.route('agent',function(){
+      this.route('index',{path:'/'});
+      this.route('create');
+      this.route('page',{path:'/:agent_id'});
+      this.route('edit',{path:'/edit/:agent_id'});
+    });
     this.route('admin',function(){
         this.route('index',{path:'/'});
         this.route('create');

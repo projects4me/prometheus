@@ -1,0 +1,88 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/**
+  This contains the CSS related to agents in the application.
+*/
+
+.agent-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  background: $highlightColor;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.agent-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background: #f4f4f4;
+  color: $highlightColor;
+  font-size: 18px;
+  vertical-align: middle;
+
+  &.agent-avatar-lg {
+    width: 96px;
+    height: 96px;
+    font-size: 48px;
+  }
+}
+
+.agents-list {
+  .agent-cell {
+    display: flex;
+    align-items: flex-start;
+
+    .agent-avatar {
+      flex: 0 0 auto;
+      margin-right: 10px;
+    }
+
+    .agent-purpose {
+      display: block;
+    }
+  }
+
+  .agent-projects .label {
+    margin-right: 4px;
+  }
+}
+
+.agent-detail {
+  .agent-header {
+    display: flex;
+
+    .agent-identity {
+      flex: 0 0 160px;
+      text-align: center;
+    }
+
+    .agent-facts {
+      flex: 1 1 auto;
+    }
+  }
+
+  .agent-role-prompt {
+    max-height: 160px;
+    overflow: hidden;
+
+    &.expanded {
+      max-height: none;
+    }
+  }
+}
+
+.agent-form {
+  .model-limits .col-md-4 {
+    padding-left: 0;
+  }
+}
