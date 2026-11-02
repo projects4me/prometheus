@@ -157,6 +157,18 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app.agent.index'
 		},
+		'app.agent.tools': {
+			title: 'views.nav.menu.agent.tools',
+			icon: 'wrench',
+			linkable: true,
+			parent: 'app.agent.index'
+		},
+		'app.agent.skills': {
+			title: 'views.nav.menu.agent.skills',
+			icon: 'book',
+			linkable: true,
+			parent: 'app.agent.index'
+		},
 		'app.agent.page': {
 			title: null, // Dynamic from route
 			icon: 'android',

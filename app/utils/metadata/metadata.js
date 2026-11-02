@@ -203,6 +203,22 @@ export default Object.extend({
                                 anchorRoute: 'agent/create',
                                 projectRelated: false,
                                 aclContext: 'agent.create',
+                            },
+                            tools: {
+                                label: 'views.nav.menu.agent.tools',
+                                route: 'app.agent.tools',
+                                className: 'text-yellow',
+                                anchorRoute: 'agent/tools',
+                                projectRelated: false,
+                                aclContext: 'agent.read',
+                            },
+                            skills: {
+                                label: 'views.nav.menu.agent.skills',
+                                route: 'app.agent.skills',
+                                className: 'text-green',
+                                anchorRoute: 'agent/skills',
+                                projectRelated: false,
+                                aclContext: 'agent.read',
                             }
                         }
                     }

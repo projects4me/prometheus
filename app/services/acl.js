@@ -72,6 +72,8 @@ export default class AclService extends Service {
         { name: 'app.user.management', map: 'user.update' },
         { name: 'app.agent.index', map: 'agent.read' },
         { name: 'app.agent.create', map: 'agent.create' },
+        { name: 'app.agent.tools', map: 'agent.read' },
+        { name: 'app.agent.skills', map: 'agent.read' },
         { name: 'app.agent.page', map: 'agent.read' },
         { name: 'app.agent.edit', map: 'agent.update' },
         { name: 'app.admin.index', map: 'user.read' },
