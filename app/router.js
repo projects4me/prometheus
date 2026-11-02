@@ -71,6 +71,7 @@ Router.map(function() {
       this.route('email');
     });
     this.route('workflow', function() {
+      this.route('index', {path: '/'});
       this.route('create');
       this.route('page', {path: '/:workflow_id'});
     });

@@ -246,17 +246,23 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app.settings'
 		},
+		'app.workflow.index': {
+			title: 'views.nav.menu.workflow.label',
+			icon: 'sitemap',
+			linkable: true,
+			parent: 'app'
+		},
 		'app.workflow.create': {
 			title: 'views.nav.menu.workflow.create',
 			icon: 'sitemap',
 			linkable: true,
-			parent: 'app'
+			parent: 'app.workflow.index'
 		},
 		'app.workflow.page': {
 			title: null, // Dynamic from route
 			icon: 'sitemap',
 			linkable: true,
-			parent: 'app'
+			parent: 'app.workflow.index'
 		},
 		'app.role.index': {
 			title: 'global.module.plural.role',

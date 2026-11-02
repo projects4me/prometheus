@@ -212,3 +212,20 @@
     overflow: auto;
   }
 }
+
+/*
+  The workflows list: the description under the name and the actors as plain tags
+*/
+.workflows-list {
+  .workflow-description {
+    display: block;
+  }
+
+  .workflow-actor {
+    display: inline-block;
+    margin: 0 4px 4px 0;
+    padding: 1px 6px;
+    border: 1px solid $borderColor;
+    background: #fff;
+  }
+}

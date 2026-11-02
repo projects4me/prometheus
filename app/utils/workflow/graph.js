@@ -15,7 +15,7 @@ let nextKey = 0;
  * @return {Object}
  * @private
  */
-function parseConfig(text) {
+export function parseConfig(text) {
     if (!text) {
         return {};
     }
