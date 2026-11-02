@@ -37,7 +37,22 @@
           <div class="box-body">
             <div class="agent-header">
               <div class="agent-identity">
-                <Agent::Avatar @large={{true}} />
+                <AccessControl @aclContext="user.update">
+                  <:default>
+                  <User::Edit::ProfilePicture
+                    @model={{this.model.user}}
+                    @uploadImage={{this.uploadImage}}
+                    @cropImageSrc={{this.cropImageSrc}}
+                    @onApplyCrop={{this.applyCrop}}
+                    @onCancelCrop={{this.cancelCrop}}
+                  >
+                    <Agent::Avatar @large={{true}} @user={{this.model.user}} />
+                  </User::Edit::ProfilePicture>
+                  </:default>
+                  <:fallback>
+                    <Agent::Avatar @large={{true}} @user={{this.model.user}} />
+                  </:fallback>
+                </AccessControl>
                 <div><strong data-agent-field="name">{{this.model.name}}</strong></div>
                 <div class="text-muted" data-agent-field="email">{{this.model.user.email}}</div>
                 <Agent::Badge />

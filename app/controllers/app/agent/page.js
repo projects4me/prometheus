@@ -5,6 +5,7 @@
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
 
 /**
  * The controller of an agent's detail page. It extends the create controller for the validation and saving the
@@ -34,6 +35,51 @@ export default class AppAgentPageController extends PrometheusCreateController {
             }
         ]
     };
+
+    @service profilePicture;
+
+    /**
+     * The picture chosen for the agent's user, waiting to be cropped.
+     *
+     * @property cropImageSrc
+     * @type String
+     */
+    @tracked cropImageSrc = null;
+
+    /**
+     * Validates the chosen picture and opens the cropper on it.
+     *
+     * @method uploadImage
+     * @param {String} _imageElementClass
+     * @param {Object} file
+     */
+    @action
+    async uploadImage(_imageElementClass, file) {
+        this.cropImageSrc = (await this.profilePicture.read(file)) ?? this.cropImageSrc;
+    }
+
+    /**
+     * Saves the cropped picture on the agent's user.
+     *
+     * @method applyCrop
+     * @param {String} croppedBase64
+     */
+    @action
+    async applyCrop(croppedBase64) {
+        if (await this.profilePicture.save(this.model.user, croppedBase64)) {
+            this.cropImageSrc = null;
+        }
+    }
+
+    /**
+     * Closes the cropper without saving.
+     *
+     * @method cancelCrop
+     */
+    @action
+    cancelCrop() {
+        this.cropImageSrc = null;
+    }
 
     constructor() {
         super(...arguments);
