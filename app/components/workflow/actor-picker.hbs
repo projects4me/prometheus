@@ -1,0 +1,15 @@
+<FormFields::FieldRelate
+  @label={{@label}}
+  @placeholder={{t (concat "views.app.workflow.config.pick." @type)}}
+  @options={{this.options}}
+  @selected={{this.selected}}
+  @onchange={{this.pick}}
+  @relateType="relate-actor"
+  @searchField="label"
+  @searchEnabled={{true}}
+  @disabled={{@locked}}
+  @required={{@required}}
+  @showFieldInfo={{true}}
+  @info={{@info}}
+  @data-field={{concat "workflownode.config." @name}}
+/>

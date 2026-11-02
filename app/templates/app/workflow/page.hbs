@@ -38,6 +38,10 @@
           <Workflow::PropertiesBox
             @node={{this.selectedNode}}
             @locked={{this.isGraphLocked}}
+            @payloadFields={{this.payloadFields}}
+            @users={{this.users}}
+            @agents={{this.model.catalog.agents}}
+            @onApply={{this.applyNode}}
             @onRemove={{this.removeNode}}
           />
         </div>
