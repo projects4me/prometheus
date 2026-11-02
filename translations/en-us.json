@@ -2457,6 +2457,7 @@
           "hidePrompt": "Show less",
           "rolesProjects": "Roles & Projects",
           "memberOf": "Member of",
+          "activities": "Agent Activities",
           "tools": "Tools",
           "skills": "Skills",
           "wholeServer": "All tools",

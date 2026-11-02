@@ -29,7 +29,7 @@ export default class AppAgentPageRoute extends AppRoute {
             });
             let agent = agents.objectAt(0);
             let userId = agent.userId;
-            let [userroles, memberships, identities, toolGrants, skillGrants, tools, servers, skills] = await Promise.all([
+            let [userroles, memberships, identities, toolGrants, skillGrants, tools, servers, skills, activities] = await Promise.all([
                 this.store.query('userrole', { query: `(Userrole.userId : ${userId})`, rels: 'role', limit: -1 }),
                 this.store.query('membership', { query: `(Membership.userId : ${userId})`, rels: 'project', limit: -1 }),
                 this.store.query('useridentity', { query: `(Useridentity.userId : ${userId})`, limit: -1 }),
@@ -37,7 +37,12 @@ export default class AppAgentPageRoute extends AppRoute {
                 this.store.query('agentskill', { query: `(Agentskill.agentId : ${agent.id})`, limit: -1 }),
                 this.store.query('tool', { limit: -1 }),
                 this.store.query('toolserver', { limit: -1 }),
-                this.store.query('skill', { limit: -1 })
+                this.store.query('skill', { limit: -1 }),
+                this.store.query('activity', {
+                    query: `((Activity.createdUser : ${userId}) OR ((Activity.relatedTo : agent) AND (Activity.relatedId : ${agent.id})))`,
+                    sort: 'Activity.dateCreated DESC',
+                    limit: 50
+                })
             ]);
 
             return {
@@ -46,7 +51,8 @@ export default class AppAgentPageRoute extends AppRoute {
                 memberships: memberships.toArray(),
                 identities: identities.toArray(),
                 grantedTools: this.describeToolGrants(toolGrants, tools, servers),
-                grantedSkills: this.describeSkillGrants(skillGrants, skills)
+                grantedSkills: this.describeSkillGrants(skillGrants, skills),
+                activities: activities.toArray()
             };
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'agent' });
@@ -96,12 +102,13 @@ export default class AppAgentPageRoute extends AppRoute {
      * @param {Object} model the agent and what belongs to it
      */
     setupController(controller, model) {
-        let { agent, userroles, memberships, identities, grantedTools, grantedSkills } = model;
+        let { agent, userroles, memberships, identities, grantedTools, grantedSkills, activities } = model;
 
         agent.user?.identities?.pushObjects(identities);
         controller.set('model', agent);
         controller.set('userroles', userroles);
         controller.set('memberships', memberships);
+        controller.set('activities', activities);
         controller.set('grantedTools', grantedTools);
         controller.set('grantedSkills', grantedSkills);
         controller.set('showWholePrompt', false);

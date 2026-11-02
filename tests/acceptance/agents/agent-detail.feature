@@ -47,3 +47,13 @@ Feature: Agents | detail
     And Agent "Agent Achilles" runs for "Sponsor One" with models "sonnet" and "opus"
     When User opens the detail page of agent "Agent Achilles"
     Then The workflows box says no workflow references the agent
+
+  Scenario: User sees the activities of the agent grouped by date
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And Agent "Agent Achilles" runs for "Sponsor One" with models "sonnet" and "opus"
+    And Agent "Agent Achilles" has 2 activities
+    When User opens the detail page of agent "Agent Achilles"
+    Then The Agent Activities box shows 2 activities
