@@ -15,6 +15,17 @@ imagePathToBase64('/img/default.png').then((base64) => {
 });
 
 /**
+ * Whether a profile picture is the placeholder a user gets before uploading one.
+ *
+ * @method isDefaultProfilePicture
+ * @param {String} picture
+ * @return {Boolean}
+ */
+export function isDefaultProfilePicture(picture) {
+    return !picture || picture === defaultProfilePicture || picture.endsWith('/img/default.png');
+}
+
+/**
  * The user model
  *
  * @class User

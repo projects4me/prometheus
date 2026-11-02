@@ -7,8 +7,6 @@ import window from "ember-window-mock";
 import { computed, action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
-import { fileToBase64 } from "prometheus/utils/image-to-base64";
-import ENV from "prometheus/config/environment";
 import { htmlSafe } from "@ember/template";
 
 /**
@@ -22,6 +20,7 @@ import { htmlSafe } from "@ember/template";
  */
 export default class AppUserPageController extends PrometheusCreateController {
     @service language;
+    @service profilePicture;
 
     /**
      * Yup schema metadata for the inline-editable fields on the user page.
@@ -305,37 +304,7 @@ export default class AppUserPageController extends PrometheusCreateController {
      */
     @action
     async uploadImage(_imageElementClass, file) {
-        const { maxFileSize, allowedTypes } = ENV.app.upload.profilePicture;
-
-        if (!allowedTypes.includes(file.file.type)) {
-            new Messenger().post({
-                message: this.intl
-                    .t("views.app.user.profilePicture.imageTypeError", {
-                        types: allowedTypes.map((type) => type.split("/")[1]).join(", "),
-                    })
-                    .toString(),
-                type: "error",
-                showCloseButton: true,
-                hideAfter: 3,
-            });
-            return;
-        }
-
-        if (file.file.size > maxFileSize) {
-            new Messenger().post({
-                message: this.intl
-                    .t("views.app.user.profilePicture.imageSizeError", {
-                        limit: `${maxFileSize / (1024 * 1024)}MB`,
-                    })
-                    .toString(),
-                type: "error",
-                showCloseButton: true,
-                hideAfter: 3,
-            });
-            return;
-        }
-
-        this.cropImageSrc = await fileToBase64(file);
+        this.cropImageSrc = (await this.profilePicture.read(file)) ?? this.cropImageSrc;
     }
 
     /**
@@ -347,25 +316,8 @@ export default class AppUserPageController extends PrometheusCreateController {
      */
     @action
     async applyCrop(croppedBase64) {
-        let previousProfilePicture = this.model.profilePicture;
-        this.model.profilePicture = croppedBase64;
-
-        try {
-            await this.model.save();
-            new Messenger().post({
-                message: htmlSafe(this.intl.t("views.app.user.profilePicture.updated")),
-                type: "success",
-                showCloseButton: true,
-                hideAfter: 3,
-            });
-            this.cropImageSrc = null;
-        } catch (error) {
-            this.model.profilePicture = previousProfilePicture;
-            this.errorManager.handleError(error, {
-                moduleName: "user",
-            });
-            this.cropImageSrc = null;
-        }
+        await this.profilePicture.save(this.model, croppedBase64);
+        this.cropImageSrc = null;
     }
 
     /**
