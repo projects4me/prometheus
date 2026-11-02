@@ -64,4 +64,22 @@ export default class AppAgentIndexController extends PrometheusListController {
             .map((membership) => membership.project)
             .filter(Boolean);
     };
+
+    /**
+     * An agent's status lives on its user: sets the user's account status.
+     *
+     * @method activationTarget
+     * @param {Prometheus.Models.Agent} agent
+     * @param {Boolean} active
+     * @return {Prometheus.Models.User|null}
+     * @protected
+     */
+    activationTarget(agent, active) {
+        let status = active ? 'active' : 'inactive';
+        if (!agent.user || agent.user.accountStatus === status) {
+            return null;
+        }
+        agent.user.set('accountStatus', status);
+        return agent.user;
+    }
 }

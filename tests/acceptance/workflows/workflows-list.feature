@@ -19,3 +19,21 @@ Feature: Workflows | list
     And Workflow "Triage new issues" shows trigger "Issue · Created" and 0 runs
     And Workflow "Triage new issues" shows last run "never"
     And Workflow "Triage new issues" has the actor "Reporter"
+
+  Scenario: User deactivates and activates the selected workflows
+
+    When User selects the row "Agent coding loop"
+    And User selects the row "Triage new issues"
+    And User clicks the list button "deactivate"
+    Then Row "Agent coding loop" shows the status "Disabled"
+    And Row "Triage new issues" shows the status "Disabled"
+    When User clicks the list button "activate"
+    Then Row "Agent coding loop" shows the status "Active"
+    And Row "Triage new issues" shows the status "Active"
+
+  Scenario: User exports the selected workflows
+
+    Given Downloads of the list are captured
+    When User selects the row "Triage new issues"
+    And User clicks the list button "export"
+    Then The list exported the rows "Triage new issues"

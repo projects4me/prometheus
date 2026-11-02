@@ -1,6 +1,7 @@
 /* global server */
 import steps from '../steps';
 import agentFixtureSteps from '../agents/agent-fixtures';
+import listToolbarSteps from '../common-steps/list-toolbar-steps';
 
 const row = (name) => Array.from(document.querySelectorAll('[data-workflow-id]')).find((el) => el.querySelector('[data-workflow-field="name"]').textContent.trim() === name);
 const text = (name, field) => row(name)?.querySelector(`[data-workflow-field="${field}"]`).textContent.replace(/\s+/g, ' ').trim();
@@ -13,7 +14,7 @@ function createWorkflow(name, status, kind, nodes) {
 }
 
 export default function (assert) {
-	return agentFixtureSteps(steps(assert))
+	return listToolbarSteps(agentFixtureSteps(steps(assert)), assert, 'workflow')
 		.given('The $status workflow "$name" triggers on $kind and runs the agent "$agent"', async function (status, name, kind, agent) {
 			let record = server.schema.agents.findBy({ name: agent });
 			createWorkflow(name, status, kind, [{ category: 'actor', kind: 'run_agent', config: JSON.stringify({ agentId: record.id }) }]);

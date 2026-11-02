@@ -52,10 +52,13 @@
           <div class="box-body no-padding">
             <div class="list-controls">
               <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-                <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="agent.delete"/>
+                <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="agent.read"/>
               </span>
               <div class="btn-group">
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="delete-agents" title="{{t "global.form.delete"}}" @onClick={{this.deleteSelected}} @aclContext="agent.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="activate-agents" title="{{t "views.app.module.list.activation.activate"}}" @onClick={{fn this.setSelectedActive true}} @aclContext="agent.update"><i class="fa fa-toggle-on"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="deactivate-agents" title="{{t "views.app.module.list.activation.deactivate"}}" @onClick={{fn this.setSelectedActive false}} @aclContext="agent.update"><i class="fa fa-toggle-off"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="export-agents" title="{{t "views.app.module.list.export.label"}}" @onClick={{this.exportSelected}} @aclContext="agent.read"><i class="fa fa-download"></i></AppUi::Button>
               </div>
               <div class="pull-right">
                 <span class="list-view-count">{{t "global.list.selectedCount" count=this.checkboxCount}}</span>
@@ -95,7 +98,7 @@
                     {{#each this.model as |agent|}}
                       <tr data-agent-id={{agent.id}}>
                         <td class="select-box">
-                          <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{agent.id}} @aclContext="agent.delete"/>
+                          <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{agent.id}} @aclContext="agent.read"/>
                         </td>
                         <td class="agent-cell" data-agent-field="agent">
                           <Agent::Avatar />

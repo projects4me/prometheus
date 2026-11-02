@@ -108,4 +108,22 @@ export default class AppWorkflowIndexController extends PrometheusListController
             isAgent: false
         };
     }
+
+    /**
+     * Activating a workflow sets it Active, deactivating sets it Disabled.
+     *
+     * @method activationTarget
+     * @param {Prometheus.Models.Workflow} workflow
+     * @param {Boolean} active
+     * @return {Prometheus.Models.Workflow|null}
+     * @protected
+     */
+    activationTarget(workflow, active) {
+        let status = active ? 'Active' : 'Disabled';
+        if (workflow.status === status) {
+            return null;
+        }
+        workflow.set('status', status);
+        return workflow;
+    }
 }

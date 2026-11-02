@@ -730,6 +730,157 @@ export default class PrometheusListController extends PrometheusController {
     }
 
     /**
+     * Sets the status of the record to active or inactive and returns the record to save. Lists that offer
+     * activate/deactivate on the selected rows override it; the record saved may differ from the row
+     * (an agent's status lives on its user).
+     *
+     * @method activationTarget
+     * @param {DS.Model} record the selected row
+     * @param {Boolean} active whether to activate the record
+     * @return {DS.Model|null} the changed record to save, or null when nothing needs saving
+     * @protected
+     */
+    activationTarget(record, active) { // eslint-disable-line no-unused-vars
+        throw new Error(`${this.constructor.name} must implement activationTarget`);
+    }
+
+    /**
+     * Activates or deactivates the selected rows, saving each changed record through the standard PATCH,
+     * one at a time. A record that fails to save is rolled back and counted as failed.
+     *
+     * @method setSelectedActive
+     * @param {Boolean} active whether to activate the rows
+     * @return {Promise}
+     * @public
+     */
+    @action
+    async setSelectedActive(active) {
+        Logger.debug('Prometheus.Controllers.List::setSelectedActive');
+        let moduleName = this.model.modelName;
+        let modulePlural = this.intl.t(`global.module.plural.${moduleName.toLowerCase()}`);
+        let selectedIds = this.getSelectedIds();
+
+        if (selectedIds.length === 0) {
+            new Messenger().post({
+                message: this.intl.t('views.app.module.list.noModuleSelected', { moduleName: modulePlural }),
+                type: 'error',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        let messenger = new Messenger().post({
+            message: this.intl.t('views.app.module.list.activation.updating', { moduleName: modulePlural }),
+            type: 'info',
+            showCloseButton: false,
+            hideAfter: false
+        });
+
+        let updated = 0;
+        let failed = 0;
+        for (let id of selectedIds) {
+            let record = this.store.peekRecord(moduleName, id);
+            let target = record ? this.activationTarget(record, active) : null;
+            if (!target) {
+                continue;
+            }
+            try {
+                await target.save();
+                updated++;
+            } catch (error) {
+                target.rollbackAttributes();
+                failed++;
+            }
+        }
+
+        messenger.update({
+            message: htmlSafe(this.intl.t(`views.app.module.list.activation.${failed ? 'partial' : 'updated'}`, {
+                moduleName: modulePlural,
+                updated,
+                failed
+            })),
+            type: failed ? 'error' : 'success',
+            showCloseButton: true,
+            hideAfter: failed ? 6 : 3
+        });
+        Logger.debug('-Prometheus.Controllers.List::setSelectedActive');
+    }
+
+    /**
+     * Exports the selected rows as CSV or, when none are selected, every row matching the current search.
+     * Gaia requires a search for that case, so with neither the user is asked to select rows or search.
+     * The request goes through the module's adapter; the list is not scoped to a project.
+     *
+     * @method exportSelected
+     * @return {Promise}
+     * @public
+     */
+    @action
+    async exportSelected() {
+        Logger.debug('Prometheus.Controllers.List::exportSelected');
+        let moduleName = this.model.modelName;
+        let modulePlural = this.intl.t(`global.module.plural.${moduleName.toLowerCase()}`);
+        let selectedIds = this.getSelectedIds();
+
+        let options = { export: true, limit: -1 };
+        if (selectedIds.length) {
+            options.ids = selectedIds.join(',');
+        } else if (!_.isEmpty(this.query)) {
+            options.selectAll = true;
+            options.query = this.query;
+        } else {
+            new Messenger().post({
+                message: this.intl.t('views.app.module.list.export.selectOrSearch', { moduleName: modulePlural }),
+                type: 'error',
+                showCloseButton: true
+            });
+            return;
+        }
+
+        let messenger = new Messenger().post({
+            message: htmlSafe(this.intl.t('views.app.module.list.export.exporting', { moduleName: modulePlural })),
+            type: 'info',
+            showCloseButton: false,
+            hideAfter: false
+        });
+
+        try {
+            let adapter = this.store.adapterFor(moduleName);
+            let data = await adapter.ajax(`${adapter.host}/${adapter.namespace}/${moduleName}`, 'GET', { data: options });
+            this.download(`${adapter.host}${data.download_url}`);
+            messenger.update({
+                message: htmlSafe(this.intl.t('views.app.module.list.export.exported', { moduleName: modulePlural })),
+                type: 'success',
+                showCloseButton: true,
+                hideAfter: 6
+            });
+        } catch (error) {
+            messenger.update({
+                message: this.intl.t('views.app.module.list.export.error', { moduleName: modulePlural }),
+                type: 'error',
+                showCloseButton: true,
+                hideAfter: 3
+            });
+        }
+        Logger.debug('-Prometheus.Controllers.List::exportSelected');
+    }
+
+    /**
+     * Starts the browser download of a file.
+     *
+     * @method download
+     * @param {String} url the file's address
+     * @protected
+     */
+    download(url) {
+        let link = document.createElement('a');
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    /**
      * This function handles the deletion of a model with a confirmation dialog.
      * It displays a warning message with confirm/cancel actions, and shows progress
      * updates during the deletion process.
