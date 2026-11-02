@@ -101,7 +101,7 @@
                           <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{agent.id}} @aclContext="agent.read"/>
                         </td>
                         <td class="agent-cell" data-agent-field="agent">
-                          <Agent::Avatar />
+                          <Agent::Avatar @user={{agent.user}} />
                           <div>
                             <LinkTo @route="app.agent.page" @model={{agent.id}} data-agent-field="name">{{agent.name}}</LinkTo>
                             {{#if agent.isActive}}
