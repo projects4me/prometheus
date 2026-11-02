@@ -14,21 +14,31 @@ import AppRoute from 'prometheus/routes/app';
  */
 export default class AppAgentCreateRoute extends AppRoute {
     /**
-     * The roles and projects for the access box.
+     * Queries the roles and projects for the access box; rejects when either query fails.
+     *
+     * @method queryOptions
+     * @return {Promise<Object>}
+     */
+    async queryOptions() {
+        let [roles, projects] = await Promise.all([
+            this.store.query('role', { limit: -1 }),
+            this.store.query('project', { limit: -1 })
+        ]);
+        return {
+            roles: roles.toArray().map((role) => ({ label: role.name, value: role.id })),
+            projects: projects.toArray().map((project) => ({ label: project.name, value: project.id }))
+        };
+    }
+
+    /**
+     * The roles and projects for the access box, or empty lists when they fail to load.
      *
      * @method loadOptions
      * @return {Promise<Object>}
      */
     async loadOptions() {
         try {
-            let [roles, projects] = await Promise.all([
-                this.store.query('role', { limit: -1 }),
-                this.store.query('project', { limit: -1 })
-            ]);
-            return {
-                roles: roles.toArray().map((role) => ({ label: role.name, value: role.id })),
-                projects: projects.toArray().map((project) => ({ label: project.name, value: project.id }))
-            };
+            return await this.queryOptions();
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'agent' });
             return { roles: [], projects: [] };

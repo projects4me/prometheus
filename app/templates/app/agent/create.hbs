@@ -1,202 +1,208 @@
-<section class="content-header">
-  <h1>
-    {{t (if this.isEdit "views.app.agent.edit.title" "views.app.agent.create.title")}}
-    <small>{{this.model.name}}</small>
-  </h1>
-  <BreadCrumb/>
-</section>
+{{#if this.notFound}}
+  <Errors::404/>
+{{else if this.loadFailed}}
+  <Errors::500/>
+{{else}}
+  <section class="content-header">
+    <h1>
+      {{t (if this.isEdit "views.app.agent.edit.title" "views.app.agent.create.title")}}
+      <small>{{this.model.name}}</small>
+    </h1>
+    <BreadCrumb/>
+  </section>
 
-<section class="content">
-  <div class="agent-form">
-    <div class="row">
-      <div class="col-md-8">
-        <AccessControl @aclContext={{if this.isEdit "agent.update" "agent.create"}}>
-          <div class="box box-primary">
-            <div class="box-header with-border">
-              <h3 class="box-title">{{t (if this.isEdit "views.app.agent.edit.title" "views.app.agent.create.title")}}</h3>
-            </div>
+  <section class="content">
+    <div class="agent-form">
+      <div class="row">
+        <div class="col-md-8">
+          <AccessControl @aclContext={{if this.isEdit "agent.update" "agent.create"}}>
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title">{{t (if this.isEdit "views.app.agent.edit.title" "views.app.agent.create.title")}}</h3>
+              </div>
 
-            <div class="form box-body">
-              <FormFields::FieldText
-                @placeholder={{t "views.app.agent.form.namePlaceholder"}}
-                @label={{t "views.app.agent.form.name"}}
-                @value={{this.model.name}}
-                @data-field="agent.name"
-                @validate={{action this.validateField "agentForm" (hash name="name" value=this.model.name)}}
-                @message={{this.message.agentForm.name}}
-                {{autofocus}}
-              />
-
-              <FormFields::FieldText
-                @placeholder={{t "views.app.agent.form.emailPlaceholder"}}
-                @label={{t "views.app.agent.form.email"}}
-                @value={{this.model.email}}
-                @readonly={{this.isEdit}}
-                @data-field="agent.email"
-                @showFieldInfo={{this.showFieldInfo}}
-                @info={{t "views.app.agent.form.emailInfo"}}
-                @validate={{action this.validateField "agentForm" (hash name="email" value=this.model.email)}}
-                @message={{this.message.agentForm.email}}
-              />
-
-              <FormFields::FieldText
-                @placeholder={{t "views.app.agent.form.purposePlaceholder"}}
-                @label={{t "views.app.agent.form.purpose"}}
-                @value={{this.model.purpose}}
-                @length="255"
-                @data-field="agent.purpose"
-              />
-
-              <div data-field="agent.rolePrompt" class="form-field ember-view">
-                <AppUi::ToastUi
-                  @contents={{readonly this.model.rolePrompt}}
-                  @initialValue={{this.model.rolePrompt}}
-                  @editType="markdown"
-                  @hide={{array "footer"}}
-                  @onContentChange={{action "selectStatic" this.model "rolePrompt"}}
+              <div class="form box-body">
+                <FormFields::FieldText
+                  @placeholder={{t "views.app.agent.form.namePlaceholder"}}
+                  @label={{t "views.app.agent.form.name"}}
+                  @value={{this.model.name}}
+                  @data-field="agent.name"
+                  @validate={{action this.validateField "agentForm" (hash name="name" value=this.model.name)}}
+                  @message={{this.message.agentForm.name}}
+                  {{autofocus}}
                 />
-                <FormFields::Label @label={{t "views.app.agent.form.rolePrompt"}} @data-field="agent.rolePrompt" />
-              </div>
 
-              <h4 class="model-limits-title">{{t "views.app.agent.form.modelAndLimits"}}</h4>
-              <div class="row model-limits">
-                <div class="col-md-4">
-                  <FormFields::FieldRelate
-                    @placeholder={{t "views.app.agent.form.modelSimple"}}
-                    @label={{t "views.app.agent.form.modelSimple"}}
-                    @options={{this.modelOptions}}
-                    @selected={{find-by "value" this.modelConfig.simple this.modelOptions}}
-                    @searchEnabled={{false}}
-                    @onchange={{fn this.selectModel "simple"}}
-                    @relateType="relate-simple"
-                    @data-field="agent.modelConfig.simple"
-                  />
-                </div>
-                <div class="col-md-4">
-                  <FormFields::FieldRelate
-                    @placeholder={{t "views.app.agent.form.modelComplex"}}
-                    @label={{t "views.app.agent.form.modelComplex"}}
-                    @options={{this.modelOptions}}
-                    @selected={{find-by "value" this.modelConfig.complex this.modelOptions}}
-                    @searchEnabled={{false}}
-                    @onchange={{fn this.selectModel "complex"}}
-                    @relateType="relate-simple"
-                    @data-field="agent.modelConfig.complex"
-                  />
-                </div>
-                <div class="col-md-4">
-                  <FormFields::FieldRelate
-                    @placeholder={{t "views.app.agent.form.escalation"}}
-                    @label={{t "views.app.agent.form.escalation"}}
-                    @options={{this.modelOptions}}
-                    @selected={{find-by "value" this.modelConfig.escalation this.modelOptions}}
-                    @searchEnabled={{false}}
-                    @onchange={{fn this.selectModel "escalation"}}
-                    @relateType="relate-simple"
-                    @data-field="agent.modelConfig.escalation"
-                  />
-                </div>
-              </div>
-              <div class="row model-limits">
-                <div class="col-md-4">
-                  <FormFields::FieldText
-                    @placeholder={{t "views.app.agent.form.maxTurns"}}
-                    @label={{t "views.app.agent.form.maxTurns"}}
-                    @value={{this.model.maxTurns}}
-                    @data-field="agent.maxTurns"
-                  />
-                </div>
-                <div class="col-md-4">
-                  <FormFields::FieldText
-                    @placeholder={{t "views.app.agent.form.maxRunsPerIssue"}}
-                    @label={{t "views.app.agent.form.maxRunsPerIssue"}}
-                    @value={{this.model.maxRunsPerIssue}}
-                    @data-field="agent.maxRunsPerIssue"
-                  />
-                </div>
-                <div class="col-md-4">
-                  <FormFields::FieldRelate
-                    @placeholder={{t "views.app.agent.form.permissionMode"}}
-                    @label={{t "views.app.agent.form.permissionMode"}}
-                    @options={{this.permissionModeOptions}}
-                    @selected={{find-by "value" this.model.permissionMode this.permissionModeOptions}}
-                    @searchEnabled={{false}}
-                    @onchange={{action "selectRelated" this.model "permissionMode"}}
-                    @relateType="relate-simple"
-                    @data-field="agent.permissionMode"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </AccessControl>
-      </div>
+                <FormFields::FieldText
+                  @placeholder={{t "views.app.agent.form.emailPlaceholder"}}
+                  @label={{t "views.app.agent.form.email"}}
+                  @value={{this.model.email}}
+                  @readonly={{this.isEdit}}
+                  @data-field="agent.email"
+                  @showFieldInfo={{this.showFieldInfo}}
+                  @info={{t "views.app.agent.form.emailInfo"}}
+                  @validate={{action this.validateField "agentForm" (hash name="email" value=this.model.email)}}
+                  @message={{this.message.agentForm.email}}
+                />
 
-      <div class="col-md-4">
-        <AccessControl @aclContext={{if this.isEdit "agent.update" "agent.create"}}>
-          <div class="box box-warning">
-            <div class="box-header with-border">
-              <h3 class="box-title">{{t "views.app.agent.form.sponsorBox"}}</h3>
-            </div>
-            <div class="box-body">
-              <FormFields::FieldRelate
-                @placeholder={{t "views.app.agent.form.selectSponsor"}}
-                @label={{t "views.app.agent.form.onBehalfOf"}}
-                @options={{this.usersList}}
-                @selected={{find-by "value" this.model.sponsorId this.usersList}}
-                @searchField="label"
-                @onchange={{action "selectRelated" this.model "sponsorId"}}
-                @relateType="relate-user"
-                @showFieldInfo={{this.showFieldInfo}}
-                @info={{t "views.app.agent.form.sponsorInfo"}}
-                @data-field="agent.sponsorId"
-              />
-            </div>
-          </div>
+                <FormFields::FieldText
+                  @placeholder={{t "views.app.agent.form.purposePlaceholder"}}
+                  @label={{t "views.app.agent.form.purpose"}}
+                  @value={{this.model.purpose}}
+                  @length="255"
+                  @data-field="agent.purpose"
+                />
 
-          <div class="box box-info">
-            <div class="box-header with-border">
-              <h3 class="box-title">{{t "views.app.agent.form.accessBox"}}</h3>
-            </div>
-            <div class="box-body">
-              <FormFields::FieldRelateMulti
-                @placeholder={{t "views.app.agent.form.rolesPlaceholder"}}
-                @label={{t "views.app.agent.form.roles"}}
-                @options={{this.rolesList}}
-                @selected={{this.selectedRoles}}
-                @searchField="label"
-                @onchange={{this.selectRoles}}
-                @relateType="relate-simple"
-                @aclContext="userrole.create"
-                @data-field="agent.roles"
-              />
-              <FormFields::FieldRelateMulti
-                @placeholder={{t "views.app.agent.form.projectsPlaceholder"}}
-                @label={{t "views.app.agent.form.projects"}}
-                @options={{this.projectsList}}
-                @selected={{this.selectedProjects}}
-                @searchField="label"
-                @onchange={{this.selectProjects}}
-                @relateType="relate-simple"
-                @aclContext="membership.create"
-                @data-field="agent.projects"
-              />
-              <div class="agent-status" data-field="agent.status">
-                <label>{{t "views.app.agent.form.status"}}</label>
-                <label class="checkbox-inline">
-                  <FormFields::FieldCheckbox @select={{this.toggleActive}} @checked={{this.active}} @data-select="agent-active" />
-                  {{t "views.app.agent.status.active"}}
-                </label>
+                <div data-field="agent.rolePrompt" class="form-field ember-view">
+                  <AppUi::ToastUi
+                    @contents={{readonly this.model.rolePrompt}}
+                    @initialValue={{this.model.rolePrompt}}
+                    @editType="markdown"
+                    @hide={{array "footer"}}
+                    @onContentChange={{action "selectStatic" this.model "rolePrompt"}}
+                  />
+                  <FormFields::Label @label={{t "views.app.agent.form.rolePrompt"}} @data-field="agent.rolePrompt" />
+                </div>
+
+                <h4 class="model-limits-title">{{t "views.app.agent.form.modelAndLimits"}}</h4>
+                <div class="row model-limits">
+                  <div class="col-md-4">
+                    <FormFields::FieldRelate
+                      @placeholder={{t "views.app.agent.form.modelSimple"}}
+                      @label={{t "views.app.agent.form.modelSimple"}}
+                      @options={{this.modelOptions}}
+                      @selected={{find-by "value" this.modelConfig.simple this.modelOptions}}
+                      @searchEnabled={{false}}
+                      @onchange={{fn this.selectModel "simple"}}
+                      @relateType="relate-simple"
+                      @data-field="agent.modelConfig.simple"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <FormFields::FieldRelate
+                      @placeholder={{t "views.app.agent.form.modelComplex"}}
+                      @label={{t "views.app.agent.form.modelComplex"}}
+                      @options={{this.modelOptions}}
+                      @selected={{find-by "value" this.modelConfig.complex this.modelOptions}}
+                      @searchEnabled={{false}}
+                      @onchange={{fn this.selectModel "complex"}}
+                      @relateType="relate-simple"
+                      @data-field="agent.modelConfig.complex"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <FormFields::FieldRelate
+                      @placeholder={{t "views.app.agent.form.escalation"}}
+                      @label={{t "views.app.agent.form.escalation"}}
+                      @options={{this.modelOptions}}
+                      @selected={{find-by "value" this.modelConfig.escalation this.modelOptions}}
+                      @searchEnabled={{false}}
+                      @onchange={{fn this.selectModel "escalation"}}
+                      @relateType="relate-simple"
+                      @data-field="agent.modelConfig.escalation"
+                    />
+                  </div>
+                </div>
+                <div class="row model-limits">
+                  <div class="col-md-4">
+                    <FormFields::FieldText
+                      @placeholder={{t "views.app.agent.form.maxTurns"}}
+                      @label={{t "views.app.agent.form.maxTurns"}}
+                      @value={{this.model.maxTurns}}
+                      @data-field="agent.maxTurns"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <FormFields::FieldText
+                      @placeholder={{t "views.app.agent.form.maxRunsPerIssue"}}
+                      @label={{t "views.app.agent.form.maxRunsPerIssue"}}
+                      @value={{this.model.maxRunsPerIssue}}
+                      @data-field="agent.maxRunsPerIssue"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <FormFields::FieldRelate
+                      @placeholder={{t "views.app.agent.form.permissionMode"}}
+                      @label={{t "views.app.agent.form.permissionMode"}}
+                      @options={{this.permissionModeOptions}}
+                      @selected={{find-by "value" this.model.permissionMode this.permissionModeOptions}}
+                      @searchEnabled={{false}}
+                      @onchange={{action "selectRelated" this.model "permissionMode"}}
+                      @relateType="relate-simple"
+                      @data-field="agent.permissionMode"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </AccessControl>
-      </div>
+          </AccessControl>
+        </div>
 
-      <div class="col-sm-12">
-        <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "agentForm" "agent"}} @disableOnSuccess={{true}} @aclContext={{if this.isEdit "agent.update" "agent.create"}}>{{t "global.form.save"}}</AppUi::Button>
-        <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
+        <div class="col-md-4">
+          <AccessControl @aclContext={{if this.isEdit "agent.update" "agent.create"}}>
+            <div class="box box-warning">
+              <div class="box-header with-border">
+                <h3 class="box-title">{{t "views.app.agent.form.sponsorBox"}}</h3>
+              </div>
+              <div class="box-body">
+                <FormFields::FieldRelate
+                  @placeholder={{t "views.app.agent.form.selectSponsor"}}
+                  @label={{t "views.app.agent.form.onBehalfOf"}}
+                  @options={{this.usersList}}
+                  @selected={{find-by "value" this.model.sponsorId this.usersList}}
+                  @searchField="label"
+                  @onchange={{action "selectRelated" this.model "sponsorId"}}
+                  @relateType="relate-user"
+                  @showFieldInfo={{this.showFieldInfo}}
+                  @info={{t "views.app.agent.form.sponsorInfo"}}
+                  @data-field="agent.sponsorId"
+                />
+              </div>
+            </div>
+
+            <div class="box box-info">
+              <div class="box-header with-border">
+                <h3 class="box-title">{{t "views.app.agent.form.accessBox"}}</h3>
+              </div>
+              <div class="box-body">
+                <FormFields::FieldRelateMulti
+                  @placeholder={{t "views.app.agent.form.rolesPlaceholder"}}
+                  @label={{t "views.app.agent.form.roles"}}
+                  @options={{this.rolesList}}
+                  @selected={{this.selectedRoles}}
+                  @searchField="label"
+                  @onchange={{this.selectRoles}}
+                  @relateType="relate-simple"
+                  @aclContext="userrole.create"
+                  @data-field="agent.roles"
+                />
+                <FormFields::FieldRelateMulti
+                  @placeholder={{t "views.app.agent.form.projectsPlaceholder"}}
+                  @label={{t "views.app.agent.form.projects"}}
+                  @options={{this.projectsList}}
+                  @selected={{this.selectedProjects}}
+                  @searchField="label"
+                  @onchange={{this.selectProjects}}
+                  @relateType="relate-simple"
+                  @aclContext="membership.create"
+                  @data-field="agent.projects"
+                />
+                <div class="agent-status" data-field="agent.status">
+                  <label>{{t "views.app.agent.form.status"}}</label>
+                  <label class="checkbox-inline">
+                    <FormFields::FieldCheckbox @select={{this.toggleActive}} @checked={{this.active}} @data-select="agent-active" />
+                    {{t "views.app.agent.status.active"}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </AccessControl>
+        </div>
+
+        <div class="col-sm-12">
+          <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{fn this.save "agentForm" "agent"}} @disableOnSuccess={{true}} @aclContext={{if this.isEdit "agent.update" "agent.create"}}>{{t "global.form.save"}}</AppUi::Button>
+          <AppUi::Button type="button" data-btn="cancel" class="btn btn-default" @onClick={{this.cancel}}>{{t "global.form.cancel"}}</AppUi::Button>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+{{/if}}

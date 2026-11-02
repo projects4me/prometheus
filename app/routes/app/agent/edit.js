@@ -16,45 +16,51 @@ export default class AppAgentEditRoute extends AppAgentCreateRoute {
     templateName = 'app/agent/create';
 
     /**
-     * The agent with its user and sponsor.
+     * The agent with its user and sponsor, or null when there is no such agent or the query fails (`loadFailed`).
      *
      * @method model
      * @param {Object} params the route params
      * @return {Promise<Prometheus.Models.Agent>}
      */
     async model(params) {
+        this.loadFailed = false;
         try {
             let agents = await this.store.query('agent', {
                 query: `(Agent.id : ${params.agent_id})`,
                 rels: 'user,sponsor'
             });
-            return agents.objectAt(0);
+            return agents.objectAt(0) ?? null;
         } catch (error) {
-            this.errorManager.handleError(error, { moduleName: 'agent' });
+            this.errorManager.handleLoadError(error, { moduleName: 'agent' });
+            this.loadFailed = true;
+            return null;
         }
     }
 
     /**
-     * Loads the roles and projects to choose from, and the ones the agent's user already has.
+     * Loads the roles and projects to choose from, and the ones the agent's user already has. When any of these
+     * fails the form is not set up (`loadFailed`): saving it would delete the assignments it could not show.
      *
      * @method afterModel
      * @param {Prometheus.Models.Agent} agent the agent
      * @return {Promise}
      */
     async afterModel(agent) {
-        this.options = await this.loadOptions();
         this.current = { userroles: [], memberships: [] };
         if (!agent) {
             return;
         }
         try {
-            let [userroles, memberships] = await Promise.all([
+            let [options, userroles, memberships] = await Promise.all([
+                this.queryOptions(),
                 this.store.query('userrole', { query: `(Userrole.userId : ${agent.userId})`, limit: -1 }),
                 this.store.query('membership', { query: `(Membership.userId : ${agent.userId})`, limit: -1 })
             ]);
+            this.options = options;
             this.current = { userroles: userroles.toArray(), memberships: memberships.toArray() };
         } catch (error) {
-            this.errorManager.handleError(error, { moduleName: 'agent' });
+            this.errorManager.handleLoadError(error, { moduleName: 'agent' });
+            this.loadFailed = true;
         }
     }
 
@@ -64,7 +70,12 @@ export default class AppAgentEditRoute extends AppAgentCreateRoute {
      * @param {Prometheus.Models.Agent} model the agent
      */
     setupController(controller, model) {
+        controller.set('notFound', !model && !this.loadFailed);
+        controller.set('loadFailed', this.loadFailed);
         controller.set('model', model);
+        if (!model || this.loadFailed) {
+            return;
+        }
         controller.setupForm(this.options, this.current);
         this.breadcrumb.setTitle('app.agent.page', model.name);
     }

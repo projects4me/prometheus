@@ -3,6 +3,7 @@
  */
 
 import Service, { inject as service } from '@ember/service';
+import Logger from 'js-logger';
 import ForbiddenError from '../adapters/errors/forbidden-error';
 import UnauthorizedError from '../adapters/errors/unauthorized-error';
 
@@ -68,6 +69,23 @@ export default class ErrorManagerService extends Service {
         } else {
             // Bubble error to the error() hook in app route.
             throw error;
+        }
+    }
+
+    /**
+     * Handles the error of a load the route recovers from by showing an error page instead of its data. An error
+     * no handler takes is logged rather than thrown, so the route still resolves.
+     *
+     * @method handleLoadError
+     * @param {Object} error The error object.
+     * @param {*} options Options object provided to each error handler.
+     * @returns {void}
+     */
+    handleLoadError(error, options = {}) {
+        try {
+            this.handleError(error, options);
+        } catch (unhandled) {
+            Logger.error('ErrorManagerService::handleLoadError', unhandled);
         }
     }
 

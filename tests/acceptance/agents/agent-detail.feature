@@ -55,5 +55,54 @@ Feature: Agents | detail
     And User_1 is logged in
     And Agent "Agent Achilles" runs for "Sponsor One" with models "sonnet" and "opus"
     And Agent "Agent Achilles" has 2 activities
+    And Gaia rejects an activity sort that carries its order
     When User opens the detail page of agent "Agent Achilles"
-    Then The Agent Activities box shows 2 activities
+    Then The agent detail shows the AGENT label
+    And The Agent Activities box shows 2 activities
+
+  Scenario: User opens the detail page of an agent that does not exist
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    When User opens the detail page of an agent that does not exist
+    Then The page not found error is shown
+
+  Scenario: User opens the edit page of an agent that does not exist
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    When User opens the edit page of an agent that does not exist
+    Then The page not found error is shown
+
+  Scenario: User sees an error when the agent cannot be loaded
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And Gaia fails to load agents
+    When User opens the detail page of an agent that does not exist
+    Then The server error is shown
+
+  Scenario: User sees an error instead of the edit form when the agent's roles cannot be loaded
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And Agent "Agent Achilles" runs for "Sponsor One" with models "sonnet" and "opus"
+    And Gaia fails to load user roles
+    When User opens the edit page of agent "Agent Achilles"
+    Then The server error is shown
+    And The agent form is not shown
+
+  Scenario: User sees an error instead of the edit form when the roles to choose from cannot be loaded
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And Agent "Agent Achilles" runs for "Sponsor One" with models "sonnet" and "opus"
+    And Gaia denies access to roles
+    When User opens the edit page of agent "Agent Achilles"
+    Then The server error is shown
+    And The agent form is not shown

@@ -16,18 +16,29 @@ export default class AppAgentPageRoute extends AppRoute {
     /**
      * Loads the agent with its user and sponsor, then its user's roles, project memberships and identities.
      * These are separate queries because Gaia limits the joined rows of a hasMany, not the parents.
+     * Resolves to `{ notFound: true }` when there is no such agent and to `{ failed: true }` when a query fails.
      *
      * @method model
      * @param {Object} params the route params
      * @return {Promise<Object>}
      */
     async model(params) {
+        let agent;
         try {
             let agents = await this.store.query('agent', {
                 query: `(Agent.id : ${params.agent_id})`,
                 rels: 'user,sponsor'
             });
-            let agent = agents.objectAt(0);
+            agent = agents.objectAt(0);
+        } catch (error) {
+            this.errorManager.handleLoadError(error, { moduleName: 'agent' });
+            return { failed: true };
+        }
+        if (!agent) {
+            return { notFound: true };
+        }
+
+        try {
             let userId = agent.userId;
             let [userroles, memberships, identities, toolGrants, skillGrants, tools, servers, skills, activities] = await Promise.all([
                 this.store.query('userrole', { query: `(Userrole.userId : ${userId})`, rels: 'role', limit: -1 }),
@@ -40,7 +51,8 @@ export default class AppAgentPageRoute extends AppRoute {
                 this.store.query('skill', { limit: -1 }),
                 this.store.query('activity', {
                     query: `((Activity.createdUser : ${userId}) OR ((Activity.relatedTo : agent) AND (Activity.relatedId : ${agent.id})))`,
-                    sort: 'Activity.dateCreated DESC',
+                    sort: 'Activity.dateCreated',
+                    order: 'DESC',
                     limit: 50
                 })
             ]);
@@ -55,7 +67,8 @@ export default class AppAgentPageRoute extends AppRoute {
                 activities: activities.toArray()
             };
         } catch (error) {
-            this.errorManager.handleError(error, { moduleName: 'agent' });
+            this.errorManager.handleLoadError(error, { moduleName: 'agent' });
+            return { failed: true };
         }
     }
 
@@ -102,8 +115,14 @@ export default class AppAgentPageRoute extends AppRoute {
      * @param {Object} model the agent and what belongs to it
      */
     setupController(controller, model) {
-        let { agent, userroles, memberships, identities, grantedTools, grantedSkills, activities } = model;
+        let { agent, userroles, memberships, identities, grantedTools, grantedSkills, activities, notFound, failed } = model;
 
+        controller.set('notFound', Boolean(notFound));
+        controller.set('loadFailed', Boolean(failed));
+        if (!agent) {
+            controller.set('model', null);
+            return;
+        }
         agent.user?.identities?.pushObjects(identities);
         controller.set('model', agent);
         controller.set('userroles', userroles);
