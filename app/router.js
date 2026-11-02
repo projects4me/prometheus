@@ -54,6 +54,8 @@ Router.map(function() {
     this.route('agent',function(){
       this.route('index',{path:'/'});
       this.route('create');
+      this.route('tools');
+      this.route('skills');
       this.route('page',{path:'/:agent_id'});
       this.route('edit',{path:'/edit/:agent_id'});
     });

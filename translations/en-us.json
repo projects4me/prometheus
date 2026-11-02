@@ -2345,7 +2345,68 @@
           "showPrompt": "Show the whole prompt",
           "hidePrompt": "Show less",
           "rolesProjects": "Roles & Projects",
-          "memberOf": "Member of"
+          "memberOf": "Member of",
+          "tools": "Tools",
+          "skills": "Skills",
+          "wholeServer": "All tools",
+          "noTools": "No tools granted",
+          "noSkills": "No skills granted"
+        },
+        "tools": {
+          "title": "Tool Catalog",
+          "servers": "Tool Servers",
+          "addServer": "Add server",
+          "refresh": "Refresh",
+          "toolsOf": "{server} · Tools",
+          "noTools": "No tools yet. Refresh the server to load them.",
+          "grantsOn": "Grants on {name}",
+          "grantsOnServer": "Grants on all tools of {name}",
+          "noGrants": "Not granted to any agent",
+          "grantAgent": "Agent",
+          "rule": "Permission rule",
+          "rulePlaceholder": "Permission rule, such as git status:*",
+          "addGrant": "Grant",
+          "server": {
+            "name": "Server",
+            "kind": "Kind",
+            "location": "Runs in",
+            "endpoint": "Endpoint",
+            "description": "Description",
+            "tools": "Tools",
+            "agents": "Agents",
+            "refreshed": "Schemas refreshed",
+            "never": "never"
+          },
+          "tool": {
+            "name": "Tool",
+            "description": "Description",
+            "inputs": "Inputs",
+            "grantedTo": "Granted to"
+          },
+          "errors": {
+            "name": "A name is required.",
+            "agent": "Choose an agent.",
+            "save": "Could not save the change.",
+            "refresh": "The server could not be refreshed. Its stored tools are kept."
+          }
+        },
+        "skills": {
+          "title": "Skills",
+          "subtitle": "for agents",
+          "newSkill": "New skill",
+          "skillName": "Skill: {name}",
+          "edited": "edited by {user}",
+          "name": "Name",
+          "version": "Version",
+          "description": "Description",
+          "content": "Content (SKILL.md)",
+          "usedBy": "Used by",
+          "noGrants": "Not used by any agent",
+          "agentCount": "{count, plural, one {# agent} other {# agents}}",
+          "errors": {
+            "name": "A name is required.",
+            "save": "Could not save the change."
+          }
         }
       }
     },
@@ -2474,7 +2535,9 @@
         "agent": {
           "label": "Agents",
           "list": "List Agents",
-          "create": "Create Agent"
+          "create": "Create Agent",
+          "tools": "Tool Catalog",
+          "skills": "Skills"
         }
       }
     },
