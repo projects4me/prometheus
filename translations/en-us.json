@@ -412,9 +412,18 @@
             },
             "searchQueryRequired": "Search query is required to export the {moduleName}",
             "noItemsSelected": "No {moduleName} selected for export",
+            "selectOrSearch": "Select some {moduleName} or search to export them",
+            "label": "Export",
             "exporting": "Exporting <strong>{moduleName}</strong> ..",
             "exported": "<strong>{moduleName}</strong> exported successfully",
             "error": "An error occurred while exporting the {moduleName}. Please try again."
+          },
+          "activation": {
+            "activate": "Activate",
+            "deactivate": "Deactivate",
+            "updating": "Updating {moduleName} ..",
+            "updated": "<strong>{updated} {moduleName}</strong> updated",
+            "partial": "<strong>{updated} {moduleName}</strong> updated, <strong>{failed}</strong> failed"
           },
           "massUpdate": {
             "updating": "Updating {moduleName} ..",

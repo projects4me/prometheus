@@ -5,6 +5,7 @@
 import applyQuery from '../helpers/apply-query';
 import getRequestData from '../helpers/parse-request';
 import limitModel from '../helpers/limit-model';
+import exportResponse from '../helpers/export-response';
 
 /**
  * Agents as Gaia serves them: an agent row tied to a users row of type agent. A new agent creates its user from
@@ -14,6 +15,9 @@ import limitModel from '../helpers/limit-model';
  */
 export function register(server) {
 	server.get('/agent', (schema, request) => {
+		if (request.queryParams.export) {
+			return exportResponse('agent', request);
+		}
 		let agents = applyQuery(schema.agents.all(), request);
 
 		return limitModel(request.queryParams.limit, agents, request.queryParams.page);

@@ -1,12 +1,13 @@
 /* global server */
 import steps from '../steps';
 import agentFixtureSteps from './agent-fixtures';
+import listToolbarSteps from '../common-steps/list-toolbar-steps';
 
 const row = (name) => Array.from(document.querySelectorAll('[data-agent-id]')).find((el) => el.querySelector('[data-agent-field="name"]').textContent.trim() === name);
 const text = (name, field) => row(name)?.querySelector(`[data-agent-field="${field}"]`).textContent.replace(/\s+/g, ' ').trim();
 
 export default function (assert) {
-	return agentFixtureSteps(steps(assert))
+	return listToolbarSteps(agentFixtureSteps(steps(assert)), assert, 'agent')
 		.then('Agents list has $count agents', function (count) {
 			assert.equal(document.querySelectorAll('[data-agent-id]').length, Number(count), `Agents list has ${count} agents`);
 		})

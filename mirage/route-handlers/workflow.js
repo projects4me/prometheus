@@ -1,9 +1,13 @@
 import getRequestData from '../helpers/parse-request';
 import applyQuery from '../helpers/apply-query';
 import limitModel from '../helpers/limit-model';
+import exportResponse from '../helpers/export-response';
 
 export function register(server) {
 	server.get('/workflow', (schema, request) => {
+		if (request.queryParams.export) {
+			return exportResponse('workflow', request);
+		}
 		let workflows = applyQuery(schema.workflows.all(), request);
 		return limitModel(request.queryParams.limit, workflows, request.queryParams.page);
 	});
