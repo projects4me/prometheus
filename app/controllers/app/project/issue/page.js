@@ -6,9 +6,8 @@ import PrometheusController from "prometheus/controllers/prometheus";
 import { inject as controller } from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
+import { postToast } from 'prometheus/utils/ui/post-toast';
 import { pushIfMissing, removeById } from 'prometheus/utils/live/collection';
-
-/* global Messenger */
 
 /**
  * This controller is used to manage the issues detail/page view
@@ -181,23 +180,6 @@ export default class AppProjectIssuePageController extends PrometheusController 
     }
 
     /**
-     * Shows an info toast
-     *
-     * @method toast
-     * @param {String} key Translation key under views.app.issue.detail.live
-     * @param {Object} values
-     * @returns {void}
-     * @private
-     */
-    toast(key, values) {
-        new Messenger().post({
-            message: this.intl.t(`views.app.issue.detail.live.${key}`, values),
-            type: 'info',
-            showCloseButton: true
-        });
-    }
-
-    /**
      * Applies a remote status change onto the open issue without saving it
      *
      * The state is applied at once, only the toast waits for the actor to load.
@@ -272,7 +254,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
         try {
             let actorName = await this.otherActorName(envelope);
             if (actorName && this.isStillOpen(issue)) {
-                this.toast(key, { user: actorName, ...(values ? values() : {}) });
+                postToast(this.intl, `views.app.issue.detail.live.${key}`, 'info', { user: actorName, ...(values ? values() : {}) });
             }
         } catch (error) {
             this.logLiveFailure(error);
