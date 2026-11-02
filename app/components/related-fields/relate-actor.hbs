@@ -1,0 +1,10 @@
+<span class="relate-user" data-actor-option={{@data.kind}}>
+  {{#if (eq @data.kind "agent")}}
+    <Agent::Avatar />
+  {{else if (eq @data.kind "user")}}
+    <img src="{{this.apiHost}}/userimage/get/{{@data.value}}" class="user-relate-icon" alt="{{t "global.form.image"}}">
+  {{else}}
+    <i class="fa fa-code" aria-hidden="true"></i>
+  {{/if}}
+  <span class="username">{{@data.label}}</span>
+</span>

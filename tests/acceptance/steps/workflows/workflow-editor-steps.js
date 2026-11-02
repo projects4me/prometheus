@@ -1,7 +1,10 @@
 /* global server */
 import { click, currentURL, fillIn, findAll, triggerEvent } from '@ember/test-helpers';
 import { Response } from 'miragejs';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
+
+const CONFIG = name => `[data-field="workflownode.config.${name}"]`;
 
 const NODE = kind => `[data-workflow-node][data-node-kind="${kind}"]`;
 
@@ -15,6 +18,11 @@ export const given = function () {
             "The $status workflow $name starts with an issue.created trigger": () => async function (status, name) {
                 let workflow = server.create('workflow', { name, status });
                 server.create('workflownode', { workflowId: workflow.id, category: 'trigger', kind: 'issue.created' });
+            }
+        },
+        {
+            "There is an agent named $name": () => async function (name) {
+                server.create('agent', { name });
             }
         },
         {
@@ -57,6 +65,46 @@ export const when = function () {
             "User enters $name in the workflow name": (assert) => async function (name) {
                 await fillIn('[data-field="workflow.name"] input', name);
                 assert.ok(true, 'User enters the workflow name');
+            }
+        },
+        {
+            "User adds the condition $field $operator $value": (assert) => async function (field, operator, value) {
+                await click('[data-add-condition]');
+                await selectChoose('[data-condition="0"] [data-field="workflownode.condition.field"]', field);
+                await selectChoose('[data-condition="0"] [data-field="workflownode.condition.operator"]', operator);
+                await fillIn('[data-condition="0"] [data-field="workflownode.condition.value"] input', value);
+                assert.ok(true, 'User adds a condition');
+            }
+        },
+        {
+            "User picks $label as the $setting": (assert) => async function (label, setting) {
+                await selectChoose(CONFIG(setting), label);
+                assert.ok(true, `User picks the ${setting}`);
+            }
+        },
+        {
+            "User types $text in the $setting setting": (assert) => async function (text, setting) {
+                await fillIn(`${CONFIG(setting)} input, ${CONFIG(setting)} textarea`, text);
+                assert.ok(true, `User enters the ${setting}`);
+            }
+        },
+        {
+            "User inserts $path into the $setting": (assert) => async function (path, setting) {
+                await selectChoose(CONFIG(`${setting}.expression`), path);
+                assert.ok(true, `User inserts ${path}`);
+            }
+        },
+        {
+            "User adds the case $key": (assert) => async function (key) {
+                await click('[data-add-case]');
+                await fillIn('[data-case="0"] [data-field="workflownode.case.key"] input', key);
+                assert.ok(true, 'User adds a case');
+            }
+        },
+        {
+            "User applies the step": (assert) => async function () {
+                await click('[data-apply-step]');
+                assert.ok(true, 'User applies the step');
             }
         },
         {
@@ -109,6 +157,18 @@ export const then = function () {
             "The $kind step shows the message $message": (assert) => async function (kind, message) {
                 assert.dom(`${NODE(kind)}.has-errors`).exists();
                 assert.dom('[data-node-errors]').hasText(message);
+            }
+        },
+        {
+            "The $kind step of workflow $id has the config $json": (assert) => async function (kind, id, json) {
+                let node = nodeKinds(id).find(record => record.kind === kind);
+                assert.ok(node, `the ${kind} step is saved`);
+                assert.deepEqual(JSON.parse(node.config || '{}'), JSON.parse(json));
+            }
+        },
+        {
+            "The step shows the outputs $ports": (assert) => async function (ports) {
+                assert.deepEqual(findAll('[data-step-output]').map(port => port.dataset.stepOutput), ports.split(', '));
             }
         },
         {
