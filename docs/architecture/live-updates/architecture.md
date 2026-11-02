@@ -64,9 +64,10 @@ shared event catalog.
 | Conversation controller | tracked project id | `conversation.comment.created/updated/deleted`, `conversation.vote.added/removed`, `conversation.created` |
 | Ideas controller (browser) | tracked project id | `idea.created`, `idea.updated` (reload the list) |
 | Idea page controller | tracked project id | only events whose `meta.ideaId` is the open idea: `idea.message.created` (loads and appends the message, no duplicate), `idea.plan.created` and `idea.plan.status.changed` (reload plans, Plan box shows the latest version), `idea.planissue.created` (reload Created Issues), `idea.updated` (reload the header) |
+| Issue page controller | tracked project id | only events of the open issue: `issue.status.changed` (status; a `statusId`-only change takes the name from the project statuses), `issue.assignee.changed`; only comments of the issue's room: `conversation.comment.created/updated/deleted`. A Messenger toast shows for changes by another actor, never for own changes or deletes |
 | Notifications service | `user:<currentUser.id>` | `notification.created` |
 
-Issue list, issue detail, wiki, and issue comments are not live.
+Issue list, the issue activity list, wiki, and non-conversation comments are not live.
 
 ## Client contract (what this app sends)
 
@@ -111,6 +112,7 @@ fail CORS.
 | Board | `app/controllers/app/project/board.js`, `app/routes/app/project/board.js` |
 | Gantt | `app/controllers/app/project/gantt.js`, `app/routes/app/project/gantt.js` |
 | Conversations | `app/controllers/app/project/conversation.js`, `app/routes/app/project/conversation.js` |
+| Issue page | `app/controllers/app/project/issue/page.js`, `app/routes/app/project/issue/page.js` |
 | Echo suppression | `app/adapters/application.js` |
 | Fake Hermes helper | `tests/helpers/hermes-fake.js` |
 | Yadda live steps | `tests/acceptance/steps/live/hermes-live-steps.js` |

@@ -117,9 +117,18 @@ and Hermes room keys are out of scope here.
 | | |
 |---|---|
 | Status | Accepted |
-| Decision | Issue list, issue detail, wiki, and non-conversation comments do not register Hermes intents. Live events for those surfaces are not applied. |
+| Decision | Issue list, the activity list of the issue page, wiki, and non-conversation comments do not register Hermes intents. The issue page itself registers for status, assignee and its comments (D-013). Live events for those surfaces are not applied. |
 | Rationale | No handler means no intent, which means Hermes does not put the socket in that composite room. |
 | Implications | Shipping live updates for a new screen is an explicit register map on that screen, plus Gaia already publishing the name. |
+
+### D-013 — The issue page toasts changes by other actors
+
+| | |
+|---|---|
+| Status | Accepted |
+| Decision | The issue page shows a Messenger toast for status, assignee and comment create/edit changes made by another actor. It never toasts the current user's own changes, nor deletes. |
+| Rationale | The page changes under the user's eyes; the toast says who changed it. Own changes already have local feedback. |
+| Implications | Handlers check `envelope.actorId` against the current user and apply events only for the open issue and its room. |
 
 ### D-012 — Live-update tests use Mirage + Fake Hermes (no Gaia)
 
