@@ -2346,6 +2346,32 @@
           "hidePrompt": "Show less",
           "rolesProjects": "Roles & Projects",
           "memberOf": "Member of"
+        },
+        "credentials": {
+          "title": "Credentials",
+          "clientId": "Client ID",
+          "clientSecret": "Client secret",
+          "created": "Created {date} by {user}",
+          "lastUsed": "last used {date}",
+          "neverUsed": "never used",
+          "none": "This agent has no credentials yet.",
+          "issue": "Issue credentials",
+          "rotate": "Rotate secret",
+          "revoke": "Revoke",
+          "revokeTitle": "Revoke credentials",
+          "revokeWarning": "The agent can no longer sign in until new credentials are issued.",
+          "revoked": "Credentials revoked",
+          "revokeFailed": "The credentials could not be revoked",
+          "issueFailed": "The credentials could not be issued",
+          "loadFailed": "The credentials could not be loaded",
+          "newSecretTitle": "New client secret",
+          "copyNow": "Copy the secret now. It is shown only once: Projects4Me keeps only a hash of it. The previous secret stopped working when this one was created.",
+          "copy": "Copy",
+          "copied": "Copied to the clipboard",
+          "copyFailed": "Could not copy to the clipboard",
+          "copiedIt": "I have copied it",
+          "forMachine": "For the machine that runs this agent",
+          "orConfigure": "Or run dev-tools/installer/p4m configure and paste it when asked."
         }
       }
     },
