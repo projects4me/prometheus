@@ -12,10 +12,10 @@ export default Factory.extend({
     },
     kind: 'user',
     steps() {
-        return [];
+        return '[]';
     },
     screens() {
-        return [];
+        return '[]';
     },
     ideaplanId: null,
     costUsd: 0,

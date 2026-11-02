@@ -162,8 +162,8 @@
                 @placeholder={{t "views.app.issue.create.selectassignee"}}
                 @label={{t "views.app.issue.create.assignedTo"}}
                 @value={{this.model.assignee}}
-                @options={{this.activeMembersList}}
-                @selected={{find-by "value" this.model.assignee this.activeMembersList}}
+                @options={{this.assigneeGroups}}
+                @selected={{find-by "value" this.model.assignee this.assigneeOptions}}
                 @searchField="label"
                 @onchange={{action "selectRelated" this.model 'assignee'}}
                 @relateType="relate-user"

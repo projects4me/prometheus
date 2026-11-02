@@ -1,5 +1,6 @@
 <div class="row idea-wrapper">
   <AccessControl @aclContext="idea.read">
+    {{#unless this.browserCollapsed}}
     <div class="col-md-3">
       <div class="box box-primary idea-browser" data-idea-browser>
         <div class="box-header with-border">
@@ -16,9 +17,11 @@
           <ul class="nav nav-stacked idea-list" data-idea-list>
             {{#each this.listedIdeas as |idea|}}
               <li class={{if (eq idea.id this.selectedIdeaId) "active menu-open"}} data-idea={{idea.id}}>
-                <LinkTo @route="app.project.idea.page" @model={{idea.id}}>
+                <LinkTo @route="app.project.idea.page" @model={{idea.id}} @query={{this.linkQuery}}>
                   <span data-idea-title>{{idea.title}}</span>
-                  <span class="label pull-right {{if (eq idea.status "open") "new" "deferred"}}" data-idea-status>{{t (concat "views.app.idea.status." idea.status)}}</span>
+                  {{#let (get this.progressByIdea idea.id) as |progress|}}
+                    <span class="label pull-right {{progress.class}}" data-idea-status>{{t progress.label}}</span>
+                  {{/let}}
                 </LinkTo>
               </li>
             {{else}}
@@ -39,8 +42,21 @@
         {{/if}}
       </div>
     </div>
+    {{/unless}}
 
-    <div class="col-md-9">
+    <div class={{if this.browserCollapsed "col-md-12" "col-md-9"}}>
+      <button
+        class="board-panel-divider idea-browser-divider"
+        type="button"
+        title={{if this.browserCollapsed (t "views.app.idea.browser.expand") (t "views.app.idea.browser.collapse")}}
+        {{on "click" this.toggleBrowser}}
+        data-collapse-browser={{unless this.browserCollapsed "true"}}
+        data-expand-browser={{if this.browserCollapsed "true"}}
+      >
+        <span class="divider-handle">
+          <i class="fa fa-angle-{{if this.browserCollapsed "right" "left"}}"></i>
+        </span>
+      </button>
       {{outlet}}
     </div>
   </AccessControl>

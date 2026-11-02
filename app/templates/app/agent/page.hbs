@@ -1,0 +1,201 @@
+<section class="content-header">
+  <h1>
+    {{t "views.app.agent.detail.title"}}
+    <small>{{this.model.name}}</small>
+  </h1>
+  <BreadCrumb/>
+</section>
+
+<section class="content">
+  <div class="row agent-detail">
+    <AccessControl @aclContext="agent.read">
+      <div class="col-md-8">
+        <div class="box box-primary agent-header-box" data-agent-box="header">
+          <div class="box-header with-border">
+            <h3 class="box-title">
+              {{t "views.app.agent.detail.heading" name=this.model.name}}
+              <AppUi::Dropdown>
+                <:button>
+                  <span class="label {{if this.model.isActive "label-success" "label-danger"}}" data-agent-field="status">
+                    {{if this.model.isActive (t "views.app.agent.status.active") (t "views.app.agent.status.disabled")}}
+                  </span>
+                </:button>
+                <:content>
+                  <div {{on "click" (fn this.changeStatus "active")}} data-agent-status="active">{{t "views.app.agent.status.active"}}</div>
+                  <div {{on "click" (fn this.changeStatus "inactive")}} data-agent-status="inactive">{{t "views.app.agent.status.disabled"}}</div>
+                </:content>
+              </AppUi::Dropdown>
+            </h3>
+            <div class="box-tools pull-right">
+              <AccessControl @aclContext="agent.update">
+                <LinkTo @route="app.agent.edit" @model={{this.model.id}} class="btn btn-box-tool" data-btn="edit" title={{t "global.form.edit"}}>
+                  <i class="fa fa-pencil"></i>
+                </LinkTo>
+              </AccessControl>
+            </div>
+          </div>
+          <div class="box-body">
+            <div class="agent-header">
+              <div class="agent-identity">
+                <Agent::Avatar @large={{true}} />
+                <div><strong data-agent-field="name">{{this.model.name}}</strong></div>
+                <div class="text-muted" data-agent-field="email">{{this.model.user.email}}</div>
+                <Agent::Badge />
+              </div>
+              <div class="agent-facts">
+                <h4>{{t "views.app.agent.form.purpose"}}</h4>
+                <p data-agent-field="purpose">{{this.model.purpose}}</p>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <h4>{{t "views.app.agent.detail.sponsor"}}</h4>
+                    <p data-agent-field="sponsor">
+                      {{#if this.model.sponsor.id}}
+                        <LinkTo @route="app.user.page" @model={{this.model.sponsor.id}}>{{this.model.sponsor.name}}</LinkTo>
+                      {{else}}
+                        <em>{{t "views.app.agent.autonomous"}}</em>
+                      {{/if}}
+                    </p>
+                  </div>
+                  <div class="col-sm-4">
+                    <h4>{{t "views.app.agent.form.permissionMode"}}</h4>
+                    <p data-agent-field="permission-mode">{{this.model.permissionMode}}</p>
+                  </div>
+                  <div class="col-sm-4">
+                    <h4>{{t "views.app.agent.detail.maxTurns"}}</h4>
+                    <p data-agent-field="max-turns">{{t "views.app.agent.detail.limits" turns=this.model.maxTurns runs=this.model.maxRunsPerIssue}}</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4">
+                    <h4>{{t "views.app.agent.detail.modelSimple"}}</h4>
+                    <p data-agent-field="model-simple">{{this.model.config.simple}}</p>
+                  </div>
+                  <div class="col-sm-4">
+                    <h4>{{t "views.app.agent.detail.modelComplex"}}</h4>
+                    <p data-agent-field="model-complex">{{this.model.config.complex}}</p>
+                  </div>
+                  <div class="col-sm-4">
+                    <h4>{{t "views.app.agent.detail.escalatesTo"}}</h4>
+                    <p data-agent-field="model-escalation">{{this.model.config.escalation}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="box box-info" data-agent-box="role-prompt">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.agent.form.rolePrompt"}}</h3>
+            <div class="box-tools pull-right">
+              <AccessControl @aclContext="agent.update">
+                <LinkTo @route="app.agent.edit" @model={{this.model.id}} class="btn btn-box-tool" data-btn="edit-prompt" title={{t "global.form.edit"}}>
+                  <i class="fa fa-pencil"></i>
+                </LinkTo>
+              </AccessControl>
+            </div>
+          </div>
+          <div class="box-body">
+            <div class="agent-role-prompt {{if this.showWholePrompt "expanded"}}" data-agent-field="role-prompt" {{render-markdown this.model.rolePrompt}}></div>
+          </div>
+          <div class="box-footer text-center">
+            <AppUi::Button type="button" class="btn btn-link" data-btn="toggle-prompt" @onClick={{this.togglePrompt}}>
+              {{if this.showWholePrompt (t "views.app.agent.detail.hidePrompt") (t "views.app.agent.detail.showPrompt")}}
+            </AppUi::Button>
+          </div>
+        </div>
+
+        <Agent::Workflows @agent={{this.model}} />
+
+        <div class="box box-success" data-agent-box="tools">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.agent.detail.tools"}}</h3>
+            <div class="box-tools pull-right">
+              <LinkTo @route="app.agent.tools" class="btn btn-box-tool" title={{t "views.nav.menu.agent.tools"}}><i class="fa fa-wrench"></i></LinkTo>
+            </div>
+          </div>
+          <div class="box-body no-padding">
+            <table class="table">
+              <tbody>
+                {{#each this.grantedTools as |grant|}}
+                  <tr data-agent-tool={{grant.name}}>
+                    <td>
+                      <code>{{grant.name}}</code>
+                      {{#if grant.isServer}}<span class="label label-default">{{t "views.app.agent.detail.wholeServer"}}</span>{{/if}}
+                      {{#if grant.server}}<span class="text-muted small">{{grant.server}}</span>{{/if}}
+                    </td>
+                    <td><code>{{grant.permissionRule}}</code></td>
+                  </tr>
+                {{else}}
+                  <tr><td class="text-muted">{{t "views.app.agent.detail.noTools"}}</td></tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="box box-success" data-agent-box="skills">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.agent.detail.skills"}}</h3>
+            <div class="box-tools pull-right">
+              <LinkTo @route="app.agent.skills" class="btn btn-box-tool" title={{t "views.nav.menu.agent.skills"}}><i class="fa fa-book"></i></LinkTo>
+            </div>
+          </div>
+          <div class="box-body">
+            {{#each this.grantedSkills as |skill|}}
+              <span class="label label-default" data-agent-skill={{skill.name}}>{{skill.name}}{{#if skill.version}} v{{skill.version}}{{/if}}</span>
+            {{else}}
+              <span class="text-muted">{{t "views.app.agent.detail.noSkills"}}</span>
+            {{/each}}
+          </div>
+        </div>
+
+        <div class="box box-danger" data-agent-box="activities">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.agent.detail.activities"}}</h3>
+          </div>
+          <div class="box-body agent-activities">
+            <AppUi::Timeline @activities={{this.groupedActivities}} @dataKey="data" as |key|>
+              {{moment-format key "Do MMM. YYYY"}}
+            </AppUi::Timeline>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <Agent::Credentials @agent={{this.model}} />
+
+        <div class="box box-warning" data-agent-box="roles-projects">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.agent.detail.rolesProjects"}}</h3>
+          </div>
+          <div class="box-body">
+            <h4>{{t "views.app.agent.form.roles"}}</h4>
+            <p data-agent-field="roles">
+              {{#each this.userroles as |userrole|}}
+                <span class="label label-default">{{userrole.role.name}}</span>
+              {{/each}}
+            </p>
+            <h4>{{t "views.app.agent.detail.memberOf"}}</h4>
+            <p data-agent-field="projects">
+              {{#each this.memberships as |membership|}}
+                <span class="label label-default">{{membership.project.name}}</span>
+              {{/each}}
+            </p>
+          </div>
+        </div>
+
+        <AccessControl>
+          <UserProfile::Identities
+            @user={{this.model.user}}
+            @save={{this.save}}
+            @validateField={{this.validateField}}
+            @selectRelated={{this.selectRelated}}
+            @message={{this.message}}
+            @clearFieldMessage={{this.clearFieldMessage}}
+          />
+        </AccessControl>
+      </div>
+    </AccessControl>
+  </div>
+</section>

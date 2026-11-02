@@ -1,0 +1,226 @@
+<section class="content-header">
+  <h1>{{t "views.app.agent.tools.title"}}</h1>
+  <BreadCrumb/>
+</section>
+
+<section class="content">
+  <div class="row agent-catalog" data-catalog="tools">
+    <AccessControl @aclContext="agent.read">
+      <div class="col-md-12">
+        {{#if this.error}}
+          <div class="alert alert-danger" data-catalog-error={{this.error}}>{{t (concat "views.app.agent.tools.errors." this.error)}}</div>
+        {{/if}}
+
+        <div class="box box-primary" data-catalog-box="servers">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.agent.tools.servers"}}</h3>
+            <div class="box-tools pull-right">
+              <AccessControl @aclContext="agent.update">
+                <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="add-server" @onClick={{this.toggleServerForm}}>
+                  <i class="fa fa-plus"></i> {{t "views.app.agent.tools.addServer"}}
+                </AppUi::Button>
+              </AccessControl>
+            </div>
+          </div>
+
+          {{#if this.showServerForm}}
+            <form class="box-body" data-catalog-form="server" {{on "submit" this.addServer}}>
+              <div class="row">
+                <div class="col-md-3">
+                  <FormFields::FieldText
+                    @label={{t "views.app.agent.tools.server.name"}}
+                    @value={{this.serverForm.name}}
+                    @data-field="toolserver.name"
+                    @length="100"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <FormFields::FieldRelate
+                    @label={{t "views.app.agent.tools.server.kind"}}
+                    @options={{this.serverKindOptions}}
+                    @selected={{find-by "value" this.serverForm.kind this.serverKindOptions}}
+                    @searchEnabled={{false}}
+                    @onchange={{fn this.selectOption "serverForm" "kind"}}
+                    @relateType="relate-simple"
+                    @data-field="toolserver.kind"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <FormFields::FieldRelate
+                    @label={{t "views.app.agent.tools.server.location"}}
+                    @options={{this.serverLocationOptions}}
+                    @selected={{find-by "value" this.serverForm.location this.serverLocationOptions}}
+                    @searchEnabled={{false}}
+                    @onchange={{fn this.selectOption "serverForm" "location"}}
+                    @relateType="relate-simple"
+                    @data-field="toolserver.location"
+                  />
+                </div>
+                <div class="col-md-5">
+                  <FormFields::FieldText
+                    @label={{t "views.app.agent.tools.server.endpoint"}}
+                    @value={{this.serverForm.endpoint}}
+                    @data-field="toolserver.endpoint"
+                    @length="255"
+                  />
+                </div>
+              </div>
+              <FormFields::FieldText
+                @label={{t "views.app.agent.tools.server.description"}}
+                @value={{this.serverForm.description}}
+                @data-field="toolserver.description"
+              />
+              <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="save-server" @onClick={{this.addServer}}>{{t "global.form.save"}}</AppUi::Button>
+              <AppUi::Button type="button" class="btn btn-default btn-sm" @onClick={{this.toggleServerForm}}>{{t "global.form.cancel"}}</AppUi::Button>
+            </form>
+          {{/if}}
+
+          <div class="box-body no-padding table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>{{t "views.app.agent.tools.server.name"}}</th>
+                  <th>{{t "views.app.agent.tools.server.kind"}}</th>
+                  <th>{{t "views.app.agent.tools.server.location"}}</th>
+                  <th>{{t "views.app.agent.tools.server.endpoint"}}</th>
+                  <th>{{t "views.app.agent.tools.server.tools"}}</th>
+                  <th>{{t "views.app.agent.tools.server.agents"}}</th>
+                  <th>{{t "views.app.agent.tools.server.refreshed"}}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each this.serverRows as |row|}}
+                  <tr class={{if row.isSelected "active"}} data-server={{row.server.name}}>
+                    <td>
+                      <a href="#" data-btn="select-server" {{on "click" (fn this.selectServer row.server)}}>{{row.server.name}}</a>
+                      <div class="text-muted small">{{row.server.description}}</div>
+                      {{#if row.server.refreshError}}
+                        <div class="text-red small">{{row.server.refreshError}}</div>
+                      {{/if}}
+                    </td>
+                    <td>{{row.server.kind}}</td>
+                    <td><span class="label label-default">{{row.server.location}}</span></td>
+                    <td><code>{{if row.server.endpoint row.server.endpoint "–"}}</code></td>
+                    <td data-cell="tools">{{row.toolCount}}</td>
+                    <td data-cell="agents">{{row.agentCount}}</td>
+                    <td>{{if row.server.schemaRefreshedAt (moment-from-now row.server.schemaRefreshedAt) (t "views.app.agent.tools.server.never")}}</td>
+                    <td class="text-right">
+                      {{#if row.canRefresh}}
+                        <AccessControl @aclContext="agent.update">
+                          <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="refresh" disabled={{row.isRefreshing}} @onClick={{fn this.refreshServer row.server}}>
+                            <i class="fa fa-refresh"></i> {{t "views.app.agent.tools.refresh"}}
+                          </AppUi::Button>
+                        </AccessControl>
+                      {{/if}}
+                    </td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {{#if this.selectedServer}}
+          <div class="box box-info" data-catalog-box="tools">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{t "views.app.agent.tools.toolsOf" server=this.selectedServer.name}}</h3>
+            </div>
+            <div class="box-body no-padding table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>{{t "views.app.agent.tools.tool.name"}}</th>
+                    <th>{{t "views.app.agent.tools.tool.description"}}</th>
+                    <th>{{t "views.app.agent.tools.tool.inputs"}}</th>
+                    <th>{{t "views.app.agent.tools.tool.grantedTo"}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each this.toolRows as |row|}}
+                    <tr class={{if row.isSelected "active"}} data-tool={{row.tool.name}}>
+                      <td><a href="#" data-btn="select-tool" {{on "click" (fn this.selectTool row.tool)}}><code>{{row.tool.name}}</code></a></td>
+                      <td>{{row.tool.description}}</td>
+                      <td>
+                        {{#each row.inputs as |input|}}
+                          <span class="label label-default">{{input}}</span>
+                        {{/each}}
+                      </td>
+                      <td data-cell="granted-to">{{row.grantedTo}}</td>
+                    </tr>
+                  {{else}}
+                    <tr><td colspan="4" class="text-muted">{{t "views.app.agent.tools.noTools"}}</td></tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="box box-warning" data-catalog-box="grants">
+            <div class="box-header with-border">
+              <h3 class="box-title">
+                {{#if this.selectedTool}}
+                  {{t "views.app.agent.tools.grantsOn" name=this.selectedTool.name}}
+                {{else}}
+                  {{t "views.app.agent.tools.grantsOnServer" name=this.selectedServer.name}}
+                {{/if}}
+              </h3>
+            </div>
+            <div class="box-body">
+              {{#each this.grantRows as |row|}}
+                <div class="row agent-grant" data-grant={{row.agentName}}>
+                  <div class="col-md-3"><strong>{{row.agentName}}</strong></div>
+                  <div class="col-md-8">
+                    <FormFields::FieldText
+                      @placeholder={{t "views.app.agent.tools.rulePlaceholder"}}
+                      @value={{row.grant.permissionRule}}
+                      @data-field="agenttool.permissionRule"
+                      @length="255"
+                      {{on "change" (fn this.saveRule row.grant)}}
+                    />
+                  </div>
+                  <div class="col-md-1">
+                    <AccessControl @aclContext="agent.update">
+                      <AppUi::Button type="button" class="btn btn-default btn-sm" data-btn="remove-grant" @onClick={{fn this.removeGrant row.grant}}>
+                        <i class="fa fa-times"></i>
+                      </AppUi::Button>
+                    </AccessControl>
+                  </div>
+                </div>
+              {{else}}
+                <p class="text-muted">{{t "views.app.agent.tools.noGrants"}}</p>
+              {{/each}}
+
+              <AccessControl @aclContext="agent.update">
+                <form class="row" data-catalog-form="grant" {{on "submit" this.addGrant}}>
+                  <div class="col-md-3">
+                    <FormFields::FieldRelate
+                      @label={{t "views.app.agent.tools.grantAgent"}}
+                      @options={{this.agentOptions}}
+                      @selected={{find-by "value" this.grantForm.agentId this.agentOptions}}
+                      @onchange={{fn this.selectOption "grantForm" "agentId"}}
+                      @relateType="relate-simple"
+                      @data-field="agenttool.agentId"
+                    />
+                  </div>
+                  <div class="col-md-7">
+                    <FormFields::FieldText
+                      @label={{t "views.app.agent.tools.rule"}}
+                      @placeholder={{t "views.app.agent.tools.rulePlaceholder"}}
+                      @value={{this.grantForm.permissionRule}}
+                      @data-field="agenttool.newRule"
+                      @length="255"
+                    />
+                  </div>
+                  <div class="col-md-2">
+                    <AppUi::Button type="button" class="btn btn-primary btn-sm" data-btn="add-grant" @onClick={{this.addGrant}}>{{t "views.app.agent.tools.addGrant"}}</AppUi::Button>
+                  </div>
+                </form>
+              </AccessControl>
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    </AccessControl>
+  </div>
+</section>

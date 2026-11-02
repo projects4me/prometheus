@@ -1,11 +1,16 @@
 <div class="box box-success idea-plan" data-idea-plan>
   <div class="box-header with-border">
     <h3 class="box-title">{{t "views.app.idea.plan.title"}}</h3>
-    {{#if this.selected}}
-      <div class="box-tools pull-right">
+    <div class="box-tools pull-right">
+      {{#if this.selected}}
         <span class="label {{this.statusClass}}" role="status" aria-live="polite" data-idea-plan-status>{{#if this.isCreating}}<i class="fa fa-spinner fa-spin" aria-hidden="true" data-idea-plan-creating></i> {{/if}}{{t (concat "views.app.idea.plan.status." this.selected.status)}}</span>
-      </div>
-    {{/if}}
+      {{/if}}
+      {{#if @onToggleReview}}
+        <button type="button" class="btn btn-box-tool" title={{t (if @isReviewMode "views.app.idea.plan.reviewExit" "views.app.idea.plan.reviewEnter")}} {{on "click" @onToggleReview}} data-idea-plan-review>
+          <i class="fa {{if @isReviewMode "fa-compress" "fa-expand"}}"></i>
+        </button>
+      {{/if}}
+    </div>
   </div>
   {{#if this.selected}}
     <div class="box-body">

@@ -1,5 +1,5 @@
-<div class="row idea-page">
-  <div class="col-md-8" data-idea-main>
+<div class="row idea-page {{if this.isReviewMode "idea-review-mode"}}">
+  <div class={{this.mainClass}} data-idea-main>
     {{#if this.model}}
       <Idea::ConversationBox
         @idea={{this.model}}
@@ -12,9 +12,9 @@
       />
     {{/if}}
   </div>
-  <div class="col-md-4" data-idea-side>
+  <div class={{this.sideClass}} data-idea-side>
     {{#if this.model}}
-      <Idea::PlanBox @plans={{this.plans}} @messages={{this.messages}} @shownPlan={{this.shownPlan}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readableProjectIds}} @onApprove={{this.approvePlan}} />
+      <Idea::PlanBox @plans={{this.plans}} @messages={{this.messages}} @shownPlan={{this.shownPlan}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readableProjectIds}} @onApprove={{this.approvePlan}} @isReviewMode={{this.isReviewMode}} @onToggleReview={{this.toggleReviewMode}} />
       <Idea::CreatedIssuesBox @plans={{this.plans}} @planIssues={{this.planIssues}} @readableProjectIds={{this.readableProjectIds}} />
       <Idea::SummaryBox @idea={{this.model}} @messages={{this.messages}} @plans={{this.plans}} @createdUserName={{this.createdUserName}} />
     {{/if}}

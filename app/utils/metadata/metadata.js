@@ -144,24 +144,6 @@ export default Object.extend({
                     anchorRoute: 'idea',
                     projectRelated: true,
                     aclContext: 'idea.read',
-                    actions:{
-                        section1:{
-                            list:{
-                                label: 'views.nav.menu.idea.list',
-                                route: 'app.project.idea',
-                                className: 'text-teal',
-                                anchorRoute: 'idea',
-                                projectRelated: true,
-                            },
-                            create:{
-                                label: 'views.nav.menu.idea.create',
-                                route: 'app.project.idea.create',
-                                className: 'text-red',
-                                anchorRoute: 'idea/create',
-                                projectRelated: true,
-                            }
-                        }
-                    },
                     order: 7
                 },
                 Conversation:{
@@ -190,6 +172,57 @@ export default Object.extend({
                 }
             },
             adminItems: {
+                Workflows: {
+                    label: 'views.nav.menu.workflow.label',
+                    icon: 'sitemap',
+                    route: 'app.workflow',
+                    anchorRoute: 'workflow',
+                    aclContext: 'workflow.read',
+                    projectRelated: false
+                },
+                Agents: {
+                    label: 'global.module.plural.agent',
+                    icon: 'android',
+                    route: 'app.agent',
+                    anchorRoute: 'agent',
+                    aclContext: 'agent.read',
+                    projectRelated: false,
+                    actions: {
+                        section1: {
+                            list: {
+                                label: 'views.nav.menu.agent.list',
+                                route: 'app.agent',
+                                className: 'text-teal',
+                                anchorRoute: 'agent',
+                                projectRelated: false,
+                            },
+                            create: {
+                                label: 'views.nav.menu.agent.create',
+                                route: 'app.agent.create',
+                                className: 'text-red',
+                                anchorRoute: 'agent/create',
+                                projectRelated: false,
+                                aclContext: 'agent.create',
+                            },
+                            tools: {
+                                label: 'views.nav.menu.agent.tools',
+                                route: 'app.agent.tools',
+                                className: 'text-yellow',
+                                anchorRoute: 'agent/tools',
+                                projectRelated: false,
+                                aclContext: 'agent.read',
+                            },
+                            skills: {
+                                label: 'views.nav.menu.agent.skills',
+                                route: 'app.agent.skills',
+                                className: 'text-green',
+                                anchorRoute: 'agent/skills',
+                                projectRelated: false,
+                                aclContext: 'agent.read',
+                            }
+                        }
+                    }
+                },
                 Settings: {
                     label: 'views.nav.menu.settings.label',
                     icon: 'cogs',

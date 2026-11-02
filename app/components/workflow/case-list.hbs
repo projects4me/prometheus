@@ -1,0 +1,42 @@
+<div class="workflow-case-list" data-case-list>
+  {{#each this.rows key="index" as |row|}}
+    <div class="box box-default workflow-case" data-case={{row.index}}>
+      <div class="box-header with-border">
+        <h3 class="box-title">{{t "views.app.workflow.config.caseTitle" number=(inc row.index)}}</h3>
+        <div class="box-tools pull-right">
+          <button
+            type="button"
+            class="btn btn-box-tool"
+            disabled={{@locked}}
+            title={{t "views.app.workflow.config.removeCase"}}
+            data-remove-case
+            {{on "click" (fn this.remove row.index)}}
+          >
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <div class="box-body">
+        <FormFields::FieldText
+          @label={{t "views.app.workflow.config.caseKey"}}
+          @value={{row.entry.key}}
+          @onInput={{fn this.changeKey row.index}}
+          @readonly={{@locked}}
+          @required={{true}}
+          @showFieldInfo={{true}}
+          @info={{t "views.app.workflow.config.caseKeyInfo" default=this.defaultPort}}
+          @data-field="workflownode.case.key"
+        />
+        <Workflow::ConditionList
+          @conditions={{row.entry.conditions}}
+          @payloadFields={{@payloadFields}}
+          @locked={{@locked}}
+          @onChange={{fn this.changeConditions row.index}}
+        />
+      </div>
+    </div>
+  {{/each}}
+  <button type="button" class="btn btn-default btn-xs" disabled={{@locked}} data-add-case {{on "click" this.add}}>
+    <i class="fa fa-plus" aria-hidden="true"></i> {{t "views.app.workflow.config.addCase"}}
+  </button>
+</div>

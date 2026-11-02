@@ -33,11 +33,21 @@ import * as Systemsetting from './route-handlers/systemsetting';
 import * as Setting from './route-handlers/setting';
 import * as Issueplanning from './route-handlers/issueplanning';
 import * as Issuewatcher from './route-handlers/issuewatcher';
+import * as Agent from './route-handlers/agent';
+import * as AgentCatalog from './route-handlers/agent-catalog';
+import * as Agentcredential from './route-handlers/agentcredential';
+import * as Useridentity from './route-handlers/useridentity';
 import * as Userskill from './route-handlers/userskill';
 import * as Userqualification from './route-handlers/userqualification';
 import * as Idea from './route-handlers/idea';
 import * as Ideamessage from './route-handlers/ideamessage';
 import * as Ideaplan from './route-handlers/ideaplan';
+import * as Workflow from './route-handlers/workflow';
+import * as Workflownode from './route-handlers/workflownode';
+import * as Workflowedge from './route-handlers/workflowedge';
+import * as Workflowrun from './route-handlers/workflowrun';
+import * as Workflowreference from './route-handlers/workflowreference';
+import * as Workflowevent from './route-handlers/workflowevent';
 import * as Ideaplanissue from './route-handlers/ideaplanissue';
 
 export function makeServer(config) {
@@ -88,10 +98,20 @@ function routes() {
     Setting.register(this, ctx);
     Issueplanning.register(this, ctx);
     Issuewatcher.register(this, ctx);
+    Agent.register(this);
+    AgentCatalog.register(this);
+    Agentcredential.register(this);
+    Useridentity.register(this);
     Userskill.register(this);
     Userqualification.register(this);
     Idea.register(this, ctx);
     Ideamessage.register(this, ctx);
     Ideaplan.register(this, ctx);
+    Workflow.register(this, ctx);
+    Workflownode.register(this, ctx);
+    Workflowedge.register(this, ctx);
+    Workflowrun.register(this, ctx);
+    Workflowreference.register(this, ctx);
+    Workflowevent.register(this);
     Ideaplanissue.register(this, ctx);
 }

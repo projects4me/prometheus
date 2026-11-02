@@ -1,0 +1,33 @@
+<div class="box box-info workflow-properties-section" data-workflow-properties>
+  <div class="box-header with-border">
+    {{#if @node}}
+      <h3 class="box-title" data-selected-kind>{{t (kind-label @node.kind)}}</h3>
+      <div class="box-tools pull-right">
+        <span class="text-muted" data-selected-category>{{t (concat "views.app.workflow.categories." @node.category)}}</span>
+      </div>
+    {{else}}
+      <h3 class="box-title">{{t "views.app.workflow.properties.title"}}</h3>
+    {{/if}}
+  </div>
+  <div class="box-body">
+    {{#if @node}}
+      {{!-- one form per step: a new step starts a fresh draft --}}
+      {{#each (array @node) key="key" as |node|}}
+        <Workflow::StepForm
+          @node={{node}}
+          @payloadFields={{@payloadFields}}
+          @users={{@users}}
+          @agents={{@agents}}
+          @locked={{@locked}}
+          @onApply={{@onApply}}
+          @onRemove={{@onRemove}}
+        />
+      {{/each}}
+    {{else}}
+      <p class="text-center text-muted" data-no-node>
+        <i class="fa fa-info-circle" aria-hidden="true"></i>
+        {{t "views.app.workflow.properties.empty"}}
+      </p>
+    {{/if}}
+  </div>
+</div>

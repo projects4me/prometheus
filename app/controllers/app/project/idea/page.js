@@ -4,8 +4,14 @@
 
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
+import { inject as controller } from '@ember/controller';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
+
+/**
+ * The view value of the plan review mode
+ */
+const REVIEW_VIEW = 'plan';
 
 /**
  * The controller of one idea. It loads the messages of the idea and saves what is written in the
@@ -52,6 +58,15 @@ export default class AppProjectIdeaPageController extends Controller {
     @service currentUser;
 
     /**
+     * The controller of the idea browser, whose progress badge follows the plan status
+     *
+     * @property ideaController
+     * @type Prometheus.Controllers.App.Project.Idea
+     * @public
+     */
+    @controller('app.project.idea') ideaController;
+
+    /**
      * Disposer of the Hermes registration
      *
      * @property hermesDisposer
@@ -95,6 +110,59 @@ export default class AppProjectIdeaPageController extends Controller {
      * @public
      */
     @tracked shownPlan = null;
+
+    /**
+     * The controller of the idea area, it owns the view query param
+     *
+     * @property ideaController
+     * @type Ember.Controller
+     * @private
+     */
+    @controller('app.project.idea') ideaController;
+
+    /**
+     * Whether the plan has the wide column; any view other than plan means the conversation layout
+     *
+     * @property isReviewMode
+     * @type Boolean
+     * @public
+     */
+    get isReviewMode() {
+        return this.ideaController.view === REVIEW_VIEW;
+    }
+
+    /**
+     * The classes of the conversation column
+     *
+     * @property mainClass
+     * @type String
+     * @public
+     */
+    get mainClass() {
+        return this.isReviewMode ? 'col-md-4 col-md-push-8' : 'col-md-8';
+    }
+
+    /**
+     * The classes of the plan column
+     *
+     * @property sideClass
+     * @type String
+     * @public
+     */
+    get sideClass() {
+        return this.isReviewMode ? 'col-md-8 col-md-pull-4' : 'col-md-4';
+    }
+
+    /**
+     * Switches between the conversation layout and the plan review mode
+     *
+     * @method toggleReviewMode
+     * @public
+     */
+    @action
+    toggleReviewMode() {
+        this.ideaController.view = this.isReviewMode ? null : REVIEW_VIEW;
+    }
 
     /**
      * The id of the idea whose messages are in the list
@@ -328,6 +396,8 @@ export default class AppProjectIdeaPageController extends Controller {
         plan.status = 'approved';
         try {
             await plan.save();
+            // the adapter marks this write as local, so Hermes drops its event and the badge needs the refresh
+            this.ideaController.setPlanStatus(plan.ideaId, plan.status);
         } catch (error) {
             plan.rollbackAttributes();
             this.errorManager.handleError(error, { moduleName: 'idea' });

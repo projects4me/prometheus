@@ -70,6 +70,12 @@ export default class AclService extends Service {
         { name: 'app.user.create', map: 'user.create' },
         { name: 'app.user.index', map: 'user.read' },
         { name: 'app.user.management', map: 'user.update' },
+        { name: 'app.agent.index', map: 'agent.read' },
+        { name: 'app.agent.create', map: 'agent.create' },
+        { name: 'app.agent.tools', map: 'agent.read' },
+        { name: 'app.agent.skills', map: 'agent.read' },
+        { name: 'app.agent.page', map: 'agent.read' },
+        { name: 'app.agent.edit', map: 'agent.update' },
         { name: 'app.admin.index', map: 'user.read' },
         { name: 'app.admin.create', map: 'user.create' },
         { name: 'app.admin.page', map: 'user.read' },
@@ -81,7 +87,11 @@ export default class AclService extends Service {
         { name: 'app.settings.users', map: 'user.read' },
         { name: 'app.settings.issue-types', map: 'setting.read' },
         { name: 'app.settings.issue-statuses', map: 'setting.read' },
-        { name: 'app.settings.email', map: 'setting.read' }
+        { name: 'app.settings.email', map: 'setting.read' },
+        { name: 'app.workflow', map: 'workflow.read' },
+        { name: 'app.workflow.index', map: 'workflow.read' },
+        { name: 'app.workflow.create', map: 'workflow.create' },
+        { name: 'app.workflow.page', map: 'workflow.read' }
     ];
 
     /**

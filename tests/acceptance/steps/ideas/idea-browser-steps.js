@@ -28,12 +28,35 @@ export const given = function () {
                 });
                 assert.ok(true, `${table.length} ideas exist`);
             }
+        },
+        {
+            "The collapsed state of the idea browser is cleared": (assert) => async function () {
+                localStorage.removeItem('ideaBrowserCollapsed');
+                assert.ok(true, 'The stored state is cleared');
+            }
+        },
+        {
+            "The plans of the idea $title are\n$table":(assert, ctx) => async function (title, table) {
+                let idea = server.schema.ideas.findBy({ title });
+                table.forEach(row => {
+                    server.create('ideaplan', { ideaId: idea.id, version: Number(row.version), status: row.status });
+                });
+                assert.ok(true, `${table.length} plans exist for ${title}`);
+            }
         }
     ];
 };
 
 export const when = function () {
     return [
+        {
+            "The plan version $version of the idea $title is now $status": (assert) => async function (version, title, status) {
+                let idea = server.schema.ideas.findBy({ title });
+                let plan = server.schema.ideaplans.findBy({ ideaId: idea.id, version: Number(version) });
+                plan.update({ status });
+                assert.ok(true, `plan ${version} of ${title} is now ${status}`);
+            }
+        },
         {
             "User opens the ideas of the project": (assert, ctx) => async function () {
                 let project = ctx.get('currentProject');
@@ -42,9 +65,34 @@ export const when = function () {
             }
         },
         {
+            "User opens the board of the project": (assert, ctx) => async function () {
+                let project = ctx.get('currentProject');
+                await visit(`/app/project/${project.shortCode}/board`);
+                assert.ok(true, 'User opens the board of the project');
+            }
+        },
+        {
+            "User clicks the Ideas entry in the sidebar": (assert) => async function () {
+                await click('.sidebar-menu [data-navigation-module="Idea"] > a');
+                assert.ok(true, 'User clicks the Ideas entry in the sidebar');
+            }
+        },
+        {
             "User clicks the archived footer link": (assert) => async function () {
                 await click(`${BROWSER} [data-toggle-archived]`);
                 assert.ok(true, 'User clicks the archived footer link');
+            }
+        },
+        {
+            "User collapses the idea browser": (assert) => async function () {
+                await click('[data-collapse-browser]');
+                assert.ok(true, 'User collapses the idea browser');
+            }
+        },
+        {
+            "User expands the idea browser": (assert) => async function () {
+                await click('[data-expand-browser]');
+                assert.ok(true, 'User expands the idea browser');
             }
         },
         {
@@ -61,6 +109,17 @@ export const then = function () {
         {
             "The sidebar shows the Idea entry": (assert) => async function () {
                 assert.dom('.sidebar-menu [data-navigation-module="Idea"]').exists();
+            }
+        },
+        {
+            "The ideas page is open": (assert, ctx) => async function () {
+                let project = ctx.get('currentProject');
+                assert.ok(currentURL().toLowerCase().startsWith(`/app/project/${project.shortCode.toLowerCase()}/idea`), `ideas route is open: ${currentURL()}`);
+            }
+        },
+        {
+            "The Ideas sidebar entry has no submenu": (assert) => async function () {
+                assert.dom('.sidebar-menu [data-navigation-module="Idea"] .treeview-menu').doesNotExist();
             }
         },
         {
@@ -95,6 +154,31 @@ export const then = function () {
                 assert.dom('[data-idea-main]').exists();
                 assert.dom('[data-idea-empty]').doesNotExist();
                 assert.dom(`${BROWSER} li`).exists();
+            }
+        },
+        {
+            "The idea browser is hidden and the idea page spans the full width": (assert) => async function () {
+                assert.dom(BROWSER).doesNotExist();
+                assert.dom('.idea-wrapper > .col-md-12').exists();
+                assert.dom('[data-expand-browser]').exists();
+            }
+        },
+        {
+            "The idea browser is shown beside the idea page": (assert) => async function () {
+                assert.dom(BROWSER).exists();
+                assert.dom('.idea-wrapper > .col-md-9').exists();
+                assert.dom('[data-expand-browser]').doesNotExist();
+            }
+        },
+        {
+            "The collapsed state is remembered in the browser storage as $value": (assert) => async function (value) {
+                assert.equal(localStorage.getItem('ideaBrowserCollapsed'), value);
+            }
+        },
+        {
+            "The stored idea browser state is reset": (assert) => async function () {
+                localStorage.removeItem('ideaBrowserCollapsed');
+                assert.ok(true, 'The stored state is cleared');
             }
         },
         {

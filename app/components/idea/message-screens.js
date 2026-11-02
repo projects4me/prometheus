@@ -5,7 +5,7 @@
 import Component from '@glimmer/component';
 
 /**
- * The screens of an idea message, one thumbnail per screen. Each screen points at an upload
+ * The screens of an idea message, one image per screen. Each screen points at an upload
  * related to the idea.
  *
  * @class IdeaMessageScreensComponent

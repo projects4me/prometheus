@@ -117,6 +117,38 @@ export default class AppUserPageController extends PrometheusCreateController {
                 ],
             },
             {
+                name: "userIdentity",
+                fields: [
+                    {
+                        name: "provider",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [{ name: "required" }],
+                            },
+                        },
+                    },
+                    {
+                        name: "handle",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [{ name: "required" }],
+                            },
+                        },
+                    },
+                    {
+                        name: "email",
+                        validations: {
+                            default: {
+                                type: "string",
+                                rules: [{ name: "email" }],
+                            },
+                        },
+                    },
+                ],
+            },
+            {
                 name: "userSkill",
                 fields: [
                     {

@@ -17,8 +17,30 @@ Feature: Ideas | idea browser
     When User opens the ideas of the project
     Then The sidebar shows the Idea entry
     And The idea browser lists the ideas Newest idea, Older idea
-    And The idea Newest idea is labelled Open
+    And The idea Newest idea is labelled Brainstorming
     And The idea browser opens on the new idea form
+
+  Scenario: The browser labels each idea with the status of its latest plan
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The ideas of the project are
+    ---------------------------------------------------------
+    | title        | status | dateModified        |
+    | Planned idea | open   | 2026-10-01 10:00:00 |
+    | Fresh idea   | open   | 2026-10-02 10:00:00 |
+    ---------------------------------------------------------
+    And The plans of the idea Planned idea are
+    ---------------------------
+    | version | status        |
+    | 2       | creating      |
+    | 1       | superseded    |
+    ---------------------------
+    When User opens the ideas of the project
+    Then The idea Planned idea is labelled Creating issues
+    And The idea Fresh idea is labelled Brainstorming
 
   Scenario: The archived ideas are shown and hidden from the footer link
 
@@ -59,6 +81,17 @@ Feature: Ideas | idea browser
     When User selects the idea First one in the browser
     Then The idea First one is highlighted in the browser
 
+  Scenario: The Ideas nav item is a direct link without a submenu
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    When User opens the board of the project
+    And User clicks the Ideas entry in the sidebar
+    Then The ideas page is open
+    And The Ideas sidebar entry has no submenu
+
   Scenario: The Ideas entry is hidden when the user cannot list ideas
 
     Given There is no pre-existing data
@@ -78,3 +111,24 @@ Feature: Ideas | idea browser
     And User selects Project 1
     When User opens the ideas of the project
     Then The empty idea box is shown
+
+  Scenario: Collapsing the idea browser widens the idea page and the choice is remembered
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And The collapsed state of the idea browser is cleared
+    And User selects Project 1
+    And The ideas of the project are
+    ---------------------------------------------------------
+    | title      | status | dateModified        |
+    | First idea | open   | 2026-10-01 10:00:00 |
+    ---------------------------------------------------------
+    When User opens the ideas of the project
+    And User collapses the idea browser
+    Then The idea browser is hidden and the idea page spans the full width
+    And The collapsed state is remembered in the browser storage as true
+    When User expands the idea browser
+    Then The idea browser is shown beside the idea page
+    And The collapsed state is remembered in the browser storage as false
+    Then The stored idea browser state is reset

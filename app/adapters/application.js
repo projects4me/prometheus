@@ -170,6 +170,18 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
             case 403:
                 adapterError = new ForbiddenError(payload.error);
                 break;
+            case 404:
+                // an unknown record answers with its reason in `messages`; keep it when there is one
+                adapterError = Array.isArray(payload?.messages) && payload.messages.length
+                    ? new AdapterError(payload.messages.map(message => ({ title: 'Not Found', detail: message })))
+                    : new AdapterError(payload.error);
+                break;
+            case 422:
+                // Gaia answers a rejected save with { status: 'ERROR', messages: [...] }; keep the messages
+                adapterError = Array.isArray(payload?.messages)
+                    ? new AdapterError(payload.messages.map(message => ({ title: 'Unprocessable Entity', detail: message })))
+                    : new AdapterError(payload?.error ? [{ title: 'Unprocessable Entity', detail: String(payload.error) }] : undefined);
+                break;
             default:
                 adapterError = new AdapterError(payload.error);
                 break;

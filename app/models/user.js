@@ -65,6 +65,16 @@ export default Model.extend({
     accountStatus: attr('string'),
 
     /**
+     * The kind of account: `human` or `agent`.
+     *
+     * @property type
+     * @type String
+     * @for User
+     * @private
+     */
+    type: attr('string', { defaultValue: 'human' }),
+
+    /**
      * User preferred language.
      *
      * @property language
@@ -427,6 +437,16 @@ export default Model.extend({
      * @private
      */
     skills: hasMany('userskill'),
+
+    /**
+     * External identities (provider, handle, ...) of this user or agent.
+     *
+     * @property identities
+     * @type {Prometheus.Models.Useridentity}
+     * @for User
+     * @private
+     */
+    identities: hasMany('useridentity'),
 
     /**
      * Qualification entries (education or certification) for this user.

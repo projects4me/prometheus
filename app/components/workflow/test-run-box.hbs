@@ -1,0 +1,23 @@
+<div class="box box-info workflow-test-run-section" data-workflow-test-run-box>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.workflow.testRun.title"}}</h3>
+    <div class="box-tools pull-right">
+      <button type="button" class="btn btn-box-tool" title={{t "views.app.workflow.runs.close"}} data-close-test-run {{on "click" @onClose}}>
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="box-body">
+    <FormFields::FieldText
+      @label={{t "views.app.workflow.testRun.entityId"}}
+      @placeholder={{t "views.app.workflow.testRun.entityPlaceholder"}}
+      @value={{this.entityId}}
+      @data-field="workflowrun.entityId"
+    />
+    <p class="text-muted">{{t "views.app.workflow.testRun.hint"}}</p>
+    <button type="button" class="btn btn-primary btn-sm" disabled={{this.cannotRun}} data-run-test {{on "click" this.run}}>
+      <i class="fa fa-play" aria-hidden="true"></i>
+      {{t "views.app.workflow.testRun.run"}}
+    </button>
+  </div>
+</div>

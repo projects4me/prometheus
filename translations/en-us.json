@@ -154,7 +154,8 @@
         "milestone": "Milestone",
         "file": "File",
         "membership": "Membership",
-        "userrole": "User Role"
+        "userrole": "User Role",
+        "workflow": "Workflow"
       },
       "plural": {
         "project": "Projects",
@@ -174,7 +175,9 @@
         "milestone": "Milestones",
         "file": "Files",
         "membership": "Memberships",
-        "userrole": "User Roles"
+        "userrole": "User Roles",
+        "agent": "Agents",
+        "workflow": "Workflows"
       },
       "project": {
         "relationships": {
@@ -733,6 +736,8 @@
         "browser": {
           "title": "Ideas",
           "new": "New idea",
+          "collapse": "Hide the ideas list",
+          "expand": "Show the ideas list",
           "empty": "No open ideas",
           "showArchived": "Show archived ({count})",
           "hideArchived": "Hide archived ({count})"
@@ -740,6 +745,14 @@
         "status": {
           "open": "Open",
           "archived": "Archived"
+        },
+        "progress": {
+          "brainstorming": "Brainstorming",
+          "proposed": "Plan proposed",
+          "approved": "Approved",
+          "creating": "Creating issues",
+          "created": "Issues created",
+          "failed": "Failed"
         },
         "fields": {
           "title": "Title",
@@ -777,8 +790,14 @@
             "upload": "The image could not be uploaded, please try again"
           }
         },
+        "screen": {
+          "preview": "Screen",
+          "previewFailed": "The screen could not be loaded"
+        },
         "plan": {
           "title": "Plan",
+          "reviewEnter": "Review the plan in the wide column",
+          "reviewExit": "Back to the conversation layout",
           "empty": "No plan yet",
           "complexities": {
             "simple": "simple",
@@ -1041,6 +1060,8 @@
           "assignedTo": "Assignee",
           "assignee": "Assignee",
           "selectassignee": "Select an assignee",
+          "agents": "Agents",
+          "runsFor": "runs for {sponsor}",
           "reportedBy": "Reported User",
           "parentId": "Parent Issue",
           "parentIssue": "Parent Issue",
@@ -1149,6 +1170,31 @@
             "institutionPlaceholder": "School or issuing institution",
             "completionYear": "Completion year",
             "completionYearPlaceholder": "Select year"
+          },
+          "identities": "Identities",
+          "identity": {
+            "add": "Add identity",
+            "remove": "Remove identity",
+            "none": "No identities added yet",
+            "saved": "Identity added",
+            "saveFailed": "Could not add identity. Please try again.",
+            "removed": "Identity removed",
+            "removeFailed": "Could not remove identity. Please try again.",
+            "verified": "Verified",
+            "unverified": "Unverified",
+            "provider": "Provider",
+            "providerPlaceholder": "Select provider",
+            "providerGit": "Git",
+            "providerGithub": "GitHub",
+            "providerGitlab": "GitLab",
+            "providerSlack": "Slack",
+            "providerSsh": "SSH",
+            "handle": "Handle",
+            "handlePlaceholder": "Enter handle",
+            "email": "Email",
+            "emailPlaceholder": "Enter email",
+            "fingerprint": "Key fingerprint",
+            "fingerprintPlaceholder": "Enter public key fingerprint"
           },
           "skills": "Skills",
           "skill": {
@@ -1292,6 +1338,15 @@
           "active": "Active",
           "disabled": "Disabled",
           "invited": "Invited"
+        }
+      },
+      "useridentity": {
+        "fields": {
+          "provider": "Provider",
+          "handle": "Handle",
+          "email": "Email",
+          "publicKeyFingerprint": "Key Fingerprint",
+          "verified": "Verified"
         }
       },
       "userskill": {
@@ -1609,6 +1664,7 @@
               "issuestatus": "Issue Status",
               "issuewatcher": "Issue Watcher",
               "userqualification": "User Qualification",
+              "useridentity": "User Identity",
               "userskill": "User Skill",
               "permission": "Permission",
               "vote": "Vote",
@@ -1873,6 +1929,19 @@
                 "title": "Title",
                 "type": "Type"
               },
+              "useridentity": {
+                "get": "Get User Identity",
+                "create": "Create User Identity",
+                "update": "Update User Identity",
+                "delete": "Delete User Identity",
+                "dateCreated": "Date Created",
+                "dateModified": "Date Modified",
+                "provider": "Provider",
+                "handle": "Handle",
+                "email": "Email",
+                "publicKeyFingerprint": "Key Fingerprint",
+                "verified": "Verified"
+              },
               "userskill": {
                 "get": "Get User Skill",
                 "create": "Create User Skill",
@@ -2107,6 +2176,389 @@
           "twentyComplete": "20% Complete",
           "four": "4"
         }
+      },
+      "workflow": {
+        "list": {
+          "subtitle": "Automations with users and agents as actors",
+          "savedsearch": "Saved Searches",
+          "search": "Search workflows ..",
+          "new": "New workflow",
+          "name": "Workflow",
+          "description": "Description",
+          "trigger": "Trigger",
+          "scope": "Scope",
+          "actors": "Actors",
+          "runs": "Runs (7 days)",
+          "lastRun": "Last run",
+          "noWorkflows": "No workflows found",
+          "noTrigger": "No trigger",
+          "allProjects": "All projects",
+          "neverRun": "never",
+          "unknownActor": "Unknown",
+          "sponsorOf": "{name}'s sponsor"
+        },
+        "status": {
+          "Draft": "Draft",
+          "Active": "Active",
+          "Disabled": "Disabled"
+        },
+        "categories": {
+          "trigger": "Triggers",
+          "condition": "Conditions",
+          "actor": "Actors",
+          "action": "Actions"
+        },
+        "kinds": {
+          "issue_created": "Issue created",
+          "issue_modified": "Issue modified",
+          "issue_assignee_changed": "Issue assignee changed",
+          "issue_status_changed": "Issue status changed",
+          "comment_added": "Comment added",
+          "wiki_created": "Wiki page created",
+          "wiki_modified": "Wiki page modified",
+          "time_logged": "Time logged",
+          "schedule": "Schedule",
+          "filter": "Filter",
+          "switch": "Switch",
+          "run_agent": "Run agent",
+          "ask_user": "Ask a user",
+          "assign": "Assign",
+          "set_field": "Set a field",
+          "set_status": "Set status",
+          "add_comment": "Add a comment",
+          "create_issue": "Create an issue",
+          "create_wiki": "Create a wiki page",
+          "notify": "Notify",
+          "call_tool": "Call a tool",
+          "end": "End"
+        },
+        "fields": {
+          "name": "Name",
+          "status": "Status",
+          "scope": "Projects"
+        },
+        "editor": {
+          "newTitle": "New workflow",
+          "saveFirst": "Save the workflow first",
+          "saveGraphFirst": "Save the changes to the flow first",
+          "version": "version {version}",
+          "runs": "Runs",
+          "testRun": "Test run",
+          "save": "Save",
+          "namePlaceholder": "Name the workflow",
+          "scopeEveryProject": "Every project",
+          "nameRequired": "Name the workflow before saving it.",
+          "saved": "The workflow is saved.",
+          "notActivated": "{count} of the steps or connections could not be saved, so the workflow is not activated yet. They are marked in red.",
+          "savedWithProblems": "The workflow is saved, but {count} of its steps or connections could not be saved. They are marked in red.",
+          "saveFailed": "The workflow could not be saved.",
+          "edgeNodeUnsaved": "Both steps must be saved before this connection can be saved."
+        },
+        "runs": {
+          "title": "Runs",
+          "close": "Close",
+          "started": "Started",
+          "entity": "Record",
+          "status": "Status",
+          "empty": "This workflow has not run yet.",
+          "steps": "Path of the run",
+          "testResult": "Simulated path",
+          "inputs": "Inputs",
+          "outputs": "Outputs",
+          "noSteps": "The run took no steps.",
+          "loadFailed": "The runs could not be loaded."
+        },
+        "testRun": {
+          "title": "Test run",
+          "entityId": "Record id",
+          "entityPlaceholder": "The id of the record the trigger is about",
+          "hint": "Simulates the workflow for the record. Nothing is written and no agent runs.",
+          "run": "Run test",
+          "failed": "The test run failed."
+        },
+        "palette": {
+          "title": "Steps",
+          "hint": "Drag onto the canvas, or click to add"
+        },
+        "canvas": {
+          "title": "Flow",
+          "locked": "Active: set the workflow to Draft to change its steps",
+          "removeEdge": "Remove the connection",
+          "zoomIn": "Zoom in",
+          "zoomOut": "Zoom out",
+          "fit": "Fit to the canvas",
+          "empty": "Drag steps here from the list on the left",
+          "input": "Input",
+          "output": "Drag to a step input to connect",
+          "noPorts": "Ends the path"
+        },
+        "properties": {
+          "title": "Properties",
+          "remove": "Delete step",
+          "name": "Step name",
+          "empty": "Select a step to see its properties",
+          "noSettings": "This step has no settings.",
+          "outputs": "Outputs",
+          "apply": "Apply"
+        },
+        "config": {
+          "insertValue": "Insert a value from the event",
+          "groups": {
+            "users": "Users",
+            "agents": "Agents",
+            "event": "From the event"
+          },
+          "pick": {
+            "user": "Select a user",
+            "agent": "Select an agent"
+          },
+          "cron": "Schedule",
+          "cronInfo": "A cron expression with five fields: minute, hour, day of month, month and day of week. 0 9 * * 1 runs every Monday at 09:00.",
+          "conditions": "Conditions",
+          "conditionsInfo": "Every condition must hold for the step to pass.",
+          "cases": "Cases",
+          "casesInfo": "The first case whose conditions all hold picks the output; with none, the step takes default.",
+          "agentId": "Agent",
+          "agentIdInfo": "The agent that runs, or a value from the event that names one.",
+          "prompt": "Prompt",
+          "promptInfo": "What the agent is asked to do. Insert values from the event, such as '{issue.number}'.",
+          "session": "Session",
+          "sessionInfo": "Leave empty to start a new session, or name one to resume it.",
+          "model": "Model",
+          "modelInfo": "Leave empty to use the agent's own model settings.",
+          "maxTurns": "Max turns",
+          "maxTurnsInfo": "Leave empty to use the agent's own limit.",
+          "claimTimeout": "Claim timeout",
+          "claimTimeoutInfo": "How long the run may wait for the agent to pick it up.",
+          "timeout": "Timeout",
+          "timeoutInfo": "How long the run may take before it ends on limit.",
+          "userId": "User",
+          "userIdInfo": "The user, or a value from the event that names one.",
+          "question": "Question",
+          "questionInfo": "What the user is asked; the workflow waits for the reply.",
+          "assigneeId": "Assignee",
+          "assigneeIdInfo": "The user the issue is assigned to, or a value from the event that names one.",
+          "field": "Field",
+          "fieldInfo": "The field of the event's record to change.",
+          "value": "Value",
+          "valueInfo": "The new value. Insert values from the event, such as '{issue.subject}'.",
+          "status": "Status",
+          "statusInfo": "The status to move the issue to.",
+          "body": "Text",
+          "bodyInfo": "The text. Insert values from the event, such as '{issue.subject}'.",
+          "ownerId": "Owner",
+          "ownerIdInfo": "Leave empty to use the user the workflow runs as.",
+          "subject": "Subject",
+          "subjectInfo": "The new issue's subject. Insert values from the event, such as '{issue.subject}'.",
+          "description": "Description",
+          "descriptionInfo": "The new issue's description.",
+          "typeId": "Type",
+          "typeIdInfo": "The id of the issue type, or a value from the event.",
+          "priority": "Priority",
+          "priorityInfo": "The new issue's priority.",
+          "title": "Title",
+          "titleInfo": "The new wiki page's title.",
+          "message": "Message",
+          "messageInfo": "The notification's text.",
+          "toolId": "Tool",
+          "toolIdInfo": "The tool to call.",
+          "conditionField": "Field",
+          "conditionFieldInfo": "A value of the event the condition checks.",
+          "operator": "Operator",
+          "conditionValue": "Value",
+          "conditionValueInfo": "The value to compare with; separate the values of in and not in with commas.",
+          "addCondition": "Add a condition",
+          "removeCondition": "Remove the condition",
+          "caseTitle": "Case {number}",
+          "caseKey": "Output",
+          "caseKeyInfo": "The output this case takes; each case needs its own, and {default} is taken.",
+          "addCase": "Add a case",
+          "removeCase": "Remove the case"
+        },
+        "operators": {
+          "equals": "equals",
+          "notEquals": "does not equal",
+          "contains": "contains",
+          "in": "is one of",
+          "notIn": "is not one of",
+          "empty": "is empty",
+          "notEmpty": "is not empty",
+          "gt": "is greater than",
+          "lt": "is less than"
+        }
+      },
+      "agent": {
+        "badge": "Agent",
+        "forSponsor": "for {name}",
+        "autonomous": "Autonomous",
+        "saved": "Agent {name} saved",
+        "status": {
+          "active": "Active",
+          "disabled": "Disabled"
+        },
+        "list": {
+          "subtitle": "AI team members",
+          "savedsearch": "Saved Searches",
+          "search": "Search agents ..",
+          "agent": "Agent",
+          "name": "Name",
+          "purpose": "Purpose",
+          "sponsor": "Sponsor",
+          "models": "Models",
+          "projects": "Projects",
+          "grants": "Grants",
+          "lastActive": "Last active",
+          "noAgents": "No agents found"
+        },
+        "create": {
+          "title": "Create Agent"
+        },
+        "edit": {
+          "title": "Edit Agent"
+        },
+        "form": {
+          "name": "Name",
+          "namePlaceholder": "Agent name",
+          "email": "Email",
+          "emailPlaceholder": "agent@projects4.me",
+          "emailInfo": "The agent's login. It never has a password: it signs in with client credentials.",
+          "purpose": "Purpose",
+          "purposePlaceholder": "What the agent does",
+          "rolePrompt": "Role prompt",
+          "modelAndLimits": "Model and limits",
+          "modelSimple": "Model for simple issues",
+          "modelComplex": "Model for complex issues",
+          "escalation": "Escalate to",
+          "maxTurns": "Max turns per run",
+          "maxRunsPerIssue": "Max runs per issue",
+          "permissionMode": "Permission mode",
+          "sponsorBox": "Sponsor",
+          "onBehalfOf": "On behalf of",
+          "selectSponsor": "Select a user",
+          "sponsorInfo": "The user the agent acts on behalf of. Leave empty for an autonomous agent.",
+          "accessBox": "Access",
+          "roles": "Roles",
+          "rolesPlaceholder": "Select roles",
+          "projects": "Projects",
+          "projectsPlaceholder": "Select projects",
+          "status": "Status"
+        },
+        "detail": {
+          "title": "Agent",
+          "heading": "Agent - {name}",
+          "sponsor": "Sponsor",
+          "maxTurns": "Max turns",
+          "limits": "{turns} per run · {runs} runs per issue",
+          "modelSimple": "Model: simple",
+          "modelComplex": "Model: complex",
+          "escalatesTo": "Escalates to",
+          "showPrompt": "Show the whole prompt",
+          "hidePrompt": "Show less",
+          "rolesProjects": "Roles & Projects",
+          "memberOf": "Member of",
+          "activities": "Agent Activities",
+          "tools": "Tools",
+          "skills": "Skills",
+          "wholeServer": "All tools",
+          "noTools": "No tools granted",
+          "noSkills": "No skills granted"
+        },
+        "tools": {
+          "title": "Tool Catalog",
+          "servers": "Tool Servers",
+          "addServer": "Add server",
+          "refresh": "Refresh",
+          "toolsOf": "{server} · Tools",
+          "noTools": "No tools yet. Refresh the server to load them.",
+          "grantsOn": "Grants on {name}",
+          "grantsOnServer": "Grants on all tools of {name}",
+          "noGrants": "Not granted to any agent",
+          "grantAgent": "Agent",
+          "rule": "Permission rule",
+          "rulePlaceholder": "Permission rule, such as git status:*",
+          "addGrant": "Grant",
+          "server": {
+            "name": "Server",
+            "kind": "Kind",
+            "location": "Runs in",
+            "endpoint": "Endpoint",
+            "description": "Description",
+            "tools": "Tools",
+            "agents": "Agents",
+            "refreshed": "Schemas refreshed",
+            "never": "never"
+          },
+          "tool": {
+            "name": "Tool",
+            "description": "Description",
+            "inputs": "Inputs",
+            "grantedTo": "Granted to"
+          },
+          "errors": {
+            "name": "A name is required.",
+            "agent": "Choose an agent.",
+            "save": "Could not save the change.",
+            "refresh": "The server could not be refreshed. Its stored tools are kept."
+          }
+        },
+        "skills": {
+          "title": "Skills",
+          "subtitle": "for agents",
+          "newSkill": "New skill",
+          "skillName": "Skill: {name}",
+          "edited": "edited by {user}",
+          "name": "Name",
+          "version": "Version",
+          "description": "Description",
+          "content": "Content (SKILL.md)",
+          "usedBy": "Used by",
+          "noGrants": "Not used by any agent",
+          "agentCount": "{count, plural, one {# agent} other {# agents}}",
+          "errors": {
+            "name": "A name is required.",
+            "save": "Could not save the change."
+          }
+        },
+        "credentials": {
+          "title": "Credentials",
+          "clientId": "Client ID",
+          "clientSecret": "Client secret",
+          "created": "Created {date} by {user}",
+          "lastUsed": "last used {date}",
+          "neverUsed": "never used",
+          "none": "This agent has no credentials yet.",
+          "issue": "Issue credentials",
+          "rotate": "Rotate secret",
+          "revoke": "Revoke",
+          "revokeTitle": "Revoke credentials",
+          "revokeWarning": "The agent can no longer sign in until new credentials are issued.",
+          "revoked": "Credentials revoked",
+          "revokeFailed": "The credentials could not be revoked",
+          "issueFailed": "The credentials could not be issued",
+          "loadFailed": "The credentials could not be loaded",
+          "newSecretTitle": "New client secret",
+          "copyNow": "Copy the secret now. It is shown only once: Projects4Me keeps only a hash of it. The previous secret stopped working when this one was created.",
+          "copy": "Copy",
+          "copied": "Copied to the clipboard",
+          "copyFailed": "Could not copy to the clipboard",
+          "copiedIt": "I have copied it",
+          "forMachine": "For the machine that runs this agent",
+          "orConfigure": "Or run dev-tools/installer/p4m configure and paste it when asked."
+        },
+        "workflows": {
+          "title": "Workflows",
+          "referencedIn": "Referenced in",
+          "status": "Status",
+          "none": "No workflow references this agent.",
+          "all": "All workflows",
+          "loadFailed": "The workflows could not be loaded",
+          "places": {
+            "trigger": "Trigger",
+            "condition": "Filter",
+            "actor": "Run agent",
+            "action": "Action"
+          }
+        }
       }
     },
     "nav": {
@@ -2146,7 +2598,6 @@
         },
         "idea": {
           "label": "Ideas",
-          "list": "List Ideas",
           "create": "New Idea"
         },
         "conversation": {
@@ -2231,6 +2682,13 @@
         },
         "edit": {
           "label": "Edit"
+        },
+        "agent": {
+          "label": "Agents",
+          "list": "List Agents",
+          "create": "Create Agent",
+          "tools": "Tool Catalog",
+          "skills": "Skills"
         }
       }
     },

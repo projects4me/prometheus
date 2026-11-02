@@ -32,6 +32,11 @@ export default App.extend({
             limit: -1
         };
 
+        let _identityOptions = {
+            query: `(Useridentity.userId : ${userId})`,
+            limit: -1
+        };
+
         let _qualificationOptions = {
             query: `(Userqualification.userId : ${userId})`,
             sort: 'completionYear',
@@ -44,6 +49,7 @@ export default App.extend({
         return hashSettled({
             user: _self.store.query('user', _userOptions),
             skills: _self.store.query('userskill', _skillOptions),
+            identities: _self.store.query('useridentity', _identityOptions),
             qualifications: _self.store.query('userqualification', _qualificationOptions)
         }).then((results) => {
             return extractHashSettled(results, 'user');
@@ -66,9 +72,11 @@ export default App.extend({
 
         const user = model.user.objectAt(0);
         const skills = model.skills?.toArray?.() ?? model.skills ?? [];
+        const identities = model.identities?.toArray?.() ?? model.identities ?? [];
         const qualifications = model.qualifications?.toArray?.() ?? model.qualifications ?? [];
 
         user.skills.pushObjects(skills);
+        user.identities.pushObjects(identities);
         user.qualifications.pushObjects(qualifications);
 
         controller.set('model', user);

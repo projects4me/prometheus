@@ -1,0 +1,5 @@
+{{#if this.isAgent}}
+  <Agent::Avatar data-user-agent-avatar ...attributes />
+{{else}}
+  <img class={{@class}} src="{{this.apiHost}}/userimage/get/{{@userId}}" alt={{@name}} ...attributes>
+{{/if}}

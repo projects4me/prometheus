@@ -51,6 +51,14 @@ Router.map(function() {
       this.route('page',{path:'/:user_id'});
       this.route('management');
     });
+    this.route('agent',function(){
+      this.route('index',{path:'/'});
+      this.route('create');
+      this.route('tools');
+      this.route('skills');
+      this.route('page',{path:'/:agent_id'});
+      this.route('edit',{path:'/edit/:agent_id'});
+    });
     this.route('admin',function(){
         this.route('index',{path:'/'});
         this.route('create');
@@ -63,6 +71,11 @@ Router.map(function() {
       this.route('issue-types');
       this.route('issue-statuses');
       this.route('email');
+    });
+    this.route('workflow', function() {
+      this.route('index', {path: '/'});
+      this.route('create');
+      this.route('page', {path: '/:workflow_id'});
     });
     this.route('access-denied');
     this.route('role', function() {

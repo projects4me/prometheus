@@ -1,0 +1,144 @@
+<div class="box box-primary user-identities-section">
+  <div class="box-header with-border box-header-flex box-header-no-content">
+    <h3 class="box-title">{{t "views.app.user.page.identities"}}</h3>
+    {{#if this.showAddControl}}
+      <AppUi::DottedAddButton
+        @title={{t "views.app.user.page.identity.add"}}
+        @onClick={{this.startAdding}}
+        @class="pull-right"
+        @aclContext="user.update"
+        @data-add="user.identities"
+      />
+    {{/if}}
+  </div>
+
+  <div class="box-body">
+    {{#if @user.identities.length}}
+      <ul class="user-identity-list list-unstyled">
+        {{#each @user.identities as |identity|}}
+          <li class="user-identity-item" data-identity-item={{identity.id}}>
+            <div class="user-identity-content">
+              <p class="user-identity-title">
+                <span class="user-identity-provider">{{or (get this.providerLabels identity.provider) identity.provider}}</span>
+                <span class="user-identity-handle">{{identity.handle}}</span>
+                {{#if identity.verified}}
+                  <span class="label label-success user-identity-verified">
+                    <i class="fa fa-check"></i> {{t "views.app.user.page.identity.verified"}}
+                  </span>
+                {{else}}
+                  <span class="label label-default user-identity-unverified">{{t "views.app.user.page.identity.unverified"}}</span>
+                {{/if}}
+              </p>
+              {{#if (or identity.email identity.publicKeyFingerprint)}}
+                <p class="user-identity-meta text-muted">
+                  {{#if identity.email}}<span>{{identity.email}}</span>{{/if}}
+                  {{#if identity.publicKeyFingerprint}}<span>{{identity.publicKeyFingerprint}}</span>{{/if}}
+                </p>
+              {{/if}}
+            </div>
+            {{#if this.canEdit}}
+              <button
+                type="button"
+                class="profile-collection-remove"
+                title={{t "views.app.user.page.identity.remove"}}
+                aria-label={{t "views.app.user.page.identity.remove"}}
+                disabled={{this.isSaving}}
+                {{on "click" (fn this.removeItem identity)}}
+              >
+                <i class="fa fa-times"></i>
+              </button>
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      {{#unless this.isAdding}}
+        <p class="user-identity-empty text-muted">{{t "views.app.user.page.identity.none"}}</p>
+      {{/unless}}
+    {{/if}}
+
+    {{#if this.isAdding}}
+      <div class="profile-inline-form user-identities-form" data-user-identities-form>
+        <FormFields::FieldRelate
+          @placeholder={{t "views.app.user.page.identity.providerPlaceholder"}}
+          @label={{t "views.app.user.page.identity.provider"}}
+          @options={{this.providerOptions}}
+          @selected={{this.selectedProvider}}
+          @searchField="label"
+          @onchange={{fn @selectRelated this.newIdentity "provider"}}
+          @relateType="relate-simple"
+          @searchEnabled={{false}}
+          @required={{true}}
+          @disabled={{this.isSaving}}
+          @data-field="user-identity.provider"
+          @validate={{fn @validateField "userIdentity" (hash name="provider" value=this.newIdentity.provider model=this.newIdentity)}}
+          @message={{@message.userIdentity.provider}}
+          @aclContext="user.update"
+        />
+
+        <FormFields::FieldText
+          @placeholder={{t "views.app.user.page.identity.handlePlaceholder"}}
+          @label={{t "views.app.user.page.identity.handle"}}
+          @type="text"
+          @value={{this.newIdentity.handle}}
+          @onInput={{fn this.updateDraftField "handle"}}
+          @lengthRequired={{false}}
+          @required={{true}}
+          @disabled={{this.isSaving}}
+          @data-field="user-identity.handle"
+          @validate={{fn @validateField "userIdentity" (hash name="handle" value=this.newIdentity.handle model=this.newIdentity)}}
+          @message={{@message.userIdentity.handle}}
+          @aclContext="user.update"
+        />
+
+        <FormFields::FieldText
+          @placeholder={{t "views.app.user.page.identity.emailPlaceholder"}}
+          @label={{t "views.app.user.page.identity.email"}}
+          @type="text"
+          @value={{this.newIdentity.email}}
+          @onInput={{fn this.updateDraftField "email"}}
+          @lengthRequired={{false}}
+          @disabled={{this.isSaving}}
+          @data-field="user-identity.email"
+          @validate={{fn @validateField "userIdentity" (hash name="email" value=this.newIdentity.email model=this.newIdentity)}}
+          @message={{@message.userIdentity.email}}
+          @aclContext="user.update"
+        />
+
+        <FormFields::FieldText
+          @placeholder={{t "views.app.user.page.identity.fingerprintPlaceholder"}}
+          @label={{t "views.app.user.page.identity.fingerprint"}}
+          @type="text"
+          @value={{this.newIdentity.publicKeyFingerprint}}
+          @onInput={{fn this.updateDraftField "publicKeyFingerprint"}}
+          @lengthRequired={{false}}
+          @disabled={{this.isSaving}}
+          @data-field="user-identity.publicKeyFingerprint"
+          @aclContext="user.update"
+        />
+
+        <div class="profile-inline-form-actions">
+          <AppUi::Button
+            type="button"
+            class="btn btn-primary btn-sm"
+            disabled={{this.isSaving}}
+            data-btn="save"
+            @onClick={{this.saveDraft}}
+            @aclContext="user.update"
+          >
+            {{t "global.form.save"}}
+          </AppUi::Button>
+          <AppUi::Button
+            type="button"
+            class="btn btn-default btn-sm"
+            disabled={{this.isSaving}}
+            data-btn="close"
+            @onClick={{this.cancelAdding}}
+          >
+            {{t "global.form.cancel"}}
+          </AppUi::Button>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</div>

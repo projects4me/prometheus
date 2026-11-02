@@ -1,0 +1,33 @@
+<div class="box box-info workflow-palette-section" data-workflow-palette>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.workflow.palette.title"}}</h3>
+  </div>
+  <div class="box-body no-padding">
+    {{#each this.groups as |group|}}
+      <div class="workflow-palette-group" data-palette-category={{group.category}}>
+        <h4 class="workflow-palette-heading">
+          <i class="fa fa-{{group.icon}}" aria-hidden="true"></i>
+          {{t (concat "views.app.workflow.categories." group.category)}}
+        </h4>
+        <ul class="nav nav-stacked">
+          {{#each group.kinds as |item|}}
+            <li>
+              <a
+                href="#"
+                role="button"
+                class="workflow-palette-item {{if @disabled 'disabled'}}"
+                draggable={{if @disabled "false" "true"}}
+                title={{t "views.app.workflow.palette.hint"}}
+                data-palette-kind={{item.kind}}
+                {{on "dragstart" (fn this.startDrag group.category item.kind)}}
+                {{on "click" (fn this.add group.category item.kind)}}
+              >
+                {{t item.labelKey}}
+              </a>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/each}}
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<div class="workflow-step-form" data-step-form={{@node.kind}}>
+  <FormFields::FieldText
+    @label={{t "views.app.workflow.properties.name"}}
+    @placeholder={{t (kind-label @node.kind)}}
+    @value={{this.name}}
+    @onInput={{this.changeName}}
+    @readonly={{@locked}}
+    @data-field="workflownode.name"
+  />
+  {{#each this.fields as |field|}}
+    <Workflow::ConfigField
+      @field={{field}}
+      @value={{get this.config field.name}}
+      @payloadFields={{@payloadFields}}
+      @users={{@users}}
+      @agents={{@agents}}
+      @locked={{@locked}}
+      @onChange={{this.changeSetting}}
+    />
+  {{else}}
+    <p class="text-muted" data-step-no-settings>
+      <i class="fa fa-info-circle" aria-hidden="true"></i>
+      {{t "views.app.workflow.properties.noSettings"}}
+    </p>
+  {{/each}}
+  {{#if this.ports.length}}
+    <h4>{{t "views.app.workflow.properties.outputs"}}</h4>
+    <p data-step-outputs>
+      {{#each this.ports as |port|}}
+        <span class="label label-default" data-step-output={{port}}>{{port}}</span>
+      {{/each}}
+    </p>
+  {{/if}}
+  {{#if @node.errors.length}}
+    <ul class="list-unstyled text-red" data-node-errors>
+      {{#each @node.errors as |message|}}
+        <li><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{message}}</li>
+      {{/each}}
+    </ul>
+  {{/if}}
+  <div class="workflow-step-actions">
+    <button type="button" class="btn btn-primary btn-sm" disabled={{@locked}} data-apply-step {{on "click" this.apply}}>
+      {{t "views.app.workflow.properties.apply"}}
+    </button>
+    <button type="button" class="btn btn-default btn-sm" disabled={{@locked}} data-remove-node {{on "click" (fn @onRemove @node)}}>
+      {{t "views.app.workflow.properties.remove"}}
+    </button>
+  </div>
+</div>
