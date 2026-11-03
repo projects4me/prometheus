@@ -94,4 +94,23 @@ module('Integration | Modifier | initialize-toastui', function (hooks) {
         assert.ok(editable.textContent.includes(second), 'the second suggestion was inserted');
         assert.strictEqual(editable.querySelectorAll('div, p').length, 1, 'Enter did not add a line');
     });
+
+    test('a mention with no matches closes the menu', async function (assert) {
+        this.set('onContentChange', () => {});
+        this.set('emojis', [{ id: 'smile', name: 'smile' }]);
+        await render(hbs`<div {{initialize-toastui editType="wysiwyg" onContentChange=this.onContentChange translatedEmojis=this.emojis}}></div>`);
+
+        let editable = document.querySelector('.tui-editor-contents[contenteditable="true"]');
+        let key = (type, key, keyCode) => editable.dispatchEvent(new KeyboardEvent(type, { key, keyCode, bubbles: true, cancelable: true }));
+        editable.focus();
+        document.execCommand('insertText', false, ':zzq');
+        key('keydown', 'q', 81);
+        key('keyup', 'q', 81);
+        await settled();
+
+        assert.dom('.tribute-container li').doesNotExist('no "No Match Found" item is shown');
+        key('keydown', 'Enter', 13);
+        await settled();
+        assert.strictEqual(editable.querySelectorAll('div, p').length, 2, 'Enter is left to the editor and adds a line');
+    });
 });

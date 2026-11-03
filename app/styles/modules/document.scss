@@ -501,6 +501,7 @@ span[id="#"]{
 // Tribute's :, @ and # suggestion menus in the editor. Tribute scrolls the container to keep its
 // highlighted item in view, and moves the highlight on mouse hover, so only .highlight is styled.
 .tribute-container {
+  z-index: 1100;
   max-height: 300px;
   overflow-y: auto;
 

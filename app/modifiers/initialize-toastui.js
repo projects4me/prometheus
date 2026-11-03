@@ -454,6 +454,8 @@ export default class ToastEditor extends Modifier {
             '100': '&#128175;',
         };        
         return new Tribute({
+            // an empty template hides the menu (and ends Tribute's active state) when nothing matches
+            noMatchTemplate: '',
             collection: [{
                 trigger: '@',
                 values: _self.usersList ?? [],
