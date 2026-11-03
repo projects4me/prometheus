@@ -699,7 +699,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         }
 
         _self.isSavingLog = true;
-        log.save().then(function () {
+        return log.save().then(function () {
             _self.isSavingLog = false;
             if (_self.isDestroyed || _self.isDestroying) return;
             new Messenger().post({
@@ -710,15 +710,18 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             _self.editingLog = null;
             _self.removeEditLogModal();
             _self.removeEditEstimateModal();
+            return true;
         }, function () {
+            // Keep the attempted values so the editors and the record stay in sync for a retry;
+            // closing the modal rolls them back
             _self.isSavingLog = false;
-            log.rollbackAttributes();
             if (_self.isDestroyed || _self.isDestroying) return;
             new Messenger().post({
                 message: _self.intl.t("views.app.issue.detail." + context + ".missing"),
                 type: 'error',
                 showCloseButton: true
             });
+            return false;
         });
 
         Logger.debug('-IssueIssueDetailsComponent->logTime');
