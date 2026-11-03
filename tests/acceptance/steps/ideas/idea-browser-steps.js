@@ -157,6 +157,21 @@ export const then = function () {
             }
         },
         {
+            "The New idea button is shown disabled": (assert) => async function () {
+                assert.dom('[data-new-idea]').hasClass('btn-default');
+                assert.dom('[data-new-idea]').hasClass('disabled');
+                assert.dom('[data-new-idea]').hasAttribute('aria-disabled', 'true');
+                assert.notEqual(document.querySelector('[data-new-idea]').tagName, 'A', 'it is not a link');
+            }
+        },
+        {
+            "The New idea button is shown as a link": (assert) => async function () {
+                assert.dom('a[data-new-idea]').exists();
+                assert.dom('[data-new-idea]').hasClass('btn-primary');
+                assert.dom('[data-new-idea]').doesNotHaveClass('disabled');
+            }
+        },
+        {
             "The idea browser is hidden and the idea page spans the full width": (assert) => async function () {
                 assert.dom(BROWSER).doesNotExist();
                 assert.dom('.idea-wrapper > .col-md-12').exists();

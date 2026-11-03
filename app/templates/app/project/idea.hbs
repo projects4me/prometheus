@@ -7,9 +7,15 @@
           <h3 class="box-title">{{t "views.app.idea.browser.title"}}</h3>
           <div class="box-tools pull-right">
             <AccessControl @aclContext="idea.create">
-              <LinkTo @route="app.project.idea.create" class="btn btn-primary btn-sm" data-new-idea>
-                <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
-              </LinkTo>
+              {{#if this.isCreating}}
+                <span class="btn btn-default btn-sm disabled" role="link" aria-disabled="true" data-new-idea>
+                  <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
+                </span>
+              {{else}}
+                <LinkTo @route="app.project.idea.create" class="btn btn-primary btn-sm" data-new-idea>
+                  <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
+                </LinkTo>
+              {{/if}}
             </AccessControl>
           </div>
         </div>

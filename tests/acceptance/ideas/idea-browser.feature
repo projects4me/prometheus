@@ -81,6 +81,23 @@ Feature: Ideas | idea browser
     When User selects the idea First one in the browser
     Then The idea First one is highlighted in the browser
 
+  Scenario: The New idea button is disabled while the Start an idea form is open
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The ideas of the project are
+    ---------------------------------------------------------
+    | title      | status | dateModified        |
+    | First one  | open   | 2026-10-02 10:00:00 |
+    ---------------------------------------------------------
+    When User opens the ideas of the project
+    Then The idea browser opens on the new idea form
+    And The New idea button is shown disabled
+    When User selects the idea First one in the browser
+    Then The New idea button is shown as a link
+
   Scenario: The Ideas nav item is a direct link without a submenu
 
     Given There is no pre-existing data

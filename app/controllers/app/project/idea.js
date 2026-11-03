@@ -43,6 +43,24 @@ export default class AppProjectIdeaController extends Controller {
     @service hermes;
 
     /**
+     * @property router
+     * @type Ember.Service
+     * @public
+     */
+    @service router;
+
+    /**
+     * True while the Start an idea form is open, so the New idea button is shown disabled
+     *
+     * @property isCreating
+     * @type Boolean
+     * @public
+     */
+    get isCreating() {
+        return this.router.currentRouteName === 'app.project.idea.create';
+    }
+
+    /**
      * The query params of the idea area: view=plan opens the idea page in plan review mode
      *
      * @property queryParams
