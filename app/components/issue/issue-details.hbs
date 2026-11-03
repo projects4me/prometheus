@@ -422,8 +422,7 @@
                 <div data-field="issue.editEstimateTime" data-field-type="wysiwyg" class="form-field ember-view">
                   <AppUi::ToastUi
                     @placeholder={{t "views.app.issue.detail.timelog.inputdescription"}}
-                    @label={{t "views.app.issue.detail.timelog.description"}}
-                    @onContentChange={{@selectStatic this.editingLog 'description'}}              
+                    @onContentChange={{fn @selectStatic this.editingLog 'description'}}              
                     @data-field="issue.editEstimateTime"
                     @editType= 'wysiwyg'
                     @hide={{array 'footer'}}
