@@ -322,16 +322,18 @@
               <ul class="attachments clearfix">
                 {{#each this.issue.files as |file|}}
                   <li>
-                    {{#if (not-eq file.fileThumbnail '0')}}
-                      <span class="attachment-icon has-img">
-                        <img src="{{file.fileThumbnail}}" alt="{{file.name}}">
-                      </span>
-                    {{else}}
-                      <AppUi::AttachmentIcon @mime={{file.fileMime}}/>
-                    {{/if}}
+                    <a href="#" class="attachment-preview-link" tabindex="-1" aria-hidden="true" {{on "click" (fn this.previewFile file)}}>
+                      {{#if (not-eq file.fileThumbnail '0')}}
+                        <span class="attachment-icon has-img">
+                          <img src="{{file.fileThumbnail}}" alt="">
+                        </span>
+                      {{else}}
+                        <AppUi::AttachmentIcon @mime={{file.fileMime}}/>
+                      {{/if}}
+                    </a>
                     <div class="attachment-info">
                       <div class="attachment-name clearfix">
-                        <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
+                        <a href="#" {{on "click" (fn this.previewFile file)}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
                       </div>
                       <div class="attachment-additional">
                         <span class="attachment-size">
@@ -344,16 +346,9 @@
                   </li>
                 {{/each}}
               </ul>
-              <div class="filePreviewModal">
-                {{#if this.filePreviewDialog}}
-                  {{#bootstrap-modal
-                      title="views.app.issue.detail.file.preview"
-                      closeLabel="global.form.close"
-                      close=(action "removeModal")}}
-                    <iframe title="{{t "views.app.issue.detail.file.preview"}}" id="file_preview"></iframe>
-                  {{/bootstrap-modal}}
-                {{/if}}
-              </div>
+              {{#if this.previewedFile}}
+                <Issue::FilePreview @file={{this.previewedFile}} @onClose={{this.closePreview}} @onDownload={{this.downloadFile}} />
+              {{/if}}
 
             </div>
             <FormFields::FieldUpload
