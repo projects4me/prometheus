@@ -963,6 +963,12 @@
           "subject": "Subject",
           "description": "Description",
           "status": "Status",
+          "live": {
+            "statusChanged": "{user} changed the status to {status}",
+            "assigneeChanged": "{user} assigned this issue to {assignee}",
+            "commented": "{user} commented",
+            "commentEdited": "{user} edited a comment"
+          },
           "statusUpdated": "Issue status updated to {status}",
           "statusUpdateFailed": "Failed to update issue to status {status}",
           "statusUpdating": "Updating issue status to {status} ..",

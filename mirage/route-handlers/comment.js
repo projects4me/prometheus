@@ -24,6 +24,10 @@ export function register(server, ctx) {
 		return model;
 	});
 
+	server.get('/comment/:id', (schema, request) => {
+		return schema.comments.find(request.params.id);
+	});
+
 	server.patch('/comment/:id', (schema, request) => {
 		let id = request.params.id;
 		let requestData = getRequestData(request);

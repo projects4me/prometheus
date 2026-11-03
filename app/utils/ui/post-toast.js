@@ -10,12 +10,14 @@
  * @module Ui
  * @param {import('@ember/service').default} intl
  * @param {string} messageKey
- * @param {'success'|'error'} [type='success']
+ * @param {'success'|'error'|'info'} [type='success']
+ * @param {Object} [values] Interpolation values for the message (escaped: they may hold user names)
  */
-export function postToast(intl, messageKey, type = 'success') {
+export function postToast(intl, messageKey, type = 'success', values = {}) {
 	new Messenger().post({
-		message: intl.t(messageKey),
+		message: intl.t(messageKey, values),
 		type,
 		showCloseButton: true,
+		escapeText: true,
 	});
 }

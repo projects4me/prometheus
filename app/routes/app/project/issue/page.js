@@ -83,7 +83,22 @@ export default App.extend({
         controller.set('issueTypes', project?.issuetypes || []);
         this.breadcrumb.setTitle(this.routeName, `#${issue.issueNumber}`);
         this.breadcrumb.setIcon(this.routeName, 'bug');
+        controller.registerHermesIntents(this.trackedProject.getProjectId());
         Logger.debug('-AppProjectIssuePageRoute::setupController');
+    },
+
+    /**
+     * Disposes the Hermes registration when leaving the issue
+     *
+     * @method resetController
+     * @param {Ember.Controller} controller
+     * @param {Boolean} isExiting
+     * @private
+     */
+    resetController(controller, isExiting) {
+        if (isExiting) {
+            controller.unregisterHermesIntents();
+        }
     },
 
     /**
