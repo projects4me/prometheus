@@ -169,7 +169,7 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.true(browser.progressByIdea.i1.loading);
     assert.notOk(browser.progressByIdea.i2.loading);
     await browser.loadPlanStatuses(browser.ideas, async () => []);
-    assert.true(browser.planStatusesLoaded);
+    assert.deepEqual(browser.loadedIdeaIds, ["i1", "i2"]);
     assert.notOk(browser.progressByIdea.i1.loading);
     assert.equal(browser.progressByIdea.i1.label, "views.app.idea.progress.brainstorming");
   });
@@ -191,13 +191,28 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.equal(browser.planStatuses.i2, "proposed");
   });
 
+  test("an idea added by a later reload shows loading, a saved status shows at once", async function (assert) {
+    let browser = this.owner.lookup("controller:app.project.idea");
+    browser.ideas = [EmberObject.create({ id: "i1", status: "open" })];
+    await browser.loadPlanStatuses(browser.ideas, async () => []);
+    browser.ideas = [...browser.ideas, EmberObject.create({ id: "i2", status: "open" })];
+    let release;
+    let pending = browser.loadPlanStatuses(browser.ideas, () => new Promise((resolve) => (release = resolve)));
+    assert.true(browser.progressByIdea.i2.loading);
+    browser.setPlanStatus("i2", "approved");
+    assert.notOk(browser.progressByIdea.i2.loading);
+    release([]);
+    await pending;
+    assert.equal(browser.progressByIdea.i2.label, "views.app.idea.progress.approved");
+  });
+
   test("the loading entry ends when the plan query rejects", async function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
     browser.ideas = [EmberObject.create({ id: "i1", status: "open" })];
     await browser.loadPlanStatuses(browser.ideas, async () => {
       throw new Error("down");
     });
-    assert.true(browser.planStatusesLoaded);
+    assert.deepEqual(browser.loadedIdeaIds, ["i1"]);
   });
 
   test("no subscriptions are left after unregistering", function (assert) {

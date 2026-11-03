@@ -162,14 +162,15 @@ export default class AppProjectIdeaController extends Controller {
     liveStatuses = {};
 
     /**
-     * Whether the plan statuses have loaded, until then a listed idea shows a loading label rather than brainstorming
+     * The ids of the ideas whose plan query has settled, an idea outside it without a known status shows a loading
+     * label rather than brainstorming
      *
-     * @property planStatusesLoaded
-     * @type Boolean
-     * @default false
+     * @property loadedIdeaIds
+     * @type Array
+     * @default []
      * @public
      */
-    @tracked planStatusesLoaded = false;
+    @tracked loadedIdeaIds = [];
 
     /**
      * The progress label key and label class of every idea by idea id: archived, brainstorming without a plan,
@@ -185,7 +186,7 @@ export default class AppProjectIdeaController extends Controller {
             let status = this.planStatuses[idea.id];
             if (idea.status === ARCHIVED) {
                 progress[idea.id] = { label: 'views.app.idea.status.archived', class: 'deferred' };
-            } else if (!this.planStatusesLoaded) {
+            } else if (!status && !this.loadedIdeaIds.includes(idea.id)) {
                 progress[idea.id] = { label: 'views.app.idea.progress.loading', class: 'default', loading: true };
             } else if (!status) {
                 progress[idea.id] = { label: 'views.app.idea.progress.brainstorming', class: 'new' };
@@ -236,8 +237,9 @@ export default class AppProjectIdeaController extends Controller {
         if (this.isDestroying || this.isDestroyed || sequence !== this.planSequence) {
             return;
         }
+        let loadedIds = ideas.map(idea => idea.id);
         if (!plans) {
-            this.planStatusesLoaded = true;
+            this.loadedIdeaIds = loadedIds;
             return;
         }
         let latest = {};
@@ -251,7 +253,7 @@ export default class AppProjectIdeaController extends Controller {
             ...Object.fromEntries(Object.entries(latest).map(([id, plan]) => [id, plan.status])),
             ...this.liveStatuses
         };
-        this.planStatusesLoaded = true;
+        this.loadedIdeaIds = loadedIds;
     }
 
     /**

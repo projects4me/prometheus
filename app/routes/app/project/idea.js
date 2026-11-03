@@ -87,7 +87,7 @@ export default class AppProjectIdeaRoute extends App {
     setupController(controller, model) {
         controller.ideas = model ? model.toArray() : [];
         controller.planStatuses = {};
-        controller.planStatusesLoaded = false;
+        controller.loadedIdeaIds = [];
         controller.loadPlanStatuses(controller.ideas, ids => this.loadPlans(ids));
         controller.registerHermesIntents(this.trackedProject.getProjectId(), () => this.loadIdeas(), ids => this.loadPlans(ids));
     }
