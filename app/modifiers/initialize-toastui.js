@@ -12,6 +12,15 @@ import $ from 'jquery';
 import Logger from 'js-logger';
 
 /**
+ * The keys Tribute uses to move through, pick from and close its suggestion menu
+ *
+ * @property MENU_KEYS
+ * @type Array
+ * @private
+ */
+const MENU_KEYS = ['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'Escape'];
+
+/**
  * This modifier will be called on the initialization of toast ui component to
  * create toast editor and attach tribute to it.
  *
@@ -276,7 +285,12 @@ export default class ToastEditor extends Modifier {
 
         editor.addHook('keydown', (data) => {
             let event = data.data;
-            if (event.key === 'Enter' && event.ctrlKey) {
+            // While a suggestion menu is open its navigation keys belong to Tribute, which handles them on
+            // the same element after the editor; preventing the default here stops the editor from moving
+            // the cursor or adding a line, and Tribute still selects the item. Keys that compose IME text are left alone.
+            let composing = event.isComposing || event.keyCode === 229;
+            let menuKey = !composing && _self.tribute.isActive && MENU_KEYS.includes(event.key);
+            if (menuKey || (event.key === 'Enter' && event.ctrlKey)) {
                 event.preventDefault();
                 return false;
             }
