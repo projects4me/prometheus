@@ -213,6 +213,17 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.equal(browser.progressByIdea.i9.label, "views.app.idea.progress.brainstorming");
   });
 
+  test("an idea created while a plan query is pending stays loaded when it settles", async function (assert) {
+    let browser = this.owner.lookup("controller:app.project.idea");
+    let release;
+    browser.ideas = [EmberObject.create({ id: "i1", status: "open" })];
+    let pending = browser.loadPlanStatuses(browser.ideas, () => new Promise((resolve) => (release = resolve)));
+    browser.addIdea(EmberObject.create({ id: "i2", status: "open" }));
+    release([]);
+    await pending;
+    assert.notOk(browser.progressByIdea.i2.loading);
+  });
+
   test("the loading entry ends when the plan query rejects", async function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
     browser.ideas = [EmberObject.create({ id: "i1", status: "open" })];

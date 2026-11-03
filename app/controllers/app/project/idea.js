@@ -237,7 +237,8 @@ export default class AppProjectIdeaController extends Controller {
         if (this.isDestroying || this.isDestroyed || sequence !== this.planSequence) {
             return;
         }
-        let loadedIds = new Set(ideas.map(idea => idea.id));
+        // keep the ids marked loaded meanwhile, such as an idea created while this query was pending
+        let loadedIds = new Set([...this.loadedIdeaIds, ...ideas.map(idea => idea.id)]);
         if (!plans) {
             this.loadedIdeaIds = loadedIds;
             return;
