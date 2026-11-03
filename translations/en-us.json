@@ -757,6 +757,7 @@
           "archived": "Archived"
         },
         "progress": {
+          "loading": "Loading",
           "brainstorming": "Brainstorming",
           "proposed": "Plan proposed",
           "approved": "Approved",

@@ -153,6 +153,26 @@ export default class AppProjectIdeaController extends Controller {
     planSequence = 0;
 
     /**
+     * The statuses set by a change saved here since the last plan load began, they win over the loaded ones
+     *
+     * @property liveStatuses
+     * @type Object
+     * @private
+     */
+    liveStatuses = {};
+
+    /**
+     * The ids of the ideas whose plan query has settled, an idea outside it without a known status shows a loading
+     * label rather than brainstorming
+     *
+     * @property loadedIdeaIds
+     * @type Set
+     * @default empty
+     * @public
+     */
+    @tracked loadedIdeaIds = new Set();
+
+    /**
      * The progress label key and label class of every idea by idea id: archived, brainstorming without a plan,
      * otherwise the status of the latest plan
      *
@@ -166,6 +186,8 @@ export default class AppProjectIdeaController extends Controller {
             let status = this.planStatuses[idea.id];
             if (idea.status === ARCHIVED) {
                 progress[idea.id] = { label: 'views.app.idea.status.archived', class: 'deferred' };
+            } else if (!status && !this.loadedIdeaIds.has(idea.id)) {
+                progress[idea.id] = { label: 'views.app.idea.progress.loading', class: 'default', loading: true };
             } else if (!status) {
                 progress[idea.id] = { label: 'views.app.idea.progress.brainstorming', class: 'new' };
             } else {
@@ -189,8 +211,8 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     setPlanStatus(ideaId, status) {
-        // an older plan query still in flight must not overwrite this status
-        this.planSequence++;
+        // a plan query still in flight must not overwrite this status, nor does this status mean the others are loaded
+        this.liveStatuses = { ...this.liveStatuses, [ideaId]: status };
         this.planStatuses = { ...this.planStatuses, [ideaId]: status };
     }
 
@@ -205,8 +227,20 @@ export default class AppProjectIdeaController extends Controller {
      */
     async loadPlanStatuses(ideas, loadPlans) {
         let sequence = ++this.planSequence;
-        let plans = await loadPlans(ideas.map(idea => idea.id));
+        this.liveStatuses = {};
+        let plans;
+        try {
+            plans = await loadPlans(ideas.map(idea => idea.id));
+        } catch {
+            plans = null;
+        }
+        if (this.isDestroying || this.isDestroyed || sequence !== this.planSequence) {
+            return;
+        }
+        // keep the ids marked loaded meanwhile, such as an idea created while this query was pending
+        let loadedIds = new Set([...this.loadedIdeaIds, ...ideas.map(idea => idea.id)]);
         if (!plans) {
+            this.loadedIdeaIds = loadedIds;
             return;
         }
         let latest = {};
@@ -216,10 +250,11 @@ export default class AppProjectIdeaController extends Controller {
                 latest[plan.ideaId] = plan;
             }
         }
-        if (this.isDestroying || this.isDestroyed || sequence !== this.planSequence) {
-            return;
-        }
-        this.planStatuses = Object.fromEntries(Object.entries(latest).map(([id, plan]) => [id, plan.status]));
+        this.planStatuses = {
+            ...Object.fromEntries(Object.entries(latest).map(([id, plan]) => [id, plan.status])),
+            ...this.liveStatuses
+        };
+        this.loadedIdeaIds = loadedIds;
     }
 
     /**
@@ -321,7 +356,8 @@ export default class AppProjectIdeaController extends Controller {
     }
 
     /**
-     * Adds an idea to the list unless it is listed already (a reload may have brought it in first)
+     * Adds an idea to the list unless it is listed already (a reload may have brought it in first), a new idea has
+     * no plan so it is loaded
      *
      * @method addIdea
      * @param {Prometheus.Models.Idea} idea
@@ -331,6 +367,7 @@ export default class AppProjectIdeaController extends Controller {
     addIdea(idea) {
         if (!this.ideas.some(listed => listed.id === idea.id)) {
             this.ideas = [...this.ideas, idea];
+            this.loadedIdeaIds = new Set([...this.loadedIdeaIds, idea.id]);
         }
     }
 
