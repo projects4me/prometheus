@@ -130,9 +130,37 @@
     .log-description {
       display: block;
       color: $darkColor;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      max-height: 150px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      white-space: normal;
+      overflow-wrap: anywhere;
+
+      img,
+      video {
+        max-width: 100%;
+        height: auto;
+      }
+
+      iframe {
+        max-width: 100%;
+      }
+
+      table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+      }
+
+      pre {
+        white-space: pre-wrap;
+        overflow-x: auto;
+      }
+
+      ul,
+      ol {
+        padding-left: 2rem;
+      }
     }
 
     .log-entry {

@@ -393,7 +393,7 @@
                         {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "views.app.issue.detail.timelog.h"}}{{/if}}
                         {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
                       </span>
-                      <span class="log-description" {{modify-links}}>
+                      <span class="log-description" tabindex="0" {{modify-links}}>
                         {{safe-html timelog.description}}
                       </span>
                     </div>
@@ -507,7 +507,7 @@
                         {{#if (gt timelog.hours 0)}}{{timelog.hours}}{{t "views.app.issue.detail.timelog.h"}}{{/if}}
                         {{#if (gt timelog.minutes 0)}}{{timelog.minutes}}{{t "views.app.issue.detail.timelog.m"}}{{/if}}
                       </span>
-                      <span class="log-description">
+                      <span class="log-description" tabindex="0">
                         {{safe-html timelog.description}}
                       </span>
                     </div>
