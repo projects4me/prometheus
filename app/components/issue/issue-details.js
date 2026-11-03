@@ -515,7 +515,11 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      */
     @action previewFile(file, event) {
         event.preventDefault();
-        this.previewTrigger = event.currentTarget;
+        const link = event.currentTarget;
+        // the thumbnail link is hidden from keyboard users: return focus to the filename link instead
+        this.previewTrigger = link.matches('[aria-hidden="true"]')
+            ? link.closest('li').querySelector('.attachment-name a') || link
+            : link;
         this.previewedFile = file;
     }
 

@@ -148,4 +148,13 @@ export default class IssueFilePreviewComponent extends AppComponent {
     @action download() {
         this.args.onDownload(this.args.file);
     }
+
+    /**
+     * Show the error state when the browser cannot load the previewed media
+     *
+     * @method markFailed
+     */
+    @action markFailed() {
+        this.failed = true;
+    }
 }

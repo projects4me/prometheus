@@ -78,6 +78,14 @@ module('Integration | Component | issue/file-preview', function (hooks) {
         assert.dom('audio.file-preview-media').exists();
     });
 
+    test('it shows an error when the image itself fails to load', async function (assert) {
+        await renderPreview(this, 'image/png');
+        document.querySelector('img.file-preview-image').dispatchEvent(new Event('error'));
+        await settled();
+        assert.dom('.file-preview-error').exists();
+        assert.dom('img.file-preview-image').doesNotExist();
+    });
+
     test('it shows an error when the response has no token', async function (assert) {
         this.store.query = () => Promise.resolve({ objectAt: () => undefined });
         await renderPreview(this, 'image/png');
