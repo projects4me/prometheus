@@ -166,11 +166,11 @@ export default class AppProjectIdeaController extends Controller {
      * label rather than brainstorming
      *
      * @property loadedIdeaIds
-     * @type Array
-     * @default []
+     * @type Set
+     * @default empty
      * @public
      */
-    @tracked loadedIdeaIds = [];
+    @tracked loadedIdeaIds = new Set();
 
     /**
      * The progress label key and label class of every idea by idea id: archived, brainstorming without a plan,
@@ -186,7 +186,7 @@ export default class AppProjectIdeaController extends Controller {
             let status = this.planStatuses[idea.id];
             if (idea.status === ARCHIVED) {
                 progress[idea.id] = { label: 'views.app.idea.status.archived', class: 'deferred' };
-            } else if (!status && !this.loadedIdeaIds.includes(idea.id)) {
+            } else if (!status && !this.loadedIdeaIds.has(idea.id)) {
                 progress[idea.id] = { label: 'views.app.idea.progress.loading', class: 'default', loading: true };
             } else if (!status) {
                 progress[idea.id] = { label: 'views.app.idea.progress.brainstorming', class: 'new' };
@@ -237,7 +237,7 @@ export default class AppProjectIdeaController extends Controller {
         if (this.isDestroying || this.isDestroyed || sequence !== this.planSequence) {
             return;
         }
-        let loadedIds = ideas.map(idea => idea.id);
+        let loadedIds = new Set(ideas.map(idea => idea.id));
         if (!plans) {
             this.loadedIdeaIds = loadedIds;
             return;
@@ -355,7 +355,8 @@ export default class AppProjectIdeaController extends Controller {
     }
 
     /**
-     * Adds an idea to the list unless it is listed already (a reload may have brought it in first)
+     * Adds an idea to the list unless it is listed already (a reload may have brought it in first), a new idea has
+     * no plan so it is loaded
      *
      * @method addIdea
      * @param {Prometheus.Models.Idea} idea
@@ -365,6 +366,7 @@ export default class AppProjectIdeaController extends Controller {
     addIdea(idea) {
         if (!this.ideas.some(listed => listed.id === idea.id)) {
             this.ideas = [...this.ideas, idea];
+            this.loadedIdeaIds = new Set([...this.loadedIdeaIds, idea.id]);
         }
     }
 

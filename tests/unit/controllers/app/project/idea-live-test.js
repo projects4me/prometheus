@@ -169,7 +169,7 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.true(browser.progressByIdea.i1.loading);
     assert.notOk(browser.progressByIdea.i2.loading);
     await browser.loadPlanStatuses(browser.ideas, async () => []);
-    assert.deepEqual(browser.loadedIdeaIds, ["i1", "i2"]);
+    assert.deepEqual([...browser.loadedIdeaIds], ["i1", "i2"]);
     assert.notOk(browser.progressByIdea.i1.loading);
     assert.equal(browser.progressByIdea.i1.label, "views.app.idea.progress.brainstorming");
   });
@@ -206,13 +206,20 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.equal(browser.progressByIdea.i2.label, "views.app.idea.progress.approved");
   });
 
+  test("a locally created idea is not left loading", function (assert) {
+    let browser = this.owner.lookup("controller:app.project.idea");
+    browser.addIdea(EmberObject.create({ id: "i9", status: "open" }));
+    assert.notOk(browser.progressByIdea.i9.loading);
+    assert.equal(browser.progressByIdea.i9.label, "views.app.idea.progress.brainstorming");
+  });
+
   test("the loading entry ends when the plan query rejects", async function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
     browser.ideas = [EmberObject.create({ id: "i1", status: "open" })];
     await browser.loadPlanStatuses(browser.ideas, async () => {
       throw new Error("down");
     });
-    assert.deepEqual(browser.loadedIdeaIds, ["i1"]);
+    assert.deepEqual([...browser.loadedIdeaIds], ["i1"]);
   });
 
   test("no subscriptions are left after unregistering", function (assert) {
