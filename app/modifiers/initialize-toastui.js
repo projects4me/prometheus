@@ -453,6 +453,7 @@ export default class ToastEditor extends Modifier {
             'exclamation': '&#10071;',
             '100': '&#128175;',
         };        
+        let latestSearchText = null;
         return new Tribute({
             // an empty template hides the menu (and ends Tribute's active state) when nothing matches
             noMatchTemplate: '',
@@ -531,6 +532,8 @@ export default class ToastEditor extends Modifier {
                 cb([]);
                 return;
             }
+            // an empty reply to an older query would hide the menu, so only the latest query's reply is shown
+            latestSearchText = text;
             var result = _self.issueSearch(text);
             let map = {
                 id: 'id',
@@ -541,6 +544,9 @@ export default class ToastEditor extends Modifier {
                 priority: 'priority'
             };
             result.then(function (data) {
+                if (text !== latestSearchText) {
+                    return;
+                }
                 console.log(data);
                 cb((new format(_self)).getSelectList(data, map));
             });
