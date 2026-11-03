@@ -5,11 +5,13 @@
 import Helper from '@ember/component/helper';
 import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
+import { labelStyle } from 'prometheus/utils/color';
 
 /**
  * Returns the inline style that paints a status label with the colour of the issue status
  * of the given name. When the status is unknown or has no colour it returns an empty string
  * so the CSS class of the status stays as the fallback. Colours that are not a plain colour value are ignored, since the style is rendered as HTML-safe.
+ * When it paints the background with a hex colour it also sets the status's text colour, dark or light.
  *
  * @class StatusStyle
  * @namespace Prometheus.Helpers
@@ -28,6 +30,13 @@ export default class StatusStyleHelper extends Helper {
     compute([statusName, property = 'background-color']) {
         let status = this.store.peekAll('issuestatus').find((item) => item.name === statusName && SAFE_COLOR.test(item.color || ''));
 
-        return status ? htmlSafe(`${property}: ${status.color} !important`) : htmlSafe('');
+        if (!status) {
+            return htmlSafe('');
+        }
+
+        // A label background also gets a readable text colour.
+        let style = property === 'background-color' && labelStyle(status.color, { textColor: status.textColor, important: true });
+
+        return htmlSafe(style || `${property}: ${status.color} !important`);
     }
 }

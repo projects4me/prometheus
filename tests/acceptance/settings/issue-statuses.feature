@@ -41,6 +41,71 @@ Feature: Settings | issue statuses
     And The issue status qa_review is listed with the label QA Review
     And One request created the issue status qa_review with the labels {"en-us": "QA Review"}
 
+  Scenario: An admin adds an issue status with a colour of their own
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 has setting.get permission set to 1
+    And User_1 has setting.update permission set to 1
+    When User opens app/settings/issue-statuses
+    And User starts adding an issue status
+    Then The colour picker reads #80b5d3
+    And The text colour reads Light
+    When User types the en-us label Blocked
+    And User picks the colour #6a3d9a with the colour picker
+    Then The colour preview reads Blocked in colour #6a3d9a
+    When User saves the issue status
+    Then The issue status blocked is listed with colour #6a3d9a, counting as done No and 0 issues
+    And The issue status blocked is listed with light label text
+    And One request created the issue status blocked with the colour #6a3d9a and the text colour light
+
+  Scenario: An admin chooses dark label text for a status
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 has setting.get permission set to 1
+    And User_1 has setting.update permission set to 1
+    And The global issue statuses are
+    ------------------------------------------------------------
+    | name | color   | done | sortOrder | issueCount |
+    | new  | #fff3a0 | 0    | 1         | 3          |
+    ------------------------------------------------------------
+    When User opens app/settings/issue-statuses
+    Then The issue status new is listed with light label text
+    When User starts editing the issue status new
+    Then The colour picker reads #fff3a0
+    And The text colour reads Light
+    And The colour preview has light text
+    When User picks the text colour Dark
+    Then The colour preview has dark text
+    When User saves the issue status
+    Then The issue status new is listed with dark label text
+    And The issue status new was saved with the text colour dark
+
+  Scenario: Each status is listed with its saved label text colour
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 has setting.get permission set to 1
+    And User_1 has setting.update permission set to 1
+    And The global issue statuses are
+    ------------------------------------------------------------
+    | name    | color   | textColor | done | sortOrder | issueCount |
+    | new     | #fff3a0 | dark      | 0    | 1         | 3          |
+    | blocked | #1a2b3c | light     | 0    | 2         | 1          |
+    | waiting | #fff3a0 | -         | 0    | 3         | 0          |
+    ------------------------------------------------------------
+    When User opens app/settings/issue-statuses
+    Then The issue status new is listed with dark label text
+    And The issue status blocked is listed with light label text
+    And The issue status waiting is listed with light label text
+    When User starts editing the issue status new
+    Then The colour picker reads #fff3a0
+    And The text colour reads Dark
+
   Scenario: The status value is derived from the label until it is typed
 
     Given There is no pre-existing data
