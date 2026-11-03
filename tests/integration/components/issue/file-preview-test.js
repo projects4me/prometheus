@@ -80,7 +80,11 @@ module('Integration | Component | issue/file-preview', function (hooks) {
 
     test('it shows an error when the image itself fails to load', async function (assert) {
         await renderPreview(this, 'image/png');
-        document.querySelector('img.file-preview-image').dispatchEvent(new Event('error'));
+        // the unreachable test host may already have reported a native load error: either way the image must be gone
+        const image = document.querySelector('img.file-preview-image');
+        if (image) {
+            image.dispatchEvent(new Event('error'));
+        }
         await settled();
         assert.dom('.file-preview-error').exists();
         assert.dom('img.file-preview-image').doesNotExist();
