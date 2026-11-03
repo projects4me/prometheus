@@ -1000,6 +1000,10 @@
             "onsecondthought": "Hmm, I will just keep it.",
             "deleted": "File has been deleted",
             "preview": "Preview File",
+            "loading": "Loading the file",
+            "previewFailed": "The file could not be loaded",
+            "noPreview": "No preview available for this file type",
+            "download": "Download",
             "uploadfailed": "Failed to upload file",
             "uploadFailedSize": "File size is too large, please upload a file smaller than {size}MB"
           },

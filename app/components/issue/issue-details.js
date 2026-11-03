@@ -16,15 +16,23 @@ import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
  */
 export default class IssueIssueDetailsComponent extends AppComponent {
     /**
-     * This flag is used to show or hide the modal dialog box
-     * for file previews
+     * The file that is open in the preview modal, if any
      *
-     * @property previewFileDialog
-     * @type boolean
+     * @property previewedFile
+     * @type Upload
      * @for IssueIssueDetailsComponent
      * @private
      */
-    @tracked previewFileDialog = false;
+    @tracked previewedFile = null;
+
+    /**
+     * The element that opened the preview, it gets the focus back when the preview closes
+     *
+     * @property previewTrigger
+     * @type HTMLElement
+     * @private
+     */
+    previewTrigger = null;
 
     /**
      * This flag is used to show or hide the modal dialog box
@@ -500,35 +508,34 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     }
 
     /**
-     * This function is used to handle the preview of a file
+     * This function opens the preview modal of a file
      *
      * @param file
+     * @param event
      */
-    @action previewFile(file) {
-        Logger.debug('IssueIssueDetailsComponent->previewFile');
-        let _self = this;
-        Logger.debug(_self);
-        _self.showDialog();
+    @action previewFile(file, event) {
+        event.preventDefault();
+        const link = event.currentTarget;
+        // the thumbnail link is hidden from keyboard users: return focus to the filename link instead
+        this.previewTrigger = link.matches('[aria-hidden="true"]')
+            ? link.closest('li').querySelector('.attachment-name a') || link
+            : link;
+        this.previewedFile = file;
+    }
 
-        // get a download token
-        let options = {
-            id: file.get('id'),
-            download: true
-        };
-        Logger.debug('Retrieving upload with options ' + options);
-        _self.store.query('upload', options).then(function (contents) {
-            let downloadLink = contents.objectAt(0).get('downloadLink');
-            Logger.debug('Download link found : ' + downloadLink);
-
-            let path = _self.store.adapterFor('upload').host + '/preview/get/' + downloadLink;
-            $('#file_preview').attr('src', path);
-            Logger.debug(path);
-        });
-
-
-        // navigate user to the page for download
-
-        Logger.debug('-IssueIssueDetailsComponent->previewFile');
+    /**
+     * This function closes the preview modal and returns the focus to the attachment
+     *
+     * @method closePreview
+     */
+    @action closePreview() {
+        if (this.isDestroyed || this.isDestroying) return;
+        this.previewedFile = null;
+        const trigger = this.previewTrigger;
+        this.previewTrigger = null;
+        if (trigger && trigger.isConnected) {
+            trigger.focus();
+        }
     }
 
     /**
@@ -829,28 +836,6 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     @action showEstimateTimeDialog() {
         this.estimateTimeDialog = true;
     }
-    /**
-     * This function is used to show the add modal dialog box
-     *
-     * @method showDialog
-     * @public
-     */
-    @action showDialog() {
-        this.filePreviewDialog = true;
-    }
-
-    /**
-     * This function is used to hide the add tag modal
-     *
-     * @method removeModal
-     * @public
-     */
-    @action removeModal() {
-        if (this.isDestroyed || this.isDestroying) return;
-        this.filePreviewDialog = false;
-        $('.modal').modal('hide');
-    }
-
     /**
      * This function is used to hide the log time modal
      *
