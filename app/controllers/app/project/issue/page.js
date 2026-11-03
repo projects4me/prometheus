@@ -8,6 +8,8 @@ import { inject as service } from '@ember/service';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 import { postToast } from 'prometheus/utils/ui/post-toast';
 import { pushIfMissing, removeById } from 'prometheus/utils/live/collection';
+import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
+import { isOpenIssueEvent, isIssueRoomEvent, resolveStatusName, findOrLoad } from 'prometheus/utils/live/issue';
 
 /**
  * This controller is used to manage the issues detail/page view
@@ -62,15 +64,6 @@ export default class AppProjectIssuePageController extends PrometheusController 
     hermesDisposer = null;
 
     /**
-     * Counts the assignee events, so that only the latest one is applied
-     *
-     * @property assigneeSequence
-     * @type Number
-     * @private
-     */
-    assigneeSequence = 0;
-
-    /**
      * Ids of comments deleted remotely, so a pending created lookup does not add them back
      *
      * @property deletedCommentIds
@@ -94,11 +87,31 @@ export default class AppProjectIssuePageController extends PrometheusController 
             return;
         }
         this.hermesDisposer = this.hermes.register(this, projectId, {
-            'issue.status.changed': envelope => this.onOpenIssue(envelope, () => this.applyStatus(envelope)),
-            'issue.assignee.changed': envelope => this.onOpenIssue(envelope, () => this.applyAssignee(envelope)),
-            'conversation.comment.created': envelope => this.onIssueRoom(envelope, () => this.applyCommentCreated(envelope)),
-            'conversation.comment.updated': envelope => this.onIssueRoom(envelope, () => this.applyCommentUpdated(envelope)),
-            'conversation.comment.deleted': envelope => this.onIssueRoom(envelope, () => this.applyCommentDeleted(envelope))
+            'issue.status.changed': envelope => {
+                if (isOpenIssueEvent(this.issue, envelope)) {
+                    this.applyStatus(envelope);
+                }
+            },
+            'issue.assignee.changed': envelope => {
+                if (isOpenIssueEvent(this.issue, envelope)) {
+                    this.applyAssignee(envelope);
+                }
+            },
+            'conversation.comment.created': envelope => {
+                if (isIssueRoomEvent(this.issue, envelope)) {
+                    this.applyCommentCreated(envelope);
+                }
+            },
+            'conversation.comment.updated': envelope => {
+                if (isIssueRoomEvent(this.issue, envelope)) {
+                    this.applyCommentUpdated(envelope);
+                }
+            },
+            'conversation.comment.deleted': envelope => {
+                if (isIssueRoomEvent(this.issue, envelope)) {
+                    this.applyCommentDeleted(envelope);
+                }
+            }
         });
     }
 
@@ -115,39 +128,6 @@ export default class AppProjectIssuePageController extends PrometheusController 
     }
 
     /**
-     * Runs the handler only for events of the open issue
-     *
-     * @method onOpenIssue
-     * @param {Object} envelope Domain-event envelope
-     * @param {Function} handler
-     * @returns {void}
-     * @private
-     */
-    onOpenIssue(envelope, handler) {
-        let id = envelope?.resource?.id;
-        if (this.issue && id && String(id) === String(this.issue.id)) {
-            handler();
-        }
-    }
-
-    /**
-     * Runs the handler only for comment events of the room of the open issue
-     *
-     * @method onIssueRoom
-     * @param {Object} envelope Domain-event envelope
-     * @param {Function} handler
-     * @returns {void}
-     * @private
-     */
-    onIssueRoom(envelope, handler) {
-        let roomId = envelope?.meta?.conversationId || envelope?.changes?.relatedId;
-        let issueRoomId = this.issue?.conversationRoomId;
-        if (roomId && issueRoomId && String(roomId) === String(issueRoomId) && envelope.resource?.id) {
-            handler();
-        }
-    }
-
-    /**
      * Whether the issue is still the open one and the controller is alive
      *
      * @method isStillOpen
@@ -157,19 +137,6 @@ export default class AppProjectIssuePageController extends PrometheusController 
      */
     isStillOpen(issue) {
         return !this.isDestroying && !this.isDestroyed && this.issue === issue;
-    }
-
-    /**
-     * Finds a record in the store, loading it when it is not there yet
-     *
-     * @method findOrLoad
-     * @param {String} type
-     * @param {String} id
-     * @returns {Promise}
-     * @private
-     */
-    async findOrLoad(type, id) {
-        return this.store.peekRecord(type, id) || this.store.findRecord(type, id);
     }
 
     /**
@@ -185,7 +152,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
         if (!actorId || actorId === this.currentUser.user?.id) {
             return null;
         }
-        let actor = await this.findOrLoad('user', actorId);
+        let actor = await findOrLoad(this.store, 'user', actorId);
         return actor?.name || null;
     }
 
@@ -202,20 +169,13 @@ export default class AppProjectIssuePageController extends PrometheusController 
     async applyStatus(envelope) {
         let issue = this.issue;
         let changes = envelope.changes || {};
-        let status = changes.status;
-        let statusId = changes.statusId;
-        if (!status && !statusId) {
+        let status = resolveStatusName(changes, this.issueStatuses);
+        if (!status) {
             return;
         }
-        if (!status) {
-            status = this.issueStatuses?.find(item => String(item.id) === String(statusId))?.name;
-            if (!status) {
-                return;
-            }
-        }
         issue.set('status', status);
-        if (statusId) {
-            issue.set('statusId', String(statusId));
+        if (changes.statusId) {
+            issue.set('statusId', String(changes.statusId));
         }
         await this.notifyActor(issue, envelope, 'statusChanged', () => ({ status: issueStatusLabel(this.intl, status) }));
     }
@@ -223,7 +183,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
     /**
      * Applies a remote assignee change onto the open issue without saving it
      *
-     * Only the latest assignee event is applied when several are in flight.
+     * The assignee is set at once from the event, only the toast waits for the name to load.
      *
      * @method applyAssignee
      * @param {Object} envelope Domain-event envelope
@@ -232,21 +192,18 @@ export default class AppProjectIssuePageController extends PrometheusController 
      */
     async applyAssignee(envelope) {
         let issue = this.issue;
-        let changes = envelope.changes || {};
-        let assigneeId = changes.assignee ?? changes.assigneeId ?? null;
-        let sequence = this.assigneeSequence = (this.assigneeSequence || 0) + 1;
+        applyIssueAssigneeChange(this.store, issue, envelope);
         let assignee = null;
         try {
-            assignee = assigneeId ? await this.findOrLoad('user', assigneeId) : null;
+            assignee = await issue.get('assignedTo');
+            if (assignee && !assignee.get('name')) {
+                await this.store.findRecord('user', assignee.get('id'), { reload: true });
+            }
         } catch (error) {
             this.logLiveFailure(error);
             return;
         }
-        if (!this.isStillOpen(issue) || sequence !== this.assigneeSequence) {
-            return;
-        }
-        issue.set('assignedTo', assignee);
-        await this.notifyActor(issue, envelope, 'assigneeChanged', () => ({ assignee: assignee?.name || '' }));
+        await this.notifyActor(issue, envelope, 'assigneeChanged', () => ({ assignee: assignee?.get('name') || '' }));
     }
 
     /**
@@ -263,7 +220,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
     async notifyActor(issue, envelope, key, values) {
         try {
             let actorName = await this.otherActorName(envelope);
-            if (actorName && this.isStillOpen(issue)) {
+            if (actorName && this.hermesDisposer && this.isStillOpen(issue)) {
                 postToast(this.intl, `views.app.issue.detail.live.${key}`, 'info', { user: actorName, ...(values ? values() : {}) });
             }
         } catch (error) {
