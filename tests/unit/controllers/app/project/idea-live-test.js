@@ -160,6 +160,46 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.equal(browser.planStatuses.i1, "approved");
   });
 
+  test("ideas show a loading entry until the plan statuses have loaded, archived ones stay archived", async function (assert) {
+    let browser = this.owner.lookup("controller:app.project.idea");
+    browser.ideas = [
+      EmberObject.create({ id: "i1", status: "open" }),
+      EmberObject.create({ id: "i2", status: "archived" }),
+    ];
+    assert.true(browser.progressByIdea.i1.loading);
+    assert.notOk(browser.progressByIdea.i2.loading);
+    await browser.loadPlanStatuses(browser.ideas, async () => []);
+    assert.true(browser.planStatusesLoaded);
+    assert.notOk(browser.progressByIdea.i1.loading);
+    assert.equal(browser.progressByIdea.i1.label, "views.app.idea.progress.brainstorming");
+  });
+
+  test("a local status change keeps the other ideas loading until the plan query finishes", async function (assert) {
+    let browser = this.owner.lookup("controller:app.project.idea");
+    let release;
+    browser.ideas = [
+      EmberObject.create({ id: "i1", status: "open" }),
+      EmberObject.create({ id: "i2", status: "open" }),
+    ];
+    let pending = browser.loadPlanStatuses(browser.ideas, () => new Promise((resolve) => (release = resolve)));
+    browser.setPlanStatus("i1", "approved");
+    assert.true(browser.progressByIdea.i2.loading);
+    release([{ ideaId: "i2", version: 1, status: "proposed" }]);
+    await pending;
+    assert.notOk(browser.progressByIdea.i2.loading);
+    assert.equal(browser.planStatuses.i1, "approved");
+    assert.equal(browser.planStatuses.i2, "proposed");
+  });
+
+  test("the loading entry ends when the plan query rejects", async function (assert) {
+    let browser = this.owner.lookup("controller:app.project.idea");
+    browser.ideas = [EmberObject.create({ id: "i1", status: "open" })];
+    await browser.loadPlanStatuses(browser.ideas, async () => {
+      throw new Error("down");
+    });
+    assert.true(browser.planStatusesLoaded);
+  });
+
   test("no subscriptions are left after unregistering", function (assert) {
     let hermes = this.owner.lookup("service:hermes");
     let page = this.owner.lookup("controller:app.project.idea.page");

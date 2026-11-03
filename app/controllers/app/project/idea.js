@@ -153,6 +153,25 @@ export default class AppProjectIdeaController extends Controller {
     planSequence = 0;
 
     /**
+     * The statuses set by a change saved here since the last plan load began, they win over the loaded ones
+     *
+     * @property liveStatuses
+     * @type Object
+     * @private
+     */
+    liveStatuses = {};
+
+    /**
+     * Whether the plan statuses have loaded, until then a listed idea shows a loading label rather than brainstorming
+     *
+     * @property planStatusesLoaded
+     * @type Boolean
+     * @default false
+     * @public
+     */
+    @tracked planStatusesLoaded = false;
+
+    /**
      * The progress label key and label class of every idea by idea id: archived, brainstorming without a plan,
      * otherwise the status of the latest plan
      *
@@ -166,6 +185,8 @@ export default class AppProjectIdeaController extends Controller {
             let status = this.planStatuses[idea.id];
             if (idea.status === ARCHIVED) {
                 progress[idea.id] = { label: 'views.app.idea.status.archived', class: 'deferred' };
+            } else if (!this.planStatusesLoaded) {
+                progress[idea.id] = { label: 'views.app.idea.progress.loading', class: 'default', loading: true };
             } else if (!status) {
                 progress[idea.id] = { label: 'views.app.idea.progress.brainstorming', class: 'new' };
             } else {
@@ -189,8 +210,8 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     setPlanStatus(ideaId, status) {
-        // an older plan query still in flight must not overwrite this status
-        this.planSequence++;
+        // a plan query still in flight must not overwrite this status, nor does this status mean the others are loaded
+        this.liveStatuses = { ...this.liveStatuses, [ideaId]: status };
         this.planStatuses = { ...this.planStatuses, [ideaId]: status };
     }
 
@@ -205,8 +226,18 @@ export default class AppProjectIdeaController extends Controller {
      */
     async loadPlanStatuses(ideas, loadPlans) {
         let sequence = ++this.planSequence;
-        let plans = await loadPlans(ideas.map(idea => idea.id));
+        this.liveStatuses = {};
+        let plans;
+        try {
+            plans = await loadPlans(ideas.map(idea => idea.id));
+        } catch {
+            plans = null;
+        }
+        if (this.isDestroying || this.isDestroyed || sequence !== this.planSequence) {
+            return;
+        }
         if (!plans) {
+            this.planStatusesLoaded = true;
             return;
         }
         let latest = {};
@@ -216,10 +247,11 @@ export default class AppProjectIdeaController extends Controller {
                 latest[plan.ideaId] = plan;
             }
         }
-        if (this.isDestroying || this.isDestroyed || sequence !== this.planSequence) {
-            return;
-        }
-        this.planStatuses = Object.fromEntries(Object.entries(latest).map(([id, plan]) => [id, plan.status]));
+        this.planStatuses = {
+            ...Object.fromEntries(Object.entries(latest).map(([id, plan]) => [id, plan.status])),
+            ...this.liveStatuses
+        };
+        this.planStatusesLoaded = true;
     }
 
     /**

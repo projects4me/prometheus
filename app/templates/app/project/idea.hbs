@@ -26,7 +26,7 @@
                 <LinkTo @route="app.project.idea.page" @model={{idea.id}} @query={{this.linkQuery}}>
                   <span data-idea-title>{{idea.title}}</span>
                   {{#let (get this.progressByIdea idea.id) as |progress|}}
-                    <span class="label pull-right {{progress.class}}" data-idea-status>{{t progress.label}}</span>
+                    <span class="label pull-right {{progress.class}}" data-idea-status>{{#if progress.loading}}<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> {{/if}}{{t progress.label}}</span>
                   {{/let}}
                 </LinkTo>
               </li>
