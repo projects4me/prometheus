@@ -23,6 +23,24 @@ module('Integration | Component | idea/message-item', function (hooks) {
         assert.dom('[data-idea-message-body] strong').hasText('bold');
     });
 
+    test('a working message is a status indicator with animated dots', async function (assert) {
+        this.set('message', { id: '6', kind: 'working', body: 'Agent Nestor is working on it.', createdUser: '1', createdUserName: 'Agent Nestor', dateCreated: '2026-01-01 10:00:00' });
+        await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
+
+        assert.dom('[data-idea-working]').hasAttribute('role', 'status');
+        assert.dom('.idea-message-working').includesText('Agent Nestor is working on it');
+        assert.dom('.idea-working-dots > span').exists({ count: 3 });
+        assert.dom('.idea-message-notice').doesNotExist();
+    });
+
+    test('a legacy system message ending with is working on it. is an indicator', async function (assert) {
+        this.set('message', { id: '7', kind: 'system', body: 'Agent Nestor is working on it.', createdUser: '1', createdUserName: 'Agent Nestor' });
+        await render(hbs`<Idea::MessageItem @message={{this.message}} />`);
+
+        assert.dom('[data-idea-working]').exists();
+        assert.dom('.idea-message-notice').doesNotExist();
+    });
+
     test('script content is not executed', async function (assert) {
         window.ideaXss = false;
         this.set('message', { id: '1', kind: 'user', body: '<script>window.ideaXss = true;</script><img src=x onerror="window.ideaXss = true">' });

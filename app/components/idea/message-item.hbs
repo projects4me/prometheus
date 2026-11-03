@@ -1,4 +1,20 @@
-{{#if this.isNotice}}
+{{#if this.isWorking}}
+  <ConversationUi::CommentFrame
+    @commentId={{@message.id}}
+    @userId={{@message.createdUser}}
+    @userName={{@message.createdUserName}}
+    data-idea-message={{@message.id}}
+    data-kind={{@message.kind}}
+    data-idea-working
+    role="status"
+  >
+    <:body>
+      <div class="idea-message-working text-muted">
+        {{t "views.app.idea.conversation.working" name=@message.createdUserName}}<span class="idea-working-dots"><span>.</span><span>.</span><span>.</span></span>
+      </div>
+    </:body>
+  </ConversationUi::CommentFrame>
+{{else if this.isNotice}}
   <div class="idea-message-notice text-center text-muted {{if this.isError "text-red"}}" data-idea-message={{@message.id}} data-kind={{@message.kind}}>
     <i class="fa {{if this.isError "fa-exclamation-triangle" "fa-info-circle"}}"></i>
     <span data-idea-message-body {{render-markdown @message.body}}></span>

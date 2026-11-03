@@ -792,6 +792,7 @@
           "unarchiveMessage": "This idea will be opened again.",
           "steps": "{count, plural, one {# step} other {# steps}}",
           "plan": "View the plan",
+          "working": "{name} is working on it",
           "screenVersion": "v{version}",
           "image": {
             "uploading": "Uploading image ..",

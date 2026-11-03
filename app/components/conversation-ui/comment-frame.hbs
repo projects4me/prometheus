@@ -10,7 +10,7 @@
         <Agent::UserTag @userId={{@userId}} @showSponsor={{true}} />
       {{/if}}
       <span class="text-muted pull-right">
-        {{format-date-time date=@date}}
+        {{#if @date}}{{format-date-time date=@date}}{{/if}}
         {{yield to="tools"}}
       </span>
     </span>

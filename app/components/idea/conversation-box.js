@@ -5,6 +5,7 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { isWorkingMessage } from 'prometheus/utils/idea/working-message';
 
 /**
  * The conversation box of an idea page: the header with rename and archive, the thread of messages and
@@ -36,15 +37,18 @@ export default class IdeaConversationBoxComponent extends Component {
     }
 
     /**
-     * The messages, oldest first
+     * The messages, oldest first; working messages are left out unless they are the last one
      *
      * @property orderedMessages
      * @type Array
      * @public
      */
     get orderedMessages() {
-        return [...(this.args.messages ?? [])].sort((a, b) =>
+        let sorted = [...(this.args.messages ?? [])].sort((a, b) =>
             String(a.dateCreated).localeCompare(String(b.dateCreated)) || Number(a.id) - Number(b.id));
+        let last = sorted[sorted.length - 1];
+        // A working indicator only shows while it is the last message, a later message replaces it
+        return sorted.filter(message => !isWorkingMessage(message) || message === last);
     }
 
     /**
