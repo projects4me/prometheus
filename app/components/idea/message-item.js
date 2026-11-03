@@ -5,6 +5,7 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { isWorkingMessage } from 'prometheus/utils/idea/working-message';
 
 const NOTICE_KINDS = ['system', 'error'];
 
@@ -27,6 +28,18 @@ export default class IdeaMessageItemComponent extends Component {
     @tracked showSteps = false;
 
     /**
+     * Whether the message tells that the agent is working, the agent posts it as the kind working,
+     * older threads have it as a system message ending with the same words
+     *
+     * @property isWorking
+     * @type Boolean
+     * @public
+     */
+    get isWorking() {
+        return isWorkingMessage(this.args.message);
+    }
+
+    /**
      * Whether the message is a compact notice
      *
      * @property isNotice
@@ -34,7 +47,7 @@ export default class IdeaMessageItemComponent extends Component {
      * @public
      */
     get isNotice() {
-        return NOTICE_KINDS.includes(this.args.message.kind);
+        return !this.isWorking && NOTICE_KINDS.includes(this.args.message.kind);
     }
 
     /**
