@@ -71,11 +71,18 @@ module('Integration | Component | issue/file-preview', function (hooks) {
         assert.strictEqual(this.store.queries.length, 0, 'no token requested');
     });
 
-    test('it shows video and audio in media elements, ignoring the case of the mime type', async function (assert) {
-        await renderPreview(this, 'VIDEO/mp4');
-        assert.dom('video.file-preview-media').exists();
+    test('it offers a download instead of a preview for video', async function (assert) {
+        await renderPreview(this, 'video/mp4');
+        assert.dom('.file-preview-unsupported').exists();
+        assert.dom('video, audio').doesNotExist();
+        assert.strictEqual(this.store.queries.length, 0, 'no token requested');
+    });
+
+    test('it offers a download instead of a preview for audio', async function (assert) {
         await renderPreview(this, 'audio/mpeg');
-        assert.dom('audio.file-preview-media').exists();
+        assert.dom('.file-preview-unsupported').exists();
+        assert.dom('video, audio').doesNotExist();
+        assert.strictEqual(this.store.queries.length, 0, 'no token requested');
     });
 
     test('it shows an error when the image itself fails to load', async function (assert) {

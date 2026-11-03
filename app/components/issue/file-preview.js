@@ -73,33 +73,13 @@ export default class IssueFilePreviewComponent extends AppComponent {
     }
 
     /**
-     * Whether the file is a video
-     *
-     * @property isVideo
-     * @type boolean
-     */
-    get isVideo() {
-        return this.mime.startsWith('video/');
-    }
-
-    /**
-     * Whether the file is an audio
-     *
-     * @property isAudio
-     * @type boolean
-     */
-    get isAudio() {
-        return this.mime.startsWith('audio/');
-    }
-
-    /**
      * Whether the browser can show the file
      *
      * @property canPreview
      * @type boolean
      */
     get canPreview() {
-        return this.isImage || this.isFrame || this.isVideo || this.isAudio;
+        return this.isImage || this.isFrame;
     }
 
     /**
