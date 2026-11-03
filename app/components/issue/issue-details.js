@@ -70,6 +70,17 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     @tracked editLogDialog = false;
 
     /**
+     * This flag is used to show or hide the modal dialog box
+     * for editing an estimate
+     *
+     * @property editEstimateDialog
+     * @type boolean
+     * @for IssueIssueDetailsComponent
+     * @private
+     */
+    @tracked editEstimateDialog = false;
+
+    /**
      * This is the container object for a new time log entry
      *
      * @property editingLog
@@ -78,6 +89,14 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @private
      */
     @tracked editingLog = null;
+
+    /**
+     * True while an edited log or estimate is being saved
+     *
+     * @property isSavingLog
+     * @type Boolean
+     */
+    isSavingLog = false;
 
     /**
      * The notifications service
@@ -657,6 +676,9 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         let _self = this;
         Logger.debug(_self);
         let log = _self.editingLog;
+        if (!log || _self.isSavingLog) {
+            return;
+        }
         let context = log.get('context');
 
         let isValid = false;
@@ -666,29 +688,38 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             isValid = _self._validateLog(log);
         }
 
-        // Validate the time log and spentOn
-        if (isValid) {
-            log.save().then(function () {
-
-                new Messenger().post({
-                    message: _self.intl.t("views.app.issue.detail." + context + ".edited"),
-                    type: 'success',
-                    showCloseButton: true
-                });
-                _self.reload();
-
-            });
-        } else {
+        // Validate the time log and spentOn; keep the modal open on failure
+        if (!isValid) {
             new Messenger().post({
                 message: _self.intl.t("views.app.issue.detail." + context + ".missing"),
                 type: 'error',
                 showCloseButton: true
             });
+            return;
         }
 
-        _self.editingLog = null;
-        _self.removeEditLogModal();
-        _self.removeEditEstimateModal();
+        _self.isSavingLog = true;
+        log.save().then(function () {
+            _self.isSavingLog = false;
+            if (_self.isDestroyed || _self.isDestroying) return;
+            new Messenger().post({
+                message: _self.intl.t("views.app.issue.detail." + context + ".edited"),
+                type: 'success',
+                showCloseButton: true
+            });
+            _self.editingLog = null;
+            _self.removeEditLogModal();
+            _self.removeEditEstimateModal();
+        }, function () {
+            _self.isSavingLog = false;
+            log.rollbackAttributes();
+            if (_self.isDestroyed || _self.isDestroying) return;
+            new Messenger().post({
+                message: _self.intl.t("views.app.issue.detail." + context + ".missing"),
+                type: 'error',
+                showCloseButton: true
+            });
+        });
 
         Logger.debug('-IssueIssueDetailsComponent->logTime');
     }
@@ -842,13 +873,27 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     }
 
     /**
+     * Discards unsaved changes of the log being edited
+     *
+     * @method _rollbackEditingLog
+     * @private
+     */
+    _rollbackEditingLog() {
+        let log = this.editingLog;
+        if (log && !this.isSavingLog) {
+            log.rollbackAttributes();
+        }
+    }
+
+    /**
      * This function is used to hide the edit log time modal
      *
      * @method removeEditLogModal
      * @public
      */
     @action removeEditLogModal() {
-        if (this.isDestroyed || this.isDestroying) return;        
+        if (this.isDestroyed || this.isDestroying) return;
+        this._rollbackEditingLog();
         this.editingLog = null;
         this.editLogDialog = false;
         $('.modal').modal('hide');
@@ -862,6 +907,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      */
     @action removeEditEstimateModal() {
         if (this.isDestroyed || this.isDestroying) return;
+        this._rollbackEditingLog();
         this.editingLog = null;
         this.editEstimateDialog = false;
         $('.modal').modal('hide');

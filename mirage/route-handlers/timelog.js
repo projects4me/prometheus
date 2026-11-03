@@ -1,3 +1,4 @@
+import { Response } from "miragejs";
 import getRequestData from "../helpers/parse-request";
 import Collection from 'ember-cli-mirage/orm/collection';
 
@@ -15,6 +16,16 @@ export function register(server, ctx) {
         let requestData = getRequestData(request);
         let timelog = server.create('timelog', requestData.attributes);
         _setIssueTimeLog(timelog);
+        return timelog;
+    });
+
+    server.patch('/timelog/:id', (schema, request) => {
+        let requestData = getRequestData(request);
+        let timelog = schema.timelogs.find(request.params.id);
+        if (!timelog) {
+            return new Response(404, {}, { error: 'Timelog not found' });
+        }
+        timelog.update(requestData.attributes);
         return timelog;
     });
 }
