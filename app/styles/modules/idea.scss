@@ -126,6 +126,10 @@
       &:nth-child(3) {
         animation-delay: 0.4s;
       }
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
     }
 
     .idea-message-screens {
