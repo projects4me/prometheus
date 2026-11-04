@@ -149,7 +149,8 @@ export default class AppWorkflowPageController extends Controller {
     get testEntityType() {
         let kinds = (this.model?.graph?.nodes ?? []).filter(node => node.category === 'trigger').map(node => node.kind);
         let events = this.model?.catalog?.events ?? [];
-        let isMilestone = events.some(event => kinds.includes(event.name ?? event.id) && event.module === 'Milestone');
+        let isMilestone = kinds.includes('milestone.completed')
+            || events.some(event => kinds.includes(event.name ?? event.id) && event.module === 'Milestone');
         return isMilestone ? 'Milestone' : 'Issue';
     }
 
@@ -464,6 +465,8 @@ export default class AppWorkflowPageController extends Controller {
         if (this.testEntityType !== 'Milestone') {
             return;
         }
+        let request = this._milestoneRequest = (this._milestoneRequest ?? 0) + 1;
+        this.milestoneOptions = [];
         let ids = this._scopeIds();
         let options = { sort: 'Milestone.name', order: 'ASC', limit: -1 };
         if (ids.length) {
@@ -471,11 +474,13 @@ export default class AppWorkflowPageController extends Controller {
         }
         try {
             let milestones = await this.store.query('milestone', options);
-            if (!this.isDestroying && !this.isDestroyed) {
+            if (!this.isDestroying && !this.isDestroyed && request === this._milestoneRequest) {
                 this.milestoneOptions = milestones.toArray().map(milestone => ({ value: String(milestone.id), label: milestone.name }));
             }
         } catch (error) {
-            this.milestoneOptions = [];
+            if (request === this._milestoneRequest) {
+                this.milestoneOptions = [];
+            }
         }
     }
 

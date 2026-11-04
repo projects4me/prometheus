@@ -58,7 +58,7 @@ export default class WorkflowTestRunBoxComponent extends Component {
      * @public
      */
     get cannotRun() {
-        return this.args.running || !String(this.entityId ?? '').trim();
+        return this.args.running || !String(this.entityId ?? '').trim() || (this.isMilestone && !this.selectedMilestone);
     }
 
     /**
