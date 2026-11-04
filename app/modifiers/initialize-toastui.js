@@ -516,7 +516,7 @@ export default class ToastEditor extends Modifier {
                 },
                 menuItemTemplate: function (item) {
                     return (
-                        '<a style="cursor:pointer" title="' + item.original.name + '" aria-label="' + item.original.name + '"><span>' + emojiList[item.original.id] + '</span></a>'
+                        '<a style="cursor:pointer" title="' + item.original.name + '"><span role="img" aria-label="' + item.original.name + '">' + emojiList[item.original.id] + '</span></a>'
                     );
                 },
                 selectTemplate: function (item) {
