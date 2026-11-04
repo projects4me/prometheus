@@ -8,12 +8,26 @@
     </div>
   </div>
   <div class="box-body">
-    <FormFields::FieldText
-      @label={{t "views.app.workflow.testRun.entityId"}}
-      @placeholder={{t "views.app.workflow.testRun.entityPlaceholder"}}
-      @value={{this.entityId}}
-      @data-field="workflowrun.entityId"
-    />
+    {{#if this.isMilestone}}
+      <FormFields::FieldRelate
+        @label={{t "views.app.workflow.testRun.milestone"}}
+        @placeholder={{t "views.app.workflow.testRun.milestonePlaceholder"}}
+        @options={{@milestones}}
+        @selected={{this.selectedMilestone}}
+        @searchField="label"
+        @searchEnabled={{true}}
+        @onchange={{this.pickMilestone}}
+        @relateType="relate-simple"
+        @data-field="workflowrun.milestone"
+      />
+    {{else}}
+      <FormFields::FieldText
+        @label={{t "views.app.workflow.testRun.entityId"}}
+        @placeholder={{t "views.app.workflow.testRun.entityPlaceholder"}}
+        @value={{this.entityId}}
+        @data-field="workflowrun.entityId"
+      />
+    {{/if}}
     <p class="text-muted">{{t "views.app.workflow.testRun.hint"}}</p>
     <button type="button" class="btn btn-primary btn-sm" disabled={{this.cannotRun}} data-run-test {{on "click" this.run}}>
       <i class="fa fa-play" aria-hidden="true"></i>

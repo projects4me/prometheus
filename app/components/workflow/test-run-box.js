@@ -22,6 +22,37 @@ export default class WorkflowTestRunBoxComponent extends Component {
     @tracked entityId = '';
 
     /**
+     * Whether the record is picked from the scope's milestones rather than typed as an id
+     *
+     * @property isMilestone
+     * @type Boolean
+     * @public
+     */
+    get isMilestone() {
+        return this.args.entityType === 'Milestone';
+    }
+
+    /**
+     * The picked milestone option
+     *
+     * @property selectedMilestone
+     * @type Object
+     * @public
+     */
+    get selectedMilestone() {
+        return (this.args.milestones ?? []).find(option => option.value === this.entityId) ?? null;
+    }
+
+    /**
+     * @method pickMilestone
+     * @param {Object} option
+     * @public
+     */
+    @action pickMilestone(option) {
+        this.entityId = option?.value ?? '';
+    }
+
+    /**
      * @property cannotRun
      * @type Boolean
      * @public

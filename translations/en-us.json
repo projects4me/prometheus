@@ -2240,6 +2240,7 @@
           "wiki_created": "Wiki page created",
           "wiki_modified": "Wiki page modified",
           "time_logged": "Time logged",
+          "milestone_completed": "Milestone completed",
           "schedule": "Schedule",
           "filter": "Filter",
           "switch": "Switch",
@@ -2294,6 +2295,8 @@
         "testRun": {
           "title": "Test run",
           "entityId": "Record id",
+          "milestone": "Milestone",
+          "milestonePlaceholder": "The milestone to run the workflow for",
           "entityPlaceholder": "The id of the record the trigger is about",
           "hint": "Simulates the workflow for the record. Nothing is written and no agent runs.",
           "run": "Run test",

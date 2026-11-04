@@ -52,7 +52,7 @@
             {{#if (eq this.runSession.panel "runs")}}
               <Workflow::RunsBox @runs={{this.runSession.runs}} @selected={{this.runSession.shownRun}} @onSelect={{this.selectRun}} @onClose={{this.closePanel}} />
             {{else}}
-              <Workflow::TestRunBox @running={{this.runSession.isBusy}} @onRun={{this.runTest}} @onClose={{this.closePanel}} />
+              <Workflow::TestRunBox @entityType={{this.testEntityType}} @milestones={{this.milestoneOptions}} @running={{this.runSession.isBusy}} @onRun={{this.runTest}} @onClose={{this.closePanel}} />
             {{/if}}
           </div>
           <div class="col-md-8">

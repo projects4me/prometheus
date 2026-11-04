@@ -65,11 +65,16 @@ export default class WorkflowRunsService extends Service {
      * @method testRun
      * @param {String} workflowId
      * @param {String} entityId
+     * @param {String} entityType the module of the record, such as Issue or Milestone; Gaia assumes Issue when empty
      * @return {Promise} resolves to { run, steps }: the simulation's workflowrun record and its normalized steps
      * @public
      */
-    async testRun(workflowId, entityId) {
-        let run = this.store.createRecord('workflowrun', { workflowId, entityId, test: true });
+    async testRun(workflowId, entityId, entityType) {
+        let attributes = { workflowId, entityId, test: true };
+        if (entityType) {
+            attributes.entityType = entityType;
+        }
+        let run = this.store.createRecord('workflowrun', attributes);
         try {
             await run.save();
             return { run, steps: normalizeSteps(run.steps) };

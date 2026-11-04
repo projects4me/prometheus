@@ -43,6 +43,7 @@ export function register(server) {
 		let steps = simulate(schema, attributes.workflowId);
 		return schema.workflowruns.new({
 			workflowId: attributes.workflowId,
+			entityType: attributes.entityType ?? 'Issue',
 			entityId: attributes.entityId,
 			test: true,
 			status: 'completed',
