@@ -67,21 +67,21 @@ module('Integration | Modifier | initialize-toastui', function (hooks) {
 
     test('ArrowDown then Enter inserts the second suggestion of a mention menu', async function (assert) {
         this.set('onContentChange', () => {});
-        this.set('emojis', [{ id: 'smile', name: 'smile' }, { id: 'smirk', name: 'smirk' }]);
+        this.set('emojis', [{ id: 'smile', name: 'smile', shortcodes: ['D'] }, { id: 'slightly-smiling-face', name: 'x', shortcodes: ['D)'] }]);
         await render(hbs`<div {{initialize-toastui editType="wysiwyg" onContentChange=this.onContentChange translatedEmojis=this.emojis}}></div>`);
 
         let editable = document.querySelector('.tui-editor-contents[contenteditable="true"]');
         let key = (type, key, keyCode) => editable.dispatchEvent(new KeyboardEvent(type, { key, keyCode, bubbles: true, cancelable: true }));
         editable.focus();
-        document.execCommand('insertText', false, ':smi');
-        key('keydown', 'i', 73);
-        key('keyup', 'i', 73);
+        document.execCommand('insertText', false, ':D');
+        key('keydown', 'D', 68);
+        key('keyup', 'D', 68);
         await settled();
 
         let items = document.querySelectorAll('.tribute-container li');
         assert.strictEqual(items.length, 2, 'the emoji menu lists both matches');
         assert.dom(items[0]).hasClass('highlight', 'the first item is highlighted');
-        let second = items[1].textContent.includes('smirk') ? '\u{1F60F}' : '\u{1F604}';
+        let second = '\u{1F642}';
 
         key('keydown', 'ArrowDown', 40);
         assert.dom(items[1]).hasClass('highlight', 'ArrowDown highlights the second item');
@@ -97,7 +97,7 @@ module('Integration | Modifier | initialize-toastui', function (hooks) {
 
     test('a mention with no matches closes the menu', async function (assert) {
         this.set('onContentChange', () => {});
-        this.set('emojis', [{ id: 'smile', name: 'smile' }]);
+        this.set('emojis', [{ id: 'smile', name: 'smile', shortcodes: ['D'] }]);
         await render(hbs`<div {{initialize-toastui editType="wysiwyg" onContentChange=this.onContentChange translatedEmojis=this.emojis}}></div>`);
 
         let editable = document.querySelector('.tui-editor-contents[contenteditable="true"]');
@@ -112,5 +112,26 @@ module('Integration | Modifier | initialize-toastui', function (hooks) {
         key('keydown', 'Enter', 13);
         await settled();
         assert.strictEqual(editable.querySelectorAll('div, p').length, 2, 'Enter is left to the editor and adds a line');
+    });
+
+    test(':) lists the smiling face first, with only the emoji and no name', async function (assert) {
+        this.set('onContentChange', () => {});
+        this.set('emojis', [{ id: 'smile', name: 'smile', shortcodes: ['D'] }, { id: 'slightly-smiling-face', name: 'Slightly smiling face', shortcodes: [')', '-)'] }]);
+        await render(hbs`<div {{initialize-toastui editType="wysiwyg" onContentChange=this.onContentChange translatedEmojis=this.emojis}}></div>`);
+
+        let editable = document.querySelector('.tui-editor-contents[contenteditable="true"]');
+        let key = (type, key, keyCode) => editable.dispatchEvent(new KeyboardEvent(type, { key, keyCode, bubbles: true, cancelable: true }));
+        editable.focus();
+        document.execCommand('insertText', false, ':)');
+        key('keydown', ')', 57);
+        key('keyup', ')', 57);
+        await settled();
+
+        let items = document.querySelectorAll('.tribute-container li');
+        assert.strictEqual(items.length, 1, 'the menu stays open for a query with a bracket');
+        assert.strictEqual(items[0].textContent.trim(), '\u{1F642}', 'only the emoji is shown');
+        key('keydown', 'Enter', 13);
+        await waitUntil(() => editable.textContent.includes('\u{1F642}'));
+        assert.ok(editable.textContent.includes('\u{1F642}'), 'Enter inserts the emoji');
     });
 });

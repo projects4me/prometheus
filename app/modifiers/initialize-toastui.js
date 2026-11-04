@@ -7,6 +7,7 @@ import Editor from '@toast-ui/editor';
 import Tribute from "tributejs";
 import format from "prometheus/utils/data/format";
 import Icon from "prometheus/utils/ui/priority-icon";
+import EmojiShortcodes, { MENU_LIMIT } from "prometheus/utils/emoji-shortcodes";
 import { inject as service } from "@ember/service";
 import $ from 'jquery';
 import Logger from 'js-logger';
@@ -510,10 +511,12 @@ export default class ToastEditor extends Modifier {
                 lookup: 'number',
             }, {
                 trigger: ':',
-                values: this.translatedEmojis ?? [],
+                values: function (text, cb) {
+                    cb(EmojiShortcodes.search(_self.translatedEmojis ?? [], text, MENU_LIMIT));
+                },
                 menuItemTemplate: function (item) {
                     return (
-                        '<a style="cursor:pointer"><span>' + emojiList[item.original.id] + '&#160;' + '</span>' + item.original.name + "</a>"
+                        '<a style="cursor:pointer" title="' + item.original.name + '" aria-label="' + item.original.name + '"><span>' + emojiList[item.original.id] + '</span></a>'
                     );
                 },
                 selectTemplate: function (item) {
@@ -521,8 +524,9 @@ export default class ToastEditor extends Modifier {
                         '<span>' + emojiList[item.original.id] + '</span>'
                     );
                 },
-                menuItemLimit: 5,
-                lookup: 'name',
+                // the values function already ranks and limits, so Tribute must not filter again
+                searchOpts: { skip: true },
+                menuItemLimit: MENU_LIMIT,
             }
             ]
         });

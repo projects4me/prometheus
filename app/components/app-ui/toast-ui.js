@@ -4,6 +4,7 @@
 
 import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
+import EmojiShortcodes from 'prometheus/utils/emoji-shortcodes';
 
 /**
  * This component is used to render the toast editor
@@ -162,7 +163,7 @@ export default class ToastUiComponent extends Component {
         super(...arguments);
         let _self = this;
         let emojiList = this.emojiList.map(emoji => {
-            return {'id':emoji, 'name':String(_self.intl.t('emoji.'+emoji))};
+            return {'id':emoji, 'name':String(_self.intl.t('emoji.'+emoji)), 'shortcodes':EmojiShortcodes.for(emoji)};
         });
         _self.translatedEmojis = emojiList;
     }
