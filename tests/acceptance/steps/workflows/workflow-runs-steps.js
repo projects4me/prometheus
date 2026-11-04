@@ -1,5 +1,6 @@
 /* global server */
 import { click, fillIn } from '@ember/test-helpers';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
 
 const NODE = kind => `[data-workflow-node][data-node-kind="${kind}"]`;
@@ -37,6 +38,13 @@ export const when = function () {
             }
         },
         {
+            "User test runs the workflow for the milestone $name": (assert) => async function (name) {
+                await selectChoose('[data-field="workflowrun.milestone"]', name);
+                await click('[data-run-test]');
+                assert.ok(true, 'User test runs the workflow for a milestone');
+            }
+        },
+        {
             "User test runs the workflow for the record $id": (assert) => async function (id) {
                 await fillIn('[data-field="workflowrun.entityId"] input', id);
                 await click('[data-run-test]');
@@ -48,6 +56,14 @@ export const when = function () {
 
 export const then = function () {
     return [
+        {
+            "The test run was posted for the milestone $name": (assert) => async function (name) {
+                let milestone = server.schema.milestones.findBy({ name });
+                let run = server.schema.workflowruns.all().models.pop();
+                assert.equal(run.entityType, 'Milestone');
+                assert.equal(String(run.entityId), String(milestone.id));
+            }
+        },
         {
             "The canvas marks the step $kind as ran": (assert) => async function (kind) {
                 assert.dom(`${NODE(kind)}.ran`).exists();

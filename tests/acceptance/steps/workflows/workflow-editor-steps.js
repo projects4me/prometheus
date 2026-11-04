@@ -21,6 +21,17 @@ export const given = function () {
             }
         },
         {
+            "The $status workflow $name starts with a milestone.completed trigger": () => async function (status, name) {
+                let workflow = server.create('workflow', { name, status });
+                server.create('workflownode', { workflowId: workflow.id, category: 'trigger', kind: 'milestone.completed' });
+            }
+        },
+        {
+            "There is a milestone named $name": () => async function (name) {
+                server.create('milestone', { name });
+            }
+        },
+        {
             "There is an agent named $name": () => async function (name) {
                 server.create('agent', { name });
             }

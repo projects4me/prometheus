@@ -62,6 +62,7 @@ const KINDS = {
         'wiki.created': NEXT,
         'wiki.modified': NEXT,
         'time.logged': NEXT,
+        'milestone.completed': NEXT,
         'schedule': NEXT
     },
     condition: {

@@ -124,9 +124,10 @@ export default class RunSession {
      * @method testRun
      * @param {String} workflowId
      * @param {String} entityId
+     * @param {String} entityType
      */
-    async testRun(workflowId, entityId) {
-        let result = await this._guard('test', () => this.service.testRun(workflowId, entityId));
+    async testRun(workflowId, entityId, entityType) {
+        let result = await this._guard('test', () => this.service.testRun(workflowId, entityId, entityType));
         if (result) {
             this.runSteps = result.steps;
             this.shownRun = result.run;

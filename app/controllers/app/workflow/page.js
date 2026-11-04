@@ -123,6 +123,38 @@ export default class AppWorkflowPageController extends Controller {
     @tracked isSaving = false;
 
     /**
+     * @property store
+     * @type Ember.Service
+     * @public
+     */
+    @service store;
+
+    /**
+     * The milestones a test run of a milestone trigger can pick, as picker options
+     *
+     * @property milestoneOptions
+     * @type Array
+     * @public
+     */
+    @tracked milestoneOptions = [];
+
+    /**
+     * The module of the record the test run runs against: the module of the workflow's trigger, when it is a
+     * Milestone; Gaia assumes Issue otherwise
+     *
+     * @property testEntityType
+     * @type String
+     * @public
+     */
+    get testEntityType() {
+        let kinds = (this.model?.graph?.nodes ?? []).filter(node => node.category === 'trigger').map(node => node.kind);
+        let events = this.model?.catalog?.events ?? [];
+        let isMilestone = kinds.includes('milestone.completed')
+            || events.some(event => kinds.includes(event.name ?? event.id) && event.module === 'Milestone');
+        return isMilestone ? 'Milestone' : 'Issue';
+    }
+
+    /**
      * The payload paths the workflow's triggers offer to filters, field pickers and expressions
      *
      * @property payloadFields
@@ -225,6 +257,7 @@ export default class AppWorkflowPageController extends Controller {
      */
     @action showTestRun() {
         this.runSession.open('test');
+        return this._loadMilestones();
     }
 
     /**
@@ -256,7 +289,7 @@ export default class AppWorkflowPageController extends Controller {
      * @public
      */
     @action runTest(entityId) {
-        return this.runSession.testRun(this.model.workflow.id, entityId);
+        return this.runSession.testRun(this.model.workflow.id, entityId, this.testEntityType);
     }
 
     /**
@@ -420,6 +453,35 @@ export default class AppWorkflowPageController extends Controller {
      */
     afterSave(workflow) {
         this.breadcrumb.setTitle('app.workflow.page', workflow.name);
+    }
+
+    /**
+     * Loads the milestones of the workflow's scope for the test run picker, when the trigger is about milestones
+     *
+     * @method _loadMilestones
+     * @private
+     */
+    async _loadMilestones() {
+        if (this.testEntityType !== 'Milestone') {
+            return;
+        }
+        let request = this._milestoneRequest = (this._milestoneRequest ?? 0) + 1;
+        this.milestoneOptions = [];
+        let ids = this._scopeIds();
+        let options = { sort: 'Milestone.name', order: 'ASC', limit: -1 };
+        if (ids.length) {
+            options.query = `(${ids.map(id => `(Milestone.projectId : ${id})`).join(' OR ')})`;
+        }
+        try {
+            let milestones = await this.store.query('milestone', options);
+            if (!this.isDestroying && !this.isDestroyed && request === this._milestoneRequest) {
+                this.milestoneOptions = milestones.toArray().map(milestone => ({ value: String(milestone.id), label: milestone.name }));
+            }
+        } catch (error) {
+            if (request === this._milestoneRequest) {
+                this.milestoneOptions = [];
+            }
+        }
     }
 
     /**

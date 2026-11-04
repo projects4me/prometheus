@@ -42,6 +42,12 @@ const EVENTS = [
 	{ name: 'issue.created', label: 'Issue created', module: 'Issue', on: 'create', watchedFields: [], fields: [...COMMON, ...ISSUE] },
 	{ name: 'issue.assignee.changed', label: 'Issue assignee changed', module: 'Issue', on: 'update', watchedFields: ['assignee'], fields: [...COMMON, ...ISSUE, ...changes('assignee')] },
 	{ name: 'issue.status.changed', label: 'Issue status changed', module: 'Issue', on: 'update', watchedFields: ['status', 'statusId'], fields: [...COMMON, ...ISSUE, ...changes('status')] },
+	{
+		name: 'milestone.completed', label: 'Milestone completed', module: 'Milestone', on: 'update', watchedFields: ['status'], fields: [
+			...COMMON,
+			...['id', 'name', 'status', 'startDate', 'endDate'].map(field => ({ path: `milestone.${field}`, type: 'string'}))
+		]
+	},
 	{ name: 'comment.added', label: 'Comment added', module: 'Comment', on: 'create', watchedFields: [], fields: [...COMMON, { path: 'comment.id', type: 'string' }, { path: 'comment.comment', type: 'text' }] },
 	{
 		name: 'schedule', label: 'Schedule', module: null, on: null, watchedFields: [], fields: [
