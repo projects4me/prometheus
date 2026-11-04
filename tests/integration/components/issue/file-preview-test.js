@@ -115,6 +115,8 @@ module('Integration | Component | issue/file-preview', function (hooks) {
     test('it shows a loading state, then the file', async function (assert) {
         let release;
         this.store.pending = new Promise((resolve) => (release = resolve));
+        // a loadable image, so the browser's error event cannot remove the img while asserting
+        this.store.adapterFor = () => ({ host: 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==#' });
         const rendering = renderPreview(this, 'image/png');
         await waitFor('.file-preview-loading');
         assert.dom('.file-preview-loading').exists();
