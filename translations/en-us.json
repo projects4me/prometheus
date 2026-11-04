@@ -2312,6 +2312,7 @@
           "removeEdge": "Remove the connection",
           "zoomIn": "Zoom in",
           "zoomOut": "Zoom out",
+          "zoomHint": "Ctrl + scroll to zoom",
           "fit": "Fit to the canvas",
           "empty": "Drag steps here from the list on the left",
           "input": "Input",

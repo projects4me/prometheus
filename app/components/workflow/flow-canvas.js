@@ -176,11 +176,16 @@ export default class WorkflowFlowCanvasComponent extends Component {
     }
 
     /**
+     * Zooms on Ctrl/⌘ + wheel (a trackpad pinch arrives with ctrlKey); a plain wheel is left to scroll the page
+     *
      * @method zoomWithWheel
      * @param {WheelEvent} event
      * @public
      */
     @action zoomWithWheel(event) {
+        if (!event.ctrlKey && !event.metaKey) {
+            return;
+        }
         event.preventDefault();
         let point = this._local(event);
         this.viewport.zoomBy(event.deltaY < 0 ? ZOOM_STEP : 1 / ZOOM_STEP, point.x, point.y);
