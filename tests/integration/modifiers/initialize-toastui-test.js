@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled } from '@ember/test-helpers';
+import { render, settled, waitUntil } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Modifier | initialize-toastui', function (hooks) {
@@ -63,5 +63,54 @@ module('Integration | Modifier | initialize-toastui', function (hooks) {
 
         assert.deepEqual(received, ['shot.png']);
         assert.dom('.tui-editor-contents img').hasAttribute('src', 'http://img/shot.png');
+    });
+
+    test('ArrowDown then Enter inserts the second suggestion of a mention menu', async function (assert) {
+        this.set('onContentChange', () => {});
+        this.set('emojis', [{ id: 'smile', name: 'smile' }, { id: 'smirk', name: 'smirk' }]);
+        await render(hbs`<div {{initialize-toastui editType="wysiwyg" onContentChange=this.onContentChange translatedEmojis=this.emojis}}></div>`);
+
+        let editable = document.querySelector('.tui-editor-contents[contenteditable="true"]');
+        let key = (type, key, keyCode) => editable.dispatchEvent(new KeyboardEvent(type, { key, keyCode, bubbles: true, cancelable: true }));
+        editable.focus();
+        document.execCommand('insertText', false, ':smi');
+        key('keydown', 'i', 73);
+        key('keyup', 'i', 73);
+        await settled();
+
+        let items = document.querySelectorAll('.tribute-container li');
+        assert.strictEqual(items.length, 2, 'the emoji menu lists both matches');
+        assert.dom(items[0]).hasClass('highlight', 'the first item is highlighted');
+        let second = items[1].textContent.includes('smirk') ? '\u{1F60F}' : '\u{1F604}';
+
+        key('keydown', 'ArrowDown', 40);
+        assert.dom(items[1]).hasClass('highlight', 'ArrowDown highlights the second item');
+        assert.notStrictEqual(getComputedStyle(items[1].querySelector('a')).backgroundColor,
+            getComputedStyle(items[0].querySelector('a')).backgroundColor, 'the highlighted item is visibly styled');
+
+        key('keydown', 'Enter', 13);
+        await waitUntil(() => editable.textContent.includes(second));
+
+        assert.ok(editable.textContent.includes(second), 'the second suggestion was inserted');
+        assert.strictEqual(editable.querySelectorAll('div, p').length, 1, 'Enter did not add a line');
+    });
+
+    test('a mention with no matches closes the menu', async function (assert) {
+        this.set('onContentChange', () => {});
+        this.set('emojis', [{ id: 'smile', name: 'smile' }]);
+        await render(hbs`<div {{initialize-toastui editType="wysiwyg" onContentChange=this.onContentChange translatedEmojis=this.emojis}}></div>`);
+
+        let editable = document.querySelector('.tui-editor-contents[contenteditable="true"]');
+        let key = (type, key, keyCode) => editable.dispatchEvent(new KeyboardEvent(type, { key, keyCode, bubbles: true, cancelable: true }));
+        editable.focus();
+        document.execCommand('insertText', false, ':zzq');
+        key('keydown', 'q', 81);
+        key('keyup', 'q', 81);
+        await settled();
+
+        assert.dom('.tribute-container li').doesNotExist('no "No Match Found" item is shown');
+        key('keydown', 'Enter', 13);
+        await settled();
+        assert.strictEqual(editable.querySelectorAll('div, p').length, 2, 'Enter is left to the editor and adds a line');
     });
 });
