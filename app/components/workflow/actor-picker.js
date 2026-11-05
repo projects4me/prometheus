@@ -45,7 +45,7 @@ export default class ActorPickerComponent extends Component {
     get recordOptions() {
         if (this.args.type === 'agent') {
             return (this.args.agents ?? []).map(agent => ({
-                kind: 'agent', label: agent.name, value: String(agent.id)
+                kind: 'agent', label: agent.name, value: String(agent.id), user: agent.user
             }));
         }
         return (this.args.users ?? []).map(user => ({ kind: 'user', label: user.label, value: String(user.value) }));
