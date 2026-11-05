@@ -75,6 +75,7 @@ export default class WorkflowCatalogService extends Service {
             let agents = await this.store.query('agent', {
                 sort: 'Agent.name',
                 order: 'ASC',
+                rels: 'user',
                 limit: -1
             });
             return agents.toArray();
