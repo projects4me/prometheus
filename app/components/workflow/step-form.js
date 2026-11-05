@@ -71,7 +71,12 @@ export default class StepFormComponent extends Component {
      * @public
      */
     get placeholders() {
-        let choice = modelChoice(this.agentOf(this.config.agentId));
+        let choice = modelChoice(this.agentOf(this.config.agentId), (complexity, model) =>
+            this.intl.t('views.app.workflow.config.modelChoice', {
+                complexity: this.intl.t(`views.app.workflow.config.complexity${complexity === 'simple' ? 'Simple' : 'Complex'}`),
+                model
+            })
+        );
         return choice ? { model: this.intl.t('views.app.workflow.config.modelDefault', { choice }) } : {};
     }
 

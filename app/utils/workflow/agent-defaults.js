@@ -28,7 +28,7 @@ export const CLAIM_TIMEOUT = '15';
  */
 export const TIMEOUT = '240';
 
-const isBlank = value => value === undefined || value === null || value === '';
+const isBlank = value => value === undefined || value === null || (typeof value === 'string' && value.trim() === '');
 
 /**
  * The defaults an agent gives a Run agent step
@@ -61,8 +61,14 @@ export function agentDefaults(agent) {
  */
 export function fillAgentDefaults(config, previous, agent) {
     let before = agentDefaults(previous);
+    let after = agentDefaults(agent);
     let next = { ...config };
-    Object.entries(agentDefaults(agent)).forEach(([name, value]) => {
+    Object.entries(before).forEach(([name, value]) => {
+        if (!(name in after) && next[name] === value) {
+            delete next[name];
+        }
+    });
+    Object.entries(after).forEach(([name, value]) => {
         if (isBlank(next[name]) || next[name] === before[name]) {
             next[name] = value;
         }
@@ -75,10 +81,11 @@ export function fillAgentDefaults(config, previous, agent) {
  *
  * @method modelChoice
  * @param {Agent} agent
+ * @param {Function} label builds one entry from the complexity and the model, such as `simple: sonnet`
  * @return {String} such as `simple: sonnet, complex: opus`; empty when the agent names none
  * @public
  */
-export function modelChoice(agent) {
+export function modelChoice(agent, label) {
     let { simple, complex } = agent?.config ?? {};
-    return [simple && `simple: ${simple}`, complex && `complex: ${complex}`].filter(Boolean).join(', ');
+    return [simple && label('simple', simple), complex && label('complex', complex)].filter(Boolean).join(', ');
 }
