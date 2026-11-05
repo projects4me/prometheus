@@ -1,4 +1,4 @@
-<span class="relate-user" data-actor-option={{@data.kind}}>
+<span class="relate-user {{if (eq @data.kind "agent") "relate-agent"}}" data-actor-option={{@data.kind}}>
   {{#if (eq @data.kind "agent")}}
     <Agent::Avatar />
   {{else if (eq @data.kind "user")}}

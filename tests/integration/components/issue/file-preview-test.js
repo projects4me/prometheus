@@ -11,6 +11,9 @@ import EmberObject from '@ember/object';
 import jQuery from 'jquery';
 import AclStub from '../../stub-services/acl-stub';
 
+// a loadable data URL (the path becomes a fragment), so the browser never reports a native image load error
+const HOST = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22/%3E#';
+
 class StoreStub extends Service {
     queries = [];
     pending = null;
@@ -26,7 +29,7 @@ class StoreStub extends Service {
     }
 
     adapterFor() {
-        return { host: 'http://api.test' };
+        return { host: HOST };
     }
 }
 
@@ -54,13 +57,13 @@ module('Integration | Component | issue/file-preview', function (hooks) {
 
     test('it shows an image in an img element', async function (assert) {
         await renderPreview(this, 'image/png');
-        assert.dom('img.file-preview-image').hasAttribute('src', 'http://api.test/preview/get/tok1');
+        assert.dom('img.file-preview-image').hasAttribute('src', HOST + '/preview/get/tok1');
         assert.deepEqual(this.store.queries, [['upload', { id: '1', download: true }]]);
     });
 
     test('it shows a pdf in an iframe', async function (assert) {
         await renderPreview(this, 'application/pdf');
-        assert.dom('iframe.file-preview-frame').hasAttribute('src', 'http://api.test/preview/get/tok1');
+        assert.dom('iframe.file-preview-frame').hasAttribute('src', HOST + '/preview/get/tok1');
         assert.dom('iframe.file-preview-frame').hasAttribute('sandbox', '');
     });
 
@@ -87,11 +90,7 @@ module('Integration | Component | issue/file-preview', function (hooks) {
 
     test('it shows an error when the image itself fails to load', async function (assert) {
         await renderPreview(this, 'image/png');
-        // the unreachable test host may already have reported a native load error: either way the image must be gone
-        const image = document.querySelector('img.file-preview-image');
-        if (image) {
-            image.dispatchEvent(new Event('error'));
-        }
+        document.querySelector('img.file-preview-image').dispatchEvent(new Event('error'));
         await settled();
         assert.dom('.file-preview-error').exists();
         assert.dom('img.file-preview-image').doesNotExist();
