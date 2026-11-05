@@ -4,7 +4,6 @@
 
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
 import { expressionOf } from 'prometheus/utils/workflow/node-config';
 
 /**
@@ -29,6 +28,7 @@ const TEXT_TYPES = ['text', 'longText', 'issuetype'];
  * @argument {Array} payloadFields the trigger's payload paths, as [{ path, type }]
  * @argument {Array} users the user options
  * @argument {Array} agents the Agent records
+ * @argument {String} placeholder the hint an empty text setting shows
  * @argument {Boolean} locked
  * @argument {Function} onChange called with (name, value)
  */
@@ -40,7 +40,20 @@ export default class ConfigFieldComponent extends Component {
      * @type String
      * @public
      */
-    @tracked text = typeof this.args.value === 'string' ? this.args.value : '';
+    get text() {
+        return typeof this.args.value === 'string' ? this.args.value : '';
+    }
+
+    /**
+     * The inputs bind two-way to the text; the draft is the source, so a typed value goes to it
+     *
+     * @property text
+     * @type String
+     * @public
+     */
+    set text(value) {
+        this.args.onChange(this.args.field.name, value);
+    }
 
     /**
      * @property type
@@ -112,8 +125,7 @@ export default class ConfigFieldComponent extends Component {
      * @public
      */
     @action input(event) {
-        this.text = event.target.value;
-        this.args.onChange(this.args.field.name, this.text);
+        this.args.onChange(this.args.field.name, event.target.value);
     }
 
     /**
@@ -128,8 +140,7 @@ export default class ConfigFieldComponent extends Component {
             return;
         }
         let separator = this.text === '' || /\s$/.test(this.text) ? '' : ' ';
-        this.text = `${this.text}${separator}${expressionOf(option.value)}`;
-        this.args.onChange(this.args.field.name, this.text);
+        this.args.onChange(this.args.field.name, `${this.text}${separator}${expressionOf(option.value)}`);
     }
 
     /**

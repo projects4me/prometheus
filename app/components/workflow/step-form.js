@@ -7,6 +7,8 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { buildConfig, configFields } from 'prometheus/utils/workflow/node-config';
 import { portsOf } from 'prometheus/utils/workflow/node-catalog';
+import { fillAgentDefaults, modelChoice } from 'prometheus/utils/workflow/agent-defaults';
+import { inject as service } from '@ember/service';
 
 /**
  * The form of one workflow step: its name and the settings of its kind, edited as a draft and applied to the step
@@ -25,6 +27,13 @@ import { portsOf } from 'prometheus/utils/workflow/node-catalog';
  * @argument {Function} onRemove called with (node)
  */
 export default class StepFormComponent extends Component {
+    /**
+     * @property intl
+     * @type Service
+     * @private
+     */
+    @service intl;
+
     /**
      * The step's name in the draft
      *
@@ -52,6 +61,18 @@ export default class StepFormComponent extends Component {
      */
     get fields() {
         return configFields(this.args.node?.category, this.args.node?.kind);
+    }
+
+    /**
+     * The hints of empty settings; the empty model shows the picked agent's own choice
+     *
+     * @property placeholders
+     * @type Object
+     * @public
+     */
+    get placeholders() {
+        let choice = modelChoice(this.agentOf(this.config.agentId));
+        return choice ? { model: this.intl.t('views.app.workflow.config.modelDefault', { choice }) } : {};
     }
 
     /**
@@ -84,7 +105,21 @@ export default class StepFormComponent extends Component {
      * @public
      */
     @action changeSetting(name, value) {
-        this.config = { ...this.config, [name]: value };
+        let config = { ...this.config, [name]: value };
+        if (name === 'agentId' && this.args.node?.kind === 'run_agent') {
+            config = fillAgentDefaults(config, this.agentOf(this.config.agentId), this.agentOf(value));
+        }
+        this.config = config;
+    }
+
+    /**
+     * @method agentOf
+     * @param {String} id
+     * @return {Agent} the Agent record with the id; nothing for an expression or an unknown id
+     * @private
+     */
+    agentOf(id) {
+        return (this.args.agents ?? []).find(agent => String(agent.id) === String(id));
     }
 
     /**
