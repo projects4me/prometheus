@@ -56,4 +56,14 @@ module('Integration | Component | application-header', function (hooks) {
         assert.dom('header li.dropdown.user.user-menu span#user-name').hasText('Rana Nouman', 'current username matched');
         assert.dom('li.user-header p > small').hasText('Member since Feb 2022', 'date created matched');
     });
+    test('it renders module icons before the quick create entries', async function (assert) {
+        await render(hbs`
+            <AppLayouts::ApplicationHeader />
+        `);
+        const links = this.element.querySelectorAll('.create-module-dropdown-content a');
+        assert.strictEqual(links.length, 3, 'three entries');
+        ['fa-tasks', 'fa-comments', 'fa-briefcase'].forEach((icon, idx) => {
+            assert.ok(links[idx].firstElementChild.classList.contains(icon), `${icon} is the first child`);
+        });
+    });
 });

@@ -31,9 +31,9 @@
         <div class="create-modules">
           <button class="create-module-btn btn btn-primary" {{on "click" this.toggleCreateDropdown}}>{{t "global.form.new"}}<i class="fa fa-caret-down"></i>
           <div class="create-module-dropdown-content {{if this.isCreateDropdownOpen 'show'}}"  {{on "click" (fn (mut this.isCreateDropdownOpen) false)}}>
-            <LinkTo @route="app.project.issue.create" @model={{this.trackedProject.shortCode}} class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.issue"}}</LinkTo>
-            <LinkTo @route="app.project.conversation" @model={{this.trackedProject.shortCode}} class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}">{{t "global.module.singular.conversation"}}</LinkTo>
-            <LinkTo @route="app.projects.create">{{t "global.module.singular.project"}}</LinkTo>
+            <LinkTo @route="app.project.issue.create" @model={{this.trackedProject.shortCode}} class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}"><i class="fa fa-fw fa-tasks"></i> {{t "global.module.singular.issue"}}</LinkTo>
+            <LinkTo @route="app.project.conversation" @model={{this.trackedProject.shortCode}} class="{{if (not this.trackedProject.shortCode) 'pointer-none'}}"><i class="fa fa-fw fa-comments"></i> {{t "global.module.singular.conversation"}}</LinkTo>
+            <LinkTo @route="app.projects.create"><i class="fa fa-fw fa-briefcase"></i> {{t "global.module.singular.project"}}</LinkTo>
           </div>            
           </button>          
         </div>
