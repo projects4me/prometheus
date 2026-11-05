@@ -1,5 +1,5 @@
 /* global server */
-import { click, currentURL, fillIn, findAll, triggerEvent } from '@ember/test-helpers';
+import { click, currentURL, fillIn, find, findAll, triggerEvent } from '@ember/test-helpers';
 import { Response } from 'miragejs';
 import { selectChoose } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
@@ -34,6 +34,11 @@ export const given = function () {
         {
             "There is an agent named $name": () => async function (name) {
                 server.create('agent', { name });
+            }
+        },
+        {
+            "The agent $name takes $turns turns": () => async function (name, turns) {
+                server.schema.agents.findBy({ name }).update({ maxTurns: Number(turns) });
             }
         },
         {
@@ -168,6 +173,16 @@ export const then = function () {
             "The $kind step shows the message $message": (assert) => async function (kind, message) {
                 assert.dom(`${NODE(kind)}.has-errors`).exists();
                 assert.dom('[data-node-errors]').hasText(message);
+            }
+        },
+        {
+            "The $setting setting shows $value": (assert) => async function (setting, value) {
+                assert.equal(find(`${CONFIG(setting)} input`).value, value);
+            }
+        },
+        {
+            "The $setting setting is empty": (assert) => async function (setting) {
+                assert.equal(find(`${CONFIG(setting)} input`).value, '');
             }
         },
         {

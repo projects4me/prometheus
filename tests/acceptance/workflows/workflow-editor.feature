@@ -109,7 +109,46 @@ Feature: Workflows | edit the flow of a workflow
     And User inserts issue.subject into the prompt
     And User applies the step
     And User saves the workflow
-    Then The run_agent step of workflow 1 has the config {"agentId":"1","prompt":"Fix {issue.subject}"}
+    Then The run_agent step of workflow 1 has the config {"agentId":"1","prompt":"Fix {issue.subject}","session":"new","maxTurns":"80","claimTimeout":"15","timeout":"240"}
+
+  Scenario: Picking an agent fills the run agent settings and keeps what the user typed
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And The Draft workflow Triage starts with an issue.created trigger
+    And There is an agent named Agent Odysseus
+    And The agent Agent Odysseus takes 40 turns
+    When User opens app/workflow/1
+    And User adds a run_agent step from the palette
+    And User picks Agent Odysseus as the agentId
+    Then The maxTurns setting shows 40
+    And The session setting shows new
+    And The claimTimeout setting shows 15
+    And The timeout setting shows 240
+    And The model setting is empty
+    When User types 20 in the maxTurns setting
+    And User applies the step
+    And User saves the workflow
+    Then The run_agent step of workflow 1 has the config {"agentId":"1","session":"new","maxTurns":"20","claimTimeout":"15","timeout":"240"}
+
+  Scenario: Switching agents refills the defaults and keeps the user's edits
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And The Draft workflow Triage starts with an issue.created trigger
+    And There is an agent named Agent Odysseus
+    And The agent Agent Odysseus takes 40 turns
+    And There is an agent named Agent Achilles
+    And The agent Agent Achilles takes 60 turns
+    When User opens app/workflow/1
+    And User adds a run_agent step from the palette
+    And User picks Agent Odysseus as the agentId
+    And User types 5 in the timeout setting
+    And User picks Agent Achilles as the agentId
+    Then The maxTurns setting shows 60
+    And The timeout setting shows 5
 
   Scenario: Each case of a switch becomes an output
 
