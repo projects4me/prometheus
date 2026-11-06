@@ -151,27 +151,32 @@ function storedOperator(key, count, type) {
 }
 
 /**
- * The values of a CONTAINS on a text field, with an unquoted comma value such as `hello,world` joined
- * back into one value. Gaia reads CONTAINS as IN only when the values are quoted (`'a','b'`), so that
- * value is one search text. A list with quotes or spaces after its commas stays a list.
+ * The values of a CONTAINS on a text field, with an unquoted comma value joined back into one value:
+ * `hello,world`, or `hello, world` inside a Gaia condition. Gaia reads CONTAINS as IN only when the values
+ * are quoted (`'a','b'`), so that value is one search text. A quoted list, or a typed list with spaces
+ * after its commas, stays a list.
  *
  * @method scalarContains
  * @private
  */
-function scalarContains(key, values, type) {
+function scalarContains(key, values, type, source) {
     if (!['CONTAINS', '!CONTAINS'].includes(key) || LIST_TYPES.includes(type) || values.length < 2) {
         return values;
     }
 
-    let contiguous = values.every((value, index) => value.kind === KINDS.value && (index === 0 || value.start === values[index - 1].end + 1));
+    let unquoted = values.every((value) => value.kind === KINDS.value);
+    let wire = values.every((value) => value.wire);
+    let contiguous = values.every((value, index) => index === 0 || value.start === values[index - 1].end + 1);
 
-    if (!contiguous) {
+    if (!unquoted || !(wire || contiguous)) {
         return values;
     }
 
-    let text = values.map((value) => value.text).join(',');
+    let start = values[0].start;
+    let end = values[values.length - 1].end;
+    let text = source.slice(start, end);
 
-    return [{ kind: KINDS.value, text, value: text, start: values[0].start, end: values[values.length - 1].end }];
+    return [{ kind: KINDS.value, text, value: text, start, end }];
 }
 
 /**
@@ -181,7 +186,8 @@ function scalarContains(key, values, type) {
  * @private
  */
 class Reader {
-    constructor(tokens, schema, today) {
+    constructor(tokens, schema, today, source) {
+        this.source = source;
         this.tokens = tokens;
         this.schema = schema;
         this.today = today;
@@ -412,7 +418,7 @@ class Reader {
             return this.error(ERRORS.unclosedQuote, { quote: unclosed.text[0] }, unclosed.start, unclosed.end);
         }
 
-        values = scalarContains(typed.key, values, field.type);
+        values = scalarContains(typed.key, values, field.type, this.source);
 
         let key = storedOperator(typed.key, values.length, field.type);
         let entry = findOperator(key);
@@ -491,7 +497,8 @@ class Reader {
  *   that mixes AND and OR is left out), and the errors in the order of the text
  */
 export function parse(text, schema, { today = new Date() } = {}) {
-    let reader = new Reader(lex(text, schema), schema, today);
+    let source = String(text ?? '');
+    let reader = new Reader(lex(source, schema), schema, today, source);
     let root = reader.group(null);
     let errors = reader.errors.sort((a, b) => a.start - b.start);
 

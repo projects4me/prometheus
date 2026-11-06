@@ -61,6 +61,9 @@ const ROUND_TRIPS = {
     'header search with lowercase and': '((Issue.subject CONTAINS rock and roll) OR (Issue.description CONTAINS rock and roll))',
     'header search with lowercase or': '((Issue.subject CONTAINS this or that) AND (Issue.status : new))',
     'contains with a comma in the text': '((Issue.subject CONTAINS hello,world) AND (Issue.subject !CONTAINS a,b))',
+    'header search with a symbol': '((Issue.subject CONTAINS error: timeout) OR (Issue.description CONTAINS a != b))',
+    'header search with uppercase conjunctions': '((Issue.subject CONTAINS rock AND roll) OR (Issue.subject CONTAINS this OR that))',
+    'header search with a comma and a space': '((Issue.subject CONTAINS hello, world))',
 };
 
 module('Unit | Utility | query | parse', function () {
@@ -84,6 +87,18 @@ module('Unit | Utility | query | parse', function () {
         assert.strictEqual(query("(Issue.subject CONTAINS 'a','b')"), "((Issue.subject CONTAINS 'a','b'))", 'quoted values stay a list');
         assert.strictEqual(query('subject contains a, b'), "((Issue.subject CONTAINS 'a','b'))", 'a typed list stays a list');
         assert.strictEqual(query('(Issue.status CONTAINS new,in_progress)'), "((Issue.status CONTAINS 'new','in_progress'))", 'an enum list stays a list');
+    });
+
+    test('a Gaia condition value runs to its closing bracket', function (assert) {
+        let symbol = read('(Issue.subject CONTAINS error: timeout)');
+
+        assert.deepEqual(symbol.errors, []);
+        assert.deepEqual(shape(symbol.tree), { conjunction: 'AND', children: [{ field: 'Issue.subject', operator: 'CONTAINS', value: 'error: timeout' }] });
+        assert.strictEqual(query('(Issue.subject CONTAINS rock AND roll)'), "((Issue.subject CONTAINS 'rock AND roll'))");
+        assert.strictEqual(query('(Issue.subject CONTAINS hello, world)'), "((Issue.subject CONTAINS 'hello, world'))");
+        assert.strictEqual(query("(Issue.status CONTAINS 'new', 'done')"), "((Issue.status CONTAINS 'new','done'))", 'a quoted list stays a list');
+        assert.strictEqual(query('(Issue.startDate BETWEEN 2026-01-01 AND 2026-03-31)'), '((Issue.startDate BETWEEN 2026-01-01 AND 2026-03-31))', 'a range still splits');
+        assert.strictEqual(query('(subject contains pri in x and roll)'), "((Issue.subject CONTAINS 'pri in x and roll'))", 'a field before the conjunction is value text');
     });
 
     test('the tree it reads', function (assert) {

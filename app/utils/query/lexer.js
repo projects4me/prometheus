@@ -204,12 +204,12 @@ function tokenizer(text, schema) {
         return Boolean(field) && schema.fields.includes(field);
     }
 
-    function push(kind, first, last = first, value) {
+    function push(kind, first, last = first, value, extra = {}) {
         let start = first.start;
         let end = last.end;
         let source = text.slice(start, end);
 
-        let token = { kind, text: source, value: value === undefined ? source : value, start, end };
+        let token = { kind, text: source, value: value === undefined ? source : value, start, end, ...extra };
 
         if (first.unterminated) {
             token.unterminated = true;
@@ -235,14 +235,19 @@ function tokenizer(text, schema) {
     /**
      * Read the values of a condition that fills its brackets, in Gaia's wire format. Returns the index
      * after the values, or -1 when the brackets hold more than one condition.
+     *
+     * A Module.field condition is read as Gaia's Clause reads it: the value runs to the closing bracket,
+     * whatever words or symbols it holds, e.g. `(Issue.subject CONTAINS error: timeout AND retry)`. Only a
+     * range splits, on `AND`. Its unquoted list values are marked `wire`, so the parser can join them back
+     * into one text on a text field.
      */
-    function wireValues(i, arity) {
+    function wireValues(i, arity, dotted) {
         let close = i;
 
         while (close < pieces.length && pieces[close].type !== ')') {
             let piece = pieces[close];
 
-            if (piece.type === '(' || piece.type === 'symbol') {
+            if (piece.type === '(' || (piece.type === 'symbol' && !dotted)) {
                 return -1;
             }
 
@@ -254,31 +259,46 @@ function tokenizer(text, schema) {
         }
 
         let inside = pieces.slice(i, close);
-        // Gaia writes conjunctions in uppercase, so a lowercase `and` / `or` is part of the value, e.g.
-        // `(Issue.subject CONTAINS rock and roll)`, unless another condition follows it. A range bound
-        // separator may be typed in either case.
-        let wireConjunction = (piece) => isConjunction(piece) && (arity === 2 || piece.text === piece.text.toUpperCase());
-        let startsCondition = inside.some(
-            (piece, k) => piece.type === 'word' && i + k + 1 < close && Boolean(operatorAt(pieces, i + k + 1)) && isKnownField(piece.text)
-        );
+        let rangeSplit = false;
 
-        if (startsCondition && inside.some(isConjunction)) {
-            return -1;
+        if (dotted) {
+            rangeSplit = arity === 2 && inside.filter((piece) => piece.type === 'word' && piece.text === 'AND').length === 1;
+        } else {
+            // A lowercase `and` / `or` is part of the value, unless a condition follows it. A range bound
+            // separator may be typed in either case.
+            let firstConjunction = inside.findIndex(isConjunction);
+            let startsCondition =
+                firstConjunction !== -1 &&
+                inside.some(
+                    (piece, k) =>
+                        k > firstConjunction &&
+                        piece.type === 'word' &&
+                        i + k + 1 < close &&
+                        Boolean(operatorAt(pieces, i + k + 1)) &&
+                        isKnownField(piece.text)
+                );
+
+            if (startsCondition) {
+                return -1;
+            }
+
+            let conjunctions = inside.filter((piece) => isConjunction(piece) && (arity === 2 || piece.text === piece.text.toUpperCase()));
+
+            rangeSplit = arity === 2 && conjunctions.length === 1 && conjunctions[0].text.toUpperCase() === 'AND';
+
+            if (conjunctions.length > 0 && !rangeSplit) {
+                return -1;
+            }
         }
 
-        let conjunctions = inside.filter(wireConjunction);
-        let rangeSplit = arity === 2 && conjunctions.length === 1 && conjunctions[0].text.toUpperCase() === 'AND';
-
-        if (conjunctions.length > 0 && !rangeSplit) {
-            return -1;
-        }
-
+        let isSeparator = (piece) => rangeSplit && isConjunction(piece) && piece.text.toUpperCase() === 'AND' && (!dotted || piece.text === 'AND');
+        let wire = dotted && arity === 'n' ? { wire: true } : {};
         let segment = [];
         let flush = () => {
             if (segment.length === 1 && segment[0].type === 'quoted') {
                 pushValue(segment[0]);
             } else if (segment.length > 0) {
-                push(KINDS.value, segment[0], segment[segment.length - 1]);
+                push(KINDS.value, segment[0], segment[segment.length - 1], undefined, wire);
             }
 
             segment = [];
@@ -288,7 +308,7 @@ function tokenizer(text, schema) {
             if (piece.type === ',' && arity === 'n') {
                 flush();
                 push(KINDS.comma, piece);
-            } else if (rangeSplit && wireConjunction(piece)) {
+            } else if (isSeparator(piece)) {
                 flush();
                 push(KINDS.keyword, piece, piece, 'AND');
             } else {
@@ -393,7 +413,7 @@ function tokenizer(text, schema) {
             i += 1 + op.length;
 
             let arity = arityOf(op.entry);
-            let after = fillsBrackets && arity !== 0 ? wireValues(i, arity) : -1;
+            let after = fillsBrackets && arity !== 0 ? wireValues(i, arity, piece.text.includes('.')) : -1;
 
             i = after === -1 ? looseValues(i, arity) : after;
         }
