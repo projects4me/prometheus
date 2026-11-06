@@ -151,6 +151,30 @@ function storedOperator(key, count, type) {
 }
 
 /**
+ * The values of a CONTAINS on a text field, with an unquoted comma value such as `hello,world` joined
+ * back into one value. Gaia reads CONTAINS as IN only when the values are quoted (`'a','b'`), so that
+ * value is one search text. A list with quotes or spaces after its commas stays a list.
+ *
+ * @method scalarContains
+ * @private
+ */
+function scalarContains(key, values, type) {
+    if (!['CONTAINS', '!CONTAINS'].includes(key) || LIST_TYPES.includes(type) || values.length < 2) {
+        return values;
+    }
+
+    let contiguous = values.every((value, index) => value.kind === KINDS.value && (index === 0 || value.start === values[index - 1].end + 1));
+
+    if (!contiguous) {
+        return values;
+    }
+
+    let text = values.map((value) => value.text).join(',');
+
+    return [{ kind: KINDS.value, text, value: text, start: values[0].start, end: values[values.length - 1].end }];
+}
+
+/**
  * Read the tokens of one text.
  *
  * @class Reader
@@ -387,6 +411,8 @@ class Reader {
         if (unclosed) {
             return this.error(ERRORS.unclosedQuote, { quote: unclosed.text[0] }, unclosed.start, unclosed.end);
         }
+
+        values = scalarContains(typed.key, values, field.type);
 
         let key = storedOperator(typed.key, values.length, field.type);
         let entry = findOperator(key);

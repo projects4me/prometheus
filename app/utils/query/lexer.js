@@ -254,7 +254,19 @@ function tokenizer(text, schema) {
         }
 
         let inside = pieces.slice(i, close);
-        let conjunctions = inside.filter(isConjunction);
+        // Gaia writes conjunctions in uppercase, so a lowercase `and` / `or` is part of the value, e.g.
+        // `(Issue.subject CONTAINS rock and roll)`, unless another condition follows it. A range bound
+        // separator may be typed in either case.
+        let wireConjunction = (piece) => isConjunction(piece) && (arity === 2 || piece.text === piece.text.toUpperCase());
+        let startsCondition = inside.some(
+            (piece, k) => piece.type === 'word' && i + k + 1 < close && Boolean(operatorAt(pieces, i + k + 1)) && isKnownField(piece.text)
+        );
+
+        if (startsCondition && inside.some(isConjunction)) {
+            return -1;
+        }
+
+        let conjunctions = inside.filter(wireConjunction);
         let rangeSplit = arity === 2 && conjunctions.length === 1 && conjunctions[0].text.toUpperCase() === 'AND';
 
         if (conjunctions.length > 0 && !rangeSplit) {
@@ -276,7 +288,7 @@ function tokenizer(text, schema) {
             if (piece.type === ',' && arity === 'n') {
                 flush();
                 push(KINDS.comma, piece);
-            } else if (rangeSplit && isConjunction(piece)) {
+            } else if (rangeSplit && wireConjunction(piece)) {
                 flush();
                 push(KINDS.keyword, piece, piece, 'AND');
             } else {

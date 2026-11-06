@@ -58,6 +58,9 @@ const ROUND_TRIPS = {
     'saved search nested groups': '((Issue.priority : High) AND ((Issue.status : new) OR ((Issue.status : in_review) AND (Issue.subject NULL))))',
     'saved search empty and null': '((Issue.subject EMPTY) OR (Issue.subject !EMPTY) OR (Issue.startDate !NULL))',
     'saved search starts and ends': '((Issue.subject STARTS Fix) AND (Issue.subject !ENDS wip))',
+    'header search with lowercase and': '((Issue.subject CONTAINS rock and roll) OR (Issue.description CONTAINS rock and roll))',
+    'header search with lowercase or': '((Issue.subject CONTAINS this or that) AND (Issue.status : new))',
+    'contains with a comma in the text': '((Issue.subject CONTAINS hello,world) AND (Issue.subject !CONTAINS a,b))',
 };
 
 module('Unit | Utility | query | parse', function () {
@@ -70,6 +73,17 @@ module('Unit | Utility | query | parse', function () {
         assert.strictEqual(query('start between 05/01/2026 and 2026-08-31'), '((Issue.startDate BETWEEN 2026-05-01 AND 2026-08-31))');
         assert.strictEqual(query('(type:bug OR type:story) milestone:v0.1.1'), '(((issuetype.name : Bug) OR (issuetype.name : Story)) AND (issuemilestone.name : v0.1.1))');
         assert.strictEqual(query('description ~ crash'), '((Issue.description CONTAINS crash))');
+    });
+
+    test('Gaia values keep lowercase conjunctions and unquoted commas', function (assert) {
+        assert.strictEqual(query('(Issue.subject CONTAINS rock and roll)'), "((Issue.subject CONTAINS 'rock and roll'))");
+        assert.strictEqual(query('(Issue.subject CONTAINS this or that)'), "((Issue.subject CONTAINS 'this or that'))");
+        assert.strictEqual(query('(priority:high and status:new)'), '((Issue.priority : High) AND (Issue.status : new))', 'a lowercase and between conditions');
+        assert.strictEqual(query('(priority in high and status in new)'), '((Issue.priority : High) AND (Issue.status : new))', 'a lowercase and before a word operator');
+        assert.strictEqual(query('(Issue.subject CONTAINS hello,world)'), '((Issue.subject CONTAINS hello,world))');
+        assert.strictEqual(query("(Issue.subject CONTAINS 'a','b')"), "((Issue.subject CONTAINS 'a','b'))", 'quoted values stay a list');
+        assert.strictEqual(query('subject contains a, b'), "((Issue.subject CONTAINS 'a','b'))", 'a typed list stays a list');
+        assert.strictEqual(query('(Issue.status CONTAINS new,in_progress)'), "((Issue.status CONTAINS 'new','in_progress'))", 'an enum list stays a list');
     });
 
     test('the tree it reads', function (assert) {
