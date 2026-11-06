@@ -87,6 +87,9 @@ module('Unit | Utility | query | serializer', function () {
 
         let andBound = condition('Issue.startDate', 'BETWEEN', ['1 AND 2', '3']);
         assert.deepEqual(serialize(group('AND', [andBound])).errors, [{ code: 'reservedWord', params: { word: 'AND', value: '1 AND 2' }, nodeId: andBound.id }], 'a range bound cannot contain AND');
+        let andEnd = condition('Issue.startDate', 'BETWEEN', ['x AND', 'y']);
+        assert.deepEqual(serialize(group('AND', [andEnd])).errors, [{ code: 'reservedWord', params: { word: 'AND', value: 'x AND' }, nodeId: andEnd.id }], 'a lower bound cannot end in AND');
+        assert.strictEqual(query(group('AND', [condition('Issue.startDate', 'BETWEEN', ['x', 'AND y'])])), '((Issue.startDate BETWEEN x AND AND y))', 'an upper bound may start with AND');
         assert.deepEqual(serialize(group('AND', [condition('Issue.subject', 'CONTAINS', 'this AND that')])).errors, [], 'AND is fine outside a range');
 
         let badField = condition('Issue.a) OR (b', ':', '1');

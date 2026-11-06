@@ -35,6 +35,8 @@ const RESERVED_CHARACTER = /[()']/;
 const RESERVED_WORD = /NULL|EMPTY/;
 // Gaia splits a range on ' AND ', so a bound cannot contain it.
 const RANGE_SEPARATOR = /\sAND\s/;
+// A lower bound ending in ' AND' would join the separator, e.g. 'x AND' + 'y' reads as 'x' + 'AND y'.
+const RANGE_SEPARATOR_END = /\sAND$/;
 // Module.field paths; Gaia splits a condition on spaces, so anything else would break the query.
 const FIELD = /^[A-Za-z_]\w*(\.\w+)*$/;
 
@@ -64,7 +66,7 @@ function checkValues(node) {
 
     let isRange = findOperator(node.operator)?.arity === 2;
 
-    for (let value of valuesOf(node.value)) {
+    for (let [index, value] of valuesOf(node.value).entries()) {
         let character = value.match(RESERVED_CHARACTER);
 
         if (character) {
@@ -77,7 +79,7 @@ function checkValues(node) {
             return { code: ERRORS.reservedWord, params: { word: word[0], value }, nodeId: node.id };
         }
 
-        if (isRange && RANGE_SEPARATOR.test(value)) {
+        if (isRange && (RANGE_SEPARATOR.test(value) || (index === 0 && RANGE_SEPARATOR_END.test(value)))) {
             return { code: ERRORS.reservedWord, params: { word: 'AND', value }, nodeId: node.id };
         }
     }
