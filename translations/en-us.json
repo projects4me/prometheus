@@ -329,6 +329,38 @@
     "question": "question",
     "exclamation": "exclamation"
   },
+  "components": {
+    "ezSearch": {
+      "operators": {
+        "equal": "is",
+        "notEqual": "is not",
+        "in": "is any of",
+        "notIn": "is none of",
+        "less": "is less than",
+        "lessOrEqual": "is at most",
+        "greater": "is greater than",
+        "greaterOrEqual": "is at least",
+        "between": "is between",
+        "notBetween": "is not between",
+        "contains": "contains",
+        "notContains": "does not contain",
+        "startsWith": "starts with",
+        "notStartsWith": "does not start with",
+        "endsWith": "ends with",
+        "notEndsWith": "does not end with",
+        "isNull": "is not set",
+        "isNotNull": "is set",
+        "isEmpty": "is empty",
+        "isNotEmpty": "is not empty"
+      },
+      "errors": {
+        "reservedCharacter": "The value \"{value}\" can't contain {character}",
+        "reservedWord": "The value \"{value}\" can't contain the word {word} in capitals",
+        "invalidField": "\"{field}\" is not a field that can be searched",
+        "invalidTree": "The search could not be read"
+      }
+    }
+  },
   "views": {
     "components": {
       "infiniteScroll": {
