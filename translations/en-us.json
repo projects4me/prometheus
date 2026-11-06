@@ -357,7 +357,19 @@
         "reservedCharacter": "The value \"{value}\" can't contain {character}",
         "reservedWord": "The value \"{value}\" can't contain the word {word} in capitals",
         "invalidField": "\"{field}\" is not a field that can be searched",
-        "invalidTree": "The search could not be read"
+        "invalidTree": "The search could not be read",
+        "missingOperator": "Choose an operator after {field}",
+        "missingValue": "Enter a value for {field} after {operator}",
+        "mixedConjunction": "AND and OR can't be mixed in one group. Add brackets",
+        "misplacedConjunction": "{conjunction} needs a condition on both sides",
+        "unknownValue": "\"{value}\" isn't a {field}. Pick one of: {choices}",
+        "ambiguousValue": "\"{value}\" matches more than one {field}: {choices}",
+        "invalidOperator": "{field} can't use the operator {operator}",
+        "badDate": "\"{value}\" isn't a date. Use YYYY-MM-DD, MM/DD/YYYY or today",
+        "betweenValues": "{operator} needs two values, like 2026-01-01 and 2026-01-31",
+        "unbalancedBracket": "The bracket {bracket} has no matching bracket",
+        "unclosedQuote": "Close the quote {quote}",
+        "unexpectedToken": "\"{text}\" isn't expected here"
       }
     }
   },
