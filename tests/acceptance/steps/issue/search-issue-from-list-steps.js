@@ -1,4 +1,16 @@
+import { click } from '@ember/test-helpers';
 import steps from '../steps';
+
+export const when = function () {
+    return [
+        {
+            "User selects a saved search in the issue ezSearch": (assert) => async function () {
+                await click('[data-ez-saved] button');
+                await click('[data-ez-saved-item]');
+            }
+        },
+    ];
+}
 
 export const then = function () {
     return [

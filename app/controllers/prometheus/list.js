@@ -319,6 +319,19 @@ export default class PrometheusListController extends PrometheusController {
     }
 
     /**
+     * Apply a query from ezSearch: keep it, search by it and go back to the first page.
+     *
+     * @method applyQuery
+     * @param {String} query The Gaia query string, empty for none
+     * @public
+     */
+    @action applyQuery(query) {
+        this.queryString = query;
+        this.set('query', query);
+        this.set('page', 1);
+    }
+
+    /**
      * Clear the search
      *
      * @method clearSearch
