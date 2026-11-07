@@ -1,0 +1,135 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+// The compact ezSearch. A grid shared by both layouts. Multi-row: the bar, Search and Clear on row 1, Saved and
+// Filter on row 2, the chips on row 3. Linear: Saved, bar, Filter, Search and Clear on one row.
+.ez-search-compact {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+  align-items: start;
+  row-gap: 8px;
+  width: 100%;
+  min-width: 0;
+
+  .btn {
+    border-radius: 0;
+  }
+
+  .ez-search-compact-bar {
+    grid-row: 1;
+    grid-column: 1 / 4;
+    min-width: 0;
+  }
+
+  // Search and Clear are attached to the bar's right end, like an input group.
+  .ez-search-compact-search,
+  .ez-search-compact-clear {
+    grid-row: 1;
+    margin-left: -1px;
+  }
+
+  .ez-search-compact-search {
+    grid-column: 4;
+  }
+
+  .ez-search-compact-clear {
+    grid-column: 5;
+  }
+
+  .ez-search-compact-saved {
+    grid-row: 2;
+    grid-column: 1;
+    min-width: 0;
+
+    .app-dropdown-content {
+      left: 0;
+      right: auto;
+      min-width: min(160px, calc(100vw - 32px));
+      max-width: calc(100vw - 32px);
+
+      > * {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        text-align: left;
+      }
+
+      button {
+        display: block;
+        width: 100%;
+        padding: 3px 20px;
+        background: transparent;
+        border: 0;
+      }
+    }
+  }
+
+  .ez-search-compact-saved-name {
+    display: inline-block;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+  }
+
+  .ez-search-compact-saved-edited {
+    white-space: nowrap;
+  }
+
+  .ez-search-compact-filter {
+    grid-row: 2;
+    grid-column: 2;
+    justify-self: start;
+    margin-left: 8px;
+
+    .label {
+      margin-left: 4px;
+      border-radius: 0;
+    }
+  }
+
+  .ez-search-compact-chips {
+    grid-row: 3;
+    grid-column: 1 / -1;
+  }
+
+  &.ez-search-compact-linear {
+    row-gap: 0;
+    align-items: start;
+
+    .ez-search-compact-saved {
+      grid-row: 1;
+      grid-column: 1;
+      margin-right: 8px;
+
+      .ez-search-compact-saved-name {
+        max-width: 100px;
+      }
+    }
+
+    .ez-search-compact-bar {
+      grid-row: 1;
+      grid-column: 2;
+    }
+
+    .ez-search-compact-filter {
+      grid-row: 1;
+      grid-column: 3;
+      margin-left: 8px;
+    }
+
+    .ez-search-compact-search {
+      margin-left: 8px;
+    }
+
+    .ez-search-compact-clear {
+      margin-left: 4px;
+    }
+  }
+}
+
+.ez-search-compact-modal .ez-search-compact-modal-query {
+  margin-bottom: 10px;
+  overflow-wrap: anywhere;
+}

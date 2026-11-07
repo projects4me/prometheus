@@ -330,6 +330,14 @@
     "exclamation": "exclamation"
   },
   "components": {
+    "ezSearchCompact": {
+      "saved": "Saved",
+      "filter": "Filter",
+      "saveCurrent": "Save current search…",
+      "builder": {
+        "title": "Filter"
+      }
+    },
     "ezSearch": {
       "builderToggle": "Builder",
       "savedSearch": {

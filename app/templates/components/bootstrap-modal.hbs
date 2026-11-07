@@ -9,6 +9,9 @@
         {{yield}}
       </div>
       <div class="modal-footer">
+        {{#if (and this.leftLabel this.leftAction)}}
+          <AppUi::Button type="button" data-btn="left" @onClick={{action "left"}} disabled={{this.busy}} class="btn btn-default pull-left">{{t this.leftLabel}}</AppUi::Button>
+        {{/if}}
         {{!-- close is handled in .js of component, so better to pass noop--}}
         <AppUi::Button type="button"  data-btn="cancel" @onClick={{fn (noop)}} disabled={{this.busy}} class="btn btn-default" data-dismiss="modal">{{t this.closeLabel}}</AppUi::Button>
         {{#if (and this.confirmLabel (not @removeConfirmBtn))}}

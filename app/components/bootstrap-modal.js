@@ -119,6 +119,20 @@ export default Component.extend({
     actions: {
 
         /**
+         * The optional left footer button (`leftLabel`, `leftAction`): run its action, then hide the modal
+         *
+         * @method left
+         * @public
+         */
+        left: function() {
+            if (this.busy) {
+                return;
+            }
+            this.leftAction();
+            this._hide();
+        },
+
+        /**
          * This action is captures the confirm button and send it forward to be
          * handled by the controller
          *
