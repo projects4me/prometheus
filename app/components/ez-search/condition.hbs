@@ -1,0 +1,48 @@
+<div class="ez-search-condition" data-ez-condition={{@condition.id}}>
+  <div class="row">
+    <div class="col-xs-10 col-sm-3 ez-search-condition-field">
+      <FormFields::FieldRelate
+        @placeholder={{t "components.ezSearch.panel.field"}}
+        @options={{this.fields}}
+        @selected={{this.field}}
+        @searchField="label"
+        @onchange={{this.setField}}
+        @relateType="relate-simple"
+        @data-field="ez-search.condition.field"
+      />
+    </div>
+    <div class="col-xs-2 col-sm-1 col-sm-push-8 text-right ez-search-condition-remove">
+      <button type="button" class="btn btn-box-tool" data-ez-remove-condition title={{t "components.ezSearch.panel.removeCondition"}} {{on "click" this.removeRow}}>
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-2 col-sm-pull-1 ez-search-condition-operator">
+      <FormFields::FieldRelate
+        @placeholder={{t "components.ezSearch.panel.operator"}}
+        @options={{this.operators}}
+        @selected={{this.operator}}
+        @searchField="label"
+        @onchange={{this.setOperator}}
+        @relateType="relate-simple"
+        @disabled={{not this.field}}
+        @data-field="ez-search.condition.operator"
+      />
+    </div>
+    <div class="col-xs-12 col-sm-6 col-sm-pull-1 ez-search-condition-value">
+      {{#if this.operator}}
+        <EzSearch::ValueEditor
+          @field={{this.field}}
+          @operator={{this.operator}}
+          @value={{@condition.value}}
+          @onChange={{this.setValue}}
+        />
+      {{/if}}
+    </div>
+  </div>
+  {{#if this.isIncomplete}}
+    <div class="text-muted ez-search-condition-note" data-ez-incomplete>{{t "components.ezSearch.panel.incomplete"}}</div>
+  {{/if}}
+  {{#each this.messages as |message|}}
+    <div class="error text-red ez-search-error" data-ez-error>{{message}}</div>
+  {{/each}}
+</div>
