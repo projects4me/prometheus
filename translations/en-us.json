@@ -353,6 +353,16 @@
         "isEmpty": "is empty",
         "isNotEmpty": "is not empty"
       },
+      "valueEditor": {
+        "text": "Enter a value",
+        "value": "Choose a value",
+        "values": "Choose values",
+        "csv": "Enter values separated by commas",
+        "date": "Pick a date",
+        "from": "From",
+        "to": "To",
+        "and": "and"
+      },
       "errors": {
         "reservedCharacter": "The value \"{value}\" can't contain {character}",
         "reservedWord": "The value \"{value}\" can't contain the word {word} in capitals",

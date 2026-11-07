@@ -1,0 +1,28 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+// The ezSearch value editor: its controls fill their column, and stack on mobile.
+.ez-search-value-editor {
+  width: 100%;
+
+  .form-field {
+    width: 100%;
+  }
+
+  .ez-search-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .form-field {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+}

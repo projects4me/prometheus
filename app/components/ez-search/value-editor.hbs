@@ -1,0 +1,86 @@
+{{#if (not-eq this.kind "none")}}
+  <div class="ez-search-value-editor" data-ez-value-editor={{this.kind}} ...attributes>
+    {{#if (eq this.kind "select")}}
+      <FormFields::FieldRelate
+        @placeholder={{t "components.ezSearch.valueEditor.value"}}
+        @options={{this.options}}
+        @selected={{this.selectedOne}}
+        @searchField="label"
+        @onchange={{this.selectOne}}
+        @relateType={{this.relateType}}
+        @data-field="ez-search.value"
+      />
+    {{else if (eq this.kind "list")}}
+      <FormFields::FieldRelateMulti
+        @placeholder={{t "components.ezSearch.valueEditor.values"}}
+        @options={{this.options}}
+        @selected={{this.selectedMany}}
+        @searchField="label"
+        @onchange={{this.selectMany}}
+        @relateType={{this.relateType}}
+        @data-field="ez-search.values"
+      />
+    {{else if (eq this.kind "date")}}
+      <FormFields::FieldDate
+        @placeholder={{t "components.ezSearch.valueEditor.date"}}
+        @value={{this.first}}
+        @format={{this.dateFormat}}
+        @singleDatePicker={{true}}
+        @showDropdowns={{true}}
+        @autoApply={{true}}
+        @update={{this.setDate}}
+        @data-field="ez-search.date"
+      />
+    {{else if (eq this.kind "range")}}
+      <div class="ez-search-range">
+        <FormFields::FieldDate
+          @placeholder={{t "components.ezSearch.valueEditor.from"}}
+          @value={{this.from}}
+          @format={{this.dateFormat}}
+          @singleDatePicker={{true}}
+          @showDropdowns={{true}}
+          @autoApply={{true}}
+          @update={{this.setFrom}}
+          @data-field="ez-search.from"
+        />
+        <span class="ez-search-range-and">{{t "components.ezSearch.valueEditor.and"}}</span>
+        <FormFields::FieldDate
+          @placeholder={{t "components.ezSearch.valueEditor.to"}}
+          @value={{this.to}}
+          @format={{this.dateFormat}}
+          @singleDatePicker={{true}}
+          @showDropdowns={{true}}
+          @autoApply={{true}}
+          @update={{this.setTo}}
+          @data-field="ez-search.to"
+        />
+      </div>
+    {{else if (eq this.kind "numrange")}}
+      <div class="ez-search-range">
+        <FormFields::FieldText
+          @placeholder={{t "components.ezSearch.valueEditor.from"}}
+          @type={{this.boundType}}
+          @value={{this.from}}
+          @onInput={{this.typedFrom}}
+          @data-field="ez-search.from"
+        />
+        <span class="ez-search-range-and">{{t "components.ezSearch.valueEditor.and"}}</span>
+        <FormFields::FieldText
+          @placeholder={{t "components.ezSearch.valueEditor.to"}}
+          @type={{this.boundType}}
+          @value={{this.to}}
+          @onInput={{this.typedTo}}
+          @data-field="ez-search.to"
+        />
+      </div>
+    {{else}}
+      <FormFields::FieldText
+        @placeholder={{this.placeholder}}
+        @type={{this.inputType}}
+        @value={{this.text}}
+        @onInput={{this.typed}}
+        @data-field="ez-search.text"
+      />
+    {{/if}}
+  </div>
+{{/if}}
