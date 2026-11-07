@@ -432,6 +432,22 @@ export default Object.extend({
                 }
             }
         },
+        Workflow: {
+            search: {
+                module: 'Workflow',
+                textField: 'Workflow.name',
+                fields: {
+                    'Workflow.name': { label: 'views.app.workflow.list.name', type: 'text', aliases: ['name'] },
+                    'Workflow.description': { label: 'views.app.workflow.list.description', type: 'text', aliases: ['description'] },
+                    'Workflow.status': {
+                        label: 'views.app.workflow.fields.status',
+                        type: 'enum',
+                        aliases: ['status'],
+                        values: { source: 'translation', key: 'views.app.workflow.status' }
+                    }
+                }
+            }
+        },
         Issue: {
             search: {
                 module: 'Issue',

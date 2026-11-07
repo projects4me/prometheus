@@ -2,6 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import { inject as service } from '@ember/service';
 import AppRoute from 'prometheus/routes/app';
 import { scopeOf, actorsOf } from 'prometheus/utils/workflow/list-summary';
 
@@ -14,6 +15,14 @@ import { scopeOf, actorsOf } from 'prometheus/utils/workflow/list-summary';
  * @extends AppRoute
  */
 export default class AppWorkflowIndexRoute extends AppRoute {
+    /**
+     * Loads the search schema of the module.
+     *
+     * @property querySchemaService
+     * @type Prometheus.Services.QuerySchema
+     */
+    @service('query-schema') querySchemaService;
+
     /**
      * The list is reloaded whenever one of these query params changes.
      *
@@ -65,6 +74,7 @@ export default class AppWorkflowIndexRoute extends AppRoute {
         this.agents = [];
         this.projects = [];
         this.savedsearches = [];
+        this.schema = null;
 
         try {
             let savedsearches = await this.store.query('savedsearch', {
@@ -72,7 +82,18 @@ export default class AppWorkflowIndexRoute extends AppRoute {
                 limit: -1
             });
             this.savedsearches = savedsearches.toArray();
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'workflow' });
+        }
 
+        try {
+            let schema = await this.querySchemaService.load('Workflow');
+            this.schema = Array.isArray(schema) ? null : schema;
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'workflow' });
+        }
+
+        try {
             if (!list.length) {
                 return;
             }
@@ -115,6 +136,7 @@ export default class AppWorkflowIndexRoute extends AppRoute {
         controller.set('agents', this.agents);
         controller.set('projects', this.projects);
         controller.set('savedsearches', this.savedsearches);
+        controller.set('querySchema', this.schema);
 
         if (controller.searchId) {
             controller.set('activeSearch', this.savedsearches.find((search) => search.id === controller.searchId) || null);
