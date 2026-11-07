@@ -30,6 +30,23 @@ export default class EzSearchConditionComponent extends Component {
     }
 
     /**
+     * The field for the value editor: fields that carry their own `values` keep them, the others get the
+     * schema's values for their `valueSource`.
+     *
+     * @property valueField
+     * @type Object
+     */
+    get valueField() {
+        let field = this.field;
+
+        if (!field || field.values || !this.args.schema?.valuesFor) {
+            return field;
+        }
+
+        return { ...field, values: this.args.schema.valuesFor(field) };
+    }
+
+    /**
      * The operators valid for the field's type, with their translated labels.
      *
      * @property operators
@@ -83,7 +100,8 @@ export default class EzSearchConditionComponent extends Component {
         }
 
         if (this.field && this.field.type === field.type) {
-            this.emit(condition(field.id, this.args.condition.operator, this.args.condition.value, id));
+            let value = this.field.valueSource === field.valueSource ? this.args.condition.value : null;
+            this.emit(condition(field.id, this.args.condition.operator, value, id));
             return;
         }
 

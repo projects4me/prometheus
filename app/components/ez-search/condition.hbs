@@ -31,7 +31,7 @@
     <div class="col-xs-12 col-sm-6 col-sm-pull-1 ez-search-condition-value">
       {{#if this.operator}}
         <EzSearch::ValueEditor
-          @field={{this.field}}
+          @field={{this.valueField}}
           @operator={{this.operator}}
           @value={{@condition.value}}
           @onChange={{this.setValue}}

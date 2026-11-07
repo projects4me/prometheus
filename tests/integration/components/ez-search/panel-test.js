@@ -35,7 +35,7 @@ module('Integration | Component | ez-search/panel', function (hooks) {
         this.tree = buildTree();
     });
 
-    async function show(context) {
+    async function show() {
         await render(hbs`<EzSearch::Panel @tree={{this.tree}} @schema={{this.schema}} @onChange={{this.onChange}} />`);
     }
 
