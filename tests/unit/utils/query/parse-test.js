@@ -63,6 +63,7 @@ const ROUND_TRIPS = {
     'contains with a comma in the text': '((Issue.subject CONTAINS hello,world) AND (Issue.subject !CONTAINS a,b))',
     'header search with a symbol': '((Issue.subject CONTAINS error: timeout) OR (Issue.description CONTAINS a != b))',
     'header search with uppercase conjunctions': '((Issue.subject CONTAINS rock AND roll) OR (Issue.subject CONTAINS this OR that))',
+    'apostrophe inside a value': "((Issue.subject CONTAINS O'Brien))",
     'header search with a comma and a space': '((Issue.subject CONTAINS hello, world))',
 };
 
@@ -138,7 +139,8 @@ module('Unit | Utility | query | parse', function () {
         assert.strictEqual(query('start < 1/2/2026'), '((Issue.startDate < 2026-01-02))');
         assert.strictEqual(query('Issue.startDate NULL'), '((Issue.startDate NULL))');
         assert.strictEqual(query('subject empty'), '((Issue.subject EMPTY))');
-        assert.strictEqual(query('subject:"don\'t"'), '', "a value the serializer refuses is left out there, not here");
+        assert.strictEqual(query('subject:"don\'t"'), "((Issue.subject : don't))", 'an inner apostrophe is written');
+        assert.strictEqual(query('subject:"\'quoted\'"'), '', 'a value the serializer refuses is left out there, not here');
         assert.deepEqual(shape(read(`subject:"don't"`).tree).children, [{ field: 'Issue.subject', operator: ':', value: "don't" }]);
     });
 
@@ -201,6 +203,12 @@ module('Unit | Utility | query | parse', function () {
 
             assert.true(isGroup(result.tree), `${text} gives a tree`);
         }
+    });
+
+    test('an apostrophe at the edge of a value is refused', function (assert) {
+        let codes = serialize(read("subject ~ \"'quoted'\"").tree).errors.map((error) => error.code);
+
+        assert.deepEqual(codes, ['reservedApostrophe']);
     });
 
     for (let [name, text] of Object.entries(ROUND_TRIPS)) {

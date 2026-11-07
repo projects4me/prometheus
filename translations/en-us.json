@@ -390,6 +390,7 @@
       },
       "errors": {
         "reservedCharacter": "The value \"{value}\" can't contain {character}",
+        "reservedApostrophe": "The value \"{value}\": Apostrophes can't start or end a value or appear in a list yet",
         "reservedWord": "The value \"{value}\" can't contain the word {word} in capitals",
         "invalidField": "\"{field}\" is not a field that can be searched",
         "invalidTree": "The search could not be read",

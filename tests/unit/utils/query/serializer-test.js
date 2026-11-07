@@ -66,7 +66,8 @@ module('Unit | Utility | query | serializer', function () {
         let cases = [
             ['a(b', 'reservedCharacter', { character: '(', value: 'a(b' }],
             ['a)b', 'reservedCharacter', { character: ')', value: 'a)b' }],
-            ["it's", 'reservedCharacter', { character: "'", value: "it's" }],
+            ["'quoted'", 'reservedApostrophe', { value: "'quoted'" }],
+            ["it's'", 'reservedApostrophe', { value: "it's'" }],
             ['NULL', 'reservedWord', { word: 'NULL', value: 'NULL' }],
             ['NOT EMPTY', 'reservedWord', { word: 'EMPTY', value: 'NOT EMPTY' }],
         ];
@@ -78,6 +79,11 @@ module('Unit | Utility | query | serializer', function () {
             assert.deepEqual(result.errors, [{ code, params, nodeId: bad.id }], `${value} is refused`);
             assert.strictEqual(result.query, '((Issue.a : 1))', `${value} is left out`);
         }
+
+        assert.strictEqual(query(group('AND', [condition('Issue.subject', 'CONTAINS', "O'Brien")])), "((Issue.subject CONTAINS O'Brien))", 'an inner apostrophe is written');
+        assert.strictEqual(query(group('AND', [condition('Issue.subject', 'CONTAINS', "Rana's board")])), "((Issue.subject CONTAINS 'Rana's board'))", 'an inner apostrophe in a quoted value');
+        let apostropheList = condition('assignedTo.name', 'IN', ["O'Brien", 'rana']);
+        assert.deepEqual(serialize(group('AND', [apostropheList])).errors, [{ code: 'reservedApostrophe', params: { value: "O'Brien" }, nodeId: apostropheList.id }], 'an apostrophe in a list is refused');
 
         let list = condition('Issue.status', 'IN', ['ok', 'EMPTY']);
         assert.strictEqual(serialize(group('AND', [list])).errors[0].nodeId, list.id, 'list values are checked');
