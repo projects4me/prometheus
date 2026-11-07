@@ -71,20 +71,7 @@
     {{/if}}
   </button>
 
-  <AppUi::Button
-    class="btn btn-primary btn-sm ez-search-compact-search"
-    title={{t "global.form.search"}}
-    @onClick={{this.apply}}
-    @aclContext={{@aclContext}}
-    disabled={{this.hasErrors}}
-    data-ez-search-apply
-  ><i class="fa fa-search"></i> <span class={{if @linear "sr-only"}}>{{t "global.form.search"}}</span></AppUi::Button>
-  <AppUi::Button
-    class="btn btn-default btn-sm ez-search-compact-clear"
-    title={{t "global.form.clear"}}
-    @onClick={{this.clear}}
-    data-ez-search-clear
-  ><i class="fa fa-times"></i> <span class={{if @linear "sr-only"}}>{{t "global.form.clear"}}</span></AppUi::Button>
+  <EzSearchCompact::Actions @onSearch={{this.apply}} @onClear={{this.clear}} @aclContext={{@aclContext}} @disabled={{this.hasErrors}} />
 
   {{#unless @linear}}
     <div class="ez-search-compact-chips">

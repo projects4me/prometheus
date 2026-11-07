@@ -1,0 +1,20 @@
+{{! Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line }}
+{{! The Search and Clear icon buttons, shared by the multi-row and the linear layout. }}
+<div class="ez-search-compact-actions" ...attributes>
+  <AppUi::Button
+    class="btn btn-primary btn-sm ez-search-compact-search"
+    title={{t "global.form.search"}}
+    aria-label={{t "global.form.search"}}
+    @onClick={{@onSearch}}
+    @aclContext={{@aclContext}}
+    disabled={{@disabled}}
+    data-ez-search-apply
+  ><i class="fa fa-search" aria-hidden="true"></i></AppUi::Button>
+  <AppUi::Button
+    class="btn btn-default btn-sm ez-search-compact-clear"
+    title={{t "global.form.clear"}}
+    aria-label={{t "global.form.clear"}}
+    @onClick={{@onClear}}
+    data-ez-search-clear
+  ><i class="fa fa-times" aria-hidden="true"></i></AppUi::Button>
+</div>
