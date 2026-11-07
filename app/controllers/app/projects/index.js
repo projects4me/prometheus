@@ -28,102 +28,13 @@ export default class AppProjectsIndexController extends PrometheusListController
     @tracked querySchema = null;
 
     /**
-     * The query shown in the save search dialog.
+     * What the shared ezSearch saved-search actions need for projects.
      *
-     * @property saveSearchQuery
-     * @type String
+     * @method savedSearchContext
+     * @return {Object}
      */
-    @tracked saveSearchQuery = '';
-
-    /**
-     * The saved searches in the shape <EzSearch> expects.
-     *
-     * @property ezSavedSearches
-     * @type Array
-     */
-    get ezSavedSearches() {
-        return (this.savedsearches || []).map((search) => ({
-            id: search.get('id'),
-            name: search.get('name'),
-            query: search.get('searchquery'),
-        }));
-    }
-
-    /**
-     * Mark a saved search as the active one, or clear the mark.
-     *
-     * @method selectSavedSearch
-     * @param {Object|null} search The picked item (`{id, name, query}`) or null
-     */
-    @action selectSavedSearch(search) {
-        if (!search) {
-            this.set('searchId', null);
-            this.set('activeSearch', null);
-
-            return;
-        }
-
-        this.set('searchId', String(search.id));
-        this.set('activeSearch', (this.savedsearches || []).find((item) => String(item.get('id')) === String(search.id)) || null);
-    }
-
-    /**
-     * Open the save dialog for the query ezSearch hands over.
-     *
-     * @method showEzSaveSearchDialog
-     * @param {String} query
-     */
-    @action showEzSaveSearchDialog(query) {
-        this.set('saveSearchQuery', query);
-        this.set('saveSearchDialog', true);
-    }
-
-    /**
-     * Save the query shown in the dialog as a saved search.
-     *
-     * @method saveEzSearch
-     */
-    @action async saveEzSearch() {
-        let query = this.saveSearchQuery;
-
-        if (!query) {
-            new Messenger().post({
-                message: this.intl.t("views.app.project.list.savedsearch.missing"),
-                type: 'error',
-                showCloseButton: true
-            });
-            this.send('removeSaveSearchDialog');
-
-            return;
-        }
-
-        let savedSearch = this.newSavedsearch;
-
-        savedSearch.set('relatedTo', 'project');
-        savedSearch.set('searchquery', query);
-
-        try {
-            let data = await savedSearch.save();
-
-            if (this.isDestroying || this.isDestroyed) {
-                return;
-            }
-
-            this.set('savedsearches', [...(this.savedsearches || []), data]);
-            this.set('newSavedsearch', this.store.createRecord('savedsearch'));
-
-            new Messenger().post({
-                message: htmlSafe(this.intl.t("views.app.project.list.savedsearch.added", { name: data.get('name') })),
-                type: 'success',
-                showCloseButton: true
-            });
-        } catch (error) {
-            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
-        }
-
-        if (!this.isDestroying && !this.isDestroyed) {
-            this.send('removeSaveSearchDialog');
-        }
+    savedSearchContext() {
+        return { relatedTo: 'project', messagePrefix: 'views.app.project.list.savedsearch' };
     }
 
     /**
@@ -236,7 +147,7 @@ export default class AppProjectsIndexController extends PrometheusListController
         _savedSearch.set('public', 0);
 
         _savedSearch.save().then(function (data) {
-            _self.get('savedsearches').pushObject(data);
+            _self.savedsearches = [..._self.savedsearches, data];
             let newSavedSearch = _self.get('store').createRecord('savedsearch');
             _self.set('newSavedsearch', newSavedSearch);
 
@@ -274,7 +185,7 @@ export default class AppProjectsIndexController extends PrometheusListController
                         // destroy the saved search
                         toBeDeleted.destroyRecord().then(function () {
                             // remove from the view by updating the model
-                            _self.get('savedsearches').removeObject(toBeDeleted);
+                            _self.savedsearches = _self.savedsearches.filter((item) => item !== toBeDeleted);
 
                             return deleting.update({
                                 message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.deleted", { name: search.get('name') })),
