@@ -331,6 +331,7 @@
   },
   "components": {
     "ezSearch": {
+      "builderToggle": "Builder",
       "operators": {
         "equal": "is",
         "notEqual": "is not",

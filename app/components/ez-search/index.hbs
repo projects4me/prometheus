@@ -1,0 +1,71 @@
+<div class="ez-search" data-ez-search ...attributes>
+  <div class="search ez-search-toolbar">
+    <div class="ez-search-saved" data-ez-saved>
+      <AppUi::Dropdown @isPrimary={{true}}>
+        <:button>
+          <i class="fa fa-bookmark visible-xs-inline"></i>
+          <span class="hidden-xs">{{t "views.app.issue.list.savedsearch.label"}}</span>
+        </:button>
+        <:content>
+          {{#each this.searches as |item|}}
+            {{! template-lint-disable no-invalid-interactive }}
+            <div class={{if item.active "active"}} data-ez-saved-item {{on "click" (fn this.pickSaved item.search)}}>
+              {{item.search.name}}
+              {{#if item.active}}
+                <i class="fa fa-check pull-right"></i>
+              {{/if}}
+            </div>
+          {{/each}}
+        </:content>
+      </AppUi::Dropdown>
+    </div>
+
+    <div class="ez-search-field" {{did-update this.reload @query}}>
+      <EzSearch::SearchBar
+        @tree={{this.tree}}
+        @schema={{@schema}}
+        @onChange={{this.onTreeChange}}
+        @onErrors={{this.onBarErrors}}
+        @onRun={{this.apply}}
+        @placeholder={{t "global.form.search"}}
+      />
+      {{#each this.storedMessages as |message|}}
+        <span class="error text-red ez-search-error" data-ez-stored-error>{{message}}</span>
+      {{/each}}
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-default ez-search-builder {{if this.builderOpen 'active'}}"
+      title={{t "components.ezSearch.builderToggle"}}
+      aria-pressed={{if this.builderOpen "true" "false"}}
+      data-ez-builder-toggle
+      {{on "click" this.toggleBuilder}}
+    >
+      <i class="fa fa-sliders"></i>
+      <span class="hidden-xs">{{t "components.ezSearch.builderToggle"}}</span>
+    </button>
+
+    <div class="ez-search-actions">
+      <AppUi::Button
+        class="btn btn-primary"
+        @onClick={{this.apply}}
+        @aclContext={{@aclContext}}
+        disabled={{this.hasErrors}}
+        data-ez-search-apply
+      >{{t "global.form.search"}}</AppUi::Button>
+      <AppUi::Button class="btn btn-default" @onClick={{this.clear}} data-ez-search-clear>{{t "global.form.clear"}}</AppUi::Button>
+    </div>
+  </div>
+
+  {{#if this.builderOpen}}
+    <div class="ez-search-builder-area">
+      <EzSearch::Panel @tree={{this.tree}} @schema={{@schema}} @onChange={{this.onTreeChange}} />
+      {{#if @onSave}}
+        <div class="ez-search-save text-right">
+          <button type="button" class="btn btn-primary" data-ez-save {{on "click" this.save}}>{{t "global.form.savesearch"}}</button>
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>
