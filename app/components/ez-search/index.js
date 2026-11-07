@@ -28,6 +28,8 @@ export default class EzSearchComponent extends Component {
     @tracked builderOpen = false;
     @tracked barErrors = [];
     @tracked storedErrors = [];
+    @tracked loadId = 0;
+    loadCount = 0;
 
     constructor() {
         super(...arguments);
@@ -89,6 +91,7 @@ export default class EzSearchComponent extends Component {
         this.tree = tree;
         this.storedErrors = errors;
         this.barErrors = [];
+        this.loadId = ++this.loadCount;
     }
 
     @action
@@ -128,7 +131,18 @@ export default class EzSearchComponent extends Component {
             return;
         }
 
-        let base = this.args.baseQuery ? parse(this.args.baseQuery, this.args.schema).tree : null;
+        let base = null;
+
+        if (this.args.baseQuery) {
+            let parsedBase = parse(this.args.baseQuery, this.args.schema);
+
+            if (parsedBase.errors.length > 0) {
+                return;
+            }
+
+            base = parsedBase.tree;
+        }
+
         let { query, errors } = serialize(compose(base, this.tree));
 
         if (errors.length > 0) {

@@ -4,31 +4,34 @@
       <AppUi::Dropdown @isPrimary={{true}}>
         <:button>
           <i class="fa fa-bookmark visible-xs-inline"></i>
+          <span class="sr-only visible-xs-inline">{{t "views.app.issue.list.savedsearch.label"}}</span>
           <span class="hidden-xs">{{t "views.app.issue.list.savedsearch.label"}}</span>
         </:button>
         <:content>
           {{#each this.searches as |item|}}
-            {{! template-lint-disable no-invalid-interactive }}
-            <div class={{if item.active "active"}} data-ez-saved-item {{on "click" (fn this.pickSaved item.search)}}>
+            <button type="button" class={{if item.active "active"}} data-ez-saved-item {{on "click" (fn this.pickSaved item.search)}}>
               {{item.search.name}}
               {{#if item.active}}
                 <i class="fa fa-check pull-right"></i>
               {{/if}}
-            </div>
+            </button>
           {{/each}}
         </:content>
       </AppUi::Dropdown>
     </div>
 
     <div class="ez-search-field" {{did-update this.reload @query}}>
-      <EzSearch::SearchBar
-        @tree={{this.tree}}
-        @schema={{@schema}}
-        @onChange={{this.onTreeChange}}
-        @onErrors={{this.onBarErrors}}
-        @onRun={{this.apply}}
-        @placeholder={{t "global.form.search"}}
-      />
+      {{! A new loadId remounts the bar so a load drops its unparsed draft and errors. }}
+      {{#each (array this.loadId) key="@identity"}}
+        <EzSearch::SearchBar
+          @tree={{this.tree}}
+          @schema={{@schema}}
+          @onChange={{this.onTreeChange}}
+          @onErrors={{this.onBarErrors}}
+          @onRun={{this.apply}}
+          @placeholder={{t "global.form.search"}}
+        />
+      {{/each}}
       {{#each this.storedMessages as |message|}}
         <span class="error text-red ez-search-error" data-ez-stored-error>{{message}}</span>
       {{/each}}

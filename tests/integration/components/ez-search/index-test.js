@@ -99,6 +99,31 @@ module('Integration | Component | ez-search', function (hooks) {
         assert.notOk(this.applied[0].includes('Issue.status'));
     });
 
+    test('Apply does nothing when @baseQuery does not parse', async function (assert) {
+        this.baseQuery = '((Issue.status : zzz))';
+        this.query = '((Issue.status : done))';
+        await show();
+        await click('[data-ez-search-apply]');
+
+        assert.strictEqual(this.applied.length, 0);
+    });
+
+    test('loading a saved search drops invalid bar text and its errors', async function (assert) {
+        this.saved = [{ name: 'Done', query: '((Issue.status : done))' }];
+        await show();
+        await focus(INPUT);
+        await fillIn(INPUT, 'status:zzz');
+        await blur(INPUT);
+        await settled();
+        assert.dom('[data-ez-search-apply]').isDisabled();
+
+        await click('[data-ez-saved] button');
+        await click('[data-ez-saved-item]');
+
+        assert.dom('[data-ez-search-apply]').isNotDisabled();
+        assert.dom(INPUT).doesNotIncludeText('zzz');
+    });
+
     test('an invalid bar disables Search', async function (assert) {
         await show();
         await focus(INPUT);
