@@ -2,7 +2,6 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import _ from "lodash";
 import Object from '@ember/object';
 
 /**
@@ -281,6 +280,21 @@ export default Object.extend({
             }
         },
         Project:{
+            search: {
+                module: 'Project',
+                textField: 'Project.name',
+                fields: {
+                    'Project.name': { label: 'views.app.project.filter.name', type: 'text', aliases: ['name'] },
+                    'Project.shortCode': { label: 'views.app.project.filter.shortCode', type: 'text', aliases: ['code'] },
+                    'Project.status': {
+                        label: 'views.app.project.filter.status',
+                        type: 'enum',
+                        aliases: ['status'],
+                        values: { source: 'translation', key: 'views.app.project.lists.status' }
+                    },
+                    'manager.name': { label: 'views.app.project.filter.manager', type: 'text', aliases: ['manager'] }
+                }
+            },
             list: {
                 fields:{
                     name:{
@@ -397,6 +411,61 @@ export default Object.extend({
                 }
             }
         },
+        Issue: {
+            search: {
+                module: 'Issue',
+                textField: 'Issue.subject',
+                fields: {
+                    'Issue.issueNumber': { label: 'views.app.issue.fields.issueNumber', type: 'number', aliases: ['number', '#'] },
+                    'Issue.subject': { label: 'views.app.issue.fields.subject', type: 'text', aliases: ['subject'] },
+                    'Issue.status': {
+                        label: 'views.app.issue.fields.status',
+                        type: 'enum',
+                        aliases: ['status'],
+                        values: { source: 'issueStatuses' }
+                    },
+                    'issuemilestone.name': {
+                        label: 'views.app.issue.fields.milestoneId',
+                        type: 'enum',
+                        aliases: ['milestone'],
+                        values: { source: 'milestones' }
+                    },
+                    'issuetype.name': {
+                        label: 'views.app.issue.fields.typeId',
+                        type: 'enum',
+                        aliases: ['type'],
+                        values: { source: 'issueTypes' }
+                    },
+                    'Issue.priority': {
+                        label: 'views.app.issue.fields.priority',
+                        type: 'enum',
+                        aliases: ['priority', 'prio'],
+                        values: { source: 'translation', key: 'views.app.issue.lists.priority' }
+                    },
+                    'Issue.startDate': { label: 'views.app.issue.fields.startDate', type: 'date', aliases: ['start'] },
+                    'Issue.endDate': { label: 'views.app.issue.fields.endDate', type: 'date', aliases: ['end'] },
+                    'parentissue.issueNumber': { label: 'views.app.issue.fields.parent', type: 'number', aliases: ['parent'] },
+                    'assignedTo.name': {
+                        label: 'views.app.issue.fields.assignee',
+                        type: 'user',
+                        aliases: ['assignee'],
+                        values: { source: 'members' }
+                    },
+                    'ownedBy.name': {
+                        label: 'views.app.issue.fields.owner',
+                        type: 'user',
+                        aliases: ['owner'],
+                        values: { source: 'members' }
+                    },
+                    'reportedBy.name': {
+                        label: 'views.app.issue.fields.reportedBy',
+                        type: 'user',
+                        aliases: ['reporter'],
+                        values: { source: 'members' }
+                    }
+                }
+            }
+        },
         Dashboard:{
             widgets: {
                 recentIssues: {
@@ -496,27 +565,17 @@ export default Object.extend({
 
     /**
      * This function is used to retrieve the metadata for the different views in the
-     * system. The function has the capability of translating the labels as well
+     * system. Labels are translation keys; they are translated where they are shown.
      *
      * @method getViewMeta
      * @param {String} module  The module for which we have to retrieve the meta
      * @param {String} view The view of the module whose meta is required
-     * @param {Object} intl The object for the internationalization library
      * @return {Object} metadata The requested metadata
      */
-    getViewMeta:function(module,view,intl){
+    getViewMeta:function(module,view){
         if (this.views[module] !== undefined && this.views[module][view] !== undefined)
         {
             let meta = this.views[module][view];
-            if (view === 'filters')
-            {
-                _.forEach(meta.enabledFilters,function(value){
-                    let label = intl.t(value.label);
-                    if (label.string !== undefined){
-                        value.label = label.string;
-                    }
-                });
-            }
             return meta;
         }
         return false;
