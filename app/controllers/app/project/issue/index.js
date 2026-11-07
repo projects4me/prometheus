@@ -33,112 +33,17 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
     @tracked querySchema = null;
 
     /**
-     * The saved searches of the current user. Tracked so ezSavedSearches
-     * recomputes; always replace the array instead of mutating it.
+     * What the shared ezSearch saved-search actions need for issues.
      *
-     * @property savedsearches
-     * @type Array
+     * @method savedSearchContext
+     * @return {Object}
      */
-    @tracked savedsearches = null;
-
-    /**
-     * The query shown in the save search dialog.
-     *
-     * @property saveSearchQuery
-     * @type String
-     */
-    @tracked saveSearchQuery = '';
-
-    /**
-     * The saved searches in the shape <EzSearch> expects.
-     *
-     * @property ezSavedSearches
-     * @type Array
-     */
-    get ezSavedSearches() {
-        return (this.savedsearches || []).map((search) => ({
-            id: search.get('id'),
-            name: search.get('name'),
-            query: search.get('searchquery'),
-        }));
-    }
-
-    /**
-     * Mark a saved search as the active one, or clear the mark.
-     *
-     * @method selectSavedSearch
-     * @param {Object|null} search The picked item (`{id, name, query}`) or null
-     */
-    @action selectSavedSearch(search) {
-        if (!search) {
-            this.set('searchId', null);
-            this.set('activeSearch', null);
-
-            return;
-        }
-
-        this.set('searchId', String(search.id));
-        this.set('activeSearch', (this.savedsearches || []).find((item) => String(item.get('id')) === String(search.id)) || null);
-    }
-
-    /**
-     * Open the save dialog for the query ezSearch hands over.
-     *
-     * @method showEzSaveSearchDialog
-     * @param {String} query
-     */
-    @action showEzSaveSearchDialog(query) {
-        this.set('saveSearchQuery', query);
-        this.set('saveSearchDialog', true);
-    }
-
-    /**
-     * Save the query shown in the dialog as a saved search.
-     *
-     * @method saveEzSearch
-     */
-    @action async saveEzSearch() {
-        let query = this.saveSearchQuery;
-
-        if (!query) {
-            new Messenger().post({
-                message: this.intl.t("views.app.issue.list.savedsearch.missing"),
-                type: 'error',
-                showCloseButton: true
-            });
-            this.send('removeSaveSearchDialog');
-
-            return;
-        }
-
-        let savedSearch = this.newSavedsearch;
-
-        savedSearch.set('relatedTo', 'issue');
-        savedSearch.set('searchquery', query);
-        savedSearch.set('projectId', this.appProjectController.projectId);
-
-        try {
-            let data = await savedSearch.save();
-
-            if (this.isDestroying || this.isDestroyed) {
-                return;
-            }
-
-            this.set('savedsearches', [...(this.savedsearches || []), data]);
-            this.set('newSavedsearch', this.store.createRecord('savedsearch'));
-
-            new Messenger().post({
-                message: htmlSafe(this.intl.t("views.app.issue.list.savedsearch.added", { name: data.get('name') })),
-                type: 'success',
-                showCloseButton: true
-            });
-        } catch (error) {
-            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
-        }
-
-        if (!this.isDestroying && !this.isDestroyed) {
-            this.send('removeSaveSearchDialog');
-        }
+    savedSearchContext() {
+        return {
+            relatedTo: 'issue',
+            messagePrefix: 'views.app.issue.list.savedsearch',
+            projectId: this.appProjectController.projectId,
+        };
     }
 
     /**
