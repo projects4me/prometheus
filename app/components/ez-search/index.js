@@ -58,6 +58,8 @@ export default class EzSearchComponent extends Component {
         let search = (this.args.savedSearches || []).find((item) => String(item.id) === String(id));
 
         if (!search) {
+            this.pickedSearch = null;
+
             return;
         }
 
@@ -221,13 +223,16 @@ export default class EzSearchComponent extends Component {
             return;
         }
 
+        let appliedSearch = this.pickedSearch;
+        let appliedTree = this.currentQuery;
+
         await this.args.onApply?.(query);
 
         if (this.isDestroying || this.isDestroyed) {
             return;
         }
 
-        if (this.pickedSearch && this.currentQuery !== this.pickedQuery) {
+        if (appliedSearch && this.pickedSearch === appliedSearch && appliedTree !== this.pickedQuery) {
             this.pickedSearch = null;
             this.args.onSavedSearchChange?.(null);
         }
