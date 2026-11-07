@@ -138,7 +138,6 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
     @action saveSearch() {
         Logger.debug('Prometheus.Controllers.Project.Issue->openSaveSearch');
         let _self = this;
-        _self.send('searchByRules');
         let query = _self.get('query');
         Logger.debug(_self);
 
