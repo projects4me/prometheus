@@ -44,6 +44,20 @@
       gap: 8px;
     }
 
+    // The Saved Searches button is first in the toolbar: the menu lines up with its left edge and grows right.
+    .ez-search-saved .app-dropdown-content {
+      left: 0;
+      right: auto;
+      min-width: min(160px, calc(100vw - 32px));
+      max-width: calc(100vw - 32px);
+
+      > * {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        text-align: left;
+      }
+    }
+
     @media (max-width: 767px) {
       flex-wrap: wrap;
 
