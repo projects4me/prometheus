@@ -107,6 +107,34 @@ module('Unit | Utility | query | completer', function () {
         assert.deepEqual(inserts(at('(type:bug AND (status:new OR status:done) |')), ['AND', ')'], 'the inner group is one condition');
     });
 
+    test('a list is one condition', function (assert) {
+        assert.deepEqual(inserts(at('type in bug, story |')), ['AND', 'OR']);
+        assert.deepEqual(inserts(at('type in bug, story AND status:new |')), ['AND']);
+    });
+
+    test('the replacement stops before a negated operator', function (assert) {
+        let text = 'typ!:bug';
+        let result = complete(text, 3, schema);
+
+        assert.strictEqual(result.replaceEnd, 3);
+        assert.strictEqual(complete('typ!=bug', 3, schema).replaceEnd, 3);
+    });
+
+    test('a closed quote ends the replacement at the cursor', function (assert) {
+        let text = 'type:"bug" status:"new"';
+        let result = complete(text, 10, schema);
+
+        assert.strictEqual(result.replaceEnd, 10);
+    });
+
+    test('a quoted free-text fragment keeps its quotes', function (assert) {
+        let result = at('"rock and roll|');
+        let item = result.suggestions.find((s) => s.kind === 'text');
+
+        assert.strictEqual(item.insert, '"rock and roll"');
+        assert.strictEqual(at('"type|"').suggestions.find((s) => s.kind === 'text').insert, '"type"');
+    });
+
     test('a range awaits its AND', function (assert) {
         assert.deepEqual(inserts(at('start between 2026-05-01 |')), ['AND']);
     });

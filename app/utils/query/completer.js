@@ -185,6 +185,11 @@ function readState(tokens, schema) {
             }
         } else if (token.kind === KINDS.comma) {
             if (current && current.arity === 'n') {
+                if (state === 'connector') {
+                    // A list is one condition: it was counted when its first value completed.
+                    group().count -= 1;
+                }
+
                 state = 'value';
             }
         } else if (token.kind === KINDS.keyword) {
@@ -244,6 +249,10 @@ function wordEnd(text, cursor, fragment) {
     let quote = text[fragment.start];
 
     if (fragment.kind === KINDS.quoted && (quote === '"' || quote === "'")) {
+        if (!fragment.unterminated) {
+            return cursor;
+        }
+
         let close = text.indexOf(quote, cursor);
 
         return close === -1 ? text.length : close + 1;
@@ -251,7 +260,7 @@ function wordEnd(text, cursor, fragment) {
 
     let end = cursor;
 
-    while (end < text.length && !WORD_BREAK.test(text[end])) {
+    while (end < text.length && !WORD_BREAK.test(text[end]) && !(text[end] === '!' && /[:=]/.test(text[end + 1] || ''))) {
         end += 1;
     }
 
@@ -262,7 +271,7 @@ function wordEnd(text, cursor, fragment) {
  * @method fieldItems
  * @private
  */
-function fieldItems(schema, fragment) {
+function fieldItems(schema, fragment, literal = fragment) {
     let items = schema.fields.map((field) => ({
         label: field.label || shortName(field.id),
         names: [...(field.aliases || []), field.id, shortName(field.id)],
@@ -279,7 +288,7 @@ function fieldItems(schema, fragment) {
         kind: 'text',
         label: SEARCH_TEXT_KEY,
         params: { field: textField.label || shortName(textField.id), word: fragment },
-        insert: fragment,
+        insert: literal,
         detail: textField.id,
     };
 
@@ -368,11 +377,19 @@ export function complete(text, cursor, schema) {
     let rest = fragment ? tokens.slice(0, -1) : tokens;
     let typed = fragment ? String(fragment.kind === KINDS.quoted ? fragment.value : fragment.text) : '';
     let state = readState(rest, schema);
+    let literal = typed;
+
+    if (fragment && fragment.kind === KINDS.quoted) {
+        // Keep the quotes so the text stays one phrase (or one text search) when inserted.
+        let raw = source.slice(fragment.start, at);
+
+        literal = fragment.unterminated ? raw + raw[0] : raw;
+    }
     let context = state.state === 'between' ? 'connector' : state.state;
     let suggestions;
 
     if (context === 'field') {
-        suggestions = fieldItems(schema, typed);
+        suggestions = fieldItems(schema, typed, literal);
     } else if (context === 'operator') {
         suggestions = operatorItems(state.field, typed);
     } else if (context === 'value') {
@@ -383,7 +400,7 @@ export function complete(text, cursor, schema) {
         if (typed !== '' && suggestions.length === 0) {
             // Words that continue the query without a conjunction start a new condition (an implied AND).
             context = 'field';
-            suggestions = fieldItems(schema, typed);
+            suggestions = fieldItems(schema, typed, literal);
         }
     }
 
