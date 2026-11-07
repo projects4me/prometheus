@@ -45,7 +45,7 @@
         </div>
 
         <div class="lane box-body" data-field-lane-group={{@group}} data-field-milestone-id={{this.milestone.id}} data-field-status="{{status.name}}" data-issue-status-id={{status.id}}>
-          <AppUi::TaskBoard::IssuesProvider @issues={{this.sortedIssues}} @query={{@query}} as |issues|>
+          <AppUi::TaskBoard::IssuesProvider @issues={{this.sortedIssues}} as |issues|>
             {{#each issues as |issue|}}
               {{#if (eq issue.status status.name)}}
                 <div class="board-issue-item" style="{{laneitem-color issue.issuetype.name}}" data-field-issue-id="{{issue.id}}" data-field-issue-status="{{issue.status}}" data-field-issue-milestone="{{issue.milestoneId}}">
