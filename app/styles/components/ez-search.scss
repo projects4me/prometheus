@@ -48,6 +48,7 @@
     .ez-search-saved .app-dropdown-content {
       left: 0;
       right: auto;
+      min-width: min(160px, calc(100vw - 32px));
       max-width: calc(100vw - 32px);
 
       > * {

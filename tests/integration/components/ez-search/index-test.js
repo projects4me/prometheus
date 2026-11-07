@@ -91,7 +91,8 @@ module('Integration | Component | ez-search', function (hooks) {
         await click('[data-ez-saved] button');
         const button = document.querySelector('[data-ez-saved] button').getBoundingClientRect();
         const menu = document.querySelector('[data-ez-saved] .app-dropdown-content').getBoundingClientRect();
-        assert.true(menu.left >= button.left - 4, 'the menu does not start left of the button');
+        assert.true(Math.abs(menu.left - button.left) <= 4, 'the menu lines up with the left edge of the button');
+        assert.true(menu.right <= window.innerWidth, 'the menu stays inside the viewport');
     });
 
     test('choosing a saved search loads it and marks it', async function (assert) {
