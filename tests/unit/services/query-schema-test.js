@@ -5,6 +5,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
+import MD from 'prometheus/utils/metadata/metadata';
 
 module('Unit | Service | query-schema', function (hooks) {
     setupTest(hooks);
@@ -92,8 +93,31 @@ module('Unit | Service | query-schema', function (hooks) {
         assert.notStrictEqual(await this.service.load('Issue', { projectId: this.project.id }), schema, 'clear forgets the cache');
     });
 
-    test('an unknown module is refused and not cached', async function (assert) {
-        await assert.rejects(this.service.load('Nope'), /No query schema/);
-        assert.strictEqual(this.service.cache.size, 0);
+    test('a module without search metadata has no schema', async function (assert) {
+        assert.strictEqual(await this.service.load('Nope'), null);
+    });
+
+    test('an unknown value source is refused and not cached', async function (assert) {
+        let views = MD.create().views;
+
+        views.QuerySchemaTest = {
+            search: { module: 'QuerySchemaTest', fields: { 'QuerySchemaTest.kind': { label: 'x', type: 'enum', values: { source: 'nope' } } } },
+        };
+
+        try {
+            await assert.rejects(this.service.load('QuerySchemaTest'), /Unknown search value source "nope"/);
+            assert.strictEqual(this.service.cache.size, 0);
+        } finally {
+            delete views.QuerySchemaTest;
+        }
+    });
+
+    test('the fields keep the order of the metadata and share their value sources', async function (assert) {
+        let schema = await this.service.load('Issue', { projectId: this.project.id });
+        let meta = MD.create().getViewMeta('Issue', 'search');
+
+        assert.deepEqual(schema.fields.map((field) => field.id), Object.keys(meta.fields));
+        assert.strictEqual(schema.resolveField('owner').valueSource, schema.resolveField('assignee').valueSource);
+        assert.strictEqual(schema.resolveField('prio').labelKey, 'views.app.issue.fields.priority');
     });
 });

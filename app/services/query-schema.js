@@ -3,25 +3,32 @@
  */
 
 import Service, { inject as service } from '@ember/service';
-import Format from 'prometheus/utils/data/format';
-import { issueStatusLabel, issueTypeRecordLabel } from 'prometheus/utils/issue-status/label';
-import { createIssueSchema } from 'prometheus/utils/query/schemas/issue';
-import { createProjectSchema } from 'prometheus/utils/query/schemas/project';
+import { assert } from '@ember/debug';
+import MD from 'prometheus/utils/metadata/metadata';
+import { createSchema } from 'prometheus/utils/query/schema';
+import { createContext, valueSource } from 'prometheus/utils/query/value-sources';
 
 /**
- * Turns a `{value: label}` translation list into `{value, label}` options.
+ * The key a field's values are listed under in the schema: its source and parameters, so fields with
+ * the same values (e.g. assignee and owner) share one load.
  *
- * @method options
+ * @method sourceKey
  * @private
  */
-function options(list) {
-    return Object.entries(list || {}).map(([value, label]) => ({ value, label }));
+function sourceKey(values) {
+    let { source, ...params } = values;
+    let sorted = Object.keys(params)
+        .sort()
+        .map((name) => [name, params[name]]);
+
+    return sorted.length ? `${source}:${JSON.stringify(sorted)}` : source;
 }
 
 /**
- * Loads the ezSearch schema of a module with its values: the statuses, milestones, issue types,
- * priorities and members of a project. Schemas are cached per module and project; the cache holds
- * the promise, so concurrent callers share one load, and a failed load is not kept.
+ * Loads the ezSearch schema of a module from its search metadata, `views.<Module>.search` in
+ * `utils/metadata/metadata.js`, and lists the values of its fields from their value sources
+ * (`utils/query/value-sources.js`). Schemas are cached per module and context; the cache holds the
+ * promise, so concurrent callers share one load, and a failed load is not kept.
  * Callers check `isDestroying`/`isDestroyed` after awaiting.
  *
  * @class QuerySchemaService
@@ -45,14 +52,14 @@ export default class QuerySchemaService extends Service {
      * Load the schema of a module.
      *
      * @method load
-     * @param {String} module `Issue` or `Project`
+     * @param {String} module The module, e.g. `Issue` or `Project`
      * @param {Object} [options]
-     * @param {String|Number} [options.projectId] The project whose values an Issue schema lists
-     * @return {Promise<Object>} The schema
+     * @param {String|Number} [options.projectId] The project whose values the value sources list
+     * @return {Promise<Object|null>} The schema, or null when the module declares no search
      * @public
      */
     load(module, { projectId = null } = {}) {
-        let key = `${module}:${module === 'Issue' ? projectId : ''}`;
+        let key = `${module}:${projectId ?? ''}`;
 
         if (!this.cache.has(key)) {
             let promise = this.build(module, projectId);
@@ -83,57 +90,51 @@ export default class QuerySchemaService extends Service {
      * @private
      */
     async build(module, projectId) {
-        if (module === 'Issue') {
-            return createIssueSchema({ intl: this.intl, values: await this.issueValues(projectId) });
+        let meta = MD.create().getViewMeta(module, 'search');
+
+        if (!meta) {
+            return null;
         }
 
-        if (module === 'Project') {
-            let format = new Format(this);
+        let fields = Object.entries(meta.fields || {}).map(([id, field]) => ({
+            id,
+            aliases: field.aliases || [],
+            labelKey: field.label,
+            label: field.label ? this.intl.t(field.label) : undefined,
+            type: field.type,
+            valueSource: field.values ? sourceKey(field.values) : undefined,
+        }));
 
-            return createProjectSchema({ intl: this.intl, values: { statuses: options(format.getTranslation('views.app.project.lists.status')) } });
-        }
-
-        throw new Error(`No query schema for the module ${module}`);
+        return createSchema({
+            module: meta.module || module,
+            textField: meta.textField || null,
+            fields,
+            values: await this.loadValues(Object.values(meta.fields || {}), projectId),
+        });
     }
 
     /**
-     * The values of an Issue schema, loaded in parallel: the project with its members, issue types and
-     * issue statuses, and its milestones.
+     * The values of the fields' sources by source key, loaded in parallel, each source once.
      *
-     * @method issueValues
+     * @method loadValues
      * @private
      */
-    async issueValues(projectId) {
-        let [projects, milestones] = await Promise.all([
-            this.store.query('project', { query: `(Project.id : ${projectId})`, rels: 'members,issuetypes,issuestatuses', limit: -1 }),
-            this.store.query('milestone', {
-                query: `(projectId : ${projectId})`,
-                fields: 'Milestone.name',
-                sort: 'Milestone.dateCreated',
-                order: 'DESC',
-                limit: -1,
-            }),
-        ]);
-        let project = projects.objectAt(0);
-        let statuses = project?.get('issuestatuses')?.toArray() ?? [];
+    async loadValues(fields, projectId) {
+        let context = createContext({ owner: this, store: this.store, intl: this.intl, projectId });
+        let specs = new Map();
 
-        if (statuses.length === 0) {
-            statuses = (await this.store.query('issuestatus', { query: '(Issuestatus.system : 1)', limit: -1 })).toArray();
-        }
+        fields.filter((field) => field.values).forEach((field) => specs.set(sourceKey(field.values), field.values));
 
-        let format = new Format(this);
+        let entries = await Promise.all(
+            [...specs].map(async ([key, spec]) => {
+                let source = valueSource(spec.source);
 
-        return {
-            statuses: statuses.map((status) => ({ value: status.name, label: issueStatusLabel(this.intl, status.name) })),
-            milestones: milestones.toArray().map((milestone) => ({ value: milestone.name, label: milestone.name })),
-            types: (project?.get('issuetypes')?.toArray() ?? []).map((type) => ({ value: type.name, label: issueTypeRecordLabel(this.intl, type) })),
-            priorities: options(format.getTranslation('views.app.issue.lists.priority')),
-            users: (project?.get('members')?.toArray() ?? []).map((user) => ({
-                value: user.name,
-                label: user.name,
-                id: user.id,
-                profilePicture: user.profilePicture,
-            })),
-        };
+                assert(`Unknown search value source "${spec.source}"`, source);
+
+                return [key, source ? await source(spec, context) : []];
+            })
+        );
+
+        return Object.fromEntries(entries);
     }
 }
