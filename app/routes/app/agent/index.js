@@ -2,6 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import { inject as service } from '@ember/service';
 import AppRoute from 'prometheus/routes/app';
 
 /**
@@ -13,6 +14,14 @@ import AppRoute from 'prometheus/routes/app';
  * @extends AppRoute
  */
 export default class AppAgentIndexRoute extends AppRoute {
+    /**
+     * Loads the search schema of the module.
+     *
+     * @property querySchemaService
+     * @type Prometheus.Services.QuerySchema
+     */
+    @service('query-schema') querySchemaService;
+
     /**
      * The list is reloaded whenever one of these query params changes.
      *
@@ -60,6 +69,7 @@ export default class AppAgentIndexRoute extends AppRoute {
         let userId = this.currentUser.user.id;
         this.memberships = [];
         this.savedsearches = [];
+        this.schema = null;
 
         try {
             let savedsearches = await this.store.query('savedsearch', {
@@ -67,7 +77,18 @@ export default class AppAgentIndexRoute extends AppRoute {
                 limit: -1
             });
             this.savedsearches = savedsearches.toArray();
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'agent' });
+        }
 
+        try {
+            let schema = await this.querySchemaService.load('Agent');
+            this.schema = Array.isArray(schema) ? null : schema;
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'agent' });
+        }
+
+        try {
             if (userIds.length) {
                 let query = userIds.map((id) => `(Membership.userId : ${id})`).join(' OR ');
                 let memberships = await this.store.query('membership', {
@@ -93,6 +114,7 @@ export default class AppAgentIndexRoute extends AppRoute {
         controller.set('model', model);
         controller.set('memberships', this.memberships);
         controller.set('savedsearches', this.savedsearches);
+        controller.set('querySchema', this.schema);
 
         if (controller.searchId) {
             controller.set('activeSearch', this.savedsearches.find((search) => search.id === controller.searchId) || null);
