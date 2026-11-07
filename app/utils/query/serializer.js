@@ -26,11 +26,18 @@ import { operator as findOperator } from 'prometheus/utils/query/operators';
 export const ERRORS = Object.freeze({
     reservedCharacter: 'reservedCharacter',
     reservedWord: 'reservedWord',
+    reservedApostrophe: 'reservedApostrophe',
     invalidField: 'invalidField',
     invalidTree: 'invalidTree',
 });
 
-const RESERVED_CHARACTER = /[()']/;
+const RESERVED_CHARACTER = /[()]/;
+// Gaia trims ' from both ends of a value and splits an IN list on ',' until agaia-4303, so an apostrophe
+// is only safe inside a single value.
+const EDGE_APOSTROPHE = /^'|'$/;
+// The lexer starts quoted text at an apostrophe after a word break, and closes a quote at the next apostrophe, so
+// `a,'b`, a quoted value such as `'Rana's board'`, a double quote (which opens a lexer quote) and a trailing comma do not read back.
+const UNREADABLE_APOSTROPHE = /[,:=<>~]'|"|,$/;
 // Gaia's Clause matches these anywhere in a condition, not only as whole words.
 const RESERVED_WORD = /NULL|EMPTY/;
 // Gaia splits a range on ' AND ', so a bound cannot contain it.
@@ -53,8 +60,8 @@ function valuesOf(value) {
 }
 
 /**
- * The first error in a condition's field or values, or null. Gaia's Clause cannot read brackets, quotes or
- * the uppercase words NULL and EMPTY inside a value, or AND inside a range bound, yet.
+ * The first error in a condition's field or values, or null. Gaia's Clause cannot read brackets, an apostrophe at the
+ * edge of a value, in a list, in a value with spaces or after a comma, or the uppercase words NULL and EMPTY inside a value, or AND inside a range bound, yet.
  *
  * @method checkValues
  * @private
@@ -64,13 +71,19 @@ function checkValues(node) {
         return { code: ERRORS.invalidField, params: { field: String(node.field) }, nodeId: node.id };
     }
 
-    let isRange = findOperator(node.operator)?.arity === 2;
+    let arity = findOperator(node.operator)?.arity;
+    let isRange = arity === 2;
+    let isList = arity === 'n' && valuesOf(node.value).length > 1;
 
     for (let [index, value] of valuesOf(node.value).entries()) {
         let character = value.match(RESERVED_CHARACTER);
 
         if (character) {
             return { code: ERRORS.reservedCharacter, params: { character: character[0], value }, nodeId: node.id };
+        }
+
+        if (EDGE_APOSTROPHE.test(value) || ((isList || isRange) && value.includes("'")) || (value.includes("'") && (/\s/.test(value) || UNREADABLE_APOSTROPHE.test(value)))) {
+            return { code: ERRORS.reservedApostrophe, params: { value }, nodeId: node.id };
         }
 
         let word = value.match(RESERVED_WORD);

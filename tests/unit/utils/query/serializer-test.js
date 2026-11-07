@@ -66,7 +66,8 @@ module('Unit | Utility | query | serializer', function () {
         let cases = [
             ['a(b', 'reservedCharacter', { character: '(', value: 'a(b' }],
             ['a)b', 'reservedCharacter', { character: ')', value: 'a)b' }],
-            ["it's", 'reservedCharacter', { character: "'", value: "it's" }],
+            ["'quoted'", 'reservedApostrophe', { value: "'quoted'" }],
+            ["it's'", 'reservedApostrophe', { value: "it's'" }],
             ['NULL', 'reservedWord', { word: 'NULL', value: 'NULL' }],
             ['NOT EMPTY', 'reservedWord', { word: 'EMPTY', value: 'NOT EMPTY' }],
         ];
@@ -78,6 +79,16 @@ module('Unit | Utility | query | serializer', function () {
             assert.deepEqual(result.errors, [{ code, params, nodeId: bad.id }], `${value} is refused`);
             assert.strictEqual(result.query, '((Issue.a : 1))', `${value} is left out`);
         }
+
+        assert.strictEqual(query(group('AND', [condition('Issue.subject', 'CONTAINS', "O'Brien")])), "((Issue.subject CONTAINS O'Brien))", 'an inner apostrophe is written');
+        for (let value of ["Rana's board", "a','b", "a,'b", "\"O'Brien\"", "a,\"b'c", "O'Brien,"]) {
+            let unreadable = condition('Issue.subject', 'CONTAINS', value);
+            assert.deepEqual(serialize(group('AND', [unreadable])).errors, [{ code: 'reservedApostrophe', params: { value }, nodeId: unreadable.id }], `${value} cannot be read back, so it is refused`);
+        }
+        let apostropheList = condition('assignedTo.name', 'IN', ["O'Brien", 'rana']);
+        assert.deepEqual(serialize(group('AND', [apostropheList])).errors, [{ code: 'reservedApostrophe', params: { value: "O'Brien" }, nodeId: apostropheList.id }], 'an apostrophe in a list is refused');
+        let apostropheRange = condition('Issue.startDate', 'BETWEEN', ["1'2", '3']);
+        assert.deepEqual(serialize(group('AND', [apostropheRange])).errors, [{ code: 'reservedApostrophe', params: { value: "1'2" }, nodeId: apostropheRange.id }], 'an apostrophe in a range bound is refused');
 
         let list = condition('Issue.status', 'IN', ['ok', 'EMPTY']);
         assert.strictEqual(serialize(group('AND', [list])).errors[0].nodeId, list.id, 'list values are checked');
