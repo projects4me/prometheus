@@ -36,8 +36,8 @@ const RESERVED_CHARACTER = /[()]/;
 // is only safe inside a single value.
 const EDGE_APOSTROPHE = /^'|'$/;
 // The lexer starts quoted text at an apostrophe after a word break, and closes a quote at the next apostrophe, so
-// `a,'b`, a quoted value such as `'Rana's board'` and a value that starts with a double quote do not read back.
-const UNREADABLE_APOSTROPHE = /[,:=<>~]'|^"/;
+// `a,'b`, a quoted value such as `'Rana's board'`, a double quote (which opens a lexer quote) and a trailing comma do not read back.
+const UNREADABLE_APOSTROPHE = /[,:=<>~]'|"|,$/;
 // Gaia's Clause matches these anywhere in a condition, not only as whole words.
 const RESERVED_WORD = /NULL|EMPTY/;
 // Gaia splits a range on ' AND ', so a bound cannot contain it.
