@@ -1,0 +1,112 @@
+{{! Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line }}
+<div class="ez-search-compact {{if @linear 'ez-search-compact-linear'}}" data-ez-search-compact {{did-update this.onActiveChange @activeSavedSearchId @savedSearches}} ...attributes>
+  <div class="ez-search-compact-saved ez-search-saved" data-ez-saved>
+    <AppUi::Dropdown @isPrimary={{if this.pickedSearch true false}}>
+      <:button>
+        <i class="fa {{if this.pickedSearch 'fa-bookmark' 'fa-bookmark-o'}}"></i>
+        {{#if this.pickedSearch}}
+          <span class="ez-search-compact-saved-name" title={{this.pickedSearch.name}} data-ez-saved-name>{{this.pickedSearch.name}}</span>
+          {{#if this.isEdited}}
+            <span class="ez-search-compact-saved-edited" data-ez-saved-edited>&middot; {{t "components.ezSearch.savedSearch.edited"}}</span>
+          {{/if}}
+        {{else}}
+          <span class={{if @linear "sr-only"}}>{{t "components.ezSearchCompact.saved"}}</span>
+        {{/if}}
+      </:button>
+      <:content>
+        {{#if this.isEdited}}
+          {{#if @onUpdateSavedSearch}}
+            <button type="button" data-ez-saved-update {{on "click" this.updateSaved}}>{{t "components.ezSearch.savedSearch.update" name=this.pickedSearch.name}}</button>
+          {{/if}}
+          {{#if @onSave}}
+            <button type="button" data-ez-saved-save-new {{on "click" this.save}}>{{t "components.ezSearch.savedSearch.saveAsNew"}}</button>
+          {{/if}}
+          <button type="button" data-ez-saved-revert {{on "click" this.revert}}>{{t "components.ezSearch.savedSearch.revert"}}</button>
+        {{/if}}
+        {{#each this.searches as |item|}}
+          <button type="button" class={{if item.active "active"}} data-ez-saved-item {{on "click" (fn this.pickSaved item.search)}}>
+            {{item.search.name}}
+            {{#if item.active}}
+              <i class="fa fa-check pull-right"></i>
+            {{/if}}
+          </button>
+        {{/each}}
+        {{#if @onSave}}
+          {{#unless this.isEdited}}
+            <button type="button" data-ez-save {{on "click" this.save}}>{{t "components.ezSearchCompact.saveCurrent"}}</button>
+          {{/unless}}
+        {{/if}}
+      </:content>
+    </AppUi::Dropdown>
+  </div>
+
+  <div class="ez-search-compact-bar" {{did-update this.reload @query}}>
+    {{! A new loadId remounts the bar so a load drops its unparsed draft and errors. }}
+    {{#each (array this.loadId) key="@identity"}}
+      <EzSearch::SearchBar
+        @tree={{this.tree}}
+        @schema={{@schema}}
+        @onChange={{this.onTreeChange}}
+        @onErrors={{this.onBarErrors}}
+        @onRun={{this.apply}}
+        @placeholder={{t "global.form.search"}}
+      />
+    {{/each}}
+    {{#each this.storedMessages as |message|}}
+      <span class="error text-red ez-search-error" data-ez-stored-error>{{message}}</span>
+    {{/each}}
+  </div>
+
+  <button
+    type="button"
+    class="btn btn-default btn-sm ez-search-compact-filter"
+    title={{t "components.ezSearchCompact.filter"}}
+    data-ez-builder-toggle
+    {{on "click" this.openFilter}}
+  >
+    <i class="fa fa-sliders"></i>
+    <span class={{if @linear "sr-only"}}>{{t "components.ezSearchCompact.filter"}}</span>
+    {{#if this.conditionCount}}
+      <span class="label label-primary" data-ez-filter-count>{{this.conditionCount}}</span>
+    {{/if}}
+  </button>
+
+  <AppUi::Button
+    class="btn btn-primary btn-sm ez-search-compact-search"
+    title={{t "global.form.search"}}
+    @onClick={{this.apply}}
+    @aclContext={{@aclContext}}
+    disabled={{this.hasErrors}}
+    data-ez-search-apply
+  ><i class="fa fa-search"></i> <span class={{if @linear "sr-only"}}>{{t "global.form.search"}}</span></AppUi::Button>
+  <AppUi::Button
+    class="btn btn-default btn-sm ez-search-compact-clear"
+    title={{t "global.form.clear"}}
+    @onClick={{this.clear}}
+    data-ez-search-clear
+  ><i class="fa fa-times"></i> <span class={{if @linear "sr-only"}}>{{t "global.form.clear"}}</span></AppUi::Button>
+
+  {{#unless @linear}}
+    <div class="ez-search-compact-chips">
+      <EzSearch::AppliedFilters @tree={{this.tree}} @schema={{@schema}} @onChange={{this.removeChip}} />
+    </div>
+  {{/unless}}
+
+  {{#if this.filterOpen}}
+    {{#bootstrap-modal
+      title="components.ezSearchCompact.builder.title"
+      closeLabel="global.form.cancel"
+      confirmLabel="global.form.search"
+      leftLabel="global.form.clear"
+      leftAction=this.clearFilter
+      containerClass="ez-search-compact-modal"
+      close=this.closeFilter
+      confirm=this.searchFilter
+    }}
+      <div class="ez-search-compact-modal-query" data-ez-draft-query>
+        <EzSearch::QueryText @text={{this.draftQuery}} @schema={{@schema}} />
+      </div>
+      <EzSearch::Panel @tree={{this.draft}} @schema={{@schema}} @onChange={{this.onDraftChange}} />
+    {{/bootstrap-modal}}
+  {{/if}}
+</div>
