@@ -356,14 +356,6 @@ span[id="#"]{
     padding-top: 4px;
     margin-top: 0px;
   }
-
-  .dropToggle{
-   transform:         rotate(180deg); /* CSS3 */
-   -moz-transform:    rotate(180deg); /* Firefox */
-   -webkit-transform: rotate(180deg); /* Webkit */
-   -o-transform:      rotate(180deg); /* Opera */
-   -ms-transform:     rotate(180deg); /* IE 9 */
-  }
 }
 
 
@@ -451,18 +443,6 @@ span[id="#"]{
 
 .pointer-none {
   pointer-events: none;
-}
-
-// jQuery query Builder custom styles
-.query-builder {
-  .rules-group-container {
-    .group-conditions {
-      .btn.btn-xs.btn-primary.active:not(.disabled) {
-        cursor: pointer;
-        box-shadow: 0 0 0.5rem 0.25rem $primaryColor;
-      }
-    }
-  }
 }
 
 .label-primary {

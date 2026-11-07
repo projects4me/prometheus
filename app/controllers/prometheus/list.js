@@ -4,8 +4,6 @@
 
 import PrometheusController from "prometheus/controllers/prometheus";
 import _ from "lodash";
-import queryBuilder from "prometheus/utils/query/builder";
-import queryParser from "prometheus/utils/query/parser";
 import $ from 'jquery';
 import { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
@@ -141,16 +139,6 @@ export default class PrometheusListController extends PrometheusController {
      * @public
      */
     @tracked massUpdateModel = null;
-    /**
-     * The keydown event handler function for search queries
-     * 
-     * @property _searchRulesHandler
-     * @for List
-     * @type Function
-     * @private
-     */
-    _searchRulesHandler = null;
-
     /**
      * The empty saved search object that we utilize for saving searches
      *
@@ -295,27 +283,6 @@ export default class PrometheusListController extends PrometheusController {
         Logger.debug('Prometheus.Controllers.List::populateQuery');
         this.queryString = query;
         Logger.debug('-Prometheus.Controllers.List::populateQuery');
-    }
-
-    /**
-     * Convert the rule object to string and perform searched
-     *
-     * @method searchByRules
-     * @return void
-     * @public
-     */
-    @action searchByRules() {
-        Logger.debug('Prometheus.Controllers.List::searchByRules');
-        let result = queryBuilder.getRules();
-
-        if (!$.isEmptyObject(result)) {
-            let query = queryParser.getQueryString(result);
-
-            this.queryString = query;
-            this.set('query', query);
-            this.set('page', 1);
-        }
-        Logger.debug('-Prometheus.Controllers.List::searchByRules');
     }
 
     /**
@@ -467,36 +434,11 @@ export default class PrometheusListController extends PrometheusController {
      */
     @action clearSearch() {
         Logger.debug('Prometheus.Controllers.List::clearSearch');
-        queryBuilder.clear();
         this.set('query', '');
         this.set('searchId', null);
         this.set('activeSearch', null);
         this.set('page', 1);
         Logger.debug('-Prometheus.Controllers.List::clearSearch');
-    }
-
-    /**
-     * Open the filter view if not already Open
-     *
-     * @method openFilters
-     * @public
-     */
-    @action openFilters() {
-        Logger.debug('Prometheus.Controllers.List::openFilters');
-        let filterEl = document.querySelector('.list-view-filters');
-        $('.search [data-toggle=collapse]').click();
-        if (!this._searchRulesHandler && (filterEl.ariaExpanded === 'true')) {
-            this._searchRulesHandler = (e) => {
-                if(e.key === 'Enter') {
-                    let input = document.querySelector('.rule-value-container > input');
-                    input && input.blur();
-                    this.searchByRules();
-                }
-            };
-            document.addEventListener('keydown', this._searchRulesHandler);
-        }
-        $('.search input').blur();
-        Logger.debug('-Prometheus.Controllers.List::openFilters');
     }
 
     /**
@@ -653,7 +595,6 @@ export default class PrometheusListController extends PrometheusController {
     @action showSaveSearchDialog() {
         Logger.debug('Prometheus.Controllers.List::showSaveSearchDialog');
         let _self = this;
-        _self.send('searchByRules');
         _self.set('saveSearchDialog', true);
         Logger.debug('-Prometheus.Controllers.List::showSaveSearchDialog');
     }
