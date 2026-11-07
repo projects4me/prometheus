@@ -292,7 +292,12 @@ export default Object.extend({
                         aliases: ['status'],
                         values: { source: 'translation', key: 'views.app.project.lists.status' }
                     },
-                    'manager.name': { label: 'views.app.project.filter.manager', type: 'text', aliases: ['manager'] }
+                    'manager.name': {
+                        label: 'views.app.project.filter.manager',
+                        type: 'user',
+                        aliases: ['manager'],
+                        values: { source: 'users' }
+                    }
                 }
             },
             list: {
