@@ -48,6 +48,25 @@ export default class RenderMarkdown extends Modifier {
     markdown = null;
 
     /**
+     * The resolved address of each upload, by its id, kept for the modifier's lifetime. Download tokens are
+     * single use, so an image shown again keeps its address instead of fetching a new one.
+     *
+     * @property addresses
+     * @type Map
+     * @private
+     */
+    addresses = new Map();
+
+    /**
+     * The address lookup of each upload in progress, by its id
+     *
+     * @property lookups
+     * @type Map
+     * @private
+     */
+    lookups = new Map();
+
+    /**
      * The upload id of each shown image, by its address
      *
      * @property imageUploads
@@ -57,19 +76,43 @@ export default class RenderMarkdown extends Modifier {
     imageUploads = new Map();
 
     /**
-     * Creates the viewer on the first run and updates its markdown on the next ones
+     * Creates the viewer on the first run and updates its markdown on the next ones. It runs while the
+     * template is tracked, so it reads only its argument and leaves the address lookup to a later task:
+     * store state read by the lookup would otherwise make the modifier re-run each time the lookup resolves.
      *
      * @method didReceiveArguments
      * @private
      */
     didReceiveArguments() {
         let markdown = this.args.positional[0] ?? '';
-        this.markdown = markdown;
-        this.show(replaceUploadImages(markdown, alt => alt));
-        let uploadIds = uploadImageIds(markdown);
-        if (uploadIds.length) {
-            this.showImages(markdown, uploadIds);
+        if (this.viewer && markdown === this.markdown) {
+            return;
         }
+        this.markdown = markdown;
+        this.showWithImages(markdown);
+        let missing = uploadImageIds(markdown).filter(uploadId => !this.addresses.has(uploadId));
+        if (missing.length) {
+            this.showImages(missing);
+        }
+    }
+
+    /**
+     * Shows the markdown with the images whose addresses are known, the others by their name
+     *
+     * @method showWithImages
+     * @param {String} markdown
+     * @private
+     */
+    showWithImages(markdown) {
+        this.imageUploads.clear();
+        this.show(replaceUploadImages(markdown, (alt, uploadId) => {
+            let address = this.addresses.get(uploadId);
+            if (!address) {
+                return alt;
+            }
+            this.imageUploads.set(address, uploadId);
+            return `![${alt}](${address})`;
+        }));
     }
 
     /**
@@ -94,30 +137,45 @@ export default class RenderMarkdown extends Modifier {
     }
 
     /**
-     * Resolves the addresses of the uploads and shows their images
+     * Resolves the addresses of the uploads and shows their images in the markdown shown by then; markdown
+     * replaced in the meantime is not shown again. The lookup starts after the current render, outside its
+     * tracking frame, and an upload already being looked up is not looked up twice.
      *
      * @method showImages
-     * @param {String} markdown
      * @param {Array} uploadIds
      * @private
      */
-    async showImages(markdown, uploadIds) {
-        let addresses = {};
-        await Promise.all(uploadIds.map(async (uploadId) => {
-            try {
-                addresses[uploadId] = await this.uploadPreview.previewUrl(uploadId);
-            } catch (e) {
-                Logger.error('RenderMarkdown->showImages ' + e);
-            }
-        }));
-        if (!this.viewer || this.markdown !== markdown) {
-            return;
+    async showImages(uploadIds) {
+        await Promise.resolve();
+        let resolved = await Promise.all(uploadIds.map(uploadId => this.lookup(uploadId)));
+        let shown = uploadImageIds(this.markdown);
+        if (this.viewer && uploadIds.some((uploadId, i) => resolved[i] && shown.includes(uploadId))) {
+            this.showWithImages(this.markdown);
         }
-        this.imageUploads.clear();
-        Object.entries(addresses).forEach(([uploadId, address]) => this.imageUploads.set(address, uploadId));
-        this.show(replaceUploadImages(markdown, (alt, uploadId) => {
-            return addresses[uploadId] ? `![${alt}](${addresses[uploadId]})` : alt;
-        }));
+    }
+
+    /**
+     * Resolves the address of an upload once and keeps it, an upload that can't be read resolves to null
+     *
+     * @method lookup
+     * @param {String} uploadId
+     * @return {Promise} resolves to whether the address is known
+     * @private
+     */
+    lookup(uploadId) {
+        if (!this.lookups.has(uploadId)) {
+            this.lookups.set(uploadId, this.uploadPreview.previewUrl(uploadId).then((address) => {
+                if (!this.viewer) {
+                    return false;
+                }
+                this.addresses.set(uploadId, address);
+                return true;
+            }, (e) => {
+                Logger.error('RenderMarkdown->showImages ' + e);
+                return false;
+            }).finally(() => this.lookups.delete(uploadId)));
+        }
+        return this.lookups.get(uploadId);
     }
 
     /**
@@ -156,5 +214,7 @@ export default class RenderMarkdown extends Modifier {
         this.element?.removeEventListener('click', this.openImage);
         this.viewer?.remove?.();
         this.viewer = null;
+        this.addresses.clear();
+        this.imageUploads.clear();
     }
 }
