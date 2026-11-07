@@ -59,3 +59,8 @@ Feature: Board collapse functionality | Taskboard
     And User clicks the panel divider handle
     When User clicks the panel divider handle to expand
     Then The issue details panel should be in default width mode
+
+  Scenario: Issue preview panel does not overlap the board
+
+    Given User clicks on first issue on the board to open details
+    Then The issue preview panel and the board columns do not overlap

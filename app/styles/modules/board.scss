@@ -10,6 +10,15 @@
 
 .board {
 
+  // The lane headers use z-index 999: keep that inside the board column so lanes never show
+  // over or under the quick preview panel, and let the lanes scroll inside the column.
+  .board-column {
+    position: relative;
+    min-width: 0;
+    isolation: isolate;
+    overflow-x: clip;
+  }
+
   .board-container {
     .nav-tabs-custom {
       position: relative;

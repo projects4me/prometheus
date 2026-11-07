@@ -42,5 +42,20 @@ export default function (assert) {
 	.then('User should see the task board content', function () {
 		let boardContainer = document.querySelector('.board-container');
 		assert.ok(boardContainer, 'Task board content should be visible when expanded');
+	})
+
+	/**
+	 * Verifies the open quick preview panel and the board column do not overlap.
+	 */
+	.then('The issue preview panel and the board columns do not overlap', function () {
+		let board = document.querySelector('.board-column').getBoundingClientRect();
+		let panel = document.querySelector('.issue-details-container').getBoundingClientRect();
+		assert.ok(board.right <= panel.left + 1, `Board column (right ${board.right}) ends before the panel (left ${panel.left})`);
+		let panelBox = document.querySelector('.issue-details-container');
+		let lanes = [...document.querySelectorAll('.board-column .lane .box-header')];
+		assert.ok(lanes.length > 0, 'Lane headers are rendered');
+		// Whatever is painted over the panel must belong to the panel, never to a lane
+		let hit = document.elementFromPoint(panel.left + 4, board.top + 4 > panel.top ? board.top + 4 : panel.top + 4);
+		assert.ok(hit && panelBox.contains(hit), 'The panel is painted on top of its own area');
 	});
 }
