@@ -35,6 +35,9 @@ const RESERVED_CHARACTER = /[()]/;
 // Gaia trims ' from both ends of a value and splits an IN list on ',' until agaia-4303, so an apostrophe
 // is only safe inside a single value.
 const EDGE_APOSTROPHE = /^'|'$/;
+// The lexer starts quoted text at an apostrophe after a word break, and closes a quote at the next apostrophe, so
+// `a,'b` and a quoted value such as `'Rana's board'` do not read back.
+const UNREADABLE_APOSTROPHE = /[,:=<>~]'/;
 // Gaia's Clause matches these anywhere in a condition, not only as whole words.
 const RESERVED_WORD = /NULL|EMPTY/;
 // Gaia splits a range on ' AND ', so a bound cannot contain it.
@@ -58,7 +61,7 @@ function valuesOf(value) {
 
 /**
  * The first error in a condition's field or values, or null. Gaia's Clause cannot read brackets, an apostrophe at the
- * edge of a value or in a list, or the uppercase words NULL and EMPTY inside a value, or AND inside a range bound, yet.
+ * edge of a value, in a list, in a value with spaces or after a comma, or the uppercase words NULL and EMPTY inside a value, or AND inside a range bound, yet.
  *
  * @method checkValues
  * @private
@@ -79,7 +82,7 @@ function checkValues(node) {
             return { code: ERRORS.reservedCharacter, params: { character: character[0], value }, nodeId: node.id };
         }
 
-        if (EDGE_APOSTROPHE.test(value) || (isList && value.includes("'"))) {
+        if (EDGE_APOSTROPHE.test(value) || (isList && value.includes("'")) || (value.includes("'") && (/\s/.test(value) || UNREADABLE_APOSTROPHE.test(value)))) {
             return { code: ERRORS.reservedApostrophe, params: { value }, nodeId: node.id };
         }
 

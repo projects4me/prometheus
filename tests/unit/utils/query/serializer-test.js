@@ -81,7 +81,10 @@ module('Unit | Utility | query | serializer', function () {
         }
 
         assert.strictEqual(query(group('AND', [condition('Issue.subject', 'CONTAINS', "O'Brien")])), "((Issue.subject CONTAINS O'Brien))", 'an inner apostrophe is written');
-        assert.strictEqual(query(group('AND', [condition('Issue.subject', 'CONTAINS', "Rana's board")])), "((Issue.subject CONTAINS 'Rana's board'))", 'an inner apostrophe in a quoted value');
+        for (let value of ["Rana's board", "a','b", "a,'b"]) {
+            let unreadable = condition('Issue.subject', 'CONTAINS', value);
+            assert.deepEqual(serialize(group('AND', [unreadable])).errors, [{ code: 'reservedApostrophe', params: { value }, nodeId: unreadable.id }], `${value} cannot be read back, so it is refused`);
+        }
         let apostropheList = condition('assignedTo.name', 'IN', ["O'Brien", 'rana']);
         assert.deepEqual(serialize(group('AND', [apostropheList])).errors, [{ code: 'reservedApostrophe', params: { value: "O'Brien" }, nodeId: apostropheList.id }], 'an apostrophe in a list is refused');
 
