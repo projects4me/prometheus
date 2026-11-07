@@ -143,6 +143,24 @@ module('Integration | Component | ez-search-compact', function (hooks) {
         assert.deepEqual(this.saves, [DONE]);
     });
 
+    test('multi-row: Search and Clear are icon-only buttons attached to the bar', async function (assert) {
+        await render(hbs`<div style="width: 300px"><EzSearchCompact @schema={{this.schema}} @query={{this.query}}
+          @savedSearches={{this.saved}} @onApply={{this.onApply}} @aclContext="issue.read" /></div>`);
+
+        const search = document.querySelector('[data-ez-search-apply]');
+        const clear = document.querySelector('[data-ez-search-clear]');
+        const input = document.querySelector('[data-ez-search-bar]');
+        assert.strictEqual(search.textContent.trim(), '', 'Search has no text');
+        assert.strictEqual(clear.textContent.trim(), '', 'Clear has no text');
+        assert.dom('i.fa-search', search).exists();
+        assert.dom('i.fa-times', clear).exists();
+        assert.dom(search).hasAttribute('title');
+        assert.dom(clear).hasAttribute('aria-label');
+        assert.ok(Math.abs(input.getBoundingClientRect().top - search.getBoundingClientRect().top) <= 4, 'on the bar row');
+        const buttons = search.getBoundingClientRect().width + clear.getBoundingClientRect().width;
+        assert.ok(input.getBoundingClientRect().width > buttons, 'the input is wider than both buttons');
+    });
+
     test('linear: one row without chips', async function (assert) {
         this.linear = true;
         this.query = DONE;

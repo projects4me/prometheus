@@ -6,7 +6,7 @@
 // Filter on row 2, the chips on row 3. Linear: Saved, bar, Filter, Search and Clear on one row.
 .ez-search-compact {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: start;
   row-gap: 8px;
   width: 100%;
@@ -22,19 +22,24 @@
     min-width: 0;
   }
 
-  // Search and Clear are attached to the bar's right end, like an input group.
-  .ez-search-compact-search,
-  .ez-search-compact-clear {
+  // Search and Clear are icon-only buttons attached to the bar's right end, like an input-group-btn: same height
+  // as the input, no gap.
+  .ez-search-compact-actions {
     grid-row: 1;
-    margin-left: -1px;
-  }
-
-  .ez-search-compact-search {
     grid-column: 4;
-  }
+    display: flex;
+    align-self: stretch;
+    margin-left: -1px;
 
-  .ez-search-compact-clear {
-    grid-column: 5;
+    .btn {
+      margin-left: -1px;
+      padding-left: 10px;
+      padding-right: 10px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
   }
 
   .ez-search-compact-saved {
@@ -119,12 +124,8 @@
       margin-left: 8px;
     }
 
-    .ez-search-compact-search {
+    .ez-search-compact-actions {
       margin-left: 8px;
-    }
-
-    .ez-search-compact-clear {
-      margin-left: 4px;
     }
   }
 }
