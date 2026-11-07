@@ -1,0 +1,93 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+@import '../variables.scss';
+
+// The ezSearch search bar: a text input with a suggestion menu and a coloured, formatted view.
+.ez-search-bar {
+  position: relative;
+  width: 100%;
+  border-radius: 0;
+
+  .form-field,
+  input {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .ez-search-bar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    padding: 5px 10px;
+    background: $backgroundColor;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: text;
+    z-index: 2;
+  }
+
+  .token-field {
+    color: $secondaryColor;
+  }
+
+  .token-operator {
+    color: $primaryColor;
+  }
+
+  .token-keyword {
+    color: $highlightColor;
+    font-weight: bold;
+  }
+
+  .ez-search-menu {
+    display: block;
+    top: 100%;
+    left: 0;
+    min-width: 100%;
+    max-height: 320px;
+    overflow-y: auto;
+    border-radius: 0;
+    z-index: 1000;
+
+    .dropdown-header {
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    li.active > a {
+      background: $primaryColorLight;
+    }
+
+    .ez-search-item-detail {
+      float: right;
+      margin-left: 16px;
+      color: $mediumColor;
+    }
+
+    .ez-search-hint {
+      padding: 3px 20px;
+      color: $mediumColor;
+      font-size: 11px;
+      border-top: 1px solid $borderColor;
+    }
+  }
+
+  .ez-search-error {
+    display: block;
+  }
+
+  @media (max-width: 767px) {
+    .ez-search-menu {
+      width: 100%;
+
+      .ez-search-hint {
+        display: none;
+      }
+    }
+  }
+}

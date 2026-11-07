@@ -1,0 +1,47 @@
+<div class="ez-search-bar" data-ez-search-bar>
+  {{#if this.showQueryText}}
+    {{! template-lint-disable no-invalid-interactive }}
+    <div class="ez-search-bar-overlay" data-ez-query-overlay {{on "click" this.focusInput}}>
+      <EzSearch::QueryText @text={{this.text}} @schema={{@schema}} />
+    </div>
+  {{/if}}
+
+  <FormFields::FieldText
+    @value={{readonly this.text}}
+    @placeholder={{@placeholder}}
+    @data-field="ez-search-input"
+    @onInput={{this.onInput}}
+    @focusIn={{this.onFocus}}
+    @onBlur={{this.onBlur}}
+    autocomplete="off"
+    spellcheck="false"
+    {{on "keydown" this.onKeydown}}
+    {{on "keyup" this.onCaret}}
+    {{on "click" this.onCaret}}
+  />
+
+  {{#if this.showMenu}}
+    <ul class="dropdown-menu ez-search-menu" role="listbox" data-ez-menu>
+      {{#each this.items as |item|}}
+        {{#if item.header}}
+          <li class="dropdown-header">{{item.header}}</li>
+        {{/if}}
+        <li class={{if item.active "active"}} role="option" aria-selected={{if item.active "true" "false"}}>
+          <a href="#" {{on "mousedown" (fn this.pick item.suggestion)}}>
+            <span class="ez-search-item-label">{{item.label}}</span>
+            {{#if item.suggestion.detail}}
+              <span class="ez-search-item-detail">{{item.suggestion.detail}}</span>
+            {{/if}}
+          </a>
+        </li>
+      {{/each}}
+      <li class="ez-search-hint">{{t "components.ezSearch.searchBar.hint"}}</li>
+    </ul>
+  {{/if}}
+
+  {{#each this.messages as |message|}}
+    <span class="error text-red ez-search-error" data-ez-error>
+      {{t "components.ezSearch.searchBar.position" position=message.position}}: {{message.text}}
+    </span>
+  {{/each}}
+</div>

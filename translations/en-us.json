@@ -353,6 +353,21 @@
         "isEmpty": "is empty",
         "isNotEmpty": "is not empty"
       },
+      "completer": {
+        "searchText": "Search {field} for \"{word}\""
+      },
+      "searchBar": {
+        "sections": {
+          "field": "Fields",
+          "text": "Free text",
+          "operator": "Operators",
+          "value": "Values",
+          "keyword": "Keywords",
+          "bracket": "Brackets"
+        },
+        "hint": "Up and Down to move, Tab or Enter to accept, Esc to close",
+        "position": "At character {position}"
+      },
       "valueEditor": {
         "text": "Enter a value",
         "value": "Choose a value",
