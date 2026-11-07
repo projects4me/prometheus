@@ -170,7 +170,7 @@ export default App.extend({
         }
         let projectId = this.trackedProject.getProjectId();
         let results = await hashSettled({
-            schema: this.querySchema.load('Issue', { projectId }),
+            schema: this.querySchema.load('TaskBoard', { projectId }),
             savedsearches: this.savedSearch.load('issue', projectId)
         });
         if (results.schema.state === 'rejected') {

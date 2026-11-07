@@ -446,7 +446,8 @@
         "betweenValues": "{operator} needs two values, like 2026-01-01 and 2026-01-31",
         "unbalancedBracket": "The bracket {bracket} has no matching bracket",
         "unclosedQuote": "Close the quote {quote}",
-        "unexpectedToken": "\"{text}\" isn't expected here"
+        "unexpectedToken": "\"{text}\" isn't expected here",
+        "excludedField": "{field} can't be searched here. {reason}"
       }
     }
   },
@@ -1647,6 +1648,7 @@
         "spent": "Spent",
         "estimated": "Estimated",
         "savedSearches": "Saved Searches",
+        "searchExcludedMilestone": "Use the milestone tabs.",
         "infoTags": {
           "blocked": "Blocked",
           "reopened": "Reopened",

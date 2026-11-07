@@ -5,6 +5,7 @@
 import { module, test } from 'qunit';
 import { isGroup } from 'prometheus/utils/query/ast';
 import { ERRORS, parse } from 'prometheus/utils/query/parse';
+import { createSchema } from 'prometheus/utils/query/schema';
 import { serialize } from 'prometheus/utils/query/serializer';
 import { issueQuerySchema } from 'prometheus/tests/helpers/query-schema';
 
@@ -68,6 +69,29 @@ const ROUND_TRIPS = {
 };
 
 module('Unit | Utility | query | parse', function () {
+    test('an excluded field is refused and nothing is applied', function (assert) {
+        let schema = createSchema({
+            module: 'Issue',
+            textField: 'Issue.subject',
+            fields: [{ id: 'Issue.subject', label: 'Subject', type: 'text' }],
+            excluded: [{ id: 'issuemilestone.name', aliases: ['milestone'], label: 'Milestone', type: 'enum', reason: 'Use the milestone tabs.' }],
+        });
+        let { tree, errors } = parse('milestone: Sprint', schema);
+
+        assert.deepEqual(
+            errors.map((e) => e.code),
+            [ERRORS.excludedField]
+        );
+        assert.deepEqual(errors[0].params, { field: 'Milestone', reason: 'Use the milestone tabs.' });
+        assert.strictEqual(tree.children.length, 0, 'nothing applied');
+        assert.strictEqual(parse('(issuemilestone.name : Sprint)', schema).errors[0].code, ERRORS.excludedField, 'a Gaia query too');
+        assert.deepEqual(
+            parse('milestone:', schema).errors.map((e) => e.code),
+            [ERRORS.excludedField],
+            'a missing value does not add a second error'
+        );
+    });
+
     test('loose input serializes exactly', function (assert) {
         // The serializer brackets the root group too, so one condition is in double brackets.
         assert.strictEqual(query('priority:high'), '((Issue.priority : High))');

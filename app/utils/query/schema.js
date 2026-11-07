@@ -16,6 +16,10 @@
  *
  * `values` maps a value source to its values, each `{value, label}`.
  *
+ * `excluded` lists fields the view does not search, each `{id, aliases, label, reason}` (`reason` is the
+ * translated hint shown with the error). They are not in `fields`, so they are not suggested or built,
+ * but `resolveField` still finds them, as `{excluded: true, reason}`, so the parser can refuse them.
+ *
  * @class Schema
  * @namespace Prometheus.Utils.Query
  * @module utils/query
@@ -74,10 +78,12 @@ function only(items, matches) {
  * @param {Array} options.fields The fields
  * @param {String} [options.textField] The field free text searches, e.g. `Issue.subject`
  * @param {Object} [options.values] The values of each value source
+ * @param {Array} [options.excluded] The fields this schema refuses to search
  * @return {Object} The schema
  */
-export function createSchema({ module, fields = [], textField = null, values = {} }) {
+export function createSchema({ module, fields = [], textField = null, values = {}, excluded = [] }) {
     let frozenFields = Object.freeze(fields.map((field) => Object.freeze({ type: 'text', ...field })));
+    let refused = Object.freeze(excluded.map((field) => Object.freeze({ type: 'text', ...field, excluded: true })));
 
     /**
      * Resolve a typed word to a field. In order, without case: the id, the id without its module
@@ -96,11 +102,12 @@ export function createSchema({ module, fields = [], textField = null, values = {
             return null;
         }
 
-        let field =
-            frozenFields.find((f) => lower(f.id) === key) ||
-            only(frozenFields, (f) => lower(shortName(f.id)) === key) ||
-            only(frozenFields, (f) => names(f).includes(key)) ||
-            only(frozenFields, (f) => names(f).some((name) => name.startsWith(key)));
+        let find = (list) =>
+            list.find((f) => lower(f.id) === key) ||
+            only(list, (f) => lower(shortName(f.id)) === key) ||
+            only(list, (f) => names(f).includes(key)) ||
+            only(list, (f) => names(f).some((name) => name.startsWith(key)));
+        let field = find(frozenFields) || find(refused);
 
         if (field) {
             return field;

@@ -90,11 +90,19 @@ export default class QuerySchemaService extends Service {
      * @private
      */
     async build(module, projectId) {
-        let meta = MD.create().getViewMeta(module, 'search');
+        let meta = this.searchMeta(module);
 
         if (!meta) {
             return null;
         }
+
+        let excluded = (meta.excluded || []).map(([id, field]) => ({
+            id,
+            aliases: field.aliases || [],
+            labelKey: field.label,
+            label: field.label ? this.intl.t(field.label) : undefined,
+            reason: meta.excludeReason ? this.intl.t(meta.excludeReason) : undefined,
+        }));
 
         let fields = Object.entries(meta.fields || {}).map(([id, field]) => ({
             id,
@@ -109,8 +117,55 @@ export default class QuerySchemaService extends Service {
             module: meta.module || module,
             textField: meta.textField || null,
             fields,
+            excluded,
             values: await this.loadValues(Object.values(meta.fields || {}), projectId),
         });
+    }
+
+    /**
+     * The search metadata of a view, with `extends` and `exclude` applied: a view that `extends` another
+     * module starts from that module's search metadata (module, text field, fields), and `exclude` removes
+     * field ids from it. The removed fields come back as `excluded` entries, `[id, field]`, so the parser
+     * can refuse them with a clear message; `excludeReason` is the translation key of the hint.
+     * Unknown `extends` or `exclude` ids are errors in development and tests.
+     *
+     * @method searchMeta
+     * @param {String} view The view, e.g. `Issue` or `TaskBoard`
+     * @return {Object|false} The metadata, or false when the view declares no search
+     * @private
+     */
+    searchMeta(view) {
+        let md = MD.create();
+        let meta = md.getViewMeta(view, 'search');
+
+        if (!meta || !meta.extends) {
+            return meta;
+        }
+
+        let base = md.getViewMeta(meta.extends, 'search');
+
+        assert(`View "${view}" extends "${meta.extends}", which declares no search metadata`, base);
+
+        let fields = { ...((base && base.fields) || {}) };
+        let excluded = [];
+
+        (meta.exclude || []).forEach((id) => {
+            assert(`View "${view}" excludes "${id}", which is not a search field of "${meta.extends}"`, id in fields);
+
+            if (id in fields) {
+                excluded.push([id, fields[id]]);
+                delete fields[id];
+            }
+        });
+
+        return {
+            ...base,
+            ...meta,
+            module: meta.module || (base && base.module) || meta.extends,
+            textField: meta.textField || (base && base.textField) || null,
+            fields: { ...fields, ...(meta.fields || {}) },
+            excluded,
+        };
     }
 
     /**

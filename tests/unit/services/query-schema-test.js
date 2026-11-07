@@ -112,6 +112,38 @@ module('Unit | Service | query-schema', function (hooks) {
         }
     });
 
+    test('TaskBoard extends Issue without the milestone field', async function (assert) {
+        let schema = await this.service.load('TaskBoard', { projectId: this.project.id });
+        let issue = await this.service.load('Issue', { projectId: this.project.id });
+        let field = schema.resolveField('milestone');
+
+        assert.strictEqual(schema.module, 'Issue');
+        assert.strictEqual(schema.textField, 'Issue.subject');
+        assert.deepEqual(
+            schema.fields.map((f) => f.id),
+            issue.fields.map((f) => f.id).filter((id) => id !== 'issuemilestone.name'),
+            'the milestone is not a field'
+        );
+        assert.true(field.excluded, 'the milestone still resolves, as excluded');
+        assert.strictEqual(field.reason, 'Use the milestone tabs.');
+        assert.strictEqual(schema.resolveField('status').id, 'Issue.status', 'the other fields are kept');
+    });
+
+    test('an unknown extends or exclude is refused', async function (assert) {
+        let views = MD.create().views;
+
+        views.BadExtends = { search: { extends: 'Nope' } };
+        views.BadExclude = { search: { extends: 'Issue', exclude: ['Issue.nope'] } };
+
+        try {
+            await assert.rejects(this.service.load('BadExtends'), /extends "Nope"/);
+            await assert.rejects(this.service.load('BadExclude'), /excludes "Issue.nope"/);
+        } finally {
+            delete views.BadExtends;
+            delete views.BadExclude;
+        }
+    });
+
     test('the fields keep the order of the metadata and share their value sources', async function (assert) {
         let schema = await this.service.load('Issue', { projectId: this.project.id });
         let meta = MD.create().getViewMeta('Issue', 'search');
