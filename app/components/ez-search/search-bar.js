@@ -122,7 +122,12 @@ export default class EzSearchSearchBarComponent extends Component {
     }
 
     syncCursor(event) {
-        this.cursor = event.target.selectionStart ?? this.text.length;
+        let cursor = event.target.selectionStart ?? this.text.length;
+
+        if (cursor !== this.cursor) {
+            this.cursor = cursor;
+            this.activeIndex = 0;
+        }
     }
 
     @action
@@ -158,6 +163,10 @@ export default class EzSearchSearchBarComponent extends Component {
 
     @action
     onKeydown(event) {
+        if (event.isComposing || event.keyCode === 229) {
+            return;
+        }
+
         let count = this.items.length;
 
         if (this.showMenu && event.key === 'ArrowDown') {
@@ -166,7 +175,7 @@ export default class EzSearchSearchBarComponent extends Component {
         } else if (this.showMenu && event.key === 'ArrowUp') {
             event.preventDefault();
             this.activeIndex = (this.activeIndex - 1 + count) % count;
-        } else if (this.showMenu && (event.key === 'Tab' || event.key === 'Enter')) {
+        } else if (this.showMenu && (event.key === 'Tab' || (event.key === 'Enter' && this.draft !== null))) {
             event.preventDefault();
             this.accept(this.completion.suggestions[this.activeIndex], event.target);
         } else if (event.key === 'Escape' && this.menuOpen) {
@@ -204,6 +213,16 @@ export default class EzSearchSearchBarComponent extends Component {
         // mousedown keeps the focus in the input
         event.preventDefault();
         this.accept(suggestion, event.currentTarget.closest('.ez-search-bar').querySelector('input'));
+    }
+
+    @action
+    clickItem(suggestion, event) {
+        event.preventDefault();
+
+        // a click without a preceding mousedown (assistive technology) has no pointer detail
+        if (event.detail === 0) {
+            this.pick(suggestion, event);
+        }
     }
 
     @action

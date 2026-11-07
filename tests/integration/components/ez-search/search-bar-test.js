@@ -94,9 +94,33 @@ module('Integration | Component | ez-search/search-bar', function (hooks) {
 
         assert.dom('[data-ez-query-text] .token-field').exists();
         assert.dom('[data-ez-query-text] .token-operator').exists();
+        assert.dom('[data-ez-query-text]').hasText('((Issue.status : done))');
 
-        this.set('tree', parse('"<b>x</b>"', this.schema).tree);
+        let { tree, errors } = parse('"<b>x</b>"', this.schema);
+        assert.deepEqual(errors, []);
+        assert.strictEqual(tree.children.length, 1);
+        this.set('tree', tree);
         await settled();
+        assert.dom('[data-ez-query-text]').includesText('<b>x</b>');
         assert.dom('[data-ez-query-text] b').doesNotExist();
+    });
+
+    test('Enter after focusing an existing query runs it instead of accepting a suggestion', async function (assert) {
+        this.set('tree', parse('status:done', this.schema).tree);
+        await settled();
+        await focus(INPUT);
+        await triggerKeyEvent(INPUT, 'keydown', 'Enter');
+
+        assert.strictEqual(this.runs, 1);
+        assert.dom(INPUT).hasValue('((Issue.status : done))');
+    });
+
+    test('keys are ignored during IME composition', async function (assert) {
+        await focus(INPUT);
+        await fillIn(INPUT, 'prio');
+        await triggerKeyEvent(INPUT, 'keydown', 'Enter', { isComposing: true });
+
+        assert.dom(INPUT).hasValue('prio');
+        assert.strictEqual(this.runs, 0);
     });
 });

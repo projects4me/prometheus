@@ -27,7 +27,7 @@
           <li class="dropdown-header">{{item.header}}</li>
         {{/if}}
         <li class={{if item.active "active"}} role="option" aria-selected={{if item.active "true" "false"}}>
-          <a href="#" {{on "mousedown" (fn this.pick item.suggestion)}}>
+          <a href="#" {{on "mousedown" (fn this.pick item.suggestion)}} {{on "click" (fn this.clickItem item.suggestion)}}>
             <span class="ez-search-item-label">{{item.label}}</span>
             {{#if item.suggestion.detail}}
               <span class="ez-search-item-detail">{{item.suggestion.detail}}</span>
