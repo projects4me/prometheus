@@ -87,6 +87,8 @@ module('Unit | Utility | query | serializer', function () {
         }
         let apostropheList = condition('assignedTo.name', 'IN', ["O'Brien", 'rana']);
         assert.deepEqual(serialize(group('AND', [apostropheList])).errors, [{ code: 'reservedApostrophe', params: { value: "O'Brien" }, nodeId: apostropheList.id }], 'an apostrophe in a list is refused');
+        let apostropheRange = condition('Issue.startDate', 'BETWEEN', ["1'2", '3']);
+        assert.deepEqual(serialize(group('AND', [apostropheRange])).errors, [{ code: 'reservedApostrophe', params: { value: "1'2" }, nodeId: apostropheRange.id }], 'an apostrophe in a range bound is refused');
 
         let list = condition('Issue.status', 'IN', ['ok', 'EMPTY']);
         assert.strictEqual(serialize(group('AND', [list])).errors[0].nodeId, list.id, 'list values are checked');

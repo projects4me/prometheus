@@ -82,7 +82,7 @@ function checkValues(node) {
             return { code: ERRORS.reservedCharacter, params: { character: character[0], value }, nodeId: node.id };
         }
 
-        if (EDGE_APOSTROPHE.test(value) || (isList && value.includes("'")) || (value.includes("'") && (/\s/.test(value) || UNREADABLE_APOSTROPHE.test(value)))) {
+        if (EDGE_APOSTROPHE.test(value) || ((isList || isRange) && value.includes("'")) || (value.includes("'") && (/\s/.test(value) || UNREADABLE_APOSTROPHE.test(value)))) {
             return { code: ERRORS.reservedApostrophe, params: { value }, nodeId: node.id };
         }
 
