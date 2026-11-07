@@ -42,6 +42,23 @@ module('Integration | Component | ez-search', function (hooks) {
         />`);
     }
 
+    test('the bar has no form-field margin and shares a row with the Search button', async function (assert) {
+        await show();
+
+        const field = document.querySelector('[data-ez-search-bar] .form-field');
+        const style = getComputedStyle(field);
+        ['Top', 'Right', 'Bottom', 'Left'].forEach((side) => assert.strictEqual(style[`margin${side}`], '0px', `margin ${side}`));
+
+        // The layout depends on the real window width (ez-search.scss wraps at max-width: 767px), which a test cannot set.
+        const bar = document.querySelector('[data-ez-search-bar]').getBoundingClientRect();
+        const button = document.querySelector('[data-ez-search-apply]').getBoundingClientRect();
+        if (window.innerWidth > 767) {
+            assert.ok(Math.abs(bar.top - button.top) <= 4, `bar and Search share a row (${bar.top} vs ${button.top})`);
+        } else {
+            assert.ok(button.top >= bar.bottom - 1, `bar and Search wrap onto separate rows (${bar.bottom} vs ${button.top})`);
+        }
+    });
+
     test('typing updates the open panel and editing the panel updates the bar', async function (assert) {
         await show();
         await click('[data-ez-builder-toggle]');
