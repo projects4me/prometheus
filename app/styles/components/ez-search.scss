@@ -95,3 +95,19 @@
     background: transparent;
     border: 0;
 }
+
+// The active saved search's name on the Saved Searches button: one line, cut with an ellipsis.
+.ez-search .ez-search-saved {
+    .ez-search-saved-name {
+        display: inline-block;
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: bottom;
+    }
+
+    .ez-search-saved-edited {
+        white-space: nowrap;
+    }
+}

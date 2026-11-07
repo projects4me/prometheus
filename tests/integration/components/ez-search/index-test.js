@@ -227,21 +227,125 @@ module('Integration | Component | ez-search', function (hooks) {
         assert.deepEqual(this.changes, [null]);
     });
 
-    test('applying an edited query drops the mark and reports null', async function (assert) {
-        this.activeId = 's1';
-        await show();
+    async function edit() {
         await focus(INPUT);
         await fillIn(INPUT, 'status:new');
         await blur(INPUT);
+    }
 
-        await click('.app-dropdown-btn');
-        assert.dom('[data-ez-saved-item] .fa-check').exists();
-        assert.deepEqual(this.changes, []);
+    test('the button shows the active name with a title, and no edited marker while unchanged', async function (assert) {
+        this.activeId = 's1';
+        await show();
 
+        assert.dom('[data-ez-saved-name]').hasText('Done ones').hasAttribute('title', 'Done ones');
+        assert.dom('[data-ez-saved-edited]').doesNotExist();
+    });
+
+    test('without an active search the button keeps its label', async function (assert) {
+        await show();
+
+        assert.dom('[data-ez-saved-name]').doesNotExist();
+        assert.dom('[data-ez-saved] button').includesText('Saved Searches');
+    });
+
+    test('editing keeps the search active, shows edited and reports nothing', async function (assert) {
+        this.activeId = 's1';
+        await show();
+        await edit();
         await click('[data-ez-search-apply]');
 
-        assert.deepEqual(this.changes, [null]);
+        assert.dom('[data-ez-saved-name]').hasText('Done ones');
+        assert.dom('[data-ez-saved-edited]').exists();
+        assert.deepEqual(this.changes, []);
         await click('.app-dropdown-btn');
-        assert.dom('[data-ez-saved-item] .fa-check').doesNotExist();
+        assert.dom('[data-ez-saved-item] .fa-check').exists();
+    });
+
+    test('the edited menu offers Update and Save as new only for given callbacks, and Revert', async function (assert) {
+        this.activeId = 's1';
+        await show();
+        await click('.app-dropdown-btn');
+        assert.dom('[data-ez-saved-revert]').doesNotExist();
+        await click('.app-dropdown-btn');
+
+        await edit();
+        await click('.app-dropdown-btn');
+        assert.dom('[data-ez-saved-update]').doesNotExist();
+        assert.dom('[data-ez-saved-save-new]').doesNotExist();
+        assert.dom('[data-ez-saved-revert]').exists();
+    });
+
+    test('Update hands the edited query over, makes it the saved one and applies it', async function (assert) {
+        let updates = [];
+
+        this.activeId = 's1';
+        this.onUpdate = (search, query) => updates.push([search.id, query]);
+        await render(hbs`<EzSearch
+          @schema={{this.schema}}
+          @savedSearches={{this.saved}}
+          @activeSavedSearchId={{this.activeId}}
+          @onApply={{this.onApply}}
+          @onUpdateSavedSearch={{this.onUpdate}}
+          @aclContext="issue.read"
+        />`);
+        await edit();
+        await click('.app-dropdown-btn');
+        assert.dom('[data-ez-saved-update]').includesText('Update "Done ones"');
+        await click('[data-ez-saved-update]');
+
+        assert.deepEqual(updates, [['s1', '((Issue.status : new))']]);
+        assert.deepEqual(this.applied, ['((Issue.status : new))']);
+        assert.dom('[data-ez-saved-edited]').doesNotExist();
+        assert.dom('[data-ez-saved-name]').hasText('Done ones');
+    });
+
+    test('Save as new hands the edited query to @onSave', async function (assert) {
+        let saved = [];
+
+        this.activeId = 's1';
+        this.onSave = (query) => saved.push(query);
+        await show();
+        await edit();
+        await click('.app-dropdown-btn');
+        await click('[data-ez-saved-save-new]');
+
+        assert.deepEqual(saved, ['((Issue.status : new))']);
+    });
+
+    test('Revert loads the saved query back and applies it', async function (assert) {
+        this.activeId = 's1';
+        await show();
+        await edit();
+        await click('.app-dropdown-btn');
+        await click('[data-ez-saved-revert]');
+
+        assert.dom(INPUT).hasValue('((Issue.status : done))');
+        assert.dom('[data-ez-saved-edited]').doesNotExist();
+        assert.dom('[data-ez-saved-name]').hasText('Done ones');
+        assert.deepEqual(this.applied, ['((Issue.status : done))']);
+    });
+
+    test('picking another search ends the edited state', async function (assert) {
+        this.saved = [...this.saved, { id: 's2', name: 'Open ones', query: '((Issue.status : open))' }];
+        this.activeId = 's1';
+        await show();
+        await edit();
+        await click('.app-dropdown-btn');
+        await click('[data-ez-saved-item]:last-of-type');
+
+        assert.dom('[data-ez-saved-name]').hasText('Open ones');
+        assert.dom('[data-ez-saved-edited]').doesNotExist();
+        assert.strictEqual(this.changes[this.changes.length - 1].id, 's2');
+    });
+
+    test('Clear ends the edited state and the active search', async function (assert) {
+        this.activeId = 's1';
+        await show();
+        await edit();
+        await click('[data-ez-search-clear]');
+
+        assert.dom('[data-ez-saved-name]').doesNotExist();
+        assert.dom('[data-ez-saved-edited]').doesNotExist();
+        assert.deepEqual(this.changes, [null]);
     });
 });

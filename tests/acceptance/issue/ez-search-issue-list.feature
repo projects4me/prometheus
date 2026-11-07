@@ -45,6 +45,18 @@ Feature: Issue | ezSearch on the issue list
     And the issue list was queried with "savedsearch" in it
     And the url has a saved search id
 
+  Scenario: Updating the active saved search keeps the change after a reload
+
+    Given There is a saved search related to issue
+    When User navigates to app/project/project_1/issue
+    And User selects a saved search in the issue ezSearch
+    And User types "prio = hi" in the issue search bar and presses Enter
+    Then the issue saved search button shows edited
+    When User updates the active saved search in the issue ezSearch
+    Then the issue saved search button does not show edited
+    When User navigates to app/project/project_1/issue?searchId=1
+    Then the issue search bar shows "((Issue.priority : high))"
+
   Scenario: An invalid query shows the error and sends nothing
 
     When User navigates to app/project/project_1/issue

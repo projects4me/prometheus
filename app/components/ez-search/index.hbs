@@ -5,9 +5,25 @@
         <:button>
           <i class="fa fa-bookmark visible-xs-inline"></i>
           <span class="sr-only visible-xs-inline">{{t "views.app.issue.list.savedsearch.label"}}</span>
-          <span class="hidden-xs">{{t "views.app.issue.list.savedsearch.label"}}</span>
+          {{#if this.pickedSearch}}
+            <span class="hidden-xs ez-search-saved-name" title={{this.pickedSearch.name}} data-ez-saved-name>{{this.pickedSearch.name}}</span>
+            {{#if this.isEdited}}
+              <span class="hidden-xs ez-search-saved-edited" data-ez-saved-edited>&middot; {{t "components.ezSearch.savedSearch.edited"}}</span>
+            {{/if}}
+          {{else}}
+            <span class="hidden-xs">{{t "views.app.issue.list.savedsearch.label"}}</span>
+          {{/if}}
         </:button>
         <:content>
+          {{#if this.isEdited}}
+            {{#if @onUpdateSavedSearch}}
+              <button type="button" data-ez-saved-update {{on "click" this.updateSaved}}>{{t "components.ezSearch.savedSearch.update" name=this.pickedSearch.name}}</button>
+            {{/if}}
+            {{#if @onSave}}
+              <button type="button" data-ez-saved-save-new {{on "click" this.save}}>{{t "components.ezSearch.savedSearch.saveAsNew"}}</button>
+            {{/if}}
+            <button type="button" data-ez-saved-revert {{on "click" this.revert}}>{{t "components.ezSearch.savedSearch.revert"}}</button>
+          {{/if}}
           {{#each this.searches as |item|}}
             <button type="button" class={{if item.active "active"}} data-ez-saved-item {{on "click" (fn this.pickSaved item.search)}}>
               {{item.search.name}}

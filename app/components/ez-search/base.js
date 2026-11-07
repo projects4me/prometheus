@@ -24,9 +24,12 @@ import { compose } from 'prometheus/utils/query/composer';
  * - `@savedSearches`: the saved searches, `{id, name, query}`.
  * - `@activeSavedSearchId` (optional): the saved search to mark and, without `@query`, load.
  * - `@onApply(queryString)`: called with the composed query on apply; may return a promise.
- * - `@onSave(queryString)` (optional): called with the current query when the user saves it.
+ * - `@onSave(queryString)` (optional): called with the current query when the user saves it, also as a new
+ *   search from the edited state; the Save as new entry shows only when it is given.
+ * - `@onUpdateSavedSearch(search, queryString)` (optional): called when the user updates the active saved
+ *   search with the edited query; the Update entry shows only when it is given.
  * - `@onSavedSearchChange(search|null)` (optional): called when a saved search is picked, or deselected by
- *   picking it again, by Clear, or by applying a query that no longer matches it.
+ *   picking it again or by Clear. Editing the query keeps the search active (see `isEdited`).
  * - `@aclContext`: the ACL context passed to the apply button.
  *
  * @class EzSearchBase
@@ -42,7 +45,7 @@ export default class EzSearchBase extends Component {
     @tracked storedErrors = [];
     @tracked loadId = 0;
     @tracked pickedSearch = null;
-    pickedQuery = '';
+    @tracked pickedQuery = '';
     loadCount = 0;
 
     constructor() {
@@ -77,7 +80,20 @@ export default class EzSearchBase extends Component {
         }
 
         this.pickedSearch = search;
-        this.pickedQuery = this.currentQuery;
+        this.pickedQuery = this.savedForm(search);
+    }
+
+    /**
+     * The serialized form of a saved search's query, what the tree is compared with to tell it was edited.
+     *
+     * @method savedForm
+     * @param {Object} search
+     * @return {String}
+     */
+    savedForm(search) {
+        let { tree } = parse(search.query || '', this.args.schema);
+
+        return tree ? serialize(tree).query : '';
     }
 
     @action
@@ -123,6 +139,16 @@ export default class EzSearchBase extends Component {
      */
     get currentQuery() {
         return this.tree ? serialize(this.tree).query : '';
+    }
+
+    /**
+     * Whether the active saved search's query was changed: the serialized tree differs from the one loaded.
+     *
+     * @property isEdited
+     * @type Boolean
+     */
+    get isEdited() {
+        return Boolean(this.pickedSearch) && this.currentQuery !== this.pickedQuery;
     }
 
     /**
@@ -178,7 +204,7 @@ export default class EzSearchBase extends Component {
 
     @action
     async pickSaved(search) {
-        if (this.pickedSearch === search) {
+        if (this.pickedSearch && String(this.pickedSearch.id) === String(search.id)) {
             await this.deselect();
 
             return;
@@ -186,7 +212,7 @@ export default class EzSearchBase extends Component {
 
         this.load(search.query);
         this.pickedSearch = search;
-        this.pickedQuery = this.currentQuery;
+        this.pickedQuery = this.savedForm(search);
         this.args.onSavedSearchChange?.(search);
         await this.apply();
     }
@@ -232,19 +258,7 @@ export default class EzSearchBase extends Component {
             return;
         }
 
-        let appliedSearch = this.pickedSearch;
-        let appliedTree = this.currentQuery;
-
         await this.args.onApply?.(query);
-
-        if (this.isDestroying || this.isDestroyed) {
-            return;
-        }
-
-        if (appliedSearch && this.pickedSearch === appliedSearch && appliedTree !== this.pickedQuery) {
-            this.pickedSearch = null;
-            this.args.onSavedSearchChange?.(null);
-        }
     }
 
     /**
@@ -263,5 +277,48 @@ export default class EzSearchBase extends Component {
     @action
     save() {
         this.args.onSave?.(this.currentQuery);
+    }
+
+    /**
+     * Hand the edited query to `@onUpdateSavedSearch`, make it the saved version and apply it.
+     *
+     * @method updateSaved
+     */
+    @action
+    async updateSaved() {
+        let search = this.pickedSearch;
+        let query = this.currentQuery;
+
+        if (!search || this.hasErrors || query === '') {
+            return;
+        }
+
+        await this.args.onUpdateSavedSearch?.(search, query);
+
+        if (this.isDestroying || this.isDestroyed) {
+            return;
+        }
+
+        let fresh = (this.args.savedSearches || []).find((item) => String(item.id) === String(search.id));
+
+        this.pickedSearch = fresh || search;
+        this.pickedQuery = query;
+        await this.apply();
+    }
+
+    /**
+     * Load the active saved search's query back and apply it.
+     *
+     * @method revert
+     */
+    @action
+    async revert() {
+        if (!this.pickedSearch) {
+            return;
+        }
+
+        this.load(this.pickedSearch.query);
+        this.pickedQuery = this.savedForm(this.pickedSearch);
+        await this.apply();
     }
 }

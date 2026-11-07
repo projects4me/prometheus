@@ -123,6 +123,15 @@ export default App.extend({
     currentUser: inject(),
 
     /**
+     * The saved search calls
+     *
+     * @property savedSearch
+     * @type Prometheus.Services.SavedSearchService
+     * @private
+     */
+    savedSearch: inject('saved-search'),
+
+    /**
      * In this hook we're loading list of issue statuses and types available in the project.
      *
      * @method beforeModel
@@ -237,20 +246,15 @@ export default App.extend({
         let _self = this;
         let projectId = _self.trackedProject.getProjectId();
         
-        let savedSearchesOption = {
-            query: '((Savedsearch.relatedTo : issue) AND (Savedsearch.projectId : '+projectId+') AND (Savedsearch.createdUser : '+_self.get('currentUser.user.id')+'))',
-            limit: -1
-        };
-
         return hashSettled({
-            savedsearches: _self.store.query('savedsearch',savedSearchesOption),
+            savedsearches: _self.savedSearch.load('issue', projectId),
             schema: _self.querySchema.load('Issue', { projectId }),
         }).then(function(results){
             if (results.schema.state === 'rejected') {
                 _self.errorManager.handleError(results.schema.reason, { moduleName: "issue" });
             }
             let data = extractHashSettled(results);
-            _self.set('savedsearches',data.savedsearches.toArray());
+            _self.set('savedsearches',data.savedsearches);
             _self.set('schema', Array.isArray(data.schema) ? null : data.schema);
         }).catch((error) =>{
             _self.errorManager.handleError(error, {
