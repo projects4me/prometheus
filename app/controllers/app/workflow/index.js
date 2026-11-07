@@ -2,6 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import { tracked } from '@glimmer/tracking';
 import PrometheusListController from 'prometheus/controllers/prometheus/list';
 import { triggerOf, actorsOf, scopeOf, runStatsOf } from 'prometheus/utils/workflow/list-summary';
 
@@ -15,38 +16,22 @@ import { triggerOf, actorsOf, scopeOf, runStatsOf } from 'prometheus/utils/workf
  */
 export default class AppWorkflowIndexController extends PrometheusListController {
     /**
-     * The fields the query builder can filter the list by.
+     * The search schema <EzSearch> filters the list with.
      *
-     * @property metadata
+     * @property querySchema
      * @type Object
      */
-    metadata = {
-        filters: [
-            {
-                id: 'Workflow.name',
-                label: this.intl.t('views.app.workflow.list.name'),
-                type: 'string'
-            },
-            {
-                id: 'Workflow.description',
-                label: this.intl.t('views.app.workflow.list.description'),
-                type: 'string',
-                operators: ['equal', 'not_equal', 'contains', 'is_null', 'is_not_null']
-            },
-            {
-                id: 'Workflow.status',
-                label: this.intl.t('views.app.workflow.fields.status'),
-                type: 'string',
-                input: 'select',
-                values: {
-                    Draft: this.intl.t('views.app.workflow.status.Draft'),
-                    Active: this.intl.t('views.app.workflow.status.Active'),
-                    Disabled: this.intl.t('views.app.workflow.status.Disabled')
-                },
-                operators: ['equal', 'not_equal']
-            }
-        ]
-    };
+    @tracked querySchema = null;
+
+    /**
+     * What differs on this list when saving a search.
+     *
+     * @method savedSearchContext
+     * @return {Object}
+     */
+    savedSearchContext() {
+        return { relatedTo: 'workflow', messagePrefix: 'views.app.workflow.list.savedsearch' };
+    }
 
     sort = 'Workflow.name';
     order = 'asc';
