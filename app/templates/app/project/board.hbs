@@ -19,8 +19,12 @@
         @updateIssue={{this.updateIssue}}
         @openIssue={{this.openIssue}}
         @selectIssue={{this.selectIssue}}
-        @savedSearches={{this.savedSearches}}
-        @applySearch={{this.applySearch}}
+        @querySchema={{this.querySchema}}
+        @savedSearches={{this.ezSavedSearches}}
+        @applyQuery={{this.applyQuery}}
+        @selectSavedSearch={{this.selectSavedSearch}}
+        @showSaveSearchDialog={{this.showEzSaveSearchDialog}}
+        @updateSavedSearch={{this.updateEzSavedSearch}}
         @paramsQuery={{this.query}}
         @selectedSearchId={{this.searchId}}
         @validateField={{this.validateField}}
@@ -82,6 +86,28 @@
         </div>
       {{/if}}
     </div>
+  {{/if}}
+
+  {{#if this.saveSearchDialog}}
+    {{#bootstrap-modal
+        title="global.form.savesearch"
+        confirmLabel="global.form.save"
+        closeLabel="global.form.cancel"
+        confirm=this.saveEzSearch
+        close=this.removeSaveSearchDialog}}
+
+      <div class="ember-view">
+        <label>{{t "views.app.issue.list.savedsearch.query"}}</label>
+        <span data-save-search-query>{{this.saveSearchQuery}}</span>
+      </div>
+
+      <FormFields::FieldText
+        @placeholder={{t "views.app.issue.list.savedsearch.inputname"}}
+        @label={{t "views.app.issue.list.savedsearch.name"}}
+        @value={{this.newSavedsearch.name}}
+      />
+
+    {{/bootstrap-modal}}
   {{/if}}
 
 </div>

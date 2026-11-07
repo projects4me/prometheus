@@ -3,7 +3,8 @@
  */
 
 import App from "prometheus/routes/app";
-import { hash } from 'rsvp';
+import { hash, hashSettled } from 'rsvp';
+import { inject as service } from '@ember/service';
 
 /**
  * This is the route to load the task board for a project
@@ -26,17 +27,27 @@ export default App.extend({
     queryParams: {
         query: {
             refreshModel: true
+        },
+        searchId: {
+            refreshModel: false
         }
     },
 
     /**
-     * This is the query that is used to filter the issues.
+     * The ezSearch schema builder.
      *
-     * @property query
-     * @type String
-     * @for Board
+     * @property querySchema
+     * @type Ember.Service
      */
-    query: '',
+    querySchema: service('query-schema'),
+
+    /**
+     * The saved searches service.
+     *
+     * @property savedSearch
+     * @type Ember.Service
+     */
+    savedSearch: service('saved-search'),
 
     /**
      * This function is called by ember when we enter this route and returns
@@ -49,9 +60,7 @@ export default App.extend({
     async model(params) {
         let _self = this;
         let projectId = this.trackedProject.getProjectId();
-        if(_.has(params, 'query')) {
-            this.set('query', params.query);
-        }
+        let searchQuery = params?.query || '';
         
         //Fetch milestones of current project
         let _milestoneOptions = {
@@ -73,8 +82,8 @@ export default App.extend({
             limit: -1
         }
 
-        if(this.query) {
-            _issueOptions.query = `(${_issueOptions.query}) AND (${this.query})`;
+        if(searchQuery) {
+            _issueOptions.query = `(${_issueOptions.query}) AND (${searchQuery})`;
         }
         let backlogIssues = await _self.store.query('issue', _issueOptions).catch((error) => _self.errorManager.handleError(error));
 
@@ -88,11 +97,10 @@ export default App.extend({
 
         await hash(milestones.map(async (milestone) => {
             let query = `((Issue.milestoneId : ${milestone.id} ) AND (Issue.projectId : ${projectId}))`;
-            if(this.query) {
-                query = `(${query}) AND (${this.query})`;
+            if(searchQuery) {
+                query = `(${query}) AND (${searchQuery})`;
             }
             let issues = await _self.store.query('issue', {
-                query: `((Issue.milestoneId : ${milestone.id} ) AND (Issue.projectId : ${projectId}))`,
                 rels: 'assignedTo,spent,estimated,parentissue,issuetype,comments,files',
                 query: query,
                 limit: -1
@@ -114,11 +122,9 @@ export default App.extend({
         milestonesArray.pushObject(backlog);
 
 
-        let savedSearches = await this.fetchSavedSearches();
         let model = hash({
             milestones: milestonesArray,
-            issueStatuses: issueStatuses || [],
-            savedSearches: savedSearches || []
+            issueStatuses: issueStatuses || []
         });
 
         return model;
@@ -147,28 +153,33 @@ export default App.extend({
 
         //Board columns follow the order configured in Settings
         model.issueStatuses = [...model.issueStatuses.toArray()].sort((a, b) => a.sortOrder - b.sortOrder);
+        await this.loadSearchData();
         return model;
     },
 
     /**
-     * This function is used to fetch the saved searches.
+     * Loads the ezSearch schema and the saved searches of the issues once per visit; a failure only drops the search.
      *
-     * @method fetchSavedSearches
-     * @returns {Array} The saved searches
+     * @method loadSearchData
+     * @returns {Promise}
+     * @private
      */
-    async fetchSavedSearches() {
-        let savedSearches = await this.store.query('savedsearch', {
-            query: `(Savedsearch.relatedTo : issue) AND (Savedsearch.projectId : ${this.trackedProject.getProjectId()})`,
-            limit: -1
+    async loadSearchData() {
+        if (this.searchData) {
+            return;
+        }
+        let projectId = this.trackedProject.getProjectId();
+        let results = await hashSettled({
+            schema: this.querySchema.load('Issue', { projectId }),
+            savedsearches: this.savedSearch.load('issue', projectId)
         });
-
-        let publicSearches = await this.store.query('savedsearch', {
-            query: `(Savedsearch.relatedTo : issue) AND (Savedsearch.projectId : ${this.trackedProject.getProjectId()}) AND (Savedsearch.public : 1)`,
-            limit: -1
-        });
-        
-        let allSearches = savedSearches.toArray().concat(publicSearches.toArray());
-        return allSearches;
+        if (results.schema.state === 'rejected') {
+            this.errorManager.handleError(results.schema.reason, { moduleName: 'issue' });
+        }
+        this.searchData = {
+            schema: results.schema.state === 'fulfilled' ? results.schema.value : null,
+            savedsearches: results.savedsearches.state === 'fulfilled' ? results.savedsearches.value : []
+        };
     },
 
     /**
@@ -207,8 +218,11 @@ export default App.extend({
         Logger.debug('Prometheus.Routes.Board::setupController');
         controller.set('milestones', model.milestones);
         controller.set('issueStatuses', model.issueStatuses);
-        controller.set('savedSearches', model.savedSearches);
-        controller.set('query', this.query);
+        controller.set('querySchema', this.searchData?.schema ?? null);
+        controller.set('savedsearches', this.searchData?.savedsearches ?? []);
+        if (!controller.newSavedsearch) {
+            controller.set('newSavedsearch', this.store.createRecord('savedsearch'));
+        }
         controller.set('selectedIssue', null);
         controller.registerHermesIntents(this.trackedProject.getProjectId());
         controller.registerIssuePreview();
@@ -233,7 +247,7 @@ export default App.extend({
             controller.isLoadingIssueDetails = false;
             controller.selectedIssue = null;
             controller.selectedIssueDetails = null;
-            this.set('query', null);
+            this.searchData = null;
         }
     }
 });

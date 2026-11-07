@@ -307,8 +307,9 @@ export default class InitializeSortable extends Modifier {
             this.projectId = lastProjectId;
         }
 
-        // Only update the sortable to lanes if a new milestone has been added
-        if(this.args.named.newMilestoneAdded) {
+        // Lanes re-rendered by a new milestone or a search reload (paramsQuery) need Sortable again;
+        // lanes that already have it are skipped by _attachSortableToLanes.
+        if(this.args.named.newMilestoneAdded || this.args.named.paramsQuery !== undefined) {
             this._attachSortableToLanes();
         }
         this._cleanupMilestoneTabSortables();

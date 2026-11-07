@@ -13,14 +13,30 @@
   .board-container {
     .nav-tabs-custom {
       position: relative;
+      // The milestone tabs and the search share one row; the lanes (.tab-content) take the row below
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
 
       .milestone.box {
         border-top: none;
       }
 
       .milestone-tabs {
-        width: 80%;
-        display: inline-block;
+        flex: 1 1 0;
+        min-width: 0;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+
+        > li {
+          flex: 0 0 auto;
+          float: none;
+          white-space: nowrap;
+        }
 
         .dotted-circle-add {
           height: 2rem;
@@ -38,25 +54,24 @@
       }
 
       .milestone-filters {
-        position: absolute;
-        top: 10px;
-        width: 20%;
+        flex: 0 0 30%;
+        min-width: fit-content;
+        padding: 0.5rem 1rem;
+      }
 
-        .filters {
-          width: 100%;
-          margin-right: 1rem;
+      > .tab-content {
+        flex: 0 0 100%;
+      }
 
-          .app-dropdown {
-            margin-right: 0.5rem;
+      // Below md the search wraps under the tabs at full width
+      @media (max-width: 767px) {
+        .milestone-tabs {
+          flex: 0 0 100%;
+        }
 
-            .caret {
-              margin-left: 0.2rem;
-            }
-          }
-
-          input {
-            width: 80%;
-          }
+        .milestone-filters {
+          flex: 0 0 100%;
+          min-width: 0;
         }
       }
     }

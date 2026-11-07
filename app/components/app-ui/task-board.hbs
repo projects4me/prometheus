@@ -1,4 +1,4 @@
-<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue query=this.query paramsQuery=@paramsQuery creatingIssue=this.creatingIssue newMilestoneAdded=this.newMilestoneAdded}}>
+<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue paramsQuery=@paramsQuery creatingIssue=this.creatingIssue newMilestoneAdded=this.newMilestoneAdded}}>
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs milestone-tabs">
       {{#each @milestones as |milestone index|}}
@@ -34,32 +34,22 @@
         </li>
       {{/if}}
     </ul>
-    <span class="milestone-filters">
-      <div class="box-tools pull-right filters flex-row">
-        <AppUi::Dropdown @isPrimary={{true}}>
-          <:button>
-            {{t "views.app.board.savedSearches"}}
-          </:button>
-          <:content>
-           {{#each @savedSearches as |search|}}
-            <div {{on "click" (fn this.toggleSearch search)}} class="{{if (call (fn this.isSearchActive search)) 'active' ''}}">
-              {{search.name}}
-              {{#if (call (fn this.isSearchActive search))}}
-                <i class="fa fa-check pull-right"></i>
-              {{/if}}
-            </div>
-           {{/each}}
-          </:content>
-        </AppUi::Dropdown>
-        <Input
-          @value={{this.query}}
-          data-milestones-taskboard-search
-          name="query"
-          autocomplete="off"
-          placeholder={{concat (t "global.form.search") " " (t "global.module.plural.issue") " .."}}
+    {{#if @querySchema}}
+      <span class="milestone-filters" data-milestones-taskboard-search>
+        <EzSearchCompact
+          @linear={{true}}
+          @schema={{@querySchema}}
+          @query={{@paramsQuery}}
+          @savedSearches={{@savedSearches}}
+          @activeSavedSearchId={{@selectedSearchId}}
+          @onSavedSearchChange={{@selectSavedSearch}}
+          @onApply={{@applyQuery}}
+          @onSave={{@showSaveSearchDialog}}
+          @onUpdateSavedSearch={{@updateSavedSearch}}
+          @aclContext="issue.read"
         />
-      </div>
-    </span>
+      </span>
+    {{/if}}
     <div class="tab-content">
       {{#each @milestones as |milestone index|}}
         <div class="tab-pane {{if (eq index 0) "active" ""}}" id="tab_{{if milestone.id milestone.id "backlog"}}">
@@ -68,7 +58,6 @@
             @group={{@group}}
             @statuses={{@statuses}}
             @statusClass={{@statusClass}}
-            @query={{this.query}}
             @openIssue={{@openIssue}}
             @selectIssue={{this.selectIssue}}
             @validateField={{@validateField}}

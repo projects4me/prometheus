@@ -15,28 +15,13 @@ import Component from '@glimmer/component';
 export default class TaskBoardIssuesProviderComponent extends Component {
 
     /**
-     * This function is used to filter the issues based upon user's input and return
-     * that list of filtered issues in order to render them template.
+     * The issues of the lane. Searching runs on the server (the route reloads the lanes),
+     * so nothing is filtered in the browser.
      *
      * @method get
      * @public
      */
     get results() {
-        let { issues, query } = this.args;
-        if (query) {
-            issues = issues.filter((issue) => {
-                let subject = issue.subject;
-                let description = issue.description;
-                let issueNumber = issue.issueNumber;
-
-                if ((subject != null && subject.includes(query)) ||
-                    (description != null && description.includes(query)) ||
-                    (issueNumber != null && issueNumber.includes(query))
-                ) {
-                    return true;
-                }
-            });
-        }
-        return issues;
+        return this.args.issues;
     }
 }

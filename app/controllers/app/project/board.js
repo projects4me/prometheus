@@ -12,6 +12,9 @@ import { peekOrPush, insertAtIfMissing } from 'prometheus/utils/live/collection'
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
 import { refreshView } from 'prometheus/utils/live/reload';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
+import { htmlSafe } from '@ember/template';
+
+const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
 
 /**
  * Board controller: kanban columns plus Hermes live handlers for status,
@@ -54,6 +57,16 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      * @private
      */
     @service issuePreview;
+
+    /**
+     * Creates and updates the saved searches of the issues.
+     *
+     * @property savedSearch
+     * @type Ember.Service
+     * @for AppProjectBoardController
+     * @private
+     */
+    @service savedSearch;
 
     /**
      * Disposer returned by issuePreview.register() for this screen.
@@ -346,6 +359,66 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      * @for Board
      */
     @tracked searchId = null;
+
+    /**
+     * The ezSearch schema of the issues, loaded by the route
+     *
+     * @property querySchema
+     * @type Object
+     * @for Board
+     */
+    @tracked querySchema = null;
+
+    /**
+     * The saved searches of the user for the issues, loaded by the route; always replaced, never mutated
+     *
+     * @property savedsearches
+     * @type Array
+     * @for Board
+     */
+    @tracked savedsearches = [];
+
+    /**
+     * The unsaved record the save dialog names
+     *
+     * @property newSavedsearch
+     * @type Object
+     * @for Board
+     */
+    @tracked newSavedsearch = null;
+
+    /**
+     * Whether the save search dialog is open
+     *
+     * @property saveSearchDialog
+     * @type Boolean
+     * @for Board
+     */
+    @tracked saveSearchDialog = false;
+
+    /**
+     * The query the save dialog shows
+     *
+     * @property saveSearchQuery
+     * @type String
+     * @for Board
+     */
+    @tracked saveSearchQuery = '';
+
+    /**
+     * The saved searches in the shape <EzSearchCompact> expects
+     *
+     * @property ezSavedSearches
+     * @type Array
+     * @for Board
+     */
+    get ezSavedSearches() {
+        return this.savedsearches.map(search => ({
+            id: search.get('id'),
+            name: search.get('name'),
+            query: search.get('searchquery')
+        }));
+    }
 
     /**
      * The currently selected issue for displaying in the sidebar
@@ -824,15 +897,120 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
     }
 
     /**
-     * This action is used to apply the search to the issues.
+     * Runs a query from ezSearch; the route reloads the lanes for it
      *
-     * @method applySearch
-     * @param {Object} search The search object to apply
+     * @method applyQuery
+     * @param {String} query The Gaia query, empty for none
      * @public
      */
-    @action applySearch(search) {
-        this.query = search.searchquery;
-        this.searchId = search.id;
+    @action applyQuery(query) {
+        this.query = query || null;
+    }
+
+    /**
+     * Marks a saved search as the active one, or clears the mark
+     *
+     * @method selectSavedSearch
+     * @param {Object|null} search The picked item or null
+     * @public
+     */
+    @action selectSavedSearch(search) {
+        this.searchId = search ? String(search.id) : null;
+    }
+
+    /**
+     * Opens the save dialog for the query ezSearch hands over
+     *
+     * @method showEzSaveSearchDialog
+     * @param {String} query
+     * @public
+     */
+    @action showEzSaveSearchDialog(query) {
+        this.saveSearchQuery = query;
+        this.saveSearchDialog = true;
+    }
+
+    /**
+     * Closes the save dialog
+     *
+     * @method removeSaveSearchDialog
+     * @public
+     */
+    @action removeSaveSearchDialog() {
+        this.saveSearchDialog = false;
+    }
+
+    /**
+     * Saves the query of the dialog as a saved search of the issues of the project
+     *
+     * @method saveEzSearch
+     * @returns {Promise}
+     * @public
+     */
+    @action async saveEzSearch() {
+        let query = this.saveSearchQuery;
+        if (!query) {
+            this.notify('error', this.intl.t(`${SAVED_SEARCH_MESSAGES}.missing`));
+            this.removeSaveSearchDialog();
+            return;
+        }
+        try {
+            let data = await this.savedSearch.create(this.newSavedsearch, {
+                relatedTo: 'issue',
+                query,
+                projectId: this.trackedProject.getProjectId()
+            });
+            if (this.isDestroying || this.isDestroyed) {
+                return;
+            }
+            this.savedsearches = [...this.savedsearches, data];
+            this.newSavedsearch = this.store.createRecord('savedsearch');
+            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.added`, { name: data.get('name') })));
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
+        }
+        if (!this.isDestroying && !this.isDestroyed) {
+            this.removeSaveSearchDialog();
+        }
+    }
+
+    /**
+     * Replaces the query of a saved search with the one ezSearch hands over
+     *
+     * @method updateEzSavedSearch
+     * @param {Object} search The saved search item
+     * @param {String} query
+     * @returns {Promise}
+     * @public
+     */
+    @action async updateEzSavedSearch(search, query) {
+        let record = this.savedsearches.find(item => String(item.get('id')) === String(search.id));
+        if (!record) {
+            return;
+        }
+        try {
+            await this.savedSearch.update(record, query);
+            if (this.isDestroying || this.isDestroyed) {
+                return;
+            }
+            this.savedsearches = [...this.savedsearches];
+            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.updated`, { name: record.get('name') })));
+        } catch (error) {
+            record.rollbackAttributes();
+            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
+        }
+    }
+
+    /**
+     * Posts a message to the user
+     *
+     * @method notify
+     * @param {String} type
+     * @param {String|Object} message
+     * @private
+     */
+    notify(type, message) {
+        new Messenger().post({ message, type, showCloseButton: true });
     }
 
     /**
