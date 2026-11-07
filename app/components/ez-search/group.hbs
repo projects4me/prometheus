@@ -1,0 +1,46 @@
+<div class="ez-search-group {{if (eq @group.conjunction "OR") "ez-search-group-or" "ez-search-group-and"}}" data-ez-group={{@group.conjunction}}>
+  <div class="ez-search-group-header">
+    <div class="btn-group btn-group-xs" role="group">
+      {{#each this.conjunctions as |conjunction|}}
+        <button
+          type="button"
+          class="btn btn-default {{if (eq @group.conjunction conjunction) "active"}}"
+          data-ez-conjunction={{conjunction}}
+          {{on "click" (fn this.setConjunction conjunction)}}
+        >{{conjunction}}</button>
+      {{/each}}
+    </div>
+    <button type="button" class="btn btn-default btn-xs" data-ez-add-condition {{on "click" this.addCondition}}>
+      <i class="fa fa-plus"></i><span class="hidden-xs"> {{t "components.ezSearch.panel.condition"}}</span>
+    </button>
+    <button type="button" class="btn btn-default btn-xs" data-ez-add-group {{on "click" this.addGroup}}>
+      <i class="fa fa-sitemap"></i><span class="hidden-xs"> {{t "components.ezSearch.panel.group"}}</span>
+    </button>
+    {{#unless @isRoot}}
+      <button type="button" class="btn btn-box-tool pull-right" data-ez-remove-group title={{t "components.ezSearch.panel.removeGroup"}} {{on "click" this.removeGroup}}>
+        <i class="fa fa-times"></i>
+      </button>
+    {{/unless}}
+  </div>
+  <div class="ez-search-group-body">
+    {{#each @group.children as |child|}}
+      {{#if (eq child.kind "group")}}
+        <EzSearch::Group
+          @group={{child}}
+          @tree={{@tree}}
+          @schema={{@schema}}
+          @errors={{@errors}}
+          @onChange={{@onChange}}
+        />
+      {{else}}
+        <EzSearch::Condition
+          @condition={{child}}
+          @tree={{@tree}}
+          @schema={{@schema}}
+          @errors={{@errors}}
+          @onChange={{@onChange}}
+        />
+      {{/if}}
+    {{/each}}
+  </div>
+</div>

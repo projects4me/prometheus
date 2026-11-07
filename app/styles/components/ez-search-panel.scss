@@ -1,0 +1,58 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+@import '../variables.scss';
+
+// The ezSearch visual builder: nested groups with a coloured left edge and rows of field, operator and value.
+.ez-search-panel {
+  .ez-search-group {
+    border: 1px solid $borderColor;
+    border-left-width: 4px;
+    border-radius: 0;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    background: $backgroundColor;
+  }
+
+  .ez-search-group-and {
+    border-left-color: $primaryColor;
+  }
+
+  .ez-search-group-or {
+    border-left-color: $highlightColor;
+  }
+
+  .ez-search-group-header {
+    margin-bottom: 8px;
+
+    .btn {
+      border-radius: 0;
+    }
+  }
+
+  .ez-search-group .ez-search-group {
+    margin-left: 20px;
+    margin-bottom: 0;
+    margin-top: 8px;
+  }
+
+  .ez-search-condition {
+    margin-bottom: 6px;
+  }
+
+  .ez-search-condition-note {
+    font-size: 12px;
+  }
+
+  @media (max-width: 767px) {
+    .ez-search-group .ez-search-group {
+      margin-left: 8px;
+    }
+
+    .ez-search-condition-operator,
+    .ez-search-condition-value {
+      margin-top: 6px;
+    }
+  }
+}

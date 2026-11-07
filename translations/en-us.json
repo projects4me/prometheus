@@ -368,6 +368,15 @@
         "hint": "Up and Down to move, Tab or Enter to accept, Esc to close",
         "position": "At character {position}"
       },
+      "panel": {
+        "condition": "Condition",
+        "group": "Group",
+        "field": "Choose a field",
+        "operator": "Choose an operator",
+        "removeCondition": "Remove condition",
+        "removeGroup": "Remove group",
+        "incomplete": "Incomplete: left out of the query"
+      },
       "valueEditor": {
         "text": "Enter a value",
         "value": "Choose a value",
