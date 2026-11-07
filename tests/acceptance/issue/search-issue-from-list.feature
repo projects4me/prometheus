@@ -14,5 +14,5 @@ Feature: Issue | search issue from list
     ---------
     And There is a saved search related to issue
     When User navigates to app/project/project_1/issue
-    And User selects a saved search
+    And User selects a saved search in the issue ezSearch
     Then the searched issue should be inside list

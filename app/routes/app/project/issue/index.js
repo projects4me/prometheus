@@ -26,7 +26,16 @@ export default App.extend({
      * @for Project
      * @private
      */
-    trackedProject: inject(),    
+    trackedProject: inject(),
+
+    /**
+     * Loads the ezSearch schema of the issues.
+     *
+     * @property querySchema
+     * @type Prometheus.Services.QuerySchemaService
+     * @private
+     */
+    querySchema: inject('query-schema'),    
 
     /**
      * We need to reload the model as the values related ot the page's data are
@@ -235,9 +244,11 @@ export default App.extend({
 
         return hashSettled({
             savedsearches: _self.store.query('savedsearch',savedSearchesOption),
+            schema: _self.querySchema.load('Issue', { projectId }),
         }).then(function(results){
             let data = extractHashSettled(results);
             _self.set('savedsearches',data.savedsearches.toArray());
+            _self.set('schema', Array.isArray(data.schema) ? null : data.schema);
         }).catch((error) =>{
             _self.errorManager.handleError(error, {
                 moduleName: "issue"
@@ -264,6 +275,7 @@ export default App.extend({
         let savedSearch = this.store.createRecord('savedsearch');
         controller.set('newSavedsearch',savedSearch);
         controller.set('savedsearches',this.savedsearches);
+        controller.set('querySchema',this.schema);
         controller.set('model',model);
         controller.set('query',this.query);
         controller.set('sort',this.sort);

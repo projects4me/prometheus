@@ -25,123 +25,112 @@ import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 export default class AppProjectIssueIndexController extends PrometheusListController {
 
     /**
-     * This object holds all of the information that we need to create our schema and handle filtering
-     * rules for the issues list.
-     * @property metadata
+     * The ezSearch schema of the issues, loaded by the route.
+     *
+     * @property querySchema
      * @type Object
-     * @for AppProjectIssueCreateController
-     * @protected
      */
-    metadata = {
-        filters:[
-            {
-                id: 'Issue.issueNumber',
-                label: this.intl.t("views.app.issue.fields.issueNumber"),
-                type: 'string'
-            },
-            {
-                id: 'Issue.subject',
-                label: this.intl.t("views.app.issue.fields.subject"),
-                type: 'string'
-            },
-            {
-                id: 'Issue.status',
-                label: this.intl.t("views.app.issue.fields.status"),
-                type: 'string',
-                input: 'select',
-                get values() {
-                    return this._controller.statusOptionsByName;
-                },
-                _controller: this
-            },
-            {
-                id: 'issuemilestone.name',
-                label: this.intl.t("views.app.issue.fields.milestoneId"),
-                type: 'string',
-                input: 'select',
-                get values() {
-                    return this._controller.milestonesOptions;
-                },
-                _controller: this,
-            },
-            {
-                id: 'issuetype.name',
-                label: this.intl.t("views.app.issue.fields.typeId"),
-                type: 'string',
-                input: 'select',
-                get values() {
-                    return this._controller.issueTypeOptions;
-                },
-                _controller: this,
-            },                                
-            {
-                id: 'Issue.priority',
-                label: this.intl.t("views.app.issue.fields.priority"),
-                type: 'string',
-                input: 'select',
-                values: (new format(this)).getTranslation('views.app.issue.lists.priority'),
-            },
-            {
-                id: 'Issue.startDate',
-                label: this.intl.t("views.app.issue.fields.startDate"),
-                type: 'date',
-                input: "text",
-                plugin: 'datepicker',
-                plugin_config: {
-                    todayBtn: 'linked',
-                    todayHighlight: true,
-                    autoclose: true
-                }
-            },
-            {
-                id: 'Issue.endDate',
-                label: this.intl.t("views.app.issue.fields.endDate"),
-                type: 'date',
-                input: "text",
-                plugin: 'datepicker',
-                plugin_config: {
-                    todayBtn: 'linked',
-                    todayHighlight: true,
-                    autoclose: true
-                }
-            },
-            {
-                id: 'parentissue.issueNumber',
-                label: this.intl.t("views.app.issue.fields.parent"),
-                type: 'string'
-            },
-            {
-                id: 'assignedTo.name',
-                label: this.intl.t("views.app.issue.fields.assignee"),
-                type: 'string',
-                input: 'select',
-                get values() {
-                    return this._controller.usersOptions;
-                },
-                _controller: this
-            },
-            {
-                id: 'ownedBy.name',
-                label: this.intl.t("views.app.issue.fields.owner"),
-                type: 'string',
-                input: 'select',
-                get values() {
-                    return this._controller.usersOptions;
-                },
-                _controller: this
-            },
-            {
-                id: 'reportedBy.name',
-                label: this.intl.t("views.app.issue.fields.reportedBy"),
-                type: 'string',
-                input: 'select',
-                get values() {
-                    return this._controller.usersOptions;
-                },
-                _controller: this
+    @tracked querySchema = null;
+
+    /**
+     * The query shown in the save search dialog.
+     *
+     * @property saveSearchQuery
+     * @type String
+     */
+    @tracked saveSearchQuery = '';
+
+    /**
+     * The saved searches in the shape <EzSearch> expects.
+     *
+     * @property ezSavedSearches
+     * @type Array
+     */
+    get ezSavedSearches() {
+        return (this.savedsearches || []).map((search) => ({
+            id: search.get('id'),
+            name: search.get('name'),
+            query: search.get('searchquery'),
+        }));
+    }
+
+    /**
+     * Mark a saved search as the active one, or clear the mark.
+     *
+     * @method selectSavedSearch
+     * @param {Object|null} search The picked item (`{id, name, query}`) or null
+     */
+    @action selectSavedSearch(search) {
+        if (!search) {
+            this.set('searchId', null);
+            this.set('activeSearch', null);
+
+            return;
+        }
+
+        this.set('searchId', String(search.id));
+        this.set('activeSearch', (this.savedsearches || []).find((item) => String(item.get('id')) === String(search.id)) || null);
+    }
+
+    /**
+     * Open the save dialog for the query ezSearch hands over.
+     *
+     * @method showEzSaveSearchDialog
+     * @param {String} query
+     */
+    @action showEzSaveSearchDialog(query) {
+        this.set('saveSearchQuery', query);
+        this.set('saveSearchDialog', true);
+    }
+
+    /**
+     * Save the query shown in the dialog as a saved search.
+     *
+     * @method saveEzSearch
+     */
+    @action async saveEzSearch() {
+        let query = this.saveSearchQuery;
+
+        if (!query) {
+            new Messenger().post({
+                message: this.intl.t("views.app.issue.list.savedsearch.missing"),
+                type: 'error',
+                showCloseButton: true
+            });
+            this.send('removeSaveSearchDialog');
+
+            return;
+        }
+
+        let savedSearch = this.newSavedsearch;
+
+        savedSearch.set('relatedTo', 'issue');
+        savedSearch.set('searchquery', query);
+        savedSearch.set('projectId', this.appProjectController.projectId);
+
+        try {
+            let data = await savedSearch.save();
+
+            if (this.isDestroying || this.isDestroyed) {
+                return;
             }
-        ]
-    }    
+
+            this.set('savedsearches', [...(this.savedsearches || []), data]);
+            this.set('newSavedsearch', this.store.createRecord('savedsearch'));
+
+            new Messenger().post({
+                message: htmlSafe(this.intl.t("views.app.issue.list.savedsearch.added", { name: data.get('name') })),
+                type: 'success',
+                showCloseButton: true
+            });
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
+        }
+
+        if (!this.isDestroying && !this.isDestroyed) {
+            this.send('removeSaveSearchDialog');
+        }
+    }
 
     /**
      * This property stores the field on which the page if currently sored on

@@ -7,6 +7,9 @@ export function register(server, ctx) {
     server.get('/issue', (schema, request) => {
         let model = schema.issues.all();
         let issueQuery = request.queryParams.query;
+        // Let the steps assert what the list sent; Mirage still doesn't filter by it.
+        ctx.set('lastIssueQuery', issueQuery);
+        ctx.set('issueQueries', [...(ctx.get('issueQueries') || []), issueQuery]);
         let field = ctx.get('fieldSearched');
         field = field ? field : 'Issue.issueNumber';
         let value = getValueFromQuery(field, issueQuery);
