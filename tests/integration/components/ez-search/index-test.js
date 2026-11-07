@@ -42,6 +42,18 @@ module('Integration | Component | ez-search', function (hooks) {
         />`);
     }
 
+    test('the bar has no form-field margin and shares a row with the Search button', async function (assert) {
+        await show();
+
+        const field = document.querySelector('[data-ez-search-bar] .form-field');
+        const style = getComputedStyle(field);
+        ['Top', 'Right', 'Bottom', 'Left'].forEach((side) => assert.strictEqual(style[`margin${side}`], '0px', `margin ${side}`));
+
+        const barTop = document.querySelector('[data-ez-search-bar]').getBoundingClientRect().top;
+        const buttonTop = document.querySelector('[data-ez-search-apply]').getBoundingClientRect().top;
+        assert.ok(Math.abs(barTop - buttonTop) <= 4, `bar and Search share a row (${barTop} vs ${buttonTop})`);
+    });
+
     test('typing updates the open panel and editing the panel updates the bar', async function (assert) {
         await show();
         await click('[data-ez-builder-toggle]');

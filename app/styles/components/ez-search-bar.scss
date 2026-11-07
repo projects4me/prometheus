@@ -16,6 +16,15 @@
     border-radius: 0;
   }
 
+  // The bar is a toolbar field, not a form layout field: drop the form-layout spacing.
+  .form-field {
+    margin: 0;
+
+    [data-form-field="label"] {
+      display: none;
+    }
+  }
+
   .ez-search-bar-overlay {
     position: absolute;
     top: 0;
