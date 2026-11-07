@@ -68,8 +68,24 @@
       font-size: 11px;
     }
 
-    li.active > a {
-      background: $primaryColorLight;
+    .dropdown-header {
+      color: $mediumColor;
+    }
+
+    li > a {
+      color: $darkColor;
+    }
+
+    li.active > a,
+    li > a:hover,
+    li > a:focus {
+      background: $primaryColor;
+      color: #fff;
+      outline: none;
+
+      .ez-search-item-detail {
+        color: #fff;
+      }
     }
 
     .ez-search-item-detail {

@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, fillIn, triggerKeyEvent, focus, blur, settled } from '@ember/test-helpers';
+import { render, find, fillIn, triggerKeyEvent, focus, blur, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
 import { issueQuerySchema } from '../../../helpers/query-schema';
@@ -44,6 +44,22 @@ module('Integration | Component | ez-search/search-bar', function (hooks) {
 
         await triggerKeyEvent(INPUT, 'keydown', 'Tab');
         assert.dom(INPUT).hasValue('priority ');
+    });
+
+    test('the menu is readable: dark rows, crimson active row with white text', async function (assert) {
+        await focus(INPUT);
+        await fillIn(INPUT, '');
+        await triggerKeyEvent(INPUT, 'keydown', 'ArrowDown');
+
+        const active = find('[data-ez-menu] li.active > a');
+        const normal = find('[data-ez-menu] li:not(.active):not(.dropdown-header):not(.ez-search-hint) > a');
+        assert.ok(active && normal, 'active and normal rows exist');
+
+        const activeStyle = getComputedStyle(active);
+        assert.strictEqual(activeStyle.backgroundColor, 'rgb(179, 36, 79)', 'active row uses the crimson token');
+        assert.strictEqual(activeStyle.color, 'rgb(255, 255, 255)', 'active row text is white');
+        assert.strictEqual(getComputedStyle(normal).color, 'rgb(51, 51, 51)', 'normal rows use the dark text colour');
+        assert.strictEqual(getComputedStyle(find('[data-ez-menu]')).opacity, '1', 'the menu is not faded');
     });
 
     test('arrow keys move and Esc closes the menu', async function (assert) {
