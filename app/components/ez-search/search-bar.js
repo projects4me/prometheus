@@ -16,7 +16,7 @@ import { complete } from 'prometheus/utils/query/completer';
  * Errors are shown under the input and nothing is reported. A suggestion menu from `complete()` helps
  * while typing.
  *
- * Arguments: `@tree`, `@schema`, `@placeholder`, `@onChange(tree)` and `@onRun()`.
+ * Arguments: `@tree`, `@schema`, `@placeholder`, `@onChange(tree)`, `@onErrors(errors)` and `@onRun()`.
  *
  * @class SearchBar
  * @namespace Prometheus.Components.EzSearch
@@ -31,6 +31,17 @@ export default class EzSearchSearchBarComponent extends Component {
     @tracked activeIndex = 0;
     @tracked cursor = 0;
     @tracked errors = [];
+
+    /**
+     * Keep the parse errors of the text and report them with `@onErrors(errors)`.
+     *
+     * @method setErrors
+     * @param {Array} errors
+     */
+    setErrors(errors) {
+        this.errors = errors;
+        this.args.onErrors?.(errors);
+    }
 
     /**
      * The text of the input: the draft while editing, else the exact format of `@tree`.
@@ -109,7 +120,7 @@ export default class EzSearchSearchBarComponent extends Component {
 
         let { tree, errors } = parse(this.draft, this.args.schema);
 
-        this.errors = errors;
+        this.setErrors(errors);
 
         if (errors.length > 0) {
             return false;
@@ -134,7 +145,7 @@ export default class EzSearchSearchBarComponent extends Component {
     onInput(event) {
         this.draft = event.target.value;
         this.syncCursor(event);
-        this.errors = [];
+        this.setErrors([]);
         this.activeIndex = 0;
         this.menuOpen = true;
     }
@@ -198,7 +209,7 @@ export default class EzSearchSearchBarComponent extends Component {
         this.draft = text.slice(0, replaceStart) + inserted + text.slice(replaceEnd);
         this.cursor = replaceStart + inserted.length;
         this.activeIndex = 0;
-        this.errors = [];
+        this.setErrors([]);
 
         if (input) {
             let position = this.cursor;

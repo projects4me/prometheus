@@ -26,3 +26,58 @@
     }
   }
 }
+
+// The ezSearch toolbar; on mobile the bar takes the first row, the rest wrap below it.
+.ez-search {
+  .ez-search-toolbar {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+
+    .ez-search-field {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .ez-search-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    @media (max-width: 767px) {
+      flex-wrap: wrap;
+
+      .ez-search-field {
+        order: -1;
+        flex: 1 1 100%;
+      }
+
+      .ez-search-actions {
+        margin-left: auto;
+      }
+    }
+  }
+
+  .ez-search-builder-area {
+    margin-top: 10px;
+
+    .ez-search-save {
+      margin-top: 10px;
+
+      @media (max-width: 767px) {
+        .btn {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.ez-search .ez-search-saved .dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: 3px 20px;
+    text-align: left;
+    background: transparent;
+    border: 0;
+}
