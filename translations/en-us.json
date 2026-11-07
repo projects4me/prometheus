@@ -871,7 +871,9 @@
           "expand": "Show the ideas list",
           "empty": "No open ideas",
           "showArchived": "Show archived ({count})",
-          "hideArchived": "Hide archived ({count})"
+          "hideArchived": "Hide archived ({count})",
+          "count": "{count}",
+          "countOf": "{count} of {total}"
         },
         "status": {
           "open": "Open",
@@ -888,7 +890,12 @@
         },
         "fields": {
           "title": "Title",
-          "description": "Describe it"
+          "description": "Describe it",
+          "descriptionLabel": "Description",
+          "status": "Status",
+          "creator": "Created by",
+          "dateCreated": "Created",
+          "dateModified": "Updated"
         },
         "created": "Idea <strong>{title}</strong> has been started",
         "create": {
