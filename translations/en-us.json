@@ -332,6 +332,12 @@
   "components": {
     "ezSearch": {
       "builderToggle": "Builder",
+      "savedSearch": {
+        "edited": "edited",
+        "update": "Update \"{name}\"",
+        "saveAsNew": "Save as new search…",
+        "revert": "Revert to saved"
+      },
       "operators": {
         "equal": "is",
         "notEqual": "is not",

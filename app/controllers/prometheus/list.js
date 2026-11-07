@@ -7,6 +7,7 @@ import _ from "lodash";
 import $ from 'jquery';
 import { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import ENV from 'prometheus/config/environment';
 import { htmlSafe } from '@ember/template';
@@ -22,6 +23,8 @@ import { scheduleOnce } from '@ember/runloop';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 export default class PrometheusListController extends PrometheusController {
+    @service savedSearch;
+
 
     /**
      * The default list view supports the following parameters that can
@@ -392,17 +395,8 @@ export default class PrometheusListController extends PrometheusController {
             return;
         }
 
-        let savedSearch = this.newSavedsearch;
-
-        savedSearch.set('relatedTo', relatedTo);
-        savedSearch.set('searchquery', query);
-
-        if (projectId !== undefined) {
-            savedSearch.set('projectId', projectId);
-        }
-
         try {
-            let data = await savedSearch.save();
+            let data = await this.savedSearch.create(this.newSavedsearch, { relatedTo, query, projectId });
 
             if (this.isDestroying || this.isDestroyed) {
                 return;
@@ -422,6 +416,42 @@ export default class PrometheusListController extends PrometheusController {
 
         if (!this.isDestroying && !this.isDestroyed) {
             this.send('removeSaveSearchDialog');
+        }
+    }
+
+    /**
+     * Replace the query of a saved search with the one ezSearch hands over.
+     *
+     * @method updateEzSavedSearch
+     * @param {Object} search The saved search item (`{id, name, query}`)
+     * @param {String} query The new Gaia query string
+     */
+    @action async updateEzSavedSearch(search, query) {
+        let { messagePrefix } = this.savedSearchContext();
+        let record = (this.savedsearches || []).find((item) => String(item.get('id')) === String(search.id));
+
+        if (!record) {
+            return;
+        }
+
+        try {
+            await this.savedSearch.update(record, query);
+
+            if (this.isDestroying || this.isDestroyed) {
+                return;
+            }
+
+            // Replace the array so ezSavedSearches recomputes with the new query.
+            this.set('savedsearches', [...this.savedsearches]);
+
+            new Messenger().post({
+                message: htmlSafe(this.intl.t(`${messagePrefix}.updated`, { name: record.get('name') })),
+                type: 'success',
+                showCloseButton: true
+            });
+        } catch (error) {
+            record.rollbackAttributes();
+            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
         }
     }
 

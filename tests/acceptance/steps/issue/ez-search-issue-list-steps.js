@@ -61,6 +61,12 @@ export const when = function () {
             }
         },
         {
+            'User updates the active saved search in the issue ezSearch': (assert) => async function () {
+                await click('[data-ez-saved] button');
+                await click('[data-ez-saved-update]');
+            }
+        },
+        {
             'User opens the issue search builder': (assert) => async function () {
                 await click('[data-ez-builder-toggle]');
             }
@@ -83,6 +89,16 @@ export const then = function () {
         {
             'the issue search bar shows "$text"': (assert) => async function (text) {
                 assert.dom(INPUT).hasValue(text);
+            }
+        },
+        {
+            'the issue saved search button shows edited': (assert) => async function () {
+                assert.dom('[data-ez-saved-edited]').exists();
+            }
+        },
+        {
+            'the issue saved search button does not show edited': (assert) => async function () {
+                assert.dom('[data-ez-saved-edited]').doesNotExist();
             }
         },
         {
