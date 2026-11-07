@@ -6,6 +6,7 @@ import App from "prometheus/routes/app";
 import MD from "prometheus/utils/metadata/metadata";
 import ENV from "../../config/environment";
 import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
 import { capitalize} from '@ember/string';
 
 /**
@@ -70,6 +71,16 @@ export default App.extend({
     intl: inject(),
 
     /**
+     * Loads the ezSearch schema of the module from its search metadata
+     *
+     * @property querySchemaService
+     * @type Prometheus.Services.QuerySchemaService
+     * @for Module
+     * @private
+     */
+    querySchemaService: service('query-schema'),
+
+    /**
      * The setup controller function that will be called every time the user visits
      * the module route, this function is responsible for loading the required data
      * for the route
@@ -117,7 +128,19 @@ export default App.extend({
         controller.set('model',this.data);
         controller.set('module',this.module);
         controller.set('metaData',this.metaData);
-        //controller.setupController();
+
+        // The search is shown only when the module declares search metadata
+        controller.set('querySchema', null);
+        let module = this.module;
+        this.querySchemaService.load(module).then((schema) => {
+            if (!controller.isDestroying && !controller.isDestroyed && controller.module === module) {
+                controller.set('querySchema', schema || null);
+            }
+        }).catch((error) => {
+            if (!controller.isDestroying && !controller.isDestroyed) {
+                this.errorManager?.handleError(error, { moduleName: module });
+            }
+        });
     }
 
 });
