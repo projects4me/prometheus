@@ -83,7 +83,16 @@ module('Integration | Component | ez-search/value-editor', function (hooks) {
         assert.dom('[data-ez-value-editor="select"] .relate-user .username').hasText('Sam');
     });
 
-    test('date field renders a date control; BETWEEN renders two', async function (assert) {
+    test('number BETWEEN renders two number inputs and each emits [from, to] changing one end', async function (assert) {
+        await show(this, { id: 'Issue.estimate', type: 'number' }, 'BETWEEN', ['1', '9']);
+        assert.dom('[data-ez-value-editor="numrange"] input[type="number"]').exists({ count: 2 });
+        await fillIn('[data-ez-value-editor="numrange"] .ez-search-range > :first-child input', '3');
+        assert.deepEqual(this.emitted.at(-1), ['3', '9']);
+        await fillIn('[data-ez-value-editor="numrange"] .ez-search-range > :last-child input', '7');
+        assert.deepEqual(this.emitted.at(-1), ['1', '7']);
+    });
+
+    test('date field renders a date control; BETWEEN renders two',async function (assert) {
         await show(this, { id: 'Issue.startDate', type: 'date' }, ':');
         assert.dom('[data-ez-value-editor="date"] input').exists({ count: 1 });
         await show(this, { id: 'Issue.startDate', type: 'date' }, 'BETWEEN');

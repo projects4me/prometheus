@@ -55,6 +55,24 @@
           @data-field="ez-search.to"
         />
       </div>
+    {{else if (eq this.kind "numrange")}}
+      <div class="ez-search-range">
+        <FormFields::FieldText
+          @placeholder={{t "components.ezSearch.valueEditor.from"}}
+          @type={{this.boundType}}
+          @value={{this.from}}
+          @onInput={{this.typedFrom}}
+          @data-field="ez-search.from"
+        />
+        <span class="ez-search-range-and">{{t "components.ezSearch.valueEditor.and"}}</span>
+        <FormFields::FieldText
+          @placeholder={{t "components.ezSearch.valueEditor.to"}}
+          @type={{this.boundType}}
+          @value={{this.to}}
+          @onInput={{this.typedTo}}
+          @data-field="ez-search.to"
+        />
+      </div>
     {{else}}
       <FormFields::FieldText
         @placeholder={{this.placeholder}}

@@ -24,7 +24,7 @@ export default class EzSearchValueEditorComponent extends Component {
     @service intl;
 
     /**
-     * The kind of control to show: `none`, `range`, `date`, `list` (static options), `csv` (typed, comma separated), `select` or `text`.
+     * The kind of control to show: `none`, `range` (two dates), `numrange` (two typed bounds), `date`, `list` (static options), `csv` (typed, comma separated), `select` or `text`.
      *
      * @property kind
      * @type String
@@ -37,7 +37,7 @@ export default class EzSearchValueEditorComponent extends Component {
             return 'none';
         }
         if (arity === 2) {
-            return 'range';
+            return type === 'date' ? 'range' : 'numrange';
         }
         if (arity === 'n') {
             return type === 'enum' || type === 'user' ? 'list' : 'csv';
@@ -91,6 +91,21 @@ export default class EzSearchValueEditorComponent extends Component {
 
     get to() {
         return Array.isArray(this.args.value) ? (this.args.value[1] ?? '') : '';
+    }
+
+    // The bound inputs are not two-way owners of the value: changes arrive through `typedFrom` and `typedTo`.
+    set from(value) {}
+
+    set to(value) {}
+
+    /**
+     * The input type of the typed range bounds: number for number fields, text otherwise.
+     *
+     * @property boundType
+     * @type String
+     */
+    get boundType() {
+        return this.args.field?.type === 'number' ? 'number' : 'text';
     }
 
     get selectedOne() {
@@ -176,5 +191,15 @@ export default class EzSearchValueEditorComponent extends Component {
     @action
     setTo(date) {
         this.emit([this.from, date]);
+    }
+
+    @action
+    typedFrom(event) {
+        this.setFrom(event.target.value);
+    }
+
+    @action
+    typedTo(event) {
+        this.setTo(event.target.value);
     }
 }
