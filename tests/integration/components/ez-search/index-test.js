@@ -19,10 +19,13 @@ module('Integration | Component | ez-search', function (hooks) {
         this.schema = issueQuerySchema();
         this.applied = [];
         this.onApply = (query) => this.applied.push(query);
-        this.saved = [{ name: 'Done ones', query: '((Issue.status : done))' }];
+        this.saved = [{ id: 's1', name: 'Done ones', query: '((Issue.status : done))' }];
         this.query = '';
         this.baseQuery = '';
         this.onSave = undefined;
+        this.activeId = undefined;
+        this.changes = [];
+        this.onChange = (search) => this.changes.push(search);
     });
 
     async function show() {
@@ -33,6 +36,8 @@ module('Integration | Component | ez-search', function (hooks) {
           @savedSearches={{this.saved}}
           @onApply={{this.onApply}}
           @onSave={{this.onSave}}
+          @activeSavedSearchId={{this.activeId}}
+          @onSavedSearchChange={{this.onChange}}
           @aclContext="issue.read"
         />`);
     }
@@ -150,5 +155,67 @@ module('Integration | Component | ez-search', function (hooks) {
         assert.dom('[data-ez-save]').exists();
         await click('[data-ez-save]');
         assert.deepEqual(saved, ['((Issue.status : done))']);
+    });
+
+    test('@activeSavedSearchId marks the search and loads its query', async function (assert) {
+        this.activeId = 's1';
+        await show();
+
+        assert.dom(INPUT).hasValue('((Issue.status : done))');
+        await click('.app-dropdown-btn');
+        assert.dom('[data-ez-saved-item] .fa-check').exists();
+    });
+
+    test('@query wins over @activeSavedSearchId but the mark stays', async function (assert) {
+        this.activeId = 's1';
+        this.query = '((Issue.status : new))';
+        await show();
+
+        assert.dom(INPUT).hasValue('((Issue.status : new))');
+        await click('.app-dropdown-btn');
+        assert.dom('[data-ez-saved-item] .fa-check').exists();
+    });
+
+    test('picking a saved search reports it and applies; picking it again reports null', async function (assert) {
+        await show();
+        await click('.app-dropdown-btn');
+        await click('[data-ez-saved-item]');
+
+        assert.strictEqual(this.changes.length, 1);
+        assert.strictEqual(this.changes[0].id, 's1');
+        assert.deepEqual(this.applied, ['((Issue.status : done))']);
+
+        await click('.app-dropdown-btn');
+        await click('[data-ez-saved-item]');
+
+        assert.deepEqual(this.changes.slice(1), [null]);
+        assert.dom(INPUT).hasValue('');
+        assert.strictEqual(this.applied.length, 2);
+    });
+
+    test('Clear reports null', async function (assert) {
+        this.activeId = 's1';
+        await show();
+        await click('[data-ez-search-clear]');
+
+        assert.deepEqual(this.changes, [null]);
+    });
+
+    test('applying an edited query drops the mark and reports null', async function (assert) {
+        this.activeId = 's1';
+        await show();
+        await focus(INPUT);
+        await fillIn(INPUT, 'status:new');
+        await blur(INPUT);
+
+        await click('.app-dropdown-btn');
+        assert.dom('[data-ez-saved-item] .fa-check').exists();
+        assert.deepEqual(this.changes, []);
+
+        await click('[data-ez-search-apply]');
+
+        assert.deepEqual(this.changes, [null]);
+        await click('.app-dropdown-btn');
+        assert.dom('[data-ez-saved-item] .fa-check').doesNotExist();
     });
 });
