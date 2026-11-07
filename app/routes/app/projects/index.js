@@ -104,6 +104,15 @@ export default App.extend({
     currentUser: inject(),
 
     /**
+     * Loads the ezSearch schema of the projects.
+     *
+     * @property querySchema
+     * @type Prometheus.Services.QuerySchemaService
+     * @private
+     */
+    querySchema: inject('query-schema'),
+
+    /**
      * The trackedProject service provides id of the selected project.
      *
      * @property trackedProject
@@ -180,10 +189,12 @@ export default App.extend({
         };
 
         return hashSettled({
-            savedsearches: _self.store.query('savedsearch', savedSearchesOption)
+            savedsearches: _self.store.query('savedsearch', savedSearchesOption),
+            schema: _self.querySchema.load('Project')
         }).then(function (results) {
             let data = extractHashSettled(results);
             _self.set('savedsearches', data.savedsearches.toArray());
+            _self.set('schema', Array.isArray(data.schema) ? null : data.schema);
         }).catch((error) => {
             _self.errorManager.handleError(error);
         });
@@ -209,6 +220,7 @@ export default App.extend({
         let savedSearch = this.store.createRecord('savedsearch');
         controller.set('newSavedsearch', savedSearch);
         controller.set('savedsearches', this.savedsearches);
+        controller.set('querySchema', this.schema);
         controller.set('model', model);
         controller.set('query', this.query);
         controller.set('sort', this.sort);

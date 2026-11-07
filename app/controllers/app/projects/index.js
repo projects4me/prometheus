@@ -5,6 +5,7 @@
 import PrometheusListController from "prometheus/controllers/prometheus/list";
 import { htmlSafe } from '@ember/template';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import format from "prometheus/utils/data/format";
 
 /**
@@ -19,40 +20,110 @@ import format from "prometheus/utils/data/format";
 export default class AppProjectsIndexController extends PrometheusListController {
 
     /**
-     * This object holds all of the information that we need to create our schema and handle filtering
-     * rules for the projects list.
-     * @property metadata
+     * The ezSearch schema of the projects, loaded by the route.
+     *
+     * @property querySchema
      * @type Object
-     * @for AppProjectsIndexController
-     * @protected
      */
-    metadata = {
-        filters: [
-            {
-                id: 'Project.name',
-                label: this.intl.t("views.app.project.filter.name"),
-                type: 'string'
-            },
-            {
-                id: 'Project.shortCode',
-                label: this.intl.t("views.app.project.filter.shortCode"),
-                type: 'string',
-                operators: ['equal', 'not_equal', 'in', 'not_in', 'is_null', 'is_not_null','contains']
-            },
-            {
-                id: 'Project.status',
-                label: this.intl.t("views.app.project.filter.status"),
-                type: 'string',
-                input: 'select',
-                values: (new format(this)).getTranslation('views.app.project.lists.status'),
-                operators: ['equal']
-            },
-            {
-                id: 'manager.name',
-                label: this.intl.t("views.app.project.filter.manager"),
-                type: 'string',
+    @tracked querySchema = null;
+
+    /**
+     * The query shown in the save search dialog.
+     *
+     * @property saveSearchQuery
+     * @type String
+     */
+    @tracked saveSearchQuery = '';
+
+    /**
+     * The saved searches in the shape <EzSearch> expects.
+     *
+     * @property ezSavedSearches
+     * @type Array
+     */
+    get ezSavedSearches() {
+        return (this.savedsearches || []).map((search) => ({
+            id: search.get('id'),
+            name: search.get('name'),
+            query: search.get('searchquery'),
+        }));
+    }
+
+    /**
+     * Mark a saved search as the active one, or clear the mark.
+     *
+     * @method selectSavedSearch
+     * @param {Object|null} search The picked item (`{id, name, query}`) or null
+     */
+    @action selectSavedSearch(search) {
+        if (!search) {
+            this.set('searchId', null);
+            this.set('activeSearch', null);
+
+            return;
+        }
+
+        this.set('searchId', String(search.id));
+        this.set('activeSearch', (this.savedsearches || []).find((item) => String(item.get('id')) === String(search.id)) || null);
+    }
+
+    /**
+     * Open the save dialog for the query ezSearch hands over.
+     *
+     * @method showEzSaveSearchDialog
+     * @param {String} query
+     */
+    @action showEzSaveSearchDialog(query) {
+        this.set('saveSearchQuery', query);
+        this.set('saveSearchDialog', true);
+    }
+
+    /**
+     * Save the query shown in the dialog as a saved search.
+     *
+     * @method saveEzSearch
+     */
+    @action async saveEzSearch() {
+        let query = this.saveSearchQuery;
+
+        if (!query) {
+            new Messenger().post({
+                message: this.intl.t("views.app.project.list.savedsearch.missing"),
+                type: 'error',
+                showCloseButton: true
+            });
+            this.send('removeSaveSearchDialog');
+
+            return;
+        }
+
+        let savedSearch = this.newSavedsearch;
+
+        savedSearch.set('relatedTo', 'project');
+        savedSearch.set('searchquery', query);
+
+        try {
+            let data = await savedSearch.save();
+
+            if (this.isDestroying || this.isDestroyed) {
+                return;
             }
-        ]
+
+            this.set('savedsearches', [...(this.savedsearches || []), data]);
+            this.set('newSavedsearch', this.store.createRecord('savedsearch'));
+
+            new Messenger().post({
+                message: htmlSafe(this.intl.t("views.app.project.list.savedsearch.added", { name: data.get('name') })),
+                type: 'success',
+                showCloseButton: true
+            });
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
+        }
+
+        if (!this.isDestroying && !this.isDestroyed) {
+            this.send('removeSaveSearchDialog');
+        }
     }
 
     /**
@@ -146,49 +217,6 @@ export default class AppProjectsIndexController extends PrometheusListController
         Logger.debug("Prometheus.Controllers.Projects.Index::createProject()");
         this.transitionToRoute('app.projects.create');
         Logger.debug("-Prometheus.Controllers.Projects.Index::createProject()");
-    }
-
-    /**
-     * This function is used to save a search
-     *
-     * @method saveSearch
-     * @public
-     */
-    @action saveSearch() {
-        Logger.debug('Prometheus.Controllers.Projects.Index->openSaveSearch');
-        let _self = this;
-        _self.send('searchByRules');
-        let query = _self.get('query');
-
-        if (query !== null) {
-            let _savedSearch = _self.get('newSavedsearch');
-            _savedSearch.set('relatedTo', 'project');
-            _savedSearch.set('searchquery', query);
-
-            _savedSearch.save().then(function (data) {
-                _self.get('savedsearches').pushObject(data);
-                _self.set('newSavedsearch', {});
-
-                new Messenger().post({
-                    message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.added", { name: data.get('name') })),
-                    type: 'success',
-                    showCloseButton: true
-                });
-
-            });
-        } else {
-
-            new Messenger().post({
-                message: _self.intl.t("views.app.project.list.savedsearch.missing"),
-                type: 'error',
-                showCloseButton: true
-            });
-
-        }
-
-        _self.send('removeSaveSearchDialog');
-
-        Logger.debug('-Prometheus.Controllers.Projects.Index->openSaveSearch');
     }
 
     /**

@@ -14,66 +14,40 @@
         <div class="box box-primary list-view">
           <div class="box-header with-border">
 
-            <div class="search">
-              {{!-- Saved Searches Dropdown --}}
-              <AppUi::Dropdown @isPrimary={{true}}>
-                <:button>
-                  {{t "views.app.project.list.savedsearch.label"}}
-                </:button>
-                <:content>
-                  {{#each this.savedsearches as |search|}}
-                    <div {{on "click" (fn this.toggleSearch search)}} class="{{if (call (fn this.isSearchActive search)) 'active' ''}}">
-                      {{search.name}}
-                      {{#if (call (fn this.isSearchActive search))}}
-                        <i class="fa fa-check pull-right"></i>
-                      {{/if}}
-                    </div>
-                  {{/each}}
-                </:content>
-              </AppUi::Dropdown>
-              {{!-- End Saved Searches Dropdown --}}
-              <div class="has-feedback">
+            {{#if this.querySchema}}
+              <EzSearch
+                @schema={{this.querySchema}}
+                @query={{this.query}}
+                @savedSearches={{this.ezSavedSearches}}
+                @activeSavedSearchId={{this.searchId}}
+                @onSavedSearchChange={{this.selectSavedSearch}}
+                @onApply={{this.applyQuery}}
+                @onSave={{this.showEzSaveSearchDialog}}
+                @aclContext="project.read"
+              />
+            {{/if}}
+            {{#if this.saveSearchDialog}}
+              {{#bootstrap-modal
+                  title="global.form.savesearch"
+                  confirmLabel="global.form.save"
+                  closeLabel="global.form.cancel"
+                  confirm=(action "saveEzSearch")
+                  close=(action "removeSaveSearchDialog")}}
+
+                <div class="ember-view">
+                  <label>{{t "views.app.project.list.savedsearch.query"}}</label>
+                  <span data-save-search-query>{{this.saveSearchQuery}}</span>
+                </div>
+
                 <FormFields::FieldText
-                  data-toggle="collapse"
-                  data-target=".list-view-filters"
-                  @focusIn={{fn this.openFilters}}
-                  @insert-newline={{this.filter}}
-                  @value={{this.query}}
-                  @name="query"
-                  @readonly="readonly"
-                  @placeholder={{concat (t "global.form.search") " " (t "global.module.plural.project") " .."}}
+                  @placeholder={{t "views.app.project.list.savedsearch.inputname"}}
+                  @label={{t "views.app.project.list.savedsearch.name"}}
+                  @value={{this.newSavedsearch.name}}
+                  @aclContex="App.Project.List.SavedSearch.Create.Name"
                 />
-                <span class="glyphicon glyphicon-search form-control-feedback"></span>
-              </div>
-              <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.searchByRules}} @aclContext="project.read">{{t "global.form.search"}}</AppUi::Button>
-              <AppUi::Button type="button" class="btn" @onClick={{this.clearSearch}}>{{t "global.form.clear"}}</AppUi::Button>
-            </div>
-            <div class="list-view-filters collapse">
-              {{query-builder module="project" query=this.query}}
-              <AppUi::Button type="button" class="btn btn-primary pull-right" @onClick={{this.showSaveSearchDialog}} @aclContext="project.create">{{t "global.form.savesearch"}}</AppUi::Button>
-              {{#if this.saveSearchDialog}}
-                {{#bootstrap-modal
-                    title="global.form.savesearch"
-                    confirmLabel="global.form.save"
-                    closeLabel="global.form.cancel"
-                    confirm=(action "saveSearch")
-                    close=(action "removeSaveSearchDialog")}}
 
-                  <div class="ember-view">
-                    <label>{{t "views.app.project.list.savedsearch.query"}}</label>
-                    <span>{{this.query}}</span>
-                  </div>
-
-                  <FormFields::FieldText
-                    @placeholder={{t "views.app.project.list.savedsearch.inputname"}}
-                    @label={{t "views.app.project.list.savedsearch.name"}}
-                    @value={{this.newSavedsearch.name}}
-                    @aclContex="App.Project.List.SavedSearch.Create.Name"
-                  />
-
-                {{/bootstrap-modal}}
-              {{/if}}
-            </div>
+              {{/bootstrap-modal}}
+            {{/if}}
             {{!-- /.box-tools --}}
           </div>
           {{!-- /.box-header --}}
