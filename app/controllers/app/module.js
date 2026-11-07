@@ -4,12 +4,9 @@
 
 import PrometheusController from "prometheus/controllers/prometheus";
 import { action } from "@ember/object";
+import { tracked } from '@glimmer/tracking';
 import _ from "lodash";
 import navi from "../../utils/navigation/navigation";
-import queryParser from "../../utils/query/parser";
-import queryBuilder from "../../utils/query/builder";
-import MD from "../../utils/metadata/metadata";
-import { schedule } from '@ember/runloop';
 import { camelize } from '@ember/string';
 import $ from 'jquery';
 
@@ -100,24 +97,15 @@ export default class AppModuleController extends PrometheusController {
     sortOrder = 'desc';
 
     /**
-     * Setup Controller function is called by the router at the end of the
-     * setupController function defined in the app.module route. This function
-     * is used to perform actions required at the start of each render cycle.
+     * The ezSearch schema of the module, loaded by the route; null when the module declares no
+     * search metadata (`views.<Module>.search`).
      *
-     * This is a replacement of init function which is only called once but if the
-     * setupController function in router calls this function then it is called
-     * every time a user tries to visit the route
-     *
-     * @method setupController
-     * @private
+     * @property querySchema
+     * @for Module
+     * @type Object
+     * @public
      */
-    setupController() {
-        this._super();
-        // call initialize action after the view has been rendered
-        schedule("afterRender", this, function () {
-            this.send("setupQuery");
-        });
-    }
+    @tracked querySchema = null;
 
     /**
      * This function is triggered when the checkbox on the the top right of the list is called
@@ -197,67 +185,17 @@ export default class AppModuleController extends PrometheusController {
     }
 
     /**
-     * This function is used to handle search queries
+     * Apply a query from ezSearch: keep it, go back to the first page and search by it.
      *
-     * @method filter
-     * @return void
+     * @method applyQuery
+     * @param {String} query The Gaia query string, empty for none
      * @public
-     * @todo Validate query before submission
      */
-    @action filter() {
+    @action applyQuery(query) {
+        this.queryString = query || null;
+        this.set('query', this.queryString);
+        this.set('page', 0);
         this.send('navigate');
-    }
-
-    /**
-     * Keep the query being searched in the controller
-     *
-     * @method populateQuery
-     * @param {String} query
-     * @return void
-     * @public
-     * @todo allow auto complete
-     */
-    @action populateQuery(query) {
-        this.queryString = query;
-        this.send('setupQuery');
-    }
-
-    /**
-     * Convert the rule object to string and perform searched
-     *
-     * @method searchByRules
-     * @return void
-     * @public
-     */
-    @action searchByRules() {
-        let result = queryBuilder.getRules();
-        if (!$.isEmptyObject(result)) {
-            let query = queryParser.getQueryString(result);
-            this.queryString = query;
-            this.set('query', query);
-            /*
-             var URIData = navi.buildURL(Ember.String.camelize(this.module),'module');
-             this.transitionToRoute(URIData.route,URIData.options,{ queryParams: { page: this.page, query:this.queryString }});
-             */
-            this.send('navigate');
-        }
-    }
-
-    /**
-     * This function will be used to initialize the page and initialize the query
-     * using jQuery Query Builder
-     *
-     * @method setupQuery
-     * @private
-     */
-    @action setupQuery() {
-        let intl = this.intl;
-        let filters = MD.create().getViewMeta(this.module, 'filters', intl).enabledFilters;
-        let rules = queryParser.getRules(this.query, filters);
-        queryBuilder.init('#builder', filters);
-        if (rules !== undefined && rules !== '') {
-            queryBuilder.setRules(rules);
-        }
     }
 
     /**
@@ -305,27 +243,5 @@ export default class AppModuleController extends PrometheusController {
         }
         let URIData = navi.buildURL(camelize(this.module), 'module');
         this.transitionToRoute(URIData.route, URIData.options, { queryParams: { page: this.page, query: this.queryString, sort: this.sort, order: this.sortOrder } });
-    }
-
-    /**
-     * Open the filter view if not already Open
-     *
-     * @method openFilters
-     * @public
-     */
-    @action openFilters() {
-        if ($('.list-view-filters').css('display') === 'none') {
-            $('.list-view-actions [data-toggle=collapse]').click();
-        }
-    }
-
-    /**
-     * Toggle the dropdown arrow on toggle
-     *
-     * @method toggleFilters
-     * @private
-     */
-    @action toggleFilters() {
-        $('#toggleFilters').toggleClass('dropToggle');
     }
 }
