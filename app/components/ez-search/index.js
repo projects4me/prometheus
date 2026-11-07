@@ -15,7 +15,10 @@ import { compose } from 'prometheus/utils/query/composer';
  * around them.
  *
  * Arguments: `@schema`, `@query` (the Gaia string to load), `@baseQuery` (ANDed in on apply, never shown),
- * `@savedSearches` (`{name, query}`), `@onApply(queryString)`, `@onSave(queryString)` and `@aclContext`.
+ * `@savedSearches` (`{id, name, query}`), `@onApply(queryString)`, `@onSave(queryString)` and `@aclContext`.
+ * Optional: `@activeSavedSearchId` (the saved search to mark and, without `@query`, load) and
+ * `@onSavedSearchChange(search|null)` (called when a saved search is picked, or deselected by picking it again,
+ * by Clear, or by applying a query that no longer matches it).
  *
  * @class EzSearch
  * @namespace Prometheus.Components
@@ -29,11 +32,58 @@ export default class EzSearchComponent extends Component {
     @tracked barErrors = [];
     @tracked storedErrors = [];
     @tracked loadId = 0;
+    @tracked pickedSearch = null;
+    pickedQuery = '';
     loadCount = 0;
 
     constructor() {
         super(...arguments);
         this.load(this.args.query);
+        this.syncActive(!this.args.query);
+    }
+
+    /**
+     * Mark the saved search named by `@activeSavedSearchId`, loading its query when asked to.
+     *
+     * @method syncActive
+     * @param {Boolean} loadQuery
+     */
+    syncActive(loadQuery) {
+        let id = this.args.activeSavedSearchId;
+
+        if (id === undefined || id === null || id === '') {
+            return;
+        }
+
+        let search = (this.args.savedSearches || []).find((item) => String(item.id) === String(id));
+
+        if (!search) {
+            return;
+        }
+
+        if (loadQuery) {
+            this.load(search.query);
+        }
+
+        this.pickedSearch = search;
+        this.pickedQuery = this.currentQuery;
+    }
+
+    @action
+    onActiveChange() {
+        let id = this.args.activeSavedSearchId;
+
+        if (id === undefined || id === null || id === '') {
+            this.pickedSearch = null;
+
+            return;
+        }
+
+        if (this.pickedSearch && String(this.pickedSearch.id) === String(id)) {
+            return;
+        }
+
+        this.syncActive(!this.args.query);
     }
 
     /**
@@ -75,7 +125,7 @@ export default class EzSearchComponent extends Component {
 
         return (this.args.savedSearches || []).map((search) => ({
             search,
-            active: current !== '' && search.query === current,
+            active: this.pickedSearch ? String(search.id) === String(this.pickedSearch.id) : current !== '' && search.query === current,
         }));
     }
 
@@ -116,8 +166,30 @@ export default class EzSearchComponent extends Component {
     }
 
     @action
-    pickSaved(search) {
+    async pickSaved(search) {
+        if (this.pickedSearch === search) {
+            await this.deselect();
+
+            return;
+        }
+
         this.load(search.query);
+        this.pickedSearch = search;
+        this.pickedQuery = this.currentQuery;
+        this.args.onSavedSearchChange?.(search);
+        await this.apply();
+    }
+
+    /**
+     * Drop the mark and the tree, report it and apply.
+     *
+     * @method deselect
+     */
+    async deselect() {
+        this.load('');
+        this.pickedSearch = null;
+        this.args.onSavedSearchChange?.(null);
+        await this.apply();
     }
 
     /**
@@ -150,6 +222,15 @@ export default class EzSearchComponent extends Component {
         }
 
         await this.args.onApply?.(query);
+
+        if (this.isDestroying || this.isDestroyed) {
+            return;
+        }
+
+        if (this.pickedSearch && this.currentQuery !== this.pickedQuery) {
+            this.pickedSearch = null;
+            this.args.onSavedSearchChange?.(null);
+        }
     }
 
     /**
@@ -160,6 +241,8 @@ export default class EzSearchComponent extends Component {
     @action
     async clear() {
         this.load('');
+        this.pickedSearch = null;
+        this.args.onSavedSearchChange?.(null);
         await this.apply();
     }
 
