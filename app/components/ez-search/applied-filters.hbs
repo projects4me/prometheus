@@ -1,0 +1,18 @@
+{{! Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line }}
+{{#if this.chips.length}}
+  <div class="ez-search-chips" data-ez-chips>
+    {{#each this.chips as |chip|}}
+      <button
+        type="button"
+        class="btn btn-default btn-xs ez-search-chip"
+        title={{chip.title}}
+        aria-label={{t "components.ezSearch.chips.remove" filter=chip.title}}
+        data-ez-chip={{chip.id}}
+        {{on "click" (fn this.removeChip chip.id)}}
+      >
+        <span class="ez-search-chip-text">{{chip.label}}{{#if chip.value}} <strong>{{chip.value}}</strong>{{/if}}</span>
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </button>
+    {{/each}}
+  </div>
+{{/if}}
