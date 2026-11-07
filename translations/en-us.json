@@ -354,6 +354,33 @@
         "isEmpty": "is empty",
         "isNotEmpty": "is not empty"
       },
+      "chips": {
+        "any": "Any of:",
+        "all": "All of:",
+        "and": "and",
+        "remove": "Remove filter {filter}",
+        "operators": {
+          "notEqual": "is not",
+          "in": "is any of",
+          "notIn": "is none of",
+          "less": "is less than",
+          "lessOrEqual": "is at most",
+          "greater": "is greater than",
+          "greaterOrEqual": "is at least",
+          "between": "between",
+          "notBetween": "not between",
+          "contains": "contains",
+          "notContains": "does not contain",
+          "startsWith": "starts with",
+          "notStartsWith": "does not start with",
+          "endsWith": "ends with",
+          "notEndsWith": "does not end with",
+          "isNull": "is not set",
+          "isNotNull": "is set",
+          "isEmpty": "is empty",
+          "isNotEmpty": "is not empty"
+        }
+      },
       "completer": {
         "searchText": "Search {field} for \"{word}\""
       },

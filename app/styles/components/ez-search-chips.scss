@@ -1,0 +1,28 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+// The ezSearch applied-filter chips: removable conditions that wrap onto more lines.
+.ez-search-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  .ez-search-chip {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    border-radius: 0;
+
+    .ez-search-chip-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .fa-times {
+      margin-left: 6px;
+      flex: none;
+    }
+  }
+}
