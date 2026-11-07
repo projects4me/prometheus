@@ -33,6 +33,15 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
     @tracked querySchema = null;
 
     /**
+     * The saved searches of the current user. Tracked so ezSavedSearches
+     * recomputes; always replace the array instead of mutating it.
+     *
+     * @property savedsearches
+     * @type Array
+     */
+    @tracked savedsearches = null;
+
+    /**
      * The query shown in the save search dialog.
      *
      * @property saveSearchQuery
@@ -235,7 +244,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
             _savedSearch.set('projectId', _self.appProjectController.projectId);
 
             _savedSearch.save().then(function (data) {
-                _self.get('savedsearches').pushObject(data);
+                _self.savedsearches = [...(_self.savedsearches || []), data];
                 _self.set('newSavedsearch', {});
 
                 new Messenger().post({
@@ -279,7 +288,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
         _savedSearch.set('public', 0);
 
         _savedSearch.save().then(function (data) {
-            _self.get('savedsearches').pushObject(data);
+            _self.savedsearches = [...(_self.savedsearches || []), data];
             let newSavedSearch = _self.get('store').createRecord('savedsearch');
             _self.set('newSavedsearch', newSavedSearch);
 
@@ -317,7 +326,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
                         // destroy the saved search
                         toBeDeleted.destroyRecord().then(function () {
                             // remove from the view by updating the model
-                            _self.get('savedsearches').removeObject(toBeDeleted);
+                            _self.savedsearches = (_self.savedsearches || []).filter((item) => item !== toBeDeleted);
 
                             return deleting.update({
                                 message: htmlSafe(_self.intl.t("views.app.issue.list.savedsearch.deleted", { name: search.get('name') })),

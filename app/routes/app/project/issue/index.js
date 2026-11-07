@@ -246,6 +246,9 @@ export default App.extend({
             savedsearches: _self.store.query('savedsearch',savedSearchesOption),
             schema: _self.querySchema.load('Issue', { projectId }),
         }).then(function(results){
+            if (results.schema.state === 'rejected') {
+                _self.errorManager.handleError(results.schema.reason, { moduleName: "issue" });
+            }
             let data = extractHashSettled(results);
             _self.set('savedsearches',data.savedsearches.toArray());
             _self.set('schema', Array.isArray(data.schema) ? null : data.schema);
