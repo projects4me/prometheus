@@ -3,6 +3,11 @@
 
     {{! Left side - Task list }}
     <div class="gantt-task-list">
+      {{#if (has-block "search")}}
+        <div class="gantt-search" data-gantt-search {{did-insert this.trackSearchHeight}} {{will-destroy this.untrackSearchHeight}}>
+          {{yield to="search"}}
+        </div>
+      {{/if}}
       <div class="gantt-header">
         <div class="gantt-header-row">
           <div class="gantt-header-cell task-name">{{t "views.app.gantt.milestone"}}</div>

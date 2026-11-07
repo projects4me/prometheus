@@ -5,6 +5,12 @@ export function register(server, ctx) {
         return schema.savedsearches.all();
     });
 
+    server.post('/savedsearch', (schema, request) => {
+        let { attributes } = getRequestData(request);
+
+        return schema.savedsearches.create(attributes);
+    });
+
     server.patch('/savedsearch/:id', (schema, request) => {
         let { attributes } = getRequestData(request);
         let savedsearch = schema.savedsearches.find(request.params.id);

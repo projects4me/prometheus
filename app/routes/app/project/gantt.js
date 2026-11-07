@@ -3,7 +3,8 @@
  */
 
 import App from 'prometheus/routes/app';
-import { hash } from 'rsvp';
+import { hash, hashSettled } from 'rsvp';
+import { inject as service } from '@ember/service';
 
 /**
  * This is the route to load the Gantt chart for a project
@@ -25,8 +26,29 @@ export default class GanttRoute extends App {
 	queryParams = {
 		query: {
 			refreshModel: true
+		},
+		searchId: {
+			refreshModel: false
 		}
 	};
+
+	/**
+	 * The ezSearch schema builder.
+	 *
+	 * @property querySchema
+	 * @type Ember.Service
+	 * @for GanttRoute
+	 */
+	@service('query-schema') querySchema;
+
+	/**
+	 * The saved searches service.
+	 *
+	 * @property savedSearch
+	 * @type Ember.Service
+	 * @for GanttRoute
+	 */
+	@service('saved-search') savedSearch;
 
 	/**
 	 * This is the query that is used to filter the issues.
@@ -36,6 +58,15 @@ export default class GanttRoute extends App {
 	 * @for GanttRoute
 	 */
 	query = '';
+
+	/**
+	 * The ezSearch schema and saved searches of the issues, loaded once per visit and project.
+	 *
+	 * @property searchData
+	 * @type Object
+	 * @for GanttRoute
+	 */
+	searchData = null;
 
 	/**
 	 * This function is called by ember when we enter this route and returns
@@ -50,9 +81,8 @@ export default class GanttRoute extends App {
 		let _self = this;
 		let projectId = this.trackedProject.getProjectId();
 
-		if (_.has(params, 'query')) {
-			this.query = params.query;
-		}
+		let searchQuery = params?.query || '';
+		this.query = searchQuery;
 
 		// Fetch milestones of current project (in_progress and planned)
 		let _milestoneOptions = {
@@ -74,8 +104,8 @@ export default class GanttRoute extends App {
 		await hash(
 			milestones.map(async (milestone) => {
 				let query = `((Issue.milestoneId : ${milestone.id}) AND (Issue.projectId : ${projectId}))`;
-				if (this.query) {
-					query = `(${query}) AND (${this.query})`;
+				if (searchQuery) {
+					query = `(${query}) AND (${searchQuery})`;
 				}
 				let issues = await _self.store
 					.query('issue', {
@@ -104,6 +134,34 @@ export default class GanttRoute extends App {
 		});
 
 		return model;
+	}
+
+	/**
+	 * Loads the ezSearch schema and the saved searches of the issues once per visit; a failure only drops the search.
+	 *
+	 * @method afterModel
+	 * @returns {Promise}
+	 */
+	async afterModel() {
+		let projectId = this.trackedProject.getProjectId();
+		if (this.searchData?.projectId === projectId) {
+			return;
+		}
+		let results = await hashSettled({
+			schema: this.querySchema.load('Issue', { projectId }),
+			savedsearches: this.savedSearch.load('issue', projectId)
+		});
+		if (results.schema.state === 'rejected') {
+			this.errorManager.handleError(results.schema.reason, { moduleName: 'issue' });
+		}
+		if (results.savedsearches.state === 'rejected') {
+			this.errorManager.handleError(results.savedsearches.reason, { moduleName: 'savedsearch' });
+		}
+		this.searchData = {
+			projectId,
+			schema: results.schema.state === 'fulfilled' ? results.schema.value : null,
+			savedsearches: results.savedsearches.state === 'fulfilled' ? results.savedsearches.value : []
+		};
 	}
 
 	/**
@@ -174,7 +232,8 @@ export default class GanttRoute extends App {
 		controller.set('milestones', model.milestones);
 		controller.set('timelineStart', model.timelineStart);
 		controller.set('timelineEnd', model.timelineEnd);
-		controller.set('query', this.query);
+		controller.set('querySchema', this.searchData?.schema ?? null);
+		controller.set('savedsearches', this.searchData?.savedsearches ?? []);
 		controller.set('selectedIssue', null);
 		controller.set('isIssuePanelOpen', false);
 		controller.autoExpandFirstMilestone();
@@ -195,6 +254,8 @@ export default class GanttRoute extends App {
 			controller.unregisterHermesIntents();
 			controller.unregisterIssuePreview();
 			controller.query = null;
+			controller.searchId = null;
+			this.searchData = null;
 			controller.selectedIssue = null;
 			this.query = null;
 		}

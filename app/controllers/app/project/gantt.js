@@ -127,7 +127,7 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * @type Array
 	 * @for AppProjectGanttController
 	 */
-	queryParams = ['query'];
+	queryParams = ['query', 'searchId'];
 
 	/**
 	 * This is the query that is used to filter the issues.
@@ -137,6 +137,57 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * @for AppProjectGanttController
 	 */
 	@tracked query = '';
+
+	/**
+	 * The id of the saved search the query came from, null for none.
+	 *
+	 * @property searchId
+	 * @type String
+	 * @for AppProjectGanttController
+	 */
+	@tracked searchId = null;
+
+	/**
+	 * The ezSearch schema of the issues, set by the route; null hides the search.
+	 *
+	 * @property querySchema
+	 * @type Object
+	 * @for AppProjectGanttController
+	 */
+	@tracked querySchema = null;
+
+	/**
+	 * The saved issue searches of the user in this project, set by the route.
+	 *
+	 * @property savedsearches
+	 * @type Array
+	 * @for AppProjectGanttController
+	 */
+	@tracked savedsearches = [];
+
+	/**
+	 * Runs a query from ezSearch; the route reloads the chart for it.
+	 *
+	 * @method applyQuery
+	 * @param {String} query The Gaia query, empty for none
+	 * @for AppProjectGanttController
+	 */
+	@action
+	applyQuery(query) {
+		this.query = query || null;
+	}
+
+	/**
+	 * Marks a saved search as the active one, or clears the mark.
+	 *
+	 * @method selectSavedSearch
+	 * @param {Object|null} search The picked item or null
+	 * @for AppProjectGanttController
+	 */
+	@action
+	selectSavedSearch(search) {
+		this.searchId = search ? String(search.id) : null;
+	}
 
 	/**
 	 * The currently selected issue for displaying details

@@ -1,0 +1,32 @@
+<EzSearchCompact
+  @schema={{@schema}}
+  @query={{@query}}
+  @savedSearches={{this.items}}
+  @activeSavedSearchId={{@activeSavedSearchId}}
+  @onSavedSearchChange={{@onSavedSearchChange}}
+  @onApply={{@onApply}}
+  @onSave={{this.openSaveDialog}}
+  @onUpdateSavedSearch={{this.update}}
+  @aclContext={{@aclContext}}
+/>
+{{#if this.newSavedsearch}}
+  {{#bootstrap-modal
+      title="global.form.savesearch"
+      confirmLabel="global.form.save"
+      closeLabel="global.form.cancel"
+      confirm=this.save
+      close=this.closeSaveDialog}}
+
+    <div class="ember-view">
+      <label>{{t (concat this.messages ".query")}}</label>
+      <span data-save-search-query>{{this.saveSearchQuery}}</span>
+    </div>
+
+    <FormFields::FieldText
+      @placeholder={{t (concat this.messages ".inputname")}}
+      @label={{t (concat this.messages ".name")}}
+      @value={{this.newSavedsearch.name}}
+    />
+
+  {{/bootstrap-modal}}
+{{/if}}
