@@ -49,9 +49,14 @@ module('Integration | Component | ez-search', function (hooks) {
         const style = getComputedStyle(field);
         ['Top', 'Right', 'Bottom', 'Left'].forEach((side) => assert.strictEqual(style[`margin${side}`], '0px', `margin ${side}`));
 
-        const barTop = document.querySelector('[data-ez-search-bar]').getBoundingClientRect().top;
-        const buttonTop = document.querySelector('[data-ez-search-apply]').getBoundingClientRect().top;
-        assert.ok(Math.abs(barTop - buttonTop) <= 4, `bar and Search share a row (${barTop} vs ${buttonTop})`);
+        // The layout depends on the real window width (ez-search.scss wraps at max-width: 767px), which a test cannot set.
+        const bar = document.querySelector('[data-ez-search-bar]').getBoundingClientRect();
+        const button = document.querySelector('[data-ez-search-apply]').getBoundingClientRect();
+        if (window.innerWidth > 767) {
+            assert.ok(Math.abs(bar.top - button.top) <= 4, `bar and Search share a row (${bar.top} vs ${button.top})`);
+        } else {
+            assert.ok(button.top >= bar.bottom - 1, `bar and Search wrap onto separate rows (${bar.bottom} vs ${button.top})`);
+        }
     });
 
     test('typing updates the open panel and editing the panel updates the bar', async function (assert) {
