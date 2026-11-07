@@ -2,6 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import { tracked } from '@glimmer/tracking';
 import PrometheusListController from 'prometheus/controllers/prometheus/list';
 
 /**
@@ -14,31 +15,22 @@ import PrometheusListController from 'prometheus/controllers/prometheus/list';
  */
 export default class AppAgentIndexController extends PrometheusListController {
     /**
-     * The fields the query builder can filter the list by.
+     * The search schema <EzSearch> filters the list with.
      *
-     * @property metadata
+     * @property querySchema
      * @type Object
      */
-    metadata = {
-        filters: [
-            {
-                id: 'Agent.name',
-                label: this.intl.t('views.app.agent.list.name'),
-                type: 'string'
-            },
-            {
-                id: 'Agent.purpose',
-                label: this.intl.t('views.app.agent.list.purpose'),
-                type: 'string',
-                operators: ['equal', 'not_equal', 'contains', 'is_null', 'is_not_null']
-            },
-            {
-                id: 'sponsor.name',
-                label: this.intl.t('views.app.agent.list.sponsor'),
-                type: 'string'
-            }
-        ]
-    };
+    @tracked querySchema = null;
+
+    /**
+     * What differs on this list when saving a search.
+     *
+     * @method savedSearchContext
+     * @return {Object}
+     */
+    savedSearchContext() {
+        return { relatedTo: 'agent', messagePrefix: 'views.app.agent.list.savedsearch' };
+    }
 
     sort = 'Agent.name';
     order = 'asc';

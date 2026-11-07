@@ -416,6 +416,22 @@ export default Object.extend({
                 }
             }
         },
+        Agent: {
+            search: {
+                module: 'Agent',
+                textField: 'Agent.name',
+                fields: {
+                    'Agent.name': { label: 'views.app.agent.list.name', type: 'text', aliases: ['name'] },
+                    'Agent.purpose': { label: 'views.app.agent.list.purpose', type: 'text', aliases: ['purpose'] },
+                    'sponsor.name': {
+                        label: 'views.app.agent.list.sponsor',
+                        type: 'user',
+                        aliases: ['sponsor'],
+                        values: { source: 'users' }
+                    }
+                }
+            }
+        },
         Issue: {
             search: {
                 module: 'Issue',

@@ -12,41 +12,17 @@
       <AccessControl @aclContext="agent.read">
         <div class="box box-primary list-view">
           <div class="box-header with-border">
-            <div class="search">
-              <AppUi::Dropdown @isPrimary={{true}}>
-                <:button>
-                  {{t "views.app.agent.list.savedsearch"}}
-                </:button>
-                <:content>
-                  {{#each this.savedsearches as |search|}}
-                    <div {{on "click" (fn this.toggleSearch search)}} class="{{if (call (fn this.isSearchActive search)) "active"}}">
-                      {{search.name}}
-                      {{#if (call (fn this.isSearchActive search))}}
-                        <i class="fa fa-check pull-right"></i>
-                      {{/if}}
-                    </div>
-                  {{/each}}
-                </:content>
-              </AppUi::Dropdown>
-              <div class="has-feedback">
-                <FormFields::FieldText
-                  data-toggle="collapse"
-                  data-target=".list-view-filters"
-                  @focusIn={{fn this.openFilters}}
-                  @insert-newline={{this.filter}}
-                  @value={{this.query}}
-                  @name="query"
-                  @readonly="readonly"
-                  @placeholder={{t "views.app.agent.list.search"}}
-                />
-                <span class="glyphicon glyphicon-search form-control-feedback"></span>
-              </div>
-              <AppUi::Button type="button" class="btn btn-primary" data-btn="search" @onClick={{this.searchByRules}} @aclContext="agent.read">{{t "global.form.search"}}</AppUi::Button>
-              <AppUi::Button type="button" class="btn" data-btn="clear" @onClick={{this.clearSearch}}>{{t "global.form.clear"}}</AppUi::Button>
-            </div>
-            <div class="list-view-filters collapse">
-              {{query-builder module="agent" query=this.query}}
-            </div>
+            {{#if this.querySchema}}
+              <EzSearch
+                @schema={{this.querySchema}}
+                @query={{this.query}}
+                @savedSearches={{this.ezSavedSearches}}
+                @activeSavedSearchId={{this.searchId}}
+                @onSavedSearchChange={{this.selectSavedSearch}}
+                @onApply={{this.applyQuery}}
+                @aclContext="agent.read"
+              />
+            {{/if}}
           </div>
 
           <div class="box-body no-padding">
