@@ -7,7 +7,9 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { planStatusClass } from 'prometheus/utils/idea/plan-status';
 import { tracked } from '@glimmer/tracking';
+import { htmlSafe } from '@ember/template';
 
+const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
 const STORAGE_KEY = 'ideaBrowserCollapsed';
 const OPEN = 'open';
 const ARCHIVED = 'archived';
@@ -50,6 +52,41 @@ export default class AppProjectIdeaController extends Controller {
     @service router;
 
     /**
+     * @property savedSearch
+     * @type Ember.Service
+     * @public
+     */
+    @service savedSearch;
+
+    /**
+     * @property store
+     * @type Ember.Service
+     * @public
+     */
+    @service store;
+
+    /**
+     * @property intl
+     * @type Ember.Service
+     * @public
+     */
+    @service intl;
+
+    /**
+     * @property errorManager
+     * @type Ember.Service
+     * @public
+     */
+    @service errorManager;
+
+    /**
+     * @property trackedProject
+     * @type Ember.Service
+     * @public
+     */
+    @service trackedProject;
+
+    /**
      * True while the Start an idea form is open, so the New idea button is shown disabled
      *
      * @property isCreating
@@ -67,7 +104,7 @@ export default class AppProjectIdeaController extends Controller {
      * @type Array
      * @public
      */
-    queryParams = ['view'];
+    queryParams = ['view', 'query', 'searchId'];
 
     /**
      * The view of the idea page, plan for the review mode and null for the conversation layout
@@ -86,7 +123,228 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     get linkQuery() {
-        return { view: this.view };
+        return { view: this.view, query: this.query, searchId: this.searchId };
+    }
+
+    /**
+     * The Gaia query the list is narrowed by, null for none
+     *
+     * @property query
+     * @type String
+     * @public
+     */
+    @tracked query = null;
+
+    /**
+     * The id of the saved search the query came from, null for none
+     *
+     * @property searchId
+     * @type String
+     * @public
+     */
+    @tracked searchId = null;
+
+    /**
+     * The ezSearch schema of the ideas, loaded by the route
+     *
+     * @property querySchema
+     * @type Object
+     * @public
+     */
+    @tracked querySchema = null;
+
+    /**
+     * The saved searches of the user for the ideas, loaded by the route; always replaced, never mutated
+     *
+     * @property savedsearches
+     * @type Array
+     * @public
+     */
+    @tracked savedsearches = [];
+
+    /**
+     * The unsaved record the save dialog names
+     *
+     * @property newSavedsearch
+     * @type Object
+     * @public
+     */
+    @tracked newSavedsearch = null;
+
+    /**
+     * Whether the save search dialog is open
+     *
+     * @property saveSearchDialog
+     * @type Boolean
+     * @public
+     */
+    @tracked saveSearchDialog = false;
+
+    /**
+     * The query the save dialog shows
+     *
+     * @property saveSearchQuery
+     * @type String
+     * @public
+     */
+    @tracked saveSearchQuery = '';
+
+    /**
+     * The number of ideas of the project whatever the search, null while unknown
+     *
+     * @property totalIdeas
+     * @type Number
+     * @public
+     */
+    @tracked totalIdeas = null;
+
+    /**
+     * Whether a search narrows the list
+     *
+     * @property isSearching
+     * @type Boolean
+     * @public
+     */
+    get isSearching() {
+        return Boolean(this.query);
+    }
+
+    /**
+     * The saved searches in the shape <EzSearchCompact> expects
+     *
+     * @property ezSavedSearches
+     * @type Array
+     * @public
+     */
+    get ezSavedSearches() {
+        return this.savedsearches.map(search => ({
+            id: search.get('id'),
+            name: search.get('name'),
+            query: search.get('searchquery')
+        }));
+    }
+
+    /**
+     * Runs a query from ezSearch; the route reloads the ideas for it
+     *
+     * @method applyQuery
+     * @param {String} query The Gaia query, empty for none
+     * @public
+     */
+    @action
+    applyQuery(query) {
+        this.query = query || null;
+    }
+
+    /**
+     * Marks a saved search as the active one, or clears the mark
+     *
+     * @method selectSavedSearch
+     * @param {Object|null} search The picked item or null
+     * @public
+     */
+    @action
+    selectSavedSearch(search) {
+        this.searchId = search ? String(search.id) : null;
+    }
+
+    /**
+     * Opens the save dialog for the query ezSearch hands over
+     *
+     * @method showEzSaveSearchDialog
+     * @param {String} query
+     * @public
+     */
+    @action
+    showEzSaveSearchDialog(query) {
+        this.saveSearchQuery = query;
+        this.saveSearchDialog = true;
+    }
+
+    /**
+     * Closes the save dialog
+     *
+     * @method removeSaveSearchDialog
+     * @public
+     */
+    @action
+    removeSaveSearchDialog() {
+        this.saveSearchDialog = false;
+    }
+
+    /**
+     * Saves the query of the dialog as a saved search of the ideas of the project
+     *
+     * @method saveEzSearch
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async saveEzSearch() {
+        let query = this.saveSearchQuery;
+        if (!query) {
+            this.notify('error', this.intl.t(`${SAVED_SEARCH_MESSAGES}.missing`));
+            this.removeSaveSearchDialog();
+            return;
+        }
+        try {
+            let data = await this.savedSearch.create(this.newSavedsearch, {
+                relatedTo: 'idea',
+                query,
+                projectId: this.trackedProject.getProjectId()
+            });
+            if (this.isDestroying || this.isDestroyed) {
+                return;
+            }
+            this.savedsearches = [...this.savedsearches, data];
+            this.newSavedsearch = this.store.createRecord('savedsearch');
+            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.added`, { name: data.get('name') })));
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
+        }
+        if (!this.isDestroying && !this.isDestroyed) {
+            this.removeSaveSearchDialog();
+        }
+    }
+
+    /**
+     * Replaces the query of a saved search with the one ezSearch hands over
+     *
+     * @method updateEzSavedSearch
+     * @param {Object} search The saved search item
+     * @param {String} query
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async updateEzSavedSearch(search, query) {
+        let record = this.savedsearches.find(item => String(item.get('id')) === String(search.id));
+        if (!record) {
+            return;
+        }
+        try {
+            await this.savedSearch.update(record, query);
+            if (this.isDestroying || this.isDestroyed) {
+                return;
+            }
+            this.savedsearches = [...this.savedsearches];
+            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.updated`, { name: record.get('name') })));
+        } catch (error) {
+            record.rollbackAttributes();
+            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
+        }
+    }
+
+    /**
+     * Posts a message to the user
+     *
+     * @method notify
+     * @param {String} type
+     * @param {String|Object} message
+     * @private
+     */
+    notify(type, message) {
+        new Messenger().post({ message, type, showCloseButton: true });
     }
 
     /**
@@ -298,7 +556,7 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     get listedIdeas() {
-        return this.showArchived ? [...this.openIdeas, ...this.archivedIdeas] : this.openIdeas;
+        return this.showArchived || this.isSearching ? [...this.openIdeas, ...this.archivedIdeas] : this.openIdeas;
     }
 
     /**
@@ -318,18 +576,19 @@ export default class AppProjectIdeaController extends Controller {
      * @param {String} projectId
      * @param {Function} loadIdeas Loads the ideas of the project, supplied by the route
      * @param {Function} loadPlans Loads the plans of idea ids, supplied by the route
+     * @param {Function} [loadTotal] Counts all the ideas of the project, supplied by the route
      * @returns {void}
      * @public
      */
-    registerHermesIntents(projectId, loadIdeas, loadPlans) {
+    registerHermesIntents(projectId, loadIdeas, loadPlans, loadTotal) {
         this.unregisterHermesIntents();
         this.reloadSequence++;
         if (!projectId) {
             return;
         }
         this.hermesDisposer = this.hermes.register(this, projectId, {
-            'idea.created': envelope => this.handleIdeaCreated(envelope, loadIdeas, loadPlans),
-            'idea.updated': () => this.reloadIdeas(loadIdeas, loadPlans),
+            'idea.created': envelope => this.handleIdeaCreated(envelope, loadIdeas, loadPlans, loadTotal),
+            'idea.updated': () => this.reloadIdeas(loadIdeas, loadPlans, loadTotal),
             'idea.plan.created': () => this.loadPlanStatuses(this.ideas, loadPlans),
             'idea.plan.status.changed': () => this.loadPlanStatuses(this.ideas, loadPlans)
         });
@@ -344,15 +603,16 @@ export default class AppProjectIdeaController extends Controller {
      * @param {Object} envelope Domain-event envelope
      * @param {Function} loadIdeas
      * @param {Function} loadPlans
+     * @param {Function} [loadTotal]
      * @returns {Promise|void}
      * @public
      */
-    handleIdeaCreated(envelope, loadIdeas, loadPlans) {
+    handleIdeaCreated(envelope, loadIdeas, loadPlans, loadTotal) {
         let resourceId = envelope?.resource?.id;
         if (resourceId && this.ideas.some(listed => String(listed.id) === String(resourceId))) {
             return;
         }
-        return this.reloadIdeas(loadIdeas, loadPlans);
+        return this.reloadIdeas(loadIdeas, loadPlans, loadTotal);
     }
 
     /**
@@ -367,6 +627,9 @@ export default class AppProjectIdeaController extends Controller {
     addIdea(idea) {
         if (!this.ideas.some(listed => listed.id === idea.id)) {
             this.ideas = [...this.ideas, idea];
+            if (this.totalIdeas !== null) {
+                this.totalIdeas++;
+            }
             this.loadedIdeaIds = new Set([...this.loadedIdeaIds, idea.id]);
         }
     }
@@ -390,14 +653,16 @@ export default class AppProjectIdeaController extends Controller {
      * @method reloadIdeas
      * @param {Function} loadIdeas
      * @param {Function} loadPlans
+     * @param {Function} [loadTotal]
      * @returns {Promise}
      * @public
      */
-    async reloadIdeas(loadIdeas, loadPlans) {
+    async reloadIdeas(loadIdeas, loadPlans, loadTotal) {
         let sequence = ++this.reloadSequence;
-        let ideas = await loadIdeas();
+        let [ideas, total] = await Promise.all([loadIdeas(), this.isSearching && loadTotal ? loadTotal() : null]);
         if (ideas && sequence === this.reloadSequence) {
             this.ideas = ideas.toArray();
+            this.totalIdeas = this.isSearching ? total : this.ideas.length;
             if (loadPlans) {
                 await this.loadPlanStatuses(this.ideas, loadPlans);
             }

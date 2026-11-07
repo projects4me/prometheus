@@ -1,8 +1,11 @@
 import getRequestData from '../helpers/parse-request';
 import applyQuery from '../helpers/apply-query';
 
-export function register(server) {
+export function register(server, ctx) {
 	server.get('/idea', (schema, request) => {
+		// Let the steps assert what the browser sent.
+		ctx.set('lastIdeaQuery', request.queryParams.query);
+		ctx.set('ideaQueries', [...(ctx.get('ideaQueries') || []), request.queryParams.query]);
 		return applyQuery(schema.ideas.all(), request);
 	});
 

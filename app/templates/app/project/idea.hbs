@@ -4,7 +4,16 @@
     <div class="col-md-3">
       <div class="box box-primary idea-browser" data-idea-browser>
         <div class="box-header with-border">
-          <h3 class="box-title">{{t "views.app.idea.browser.title"}}</h3>
+          <h3 class="box-title">
+            {{t "views.app.idea.browser.title"}}
+            {{#if this.isSearching}}
+              {{#if (not-eq this.totalIdeas null)}}
+                <small data-idea-count>{{t "views.app.idea.browser.countOf" count=this.ideas.length total=this.totalIdeas}}</small>
+              {{/if}}
+            {{else}}
+              <small data-idea-count>{{t "views.app.idea.browser.count" count=this.ideas.length}}</small>
+            {{/if}}
+          </h3>
           <div class="box-tools pull-right">
             <AccessControl @aclContext="idea.create">
               {{#if this.isCreating}}
@@ -19,6 +28,42 @@
             </AccessControl>
           </div>
         </div>
+        {{#if this.querySchema}}
+          <div class="box-body idea-search" data-idea-search>
+            <EzSearchCompact
+              @schema={{this.querySchema}}
+              @query={{this.query}}
+              @savedSearches={{this.ezSavedSearches}}
+              @activeSavedSearchId={{this.searchId}}
+              @onSavedSearchChange={{this.selectSavedSearch}}
+              @onApply={{this.applyQuery}}
+              @onSave={{this.showEzSaveSearchDialog}}
+              @onUpdateSavedSearch={{this.updateEzSavedSearch}}
+              @aclContext="idea.read"
+            />
+          </div>
+        {{/if}}
+        {{#if this.saveSearchDialog}}
+          {{#bootstrap-modal
+              title="global.form.savesearch"
+              confirmLabel="global.form.save"
+              closeLabel="global.form.cancel"
+              confirm=this.saveEzSearch
+              close=this.removeSaveSearchDialog}}
+
+            <div class="ember-view">
+              <label>{{t "views.app.issue.list.savedsearch.query"}}</label>
+              <span data-save-search-query>{{this.saveSearchQuery}}</span>
+            </div>
+
+            <FormFields::FieldText
+              @placeholder={{t "views.app.issue.list.savedsearch.inputname"}}
+              @label={{t "views.app.issue.list.savedsearch.name"}}
+              @value={{this.newSavedsearch.name}}
+            />
+
+          {{/bootstrap-modal}}
+        {{/if}}
         <div class="box-body no-padding">
           <ul class="nav nav-stacked idea-list" data-idea-list>
             {{#each this.listedIdeas as |idea|}}
@@ -41,7 +86,7 @@
             {{/each}}
           </ul>
         </div>
-        {{#if this.archivedIdeas.length}}
+        {{#if (and this.archivedIdeas.length (not this.isSearching))}}
           <div class="box-footer text-center">
             <button type="button" class="btn btn-link" {{on "click" this.toggleArchived}} data-toggle-archived>
               {{#if this.showArchived}}

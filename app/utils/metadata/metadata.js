@@ -503,6 +503,30 @@ export default Object.extend({
                 }
             }
         },
+        Idea: {
+            search: {
+                module: 'Idea',
+                textField: 'Idea.title',
+                fields: {
+                    'Idea.title': { label: 'views.app.idea.fields.title', type: 'text', aliases: ['title'] },
+                    'Idea.description': { label: 'views.app.idea.fields.descriptionLabel', type: 'text', aliases: ['description'] },
+                    'Idea.status': {
+                        label: 'views.app.idea.fields.status',
+                        type: 'enum',
+                        aliases: ['status'],
+                        values: { source: 'translation', key: 'views.app.idea.status' }
+                    },
+                    'createdBy.name': {
+                        label: 'views.app.idea.fields.creator',
+                        type: 'user',
+                        aliases: ['creator', 'author'],
+                        values: { source: 'members' }
+                    },
+                    'Idea.dateCreated': { label: 'views.app.idea.fields.dateCreated', type: 'date', aliases: ['created'] },
+                    'Idea.dateModified': { label: 'views.app.idea.fields.dateModified', type: 'date', aliases: ['updated'] }
+                }
+            }
+        },
         Dashboard:{
             widgets: {
                 recentIssues: {
