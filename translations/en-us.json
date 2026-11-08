@@ -331,6 +331,11 @@
   },
   "components": {
     "quickList": {
+      "countOfTotal": "{count} of {total}",
+      "empty": "No records found.",
+      "clearSearch": "Clear the search",
+      "error": "The list could not be loaded.",
+      "retry": "Try again",
       "pagination": {
         "range": "{from}-{to} / {total}",
         "previous": "Previous page",
