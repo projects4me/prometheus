@@ -11,4 +11,45 @@
 	table code {
 		word-break: break-all;
 	}
+
+	// Dropdown demo: the edge box sets where the menu has room, the scoped class mirrors ezSearch's override.
+	.dropdown-demo-box {
+		display: flex;
+		min-height: 120px;
+		padding: 10px;
+		border: 1px dashed #ccc;
+
+		&.is-left { justify-content: flex-start; }
+		&.is-right { justify-content: flex-end; }
+
+		&.is-scroll .app-dropdown-content {
+			max-height: 150px;
+			overflow-y: auto;
+		}
+
+		&.is-scoped .app-dropdown-content {
+			left: 0;
+			right: auto;
+		}
+
+		.app-dropdown-content {
+			hr {
+				margin: 2px 0;
+				padding: 0;
+				height: 1px;
+				width: 100%;
+			}
+
+			> .active {
+				background-color: $highlightColor;
+				color: #fff;
+			}
+
+			> .dropdown-long {
+				white-space: normal;
+				overflow-wrap: anywhere;
+				max-width: 220px;
+			}
+		}
+	}
 }
