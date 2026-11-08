@@ -1,5 +1,6 @@
 import { click, currentURL, fillIn, focus, settled, triggerKeyEvent } from '@ember/test-helpers';
 import steps from '../steps';
+import { runSearch, pressEnter } from '../ez-search-run';
 
 const INPUT = '[data-field="ez-search-input"] input, input[data-field="ez-search-input"]';
 const PROJECT = '(Issue.projectId : ';
@@ -10,8 +11,7 @@ async function type(text) {
 }
 
 async function enter() {
-    await triggerKeyEvent(INPUT, 'keydown', 'Escape');
-    await triggerKeyEvent(INPUT, 'keydown', 'Enter');
+    await runSearch(INPUT);
     await settled();
 }
 
@@ -31,6 +31,13 @@ export const when = function () {
             'User types "$text" in the issue search bar and presses Enter': (assert) => async function (text) {
                 await type(text);
                 await enter();
+            }
+        },
+        {
+            'User presses Enter in the empty issue search bar': (assert, ctx) => async function () {
+                ctx.set('issueRequestsBefore', (ctx.get('issueQueries') || []).length);
+                await focus(INPUT);
+                await pressEnter(INPUT);
             }
         },
         {

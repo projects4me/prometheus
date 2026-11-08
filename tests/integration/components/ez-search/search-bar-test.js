@@ -25,15 +25,36 @@ module('Integration | Component | ez-search/search-bar', function (hooks) {
         await render(hbs`<EzSearch::SearchBar @tree={{this.tree}} @schema={{this.schema}} @placeholder="Search" @onChange={{this.onChange}} @onRun={{this.onRun}} />`);
     });
 
-    test('Enter parses, reports, runs and shows the exact format', async function (assert) {
+    test('Enter with the menu closed parses and shows the exact format without running', async function (assert) {
         await focus(INPUT);
         await fillIn(INPUT, 'prio = hi status != done ');
         await triggerKeyEvent(INPUT, 'keydown', 'Escape');
         await triggerKeyEvent(INPUT, 'keydown', 'Enter');
 
         assert.strictEqual(this.changes.length, 1);
-        assert.strictEqual(this.runs, 1);
+        assert.strictEqual(this.runs, 0);
         assert.dom(INPUT).hasValue('((Issue.priority : High) AND (Issue.status !: done))');
+    });
+
+    test('Ctrl+Enter and Cmd+Enter parse and run, even with the menu open', async function (assert) {
+        for (let [index, modifier] of [{ ctrlKey: true }, { metaKey: true }].entries()) {
+            await focus(INPUT);
+            await fillIn(INPUT, 'prio');
+            assert.dom('[data-ez-menu]').exists();
+            await triggerKeyEvent(INPUT, 'keydown', 'Enter', modifier);
+
+            assert.strictEqual(this.runs, index + 1);
+            await blur(INPUT);
+        }
+    });
+
+    test('Enter with the menu open accepts the highlighted suggestion', async function (assert) {
+        await focus(INPUT);
+        await fillIn(INPUT, 'prio');
+        await triggerKeyEvent(INPUT, 'keydown', 'Enter');
+
+        assert.dom(INPUT).hasValue('priority ');
+        assert.strictEqual(this.runs, 0);
     });
 
     test('typing a field opens the menu and Tab inserts it', async function (assert) {
@@ -139,11 +160,11 @@ module('Integration | Component | ez-search/search-bar', function (hooks) {
         assert.dom('[data-ez-query-text] b').doesNotExist();
     });
 
-    test('Enter after focusing an existing query runs it instead of accepting a suggestion', async function (assert) {
+    test('Ctrl+Enter after focusing an existing query runs it instead of accepting a suggestion', async function (assert) {
         this.set('tree', parse('status:done', this.schema).tree);
         await settled();
         await focus(INPUT);
-        await triggerKeyEvent(INPUT, 'keydown', 'Enter');
+        await triggerKeyEvent(INPUT, 'keydown', 'Enter', { ctrlKey: true });
 
         assert.strictEqual(this.runs, 1);
         assert.dom(INPUT).hasValue('((Issue.status : done))');

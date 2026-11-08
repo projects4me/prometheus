@@ -1,5 +1,6 @@
-import { click, currentURL, fillIn, focus, settled, triggerKeyEvent } from '@ember/test-helpers';
+import { click, currentURL, fillIn, focus, settled } from '@ember/test-helpers';
 import steps from '../steps';
+import { runSearch } from '../ez-search-run';
 
 const BROWSER = '[data-idea-browser]';
 const INPUT = `${BROWSER} [data-field="ez-search-input"] input, ${BROWSER} input[data-field="ez-search-input"]`;
@@ -10,8 +11,7 @@ async function type(text) {
 }
 
 async function enter() {
-    await triggerKeyEvent(INPUT, 'keydown', 'Escape');
-    await triggerKeyEvent(INPUT, 'keydown', 'Enter');
+    await runSearch(INPUT);
     await settled();
 }
 

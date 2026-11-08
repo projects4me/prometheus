@@ -9,6 +9,7 @@ import { hbs } from 'ember-cli-htmlbars';
 import { setComponentTemplate } from '@ember/component';
 import EzSearchBase from 'prometheus/components/ez-search/base';
 import { issueQuerySchema } from '../../../helpers/query-schema';
+import { parse } from 'prometheus/utils/query/parse';
 
 let probes = [];
 
@@ -69,16 +70,46 @@ module('Unit | Component | ez-search/base', function (hooks) {
     });
 
     test('apply: reports the query, composed with @baseQuery', async function (assert) {
-        let base = await this.make({ query: DONE });
+        let base = await this.make();
 
+        base.onTreeChange(parse(DONE, base.args.schema).tree);
         await base.apply();
-        assert.strictEqual(this.applied.length, 1);
+        assert.deepEqual(this.applied, [DONE]);
 
-        let withBase = await this.make({ query: DONE, baseQuery: '((Issue.projectId : 7))' });
+        let withBase = await this.make({ baseQuery: '((Issue.projectId : 7))' });
 
+        withBase.onTreeChange(parse(DONE, withBase.args.schema).tree);
         await withBase.apply();
         assert.ok(this.applied[1].includes('projectId'));
         assert.ok(this.applied[1].includes('status'));
+    });
+
+    test('apply: does nothing for an empty bar with nothing applied', async function (assert) {
+        let base = await this.make();
+
+        await base.apply();
+        assert.strictEqual(this.applied.length, 0);
+    });
+
+    test('apply: does not apply the loaded query nor the same query twice', async function (assert) {
+        let base = await this.make({ query: DONE });
+
+        await base.apply();
+        assert.strictEqual(this.applied.length, 0, 'the loaded query is already applied');
+
+        base.onTreeChange(parse('((Issue.status : open))', base.args.schema).tree);
+        await base.apply();
+        await base.apply();
+        assert.strictEqual(this.applied.length, 1);
+    });
+
+    test('clear: after an applied search applies the empty query', async function (assert) {
+        let base = await this.make();
+
+        base.onTreeChange(parse(DONE, base.args.schema).tree);
+        await base.apply();
+        await base.clear();
+        assert.deepEqual(this.applied, [DONE, '']);
     });
 
     test('clear: empties the tree, reports null and applies', async function (assert) {

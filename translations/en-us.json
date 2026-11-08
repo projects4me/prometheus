@@ -407,7 +407,8 @@
           "keyword": "Keywords",
           "bracket": "Brackets"
         },
-        "hint": "Up and Down to move, Tab or Enter to accept, Esc to close",
+        "searchTitle": "Search (Ctrl+Enter)",
+        "hint": "Enter to accept · Ctrl+Enter to search · Esc to close",
         "position": "At character {position}"
       },
       "panel": {
