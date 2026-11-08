@@ -50,6 +50,18 @@ export const ENTRIES = [
         demo: 'developer/demos/form-fields',
         doc: 'form-fields.md',
         variants: 10
+    },
+    {
+        name: 'bootstrap-modal',
+        label: 'Modal',
+        group: 'Overlays',
+        status: 'stable',
+        summary: 'The bootstrap-modal dialog: title, confirm handling and rendering outside stacking contexts.',
+        usedIn: [
+            { label: 'Projects list', route: 'app.projects' }
+        ],
+        demo: 'developer/demos/modal',
+        doc: 'modal.md'
     }
 ];
 
