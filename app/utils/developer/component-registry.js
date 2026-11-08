@@ -23,22 +23,20 @@ export const GROUPS = ['Lists', 'Search', 'Forms', 'Overlays', 'Menus'];
  * - `doc`: the file name of its documentation in `public/ui-docs`;
  * - `variants` (optional): a count or a list of variant labels.
  *
- * The placeholder stands in until the first real component is registered.
- *
  * @property ENTRIES
  * @type {Array<Object>}
  * @public
  */
 export const ENTRIES = [
     {
-        name: 'placeholder',
-        label: 'Placeholder',
+        name: 'quick-list',
+        label: 'QuickList',
         group: 'Lists',
-        status: 'experimental',
-        summary: 'Stand-in entry until the first component is registered.',
-        usedIn: [],
-        demo: 'developer/placeholder-demo',
-        doc: null
+        status: 'stable',
+        summary: 'A narrow list of records with search, sorting, grouping, selection and paging.',
+        usedIn: [{ label: 'Ideas browser', route: 'app.projects' }],
+        demo: 'developer/demos/quick-list',
+        doc: 'quick-list.md'
     }
 ];
 
