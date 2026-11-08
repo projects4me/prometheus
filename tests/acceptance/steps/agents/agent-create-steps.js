@@ -4,7 +4,7 @@ import { Response } from 'miragejs';
 import { clickTrigger, removeMultipleOption, selectChoose, selectSearch } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
 
-const FIELDS = { projects: '[data-field="agent.projects"]', roles: '[data-field="agent.roles"]' };
+const FIELDS = { scopes: '[data-field="agent.delegationScopes"]', projects: '[data-field="agent.projects"]', roles: '[data-field="agent.roles"]' };
 
 const names = (list) => list.split(',').map((name) => name.trim());
 
@@ -92,6 +92,21 @@ export default function (assert) {
 			assert.ok(membership, `Agent ${name} is a member of ${project}`);
 			assert.notEqual(membership.deleted, '0', 'The membership is not sent a deleted flag, a field Gaia does not have');
 			assert.equal(server.schema.users.find(agent.userId).accountStatus, 'active', `Agent ${name} is active`);
+		})
+		.when('User types the scope "$scope" in the agent scopes field', async function (scope) {
+			await selectSearch(FIELDS.scopes, scope);
+			await selectChoose(FIELDS.scopes, scope);
+			assert.ok(true, `User typed the scope ${scope}`);
+		})
+		.then('Agent "$name" has the delegation scopes "$items"', function (name, list) {
+			let scopes = server.schema.agents.findBy({ name }).delegationScopes;
+			assert.deepEqual(scopes, names(list), `Agent ${name} has the delegation scopes ${list}`);
+		})
+		.then('The agent page shows the delegation scopes "$items"', function (list) {
+			assert.equal(find('[data-agent-field="delegation-scopes"]').textContent.trim(), list, 'The page shows the scopes');
+		})
+		.then('The agent page shows "$text" as its delegation scopes', function (text) {
+			assert.equal(find('[data-agent-field="delegation-scopes"]').textContent.trim(), text, 'The page shows the text');
 		})
 		.then('User sees the $type message "$message"', function (type, message) {
 			let messages = Array.from(document.querySelectorAll(`.messenger-message.message-${type} .messenger-message-inner`));

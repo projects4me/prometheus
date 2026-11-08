@@ -75,3 +75,29 @@ Feature: Agents | create
     When User opens the edit page of agent "Agent Hermes"
     Then The agent projects field shows "Alpha, Mango"
     And The agent roles field shows "Reviewer"
+
+  Scenario: User saves delegation scopes on an agent
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    When User navigates to app/agent/create
+    And User enters "Agent Hermes" in agent name field
+    And User enters "agent.hermes@projects4.me" in agent email field
+    And User picks "issue.*" in the agent scopes field
+    And User types the scope "custom.thing" in the agent scopes field
+    And User saves the agent
+    Then Agent "Agent Hermes" has the delegation scopes "issue.*, custom.thing"
+    And User is on the page of agent "Agent Hermes"
+    And The agent page shows the delegation scopes "issue.*, custom.thing"
+
+  Scenario: An agent without delegation scopes shows No delegation
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    When User navigates to app/agent/create
+    And User enters "Agent Hermes" in agent name field
+    And User enters "agent.hermes@projects4.me" in agent email field
+    And User saves the agent
+    Then The agent page shows "No delegation" as its delegation scopes

@@ -99,6 +99,18 @@
                       <p data-agent-field="model-escalation">{{this.model.config.escalation}}</p>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <h4>{{t "views.app.agent.form.scopes"}}</h4>
+                      <p data-agent-field="delegation-scopes">
+                        {{#if this.model.delegationScopes.length}}
+                          {{join ", " this.model.delegationScopes}}
+                        {{else}}
+                          <em>{{t "views.app.agent.detail.noDelegation"}}</em>
+                        {{/if}}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
