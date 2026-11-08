@@ -1,0 +1,17 @@
+<div class="box box-primary" data-entry-header>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{@entry.label}}</h3>
+    <div class="box-tools pull-right">
+      <span class="label {{this.statusClass}}" data-entry-status>{{@entry.status}}</span>
+    </div>
+  </div>
+  <div class="box-body">
+    <p data-entry-summary>{{@entry.summary}}</p>
+    {{#if @entry.usedIn.length}}
+      <p>
+        <strong>Used in:</strong>
+        {{#each @entry.usedIn as |item index|}}{{if index ", "}}<LinkTo @route={{item.route}} data-entry-used-in>{{item.label}}</LinkTo>{{/each}}
+      </p>
+    {{/if}}
+  </div>
+</div>

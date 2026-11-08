@@ -1,0 +1,35 @@
+<div class="developer" data-developer-entry>
+  <div class="row">
+    <div class="col-md-7">
+      <div class="box box-default" data-entry-demo>
+        <div class="box-header with-border">
+          <h3 class="box-title">Demo</h3>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-entry-reset {{on "click" this.reset}}>Reset</button>
+          </div>
+        </div>
+        <div class="box-body">
+          {{yield this.log to="demo"}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5">
+      <div class="box box-default" data-entry-controls>
+        <div class="box-header with-border">
+          <h3 class="box-title">Controls</h3>
+        </div>
+        <div class="box-body">
+          {{yield this.log to="controls"}}
+        </div>
+      </div>
+      <Developer::EventLog @log={{this.log}} />
+    </div>
+  </div>
+  {{#if (has-block "docs")}}
+    <div class="row">
+      <div class="col-md-12" data-entry-docs>
+        {{yield this.log to="docs"}}
+      </div>
+    </div>
+  {{/if}}
+</div>
