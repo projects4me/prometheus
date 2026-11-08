@@ -1,0 +1,27 @@
+{{#if this.hasPages}}
+  <div class="quick-list-pagination" data-quick-list-pagination>
+    <span class="quick-list-pagination-range" data-quick-list-pagination-range>
+      {{t "components.quickList.pagination.range" from=this.from to=this.to total=@total}}
+    </span>
+    <div class="btn-group">
+      <button
+        type="button"
+        class="btn btn-default btn-xs"
+        data-quick-list-pagination-prev
+        title={{t "components.quickList.pagination.previous"}}
+        aria-label={{t "components.quickList.pagination.previous"}}
+        disabled={{this.isPreviousDisabled}}
+        {{on "click" this.previous}}
+      ><i class="fa fa-angle-left"></i></button>
+      <button
+        type="button"
+        class="btn btn-default btn-xs"
+        data-quick-list-pagination-next
+        title={{t "components.quickList.pagination.next"}}
+        aria-label={{t "components.quickList.pagination.next"}}
+        disabled={{this.isNextDisabled}}
+        {{on "click" this.next}}
+      ><i class="fa fa-angle-right"></i></button>
+    </div>
+  </div>
+{{/if}}
