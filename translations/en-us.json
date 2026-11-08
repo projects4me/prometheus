@@ -338,6 +338,12 @@
       },
       "group": {
         "none": "None"
+      },
+      "selection": {
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all",
+        "count": "{count} selected",
+        "clear": "Clear selection"
       }
     },
     "ezSearchCompact": {
