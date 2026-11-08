@@ -5,10 +5,8 @@
         <span class="quick-list-group-label" data-test-quick-list-group-label>
             {{#if (has-block "heading")}}
                 {{yield @group to="heading"}}
-            {{else if (eq @group.key null)}}
-                {{t "components.quickList.group.none"}}
             {{else}}
-                {{@group.label}}
+                <QuickList::GroupLabel @group={{@group}} />
             {{/if}}
         </span>
         <span class="badge" data-test-quick-list-group-count>{{@group.count}}</span>

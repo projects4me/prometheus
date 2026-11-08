@@ -3,10 +3,10 @@
     {{yield to="actions"}}
   </QuickList::Header>
   {{yield to="search"}}
-  {{#if this.selectedIds.length}}
-    <QuickList::SelectionBar @state={{this.selectionState}} @count={{this.selectedIds.length}}
+  {{#if this.selection.count}}
+    <QuickList::SelectionBar @state={{this.selectionState}} @count={{this.selection.count}}
       @onToggleAll={{this.toggleAll}} @onClear={{this.clearSelection}}>
-      <:actions>{{yield this.selectedIds this.clearSelection to="selectionActions"}}</:actions>
+      <:actions>{{yield this.selection.ids this.clearSelection to="selectionActions"}}</:actions>
     </QuickList::SelectionBar>
   {{else if this.showToolbar}}
     <QuickList::Toolbar @groupOptions={{@groupOptions}} @groupBy={{@groupBy}} @onGroup={{@onGroup}}
@@ -58,7 +58,7 @@
               <QuickList::Group @group={{entry.group}} @collapsed={{entry.collapsed}}
                 @onToggle={{fn this.toggleGroup entry.key}}>
                 <:heading as |g|>
-                  {{#if (has-block "group")}}{{yield g to="group"}}{{else if (eq g.key null)}}{{t "components.quickList.group.none"}}{{else}}{{g.label}}{{/if}}
+                  {{#if (has-block "group")}}{{yield g to="group"}}{{else}}<QuickList::GroupLabel @group={{g}} />{{/if}}
                 </:heading>
                 <:default>
                   <ul class="quick-list__items">
