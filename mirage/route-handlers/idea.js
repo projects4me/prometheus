@@ -1,5 +1,6 @@
 import getRequestData from '../helpers/parse-request';
 import applyQuery from '../helpers/apply-query';
+import sortByFields from '../helpers/model/sort-by-fields';
 
 export function register(server, ctx) {
 	server.get('/idea', (schema, request) => {
@@ -12,9 +13,7 @@ export function register(server, ctx) {
 		let ideas = applyQuery(schema.ideas.all(), request);
 		let total = ideas.length;
 		if (params.sort) {
-			let field = params.sort.split('.').pop();
-			let direction = String(params.order).toUpperCase() === 'DESC' ? -1 : 1;
-			ideas = ideas.sort((a, b) => direction * String(a[field] ?? '').localeCompare(String(b[field] ?? '')));
+			ideas = sortByFields(params.sort, params.order, ideas);
 		}
 		let limit = Number(params.limit);
 		if (limit > 0) {
