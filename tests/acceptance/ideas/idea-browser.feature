@@ -56,11 +56,55 @@ Feature: Ideas | idea browser
     ---------------------------------------------------------
     When User opens the ideas of the project
     Then The idea browser lists the ideas Open idea
+    And The idea list was requested for the open ideas only
     And The archived footer link reads Show archived (1)
     When User clicks the archived footer link
     Then The idea browser lists the ideas Open idea, Shelved idea
+    And The idea list was requested for every status
     And The idea Shelved idea is labelled Archived
     And The archived footer link reads Hide archived (1)
+    When User clicks the archived footer link
+    Then The idea browser lists the ideas Open idea
+    And The idea list was requested for the open ideas only
+
+  Scenario: The idea list is sorted, paged and narrowed to the open ideas on the server
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The ideas of the project are
+    ---------------------------------------------------------
+    | title        | status   | dateModified        |
+    | Older idea   | open     | 2026-10-01 10:00:00 |
+    | Newest idea  | open     | 2026-10-20 10:00:00 |
+    | Shelved idea | archived | 2026-10-25 10:00:00 |
+    ---------------------------------------------------------
+    When User opens the ideas of the project
+    Then The idea list request sent sort as Idea.dateModified
+    And The idea list request sent order as DESC
+    And The idea list request sent limit as -1
+    And The idea list request sent page as 1
+    And The idea list request sent rels as createdBy
+    And The idea list was requested for the open ideas only
+    And The idea browser count reads 3
+
+  Scenario: The page and sort query params reach the idea list request
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The ideas of the project are
+    ---------------------------------------------------------
+    | title        | status   | dateModified        |
+    | Older idea   | open     | 2026-10-01 10:00:00 |
+    | Newest idea  | open     | 2026-10-20 10:00:00 |
+    ---------------------------------------------------------
+    When User opens the ideas of the project with page=2&sort=Idea.title&order=ASC
+    Then The idea list request sent page as 2
+    And The idea list request sent sort as Idea.title
+    And The idea list request sent order as ASC
 
   Scenario: Navigating between ideas highlights the selected idea
 

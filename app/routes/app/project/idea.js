@@ -4,7 +4,7 @@
 
 import App from 'prometheus/routes/app';
 import { inject as service } from '@ember/service';
-import { hashSettled } from 'rsvp';
+import { hash, hashSettled } from 'rsvp';
 
 /**
  * The ideas route, it loads the ideas of the selected project for the idea browser
@@ -43,26 +43,42 @@ export default class AppProjectIdeaRoute extends App {
     @service('saved-search') savedSearch;
 
     /**
-     * A new query reloads the ideas; the saved search id only marks the picked search.
+     * A new query, page or sort reloads the ideas; the saved search id only marks the picked search.
      *
      * @property queryParams
      * @type Object
      */
     queryParams = {
         query: { refreshModel: true },
-        searchId: { refreshModel: false }
+        searchId: { refreshModel: false },
+        page: { refreshModel: true },
+        sort: { refreshModel: true },
+        order: { refreshModel: true }
     };
 
     /**
-     * Loads the ideas of the selected project, the newest updated first, narrowed by the query when there is one.
+     * Loads a page of the ideas of the selected project and the counts the browser shows, for the query params
+     * and the page size and archived toggle of the controller.
      *
      * @method model
      * @param {Object} params The query params
-     * @returns {Promise}
+     * @returns {Promise<Object>} The ideas and the counts
      */
     async model(params) {
         Logger.debug('AppProjectIdeaRoute::model');
-        return this.loadIdeas(params?.query);
+        let controller = this.controllerFor('app.project.idea');
+        let options = {
+            query: params?.query || null,
+            page: params?.page ?? controller.page,
+            sort: params?.sort ?? controller.sort,
+            order: params?.order ?? controller.order,
+            limit: controller.pageSize,
+            showArchived: controller.showArchived
+        };
+        return hash({
+            ideas: this.loadIdeas(options),
+            counts: this.loadCounts(options)
+        });
     }
 
     /**
@@ -90,22 +106,44 @@ export default class AppProjectIdeaRoute extends App {
     }
 
     /**
-     * Queries the ideas of the selected project, the newest updated first.
+     * The Gaia query of the listed ideas: the ideas of the selected project, only the open ones unless the archived
+     * ones are shown or a search runs (a search matches every status), narrowed by the search.
      *
-     * @method loadIdeas
-     * @param {String} [query] A Gaia query the ideas must match as well
-     * @returns {Promise}
+     * @method buildIdeaQuery
+     * @param {Object} options
+     * @param {String} [options.query] A Gaia query the ideas must match as well
+     * @param {Boolean} [options.showArchived] Whether the archived ideas are listed too
+     * @returns {String}
      * @public
      */
-    async loadIdeas(query) {
-        let projectId = this.trackedProject.getProjectId();
-        let scope = `(Idea.projectId : ${projectId})`;
+    buildIdeaQuery({ query, showArchived } = {}) {
+        let conditions = [`(Idea.projectId : ${this.trackedProject.getProjectId()})`];
+        if (!showArchived && !query) {
+            conditions.push('(Idea.status : open)');
+        }
+        if (query) {
+            conditions.push(`(${query})`);
+        }
+        return conditions.length > 1 ? `(${conditions.join(' AND ')})` : conditions[0];
+    }
+
+    /**
+     * Queries a page of the ideas with their creator, the only relation the browser needs.
+     *
+     * @method loadIdeas
+     * @param {Object} options The query, page, sort, order, limit and showArchived of the list
+     * @returns {Promise} The ideas, their meta holds the total when Gaia sends it
+     * @public
+     */
+    async loadIdeas(options = {}) {
         try {
             return await this.store.query('idea', {
-                query: query ? `(${scope} AND (${query}))` : scope,
-                sort: 'Idea.dateModified',
-                order: 'DESC',
-                limit: -1
+                query: this.buildIdeaQuery(options),
+                rels: 'createdBy',
+                sort: options.sort || 'Idea.dateModified',
+                order: options.order || 'DESC',
+                limit: options.limit ?? -1,
+                page: options.page || 1
             });
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });
@@ -113,19 +151,43 @@ export default class AppProjectIdeaRoute extends App {
     }
 
     /**
-     * Counts all the ideas of the selected project, whatever the search; null when it cannot be counted.
+     * Counts the ideas of the project matching a condition; null when they cannot be counted.
+     * Gaia does not send a total in the list meta yet, so the matching ideas are loaded without relations and
+     * counted; once it does, meta.total is used.
      *
-     * @method loadTotal
+     * @method countIdeas
+     * @param {String} [condition] A Gaia condition the ideas must match as well
      * @returns {Promise<Number|null>}
      * @public
      */
-    async loadTotal() {
+    async countIdeas(condition) {
+        let scope = `(Idea.projectId : ${this.trackedProject.getProjectId()})`;
         try {
-            let ideas = await this.loadIdeas();
-            return ideas ? ideas.length : null;
+            let ideas = await this.store.query('idea', {
+                query: condition ? `(${scope} AND ${condition})` : scope,
+                rels: 'none',
+                limit: -1
+            });
+            return ideas?.meta?.total ?? ideas?.length ?? null;
         } catch (error) {
             return null;
         }
+    }
+
+    /**
+     * Counts what the browser shows besides the list: the archived ideas for the footer toggle, and all the ideas
+     * of the project while a search narrows the list.
+     *
+     * @method loadCounts
+     * @param {Object} options The query of the list
+     * @returns {Promise<Object>} archived and project counts, null where not needed or not known
+     * @public
+     */
+    async loadCounts(options = {}) {
+        if (options.query) {
+            return { archived: null, project: await this.countIdeas() };
+        }
+        return { archived: await this.countIdeas('(Idea.status : archived)'), project: null };
     }
 
     /**
@@ -150,28 +212,27 @@ export default class AppProjectIdeaRoute extends App {
     }
 
     /**
-     * Hands the ideas to the controller.
+     * Hands the ideas and counts to the controller and registers the live updates, which re-run the list query.
      *
      * @method setupController
      * @param {Controller} controller
-     * @param {Array} model
+     * @param {Object} model The ideas and counts
      * @private
      */
     setupController(controller, model) {
-        controller.ideas = model ? model.toArray() : [];
         controller.querySchema = this.searchData?.schema ?? null;
         controller.savedsearches = this.searchData?.savedsearches ?? [];
         controller.newSavedsearch = controller.newSavedsearch || this.store.createRecord('savedsearch');
-        controller.totalIdeas = controller.query ? null : controller.ideas.length;
-        if (controller.query) {
-            this.loadTotal().then(total => {
-                controller.totalIdeas = total;
-            });
-        }
         controller.planStatuses = {};
         controller.loadedIdeaIds = new Set();
+        controller.showIdeas(model?.ideas, model?.counts);
         controller.loadPlanStatuses(controller.ideas, ids => this.loadPlans(ids));
-        controller.registerHermesIntents(this.trackedProject.getProjectId(), () => this.loadIdeas(controller.query), ids => this.loadPlans(ids), () => this.loadTotal());
+        controller.registerHermesIntents(
+            this.trackedProject.getProjectId(),
+            options => this.loadIdeas(options),
+            ids => this.loadPlans(ids),
+            options => this.loadCounts(options)
+        );
     }
 
     /**
@@ -187,6 +248,7 @@ export default class AppProjectIdeaRoute extends App {
             controller.view = null;
             controller.query = null;
             controller.searchId = null;
+            controller.page = 1;
             this.searchData = null;
             controller.unregisterHermesIntents();
         }

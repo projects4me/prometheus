@@ -7,11 +7,13 @@
           <h3 class="box-title">
             {{t "views.app.idea.browser.title"}}
             {{#if this.isSearching}}
-              {{#if (not-eq this.totalIdeas null)}}
-                <small data-idea-count>{{t "views.app.idea.browser.countOf" count=this.ideas.length total=this.totalIdeas}}</small>
+              {{#if (and (not-eq this.totalIdeas null) (not-eq this.projectTotal null))}}
+                <small data-idea-count>{{t "views.app.idea.browser.countOf" count=this.totalIdeas total=this.projectTotal}}</small>
               {{/if}}
             {{else}}
-              <small data-idea-count>{{t "views.app.idea.browser.count" count=this.ideas.length}}</small>
+              {{#if (not-eq this.projectTotal null)}}
+                <small data-idea-count>{{t "views.app.idea.browser.count" count=this.projectTotal}}</small>
+              {{/if}}
             {{/if}}
           </h3>
           <div class="box-tools pull-right">
@@ -86,13 +88,13 @@
             {{/each}}
           </ul>
         </div>
-        {{#if (and this.archivedIdeas.length (not this.isSearching))}}
+        {{#if this.hasArchivedToggle}}
           <div class="box-footer text-center">
             <button type="button" class="btn btn-link" {{on "click" this.toggleArchived}} data-toggle-archived>
               {{#if this.showArchived}}
-                {{t "views.app.idea.browser.hideArchived" count=this.archivedIdeas.length}}
+                {{t "views.app.idea.browser.hideArchived" count=this.archivedTotal}}
               {{else}}
-                {{t "views.app.idea.browser.showArchived" count=this.archivedIdeas.length}}
+                {{t "views.app.idea.browser.showArchived" count=this.archivedTotal}}
               {{/if}}
             </button>
           </div>

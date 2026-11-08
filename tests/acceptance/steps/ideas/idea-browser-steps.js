@@ -100,12 +100,47 @@ export const when = function () {
                 await click(findIdea(title).querySelector('a'));
                 assert.ok(true, `User selects the idea ${title}`);
             }
+        },
+        {
+            "User opens the ideas of the project with $params": (assert, ctx) => async function (params) {
+                let project = ctx.get('currentProject');
+                await visit(`/app/project/${project.shortCode}/idea?${params}`);
+                assert.ok(true, `User opens the ideas of the project with ${params}`);
+            }
         }
     ];
 };
 
+/**
+ * The requests of the idea list itself, not the count queries (which load no relations)
+ *
+ * @param {Object} ctx
+ * @returns {Array}
+ */
+function listRequests(ctx) {
+    return (ctx.get('ideaRequests') || []).filter(params => params.rels !== 'none');
+}
+
 export const then = function () {
     return [
+        {
+            "The idea list request sent $name as $value": (assert, ctx) => async function (name, value) {
+                let last = listRequests(ctx).pop();
+                assert.equal(last?.[name], value, `the list request sent ${name}=${last?.[name]}`);
+            }
+        },
+        {
+            "The idea list was requested for the open ideas only": (assert, ctx) => async function () {
+                let last = listRequests(ctx).pop();
+                assert.ok(last?.query.includes('(Idea.status : open)'), `sent ${last?.query}`);
+            }
+        },
+        {
+            "The idea list was requested for every status": (assert, ctx) => async function () {
+                let last = listRequests(ctx).pop();
+                assert.notOk(last?.query.includes('Idea.status'), `sent ${last?.query}`);
+            }
+        },
         {
             "The sidebar shows the Idea entry": (assert) => async function () {
                 assert.dom('.sidebar-menu [data-navigation-module="Idea"]').exists();

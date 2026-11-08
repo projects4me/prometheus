@@ -3,10 +3,27 @@ import applyQuery from '../helpers/apply-query';
 
 export function register(server, ctx) {
 	server.get('/idea', (schema, request) => {
+		let params = request.queryParams;
 		// Let the steps assert what the browser sent.
-		ctx.set('lastIdeaQuery', request.queryParams.query);
-		ctx.set('ideaQueries', [...(ctx.get('ideaQueries') || []), request.queryParams.query]);
-		return applyQuery(schema.ideas.all(), request);
+		ctx.set('lastIdeaQuery', params.query);
+		ctx.set('ideaQueries', [...(ctx.get('ideaQueries') || []), params.query]);
+		ctx.set('ideaRequests', [...(ctx.get('ideaRequests') || []), { ...params }]);
+
+		let ideas = applyQuery(schema.ideas.all(), request);
+		let total = ideas.length;
+		if (params.sort) {
+			let field = params.sort.split('.').pop();
+			let direction = String(params.order).toUpperCase() === 'DESC' ? -1 : 1;
+			ideas = ideas.sort((a, b) => direction * String(a[field] ?? '').localeCompare(String(b[field] ?? '')));
+		}
+		let limit = Number(params.limit);
+		if (limit > 0) {
+			let page = Math.max(1, Number(params.page) || 1);
+			ideas = ideas.slice((page - 1) * limit, page * limit);
+		}
+		// Gaia's list meta has no total yet; Mirage sends one so the browser's use of it is covered.
+		ideas.meta = { total };
+		return ideas;
 	});
 
 	server.get('/idea/:id', (schema, request) => {
