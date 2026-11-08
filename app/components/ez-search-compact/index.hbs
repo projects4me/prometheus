@@ -80,20 +80,22 @@
   {{/unless}}
 
   {{#if this.filterOpen}}
-    {{#bootstrap-modal
-      title="components.ezSearchCompact.builder.title"
-      closeLabel="global.form.cancel"
-      confirmLabel="global.form.search"
-      leftLabel="global.form.clear"
-      leftAction=this.clearFilter
-      containerClass="ez-search-compact-modal"
-      close=this.closeFilter
-      confirm=this.searchFilter
-    }}
-      <div class="ez-search-compact-modal-query" data-ez-draft-query>
-        <EzSearch::QueryText @text={{this.draftQuery}} @schema={{@schema}} />
-      </div>
-      <EzSearch::Panel @tree={{this.draft}} @schema={{@schema}} @onChange={{this.onDraftChange}} />
-    {{/bootstrap-modal}}
+    {{#in-element this.modalRoot insertBefore=null}}
+      {{#bootstrap-modal
+        title="components.ezSearchCompact.builder.title"
+        closeLabel="global.form.cancel"
+        confirmLabel="global.form.search"
+        leftLabel="global.form.clear"
+        leftAction=this.clearFilter
+        containerClass="ez-search-compact-modal"
+        close=this.closeFilter
+        confirm=this.searchFilter
+      }}
+        <div class="ez-search-compact-modal-query" data-ez-draft-query>
+          <EzSearch::QueryText @text={{this.draftQuery}} @schema={{@schema}} />
+        </div>
+        <EzSearch::Panel @tree={{this.draft}} @schema={{@schema}} @onChange={{this.onDraftChange}} />
+      {{/bootstrap-modal}}
+    {{/in-element}}
   {{/if}}
 </div>
