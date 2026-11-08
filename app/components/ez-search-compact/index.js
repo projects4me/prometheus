@@ -6,6 +6,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import EzSearchBase from '../ez-search/base';
 import { isComplete, isCondition, isGroup } from 'prometheus/utils/query/ast';
+import config from 'prometheus/config/environment';
 import { serialize } from 'prometheus/utils/query/serializer';
 
 /**
@@ -66,6 +67,18 @@ export default class EzSearchCompactComponent extends EzSearchBase {
         return this.draft ? serialize(this.draft).query : '';
     }
 
+    /**
+     * Where the modal is rendered: the app root, outside the page's containers, so no stacking context of the page (a board filter bar, say)
+     * can trap it under Bootstrap's backdrop.
+     *
+     * @property modalRoot
+     * @type HTMLElement
+     * @private
+     */
+    get modalRoot() {
+        return document.querySelector(config.APP.rootElement || 'body') || document.body;
+    }
+
     @action
     openFilter() {
         this.draft = this.tree;
@@ -108,6 +121,10 @@ export default class EzSearchCompactComponent extends EzSearchBase {
      */
     @action
     closeFilter() {
+        if (this.isDestroying || this.isDestroyed) {
+            return;
+        }
+
         this.filterOpen = false;
         this.draft = null;
     }

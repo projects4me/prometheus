@@ -1,4 +1,4 @@
-import { click, currentURL, fillIn, focus, settled, triggerKeyEvent } from '@ember/test-helpers';
+import { click, currentURL, fillIn, focus, settled, triggerKeyEvent, waitUntil } from '@ember/test-helpers';
 import Sortable from 'sortablejs';
 import steps from '../steps';
 
@@ -30,6 +30,20 @@ export const when = function () {
             }
         },
         {
+            'User opens the board Filter modal': () => async function () {
+                await click(`${SEARCH} [data-ez-builder-toggle]`);
+                await waitUntil(() => document.querySelector('.modal.in .modal-dialog'));
+            }
+        },
+        {
+            'User adds a condition and searches in the board Filter modal': (assert, ctx) => async function () {
+                ctx.set('issueQueries', []);
+                await click('.modal [data-ez-add-condition]');
+                await click('.modal [data-btn="save"]');
+                await settled();
+            }
+        },
+        {
             'User clears the board search': (assert, ctx) => async function () {
                 ctx.set('issueQueries', []);
                 await click(`${SEARCH} [data-ez-search-clear]`);
@@ -55,6 +69,27 @@ export const then = function () {
                 assert.ok(milestoneQueries.length > 0, `lane requests sent: ${sent.join(' | ')}`);
                 assert.ok(milestoneQueries.every(query => query.includes(text)), `sent ${milestoneQueries.join(' | ')}`);
                 assert.ok(sent.filter(query => (query || '').includes('NULL')).every(query => query.includes(text)), 'backlog requested with the search');
+            }
+        },
+        {
+            'The board Filter modal is the top element at its centre': (assert) => async function () {
+                // The test runner scales #ember-testing, which makes it a stacking context of its own; the app root is
+                // the body in production, so take that context away to check the real stacking.
+                [document.querySelector('#ember-testing'), document.querySelector('#ember-testing-container')].forEach((root) => {
+                    Object.assign(root.style, { transform: 'none', zoom: '1', position: 'static', zIndex: 'auto', overflow: 'visible' });
+                });
+                let dialog = document.querySelector('.modal .modal-dialog');
+                let rect = dialog.getBoundingClientRect();
+                let top = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                assert.ok(top && dialog.contains(top), `the dialog is on top of the overlay, got ${top && top.outerHTML.slice(0, 120)}`);
+                assert.notOk(document.querySelector(SEARCH).contains(dialog), 'the modal is outside the board search');
+            }
+        },
+        {
+            'The board Filter modal and its backdrop are gone': (assert) => async function () {
+                await waitUntil(() => !document.querySelector('.modal'));
+                assert.dom('.modal').doesNotExist();
+                assert.dom('.modal-backdrop').doesNotExist();
             }
         },
         {

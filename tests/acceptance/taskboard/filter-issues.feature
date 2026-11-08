@@ -136,3 +136,32 @@ Feature: Taskboard | search the board with EzSearchCompact
     And There is custom callback for board issues
     When User navigates to app/project/project_1/board
     Then The board search and the milestone tabs share one row
+
+
+  Scenario: The Filter modal opens above the overlay and Search applies the condition
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_4 is logged in
+    And User_4 selects Project 1
+    And Project has following details
+    ------------------------------------------------------
+    | milestones(milestone) | issuestatuses(issuestatus) |
+    | 1                     | 7                          |
+    ------------------------------------------------------ 
+    And Each milestone has 4 issues and there status are
+    ------------------------------------------------------------------------
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 1           | 1         | 2    |  0       | 0       | 0        |
+    ------------------------------------------------------------
+    And backlog has 2 issues
+    ------------------------------------------------------------------------
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 0           | 0         | 0    |  1       | 0       | 0        |
+    ------------------------------------------------------------------------
+    And There is custom callback for board issues
+    When User navigates to app/project/project_1/board
+    And User opens the board Filter modal
+    Then The board Filter modal is the top element at its centre
+    When User adds a condition and searches in the board Filter modal
+    Then The board Filter modal and its backdrop are gone
