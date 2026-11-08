@@ -11,7 +11,7 @@ Feature: Developer | Component Library
     Then The sidebar shows the Developer item
     When User opens app/developer
     Then User lands on app/developer/components/placeholder
-    And The Developer Components box counts 1 entries
+    And The Developer Components box counts 2 entries
     And The Developer Components box shows the placeholder entry under Lists
     And The Developer Components box marks the placeholder entry active
     And The Developer page shows the placeholder entry

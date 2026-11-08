@@ -10,7 +10,7 @@
     {{#if @entry.usedIn.length}}
       <p>
         <strong>Used in:</strong>
-        {{#each @entry.usedIn as |item index|}}{{if index ", "}}<LinkTo @route={{item.route}} data-entry-used-in>{{item.label}}</LinkTo>{{/each}}
+        {{#each @entry.usedIn as |item index|}}{{if index ", "}}{{#if item.route}}<LinkTo @route={{item.route}} data-entry-used-in>{{item.label}}</LinkTo>{{else}}<span data-entry-used-in>{{item.label}}</span>{{/if}}{{/each}}
       </p>
     {{/if}}
   </div>

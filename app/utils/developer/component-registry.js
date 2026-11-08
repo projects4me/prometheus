@@ -18,7 +18,8 @@ export const GROUPS = ['Lists', 'Search', 'Forms', 'Overlays', 'Menus'];
  * - `name`: url segment of the entry page (`/app/developer/components/:name`);
  * - `group`: one of `GROUPS`;
  * - `status`: `stable` or `experimental`;
- * - `usedIn`: `[{ label, route }]`, screens that use the component;
+ * - `usedIn`: `[{ label, route }]`, screens that use the component (`route` is omitted for screens that need
+ *   a route parameter, which show as plain text);
  * - `demo`: the component rendered on the entry page;
  * - `doc`: the file name of its documentation in `public/ui-docs`;
  * - `variants` (optional): a count or a list of variant labels.
@@ -39,6 +40,23 @@ export const ENTRIES = [
         usedIn: [],
         demo: 'developer/placeholder-demo',
         doc: null
+    },
+    {
+        name: 'ez-search',
+        label: 'ezSearch',
+        group: 'Search',
+        status: 'stable',
+        summary: 'Search bar and visual query builder, as EzSearch and the EzSearchCompact multi-row and linear layouts.',
+        usedIn: [
+            { label: 'Issues' },
+            { label: 'Projects', route: 'app.projects' },
+            { label: 'Ideas' },
+            { label: 'Gantt' },
+            { label: 'Task Board' }
+        ],
+        demo: 'developer/demos/ez-search',
+        doc: 'ez-search.md',
+        variants: 3
     }
 ];
 

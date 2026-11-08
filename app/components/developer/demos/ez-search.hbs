@@ -1,0 +1,61 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo as |log|>
+    {{#each (array this.mountKey) key="@identity"}}
+      <div data-ez-search-demo={{this.variant}}>
+        {{#if this.isFull}}
+          <EzSearch
+            @schema={{this.schema}}
+            @query={{this.query}}
+            @baseQuery={{this.baseQuery}}
+            @savedSearches={{this.savedSearches}}
+            @activeSavedSearchId={{this.activeId}}
+            @onApply={{fn this.onApply log}}
+            @onSave={{fn this.onSave log}}
+            @onSavedSearchChange={{fn this.onSavedSearchChange log}}
+            @onUpdateSavedSearch={{fn this.onUpdateSavedSearch log}}
+            @aclContext="issue.read"
+          />
+        {{else}}
+          <EzSearchCompact
+            @linear={{this.isLinear}}
+            @schema={{this.schema}}
+            @query={{this.query}}
+            @baseQuery={{this.baseQuery}}
+            @savedSearches={{this.savedSearches}}
+            @activeSavedSearchId={{this.activeId}}
+            @onApply={{fn this.onApply log}}
+            @onSave={{fn this.onSave log}}
+            @onSavedSearchChange={{fn this.onSavedSearchChange log}}
+            @onUpdateSavedSearch={{fn this.onUpdateSavedSearch log}}
+            @aclContext="issue.read"
+          />
+        {{/if}}
+      </div>
+    {{/each}}
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <label>Variant</label>
+      <div class="btn-group" data-ez-demo-variants>
+        {{#each this.variants as |variant|}}
+          <button type="button" class="btn btn-default {{if (eq variant.key this.variant) 'active'}}" data-variant={{variant.key}} {{on "click" (fn this.setVariant variant.key)}}>{{variant.label}}</button>
+        {{/each}}
+      </div>
+    </div>
+    <div class="form-group" data-ez-demo-query>
+      <label>@query</label>
+      <Developer::StateSwitch @states={{this.presets}} @value={{this.preset}} @onChange={{this.setPreset}} />
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" data-ez-demo-base checked={{this.useBase}} {{on "change" this.toggleBase}} /> @baseQuery</label>
+    </div>
+    <div class="form-group" data-ez-demo-active>
+      <label>@activeSavedSearchId</label>
+      <Developer::StateSwitch @states={{this.activeOptions}} @value={{this.activeKey}} @onChange={{this.setActive}} />
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="ez-search.md" />
+  </:docs>
+</Developer::Entry>
