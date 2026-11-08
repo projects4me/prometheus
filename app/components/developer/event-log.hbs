@@ -1,0 +1,28 @@
+<div class="box box-default" data-event-log>
+  <div class="box-header with-border">
+    <h3 class="box-title">Event log</h3>
+    <div class="box-tools pull-right">
+      <button type="button" class="btn btn-box-tool" data-event-log-clear {{on "click" this.clear}}>Clear</button>
+    </div>
+  </div>
+  <div class="box-body no-padding">
+    {{#if this.rows.length}}
+      <table class="table table-condensed">
+        <thead>
+          <tr><th>Time</th><th>Event</th><th>Payload</th></tr>
+        </thead>
+        <tbody>
+          {{#each this.rows key="id" as |row|}}
+            <tr data-event-log-row>
+              <td>{{row.time}}</td>
+              <td>{{row.name}}</td>
+              <td><code>{{row.payload}}</code></td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <p class="text-muted event-log-empty" data-event-log-empty>No events yet</p>
+    {{/if}}
+  </div>
+</div>

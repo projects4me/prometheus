@@ -1,0 +1,5 @@
+<div class="btn-group" data-state-switch>
+  {{#each this.states as |state|}}
+    <button type="button" class="btn btn-default {{if (eq state @value) 'active'}}" data-state={{state}} {{on "click" (fn @onChange state)}}>{{state}}</button>
+  {{/each}}
+</div>
