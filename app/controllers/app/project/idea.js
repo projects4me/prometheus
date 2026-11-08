@@ -9,6 +9,7 @@ import { DEFAULT_PAGE, DEFAULT_SORT, DEFAULT_ORDER, DEFAULT_GROUP } from 'promet
 import { planStatusClass } from 'prometheus/utils/idea/plan-status';
 import { tracked } from '@glimmer/tracking';
 import { htmlSafe } from '@ember/template';
+import { buildSortOptions, buildGroupOptions, buildCreators } from 'prometheus/utils/ideas/list-options';
 import { hasNextPage } from 'prometheus/utils/quick-list/page-window';
 
 const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
@@ -166,11 +167,7 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     get sortOptions() {
-        return [
-            { key: 'Idea.dateModified', label: this.intl.t('views.app.idea.browser.sort.dateModified') },
-            { key: 'Idea.dateCreated', label: this.intl.t('views.app.idea.browser.sort.dateCreated') },
-            { key: 'Idea.title', label: this.intl.t('views.app.idea.browser.sort.title') }
-        ];
+        return buildSortOptions(this.intl);
     }
 
     /**
@@ -181,23 +178,11 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     get groupOptions() {
-        let progress = this.progressByIdea;
-        let creators = new Map(this.ideas.map(idea => [String(idea.createdUser), idea.belongsTo('createdBy').value()?.name]));
-        return [
-            { key: 'none', label: this.intl.t('views.app.idea.browser.group.none') },
-            {
-                key: 'planStatus',
-                label: this.intl.t('views.app.idea.browser.group.planStatus'),
-                groupKey: idea => progress[idea.id]?.label ?? null,
-                groupLabel: key => this.intl.t(key)
-            },
-            {
-                key: 'createdBy',
-                label: this.intl.t('views.app.idea.browser.group.createdBy'),
-                groupKey: idea => idea.createdUser,
-                groupLabel: key => creators.get(String(key)) || this.intl.t('views.app.idea.browser.unknownUser')
-            }
-        ];
+        return buildGroupOptions({
+            intl: this.intl,
+            progress: this.progressByIdea,
+            creators: buildCreators(this.ideas)
+        });
     }
 
     /**
