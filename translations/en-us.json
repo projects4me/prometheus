@@ -901,7 +901,17 @@
           "showArchived": "Show archived ({count})",
           "hideArchived": "Hide archived ({count})",
           "count": "{count}",
-          "countOf": "{count} of {total}"
+          "countOf": "{count} of {total}",
+          "sort": {
+            "dateModified": "Last updated",
+            "dateCreated": "Date created",
+            "title": "Title"
+          },
+          "group": {
+            "none": "None",
+            "planStatus": "Plan status",
+            "createdBy": "Created by"
+          }
         },
         "status": {
           "open": "Open",

@@ -34,6 +34,7 @@ import { groupItems } from 'prometheus/utils/quick-list/group-items';
  * - `<:item as |record Item|>`: one row per record. `Item` is `QuickList::Item` with `@isActive`
  *   already set from `@activeId`; pass it `@route`/`@model` and fill its `<:primary>` and `<:secondary>`
  *   blocks.
+ * - `<:footer>`: rendered under the pagination, inside the box.
  * - `<:empty>`: replaces the default empty state ("No records found.").
  * - `<:group as |group|>`: replaces the label of a group heading (`group` is `{ key, label, items, count }`).
  * - `<:selectionActions as |selected clear|>`: the actions in the selection bar; `selected` is the

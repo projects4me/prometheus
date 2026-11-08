@@ -242,6 +242,7 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.equal(browser.projectTotal, 9, "open ideas plus the archived ones");
     assert.true(browser.hasArchivedToggle);
 
+    browser.pageSize = -1;
     browser.showIdeas(page(["i1", "i2"], {}), { archived: 0, project: null });
     assert.equal(browser.totalIdeas, 2, "every idea is loaded with the page size -1");
     assert.false(browser.hasArchivedToggle);

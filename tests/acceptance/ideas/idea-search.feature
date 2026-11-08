@@ -14,13 +14,13 @@ Feature: Ideas | search the idea browser
     | Shelved idea | archived | 2026-10-25 10:00:00 |
     ---------------------------------------------------------
 
-  Scenario: Running a query requests the list with it and shows n of total
+  Scenario: Running a query requests the list with it and shows the count
 
     When User opens the ideas of the project
-    Then The idea browser count reads 3
+    Then The idea browser count reads 2
     When User types "title ~ idea status = open" in the idea search bar and presses Enter
     Then The idea list was requested with "Idea.title"
-    And The idea browser count reads 2 of 3
+    And The idea browser count reads 2
     And The idea url keeps the search
 
   Scenario: Removing a chip runs the search again
@@ -29,7 +29,7 @@ Feature: Ideas | search the idea browser
     And User types "title ~ idea" in the idea search bar and presses Enter
     And User removes the first applied filter of the idea search
     Then The idea list was requested with no search
-    And The idea browser count reads 3
+    And The idea browser count reads 2
 
   Scenario: Applying a saved search shows its name, editing it shows edited and updating clears it
 

@@ -104,7 +104,7 @@ export default class AppProjectIdeaController extends Controller {
      * @type Array
      * @public
      */
-    queryParams = ['view', 'query', 'searchId', 'page', 'sort', 'order'];
+    queryParams = ['view', 'query', 'searchId', 'page', 'sort', 'order', 'group'];
 
     /**
      * The page of the idea list, 1 based
@@ -144,7 +144,116 @@ export default class AppProjectIdeaController extends Controller {
      * @default -1
      * @public
      */
-    pageSize = -1;
+    pageSize = 20;
+
+    /**
+     * How the loaded page is grouped: none, planStatus (client side, only the loaded page) or createdBy (the
+     * server sorts by the creator first, so the groups continue across pages)
+     *
+     * @property group
+     * @type String
+     * @default 'none'
+     * @public
+     */
+    @tracked group = 'none';
+
+    /**
+     * The sort options of the list menu
+     *
+     * @property sortOptions
+     * @type Array
+     * @public
+     */
+    get sortOptions() {
+        return [
+            { key: 'Idea.dateModified', label: this.intl.t('views.app.idea.browser.sort.dateModified') },
+            { key: 'Idea.dateCreated', label: this.intl.t('views.app.idea.browser.sort.dateCreated') },
+            { key: 'Idea.title', label: this.intl.t('views.app.idea.browser.sort.title') }
+        ];
+    }
+
+    /**
+     * The group options of the list menu
+     *
+     * @property groupOptions
+     * @type Array
+     * @public
+     */
+    get groupOptions() {
+        let progress = this.progressByIdea;
+        let creators = new Map(this.ideas.map(idea => [String(idea.createdUser), idea.belongsTo('createdBy').value()?.name]));
+        return [
+            { key: 'none', label: this.intl.t('views.app.idea.browser.group.none') },
+            {
+                key: 'planStatus',
+                label: this.intl.t('views.app.idea.browser.group.planStatus'),
+                groupKey: idea => progress[idea.id]?.label ?? null,
+                groupLabel: key => this.intl.t(key)
+            },
+            {
+                key: 'createdBy',
+                label: this.intl.t('views.app.idea.browser.group.createdBy'),
+                groupKey: idea => idea.createdUser,
+                groupLabel: key => creators.get(String(key)) ?? String(key)
+            }
+        ];
+    }
+
+    /**
+     * The order in the lower case the QuickList toolbar uses
+     *
+     * @property listOrder
+     * @type String
+     * @public
+     */
+    get listOrder() {
+        return String(this.order).toLowerCase();
+    }
+
+    /**
+     * Sorts the list by a field; a date starts with the newest first, a title from A to Z
+     *
+     * @method sortList
+     * @param {String} key The sort field
+     * @param {String} order asc or desc as the toolbar sends it
+     * @returns {void}
+     * @public
+     */
+    @action
+    sortList(key, order) {
+        let isDate = key !== 'Idea.title';
+        let next = key === this.sort ? order : isDate ? 'desc' : 'asc';
+        this.sort = key;
+        this.order = next.toUpperCase();
+        this.page = 1;
+    }
+
+    /**
+     * Groups the list; grouping by creator changes the server sort, so it starts from the first page
+     *
+     * @method groupList
+     * @param {String} key none, planStatus or createdBy
+     * @returns {void}
+     * @public
+     */
+    @action
+    groupList(key) {
+        this.group = key;
+        this.page = 1;
+    }
+
+    /**
+     * Opens a page of the list
+     *
+     * @method changePage
+     * @param {Number} page
+     * @returns {void}
+     * @public
+     */
+    @action
+    changePage(page) {
+        this.page = page;
+    }
 
     /**
      * The view of the idea page, plan for the review mode and null for the conversation layout
@@ -286,6 +395,7 @@ export default class AppProjectIdeaController extends Controller {
             page: this.page,
             sort: this.sort,
             order: this.order,
+            group: this.group,
             limit: this.pageSize,
             showArchived: this.showArchived
         };

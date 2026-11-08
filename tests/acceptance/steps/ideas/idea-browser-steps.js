@@ -4,17 +4,31 @@ import steps from '../steps';
 const BROWSER = '[data-idea-browser]';
 
 function findIdea(title) {
-    return [...document.querySelectorAll(`${BROWSER} li[data-idea]`)]
+    return [...document.querySelectorAll(`${BROWSER} a[data-idea]`)]
         .find(item => item.querySelector('[data-idea-title]').textContent.trim() === title);
 }
 
 function listedTitles() {
-    return [...document.querySelectorAll(`${BROWSER} li[data-idea] [data-idea-title]`)]
+    return [...document.querySelectorAll(`${BROWSER} a[data-idea] [data-idea-title]`)]
         .map(title => title.textContent.trim());
 }
 
 export const given = function () {
     return [
+        {
+            "The project has $count generated open ideas": (assert, ctx) => async function (count) {
+                let project = ctx.get('currentProject');
+                for (let i = 1; i <= Number(count); i++) {
+                    server.create('idea', {
+                        projectId: project.id,
+                        title: `Generated idea ${String(i).padStart(2, '0')}`,
+                        status: 'open',
+                        dateModified: `2026-10-${String(i).padStart(2, '0')} 10:00:00`
+                    });
+                }
+                assert.ok(true, `${count} ideas exist`);
+            }
+        },
         {
             "The ideas of the project are\n$table": (assert, ctx) => async function (table) {
                 let project = ctx.get('currentProject');
@@ -97,7 +111,7 @@ export const when = function () {
         },
         {
             "User selects the idea $title in the browser": (assert) => async function (title) {
-                await click(findIdea(title).querySelector('a'));
+                await click(findIdea(title));
                 assert.ok(true, `User selects the idea ${title}`);
             }
         },
@@ -168,14 +182,25 @@ export const then = function () {
             }
         },
         {
+            "The idea browser lists $count ideas": (assert) => async function (count) {
+                assert.equal(listedTitles().length, Number(count));
+            }
+        },
+        {
+            "User opens the next page of the idea browser": (assert) => async function () {
+                await click(`${BROWSER} [data-quick-list-pagination-next]`);
+                assert.ok(true, 'the next page is requested');
+            }
+        },
+        {
             "The idea $title is labelled $label": (assert) => async function (title, label) {
                 assert.equal(findIdea(title).querySelector('[data-idea-status]').textContent.trim(), label);
             }
         },
         {
             "The idea $title is highlighted in the browser": (assert) => async function (title) {
-                assert.dom(`${BROWSER} li.active`).exists({ count: 1 });
-                assert.ok(findIdea(title).classList.contains('active'), `${title} is highlighted`);
+                assert.dom(`${BROWSER} .quick-list-item--active`).exists({ count: 1 });
+                assert.ok(findIdea(title).classList.contains('quick-list-item--active'), `${title} is highlighted`);
             }
         },
         {
