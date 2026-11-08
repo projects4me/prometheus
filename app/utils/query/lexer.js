@@ -201,7 +201,7 @@ function tokenizer(text, schema) {
 
         let field = schema.resolveField(word);
 
-        return Boolean(field) && schema.fields.includes(field);
+        return Boolean(field) && (schema.fields.includes(field) || field.excluded === true);
     }
 
     function push(kind, first, last = first, value, extra = {}) {

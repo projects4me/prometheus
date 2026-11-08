@@ -503,6 +503,13 @@ export default Object.extend({
                 }
             }
         },
+        TaskBoard: {
+            search: {
+                extends: 'Issue',
+                exclude: ['issuemilestone.name'],
+                excludeReason: 'views.app.board.searchExcludedMilestone'
+            }
+        },
         Idea: {
             search: {
                 module: 'Idea',

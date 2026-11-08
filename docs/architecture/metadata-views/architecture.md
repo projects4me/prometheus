@@ -82,6 +82,31 @@ Issue: {
   prefix, an alias or the translated label, and then a unique prefix of an alias or label
   (`app/utils/query/schema.js`).
 
+## Extending another view: `extends` and `exclude`
+
+A view that needs the search fields of another module, minus a few, declares that instead of copying the
+fields or hard-coding exceptions:
+
+```js
+TaskBoard: {
+    search: {
+        extends: 'Issue',                                   // start from Issue's search metadata
+        exclude: ['issuemilestone.name'],                   // field ids removed from it
+        excludeReason: 'views.app.board.searchExcludedMilestone', // optional hint shown with the error
+    },
+},
+```
+
+- The view starts from the named module's `module`, `textField` and `fields` (and so its value sources);
+  keys the view declares itself win.
+- An excluded field is not suggested and not in the builder. If it is typed, or arrives through `@query`
+  or a saved search, parsing reports `excludedField` ("Milestone can't be searched here. Use the milestone
+  tabs.") and applies nothing. `excludeReason` is the translation key of the second sentence.
+- An unknown `extends` or an `exclude` id that is not a field of the base is an error in development and
+  tests (`QuerySchemaService.searchMeta`).
+- The Task Board is the example: the milestone is chosen with the milestone tabs, so the board loads
+  `load('TaskBoard', {projectId})` rather than `load('Issue', …)`.
+
 ## Value sources
 
 The value sources live in `app/utils/query/value-sources.js`, in the `VALUE_SOURCES` registry. Each one

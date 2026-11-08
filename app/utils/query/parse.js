@@ -52,6 +52,7 @@ export const ERRORS = Object.freeze({
     unbalancedBracket: 'unbalancedBracket',
     unclosedQuote: 'unclosedQuote',
     unexpectedToken: 'unexpectedToken',
+    excludedField: 'excludedField',
 });
 
 const VALUE_KINDS = [KINDS.value, KINDS.quoted];
@@ -406,7 +407,15 @@ class Reader {
         let readsList = typed.arity === 'n' || ['CONTAINS', '!CONTAINS'].includes(typed.key);
         let field = this.schema.resolveField(fieldToken.text);
         let label = this.labelOf(field, fieldToken.text);
+        let seen = this.errors.length;
         let values = this.values(readsList ? 'n' : typed.arity, label);
+
+        if (field.excluded) {
+            // The values are read only to keep the parser in sync; the excluded field is the one error to report.
+            this.errors.length = seen;
+
+            return this.error(ERRORS.excludedField, { field: label, reason: field.reason || '' }, fieldToken.start, fieldToken.end);
+        }
 
         if (values.invalid) {
             return null;
