@@ -330,6 +330,12 @@
     "exclamation": "exclamation"
   },
   "components": {
+    "developerDocs": {
+      "title": "Documentation",
+      "loading": "Loading documentation...",
+      "missing": "No documentation yet. Expected file:",
+      "error": "The documentation could not be loaded."
+    },
     "quickList": {
       "countOfTotal": "{count} of {total}",
       "empty": "No records found.",

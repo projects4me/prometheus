@@ -1,0 +1,28 @@
+<div class="box box-info" data-developer-docs>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "components.developerDocs.title"}}</h3>
+    <div class="box-tools pull-right"><code>{{this.path}}</code></div>
+  </div>
+  <div class="box-body">
+    {{#if this.loading}}
+      <AppUi::Loader @message={{t "components.developerDocs.loading"}} />
+    {{else if this.missing}}
+      <p data-docs-missing>{{t "components.developerDocs.missing"}} <code>{{this.path}}</code></p>
+    {{else if this.failed}}
+      <p class="text-danger" data-docs-error>{{t "components.developerDocs.error"}}</p>
+    {{else}}
+      <ul class="nav nav-tabs">
+        {{#each this.sections as |section|}}
+          <li class={{if (eq section this.active) "active"}}>
+            <a href="#" data-docs-tab={{section.title}} {{on "click" (fn this.select section)}}>{{section.title}}</a>
+          </li>
+        {{/each}}
+      </ul>
+      <div class="tab-content" data-docs-content>
+        {{#if this.active}}
+          <div {{render-markdown this.active.body}}></div>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+</div>

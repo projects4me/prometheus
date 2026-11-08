@@ -183,6 +183,7 @@ working. Labels and placeholders come from `translations/en-us.json`.
 | Toolbars | `AppUi::Toolbar` and `components/toolbar.scss` |
 | Modals | `bootstrap-modal` (Bootstrap 3 modal, square) |
 | Tooltips | tippy.js themes in `components/tooltip-themes.scss` |
+| Component docs | Markdown files in `public/ui-docs/` (format in its `README.md`), shown by `Developer::Docs` |
 
 ## 10. Rounded corners already in the code (don't copy)
 
