@@ -149,6 +149,20 @@ Feature: Ideas | idea browser
     Then The idea list request sent sort as Idea.createdUser,Idea.title
     And The idea list request sent order as ASC
 
+  Scenario: Leaving the idea area resets the page, sort, order and group
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The project has 3 generated open ideas
+    When User opens the ideas of the project with page=2&sort=Idea.title&order=ASC&group=createdBy
+    And User opens the board of the project
+    And User clicks the Ideas entry in the sidebar
+    Then The idea list request sent sort as Idea.dateModified
+    And The idea list request sent order as DESC
+    And The idea list request sent page as 1
+
   Scenario: Navigating between ideas highlights the selected idea
 
     Given There is no pre-existing data
