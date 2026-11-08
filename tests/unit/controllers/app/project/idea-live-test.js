@@ -233,23 +233,20 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.deepEqual([...browser.loadedIdeaIds], ["i1"]);
   });
 
-  test("the list total comes from meta.total, or the loaded ideas when all are loaded", function (assert) {
+  test("the next page comes from meta.links.next, never from a total", function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
     let page = (ids, meta) => ({ meta, toArray: () => ids.map((id) => EmberObject.create({ id, status: "open" })) });
 
-    browser.showIdeas(page(["i1"], { total: 7 }), { archived: 2, project: null });
-    assert.equal(browser.totalIdeas, 7);
-    assert.equal(browser.projectTotal, 9, "open ideas plus the archived ones");
+    browser.showIdeas(page(["i1"], { links: { next: { href: "/idea?page=2" } } }), { archived: 2 });
+    assert.true(browser.hasNext);
     assert.true(browser.hasArchivedToggle);
 
-    browser.pageSize = -1;
-    browser.showIdeas(page(["i1", "i2"], {}), { archived: 0, project: null });
-    assert.equal(browser.totalIdeas, 2, "every idea is loaded with the page size -1");
+    browser.showIdeas(page(["i1"], { links: {} }), { archived: 0 });
+    assert.false(browser.hasNext);
     assert.false(browser.hasArchivedToggle);
 
-    browser.pageSize = 20;
     browser.showIdeas(page(["i1"], {}), null);
-    assert.equal(browser.totalIdeas, null, "unknown without meta.total once the list is paged");
+    assert.false(browser.hasNext);
   });
 
   test("no subscriptions are left after unregistering", function (assert) {

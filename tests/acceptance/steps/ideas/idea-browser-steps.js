@@ -214,6 +214,17 @@ export const then = function () {
             }
         },
         {
+            "The idea browser pagination reads $text": (assert) => async function (text) {
+                assert.dom(`${BROWSER} [data-quick-list-pagination-range]`).hasText(text);
+            }
+        },
+        {
+            "The next page button of the idea browser is $state": (assert) => async function (state) {
+                let next = `${BROWSER} [data-quick-list-pagination-next]`;
+                state === 'enabled' ? assert.dom(next).isNotDisabled() : assert.dom(next).isDisabled();
+            }
+        },
+        {
             "The idea $title is labelled $label": (assert) => async function (title, label) {
                 assert.equal(findIdea(title).querySelector('[data-idea-status]').textContent.trim(), label);
             }

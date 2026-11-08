@@ -5,6 +5,8 @@
       <small class="quick-list__count" data-test-quick-list-count>
         {{#if this.showTotal}}
           {{t "components.quickList.countOfTotal" count=@count total=@total}}
+        {{else if this.showMore}}
+          {{@count}}+
         {{else}}
           {{@count}}
         {{/if}}

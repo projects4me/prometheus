@@ -14,6 +14,7 @@ import Component from '@glimmer/component';
  *   error). Defaults to true; the count is also hidden when `@count` is not a number.
  * - `@total` {Number}: optional total number of matching records. When it differs from `@count`, the
  *   header reads `count of total` (for example `0 of 64`); otherwise it shows `@count` alone.
+ * - `@hasNext` {Boolean}: without a `@total`, a next page exists, so the count reads `20+`.
  *
  * Block: the default block is rendered inside the header's `box-tools` (the list's `<:actions>`).
  *
@@ -48,5 +49,17 @@ export default class QuickListHeaderComponent extends Component {
 	get showTotal() {
 		let total = this.args.total;
 		return typeof total === 'number' && total !== this.args.count;
+	}
+
+	/**
+	 * Whether the count reads `count+`: more records exist than the shown page and no total is known.
+	 *
+	 * @property showMore
+	 * @type {Boolean}
+	 * @public
+	 */
+	get showMore() {
+		let total = this.args.total;
+		return (total === undefined || total === null) && Boolean(this.args.hasNext);
 	}
 }

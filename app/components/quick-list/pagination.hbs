@@ -1,7 +1,7 @@
 {{#if this.hasPages}}
   <div class="quick-list-pagination" data-quick-list-pagination>
     <span class="quick-list-pagination-range" data-quick-list-pagination-range>
-      {{t "components.quickList.pagination.range" from=this.from to=this.to total=@total}}
+      {{t "components.quickList.pagination.range" from=this.from to=this.to total=this.totalText}}
     </span>
     <div class="btn-group">
       <button
