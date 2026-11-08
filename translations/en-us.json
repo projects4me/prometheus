@@ -336,6 +336,9 @@
         "previous": "Previous page",
         "next": "Next page"
       },
+      "group": {
+        "none": "None"
+      },
       "selection": {
         "selectAll": "Select all",
         "deselectAll": "Deselect all",
