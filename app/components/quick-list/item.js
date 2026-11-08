@@ -11,6 +11,7 @@ import Component from '@glimmer/component';
  * Arguments:
  * - `@route` {String}: the route the row links to. Without it the row is not a link.
  * - `@model` {*}: optional model or id for `@route`.
+ * - `@query` {Object}: optional query params of the link.
  * - `@isActive` {Boolean}: marks the open record with a crimson bar on the left.
  *
  * Named blocks:
@@ -43,5 +44,16 @@ export default class QuickListItemComponent extends Component {
 	get models() {
 		let model = this.args.model;
 		return model === undefined || model === null ? [] : [model];
+	}
+
+	/**
+	 * The query params of the link: `@query` when it was passed, otherwise none.
+	 *
+	 * @property query
+	 * @type {Object}
+	 * @public
+	 */
+	get query() {
+		return this.args.query ?? {};
 	}
 }

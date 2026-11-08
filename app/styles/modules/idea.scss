@@ -8,21 +8,6 @@
   }
 
   .idea-browser {
-    .nav-stacked > li > a {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .idea-list > li {
-      border-bottom: 1px solid #f4f4f4;
-
-      > a {
-        color: inherit;
-        border-radius: 0;
-      }
-    }
-
     .label {
       margin-left: 0.5rem;
     }

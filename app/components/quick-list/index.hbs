@@ -87,4 +87,5 @@
   {{#if @onPage}}
     <QuickList::Pagination @page={{@page}} @limit={{@limit}} @total={{@total}} @disabled={{@isLoading}} @onPage={{@onPage}} />
   {{/if}}
+  {{yield to="footer"}}
 </div>

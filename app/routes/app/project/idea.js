@@ -53,7 +53,8 @@ export default class AppProjectIdeaRoute extends App {
         searchId: { refreshModel: false },
         page: { refreshModel: true },
         sort: { refreshModel: true },
-        order: { refreshModel: true }
+        order: { refreshModel: true },
+        group: { refreshModel: true }
     };
 
     /**
@@ -72,6 +73,7 @@ export default class AppProjectIdeaRoute extends App {
             page: params?.page ?? controller.page,
             sort: params?.sort ?? controller.sort,
             order: params?.order ?? controller.order,
+            group: params?.group ?? controller.group,
             limit: controller.pageSize,
             showArchived: controller.showArchived
         };
@@ -128,6 +130,21 @@ export default class AppProjectIdeaRoute extends App {
     }
 
     /**
+     * The sort of the list: grouping by creator sorts by the creator first, so the groups continue across pages.
+     *
+     * @method buildSort
+     * @param {Object} options
+     * @param {String} [options.sort] The chosen sort field
+     * @param {String} [options.group] The grouping of the list
+     * @returns {String}
+     * @public
+     */
+    buildSort({ sort, group } = {}) {
+        let field = sort || 'Idea.dateModified';
+        return group === 'createdBy' ? `Idea.createdUser,${field}` : field;
+    }
+
+    /**
      * Queries a page of the ideas with their creator, the only relation the browser needs.
      *
      * @method loadIdeas
@@ -140,7 +157,7 @@ export default class AppProjectIdeaRoute extends App {
             return await this.store.query('idea', {
                 query: this.buildIdeaQuery(options),
                 rels: 'createdBy',
-                sort: options.sort || 'Idea.dateModified',
+                sort: this.buildSort(options),
                 order: options.order || 'DESC',
                 limit: options.limit ?? -1,
                 page: options.page || 1
@@ -249,6 +266,7 @@ export default class AppProjectIdeaRoute extends App {
             controller.query = null;
             controller.searchId = null;
             controller.page = 1;
+            controller.group = 'none';
             this.searchData = null;
             controller.unregisterHermesIntents();
         }

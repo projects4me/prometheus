@@ -2,104 +2,111 @@
   <AccessControl @aclContext="idea.read">
     {{#unless this.browserCollapsed}}
     <div class="col-md-3">
-      <div class="box box-primary idea-browser" data-idea-browser>
-        <div class="box-header with-border">
-          <h3 class="box-title">
-            {{t "views.app.idea.browser.title"}}
-            {{#if this.isSearching}}
-              {{#if (and (not-eq this.totalIdeas null) (not-eq this.projectTotal null))}}
-                <small data-idea-count>{{t "views.app.idea.browser.countOf" count=this.totalIdeas total=this.projectTotal}}</small>
-              {{/if}}
+      <QuickList
+        @title={{t "views.app.idea.browser.title"}}
+        @items={{this.listedIdeas}}
+        @total={{this.totalIdeas}}
+        @activeId={{this.selectedIdeaId}}
+        @page={{this.page}}
+        @limit={{this.pageSize}}
+        @onPage={{this.changePage}}
+        @sortOptions={{this.sortOptions}}
+        @sort={{this.sort}}
+        @order={{this.listOrder}}
+        @onSort={{this.sortList}}
+        @groupOptions={{this.groupOptions}}
+        @groupBy={{this.group}}
+        @onGroup={{this.groupList}}
+        class="idea-browser"
+        data-idea-browser
+      >
+        <:actions>
+          <AccessControl @aclContext="idea.create">
+            {{#if this.isCreating}}
+              <span class="btn btn-default btn-sm disabled" role="link" aria-disabled="true" data-new-idea>
+                <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
+              </span>
             {{else}}
-              {{#if (not-eq this.projectTotal null)}}
-                <small data-idea-count>{{t "views.app.idea.browser.count" count=this.projectTotal}}</small>
-              {{/if}}
+              <LinkTo @route="app.project.idea.create" class="btn btn-primary btn-sm" data-new-idea>
+                <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
+              </LinkTo>
             {{/if}}
-          </h3>
-          <div class="box-tools pull-right">
-            <AccessControl @aclContext="idea.create">
-              {{#if this.isCreating}}
-                <span class="btn btn-default btn-sm disabled" role="link" aria-disabled="true" data-new-idea>
-                  <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
-                </span>
-              {{else}}
-                <LinkTo @route="app.project.idea.create" class="btn btn-primary btn-sm" data-new-idea>
-                  <i class="fa fa-plus"></i> {{t "views.app.idea.browser.new"}}
-                </LinkTo>
-              {{/if}}
-            </AccessControl>
-          </div>
-        </div>
-        {{#if this.querySchema}}
-          <div class="box-body idea-search" data-idea-search>
-            <EzSearchCompact
-              @schema={{this.querySchema}}
-              @query={{this.query}}
-              @savedSearches={{this.ezSavedSearches}}
-              @activeSavedSearchId={{this.searchId}}
-              @onSavedSearchChange={{this.selectSavedSearch}}
-              @onApply={{this.applyQuery}}
-              @onSave={{this.showEzSaveSearchDialog}}
-              @onUpdateSavedSearch={{this.updateEzSavedSearch}}
-              @aclContext="idea.read"
-            />
-          </div>
-        {{/if}}
-        {{#if this.saveSearchDialog}}
-          {{#bootstrap-modal
-              title="global.form.savesearch"
-              confirmLabel="global.form.save"
-              closeLabel="global.form.cancel"
-              confirm=this.saveEzSearch
-              close=this.removeSaveSearchDialog}}
-
-            <div class="ember-view">
-              <label>{{t "views.app.issue.list.savedsearch.query"}}</label>
-              <span data-save-search-query>{{this.saveSearchQuery}}</span>
+          </AccessControl>
+        </:actions>
+        <:search>
+          {{#if this.querySchema}}
+            <div class="box-body idea-search" data-idea-search>
+              <EzSearchCompact
+                @schema={{this.querySchema}}
+                @query={{this.query}}
+                @savedSearches={{this.ezSavedSearches}}
+                @activeSavedSearchId={{this.searchId}}
+                @onSavedSearchChange={{this.selectSavedSearch}}
+                @onApply={{this.applyQuery}}
+                @onSave={{this.showEzSaveSearchDialog}}
+                @onUpdateSavedSearch={{this.updateEzSavedSearch}}
+                @aclContext="idea.read"
+              />
             </div>
+          {{/if}}
+        </:search>
+        <:item as |idea Item|>
+          <Item @route="app.project.idea.page" @model={{idea.id}} @query={{this.linkQuery}} data-idea={{idea.id}}>
+            <:primary>
+              <span data-idea-title>{{idea.title}}</span>
+              {{#let (get this.progressByIdea idea.id) as |progress|}}
+                <span class="pull-right" aria-live="polite" aria-busy={{if progress.loading "true" "false"}}>
+                  {{#if progress.loading}}
+                    <span class="skeleton-line skeleton-line--xs idea-status-skeleton" data-idea-status-skeleton><span class="sr-only">{{t progress.label}}</span></span>
+                  {{else}}
+                    <span class="label {{progress.class}}" data-idea-status>{{t progress.label}}</span>
+                  {{/if}}
+                </span>
+              {{/let}}
+            </:primary>
+            <:secondary>
+              {{idea.createdBy.name}} · {{format-date-time date=idea.dateModified humanize=true}}
+            </:secondary>
+          </Item>
+        </:item>
+        <:empty>
+          <p class="quick-list__state quick-list__state--empty" data-test-quick-list-empty>{{t "views.app.idea.browser.empty"}}</p>
+        </:empty>
+        <:footer>
+          {{#if this.hasArchivedToggle}}
+            <div class="box-footer text-center">
+              <button type="button" class="btn btn-link" {{on "click" this.toggleArchived}} data-toggle-archived>
+                {{#if this.showArchived}}
+                  {{t "views.app.idea.browser.hideArchived" count=this.archivedTotal}}
+                {{else}}
+                  {{t "views.app.idea.browser.showArchived" count=this.archivedTotal}}
+                {{/if}}
+              </button>
+            </div>
+          {{/if}}
+        </:footer>
+      </QuickList>
+      {{#if this.saveSearchDialog}}
+        {{#bootstrap-modal
+            title="global.form.savesearch"
+            confirmLabel="global.form.save"
+            closeLabel="global.form.cancel"
+            confirm=this.saveEzSearch
+            close=this.removeSaveSearchDialog}}
 
-            <FormFields::FieldText
-              @placeholder={{t "views.app.issue.list.savedsearch.inputname"}}
-              @label={{t "views.app.issue.list.savedsearch.name"}}
-              @value={{this.newSavedsearch.name}}
-            />
-
-          {{/bootstrap-modal}}
-        {{/if}}
-        <div class="box-body no-padding">
-          <ul class="nav nav-stacked idea-list" data-idea-list>
-            {{#each this.listedIdeas as |idea|}}
-              <li class={{if (eq idea.id this.selectedIdeaId) "active menu-open"}} data-idea={{idea.id}}>
-                <LinkTo @route="app.project.idea.page" @model={{idea.id}} @query={{this.linkQuery}}>
-                  <span data-idea-title>{{idea.title}}</span>
-                  {{#let (get this.progressByIdea idea.id) as |progress|}}
-                    <span class="pull-right" aria-live="polite" aria-busy={{if progress.loading "true" "false"}}>
-                      {{#if progress.loading}}
-                        <span class="skeleton-line skeleton-line--xs idea-status-skeleton" data-idea-status-skeleton><span class="sr-only">{{t progress.label}}</span></span>
-                      {{else}}
-                        <span class="label {{progress.class}}" data-idea-status>{{t progress.label}}</span>
-                      {{/if}}
-                    </span>
-                  {{/let}}
-                </LinkTo>
-              </li>
-            {{else}}
-              <li class="no-entry">{{t "views.app.idea.browser.empty"}}</li>
-            {{/each}}
-          </ul>
-        </div>
-        {{#if this.hasArchivedToggle}}
-          <div class="box-footer text-center">
-            <button type="button" class="btn btn-link" {{on "click" this.toggleArchived}} data-toggle-archived>
-              {{#if this.showArchived}}
-                {{t "views.app.idea.browser.hideArchived" count=this.archivedTotal}}
-              {{else}}
-                {{t "views.app.idea.browser.showArchived" count=this.archivedTotal}}
-              {{/if}}
-            </button>
+          <div class="ember-view">
+            <label>{{t "views.app.issue.list.savedsearch.query"}}</label>
+            <span data-save-search-query>{{this.saveSearchQuery}}</span>
           </div>
-        {{/if}}
-      </div>
+
+          <FormFields::FieldText
+            @placeholder={{t "views.app.issue.list.savedsearch.inputname"}}
+            @label={{t "views.app.issue.list.savedsearch.name"}}
+            @value={{this.newSavedsearch.name}}
+          />
+
+        {{/bootstrap-modal}}
+      {{/if}}
     </div>
     {{/unless}}
 

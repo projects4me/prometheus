@@ -83,11 +83,11 @@ Feature: Ideas | idea browser
     When User opens the ideas of the project
     Then The idea list request sent sort as Idea.dateModified
     And The idea list request sent order as DESC
-    And The idea list request sent limit as -1
+    And The idea list request sent limit as 20
     And The idea list request sent page as 1
     And The idea list request sent rels as createdBy
     And The idea list was requested for the open ideas only
-    And The idea browser count reads 3
+    And The idea browser count reads 2
 
   Scenario: The page and sort query params reach the idea list request
 
@@ -104,6 +104,31 @@ Feature: Ideas | idea browser
     When User opens the ideas of the project with page=2&sort=Idea.title&order=ASC
     Then The idea list request sent page as 2
     And The idea list request sent sort as Idea.title
+    And The idea list request sent order as ASC
+
+  Scenario: The idea browser shows 20 ideas per page and the next page loads the rest
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The project has 23 generated open ideas
+    When User opens the ideas of the project
+    Then The idea browser lists 20 ideas
+    And The idea list request sent limit as 20
+    When User opens the ideas of the project with page=2
+    Then The idea browser lists 3 ideas
+    And The idea list request sent page as 2
+
+  Scenario: Grouping by creator sorts by the creator first, then by the chosen sort
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The project has 3 generated open ideas
+    When User opens the ideas of the project with group=createdBy&sort=Idea.title&order=ASC
+    Then The idea list request sent sort as Idea.createdUser,Idea.title
     And The idea list request sent order as ASC
 
   Scenario: Navigating between ideas highlights the selected idea

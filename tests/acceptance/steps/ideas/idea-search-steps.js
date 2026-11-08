@@ -80,7 +80,7 @@ export const then = function () {
         },
         {
             'The idea browser count reads $text': (assert) => async function (text) {
-                assert.dom(`${BROWSER} [data-idea-count]`).hasText(text);
+                assert.dom(`${BROWSER} [data-test-quick-list-count]`).hasText(text);
             }
         },
         {
