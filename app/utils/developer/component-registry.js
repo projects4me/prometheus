@@ -66,6 +66,16 @@ export const ENTRIES = [
         demo: 'developer/demos/form-fields',
         doc: 'form-fields.md',
         variants: 10
+    },
+    {
+        name: 'dropdown',
+        label: 'Dropdown',
+        group: 'Menus',
+        status: 'stable',
+        summary: 'A button that opens a floating menu, used for saved searches and board filters.',
+        usedIn: [{ label: 'ezSearch saved searches', route: 'app.projects' }],
+        demo: 'developer/demos/dropdown',
+        doc: 'dropdown.md'
     }
 ];
 

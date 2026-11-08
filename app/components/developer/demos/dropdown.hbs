@@ -1,0 +1,43 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo as |log|>
+    <div class={{this.boxClass}} data-demo-dropdown {{did-insert (fn this.watch log)}}>
+      <AppUi::Dropdown>
+        <:button>
+          <span data-demo-dropdown-trigger>Saved searches</span>
+        </:button>
+        <:content>
+          {{#each this.items as |item|}}
+            {{#if item.divider}}
+              <hr data-demo-dropdown-divider>
+            {{else}}
+              <button type="button" class="{{if item.active 'active'}}{{if item.long ' dropdown-long'}}" data-demo-dropdown-item={{item.key}} {{on "click" (fn this.choose log item)}}>
+                <span>{{#if item.icon}}<i class="fa {{item.icon}}"></i> {{/if}}{{item.label}}</span>
+                {{#if item.active}}<i class="fa fa-check"></i>{{/if}}
+              </button>
+            {{/if}}
+          {{/each}}
+        </:content>
+      </AppUi::Dropdown>
+    </div>
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <label>Placement</label>
+      <div class="btn-group" data-control-placement>
+        {{#each this.placements as |placement|}}
+          <button type="button" class="btn btn-default {{if (eq placement this.placement) 'active'}}" data-placement={{placement}} {{on "click" (fn this.setPlacement placement)}}>{{placement}} edge</button>
+        {{/each}}
+      </div>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" data-control-scoped checked={{this.scoped}} {{on "change" this.setScoped}}> Scoped left alignment (as in ezSearch)</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" data-control-many checked={{this.many}} {{on "change" this.setMany}}> Many items (scroll)</label>
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="dropdown.md" />
+  </:docs>
+</Developer::Entry>
