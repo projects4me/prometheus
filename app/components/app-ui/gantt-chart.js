@@ -1029,62 +1029,59 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
-	 * Observes the height of the search block while it is rendered.
+	 * The observer that keeps the two header columns the same height
 	 *
-	 * @property searchResizeObserver
+	 * @property headerResizeObserver
 	 * @type ResizeObserver
 	 * @private
 	 */
-	searchResizeObserver = null;
+	headerResizeObserver = null;
 
 	/**
-	 * The chart container that carries --gantt-search-height.
+	 * Makes both sides of the chart's header band the same height, so the timeline starts level with the
+	 * top of the search and the date header sits level with the column row on the left. The shorter side
+	 * gets the difference as a gap above its bottom header (--gantt-left-gap / --gantt-right-gap), which
+	 * keeps the task rows and the timeline rows aligned.
 	 *
-	 * @property searchContainer
-	 * @type HTMLElement
-	 * @private
-	 */
-	searchContainer = null;
-
-	/**
-	 * Mirrors the height of the search block onto the chart as --gantt-search-height, so the timeline
-	 * side gets the same top offset and its rows stay aligned with the task rows.
-	 *
-	 * @method trackSearchHeight
-	 * @param {HTMLElement} element The search block
+	 * @method trackHeaderBand
+	 * @param {HTMLElement} container The .gantt-container element
 	 * @public
 	 */
-	@action trackSearchHeight(element) {
-		this.searchResizeObserver?.disconnect();
-		this.searchResizeObserver = null;
-		let container = element.closest('.gantt-container');
-		if (!container) {
-			return;
-		}
+	@action trackHeaderBand(container) {
+		this.headerResizeObserver?.disconnect();
+		this.headerResizeObserver = null;
+		let height = (selector) => container.querySelector(selector)?.offsetHeight ?? 0;
 		let sync = () => {
-			if (!this.isDestroying && !this.isDestroyed) {
-				container.style.setProperty('--gantt-search-height', `${element.offsetHeight}px`);
+			if (this.isDestroying || this.isDestroyed) {
+				return;
 			}
+			let left = height('.gantt-search') + height('.gantt-task-list > .gantt-header');
+			let right = height('.gantt-time-scale-selector') + height('.gantt-timeline-header');
+			let band = Math.max(left, right);
+			container.style.setProperty('--gantt-left-gap', `${band - left}px`);
+			container.style.setProperty('--gantt-right-gap', `${band - right}px`);
 		};
 		sync();
 		if (typeof ResizeObserver === 'function') {
-			this.searchResizeObserver = new ResizeObserver(sync);
-			this.searchResizeObserver.observe(element);
+			this.headerResizeObserver = new ResizeObserver(sync);
+			['.gantt-search', '.gantt-task-list > .gantt-header', '.gantt-time-scale-selector', '.gantt-timeline-header'].forEach((selector) => {
+				let element = container.querySelector(selector);
+				if (element) {
+					this.headerResizeObserver.observe(element);
+				}
+			});
 		}
-		this.searchContainer = container;
 	}
 
 	/**
-	 * Stops mirroring the search block height and removes the offset
+	 * Stops keeping the header columns the same height
 	 *
-	 * @method untrackSearchHeight
+	 * @method untrackHeaderBand
 	 * @public
 	 */
-	@action untrackSearchHeight() {
-		this.searchResizeObserver?.disconnect();
-		this.searchResizeObserver = null;
-		this.searchContainer?.style.removeProperty('--gantt-search-height');
-		this.searchContainer = null;
+	@action untrackHeaderBand() {
+		this.headerResizeObserver?.disconnect();
+		this.headerResizeObserver = null;
 	}
 
 	/**
