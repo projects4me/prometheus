@@ -464,6 +464,8 @@ export default class AppProjectIdeaPageController extends Controller {
     @action
     async toggleArchive() {
         await this.saveIdea({ status: this.model.status === 'archived' ? 'open' : 'archived' });
+        // the browser lists by status on the server, and this tab's own idea.updated event is not delivered back
+        await this.ideaController.refreshList();
     }
 
     /**

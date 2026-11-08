@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Model, { attr } from '@ember-data/model';
+import Model, { attr, belongsTo } from '@ember-data/model';
 
 /**
  * The idea model, a project scoped idea that is brainstormed before it becomes issues
@@ -61,4 +61,14 @@ export default class IdeaModel extends Model {
      * @public
      */
     @attr('string') dateModified;
+
+    /**
+     * The user who created the idea, the only relation the idea browser loads with the ideas
+     *
+     * @property createdBy
+     * @type Prometheus.Models.User
+     * @for Idea
+     * @public
+     */
+    @belongsTo('user', { async: true, inverse: null }) createdBy;
 }

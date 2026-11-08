@@ -104,7 +104,47 @@ export default class AppProjectIdeaController extends Controller {
      * @type Array
      * @public
      */
-    queryParams = ['view', 'query', 'searchId'];
+    queryParams = ['view', 'query', 'searchId', 'page', 'sort', 'order'];
+
+    /**
+     * The page of the idea list, 1 based
+     *
+     * @property page
+     * @type Number
+     * @default 1
+     * @public
+     */
+    @tracked page = 1;
+
+    /**
+     * The field the ideas are sorted by on the server
+     *
+     * @property sort
+     * @type String
+     * @default Idea.dateModified
+     * @public
+     */
+    @tracked sort = 'Idea.dateModified';
+
+    /**
+     * The direction of the sort, ASC or DESC
+     *
+     * @property order
+     * @type String
+     * @default DESC
+     * @public
+     */
+    @tracked order = 'DESC';
+
+    /**
+     * The number of ideas a page holds, -1 for all of them
+     *
+     * @property pageSize
+     * @type Number
+     * @default -1
+     * @public
+     */
+    pageSize = -1;
 
     /**
      * The view of the idea page, plan for the review mode and null for the conversation layout
@@ -190,13 +230,87 @@ export default class AppProjectIdeaController extends Controller {
     @tracked saveSearchQuery = '';
 
     /**
-     * The number of ideas of the project whatever the search, null while unknown
+     * The number of ideas the list query matches over all its pages, null while unknown
      *
      * @property totalIdeas
      * @type Number
      * @public
      */
     @tracked totalIdeas = null;
+
+    /**
+     * The number of archived ideas of the project, for the footer toggle; null while unknown or searching
+     *
+     * @property archivedTotal
+     * @type Number
+     * @public
+     */
+    @tracked archivedTotal = null;
+
+    /**
+     * The number of ideas of the project whatever the search, counted while a search runs; null while unknown
+     *
+     * @property searchedProjectTotal
+     * @type Number
+     * @private
+     */
+    @tracked searchedProjectTotal = null;
+
+    /**
+     * The number of ideas of the project whatever the search and the archived toggle, null while unknown
+     *
+     * @property projectTotal
+     * @type Number
+     * @public
+     */
+    get projectTotal() {
+        if (this.isSearching) {
+            return this.searchedProjectTotal;
+        }
+        if (this.totalIdeas === null) {
+            return null;
+        }
+        return this.showArchived ? this.totalIdeas : this.totalIdeas + (this.archivedTotal ?? 0);
+    }
+
+    /**
+     * The options of the list query: search, page, sort, order, page size and archived toggle
+     *
+     * @property listOptions
+     * @type Object
+     * @public
+     */
+    get listOptions() {
+        return {
+            query: this.query,
+            page: this.page,
+            sort: this.sort,
+            order: this.order,
+            limit: this.pageSize,
+            showArchived: this.showArchived
+        };
+    }
+
+    /**
+     * Shows a loaded page of ideas and the counts that came with it
+     *
+     * @method showIdeas
+     * @param {Object} [ideas] The ideas the list query returned, their meta holds the total when Gaia sends it
+     * @param {Object} [counts] The archived and project counts of the route
+     * @returns {void}
+     * @public
+     */
+    showIdeas(ideas, counts) {
+        this.ideas = ideas ? ideas.toArray() : [];
+        let total = ideas?.meta?.total;
+        if (total === undefined || total === null) {
+            // Gaia does not send meta.total yet: the count is only known when every idea is loaded.
+            total = ideas && this.pageSize === -1 ? this.ideas.length : null;
+        }
+        this.totalIdeas = total === null ? null : Number(total);
+        this.archivedTotal = counts?.archived ?? null;
+        this.searchedProjectTotal = counts?.project ?? null;
+    }
 
     /**
      * Whether a search narrows the list
@@ -516,36 +630,36 @@ export default class AppProjectIdeaController extends Controller {
     }
 
     /**
-     * The ideas sorted by the date they were last modified, newest first
-     *
-     * @property sortedIdeas
-     * @type Array
-     * @private
-     */
-    get sortedIdeas() {
-        return [...this.ideas].sort((a, b) => String(b.dateModified).localeCompare(String(a.dateModified)));
-    }
-
-    /**
-     * The open ideas, newest updated first
+     * The open ideas of the page, in the order of the server sort
      *
      * @property openIdeas
      * @type Array
      * @public
      */
     get openIdeas() {
-        return this.sortedIdeas.filter(idea => idea.status === OPEN);
+        return this.ideas.filter(idea => idea.status === OPEN);
     }
 
     /**
-     * The archived ideas, newest updated first
+     * The archived ideas of the page, in the order of the server sort
      *
      * @property archivedIdeas
      * @type Array
      * @public
      */
     get archivedIdeas() {
-        return this.sortedIdeas.filter(idea => idea.status === ARCHIVED);
+        return this.ideas.filter(idea => idea.status === ARCHIVED);
+    }
+
+    /**
+     * Whether the footer offers the archived ideas: there are some and no search runs
+     *
+     * @property hasArchivedToggle
+     * @type Boolean
+     * @public
+     */
+    get hasArchivedToggle() {
+        return !this.isSearching && this.archivedTotal > 0;
     }
 
     /**
@@ -574,9 +688,9 @@ export default class AppProjectIdeaController extends Controller {
      *
      * @method registerHermesIntents
      * @param {String} projectId
-     * @param {Function} loadIdeas Loads the ideas of the project, supplied by the route
+     * @param {Function} loadIdeas Runs the list query for listOptions, supplied by the route
      * @param {Function} loadPlans Loads the plans of idea ids, supplied by the route
-     * @param {Function} [loadTotal] Counts all the ideas of the project, supplied by the route
+     * @param {Function} [loadTotal] Loads the archived and project counts for listOptions, supplied by the route
      * @returns {void}
      * @public
      */
@@ -586,6 +700,7 @@ export default class AppProjectIdeaController extends Controller {
         if (!projectId) {
             return;
         }
+        this.loaders = { loadIdeas, loadPlans, loadTotal };
         this.hermesDisposer = this.hermes.register(this, projectId, {
             'idea.created': envelope => this.handleIdeaCreated(envelope, loadIdeas, loadPlans, loadTotal),
             'idea.updated': () => this.reloadIdeas(loadIdeas, loadPlans, loadTotal),
@@ -626,9 +741,13 @@ export default class AppProjectIdeaController extends Controller {
      */
     addIdea(idea) {
         if (!this.ideas.some(listed => listed.id === idea.id)) {
-            this.ideas = [...this.ideas, idea];
+            // the newest idea leads the default sort, date modified newest first
+            this.ideas = [idea, ...this.ideas];
             if (this.totalIdeas !== null) {
                 this.totalIdeas++;
+            }
+            if (this.searchedProjectTotal !== null) {
+                this.searchedProjectTotal++;
             }
             this.loadedIdeaIds = new Set([...this.loadedIdeaIds, idea.id]);
         }
@@ -645,10 +764,11 @@ export default class AppProjectIdeaController extends Controller {
         this.reloadSequence++;
         this.hermesDisposer?.();
         this.hermesDisposer = null;
+        this.loaders = null;
     }
 
     /**
-     * Reloads the ideas of the project
+     * Re-runs the current list query and counts
      *
      * @method reloadIdeas
      * @param {Function} loadIdeas
@@ -659,10 +779,13 @@ export default class AppProjectIdeaController extends Controller {
      */
     async reloadIdeas(loadIdeas, loadPlans, loadTotal) {
         let sequence = ++this.reloadSequence;
-        let [ideas, total] = await Promise.all([loadIdeas(), this.isSearching && loadTotal ? loadTotal() : null]);
+        let options = this.listOptions;
+        let [ideas, counts] = await Promise.all([loadIdeas(options), loadTotal ? loadTotal(options) : null]);
+        if (this.isDestroying || this.isDestroyed) {
+            return;
+        }
         if (ideas && sequence === this.reloadSequence) {
-            this.ideas = ideas.toArray();
-            this.totalIdeas = this.isSearching ? total : this.ideas.length;
+            this.showIdeas(ideas, counts);
             if (loadPlans) {
                 await this.loadPlanStatuses(this.ideas, loadPlans);
             }
@@ -670,14 +793,36 @@ export default class AppProjectIdeaController extends Controller {
     }
 
     /**
-     * Shows or hides the archived ideas
+     * Shows or hides the archived ideas; the list query changes, so it runs again from the first page
      *
      * @method toggleArchived
+     * @returns {Promise|void}
      * @public
      */
     @action
     toggleArchived() {
         this.showArchived = !this.showArchived;
+        if (this.page !== 1) {
+            // the page query param refreshes the route, which reads showArchived
+            this.page = 1;
+            return;
+        }
+        return this.refreshList();
+    }
+
+    /**
+     * Re-runs the current list query and counts with the loaders of the route, after a change that moves ideas
+     * between the listed and unlisted statuses
+     *
+     * @method refreshList
+     * @returns {Promise}
+     * @public
+     */
+    async refreshList() {
+        if (this.loaders) {
+            let { loadIdeas, loadPlans, loadTotal } = this.loaders;
+            await this.reloadIdeas(loadIdeas, loadPlans, loadTotal);
+        }
     }
 
     /**

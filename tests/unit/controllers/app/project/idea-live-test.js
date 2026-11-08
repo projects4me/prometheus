@@ -132,7 +132,7 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
 
     browser.ideas = [EmberObject.create({ id: "i0" })];
     create.navigateToSuccess(idea);
-    assert.deepEqual(browser.ideas.map((i) => i.id), ["i0", "i1"]);
+    assert.deepEqual(browser.ideas.map((i) => i.id), ["i1", "i0"], "the new idea leads, newest modified first");
   });
 
   test("approving a plan locally refreshes the browser badge", async function (assert) {
@@ -231,6 +231,24 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
       throw new Error("down");
     });
     assert.deepEqual([...browser.loadedIdeaIds], ["i1"]);
+  });
+
+  test("the list total comes from meta.total, or the loaded ideas when all are loaded", function (assert) {
+    let browser = this.owner.lookup("controller:app.project.idea");
+    let page = (ids, meta) => ({ meta, toArray: () => ids.map((id) => EmberObject.create({ id, status: "open" })) });
+
+    browser.showIdeas(page(["i1"], { total: 7 }), { archived: 2, project: null });
+    assert.equal(browser.totalIdeas, 7);
+    assert.equal(browser.projectTotal, 9, "open ideas plus the archived ones");
+    assert.true(browser.hasArchivedToggle);
+
+    browser.showIdeas(page(["i1", "i2"], {}), { archived: 0, project: null });
+    assert.equal(browser.totalIdeas, 2, "every idea is loaded with the page size -1");
+    assert.false(browser.hasArchivedToggle);
+
+    browser.pageSize = 20;
+    browser.showIdeas(page(["i1"], {}), null);
+    assert.equal(browser.totalIdeas, null, "unknown without meta.total once the list is paged");
   });
 
   test("no subscriptions are left after unregistering", function (assert) {
