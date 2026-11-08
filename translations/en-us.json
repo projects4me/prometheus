@@ -1709,6 +1709,14 @@
         }
       },
       "settings": {
+        "ui": {
+          "title": "UI",
+          "quickList": {
+            "tab": "QuickList",
+            "intro": "QuickList shown with every feature turned on.",
+            "empty": "Showcase coming soon"
+          }
+        },
         "email": {
           "title": "Outgoing mail (SMTP)",
           "host": "Host",
@@ -2847,7 +2855,11 @@
           "group": {
             "access": "Access",
             "projects": "Projects",
-            "system": "System"
+            "system": "System",
+            "developer": "Developer"
+          },
+          "ui": {
+            "label": "UI"
           },
           "email": {
             "label": "Email"

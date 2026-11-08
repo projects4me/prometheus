@@ -1,0 +1,15 @@
+<div class="box box-primary" data-settings-ui>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.settings.ui.title"}}</h3>
+  </div>
+  <div class="box-body">
+    <ul class="nav nav-tabs">
+      <li class={{if (is-active-route "app.settings.ui.quick-list") "active"}} data-ui-tab="quick-list">
+        <LinkTo @route="app.settings.ui.quick-list">{{t "views.app.settings.ui.quickList.tab"}}</LinkTo>
+      </li>
+    </ul>
+    <div class="tab-content">
+      {{outlet}}
+    </div>
+  </div>
+</div>
