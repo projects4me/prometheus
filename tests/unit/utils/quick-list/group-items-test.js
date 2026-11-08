@@ -26,10 +26,14 @@ module('Unit | Utility | quick-list/group-items', function () {
         assert.deepEqual(groups[0].items, [a, c]);
     });
 
-    test('null, undefined and empty keys share one None group', function (assert) {
+    test('null, undefined and empty keys share one group with a null label', function (assert) {
         const groups = groupItems([{ status: null }, { status: 'a' }, {}, { status: '' }], option);
-        assert.deepEqual(groups.map((g) => g.label), ['None', 'A']);
+        assert.deepEqual(groups.map((g) => g.label), [null, 'A']);
         assert.strictEqual(groups[0].key, null);
         assert.strictEqual(groups[0].count, 3);
+    });
+
+    test('a missing option returns no groups', function (assert) {
+        assert.deepEqual(groupItems([{ a: 1 }], undefined), []);
     });
 });

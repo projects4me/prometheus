@@ -40,4 +40,10 @@ module('Integration | Component | quick-list/group', function (hooks) {
         assert.dom('[data-test-quick-list-group-label]').doesNotContainText('New');
         assert.dom('[data-test-quick-list-group-count]').hasText('3');
     });
+
+    test('a group without a key shows the translated None label', async function (assert) {
+        this.set('group', { key: null, label: null, items: [], count: 1 });
+        await render(hbs`<QuickList::Group @group={{this.group}} @collapsed={{this.collapsed}} @onToggle={{this.toggle}} />`);
+        assert.dom('[data-test-quick-list-group-label]').hasText('None');
+    });
 });

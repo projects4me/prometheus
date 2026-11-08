@@ -335,6 +335,9 @@
         "range": "{from}-{to} / {total}",
         "previous": "Previous page",
         "next": "Next page"
+      },
+      "group": {
+        "none": "None"
       }
     },
     "ezSearchCompact": {

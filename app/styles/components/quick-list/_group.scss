@@ -1,5 +1,10 @@
 .quick-list-group {
     .quick-list-group-heading {
+        display: block;
+        width: 100%;
+        text-align: left;
+        border: 0;
+        border-radius: 0;
         background: #f4f4f4;
         border-bottom: 1px solid #ddd;
         padding: 6px 10px;
