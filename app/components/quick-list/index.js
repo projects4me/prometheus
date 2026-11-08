@@ -3,9 +3,10 @@
  */
 
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { schedule } from '@ember/runloop';
+import Selection from 'prometheus/utils/quick-list/selection';
+import CollapseState from 'prometheus/utils/quick-list/collapse-state';
 import { groupItems } from 'prometheus/utils/quick-list/group-items';
 
 /**
@@ -125,22 +126,22 @@ export default class QuickListComponent extends Component {
 	}
 
 	/**
-	 * Ids of the selected records (current page only).
+	 * The selected record ids (current page only); reports every change through `@onSelect`.
 	 *
-	 * @property selectedIds
-	 * @type {Array}
+	 * @property selection
+	 * @type {Selection}
 	 * @public
 	 */
-	@tracked selectedIds = [];
+	selection = new Selection((ids) => this.args.onSelect?.(ids));
 
 	/**
-	 * Collapsed group keys, per `@groupBy`, so a grouping remembers its state while the component lives.
+	 * Collapsed groups, per `@groupBy`, so a grouping remembers its state while the component lives.
 	 *
-	 * @property collapsed
-	 * @type {Object}
+	 * @property collapseState
+	 * @type {CollapseState}
 	 * @private
 	 */
-	@tracked collapsed = {};
+	collapseState = new CollapseState();
 
 	/**
 	 * The items paired with whether each one is the open record (`@activeId`) and whether it is
@@ -153,11 +154,10 @@ export default class QuickListComponent extends Component {
 	get rows() {
 		let activeId = this.args.activeId;
 		let hasActive = activeId !== undefined && activeId !== null;
-		let selected = this.selectedIds.map(String);
 		return this.items.map((record) => ({
 			record,
 			isActive: hasActive && !!record && String(record.id) === String(activeId),
-			isSelected: !!record && selected.includes(String(record.id)),
+			isSelected: !!record && this.selection.has(record.id),
 		}));
 	}
 
@@ -173,12 +173,11 @@ export default class QuickListComponent extends Component {
 		if (!this.args.groupBy || !option) {
 			return null;
 		}
-		let collapsed = this.collapsed[this.args.groupBy] ?? [];
 		let rowOf = new Map(this.rows.map((row) => [row.record, row]));
 		return groupItems(this.items, option).map((group) => ({
 			group,
 			key: group.key,
-			collapsed: collapsed.includes(group.key),
+			collapsed: this.collapseState.isCollapsed(this.args.groupBy, group.key),
 			rows: group.items.map((record) => rowOf.get(record)),
 		}));
 	}
@@ -206,11 +205,7 @@ export default class QuickListComponent extends Component {
 	 * @public
 	 */
 	get selectionState() {
-		let count = this.rows.filter((row) => row.isSelected).length;
-		if (count === 0) {
-			return 'none';
-		}
-		return count === this.rows.length ? 'all' : 'some';
+		return this.selection.state(this.items);
 	}
 
 	/**
@@ -220,10 +215,7 @@ export default class QuickListComponent extends Component {
 	 */
 	@action
 	toggleGroup(key) {
-		let groupBy = this.args.groupBy;
-		let current = this.collapsed[groupBy] ?? [];
-		let next = current.includes(key) ? current.filter((k) => k !== key) : [...current, key];
-		this.collapsed = { ...this.collapsed, [groupBy]: next };
+		this.collapseState.toggle(this.args.groupBy, key);
 	}
 
 	/**
@@ -233,9 +225,7 @@ export default class QuickListComponent extends Component {
 	 */
 	@action
 	toggleRow(record) {
-		let id = String(record.id);
-		let ids = this.selectedIds.map(String);
-		this.select(ids.includes(id) ? ids.filter((i) => i !== id) : [...ids, id]);
+		this.selection.toggle(record.id);
 	}
 
 	/**
@@ -246,7 +236,7 @@ export default class QuickListComponent extends Component {
 	 */
 	@action
 	toggleAll() {
-		this.select(this.selectionState === 'all' ? [] : this.items.map((r) => String(r.id)));
+		this.selection.toggleAll(this.items);
 	}
 
 	/**
@@ -255,7 +245,7 @@ export default class QuickListComponent extends Component {
 	 */
 	@action
 	clearSelection() {
-		this.select([]);
+		this.selection.clear();
 	}
 
 	/**
@@ -267,19 +257,9 @@ export default class QuickListComponent extends Component {
 	@action
 	itemsChanged() {
 		schedule('afterRender', () => {
-			if (!this.isDestroying && !this.isDestroyed && this.selectedIds.length) {
-				this.select([]);
+			if (!this.isDestroying && !this.isDestroyed && this.selection.count) {
+				this.selection.clear();
 			}
 		});
-	}
-
-	/**
-	 * @method select
-	 * @param {Array} ids
-	 * @private
-	 */
-	select(ids) {
-		this.selectedIds = ids;
-		this.args.onSelect?.(ids);
 	}
 }
