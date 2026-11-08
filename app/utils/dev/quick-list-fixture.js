@@ -19,7 +19,7 @@ export const QUICK_LIST_FIXTURE_STATUSES = [
 	'feedback',
 ];
 
-const CREATORS = ['Ada Lovelace', 'Grace Hopper', 'Alan Turing', 'Linus Torvalds', 'Margaret Hamilton'];
+export const QUICK_LIST_FIXTURE_CREATORS = ['Ada Lovelace', 'Grace Hopper', 'Alan Turing', 'Linus Torvalds', 'Margaret Hamilton'];
 
 const TOPICS = [
 	'Login form', 'Board filters', 'Email digest', 'Export to CSV', 'Dark theme', 'Release notes',
@@ -32,7 +32,7 @@ const TOPICS = [
 	'Deep links', 'Inline editing', 'Drag and drop', 'Custom fields', 'Archive rules',
 ];
 
-const TAGS = ['ui', 'api', 'bug', 'idea', 'docs', 'urgent', 'design'];
+export const QUICK_LIST_FIXTURE_TAGS = ['ui', 'api', 'bug', 'idea', 'docs', 'urgent', 'design'];
 
 const DAY = 24 * 60 * 60 * 1000;
 const BASE = Date.UTC(2026, 0, 5, 9, 0, 0);
@@ -53,10 +53,10 @@ export function buildQuickListFixture() {
 			id: String(i + 1),
 			title: TOPICS[i % TOPICS.length],
 			status: QUICK_LIST_FIXTURE_STATUSES[(i * 3) % QUICK_LIST_FIXTURE_STATUSES.length],
-			creator: CREATORS[(i * 2) % CREATORS.length],
+			creator: QUICK_LIST_FIXTURE_CREATORS[(i * 2) % QUICK_LIST_FIXTURE_CREATORS.length],
 			created: new Date(created).toISOString(),
 			updated: new Date(updated).toISOString(),
-			tags: [TAGS[i % TAGS.length], TAGS[(i * 3 + 1) % TAGS.length]].filter((t, n, all) => all.indexOf(t) === n),
+			tags: [QUICK_LIST_FIXTURE_TAGS[i % QUICK_LIST_FIXTURE_TAGS.length], QUICK_LIST_FIXTURE_TAGS[(i * 3 + 1) % QUICK_LIST_FIXTURE_TAGS.length]].filter((t, n, all) => all.indexOf(t) === n),
 		};
 	});
 }
