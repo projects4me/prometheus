@@ -1,0 +1,62 @@
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo as |log|>
+    <button type="button" class="btn btn-primary" data-modal-open {{on "click" (fn this.open log)}}>Open modal</button>
+    <div data-modal-box style="margin-top: 15px; height: 120px; overflow: hidden; transform: translateZ(0); border: 1px dashed #d2d6de; padding: 10px;">
+      <small class="text-muted">Constrained box: overflow hidden and a transform, so a modal rendered inside it is clipped and positioned against the box.</small>
+      {{#if this.isOpen}}
+        {{#if this.inElement}}
+          {{#in-element this.modalRoot insertBefore=null}}
+            {{#bootstrap-modal
+              title=this.title
+              closeLabel="global.form.close"
+              confirmLabel="global.form.save"
+              containerClass=this.containerClass
+              removeConfirmBtn=this.removeConfirmBtn
+              confirm=(fn this.confirm log)
+              close=(fn this.closed log)
+            }}
+              <p data-modal-content>Modal rendered with in-element.</p>
+            {{/bootstrap-modal}}
+          {{/in-element}}
+        {{else}}
+          {{#bootstrap-modal
+            title=this.title
+            closeLabel="global.form.close"
+            confirmLabel="global.form.save"
+            containerClass=this.containerClass
+            removeConfirmBtn=this.removeConfirmBtn
+            confirm=(fn this.confirm log)
+            close=(fn this.closed log)
+          }}
+            <p data-modal-content>Modal rendered inside the box.</p>
+          {{/bootstrap-modal}}
+        {{/if}}
+      {{/if}}
+    </div>
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <label>Title (translation key)</label>
+      <Developer::StateSwitch @states={{this.titles}} @value={{this.title}} @onChange={{fn this.setField "title"}} />
+    </div>
+    <div class="form-group">
+      <label>@containerClass</label>
+      <Developer::StateSwitch @states={{this.containerClasses}} @value={{this.containerClass}} @onChange={{fn this.setField "containerClass"}} />
+    </div>
+    <div class="form-group">
+      <label>@removeConfirmBtn</label>
+      <Developer::StateSwitch @states={{this.confirmButtons}} @value={{this.confirmButton}} @onChange={{this.setConfirmButton}} />
+    </div>
+    <div class="form-group">
+      <label>Confirm behaviour</label>
+      <Developer::StateSwitch @states={{this.behaviours}} @value={{this.behaviour}} @onChange={{fn this.setField "behaviour"}} />
+    </div>
+    <div class="form-group">
+      <label>Rendering</label>
+      <Developer::StateSwitch @states={{this.renderings}} @value={{this.rendering}} @onChange={{this.setRendering}} />
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="modal.md" />
+  </:docs>
+</Developer::Entry>

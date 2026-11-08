@@ -68,6 +68,18 @@ export const ENTRIES = [
         variants: 10
     },
     {
+        name: 'bootstrap-modal',
+        label: 'Modal',
+        group: 'Overlays',
+        status: 'stable',
+        summary: 'The bootstrap-modal dialog: title, confirm handling and rendering outside stacking contexts.',
+        usedIn: [
+            { label: 'Projects list', route: 'app.projects' }
+        ],
+        demo: 'developer/demos/modal',
+        doc: 'modal.md'
+    },
+    {
         name: 'dropdown',
         label: 'Dropdown',
         group: 'Menus',
