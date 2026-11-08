@@ -1,0 +1,17 @@
+<div class="quick-list-selection" data-quick-list-selection>
+  <QuickList::SelectAll @state={{@state}} @onToggle={{@onToggleAll}} />
+  <strong class="quick-list-selection-count" data-quick-list-selection-count>
+    {{t "components.quickList.selection.count" count=@count}}
+  </strong>
+  <div class="quick-list-selection-actions" data-quick-list-selection-actions>
+    {{yield to="actions"}}
+  </div>
+  <button
+    type="button"
+    class="btn btn-default btn-xs quick-list-selection-clear"
+    data-quick-list-selection-clear
+    title={{t "components.quickList.selection.clear"}}
+    aria-label={{t "components.quickList.selection.clear"}}
+    {{on "click" this.clear}}
+  ><i class="fa fa-times"></i></button>
+</div>

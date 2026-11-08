@@ -1,0 +1,10 @@
+<button
+  type="button"
+  class="btn btn-default btn-xs quick-list-select-all"
+  data-quick-list-select-all
+  data-state={{this.state}}
+  title={{this.label}}
+  aria-label={{this.label}}
+  aria-pressed={{this.ariaPressed}}
+  {{on "click" this.toggle}}
+><i class="fa {{this.icon}}"></i></button>
