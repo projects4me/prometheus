@@ -1,0 +1,51 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/**
+  This contains the CSS related to the Developer Component Library.
+*/
+
+.developer {
+  .developer-nav {
+    .box-body {
+      padding: 0 0 10px;
+    }
+
+    .developer-nav__search {
+      padding: 10px 15px 0;
+
+      .form-control,
+      .input-group-addon {
+        border-radius: 0;
+      }
+    }
+
+    .developer-nav__group {
+      padding: 12px 15px 4px;
+      color: $mediumColor;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .developer-nav__empty {
+      padding: 12px 15px 0;
+      margin: 0;
+    }
+
+    .nav-stacked > li > a {
+      border-radius: 0;
+      border-left: 3px solid transparent;
+      color: $darkColor;
+      padding: 8px 15px;
+    }
+
+    .nav-stacked > li.active > a,
+    .nav-stacked > li.active > a:hover {
+      background: $borderColor;
+      border-left-color: $primaryColor;
+      color: $primaryColor;
+      font-weight: 600;
+    }
+  }
+}

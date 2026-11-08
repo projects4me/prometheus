@@ -1,0 +1,19 @@
+{{#if this.model.entry}}
+  <div class="developer-entry" data-developer-entry={{this.model.entry.name}}>
+    {{component this.model.entry.demo entry=this.model.entry}}
+  </div>
+{{else}}
+  <div class="box box-danger" data-developer-unknown>
+    <div class="box-header with-border">
+      <h3 class="box-title">Component not found</h3>
+    </div>
+    <div class="box-body">
+      <p>No component named <code>{{this.model.name}}</code> is registered.</p>
+      {{#if this.model.first}}
+        <LinkTo @route="app.developer.component" @model={{this.model.first.name}} data-developer-back>
+          <i class="fa fa-arrow-left"></i> Back to {{this.model.first.label}}
+        </LinkTo>
+      {{/if}}
+    </div>
+  </div>
+{{/if}}
