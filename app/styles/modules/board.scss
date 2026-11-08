@@ -44,7 +44,8 @@
         right: 0;
         width: 30%;
         padding: 0.5rem 1rem;
-        z-index: 2;
+        // Above the lane headers (999) so the ezSearch menus are not hidden behind them
+        z-index: $ezSearchMenuZIndex;
       }
 
       // Below md the search goes under the tabs at full width
