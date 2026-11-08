@@ -74,7 +74,7 @@
   border-right: 2px solid #ddd;
 }
 
-/* The search block sits above the task header; the timeline side takes the same offset to stay aligned */
+/* The search block sits at the top of the header band; the gap pushes the column row to the band's bottom */
 .gantt-search {
   position: relative;
   z-index: 11;
@@ -83,11 +83,13 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-.gantt-container .gantt-timeline-wrapper {
-  padding-top: var(--gantt-search-height, 0);
+/* The Days/Weeks tabs sit at the top; the gap pushes the date header to the band's bottom */
+.gantt-container .gantt-time-scale-selector {
+  margin-bottom: var(--gantt-right-gap, 0);
 }
 
 .gantt-header {
+  margin-top: var(--gantt-left-gap, 0);
   position: sticky;
   top: 0;
   z-index: 10;
