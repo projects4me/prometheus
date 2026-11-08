@@ -11,16 +11,15 @@
         </:button>
         <:content>
           {{#each @groupOptions as |option|}}
-            <a
-              href="#"
-              role="button"
+            <button
+              type="button"
               class="quick-list-toolbar-option {{if (eq option.key @groupBy) 'is-current'}}"
               data-test-group-option={{option.key}}
               {{on "click" (fn this.selectGroup option.key)}}
             >
               <span>{{option.label}}</span>
               {{#if (eq option.key @groupBy)}}<i class="fa fa-check"></i>{{/if}}
-            </a>
+            </button>
           {{/each}}
         </:content>
       </AppUi::Dropdown>
@@ -33,16 +32,15 @@
         </:button>
         <:content>
           {{#each @sortOptions as |option|}}
-            <a
-              href="#"
-              role="button"
+            <button
+              type="button"
               class="quick-list-toolbar-option {{if (eq option.key @sort) 'is-current'}}"
               data-test-sort-option={{option.key}}
               {{on "click" (fn this.selectSort option.key)}}
             >
               <span>{{option.label}}</span>
               {{#if (eq option.key @sort)}}<i class="fa {{this.orderIcon}}"></i>{{/if}}
-            </a>
+            </button>
           {{/each}}
         </:content>
       </AppUi::Dropdown>

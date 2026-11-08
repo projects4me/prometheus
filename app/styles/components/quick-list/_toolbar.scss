@@ -17,6 +17,17 @@
     border-radius: 0;
   }
 
+  .quick-list-toolbar-option {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.3rem 1rem;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    text-align: left;
+  }
+
   .quick-list-toolbar-option.is-current {
     color: $primaryColor;
     font-weight: 600;
