@@ -6,6 +6,8 @@
  * QuickList (components/quick-list): a narrow list of records in a box-primary.
  * Square edges, colours from variables.scss, no shadows.
  */
+@import 'quick-list/pagination';
+
 .quick-list {
   border-radius: 0;
   box-shadow: none;

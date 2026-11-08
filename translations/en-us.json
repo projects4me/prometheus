@@ -335,7 +335,12 @@
       "empty": "No records found.",
       "clearSearch": "Clear the search",
       "error": "The list could not be loaded.",
-      "retry": "Try again"
+      "retry": "Try again",
+      "pagination": {
+        "range": "{from}-{to} / {total}",
+        "previous": "Previous page",
+        "next": "Next page"
+      }
     },
     "ezSearchCompact": {
       "saved": "Saved",
