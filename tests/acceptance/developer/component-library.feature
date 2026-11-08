@@ -11,7 +11,7 @@ Feature: Developer | Component Library
     Then The sidebar shows the Developer item
     When User opens app/developer
     Then User lands on app/developer/components/quick-list
-    And The Developer Components box counts 2 entries
+    And The Developer Components box counts 3 entries
     And The Developer Components box shows the quick-list entry under Lists
     And The Developer Components box marks the quick-list entry active
     And The Developer page shows the quick-list entry
