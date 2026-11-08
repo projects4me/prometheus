@@ -30,6 +30,21 @@ export const given = function () {
             }
         },
         {
+            "The project has $count generated open ideas alternating between creators $first and $second": (assert, ctx) => async function (count, first, second) {
+                let project = ctx.get('currentProject');
+                for (let i = 1; i <= Number(count); i++) {
+                    server.create('idea', {
+                        projectId: project.id,
+                        title: `Generated idea ${String(i).padStart(2, '0')}`,
+                        status: 'open',
+                        createdUser: i % 2 ? first : second,
+                        dateModified: `2026-10-${String(i).padStart(2, '0')} 10:00:00`
+                    });
+                }
+                assert.ok(true, `${count} ideas exist`);
+            }
+        },
+        {
             "The ideas of the project are\n$table": (assert, ctx) => async function (table) {
                 let project = ctx.get('currentProject');
                 table.forEach(row => {

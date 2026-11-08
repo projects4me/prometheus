@@ -149,6 +149,18 @@ Feature: Ideas | idea browser
     Then The idea list request sent sort as Idea.createdUser,Idea.title
     And The idea list request sent order as ASC
 
+  Scenario: Grouped by creator, each creator's ideas are contiguous and in the chosen order across pages
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The project has 23 generated open ideas alternating between creators 1 and 2
+    When User opens the ideas of the project with group=createdBy&sort=Idea.title&order=ASC
+    Then The idea browser lists the ideas Generated idea 01, Generated idea 03, Generated idea 05, Generated idea 07, Generated idea 09, Generated idea 11, Generated idea 13, Generated idea 15, Generated idea 17, Generated idea 19, Generated idea 21, Generated idea 23, Generated idea 02, Generated idea 04, Generated idea 06, Generated idea 08, Generated idea 10, Generated idea 12, Generated idea 14, Generated idea 16
+    When User opens the ideas of the project with group=createdBy&sort=Idea.title&order=ASC&page=2
+    Then The idea browser lists the ideas Generated idea 18, Generated idea 20, Generated idea 22
+
   Scenario: Navigating between ideas highlights the selected idea
 
     Given There is no pre-existing data
