@@ -1713,8 +1713,32 @@
           "title": "UI",
           "quickList": {
             "tab": "QuickList",
-            "intro": "QuickList shown with every feature turned on.",
-            "empty": "Showcase coming soon"
+            "intro": "QuickList shown with every feature turned on, on fixture data.",
+            "title": "Issues",
+            "filter": "Filter by title",
+            "sort": {
+              "updated": "Updated",
+              "created": "Created",
+              "title": "Title"
+            },
+            "group": {
+              "status": "Status",
+              "creator": "Creator"
+            },
+            "actions": {
+              "new": "New record",
+              "newDone": "New record clicked (showcase only)",
+              "archive": "Archive",
+              "archiveDone": "Archive: {count, plural, one {# record} other {# records}} selected",
+              "delete": "Delete",
+              "deleteDone": "Delete: {count, plural, one {# record} other {# records}} selected"
+            },
+            "states": {
+              "normal": "Normal",
+              "loading": "Loading",
+              "empty": "Empty",
+              "error": "Error"
+            }
           }
         },
         "email": {
