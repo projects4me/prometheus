@@ -39,6 +39,16 @@ export default class SavedSearchService extends Service {
     }
 
     /**
+     * Build an unsaved saved search record for a save dialog to name.
+     *
+     * @method build
+     * @return {Object} The new savedsearch record
+     */
+    build() {
+        return this.store.createRecord('savedsearch');
+    }
+
+    /**
      * Save a new saved search record.
      *
      * @method create

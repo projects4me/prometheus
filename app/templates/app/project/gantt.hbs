@@ -20,5 +20,21 @@
     @selectStatic={{this.selectStatic}}
     @projectController={{this.projectController}}
     @issueTypes={{this.projectController.issuetypes}}
-  />
+  >
+    <:search>
+      {{#if this.querySchema}}
+        <SavedSearch::CompactBar
+          @schema={{this.querySchema}}
+          @query={{this.query}}
+          @savedSearches={{this.savedsearches}}
+          @activeSavedSearchId={{this.searchId}}
+          @relatedTo="issue"
+          @projectId={{this.trackedProject.id}}
+          @aclContext="issue.read"
+          @onApply={{this.applyQuery}}
+          @onSavedSearchChange={{this.selectSavedSearch}}
+        />
+      {{/if}}
+    </:search>
+  </AppUi::GanttChart>
 </div>

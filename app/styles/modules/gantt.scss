@@ -74,6 +74,19 @@
   border-right: 2px solid #ddd;
 }
 
+/* The search block sits above the task header; the timeline side takes the same offset to stay aligned */
+.gantt-search {
+  position: relative;
+  z-index: 11;
+  padding: 8px 10px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.gantt-container .gantt-timeline-wrapper {
+  padding-top: var(--gantt-search-height, 0);
+}
+
 .gantt-header {
   position: sticky;
   top: 0;

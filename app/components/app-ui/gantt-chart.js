@@ -1029,6 +1029,65 @@ export default class GanttChartComponent extends AppComponent {
 	}
 
 	/**
+	 * Observes the height of the search block while it is rendered.
+	 *
+	 * @property searchResizeObserver
+	 * @type ResizeObserver
+	 * @private
+	 */
+	searchResizeObserver = null;
+
+	/**
+	 * The chart container that carries --gantt-search-height.
+	 *
+	 * @property searchContainer
+	 * @type HTMLElement
+	 * @private
+	 */
+	searchContainer = null;
+
+	/**
+	 * Mirrors the height of the search block onto the chart as --gantt-search-height, so the timeline
+	 * side gets the same top offset and its rows stay aligned with the task rows.
+	 *
+	 * @method trackSearchHeight
+	 * @param {HTMLElement} element The search block
+	 * @public
+	 */
+	@action trackSearchHeight(element) {
+		this.searchResizeObserver?.disconnect();
+		this.searchResizeObserver = null;
+		let container = element.closest('.gantt-container');
+		if (!container) {
+			return;
+		}
+		let sync = () => {
+			if (!this.isDestroying && !this.isDestroyed) {
+				container.style.setProperty('--gantt-search-height', `${element.offsetHeight}px`);
+			}
+		};
+		sync();
+		if (typeof ResizeObserver === 'function') {
+			this.searchResizeObserver = new ResizeObserver(sync);
+			this.searchResizeObserver.observe(element);
+		}
+		this.searchContainer = container;
+	}
+
+	/**
+	 * Stops mirroring the search block height and removes the offset
+	 *
+	 * @method untrackSearchHeight
+	 * @public
+	 */
+	@action untrackSearchHeight() {
+		this.searchResizeObserver?.disconnect();
+		this.searchResizeObserver = null;
+		this.searchContainer?.style.removeProperty('--gantt-search-height');
+		this.searchContainer = null;
+	}
+
+	/**
 	 * Register a rendered issue bar element for dependency calculations
 	 *
 	 * @method registerIssueBar
