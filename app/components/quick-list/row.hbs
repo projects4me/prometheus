@@ -1,0 +1,9 @@
+<li class="quick-list__row {{if @selectable "quick-list__row--selectable"}} {{if @selected "quick-list__row--selected"}}" data-test-quick-list-row>
+  {{#if @selectable}}
+    <button type="button" class="quick-list__check" aria-pressed={{if @selected "true" "false"}}
+      data-test-quick-list-check {{on "click" @onToggle}}>
+      <i class="fa {{if @selected "fa-check-square" "fa-square-o"}}"></i>
+    </button>
+  {{/if}}
+  <div class="quick-list__row-body">{{yield}}</div>
+</li>

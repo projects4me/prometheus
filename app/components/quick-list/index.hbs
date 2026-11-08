@@ -1,8 +1,23 @@
-<div class="box box-primary quick-list" data-test-quick-list ...attributes>
+<div class="box box-primary quick-list" data-test-quick-list {{on-update @items this.itemsChanged}} ...attributes>
   <QuickList::Header @title={{@title}} @count={{this.items.length}} @total={{@total}} @showCount={{this.showCount}}>
     {{yield to="actions"}}
   </QuickList::Header>
   {{yield to="search"}}
+  {{#if this.selectedIds.length}}
+    <QuickList::SelectionBar @state={{this.selectionState}} @count={{this.selectedIds.length}}
+      @onToggleAll={{this.toggleAll}} @onClear={{this.clearSelection}}>
+      <:actions>{{yield this.selectedIds this.clearSelection to="selectionActions"}}</:actions>
+    </QuickList::SelectionBar>
+  {{else if this.showToolbar}}
+    <QuickList::Toolbar @groupOptions={{@groupOptions}} @groupBy={{@groupBy}} @onGroup={{@onGroup}}
+      @sortOptions={{@sortOptions}} @sort={{@sort}} @order={{@order}} @onSort={{@onSort}}>
+      <:start>
+        {{#if @selectable}}
+          <QuickList::SelectAll @state={{this.selectionState}} @onToggle={{this.toggleAll}} />
+        {{/if}}
+      </:start>
+    </QuickList::Toolbar>
+  {{/if}}
   <div class="box-body no-padding quick-list__body">
     {{#if @isLoading}}
       {{#each this.skeletonRows}}
@@ -37,12 +52,39 @@
       {{/if}}
     {{else}}
       <ul class="quick-list__items">
-        {{#each this.rows as |row|}}
-          <li class="quick-list__row">
-            {{yield row.record (component "quick-list/item" isActive=row.isActive) to="item"}}
-          </li>
-        {{/each}}
+        {{#if this.groups}}
+          {{#each this.groups as |entry|}}
+            <li class="quick-list__group">
+              <QuickList::Group @group={{entry.group}} @collapsed={{entry.collapsed}}
+                @onToggle={{fn this.toggleGroup entry.key}}>
+                <:heading as |g|>
+                  {{#if (has-block "group")}}{{yield g to="group"}}{{else if (eq g.key null)}}{{t "components.quickList.group.none"}}{{else}}{{g.label}}{{/if}}
+                </:heading>
+                <:default>
+                  <ul class="quick-list__items">
+                    {{#each entry.rows as |row|}}
+                      <QuickList::Row @selectable={{@selectable}} @selected={{row.isSelected}}
+                        @onToggle={{fn this.toggleRow row.record}}>
+                        {{yield row.record (component "quick-list/item" isActive=row.isActive) to="item"}}
+                      </QuickList::Row>
+                    {{/each}}
+                  </ul>
+                </:default>
+              </QuickList::Group>
+            </li>
+          {{/each}}
+        {{else}}
+          {{#each this.rows as |row|}}
+            <QuickList::Row @selectable={{@selectable}} @selected={{row.isSelected}}
+              @onToggle={{fn this.toggleRow row.record}}>
+              {{yield row.record (component "quick-list/item" isActive=row.isActive) to="item"}}
+            </QuickList::Row>
+          {{/each}}
+        {{/if}}
       </ul>
     {{/if}}
   </div>
+  {{#if @onPage}}
+    <QuickList::Pagination @page={{@page}} @limit={{@limit}} @total={{@total}} @disabled={{@isLoading}} @onPage={{@onPage}} />
+  {{/if}}
 </div>
