@@ -1,0 +1,127 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/**
+ * QuickList (components/quick-list): a narrow list of records in a box-primary.
+ * Square edges, colours from variables.scss, no shadows.
+ */
+.quick-list {
+  border-radius: 0;
+  box-shadow: none;
+
+  .box-header,
+  .box-body {
+    border-radius: 0;
+  }
+
+  .quick-list__count {
+    color: $mediumColor;
+    margin-left: 0.4rem;
+  }
+
+  .quick-list__items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .quick-list__row {
+    border-bottom: 1px solid $borderColor;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .quick-list-item {
+    border-left: 3px solid transparent;
+    color: $darkColor;
+    display: block;
+    padding: 0.8rem 1rem 0.8rem 0.9rem;
+
+    &:hover,
+    &:focus {
+      background-color: $borderColor;
+      color: $darkColor;
+      text-decoration: none;
+    }
+
+    &--active {
+      border-left-color: $primaryColor;
+    }
+  }
+
+  .quick-list-item__primary {
+    align-items: flex-start;
+    display: flex;
+    font-weight: 600;
+    gap: 0.6rem;
+    justify-content: space-between;
+    overflow-wrap: anywhere;
+
+    > :first-child {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    > :not(:first-child) {
+      flex: 0 0 auto;
+    }
+
+    .label {
+      border-radius: 0;
+    }
+  }
+
+  .quick-list-item__secondary {
+    color: $mediumColor;
+    font-size: 12px;
+    margin-top: 0.3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .label {
+      border-radius: 0;
+      margin-left: 0.3rem;
+    }
+  }
+
+  .quick-list__skeleton {
+    border-bottom: 1px solid $borderColor;
+    padding: 0.8rem 1rem;
+
+    .skeleton-line {
+      border-radius: 0;
+    }
+
+    .skeleton-line:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .quick-list__state {
+    margin: 0;
+    padding: 1.5rem 1rem;
+    text-align: center;
+
+    .fa {
+      margin-right: 0.4rem;
+    }
+
+    &--empty {
+      color: $mediumColor;
+    }
+
+    &--error {
+      color: $dangerColor;
+    }
+  }
+
+  .quick-list__state-action {
+    border-radius: 0;
+    padding: 0 0 0 0.4rem;
+    vertical-align: baseline;
+  }
+}

@@ -1,0 +1,48 @@
+<div class="box box-primary quick-list" data-test-quick-list ...attributes>
+  <QuickList::Header @title={{@title}} @count={{this.items.length}} @total={{@total}} @showCount={{this.showCount}}>
+    {{yield to="actions"}}
+  </QuickList::Header>
+  {{yield to="search"}}
+  <div class="box-body no-padding quick-list__body">
+    {{#if @isLoading}}
+      {{#each this.skeletonRows}}
+        <div class="quick-list__skeleton" data-test-quick-list-skeleton>
+          <span class="skeleton-line skeleton-line--medium"></span>
+          <span class="skeleton-line skeleton-line--short"></span>
+        </div>
+      {{/each}}
+    {{else if @error}}
+      <p class="quick-list__state quick-list__state--error" data-test-quick-list-error>
+        <i class="fa fa-exclamation-triangle"></i>
+        {{t "components.quickList.error"}}
+        {{#if @onRetry}}
+          <button type="button" class="btn btn-link quick-list__state-action" data-test-quick-list-retry {{on "click" @onRetry}}>
+            {{t "components.quickList.retry"}}
+          </button>
+        {{/if}}
+      </p>
+    {{else if this.isEmpty}}
+      {{#if (has-block "empty")}}
+        {{yield to="empty"}}
+      {{else}}
+        <p class="quick-list__state quick-list__state--empty" data-test-quick-list-empty>
+          <i class="fa fa-info-circle"></i>
+          {{t "components.quickList.empty"}}
+          {{#if @onClearSearch}}
+            <button type="button" class="btn btn-link quick-list__state-action" data-test-quick-list-clear-search {{on "click" @onClearSearch}}>
+              {{t "components.quickList.clearSearch"}}
+            </button>
+          {{/if}}
+        </p>
+      {{/if}}
+    {{else}}
+      <ul class="quick-list__items">
+        {{#each this.rows as |row|}}
+          <li class="quick-list__row">
+            {{yield row.record (component "quick-list/item" isActive=row.isActive) to="item"}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+  </div>
+</div>
