@@ -43,7 +43,8 @@ Feature: Gantt | search the task list with ezSearch
     When User navigates to app/project/project_1/gantt
     And User types "subject ~ task" in the gantt search bar and presses Enter
     And User saves the gantt search as Tasks
-    Then A gantt saved search Tasks of the issues was stored with "Issue.subject"
+    Then The gantt save dialog is closed
+    And A gantt saved search Tasks of the issues was stored with "Issue.subject"
     And The gantt saved search list has Tasks
 
   Scenario: An invalid query shows an error and sends nothing

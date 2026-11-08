@@ -130,7 +130,7 @@ export default class SavedSearchCompactBarComponent extends Component {
     async save() {
         let record = this.newSavedsearch;
         if (!record) {
-            return;
+            return false;
         }
         try {
             let data = await this.savedSearch.create(record, {
@@ -139,16 +139,16 @@ export default class SavedSearchCompactBarComponent extends Component {
                 projectId: this.args.projectId
             });
             if (this.isDestroying || this.isDestroyed) {
-                return;
+                return false;
             }
             this.addedSearches = [...this.addedSearches, data];
-            this.newSavedsearch = null;
             this.notify('success', htmlSafe(this.intl.t(`${this.messages}.added`, { name: data.get('name') })));
+            // the modal hides itself on a truthy result and then calls closeSaveDialog
+            return true;
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'savedsearch' });
-            if (!this.isDestroying && !this.isDestroyed) {
-                this.closeSaveDialog();
-            }
+            // keep the dialog open so the user can retry
+            return false;
         }
     }
 

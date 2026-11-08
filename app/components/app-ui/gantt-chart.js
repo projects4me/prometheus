@@ -1055,8 +1055,17 @@ export default class GanttChartComponent extends AppComponent {
 	 * @public
 	 */
 	@action trackSearchHeight(element) {
+		this.searchResizeObserver?.disconnect();
+		this.searchResizeObserver = null;
 		let container = element.closest('.gantt-container');
-		let sync = () => container?.style.setProperty('--gantt-search-height', `${element.offsetHeight}px`);
+		if (!container) {
+			return;
+		}
+		let sync = () => {
+			if (!this.isDestroying && !this.isDestroyed) {
+				container.style.setProperty('--gantt-search-height', `${element.offsetHeight}px`);
+			}
+		};
 		sync();
 		if (typeof ResizeObserver === 'function') {
 			this.searchResizeObserver = new ResizeObserver(sync);

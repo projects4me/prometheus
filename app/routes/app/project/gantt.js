@@ -157,8 +157,10 @@ export default class GanttRoute extends App {
 		if (results.savedsearches.state === 'rejected') {
 			this.errorManager.handleError(results.savedsearches.reason, { moduleName: 'savedsearch' });
 		}
+		let failed = results.schema.state === 'rejected' || results.savedsearches.state === 'rejected';
 		this.searchData = {
-			projectId,
+			// a failed load is not cached, so the next refresh retries it
+			projectId: failed ? null : projectId,
 			schema: results.schema.state === 'fulfilled' ? results.schema.value : null,
 			savedsearches: results.savedsearches.state === 'fulfilled' ? results.savedsearches.value : []
 		};

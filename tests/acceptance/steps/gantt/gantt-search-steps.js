@@ -19,7 +19,7 @@ async function enter(expectUrlChange = true) {
     await triggerKeyEvent(INPUT, 'keydown', 'Escape');
     await triggerKeyEvent(INPUT, 'keydown', 'Enter');
     if (expectUrlChange) {
-        await waitUntil(() => currentURL() !== before, { timeout: 3000 }).catch(() => {});
+        await waitUntil(() => currentURL() !== before, { timeout: 3000 });
     }
     await settled();
 }
@@ -55,7 +55,7 @@ export const when = function () {
             'User removes the first applied filter of the gantt search': (assert) => async function () {
                 let before = currentURL();
                 await click(`${BAR} [data-ez-chip]`);
-                await waitUntil(() => currentURL() !== before, { timeout: 3000 }).catch(() => {});
+                await waitUntil(() => currentURL() !== before, { timeout: 3000 });
                 await settled();
             }
         },
@@ -121,6 +121,13 @@ export const then = function () {
                 await click(`${BAR} [data-ez-saved] button`);
                 assert.dom(`${BAR} [data-ez-saved-item]`).exists({ count: 1 });
                 assert.dom(`${BAR} [data-ez-saved-item]`).includesText(name);
+            }
+        },
+        {
+            'The gantt save dialog is closed': (assert) => async function () {
+                await waitUntil(() => !document.querySelector('.modal-backdrop'), { timeout: 3000 });
+                assert.dom('.modal').doesNotExist();
+                assert.dom('.modal-backdrop').doesNotExist();
             }
         },
         {
