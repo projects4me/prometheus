@@ -330,6 +330,13 @@
     "exclamation": "exclamation"
   },
   "components": {
+    "quickList": {
+      "pagination": {
+        "range": "{from}-{to} / {total}",
+        "previous": "Previous page",
+        "next": "Next page"
+      }
+    },
     "ezSearchCompact": {
       "saved": "Saved",
       "filter": "Filter",
