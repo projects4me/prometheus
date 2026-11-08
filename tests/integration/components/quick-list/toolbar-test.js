@@ -76,4 +76,16 @@ module('Integration | Component | quick-list/toolbar', function (hooks) {
 		assert.dom('.quick-list-toolbar-group').doesNotExist();
 		assert.dom('.quick-list-toolbar-sort').doesNotExist();
 	});
+	for (const menu of ['group', 'sort']) {
+		test(`the current ${menu} option is white on hover and focus, crimson at rest`, async function (assert) {
+			await render(template);
+			await click(`.quick-list-toolbar-${menu} .app-dropdown-btn`);
+			const item = this.element.querySelector(`[data-test-${menu}-option].is-current`);
+			const rest = getComputedStyle(item).color;
+			assert.notStrictEqual(rest, 'rgb(255, 255, 255)', 'marker colour at rest');
+			item.focus();
+			assert.strictEqual(getComputedStyle(item).color, 'rgb(255, 255, 255)', 'white when focused');
+			assert.strictEqual(getComputedStyle(item.querySelector('i')).color, 'rgb(255, 255, 255)', 'icon is white when focused');
+		});
+	}
 });
