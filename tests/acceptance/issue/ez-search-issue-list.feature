@@ -64,3 +64,9 @@ Feature: Issue | ezSearch on the issue list
     Then the issue search shows an error
     And the issue search button is disabled
     And no new issue request was made
+
+  Scenario: Enter in the empty bar sends nothing
+
+    When User navigates to app/project/project_1/issue
+    And User presses Enter in the empty issue search bar
+    Then no new issue request was made

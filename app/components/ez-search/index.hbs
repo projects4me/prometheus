@@ -71,6 +71,7 @@
         @onClick={{this.apply}}
         @aclContext={{@aclContext}}
         disabled={{this.hasErrors}}
+        title={{t "components.ezSearch.searchBar.searchTitle"}}
         data-ez-search-apply
       >{{t "global.form.search"}}</AppUi::Button>
       <AppUi::Button class="btn btn-default" @onClick={{this.clear}} data-ez-search-clear>{{t "global.form.clear"}}</AppUi::Button>

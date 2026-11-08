@@ -47,10 +47,12 @@ export default class EzSearchBase extends Component {
     @tracked pickedSearch = null;
     @tracked pickedQuery = '';
     loadCount = 0;
+    appliedQuery = null;
 
     constructor() {
         super(...arguments);
         this.load(this.args.query);
+        this.appliedQuery = this.composedQuery(parse(this.args.query || '', this.args.schema).tree);
         this.syncActive(!this.args.query);
     }
 
@@ -184,6 +186,7 @@ export default class EzSearchBase extends Component {
     @action
     reload() {
         this.load(this.args.query);
+        this.appliedQuery = this.composedQuery();
     }
 
     @action
@@ -230,7 +233,33 @@ export default class EzSearchBase extends Component {
     }
 
     /**
-     * Report the base query ANDed with the tree; nothing when serializing gives errors.
+     * The base query ANDed with the tree, formatted; null when the base or the tree gives errors.
+     *
+     * @method composedQuery
+     * @param {Object|null} tree The tree to compose, the current one by default
+     * @return {String|null}
+     */
+    composedQuery(tree = this.tree) {
+        let base = null;
+
+        if (this.args.baseQuery) {
+            let parsedBase = parse(this.args.baseQuery, this.args.schema);
+
+            if (parsedBase.errors.length > 0) {
+                return null;
+            }
+
+            base = parsedBase.tree;
+        }
+
+        let { query, errors } = serialize(compose(base, tree));
+
+        return errors.length > 0 ? null : query;
+    }
+
+    /**
+     * Report the base query ANDed with the tree; nothing when serializing gives errors, or when the
+     * query equals the one last applied (so an empty bar with nothing applied does nothing).
      *
      * @method apply
      */
@@ -240,25 +269,22 @@ export default class EzSearchBase extends Component {
             return;
         }
 
-        let base = null;
+        let query = this.composedQuery();
 
-        if (this.args.baseQuery) {
-            let parsedBase = parse(this.args.baseQuery, this.args.schema);
-
-            if (parsedBase.errors.length > 0) {
-                return;
-            }
-
-            base = parsedBase.tree;
-        }
-
-        let { query, errors } = serialize(compose(base, this.tree));
-
-        if (errors.length > 0) {
+        if (query === null || query === this.appliedQuery) {
             return;
         }
 
-        await this.args.onApply?.(query);
+        let previous = this.appliedQuery;
+
+        this.appliedQuery = query;
+
+        try {
+            await this.args.onApply?.(query);
+        } catch (error) {
+            this.appliedQuery = previous;
+            throw error;
+        }
     }
 
     /**

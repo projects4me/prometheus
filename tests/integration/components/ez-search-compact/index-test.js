@@ -95,7 +95,7 @@ module('Integration | Component | ez-search-compact', function (hooks) {
         const full = await scenario(this, true);
         const compact = await scenario(this, false);
 
-        assert.ok(full.applied.length >= 4, 'the scenario applied');
+        assert.ok(full.applied.length >= 3, 'the scenario applied');
         assert.deepEqual(compact, full);
     });
 
@@ -115,8 +115,13 @@ module('Integration | Component | ez-search-compact', function (hooks) {
     });
 
     test('no badge or chips without conditions; Search and Clear apply', async function (assert) {
-        this.query = DONE;
         await show();
+        await click('[data-ez-search-apply]');
+        assert.deepEqual(this.applied, [], 'nothing to apply yet');
+
+        await focus(INPUT);
+        await fillIn(INPUT, DONE);
+        await blur(INPUT);
         await click('[data-ez-search-apply]');
         assert.deepEqual(this.applied, [DONE]);
 
@@ -187,12 +192,12 @@ module('Integration | Component | ez-search-compact', function (hooks) {
     });
 
     test('the modal applies on Search', async function (assert) {
+        this.query = DONE;
         await show();
         await click('[data-ez-builder-toggle]');
         assert.dom('.modal [data-ez-panel]').exists();
 
-        await click('.modal [data-ez-add-condition]');
-        assert.dom('.modal [data-ez-condition]').exists();
+        await click('.modal [data-ez-remove-condition]');
         await click('.modal [data-btn="save"]');
         await waitUntil(() => !document.querySelector('.modal'));
 

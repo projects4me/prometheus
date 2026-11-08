@@ -1,6 +1,7 @@
-import { click, currentURL, fillIn, focus, settled, triggerKeyEvent, waitUntil } from '@ember/test-helpers';
+import { click, currentURL, fillIn, focus, settled, waitUntil } from '@ember/test-helpers';
 import Sortable from 'sortablejs';
 import steps from '../steps';
+import { runSearch } from '../ez-search-run';
 
 const SEARCH = '[data-milestones-taskboard-search]';
 const INPUT = `${SEARCH} [data-field="ez-search-input"] input, ${SEARCH} input[data-field="ez-search-input"]`;
@@ -24,8 +25,7 @@ export const when = function () {
                 ctx.set('issueQueries', []);
                 await focus(INPUT);
                 await fillIn(INPUT, text);
-                await triggerKeyEvent(INPUT, 'keydown', 'Escape');
-                await triggerKeyEvent(INPUT, 'keydown', 'Enter');
+                await runSearch(INPUT);
                 await settled();
             }
         },

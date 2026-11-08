@@ -12,7 +12,7 @@ import { complete } from 'prometheus/utils/query/completer';
 
 /**
  * The text editor of ezSearch. The user types a loose query; on Enter or blur it is parsed against
- * `@schema` and, when it reads, reported with `@onChange(tree)` and replaced by the exact Gaia format.
+ * `@schema` and, when it reads, reported with `@onChange(tree)` and replaced by the exact Gaia format. Ctrl/Cmd+Enter also runs it with `@onRun()`.
  * Errors are shown under the input and nothing is reported. A suggestion menu from `complete()` helps
  * while typing.
  *
@@ -186,6 +186,11 @@ export default class EzSearchSearchBarComponent extends Component {
         } else if (this.showMenu && event.key === 'ArrowUp') {
             event.preventDefault();
             this.activeIndex = (this.activeIndex - 1 + count) % count;
+        } else if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+            event.preventDefault();
+            if (this.commit()) {
+                this.args.onRun?.();
+            }
         } else if (this.showMenu && (event.key === 'Tab' || (event.key === 'Enter' && this.draft !== null))) {
             event.preventDefault();
             this.accept(this.completion.suggestions[this.activeIndex], event.target);
@@ -194,9 +199,7 @@ export default class EzSearchSearchBarComponent extends Component {
             this.menuOpen = false;
         } else if (event.key === 'Enter') {
             event.preventDefault();
-            if (this.commit()) {
-                this.args.onRun?.();
-            }
+            this.commit();
         }
     }
 

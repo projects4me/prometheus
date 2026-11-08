@@ -1,5 +1,6 @@
-import { click, currentURL, fillIn, focus, settled, triggerKeyEvent, waitUntil } from '@ember/test-helpers';
+import { click, currentURL, fillIn, focus, settled, waitUntil } from '@ember/test-helpers';
 import steps from '../steps';
+import { runSearch } from '../ez-search-run';
 
 const BAR = '[data-gantt-search]';
 const INPUT = `${BAR} [data-field="ez-search-input"] input, ${BAR} input[data-field="ez-search-input"]`;
@@ -16,8 +17,7 @@ async function type(text) {
  */
 async function enter(expectUrlChange = true) {
     let before = currentURL();
-    await triggerKeyEvent(INPUT, 'keydown', 'Escape');
-    await triggerKeyEvent(INPUT, 'keydown', 'Enter');
+    await runSearch(INPUT);
     if (expectUrlChange) {
         await waitUntil(() => currentURL() !== before, { timeout: 3000 });
     }

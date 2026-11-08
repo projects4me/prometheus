@@ -107,13 +107,21 @@ module('Integration | Component | ez-search', function (hooks) {
 
     test('Search applies with the base query ANDed in', async function (assert) {
         this.baseQuery = '((Issue.projectId : p1))';
-        this.query = '((Issue.status : done))';
         await show();
+        await edit();
         await click('[data-ez-search-apply]');
 
         assert.strictEqual(this.applied.length, 1);
         assert.ok(this.applied[0].includes('Issue.projectId'));
         assert.ok(this.applied[0].includes('Issue.status'));
+    });
+
+    test('Search on an empty bar with nothing applied does nothing, and the button title names Ctrl+Enter', async function (assert) {
+        await show();
+        await click('[data-ez-search-apply]');
+
+        assert.strictEqual(this.applied.length, 0);
+        assert.dom('[data-ez-search-apply]').hasAttribute('title', 'Search (Ctrl+Enter)');
     });
 
     test('Clear empties both editors and applies the base query only', async function (assert) {
