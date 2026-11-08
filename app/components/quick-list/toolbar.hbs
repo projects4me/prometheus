@@ -1,0 +1,49 @@
+<div class="quick-list-toolbar" ...attributes>
+  <div class="quick-list-toolbar-start">
+    {{yield to="start"}}
+  </div>
+  <div class="quick-list-toolbar-menus">
+    {{#if this.hasGroupOptions}}
+      <AppUi::Dropdown class="quick-list-toolbar-group">
+        <:button>
+          <i class="fa fa-object-group"></i>
+          <span>{{t "components.quickList.toolbar.groupBy"}}{{#if this.groupLabel}}: {{this.groupLabel}}{{/if}}</span>
+        </:button>
+        <:content>
+          {{#each @groupOptions as |option|}}
+            <button
+              type="button"
+              class="quick-list-toolbar-option {{if (eq option.key @groupBy) 'is-current'}}"
+              data-test-group-option={{option.key}}
+              {{on "click" (fn this.selectGroup option.key)}}
+            >
+              <span>{{option.label}}</span>
+              {{#if (eq option.key @groupBy)}}<i class="fa fa-check"></i>{{/if}}
+            </button>
+          {{/each}}
+        </:content>
+      </AppUi::Dropdown>
+    {{/if}}
+    {{#if this.hasSortOptions}}
+      <AppUi::Dropdown class="quick-list-toolbar-sort">
+        <:button>
+          <i class="fa {{this.orderIcon}}"></i>
+          <span>{{t "components.quickList.toolbar.sortBy"}}{{#if this.sortLabel}}: {{this.sortLabel}}{{/if}}</span>
+        </:button>
+        <:content>
+          {{#each @sortOptions as |option|}}
+            <button
+              type="button"
+              class="quick-list-toolbar-option {{if (eq option.key @sort) 'is-current'}}"
+              data-test-sort-option={{option.key}}
+              {{on "click" (fn this.selectSort option.key)}}
+            >
+              <span>{{option.label}}</span>
+              {{#if (eq option.key @sort)}}<i class="fa {{this.orderIcon}}"></i>{{/if}}
+            </button>
+          {{/each}}
+        </:content>
+      </AppUi::Dropdown>
+    {{/if}}
+  </div>
+</div>

@@ -341,6 +341,11 @@
         "previous": "Previous page",
         "next": "Next page"
       },
+      "toolbar": {
+        "groupBy": "Group by",
+        "sortBy": "Sort",
+        "none": "None"
+      },
       "group": {
         "none": "None"
       },
