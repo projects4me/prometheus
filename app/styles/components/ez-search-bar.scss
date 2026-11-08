@@ -74,6 +74,11 @@
 
     li > a {
       color: $darkColor;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0 16px;
+      white-space: normal;
     }
 
     li.active > a,
@@ -89,8 +94,9 @@
     }
 
     .ez-search-item-detail {
-      float: right;
-      margin-left: 16px;
+      margin-left: auto;
+      min-width: 0;
+      overflow-wrap: anywhere;
       color: $mediumColor;
     }
 

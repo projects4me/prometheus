@@ -62,6 +62,24 @@ module('Integration | Component | ez-search/search-bar', function (hooks) {
         assert.strictEqual(getComputedStyle(find('[data-ez-menu]')).opacity, '1', 'the menu is not faded');
     });
 
+    test('a wrapped two-line row is fully inside the highlighted link', async function (assert) {
+        await focus(INPUT);
+        await fillIn(INPUT, '');
+        const menu = find('[data-ez-menu]');
+        menu.style.width = '240px';
+        menu.style.minWidth = '0';
+        const detail = find('[data-ez-menu] li:not(.dropdown-header):not(.ez-search-hint) .ez-search-item-detail');
+        assert.ok(detail, 'a row with a detail exists');
+        detail.textContent = 'issuemilestone.name.with.a.very.long.field.identifier.that.cannot.fit';
+        const row = detail.closest('li');
+        row.classList.add('active');
+
+        const link = row.querySelector('a').getBoundingClientRect();
+        const box = detail.getBoundingClientRect();
+        assert.ok(box.top >= link.top - 0.5 && box.bottom <= link.bottom + 0.5, 'detail is vertically inside the row link');
+        assert.ok(box.left >= link.left - 0.5 && box.right <= link.right + 0.5, 'detail is horizontally inside the row link');
+    });
+
     test('arrow keys move and Esc closes the menu', async function (assert) {
         await focus(INPUT);
         await fillIn(INPUT, '');
