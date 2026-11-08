@@ -335,6 +335,12 @@
         "range": "{from}-{to} / {total}",
         "previous": "Previous page",
         "next": "Next page"
+      },
+      "selection": {
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all",
+        "count": "{count} selected",
+        "clear": "Clear selection"
       }
     },
     "ezSearchCompact": {
