@@ -78,6 +78,9 @@ export const then = function () {
                 [document.querySelector('#ember-testing'), document.querySelector('#ember-testing-container')].forEach((root) => {
                     Object.assign(root.style, { transform: 'none', zoom: '1', position: 'static', zIndex: 'auto', overflow: 'visible' });
                 });
+                // Messenger toasts live in the body and outlive the test that raised them; a success toast left over
+                // from an earlier scenario can sit over the dialog centre and is not what this check is about.
+                document.querySelectorAll('.messenger-message').forEach((toast) => toast.remove());
                 let dialog = document.querySelector('.modal .modal-dialog');
                 let rect = dialog.getBoundingClientRect();
                 let top = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
