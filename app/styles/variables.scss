@@ -19,3 +19,6 @@ $infoColor:#61c4b8;
 $warningColor:#db8b0b;
 $dangerColor:#d33724;
 $missingColor:#000000;
+
+// z-index of the ezSearch menus (suggestions, Saved, Filter badge); must stay above the board lane headers (999).
+$ezSearchMenuZIndex: 1000;
