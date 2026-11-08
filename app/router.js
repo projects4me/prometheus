@@ -76,6 +76,11 @@ Router.map(function() {
         this.route('quick-list');
       });
     });
+    this.route('developer', function() {
+      this.route('index', {path: '/'});
+      this.route('components');
+      this.route('component', {path: '/components/:name'});
+    });
     this.route('workflow', function() {
       this.route('index', {path: '/'});
       this.route('create');

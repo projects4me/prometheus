@@ -229,6 +229,14 @@ export default Object.extend({
                     anchorRoute: 'settings',
                     aclContext: 'setting.read',
                     projectRelated: false,
+                },
+                Developer: {
+                    label: 'views.nav.menu.developer.label',
+                    icon: 'code',
+                    route: 'app.developer',
+                    anchorRoute: 'developer',
+                    aclContext: 'setting.read',
+                    projectRelated: false,
                 }
             },
             settingsItems: {

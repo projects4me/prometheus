@@ -2909,6 +2909,9 @@
         "board": {
           "label": "Task Board"
         },
+        "developer": {
+          "label": "Developer"
+        },
         "workflow": {
           "label": "Workflows",
           "create": "Create Workflow",

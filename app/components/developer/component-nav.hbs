@@ -1,0 +1,35 @@
+<div class="box box-primary developer-nav" data-developer-nav>
+  <div class="box-header with-border">
+    <h3 class="box-title">Components</h3>
+    <div class="box-tools pull-right">
+      <span class="label label-primary" data-developer-nav-count>{{this.count}}</span>
+    </div>
+  </div>
+  <div class="box-body">
+    <div class="developer-nav__search" data-developer-nav-search>
+      <FormFields::FieldSearch
+        @placeholder="Search components"
+        @data-module="developer"
+        @value={{this.filter}}
+        @onInput={{this.updateFilter}}
+      />
+    </div>
+    {{#each this.groups as |section|}}
+      <div class="developer-nav__group" data-developer-group={{section.group}}>{{section.group}}</div>
+      <ul class="nav nav-pills nav-stacked">
+        {{#each section.entries as |entry|}}
+          <li class={{if (eq this.active entry.name) "active"}} data-developer-item={{entry.name}}>
+            <LinkTo @route="app.developer.component" @model={{entry.name}} title={{entry.summary}}>
+              {{entry.label}}
+              {{#if (eq entry.status "experimental")}}
+                <span class="label label-warning pull-right">experimental</span>
+              {{/if}}
+            </LinkTo>
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p class="developer-nav__empty text-muted" data-developer-nav-empty>No components match.</p>
+    {{/each}}
+  </div>
+</div>
