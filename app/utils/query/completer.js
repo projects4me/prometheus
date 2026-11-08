@@ -388,7 +388,10 @@ export function complete(text, cursor, schema) {
     let context = state.state === 'between' ? 'connector' : state.state;
     let suggestions;
 
-    if (context === 'field') {
+    if (state.field?.excluded && (context === 'operator' || context === 'value')) {
+        // The parser refuses an excluded field, so offer nothing after it.
+        suggestions = [];
+    } else if (context === 'field') {
         suggestions = fieldItems(schema, typed, literal);
     } else if (context === 'operator') {
         suggestions = operatorItems(state.field, typed);

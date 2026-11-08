@@ -4,6 +4,7 @@
 
 import { module, test } from 'qunit';
 import { complete } from 'prometheus/utils/query/completer';
+import { createSchema } from 'prometheus/utils/query/schema';
 import { forType } from 'prometheus/utils/query/operators';
 import { issueQuerySchema } from 'prometheus/tests/helpers/query-schema';
 
@@ -157,6 +158,20 @@ module('Unit | Utility | query | completer', function () {
 
         assert.deepEqual(inserts(value), ['High']);
         assert.deepEqual([value.replaceStart, value.replaceEnd], [11, 15]);
+    });
+
+    test('an excluded field gets no operator or value suggestions', function (assert) {
+        let refusing = createSchema({
+            module: 'Issue',
+            fields: [{ id: 'Issue.subject', label: 'Subject' }],
+            excluded: [{ id: 'Issue.milestone', label: 'Milestone', type: 'enum', valueSource: 'milestones' }],
+            values: { milestones: [{ value: 'v0.1.1', label: 'v0.1.1' }] },
+        });
+        let text = 'milestone = ';
+        let result = complete(text, text.length, refusing);
+
+        assert.strictEqual(result.context, 'value');
+        assert.deepEqual(result.suggestions, []);
     });
 
     test('at most eight suggestions', function (assert) {
