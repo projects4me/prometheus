@@ -335,6 +335,11 @@
         "range": "{from}-{to} / {total}",
         "previous": "Previous page",
         "next": "Next page"
+      },
+      "toolbar": {
+        "groupBy": "Group by",
+        "sortBy": "Sort",
+        "none": "None"
       }
     },
     "ezSearchCompact": {

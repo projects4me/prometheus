@@ -1,0 +1,24 @@
+// QuickList toolbar. Not imported yet: the assemble issue imports it.
+.quick-list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+
+  .quick-list-toolbar-menus {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+
+  .app-dropdown .app-dropdown-btn {
+    height: auto;
+    border-radius: 0;
+  }
+
+  .quick-list-toolbar-option.is-current {
+    color: $primaryColor;
+    font-weight: 600;
+  }
+}
