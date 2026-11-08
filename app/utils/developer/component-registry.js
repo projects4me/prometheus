@@ -57,6 +57,17 @@ export const ENTRIES = [
         demo: 'developer/demos/ez-search',
         doc: 'ez-search.md',
         variants: 3
+    },
+    {
+        name: 'form-fields',
+        label: 'Form fields',
+        group: 'Forms',
+        status: 'stable',
+        summary: 'The FormFields::* components every form is built from.',
+        usedIn: [],
+        demo: 'developer/demos/form-fields',
+        doc: 'form-fields.md',
+        variants: 10
     }
 ];
 
