@@ -258,6 +258,12 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app.settings'
 		},
+		'app.settings.services': {
+			title: 'views.nav.menu.settings.services.label',
+			icon: 'plug',
+			linkable: true,
+			parent: 'app.settings'
+		},
 		'app.workflow.index': {
 			title: 'views.nav.menu.workflow.label',
 			icon: 'sitemap',

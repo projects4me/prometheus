@@ -282,6 +282,12 @@ export default Object.extend({
                             icon: 'envelope',
                             route: 'app.settings.email',
                             aclContext: 'setting.read'
+                        },
+                        Services: {
+                            label: 'views.nav.menu.settings.services.label',
+                            icon: 'plug',
+                            route: 'app.settings.services',
+                            aclContext: 'serviceclient.read'
                         }
                     }
                 }

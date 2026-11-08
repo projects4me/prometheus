@@ -71,6 +71,7 @@ Router.map(function() {
       this.route('issue-types');
       this.route('issue-statuses');
       this.route('email');
+      this.route('services');
     });
     this.route('developer', function() {
       this.route('index', {path: '/'});

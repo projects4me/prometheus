@@ -1,0 +1,87 @@
+<section class="settings-services">
+  <div class="row module services">
+    <div class="col-md-12">
+      <AccessControl @aclContext="serviceclient.read">
+        <div class="box box-primary list-view">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.settings.services.title"}}</h3>
+            <div class="box-tools pull-right">
+              <span class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> {{t "views.app.settings.services.info"}}</span>
+            </div>
+          </div>
+
+          <div class="box-body no-padding">
+            <table class="table table-hover" data-services-table>
+              <thead>
+                <tr>
+                  <th>{{t "views.app.settings.services.name"}}</th>
+                  <th>{{t "views.app.settings.services.kind"}}</th>
+                  <th>{{t "views.app.settings.services.status"}}</th>
+                  <th>{{t "views.app.settings.services.lastUsed"}}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each this.serviceClients as |client|}}
+                  <tr data-service-client={{client.id}}>
+                    <td data-column="name">{{client.name}}</td>
+                    <td data-column="kind"><code>{{client.kind}}</code></td>
+                    <td data-column="status">
+                      {{#if client.isActive}}
+                        <span class="label label-success">{{t "views.app.settings.services.active"}}</span>
+                      {{else}}
+                        <span class="label label-default">{{t "views.app.settings.services.disabled"}}</span>
+                      {{/if}}
+                    </td>
+                    <td data-column="lastUsed">
+                      {{#if client.lastUsedAt}}
+                        {{client.lastUsedAt}}
+                      {{else}}
+                        <span class="text-muted">{{t "views.app.settings.services.never"}}</span>
+                      {{/if}}
+                    </td>
+                    <td class="text-right">
+                      <AccessControl @aclContext="serviceclient.update">
+                        {{#if client.isActive}}
+                          <AppUi::Button type="button" class="btn btn-danger btn-xs" data-btn="disable-service" @onClick={{fn this.confirmToggle client}}>
+                            {{t "views.app.settings.services.disable"}}
+                          </AppUi::Button>
+                        {{else}}
+                          <AppUi::Button type="button" class="btn btn-success btn-xs" data-btn="enable-service" @onClick={{fn this.confirmToggle client}}>
+                            {{t "views.app.settings.services.enable"}}
+                          </AppUi::Button>
+                        {{/if}}
+                      </AccessControl>
+                    </td>
+                  </tr>
+                {{else}}
+                  <tr>
+                    <td colspan="5" class="text-muted" data-services-empty>{{t "views.app.settings.services.empty"}}</td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </AccessControl>
+    </div>
+  </div>
+
+  {{#if this.confirming}}
+    {{#bootstrap-modal
+      title=(if this.confirmingDisable "views.app.settings.services.disableTitle" "views.app.settings.services.enableTitle")
+      confirmLabel=(if this.confirmingDisable "views.app.settings.services.disable" "views.app.settings.services.enable")
+      closeLabel="global.form.cancel"
+      confirm=(action this.toggleStatus)
+      close=(action this.cancelToggle)
+    }}
+      <div class="box-body" data-services-confirm>
+        {{#if this.confirmingDisable}}
+          {{t "views.app.settings.services.disableMessage" name=this.confirming.name}}
+        {{else}}
+          {{t "views.app.settings.services.enableMessage" name=this.confirming.name}}
+        {{/if}}
+      </div>
+    {{/bootstrap-modal}}
+  {{/if}}
+</section>

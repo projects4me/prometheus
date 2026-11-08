@@ -16,6 +16,7 @@ import * as Userrole from './route-handlers/userrole';
 import * as Milestone from './route-handlers/milestone';
 import * as Project from './route-handlers/project';
 import * as Role from './route-handlers/role';
+import * as Serviceclient from './route-handlers/serviceclient';
 import * as Savedsearch from './route-handlers/savedsearch';
 import * as Systemnotification from './route-handlers/systemnotification';
 import * as Systemnotificationrecipient from './route-handlers/systemnotificationrecipient';
@@ -81,6 +82,7 @@ function routes() {
     Milestone.register(this, ctx);
     Project.register(this, ctx);
     Role.register(this, ctx);
+    Serviceclient.register(this, ctx);
     Savedsearch.register(this, ctx);
     Systemnotification.register(this, ctx);
     Systemnotificationrecipient.register(this, ctx);
