@@ -79,6 +79,18 @@ module('Integration | Component | ez-search-compact', function (hooks) {
         };
     }
 
+    for (const full of [false, true]) {
+        test(`a focused saved item is highlighted (${full ? 'EzSearch' : 'EzSearchCompact'})`, async function (assert) {
+            await show(full);
+            await click('.app-dropdown-btn');
+            const item = this.element.querySelector('[data-ez-saved-item]');
+            item.focus();
+            const style = getComputedStyle(item);
+            assert.notEqual(style.backgroundColor, 'rgba(0, 0, 0, 0)', 'has a background');
+            assert.strictEqual(style.color, 'rgb(255, 255, 255)', 'white text');
+        });
+    }
+
     test('it takes the same arguments as EzSearch and gives the same callbacks', async function (assert) {
         const full = await scenario(this, true);
         const compact = await scenario(this, false);
