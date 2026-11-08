@@ -5,6 +5,7 @@
 import App from 'prometheus/routes/app';
 import { inject as service } from '@ember/service';
 import { hash, hashSettled } from 'rsvp';
+import { buildSort } from 'prometheus/utils/ideas/list-options';
 import { DEFAULT_PAGE, DEFAULT_SORT, DEFAULT_ORDER, DEFAULT_GROUP } from 'prometheus/utils/idea/browser-defaults';
 
 /**
@@ -132,21 +133,6 @@ export default class AppProjectIdeaRoute extends App {
     }
 
     /**
-     * The sort of the list: grouping by creator sorts by the creator first, so the groups continue across pages.
-     *
-     * @method buildSort
-     * @param {Object} options
-     * @param {String} [options.sort] The chosen sort field
-     * @param {String} [options.group] The grouping of the list
-     * @returns {String}
-     * @public
-     */
-    buildSort({ sort, group } = {}) {
-        let field = sort || DEFAULT_SORT;
-        return group === 'createdBy' ? `Idea.createdUser,${field}` : field;
-    }
-
-    /**
      * Queries a page of the ideas with their creator, the only relation the browser needs.
      *
      * @method loadIdeas
@@ -159,7 +145,7 @@ export default class AppProjectIdeaRoute extends App {
             return await this.store.query('idea', {
                 query: this.buildIdeaQuery(options),
                 rels: 'createdBy',
-                sort: this.buildSort(options),
+                sort: buildSort(options),
                 order: options.order || DEFAULT_ORDER,
                 limit: options.limit ?? -1,
                 page: options.page || DEFAULT_PAGE
