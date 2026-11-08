@@ -5,6 +5,7 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { DEFAULT_PAGE, DEFAULT_SORT, DEFAULT_ORDER, DEFAULT_GROUP } from 'prometheus/utils/idea/browser-defaults';
 import { planStatusClass } from 'prometheus/utils/idea/plan-status';
 import { tracked } from '@glimmer/tracking';
 import { htmlSafe } from '@ember/template';
@@ -114,7 +115,7 @@ export default class AppProjectIdeaController extends Controller {
      * @default 1
      * @public
      */
-    @tracked page = 1;
+    @tracked page = DEFAULT_PAGE;
 
     /**
      * The field the ideas are sorted by on the server
@@ -124,7 +125,7 @@ export default class AppProjectIdeaController extends Controller {
      * @default Idea.dateModified
      * @public
      */
-    @tracked sort = 'Idea.dateModified';
+    @tracked sort = DEFAULT_SORT;
 
     /**
      * The direction of the sort, ASC or DESC
@@ -134,7 +135,7 @@ export default class AppProjectIdeaController extends Controller {
      * @default DESC
      * @public
      */
-    @tracked order = 'DESC';
+    @tracked order = DEFAULT_ORDER;
 
     /**
      * The number of ideas a page holds, -1 for all of them
@@ -155,7 +156,7 @@ export default class AppProjectIdeaController extends Controller {
      * @default 'none'
      * @public
      */
-    @tracked group = 'none';
+    @tracked group = DEFAULT_GROUP;
 
     /**
      * The sort options of the list menu
