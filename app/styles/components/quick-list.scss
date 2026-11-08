@@ -7,6 +7,9 @@
  * Square edges, colours from variables.scss, no shadows.
  */
 @import 'quick-list/pagination';
+@import 'quick-list/group';
+@import 'quick-list/toolbar';
+@import 'quick-list/selection';
 
 .quick-list {
   border-radius: 0;
@@ -125,5 +128,32 @@
     border-radius: 0;
     padding: 0 0 0 0.4rem;
     vertical-align: baseline;
+  }
+
+  .quick-list__row--selectable {
+    align-items: stretch;
+    display: flex;
+  }
+
+  .quick-list__row--selected {
+    background-color: #f9fafc;
+  }
+
+  .quick-list__row-body {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .quick-list__check {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    color: $mediumColor;
+    flex: 0 0 auto;
+    padding: 0 0 0 0.9rem;
+
+    .fa-check-square {
+      color: $primaryColor;
+    }
   }
 }
