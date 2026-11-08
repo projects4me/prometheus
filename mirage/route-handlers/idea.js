@@ -12,16 +12,18 @@ export function register(server, ctx) {
 
 		let ideas = applyQuery(schema.ideas.all(), request);
 		let total = ideas.length;
+		let hasNext = false;
 		if (params.sort) {
 			ideas = sortByFields(params.sort, params.order, ideas);
 		}
 		let limit = Number(params.limit);
+		let page = Math.max(1, Number(params.page) || 1);
 		if (limit > 0) {
-			let page = Math.max(1, Number(params.page) || 1);
 			ideas = ideas.slice((page - 1) * limit, page * limit);
+			hasNext = total > page * limit;
 		}
-		// Gaia's list meta has no total yet; Mirage sends one so the browser's use of it is covered.
-		ideas.meta = { total };
+		// Like Gaia: no total, only meta.links.next while more rows exist after this page.
+		ideas.meta = { links: hasNext ? { next: { href: `/idea?page=${page + 1}` } } : {} };
 		return ideas;
 	});
 

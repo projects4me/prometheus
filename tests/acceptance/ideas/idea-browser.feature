@@ -134,9 +134,13 @@ Feature: Ideas | idea browser
     When User opens the ideas of the project
     Then The idea browser lists 20 ideas
     And The idea list request sent limit as 20
+    And The idea browser pagination reads 1-20 / 20+
+    And The next page button of the idea browser is enabled
     When User opens the ideas of the project with page=2
     Then The idea browser lists 3 ideas
     And The idea list request sent page as 2
+    And The idea browser pagination reads 21-23 / 23
+    And The next page button of the idea browser is disabled
 
   Scenario: Grouping by creator sorts by the creator first, then by the chosen sort
 

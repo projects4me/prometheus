@@ -151,7 +151,7 @@ export default class AppProjectIdeaRoute extends App {
      *
      * @method loadIdeas
      * @param {Object} options The query, page, sort, order, limit and showArchived of the list
-     * @returns {Promise} The ideas, their meta holds the total when Gaia sends it
+     * @returns {Promise} The ideas, their meta links the next page when there is one
      * @public
      */
     async loadIdeas(options = {}) {
@@ -171,8 +171,8 @@ export default class AppProjectIdeaRoute extends App {
 
     /**
      * Counts the ideas of the project matching a condition; null when they cannot be counted.
-     * Gaia does not send a total in the list meta yet, so the matching ideas are loaded without relations and
-     * counted; once it does, meta.total is used.
+     * Gaia sends no total in the list meta, so the matching ideas are loaded without relations and counted;
+     * only the footer toggle uses it, never the paging.
      *
      * @method countIdeas
      * @param {String} [condition] A Gaia condition the ideas must match as well
@@ -187,26 +187,26 @@ export default class AppProjectIdeaRoute extends App {
                 rels: 'none',
                 limit: -1
             });
-            return ideas?.meta?.total ?? ideas?.length ?? null;
+            return ideas?.length ?? null;
         } catch (error) {
             return null;
         }
     }
 
     /**
-     * Counts what the browser shows besides the list: the archived ideas for the footer toggle, and all the ideas
-     * of the project while a search narrows the list.
+     * Counts what the browser shows besides the list: the archived ideas for the footer toggle, unless a search
+     * narrows the list. The list itself is paged without counts, Gaia reports the next page.
      *
      * @method loadCounts
      * @param {Object} options The query of the list
-     * @returns {Promise<Object>} archived and project counts, null where not needed or not known
+     * @returns {Promise<Object>} the archived count, null where not needed or not known
      * @public
      */
     async loadCounts(options = {}) {
         if (options.query) {
-            return { archived: null, project: await this.countIdeas() };
+            return { archived: null };
         }
-        return { archived: await this.countIdeas('(Idea.status : archived)'), project: null };
+        return { archived: await this.countIdeas('(Idea.status : archived)') };
     }
 
     /**

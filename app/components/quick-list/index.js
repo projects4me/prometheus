@@ -43,6 +43,9 @@ import { groupItems } from 'prometheus/utils/quick-list/group-items';
  *
  * Paging (`QuickList::Pagination`, under the items, shown when `@onPage` is passed):
  * - `@page` {Number}, `@limit` {Number}: the current page and the page size; `@total` is the record count.
+ * - `@hasNext` {Boolean}: whether a next page exists; used when there is no `@total` (Gaia sends none). Then
+ *   the range reads `1-20 / 20+` with a next page and `21-25 / 25` on the last one, › follows `@hasNext`,
+ *   and the pagination hides only on page 1 without a next page. With `@total` nothing changes.
  * - `@onPage` {Function}: called with the new page number. The buttons are disabled while `@isLoading`.
  *
  * Grouping and sorting (`QuickList::Toolbar` under the search when any option is given or `@selectable`):

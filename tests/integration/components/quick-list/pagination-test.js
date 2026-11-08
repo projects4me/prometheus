@@ -53,4 +53,36 @@ module('Integration | Component | quick-list/pagination', function (hooks) {
 		await click('[data-quick-list-pagination-prev]');
 		assert.deepEqual(this.calls, [3, 1]);
 	});
+
+	module('without a total', function () {
+		const noTotal = hbs`<QuickList::Pagination @page={{this.page}} @limit={{20}} @count={{this.count}} @hasNext={{this.hasNext}} @onPage={{this.onPage}} />`;
+
+		test('a next page reads 20+ and enables next', async function (assert) {
+			this.set('count', 20);
+			this.set('hasNext', true);
+			await render(noTotal);
+			assert.dom('[data-quick-list-pagination-range]').hasText('1-20 / 20+');
+			assert.dom('[data-quick-list-pagination-prev]').isDisabled();
+			assert.dom('[data-quick-list-pagination-next]').isNotDisabled();
+			await click('[data-quick-list-pagination-next]');
+			assert.deepEqual(this.calls, [2]);
+		});
+
+		test('the last page reads the shown rows and disables next', async function (assert) {
+			this.set('page', 2);
+			this.set('count', 5);
+			this.set('hasNext', false);
+			await render(noTotal);
+			assert.dom('[data-quick-list-pagination-range]').hasText('21-25 / 25');
+			assert.dom('[data-quick-list-pagination-prev]').isNotDisabled();
+			assert.dom('[data-quick-list-pagination-next]').isDisabled();
+		});
+
+		test('it hides on the first page without a next page', async function (assert) {
+			this.set('count', 7);
+			this.set('hasNext', false);
+			await render(noTotal);
+			assert.dom('[data-quick-list-pagination]').doesNotExist();
+		});
+	});
 });

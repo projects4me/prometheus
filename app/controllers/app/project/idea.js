@@ -9,6 +9,7 @@ import { DEFAULT_PAGE, DEFAULT_SORT, DEFAULT_ORDER, DEFAULT_GROUP } from 'promet
 import { planStatusClass } from 'prometheus/utils/idea/plan-status';
 import { tracked } from '@glimmer/tracking';
 import { htmlSafe } from '@ember/template';
+import { hasNextPage } from 'prometheus/utils/quick-list/page-window';
 
 const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
 const STORAGE_KEY = 'ideaBrowserCollapsed';
@@ -340,13 +341,13 @@ export default class AppProjectIdeaController extends Controller {
     @tracked saveSearchQuery = '';
 
     /**
-     * The number of ideas the list query matches over all its pages, null while unknown
+     * Whether Gaia reported a next page of the list query (`meta.links.next`); the browser never asks for a total
      *
-     * @property totalIdeas
-     * @type Number
+     * @property hasNext
+     * @type Boolean
      * @public
      */
-    @tracked totalIdeas = null;
+    @tracked hasNext = false;
 
     /**
      * The number of archived ideas of the project, for the footer toggle; null while unknown or searching
@@ -356,32 +357,6 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     @tracked archivedTotal = null;
-
-    /**
-     * The number of ideas of the project whatever the search, counted while a search runs; null while unknown
-     *
-     * @property searchedProjectTotal
-     * @type Number
-     * @private
-     */
-    @tracked searchedProjectTotal = null;
-
-    /**
-     * The number of ideas of the project whatever the search and the archived toggle, null while unknown
-     *
-     * @property projectTotal
-     * @type Number
-     * @public
-     */
-    get projectTotal() {
-        if (this.isSearching) {
-            return this.searchedProjectTotal;
-        }
-        if (this.totalIdeas === null) {
-            return null;
-        }
-        return this.showArchived ? this.totalIdeas : this.totalIdeas + (this.archivedTotal ?? 0);
-    }
 
     /**
      * The options of the list query: search, page, sort, order, page size and archived toggle
@@ -406,21 +381,15 @@ export default class AppProjectIdeaController extends Controller {
      * Shows a loaded page of ideas and the counts that came with it
      *
      * @method showIdeas
-     * @param {Object} [ideas] The ideas the list query returned, their meta holds the total when Gaia sends it
+     * @param {Object} [ideas] The ideas the list query returned, their meta links the next page when there is one
      * @param {Object} [counts] The archived and project counts of the route
      * @returns {void}
      * @public
      */
     showIdeas(ideas, counts) {
         this.ideas = ideas ? ideas.toArray() : [];
-        let total = ideas?.meta?.total;
-        if (total === undefined || total === null) {
-            // Gaia does not send meta.total yet: the count is only known when every idea is loaded.
-            total = ideas && this.pageSize === -1 ? this.ideas.length : null;
-        }
-        this.totalIdeas = total === null ? null : Number(total);
+        this.hasNext = hasNextPage(ideas?.meta);
         this.archivedTotal = counts?.archived ?? null;
-        this.searchedProjectTotal = counts?.project ?? null;
     }
 
     /**
@@ -866,12 +835,6 @@ export default class AppProjectIdeaController extends Controller {
         if (!this.ideas.some(listed => listed.id === idea.id)) {
             // the newest idea leads the default sort, date modified newest first
             this.ideas = [idea, ...this.ideas];
-            if (this.totalIdeas !== null) {
-                this.totalIdeas++;
-            }
-            if (this.searchedProjectTotal !== null) {
-                this.searchedProjectTotal++;
-            }
             this.loadedIdeaIds = new Set([...this.loadedIdeaIds, idea.id]);
         }
     }

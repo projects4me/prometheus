@@ -1,5 +1,5 @@
 <div class="box box-primary quick-list" data-test-quick-list {{on-update @items this.itemsChanged}} ...attributes>
-  <QuickList::Header @title={{@title}} @count={{this.items.length}} @total={{@total}} @showCount={{this.showCount}}>
+  <QuickList::Header @title={{@title}} @count={{this.items.length}} @total={{@total}} @hasNext={{@hasNext}} @showCount={{this.showCount}}>
     {{yield to="actions"}}
   </QuickList::Header>
   {{yield to="search"}}
@@ -85,7 +85,7 @@
     {{/if}}
   </div>
   {{#if @onPage}}
-    <QuickList::Pagination @page={{@page}} @limit={{@limit}} @total={{@total}} @disabled={{@isLoading}} @onPage={{@onPage}} />
+    <QuickList::Pagination @page={{@page}} @limit={{@limit}} @total={{@total}} @hasNext={{@hasNext}} @count={{this.items.length}} @disabled={{@isLoading}} @onPage={{@onPage}} />
   {{/if}}
   {{yield to="footer"}}
 </div>
