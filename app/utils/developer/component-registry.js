@@ -39,6 +39,17 @@ export const ENTRIES = [
         usedIn: [],
         demo: 'developer/placeholder-demo',
         doc: null
+    },
+    {
+        name: 'form-fields',
+        label: 'Form fields',
+        group: 'Forms',
+        status: 'stable',
+        summary: 'The FormFields::* components every form is built from.',
+        usedIn: [],
+        demo: 'developer/demos/form-fields',
+        doc: 'form-fields.md',
+        variants: 10
     }
 ];
 
