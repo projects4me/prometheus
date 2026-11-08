@@ -71,10 +71,6 @@ Router.map(function() {
       this.route('issue-types');
       this.route('issue-statuses');
       this.route('email');
-      this.route('ui', function() {
-        this.route('index', {path: '/'});
-        this.route('quick-list');
-      });
     });
     this.route('developer', function() {
       this.route('index', {path: '/'});
