@@ -29,7 +29,11 @@
   }
 
   .quick-list-toolbar-option.is-current {
-    color: $primaryColor;
     font-weight: 600;
+
+    // The crimson marker is for rest only; hover and focus use the dropdown's white text.
+    &:not(:hover):not(:focus) {
+      color: $primaryColor;
+    }
   }
 }
