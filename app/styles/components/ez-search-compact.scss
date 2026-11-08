@@ -60,11 +60,7 @@
       }
 
       button {
-        display: block;
-        width: 100%;
-        padding: 3px 20px;
-        background: transparent;
-        border: 0;
+        @include menu-item-button;
       }
     }
   }

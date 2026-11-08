@@ -88,12 +88,7 @@
 }
 
 .ez-search .ez-search-saved .dropdown-menu button {
-    display: block;
-    width: 100%;
-    padding: 3px 20px;
-    text-align: left;
-    background: transparent;
-    border: 0;
+    @include menu-item-button;
 }
 
 // The active saved search's name on the Saved Searches button: one line, cut with an ellipsis.

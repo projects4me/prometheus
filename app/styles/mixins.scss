@@ -23,3 +23,21 @@
     color: $color;
     font-size: $fontSize;
 }
+
+// A menu item button: transparent at rest, the primary highlight on hover and keyboard focus
+// (as the shared dropdown in components/dropdown.scss).
+@mixin menu-item-button {
+    display: block;
+    width: 100%;
+    padding: 3px 20px;
+    text-align: left;
+    background: transparent;
+    border: 0;
+
+    &:hover,
+    &:focus {
+        background-color: $primaryColor;
+        color: #fff;
+        outline: none;
+    }
+}
