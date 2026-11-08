@@ -5,6 +5,7 @@
 import App from 'prometheus/routes/app';
 import { inject as service } from '@ember/service';
 import { hash, hashSettled } from 'rsvp';
+import { DEFAULT_PAGE, DEFAULT_SORT, DEFAULT_ORDER, DEFAULT_GROUP } from 'prometheus/utils/idea/browser-defaults';
 
 /**
  * The ideas route, it loads the ideas of the selected project for the idea browser
@@ -141,7 +142,7 @@ export default class AppProjectIdeaRoute extends App {
      * @public
      */
     buildSort({ sort, group } = {}) {
-        let field = sort || 'Idea.dateModified';
+        let field = sort || DEFAULT_SORT;
         return group === 'createdBy' ? `Idea.createdUser,${field}` : field;
     }
 
@@ -159,9 +160,9 @@ export default class AppProjectIdeaRoute extends App {
                 query: this.buildIdeaQuery(options),
                 rels: 'createdBy',
                 sort: this.buildSort(options),
-                order: options.order || 'DESC',
+                order: options.order || DEFAULT_ORDER,
                 limit: options.limit ?? -1,
-                page: options.page || 1
+                page: options.page || DEFAULT_PAGE
             });
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });
@@ -266,8 +267,10 @@ export default class AppProjectIdeaRoute extends App {
             controller.view = null;
             controller.query = null;
             controller.searchId = null;
-            controller.page = 1;
-            controller.group = 'none';
+            controller.page = DEFAULT_PAGE;
+            controller.sort = DEFAULT_SORT;
+            controller.order = DEFAULT_ORDER;
+            controller.group = DEFAULT_GROUP;
             controller.archived = false;
             this.searchData = null;
             controller.unregisterHermesIntents();
