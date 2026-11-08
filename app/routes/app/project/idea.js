@@ -54,7 +54,8 @@ export default class AppProjectIdeaRoute extends App {
         page: { refreshModel: true },
         sort: { refreshModel: true },
         order: { refreshModel: true },
-        group: { refreshModel: true }
+        group: { refreshModel: true },
+        archived: { refreshModel: true }
     };
 
     /**
@@ -75,7 +76,7 @@ export default class AppProjectIdeaRoute extends App {
             order: params?.order ?? controller.order,
             group: params?.group ?? controller.group,
             limit: controller.pageSize,
-            showArchived: controller.showArchived
+            showArchived: params?.archived ?? controller.archived
         };
         return hash({
             ideas: this.loadIdeas(options),
@@ -267,6 +268,7 @@ export default class AppProjectIdeaRoute extends App {
             controller.searchId = null;
             controller.page = 1;
             controller.group = 'none';
+            controller.archived = false;
             this.searchData = null;
             controller.unregisterHermesIntents();
         }

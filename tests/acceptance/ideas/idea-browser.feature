@@ -67,6 +67,24 @@ Feature: Ideas | idea browser
     Then The idea browser lists the ideas Open idea
     And The idea list was requested for the open ideas only
 
+  Scenario: The archived toggle survives a reload
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The ideas of the project are
+    ---------------------------------------------------------
+    | title        | status   | dateModified        |
+    | Open idea    | open     | 2026-10-01 10:00:00 |
+    | Shelved idea | archived | 2026-10-25 10:00:00 |
+    ---------------------------------------------------------
+    When User opens the ideas of the project
+    And User clicks the archived footer link
+    And User reloads the page
+    Then The idea browser lists the ideas Open idea, Shelved idea
+    And The archived footer link reads Hide archived (1)
+
   Scenario: The idea list is sorted, paged and narrowed to the open ideas on the server
 
     Given There is no pre-existing data
