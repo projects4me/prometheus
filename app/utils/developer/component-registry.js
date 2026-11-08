@@ -18,12 +18,11 @@ export const GROUPS = ['Lists', 'Search', 'Forms', 'Overlays', 'Menus'];
  * - `name`: url segment of the entry page (`/app/developer/components/:name`);
  * - `group`: one of `GROUPS`;
  * - `status`: `stable` or `experimental`;
- * - `usedIn`: `[{ label, route }]`, screens that use the component;
+ * - `usedIn`: `[{ label, route }]`, screens that use the component (`route` is omitted for screens that need
+ *   a route parameter, which show as plain text);
  * - `demo`: the component rendered on the entry page;
  * - `doc`: the file name of its documentation in `public/ui-docs`;
  * - `variants` (optional): a count or a list of variant labels.
- *
- * The placeholder stands in until the first real component is registered.
  *
  * @property ENTRIES
  * @type {Array<Object>}
@@ -31,14 +30,31 @@ export const GROUPS = ['Lists', 'Search', 'Forms', 'Overlays', 'Menus'];
  */
 export const ENTRIES = [
     {
-        name: 'placeholder',
-        label: 'Placeholder',
+        name: 'quick-list',
+        label: 'QuickList',
         group: 'Lists',
-        status: 'experimental',
-        summary: 'Stand-in entry until the first component is registered.',
-        usedIn: [],
-        demo: 'developer/placeholder-demo',
-        doc: null
+        status: 'stable',
+        summary: 'A narrow list of records with search, sorting, grouping, selection and paging.',
+        usedIn: [{ label: 'Ideas browser', route: 'app.projects' }],
+        demo: 'developer/demos/quick-list',
+        doc: 'quick-list.md'
+    },
+    {
+        name: 'ez-search',
+        label: 'ezSearch',
+        group: 'Search',
+        status: 'stable',
+        summary: 'Search bar and visual query builder, as EzSearch and the EzSearchCompact multi-row and linear layouts.',
+        usedIn: [
+            { label: 'Issues' },
+            { label: 'Projects', route: 'app.projects' },
+            { label: 'Ideas' },
+            { label: 'Gantt' },
+            { label: 'Task Board' }
+        ],
+        demo: 'developer/demos/ez-search',
+        doc: 'ez-search.md',
+        variants: 3
     },
     {
         name: 'form-fields',
@@ -62,6 +78,16 @@ export const ENTRIES = [
         ],
         demo: 'developer/demos/modal',
         doc: 'modal.md'
+    },
+    {
+        name: 'dropdown',
+        label: 'Dropdown',
+        group: 'Menus',
+        status: 'stable',
+        summary: 'A button that opens a floating menu, used for saved searches and board filters.',
+        usedIn: [{ label: 'ezSearch saved searches', route: 'app.projects' }],
+        demo: 'developer/demos/dropdown',
+        doc: 'dropdown.md'
     }
 ];
 

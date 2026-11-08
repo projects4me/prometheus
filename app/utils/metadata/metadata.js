@@ -284,17 +284,6 @@ export default Object.extend({
                             aclContext: 'setting.read'
                         }
                     }
-                },
-                developer: {
-                    label: 'views.nav.menu.settings.group.developer',
-                    items: {
-                        UI: {
-                            label: 'views.nav.menu.settings.ui.label',
-                            icon: 'paint-brush',
-                            route: 'app.settings.ui',
-                            aclContext: 'setting.read'
-                        }
-                    }
                 }
             }
         },
