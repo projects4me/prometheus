@@ -1,0 +1,19 @@
+<div class="box-header with-border quick-list__header" data-test-quick-list-header>
+  <h3 class="box-title">
+    {{@title}}
+    {{#if this.hasCount}}
+      <small class="quick-list__count" data-test-quick-list-count>
+        {{#if this.showTotal}}
+          {{t "components.quickList.countOfTotal" count=@count total=@total}}
+        {{else}}
+          {{@count}}
+        {{/if}}
+      </small>
+    {{/if}}
+  </h3>
+  {{#if (has-block)}}
+    <div class="box-tools pull-right" data-test-quick-list-actions>
+      {{yield}}
+    </div>
+  {{/if}}
+</div>
