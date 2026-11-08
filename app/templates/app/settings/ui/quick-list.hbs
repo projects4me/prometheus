@@ -1,4 +1,53 @@
 <div class="tab-pane active" data-ui-quick-list>
   <p>{{t "views.app.settings.ui.quickList.intro"}}</p>
-  <p class="text-muted" data-ui-empty>{{t "views.app.settings.ui.quickList.empty"}}</p>
+  <div class="row">
+    <div class="col-md-4">
+      <QuickList @title={{t "views.app.settings.ui.quickList.title"}}
+        @items={{this.items}} @total={{this.total}} @page={{this.page}} @limit={{this.limit}}
+        @onPage={{this.setPage}} @isLoading={{this.isLoading}} @error={{this.isError}} @onRetry={{this.retry}}
+        @onClearSearch={{if this.filter this.clearFilter}}
+        @groupOptions={{this.groupOptions}} @groupBy={{this.groupBy}} @onGroup={{this.setGroup}}
+        @sortOptions={{this.sortOptions}} @sort={{this.sort}} @order={{this.order}} @onSort={{this.setSort}}
+        @selectable={{true}}>
+        <:actions>
+          <button type="button" class="btn btn-box-tool" data-ui-new title={{t "views.app.settings.ui.quickList.actions.new"}}
+            {{on "click" this.newRecord}}><i class="fa fa-plus"></i></button>
+        </:actions>
+        <:search>
+          <div class="box-body" data-ui-filter-box>
+            <input type="search" class="form-control input-sm" data-ui-filter value={{this.filter}}
+              placeholder={{t "views.app.settings.ui.quickList.filter"}} {{on "input" this.setFilter}}>
+          </div>
+        </:search>
+        <:item as |record Item|>
+          <Item>
+            <:primary>
+              <span>{{record.title}}</span>
+              <span class="label {{record.status}}">{{status-label record.status}}</span>
+            </:primary>
+            <:secondary>
+              {{record.creator}} · {{format-date date=record.updated}}
+              {{#each record.tags as |tag|}}<span class="label label-default">{{tag}}</span> {{/each}}
+            </:secondary>
+          </Item>
+        </:item>
+        <:selectionActions as |selected clear|>
+          <button type="button" class="btn btn-default btn-xs" data-ui-archive
+            {{on "click" (fn this.act "archive" selected clear)}}>{{t "views.app.settings.ui.quickList.actions.archive"}}</button>
+          <button type="button" class="btn btn-danger btn-xs" data-ui-delete
+            {{on "click" (fn this.act "delete" selected clear)}}>{{t "views.app.settings.ui.quickList.actions.delete"}}</button>
+        </:selectionActions>
+      </QuickList>
+    </div>
+    <div class="col-md-8">
+      <div class="btn-group" data-ui-states>
+        {{#each this.states as |state|}}
+          <button type="button" class="btn btn-default btn-sm {{if (eq this.state state) "active"}}"
+            data-ui-state={{if state state "normal"}} {{on "click" (fn this.setState state)}}>
+            {{t (concat "views.app.settings.ui.quickList.states." (if state state "normal"))}}
+          </button>
+        {{/each}}
+      </div>
+    </div>
+  </div>
 </div>
