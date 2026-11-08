@@ -194,7 +194,7 @@ export default class AppProjectIdeaController extends Controller {
                 key: 'createdBy',
                 label: this.intl.t('views.app.idea.browser.group.createdBy'),
                 groupKey: idea => idea.createdUser,
-                groupLabel: key => creators.get(String(key)) ?? String(key)
+                groupLabel: key => creators.get(String(key)) || this.intl.t('views.app.idea.browser.unknownUser')
             }
         ];
     }

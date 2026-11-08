@@ -911,7 +911,8 @@
             "none": "None",
             "planStatus": "Plan status",
             "createdBy": "Created by"
-          }
+          },
+          "unknownUser": "Unknown user"
         },
         "status": {
           "open": "Open",

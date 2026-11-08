@@ -65,7 +65,7 @@
               {{/let}}
             </:primary>
             <:secondary>
-              {{idea.createdBy.name}} · {{format-date-time date=idea.dateModified humanize=true}}
+              {{if idea.createdBy.name idea.createdBy.name (t "views.app.idea.browser.unknownUser")}} · {{format-date-time date=idea.dateModified humanize=true}}
             </:secondary>
           </Item>
         </:item>
