@@ -1,0 +1,74 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @log={{this.log}} @onReset={{this.reset}}>
+  <:demo>
+    <div data-demo-quick-list>
+      <QuickList @title="Issues"
+        @items={{this.items}} @hasNext={{this.hasNext}} @page={{this.page}} @limit={{this.limit}}
+        @onPage={{this.setPage}} @isLoading={{this.isLoading}} @error={{this.isError}}
+        @onRetry={{this.retry}}
+        @onClearSearch={{if this.query this.clearSearch}}
+        @groupOptions={{this.groupOptions}} @groupBy={{this.groupBy}} @onGroup={{this.setGroup}}
+        @sortOptions={{this.sortOptions}} @sort={{this.sort}} @order={{this.order}} @onSort={{this.setSort}}
+        @selectable={{this.selectable}}>
+        <:actions>
+          <button type="button" class="btn btn-box-tool" data-demo-new title="New record" {{on "click" this.newRecord}}><i class="fa fa-plus"></i></button>
+        </:actions>
+        <:search>
+          {{#if this.searchOn}}
+            <div class="box-body" data-demo-search>
+              <EzSearchCompact @schema={{this.schema}} @query={{this.query}}
+                @onApply={{this.applyQuery}} />
+            </div>
+          {{/if}}
+        </:search>
+        <:item as |record Item|>
+          <Item>
+            <:primary>
+              <span>{{record.title}}</span>
+              <span class="label {{record.status}}">{{status-label record.status}}</span>
+            </:primary>
+            <:secondary>
+              {{record.creator}} · {{format-date date=record.updated}}
+              {{#each record.tags as |tag|}}<span class="label label-default">{{tag}}</span> {{/each}}
+            </:secondary>
+          </Item>
+        </:item>
+        <:selectionActions as |selected clear|>
+          <button type="button" class="btn btn-default btn-xs" data-demo-archive {{on "click" (fn this.select "archive" selected clear)}}>Archive</button>
+          <button type="button" class="btn btn-danger btn-xs" data-demo-delete {{on "click" (fn this.select "delete" selected clear)}}>Delete</button>
+        </:selectionActions>
+      </QuickList>
+    </div>
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <label>State</label>
+      <Developer::StateSwitch @value={{this.state}} @onChange={{this.setState}} />
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" data-control-selectable checked={{this.selectable}} {{on "change" this.setSelectable}}> @selectable</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" data-control-search checked={{this.searchOn}} {{on "change" this.setSearchOn}}> Search block</label>
+    </div>
+    <div class="form-group">
+      <label for="demo-group-by">@groupBy</label>
+      <select id="demo-group-by" class="form-control input-sm" data-control-group-by {{on "change" this.setGroupBy}}>
+        {{#each this.groupKeys as |key|}}
+          <option value={{key}} selected={{eq this.groupValue key}}>{{key}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="demo-limit">@limit</label>
+      <select id="demo-limit" class="form-control input-sm" data-control-limit {{on "change" this.setLimit}}>
+        {{#each this.limits as |size|}}
+          <option value={{size}} selected={{eq this.limit size}}>{{size}}</option>
+        {{/each}}
+      </select>
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="quick-list.md" />
+  </:docs>
+</Developer::Entry>
