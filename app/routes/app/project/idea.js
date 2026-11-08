@@ -81,7 +81,7 @@ export default class AppProjectIdeaRoute extends App {
         };
         return hash({
             ideas: this.loadIdeas(options),
-            counts: this.loadCounts(options)
+            counts: this.loadCounts()
         });
     }
 
@@ -122,7 +122,7 @@ export default class AppProjectIdeaRoute extends App {
      */
     buildIdeaQuery({ query, showArchived } = {}) {
         let conditions = [`(Idea.projectId : ${this.trackedProject.getProjectId()})`];
-        if (!showArchived && !query) {
+        if (!showArchived) {
             conditions.push('(Idea.status : open)');
         }
         if (query) {
@@ -194,18 +194,14 @@ export default class AppProjectIdeaRoute extends App {
     }
 
     /**
-     * Counts what the browser shows besides the list: the archived ideas for the footer toggle, unless a search
-     * narrows the list. The list itself is paged without counts, Gaia reports the next page.
+     * Counts what the browser shows besides the list: the archived ideas of the project for the footer toggle, also
+     * during a search. The list itself is paged without counts, Gaia reports the next page.
      *
      * @method loadCounts
-     * @param {Object} options The query of the list
-     * @returns {Promise<Object>} the archived count, null where not needed or not known
+     * @returns {Promise<Object>} the archived count, null where not known
      * @public
      */
-    async loadCounts(options = {}) {
-        if (options.query) {
-            return { archived: null };
-        }
+    async loadCounts() {
         return { archived: await this.countIdeas('(Idea.status : archived)') };
     }
 
@@ -250,7 +246,7 @@ export default class AppProjectIdeaRoute extends App {
             this.trackedProject.getProjectId(),
             options => this.loadIdeas(options),
             ids => this.loadPlans(ids),
-            options => this.loadCounts(options)
+            () => this.loadCounts()
         );
     }
 

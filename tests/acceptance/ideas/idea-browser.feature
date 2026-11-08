@@ -59,7 +59,7 @@ Feature: Ideas | idea browser
     And The idea list was requested for the open ideas only
     And The archived footer link reads Show archived (1)
     When User clicks the archived footer link
-    Then The idea browser lists the ideas Open idea, Shelved idea
+    Then The idea browser lists the ideas Shelved idea, Open idea
     And The idea list was requested for every status
     And The idea Shelved idea is labelled Archived
     And The archived footer link reads Hide archived (1)
@@ -82,7 +82,7 @@ Feature: Ideas | idea browser
     When User opens the ideas of the project
     And User clicks the archived footer link
     And User reloads the page
-    Then The idea browser lists the ideas Open idea, Shelved idea
+    Then The idea browser lists the ideas Shelved idea, Open idea
     And The archived footer link reads Hide archived (1)
 
   Scenario: The idea list is sorted, paged and narrowed to the open ideas on the server

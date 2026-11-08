@@ -43,12 +43,21 @@ Feature: Ideas | search the idea browser
     When User updates the active idea saved search
     Then The idea saved search button does not show edited
 
-  Scenario: Archived ideas match after the open ones and the archived footer is hidden
+  Scenario: A search lists open ideas only and keeps the archived footer
 
     When User opens the ideas of the project
     And User types "title ~ idea" in the idea search bar and presses Enter
-    Then The idea browser lists the ideas Newest idea, Older idea, Shelved idea
-    And The archived footer is hidden
+    Then The idea list was requested for the open ideas only
+    And The idea browser lists the ideas Newest idea, Older idea
+    And The archived footer link reads Show archived (1)
+
+  Scenario: With show archived the search finds archived ideas in the server order
+
+    When User opens the ideas of the project
+    And User types "title ~ idea" in the idea search bar and presses Enter
+    And User clicks the archived footer link
+    Then The idea list was requested for every status
+    And The idea browser lists the ideas Shelved idea, Newest idea, Older idea
 
   Scenario: Opening another idea keeps the search
 
