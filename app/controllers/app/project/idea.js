@@ -104,7 +104,7 @@ export default class AppProjectIdeaController extends Controller {
      * @type Array
      * @public
      */
-    queryParams = ['view', 'query', 'searchId', 'page', 'sort', 'order', 'group'];
+    queryParams = ['view', 'query', 'searchId', 'page', 'sort', 'order', 'group', 'archived'];
 
     /**
      * The page of the idea list, 1 based
@@ -272,7 +272,7 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     get linkQuery() {
-        return { view: this.view, query: this.query, searchId: this.searchId };
+        return { view: this.view, query: this.query, searchId: this.searchId, archived: this.archived };
     }
 
     /**
@@ -608,13 +608,25 @@ export default class AppProjectIdeaController extends Controller {
     @tracked selectedIdeaId = null;
 
     /**
+     * Whether the archived ideas are listed after the open ones, kept in the URL as the archived query param
+     *
+     * @property archived
+     * @type Boolean
+     * @default false
+     * @public
+     */
+    @tracked archived = false;
+
+    /**
      * Whether the archived ideas are listed after the open ones
      *
      * @property showArchived
      * @type Boolean
      * @public
      */
-    @tracked showArchived = false;
+    get showArchived() {
+        return this.archived;
+    }
 
     /**
      * The status of the latest plan by idea id, empty for an idea without a plan
@@ -906,18 +918,14 @@ export default class AppProjectIdeaController extends Controller {
      * Shows or hides the archived ideas; the list query changes, so it runs again from the first page
      *
      * @method toggleArchived
-     * @returns {Promise|void}
+     * @returns {void}
      * @public
      */
     @action
     toggleArchived() {
-        this.showArchived = !this.showArchived;
-        if (this.page !== 1) {
-            // the page query param refreshes the route, which reads showArchived
-            this.page = 1;
-            return;
-        }
-        return this.refreshList();
+        // the archived and page query params refresh the route, which reads them
+        this.archived = !this.archived;
+        this.page = 1;
     }
 
     /**

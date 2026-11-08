@@ -116,6 +116,12 @@ export const when = function () {
             }
         },
         {
+            "User reloads the page": (assert) => async function () {
+                await visit(currentURL());
+                assert.ok(true, 'User reloads the page');
+            }
+        },
+        {
             "User opens the ideas of the project with $params": (assert, ctx) => async function (params) {
                 let project = ctx.get('currentProject');
                 await visit(`/app/project/${project.shortCode}/idea?${params}`);
