@@ -1,0 +1,19 @@
+<div class="quick-list-group" data-test-quick-list-group={{@group.key}}>
+    <div class="quick-list-group-heading" role="button" tabindex="0" aria-expanded={{if @collapsed "false" "true"}}
+        data-test-quick-list-group-toggle {{on "click" @onToggle}}>
+        <i class="fa {{this.caretClass}}" aria-hidden="true"></i>
+        <span class="quick-list-group-label" data-test-quick-list-group-label>
+            {{#if (has-block "heading")}}
+                {{yield @group to="heading"}}
+            {{else}}
+                {{@group.label}}
+            {{/if}}
+        </span>
+        <span class="badge" data-test-quick-list-group-count>{{@group.count}}</span>
+    </div>
+    {{#unless @collapsed}}
+        <div class="quick-list-group-items" data-test-quick-list-group-items>
+            {{yield @group}}
+        </div>
+    {{/unless}}
+</div>
