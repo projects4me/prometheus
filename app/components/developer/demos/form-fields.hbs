@@ -1,0 +1,65 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo as |log|>
+    <div data-demo-field={{this.field}}>
+      {{#if (eq this.field "FieldText")}}
+        <FormFields::FieldText @data-field="demo-text" @label="Text" @value={{this.value}} @placeholder={{this.placeholder}}
+          @readonly={{if this.readonly "readonly"}} @validate={{fn this.validate log}} @message={{this.message}}
+          @onInput={{fn this.onInput log}} disabled={{this.disabled}} />
+      {{else if (eq this.field "FieldTextArea")}}
+        <FormFields::FieldTextArea @data-field="demo-textarea" @label="Text area" @value={{this.value}} @placeholder={{this.placeholder}}
+          @validate={{fn this.validate log}} @message={{this.message}} @onInput={{fn this.onInput log}}
+          disabled={{this.disabled}} readonly={{this.readonly}} />
+      {{else if (eq this.field "FieldRelate")}}
+        <FormFields::FieldRelate @data-field="demo-relate" @label="User" @relateType="relate-simple" @options={{this.users}}
+          @selected={{this.selected}} @searchField="label" @searchEnabled={{this.searchEnabled}} @placeholder={{this.placeholder}}
+          @disabled={{this.disabled}} @validate={{fn this.validate log}} @message={{this.message}}
+          @onchange={{fn this.onSelect log}} />
+      {{else if (eq this.field "FieldRelateMulti")}}
+        <FormFields::FieldRelateMulti @data-field="demo-relate-multi" @label="Users" @relateType="relate-simple" @options={{this.users}}
+          @selected={{this.selected}} @searchField="label" @searchEnabled={{this.searchEnabled}} @placeholder={{this.placeholder}}
+          @validate={{fn this.validate log}} @message={{this.message}} @onchange={{fn this.onSelect log}} />
+      {{else if (eq this.field "FieldMultiSelect")}}
+        <FormFields::FieldMultiSelect @data-field="demo-multi-select" @label="Types" @options={{this.tags}}
+          @selected={{this.selected}} @searchEnabled={{this.searchEnabled}} @placeholder={{this.placeholder}}
+          @validate={{fn this.validate log}} @message={{this.message}} @onchange={{fn this.onSelect log}} />
+      {{else if (eq this.field "FieldDate")}}
+        <FormFields::FieldDate @data-field="demo-date" @label="Date" @value={{this.value}} @placeholder={{this.placeholder}}
+          @format="YYYY-MM-DD" @singleDatePicker={{true}} @showDropdowns={{true}} @autoApply={{true}}
+          @validate={{fn this.validate log}} @message={{this.message}} @update={{fn this.onDate log}} />
+      {{else if (eq this.field "FieldCheckbox")}}
+        <FormFields::FieldCheckbox @checked={{this.checked}} @select={{fn this.onCheck log}} data-select="demo-checkbox" />
+      {{else if (eq this.field "FieldSwitch")}}
+        <FormFields::FieldSwitch @checkedValue={{this.checked}} @callBack={{fn this.onCheck log}} />
+      {{else if (eq this.field "FieldUpload")}}
+        <FormFields::FieldUpload @label="Choose a file" @uploadFile={{fn this.onUpload log}} />
+      {{else if (eq this.field "FieldSearch")}}
+        <FormFields::FieldSearch @value={{this.searchText}} @placeholder={{this.placeholder}} @onInput={{fn this.onSearch log}} />
+      {{/if}}
+    </div>
+    {{#if this.message}}
+      <div data-demo-validation>
+        <FormFields::ValidationMessages::Failure @message={{this.message}} />
+      </div>
+    {{/if}}
+    <p class="margin-top"><strong>Value:</strong> <code data-demo-value>{{this.valueText}}</code></p>
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <Developer::StateSwitch @states={{this.fields}} @value={{this.field}} @onChange={{this.pick}} />
+    </div>
+    <div class="checkbox"><label><input type="checkbox" data-control="disabled" checked={{this.disabled}} {{on "change" (fn this.toggle "disabled")}}> Disabled</label></div>
+    <div class="checkbox"><label><input type="checkbox" data-control="readonly" checked={{this.readonly}} {{on "change" (fn this.toggle "readonly")}}> Read-only</label></div>
+    <div class="checkbox"><label><input type="checkbox" data-control="error" checked={{this.showError}} {{on "change" (fn this.toggle "showError")}}> Validation error</label></div>
+    {{#if this.hasSearchOption}}
+      <div class="checkbox"><label><input type="checkbox" data-control="search" checked={{this.searchEnabled}} {{on "change" (fn this.toggle "searchEnabled")}}> Search enabled</label></div>
+    {{/if}}
+    <div class="form-group">
+      <label for="demo-placeholder">Placeholder</label>
+      <input id="demo-placeholder" class="form-control input-sm" data-control="placeholder" value={{this.placeholder}} {{on "input" this.setPlaceholder}}>
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc={{@entry.doc}} />
+  </:docs>
+</Developer::Entry>
