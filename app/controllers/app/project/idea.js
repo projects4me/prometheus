@@ -13,7 +13,6 @@ import { hasNextPage } from 'prometheus/utils/quick-list/page-window';
 
 const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
 const STORAGE_KEY = 'ideaBrowserCollapsed';
-const OPEN = 'open';
 const ARCHIVED = 'archived';
 const PROGRESS_STATUSES = ['proposed', 'approved', 'creating', 'created', 'failed'];
 
@@ -722,47 +721,25 @@ export default class AppProjectIdeaController extends Controller {
     }
 
     /**
-     * The open ideas of the page, in the order of the server sort
-     *
-     * @property openIdeas
-     * @type Array
-     * @public
-     */
-    get openIdeas() {
-        return this.ideas.filter(idea => idea.status === OPEN);
-    }
-
-    /**
-     * The archived ideas of the page, in the order of the server sort
-     *
-     * @property archivedIdeas
-     * @type Array
-     * @public
-     */
-    get archivedIdeas() {
-        return this.ideas.filter(idea => idea.status === ARCHIVED);
-    }
-
-    /**
-     * Whether the footer offers the archived ideas: there are some and no search runs
+     * Whether the footer offers the archived ideas: there are some, also during a search
      *
      * @property hasArchivedToggle
      * @type Boolean
      * @public
      */
     get hasArchivedToggle() {
-        return !this.isSearching && this.archivedTotal > 0;
+        return this.archivedTotal > 0;
     }
 
     /**
-     * The ideas that are listed in the browser
+     * The ideas that are listed in the browser, in the order the server returned them
      *
      * @property listedIdeas
      * @type Array
      * @public
      */
     get listedIdeas() {
-        return this.showArchived || this.isSearching ? [...this.openIdeas, ...this.archivedIdeas] : this.openIdeas;
+        return this.ideas;
     }
 
     /**
