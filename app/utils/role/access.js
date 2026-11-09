@@ -5,8 +5,7 @@
 import { get } from '@ember/object';
 
 /**
- * The access summary of roles: permission coverage, access tier, members and initials, shared by the role browser
- * and Role::Card
+ * The access summary of roles: permission coverage, access tier, members and initials, shared by the role browser.
  *
  * @module Utils.Role
  */
