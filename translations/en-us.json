@@ -2720,9 +2720,13 @@
           "rolesPlaceholder": "Select roles",
           "projects": "Projects",
           "projectsPlaceholder": "Select projects",
-          "status": "Status"
+          "status": "Status",
+          "scopes": "Delegation scopes",
+          "scopesPlaceholder": "Select or type permission names, such as issue.*",
+          "scopesInfo": "The permissions a runtime may use when it runs this agent. Empty means the agent can't run on a runtime."
         },
         "detail": {
+          "noDelegation": "No delegation",
           "title": "Agent",
           "heading": "Agent - {name}",
           "sponsor": "Sponsor",

@@ -94,6 +94,15 @@ export default class AgentModel extends Model {
     @attr('string') permissionMode;
 
     /**
+     * The permission names (`*` wildcards allowed, such as `issue.*`) a runtime may use when running this agent.
+     * Empty means the agent can't run on a runtime.
+     *
+     * @property delegationScopes
+     * @type Array<String>
+     */
+    @attr({ defaultValue: () => [] }) delegationScopes;
+
+    /**
      * @property userId
      * @type String
      */

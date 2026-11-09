@@ -7,6 +7,7 @@ import { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { htmlSafe } from '@ember/template';
+import { scopeOptions, searchScopes } from 'prometheus/utils/agent-scopes';
 
 /**
  * The models the agent runtime can be set to.
@@ -105,6 +106,14 @@ export default class AppAgentCreateController extends PrometheusCreateController
     @tracked active = true;
 
     /**
+     * The delegation scopes chosen for the agent, as `{label, value}`.
+     *
+     * @property selectedScopes
+     * @type Array
+     */
+    @tracked selectedScopes = [];
+
+    /**
      * The model for the three model selects.
      *
      * @property modelConfig
@@ -157,6 +166,14 @@ export default class AppAgentCreateController extends PrometheusCreateController
     }
 
     /**
+     * The delegation scope suggestions.
+     *
+     * @property scopeOptions
+     * @type Array
+     */
+    scopeOptions = scopeOptions();
+
+    /**
      * Fills the form from the route's data.
      *
      * @method setupForm
@@ -170,6 +187,7 @@ export default class AppAgentCreateController extends PrometheusCreateController
         this.selectedRoles = this.rolesList.filter((role) => this.current.userroles.some((userrole) => userrole.roleId === role.value));
         this.selectedProjects = this.projectsList.filter((project) => this.current.memberships.some((membership) => membership.projectId === project.value));
         this.modelConfig = { ...this.model.config };
+        this.selectedScopes = (this.model.delegationScopes ?? []).map((value) => ({ label: value, value }));
         this.active = this.model.isNew ? true : this.model.isActive;
         this.message = {};
     }
@@ -183,6 +201,25 @@ export default class AppAgentCreateController extends PrometheusCreateController
      */
     @action selectModel(key, option) {
         this.modelConfig = { ...this.modelConfig, [key]: option.value };
+    }
+
+    /**
+     * Searches the scope suggestions; the typed text is offered as an entry of its own.
+     *
+     * @method searchScopes
+     * @param {String} term what the user typed
+     * @return {Array} the options
+     */
+    @action searchScopes(term) {
+        return searchScopes(this.scopeOptions, term);
+    }
+
+    /**
+     * @method selectScopes
+     * @param {Array} scopes the chosen scopes
+     */
+    @action selectScopes(scopes) {
+        this.selectedScopes = scopes;
     }
 
     /**
@@ -217,6 +254,7 @@ export default class AppAgentCreateController extends PrometheusCreateController
      */
     beforeSave(model) {
         model.set('modelConfig', { ...this.modelConfig });
+        model.set('delegationScopes', this.selectedScopes.map((scope) => scope.value));
         if (model.isNew) {
             model.set('accountStatus', this.active ? 'active' : 'inactive');
         }

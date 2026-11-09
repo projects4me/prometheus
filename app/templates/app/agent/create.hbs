@@ -188,6 +188,19 @@
                   @aclContext="membership.create"
                   @data-field="agent.projects"
                 />
+                <FormFields::FieldRelateMulti
+                  @placeholder={{t "views.app.agent.form.scopesPlaceholder"}}
+                  @label={{t "views.app.agent.form.scopes"}}
+                  @options={{this.scopeOptions}}
+                  @selected={{this.selectedScopes}}
+                  @search={{this.searchScopes}}
+                  @searchEnabled={{true}}
+                  @onchange={{this.selectScopes}}
+                  @relateType="relate-simple"
+                  @showFieldInfo={{this.showFieldInfo}}
+                  @info={{t "views.app.agent.form.scopesInfo"}}
+                  @data-field="agent.delegationScopes"
+                />
                 <div class="agent-status" data-field="agent.status">
                   <label>{{t "views.app.agent.form.status"}}</label>
                   <label class="checkbox-inline">
