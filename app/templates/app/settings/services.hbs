@@ -67,6 +67,193 @@
     </div>
   </div>
 
+  <div class="row module service-enrollments">
+    <div class="col-md-12">
+      <AccessControl @aclContext="serviceenrollment.read">
+        <div class="box box-primary list-view">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.settings.services.requests.title"}}</h3>
+            <div class="box-tools pull-right">
+              <span class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> {{t "views.app.settings.services.requests.info"}}</span>
+            </div>
+          </div>
+          <div class="box-body no-padding">
+            <table class="table table-hover" data-requests-table>
+              <thead>
+                <tr>
+                  <th>{{t "views.app.settings.services.name"}}</th>
+                  <th>{{t "views.app.settings.services.kind"}}</th>
+                  <th>{{t "views.app.settings.services.requests.userCode"}}</th>
+                  <th>{{t "views.app.settings.services.requests.timeLeft"}}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each this.pendingRequests as |item|}}
+                  <tr data-request={{item.record.id}}>
+                    <td data-column="name">{{item.record.name}}</td>
+                    <td data-column="kind"><code>{{item.record.kind}}</code></td>
+                    <td data-column="userCode"><code>{{item.record.userCode}}</code></td>
+                    <td data-column="timeLeft">
+                      {{#if item.expired}}
+                        <span class="label label-default">{{t "views.app.settings.services.requests.expired"}}</span>
+                      {{else}}
+                        {{t "views.app.settings.services.requests.minutesLeft" count=item.minutesLeft}}
+                      {{/if}}
+                    </td>
+                    <td class="text-right">
+                      {{#unless item.expired}}
+                        <AccessControl @aclContext="serviceenrollment.update">
+                          <AppUi::Button type="button" class="btn btn-success btn-xs" data-btn="approve-request" @onClick={{fn this.confirmDecision item.record "approved"}}>
+                            {{t "views.app.settings.services.requests.approve"}}
+                          </AppUi::Button>
+                          <AppUi::Button type="button" class="btn btn-danger btn-xs" data-btn="deny-request" @onClick={{fn this.confirmDecision item.record "denied"}}>
+                            {{t "views.app.settings.services.requests.deny"}}
+                          </AppUi::Button>
+                        </AccessControl>
+                      {{/unless}}
+                    </td>
+                  </tr>
+                {{else}}
+                  <tr>
+                    <td colspan="5" class="text-muted" data-requests-empty>{{t "views.app.settings.services.requests.empty"}}</td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </AccessControl>
+    </div>
+  </div>
+
+  <div class="row module service-tokens">
+    <div class="col-md-12">
+      <AccessControl @aclContext="serviceenrollmenttoken.read">
+        <div class="box box-primary list-view">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{t "views.app.settings.services.tokens.title"}}</h3>
+            <div class="box-tools pull-right">
+              <span class="text-muted"><i class="fa fa-info-circle" aria-hidden="true"></i> {{t "views.app.settings.services.tokens.info"}}</span>
+            </div>
+          </div>
+          <AccessControl @aclContext="serviceenrollmenttoken.create">
+            <div class="box-body" data-token-form>
+              <div class="row">
+                <div class="col-md-5">
+                  <FormFields::FieldText
+                    @placeholder={{t "views.app.settings.services.tokens.namePlaceholder"}}
+                    @label={{t "views.app.settings.services.name"}}
+                    @type="text"
+                    @value={{this.tokenName}}
+                    @data-field="serviceenrollmenttoken.name"
+                    @length="100"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <FormFields::FieldRelate
+                    @placeholder={{t "views.app.settings.services.kind"}}
+                    @label={{t "views.app.settings.services.kind"}}
+                    @value={{this.tokenKind}}
+                    @options={{this.kindOptions}}
+                    @selected={{this.selectedKind}}
+                    @searchField="label"
+                    @onchange={{this.selectKind}}
+                    @relateType="relate-simple"
+                    @data-field="serviceenrollmenttoken.kind"
+                  />
+                </div>
+                <div class="col-md-3">
+                  <AppUi::Button type="button" class="btn btn-primary" data-btn="create-token" @onClick={{this.createToken}}>
+                    {{t "views.app.settings.services.tokens.create"}}
+                  </AppUi::Button>
+                </div>
+              </div>
+            </div>
+          </AccessControl>
+          <div class="box-body no-padding">
+            <table class="table table-hover" data-tokens-table>
+              <thead>
+                <tr>
+                  <th>{{t "views.app.settings.services.name"}}</th>
+                  <th>{{t "views.app.settings.services.kind"}}</th>
+                  <th>{{t "views.app.settings.services.status"}}</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each this.tokenRows as |item|}}
+                  <tr data-token={{item.record.id}}>
+                    <td data-column="name">{{item.record.name}}</td>
+                    <td data-column="kind"><code>{{item.record.kind}}</code></td>
+                    <td data-column="state">
+                      {{#if (eq item.state "active")}}
+                        <span class="label label-success">{{t "views.app.settings.services.tokens.active"}}</span>
+                      {{else if (eq item.state "used")}}
+                        <span class="label label-info">{{t "views.app.settings.services.tokens.used"}}</span>
+                      {{else}}
+                        <span class="label label-default">{{t "views.app.settings.services.tokens.expired"}}</span>
+                      {{/if}}
+                    </td>
+                    <td class="text-right">
+                      <AccessControl @aclContext="serviceenrollmenttoken.delete">
+                        <AppUi::Button type="button" class="btn btn-danger btn-xs" data-btn="revoke-token" @onClick={{fn this.revokeToken item.record}}>
+                          {{t "views.app.settings.services.tokens.revoke"}}
+                        </AppUi::Button>
+                      </AccessControl>
+                    </td>
+                  </tr>
+                {{else}}
+                  <tr>
+                    <td colspan="4" class="text-muted" data-tokens-empty>{{t "views.app.settings.services.tokens.empty"}}</td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </AccessControl>
+    </div>
+  </div>
+
+  {{#if this.deciding}}
+    {{#bootstrap-modal
+      title=(if (eq this.decision "approved") "views.app.settings.services.requests.approveTitle" "views.app.settings.services.requests.denyTitle")
+      confirmLabel=(if (eq this.decision "approved") "views.app.settings.services.requests.approve" "views.app.settings.services.requests.deny")
+      closeLabel="global.form.cancel"
+      confirm=(action this.decide)
+      close=(action this.cancelDecision)
+    }}
+      <div class="box-body" data-request-confirm>
+        {{#if (eq this.decision "approved")}}
+          {{t "views.app.settings.services.requests.approveMessage" name=this.deciding.name}}
+        {{else}}
+          {{t "views.app.settings.services.requests.denyMessage" name=this.deciding.name}}
+        {{/if}}
+        <p class="lead text-center"><code data-request-code>{{this.deciding.userCode}}</code></p>
+      </div>
+    {{/bootstrap-modal}}
+  {{/if}}
+
+  {{#if this.createdToken}}
+    {{#bootstrap-modal
+      title="views.app.settings.services.tokens.createdTitle"
+      closeLabel="views.app.settings.services.tokens.copiedIt"
+      close=(action this.closeCreatedToken)
+      removeConfirmBtn=true
+    }}
+      <div class="box-body" data-token-created>
+        <div class="alert alert-warning" data-token-warning>{{t "views.app.settings.services.tokens.warning"}}</div>
+        <div class="input-group">
+          <input type="text" class="form-control" readonly value={{this.createdToken.token}} data-token-value>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-btn="copy-token" {{on "click" this.copyToken}}>{{t "views.app.settings.services.tokens.copy"}}</button>
+          </span>
+        </div>
+      </div>
+    {{/bootstrap-modal}}
+  {{/if}}
+
   {{#if this.confirming}}
     {{#bootstrap-modal
       title=(if this.confirmingDisable "views.app.settings.services.disableTitle" "views.app.settings.services.enableTitle")
