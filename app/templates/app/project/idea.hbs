@@ -6,6 +6,9 @@
         @title={{t "views.app.idea.browser.title"}}
         @items={{this.listedIdeas}}
         @hasNext={{this.hasNext}}
+        @isLoading={{this.isListLoading}}
+        @error={{this.listError}}
+        @onRetry={{this.reloadList}}
         @activeId={{this.selectedIdeaId}}
         @page={{this.page}}
         @limit={{this.pageSize}}
