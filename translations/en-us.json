@@ -1758,6 +1758,24 @@
             }
           }
         },
+        "services": {
+          "title": "Services",
+          "info": "Talos runtimes and Hermes that have an identity in Gaia.",
+          "name": "Name",
+          "kind": "Kind",
+          "status": "Status",
+          "lastUsed": "Last used",
+          "never": "Never",
+          "active": "Active",
+          "disabled": "Disabled",
+          "disable": "Disable",
+          "enable": "Enable",
+          "disableTitle": "Disable service",
+          "enableTitle": "Enable service",
+          "disableMessage": "Disable {name}? It gets no new tokens until you enable it again.",
+          "enableMessage": "Enable {name}? It can get tokens again.",
+          "empty": "No services have enrolled yet."
+        },
         "email": {
           "title": "Outgoing mail (SMTP)",
           "host": "Host",
@@ -2908,6 +2926,9 @@
           },
           "email": {
             "label": "Email"
+          },
+          "services": {
+            "label": "Services"
           },
           "issueTypes": {
             "label": "Issue Types"

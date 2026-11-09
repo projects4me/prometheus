@@ -88,6 +88,7 @@ export default class AclService extends Service {
         { name: 'app.settings.issue-types', map: 'setting.read' },
         { name: 'app.settings.issue-statuses', map: 'setting.read' },
         { name: 'app.settings.email', map: 'setting.read' },
+        { name: 'app.settings.services', map: 'serviceclient.read' },
         { name: 'app.developer', map: 'setting.read' },
         { name: 'app.developer.index', map: 'setting.read' },
         { name: 'app.developer.components', map: 'setting.read' },
