@@ -6,8 +6,8 @@ export const when = function () {
     return [
         {
             'User deletes role from detail page': (assert) => async function () {
-                let deleteBtn = document.querySelector('.role-details [data-btn="delete-role"]');
-                assert.ok(deleteBtn, 'Labeled Delete button on role detail exists');
+                let deleteBtn = document.querySelector('.role-details [data-role="role-record"] .box-tools [data-btn="delete-role"]');
+                assert.ok(deleteBtn, 'Delete button in the Role box header exists');
                 await click(deleteBtn);
 
                 let confirmBtn = document.querySelector('[data-action="confirm"] a');
@@ -28,6 +28,9 @@ export default function (assert) {
             lockoutIds.push(String(roleId));
             ctx.set('roleDeleteLockoutIds', lockoutIds);
             assert.ok(true, `Role delete for role ${roleId} is locked out`);
+        })
+        .then('The Permissions box has no delete button', async function () {
+            assert.notOk(document.querySelector('[data-role="role-permissions"] [data-btn="delete-role"]'), 'Permissions box has no delete button');
         })
         .then('Role of id $roleId is not present inside list', async function (roleId) {
             assert.dom(`[data-role="${roleId}"]`).doesNotExist(

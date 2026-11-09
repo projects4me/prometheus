@@ -144,18 +144,4 @@
     </div>
 
   </div>
-
-  <div class="role-permissions__actions">
-    {{#if @onDelete}}
-      <AppUi::Button
-        data-btn="delete-role"
-        type="button"
-        class="btn btn-default"
-        @onClick={{@onDelete}}
-        @aclContext="role.delete"
-      >
-        {{t "views.app.role.tabs.permission.deleteRole"}}
-      </AppUi::Button>
-    {{/if}}
-  </div>
 </div>

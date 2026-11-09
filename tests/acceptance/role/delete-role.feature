@@ -8,6 +8,7 @@ Feature: Role | delete role
     And There are 10 roles in system
     And User_1 is logged in
     When User navigates to app/role/2
+    Then The Permissions box has no delete button
     And User deletes role from detail page
     Then The first listed role is open
     And there are 9 roles present in the template
