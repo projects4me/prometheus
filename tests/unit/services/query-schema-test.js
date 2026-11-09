@@ -6,6 +6,8 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import MD from 'prometheus/utils/metadata/metadata';
+import { parse } from 'prometheus/utils/query/parse';
+import { serialize } from 'prometheus/utils/query/serializer';
 
 module('Unit | Service | query-schema', function (hooks) {
     setupTest(hooks);
@@ -151,5 +153,39 @@ module('Unit | Service | query-schema', function (hooks) {
         assert.deepEqual(schema.fields.map((field) => field.id), Object.keys(meta.fields));
         assert.strictEqual(schema.resolveField('owner').valueSource, schema.resolveField('assignee').valueSource);
         assert.strictEqual(schema.resolveField('prio').labelKey, 'views.app.issue.fields.priority');
+    });
+
+    test('the Conversationroom schema builds the room type, linked issue and liked by clauses', async function (assert) {
+        let current = this.users[1];
+
+        this.owner.lookup('service:current-user').set('user', { id: current.id, name: current.name });
+
+        let schema = await this.service.load('Conversationroom', { projectId: this.project.id });
+        let query = (text) => {
+            let { tree, errors } = parse(text, schema);
+
+            assert.deepEqual(errors, [], `${text} parses`);
+
+            return serialize(tree).query;
+        };
+
+        assert.strictEqual(schema.textField, 'Conversationroom.subject');
+        assert.strictEqual(query('type: vote'), '((Conversationroom.roomType : vote))');
+        assert.strictEqual(query('type: Discussion'), '((Conversationroom.roomType : discussion))', 'the translated label resolves');
+        assert.strictEqual(query('issue NULL'), '((Conversationroom.issueNumber NULL))');
+        assert.strictEqual(query('issue !NULL'), '((Conversationroom.issueNumber !NULL))');
+        assert.strictEqual(query(`liked: "${this.users[0].name}"`), `((votes.createdUser : ${this.users[0].id}))`, 'a member name resolves to the user id');
+        assert.strictEqual(schema.resolveField('Liked by').id, 'votes.createdUser');
+        assert.strictEqual(schema.resolveField('Linked issue').id, 'Conversationroom.issueNumber');
+        assert.strictEqual(schema.resolveField('creator').id, 'createdBy.name');
+        assert.strictEqual(schema.resolveField('created').id, 'Conversationroom.dateCreated');
+        assert.strictEqual(schema.resolveField('updated').id, 'Conversationroom.dateModified');
+        assert.strictEqual(schema.resolveField('description').id, 'Conversationroom.description');
+
+        let likers = schema.valuesFor(schema.resolveField('liked'));
+
+        assert.strictEqual(likers[0].id, current.id, 'the current user is listed first');
+        assert.ok(likers.every((m) => m.value === m.id), 'liked by values are user ids');
+        assert.ok(schema.valuesFor(schema.resolveField('creator')).every((m) => m.value === m.label), 'created by values stay names');
     });
 });

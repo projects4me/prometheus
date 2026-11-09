@@ -111,8 +111,9 @@ TaskBoard: {
 
 The value sources live in `app/utils/query/value-sources.js`, in the `VALUE_SOURCES` registry. Each one
 is `async (params, context) => [{ value, label, ... }]`, where `params` is the field's `values` entry. The
-`context` holds `store`, `intl`, `owner`, the `projectId` the schema was loaded for, and `once(key, fn)`,
-which lets sources share one request within a load.
+`context` holds `store`, `intl`, `owner`, the `projectId` the schema was loaded for, the signed-in user's
+`currentUserId`, and `once(key, fn)`, which lets sources share one request within a load. Schemas are
+cached per module, project and current user.
 
 | Source | Parameters | Values |
 |---|---|---|
@@ -120,8 +121,26 @@ which lets sources share one request within a load.
 | `issueStatuses` | none | The project's issue statuses, or the system statuses when it has none |
 | `milestones` | none | The project's milestones, newest first |
 | `issueTypes` | none | The project's issue types |
-| `members` | none | The project's members, with `id` and `profilePicture` |
-| `users` | none | All users, with `id` and `profilePicture` |
+| `members` | user options | The project's members, with `id` and `profilePicture` |
+| `users` | user options | All users, with `id` and `profilePicture` |
+
+The user sources take two options:
+
+- `value: 'id'`: the stored value is the user's id instead of the name, for a field that holds a user id
+  rather than a related user's name, such as a relation field like `votes.createdUser` (Liked by on
+  threads). The label stays the name, so people type and see names; the parser resolves a name to the id,
+  the completer inserts the name and the applied-filter chips show it.
+- `currentUserFirst: true`: the signed-in user is listed first and marked `pinned`. The completer sorts
+  user values by name with pinned ones first.
+
+```js
+'votes.createdUser': {
+    label: 'views.app.conversation.fields.likedBy',
+    type: 'user',
+    aliases: ['liked', 'likes'],
+    values: { source: 'members', value: 'id', currentUserFirst: true },
+},
+```
 
 `issueStatuses`, `issueTypes` and `members` share one project request. A field that names an unknown
 source fails the load with `Unknown search value source "<name>"` in development and tests. Production

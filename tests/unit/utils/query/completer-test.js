@@ -81,6 +81,22 @@ module('Unit | Utility | query | completer', function () {
         assert.deepEqual([result.replaceStart, result.replaceEnd], [9, 14]);
     });
 
+    test('user values insert the name and keep pinned values first', function (assert) {
+        let liked = createSchema({
+            module: 'Conversationroom',
+            fields: [{ id: 'votes.createdUser', aliases: ['liked'], type: 'user', valueSource: 'likers' }],
+            values: {
+                likers: [
+                    { value: 'u-3', label: 'Zara Khan', id: 'u-3', pinned: true },
+                    { value: 'u-1', label: 'Agent Odysseus', id: 'u-1' },
+                    { value: 'u-2', label: 'Hammad Hassan', id: 'u-2' },
+                ],
+            },
+        });
+
+        assert.deepEqual(complete('liked: ', 7, liked).suggestions.map((s) => s.insert), ['"Zara Khan"', '"Agent Odysseus"', '"Hammad Hassan"']);
+    });
+
     test('a range end gives date values', function (assert) {
         let result = at('start between 2026-05-01 and |');
 

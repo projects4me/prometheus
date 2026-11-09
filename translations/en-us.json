@@ -793,7 +793,18 @@
           "subject": "Subject",
           "description": "Description",
           "roomType": "Type",
-          "projectId": "Project"
+          "projectId": "Project",
+          "issueNumber": "Linked issue",
+          "dateCreated": "Created",
+          "dateModified": "Updated",
+          "creator": "Created by",
+          "likedBy": "Liked by"
+        },
+        "lists": {
+          "roomType": {
+            "discussion": "Discussion",
+            "vote": "Vote"
+          }
         },
         "label": "Threads",
         "create": "Start a new thread ..",
