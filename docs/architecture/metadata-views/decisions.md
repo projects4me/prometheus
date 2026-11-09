@@ -58,6 +58,14 @@ that is in the `query-schema` service when it builds the schema. `getViewMeta` n
 The order of `fields` in `views.<Module>.search` is the order of the builder and of the suggestions.
 Field ids are non-numeric string keys, so JavaScript keeps their insertion order.
 
+### D-007: Relation fields that hold a user id use the user sources with `value: 'id'`
+
+A field such as `votes.createdUser` stores a user id, not a name. Rather than a new field type or a
+thread-specific source, the `members` and `users` sources take `value: 'id'`: the value is the id, the
+label the name. The schema already resolves a label to its value, so nothing in ez-search knows about
+the field. Two members with the same name are ambiguous when typed; the builder's value picker still
+tells them apart.
+
 ---
 
 ## Open questions

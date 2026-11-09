@@ -548,6 +548,37 @@ export default Object.extend({
                 }
             }
         },
+        Conversationroom: {
+            search: {
+                module: 'Conversationroom',
+                textField: 'Conversationroom.subject',
+                fields: {
+                    'Conversationroom.subject': { label: 'views.app.conversation.fields.subject', type: 'text', aliases: ['subject'] },
+                    'Conversationroom.description': { label: 'views.app.conversation.fields.description', type: 'text', aliases: ['description'] },
+                    'Conversationroom.roomType': {
+                        label: 'views.app.conversation.fields.roomType',
+                        type: 'enum',
+                        aliases: ['type'],
+                        values: { source: 'translation', key: 'views.app.conversation.lists.roomType' }
+                    },
+                    'Conversationroom.issueNumber': { label: 'views.app.conversation.fields.issueNumber', type: 'number', aliases: ['issue'] },
+                    'Conversationroom.dateCreated': { label: 'views.app.conversation.fields.dateCreated', type: 'date', aliases: ['created'] },
+                    'Conversationroom.dateModified': { label: 'views.app.conversation.fields.dateModified', type: 'date', aliases: ['updated'] },
+                    'createdBy.name': {
+                        label: 'views.app.conversation.fields.creator',
+                        type: 'user',
+                        aliases: ['creator', 'author'],
+                        values: { source: 'members' }
+                    },
+                    'votes.createdUser': {
+                        label: 'views.app.conversation.fields.likedBy',
+                        type: 'user',
+                        aliases: ['liked', 'likes'],
+                        values: { source: 'members', value: 'id', currentUserFirst: true }
+                    }
+                }
+            }
+        },
         Role: {
             search: {
                 module: 'Role',

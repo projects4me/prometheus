@@ -22,8 +22,14 @@ module('Unit | Utility | query/value-sources', function (hooks) {
         this.server.create('milestone', { name: 'Sprint 1', projectId: project.id });
         this.users = users;
         this.project = project;
-        this.context = (projectId = project.id) =>
-            createContext({ owner: this.owner.lookup('service:query-schema'), store: this.owner.lookup('service:store'), intl: this.owner.lookup('service:intl'), projectId });
+        this.context = (projectId = project.id, currentUserId = null) =>
+            createContext({
+                owner: this.owner.lookup('service:query-schema'),
+                store: this.owner.lookup('service:store'),
+                intl: this.owner.lookup('service:intl'),
+                projectId,
+                currentUserId,
+            });
     });
 
     test('the registry names the sources and nothing else', function (assert) {
@@ -60,6 +66,20 @@ module('Unit | Utility | query/value-sources', function (hooks) {
 
         assert.deepEqual(members.map((m) => m.id).sort(), this.users.map((u) => u.id).sort());
         assert.ok(members.every((m) => m.value === m.label && 'profilePicture' in m));
+    });
+
+    test('members takes the user id as value and the current user first', async function (assert) {
+        let current = this.users[1];
+        let members = await VALUE_SOURCES.members({ value: 'id', currentUserFirst: true }, this.context(this.project.id, current.id));
+
+        assert.strictEqual(members[0].id, current.id, 'the current user comes first');
+        assert.true(members[0].pinned, 'and is pinned');
+        assert.notOk(members[1].pinned, 'the others are not');
+        assert.ok(members.every((m) => m.value === m.id && m.label === this.server.db.users.find(m.id).name), 'value is the id, label the name');
+
+        let plain = await VALUE_SOURCES.members({}, this.context(this.project.id, current.id));
+
+        assert.ok(plain.every((m) => !m.pinned && m.value === m.label), 'without the options the values are names, unpinned');
     });
 
     test('users lists all users with their avatars', async function (assert) {

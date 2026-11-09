@@ -314,6 +314,9 @@ function operatorItems(field, fragment) {
 }
 
 /**
+ * The value suggestions of a field. User values are sorted by name with `pinned` ones (the current
+ * user) first, and insert the name: the parser resolves a name to the stored value, which may be an id.
+ *
  * @method valueItems
  * @private
  */
@@ -327,7 +330,7 @@ function valueItems(schema, field, fragment) {
     if (field.type === 'date') {
         options = [{ value: 'today', label: 'today' }];
     } else if (field.type === 'user') {
-        options = [...schema.valuesFor(field)].sort((a, b) => String(a.label).localeCompare(String(b.label)));
+        options = [...schema.valuesFor(field)].sort((a, b) => Number(Boolean(b.pinned)) - Number(Boolean(a.pinned)) || String(a.label).localeCompare(String(b.label)));
     } else if (field.type === 'enum') {
         options = schema.valuesFor(field);
     }
@@ -335,7 +338,7 @@ function valueItems(schema, field, fragment) {
     let items = options.map((option) => ({
         label: option.label,
         names: [option.value],
-        suggestion: { kind: 'value', label: option.label, insert: quoteValue(option.value), detail: field.id },
+        suggestion: { kind: 'value', label: option.label, insert: quoteValue(field.type === 'user' ? option.label : option.value), detail: field.id },
     }));
 
     return rank(fragment, items).slice(0, MAX_SUGGESTIONS);

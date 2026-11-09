@@ -20,13 +20,35 @@ import { issueStatusLabel, issueTypeRecordLabel } from 'prometheus/utils/issue-s
  */
 
 /**
- * A user record as a `user` field value.
+ * A user record as a `user` field value. The value is the user's name, or the user's id when the
+ * field's `values` say `value: 'id'` (for fields that store a user id, e.g. `votes.createdUser`); the
+ * label is always the name.
  *
  * @method userOption
  * @private
  */
-function userOption(user) {
-    return { value: user.name, label: user.name, id: user.id, profilePicture: user.profilePicture };
+function userOption(user, { value } = {}) {
+    return { value: value === 'id' ? user.id : user.name, label: user.name, id: user.id, profilePicture: user.profilePicture };
+}
+
+/**
+ * User options with the current user moved to the front and marked `pinned`, when the field's
+ * `values` say `currentUserFirst: true`. Lists that sort their values keep pinned ones first.
+ *
+ * @method userOptions
+ * @private
+ */
+function userOptions(users, params, context) {
+    let options = users.map((user) => userOption(user, params));
+
+    if (!params.currentUserFirst || context.currentUserId === null || context.currentUserId === undefined) {
+        return options;
+    }
+
+    let currentId = String(context.currentUserId);
+    let current = options.filter((option) => String(option.id) === currentId).map((option) => ({ ...option, pinned: true }));
+
+    return [...current, ...options.filter((option) => String(option.id) !== currentId)];
 }
 
 /**
@@ -119,19 +141,20 @@ export const VALUE_SOURCES = Object.freeze({
     },
 
     /**
-     * The members of the project, with their avatars.
+     * The members of the project, with their avatars. Takes the user options `value: 'id'` and
+     * `currentUserFirst: true`.
      */
     async members(params, context) {
-        return (await projectRecords(context, 'members')).map(userOption);
+        return userOptions(await projectRecords(context, 'members'), params, context);
     },
 
     /**
-     * All users, with their avatars.
+     * All users, with their avatars. Takes the user options `value: 'id'` and `currentUserFirst: true`.
      */
     async users(params, context) {
         let users = await context.store.query('user', { fields: 'User.id,User.name,User.profilePicture', sort: 'User.name', order: 'ASC', limit: -1 });
 
-        return users.toArray().map(userOption);
+        return userOptions(users.toArray(), params, context);
     },
 });
 
@@ -156,9 +179,10 @@ export function valueSource(name) {
  * @param {Ember.Service} options.store
  * @param {Ember.Service} options.intl
  * @param {String|Number} [options.projectId]
+ * @param {String|Number} [options.currentUserId] The signed-in user, for `currentUserFirst`
  * @return {Object} The context
  */
-export function createContext({ owner, store, intl, projectId = null }) {
+export function createContext({ owner, store, intl, projectId = null, currentUserId = null }) {
     let loads = new Map();
 
     return {
@@ -166,6 +190,7 @@ export function createContext({ owner, store, intl, projectId = null }) {
         store,
         intl,
         projectId,
+        currentUserId,
         once(key, fn) {
             if (!loads.has(key)) {
                 loads.set(key, fn());

@@ -38,9 +38,10 @@ function sourceKey(values) {
 export default class QuerySchemaService extends Service {
     @service store;
     @service intl;
+    @service currentUser;
 
     /**
-     * The loading and loaded schemas by `<module>:<projectId>`.
+     * The loading and loaded schemas by `<module>:<projectId>:<current user id>`.
      *
      * @property cache
      * @type Map
@@ -59,10 +60,11 @@ export default class QuerySchemaService extends Service {
      * @public
      */
     load(module, { projectId = null } = {}) {
-        let key = `${module}:${projectId ?? ''}`;
+        let currentUserId = this.currentUser.user?.id ?? null;
+        let key = `${module}:${projectId ?? ''}:${currentUserId ?? ''}`;
 
         if (!this.cache.has(key)) {
-            let promise = this.build(module, projectId);
+            let promise = this.build(module, projectId, currentUserId);
 
             this.cache.set(key, promise);
             promise.catch(() => {
@@ -89,7 +91,7 @@ export default class QuerySchemaService extends Service {
      * @method build
      * @private
      */
-    async build(module, projectId) {
+    async build(module, projectId, currentUserId) {
         let meta = this.searchMeta(module);
 
         if (!meta) {
@@ -118,7 +120,7 @@ export default class QuerySchemaService extends Service {
             textField: meta.textField || null,
             fields,
             excluded,
-            values: await this.loadValues(Object.values(meta.fields || {}), projectId),
+            values: await this.loadValues(Object.values(meta.fields || {}), projectId, currentUserId),
         });
     }
 
@@ -174,8 +176,8 @@ export default class QuerySchemaService extends Service {
      * @method loadValues
      * @private
      */
-    async loadValues(fields, projectId) {
-        let context = createContext({ owner: this, store: this.store, intl: this.intl, projectId });
+    async loadValues(fields, projectId, currentUserId) {
+        let context = createContext({ owner: this, store: this.store, intl: this.intl, projectId, currentUserId });
         let specs = new Map();
 
         fields.filter((field) => field.values).forEach((field) => specs.set(sourceKey(field.values), field.values));
