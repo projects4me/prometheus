@@ -15,6 +15,10 @@ import Component from '@glimmer/component';
  * - `@isActive` {Boolean}: marks the open record with a crimson bar on the left.
  *
  * Named blocks:
+ * - `<:leading>`: optional visual on the left of the row (an initials square, a priority icon, an avatar),
+ *   in a column as wide as its content, top-aligned, 8px before the text. The primary and secondary lines
+ *   then sit beside it, lined up under each other. With `@selectable` the row reads checkbox, leading,
+ *   text. Without the block the row is exactly as before.
  * - `<:primary>`: the first line: a bold title that wraps, with anything after it (a status label)
  *   pushed to the right.
  * - `<:secondary>`: the second line: small grey text on one line, cut off with an ellipsis, with
@@ -26,6 +30,7 @@ import Component from '@glimmer/component';
  *
  * @example
  * <QuickList::Item @route="app.idea.page" @model={{idea.id}} @isActive={{true}}>
+ *   <:leading><span class="role-initials">AL</span></:leading>
  *   <:primary>
  *     <span>{{idea.name}}</span>
  *     <span class="label new">New</span>

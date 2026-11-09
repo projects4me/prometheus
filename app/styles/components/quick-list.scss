@@ -55,6 +55,22 @@
     &--active {
       border-left-color: $primaryColor;
     }
+
+    &--with-leading {
+      align-items: flex-start;
+      display: flex;
+      gap: 8px;
+    }
+  }
+
+  .quick-list-item__leading {
+    border-radius: 0;
+    flex: 0 0 auto;
+  }
+
+  .quick-list-item__body {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .quick-list-item__primary {

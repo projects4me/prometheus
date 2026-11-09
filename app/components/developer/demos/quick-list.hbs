@@ -23,6 +23,7 @@
         </:search>
         <:item as |record Item|>
           <Item>
+            <:leading><span class="quick-list-demo-initials" data-demo-initials>{{record.initials}}</span></:leading>
             <:primary>
               <span>{{record.title}}</span>
               <span class="label {{record.status}}">{{status-label record.status}}</span>

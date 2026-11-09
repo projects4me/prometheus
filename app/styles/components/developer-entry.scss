@@ -12,6 +12,20 @@
 		word-break: break-all;
 	}
 
+	// QuickList demo: the initials square in the leading column of each row.
+	.quick-list-demo-initials {
+		background-color: $primaryColor;
+		border-radius: 0;
+		color: #fff;
+		display: inline-block;
+		font-size: 12px;
+		font-weight: 600;
+		height: 32px;
+		line-height: 32px;
+		text-align: center;
+		width: 32px;
+	}
+
 	// Dropdown demo: the edge box sets where the menu has room, the scoped class mirrors ezSearch's override.
 	.dropdown-demo-box {
 		display: flex;
