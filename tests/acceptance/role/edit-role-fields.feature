@@ -28,3 +28,15 @@ Feature: Role | edit role fields
     And User enters Astronaut description in role description textarea field
     And User clicks on save button to save role description
     Then Role description of type textarea value is Astronaut description
+
+  Scenario: The role record box shows the role facts
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And There are 10 roles in system
+    And There are 10 projects in system
+    And There are 10 memberships in system
+    And User_1 is logged in
+    When User opens the roles page
+    And User selects role 2
+    Then The role record box shows the initials, access, members and actions facts

@@ -1,18 +1,63 @@
 <div class="role-details">
 
-  <div class="field-group">
-    <FormFields::FieldText @placeholder={{t "views.app.role.create.nameplaceholder" }}
-      @label={{t "views.app.role.create.name" }} @value={{this.model.name}} @data-field="role.name" @validate={{action
-      this.validateField "roleCreate" (hash name="name" value=this.model.name)}}
-      @message={{this.message.roleCreate.name}} @allowInlineEdit={{true}} @onBlur={{fn this.editRole 'name' }}
-      @reset={{fn this.resetModelAttributes this.model}} @save={{fn this.editRole 'name' }} />
+  {{!-- Role record: avatar block, name, description and facts --}}
+  <div class="box box-primary role-record" data-role="role-record">
+    <div class="box-header with-border box-header-flex box-header-no-content">
+      <h3 class="box-title">{{t "views.app.role.record.title"}}</h3>
+    </div>
+    <div class="box-body">
+      <div class="role-record__identity">
+        <span class="role-record__initials role-record__initials--{{this.facts.tier}}" aria-hidden="true" data-role-field="initials">{{this.facts.initials}}</span>
+        <div class="role-record__heading">
+          <div class="role-record__name" data-role-field="name">
+            <FormFields::FieldText @placeholder={{t "views.app.role.create.nameplaceholder" }}
+              @value={{this.model.name}} @data-field="role.name" @validate={{action
+              this.validateField "roleCreate" (hash name="name" value=this.model.name)}}
+              @message={{this.message.roleCreate.name}} @allowInlineEdit={{true}} @onBlur={{fn this.editRole 'name' }}
+              @reset={{fn this.resetModelAttributes this.model}} @save={{fn this.editRole 'name' }} />
+          </div>
+          <div class="role-record__caption text-muted" data-role-field="audit">
+            {{#if this.model.dateCreated}}
+              {{t "views.app.role.record.created" date=(moment-format this.model.dateCreated "DD MMM YYYY") name=this.model.createdUserName}}
+            {{/if}}
+            {{#if this.model.dateModified}}
+              · {{t "views.app.role.record.modified" date=(moment-format this.model.dateModified "DD MMM YYYY")}}
+            {{/if}}
+          </div>
+        </div>
+      </div>
 
-    <FormFields::FieldTextArea @placeholder={{t "views.app.role.create.descriptionplaceholder" }}
-      @label={{t "views.app.role.create.description" }} @value={{this.model.description}} @data-field="role.description"
-      @validate={{action this.validateField "roleCreate" (hash name="description" value=this.model.description)}}
-      @message={{this.message.roleCreate.description}} @allowInlineEdit={{true}} @onBlur={{fn
-      this.editRole 'description' }} @reset={{fn this.resetModelAttributes this.model}} @save={{fn
-      this.editRole 'description' }} />
+      <div class="role-record__description" data-role-field="description">
+        <FormFields::FieldTextArea @placeholder={{t "views.app.role.create.descriptionplaceholder" }}
+          @label={{t "views.app.role.record.description" }} @value={{this.model.description}} @data-field="role.description"
+          @validate={{action this.validateField "roleCreate" (hash name="description" value=this.model.description)}}
+          @message={{this.message.roleCreate.description}} @allowInlineEdit={{true}} @onBlur={{fn
+          this.editRole 'description' }} @reset={{fn this.resetModelAttributes this.model}} @save={{fn
+          this.editRole 'description' }} />
+      </div>
+
+      <div class="role-record__facts row">
+        <div class="col-sm-4" data-role-fact="access">
+          <h4>{{t "views.app.role.record.access"}}</h4>
+          {{#if this.facts.known}}
+            <span class="label role-record__granted role-record__granted--{{this.facts.tier}}" data-role-field="granted">{{t "views.app.role.browser.granted" percent=this.facts.granted}}</span>
+            {{#if this.facts.denied}}
+              <span class="label label-danger" data-role-field="denied">{{t "views.app.role.browser.denied" percent=this.facts.denied}}</span>
+            {{/if}}
+          {{else}}
+            <span class="text-muted">{{t "views.app.role.card.accessUnknown"}}</span>
+          {{/if}}
+        </div>
+        <div class="col-sm-4" data-role-fact="members">
+          <h4>{{t "views.app.role.record.members"}}</h4>
+          <span data-role-field="members">{{this.userroles.length}}</span>
+        </div>
+        <div class="col-sm-4" data-role-fact="actions">
+          <h4>{{t "views.app.role.record.actions"}}</h4>
+          <span data-role-field="actions">{{t "views.app.role.record.actionsOf" allowed=this.facts.allowed total=this.facts.total}}</span>
+        </div>
+      </div>
+    </div>
   </div>
 
   {{!-- Role members (inline, project-members pattern) --}}
@@ -184,9 +229,13 @@
       <Role::Permissions
         @permissionsByModule={{this.permissions}}
         @permissionsState={{this.permissionsState}}
-        @updatePermission={{this.updatePermission}}
         @onDelete={{fn this.deleteRole this.model}}
       />
+    </div>
+    <div class="box-footer">
+      <AppUi::Button type="button" data-btn="save" class="btn btn-primary" @onClick={{this.savePermissions}}>
+        {{t "views.app.role.tabs.permission.save"}}
+      </AppUi::Button>
     </div>
   </div>
 </div>

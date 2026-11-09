@@ -75,6 +75,14 @@ export default Model.extend({
     createdUser: attr('string'),
 
     /**
+     * The name of the user who created the role
+     *
+     * @property createdUserName
+     * @type String
+     */
+    createdUserName: attr('string'),
+
+    /**
      * The identifier of the user who last modified the role
      *
      * @property modifiedUser

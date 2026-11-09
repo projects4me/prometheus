@@ -2350,6 +2350,16 @@
             "none": "—"
           }
         },
+        "record": {
+          "title": "Role",
+          "description": "Description",
+          "created": "Created {date} by {name}",
+          "modified": "Modified {date}",
+          "access": "Access",
+          "members": "Members",
+          "actions": "Actions granted",
+          "actionsOf": "{allowed} of {total}"
+        },
         "create": {
           "title": "Add a new role",
           "nameplaceholder": "Enter role name",

@@ -81,6 +81,28 @@ export function toCoverageEntries(roleId, permissions) {
 }
 
 /**
+ * The number of action permissions and of those granted, over the entries of one role
+ *
+ * @method actionTotals
+ * @param {Array} entries Coverage entries of one role
+ * @returns {{allowed: Number, total: Number}}
+ */
+export function actionTotals(entries) {
+    let totals = { allowed: 0, total: 0 };
+    for (let entry of entries || []) {
+        let parts = (entry.resourceName || '').split('.');
+        if (parts.length !== 2 || !ACTION_VERBS.has(parts[1])) {
+            continue;
+        }
+        totals.total++;
+        if (isActionAllowed(entry.allowed)) {
+            totals.allowed++;
+        }
+    }
+    return totals;
+}
+
+/**
  * The share of granted action permissions of every role, in percent, by role id; a role without entries is left out
  *
  * @method coverageByRole

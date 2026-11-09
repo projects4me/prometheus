@@ -354,14 +354,4 @@ export default class RolePermissionsComponent extends Component {
         permission.allowed = mode;
         this.fieldAccessRevision = this.fieldAccessRevision + 1;
     }
-
-    /**
-     * Save all dirty permissions for the role.
-     *
-     * @method updatePermission
-     * @public
-     */
-    @action updatePermission() {
-        return this.args.updatePermission.perform();
-    }
 }
