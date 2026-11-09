@@ -9,6 +9,9 @@ import { htmlSafe } from '@ember/template';
 import { tracked } from '@glimmer/tracking';
 import { task, timeout } from 'ember-concurrency';
 import $ from 'jquery';
+import {
+    accessSplit, accessTier, actionTotals, coverageByRole, roleInitials, toCoverageEntries
+} from 'prometheus/utils/role/access';
 
 /**
  * The role page controller.
@@ -246,6 +249,41 @@ export default class AppRolePageController extends PrometheusCreateController {
     constructor() {
         super(...arguments);
         this.setupSchema();
+    }
+
+    /**
+     * What the Role box shows about the open role: its initials, access tier, the granted and denied percentages and
+     * the number of action permissions granted, from the same coverage rules the role browser uses
+     *
+     * @property facts
+     * @type Object
+     * @public
+     */
+    @computed('model.{id,name}', 'model.permissions.@each.allowed')
+    get facts() {
+        let roleId = String(this.model?.id ?? '');
+        let entries = toCoverageEntries(roleId, this.model?.permissions);
+        let totals = actionTotals(entries);
+        let split = accessSplit(totals.total ? (coverageByRole(entries)[roleId] ?? 0) : null);
+        return {
+            initials: roleInitials(this.model?.name),
+            tier: split.known ? accessTier(split.granted) : 'none',
+            known: split.known,
+            granted: split.granted,
+            denied: split.denied,
+            allowed: totals.allowed,
+            total: totals.total
+        };
+    }
+
+    /**
+     * Saves the changed permissions, from the Save button in the footer of the Permissions box
+     *
+     * @method savePermissions
+     * @return {Promise}
+     */
+    @action savePermissions() {
+        return this.updatePermission.perform();
     }
 
     /**

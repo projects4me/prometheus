@@ -92,41 +92,68 @@
     }
   }
 
-  .role-details {
-    position: relative;
-    border: 1px solid #bebebe;
-    border-radius: 1rem;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-    padding: 1.5rem;
+  // ── Role record box (initials, name, description, facts) ──────────────
+  .role-record {
+    .role-record__identity {
+      align-items: center;
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
 
-    .role-details__toolbar {
-      position: absolute;
-      top: 0.75rem;
-      right: 0.75rem;
-      z-index: 2;
+    .role-record__initials {
+      align-items: center;
+      background-color: rgba($mediumColor, 0.16);
+      color: $mediumColor;
+      display: flex;
+      flex: 0 0 auto;
+      font-size: 2rem;
+      font-weight: 700;
+      height: 6rem;
+      justify-content: center;
+      text-transform: uppercase;
+      width: 6rem;
 
-      .btn-box-tool {
-        padding: 0.35rem 0.6rem;
-
-        i.fa-times {
-          font-size: 1.6rem;
-          color: #666;
-        }
-
-        &:hover i.fa-times {
-          color: #333;
+      @each $tier, $colour in $role-tiers {
+        &.role-record__initials--#{$tier} {
+          background-color: rgba($colour, 0.14);
+          color: $colour;
         }
       }
     }
 
-    .field-group {
-      padding-right: 3rem;
+    .role-record__heading {
+      flex: 1 1 auto;
+      min-width: 0;
     }
 
-    .role-members {
-      margin-top: 1.5rem;
-      margin-bottom: 1.5rem;
+    .role-record__name {
+      font-weight: 700;
+    }
 
+    .role-record__caption {
+      margin-top: 0.4rem;
+    }
+
+    .role-record__description {
+      margin-bottom: 1.5rem;
+    }
+
+    .role-record__facts h4 {
+      margin-top: 0;
+    }
+
+    .role-record__granted {
+      @each $tier, $colour in $role-tiers {
+        &.role-record__granted--#{$tier} {
+          background-color: $colour;
+        }
+      }
+    }
+  }
+
+  .role-details {
+    .role-members {
       // Match project members avatar sizing (project sidebar col-md-4 users-list cells).
       // Role detail is much wider, so AdminLTE's 25% li width grows avatars too large.
       .users-list {

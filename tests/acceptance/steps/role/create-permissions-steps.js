@@ -51,7 +51,7 @@ export default function (assert) {
             assert.ok(true, `User sets field ${field} access to ${mode}`);
         })
         .when('User saves role permissions', async function () {
-            await click('[data-role="permissions"] [data-btn="save"]');
+            await click('[data-role="role-permissions"] [data-btn="save"]');
             assert.ok(true, 'User saves role permissions');
         })
         .then('Action permission $resourceName is created for role $roleId with allowed $allowed', function (resourceName, roleId, allowed) {
