@@ -10,6 +10,7 @@
 - API: `app/adapters/application.js` (host `ENV.api.host`, namespace `api/v1`, singular paths, Bearer token, refresh via `services/session.js`).
 - Queries use Gaia's query string: `store.query('issue', { query: '((Issue.projectId : X))', rels, limit })`.
 - Realtime: `services/hermes.js` (Socket.IO). Screens call `hermes.register(owner, projectId, handlers)` on route enter and dispose on exit. Contract: `docs/architecture/live-updates/`.
+- Page state: `utils/state/` (`AsyncResource`, `ListLoader`, `UrlState`); URL vs controller state and page wiring: `docs/architecture/state/`.
 - Permissions: `services/acl.js` maps routes to `module.action`; add every new route to `routeMaps`.
 - Base classes: `routes/app.js`, `controllers/prometheus.js`, `controllers/prometheus/list.js`, `components/app.js`.
 
