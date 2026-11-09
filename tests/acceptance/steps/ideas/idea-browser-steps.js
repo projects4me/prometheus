@@ -142,6 +142,58 @@ export const when = function () {
                 await visit(`/app/project/${project.shortCode}/idea?${params}`);
                 assert.ok(true, `User opens the ideas of the project with ${params}`);
             }
+        },
+        {
+            "The idea list fails to load": (assert, ctx) => async function () {
+                ctx.set('ideaListFails', true);
+                assert.ok(true, 'the idea list requests fail');
+            }
+        },
+        {
+            "The idea list loads again": (assert, ctx) => async function () {
+                ctx.set('ideaListFails', false);
+                assert.ok(true, 'the idea list requests succeed');
+            }
+        },
+        {
+            "User marks the open idea page": (assert) => async function () {
+                let page = document.querySelector('.idea-page');
+                assert.ok(page, 'an idea page is open');
+                page.dataset.testMarker = 'kept';
+            }
+        },
+        {
+            "User sorts the idea browser by $key": (assert) => async function (key) {
+                await click(`${BROWSER} .quick-list-toolbar-sort .app-dropdown-btn`);
+                await click(`${BROWSER} [data-test-sort-option="${key}"]`);
+                assert.ok(true, `User sorts the idea browser by ${key}`);
+            }
+        },
+        {
+            "User groups the idea browser by $key": (assert) => async function (key) {
+                await click(`${BROWSER} .quick-list-toolbar-group .app-dropdown-btn`);
+                await click(`${BROWSER} [data-test-group-option="${key}"]`);
+                assert.ok(true, `User groups the idea browser by ${key}`);
+            }
+        },
+        {
+            "User retries the idea list": (assert) => async function () {
+                await click(`${BROWSER} [data-test-quick-list-retry]`);
+                assert.ok(true, 'User retries the idea list');
+            }
+        },
+        {
+            "User notes the idea browser address": (assert, ctx) => async function () {
+                ctx.set('notedIdeaUrl', currentURL());
+                assert.ok(true, `noted ${currentURL()}`);
+            }
+        },
+        {
+            "User goes back to the noted idea browser address": (assert, ctx) => async function () {
+                // the test location has no history, so back is the transition to the earlier URL it makes
+                await visit(ctx.get('notedIdeaUrl'));
+                assert.ok(true, `back to ${ctx.get('notedIdeaUrl')}`);
+            }
         }
     ];
 };
@@ -301,6 +353,28 @@ export const then = function () {
                 assert.ok(/\/idea\/\d+$/.test(currentURL()), `on an idea page: ${currentURL()}`);
                 assert.dom('.idea-page .col-md-8[data-idea-main]').exists();
                 assert.dom('.idea-page .col-md-4[data-idea-side]').exists();
+            }
+        },
+        {
+            "The open idea page was not redrawn": (assert) => async function () {
+                assert.dom('.idea-page[data-test-marker="kept"]').exists('the idea page beside the list stayed');
+                assert.dom(`${BROWSER} [data-idea-search]`).exists('the search stayed');
+            }
+        },
+        {
+            "The idea browser shows the list error": (assert) => async function () {
+                assert.dom(`${BROWSER} [data-test-quick-list-error]`).exists();
+                assert.dom(`${BROWSER} a[data-idea]`).doesNotExist();
+            }
+        },
+        {
+            "The idea url has $param": (assert) => async function (param) {
+                assert.ok(currentURL().includes(param), currentURL());
+            }
+        },
+        {
+            "The idea url has no $name": (assert) => async function (name) {
+                assert.notOk(new RegExp(`[?&]${name}=`).test(currentURL()), currentURL());
             }
         }
     ];

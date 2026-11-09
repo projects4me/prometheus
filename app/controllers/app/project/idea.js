@@ -5,12 +5,18 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { DEFAULT_PAGE, DEFAULT_SORT, DEFAULT_ORDER, DEFAULT_GROUP } from 'prometheus/utils/idea/browser-defaults';
+import {
+    DEFAULT_PAGE, DEFAULT_SORT, DEFAULT_ORDER, DEFAULT_GROUP, BROWSER_PARAMS
+} from 'prometheus/utils/idea/browser-defaults';
+import {
+    buildIdeaListRequest, buildArchivedCountRequest, buildPlansRequest
+} from 'prometheus/utils/idea/browser-requests';
 import { planStatusClass } from 'prometheus/utils/idea/plan-status';
 import { tracked } from '@glimmer/tracking';
 import { htmlSafe } from '@ember/template';
 import { buildSortOptions, buildGroupOptions, buildCreators } from 'prometheus/utils/ideas/list-options';
-import { hasNextPage } from 'prometheus/utils/quick-list/page-window';
+import UrlState from 'prometheus/utils/state/url-state';
+import ListLoader from 'prometheus/utils/state/list-loader';
 
 const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
 const STORAGE_KEY = 'ideaBrowserCollapsed';
@@ -197,51 +203,6 @@ export default class AppProjectIdeaController extends Controller {
     }
 
     /**
-     * Sorts the list by a field; a date starts with the newest first, a title from A to Z
-     *
-     * @method sortList
-     * @param {String} key The sort field
-     * @param {String} order asc or desc as the toolbar sends it
-     * @returns {void}
-     * @public
-     */
-    @action
-    sortList(key, order) {
-        let isDate = key !== 'Idea.title';
-        let next = key === this.sort ? order : isDate ? 'desc' : 'asc';
-        this.sort = key;
-        this.order = next.toUpperCase();
-        this.page = 1;
-    }
-
-    /**
-     * Groups the list; grouping by creator changes the server sort, so it starts from the first page
-     *
-     * @method groupList
-     * @param {String} key none, planStatus or createdBy
-     * @returns {void}
-     * @public
-     */
-    @action
-    groupList(key) {
-        this.group = key;
-        this.page = 1;
-    }
-
-    /**
-     * Opens a page of the list
-     *
-     * @method changePage
-     * @param {Number} page
-     * @returns {void}
-     * @public
-     */
-    @action
-    changePage(page) {
-        this.page = page;
-    }
-
-    /**
      * The view of the idea page, plan for the review mode and null for the conversation layout
      *
      * @property view
@@ -262,13 +223,13 @@ export default class AppProjectIdeaController extends Controller {
     }
 
     /**
-     * The Gaia query the list is narrowed by, null for none
+     * The Gaia query the list is narrowed by, empty for none
      *
      * @property query
      * @type String
      * @public
      */
-    @tracked query = null;
+    @tracked query = '';
 
     /**
      * The id of the saved search the query came from, null for none
@@ -278,6 +239,448 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     @tracked searchId = null;
+
+    /**
+     * The search, page, sort, order, group and archived toggle of the browser, kept in the URL without refreshing
+     * the route; a change that alters the list request reloads only the list
+     *
+     * @property urlState
+     * @type UrlState
+     * @public
+     */
+    urlState;
+
+    /**
+     * The page of ideas the browser lists, with its loading flag, error and retry
+     *
+     * @property ideaList
+     * @type ListLoader
+     * @public
+     */
+    ideaList;
+
+    /**
+     * The ideas saved here since the list was last loaded, listed before the loaded page until the next load
+     *
+     * @property addedIdeas
+     * @type Array
+     * @private
+     */
+    @tracked addedIdeas = [];
+
+    /**
+     * Counts the archived count loads so that only the latest one sets archivedTotal
+     *
+     * @property archivedSequence
+     * @type Number
+     * @private
+     */
+    archivedSequence = 0;
+
+    /**
+     * Builds the list loader and the URL state; a param change that alters the list request reloads the list
+     *
+     * @constructor
+     */
+    constructor() {
+        super(...arguments);
+        this.ideaList = new ListLoader({
+            store: this.store,
+            modelName: 'idea',
+            pageSize: this.pageSize,
+            owner: this,
+            buildRequest: values => this.buildRequest(values)
+        });
+        this.urlState = new UrlState(this, { schema: BROWSER_PARAMS, routeName: 'app.project.idea' });
+        this.urlState.onChange(values => this.paramsChanged(values));
+    }
+
+    /**
+     * The list query options for the browser params, shared with the route that loads the first page
+     *
+     * @method buildRequest
+     * @param {Object} values The query, page, sort, order, group and archived params
+     * @returns {Object}
+     * @public
+     */
+    buildRequest(values) {
+        return buildIdeaListRequest(this.trackedProject.getProjectId(), values);
+    }
+
+    /**
+     * Reloads the list when the changed params alter its request; grouping by plan status only regroups the page
+     *
+     * @method paramsChanged
+     * @param {Object} values The current params
+     * @returns {Promise|void}
+     * @private
+     */
+    paramsChanged(values) {
+        if (this.ideaList.params && this.isSameRequest(values, this.ideaList.params)) {
+            return;
+        }
+        return this.loadList(values);
+    }
+
+    /**
+     * Whether two sets of params send the same list request
+     *
+     * @method isSameRequest
+     * @param {Object} a
+     * @param {Object} b
+     * @returns {Boolean}
+     * @private
+     */
+    isSameRequest(a, b) {
+        return JSON.stringify(this.buildRequest(a)) === JSON.stringify(this.buildRequest(b));
+    }
+
+    /**
+     * Shows the first page the route loaded and the archived count; a page that failed to load is loaded again
+     * here, so the list shows its error and retry
+     *
+     * @method showFirstPage
+     * @param {Object} values The params the page was loaded for
+     * @param {Object} firstPage `{ records }` or `{ error }`
+     * @param {Number} [archivedTotal]
+     * @returns {Promise}
+     * @public
+     */
+    showFirstPage(values, firstPage, archivedTotal) {
+        this.planStatuses = {};
+        this.loadedIdeaIds = new Set();
+        this.addedIdeas = [];
+        this.archivedTotal = archivedTotal ?? null;
+        if (firstPage?.error) {
+            return this.loadList(values);
+        }
+        this.ideaList.seed(firstPage?.records, values);
+        return this.loadPlanStatuses(this.ideas);
+    }
+
+    /**
+     * Loads the page of the list for the params, then the plan statuses of its ideas
+     *
+     * @method loadList
+     * @param {Object} values
+     * @returns {Promise}
+     * @public
+     */
+    async loadList(values) {
+        this.addedIdeas = [];
+        let records = await this.ideaList.run(values);
+        if (records && !this.isDestroying && !this.isDestroyed) {
+            await this.loadPlanStatuses(this.ideas);
+        }
+    }
+
+    /**
+     * Loads the current page of the list again, then the plan statuses of its ideas; the retry of the list error
+     *
+     * @method reloadList
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async reloadList() {
+        this.addedIdeas = [];
+        let records = await this.ideaList.retry();
+        if (records && !this.isDestroying && !this.isDestroyed) {
+            await this.loadPlanStatuses(this.ideas);
+        }
+    }
+
+    /**
+     * Reloads the list and the archived count, after a change that moves ideas between the listed and unlisted
+     * statuses
+     *
+     * @method refreshList
+     * @returns {Promise}
+     * @public
+     */
+    async refreshList() {
+        await Promise.all([this.reloadList(), this.loadArchivedTotal()]);
+    }
+
+    /**
+     * Counts the archived ideas of the project for the footer toggle; null when they cannot be counted. Gaia sends
+     * no total in the list meta, so the archived ideas are loaded without relations and counted.
+     *
+     * @method countArchived
+     * @returns {Promise<Number|null>}
+     * @public
+     */
+    async countArchived() {
+        try {
+            let ideas = await this.store.query('idea', buildArchivedCountRequest(this.trackedProject.getProjectId()));
+            return ideas?.length ?? null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    /**
+     * Counts the archived ideas again and shows the count in the footer
+     *
+     * @method loadArchivedTotal
+     * @returns {Promise}
+     * @public
+     */
+    async loadArchivedTotal() {
+        let sequence = ++this.archivedSequence;
+        let total = await this.countArchived();
+        if (!this.isDestroying && !this.isDestroyed && sequence === this.archivedSequence) {
+            this.archivedTotal = total;
+        }
+    }
+
+    /**
+     * Queries the plans of the given ideas in one request
+     *
+     * @method loadPlans
+     * @param {Array} ideaIds
+     * @returns {Promise} The plans, null when they could not be loaded
+     * @public
+     */
+    async loadPlans(ideaIds) {
+        let request = buildPlansRequest(ideaIds);
+        if (!request) {
+            return [];
+        }
+        try {
+            return await this.store.query('ideaplan', request);
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'idea' });
+            return null;
+        }
+    }
+
+    /**
+     * The listed ideas: those saved here since the last load, then the loaded page in the server's order
+     *
+     * @property ideas
+     * @type Array
+     * @public
+     */
+    get ideas() {
+        let items = this.ideaList.items;
+        let added = this.addedIdeas.filter(idea => !items.some(listed => listed.id === idea.id));
+        return added.length ? [...added, ...items] : items;
+    }
+
+    /**
+     * The ideas that are listed in the browser
+     *
+     * @property listedIdeas
+     * @type Array
+     * @public
+     */
+    get listedIdeas() {
+        return this.ideas;
+    }
+
+    /**
+     * Whether Gaia linked a next page of the list (`meta.links.next`); the browser never asks for a total
+     *
+     * @property hasNext
+     * @type Boolean
+     * @public
+     */
+    get hasNext() {
+        return this.ideaList.hasNext;
+    }
+
+    /**
+     * Whether the list is loading a page
+     *
+     * @property isListLoading
+     * @type Boolean
+     * @public
+     */
+    get isListLoading() {
+        return this.ideaList.isLoading;
+    }
+
+    /**
+     * The error of the latest list load
+     *
+     * @property listError
+     * @type Object
+     * @public
+     */
+    get listError() {
+        return this.ideaList.error;
+    }
+
+    /**
+     * Sorts the list by a field; a date starts with the newest first, a title from A to Z
+     *
+     * @method sortList
+     * @param {String} key The sort field
+     * @param {String} order asc or desc as the toolbar sends it
+     * @returns {void}
+     * @public
+     */
+    @action
+    sortList(key, order) {
+        let isDate = key !== 'Idea.title';
+        let next = key === this.sort ? order : isDate ? 'desc' : 'asc';
+        this.urlState.set({ sort: key, order: next.toUpperCase() });
+    }
+
+    /**
+     * Groups the list; grouping by creator changes the server sort, so it starts from the first page, the other
+     * groupings only regroup the loaded page
+     *
+     * @method groupList
+     * @param {String} key none, planStatus or createdBy
+     * @returns {void}
+     * @public
+     */
+    @action
+    groupList(key) {
+        let changesRequest = key === 'createdBy' || this.group === 'createdBy';
+        this.urlState.set(changesRequest ? { group: key } : { group: key, page: this.page });
+    }
+
+    /**
+     * Opens a page of the list
+     *
+     * @method changePage
+     * @param {Number} page
+     * @returns {void}
+     * @public
+     */
+    @action
+    changePage(page) {
+        this.urlState.set({ page });
+    }
+
+    /**
+     * Runs a query from ezSearch; only the list reloads for it
+     *
+     * @method applyQuery
+     * @param {String} query The Gaia query, empty for none
+     * @public
+     */
+    @action
+    applyQuery(query) {
+        this.urlState.set({ query: query || '' });
+    }
+
+    /**
+     * Marks a saved search as the active one, or clears the mark; its query arrives through applyQuery
+     *
+     * @method selectSavedSearch
+     * @param {Object|null} search The picked item or null
+     * @public
+     */
+    @action
+    selectSavedSearch(search) {
+        this.searchId = search ? String(search.id) : null;
+    }
+
+    /**
+     * Shows or hides the archived ideas; the list query changes, so it runs again from the first page
+     *
+     * @method toggleArchived
+     * @returns {void}
+     * @public
+     */
+    @action
+    toggleArchived() {
+        this.urlState.set({ archived: !this.archived });
+    }
+
+    /**
+     * Adds an idea to the list unless it is listed already (a reload may have brought it in first), a new idea has
+     * no plan so it is loaded
+     *
+     * @method addIdea
+     * @param {Prometheus.Models.Idea} idea
+     * @returns {void}
+     * @public
+     */
+    addIdea(idea) {
+        if (!this.ideas.some(listed => listed.id === idea.id)) {
+            // the newest idea leads the default sort, date modified newest first
+            this.addedIdeas = [idea, ...this.addedIdeas];
+            this.loadedIdeaIds = new Set([...this.loadedIdeaIds, idea.id]);
+        }
+    }
+
+    /**
+     * Registers the events that change the idea list
+     *
+     * @method registerHermesIntents
+     * @param {String} projectId
+     * @returns {void}
+     * @public
+     */
+    registerHermesIntents(projectId) {
+        this.unregisterHermesIntents();
+        if (!projectId) {
+            return;
+        }
+        this.hermesDisposer = this.hermes.register(this, projectId, {
+            'idea.created': envelope => this.handleIdeaCreated(envelope),
+            'idea.updated': () => this.refreshList(),
+            'idea.plan.created': () => this.loadPlanStatuses(this.ideas),
+            'idea.plan.status.changed': () => this.loadPlanStatuses(this.ideas)
+        });
+    }
+
+    /**
+     * Reloads the ideas when an idea is created, unless it is listed already. An idea created here is added
+     * by the create page once it is saved, so its event finds it listed; the same user creating one in
+     * another tab is not listed, so that event reloads.
+     *
+     * @method handleIdeaCreated
+     * @param {Object} envelope Domain-event envelope
+     * @returns {Promise|void}
+     * @public
+     */
+    handleIdeaCreated(envelope) {
+        let resourceId = envelope?.resource?.id;
+        if (resourceId && this.ideas.some(listed => String(listed.id) === String(resourceId))) {
+            return;
+        }
+        return this.refreshList();
+    }
+
+    /**
+     * Disposes the Hermes registration
+     *
+     * @method unregisterHermesIntents
+     * @returns {void}
+     * @public
+     */
+    unregisterHermesIntents() {
+        this.hermesDisposer?.();
+        this.hermesDisposer = null;
+    }
+
+    /**
+     * Puts the browser back to its defaults and drops the listed page, when the idea area is left or the project
+     * switches, so the next visit starts clean
+     *
+     * @method resetBrowser
+     * @returns {void}
+     * @public
+     */
+    resetBrowser() {
+        UrlState.resetController(this);
+        this.ideaList.reset();
+        this.archivedSequence++;
+        this.planSequence++;
+        this.addedIdeas = [];
+        this.archivedTotal = null;
+        this.planStatuses = {};
+        this.loadedIdeaIds = new Set();
+        this.view = null;
+        this.searchId = null;
+        this.unregisterHermesIntents();
+    }
 
     /**
      * The ezSearch schema of the ideas, loaded by the route
@@ -325,15 +728,6 @@ export default class AppProjectIdeaController extends Controller {
     @tracked saveSearchQuery = '';
 
     /**
-     * Whether Gaia reported a next page of the list query (`meta.links.next`); the browser never asks for a total
-     *
-     * @property hasNext
-     * @type Boolean
-     * @public
-     */
-    @tracked hasNext = false;
-
-    /**
      * The number of archived ideas of the project, for the footer toggle; null while unknown or searching
      *
      * @property archivedTotal
@@ -341,40 +735,6 @@ export default class AppProjectIdeaController extends Controller {
      * @public
      */
     @tracked archivedTotal = null;
-
-    /**
-     * The options of the list query: search, page, sort, order, page size and archived toggle
-     *
-     * @property listOptions
-     * @type Object
-     * @public
-     */
-    get listOptions() {
-        return {
-            query: this.query,
-            page: this.page,
-            sort: this.sort,
-            order: this.order,
-            group: this.group,
-            limit: this.pageSize,
-            showArchived: this.showArchived
-        };
-    }
-
-    /**
-     * Shows a loaded page of ideas and the counts that came with it
-     *
-     * @method showIdeas
-     * @param {Object} [ideas] The ideas the list query returned, their meta links the next page when there is one
-     * @param {Object} [counts] The archived and project counts of the route
-     * @returns {void}
-     * @public
-     */
-    showIdeas(ideas, counts) {
-        this.ideas = ideas ? ideas.toArray() : [];
-        this.hasNext = hasNextPage(ideas?.meta);
-        this.archivedTotal = counts?.archived ?? null;
-    }
 
     /**
      * Whether a search narrows the list
@@ -400,30 +760,6 @@ export default class AppProjectIdeaController extends Controller {
             name: search.get('name'),
             query: search.get('searchquery')
         }));
-    }
-
-    /**
-     * Runs a query from ezSearch; the route reloads the ideas for it
-     *
-     * @method applyQuery
-     * @param {String} query The Gaia query, empty for none
-     * @public
-     */
-    @action
-    applyQuery(query) {
-        this.query = query || null;
-    }
-
-    /**
-     * Marks a saved search as the active one, or clears the mark
-     *
-     * @method selectSavedSearch
-     * @param {Object|null} search The picked item or null
-     * @public
-     */
-    @action
-    selectSavedSearch(search) {
-        this.searchId = search ? String(search.id) : null;
     }
 
     /**
@@ -533,15 +869,6 @@ export default class AppProjectIdeaController extends Controller {
      * @private
      */
     hermesDisposer = null;
-
-    /**
-     * The ideas of the selected project, loaded by the route
-     *
-     * @property ideas
-     * @type Array
-     * @public
-     */
-    @tracked ideas = [];
 
     /**
      * Whether the idea browser is collapsed so the idea page uses the full width, remembered in localStorage
@@ -669,11 +996,11 @@ export default class AppProjectIdeaController extends Controller {
      *
      * @method loadPlanStatuses
      * @param {Array} ideas
-     * @param {Function} loadPlans Loads the plans of idea ids, supplied by the route
+     * @param {Function} [loadPlans] Loads the plans of idea ids, loadPlans by default
      * @returns {Promise}
      * @public
      */
-    async loadPlanStatuses(ideas, loadPlans) {
+    async loadPlanStatuses(ideas, loadPlans = ids => this.loadPlans(ids)) {
         let sequence = ++this.planSequence;
         this.liveStatuses = {};
         let plans;
@@ -714,159 +1041,6 @@ export default class AppProjectIdeaController extends Controller {
      */
     get hasArchivedToggle() {
         return this.archivedTotal > 0;
-    }
-
-    /**
-     * The ideas that are listed in the browser, in the order the server returned them
-     *
-     * @property listedIdeas
-     * @type Array
-     * @public
-     */
-    get listedIdeas() {
-        return this.ideas;
-    }
-
-    /**
-     * Sequence of the latest reload; leaving the route or registering for another project also bumps it,
-     * so a slower reload of an earlier project or request cannot overwrite the list
-     *
-     * @property reloadSequence
-     * @type Number
-     * @private
-     */
-    reloadSequence = 0;
-
-    /**
-     * Registers the events that change the idea list
-     *
-     * @method registerHermesIntents
-     * @param {String} projectId
-     * @param {Function} loadIdeas Runs the list query for listOptions, supplied by the route
-     * @param {Function} loadPlans Loads the plans of idea ids, supplied by the route
-     * @param {Function} [loadTotal] Loads the archived and project counts for listOptions, supplied by the route
-     * @returns {void}
-     * @public
-     */
-    registerHermesIntents(projectId, loadIdeas, loadPlans, loadTotal) {
-        this.unregisterHermesIntents();
-        this.reloadSequence++;
-        if (!projectId) {
-            return;
-        }
-        this.loaders = { loadIdeas, loadPlans, loadTotal };
-        this.hermesDisposer = this.hermes.register(this, projectId, {
-            'idea.created': envelope => this.handleIdeaCreated(envelope, loadIdeas, loadPlans, loadTotal),
-            'idea.updated': () => this.reloadIdeas(loadIdeas, loadPlans, loadTotal),
-            'idea.plan.created': () => this.loadPlanStatuses(this.ideas, loadPlans),
-            'idea.plan.status.changed': () => this.loadPlanStatuses(this.ideas, loadPlans)
-        });
-    }
-
-    /**
-     * Reloads the ideas when an idea is created, unless it is listed already. An idea created here is added
-     * by the create page once it is saved, so its event finds it listed; the same user creating one in
-     * another tab is not listed, so that event reloads.
-     *
-     * @method handleIdeaCreated
-     * @param {Object} envelope Domain-event envelope
-     * @param {Function} loadIdeas
-     * @param {Function} loadPlans
-     * @param {Function} [loadTotal]
-     * @returns {Promise|void}
-     * @public
-     */
-    handleIdeaCreated(envelope, loadIdeas, loadPlans, loadTotal) {
-        let resourceId = envelope?.resource?.id;
-        if (resourceId && this.ideas.some(listed => String(listed.id) === String(resourceId))) {
-            return;
-        }
-        return this.reloadIdeas(loadIdeas, loadPlans, loadTotal);
-    }
-
-    /**
-     * Adds an idea to the list unless it is listed already (a reload may have brought it in first), a new idea has
-     * no plan so it is loaded
-     *
-     * @method addIdea
-     * @param {Prometheus.Models.Idea} idea
-     * @returns {void}
-     * @public
-     */
-    addIdea(idea) {
-        if (!this.ideas.some(listed => listed.id === idea.id)) {
-            // the newest idea leads the default sort, date modified newest first
-            this.ideas = [idea, ...this.ideas];
-            this.loadedIdeaIds = new Set([...this.loadedIdeaIds, idea.id]);
-        }
-    }
-
-    /**
-     * Disposes the Hermes registration
-     *
-     * @method unregisterHermesIntents
-     * @returns {void}
-     * @public
-     */
-    unregisterHermesIntents() {
-        this.reloadSequence++;
-        this.hermesDisposer?.();
-        this.hermesDisposer = null;
-        this.loaders = null;
-    }
-
-    /**
-     * Re-runs the current list query and counts
-     *
-     * @method reloadIdeas
-     * @param {Function} loadIdeas
-     * @param {Function} loadPlans
-     * @param {Function} [loadTotal]
-     * @returns {Promise}
-     * @public
-     */
-    async reloadIdeas(loadIdeas, loadPlans, loadTotal) {
-        let sequence = ++this.reloadSequence;
-        let options = this.listOptions;
-        let [ideas, counts] = await Promise.all([loadIdeas(options), loadTotal ? loadTotal(options) : null]);
-        if (this.isDestroying || this.isDestroyed) {
-            return;
-        }
-        if (ideas && sequence === this.reloadSequence) {
-            this.showIdeas(ideas, counts);
-            if (loadPlans) {
-                await this.loadPlanStatuses(this.ideas, loadPlans);
-            }
-        }
-    }
-
-    /**
-     * Shows or hides the archived ideas; the list query changes, so it runs again from the first page
-     *
-     * @method toggleArchived
-     * @returns {void}
-     * @public
-     */
-    @action
-    toggleArchived() {
-        // the archived and page query params refresh the route, which reads them
-        this.archived = !this.archived;
-        this.page = 1;
-    }
-
-    /**
-     * Re-runs the current list query and counts with the loaders of the route, after a change that moves ideas
-     * between the listed and unlisted statuses
-     *
-     * @method refreshList
-     * @returns {Promise}
-     * @public
-     */
-    async refreshList() {
-        if (this.loaders) {
-            let { loadIdeas, loadPlans, loadTotal } = this.loaders;
-            await this.reloadIdeas(loadIdeas, loadPlans, loadTotal);
-        }
     }
 
     /**

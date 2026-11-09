@@ -266,3 +266,113 @@ Feature: Ideas | idea browser
     Then The idea browser is shown beside the idea page
     And The collapsed state is remembered in the browser storage as false
     Then The stored idea browser state is reset
+
+  Scenario: Paging, sorting and grouping reload only the list, not the open idea page
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The project has 23 generated open ideas
+    When User opens the ideas of the project
+    And User selects the idea Generated idea 23 in the browser
+    And User marks the open idea page
+    And User opens the next page of the idea browser
+    Then The open idea page was not redrawn
+    And The idea browser lists 3 ideas
+    And The idea list request sent page as 2
+    When User sorts the idea browser by Idea.title
+    Then The open idea page was not redrawn
+    And The idea list request sent sort as Idea.title
+    And The idea list request sent page as 1
+    When User groups the idea browser by createdBy
+    Then The open idea page was not redrawn
+    And The idea list request sent sort as Idea.createdUser,Idea.title
+    And The idea url has group=createdBy
+
+  Scenario: A search and a saved search reload only the list, not the open idea page
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The ideas of the project are
+    ---------------------------------------------------------
+    | title        | status   | dateModified        |
+    | Older idea   | open     | 2026-10-01 10:00:00 |
+    | Newest idea  | open     | 2026-10-20 10:00:00 |
+    ---------------------------------------------------------
+    And The idea saved search Mine is (Idea.title CONTAINS idea)
+    When User opens the ideas of the project
+    And User selects the idea Older idea in the browser
+    And User marks the open idea page
+    And User types "title ~ Newest" in the idea search bar and presses Enter
+    Then The open idea page was not redrawn
+    And The idea list was requested with "Idea.title"
+    When User selects the idea saved search
+    Then The open idea page was not redrawn
+    And The idea list was requested with "Idea.title CONTAINS idea"
+
+  Scenario: Going back restores the previous page and sort, and a reload keeps every param
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The project has 23 generated open ideas
+    When User opens the ideas of the project
+    And User opens the next page of the idea browser
+    And User notes the idea browser address
+    And User sorts the idea browser by Idea.title
+    Then The idea list request sent page as 1
+    And The idea list request sent sort as Idea.title
+    When User goes back to the noted idea browser address
+    Then The idea list request sent page as 2
+    And The idea list request sent sort as Idea.dateModified
+    And The idea browser lists 3 ideas
+    When User sorts the idea browser by Idea.title
+    And User opens the next page of the idea browser
+    And User reloads the page
+    Then The idea list request sent sort as Idea.title
+    And The idea list request sent order as ASC
+    And The idea list request sent page as 2
+    And The idea url has sort=Idea.title
+
+  Scenario: Switching project starts the browser from its defaults with the new project's ideas
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The project has 23 generated open ideas
+    When User opens the ideas of the project with page=2&sort=Idea.title&order=ASC
+    And User selects Project 2
+    And The ideas of the project are
+    ---------------------------------------------------------
+    | title         | status | dateModified        |
+    | Other project | open   | 2026-10-01 10:00:00 |
+    ---------------------------------------------------------
+    And User opens the ideas of the project
+    Then The idea list request sent page as 1
+    And The idea list request sent sort as Idea.dateModified
+    And The idea browser lists the ideas Other project
+    And The idea url has no page
+
+  Scenario: A failed list load shows the list error and the retry loads it
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The ideas of the project are
+    ---------------------------------------------------------
+    | title       | status | dateModified        |
+    | Older idea  | open   | 2026-10-01 10:00:00 |
+    | Newest idea | open   | 2026-10-20 10:00:00 |
+    ---------------------------------------------------------
+    And The idea list fails to load
+    When User opens the ideas of the project
+    Then The idea browser shows the list error
+    When The idea list loads again
+    And User retries the idea list
+    Then The idea browser lists the ideas Newest idea, Older idea

@@ -1,3 +1,4 @@
+import { Response } from 'miragejs';
 import getRequestData from '../helpers/parse-request';
 import applyQuery from '../helpers/apply-query';
 import sortByFields from '../helpers/model/sort-by-fields';
@@ -9,6 +10,10 @@ export function register(server, ctx) {
 		ctx.set('lastIdeaQuery', params.query);
 		ctx.set('ideaQueries', [...(ctx.get('ideaQueries') || []), params.query]);
 		ctx.set('ideaRequests', [...(ctx.get('ideaRequests') || []), { ...params }]);
+
+		if (ctx.get('ideaListFails') && params.rels !== 'none') {
+			return new Response(500, {}, { errors: [{ status: '500', title: 'Internal Server Error' }] });
+		}
 
 		let ideas = applyQuery(schema.ideas.all(), request);
 		let total = ideas.length;

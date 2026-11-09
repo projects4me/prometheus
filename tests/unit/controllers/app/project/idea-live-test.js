@@ -87,37 +87,49 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     assert.equal(reloads, 1);
   });
 
+  function stubBrowserStore(browser, requests) {
+    let store = {
+      query(type, options) {
+        requests.push([type, options]);
+        return Promise.resolve({ toArray: () => [], length: 0 });
+      },
+    };
+    browser.store = store;
+    browser.ideaList.store = store;
+  }
+
+  function listRequests(requests) {
+    return requests.filter(([type, options]) => type === "idea" && options.rels !== "none");
+  }
+
   test("browser reloads the list on idea.created and idea.updated", async function (assert) {
     let controller = this.owner.lookup("controller:app.project.idea");
-    let loads = 0;
-    controller.registerHermesIntents("p1", async () => {
-      loads++;
-      return { toArray: () => [] };
-    });
+    let requests = [];
+    stubBrowserStore(controller, requests);
+    controller.ideaList.seed([], { page: 1 });
+    controller.registerHermesIntents("p1");
 
     emitDomainEvent(this.owner, event("idea.created", "i1", { resourceType: "idea", resourceId: "i1" }));
     emitDomainEvent(this.owner, event("idea.updated", "i1", { resourceType: "idea", resourceId: "i1" }));
     await new Promise((resolve) => setTimeout(resolve, 0));
-    assert.equal(loads, 2);
+    assert.equal(listRequests(requests).length, 2);
   });
 
   test("browser skips an idea.created for an idea it lists already, and reloads for one it does not", async function (assert) {
     let controller = this.owner.lookup("controller:app.project.idea");
-    controller.ideas = [EmberObject.create({ id: "i1" })];
-    let loads = 0;
-    controller.registerHermesIntents("p1", async () => {
-      loads++;
-      return { toArray: () => [] };
-    });
+    let requests = [];
+    stubBrowserStore(controller, requests);
+    controller.ideaList.seed([EmberObject.create({ id: "i1" })], { page: 1 });
+    controller.registerHermesIntents("p1");
 
     emitDomainEvent(this.owner, event("idea.created", "i1", { resourceType: "idea", resourceId: "i1", actorId: "u1" }));
     await new Promise((resolve) => setTimeout(resolve, 0));
-    assert.equal(loads, 0, "listed already");
+    assert.equal(listRequests(requests).length, 0, "listed already");
 
     emitDomainEvent(this.owner, event("idea.created", "i2", { resourceType: "idea", resourceId: "i2", actorId: "u1",
                                                               eventId: "e2" }));
     await new Promise((resolve) => setTimeout(resolve, 0));
-    assert.equal(loads, 1, "created in another tab by the same user");
+    assert.equal(listRequests(requests).length, 1, "created in another tab by the same user");
   });
 
   test("a saved idea is listed once, also when a reload brought it in first", function (assert) {
@@ -125,12 +137,12 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     let create = this.owner.lookup("controller:app.project.idea.create");
     create.transitionToRoute = () => {};
     let idea = EmberObject.create({ id: "i1" });
-    browser.ideas = [EmberObject.create({ id: "i0" }), EmberObject.create({ id: "i1" })];
+    browser.ideaList.seed([EmberObject.create({ id: "i0" }), EmberObject.create({ id: "i1" })], {});
 
     create.navigateToSuccess(idea);
     assert.deepEqual(browser.ideas.map((i) => i.id), ["i0", "i1"]);
 
-    browser.ideas = [EmberObject.create({ id: "i0" })];
+    browser.ideaList.seed([EmberObject.create({ id: "i0" })], {});
     create.navigateToSuccess(idea);
     assert.deepEqual(browser.ideas.map((i) => i.id), ["i1", "i0"], "the new idea leads, newest modified first");
   });
@@ -138,7 +150,7 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
   test("approving a plan locally refreshes the browser badge", async function (assert) {
     let page = this.owner.lookup("controller:app.project.idea.page");
     let browser = this.owner.lookup("controller:app.project.idea");
-    browser.ideas = [EmberObject.create({ id: "i1", status: "open" })];
+    browser.ideaList.seed([EmberObject.create({ id: "i1", status: "open" })], {});
     browser.planStatuses = { i1: "proposed" };
     page.errorManager = { handleError() {} };
     await page.approvePlan(
@@ -162,10 +174,10 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
 
   test("ideas show a loading entry until the plan statuses have loaded, archived ones stay archived", async function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
-    browser.ideas = [
+    browser.ideaList.seed([
       EmberObject.create({ id: "i1", status: "open" }),
       EmberObject.create({ id: "i2", status: "archived" }),
-    ];
+    ], {});
     assert.true(browser.progressByIdea.i1.loading);
     assert.notOk(browser.progressByIdea.i2.loading);
     await browser.loadPlanStatuses(browser.ideas, async () => []);
@@ -177,10 +189,10 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
   test("a local status change keeps the other ideas loading until the plan query finishes", async function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
     let release;
-    browser.ideas = [
+    browser.ideaList.seed([
       EmberObject.create({ id: "i1", status: "open" }),
       EmberObject.create({ id: "i2", status: "open" }),
-    ];
+    ], {});
     let pending = browser.loadPlanStatuses(browser.ideas, () => new Promise((resolve) => (release = resolve)));
     browser.setPlanStatus("i1", "approved");
     assert.true(browser.progressByIdea.i2.loading);
@@ -193,9 +205,9 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
 
   test("an idea added by a later reload shows loading, a saved status shows at once", async function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
-    browser.ideas = [EmberObject.create({ id: "i1", status: "open" })];
+    browser.ideaList.seed([EmberObject.create({ id: "i1", status: "open" })], {});
     await browser.loadPlanStatuses(browser.ideas, async () => []);
-    browser.ideas = [...browser.ideas, EmberObject.create({ id: "i2", status: "open" })];
+    browser.ideaList.seed([...browser.ideas, EmberObject.create({ id: "i2", status: "open" })], {});
     let release;
     let pending = browser.loadPlanStatuses(browser.ideas, () => new Promise((resolve) => (release = resolve)));
     assert.true(browser.progressByIdea.i2.loading);
@@ -216,7 +228,7 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
   test("an idea created while a plan query is pending stays loaded when it settles", async function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
     let release;
-    browser.ideas = [EmberObject.create({ id: "i1", status: "open" })];
+    browser.ideaList.seed([EmberObject.create({ id: "i1", status: "open" })], {});
     let pending = browser.loadPlanStatuses(browser.ideas, () => new Promise((resolve) => (release = resolve)));
     browser.addIdea(EmberObject.create({ id: "i2", status: "open" }));
     release([]);
@@ -226,26 +238,27 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
 
   test("the loading entry ends when the plan query rejects", async function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
-    browser.ideas = [EmberObject.create({ id: "i1", status: "open" })];
+    browser.ideaList.seed([EmberObject.create({ id: "i1", status: "open" })], {});
     await browser.loadPlanStatuses(browser.ideas, async () => {
       throw new Error("down");
     });
     assert.deepEqual([...browser.loadedIdeaIds], ["i1"]);
   });
 
-  test("the next page comes from meta.links.next, never from a total", function (assert) {
+  test("the next page comes from meta.links.next, never from a total", async function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
+    browser.loadPlans = async () => [];
     let page = (ids, meta) => ({ meta, toArray: () => ids.map((id) => EmberObject.create({ id, status: "open" })) });
 
-    browser.showIdeas(page(["i1"], { links: { next: { href: "/idea?page=2" } } }), { archived: 2 });
+    await browser.showFirstPage({ page: 1 }, { records: page(["i1"], { links: { next: { href: "/idea?page=2" } } }) }, 2);
     assert.true(browser.hasNext);
     assert.true(browser.hasArchivedToggle);
 
-    browser.showIdeas(page(["i1"], { links: {} }), { archived: 0 });
+    await browser.showFirstPage({ page: 1 }, { records: page(["i1"], { links: {} }) }, 0);
     assert.false(browser.hasNext);
     assert.false(browser.hasArchivedToggle);
 
-    browser.showIdeas(page(["i1"], {}), null);
+    await browser.showFirstPage({ page: 1 }, { records: page(["i1"], {}) }, null);
     assert.false(browser.hasNext);
   });
 
@@ -254,7 +267,7 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     let page = this.owner.lookup("controller:app.project.idea.page");
     let browser = this.owner.lookup("controller:app.project.idea");
     page.registerHermesIntents("p1");
-    browser.registerHermesIntents("p1", async () => null);
+    browser.registerHermesIntents("p1");
     assert.equal(hermes.registrations.size, 2);
 
     page.unregisterHermesIntents();
