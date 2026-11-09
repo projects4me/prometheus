@@ -1,30 +1,18 @@
 import steps from '../steps';
-import { click, settled, triggerEvent } from '@ember/test-helpers';
+import { click, settled } from '@ember/test-helpers';
+import { selectChoose } from 'ember-power-select/test-support/helpers';
 import $ from 'jquery';
 
-/**
- * Set a native <select> value and fire change so Ember {{on "change"}} handlers run.
- *
- * @param {HTMLSelectElement} select
- * @param {string} value
- * @returns {Promise<void>}
- */
-async function selectNativeOption(select, value) {
-    select.value = value;
-    await triggerEvent(select, 'input');
-    await triggerEvent(select, 'change');
-    await settled();
-}
+const ACTION_LABELS = { '1': 'Allow', '0': 'None' };
+const FIELD_LABELS = { none: 'None', read: 'Read Only', write: 'Write + Read' };
 
 export default function (assert) {
     return steps(assert)
         .when('User sets action permission $resourceName to $allowed', async function (resourceName, allowed) {
-            let select = document.querySelector(
-                `[data-role="permission-actions"] [data-module-resource="${resourceName}"] select`
-            );
-            assert.ok(select, `Action permission select for ${resourceName} exists`);
-            await selectNativeOption(select, allowed);
-            assert.strictEqual(select.value, allowed, `Action select value is ${allowed}`);
+            let selector = `[data-role="permission-actions"] [data-field="action-${resourceName}"] .input-group`;
+            assert.ok(document.querySelector(selector), `Action permission select for ${resourceName} exists`);
+            await selectChoose(selector, ACTION_LABELS[allowed] ?? allowed);
+            await settled();
             assert.ok(true, `User sets action permission ${resourceName} to ${allowed}`);
         })
         .when('User opens fields permissions tab', async function () {
@@ -42,12 +30,10 @@ export default function (assert) {
             assert.ok(true, 'User opens fields permissions tab');
         })
         .when('User sets field $field access to $mode', async function (field, mode) {
-            let select = document.querySelector(
-                `[data-role="permission-fields"] [data-permission-module="issue"] select[data-field-access-select="${field}"]`
-            );
-            assert.ok(select, `Field access select for ${field} exists`);
-            await selectNativeOption(select, mode);
-            assert.strictEqual(select.value, mode, `Field select value is ${mode}`);
+            let selector = `[data-role="permission-fields"] [data-field="field-access-issue.${field}"] .input-group`;
+            assert.ok(document.querySelector(selector), `Field access select for ${field} exists`);
+            await selectChoose(selector, FIELD_LABELS[mode] ?? mode);
+            await settled();
             assert.ok(true, `User sets field ${field} access to ${mode}`);
         })
         .when('User saves role permissions', async function () {

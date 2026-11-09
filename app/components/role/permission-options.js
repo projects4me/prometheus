@@ -17,29 +17,41 @@ import { action } from '@ember/object';
 export default class RolePermissionOptionsComponent extends Component {
 
     /**
-     * This function is used to update the access level of permission.
-     * 
-     * @param {Prometheus.Models.Permission} permission 
-     * @param {String} flag 
-     * @param {Event} evt 
-     * @method updateAccessLevel
+     * The option matching the permission's current value.
+     *
+     * @property selectedOption
+     * @type {{label: string, value: string}|undefined}
      */
-    @action updateAccessLevel(permission, flag, evt) {
-        permission[flag] = evt.target.value;
+    get selectedOption() {
+        return (this.args.options || []).find((option) => String(option.value) === String(this.args.value));
     }
 
     /**
-     * This function calls the updateAccessLevel function and after that calls updateDisableState
-     * to update the state of disabled attribute of the button. 
-     * 
+     * Update the access level of the permission from the chosen option.
+     *
+     * @param {Prometheus.Models.Permission} permission
+     * @param {String} flag
+     * @param {{value: String}} option
+     * @method updateAccessLevel
+     */
+    @action updateAccessLevel(permission, flag, option) {
+        if (!option) {
+            return;
+        }
+        permission[flag] = option.value;
+    }
+
+    /**
+     * Update the permission, then refresh the save button's disabled state.
+     *
      * @param {Prometheus.Models.Permission} permission
      * @param {String} flag
      * @param {Function} updateDisableState
-     * @param {Event} evt
-     * @method updateAccessLevel
+     * @param {{value: String}} option
+     * @method updatePermission
      */
-    @action updatePermission(permission, flag, updateDisableState, evt) {
-        this.updateAccessLevel(permission, flag, evt);
+    @action updatePermission(permission, flag, updateDisableState, option) {
+        this.updateAccessLevel(permission, flag, option);
         if (typeof updateDisableState === 'function') {
             updateDisableState(permission);
         }
