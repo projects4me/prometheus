@@ -34,9 +34,10 @@
                             class="permission-control"
                             data-module-resource={{control.resourceName}}
                           >
-                            <label class="permission-control__label">{{control.displayLabel}}</label>
                             <div class="permission-control__input">
                               <Role::PermissionOptions
+                                @label={{control.displayLabel}}
+                                @dataField={{concat "action-" control.resourceName}}
                                 @options={{get-permission-options control.permission.resourceName}}
                                 @value={{control.permission.allowed}}
                                 @permission={{control.permission}}
@@ -99,13 +100,16 @@
                             data-field-access={{control.accessMode}}
                             data-module-resource={{control.permission.resourceName}}
                           >
-                            <label class="permission-control__label">{{control.displayLabel}}</label>
                             <div class="permission-control__input">
-                              <select data-field-access-select={{control.field}} {{on "change" (fn this.setFieldAccessMode control)}}>
-                                {{#each this.fieldAccessOptions as |optionObject|}}
-                                  <option value={{optionObject.value}} selected={{eq control.accessMode optionObject.value}}>{{optionObject.label}}</option>
-                                {{/each}}
-                              </select>
+                              <FormFields::FieldRelate
+                                @data-field={{concat "field-access-" control.resourceName}}
+                                @label={{control.displayLabel}}
+                                @relateType="relate-simple"
+                                @options={{this.fieldAccessOptions}}
+                                @selected={{control.accessOption}}
+                                @searchEnabled={{false}}
+                                @onchange={{fn this.setFieldAccessMode control}}
+                              />
                             </div>
                           </div>
                         {{/each}}

@@ -1,5 +1,9 @@
-<select {{on "change" (fn this.updatePermission @permission @flag @updateDisableState)}}>
-  {{#each @options as |optionObject|}}
-  <option value={{optionObject.value}} selected={{eq @value optionObject.value}}>{{optionObject.label}}</option>
-  {{/each}}
-</select>
+<FormFields::FieldRelate
+  @data-field={{@dataField}}
+  @label={{@label}}
+  @relateType="relate-simple"
+  @options={{@options}}
+  @selected={{this.selectedOption}}
+  @searchEnabled={{false}}
+  @onchange={{fn this.updatePermission @permission @flag @updateDisableState}}
+/>

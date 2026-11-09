@@ -123,6 +123,9 @@ export default class RolePermissionsComponent extends Component {
                     moduleName,
                     displayLabel: this.resolveFieldLabel(moduleName, field),
                     accessMode: this.resolveAccessMode(permission.allowed),
+                    accessOption: this.fieldAccessOptions.find(
+                        (option) => option.value === this.resolveAccessMode(permission.allowed)
+                    ),
                     permission,
                     resourceName: permission.resourceName,
                     resourceAlias: permission.resourceAlias
@@ -338,10 +341,10 @@ export default class RolePermissionsComponent extends Component {
      *
      * @method setFieldAccessMode
      * @param {Object} control field control entry
-     * @param {Event} evt
+     * @param {{label: string, value: string}} option the option chosen in the select
      */
-    @action setFieldAccessMode(control, evt) {
-        let mode = evt.target.value;
+    @action setFieldAccessMode(control, option) {
+        let mode = option?.value;
         if (![FIELD_ACCESS_NONE, FIELD_ACCESS_READ, FIELD_ACCESS_WRITE].includes(mode)) {
             return;
         }
