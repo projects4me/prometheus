@@ -7,5 +7,5 @@ Feature: Role | render list of roles
     And default scenario is loaded
     And There are 10 roles in system
     And User_1 is logged in
-    When User navigates to app/role
+    When User opens the roles page
     Then there are 10 roles present in the template

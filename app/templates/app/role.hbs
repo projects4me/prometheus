@@ -1,4 +1,4 @@
-<div class="roles {{if this.isRolePage "roles--detail-open"}}">
+<div class="roles">
   <section class="content-header">
     <h1> {{t "global.module.plural.role"}} </h1>
     <BreadCrumb/>
@@ -6,94 +6,147 @@
 
   <section class="content">
     <div class="row">
-      
-      <div>
-        <div class="box box-primary">
-          <div class="box-body {{if this.isRolePage "role-box-body--detail-open"}}">
-            <div class="role-cards {{this.rolesClass}}">
-
-              <div class="role-cards__search" data-role="role-cards-search">
-                <div class="input-group">
-                  <span class="input-group-addon">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                  </span>
-                  <Input
-                    data-field="search role"
-                    @value={{this.searchQuery}}
-                    name="query"
-                    class="form-control"
-                    autocomplete="off"
-                    placeholder={{concat (t "global.form.search") " " (t "global.module.plural.role") " .."}}
-                  />
-                </div>
+      <div class="col-md-3">
+        <QuickList
+          @title={{t "global.module.plural.role"}}
+          @items={{this.listedRoles}}
+          @hasNext={{this.hasNext}}
+          @isLoading={{this.isListLoading}}
+          @error={{this.listError}}
+          @onRetry={{this.reloadList}}
+          @activeId={{this.selectedRoleId}}
+          @page={{this.page}}
+          @limit={{this.pageSize}}
+          @onPage={{this.changePage}}
+          @sortOptions={{this.sortOptions}}
+          @sort={{this.sort}}
+          @order={{this.listOrder}}
+          @onSort={{this.sortList}}
+          @groupOptions={{this.groupOptions}}
+          @groupBy={{this.group}}
+          @onGroup={{this.groupList}}
+          class="role-browser"
+          data-role-browser
+        >
+          <:actions>
+            <AccessControl @aclContext="role.create">
+              <button type="button" class="btn btn-primary btn-sm" {{on "click" this.showAddRoleDialog}} data-btn="role-add">
+                <i class="fa fa-plus"></i> {{t "views.app.role.browser.new"}}
+              </button>
+            </AccessControl>
+          </:actions>
+          <:search>
+            {{#if this.querySchema}}
+              <div class="box-body role-search" data-role-search>
+                <EzSearchCompact
+                  @schema={{this.querySchema}}
+                  @query={{this.query}}
+                  @savedSearches={{this.ezSavedSearches}}
+                  @activeSavedSearchId={{this.searchId}}
+                  @onSavedSearchChange={{this.selectSavedSearch}}
+                  @onApply={{this.applyQuery}}
+                  @onSave={{this.showEzSaveSearchDialog}}
+                  @onUpdateSavedSearch={{this.updateEzSavedSearch}}
+                  @aclContext="role.read"
+                />
               </div>
-
-              {{#each this.filteredRoles as |role|}}
-                <LinkTo
-                  @route="app.role.page"
-                  @model={{role.id}}
-                  class="role-card-link {{this.roleCardClass}}"
-                >
-                  <Role::Card
-                    @role={{role}}
-                    @coverage={{get this.coverageByRole role.id}}
-                    @members={{get this.membersByRole role.id}}
-                  />
-                </LinkTo>
-              {{/each}}
-
-              {{!-- +Role Add Button --}}
-              <div class="role-card-container {{this.roleCardClass}}">
-                <div class="role-card role-add-card" {{on "click" this.showAddRoleDialog}} data-btn="role-add" role="button" tabindex="0">
-                  <div class="role-add">
-                    <ion class="ion-md-add"></ion>
+            {{/if}}
+          </:search>
+          <:item as |role Item|>
+            {{#let (get this.rowsById role.id) as |row|}}
+              <Item @route="app.role.page" @model={{role.id}} class="role-row role-row--{{row.tier}}" data-role={{role.id}}>
+                <:leading>
+                  <span class="role-row__initials" aria-hidden="true" data-role-field="initials">{{row.initials}}</span>
+                </:leading>
+                <:primary>
+                  <span class="role-row__name" data-role-field="name">{{role.name}}</span>
+                  {{#if row.loaded}}
+                    <span class="role-row__access" data-role-field="coverage">
+                      <span class="role-row__granted" title={{t "views.app.role.card.accessGranted" percent=row.granted}} data-role-field="granted">{{t "views.app.role.browser.granted" percent=row.granted}}</span>
+                      {{#if row.denied}}
+                        <span class="role-row__denied" title={{t "views.app.role.card.accessDenied" percent=row.denied}} data-role-field="denied">{{t "views.app.role.browser.denied" percent=row.denied}}</span>
+                      {{/if}}
+                    </span>
+                  {{/if}}
+                </:primary>
+                <:secondary>
+                  <div class="role-row__description {{unless row.description "role-row__description--empty"}}" data-role-field="description">
+                    {{if row.description row.description (t "views.app.role.card.noDescription")}}
                   </div>
-                  <span class="role-add-card__label">{{t "views.app.role.list.add"}}</span>
-                </div>
-              </div>
-              {{!-- Role Add Button --}}
-              
-              {{!-- Modal for creating new roles --}}
-              {{#if this.addRoleDialog}}
-                {{#bootstrap-modal
-                  title="views.app.role.create.title"
-                  confirmLabel="global.form.save"
-                  closeLabel="global.form.cancel"
-                  confirm=(action "addRole")
-                  close=(action "removeModal")
-                }}
-                <div class="box-body">
-                  <FormFields::FieldText
-                    @placeholder={{t "views.app.role.create.nameplaceholder"}}
-                    @label={{t "views.app.role.create.name"}}
-                    @value={{this.newRole.name}}
-                    @data-field="role.name"
-                    @validate={{action this.validateField "roleCreate" (hash name="name" value=this.newRole.name model=this.newRole)}}
-                    @message={{this.message.roleCreate.name}}                    
-                  />
+                  <div class="role-row__footer">
+                    <span class="role-row__members" data-role-field="members">
+                      {{#if row.members.length}}
+                        <Project::MemberAvatars @members={{row.members}} @maxVisible={{2}} />
+                      {{else}}
+                        {{t "views.app.role.card.noMembers"}}
+                      {{/if}}
+                    </span>
+                    {{#if row.modified}}
+                      <span class="role-row__modified" data-role-field="dateModified">{{moment-format row.modified "DD MMM YYYY"}}</span>
+                    {{/if}}
+                  </div>
+                </:secondary>
+              </Item>
+            {{/let}}
+          </:item>
+        </QuickList>
 
-                  <FormFields::FieldTextArea
-                    @placeholder={{t "views.app.role.create.descriptionplaceholder"}}
-                    @label={{t "views.app.role.create.description"}}
-                    @value={{this.newRole.description}}
-                    @data-field="role.description"
-                    @validate={{action this.validateField "roleCreate" (hash name="description" value=this.newRole.description model=this.newRole)}}
-                    @message={{this.message.roleCreate.description}}
-                  />                  
-                </div>
-                {{/bootstrap-modal}}
-              {{/if}}
+        {{#if this.addRoleDialog}}
+          {{#bootstrap-modal
+            title="views.app.role.create.title"
+            confirmLabel="global.form.save"
+            closeLabel="global.form.cancel"
+            confirm=this.addRole
+            close=this.removeModal
+          }}
+            <div class="box-body">
+              <FormFields::FieldText
+                @placeholder={{t "views.app.role.create.nameplaceholder"}}
+                @label={{t "views.app.role.create.name"}}
+                @value={{this.newRole.name}}
+                @data-field="role.name"
+                @validate={{action this.validateField "roleCreate" (hash name="name" value=this.newRole.name model=this.newRole)}}
+                @message={{this.message.roleCreate.name}}
+              />
 
+              <FormFields::FieldTextArea
+                @placeholder={{t "views.app.role.create.descriptionplaceholder"}}
+                @label={{t "views.app.role.create.description"}}
+                @value={{this.newRole.description}}
+                @data-field="role.description"
+                @validate={{action this.validateField "roleCreate" (hash name="description" value=this.newRole.description model=this.newRole)}}
+                @message={{this.message.roleCreate.description}}
+              />
+            </div>
+          {{/bootstrap-modal}}
+        {{/if}}
+
+        {{#if this.saveSearchDialog}}
+          {{#bootstrap-modal
+              title="global.form.savesearch"
+              confirmLabel="global.form.save"
+              closeLabel="global.form.cancel"
+              confirm=this.saveEzSearch
+              close=this.removeSaveSearchDialog}}
+
+            <div class="ember-view">
+              <label>{{t "views.app.issue.list.savedsearch.query"}}</label>
+              <span data-save-search-query>{{this.saveSearchQuery}}</span>
             </div>
 
-            {{!-- Render app/role/page template here.. --}}
-            {{outlet}}
+            <FormFields::FieldText
+              @placeholder={{t "views.app.issue.list.savedsearch.inputname"}}
+              @label={{t "views.app.issue.list.savedsearch.name"}}
+              @value={{this.newSavedsearch.name}}
+            />
 
-          </div>
-
-        </div>
+          {{/bootstrap-modal}}
+        {{/if}}
       </div>
 
+      <div class="col-md-9">
+        {{outlet}}
+      </div>
     </div>
   </section>
 </div>

@@ -1,12 +1,16 @@
 import steps from '../steps';
-import { typeIn } from '@ember/test-helpers';
+import { fillIn, focus, settled } from '@ember/test-helpers';
+import { runSearch } from '../ez-search-run';
 
 export const when = function () {
     return [
         {
             "User searches for role name $role": (assert) => async function (role) {
-                let searchEl = document.querySelector('[data-field="search role"]');
-                await typeIn(searchEl, role);
+                let input = '[data-role-browser] [data-field="ez-search-input"] input, [data-role-browser] input[data-field="ez-search-input"]';
+                await focus(input);
+                await fillIn(input, `name ~ ${role}`);
+                await runSearch(input);
+                await settled();
             }
         }
     ];

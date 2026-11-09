@@ -2311,6 +2311,27 @@
             "confirmdelete": "Yes, remove role assignment for <strong>{user}</strong>"
           }
         },
+        "browser": {
+          "new": "New Role",
+          "granted": "{percent}%",
+          "denied": "{percent}% denied",
+          "noMatch": "No roles match this search",
+          "sort": {
+            "name": "Name",
+            "dateModified": "Last modified"
+          },
+          "group": {
+            "none": "None",
+            "tier": "Access tier"
+          },
+          "tier": {
+            "high": "High access",
+            "elevated": "Elevated access",
+            "medium": "Medium access",
+            "low": "Basic access",
+            "none": "No access data"
+          }
+        },
         "card": {
           "coverage": "Permission Coverage",
           "access": "{percent}% ACCESS",

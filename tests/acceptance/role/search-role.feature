@@ -8,6 +8,6 @@ Feature: Role | search a role
     And There are 10 roles in system
     And Role 4 has name Astronaut
     And User_1 is logged in
-    When User navigates to app/role
+    When User opens the roles page
     And User searches for role name Astronaut
     Then There will a role name Astronaut in the template

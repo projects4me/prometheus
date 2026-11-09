@@ -7,24 +7,88 @@
 */
 
 .roles {
-  .role-box-body--detail-open {
-    &::after {
-      content: "";
-      display: table;
-      clear: both;
-    }
-  }
+  // ── Role browser rows (QuickList) ─────────────────────────────────────
+  $role-tiers: (
+    high: $primaryColor,
+    elevated: darken($warningColor, 6%),
+    medium: $secondaryColor,
+    low: darken($mediumColor, 12%),
+    none: $mediumColor
+  );
 
-  // Active role: de-emphasise siblings; chevron marks the open card (no border/glow).
-  &.roles--detail-open .role-cards {
-    .role-card-link:not(.active) .role-card {
-      opacity: 0.6;
-      transition: opacity 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  .role-row {
+    .role-row__initials {
+      align-items: center;
+      background-color: rgba($mediumColor, 0.16);
+      color: $mediumColor;
+      display: flex;
+      font-weight: 700;
+      height: 3.6rem;
+      justify-content: center;
+      text-transform: uppercase;
+      width: 3.6rem;
     }
 
-    .role-card-link.active .role-card__open-cue {
-      opacity: 1;
-      transform: translateX(0);
+    .role-row__name {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .role-row__access {
+      flex: 0 0 auto;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+      white-space: nowrap;
+    }
+
+    .role-row__denied {
+      color: $dangerColor;
+      margin-left: 0.5rem;
+    }
+
+    .role-row__description {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &--empty {
+        color: $mediumColor;
+        font-style: italic;
+      }
+    }
+
+    .role-row__footer {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.4rem;
+
+      .member-avatars .member-avatar,
+      .member-avatars .member-avatars-overflow {
+        height: 2.4rem;
+        width: 2.4rem;
+      }
+    }
+
+    .role-row__modified {
+      white-space: nowrap;
+    }
+
+    @each $tier, $colour in $role-tiers {
+      &.role-row--#{$tier} {
+        .role-row__initials {
+          background-color: rgba($colour, 0.14);
+          color: $colour;
+        }
+
+        .role-row__granted {
+          color: $colour;
+        }
+      }
     }
   }
 
@@ -384,13 +448,6 @@
         }
       }
     }
-  }
-
-  // List view: own block row so cards don't wrap around it, but input group is constrained.
-  &:not(.roles--detail-open) .role-cards .role-cards__search .input-group {
-    width: 30rem;
-    max-width: 100%;
-    margin-left: auto;
   }
 
   .role-details {

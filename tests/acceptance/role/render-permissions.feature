@@ -10,7 +10,7 @@ Feature: Role | render permissions
     And There are 10 projects in system
     And There are 10 userroles for role 2
     And User_1 is logged in
-    When User navigates to app/role
+    When User opens the roles page
     And User selects role 2
     Then There are 4 action permissions for issue module
     And There are 6 field permissions for issue module
