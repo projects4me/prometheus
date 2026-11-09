@@ -35,7 +35,7 @@ Used in the Ideas browser.
 
 - actions: header tools, in the box tools of the header.
 - search: a slot under the header, for EzSearchCompact; rendered as is.
-- item: one row per record; yields the record and the Item component, whose primary and secondary blocks hold the first and second line.
+- item: one row per record; yields the record and the Item component, whose primary and secondary blocks hold the first and second line. An optional leading block on the Item puts a visual (an initials square, an icon, an avatar) in a column on the left, as wide as its content and top-aligned, with the two lines lined up beside it; with selection the row reads checkbox, leading, text.
 - group: replaces the label of a group heading; yields the group with key, label, items and count.
 - selectionActions: the actions of the selection bar; yields the selected ids and a function that clears the selection.
 - empty: replaces the default empty state.
