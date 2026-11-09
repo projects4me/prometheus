@@ -4,6 +4,19 @@
   <div class="box box-primary role-record" data-role="role-record">
     <div class="box-header with-border box-header-flex box-header-no-content">
       <h3 class="box-title">{{t "views.app.role.record.title"}}</h3>
+      <div class="box-tools pull-right">
+        <AppUi::Button
+          type="button"
+          class="btn btn-box-tool"
+          data-btn="delete-role"
+          data-toggle="tooltip"
+          title={{t "views.app.role.tabs.permission.deleteRole"}}
+          @onClick={{fn this.deleteRole this.model}}
+          @aclContext="role.delete"
+        >
+          <i class="fa fa-trash"></i>
+        </AppUi::Button>
+      </div>
     </div>
     <div class="box-body">
       <div class="role-record__identity">
@@ -229,7 +242,6 @@
       <Role::Permissions
         @permissionsByModule={{this.permissions}}
         @permissionsState={{this.permissionsState}}
-        @onDelete={{fn this.deleteRole this.model}}
       />
     </div>
     <div class="box-footer">
