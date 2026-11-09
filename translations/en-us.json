@@ -1774,7 +1774,39 @@
           "enableTitle": "Enable service",
           "disableMessage": "Disable {name}? It gets no new tokens until you enable it again.",
           "enableMessage": "Enable {name}? It can get tokens again.",
-          "empty": "No services have enrolled yet."
+          "empty": "No services have enrolled yet.",
+          "copied": "Token copied",
+          "copyFailed": "The token could not be copied",
+          "requests": {
+            "title": "Enrollment requests",
+            "info": "Services that show a code and wait for you to approve them.",
+            "userCode": "Code",
+            "timeLeft": "Time left",
+            "minutesLeft": "{count} min",
+            "expired": "Expired",
+            "approve": "Approve",
+            "deny": "Deny",
+            "approveTitle": "Approve enrollment",
+            "denyTitle": "Deny enrollment",
+            "approveMessage": "Approve {name}? Check that this code matches the one the service shows.",
+            "denyMessage": "Deny {name}? Check that this code matches the one the service shows.",
+            "empty": "No enrollment requests are waiting."
+          },
+          "tokens": {
+            "title": "Enrollment tokens",
+            "info": "Single-use tokens for deploy pipelines that enroll a service unattended.",
+            "namePlaceholder": "Name of the service",
+            "create": "Create token",
+            "active": "Active",
+            "used": "Used",
+            "expired": "Expired",
+            "revoke": "Revoke",
+            "empty": "No enrollment tokens.",
+            "createdTitle": "New enrollment token",
+            "warning": "Copy the token now: it is shown only once. It can be used a single time and expires in 15 minutes.",
+            "copy": "Copy",
+            "copiedIt": "I have copied it"
+          }
         },
         "email": {
           "title": "Outgoing mail (SMTP)",

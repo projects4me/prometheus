@@ -17,6 +17,8 @@ import * as Milestone from './route-handlers/milestone';
 import * as Project from './route-handlers/project';
 import * as Role from './route-handlers/role';
 import * as Serviceclient from './route-handlers/serviceclient';
+import * as Serviceenrollment from './route-handlers/serviceenrollment';
+import * as Serviceenrollmenttoken from './route-handlers/serviceenrollmenttoken';
 import * as Savedsearch from './route-handlers/savedsearch';
 import * as Systemnotification from './route-handlers/systemnotification';
 import * as Systemnotificationrecipient from './route-handlers/systemnotificationrecipient';
@@ -83,6 +85,8 @@ function routes() {
     Project.register(this, ctx);
     Role.register(this, ctx);
     Serviceclient.register(this, ctx);
+    Serviceenrollment.register(this, ctx);
+    Serviceenrollmenttoken.register(this, ctx);
     Savedsearch.register(this, ctx);
     Systemnotification.register(this, ctx);
     Systemnotificationrecipient.register(this, ctx);
