@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import AppRoleController from 'prometheus/controllers/app/role';
+import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { action, computed } from '@ember/object';
 import { inject as controller } from '@ember/controller';
 import { htmlSafe } from '@ember/template';
@@ -18,7 +18,16 @@ import $ from 'jquery';
  * @extends Ember.Controller
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default class AppRolePageController extends AppRoleController {
+export default class AppRolePageController extends PrometheusCreateController {
+    /**
+     * The role browser listed beside this page, whose row of the open role follows the changes made here
+     *
+     * @property roleListController
+     * @type Prometheus.Controllers.App.Role
+     * @public
+     */
+    @controller('app.role') roleListController;
+
     /**
      * This object maintains all of the permissions state that are updated by the user.
      *
@@ -192,6 +201,20 @@ export default class AppRolePageController extends AppRoleController {
     metadata = {
         sections: [
             {
+                // The inline edits of the role name and description
+                name: "roleCreate",
+                fields: [
+                    {
+                        name: "name",
+                        validations: { default: { type: "string", rules: [{ name: "required" }] } }
+                    },
+                    {
+                        name: "description",
+                        validations: { default: { type: "string", rules: [{ name: "required" }] } }
+                    }
+                ]
+            },
+            {
                 name: "userroleCreate",
                 fields: [
                     {
@@ -223,16 +246,6 @@ export default class AppRolePageController extends AppRoleController {
     constructor() {
         super(...arguments);
         this.setupSchema();
-    }
-
-    /**
-     * Close the role detail panel and return to the roles list.
-     *
-     * @method closeRoleDetail
-     * @protected
-     */
-    @action closeRoleDetail() {
-        this.router.transitionTo('app.role');
     }
 
     /**
@@ -582,6 +595,7 @@ export default class AppRolePageController extends AppRoleController {
                     action: function () {
                         userrole.destroyRecord().then(function () {
                             _self.userroles.removeObject(userrole);
+                            _self.syncListMembers();
                             return deleting.update({
                                 message: htmlSafe(_self.intl.t("global.form.deleted")).toString(),
                                 type: 'success',
@@ -744,6 +758,105 @@ export default class AppRolePageController extends AppRoleController {
             });
         } finally {
             _self.isAddingUserroles = false;
+            _self.syncListMembers();
         }
+    }
+
+    /**
+     * Push this role's members into the role browser so its row shows them without reloading the list
+     *
+     * @method syncListMembers
+     * @private
+     */
+    syncListMembers() {
+        if (this.isDestroying || this.isDestroyed || !this.model) {
+            return;
+        }
+        this.roleListController?.syncRoleMembers(this.model.id, this.userroles);
+    }
+
+    /**
+     * Delete a role after Messenger confirmation. The role browser reloads its page without the role and, when the
+     * deleted role was open, the roles index opens the first listed role.
+     *
+     * @method deleteRole
+     * @param {Prometheus.Models.Role} role
+     * @public
+     */
+    @action deleteRole(role) {
+        Logger.debug('App.Role.Page->deleteRole');
+        let _self = this;
+        let moduleTranslated = _self.intl.t('global.module.singular.role');
+
+        let deleting = new Messenger().post({
+            message: htmlSafe(_self.intl.t('views.app.module.list.delete.message', {
+                moduleName: moduleTranslated,
+                name: role.name
+            })),
+            type: 'warning',
+            showCloseButton: true,
+            actions: {
+                confirm: {
+                    label: htmlSafe(_self.intl.t('views.app.module.list.delete.confirmDelete', {
+                        moduleName: moduleTranslated
+                    })).toString(),
+                    action: function () {
+                        deleting.update({
+                            message: _self.intl.t('views.app.module.list.delete.deleting', {
+                                moduleName: moduleTranslated
+                            }),
+                            type: 'info',
+                            actions: false,
+                            hideAfter: false
+                        });
+
+                        let roleId = String(role.id);
+                        let wasOpen = String(_self.model?.id) === roleId;
+                        return role.destroyRecord().then(function () {
+                            deleting.update({
+                                message: _self.intl.t('views.app.module.list.delete.deleted', {
+                                    moduleName: moduleTranslated
+                                }),
+                                type: 'success',
+                                actions: false,
+                                hideAfter: 3
+                            });
+                            return _self.roleListController.roleDeleted(roleId);
+                        }).then(function () {
+                            if (wasOpen && !_self.isDestroying && !_self.isDestroyed) {
+                                _self.router.transitionTo('app.role');
+                            }
+                        }, function (error) {
+                            let detail = error?.detail || {};
+                            let errorMessage = detail.error || error?.message;
+                            let suggestion = detail.suggestion;
+                            let message = suggestion
+                                ? `${errorMessage} | ${suggestion}`
+                                : errorMessage;
+
+                            return deleting.update({
+                                message: message,
+                                type: 'error',
+                                actions: false,
+                                showCloseButton: true
+                            });
+                        });
+                    }
+                },
+                cancel: {
+                    label: htmlSafe(_self.intl.t('views.app.module.list.delete.onsecondthought')).toString(),
+                    action: function () {
+                        return deleting.update({
+                            message: _self.intl.t('views.app.module.list.delete.deletecancel'),
+                            type: 'success',
+                            actions: false,
+                            hideAfter: 3
+                        });
+                    }
+                }
+            }
+        });
+
+        Logger.debug('-App.Role.Page->deleteRole');
     }
 }

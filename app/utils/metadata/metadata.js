@@ -548,6 +548,16 @@ export default Object.extend({
                 }
             }
         },
+        Role: {
+            search: {
+                module: 'Role',
+                textField: 'Role.name',
+                fields: {
+                    'Role.name': { label: 'views.app.role.fields.name', type: 'text', aliases: ['name'] },
+                    'Role.description': { label: 'views.app.role.fields.description', type: 'text', aliases: ['description'] }
+                }
+            }
+        },
         Dashboard:{
             widgets: {
                 recentIssues: {

@@ -4,514 +4,904 @@
 
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { tracked } from '@glimmer/tracking';
-import { action, get } from '@ember/object';
-import { inject as controller } from '@ember/controller';
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
+import { allSettled } from 'rsvp';
+import UrlState from 'prometheus/utils/state/url-state';
+import ListLoader from 'prometheus/utils/state/list-loader';
+import {
+    DEFAULT_PAGE, DEFAULT_SORT, DEFAULT_ORDER, DEFAULT_GROUP, PAGE_SIZE, BROWSER_PARAMS
+} from 'prometheus/utils/role/browser-defaults';
+import { buildRoleListRequest, buildUserrolesRequest } from 'prometheus/utils/role/browser-requests';
+import {
+    TIERS, accessTier, accessSplit, coverageByRole, membersByRole, roleInitials, toCoverageEntries, userroleRoleId
+} from 'prometheus/utils/role/access';
+
+const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
+const LIST_ROUTE = 'app.role';
+const INDEX_ROUTE = 'app.role.index';
+const PAGE_ROUTE = 'app.role.page';
 
 /**
- * The role list controller.
+ * The controller of the role browser: the page of roles listed beside the open role, with the access coverage and
+ * members of each listed role, its search, paging, sort and grouping, and the add-role dialog.
  *
  * @class AppRoleController
- * @namespace Prometheus.Controller
- * @extends Ember.Controller
+ * @namespace Prometheus.Controllers
+ * @module App.Role
+ * @extends PrometheusCreateController
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class AppRoleController extends PrometheusCreateController {
-
     /**
-     * The role list controller. Delete is triggered from app.role.page, which
-     * extends this class but does not own the roles array — the parent route does.
+     * The saved searches service.
      *
-     * @property roleListController
-     * @type Prometheus.Controller.App.Role
-     * @for AppRoleController
-     * @private
-     */
-    @controller('app.role') roleListController;
-
-    /**
-     * This flag is used to show or hide the modal dialog box for adding new roles
-     * in the system.
-     *
-     * @property addRoleDialog
-     * @type bool
-     * @for AppRoleController
-     * @private
-     */
-    addRoleDialog = false;
-
-    /**
-     * This function is called on the initialization of the controller. In this function
-     * we're calling setupSchema method in order to generate schema, by analyzing metadata
-     * defined in the controller, that will be used to validate the form of the template.
-     *
-     * @method constructor
+     * @property savedSearch
+     * @type Ember.Service
      * @public
      */
-    constructor() {
-        super(...arguments);
-        this.setupSchema();
-    }
+    @service savedSearch;
 
     /**
-     * Roles shown on the list. Reassign the array (do not mutate in place) so
-     * autotracking invalidates dependent getters.
+     * The query params of the role browser, all kept without refreshing the route
      *
-     * @property roles
-     * @type {Array}
+     * @property queryParams
+     * @type Array
+     * @public
      */
-    @tracked roles = [];
+    queryParams = ['query', 'searchId', 'page', 'sort', 'order', 'group'];
 
     /**
-     * Plain coverage entries `{ roleId, resourceName, allowed }` for all roles.
+     * The Gaia query the list is narrowed by, empty for none
+     *
+     * @property query
+     * @type String
+     * @public
+     */
+    @tracked query = '';
+
+    /**
+     * The id of the saved search the query came from, null for none
+     *
+     * @property searchId
+     * @type String
+     * @public
+     */
+    @tracked searchId = null;
+
+    /**
+     * The page of the role list, 1 based
+     *
+     * @property page
+     * @type Number
+     * @public
+     */
+    @tracked page = DEFAULT_PAGE;
+
+    /**
+     * The field the roles are sorted by on the server
+     *
+     * @property sort
+     * @type String
+     * @public
+     */
+    @tracked sort = DEFAULT_SORT;
+
+    /**
+     * The direction of the sort, ASC or DESC
+     *
+     * @property order
+     * @type String
+     * @public
+     */
+    @tracked order = DEFAULT_ORDER;
+
+    /**
+     * How the loaded page is grouped: none or tier (client side, only the loaded page)
+     *
+     * @property group
+     * @type String
+     * @public
+     */
+    @tracked group = DEFAULT_GROUP;
+
+    /**
+     * The number of roles a page holds
+     *
+     * @property pageSize
+     * @type Number
+     * @public
+     */
+    pageSize = PAGE_SIZE;
+
+    /**
+     * The search, page, sort, order and group of the browser, kept in the URL; a change that alters the list request
+     * reloads only the list
+     *
+     * @property urlState
+     * @type UrlState
+     * @public
+     */
+    urlState;
+
+    /**
+     * The page of roles the browser lists, with its loading flag, error and retry
+     *
+     * @property roleList
+     * @type ListLoader
+     * @public
+     */
+    roleList;
+
+    /**
+     * The roles created here since the list was last loaded, listed before the loaded page until the next load
+     *
+     * @property addedRoles
+     * @type Array
+     * @private
+     */
+    @tracked addedRoles = [];
+
+    /**
+     * The action permissions of the listed roles as coverage entries `{ roleId, resourceName, allowed }`
      *
      * @property allPermissions
-     * @type {Array}
+     * @type Array
+     * @public
      */
     @tracked allPermissions = [];
 
     /**
-     * Userrole records (with user) used to build member avatars on cards.
+     * The user assignments of the listed roles, with their users
      *
      * @property allUserroles
-     * @type {Array}
+     * @type Array
+     * @public
      */
     @tracked allUserroles = [];
 
     /**
-     * This property is used to keep track the query for searching the role.
+     * The ids of the listed roles whose coverage and members have loaded
      *
-     * @property searchQuery
-     * @type String
-     * @for AppRoleController
-     * @private
+     * @property detailsLoadedIds
+     * @type Set
+     * @public
      */
-    @tracked searchQuery = '';
+    @tracked detailsLoadedIds = new Set();
 
     /**
-     * This object holds all of the information that we need to create our schema and also need to 
-     * render the template (in future).
+     * Counts the detail loads so that only the latest one fills the coverage and members
+     *
+     * @property detailsSequence
+     * @type Number
+     * @private
+     */
+    detailsSequence = 0;
+
+    /**
+     * The id of the role open on the page route, null on the index
+     *
+     * @property selectedRoleId
+     * @type String
+     * @public
+     */
+    @tracked selectedRoleId = null;
+
+    /**
+     * The unsaved role the add-role dialog fills, set by the route
+     *
+     * @property newRole
+     * @type Prometheus.Models.Role
+     * @public
+     */
+    @tracked newRole = null;
+
+    /**
+     * Whether the add-role dialog is open
+     *
+     * @property addRoleDialog
+     * @type Boolean
+     * @public
+     */
+    @tracked addRoleDialog = false;
+
+    /**
+     * The ezSearch schema of the roles, loaded by the route
+     *
+     * @property querySchema
+     * @type Object
+     * @public
+     */
+    @tracked querySchema = null;
+
+    /**
+     * The saved searches of the user for the roles, loaded by the route; always replaced, never mutated
+     *
+     * @property savedsearches
+     * @type Array
+     * @public
+     */
+    @tracked savedsearches = [];
+
+    /**
+     * The unsaved record the save dialog names
+     *
+     * @property newSavedsearch
+     * @type Object
+     * @public
+     */
+    @tracked newSavedsearch = null;
+
+    /**
+     * Whether the save search dialog is open
+     *
+     * @property saveSearchDialog
+     * @type Boolean
+     * @public
+     */
+    @tracked saveSearchDialog = false;
+
+    /**
+     * The query the save dialog shows
+     *
+     * @property saveSearchQuery
+     * @type String
+     * @public
+     */
+    @tracked saveSearchQuery = '';
+
+    /**
+     * The validation of the add-role dialog
+     *
      * @property metadata
      * @type Object
-     * @for AppRoleController
-     * @protected
+     * @public
      */
     metadata = {
         sections: [
             {
-                name: "roleCreate",
+                name: 'roleCreate',
                 fields: [
                     {
-                        name: "name",
-                        validations: {
-                            default: {
-                                type: "string",
-                                rules: [
-                                    {
-                                        name: "required"
-                                    }
-                                ]
-                            }
-                        }
+                        name: 'name',
+                        validations: { default: { type: 'string', rules: [{ name: 'required' }] } }
                     },
                     {
-                        name: "description",
-                        validations: {
-                            default: {
-                                type: "string",
-                                rules: [
-                                    {
-                                        name: "required"
-                                    }
-                                ]
-                            }
-                        }
+                        name: 'description',
+                        validations: { default: { type: 'string', rules: [{ name: 'required' }] } }
                     }
                 ]
             }
         ]
-    }
+    };
 
     /**
-     * Roles matching the current search query.
+     * Builds the validation schema, the list loader and the URL state; a param change that alters the list request
+     * reloads the list
      *
-     * @property filteredRoles
-     * @return {Array}
+     * @constructor
      */
-    get filteredRoles() {
-        let query = (this.searchQuery || '').toLowerCase();
-        let roles = this.roles || [];
-
-        if (!query) {
-            return roles;
-        }
-
-        return roles.filter((role) => {
-            let name = (role.name || '').toLowerCase();
-            return name.includes(query);
+    constructor() {
+        super(...arguments);
+        this.setupSchema();
+        this.roleList = new ListLoader({
+            store: this.store,
+            modelName: 'role',
+            pageSize: this.pageSize,
+            owner: this,
+            buildRequest: values => buildRoleListRequest(values)
         });
+        this.urlState = new UrlState(this, { schema: BROWSER_PARAMS, routeName: LIST_ROUTE });
+        this.urlState.onChange(values => this.paramsChanged(values));
     }
 
     /**
-     * Action-level permission resource names (e.g. "issue.get", "role.delete") are
-     * those whose second dot-segment is one of the four CRUD verbs. Field-mode
-     * permissions ("issue.subject", "issue.name") are excluded so the denominator
-     * reflects meaningful privilege surface rather than schema width.
-     */
-    _ACTION_VERBS = new Set(['get', 'create', 'update', 'delete']);
-
-    /**
-     * Whether an action permission counts as granted for coverage.
+     * The sort options of the list menu
      *
-     * Matches product ACL semantics: unset / empty allowed is the permissive
-     * default (grant). Explicit denies are '0'. Explicit grants are '1' (all)
-     * or '2' (members, for scoped resources).
-     *
-     * @method isActionAllowed
-     * @param {*} allowed
-     * @returns {boolean}
+     * @property sortOptions
+     * @type Array
+     * @public
      */
-    isActionAllowed(allowed) {
-        if (allowed === '0' || allowed === 0) {
-            return false;
-        }
-        // Permissive default (not yet saved / empty string)
-        if (allowed === '' || allowed === null || allowed === undefined) {
-            return true;
-        }
-        return allowed === '1'
-            || allowed === 1
-            || allowed === '2'
-            || allowed === 2
-            || allowed === true;
+    get sortOptions() {
+        return [
+            { key: 'Role.name', label: this.intl.t('views.app.role.browser.sort.name') },
+            { key: 'Role.dateModified', label: this.intl.t('views.app.role.browser.sort.dateModified') }
+        ];
     }
 
     /**
-     * Permission-coverage percentage for every role.
-     * Reads `@tracked` `allPermissions` / `roles` so autotracking invalidates
-     * this getter when those arrays are reassigned.
+     * The group options of the list menu: none, or the access tier of the loaded page
+     *
+     * @property groupOptions
+     * @type Array
+     * @public
+     */
+    get groupOptions() {
+        return [
+            { key: 'none', label: this.intl.t('views.app.role.browser.group.none') },
+            {
+                key: 'tier',
+                label: this.intl.t('views.app.role.browser.group.tier'),
+                groupKey: role => this.rowsById[role.id]?.tier ?? 'none',
+                groupLabel: key => this.intl.t(`views.app.role.browser.tier.${key}`)
+            }
+        ];
+    }
+
+    /**
+     * The order in the lower case the QuickList toolbar uses
+     *
+     * @property listOrder
+     * @type String
+     * @public
+     */
+    get listOrder() {
+        return String(this.order).toLowerCase();
+    }
+
+    /**
+     * The listed roles: those created here since the last load, then the loaded page in the server's order
+     *
+     * @property roles
+     * @type Array
+     * @public
+     */
+    get roles() {
+        let items = this.roleList.items;
+        let added = this.addedRoles.filter(role => !items.some(listed => listed.id === role.id));
+        return added.length ? [...added, ...items] : items;
+    }
+
+    /**
+     * The roles in the order the browser shows them: grouped by tier, the tiers run from the most to the least access
+     *
+     * @property listedRoles
+     * @type Array
+     * @public
+     */
+    get listedRoles() {
+        if (this.group !== 'tier') {
+            return this.roles;
+        }
+        let rank = role => TIERS.indexOf(this.rowsById[role.id]?.tier ?? 'none');
+        return [...this.roles].sort((a, b) => rank(a) - rank(b));
+    }
+
+    /**
+     * The access coverage in percent of every listed role whose permissions loaded, by role id
      *
      * @property coverageByRole
-     * @type {Object}
+     * @type Object
+     * @public
      */
     get coverageByRole() {
-        let statsByRole = {};
-        let actionVerbs = this._ACTION_VERBS;
-
-        (this.allPermissions || []).forEach((permission) => {
-            let parts = (permission.resourceName || '').split('.');
-            if (parts.length !== 2 || !actionVerbs.has(parts[1])) {
-                return;
-            }
-
-            let roleId = String(permission.roleId);
-            if (!statsByRole[roleId]) {
-                statsByRole[roleId] = { total: 0, allowed: 0 };
-            }
-            statsByRole[roleId].total++;
-            if (this.isActionAllowed(permission.allowed)) {
-                statsByRole[roleId].allowed++;
-            }
-        });
-
-        let coverage = {};
-        (this.roles || []).forEach((role) => {
-            let stats = statsByRole[String(role.id)];
-            coverage[role.id] = (stats && stats.total)
-                ? Math.round((stats.allowed / stats.total) * 100)
-                : 0;
-        });
-
-        return coverage;
+        return coverageByRole(this.allPermissions);
     }
 
     /**
-     * Users assigned to each role, keyed by roleId.
+     * The members of every listed role, by role id
      *
      * @property membersByRole
-     * @type {Object}
+     * @type Object
+     * @public
      */
     get membersByRole() {
-        let byRole = {};
-
-        (this.allUserroles || []).forEach((userrole) => {
-            let roleId = String(get(userrole, 'roleId') || '');
-            if (!roleId) {
-                return;
-            }
-
-            // belongsTo may be a PromiseProxy — always use Ember.get, never `.id`
-            let user = get(userrole, 'user');
-            let userId = user ? get(user, 'id') : null;
-            if (!userId) {
-                return;
-            }
-
-            if (!byRole[roleId]) {
-                byRole[roleId] = [];
-            }
-
-            // Plain objects so avatar templates never hit proxy `.id` asserts
-            byRole[roleId].push({
-                id: userId,
-                name: get(user, 'name') || ''
-            });
-        });
-
-        return byRole;
+        return membersByRole(this.allUserroles);
     }
 
     /**
-     * Replace coverage entries for one role and reassign `allPermissions` so
-     * `coverageByRole` autotracks.
+     * What a row of the browser shows for every listed role, by role id: initials, tier, the granted and denied
+     * percentages, members and the modified date
+     *
+     * @property rowsById
+     * @type Object
+     * @public
+     */
+    get rowsById() {
+        let coverage = this.coverageByRole;
+        let members = this.membersByRole;
+        let rows = {};
+        for (let role of this.roles) {
+            let id = String(role.id);
+            let loaded = this.detailsLoadedIds.has(id);
+            let split = accessSplit(loaded ? (coverage[id] ?? 0) : null);
+            rows[role.id] = {
+                initials: roleInitials(role.name),
+                tier: split.known ? accessTier(split.granted) : 'none',
+                loaded,
+                granted: split.granted,
+                denied: split.denied,
+                members: members[id] || [],
+                description: (role.description && String(role.description).trim()) || '',
+                modified: role.dateModified || role.dateCreated || null
+            };
+        }
+        return rows;
+    }
+
+    /**
+     * Whether Gaia linked a next page of the list
+     *
+     * @property hasNext
+     * @type Boolean
+     * @public
+     */
+    get hasNext() {
+        return this.roleList.hasNext;
+    }
+
+    /**
+     * Whether the list is loading a page
+     *
+     * @property isListLoading
+     * @type Boolean
+     * @public
+     */
+    get isListLoading() {
+        return this.roleList.isLoading;
+    }
+
+    /**
+     * The error of the latest list load
+     *
+     * @property listError
+     * @type Object
+     * @public
+     */
+    get listError() {
+        return this.roleList.error;
+    }
+
+    /**
+     * Whether a page of the list has loaded and nothing is loading
+     *
+     * @property isListLoaded
+     * @type Boolean
+     * @public
+     */
+    get isListLoaded() {
+        return Boolean(this.roleList.params) && !this.roleList.isLoading && !this.roleList.error;
+    }
+
+    /**
+     * The saved searches in the shape <EzSearchCompact> expects
+     *
+     * @property ezSavedSearches
+     * @type Array
+     * @public
+     */
+    get ezSavedSearches() {
+        return this.savedsearches.map(search => ({
+            id: search.get('id'),
+            name: search.get('name'),
+            query: search.get('searchquery')
+        }));
+    }
+
+    /**
+     * Reloads the list when the changed params alter its request; grouping only regroups the page
+     *
+     * @method paramsChanged
+     * @param {Object} values The current params
+     * @returns {Promise|void}
+     * @private
+     */
+    paramsChanged(values) {
+        if (this.roleList.params && this.isSameRequest(values, this.roleList.params)) {
+            return;
+        }
+        return this.loadList(values);
+    }
+
+    /**
+     * Whether two sets of params send the same list request
+     *
+     * @method isSameRequest
+     * @param {Object} a
+     * @param {Object} b
+     * @returns {Boolean}
+     * @private
+     */
+    isSameRequest(a, b) {
+        return JSON.stringify(buildRoleListRequest(a)) === JSON.stringify(buildRoleListRequest(b));
+    }
+
+    /**
+     * Shows the first page the route loaded; a page that failed to load is loaded again here, so the list shows its
+     * error and retry
+     *
+     * @method showFirstPage
+     * @param {Object} values The params the page was loaded for
+     * @param {Object} firstPage `{ records }` or `{ error }`
+     * @returns {Promise}
+     * @public
+     */
+    showFirstPage(values, firstPage) {
+        this.addedRoles = [];
+        if (firstPage?.error) {
+            return this.loadList(values);
+        }
+        this.roleList.seed(firstPage?.records, values);
+        return this.loadRoleDetails(this.roles);
+    }
+
+    /**
+     * Loads the page of the list for the params, opens its first role when none is open, then loads the coverage
+     * and members of its roles
+     *
+     * @method loadList
+     * @param {Object} values
+     * @returns {Promise}
+     * @public
+     */
+    async loadList(values) {
+        this.addedRoles = [];
+        return this.afterListLoad(await this.roleList.run(values));
+    }
+
+    /**
+     * Loads the current page of the list again; the retry of the list error and the reload after a create or delete
+     *
+     * @method reloadList
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async reloadList() {
+        return this.afterListLoad(await this.roleList.retry());
+    }
+
+    /**
+     * Opens the first listed role when none is open and loads the coverage and members of the listed roles
+     *
+     * @method afterListLoad
+     * @param {Array|undefined} records The loaded page, undefined when a newer load replaced it or it failed
+     * @returns {Promise}
+     * @private
+     */
+    async afterListLoad(records) {
+        if (!records || this.isDestroying || this.isDestroyed) {
+            return;
+        }
+        this.openFirstRole();
+        await this.loadRoleDetails(this.roles);
+    }
+
+    /**
+     * Opens the first listed role when the roles area shows none, replacing the history entry so Back does not
+     * return to the empty list; it never moves the user away from an open role
+     *
+     * @method openFirstRole
+     * @returns {void}
+     * @public
+     */
+    openFirstRole() {
+        let first = this.roles[0];
+        if (first && !this.selectedRoleId && this.router.currentRouteName === INDEX_ROUTE) {
+            this.router.replaceWith(PAGE_ROUTE, first.id);
+        }
+    }
+
+    /**
+     * Loads the permissions of every given role (one query per role, as the permission API needs the roleId) and
+     * the user assignments of all of them with their users, then shows their coverage and members
+     *
+     * @method loadRoleDetails
+     * @param {Array} roles
+     * @returns {Promise}
+     * @public
+     */
+    async loadRoleDetails(roles) {
+        let sequence = ++this.detailsSequence;
+        let roleIds = roles.map(role => String(role.id));
+        let request = buildUserrolesRequest(roleIds);
+        let [userroles, ...permissions] = await allSettled([
+            request ? this.store.query('userrole', request) : Promise.resolve([]),
+            ...roleIds.map(roleId => this.store.query('permission', { roleId }))
+        ]);
+        if (this.isDestroying || this.isDestroyed || sequence !== this.detailsSequence) {
+            return;
+        }
+        let entries = [];
+        permissions.forEach((result, index) => {
+            if (result.state === 'fulfilled') {
+                entries.push(...toCoverageEntries(roleIds[index], result.value));
+            }
+        });
+        if (userroles.state === 'rejected') {
+            this.errorManager.handleError(userroles.reason, { moduleName: 'role' });
+        }
+        this.allPermissions = entries;
+        this.allUserroles = userroles.state === 'fulfilled' ? (userroles.value?.toArray?.() ?? [...userroles.value]) : [];
+        this.detailsLoadedIds = new Set(roleIds);
+    }
+
+    /**
+     * Replaces the coverage entries of one role, after its permissions were saved on the role page
      *
      * @method syncRoleCoverage
-     * @param {string} roleId
-     * @param {Array} permissions Ember Data permission records or plain entries
+     * @param {String} roleId
+     * @param {Array} permissions Permission records or plain entries
+     * @returns {void}
+     * @public
      */
     syncRoleCoverage(roleId, permissions) {
-        let roleIdStr = String(roleId);
-        let retained = (this.allPermissions || []).filter(
-            (entry) => String(entry.roleId) !== roleIdStr
-        );
-
-        let list = [];
-        if (permissions) {
-            list = typeof permissions.toArray === 'function'
-                ? permissions.toArray()
-                : Array.from(permissions);
-        }
-
-        let fresh = list.map((permission) => ({
-            roleId: roleIdStr,
-            resourceName: get(permission, 'resourceName') || '',
-            allowed: get(permission, 'allowed')
-        })).filter((entry) => entry.resourceName);
-
-        this.allPermissions = [...retained, ...fresh];
+        let id = String(roleId);
+        let retained = this.allPermissions.filter(entry => String(entry.roleId) !== id);
+        this.allPermissions = [...retained, ...toCoverageEntries(id, permissions)];
+        this.detailsLoadedIds = new Set([...this.detailsLoadedIds, id]);
     }
 
     /**
-     * Whether the role detail pane (or its loading/error state) is active.
-     * Must be true while page is loading so the cards column stays narrow
-     * and the skeleton renders beside it, not below the full-width grid.
+     * Replaces the members of one role, after its members were changed on the role page
      *
-     * @property isRolePage
-     * @return Boolean
+     * @method syncRoleMembers
+     * @param {String} roleId
+     * @param {Array} userroles The role's user assignments with their users
+     * @returns {void}
+     * @public
      */
-    get isRolePage() {
-        let routeName = this.router.currentRouteName || '';
-        return routeName.includes('role.page');
+    syncRoleMembers(roleId, userroles) {
+        let id = String(roleId);
+        let retained = this.allUserroles.filter(userrole => userroleRoleId(userrole) !== id);
+        this.allUserroles = [...retained, ...(userroles?.toArray?.() ?? userroles ?? [])];
     }
 
     /**
-     * This function returns the css classes for the div containing roles, depending upon
-     * the current route.
-     * 
-     * @property roleClass
-     * @return String
+     * Reloads the list after a role was deleted on the role page
+     *
+     * @method roleDeleted
+     * @param {String} roleId
+     * @returns {Promise}
+     * @public
      */
-    get rolesClass() {
-        return this.isRolePage
-            ? 'col-lg-2 col-md-12 col-sm-12 col-xs-12'
-            : 'col-md-12';
+    async roleDeleted(roleId) {
+        this.addedRoles = this.addedRoles.filter(role => String(role.id) !== String(roleId));
+        if (String(this.selectedRoleId) === String(roleId)) {
+            this.selectedRoleId = null;
+        }
+        await this.reloadList();
     }
 
     /**
-     * This function returns the css classes for the role cards, depending upon
-     * the current route.
-     * 
-     * @property roleCardClass
-     * @return String
+     * Sorts the list by a field; the modified date starts with the newest first, the name from A to Z
+     *
+     * @method sortList
+     * @param {String} key The sort field
+     * @param {String} order asc or desc as the toolbar sends it
+     * @returns {void}
+     * @public
      */
-    get roleCardClass() {
-        return this.isRolePage
-            ? 'col-lg-12 col-md-3 col-sm-6 col-xs-6'
-            : 'col-xs-6 col-sm-6 col-lg-2 col-md-3';
+    @action
+    sortList(key, order) {
+        let next = key === this.sort ? order : key === 'Role.name' ? 'asc' : 'desc';
+        this.urlState.set({ sort: key, order: next.toUpperCase() });
     }
 
     /**
-     * This function is used to show the add role modal dialog box by setting
-     * the addRoleDialog flag to true.
+     * Groups the loaded page; the request does not change, so the page stays
+     *
+     * @method groupList
+     * @param {String} key none or tier
+     * @returns {void}
+     * @public
+     */
+    @action
+    groupList(key) {
+        this.urlState.set({ group: key, page: this.page });
+    }
+
+    /**
+     * Opens a page of the list
+     *
+     * @method changePage
+     * @param {Number} page
+     * @returns {void}
+     * @public
+     */
+    @action
+    changePage(page) {
+        this.urlState.set({ page });
+    }
+
+    /**
+     * Runs a query from ezSearch; only the list reloads for it
+     *
+     * @method applyQuery
+     * @param {String} query The Gaia query, empty for none
+     * @public
+     */
+    @action
+    applyQuery(query) {
+        this.urlState.set({ query: query || '' });
+    }
+
+    /**
+     * Marks a saved search as the active one, or clears the mark; its query arrives through applyQuery
+     *
+     * @method selectSavedSearch
+     * @param {Object|null} search The picked item or null
+     * @public
+     */
+    @action
+    selectSavedSearch(search) {
+        this.searchId = search ? String(search.id) : null;
+    }
+
+    /**
+     * Opens the save dialog for the query ezSearch hands over
+     *
+     * @method showEzSaveSearchDialog
+     * @param {String} query
+     * @public
+     */
+    @action
+    showEzSaveSearchDialog(query) {
+        this.saveSearchQuery = query;
+        this.saveSearchDialog = true;
+    }
+
+    /**
+     * Closes the save dialog
+     *
+     * @method removeSaveSearchDialog
+     * @public
+     */
+    @action
+    removeSaveSearchDialog() {
+        this.saveSearchDialog = false;
+    }
+
+    /**
+     * Saves the query of the dialog as a saved search of the roles
+     *
+     * @method saveEzSearch
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async saveEzSearch() {
+        let query = this.saveSearchQuery;
+        if (!query) {
+            this.notify('error', this.intl.t(`${SAVED_SEARCH_MESSAGES}.missing`));
+            this.removeSaveSearchDialog();
+            return;
+        }
+        try {
+            let data = await this.savedSearch.create(this.newSavedsearch, { relatedTo: 'role', query });
+            if (this.isDestroying || this.isDestroyed) {
+                return;
+            }
+            this.savedsearches = [...this.savedsearches, data];
+            this.newSavedsearch = this.store.createRecord('savedsearch');
+            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.added`, { name: data.get('name') })));
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
+        }
+        if (!this.isDestroying && !this.isDestroyed) {
+            this.removeSaveSearchDialog();
+        }
+    }
+
+    /**
+     * Replaces the query of a saved search with the one ezSearch hands over
+     *
+     * @method updateEzSavedSearch
+     * @param {Object} search The saved search item
+     * @param {String} query
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async updateEzSavedSearch(search, query) {
+        let record = this.savedsearches.find(item => String(item.get('id')) === String(search.id));
+        if (!record) {
+            return;
+        }
+        try {
+            await this.savedSearch.update(record, query);
+            if (this.isDestroying || this.isDestroyed) {
+                return;
+            }
+            this.savedsearches = [...this.savedsearches];
+            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.updated`, { name: record.get('name') })));
+        } catch (error) {
+            record.rollbackAttributes();
+            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
+        }
+    }
+
+    /**
+     * Shows the add-role dialog
      *
      * @method showAddRoleDialog
-     * @protected
+     * @public
      */
-    @action showAddRoleDialog() {
-        this.set('addRoleDialog', true);
+    @action
+    showAddRoleDialog() {
+        this.addRoleDialog = true;
     }
 
     /**
-     * This function is used to hide the add role modal
+     * Hides the add-role dialog
      *
      * @method removeModal
-     * @protected
+     * @public
      */
-    @action removeModal() {
-        if (this.isDestroyed || this.isDestroying) return;
-        this.set('addRoleDialog', false);
+    @action
+    removeModal() {
+        if (this.isDestroyed || this.isDestroying) {
+            return;
+        }
+        this.addRoleDialog = false;
         $('.modal').modal('hide');
     }
 
     /**
-     * This function is used to add a new role in the system
+     * Saves the role of the add-role dialog, reloads the listed page with the new role in it and opens it
      *
      * @method addRole
-     * @protected
+     * @returns {Promise}
+     * @public
      */
-    @action addRole() {
+    @action
+    async addRole() {
         Logger.debug('AppRoleController:addRole');
-        let _self = this;
-        let newRole = _self.newRole;
-
-        this.validate(newRole, 'roleCreate')
-            .then((validation) => {
-                if (validation.isValid) {
-                    newRole.save().then(function (role) {
-                        Logger.debug('A new role has been saved');
-                        // Reassign tracked arrays (in-place pushObject would not invalidate getters)
-                        _self.roles = [...(_self.roles || []), role];
-
-                        // Load this role's permission catalog so coverage % is correct
-                        // immediately (permission list API requires roleId).
-                        _self.store.query('permission', { roleId: role.id }).then((perms) => {
-                            let entries = (typeof perms.toArray === 'function'
-                                ? perms.toArray()
-                                : Array.from(perms || [])
-                            ).map((permission) => ({
-                                roleId: String(role.id),
-                                resourceName: permission.resourceName || '',
-                                allowed: permission.allowed
-                            }));
-                            _self.allPermissions = [
-                                ...(_self.allPermissions || []),
-                                ...entries
-                            ];
-                        }).catch(() => {
-                            // Coverage stays 0 until next full list reload — non-fatal.
-                        });
-
-                        new Messenger().post({
-                            message: _self.intl.t("views.app.role.created", { name: role.name }),
-                            type: 'success',
-                            showCloseButton: true
-                        });
-
-                        _self.removeModal();
-                        _self.set('newRole', _self.store.createRecord('role', {}));
-                    });
-
-                } else {
-                    let messages = _self._buildMessages(validation.errors, 'role');
-
-                    new Messenger().post({
-                        message: messages,
-                        type: 'error',
-                        showCloseButton: true
-                    });
-                }
-            });
+        let newRole = this.newRole;
+        let validation = await this.validate(newRole, 'roleCreate');
+        if (!validation.isValid) {
+            this.notify('error', this._buildMessages(validation.errors, 'role'));
+            return false;
+        }
+        let role;
+        try {
+            role = await newRole.save();
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'role' });
+            return false;
+        }
+        if (this.isDestroying || this.isDestroyed) {
+            return false;
+        }
+        this.notify('success', this.intl.t('views.app.role.created', { name: role.name }));
+        this.removeModal();
+        this.newRole = this.store.createRecord('role', {});
+        this.addedRoles = [role, ...this.addedRoles];
+        this.router.transitionTo(PAGE_ROUTE, role.id);
+        await this.reloadList();
         return false;
     }
 
     /**
-     * Delete a role after Messenger confirmation. Used from the role
-     * detail page (page controller extends this controller).
+     * Puts the browser back to its defaults and drops the listed page, when the roles area is left, so the next
+     * visit starts clean
      *
-     * @method deleteRole
-     * @param {Prometheus.Models.Role} role
-     * @protected
+     * @method resetBrowser
+     * @returns {void}
+     * @public
      */
-    @action deleteRole(role) {
-        Logger.debug('App.Role->deleteRole');
-        let _self = this;
-        let moduleTranslated = _self.intl.t('global.module.singular.role');
+    resetBrowser() {
+        UrlState.resetController(this);
+        this.roleList.reset();
+        this.detailsSequence++;
+        this.addedRoles = [];
+        this.allPermissions = [];
+        this.allUserroles = [];
+        this.detailsLoadedIds = new Set();
+        this.selectedRoleId = null;
+        this.searchId = null;
+    }
 
-        let deleting = new Messenger().post({
-            message: htmlSafe(_self.intl.t('views.app.module.list.delete.message', {
-                moduleName: moduleTranslated,
-                name: role.name
-            })),
-            type: 'warning',
-            showCloseButton: true,
-            actions: {
-                confirm: {
-                    label: htmlSafe(_self.intl.t('views.app.module.list.delete.confirmDelete', {
-                        moduleName: moduleTranslated
-                    })).toString(),
-                    action: function () {
-                        deleting.update({
-                            message: _self.intl.t('views.app.module.list.delete.deleting', {
-                                moduleName: moduleTranslated
-                            }),
-                            type: 'info',
-                            actions: false,
-                            hideAfter: false
-                        });
-
-                        return role.destroyRecord().then(function () {
-                            // Roles live on app.role (list), not on the page controller instance.
-                            let listController = _self.roleListController;
-                            if (listController.roles) {
-                                listController.roles = listController.roles.filter(
-                                    (entry) => String(entry.id) !== String(role.id)
-                                );
-                            }
-                            if (listController.allPermissions) {
-                                listController.allPermissions = listController.allPermissions.filter(
-                                    (entry) => String(entry.roleId) !== String(role.id)
-                                );
-                            }
-                            if (listController.allUserroles) {
-                                listController.allUserroles = listController.allUserroles.filter(
-                                    (entry) => String(get(entry, 'roleId')) !== String(role.id)
-                                );
-                            }
-
-                            if (_self.isRolePage
-                                && String(_self.model?.id) === String(role.id)) {
-                                _self.router.transitionTo('app.role');
-                            }
-
-                            return deleting.update({
-                                message: _self.intl.t('views.app.module.list.delete.deleted', {
-                                    moduleName: moduleTranslated
-                                }),
-                                type: 'success',
-                                actions: false,
-                                hideAfter: 3
-                            });
-                        }).catch(function (error) {
-                            let detail = error.detail || {};
-                            let errorMessage = detail.error || error.message;
-                            let suggestion = detail.suggestion;
-                            let message = suggestion
-                                ? `${errorMessage} | ${suggestion}`
-                                : errorMessage;
-
-                            return deleting.update({
-                                message: message,
-                                type: 'error',
-                                actions: false,
-                                showCloseButton: true
-                            });
-                        });
-                    }
-                },
-                cancel: {
-                    label: htmlSafe(_self.intl.t('views.app.module.list.delete.onsecondthought')).toString(),
-                    action: function () {
-                        return deleting.update({
-                            message: _self.intl.t('views.app.module.list.delete.deletecancel'),
-                            type: 'success',
-                            actions: false,
-                            hideAfter: 3
-                        });
-                    }
-                }
-            }
-        });
-
-        Logger.debug('-App.Role->deleteRole');
+    /**
+     * Posts a message to the user
+     *
+     * @method notify
+     * @param {String} type
+     * @param {String|Object} message
+     * @private
+     */
+    notify(type, message) {
+        new Messenger().post({ message, type, showCloseButton: true });
     }
 }

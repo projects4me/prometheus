@@ -1,19 +1,34 @@
 import { Response } from 'miragejs';
 import getRequestData from "../helpers/parse-request";
+import applyQuery from "../helpers/apply-query";
+import sortByFields from "../helpers/model/sort-by-fields";
 
 export function register(server, ctx) {
-    server.get('/role', (schema) => {
-        let data = schema.roles.all();
-        let count = 1;
-        let model = { data: [] };
-        _.each(data.models, function (obj) {
-            model.data.push({
-                type: 'role',
-                id: count++,
-                attributes: obj.attrs
-            });
-        });
-        return model;
+    server.get('/role', (schema, request) => {
+        let params = request.queryParams;
+        // Let the steps assert what the browser sent.
+        ctx.set('roleRequests', [...(ctx.get('roleRequests') || []), { ...params }]);
+
+        let roles = applyQuery(schema.roles.all(), request);
+        // Like Gaia's CONTAINS: a case-insensitive substring match on the field.
+        for (let [, field, value] of (params.query || '').matchAll(/Role\.(\w+) CONTAINS ([^)]+)/g)) {
+            let needle = value.trim().replace(/^["']|["']$/g, '').toLowerCase();
+            roles = roles.filter(role => String(role[field] ?? '').toLowerCase().includes(needle));
+        }
+        let total = roles.length;
+        let hasNext = false;
+        if (params.sort) {
+            roles = sortByFields(params.sort, params.order, roles);
+        }
+        let limit = Number(params.limit);
+        let page = Math.max(1, Number(params.page) || 1);
+        if (limit > 0) {
+            roles = roles.slice((page - 1) * limit, page * limit);
+            hasNext = total > page * limit;
+        }
+        // Like Gaia: no total, only meta.links.next while more rows exist after this page.
+        roles.meta = { links: hasNext ? { next: { href: `/role?page=${page + 1}` } } : {} };
+        return roles;
     });
 
     server.get('/role/:id', (schema, request) => {

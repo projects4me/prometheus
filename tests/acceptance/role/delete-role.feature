@@ -9,7 +9,7 @@ Feature: Role | delete role
     And User_1 is logged in
     When User navigates to app/role/2
     And User deletes role from detail page
-    Then User is redirected to app/role
+    Then The first listed role is open
     And there are 9 roles present in the template
     And Role of id 2 is not present inside list
 

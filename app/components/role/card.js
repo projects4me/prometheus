@@ -3,6 +3,7 @@
  */
 
 import Component from '@glimmer/component';
+import { accessTier, roleInitials } from 'prometheus/utils/role/access';
 
 /**
  * Role list card — name, granted/denied access labels, description, members, modified date.
@@ -21,13 +22,7 @@ export default class RoleCardComponent extends Component {
      * @type {string}
      */
     get initials() {
-        let name = (this.args.role && this.args.role.name) || '';
-        return name
-            .trim()
-            .split(/\s+/)
-            .slice(0, 2)
-            .map((word) => word.charAt(0).toUpperCase())
-            .join('');
+        return roleInitials(this.args.role && this.args.role.name);
     }
 
     /**
@@ -110,21 +105,7 @@ export default class RoleCardComponent extends Component {
      * @type {string}
      */
     get tierKey() {
-        let pct = this.args.coverage;
-
-        if (pct === undefined || pct === null) {
-            return 'none';
-        }
-        if (pct >= 75) {
-            return 'high';
-        }
-        if (pct >= 50) {
-            return 'elevated';
-        }
-        if (pct >= 25) {
-            return 'medium';
-        }
-        return 'low';
+        return accessTier(this.args.coverage);
     }
 
     /**

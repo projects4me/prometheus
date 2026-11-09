@@ -64,6 +64,7 @@ export default class AppRolePageRoute extends AppRoute {
         controller.set('model.permissions', model.permissions);
         controller.set('userroles', model.userroles.toArray());
         controller.set('newUserrole', newUserrole);
+        this.controllerFor('app.role').selectedRoleId = String(model.role.id);
         this.breadcrumb.setTitle(this.routeName, model.role.get('name'));
     }
 }

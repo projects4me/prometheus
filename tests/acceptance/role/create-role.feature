@@ -7,7 +7,7 @@ Feature: Role | create role
     And default scenario is loaded
     And There are 10 roles in system
     And User_1 is logged in
-    When User navigates to app/role
+    When User opens the roles page
     And User clicks on role create button
     And User enters Astronaut in role name input field
     And User enters Astronaut description in role description textarea field   

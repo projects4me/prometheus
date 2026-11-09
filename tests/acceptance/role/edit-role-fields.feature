@@ -9,7 +9,7 @@ Feature: Role | edit role fields
     And There are 10 projects in system
     And There are 10 memberships in system
     And User_1 is logged in
-    When User navigates to app/role
+    When User opens the roles page
     And User selects role 2
     And User enters Astronaut in role name input field
     And User clicks on save button to save role name
@@ -23,7 +23,7 @@ Feature: Role | edit role fields
     And There are 10 projects in system
     And There are 10 memberships in system
     And User_1 is logged in
-    When User navigates to app/role
+    When User opens the roles page
     And User selects role 2
     And User enters Astronaut description in role description textarea field
     And User clicks on save button to save role description
