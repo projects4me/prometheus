@@ -22,13 +22,32 @@
       <div class="role-record__identity">
         <span class="role-record__initials role-record__initials--{{this.facts.tier}}" aria-hidden="true" data-role-field="initials">{{this.facts.initials}}</span>
         <div class="role-record__heading">
-          <div class="role-record__name" data-role-field="name">
-            <FormFields::FieldText @placeholder={{t "views.app.role.create.nameplaceholder" }}
-              @value={{this.model.name}} @data-field="role.name" @validate={{action
-              this.validateField "roleCreate" (hash name="name" value=this.model.name)}}
-              @message={{this.message.roleCreate.name}} @allowInlineEdit={{true}} @onBlur={{fn this.editRole 'name' }}
-              @reset={{fn this.resetModelAttributes this.model}} @save={{fn this.editRole 'name' }} />
-          </div>
+          <h3 class="role-record__name" data-role-field="name">
+            <AppUi::InlineEditable
+              @value={{this.model.name}}
+              @onSave={{fn this.saveModelAttribute this.model "name"}}
+              @aclContext="role.update"
+              @validate={{fn this.validateInlineField "roleCreate" "name"}}
+              @message={{this.message.roleCreate.name}}
+              @onClearMessage={{fn this.clearFieldMessage "roleCreate" "name"}}
+            >
+              <:display>{{this.model.name}}</:display>
+              <:edit as |f|>
+                <FormFields::FieldText
+                  @value={{f.value}}
+                  @type="text"
+                  @placeholder={{t "views.app.role.create.nameplaceholder"}}
+                  @onInput={{f.update}}
+                  @validate={{fn this.validateField "roleCreate" (hash name="name" model=(hash name=f.value))}}
+                  @message={{f.message}}
+                  @data-field="role.name"
+                  @lengthRequired={{false}}
+                  autofocus
+                  {{on "keydown" f.onKeydown}}
+                />
+              </:edit>
+            </AppUi::InlineEditable>
+          </h3>
           <div class="role-record__caption text-muted" data-role-field="audit">
             {{#if this.model.dateCreated}}
               {{t "views.app.role.record.created" date=(moment-format this.model.dateCreated "DD MMM YYYY") name=this.model.createdUserName}}
@@ -41,12 +60,30 @@
       </div>
 
       <div class="role-record__description" data-role-field="description">
-        <FormFields::FieldTextArea @placeholder={{t "views.app.role.create.descriptionplaceholder" }}
-          @label={{t "views.app.role.record.description" }} @value={{this.model.description}} @data-field="role.description"
-          @validate={{action this.validateField "roleCreate" (hash name="description" value=this.model.description)}}
-          @message={{this.message.roleCreate.description}} @allowInlineEdit={{true}} @onBlur={{fn
-          this.editRole 'description' }} @reset={{fn this.resetModelAttributes this.model}} @save={{fn
-          this.editRole 'description' }} />
+        <AppUi::InlineEditable
+          @value={{this.model.description}}
+          @onSave={{fn this.saveModelAttribute this.model "description"}}
+          @aclContext="role.update"
+          @label={{t "views.app.role.record.description"}}
+          @validate={{fn this.validateInlineField "roleCreate" "description"}}
+          @message={{this.message.roleCreate.description}}
+          @onClearMessage={{fn this.clearFieldMessage "roleCreate" "description"}}
+          @submitOnEnter={{false}}
+        >
+          <:display><p class="role-record__description-text">{{this.model.description}}</p></:display>
+          <:edit as |f|>
+            <FormFields::FieldTextArea
+              @value={{f.value}}
+              @placeholder={{t "views.app.role.create.descriptionplaceholder"}}
+              @onInput={{f.update}}
+              @validate={{fn this.validateField "roleCreate" (hash name="description" model=(hash description=f.value))}}
+              @message={{f.message}}
+              @data-field="role.description"
+              autofocus
+              {{on "keydown" f.onKeydown}}
+            />
+          </:edit>
+        </AppUi::InlineEditable>
       </div>
 
       <div class="role-record__facts row">

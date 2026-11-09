@@ -11,9 +11,10 @@ Feature: Role | edit role fields
     And User_1 is logged in
     When User opens the roles page
     And User selects role 2
-    And User enters Astronaut in role name input field
-    And User clicks on save button to save role name
-    Then Role name of type input value is Astronaut
+    And User clicks on the role name to edit
+    And User edits the role name to Astronaut
+    And User saves the role inline edit
+    Then The role name shows Astronaut
 
   Scenario: Edit and update the role description
 
@@ -25,9 +26,10 @@ Feature: Role | edit role fields
     And User_1 is logged in
     When User opens the roles page
     And User selects role 2
-    And User enters Astronaut description in role description textarea field
-    And User clicks on save button to save role description
-    Then Role description of type textarea value is Astronaut description
+    And User clicks on the role description to edit
+    And User edits the role description to Astronaut description
+    And User saves the role inline edit
+    Then The role description shows Astronaut description
 
   Scenario: The role record box shows the role facts
 
