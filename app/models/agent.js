@@ -100,7 +100,7 @@ export default class AgentModel extends Model {
      * @property delegationScopes
      * @type Array<String>
      */
-    @attr({ defaultValue: () => [] }) delegationScopes;
+    @attr('json-list', { defaultValue: () => [] }) delegationScopes;
 
     /**
      * @property userId

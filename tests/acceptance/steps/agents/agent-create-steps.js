@@ -99,7 +99,8 @@ export default function (assert) {
 			assert.ok(true, `User typed the scope ${scope}`);
 		})
 		.then('Agent "$name" has the delegation scopes "$items"', function (name, list) {
-			let scopes = server.schema.agents.findBy({ name }).delegationScopes;
+			let stored = server.schema.agents.findBy({ name }).delegationScopes;
+			let scopes = typeof stored === 'string' ? JSON.parse(stored) : stored;
 			assert.deepEqual(scopes, names(list), `Agent ${name} has the delegation scopes ${list}`);
 		})
 		.then('The agent page shows the delegation scopes "$items"', function (list) {
