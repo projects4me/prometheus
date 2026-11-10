@@ -6,8 +6,9 @@ Feature: App | auth flows
 
     Given There is no pre-existing data
     And default scenario is loaded
+    And User 1 has an active account with email auth-flows@test.local
     And User is not logged in
-    When User signs in through the form with valid credentials
+    When User signs in through the form with email auth-flows@test.local and password valid-password
     Then User lands on the app route
     And The session is authenticated
     And The session holds an access token, a refresh token and an expiry
@@ -16,9 +17,10 @@ Feature: App | auth flows
 
     Given There is no pre-existing data
     And default scenario is loaded
+    And User 1 has an active account with email auth-flows@test.local
     When Signed out user visits a project deep link
     Then User is sent to the signin route
-    When User signs in through the form with valid credentials
+    When User signs in through the form with email auth-flows@test.local and password valid-password
     # KNOWN GAP: the deep link is dropped when the assets are not loaded yet (app.loading-assets
     # reads the URL after handleAuthentication cleared oldRequestedUrl), so the user lands on /app.
     # When fixed, assert "User lands on the project deep link" instead.

@@ -7,9 +7,6 @@ import Context from '../../../../mirage/yadda-context/context';
 import { currentSession } from 'prometheus/tests/helpers/session';
 import { click, currentURL, fillIn, settled, visit } from '@ember/test-helpers';
 
-const SIGN_IN_EMAIL = 'auth-flows@test.local';
-const SIGN_IN_PASSWORD = 'valid-password';
-
 /**
  * #UNCOMMON steps for auth-flows.feature only. Loaded through ember-cli-yadda
  * from tests/acceptance/steps/app/auth-flows-steps.js, not from steps.js.
@@ -20,20 +17,23 @@ export default function (assert) {
 	let deepLink = null; // eslint-disable-line no-unused-vars
 
 	return steps(assert)
-		.when('User signs in through the form with valid credentials', async function () {
-			let user = server.schema.users.find(1);
-			user.update({ email: SIGN_IN_EMAIL, accountStatus: 'active' });
+		.given('User $userId has an active account with email $email', async function (userId, email) {
+			let user = server.schema.users.find(parseInt(userId, 10));
+			user.update({ email, accountStatus: 'active' });
 			// Mirage serves `user/me` from the shared context, as the logged-in step does.
 			server.schema.userpermissions.all().models.forEach((permission) => {
 				permission.update({ userId: user.id, allowed: '1' });
 			});
 			user.update({ aclPermissions: server.schema.userpermissions.all() });
 			new Context().set('currentUser', user);
-			await fillIn('input#email', SIGN_IN_EMAIL);
-			await fillIn('input#password', SIGN_IN_PASSWORD);
+			assert.equal(user.email, email, `User ${userId} has an active account for ${email}`);
+		})
+		.when('User signs in through the form with email $email and password $password', async function (email, password) {
+			await fillIn('input#email', email);
+			await fillIn('input#password', password);
 			await click('[data-signin-submit]');
 			await settled();
-			assert.ok(true, 'User submitted the sign-in form');
+			assert.ok(true, `User submitted the sign-in form as ${email}`);
 		})
 		.when('Signed out user visits a project deep link', async function () {
 			let project = server.schema.projects.first() || server.create('project');
