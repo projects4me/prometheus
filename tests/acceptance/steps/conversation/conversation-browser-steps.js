@@ -109,6 +109,11 @@ export const then = function () {
             }
         },
         {
+            "The thread list made $count count request": (assert, ctx) => async function (count) {
+                assert.equal((ctx.get('roomCountRequests') || []).length, Number(count), 'the counts came with one call');
+            }
+        },
+        {
             "The thread $subject is open": (assert) => async function (subject) {
                 assert.dom(`${BROWSER} .quick-list-item--active [data-conversation-subject]`).hasText(subject);
                 assert.ok(/\/conversations\/[^/?]+/.test(currentURL()), `the url is a thread page: ${currentURL()}`);

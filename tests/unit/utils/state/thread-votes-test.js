@@ -57,6 +57,30 @@ module("Unit | Utility | state/thread-votes", function () {
     assert.strictEqual(votes.total, 0);
   });
 
+  test("tallies come from the room count, the voter list from the votes", async function (assert) {
+    let store = {
+      requests: [],
+      query(modelName, params) {
+        this.requests.push(modelName);
+        if (modelName === "conversationroomcount") {
+          return Promise.resolve({ toArray: () => [{ id: "r1", commentCount: 9, agreeCount: 5, disagreeCount: 2 }] });
+        }
+        return Promise.resolve({ toArray: () => [row("c1", "u1", "I agree", "d")] });
+      },
+    };
+    let votes = new ThreadVotes({ store });
+    await votes.open("r1");
+    await Promise.resolve();
+    assert.strictEqual(votes.agreeCount, 5);
+    assert.strictEqual(votes.disagreeCount, 2);
+    assert.strictEqual(votes.total, 7);
+    assert.strictEqual(votes.voteOf("u1"), "I agree", "the voter list keeps its own query");
+    votes.add(row("c2", "u2", "I disagree", "d"));
+    assert.strictEqual(votes.disagreeCount, 3, "a live vote moves the tally");
+    votes.remove("c2");
+    assert.strictEqual(votes.disagreeCount, 2);
+  });
+
   test("a failed load is flagged", async function (assert) {
     let votes = new ThreadVotes({ store: { query: () => Promise.reject(new Error("x")) } });
     window.Logger = window.Logger || { error() {} };

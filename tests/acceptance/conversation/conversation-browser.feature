@@ -42,3 +42,10 @@ Feature: Threads | thread browser
     When User opens the threads of the project
     Then The thread Beta thread shows 2 comments
     And The vote thread Poll shows "3 agree · 1 disagree"
+
+  Scenario: One count request serves the whole page
+    Given The thread Beta thread has 2 comments
+    And The vote thread Poll has 3 agree and 1 disagree votes
+    When User opens the threads of the project
+    Then The thread list made 1 count request
+    And The thread Beta thread shows 2 comments
