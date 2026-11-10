@@ -866,7 +866,17 @@
           "disagree": " are in disagreement",
           "clickup": "click to upvote",
           "clickdown": "Click to downvote",
-          "voted": "Your vote has been registered"
+          "voted": "Your vote has been registered",
+          "hint": "You haven't voted yet. Click a thumb to vote; one vote per person.",
+          "youVoted": "You voted: {vote}",
+          "votes": "{count} votes",
+          "showAll": "Show all {count} votes",
+          "failed": "The votes could not be loaded.",
+          "result": "Result",
+          "leaning": "Leaning: {vote} ({count} of {total})",
+          "tied": "Tied",
+          "noVotes": "No votes yet",
+          "turnout": "{voted} of {members} project members voted"
         },
         "new": {
           "subject": "Subject",

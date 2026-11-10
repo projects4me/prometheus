@@ -1,0 +1,51 @@
+{{!-- The body of a vote thread: the agree/disagree tallies, the user's vote and the voters --}}
+<div class="box-footer thread-vote" data-thread-vote>
+  <div class="row thread-vote-boxes">
+    <div class="col-sm-6 agree" data-vote-side="agree">
+      <div class="info-box">
+        {{#if this.hasVoted}}
+          <span class="info-box-icon bg-green" title={{t "views.app.conversation.vote.voted"}}><i class="fa {{if this.votedAgree "fa-thumbs-up" "fa-thumbs-o-up"}}"></i></span>
+        {{else}}
+          <a href="javascript:void(0);" data-btn="vote-agree" {{on "click" this.voteAgree}}>
+            <span class="info-box-icon bg-green" title={{t "views.app.conversation.vote.clickup"}}><i class="fa fa-thumbs-o-up"></i></span>
+          </a>
+        {{/if}}
+        <div class="info-box-content">
+          <span class="info-box-text">{{t "views.app.conversation.vote.upvote"}}</span>
+          <span class="info-box-number" data-vote-count="agree">{{@votes.agreeCount}}</span>
+          <div class="progress">
+            <div class="progress-bar bg-green" style={{progress-width @votes.agreePercent}}></div>
+          </div>
+          <span class="progress-description">{{@votes.agreePercent}}% {{t "views.app.conversation.vote.agree"}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 disagree" data-vote-side="disagree">
+      <div class="info-box">
+        {{#if this.hasVoted}}
+          <span class="info-box-icon bg-red" title={{t "views.app.conversation.vote.voted"}}><i class="fa {{if this.votedDisagree "fa-thumbs-down" "fa-thumbs-o-down"}}"></i></span>
+        {{else}}
+          <a href="javascript:void(0);" data-btn="vote-disagree" {{on "click" this.voteDisagree}}>
+            <span class="info-box-icon bg-red" title={{t "views.app.conversation.vote.clickdown"}}><i class="fa fa-thumbs-o-down"></i></span>
+          </a>
+        {{/if}}
+        <div class="info-box-content">
+          <span class="info-box-text">{{t "views.app.conversation.vote.downvote"}}</span>
+          <span class="info-box-number" data-vote-count="disagree">{{@votes.disagreeCount}}</span>
+          <div class="progress">
+            <div class="progress-bar bg-red" style={{progress-width @votes.disagreePercent}}></div>
+          </div>
+          <span class="progress-description">{{@votes.disagreePercent}}% {{t "views.app.conversation.vote.disagree"}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{#if @votes.failed}}
+    <p class="text-danger" data-vote-failed><i class="fa fa-exclamation-triangle"></i> {{t "views.app.conversation.vote.failed"}}</p>
+  {{else if this.hasVoted}}
+    <p class="text-muted" data-vote-status="voted">{{t "views.app.conversation.vote.youVoted" vote=this.myVote}}</p>
+  {{else}}
+    <p class="text-muted" data-vote-status="hint">{{t "views.app.conversation.vote.hint"}}</p>
+  {{/if}}
+  <Conversation::VoterList @votes={{@votes}} />
+</div>

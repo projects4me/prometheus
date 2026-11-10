@@ -1,0 +1,22 @@
+{{!-- The votes of a vote thread, newest first; the older ones expand on demand --}}
+<div class="voter-list" data-voter-list>
+  <h5 class="thread-comments-heading" data-voter-count>{{t "views.app.conversation.vote.votes" count=@votes.total}}</h5>
+  {{#each this.visibleVotes key="id" as |vote|}}
+    <ConversationUi::CommentFrame
+      @commentId={{vote.id}}
+      @userId={{vote.createdUser}}
+      @userName={{vote.createdUserName}}
+      @date={{vote.date}}
+      data-voter={{vote.id}}
+    >
+      <:tools>
+        <span class="label {{if (eq vote.text "I agree") "label-success" "label-danger"}}" data-voter-label>{{vote.text}}</span>
+      </:tools>
+    </ConversationUi::CommentFrame>
+  {{/each}}
+  {{#if this.hasHidden}}
+    <button type="button" class="btn btn-link" data-btn="show-all-votes" {{on "click" this.showAll}}>
+      {{t "views.app.conversation.vote.showAll" count=@votes.total}}
+    </button>
+  {{/if}}
+</div>

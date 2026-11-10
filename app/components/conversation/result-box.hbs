@@ -1,0 +1,18 @@
+{{!-- The result of a vote thread: which way it leans and how many of the project members voted --}}
+<div class="box box-warning" data-result-box>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.conversation.vote.result"}}</h3>
+  </div>
+  <div class="box-body">
+    <p data-vote-leaning={{@votes.leaning}}>
+      {{#if (eq @votes.leaning "none")}}
+        {{t "views.app.conversation.vote.noVotes"}}
+      {{else if (eq @votes.leaning "tied")}}
+        {{t "views.app.conversation.vote.tied"}}
+      {{else}}
+        {{t "views.app.conversation.vote.leaning" vote=(if (eq @votes.leaning "agree") "I agree" "I disagree") count=@votes.leadingCount total=@votes.total}}
+      {{/if}}
+    </p>
+    <p class="text-muted" data-vote-turnout>{{t "views.app.conversation.vote.turnout" voted=@votes.total members=@members.length}}</p>
+  </div>
+</div>
