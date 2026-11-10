@@ -5,6 +5,7 @@
 import steps from '../steps';
 import Context from '../../../../mirage/yadda-context/context';
 import { currentSession } from 'prometheus/tests/helpers/session';
+import ENV from 'prometheus/config/environment';
 import { click, currentURL, fillIn, settled, visit } from '@ember/test-helpers';
 
 /**
@@ -14,7 +15,8 @@ import { click, currentURL, fillIn, settled, visit } from '@ember/test-helpers';
  * @module tests/acceptance/steps/app/auth-flows-steps
  */
 export default function (assert) {
-	let deepLink = null; // eslint-disable-line no-unused-vars
+	let deepLink = null;
+	let invalidationTargets = [];
 
 	return steps(assert)
 		.given('User $userId has an active account with email $email', async function (userId, email) {
@@ -44,6 +46,23 @@ export default function (assert) {
 		.when('Signed in user visits the signin route', async function () {
 			await visit('/signin');
 			assert.ok(true, 'User visited /signin');
+		})
+		.given('Sign-out reloads are recorded', async function () {
+			// The tests skip the real reload, so record the calls to handleInvalidation instead.
+			invalidationTargets = [];
+			let session = currentSession();
+			let original = session.handleInvalidation.bind(session);
+			session.handleInvalidation = (target) => {
+				invalidationTargets.push(target);
+				return original(target);
+			};
+			assert.ok(true, 'handleInvalidation is recorded');
+		})
+		.then('User lands on the project deep link', async function () {
+			assert.equal(currentURL(), deepLink, `User is back on ${deepLink}`);
+		})
+		.then('The app is reloaded at the root URL', async function () {
+			assert.deepEqual(invalidationTargets, [ENV.rootURL], 'handleInvalidation was called with rootURL');
 		})
 		.then('User lands on the app route', async function () {
 			assert.ok(
