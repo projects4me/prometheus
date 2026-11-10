@@ -111,8 +111,9 @@ module('Unit | Service | intl', function (hooks) {
 			assert.strictEqual(this.intl.t('test.plain'), 'Changed', 'existing key replaced');
 		});
 
-		test('setLocale normalises the locale', function (assert) {
-			this.intl.setLocale('en_US');
+		test('setLocale normalises the locale to lower case', function (assert) {
+			// Mixed case, not en_US: newer ember-intl 6.x builds the formatter from the raw tag and throws on underscores.
+			this.intl.setLocale('EN-US');
 
 			assert.deepEqual(this.intl.locale, ['en-us']);
 			assert.strictEqual(this.intl.primaryLocale, 'en-us');
