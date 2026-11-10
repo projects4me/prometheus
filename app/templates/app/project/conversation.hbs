@@ -1,13 +1,4 @@
 <section class="content">
-  <AccessControl @aclContext="conversationroom.create">
-    <div class="row">
-      <div class="col-md-12">
-        <button type="button" class="btn btn-primary" {{on "click" this.showDialog}} data-btn="addConversation">
-          <i class="fa fa-plus"></i> {{t "views.app.conversation.browser.new"}}
-        </button>
-      </div>
-    </div>
-  </AccessControl>
   <div class="row conversation-wrapper">
     <AccessControl @aclContext="conversationroom.read">
       <div class="col-md-3">
@@ -31,6 +22,13 @@
           @onGroup={{this.groupList}}
           data-conversation-browser
         >
+          <:actions>
+            <AccessControl @aclContext="conversationroom.create">
+              <button type="button" class="btn btn-primary btn-sm" {{on "click" this.showDialog}} data-btn="addConversation">
+                <i class="fa fa-plus"></i> {{t "views.app.conversation.browser.new"}}
+              </button>
+            </AccessControl>
+          </:actions>
           <:search>
             {{#if this.querySchema}}
               <div class="box-body" data-conversation-search>
