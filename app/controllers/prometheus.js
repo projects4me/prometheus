@@ -20,7 +20,7 @@ import generateSchemaFromMeta from 'prometheus/utils/yup/generate-schema';
  */
 export default class PrometheusController extends Controller {
 	/**
-	 * The session service which is offered by ember-simple-auth
+	 * The session service (services/session.js)
 	 *
 	 * @property session
 	 * @type Ember.Service

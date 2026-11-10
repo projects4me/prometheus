@@ -184,7 +184,7 @@ module('Unit | Service | session', function (hooks) {
                 expires_at: Date.now() + 3600 * 1000,
             },
         });
-        await session.get('session').restore();
+        await session.setup();
 
         assert.true(session.isAuthenticated, 'session is authenticated');
         assert.strictEqual(
@@ -206,9 +206,9 @@ module('Unit | Service | session', function (hooks) {
         });
 
         try {
-            await session.get('session').restore();
+            await session.setup();
         } catch (e) {
-            // ESA rejects the restore when the authenticator refuses the data.
+            // setup() leaves the session unauthenticated when the authenticator refuses the data.
         }
 
         assert.false(session.isAuthenticated, 'session is not authenticated');

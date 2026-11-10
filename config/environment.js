@@ -71,8 +71,11 @@ module.exports = function(environment) {
         
         publicRoutes: ['reset-password', 'auth-status'],
 
-        'ember-simple-auth': {
+        // services/session.js: where to go after sign-in, and where the session is
+        // persisted ('local-storage', synced across tabs, or 'ephemeral' in memory).
+        session: {
             routeAfterAuthentication: 'app',
+            store: 'local-storage',
         },
     };
 
@@ -97,6 +100,9 @@ module.exports = function(environment) {
         ENV['ember-cli-mirage'] = {
             enabled: true
         };
+
+        // tests never share a session through localStorage
+        ENV.session.store = 'ephemeral';
     }
 
     if (environment === 'production') {
