@@ -8,7 +8,6 @@ import RSVP from 'rsvp';
 import { isEmpty } from '@ember/utils';
 import { run } from '@ember/runloop';
 import { makeArray } from '@ember/array';
-import { assign } from '@ember/polyfills';
 import Logger from 'js-logger';
 import { inject } from '@ember/service';
 
@@ -103,7 +102,7 @@ export default OAuth2PasswordGrant.extend({
 
                     const expiresAt = this._absolutizeExpirationTime(response['expires_in']);
                     if (!isEmpty(expiresAt)) {
-                        response = assign(response, { 'expires_at': expiresAt });
+                        response = Object.assign(response, { 'expires_at': expiresAt });
                     }
 
                     resolve(response);
