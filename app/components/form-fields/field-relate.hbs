@@ -13,6 +13,8 @@
         @onFocus={{action (mut this.shouldValidate) true}}
         @onBlur={{action this.validate}}
         @searchEnabled={{@searchEnabled}}
+        @search={{@search}}
+        @allowClear={{@allowClear}}
         @disabled={{@disabled}}
         @onClose={{action this.validate}} as |data|>
         {{component (concat 'related-fields/'@relateType) data=data}}

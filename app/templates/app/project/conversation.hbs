@@ -177,23 +177,19 @@
               @aclContext='conversationroom.create'
           />
 
-          <div class="form-group form-field ember-view" data-field="conversation.linkedIssue">
-            <div data-form-field="label">
-              <label class="floating-label">{{t "views.app.conversation.linkIssue"}}</label>
-            </div>
-            <PowerSelect
+          <FormFields::FieldRelate
               @placeholder={{t "views.app.conversation.linkIssuePlaceholder"}}
-              @searchEnabled={{true}}
+              @label={{t "views.app.conversation.linkIssue"}}
               @search={{perform this.linkIssueSearch}}
+              @searchEnabled={{true}}
               @selected={{this.newConversationLinkedIssue}}
-              @onChange={{this.setNewConversationLinkedIssue}}
+              @onchange={{this.setNewConversationLinkedIssue}}
               @disabled={{not (eq this.newConversation.roomType "discussion")}}
               @allowClear={{true}}
-              as |issue|
-            >
-              <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
-            </PowerSelect>
-          </div>
+              @relateType="relate-issue"
+              @data-field="conversation.linkedIssue"
+              @aclContext='conversationroom.create'
+          />
 
         </div>
       {{/bootstrap-modal}}
