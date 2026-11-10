@@ -6,9 +6,15 @@
 /* global require, module */
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var sass = require('sass');
+var MergeTrees = require('broccoli-merge-trees');
+var BundledTranslations = require('./lib/bundled-translations');
 
 module.exports = function (defaults) {
     let app = new EmberApp(defaults, {
+        // translations/*.json become the module prometheus/utils/intl/bundled-translations
+        trees: {
+            app: new MergeTrees(['app', new BundledTranslations('translations')]),
+        },
         // Add options here
         sassOptions: {
             implementation: sass
