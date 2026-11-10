@@ -17,8 +17,8 @@
         placeholder=(t "global.form.searchPlaceholder")
         loadingMessage=(t "global.form.loading")
         allowClear=true
-        selected=selected
-        search=(perform search)
+        selected=this.selected
+        search=(perform this.search)
         onChange=(action "itemSelected")
     as |issue|
     }}
@@ -45,7 +45,7 @@
                 <a href="#">
                   <div class="pull-left">
                     {{!-- User Image --}}
-                    <img src="{{this.apiHost}}/userimage/get/{{currentUser.user.id}}" class="img-circle" alt="{{t "global.form.image"}}">
+                    <img src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" class="img-circle" alt="{{t "global.form.image"}}">
                   </div>
                   {{!-- Message title and timestamp --}}
                   <h4>
@@ -131,19 +131,19 @@
         {{!-- Menu Toggle Button --}}
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           {{!-- The user image in the navbar--}}
-          <img src="{{this.apiHost}}/userimage/get/{{currentUser.user.id}}" class="user-image" alt="{{currentUser.user.name}}">
+          <img src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" class="user-image" alt="{{this.currentUser.user.name}}">
           {{!-- hidden-xs hides the username on small devices so only the image appears. --}}
-          <span class="hidden-xs">{{currentUser.user.name}}</span>
+          <span class="hidden-xs">{{this.currentUser.user.name}}</span>
 
         </a>
         <ul class="dropdown-menu">
           {{!-- The user image in the menu --}}
           <li class="user-header">
-            <img src="{{this.apiHost}}/userimage/get/{{currentUser.user.id}}" class="img-circle" alt="{{currentUser.user.name}}">
+            <img src="{{this.apiHost}}/userimage/get/{{this.currentUser.user.id}}" class="img-circle" alt="{{this.currentUser.user.name}}">
 
             <p>
-              {{currentUser.user.name}} - {{currentUser.user.title}}
-              <small>{{t "views.app.member"}}{{format-date date=currentUser.user.dateCreated}}</small>
+              {{this.currentUser.user.name}} - {{this.currentUser.user.title}}
+              <small>{{t "views.app.member"}}{{format-date date=this.currentUser.user.dateCreated}}</small>
             </p>
           </li>
           {{!-- Menu Body --}}
@@ -167,7 +167,7 @@
               <a href="#" class="btn btn-default btn-flat" {{action "viewProfile"}}>{{t "views.app.profile"}}</a>
             </div>
             <div class="pull-right">
-              {{#if session.isAuthenticated}}
+              {{#if this.session.isAuthenticated}}
                 <a class="btn btn-default btn-flat" href="javascript:void(0);" {{action 'signOut'}}>{{t "global.form.signout"}}</a>
               {{else}}
                 <a class="btn btn-default btn-flat" href="javascript:void(0)" {{action 'signIn'}}>{{t "global.form.signin"}}</a>

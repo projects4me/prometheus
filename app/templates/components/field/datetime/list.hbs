@@ -1,8 +1,8 @@
 {{!-- List template for datetime field--}}
 <span>
-  {{#if definition.link}}
-    <a href="javascript:void(0);" {{action navigate}}>{{format-date model.field}}</a>
+  {{#if this.definition.link}}
+    <a href="javascript:void(0);" {{action this.navigate}}>{{format-date this.model.field}}</a>
   {{else}}
-    {{format-date model.field}}
+    {{format-date this.model.field}}
   {{/if}}
 </span>

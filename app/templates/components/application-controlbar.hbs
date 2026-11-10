@@ -10,7 +10,7 @@
     <h3 class="control-sidebar-heading">{{t "views.app.application.controlBar.onlineUser"}}</h3>
     <ul class="control-sidebar-menu">
       {{#each this.users as |user|}}
-        {{#if (not-eq user.id currentUser.user.id)}}
+        {{#if (not-eq user.id this.currentUser.user.id)}}
           <li>
             <img class="contacts-list-img" src="{{this.apiHost}}/userimage/get/{{user.id}}" alt="{{t "global.form.image"}}">
             <div class="contacts-list-info">
