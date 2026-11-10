@@ -90,7 +90,7 @@
                       <li data-conversation-id="{{conversation.id}}">
                         <div class="user-block">
                           <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
-                          <LinkTo @route="app.project.conversation" @query={{hash c_id=conversation.id}}><span class="subject">{{conversation.subject}}</span></LinkTo>
+                          <LinkTo @route="app.project.conversation.page" @model={{conversation.id}}><span class="subject">{{conversation.subject}}</span></LinkTo>
                           <span class="description">{{translate-comment conversation.description}}</span>
                         </div>
                       </li>

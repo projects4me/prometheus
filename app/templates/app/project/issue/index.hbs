@@ -117,7 +117,7 @@
                         {{!-- Conversation Button --}}
                         {{#if issue.conversationRoomId}}
                           <AppUi::Button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="{{t "views.app.issue.list.openConversation"}}">
-                            <LinkTo @route="app.project.conversation" @query={{hash c_id=issue.conversationRoomId}}>
+                            <LinkTo @route="app.project.conversation.page" @model={{issue.conversationRoomId}}>
                               <i class="fa fa-comments-o"></i>
                             </LinkTo>
                           </AppUi::Button>

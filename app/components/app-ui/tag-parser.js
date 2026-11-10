@@ -226,7 +226,7 @@ export default class AppUiTagParserComponent extends AppComponent {
 		if (!context.projectShortcode || !context.conversationId) {
 			return '';
 		}
-		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/conversations?c_id=${context.conversationId}">${this.intl.t('views.app.activity.conversation')}</a>`;
+		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/conversations/${context.conversationId}">${this.intl.t('views.app.activity.conversation')}</a>`;
 	}
 
 	/**

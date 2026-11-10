@@ -44,9 +44,8 @@
                 </LinkTo>
               {{else}}
                 <LinkTo
-                  @route="app.project.conversation"
-                  @model={{call (fn this.getConversationRouteModel key)}}
-                  @query={{hash s_id=(call (fn this.getConversationRouteQuery key))}}
+                  @route="app.project.conversation.page"
+                  @models={{array (lowercase (call (fn this.getConversationRouteModel key))) (call (fn this.getConversationRouteQuery key))}}
                 >
                   <b>{{call (fn this.getTitle key)}}</b>
                 </LinkTo>
