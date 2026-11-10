@@ -20,7 +20,7 @@
       {{#if (eq this.model.roomType "vote")}}
         <Conversation::ResultBox @votes={{this.threadVotes}} @members={{this.layout.membersList}} />
       {{else}}
-        <Conversation::LinkedIssueBox @issue={{this.model.issue}} />
+        <Conversation::LinkedIssueBox @issue={{this.model.issue}} @thread={{this.model}} />
       {{/if}}
       <Conversation::ParticipantsBox @participants={{this.participants}} />
       {{!-- Room below for the Create issue and Activity boxes --}}

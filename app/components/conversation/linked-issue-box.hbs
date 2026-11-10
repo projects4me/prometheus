@@ -18,4 +18,13 @@
       <p class="text-muted" data-linked-issue-empty>{{t "views.app.conversation.thread.noLinkedIssue"}}</p>
     {{/if}}
   </div>
+  {{#if this.canCreateIssue}}
+    <AccessControl @aclContext="issue.create">
+      <div class="box-footer">
+        <LinkTo @route="app.project.issue.create" @query={{hash fromThread=@thread.id}} class="btn btn-default btn-sm" data-btn="create-issue-from-thread">
+          <i class="fa fa-plus"></i> {{t "views.app.conversation.thread.createIssue"}}
+        </LinkTo>
+      </div>
+    </AccessControl>
+  {{/if}}
 </div>

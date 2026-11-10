@@ -6,6 +6,7 @@ import App from "prometheus/routes/app";
 import format from "prometheus/utils/data/format";
 import Logger from "js-logger";
 import _ from 'lodash';
+import { canCreateIssueFromThread, threadIssueDraft } from 'prometheus/utils/conversation/thread-issue';
 
 /**
  * This is the route that will handle the creation of new issues
@@ -29,8 +30,9 @@ export default App.extend({
      * @return Prometheus.Issue
      * @private
      */
-    async afterModel() {
+    async afterModel(model, transition) {
         Logger.debug('Prometheus.Routes.App.Project.Issue.Create::afterModel()');
+        this.set('sourceThread', await this.loadSourceThread(transition?.to?.queryParams?.fromThread));
         let _self = this;
         let projectId = _self.trackedProject.getProjectId();
 
@@ -58,6 +60,29 @@ export default App.extend({
             _self.errorManager.handleError(error, {
                 moduleName: 'project'
             })
+        }
+    },
+
+    /**
+     * Loads the thread the issue is created from (the `fromThread` query parameter). Only a discussion without a
+     * linked issue is a source; anything else, or a thread that can't be read, gives a plain create form.
+     *
+     * @method loadSourceThread
+     * @param {String} threadId
+     * @return {Promise<Prometheus.Models.Conversationroom|null>}
+     * @private
+     */
+    async loadSourceThread(threadId) {
+        if (!threadId) {
+            return null;
+        }
+        try {
+            let room = this.store.peekRecord('conversationroom', threadId)
+                ?? await this.store.findRecord('conversationroom', threadId);
+            return canCreateIssueFromThread(room) ? room : null;
+        } catch (error) {
+            Logger.debug('Prometheus.Routes.App.Project.Issue.Create::loadSourceThread() thread not available');
+            return null;
         }
     },
 
@@ -105,6 +130,13 @@ export default App.extend({
             milestoneId: ''
         });
 
+        let sourceThread = _self.get('sourceThread');
+        if (sourceThread) {
+            let draft = threadIssueDraft(sourceThread, _self.get('project').shortCode,
+                this.intl.t('views.app.issue.create.fromThread'));
+            issue.setProperties({ subject: draft.subject, description: draft.description, conversationRoomId: sourceThread.id });
+        }
+
         const issueDescription = _.clone(issue.description);
         controller.set('model', issue);
         controller.set('project', _self.get('project'));
@@ -112,6 +144,7 @@ export default App.extend({
         controller.set('agents', _self.get('agents') ?? []);
         controller.set('statuses', _self.get('project').issuestatuses);
         controller.set('issueDescription', issueDescription);
+        controller.set('sourceThread', sourceThread ?? null);
 
         let priority = (new format(this)).getList('views.app.issue.lists.priority');
         controller.set('priority', priority);
@@ -133,6 +166,8 @@ export default App.extend({
             if (!controller.model.id) {
                 controller.model.destroyRecord();
             }
+            controller.set('fromThread', null);
+            controller.set('sourceThread', null);
         }
     }
 });

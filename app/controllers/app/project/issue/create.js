@@ -183,6 +183,34 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
     module = 'issue';
 
     /**
+     * The query parameters of the create page: `fromThread` is the id of the discussion the issue is created from
+     *
+     * @property queryParams
+     * @type Array
+     * @public
+     */
+    queryParams = ['fromThread'];
+
+    /**
+     * The id of the discussion the issue is created from, or null
+     *
+     * @property fromThread
+     * @type String
+     * @public
+     */
+    @tracked fromThread = null;
+
+    /**
+     * The discussion the issue is created from (set by the route), or null. Once the issue is saved the thread is
+     * linked to it and the user goes back to the thread.
+     *
+     * @property sourceThread
+     * @type Prometheus.Models.Conversationroom
+     * @public
+     */
+    @tracked sourceThread = null;
+
+    /**
      * This is the controller for the app, we are injecting it in order to
      * gain access to the data that is fetched by this controller
      *
@@ -358,13 +386,43 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
     }
 
     /**
-     * This function navigate a user to the issue detail page
+     * This function navigates a user back to the thread the issue was created from, or to the issue detail page
      *
      * @method navigateToSuccess
      * @param model
      */
     navigateToSuccess(model) {
+        if (this.sourceThread) {
+            this.transitionToRoute('app.project.conversation.page', this.sourceThread.id);
+            return;
+        }
         this.transitionToRoute('app.project.issue.page', model.get('issueNumber'));
+    }
+
+    /**
+     * Links the thread the issue was created from to the saved issue: sets the thread's issueId and issueNumber (the
+     * same fields the edit modal sets) and saves it. A failed save rolls the thread back and rethrows, so the base
+     * class shows the error; the issue itself stays saved.
+     *
+     * @method afterSave
+     * @param {Prometheus.Models.Issue} model the saved issue
+     * @return {Promise}
+     * @protected
+     */
+    async afterSave(model) {
+        let room = this.sourceThread;
+        if (!room) {
+            return;
+        }
+        room.issueId = model.id;
+        room.issueNumber = model.issueNumber;
+        try {
+            await room.save();
+        } catch (error) {
+            room.rollbackAttributes();
+            throw error;
+        }
+        room.issue = model;
     }
 
     /**
@@ -379,13 +437,17 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
     }
 
     /**
-     * This function navigates a use to the issue list view.
+     * This function navigates a user back to the thread the issue was started from, or to the issue list view.
      *
      * @method afterCancel
      * @param projectId
      * @protected
      */
     afterCancel() {
+        if (this.sourceThread) {
+            this.transitionToRoute('app.project.conversation.page', this.sourceThread.id);
+            return;
+        }
         this.transitionToRoute('app.project.issue', {  shortcode: this.trackedProject.shortCode });
     }
 

@@ -1,5 +1,5 @@
 import steps from '../steps';
-import { click } from '@ember/test-helpers';
+import { click, currentURL } from '@ember/test-helpers';
 
 export default function (assert) {
 	return steps(assert).
@@ -63,6 +63,34 @@ export default function (assert) {
     then('The linked issue box says there is no linked issue', function () {
         assert.dom('[data-linked-issue-box] [data-linked-issue-empty]').exists('The box says there is no linked issue');
         assert.dom('[data-linked-issue-box] [data-linked-issue-key]').doesNotExist();
+    }).
+    when('User clicks on create issue from thread', async function () {
+        await click('[data-linked-issue-box] [data-btn="create-issue-from-thread"]');
+        assert.ok(currentURL().includes('/issue/create?fromThread='), 'User is on the issue create page from the thread');
+    }).
+    then('The issue form is prefilled from conversation $conversationIndex', function (conversationIndex) {
+        let conversation = server.schema.conversationrooms.find(parseInt(conversationIndex));
+        assert.dom('div[data-field="issue.subject"] input').hasValue(conversation.subject, 'The subject is the thread subject');
+        let description = document.querySelector('div[data-field="issue.description"]').textContent;
+        assert.ok(description.includes('Created from the thread'), 'The description links back to the thread');
+    }).
+    then('User is back on conversation $conversationIndex which shows the new issue in the linked issue box', function (conversationIndex) {
+        let conversation = server.schema.conversationrooms.find(parseInt(conversationIndex));
+        let issue = server.schema.issues.all().models.at(-1);
+        assert.ok(currentURL().split('?')[0].endsWith(`/conversations/${conversation.id}`), `User is back on the thread (${currentURL()})`);
+        assert.strictEqual(String(conversation.issueId), String(issue.id), 'The thread is linked to the new issue');
+        assert.strictEqual(String(conversation.issueNumber), String(issue.issueNumber), 'The thread carries the issue number');
+        assert.dom('[data-linked-issue-box] [data-linked-issue-key]').hasText(`#${issue.issueNumber}`);
+        assert.dom('[data-linked-issue-box] [data-btn="create-issue-from-thread"]').doesNotExist('The button is gone once linked');
+    }).
+    then('The thread list row of conversation $conversationIndex shows the new issue key', function (conversationIndex) {
+        let conversation = server.schema.conversationrooms.find(parseInt(conversationIndex));
+        let issue = server.schema.issues.all().models.at(-1);
+        assert.dom(`[data-conversation="${conversation.id}"] [data-conversation-issue]`).includesText(`#${issue.issueNumber}`);
+    }).
+    then('The linked issue box offers no create issue button', function () {
+        assert.dom('[data-linked-issue-box] [data-linked-issue-key]').exists('The thread has a linked issue');
+        assert.dom('[data-linked-issue-box] [data-btn="create-issue-from-thread"]').doesNotExist();
     });
 }
 
