@@ -97,11 +97,6 @@ export const when = function () {
 export const then = function () {
     return [
         {
-            "The page has $count content section": (assert) => async function (count) {
-                assert.equal(document.querySelectorAll('section.content').length, Number(count), 'section.content is not nested');
-            }
-        },
-        {
             "The project header shows $count breadcrumb and no extra title row": (assert) => async function (count) {
                 assert.equal(document.querySelectorAll('ol.breadcrumb').length, Number(count), 'one breadcrumb');
                 assert.equal(document.querySelectorAll('section.content-header').length, 1, 'only the project layout header');

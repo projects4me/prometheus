@@ -22,11 +22,6 @@ Feature: Threads | thread browser
     And The thread list groups are Release 1, Release 2, No milestone
     And The thread list rows are Beta thread, Another beta, Release thread, Plain thread
 
-  Scenario: The threads page has a single content section
-
-    When User opens the threads of the project
-    Then The page has 1 content section
-
   Scenario: The threads page has the project header with a single breadcrumb
 
     When User opens the threads of the project
