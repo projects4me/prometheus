@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { authenticateSession } from 'ember-simple-auth/test-support';
+import { authenticateSession } from 'prometheus/tests/helpers/session';
 import { REFRESH_WINDOW_MS } from 'prometheus/services/session';
 
 module('Unit | Service | session', function (hooks) {
@@ -170,5 +170,47 @@ module('Unit | Service | session', function (hooks) {
         } finally {
             router.transitionTo = originalTransitionTo;
         }
+    });
+
+    test('restore authenticates a persisted session that holds an access token', async function (assert) {
+        let session = this.owner.lookup('service:session');
+        let store = session.get('store');
+
+        await store.persist({
+            authenticated: {
+                authenticator: 'authenticator:oauth2',
+                access_token: 'access-persisted',
+                refresh_token: 'refresh-persisted',
+                expires_at: Date.now() + 3600 * 1000,
+            },
+        });
+        await session.get('session').restore();
+
+        assert.true(session.isAuthenticated, 'session is authenticated');
+        assert.strictEqual(
+            session.get('data.authenticated.access_token'),
+            'access-persisted',
+            'session data comes from the store'
+        );
+    });
+
+    test('restore does not authenticate a persisted session without an access token', async function (assert) {
+        let session = this.owner.lookup('service:session');
+        let store = session.get('store');
+
+        await store.persist({
+            authenticated: {
+                authenticator: 'authenticator:oauth2',
+                refresh_token: 'refresh-persisted',
+            },
+        });
+
+        try {
+            await session.get('session').restore();
+        } catch (e) {
+            // ESA rejects the restore when the authenticator refuses the data.
+        }
+
+        assert.false(session.isAuthenticated, 'session is not authenticated');
     });
 });

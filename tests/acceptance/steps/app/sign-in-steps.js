@@ -2,7 +2,7 @@ import steps from '../steps';
 import {
 	currentSession,
 	authenticateSession
-} from 'ember-simple-auth/test-support';
+} from 'prometheus/tests/helpers/session';
 import { currentURL, visit } from '@ember/test-helpers';
 
 export const given = function () {
