@@ -391,13 +391,6 @@
 /*=====  Conversation Thread Box  ======*/
 .thread-box {
   // The root keeps .conversation-item for its hooks, but the custom box look is not applied to it
-  .thread-type {
-    display: block;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    color: $mediumColor;
-  }
-
   .thread-title {
     font-size: 2rem;
   }
