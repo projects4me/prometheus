@@ -88,4 +88,19 @@ module('Integration | Component | quick-list/toolbar', function (hooks) {
 			assert.strictEqual(getComputedStyle(item.querySelector('i')).color, 'rgb(255, 255, 255)', 'icon is white when focused');
 		});
 	}
+
+	test('the toolbar stays inside a narrow box and wraps its menus', async function (assert) {
+		this.groupOptions = [{ key: 'long', label: 'A very long group option label that cannot fit' }];
+		this.groupBy = 'long';
+		await render(hbs`<div class="narrow-box" style="width: 160px"><QuickList::Toolbar
+			@groupOptions={{this.groupOptions}} @groupBy={{this.groupBy}}
+			@sortOptions={{this.sortOptions}} @sort={{this.sort}} @order={{this.order}}
+			@onGroup={{this.onGroup}} @onSort={{this.onSort}} /></div>`);
+		const box = this.element.querySelector('.narrow-box').getBoundingClientRect();
+		const toolbar = this.element.querySelector('.quick-list-toolbar');
+		assert.strictEqual(getComputedStyle(toolbar).flexWrap, 'wrap');
+		for (const btn of this.element.querySelectorAll('.app-dropdown-btn')) {
+			assert.true(btn.getBoundingClientRect().right <= box.right + 1, 'button stays inside the box');
+		}
+	});
 });
