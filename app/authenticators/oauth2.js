@@ -10,6 +10,7 @@ import { run } from '@ember/runloop';
 import { makeArray } from '@ember/array';
 import Logger from 'js-logger';
 import { inject } from '@ember/service';
+import { logAuthEvent } from 'prometheus/utils/auth/auth-log';
 
 /**
  * This class allows the application to authenticate with using a password grant
@@ -97,6 +98,7 @@ export default OAuth2PasswordGrant.extend({
             this.makeRequest(serverTokenEndpoint, data, headers).then((response) => {
                 run(() => {
                     if (!this._validate(response)) {
+                        logAuthEvent('sign-in failed', { error: 'access_token missing' });
                         reject('access_token is missing in server response');
                     }
 
@@ -108,6 +110,7 @@ export default OAuth2PasswordGrant.extend({
                     resolve(response);
                 });
             }, (response) => {
+                logAuthEvent('sign-in failed', { error: response?.responseJSON?.error || response?.status || 'unknown' });
                 run(null, reject, useResponse ? response : response.responseJSON);
             });
         });
@@ -128,8 +131,10 @@ export default OAuth2PasswordGrant.extend({
     restore(data) {
         return new RSVP.Promise((resolve, reject) => {
             if (this._validate(data)) {
+                logAuthEvent('session restored');
                 resolve(data);
             } else {
+                logAuthEvent('restore rejected');
                 reject();
             }
         });

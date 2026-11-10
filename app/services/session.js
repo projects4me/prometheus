@@ -11,6 +11,7 @@ import {
     DEFAULT_POST_AUTH_ROUTE,
     resolvePostAuthDestination,
 } from 'prometheus/utils/auth/post-auth-destination';
+import { logAuthEvent } from 'prometheus/utils/auth/auth-log';
 
 /** Refresh when the access token expires within this window (ms). */
 export const REFRESH_WINDOW_MS = 60 * 1000;
@@ -24,7 +25,8 @@ const CROSS_TAB_LOCK_NAME = 'prometheus-oauth-token-refresh';
  *
  * @constant {String} LS_LOCK_KEY
  */
-const LS_LOCK_KEY = 'prometheus_oauth_token_refresh_lock';
+const SESSION_STORAGE_KEY = 'ember_simple_auth-session';
+const LS_LOCK_KEY ='prometheus_oauth_token_refresh_lock';
 const LS_LOCK_TTL_MS = 30 * 1000;
 const LS_LOCK_POLL_MS = 50;
 
@@ -49,6 +51,7 @@ export default ESASession.extend({
 
     authenticate() {
         this._localAuthenticationInProgress = true;
+        logAuthEvent('sign-in started');
 
         return this._super(...arguments).finally(() => {
             this._localAuthenticationInProgress = false;
@@ -78,6 +81,8 @@ export default ESASession.extend({
             delete this.oldRequestedUrl;
         }
 
+        logAuthEvent('post-auth navigation', { destination: String(destination).split('?')[0] });
+
         if (!this._localAuthenticationInProgress) {
             Logger.debug(
                 'Prometheus.Services.Session: applying post-auth navigation after cross-tab session sync',
@@ -97,10 +102,12 @@ export default ESASession.extend({
         }
 
         store.on('sessionDataUpdated', () => {
+            logAuthEvent('cross-tab session update received');
             this._crossTabAuthSyncPending = !this._localAuthenticationInProgress;
         });
 
         internalSession.on('invalidationSucceeded', () => {
+            logAuthEvent('invalidated', { crossTab: !!this._crossTabAuthSyncPending });
             if (this._crossTabAuthSyncPending && !this.get('isAuthenticated')) {
                 Logger.warn(
                     'Prometheus.Services.Session: cross-tab auth sync failed; session could not be restored'
@@ -111,6 +118,7 @@ export default ESASession.extend({
         });
 
         internalSession.on('authenticationSucceeded', () => {
+            logAuthEvent('sign-in succeeded');
             if (this._crossTabAuthSyncPending) {
                 this._crossTabAuthSyncPending = false;
             }
@@ -139,6 +147,7 @@ export default ESASession.extend({
         }
 
         if (!force && !this._tokenNeedsRefresh()) {
+            logAuthEvent('refresh skipped', { reason: 'already fresh' });
             return Promise.resolve();
         }
 
@@ -153,6 +162,31 @@ export default ESASession.extend({
         return this._inFlightRefresh;
     },
 
+    /**
+     * Removes the persisted session (active store) and the cross-tab refresh lock
+     * from localStorage (used by the public auth status page to recover a stuck
+     * session). The caller reloads the app afterwards.
+     *
+     * @method clearStoredSession
+     * @public
+     */
+    async clearStoredSession() {
+        try {
+            // clears whichever store is active (localStorage or the cookie fallback)
+            await this.get('store')?.clear();
+        } catch (e) {
+            // store unavailable
+        }
+
+        [SESSION_STORAGE_KEY, LS_LOCK_KEY].forEach((key) => {
+            try {
+                localStorage.removeItem(key);
+            } catch (e) {
+                // storage unavailable
+            }
+        });
+    },
+
     _tokenNeedsRefresh() {
         const expiresAt = this.get('data.authenticated.expires_at');
         const refreshToken = this.get('data.authenticated.refresh_token');
@@ -165,10 +199,14 @@ export default ESASession.extend({
     },
 
     async _performCoordinatedRefresh(force) {
+        logAuthEvent('refresh started', { force });
+
         return this._withCrossTabLock(async () => {
+            logAuthEvent('cross-tab lock acquired');
             await this._reconcileSessionFromStore();
 
             if (!force && !this._tokenNeedsRefresh()) {
+                logAuthEvent('refresh skipped', { reason: 'refreshed by another tab' });
                 return;
             }
 
@@ -236,6 +274,7 @@ export default ESASession.extend({
             });
 
             if (!fetchResponse.ok) {
+                logAuthEvent('refresh failed', { status: fetchResponse.status });
                 throw new Error(`Token refresh failed: ${fetchResponse.statusText}`);
             }
 
@@ -254,11 +293,13 @@ export default ESASession.extend({
                 }
             );
 
+            logAuthEvent('refresh succeeded');
             run(() => {
                 this._applyAuthenticatedData(authenticated);
                 this.get('store').persist(Object.assign({}, this.get('data') || {}, { authenticated }));
             });
         } catch (err) {
+            logAuthEvent('refresh failed', { error: err.message });
             run(() => {
                 this.invalidate();
             });
