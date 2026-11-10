@@ -25,7 +25,7 @@ export const TYPE_LABEL_CAPTION_KEY = 'views.app.settings.issueTypes.label';
  * so every field's caption stays unique.
  *
  * @method labelCaption
- * @param {Service} intl The ember-intl service
+ * @param {Service} intl The intl service
  * @param {String} locale
  * @param {String} defaultLocale
  * @param {String} key The translation key of the caption, the issue status one by default

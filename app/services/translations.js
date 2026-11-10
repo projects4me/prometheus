@@ -20,7 +20,7 @@ import { fetchLocales, fetchTranslations } from 'prometheus/utils/translations-a
  */
 export default class TranslationsService extends Service {
 	/**
-	 * The ember-intl service
+	 * The intl service
 	 *
 	 * @property intl
 	 * @type Service
@@ -128,25 +128,6 @@ export default class TranslationsService extends Service {
 			this.locales = locales.includes(this.defaultLocale) ? locales : [this.defaultLocale, ...locales];
 		} catch (error) {
 			Logger.warn('TranslationsService::loadLocales - keeping the default locale', error);
-		}
-		this.warmUp();
-	}
-
-	/**
-	 * Creates the formatter of every supported locale. ember-intl creates it on the
-	 * first use of a locale and stores it in a tracked property, which must not
-	 * happen while rendering. A failing locale is logged and skipped.
-	 *
-	 * @method warmUp
-	 * @private
-	 */
-	warmUp() {
-		for (let locale of this.locales) {
-			try {
-				this.intl.formatNumber(0, { locale });
-			} catch (error) {
-				Logger.warn(`TranslationsService::warmUp - could not prepare ${locale}`, error);
-			}
 		}
 	}
 
