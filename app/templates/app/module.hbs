@@ -4,7 +4,7 @@
     <div class="list-view-header clearfix">
 
       <div class="list-view-module">
-        <h1>{{module}}</h1>
+        <h1>{{this.module}}</h1>
       </div>
 
       <div class="btn-group">
@@ -21,16 +21,16 @@
       </div>
 
       <div class="btn-group col-sm-2">
-        <span class="list-view-count pull-left">{{t "global.list.selected"}} {{selectedCount}}</span>
+        <span class="list-view-count pull-left">{{t "global.list.selected"}} {{this.selectedCount}}</span>
         <span class="pagination">
-          {{#if model.content.meta._links.prev}}
-            <AppUi::Button type="button" class="btn btn-default" {{action "paginate" (get-page model.content.meta._links.next.href)}}><i class="fa fa-angle-double-left"></i></AppUi::Button>
+          {{#if this.model.content.meta._links.prev}}
+            <AppUi::Button type="button" class="btn btn-default" {{action "paginate" (get-page this.model.content.meta._links.next.href)}}><i class="fa fa-angle-double-left"></i></AppUi::Button>
           {{else}}
             <AppUi::Button type="button" class="btn btn-default disabled"><i class="fa fa-angle-double-left"></i></AppUi::Button>
           {{/if}}
 
-          {{#if model.content.meta._links.next}}
-            <AppUi::Button type="button" class="btn btn-default" {{action "paginate" (get-page model.content.meta._links.next.href)}}><i class="fa fa-angle-double-right"></i></AppUi::Button>
+          {{#if this.model.content.meta._links.next}}
+            <AppUi::Button type="button" class="btn btn-default" {{action "paginate" (get-page this.model.content.meta._links.next.href)}}><i class="fa fa-angle-double-right"></i></AppUi::Button>
           {{else}}
             <AppUi::Button type="button" class="btn btn-default disabled"><i class="fa fa-angle-double-right"></i></AppUi::Button>
           {{/if}}
@@ -57,9 +57,9 @@
                 </ul>
               </div>
             </th>
-            {{#each-in metaData.fields as |field definition|}}
+            {{#each-in this.metaData.fields as |field definition|}}
               {{#if definition.sort}}
-                <th class="sortable" data-sort="{{module}}.{{definition.fieldName}}Sortable"><a href="javascript:void(0);" {{action "sortData" definition.fieldName}}>{{t definition.label}}</a></th>
+                <th class="sortable" data-sort="{{this.module}}.{{definition.fieldName}}Sortable"><a href="javascript:void(0);" {{action "sortData" definition.fieldName}}>{{t definition.label}}</a></th>
               {{else}}
                 <th>{{t definition.label}}</th>
               {{/if}}
@@ -67,7 +67,7 @@
           </tr>
         </thead>
         <tbody>
-          {{#each model as |entity|}}
+          {{#each this.model as |entity|}}
             <tr>
               <td>
                 <div class="btn-group">
@@ -85,8 +85,8 @@
                   </ul>
                 </div>
               </td>
-              {{#each-in metaData.fields as |field definition|}}
-                <td>{{field-view view='list' navigate=(action "detail" entity.id) definition=definition model=entity field=field module=module}}</td>
+              {{#each-in this.metaData.fields as |field definition|}}
+                <td>{{field-view view='list' navigate=(action "detail" entity.id) definition=definition model=entity field=field module=this.module}}</td>
               {{/each-in}}
             </tr>
           {{/each}}

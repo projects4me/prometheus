@@ -1,11 +1,11 @@
 {{!-- Create template for radio field--}}
-<label>{{t definition.label}}</label>
-{{#if definition.required}}<span class="required">*</span>{{/if}}
-{{#if definition.help}}<i data-toggle="tooltip" data-placement="top" title="{{t definition.help}}" class="fa fa-question-circle"></i>{{/if}}
-<span class="hidden field-error">{{t definition.errorMsg}}</span>
+<label>{{t this.definition.label}}</label>
+{{#if this.definition.required}}<span class="required">*</span>{{/if}}
+{{#if this.definition.help}}<i data-toggle="tooltip" data-placement="top" title="{{t this.definition.help}}" class="fa fa-question-circle"></i>{{/if}}
+<span class="hidden field-error">{{t this.definition.errorMsg}}</span>
 <div class="clearfix" />
-{{#each definition.options as |option|}}
+{{#each this.definition.options as |option|}}
   <span class="btn-group">
-    {{text-field focus-in="changed" type="radio" readonly=definition.readonly name=definition.fieldName value=option.value}} {{option.label}}
+    {{text-field focus-in="changed" type="radio" readonly=this.definition.readonly name=this.definition.fieldName value=option.value}} {{option.label}}
   </span>
 {{/each}}
