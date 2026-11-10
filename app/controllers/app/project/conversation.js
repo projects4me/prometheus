@@ -16,6 +16,7 @@ import { peekOrPush, pushIfMissing, removeById } from 'prometheus/utils/live/col
 import { htmlSafe } from '@ember/template';
 import UrlState from 'prometheus/utils/state/url-state';
 import ListLoader from 'prometheus/utils/state/list-loader';
+import ThreadCounts, { fetchThreadComments } from 'prometheus/utils/conversation/thread-counts';
 import { BROWSER_PARAMS } from 'prometheus/utils/conversation/browser-defaults';
 import {
     buildConversationListRequest, buildSortOptions, buildGroupOptions, arrangeConversations
@@ -131,6 +132,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             owner: this,
             buildRequest: values => buildConversationListRequest(this.trackedProject.getProjectId(), values)
         });
+        this.threadCounts = new ThreadCounts({ owner: this, fetch: roomId => fetchThreadComments(this.store, roomId) });
         this.urlState = new UrlState(this, { schema: BROWSER_PARAMS, routeName: 'app.project.conversation' });
         this.urlState.onChange(values => this.paramsChanged(values));
     }
@@ -1184,6 +1186,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @public
      */
     handleCommentCreated(envelope) {
+        this.threadCounts.addComment(envelope.changes?.relatedId, envelope.resource.id, envelope.changes?.comment);
         let room = this.findConversationForEvent(envelope);
         if (!room) {
             return;
@@ -1229,6 +1232,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @public
      */
     handleCommentDeleted(envelope) {
+        this.threadCounts.removeComment(envelope.resource.id, envelope.changes?.relatedId);
         let room = this.findConversationForEvent(envelope);
         if (room) {
             removeById(room.comments, envelope.resource.id);
@@ -1391,6 +1395,15 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @public
      */
     conversationList;
+
+    /**
+     * The comment counts and vote tallies of the listed threads
+     *
+     * @property threadCounts
+     * @type ThreadCounts
+     * @public
+     */
+    threadCounts;
 
     /**
      * The field the threads are sorted by on the server
@@ -1618,7 +1631,34 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         if (params && JSON.stringify(this.conversationList.buildRequest(values)) === JSON.stringify(this.conversationList.buildRequest(params))) {
             return;
         }
-        return this.conversationList.run(values);
+        return this.loadCounts(this.conversationList.run(values));
+    }
+
+    /**
+     * Loads the comment counts of the listed page once the page itself has loaded; rows render while they load
+     *
+     * @method loadCounts
+     * @param {Promise} pageLoad The load of the list page
+     * @returns {Promise}
+     * @private
+     */
+    async loadCounts(pageLoad) {
+        let records = await pageLoad;
+        if (records) {
+            await this.threadCounts.load(this.conversationList.items.map(room => room.id));
+        }
+    }
+
+    /**
+     * The comment count and vote tallies of a listed thread, null while they load
+     *
+     * @method countsFor
+     * @param {String} roomId
+     * @returns {Object|null}
+     * @public
+     */
+    countsFor(roomId) {
+        return this.threadCounts.countsFor(roomId);
     }
 
     /**
@@ -1633,9 +1673,10 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      */
     showFirstPage(values, firstPage) {
         if (firstPage?.error) {
-            return this.conversationList.run(values);
+            return this.loadCounts(this.conversationList.run(values));
         }
         this.conversationList.seed(firstPage?.records, values);
+        return this.loadCounts(Promise.resolve(firstPage?.records));
     }
 
     /**
@@ -1647,7 +1688,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      */
     @action
     refreshList() {
-        return this.conversationList.retry();
+        return this.loadCounts(this.conversationList.retry());
     }
 
     /**

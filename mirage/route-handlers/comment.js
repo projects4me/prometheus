@@ -15,6 +15,10 @@ export function register(server, ctx) {
 
 	server.get('/comment', (schema, request) => {
 		let model = schema.comments.all();
+		let related = /Comment\.relatedId : (\w+)/.exec(request.queryParams.query || '');
+		if (related && !ctx.get('customCallback')) {
+			model = schema.comments.where({ relatedId: related[1] });
+		}
 		if (
 			ctx.get('customCallback') &&
 			typeof ctx.get('customCallback') === 'function'
