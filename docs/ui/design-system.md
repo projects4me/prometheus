@@ -36,6 +36,12 @@ This document was written by walking through the running app (`https://app.local
 | Content | `<section class="content">` on `#ecf0f5`, then Bootstrap `.row` / `.col-md-*` | |
 | Footer | "Copyright © 2026 **Projects4Me Inc.**" left, "Report Issue" link right | `components/app-layouts/application-footer` |
 
+**Pages under `app.project` start directly with their `.row`.** They never render their own
+`section.content-header`, page title row, `<BreadCrumb/>` or `section.content`: `templates/app/project.hbs`
+already renders the project-name link, the single breadcrumb and the content section, so a second one nests
+or duplicates them. Project pages have no page title (like Task Board and Gantt Cal). Breadcrumb labels come
+from `services/breadcrumb.js`.
+
 ## 3. Page patterns
 
 **Overview / detail page** ([project](screens/project-overview.png), [issue](screens/issue-detail.png))
@@ -56,6 +62,21 @@ This document was written by walking through the running app (`https://app.local
   menu per row. The first column is `number - subject` with the status label underneath.
 - Base controller: `controllers/prometheus/list.js` (search, export, mass update). Extend it; don't
   reimplement it.
+
+**List + detail page (QuickList)** (Roles, Ideas, Threads)
+- `.row` → `.col-md-3` with `QuickList` in a `box box-primary`, + `.col-md-9` with the outlet for the detail.
+- The detail is a `.col-md-8` record box (`box-primary`) + a `.col-md-4` info column of small boxes.
+- The first row opens by default (the index route does `replaceWith` to it). The empty state shows only when
+  nothing matches.
+- QuickList box order, top to bottom:
+  1. Header: title + the create button in `<:actions>` (`btn btn-primary btn-sm`, with ACL).
+  2. `<:search>` with `EzSearchCompact`.
+  3. Group / sort toolbar. It wraps when narrow and never overflows.
+  4. The rows, with group headings when grouped.
+  5. Pagination in the **box footer**: range `1-20 / 20+` and ‹ › buttons (ask Gaia for limit + 1). Never in
+     the header.
+- State lives in `utils/state/` (`UrlState` + `ListLoader`); the list reloads in place.
+- Component reference: `public/ui-docs/quick-list.md`.
 
 **Create / edit page** ([issue create](screens/issue-create.png))
 - `.col-md-8`: one `box-primary` titled "Create Issue" holding the main fields in a single column.
@@ -166,6 +187,10 @@ working. Labels and placeholders come from `translations/en-us.json`.
   where they already are.
 - Avatars are round images with the user's name in bold beneath or beside them, truncated with an ellipsis.
   Member grids use `users-list`.
+- No small uppercase type or "eyebrow" label above a box title. The title is the `h3.box-title`.
+- Issue statuses always render with the `status-label` + `status-style` helpers and the status class (as in
+  `components/issue/issue-details.hbs`), never the raw value.
+- Information shown in a side box (for example a linked issue) is not repeated in the record header.
 
 ## 9. Other building blocks
 
@@ -183,6 +208,8 @@ working. Labels and placeholders come from `translations/en-us.json`.
 | Toolbars | `AppUi::Toolbar` and `components/toolbar.scss` |
 | Modals | `bootstrap-modal` (Bootstrap 3 modal, square) |
 | Tooltips | tippy.js themes in `components/tooltip-themes.scss` |
+| Reply / comment box | `ConversationUi::CommentComposer` (toast-ui WYSIWYG with its toolbar, mentions and issue links); never a plain textarea |
+| Record boxes | Plain `box box-*`, with no extra shadow or border |
 | Component docs | Markdown files in `public/ui-docs/` (format in its `README.md`), shown by `Developer::Docs` |
 
 ## 10. Rounded corners already in the code (don't copy)
@@ -215,4 +242,7 @@ separate task with its own issue.
 - [ ] Form fields use `FormFields::*` with crimson labels and underline inputs
 - [ ] All strings in `translations/en-us.json`; ACL contexts set
 - [ ] A `-loading.hbs` skeleton for new routes; empty states match section 4
+- [ ] Project pages render no own content-header, title, breadcrumb or `section.content`
+- [ ] List + detail pages follow the QuickList order (create in the header, pagination in the footer)
+- [ ] Issue statuses use `status-label`; the comment input is the `CommentComposer`
 - [ ] Compared side by side in the browser with an existing screen of the same type
