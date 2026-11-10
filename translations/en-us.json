@@ -485,6 +485,33 @@
     }
   },
   "views": {
+    "authStatus": {
+      "title": "Auth status",
+      "session": "Session",
+      "authenticated": "Authenticated",
+      "authenticator": "Authenticator",
+      "accessToken": "Access token (last 4)",
+      "refreshToken": "Refresh token present",
+      "expiresAt": "Expires at",
+      "expiresIn": "Expires in",
+      "tokenType": "Token type",
+      "scope": "Scope",
+      "yes": "Yes",
+      "no": "No",
+      "lastRefresh": "Last refresh",
+      "lastCrossTab": "Last cross-tab event",
+      "log": "Event log",
+      "empty": "No events recorded",
+      "time": "Time",
+      "tab": "Tab",
+      "event": "Event",
+      "detail": "Detail",
+      "reload": "Reload",
+      "copy": "Copy log",
+      "copied": "Copied",
+      "clearLog": "Clear log",
+      "clearSession": "Clear session and sign in again"
+    },
     "components": {
       "infiniteScroll": {
         "loadMore": "Load More"

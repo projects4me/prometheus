@@ -93,6 +93,7 @@ Router.map(function() {
   });
   this.route('signin', function() {});
   this.route('reset-password');
+  this.route('auth-status');
   this.route('not-found', {path: '/*path'});
 });
 

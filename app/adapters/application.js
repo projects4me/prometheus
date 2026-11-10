@@ -10,6 +10,7 @@ import { tracked } from '@glimmer/tracking';
 import AdapterError from '@ember-data/adapter/error';
 import ForbiddenError from './errors/forbidden-error';
 import UnauthorizedError from './errors/unauthorized-error';
+import { logAuthEvent } from 'prometheus/utils/auth/auth-log';
 
 /**
  * This is the application adapter that fetches the information from the API.
@@ -264,6 +265,7 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
                 error instanceof UnauthorizedError &&
                 this.session.isAuthenticated
             ) {
+                logAuthEvent('401 retry', { url: String(url).split('?')[0] });
                 await this.session.ensureFreshToken({ force: true });
                 return this.ajax(url, type, options, true);
             }

@@ -1,0 +1,71 @@
+<section class="content-header">
+  <h1>{{t "views.authStatus.title"}}</h1>
+</section>
+
+<section class="content">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="box box-primary" data-auth-status-box="session">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{t "views.authStatus.session"}}</h3>
+        </div>
+        <div class="box-body">
+          <table class="table table-condensed">
+            <tbody>
+              <tr><th>{{t "views.authStatus.authenticated"}}</th><td data-auth-status="authenticated">{{if this.sessionInfo.authenticated (t "views.authStatus.yes") (t "views.authStatus.no")}}</td></tr>
+              <tr><th>{{t "views.authStatus.authenticator"}}</th><td data-auth-status="authenticator">{{this.sessionInfo.authenticator}}</td></tr>
+              <tr><th>{{t "views.authStatus.accessToken"}}</th><td data-auth-status="access-token">{{this.sessionInfo.accessToken}}</td></tr>
+              <tr><th>{{t "views.authStatus.refreshToken"}}</th><td data-auth-status="refresh-token">{{if this.sessionInfo.hasRefreshToken (t "views.authStatus.yes") (t "views.authStatus.no")}}</td></tr>
+              <tr><th>{{t "views.authStatus.expiresAt"}}</th><td>{{this.sessionInfo.expiresAt}}</td></tr>
+              <tr><th>{{t "views.authStatus.expiresIn"}}</th><td>{{this.sessionInfo.expiresIn}}</td></tr>
+              <tr><th>{{t "views.authStatus.tokenType"}}</th><td>{{this.sessionInfo.tokenType}}</td></tr>
+              <tr><th>{{t "views.authStatus.scope"}}</th><td>{{this.sessionInfo.scope}}</td></tr>
+              <tr><th>{{t "views.authStatus.lastRefresh"}}</th><td>{{this.summary.refresh}}</td></tr>
+              <tr><th>{{t "views.authStatus.lastCrossTab"}}</th><td>{{this.summary.crossTab}}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="box-footer">
+          <button type="button" class="btn btn-default" data-auth-status-action="reload" {{on "click" this.refresh}}>{{t "views.authStatus.reload"}}</button>
+          <button type="button" class="btn btn-danger" data-auth-status-action="clear-session" {{on "click" this.clearSession}}>{{t "views.authStatus.clearSession"}}</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="box box-primary" data-auth-status-box="log">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{t "views.authStatus.log"}}</h3>
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-default btn-sm" data-auth-status-action="copy" {{on "click" this.copyLog}}>{{if this.copied (t "views.authStatus.copied") (t "views.authStatus.copy")}}</button>
+            <button type="button" class="btn btn-default btn-sm" data-auth-status-action="clear-log" {{on "click" this.clearLog}}>{{t "views.authStatus.clearLog"}}</button>
+          </div>
+        </div>
+        <div class="box-body no-padding">
+          <table class="table table-condensed table-striped">
+            <thead>
+              <tr>
+                <th>{{t "views.authStatus.time"}}</th>
+                <th>{{t "views.authStatus.tab"}}</th>
+                <th>{{t "views.authStatus.event"}}</th>
+                <th>{{t "views.authStatus.detail"}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each this.entries as |entry|}}
+                <tr data-auth-log-entry>
+                  <td>{{entry.time}}</td>
+                  <td>{{entry.tab}}</td>
+                  <td>{{entry.event}}</td>
+                  <td>{{entry.detail}}</td>
+                </tr>
+              {{else}}
+                <tr><td colspan="4">{{t "views.authStatus.empty"}}</td></tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
