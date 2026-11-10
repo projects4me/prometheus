@@ -37,7 +37,7 @@ and Hermes room keys are out of scope here.
 |---|---|
 | Status | Accepted |
 | Decision | `loading-assets` (and `app` when assets are already loaded) connects and starts notification live sync. Logout stops notification live sync, clears registrations, and disconnects. |
-| Rationale | The socket is authenticated with the OAuth access token. It must not outlive the ember-simple-auth session. |
+| Rationale | The socket is authenticated with the OAuth access token. It must not outlive the native session (`services/session.js`). |
 | Implications | Do not connect from individual project routes. Do not leave the socket open after `invalidateSession`. |
 
 ### D-003 — `hermes` is a relay client, not a domain layer

@@ -243,6 +243,12 @@ export default class SessionService extends Service {
      * destination rules as the sign-in form (default {@link DEFAULT_POST_AUTH_ROUTE}).
      * A transition intercepted by `requireAuthentication` is retried instead.
      *
+     * Why there are two "go back" paths: `attemptedTransition` (set by the app route guard)
+     * only exists when the user was stopped while navigating inside the running app.
+     * `oldRequestedUrl` (set by the application route on a cold load of a deep link) is a plain
+     * URL, because the app route's transition is never created for a signed-out cold load. It is
+     * consumed by `app.loading-assets`, which has to load the assets before the URL can be opened.
+     *
      * @method handleAuthentication
      * @param {String} [routeAfterAuthentication]
      * @public
@@ -258,7 +264,9 @@ export default class SessionService extends Service {
             oldRequestedUrl,
         });
 
-        if (oldRequestedUrl) {
+        // A usable deep link is kept: app.loading-assets reads it (and clears it) once the assets
+        // are loaded, otherwise it is lost on the way in. A blocked one (e.g. /signin) is stale.
+        if (destination !== oldRequestedUrl) {
             delete this.oldRequestedUrl;
         }
 

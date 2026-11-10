@@ -42,7 +42,7 @@ threads. Those live in the controller handlers.
 ## Session lifecycle
 
 1. Signed-in `loading-assets` (and `app` if assets are already loaded) calls
-   `hermes.connect()` with `auth.token` from ember-simple-auth, then
+   `hermes.connect()` with `auth.token` from the native session service (`services/session.js`), then
    `notifications.startLiveSync()`.
 2. A mounted project route calls `controller.registerHermesIntents(projectId)`.
    That controller’s disposer is cleared in the route’s exit hook.

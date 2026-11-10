@@ -69,6 +69,8 @@ module.exports = function(environment) {
             enabled: false
         },
         
+        // reset-password stays reachable when signed in on purpose: the link in the e-mail must work
+        // whatever the browser's session is, and it signs nobody in or out.
         publicRoutes: ['reset-password', 'auth-status'],
 
         // services/session.js: where to go after sign-in, and where the session is
