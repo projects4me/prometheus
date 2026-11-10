@@ -22,7 +22,8 @@
       {{else}}
         <Conversation::LinkedIssueBox @issue={{this.model.issue}} />
       {{/if}}
-      {{!-- Room below for the Participants, Create issue and Activity boxes --}}
+      <Conversation::ParticipantsBox @participants={{this.participants}} />
+      {{!-- Room below for the Create issue and Activity boxes --}}
     </div>
   </div>
 {{/if}}

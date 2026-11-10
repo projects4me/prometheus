@@ -9,6 +9,7 @@ import { inject as service } from '@ember/service';
 import { peekOrPush } from 'prometheus/utils/live/collection';
 import ThreadComments from 'prometheus/utils/state/thread-comments';
 import ThreadVotes from 'prometheus/utils/state/thread-votes';
+import ThreadParticipants, { buildParticipants } from 'prometheus/utils/state/thread-participants';
 
 /**
  * The controller of one open thread: it owns the thread's comments (their own paged query, replies and the live
@@ -67,6 +68,29 @@ export default class AppProjectConversationPageController extends Controller {
     threadVotes = new ThreadVotes({ store: this.store, owner: this });
 
     /**
+     * The comment authors of the open discussion, loaded with their own minimal query
+     *
+     * @property threadParticipants
+     * @type ThreadParticipants
+     * @public
+     */
+    threadParticipants = new ThreadParticipants({ store: this.store, owner: this });
+
+    /**
+     * The participants of the open thread: its creator, then the distinct authors of its comments or votes
+     *
+     * @property participants
+     * @type Array
+     * @public
+     */
+    get participants() {
+        let room = this.model;
+        if (!room) return [];
+        let activity = room.roomType === 'vote' ? this.threadVotes.votes : this.threadParticipants.records;
+        return buildParticipants(room.createdBy, activity);
+    }
+
+    /**
      * Disposer returned by hermes.register() for the open thread
      *
      * @property hermesDisposer
@@ -86,6 +110,7 @@ export default class AppProjectConversationPageController extends Controller {
      */
     openThread(room, projectId) {
         this.closeThread();
+        this.threadParticipants.open(room?.roomType === 'discussion' ? room.id : null);
         if (room?.roomType === 'vote') {
             this.threadComments.open(null);
             if (projectId) {
@@ -147,6 +172,7 @@ export default class AppProjectConversationPageController extends Controller {
         if (this.isDestroying || this.isDestroyed) return comment;
         if (comment && this.threadComments.roomId === relatedId) {
             this.threadComments.add(comment);
+            this.threadParticipants.add(comment);
         }
         return comment;
     }
@@ -202,6 +228,7 @@ export default class AppProjectConversationPageController extends Controller {
         if (!this.isOpenThreadEvent(envelope)) return;
         let comment = peekOrPush(this.store, 'comment', envelope.resource.id, envelope.changes);
         this.threadComments.add(comment);
+        this.threadParticipants.add(comment);
     }
 
     /**
@@ -226,6 +253,7 @@ export default class AppProjectConversationPageController extends Controller {
      */
     handleCommentDeleted(envelope) {
         this.threadComments.remove(envelope?.resource?.id);
+        this.threadParticipants.remove(envelope?.resource?.id);
     }
 
     /**

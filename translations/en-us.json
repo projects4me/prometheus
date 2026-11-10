@@ -797,7 +797,8 @@
           "commentsFailed": "The comments could not be loaded.",
           "retry": "Retry",
           "linkedIssue": "Linked issue",
-          "noLinkedIssue": "No linked issue"
+          "noLinkedIssue": "No linked issue",
+          "participants": "Participants"
         },
         "browser": {
           "title": "Threads",
