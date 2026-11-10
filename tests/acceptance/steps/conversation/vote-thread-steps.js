@@ -50,6 +50,31 @@ export default function (assert) {
 			assert.dom('[data-btn="vote-agree"]').doesNotExist('The agree thumb is locked');
 			assert.dom('[data-btn="vote-disagree"]').doesNotExist('The disagree thumb is locked');
 		}).
+		given('Conversation $conversationIndex is a discussion with comments by $count people', function (conversationIndex, count) {
+			let conversation = server.schema.conversationrooms.find(parseInt(conversationIndex));
+			for (let i = 1; i <= parseInt(count); i++) {
+				// two comments per person: the person is listed once
+				for (let j = 0; j < 2; j++) {
+					server.create('comment', {
+						relatedTo: 'conversationrooms',
+						relatedId: conversation.id,
+						comment: `Comment ${i}.${j}`,
+						createdUser: `talker-${i}`,
+						createdUserName: `Talker ${i}`,
+						dateCreated: `2026-01-01 10:0${j}:${String(i).padStart(2, '0')}`
+					});
+				}
+			}
+			assert.ok(true, `Conversation ${conversationIndex} has comments by ${count} people`);
+		}).
+		then('Participants box lists $people', function (people) {
+			let ids = people.split(',').map((id) => id.trim());
+			assert.dom('[data-participants-box] [data-member-link]').exists({ count: ids.length });
+			ids.forEach((id, index) => {
+				assert.dom(`[data-participants-box] [data-member-link]:nth-of-type(${index + 1})`).exists();
+				assert.dom(`[data-participants-box] [data-member-link="${id}"]`).hasAttribute('href', `/app/user/${id}`);
+			});
+		}).
 		then('Vote body lists $count votes', function (count) {
 			assert.dom('[data-voter-count]').hasText(`${count} votes`);
 			assert.dom('[data-voter]').exists({ count: parseInt(count) });

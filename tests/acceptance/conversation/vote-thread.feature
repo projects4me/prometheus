@@ -52,3 +52,35 @@ Feature: Conversation | vote thread
       ----------------------------------------
     Then Vote body counts 0 agree and 1 disagree votes, "Leaning: I disagree (1 of 1)" and the hint to vote
     And Vote body lists 1 votes
+
+  Scenario: The participants box lists the voters of a vote thread
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 selects Project 1
+    And Project has following details
+    -----------------------------------
+    | conversations(conversationroom) |
+    | 2                               |
+    -----------------------------------
+    And Conversation 1 is a vote thread with 1 agree votes and 1 disagree votes
+    When User navigates to app/project/PROJECT_1
+    And User opens the vote thread 1 from the latest conversations
+    Then Participants box lists voter-2, voter-1
+
+  Scenario: The participants box lists each commenter of a discussion once
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 selects Project 1
+    And Project has following details
+    -----------------------------------
+    | conversations(conversationroom) |
+    | 2                               |
+    -----------------------------------
+    And Conversation 1 is a discussion with comments by 2 people
+    When User navigates to app/project/PROJECT_1
+    And User opens the vote thread 1 from the latest conversations
+    Then Participants box lists talker-2, talker-1

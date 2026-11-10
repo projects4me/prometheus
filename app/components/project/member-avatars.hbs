@@ -1,12 +1,24 @@
 <div class="member-avatars">
   {{#each this.visibleMembers as |member|}}
-    <img
-      src="{{this.apiHost}}/userimage/get/{{member.id}}"
-      class="member-avatar img-circle"
-      alt="{{member.name}}"
-      title="{{member.name}}"
-      data-toggle="tooltip"
-    >
+    {{#if @linkToUser}}
+      <a href="/app/user/{{member.id}}" data-member-link={{member.id}}>
+        <img
+          src="{{this.apiHost}}/userimage/get/{{member.id}}"
+          class="member-avatar img-circle"
+          alt="{{member.name}}"
+          title="{{member.name}}"
+          data-toggle="tooltip"
+        >
+      </a>
+    {{else}}
+      <img
+        src="{{this.apiHost}}/userimage/get/{{member.id}}"
+        class="member-avatar img-circle"
+        alt="{{member.name}}"
+        title="{{member.name}}"
+        data-toggle="tooltip"
+      >
+    {{/if}}
   {{/each}}
   {{#if this.overflowCount}}
     <span class="member-avatars-overflow" title="{{this.overflowCount}} more members" data-toggle="tooltip">
