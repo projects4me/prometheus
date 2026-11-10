@@ -4,7 +4,7 @@
 
 QuickList is a narrow list of records inside a box: a header with the title and count, an optional search block, one row per record, grouping, selection and paging, plus the loading, empty and error states. It only displays what it is given; the caller owns the queries, paging and search.
 
-Used in the Ideas browser.
+Used in the Roles, Ideas and Threads browsers. The page layout around it is in the design system ("List + detail page (QuickList)").
 
 ## Arguments
 
@@ -33,7 +33,7 @@ Used in the Ideas browser.
 
 ## Blocks
 
-- actions: header tools, in the box tools of the header.
+- actions: header tools, in the box tools of the header; the create button goes here (`btn btn-primary btn-sm`, with ACL).
 - search: a slot under the header, for EzSearchCompact; rendered as is.
 - item: one row per record; yields the record and the Item component, whose primary and secondary blocks hold the first and second line. An optional leading block on the Item puts a visual (an initials square, an icon, an avatar) in a column on the left, as wide as its content and top-aligned, with the two lines lined up beside it; with selection the row reads checkbox, leading, text.
 - group: replaces the label of a group heading; yields the group with key, label, items and count.
@@ -60,6 +60,7 @@ Used in the Ideas browser.
 - Ask Gaia for limit + 1 records and pass hasNext: the list has a next page when the extra record came back. Gaia sends no totals.
 - Keep the query, sort and page in the caller and pass them in.
 - Use EzSearchCompact in the search block.
+- Let the list draw the pagination: it sits in the box footer, never in the header.
 
 ### Avoid
 
