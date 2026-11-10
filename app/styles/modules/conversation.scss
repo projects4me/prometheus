@@ -284,7 +284,8 @@
   margin-bottom: 1.5rem;
   display: block;
   
-  .box {
+  // The thread box (.thread-box) is a standard box-primary and keeps AdminLTE's own look
+  &:not(.thread-box) .box {
     background-color: $backgroundColor;
     border: 0.1rem solid $borderColor;
     border-radius: 0.25rem;
@@ -389,11 +390,7 @@
 
 /*=====  Conversation Thread Box  ======*/
 .thread-box {
-  // The root keeps .conversation-item, whose box is rounded; the thread box follows the square design system
-  .box {
-    border-radius: 0;
-  }
-
+  // The root keeps .conversation-item for its hooks, but the custom box look is not applied to it
   .thread-type {
     display: block;
     font-size: 1.1rem;
