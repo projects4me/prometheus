@@ -56,6 +56,8 @@ export default class AclService extends Service {
         { name: 'app.project.wiki.page', map: 'wiki.read' },
         { name: 'app.project.wiki.edit', map: 'wiki.update' },
         { name: 'app.project.conversation', map: 'conversationroom.read' },
+        { name: 'app.project.conversation.index', map: 'conversationroom.read' },
+        { name: 'app.project.conversation.page', map: 'conversationroom.read' },
         { name: 'app.project.board', map: 'issue.read' },
         { name: 'app.project.calendar', map: 'issue.read' },
         { name: 'app.project.issue.index', map: 'issue.read' },

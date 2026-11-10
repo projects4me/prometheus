@@ -1,0 +1,15 @@
+{{#if this.model}}
+  <div class="conversation-opened-container" data-conversation-opened>
+    <Conversation::ConversationItem
+      @entity={{this.model}}
+      @membersList={{this.layout.membersList}}
+      @currentUser={{this.layout.currentUser}}
+      @toggleVote={{this.layout.toggleVote}}
+      @saveComment={{this.layout.saveComment}}
+      @search={{this.layout.search}}
+      @vote={{this.layout.vote}}
+      @linkIssueSearch={{this.layout.linkIssueSearch}}
+      @onLinkedIssueChange={{this.layout.updateConversationLinkedIssue}}
+    />
+  </div>
+{{/if}}

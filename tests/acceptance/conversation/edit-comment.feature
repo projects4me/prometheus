@@ -12,7 +12,7 @@ Feature: Conversation | edit comment
     | conversations(conversationroom) |
     | 1                               |
     -----------------------------------
-    When User navigates to app/project/PROJECT_1/conversations
+    When User opens the threads of the project
     And User add a comment having description testComment
     And User clicks on edit button of comment
     And User updates comment having description updatedComment
@@ -32,6 +32,6 @@ Feature: Conversation | edit comment
     -----------------------------------
     And Conversation has 1 comment
     And Comment is created by User_2
-    When User navigates to app/project/PROJECT_1/conversations
+    When User opens the threads of the project
     Then User shouldn't see edit button of comment
 

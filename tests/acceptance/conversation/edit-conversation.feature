@@ -13,7 +13,7 @@ Feature: Conversation | edit conversation
     | 1                               |
     -----------------------------------
     And Conversation is created by User_1
-    When User navigates to app/project/PROJECT_1/conversations
+    When User opens the threads of the project
     And User clicks on edit button of conversation
     And User updates conversation subject to Updated Subject
     And User updates conversation description to Updated Description
@@ -33,6 +33,6 @@ Feature: Conversation | edit conversation
     | 1                               |
     -----------------------------------
     And Conversation is created by User_2
-    When User navigates to app/project/PROJECT_1/conversations
+    When User opens the threads of the project
     Then User shouldn't see edit button of conversation
 

@@ -194,7 +194,7 @@ export const then = function () {
 						let controller = this.owner.lookup(
 							'controller:app.project.conversation'
 						);
-						let rooms = controller.conversations || [];
+						let rooms = [controller.selectedConversation, ...(controller.listedConversations || [])].filter(Boolean);
 						let found = false;
 						rooms.forEach((room) => {
 							(room.comments || []).forEach((comment) => {

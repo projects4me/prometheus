@@ -222,6 +222,18 @@ export default class BreadCrumbService extends Service {
 			linkable: true,
 			parent: 'app.project'
 		},
+		'app.project.conversation.index': {
+			title: 'views.nav.menu.conversation.label',
+			icon: 'comments',
+			linkable: true,
+			parent: 'app.project'
+		},
+		'app.project.conversation.page': {
+			title: null, // Dynamic from route
+			icon: 'comments',
+			linkable: true,
+			parent: 'app.project.conversation.index'
+		},
 		'app.project.gantt': {
 			title: 'views.nav.menu.gantt.label',
 			icon: 'gantt',
