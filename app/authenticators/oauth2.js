@@ -2,66 +2,50 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import OAuth2PasswordGrant from 'ember-simple-auth/authenticators/oauth2-password-grant';
-import ENV from "prometheus/config/environment";
-import RSVP from 'rsvp';
+import EmberObject from '@ember/object';
+import ENV from 'prometheus/config/environment';
 import { isEmpty } from '@ember/utils';
-import { run } from '@ember/runloop';
-import { makeArray } from '@ember/array';
 import Logger from 'js-logger';
-import { inject } from '@ember/service';
 import { logAuthEvent } from 'prometheus/utils/auth/auth-log';
 
 /**
- * This class allows the application to authenticate with using a password grant
+ * OAuth2 password-grant authenticator, used through
+ * `session.authenticate('authenticator:oauth2', email, password)`. It only
+ * exchanges credentials for tokens and validates restored data; token refresh is
+ * owned by `services/session.js` (`ensureFreshToken`), never by the authenticator.
  *
  * @class OAuth2Authenticator
  * @namespace Prometheus.Authenticators
- * @extends OAuth2PasswordGrant
+ * @extends EmberObject
  * @author Hammad Hassan gollomer@gmail.com
  */
-export default OAuth2PasswordGrant.extend({
-
+export default class OAuth2Authenticator extends EmberObject {
     /**
-     * The client_id to be sent to the authentication server
+     * The client_id sent to the authentication server.
      *
-     * @property clientId
+     * @property apiClientId
      * @type String
-     * @default null
      * @public
      */
-    apiClientId: ENV.api.clientId,
+    apiClientId = ENV.api.clientId;
 
     /**
-     * The client_secret to be sent to the authentication server
+     * The client_secret sent to the authentication server.
      *
-     * @property clientSecret
+     * @property apiClientSecret
      * @type String
-     * @default null
      * @public
      */
-    apiClientSecret: ENV.api.clientSecret,
+    apiClientSecret = ENV.api.clientSecret;
 
     /**
-     * The client_secret to be sent to the authentication server
+     * The token endpoint.
      *
-     * @property clientSecret
+     * @property serverTokenEndpoint
      * @type String
-     * @default null
      * @public
      */
-    serverTokenEndpoint: ENV.api.host + '/api/v' + ENV.api.version + "/token",
-
-    /**
-     * The session service which is offered by ember-simple-auth that will be used
-     * in order to verify whether the used is authenticated
-     *
-     * @property session
-     * @type Ember.Service
-     * @for OAuth2PasswordGrant
-     * @public
-     */
-    session: inject(),
+    serverTokenEndpoint = ENV.api.host + '/api/v' + ENV.api.version + '/token';
 
     /**
      * Refreshing is done by services/session.js only (see restore).
@@ -71,50 +55,71 @@ export default OAuth2PasswordGrant.extend({
      * @default false
      * @public
      */
-    refreshAccessTokens: false,
+    refreshAccessTokens = false;
 
     /**
-     * Authenticates the session with the specified `identification`, `password`
-     * and optional `scope`; issues a `POST` request to the
+     * When true, a failed sign-in rejects with the whole response instead of
+     * its `responseJSON`.
      *
-     * @method authenticate
-     * @param {String} email The resource owner email
-     * @param {String} password The resource owner password
-     * @param {String|Array} scope The scope of the access request (see [RFC 6749, section 3.3](http://tools.ietf.org/html/rfc6749#section-3.3))
-     * @param {Object} headers Optional headers that particular backends may require (for example sending 2FA challenge responses)
-     * @return {Ember.RSVP.Promise} A promise that when it resolves results in the session becoming authenticated
+     * @property rejectWithResponse
+     * @type Boolean
+     * @default false
      * @public
      */
-    authenticate(identification, password, scope = [], headers = {}) {
+    rejectWithResponse = false;
+
+    /**
+     * Authenticates with the given email, password and optional scope by POSTing
+     * a password grant to the token endpoint.
+     *
+     * @method authenticate
+     * @param {String} identification The resource owner email
+     * @param {String} password The resource owner password
+     * @param {String|Array} scope The scope of the access request
+     * @param {Object} headers Optional extra request headers
+     * @return {Promise<Object>} The token response, with `expires_at` added
+     * @public
+     */
+    async authenticate(identification, password, scope = [], headers = {}) {
         Logger.debug('in session authentication');
-        return new RSVP.Promise((resolve, reject) => {
-            const data = { 'grant_type': 'password', email: identification, password, 'client_id': this.apiClientId, 'client_secret': this.apiClientSecret, remember_me: localStorage.getItem('remember_me') };
-            const serverTokenEndpoint = this.serverTokenEndpoint;
-            const useResponse = this.rejectWithResponse;
-            const scopesString = makeArray(scope).join(' ');
-            if (!isEmpty(scopesString)) {
-                data.scope = scopesString;
-            }
-            this.makeRequest(serverTokenEndpoint, data, headers).then((response) => {
-                run(() => {
-                    if (!this._validate(response)) {
-                        logAuthEvent('sign-in failed', { error: 'access_token missing' });
-                        reject('access_token is missing in server response');
-                    }
+        const data = {
+            grant_type: 'password',
+            email: identification,
+            password,
+            client_id: this.apiClientId,
+            client_secret: this.apiClientSecret,
+            remember_me: localStorage.getItem('remember_me'),
+        };
+        const scopesString = [].concat(scope).join(' ');
 
-                    const expiresAt = this._absolutizeExpirationTime(response['expires_in']);
-                    if (!isEmpty(expiresAt)) {
-                        response = Object.assign(response, { 'expires_at': expiresAt });
-                    }
+        if (!isEmpty(scopesString)) {
+            data.scope = scopesString;
+        }
 
-                    resolve(response);
-                });
-            }, (response) => {
-                logAuthEvent('sign-in failed', { error: response?.responseJSON?.error || response?.status || 'unknown' });
-                run(null, reject, useResponse ? response : response.responseJSON);
+        let response;
+
+        try {
+            response = await this.makeRequest(this.serverTokenEndpoint, data, headers);
+        } catch (failure) {
+            logAuthEvent('sign-in failed', {
+                error: failure?.responseJSON?.error || failure?.status || 'unknown',
             });
-        });
-    },
+            throw this.rejectWithResponse ? failure : failure?.responseJSON;
+        }
+
+        if (!this._validate(response)) {
+            logAuthEvent('sign-in failed', { error: 'access_token missing' });
+            throw 'access_token is missing in server response';
+        }
+
+        const expiresAt = this._absolutizeExpirationTime(response.expires_in);
+
+        if (!isEmpty(expiresAt)) {
+            response = Object.assign(response, { expires_at: expiresAt });
+        }
+
+        return response;
+    }
 
     /**
      * Restores the session data as is. Token refresh is owned by `services/session.js`
@@ -125,18 +130,81 @@ export default OAuth2PasswordGrant.extend({
      *
      * @method restore
      * @param {Object} data The persisted session data
-     * @return {Ember.RSVP.Promise} Resolves with the data when it holds an access token
+     * @return {Promise<Object>} Resolves with the data when it holds an access token
      * @public
      */
     restore(data) {
-        return new RSVP.Promise((resolve, reject) => {
-            if (this._validate(data)) {
-                logAuthEvent('session restored');
-                resolve(data);
-            } else {
-                logAuthEvent('restore rejected');
-                reject();
-            }
-        });
+        if (this._validate(data)) {
+            logAuthEvent('session restored');
+            return Promise.resolve(data);
+        }
+
+        logAuthEvent('restore rejected');
+        return Promise.reject();
     }
-});
+
+    /**
+     * Nothing to revoke on the server; the session clears its data.
+     *
+     * @method invalidate
+     * @return {Promise<void>}
+     * @public
+     */
+    invalidate() {
+        return Promise.resolve();
+    }
+
+    /**
+     * POSTs form-encoded data. Resolves with the JSON body; rejects with the
+     * fetch Response carrying `responseJSON` (or `responseText` when the body is
+     * not JSON), as the sign-in controller expects.
+     *
+     * @method makeRequest
+     * @param {String} url
+     * @param {Object} data
+     * @param {Object} [headers]
+     * @return {Promise<Object>}
+     * @public
+     */
+    async makeRequest(url, data, headers = {}) {
+        const body = Object.keys(data)
+            .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+            .join('&');
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { ...headers, 'Content-Type': 'application/x-www-form-urlencoded' },
+            body,
+        });
+        const text = await response.text();
+        let json;
+
+        try {
+            json = JSON.parse(text);
+        } catch (e) {
+            response.responseText = text;
+            throw response;
+        }
+
+        if (!response.ok) {
+            response.responseJSON = json;
+            throw response;
+        }
+
+        return json;
+    }
+
+    /** The authenticator never schedules a refresh (see restore). */
+    _scheduleAccessTokenRefresh() {}
+
+    _absolutizeExpirationTime(expiresIn) {
+        if (!isEmpty(expiresIn)) {
+            return new Date(new Date().getTime() + expiresIn * 1000).getTime();
+        }
+
+        return undefined;
+    }
+
+    _validate(data) {
+        return !isEmpty(data?.access_token);
+    }
+}

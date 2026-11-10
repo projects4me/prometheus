@@ -21,7 +21,7 @@ import { resolveHermesUrl } from "prometheus/utils/live/url";
  */
 export default class HermesService extends Service {
     /**
-     * The session service offered by ember-simple-auth. Used for the OAuth
+     * The session service (services/session.js). Used for the OAuth
      * access token on the Socket.IO handshake.
      *
      * @property session

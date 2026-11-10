@@ -28,7 +28,7 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
     @tracked host = ENV.api.host;
 
     /**
-     * The session service which is offered by ember-simple-auth that will be used
+     * The session service (services/session.js) that will be used
      * in order to verify whether the used is authenticated
      *
      * @property session

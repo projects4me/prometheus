@@ -41,7 +41,7 @@ export default Route.extend({
     router: inject(),
 
     /**
-     * The session service which is offered by ember-simple-auth that will be used
+     * The session service (services/session.js) that will be used
      * in order to verify whether the used is authenticated
      *
      * @property session
@@ -71,6 +71,8 @@ export default Route.extend({
      */
     beforeModel: async function () {
         this._super(...arguments);
+        // restore the persisted session and enable its sign-in/sign-out handlers
+        await this.session.setup();
         await this.translations.load();
         let route = '';
         let currentUrl = getCurrentUrl(this.router);
