@@ -21,15 +21,13 @@ export default function (assert) {
 
                 assert.ok(true, `Linked conversation ${convId} with issue ${issueNumber}`);
             })
-            .then('the first conversation should display linked issue badge', async function () {
+            .then('the first conversation should not repeat the linked issue in its header', async function () {
                 let conversationItem = document.querySelector('.conversation-item[id]');
-                let badge = conversationItem && conversationItem.querySelector('[data-thread-linked-issue] a');
 
-                assert.ok(badge, 'Issue badge is rendered for the first conversation');
-                assert.ok(badge.textContent.trim().startsWith('#'), 'Badge text starts with issue number');
-                assert.ok(
-                    badge.getAttribute('href').indexOf('/app/project/PROJECT_1/issue/') !== -1,
-                    'Badge link points to issue page'
+                assert.ok(conversationItem, 'The first conversation is rendered');
+                assert.notOk(
+                    conversationItem.querySelector('[data-thread-linked-issue]'),
+                    'The linked issue is not repeated in the thread header'
                 );
             })
     );

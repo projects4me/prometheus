@@ -30,14 +30,6 @@
         {{/if}}
       </div>
       <div class="thread-meta">
-        {{#if @entity.issue.issueNumber}}
-          <div class="thread-linked-issue" data-thread-linked-issue>
-            <i class="fa fa-link"></i>
-            <a href="/app/project/{{@entity.issue.projectShortcode}}/issue/{{@entity.issue.issueNumber}}">#{{@entity.issue.issueNumber}}</a>
-            {{@entity.issue.subject}}
-            <span class="label" style={{status-style @entity.issue.status}}>{{@entity.issue.status}}</span>
-          </div>
-        {{/if}}
         <div class="text-muted" data-thread-started>
           {{t "views.app.conversation.thread.startedBy"}}
           <a href="/app/user/{{@entity.createdBy.id}}">{{@entity.createdBy.name}}</a> · {{format-date-time date=@entity.dateCreated}}
