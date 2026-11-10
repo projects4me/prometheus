@@ -17,7 +17,7 @@ module("Unit | Controller | app/project/conversation live events", function (hoo
       comments,
       votes,
     });
-    controller.set("conversations", A([room]));
+    Object.defineProperty(controller, "listedConversations", { configurable: true, get: () => A([room]) });
     controller.set("selectedConversation", room);
 
     let records = Object.create(null);
@@ -139,16 +139,16 @@ module("Unit | Controller | app/project/conversation live events", function (hoo
     assert.strictEqual(records["comment:c1"].get("comment"), "updated");
   });
 
-  test("conversation created shows reload prompt", function (assert) {
+  test("conversation created by another user reloads the list", function (assert) {
     let controller = this.owner.lookup("controller:app.project.conversation");
     let shown = 0;
-    controller.liveReloadPrompt = {
-      show() {
+    controller.liveReloadPrompt = { show() {}, clear() {} };
+    Object.defineProperty(controller, "refreshList", {
+      configurable: true,
+      value: () => {
         shown++;
       },
-      clear() {},
-    };
-    controller.router = { refresh() {} };
+    });
     Object.defineProperty(controller, "currentUser", {
       configurable: true,
       get() {
@@ -160,16 +160,16 @@ module("Unit | Controller | app/project/conversation live events", function (hoo
     assert.strictEqual(shown, 1);
   });
 
-  test("conversation created skips reload prompt for creating user", function (assert) {
+  test("conversation created by the creating user does not reload the list", function (assert) {
     let controller = this.owner.lookup("controller:app.project.conversation");
     let shown = 0;
-    controller.liveReloadPrompt = {
-      show() {
+    controller.liveReloadPrompt = { show() {}, clear() {} };
+    Object.defineProperty(controller, "refreshList", {
+      configurable: true,
+      value: () => {
         shown++;
       },
-      clear() {},
-    };
-    controller.router = { refresh() {} };
+    });
     Object.defineProperty(controller, "currentUser", {
       configurable: true,
       get() {

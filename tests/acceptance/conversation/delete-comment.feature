@@ -12,7 +12,7 @@ Feature: Conversation | delete comment
     | conversations(conversationroom) |
     | 1                               |
     -----------------------------------
-    When User navigates to app/project/PROJECT_1/conversations
+    When User opens the threads of the project
     And User add a comment having description testComment
     And User clicks on delete button of comment
     And User clicks on save button
@@ -31,5 +31,5 @@ Feature: Conversation | delete comment
     -----------------------------------
     And Conversation has 1 comment
     And Comment is created by User_2
-    When User navigates to app/project/PROJECT_1/conversations
+    When User opens the threads of the project
     Then User shouldn't see delete button of comment

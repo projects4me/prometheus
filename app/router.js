@@ -29,7 +29,10 @@ Router.map(function() {
             this.route('page',{path:'/:wiki_name'});
             this.route('edit',{path:'/edit/:wiki_name'});
         });
-        this.route('conversation',{path:'conversations'});
+        this.route('conversation',{path:'conversations'},function(){
+            this.route('index',{path:'/'});
+            this.route('page',{path:'/:conversation_id'});
+        });
         this.route('board');
         this.route('calendar');
         this.route('gantt');

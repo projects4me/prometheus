@@ -1,267 +1,192 @@
+<section class="content-header">
+  <h1>
+    {{t "views.app.conversation.browser.title"}}
+    <AccessControl @aclContext="conversationroom.create">
+      <button type="button" class="btn btn-primary pull-right" {{on "click" this.showDialog}} data-btn="addConversation">
+        <i class="fa fa-plus"></i> {{t "views.app.conversation.browser.new"}}
+      </button>
+    </AccessControl>
+  </h1>
+  <BreadCrumb/>
+</section>
+
 <section class="content">
-  <div class="conversations">
-
-    <div class="row">
-      <div class="{{if this.selectedConversation 'col-sm-2' 'col-sm-3'}}"></div>
-      {{!-- Lazy Loading Conversations with Browser Scroll --}}
-      <div class={{if this.selectedConversation 'col-sm-5' 'col-sm-6'}}>
-      <InfiniteScroll
-        @useBrowserScroll={{true}}
-        @onLoadMore={{this.loadMoreConversations}}
-        @loadMore={{this.hasMoreConversations}}
-        @threshold={{200}}
-        @loadingText={{t "views.app.conversation.loading"}}
-        @endMessageText={{t "views.app.conversation.noMore"}}
-        @useLoadMoreButton={{true}}
-        @useScrollLoading={{true}}
-        @pageSize={{this.pageSize}}
-        @model={{this.conversations}}
-      >
-        <:default>
-          <div class="conversation-grid">
-            {{!-- Search bar for conversations --}}
-            <div class="conversation-item conversation-search-bar">
-              <div class="flex-row flex-ai-c">
-                <div class="conversation-search-bar__button-col">
-                  <AppUi::Button
-                    type="button"
-                    class="btn btn-default"
-                    data-btn="addConversation"
-                    @onClick={{action "showDialog"}}
-                  >
-                    <i class="fa fa-plus"></i>
-                  </AppUi::Button>                      
-                </div>
-                <div class="box-body conversation-search-bar__body">
-                  <div class="conversation-search-container flex-row flex-ai-c flex-jc-c">
-                    <div class="box-tools filters flex-row flex-ai-c">
-                      {{!-- Search keywords input --}}
-                      <div class="search-container flex-row">
-                        <Input
-                          {{on "keyup" this.updateSearchQuery}}
-                          {{on "keypress" this.handleEnterKey}}
-                          @value={{this.searchText}}
-                          name="query"
-                          id="conversation-search"
-                          autocomplete="off"
-                          placeholder={{t "views.app.conversation.searchPlaceholder"}}
-                          class="form-control"
-                        />
-                        <AppUi::Button
-                          type="button"
-                          class="btn btn-default search-icon-button"
-                          data-btn="search"
-                          @onClick={{this.handleSearch}}
-                        >
-                          <i class="fa fa-search"></i>
-                        </AppUi::Button>
-                      </div>
-
-                      {{!-- Date filters dropdown --}}
-                      {{#if this.dateFilters}}
-                        <AppUi::Dropdown>
-                          <:button>
-                            <i class="fa fa-calendar"></i>
-                            {{#if this.activeDateFilter}}
-                              <span>{{t (concat "views.app.conversation.dateFilters." this.activeDateFilter)}}</span>
-                              {{else}}
-                                <span>{{t "views.app.conversation.dateFilters.label"}}</span>
-                            {{/if}}
-                          </:button>
-                          <:content>
-                            {{#each this.dateFilters as |dateFilter|}}
-                              <div {{on "click" (fn this.handleDateToggle dateFilter.value)}} data-date-filter-name="{{dateFilter.value}}">
-                                {{dateFilter.label}}
-                                {{#if dateFilter.isActive}}
-                                  <i class="fa fa-check pull-right"></i>
-                                {{/if}}
-                              </div>
-                            {{/each}}
-                          </:content>
-                        </AppUi::Dropdown>
-                      {{/if}}
-
-                      {{!-- Filter dropdown --}}
-                      {{#if this.filters}}
-                        <AppUi::Dropdown>
-                          <:button>
-                            <i class="fa fa-filter"></i>
-                            {{#if this.activeFilter}}
-                              <span>{{t (concat "views.app.conversation.filters." this.activeFilter)}}</span>
-                              {{else}}
-                                <span>{{t "views.app.components.table.filters"}}</span>
-                            {{/if}}
-                          </:button>
-                          <:content>
-                            {{#each this.filters as |filter|}}
-                              <div {{on "click" (fn this.handleFilterToggle filter.value)}} data-filter-name="{{filter.value}}">
-                                {{filter.label}}
-                                {{#if filter.isActive}}
-                                  <i class="fa fa-check pull-right"></i>
-                                {{/if}}
-                              </div>
-                            {{/each}}
-                          </:content>
-                        </AppUi::Dropdown>
-                      {{/if}}
-
-                      <AppUi::Button
-                        type="button"
-                        class="btn btn-default"
-                        data-btn="clearSearch"
-                        disabled={{not this.query}}
-                        @onClick={{this.clearSearch}}
-                      >
-                        <i class="fa fa-times"></i>
-                      </AppUi::Button>                      
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-            {{#if this.conversations.length}}
-              {{#each this.conversations as |entity|}}
-                <Conversation::ConversationItem
-                  @entity={{entity}}
-                  @membersList={{this.membersList}}
-                  @currentUser={{this.currentUser}}
-                  @toggleVote={{this.toggleVote}}
-                  @saveComment={{this.saveComment}}
-                  @search={{this.search}}
-                  @vote={{this.vote}}
-                  @linkIssueSearch={{this.linkIssueSearch}}
-                  @onLinkedIssueChange={{this.updateConversationLinkedIssue}}
+  <div class="row conversation-wrapper">
+    <AccessControl @aclContext="conversationroom.read">
+      <div class="col-md-3">
+        <QuickList
+          @title={{t "views.app.conversation.browser.title"}}
+          @items={{this.listedConversations}}
+          @hasNext={{this.hasNext}}
+          @isLoading={{this.isListLoading}}
+          @error={{this.listError}}
+          @onRetry={{this.refreshList}}
+          @activeId={{this.selectedConversationId}}
+          @page={{this.page}}
+          @limit={{this.pageSize}}
+          @onPage={{this.changePage}}
+          @sortOptions={{this.sortOptions}}
+          @sort={{this.sort}}
+          @order={{this.listOrder}}
+          @onSort={{this.sortList}}
+          @groupOptions={{this.groupOptions}}
+          @groupBy={{this.group}}
+          @onGroup={{this.groupList}}
+          data-conversation-browser
+        >
+          <:search>
+            {{#if this.querySchema}}
+              <div class="box-body" data-conversation-search>
+                <EzSearchCompact
+                  @schema={{this.querySchema}}
+                  @query={{this.query}}
+                  @savedSearches={{this.ezSavedSearches}}
+                  @activeSavedSearchId={{this.searchId}}
+                  @onSavedSearchChange={{this.selectSavedSearch}}
+                  @onApply={{this.applyQuery}}
+                  @onSave={{this.showEzSaveSearchDialog}}
+                  @onUpdateSavedSearch={{this.updateEzSavedSearch}}
+                  @aclContext="conversationroom.read"
                 />
-              {{/each}}
-            {{else}}
-              <Exceptions::NothingFound @description={{t "views.app.conversation.emptyStateMessage"}} />
+              </div>
             {{/if}}
-          </div>
-        </:default>
-      </InfiniteScroll>
-      </div>
-      <div class="{{if this.selectedConversation 'col-sm-5' 'col-sm-3'}} conversation-sidebar">
+          </:search>
+          <:item as |conversation Item|>
+            <Item @route="app.project.conversation.page" @model={{conversation.id}} @query={{this.linkQuery}} data-conversation={{conversation.id}}>
+              <:leading>
+                <i class="fa {{if (eq conversation.roomType "vote") "fa-thumbs-o-up" "fa-comment-o"}}" data-conversation-type={{conversation.roomType}}></i>
+              </:leading>
+              <:primary>
+                <span data-conversation-subject>{{conversation.subject}}</span>
+              </:primary>
+              <:secondary>
+                {{#if (eq conversation.roomType "discussion")}}
+                  {{#if conversation.issue.issueNumber}}
+                    <span data-conversation-issue>#{{conversation.issue.issueNumber}} · {{conversation.issue.subject}}</span><br>
+                  {{/if}}
+                {{/if}}
+                {{if conversation.createdBy.name conversation.createdBy.name (t "views.app.conversation.browser.unknownUser")}} · {{format-date-time date=conversation.dateModified humanize=true}}
+              </:secondary>
+            </Item>
+          </:item>
+          <:empty>
+            <p class="quick-list__state quick-list__state--empty" data-test-quick-list-empty>
+              <i class="fa fa-info-circle"></i> {{t "views.app.conversation.browser.empty"}}
+              {{#if this.isSearching}}
+                <button type="button" class="btn btn-link quick-list__state-action" {{on "click" this.clearListSearch}} data-test-quick-list-clear-search>
+                  {{t "components.quickList.clearSearch"}}
+                </button>
+              {{/if}}
+            </p>
+          </:empty>
+        </QuickList>
+        {{#if this.saveSearchDialog}}
+          {{#bootstrap-modal
+              title="global.form.savesearch"
+              confirmLabel="global.form.save"
+              closeLabel="global.form.cancel"
+              confirm=this.saveEzSearch
+              close=this.removeSaveSearchDialog}}
 
-        {{!-- This will contain conversation opened using the c_id query param --}}
-        {{#if this.selectedConversation}}
-        <div class="conversation-opened-container">
-          <Conversation::ConversationItem
-            @entity={{this.selectedConversation}}
-            @membersList={{this.membersList}}
-            @currentUser={{this.currentUser}}
-            @toggleVote={{this.toggleVote}}
-            @saveComment={{this.saveComment}}
-            @search={{this.search}}
-            @vote={{this.vote}}
-            @linkIssueSearch={{this.linkIssueSearch}}
-            @onLinkedIssueChange={{this.updateConversationLinkedIssue}}
-          />
-        </div>
+            <div class="ember-view">
+              <label>{{t "views.app.issue.list.savedsearch.query"}}</label>
+              <span data-save-search-query>{{this.saveSearchQuery}}</span>
+            </div>
+
+            <FormFields::FieldText
+              @placeholder={{t "views.app.issue.list.savedsearch.inputname"}}
+              @label={{t "views.app.issue.list.savedsearch.name"}}
+              @value={{this.newSavedsearch.name}}
+            />
+
+          {{/bootstrap-modal}}
         {{/if}}
-        
-        <div class="conversation-actions">
-          <AppUi::Button
-            type="button"
-            class="btn btn-default"
-            data-btn="refresh"
-            @onClick={{this.refreshConversation}}
-          >
-            <i class="fa fa-refresh"></i>
-          </AppUi::Button>
-
-          <AppUi::Button
-            type="button"
-            class="btn btn-default"
-            data-btn="scrollToTop"
-            @onClick={{this.scrollToTop}}
-          >
-            <i class="fa fa-arrow-up"></i>
-          </AppUi::Button>
-        </div>
       </div>
-    </div>
 
+      <div class="col-md-9">
+        {{outlet}}
+      </div>
+    </AccessControl>
   </div>
 
   {{#if this.addConversationDialog}}
-    {{#bootstrap-modal
-      title="views.app.conversation.create"
-      confirmLabel="global.form.save"
-      closeLabel="global.form.cancel"
-      confirm=(action "addConversation")
-      close=(action "removeModal")}}
-      <div class="box-body">
-        <FormFields::FieldText
-            @placeholder={{t "views.app.conversation.new.subject"}}
-            @label={{t "views.app.conversation.new.subject"}}
-            @value={{this.newConversation.subject}}
-            @mask="alphanumeric"
-            @data-field="newConversation.subject"
-            @focus-out={{action (mut this.showSubjectError) true}}
-            @v-focus={{this.showSubjectError}}
-            @v-model={{this.newConversation}}
-            @v-field='subject'
-            @v-output='message'
-            @aclContext='conversationroom.create'
-        />
-
-        <div data-field="newConversation.description" class="form-field ember-view">
-          <AppUi::ToastUi
-              @usersList={{this.membersList}}
-              @contents={{readonly this.newConversation.description}}
-              @initialValue={{this.newConversation.description}}
-              @editType='wysiwyg'
-              @hide={{array 'footer'}}
-              @onContentChange={{action (mut this.newConversation.description)}}
+      {{#bootstrap-modal
+        title="views.app.conversation.create"
+        confirmLabel="global.form.save"
+        closeLabel="global.form.cancel"
+        confirm=(action "addConversation")
+        close=(action "removeModal")}}
+        <div class="box-body">
+          <FormFields::FieldText
+              @placeholder={{t "views.app.conversation.new.subject"}}
+              @label={{t "views.app.conversation.new.subject"}}
+              @value={{this.newConversation.subject}}
+              @mask="alphanumeric"
+              @data-field="newConversation.subject"
+              @focus-out={{action (mut this.showSubjectError) true}}
+              @v-focus={{this.showSubjectError}}
+              @v-model={{this.newConversation}}
+              @v-field='subject'
+              @v-output='message'
+              @aclContext='conversationroom.create'
           />
-          <span class="highlight"></span>
-          <span class="bar"></span>
-          <FormFields::Label
-            @label={{t "views.app.conversation.new.description"}}
-            @data-field="newConversation.description"
-          />
-          <span class="count pull-right"></span>
-        </div>
 
-        <FormFields::FieldRelate
-            @placeholder={{t "views.app.conversation.new.type"}}
-            @label={{t "views.app.conversation.new.type"}}
-            @value={{this.newConversation.roomType}}
-            @options={{this.roomTypes}}
-            @selected={{find-by "value" this.newConversation.roomType this.roomTypes}}
-            @searchField="label"
-            @onchange={{action "selectNewType"}}
-            @relateType="relate-simple"
-            @data-field="newConversation.roomType"
-            @focus-out={{action (mut this.showTypeError) true}}
-            @v-focus={{this.showTypeError}}
-            @v-model={{this.newConversation}}
-            @v-field='roomType'
-            @v-output='message'
-            @aclContext='conversationroom.create'
-        />
-
-        <div class="form-group form-field ember-view" data-field="conversation.linkedIssue">
-          <div data-form-field="label">
-            <label class="floating-label">{{t "views.app.conversation.linkIssue"}}</label>
+          <div data-field="newConversation.description" class="form-field ember-view">
+            <AppUi::ToastUi
+                @usersList={{this.membersList}}
+                @contents={{readonly this.newConversation.description}}
+                @initialValue={{this.newConversation.description}}
+                @editType='wysiwyg'
+                @hide={{array 'footer'}}
+                @onContentChange={{action (mut this.newConversation.description)}}
+            />
+            <span class="highlight"></span>
+            <span class="bar"></span>
+            <FormFields::Label
+              @label={{t "views.app.conversation.new.description"}}
+              @data-field="newConversation.description"
+            />
+            <span class="count pull-right"></span>
           </div>
-          <PowerSelect
-            @placeholder={{t "views.app.conversation.linkIssuePlaceholder"}}
-            @searchEnabled={{true}}
-            @search={{perform this.linkIssueSearch}}
-            @selected={{this.newConversationLinkedIssue}}
-            @onChange={{this.setNewConversationLinkedIssue}}
-            @disabled={{not (eq this.newConversation.roomType "discussion")}}
-            @allowClear={{true}}
-            as |issue|
-          >
-            <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
-          </PowerSelect>
+
+          <FormFields::FieldRelate
+              @placeholder={{t "views.app.conversation.new.type"}}
+              @label={{t "views.app.conversation.new.type"}}
+              @value={{this.newConversation.roomType}}
+              @options={{this.roomTypes}}
+              @selected={{find-by "value" this.newConversation.roomType this.roomTypes}}
+              @searchField="label"
+              @onchange={{action "selectNewType"}}
+              @relateType="relate-simple"
+              @data-field="newConversation.roomType"
+              @focus-out={{action (mut this.showTypeError) true}}
+              @v-focus={{this.showTypeError}}
+              @v-model={{this.newConversation}}
+              @v-field='roomType'
+              @v-output='message'
+              @aclContext='conversationroom.create'
+          />
+
+          <div class="form-group form-field ember-view" data-field="conversation.linkedIssue">
+            <div data-form-field="label">
+              <label class="floating-label">{{t "views.app.conversation.linkIssue"}}</label>
+            </div>
+            <PowerSelect
+              @placeholder={{t "views.app.conversation.linkIssuePlaceholder"}}
+              @searchEnabled={{true}}
+              @search={{perform this.linkIssueSearch}}
+              @selected={{this.newConversationLinkedIssue}}
+              @onChange={{this.setNewConversationLinkedIssue}}
+              @disabled={{not (eq this.newConversation.roomType "discussion")}}
+              @allowClear={{true}}
+              as |issue|
+            >
+              <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
+            </PowerSelect>
+          </div>
+
         </div>
+      {{/bootstrap-modal}}
 
-      </div>
-    {{/bootstrap-modal}}
-
-  {{/if}}
+    {{/if}}
 </section>

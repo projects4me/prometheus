@@ -2,197 +2,194 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import App from "prometheus/routes/app";
-import { inject } from '@ember/service';
-import DateUtils from 'prometheus/utils/date';
+import App from 'prometheus/routes/app';
+import { inject as service } from '@ember/service';
+import { hash, hashSettled } from 'rsvp';
+import UrlState from 'prometheus/utils/state/url-state';
+import { BROWSER_PARAMS, browserValues } from 'prometheus/utils/conversation/browser-defaults';
 
 /**
- * This is the route to load the conversations for a project
+ * The threads layout route: it loads the first page of the thread list and the milestones the list is grouped by;
+ * later pages, sorts, groups and searches reload only the list through the controller's UrlState and ListLoader.
+ * The index and page children fill the detail column.
  *
  * @class Conversation
  * @namespace Prometheus.Routes
  * @module App.Project
- * @extends AppRoute
- * @author Hammad Hassan <gollomer@gmail.com>
+ * @extends App
  */
-export default App.extend({
-
+export default class AppProjectConversationRoute extends App {
     /**
      * The requested module
      *
      * @property module
      * @type String
-     * @for Conversation
-     * @private
+     * @public
      */
-    module: 'conversationroom',
-
-    /**
-     * The data for the current route
-     *
-     * @property data
-     * @type Object
-     * @for Conversation
-     * @private
-     */
-    data: null,
-
-    /**
-     * The selected items in the list view
-     *
-     * @property selectedCount
-     * @type Integer
-     * @for Conversation
-     * @private
-     */
-    selectedCount: 0,
+    module = 'conversationroom';
 
     /**
      * The trackedProject service provides id of the selected project.
      *
      * @property trackedProject
      * @type Ember.Service
-     * @for Conversation
-     * @private
+     * @public
      */
-    trackedProject: inject(),
+    @service trackedProject;
 
     /**
-     * The current date and time in 'YYYY-MM-DD HH:mm:ss.0' format.
+     * The ezSearch schema builder.
      *
-     * @property now
-     * @type string
-     * @for Conversation
-     * @private
+     * @property querySchema
+     * @type Ember.Service
+     * @public
      */
-    now : DateUtils.getNow(),
+    @service('query-schema') querySchema;
 
-    queryParams: {
-        query: {
-            refreshModel: true
-        }
-    },
     /**
-     * The model hook for this route. This is used load the conversations that we have in the system.
-     * 
+     * The saved searches service.
+     *
+     * @property savedSearch
+     * @type Ember.Service
+     * @public
+     */
+    @service('saved-search') savedSearch;
+
+    /**
+     * No query param refreshes the route: the controller reloads only the list when one changes the list request.
+     * `c_id` is the old link to a thread, the index route turns it into the thread's page.
+     *
+     * @property queryParams
+     * @type Object
+     */
+    queryParams = {
+        ...UrlState.queryParamsConfig(BROWSER_PARAMS),
+        searchId: { refreshModel: false },
+        c_id: { refreshModel: false }
+    };
+
+    /**
+     * Loads the first page of the threads for the query params with the controller's request
+     *
      * @method model
-     * @returns {Promise}
+     * @param {Object} params The query params
+     * @returns {Promise<Object>} The params and the first page (`{ records }` or `{ error }`); afterModel adds the
+     *   milestone names
      */
     async model(params) {
         Logger.debug('AppProjectConversationRoute::model');
-        let _self = this;
-        this.now = DateUtils.getNow();
-        let projectId = this.trackedProject.getProjectId();
-        let conversations = [];
-        if(params.query || params.range) {
-            conversations = await this.fetchFilteredConversations(projectId, params);
-        } else {
-            conversations = await this.fetchAllConversations(projectId);
-        }
-
-        let selectedConversation = null;
-        if(params.c_id) {
-            selectedConversation = await this.store.query('conversationroom', {
-                query: `((Conversationroom.id : ${params.c_id}) AND (Conversationroom.projectId : ${projectId}))`,
-                rels: 'votes,comments,issue',
-                limit: -1
-            }).catch((error) => {
-                _self.errorManager.handleError(error, {
-                    moduleName: 'conversationroom'
-                })
-            });
-        }        
-        return {
-            "conversations": conversations,
-            "selectedConversation": selectedConversation
-        };
-    },
-
-    /**
-     * Loads conversations onto the controller and registers Hermes intents
-     * for this project's live conversation events.
-     *
-     * @method setupController
-     * @param {Prometheus.Controller.Conversation} controller the controller object for this route
-     * @param {Prometheus.Models.Conversation} model
-     * @private
-     */
-    setupController: function (controller, model) {
-        Logger.debug('AppProjectConversationRoute::setupController');
-
-        controller.set('conversations', model.conversations.toArray());
-        controller.set('selectedConversation', model.selectedConversation?.objectAt(0));
-        let newConversation = this.store.createRecord('conversationroom', {
-            projectShortcode: this.trackedProject.shortCode
+        let controller = this.controllerFor('app.project.conversation');
+        let values = browserValues(params);
+        return hash({
+            values,
+            firstPage: this.loadFirstPage(controller, values)
         });
-        controller.set('newConversation', newConversation);
+    }
 
-        // Set the data in the controller so that any data bound in the view can get re-rendered
-        controller.set('module', this.module);
-        controller.set('projectId', this.trackedProject.getProjectId());
-        controller.set('projectShortcode', this.trackedProject.shortCode);
-        controller.setHasMoreFlag();
-        controller.set('now', this.now);
-        controller.restoreStateFromQueryParams?.();
-        controller.registerHermesIntents(this.trackedProject.getProjectId());
-    },
     /**
-     * This function is used to fetch all conversations for the project.
-     * 
-     * @method fetchAllConversations
-     * @param {string} projectId - The id of the project
-     * @returns {Promise<Array>} Returns an array of conversations
-     */
-    fetchAllConversations: async function(projectId) {
-        let _conversationOptions = {
-            order: "DESC",
-            sort: "Conversationroom.dateModified",
-            rels: 'votes,issue',
-            query: `(Conversationroom.projectId : ${projectId}) AND (Conversationroom.dateModified <: ${this.now})`,
-            limit: 10,
-            page: 1
-        }
-        let controller = this.controllerFor('app.project.conversation');
-        controller.set('now', this.now);
-        return await controller.fetchAllConversations(_conversationOptions);
-    },
-    /**
-     * This function is used to fetch filtered conversations for the project.
-     * 
-     * @method fetchFilteredConversations
-     * @param {string} projectId - The id of the project
-     * @param {Object} params - The parameters for the query
-     * @returns {Promise<Array>} Returns an array of conversations
-     */
-    fetchFilteredConversations: async function(projectId, params) {
-        let query = params.query;
-        let _conversationOptions = {
-            order: "DESC",
-            sort: "Conversationroom.dateModified",
-            rels: 'votes,issue',
-            query: `(Conversationroom.projectId : ${projectId}) AND (Conversationroom.dateModified <: ${this.now})`,
-            limit: 10,
-            page: 1
-        };
-        if (query) {
-            _conversationOptions.query += ` AND ${query}`;
-        }
-        let controller = this.controllerFor('app.project.conversation');
-        controller.set('now', this.now);
-        return await controller.fetchFilteredConversations(_conversationOptions);
-    },
-    /**
-     * On exit, dispose Hermes intents and clear the selected conversation.
+     * Loads the ezSearch schema, the saved searches and the milestones of the threads once per visit and project; a
+     * failure only drops the search or the milestone names.
      *
-     * @method resetController
-     * @param {Prometheus.Controller.Conversation} controller The controller object for this route
-     * @param {boolean} isExiting Whether the route is exiting
+     * @method afterModel
+     * @param {Object} model The params and the first page
+     * @returns {Promise}
+     */
+    async afterModel(model) {
+        let projectId = this.trackedProject.getProjectId();
+        if (!this.sideData || this.sideData.projectId !== projectId) {
+            await this.loadSideData(projectId);
+        }
+        model.milestones = this.sideData.milestones;
+    }
+
+    /**
+     * Loads the ezSearch schema, the saved searches and the milestones of the project
+     *
+     * @method loadSideData
+     * @param {String} projectId
+     * @returns {Promise}
      * @private
      */
-    resetController: function (controller, isExiting) {
-        if (isExiting) {
-            controller.unregisterHermesIntents();
-            controller.selectedConversation = null;
+    async loadSideData(projectId) {
+        let results = await hashSettled({
+            schema: this.querySchema.load('Conversationroom', { projectId }),
+            savedsearches: this.savedSearch.load('conversationroom', projectId),
+            milestones: this.store.query('milestone', {
+                query: `(Milestone.projectId : ${projectId})`,
+                limit: -1
+            })
+        });
+        if (results.schema.state === 'rejected') {
+            this.errorManager.handleError(results.schema.reason, { moduleName: 'conversationroom' });
+        }
+        let milestones = {};
+        if (results.milestones.state === 'fulfilled') {
+            results.milestones.value.forEach(milestone => {
+                milestones[milestone.id] = milestone.name;
+            });
+        }
+        this.sideData = {
+            projectId,
+            schema: results.schema.state === 'fulfilled' ? results.schema.value : null,
+            savedsearches: results.savedsearches.state === 'fulfilled' ? results.savedsearches.value : [],
+            milestones
+        };
+    }
+
+    /**
+     * Queries the first page of the threads with the controller's list request; a failure is handed to the
+     * controller, whose list shows the error and a retry instead of the whole page failing
+     *
+     * @method loadFirstPage
+     * @param {Controller} controller
+     * @param {Object} values The browser params
+     * @returns {Promise<Object>} `{ records }` or `{ error }`
+     * @public
+     */
+    async loadFirstPage(controller, values) {
+        try {
+            return { records: await this.store.query('conversationroom', controller.conversationList.request(values)) };
+        } catch (error) {
+            return { error };
         }
     }
-});
+
+    /**
+     * Hands the search data, the milestones and the first page to the controller and registers the live updates
+     *
+     * @method setupController
+     * @param {Controller} controller
+     * @param {Object} model The params and the first page
+     * @private
+     */
+    setupController(controller, model) {
+        Logger.debug('AppProjectConversationRoute::setupController');
+        controller.querySchema = this.sideData?.schema ?? null;
+        controller.savedsearches = this.sideData?.savedsearches ?? [];
+        controller.milestones = model?.milestones ?? {};
+        controller.newSavedsearch = controller.newSavedsearch || this.store.createRecord('savedsearch');
+        controller.newConversation = this.store.createRecord('conversationroom', {
+            projectShortcode: this.trackedProject.shortCode
+        });
+        controller.module = this.module;
+        controller.projectId = this.trackedProject.getProjectId();
+        controller.projectShortcode = this.trackedProject.shortCode;
+        controller.showFirstPage(model?.values, model?.firstPage);
+        controller.registerHermesIntents(this.trackedProject.getProjectId());
+    }
+
+    /**
+     * Puts the browser back to its defaults when the threads are left or the project switches
+     *
+     * @method resetController
+     * @param {Controller} controller
+     * @param {Boolean} isExiting
+     * @private
+     */
+    resetController(controller, isExiting) {
+        controller.resetBrowser();
+        if (isExiting) {
+            this.sideData = null;
+        }
+    }
+}

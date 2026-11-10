@@ -12,7 +12,7 @@ Feature: Live | conversation remote updates
     | conversations(conversationroom) |
     | 1                               |
     -----------------------------------
-    When User navigates to app/project/PROJECT_1/conversations
+    When User opens the threads of the project
     Then Hermes intents include "conversation.comment.created" for project "1"
     When Another user produces domain event "conversation.comment.created" with:
       ----------------------------------------

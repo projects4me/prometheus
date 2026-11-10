@@ -1,34 +1,39 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import EmberObject from "@ember/object";
-import { A } from "@ember/array";
 
-module("Unit | Route | app/project/conversation now", function (hooks) {
+module("Unit | Route | app/project/conversation first page", function (hooks) {
   setupTest(hooks);
 
-  test("model refreshes now before fetching conversations", async function (assert) {
+  test("loadFirstPage queries the threads with the list request of the controller", async function (assert) {
     let route = this.owner.lookup("route:app.project.conversation");
-    route.set("now", "2000-01-01 00:00:00");
-    Object.defineProperty(route, "trackedProject", {
+    let controller = { conversationList: { request: (values) => ({ query: "q", page: values.page, limit: 20 }) } };
+    let asked = null;
+    Object.defineProperty(route, "store", {
       configurable: true,
       get() {
-        return { getProjectId: () => "project-1" };
+        return { query: async (model, options) => { asked = { model, options }; return ["room"]; } };
       },
     });
 
-    let capturedNow = null;
-    route.fetchAllConversations = async function () {
-      capturedNow = this.now;
-      return EmberObject.create({ toArray: () => A([]) });
-    };
+    let firstPage = await route.loadFirstPage(controller, { page: 2 });
 
-    await route.model({});
+    assert.deepEqual(firstPage, { records: ["room"] });
+    assert.strictEqual(asked.model, "conversationroom");
+    assert.deepEqual(asked.options, { query: "q", page: 2, limit: 20 });
+  });
 
-    assert.notStrictEqual(
-      capturedNow,
-      "2000-01-01 00:00:00",
-      "now is refreshed before the list query"
-    );
-    assert.ok(capturedNow, "now is set for the fetch");
+  test("loadFirstPage hands a failed load to the list as an error", async function (assert) {
+    let route = this.owner.lookup("route:app.project.conversation");
+    let controller = { conversationList: { request: () => ({}) } };
+    Object.defineProperty(route, "store", {
+      configurable: true,
+      get() {
+        return { query: async () => { throw new Error("boom"); } };
+      },
+    });
+
+    let firstPage = await route.loadFirstPage(controller, {});
+
+    assert.strictEqual(firstPage.error.message, "boom");
   });
 });

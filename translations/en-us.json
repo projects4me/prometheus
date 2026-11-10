@@ -789,6 +789,30 @@
         }
       },
       "conversation": {
+        "browser": {
+          "title": "Threads",
+          "new": "New thread",
+          "empty": "No threads match",
+          "noMilestone": "No milestone",
+          "noneOpen": "No thread is open",
+          "noneOpenHint": "Pick a thread from the list, or start a new one.",
+          "savedSearchAdded": "The search {name} was saved",
+          "sort": {
+            "dateModified": "Last updated",
+            "dateCreated": "Date created",
+            "subject": "Subject"
+          },
+          "group": {
+            "none": "None",
+            "milestone": "Milestone",
+            "roomType": "Type"
+          },
+          "type": {
+            "discussion": "Discussion",
+            "vote": "Vote"
+          },
+          "unknownUser": "Unknown user"
+        },
         "fields": {
           "subject": "Subject",
           "description": "Description",

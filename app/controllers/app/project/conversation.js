@@ -13,6 +13,13 @@ import DateUtils from 'prometheus/utils/date';
 import { task, timeout } from 'ember-concurrency';
 import format from 'prometheus/utils/data/format';
 import { peekOrPush, pushIfMissing, removeById } from 'prometheus/utils/live/collection';
+import { htmlSafe } from '@ember/template';
+import UrlState from 'prometheus/utils/state/url-state';
+import ListLoader from 'prometheus/utils/state/list-loader';
+import { BROWSER_PARAMS } from 'prometheus/utils/conversation/browser-defaults';
+import {
+    buildConversationListRequest, buildSortOptions, buildGroupOptions, arrangeConversations
+} from 'prometheus/utils/conversation/list-options';
 
 /**
  * Conversation rooms controller, including Hermes live handlers for comments,
@@ -104,7 +111,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @for AppProjectConversationController
      * @public
      */
-    queryParams = ['c_id', 'query', 'filter', 'date', 'q'];
+    queryParams = ['c_id', 'query', 'searchId', 'page', 'sort', 'order', 'group', 'filter', 'date', 'q'];
 
     /**
      * This function is called on the initialization of the controller. In this function
@@ -117,6 +124,15 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     constructor() {
         super(...arguments);
         this.setupSchema();
+        this.conversationList = new ListLoader({
+            store: this.store,
+            modelName: 'conversationroom',
+            pageSize: this.pageSize,
+            owner: this,
+            buildRequest: values => buildConversationListRequest(this.trackedProject.getProjectId(), values)
+        });
+        this.urlState = new UrlState(this, { schema: BROWSER_PARAMS, routeName: 'app.project.conversation' });
+        this.urlState.onChange(values => this.paramsChanged(values));
     }
 
     /**
@@ -235,7 +251,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @type {number}
      * @public
      */
-    @tracked pageSize = 10;
+    @tracked pageSize = 20;
 
     /**
      * Whether there are more conversations to load
@@ -459,7 +475,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                 pushIfMissing(_self.selectedConversation.comments, comment);
             } else {
                 pushIfMissing(
-                    _self.conversations.find((conversation) => conversation.id === relatedId).comments,
+                    _self.listedConversations.find((conversation) => conversation.id === relatedId).comments,
                     comment
                 );
             }
@@ -498,7 +514,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                 pushIfMissing(_self.selectedConversation.comments, savedComment);
             } else {
                 pushIfMissing(
-                    _self.conversations.find((conversation) => conversation.id === relatedId).comments,
+                    _self.listedConversations.find((conversation) => conversation.id === relatedId).comments,
                     savedComment
                 );
             }
@@ -543,7 +559,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                 if(_self.selectedConversation?.id === conversationId) {
                     _self.selectedConversation.votes.addObject(data);
                 } else {
-                    _self.conversations.find((conversation) => conversation.id === conversationId).votes.addObject(data);
+                    _self.listedConversations.find((conversation) => conversation.id === conversationId).votes.addObject(data);
                 }
             }
         } catch(error) {
@@ -583,7 +599,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             });
             let conversation = _self.selectedConversation?.id === conversationId
                 ? _self.selectedConversation
-                : _self.conversations.find((c) => c.id === conversationId);
+                : _self.listedConversations.find((c) => c.id === conversationId);
             if (conversation && conversation.votes) {
                 conversation.votes.removeObject(voteRecord);
             }
@@ -608,7 +624,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     @action async toggleVote(conversationId) {
         let conversation = this.selectedConversation?.id === conversationId
             ? this.selectedConversation
-            : this.conversations.find((c) => c.id === conversationId);
+            : this.listedConversations.find((c) => c.id === conversationId);
         if (!conversation || !conversation.votes) return;
 
         let userVote = conversation.votes.find((v) => v.createdUser === this.currentUser.user.id);
@@ -650,7 +666,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
                     newConversation.save().then(function (conversation) {
                         Logger.debug('A new conversation has been saved');
 
-                        _self.conversations.unshiftObject(conversation);
+                        _self.afterConversationCreated(conversation);
                         new Messenger().post({
                             message: _self.intl.t("views.app.conversation.created", { name: conversation.get('subject') }),
                             type: 'success',
@@ -1257,8 +1273,8 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     }
 
     /**
-     * Prompts a reload when a new conversation cannot be placed without a refresh.
-     * Skips the prompt for the creating user (local echo can beat noteLocalWrite).
+     * Reloads the list when another user creates a conversation; the creating user's own list reloads when the
+     * thread is saved.
      *
      * @method handleConversationCreated
      * @param {Object} envelope Domain-event envelope
@@ -1269,7 +1285,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         if (envelope?.actorId && envelope.actorId === this.currentUser.user?.id) {
             return;
         }
-        this.liveReloadPrompt.show(this, () => this.router.refresh());
+        this.refreshList();
     }
 
     /**
@@ -1299,8 +1315,8 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      */
     findConversationContaining(collectionName, resourceId) {
         let rooms = this.selectedConversation
-            ? [this.selectedConversation, ...(this.conversations || [])]
-            : (this.conversations || []);
+            ? [this.selectedConversation, ...(this.listedConversations || [])]
+            : (this.listedConversations || []);
         return rooms.find((room) => room[collectionName]?.findBy('id', resourceId)) || null;
     }
 
@@ -1319,7 +1335,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         if (this.selectedConversation?.id === id) {
             return this.selectedConversation;
         }
-        return (this.conversations || []).find((conversation) => conversation.id === id) || null;
+        return (this.listedConversations || []).find((conversation) => conversation.id === id) || null;
     }
 
     /**
@@ -1334,8 +1350,499 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         if (this.selectedConversation) {
             removeById(this.selectedConversation.comments, commentId);
         }
-        (this.conversations || []).forEach((room) => {
+        (this.listedConversations || []).forEach((room) => {
             removeById(room.comments, commentId);
         });
+    }
+
+    /**
+     * The tracked project, whose id scopes the list request
+     *
+     * @property trackedProject
+     * @type Ember.Service
+     * @public
+     */
+    @service trackedProject;
+
+    /**
+     * The saved searches service
+     *
+     * @property savedSearch
+     * @type Ember.Service
+     * @public
+     */
+    @service savedSearch;
+
+    /**
+     * The search, page, sort, order and group of the browser, kept in the URL without refreshing the route; a change
+     * that alters the list request reloads only the list
+     *
+     * @property urlState
+     * @type UrlState
+     * @public
+     */
+    urlState;
+
+    /**
+     * The page of threads the browser lists, with its loading flag, error and retry
+     *
+     * @property conversationList
+     * @type ListLoader
+     * @public
+     */
+    conversationList;
+
+    /**
+     * The field the threads are sorted by on the server
+     *
+     * @property sort
+     * @type String
+     * @public
+     */
+    @tracked sort = 'Conversationroom.dateModified';
+
+    /**
+     * The order of the sort, ASC or DESC
+     *
+     * @property order
+     * @type String
+     * @public
+     */
+    @tracked order = 'DESC';
+
+    /**
+     * The grouping of the list: milestone (default), roomType or none
+     *
+     * @property group
+     * @type String
+     * @public
+     */
+    @tracked group = 'milestone';
+
+    /**
+     * The id of the saved search the query came from, null for none
+     *
+     * @property searchId
+     * @type String
+     * @public
+     */
+    @tracked searchId = null;
+
+    /**
+     * The id of the thread open in the detail column, null for none
+     *
+     * @property selectedConversationId
+     * @type String
+     * @public
+     */
+    @tracked selectedConversationId = null;
+
+    /**
+     * The milestone names by milestone id, loaded by the route
+     *
+     * @property milestones
+     * @type Object
+     * @public
+     */
+    @tracked milestones = {};
+
+    /**
+     * The ezSearch schema of the threads, loaded by the route
+     *
+     * @property querySchema
+     * @type Object
+     * @public
+     */
+    @tracked querySchema = null;
+
+    /**
+     * The saved searches of the user for the threads, loaded by the route; always replaced, never mutated
+     *
+     * @property savedsearches
+     * @type Array
+     * @public
+     */
+    @tracked savedsearches = [];
+
+    /**
+     * The record the save search dialog fills in
+     *
+     * @property newSavedsearch
+     * @type Prometheus.Models.Savedsearch
+     * @public
+     */
+    @tracked newSavedsearch = null;
+
+    /**
+     * Whether the save search dialog is open
+     *
+     * @property saveSearchDialog
+     * @type Boolean
+     * @public
+     */
+    @tracked saveSearchDialog = false;
+
+    /**
+     * The query the save search dialog shows
+     *
+     * @property saveSearchQuery
+     * @type String
+     * @public
+     */
+    @tracked saveSearchQuery = '';
+
+    /**
+     * The sort options of the list menu
+     *
+     * @property sortOptions
+     * @type Array
+     * @public
+     */
+    get sortOptions() {
+        return buildSortOptions(this.intl);
+    }
+
+    /**
+     * The group options of the list menu
+     *
+     * @property groupOptions
+     * @type Array
+     * @public
+     */
+    get groupOptions() {
+        return buildGroupOptions({ intl: this.intl, milestones: this.milestones });
+    }
+
+    /**
+     * The order in the lower case the QuickList toolbar uses
+     *
+     * @property listOrder
+     * @type String
+     * @public
+     */
+    get listOrder() {
+        return String(this.order).toLowerCase();
+    }
+
+    /**
+     * The query params the row links carry, so the search, sort and group stay when a thread is opened
+     *
+     * @property linkQuery
+     * @type Object
+     * @public
+     */
+    get linkQuery() {
+        return { query: this.query, searchId: this.searchId, page: this.page, sort: this.sort, order: this.order, group: this.group };
+    }
+
+    /**
+     * The threads of the loaded page in the order QuickList shows them
+     *
+     * @property listedConversations
+     * @type Array
+     * @public
+     */
+    get listedConversations() {
+        return arrangeConversations(this.conversationList.items, { group: this.group, milestones: this.milestones });
+    }
+
+    /**
+     * Whether Gaia linked a next page of the list; the browser never asks for a total
+     *
+     * @property hasNext
+     * @type Boolean
+     * @public
+     */
+    get hasNext() {
+        return this.conversationList.hasNext;
+    }
+
+    /**
+     * Whether the list is loading a page
+     *
+     * @property isListLoading
+     * @type Boolean
+     * @public
+     */
+    get isListLoading() {
+        return this.conversationList.isLoading;
+    }
+
+    /**
+     * The error of the latest list load
+     *
+     * @property listError
+     * @type Object
+     * @public
+     */
+    get listError() {
+        return this.conversationList.error;
+    }
+
+    /**
+     * Whether a search narrows the list
+     *
+     * @property isSearching
+     * @type Boolean
+     * @public
+     */
+    get isSearching() {
+        return Boolean(this.query);
+    }
+
+    /**
+     * The saved searches in the shape EzSearchCompact expects
+     *
+     * @property ezSavedSearches
+     * @type Array
+     * @public
+     */
+    get ezSavedSearches() {
+        return this.savedsearches.map(search => ({
+            id: search.get('id'),
+            name: search.get('name'),
+            query: search.get('searchquery')
+        }));
+    }
+
+    /**
+     * Reloads the list when the changed params alter its request; grouping only regroups the loaded page
+     *
+     * @method paramsChanged
+     * @param {Object} values The current params
+     * @returns {Promise|void}
+     * @private
+     */
+    paramsChanged(values) {
+        let params = this.conversationList.params;
+        if (params && JSON.stringify(this.conversationList.buildRequest(values)) === JSON.stringify(this.conversationList.buildRequest(params))) {
+            return;
+        }
+        return this.conversationList.run(values);
+    }
+
+    /**
+     * Shows the first page the route loaded; a page that failed to load is loaded again here, so the list shows its
+     * error and retry
+     *
+     * @method showFirstPage
+     * @param {Object} values The params the page was loaded for
+     * @param {Object} firstPage `{ records }` or `{ error }`
+     * @returns {Promise|void}
+     * @public
+     */
+    showFirstPage(values, firstPage) {
+        if (firstPage?.error) {
+            return this.conversationList.run(values);
+        }
+        this.conversationList.seed(firstPage?.records, values);
+    }
+
+    /**
+     * Loads the current page of the list again; the retry of the list error and the reload after a change
+     *
+     * @method refreshList
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    refreshList() {
+        return this.conversationList.retry();
+    }
+
+    /**
+     * Reloads the list after a thread was created here and opens it
+     *
+     * @method afterConversationCreated
+     * @param {Prometheus.Models.Conversationroom} conversation
+     * @returns {void}
+     * @public
+     */
+    afterConversationCreated(conversation) {
+        this.refreshList();
+        this.router.transitionTo('app.project.conversation.page', conversation.id);
+    }
+
+    /**
+     * Sorts the list by a field; a date starts with the newest first, a subject from A to Z
+     *
+     * @method sortList
+     * @param {String} key The sort field
+     * @param {String} order asc or desc as the toolbar sends it
+     * @returns {void}
+     * @public
+     */
+    @action
+    sortList(key, order) {
+        let isDate = key !== 'Conversationroom.subject';
+        let next = key === this.sort ? order : isDate ? 'desc' : 'asc';
+        this.urlState.set({ sort: key, order: next.toUpperCase() });
+    }
+
+    /**
+     * Groups the list; it only regroups the loaded page, so the page stays
+     *
+     * @method groupList
+     * @param {String} key none, milestone or roomType
+     * @returns {void}
+     * @public
+     */
+    @action
+    groupList(key) {
+        this.urlState.set({ group: key, page: this.page });
+    }
+
+    /**
+     * Opens a page of the list
+     *
+     * @method changePage
+     * @param {Number} page
+     * @returns {void}
+     * @public
+     */
+    @action
+    changePage(page) {
+        this.urlState.set({ page });
+    }
+
+    /**
+     * Runs a query from ezSearch; only the list reloads for it
+     *
+     * @method applyQuery
+     * @param {String} query The Gaia query, empty for none
+     * @public
+     */
+    @action
+    applyQuery(query) {
+        this.urlState.set({ query: query || '' });
+    }
+
+    /**
+     * Clears the search, the action of the empty state
+     *
+     * @method clearListSearch
+     * @public
+     */
+    @action
+    clearListSearch() {
+        this.searchId = null;
+        this.urlState.set({ query: '' });
+    }
+
+    /**
+     * Marks a saved search as the active one, or clears the mark; its query arrives through applyQuery
+     *
+     * @method selectSavedSearch
+     * @param {Object|null} search The picked item or null
+     * @public
+     */
+    @action
+    selectSavedSearch(search) {
+        this.searchId = search ? String(search.id) : null;
+    }
+
+    /**
+     * Opens the save dialog for the query ezSearch hands over
+     *
+     * @method showEzSaveSearchDialog
+     * @param {String} query
+     * @public
+     */
+    @action
+    showEzSaveSearchDialog(query) {
+        this.saveSearchQuery = query;
+        this.saveSearchDialog = true;
+    }
+
+    /**
+     * Closes the save dialog
+     *
+     * @method removeSaveSearchDialog
+     * @public
+     */
+    @action
+    removeSaveSearchDialog() {
+        this.saveSearchDialog = false;
+    }
+
+    /**
+     * Saves the query of the dialog as a saved search of the threads of the project
+     *
+     * @method saveEzSearch
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async saveEzSearch() {
+        let query = this.saveSearchQuery;
+        if (!query) {
+            this.removeSaveSearchDialog();
+            return;
+        }
+        try {
+            let data = await this.savedSearch.create(this.newSavedsearch, {
+                relatedTo: 'conversationroom',
+                query,
+                projectId: this.trackedProject.getProjectId()
+            });
+            if (this.isDestroying || this.isDestroyed) {
+                return;
+            }
+            this.savedsearches = [...this.savedsearches, data];
+            this.newSavedsearch = this.store.createRecord('savedsearch');
+            new Messenger().post({
+                message: htmlSafe(this.intl.t('views.app.conversation.browser.savedSearchAdded', { name: data.get('name') })),
+                type: 'success',
+                showCloseButton: true
+            });
+        } catch (error) {
+            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
+        }
+        if (!this.isDestroying && !this.isDestroyed) {
+            this.removeSaveSearchDialog();
+        }
+    }
+
+    /**
+     * Replaces the query of a saved search with the one ezSearch hands over
+     *
+     * @method updateEzSavedSearch
+     * @param {Object} search The saved search item
+     * @param {String} query
+     * @returns {Promise}
+     * @public
+     */
+    @action
+    async updateEzSavedSearch(search, query) {
+        let record = this.savedsearches.find(item => String(item.get('id')) === String(search.id));
+        if (!record) {
+            return;
+        }
+        try {
+            await this.savedSearch.update(record, query);
+            if (!this.isDestroying && !this.isDestroyed) {
+                this.savedsearches = [...this.savedsearches];
+            }
+        } catch (error) {
+            record.rollbackAttributes();
+            this.errorManager.handleError(error, { moduleName: 'savedsearch' });
+        }
+    }
+
+    /**
+     * Puts the browser back to its defaults and drops the listed page, when the threads are left or the project
+     * switches, so the next visit starts clean
+     *
+     * @method resetBrowser
+     * @returns {void}
+     * @public
+     */
+    resetBrowser() {
+        UrlState.resetController(this);
+        this.conversationList.reset();
+        this.searchId = null;
+        this.selectedConversation = null;
+        this.selectedConversationId = null;
+        this.unregisterHermesIntents();
     }
 }

@@ -12,7 +12,7 @@ Feature: Conversation | toggle vote (love / unlove)
     | conversations(conversationroom) |
     | 1                               |
     -----------------------------------
-    When User navigates to app/project/PROJECT_1/conversations
+    When User opens the threads of the project
     And User clicks love button on the first conversation
     Then the first conversation shows loved state
 
@@ -27,7 +27,7 @@ Feature: Conversation | toggle vote (love / unlove)
     | conversations(conversationroom) |
     | 1                               |
     -----------------------------------
-    When User navigates to app/project/PROJECT_1/conversations
+    When User opens the threads of the project
     And User clicks love button on the first conversation
     And User clicks love button on the first conversation
     Then the first conversation shows unlovable state
