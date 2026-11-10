@@ -23,7 +23,7 @@ export default function (assert) {
             })
             .then('the first conversation should display linked issue badge', async function () {
                 let conversationItem = document.querySelector('.conversation-item[id]');
-                let badge = conversationItem && conversationItem.querySelector('.subject .conversation-issue-badge a');
+                let badge = conversationItem && conversationItem.querySelector('[data-thread-linked-issue] a');
 
                 assert.ok(badge, 'Issue badge is rendered for the first conversation');
                 assert.ok(badge.textContent.trim().startsWith('#'), 'Badge text starts with issue number');

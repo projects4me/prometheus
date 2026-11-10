@@ -1,0 +1,55 @@
+{{#bootstrap-modal
+  title="views.app.conversation.edit.title"
+  closeLabel="global.form.cancel"
+  confirmLabel="views.app.conversation.edit.update"
+  close=(action "close")
+  confirm=(action "updateConversation")
+}}
+  <div class="edit-conversation-form">
+    <div class="form-group">
+      <FormFields::FieldText
+        @placeholder={{t "views.app.conversation.fields.subject"}}
+        @label={{t "views.app.conversation.fields.subject"}}
+        @type="text"
+        @value={{this.editedSubject}}
+        @data-field="conversation.subject"
+        @length="255"
+        @onInput={{this.handleSubjectChange}}
+      />
+    </div>
+    <div data-field="conversation.description" data-field-type="wysiwyg" class="form-field ember-view">
+      <AppUi::ToastUi
+        @usersList={{@membersList}}
+        @issueSearch={{perform @search}}
+        @editType='wysiwyg'
+        @hide={{array 'footer'}}
+        @onContentChange={{this.handleDescriptionChange}}
+        @initialValue={{this.editedDescription}}
+        @placeholder={{t "views.app.conversation.fields.description"}}
+      />
+      <FormFields::Label
+        @label={{t "views.app.conversation.fields.description"}}
+        @data-field="conversation.description"
+      />
+    </div>
+    {{#if @linkIssueSearch}}
+      {{!-- Carried over from ConversationItem as it was; the new thread form uses FormFields::FieldRelate for this field --}}
+      <div class="form-group form-field ember-view" data-field="conversation.linkedIssue">
+        <div data-form-field="label">
+          <label class="floating-label">{{t "views.app.conversation.linkIssue"}}</label>
+        </div>
+        <PowerSelect
+          @placeholder={{t "views.app.conversation.linkIssuePlaceholder"}}
+          @searchEnabled={{true}}
+          @search={{perform @linkIssueSearch}}
+          @selected={{this.editedLinkedIssue}}
+          @onChange={{this.setEditedLinkedIssue}}
+          @allowClear={{true}}
+          as |issue|
+        >
+          <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
+        </PowerSelect>
+      </div>
+    {{/if}}
+  </div>
+{{/bootstrap-modal}}

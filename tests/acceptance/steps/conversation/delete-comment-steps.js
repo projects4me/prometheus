@@ -8,6 +8,8 @@ export default function (assert) {
         comments.forEach(comment => {
             comment.update({
                 conversationId: conversationroom.id,
+                relatedTo: 'conversationrooms',
+                relatedId: conversationroom.id,
             });
         });
         conversationroom.update({

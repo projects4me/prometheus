@@ -1,0 +1,79 @@
+<div class="conversation-item thread-box" id={{@entity.id}} data-thread-box>
+  <div class="box box-primary">
+    <div class="box-header with-border">
+      <span class="thread-type" data-thread-type>
+        {{#if (eq @entity.roomType "vote")}}{{t "views.app.conversation.thread.vote"}}{{else}}{{t "views.app.conversation.thread.discussion"}}{{/if}}
+      </span>
+      <h3 class="box-title thread-title subject">{{@entity.subject}}</h3>
+      <div class="box-tools">
+        <AppUi::Button
+          class="upvotes btn btn-box-tool"
+          data-btn="toggle-vote"
+          title={{if (user-created @entity.votes @currentUser.user.id) (t "views.app.conversation.downvote") (t "views.app.conversation.upvote")}}
+          @onClick={{fn @toggleVote @entity.id}}
+        >
+          {{@entity.votes.length}}
+          {{#if (user-created @entity.votes @currentUser.user.id)}}
+            <i class="fa fa-heart"></i>
+          {{else}}
+            <i class="fa fa-heart-o"></i>
+          {{/if}}
+        </AppUi::Button>
+        {{#if this.isOwnConversation}}
+          <AppUi::Button
+            type="button"
+            class="btn btn-box-tool"
+            data-btn="edit-conversation"
+            @onClick={{this.showEditConversationDialog}}
+            data-toggle="tooltip"
+            title="{{t 'global.form.edit'}}"
+          >
+            <i class="fa fa-pencil"></i>
+          </AppUi::Button>
+        {{/if}}
+      </div>
+      <div class="thread-meta">
+        {{#if @entity.issue.issueNumber}}
+          <div class="thread-linked-issue" data-thread-linked-issue>
+            <i class="fa fa-link"></i>
+            <a href="/app/project/{{@entity.issue.projectShortcode}}/issue/{{@entity.issue.issueNumber}}">#{{@entity.issue.issueNumber}}</a>
+            {{@entity.issue.subject}}
+            <span class="label" style={{status-style @entity.issue.status}}>{{@entity.issue.status}}</span>
+          </div>
+        {{/if}}
+        <div class="text-muted" data-thread-started>
+          {{t "views.app.conversation.thread.startedBy"}}
+          <a href="/app/user/{{@entity.createdBy.id}}">{{@entity.createdBy.name}}</a> · {{format-date-time date=@entity.dateCreated}}
+        </div>
+      </div>
+    </div>
+    <div class="box-body">
+      <p>{{translate-comment @entity.description}}</p>
+    </div>
+    {{!-- Body slot by roomType: the vote body plugs in here; until then a vote room shows the description only --}}
+    {{#if this.isDiscussion}}
+      <Conversation::ThreadComments
+        @roomId={{@entity.id}}
+        @comments={{@comments.items}}
+        @hasOlder={{@comments.hasOlder}}
+        @isLoading={{@comments.isLoading}}
+        @failed={{@comments.failed}}
+        @onLoadOlder={{@onLoadOlderComments}}
+        @onReply={{@onReply}}
+        @membersList={{@membersList}}
+        @search={{@search}}
+      />
+    {{/if}}
+  </div>
+
+  {{#if this.showEditConversationModal}}
+    <Conversation::EditThreadModal
+      @entity={{@entity}}
+      @membersList={{@membersList}}
+      @search={{@search}}
+      @linkIssueSearch={{@linkIssueSearch}}
+      @onSave={{@onUpdateConversation}}
+      @onClose={{this.removeEditConversationModal}}
+    />
+  {{/if}}
+</div>

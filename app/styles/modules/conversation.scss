@@ -437,3 +437,34 @@
   }
 }
 /*=====  End of Conversation New Conversation Form  ======*/
+
+/*=====  Conversation Thread Box  ======*/
+.thread-box {
+  // The root keeps .conversation-item, whose box is rounded; the thread box follows the square design system
+  .box {
+    border-radius: 0;
+  }
+
+  .thread-type {
+    display: block;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    color: $mediumColor;
+  }
+
+  .thread-title {
+    font-size: 2rem;
+  }
+
+  .thread-meta {
+    margin-top: 0.8rem;
+  }
+
+  .thread-comments-heading {
+    font-size: 1.2rem;
+    margin-top: 0;
+    text-transform: uppercase;
+    color: $mediumColor;
+  }
+}
+/*=====  End of Conversation Thread Box  ======*/

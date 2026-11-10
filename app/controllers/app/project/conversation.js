@@ -473,14 +473,11 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         });
 
         return comment.save({adapterOptions: {mentionedIssues: mentionedIssues}}).then(function (comment) {
-            if(_self.selectedConversation?.id === relatedId) {
-                pushIfMissing(_self.selectedConversation.comments, comment);
-            } else {
-                pushIfMissing(
-                    _self.listedConversations.find((conversation) => conversation.id === relatedId).comments,
-                    comment
-                );
+            // The open thread's comments belong to the page controller, which adds the returned comment
+            if(_self.selectedConversation?.id !== relatedId) {
+                pushIfMissing(_self.findConversationById(relatedId)?.comments, comment);
             }
+            return comment;
         }).catch(function (error) {
             if (comment.isNew) {
                 comment.unloadRecord();
@@ -722,7 +719,30 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     }
 
     /**
-     * Persists the linked issue for a conversation (edit modal). Called from ConversationItem on save.
+     * Saves a thread edited in the edit thread modal: subject and description, then the linked issue. Rolls the
+     * unsaved attributes back and rethrows when a save fails.
+     *
+     * @method updateConversation
+     * @param {Object} conversation Conversation model
+     * @param {Object} changes { subject, description, linkedIssue }
+     * @returns {Promise}
+     * @public
+     */
+    @action async updateConversation(conversation, { subject, description, linkedIssue }) {
+        Logger.debug('AppProjectConversationController::updateConversation');
+        try {
+            conversation.set('subject', subject);
+            conversation.set('description', description);
+            await conversation.save();
+            await this.updateConversationLinkedIssue(conversation, linkedIssue);
+        } catch (error) {
+            conversation.rollbackAttributes();
+            throw error;
+        }
+    }
+
+    /**
+     * Persists the linked issue for a conversation (edit modal). Called by updateConversation.
      *
      * @method updateConversationLinkedIssue
      * @param {Object} conversation Conversation model
@@ -1188,7 +1208,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     handleCommentCreated(envelope) {
         this.threadCounts.addComment(envelope.changes?.relatedId, envelope.resource.id, envelope.changes?.comment);
         let room = this.findConversationForEvent(envelope);
-        if (!room) {
+        if (!room || this.isOpenThread(room)) {
             return;
         }
         let comment = peekOrPush(
@@ -1220,7 +1240,9 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         }
         let room = this.findConversationForEvent(envelope)
             || this.findConversationContaining('comments', comment.id);
-        pushIfMissing(room?.comments, comment);
+        if (!this.isOpenThread(room)) {
+            pushIfMissing(room?.comments, comment);
+        }
     }
 
     /**
@@ -1234,6 +1256,9 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     handleCommentDeleted(envelope) {
         this.threadCounts.removeComment(envelope.resource.id, envelope.changes?.relatedId);
         let room = this.findConversationForEvent(envelope);
+        if (this.isOpenThread(room)) {
+            return;
+        }
         if (room) {
             removeById(room.comments, envelope.resource.id);
         } else {
@@ -1293,6 +1318,19 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     }
 
     /**
+     * Whether a room is the discussion open on the page, whose comment events the page controller handles.
+     * An open vote room stays with this controller: the page controller only listens for discussions.
+     *
+     * @method isOpenThread
+     * @param {Object} room Conversation room
+     * @returns {Boolean}
+     * @private
+     */
+    isOpenThread(room) {
+        return Boolean(room) && room === this.selectedConversation && room.roomType === 'discussion';
+    }
+
+    /**
      * Resolves the conversation room for a comment or vote envelope.
      *
      * @method findConversationForEvent
@@ -1343,7 +1381,8 @@ export default class AppProjectConversationController extends PrometheusCreateCo
     }
 
     /**
-     * Removes a comment from the selected room and every loaded room.
+     * Removes a comment from the selected room and every loaded room, except the open discussion, whose comments
+     * the page controller owns.
      *
      * @method removeCommentFromConversations
      * @param {String} commentId Comment id
@@ -1351,10 +1390,11 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @private
      */
     removeCommentFromConversations(commentId) {
-        if (this.selectedConversation) {
-            removeById(this.selectedConversation.comments, commentId);
-        }
-        (this.listedConversations || []).forEach((room) => {
+        let rooms = [this.selectedConversation, ...(this.listedConversations || [])].filter(Boolean);
+        rooms.forEach((room) => {
+            if (this.isOpenThread(room)) {
+                return;
+            }
             removeById(room.comments, commentId);
         });
     }

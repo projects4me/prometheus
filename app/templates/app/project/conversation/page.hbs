@@ -1,15 +1,22 @@
 {{#if this.model}}
-  <div class="conversation-opened-container" data-conversation-opened>
-    <Conversation::ConversationItem
-      @entity={{this.model}}
-      @membersList={{this.layout.membersList}}
-      @currentUser={{this.layout.currentUser}}
-      @toggleVote={{this.layout.toggleVote}}
-      @saveComment={{this.layout.saveComment}}
-      @search={{this.layout.search}}
-      @vote={{this.layout.vote}}
-      @linkIssueSearch={{this.layout.linkIssueSearch}}
-      @onLinkedIssueChange={{this.layout.updateConversationLinkedIssue}}
-    />
+  <div class="conversation-opened-container row" data-conversation-opened>
+    <div class="col-md-8">
+      <Conversation::ThreadBox
+        @entity={{this.model}}
+        @membersList={{this.layout.membersList}}
+        @currentUser={{this.layout.currentUser}}
+        @toggleVote={{this.layout.toggleVote}}
+        @comments={{this.threadComments}}
+        @onLoadOlderComments={{this.loadOlderComments}}
+        @onReply={{this.postComment}}
+        @search={{this.layout.search}}
+        @linkIssueSearch={{this.layout.linkIssueSearch}}
+        @onUpdateConversation={{this.layout.updateConversation}}
+      />
+    </div>
+    <div class="col-md-4">
+      <Conversation::LinkedIssueBox @issue={{this.model.issue}} />
+      {{!-- Room below for the Participants, Create issue and Activity boxes --}}
+    </div>
   </div>
 {{/if}}
