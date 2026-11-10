@@ -96,8 +96,8 @@ export function flattenKeys(object) {
 }
 
 /**
- * Translations and locale-aware formatting on the browser's Intl APIs. Keeps
- * the API Prometheus used from ember-intl: `t`, `exists`, `lookup`,
+ * Translations and locale-aware formatting on the browser's Intl APIs. Offers
+ * the API Prometheus used before the native service: `t`, `exists`, `lookup`,
  * `setLocale`, `addTranslations`, `translationsFor`, `locale`,
  * `primaryLocale`, `locales`, `formatNumber`, `formatDate`, `formatMessage`.
  * The static bundle (`translations/*.json`) is loaded on creation.

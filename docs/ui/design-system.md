@@ -176,6 +176,13 @@ Use the `FormFields::*` components. Don't write raw `<input>` or `<select>`.
 Pass `@data-field="<model>.<field>"` and `@aclContext` like the existing forms do, so field-level ACL keeps
 working. Labels and placeholders come from `translations/en-us.json`.
 
+### Translation message limits
+
+Messages are formatted by `app/utils/intl/message-format.js`. It supports only `{arg}`, `plural` and `select`
+(plus `offset:`, `#` and apostrophe quoting); HTML tags are plain text. `number`, `date`, `time`,
+`selectordinal` and any other argument type throw "Unsupported argument type". Anyone adding them to a
+translation, from the app or from Gaia, must extend the formatter first.
+
 ## 8. Buttons, labels, icons, avatars
 
 - **Primary:** `btn btn-primary`, crimson, hover plum, square. One per action area (Save, Search, Post).

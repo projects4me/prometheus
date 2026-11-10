@@ -7,7 +7,12 @@
  * Prometheus translations use: `{arg}`, `{n, plural, =0 {..} one {..} other {..}}`
  * (with `offset:` and `#`), `{x, select, a {..} other {..}}` and ICU apostrophe
  * quoting (`''` is a quote, `'{literal}'` is literal text). HTML tags are plain
- * text, as with ember-intl's `ignoreTag: true`.
+ * text.
+ *
+ * Limits: only `{arg}`, `plural` and `select` are supported. `number`, `date`,
+ * `time`, `selectordinal` and every other argument type throw "Unsupported
+ * argument type". Anyone adding one to a translation, from the app or from
+ * Gaia, must extend this formatter first.
  *
  * Like formatjs, a placeholder whose name is missing from `values` throws.
  *
