@@ -1,16 +1,13 @@
-<section class="content-header">
-  <h1>
-    {{t "views.app.conversation.browser.title"}}
-    <AccessControl @aclContext="conversationroom.create">
-      <button type="button" class="btn btn-primary pull-right" {{on "click" this.showDialog}} data-btn="addConversation">
-        <i class="fa fa-plus"></i> {{t "views.app.conversation.browser.new"}}
-      </button>
-    </AccessControl>
-  </h1>
-  <BreadCrumb/>
-</section>
-
 <section class="content">
+  <AccessControl @aclContext="conversationroom.create">
+    <div class="row">
+      <div class="col-md-12">
+        <button type="button" class="btn btn-primary" {{on "click" this.showDialog}} data-btn="addConversation">
+          <i class="fa fa-plus"></i> {{t "views.app.conversation.browser.new"}}
+        </button>
+      </div>
+    </div>
+  </AccessControl>
   <div class="row conversation-wrapper">
     <AccessControl @aclContext="conversationroom.read">
       <div class="col-md-3">

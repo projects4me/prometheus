@@ -97,6 +97,13 @@ export const when = function () {
 export const then = function () {
     return [
         {
+            "The project header shows $count breadcrumb and no extra title row": (assert) => async function (count) {
+                assert.equal(document.querySelectorAll('ol.breadcrumb').length, Number(count), 'one breadcrumb');
+                assert.equal(document.querySelectorAll('section.content-header').length, 1, 'only the project layout header');
+                assert.notOk(document.querySelector('section.content-header h1 .pull-right'), 'no title row button');
+            }
+        },
+        {
             "The thread $subject shows $count comments": (assert) => async function (subject, count) {
                 let row = [...document.querySelectorAll(`${BROWSER} [data-conversation]`)].find(node => node.querySelector('[data-conversation-subject]').textContent.trim() === subject);
                 assert.equal(row.querySelector('[data-conversation-comments]').textContent.trim(), String(count));
