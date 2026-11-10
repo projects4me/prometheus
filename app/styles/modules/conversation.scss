@@ -277,8 +277,7 @@
 /*====================================
 =            Conversation Grid        =
 ====================================*/
-// Conversation grid styles are now handled by .conversation-scroll-container
-// which is applied to the InfiniteScroll container
+
 
 .conversation-item {
   width: 100%;
@@ -293,48 +292,6 @@
     box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, 0.2);
     transition: all 0.4s ease-in-out;
   }
-}
-
-@media (max-width: 768px) {
-  .conversation-scroll-container {
-    height: calc(100vh - 150px);
-    
-
-    .conversation-grid {
-      padding: 0 1.5rem;
-    }
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .conversation-scroll-container {
-    height: calc(100vh - 180px);
-    
-    .conversation-grid {
-      max-width: 50rem;
-      padding: 0 2rem;
-    }
-  }
-}
-
-.conversation-item .post-title {
-  font-size: 2rem;
-}
-
-.conversation-item .post-info {
-  color: #999;
-  text-transform: uppercase;
-}
-
-.conversation-item .read-more {
-  color: $secondaryColor;
-}
-
-.conversation-item .tag-comment {
-  border-top: 0.1rem solid $borderColor;
-  margin-top: 1rem;
-  padding: 0.5rem 0;
-  color: #999;
 }
 
 .upvotes {
@@ -421,14 +378,6 @@
 
 /*=====  End of Conversation Search Bar  ======*/
 
-/*=====  Conversation Empty State  ======*/
-.conversation-grid {
-  .no-content {
-    background-color: $backgroundColor;
-  }
-}
-
-/*=====  End of Conversation Empty State  ======*/
 
 /*=====  Conversation New Conversation Form  ======*/
 [data-field="conversation.linkedIssue"] {
