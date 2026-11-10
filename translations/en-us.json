@@ -789,6 +789,16 @@
         }
       },
       "conversation": {
+        "thread": {
+          "discussion": "Discussion",
+          "vote": "Vote",
+          "startedBy": "Started by",
+          "loadOlder": "Load older comments",
+          "commentsFailed": "The comments could not be loaded.",
+          "retry": "Retry",
+          "linkedIssue": "Linked issue",
+          "noLinkedIssue": "No linked issue"
+        },
         "browser": {
           "title": "Threads",
           "new": "New thread",

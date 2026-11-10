@@ -1,0 +1,31 @@
+{{!-- The comments of a discussion (oldest first, older pages on demand) and the reply box --}}
+<div class="box-footer box-comments thread-comments" data-thread-comments>
+  <h5 class="thread-comments-heading" data-thread-comment-count>
+    {{@comments.length}}{{if @hasOlder "+"}} {{t "views.app.conversation.comments"}}
+  </h5>
+  {{#if @hasOlder}}
+    <button type="button" class="btn btn-link" data-btn="load-older-comments" disabled={{@isLoading}} {{on "click" @onLoadOlder}}>
+      {{t "views.app.conversation.thread.loadOlder"}}
+    </button>
+  {{/if}}
+  {{#if @failed}}
+    <p class="text-danger" data-thread-comments-failed>
+      <i class="fa fa-exclamation-triangle"></i> {{t "views.app.conversation.thread.commentsFailed"}}
+      <button type="button" class="btn btn-link" data-btn="retry-comments" {{on "click" @onLoadOlder}}>{{t "views.app.conversation.thread.retry"}}</button>
+    </p>
+  {{/if}}
+  {{#each @comments key="id" as |comment|}}
+    <ConversationUi::CommentItem
+      @comment={{comment}}
+      @usersList={{@membersList}}
+      @issueSearch={{perform @search}}
+    />
+  {{/each}}
+</div>
+<ConversationUi::CommentComposer
+  @usersList={{@membersList}}
+  @issueSearch={{perform @search}}
+  @save={{@onReply}}
+  @entity={{@roomId}}
+  data-thread-reply
+/>

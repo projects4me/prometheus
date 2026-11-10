@@ -1,0 +1,21 @@
+<div class="box box-info" data-linked-issue-box>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.conversation.thread.linkedIssue"}}</h3>
+  </div>
+  <div class="box-body">
+    {{#if @issue.issueNumber}}
+      <p>
+        <a href="/app/project/{{@issue.projectShortcode}}/issue/{{@issue.issueNumber}}" data-linked-issue-key>#{{@issue.issueNumber}}</a>
+        <span data-linked-issue-subject>{{@issue.subject}}</span>
+      </p>
+      <p>
+        <span class="label" style={{status-style @issue.status}} data-linked-issue-status>{{@issue.status}}</span>
+        {{#if @issue.issuemilestone.name}}
+          <span class="text-muted" data-linked-issue-milestone><i class="fa fa-flag-o"></i> {{@issue.issuemilestone.name}}</span>
+        {{/if}}
+      </p>
+    {{else}}
+      <p class="text-muted" data-linked-issue-empty>{{t "views.app.conversation.thread.noLinkedIssue"}}</p>
+    {{/if}}
+  </div>
+</div>

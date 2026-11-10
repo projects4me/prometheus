@@ -195,6 +195,9 @@ export const then = function () {
 							'controller:app.project.conversation'
 						);
 						let rooms = [controller.selectedConversation, ...(controller.listedConversations || [])].filter(Boolean);
+						// The open thread's comments live in the page controller's loader
+						let page = this.owner.lookup('controller:app.project.conversation.page');
+						rooms.push({ comments: page.threadComments.items });
 						let found = false;
 						rooms.forEach((room) => {
 							(room.comments || []).forEach((comment) => {

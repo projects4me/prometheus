@@ -6,8 +6,8 @@ import App from 'prometheus/routes/app';
 import { inject as service } from '@ember/service';
 
 /**
- * The route of one thread: it loads the thread with its issue, votes and comments and marks it as the open one in
- * the browser. The thread page issue replaces what the template renders.
+ * The route of one thread: it loads the thread with its author, issue and votes (comments come through their own
+ * query in the page controller), marks it as the open one in the browser and opens it in the page controller.
  *
  * @class Page
  * @namespace Prometheus.Routes
@@ -37,7 +37,7 @@ export default class AppProjectConversationPageRoute extends App {
         try {
             let rooms = await this.store.query('conversationroom', {
                 query: `((Conversationroom.id : ${params.conversation_id}) AND (Conversationroom.projectId : ${projectId}))`,
-                rels: 'votes,comments,issue',
+                rels: 'createdBy,issue,votes',
                 limit: -1
             });
             return rooms.objectAt(0);
@@ -62,5 +62,20 @@ export default class AppProjectConversationPageRoute extends App {
         this.breadcrumb.setIcon(this.routeName, 'comments');
         controller.model = model;
         controller.layout = layout;
+        controller.openThread(model, this.trackedProject.getProjectId());
+    }
+
+    /**
+     * Stops the open thread's live comment updates when the thread page is left
+     *
+     * @method resetController
+     * @param {Controller} controller
+     * @param {Boolean} isExiting
+     * @private
+     */
+    resetController(controller, isExiting) {
+        if (isExiting) {
+            controller.closeThread();
+        }
     }
 }

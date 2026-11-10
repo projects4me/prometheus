@@ -9,16 +9,18 @@ module("Unit | Controller | app/project/conversation live events", function (hoo
   setupTest(hooks);
   installFakeHermes(hooks);
 
-  function setupRoom(controller) {
+  function setupRoom(controller, { open = false, roomType = "discussion" } = {}) {
     let comments = A([]);
     let votes = A([]);
     let room = EmberObject.create({
       id: "room-1",
+      roomType,
       comments,
       votes,
     });
     Object.defineProperty(controller, "listedConversations", { configurable: true, get: () => A([room]) });
-    controller.set("selectedConversation", room);
+    // The open thread's comments belong to the page controller; the layout keeps the other listed rooms
+    controller.set("selectedConversation", open ? room : null);
 
     let records = Object.create(null);
     let store = {
@@ -192,6 +194,37 @@ module("Unit | Controller | app/project/conversation live events", function (hoo
     });
 
     assert.strictEqual(comments.length, 0);
+  });
+
+  test("comment events of the open thread are left to the page controller", function (assert) {
+    let controller = this.owner.lookup("controller:app.project.conversation");
+    let { comments, votes } = setupRoom(controller, { open: true });
+
+    controller.handleCommentCreated({
+      resource: { id: "c1" },
+      changes: { relatedId: "room-1", comment: "hello" },
+      meta: { conversationId: "room-1" },
+    });
+    assert.strictEqual(comments.length, 0, "the open thread's comments are not touched");
+
+    controller.handleVoteAdded({
+      resource: { id: "v1" },
+      changes: { relatedId: "room-1", vote: true },
+      meta: { conversationId: "room-1" },
+    });
+    assert.strictEqual(votes.length, 1, "votes of the open thread still update");
+  });
+
+  test("comment events of an open vote room stay with the layout controller", function (assert) {
+    let controller = this.owner.lookup("controller:app.project.conversation");
+    let { comments } = setupRoom(controller, { open: true, roomType: "vote" });
+
+    controller.handleCommentCreated({
+      resource: { id: "c1" },
+      changes: { relatedId: "room-1", comment: "I agree" },
+      meta: { conversationId: "room-1" },
+    });
+    assert.strictEqual(comments.length, 1, "the page controller does not listen for vote rooms");
   });
 
   test("unregister clears conversation hermes registration", function (assert) {
