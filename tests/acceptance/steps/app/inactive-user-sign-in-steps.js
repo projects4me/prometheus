@@ -3,7 +3,7 @@
  */
 
 import steps from '../steps';
-import { currentSession } from 'ember-simple-auth/test-support';
+import { currentSession } from 'prometheus/tests/helpers/session';
 import { click, fillIn, settled } from '@ember/test-helpers';
 
 const INACTIVE_SIGN_IN_EMAIL = 'inactive-user@test.local';
