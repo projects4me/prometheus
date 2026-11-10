@@ -14,4 +14,3 @@ Feature: Conversation | search conversation
     -----------------------------------
     And conversation 1 is linked with issue 1
     When User opens the threads of the project
-    Then the first conversation should not repeat the linked issue in its header

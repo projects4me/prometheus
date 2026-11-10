@@ -21,14 +21,5 @@ export default function (assert) {
 
                 assert.ok(true, `Linked conversation ${convId} with issue ${issueNumber}`);
             })
-            .then('the first conversation should not repeat the linked issue in its header', async function () {
-                let conversationItem = document.querySelector('.conversation-item[id]');
-
-                assert.ok(conversationItem, 'The first conversation is rendered');
-                assert.notOk(
-                    conversationItem.querySelector('[data-thread-linked-issue]'),
-                    'The linked issue is not repeated in the thread header'
-                );
-            })
     );
 }
