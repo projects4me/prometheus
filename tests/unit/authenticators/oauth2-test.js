@@ -37,6 +37,16 @@ module('Unit | Authenticator | oauth2', function (hooks) {
         assert.strictEqual(requests.length, 0, 'the authenticator makes no token request');
     });
 
+    test('authenticate resolves with expires_at when the server returns expires_in', async function (assert) {
+        let authenticator = this.owner.lookup('authenticator:oauth2');
+        authenticator.makeRequest = () => Promise.resolve({ access_token: 'a', refresh_token: 'r', expires_in: 3600 });
+
+        let response = await authenticator.authenticate('user@example.com', 'secret');
+
+        assert.strictEqual(response.access_token, 'a', 'the server response is kept');
+        assert.ok(response.expires_at > Date.now(), 'expires_at is set in the future');
+    });
+
     test('restore rejects data without an access token', async function (assert) {
         let authenticator = this.owner.lookup('authenticator:oauth2');
 
