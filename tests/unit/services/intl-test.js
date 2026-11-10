@@ -112,7 +112,7 @@ module('Unit | Service | intl', function (hooks) {
 		});
 
 		test('setLocale normalises the locale to lower case', function (assert) {
-			// Mixed case, not en_US: newer ember-intl 6.x builds the formatter from the raw tag and throws on underscores.
+			// Mixed case, not en_US: a formatter built from the raw tag would throw on underscores.
 			this.intl.setLocale('EN-US');
 
 			assert.deepEqual(this.intl.locale, ['en-us']);
