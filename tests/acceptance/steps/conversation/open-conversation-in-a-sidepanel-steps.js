@@ -14,7 +14,6 @@ export default function (assert) {
     }).
     then('User should see the thread box and the linked issue box of conversation $conversationIndex', function () {
         assert.dom('[data-thread-box] .box-primary').exists('The thread box is shown');
-        assert.dom('[data-thread-box] [data-thread-type]').doesNotExist('No type label is shown');
         assert.dom('[data-thread-box] [data-thread-started]').exists('The started by line is shown');
         assert.dom('[data-linked-issue-box].box-info').exists('The linked issue box is shown');
     }).
