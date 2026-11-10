@@ -34,3 +34,11 @@ Feature: Threads | thread browser
     And User searches the threads for "subject ~ beta"
     Then The thread list rows are Beta thread, Another beta
     And Only the thread list was requested again
+
+  Scenario: Rows show comment counts for discussions and the vote tally for votes
+
+    Given The thread Beta thread has 2 comments
+    And The vote thread Poll has 3 agree and 1 disagree votes
+    When User opens the threads of the project
+    Then The thread Beta thread shows 2 comments
+    And The vote thread Poll shows "3 agree · 1 disagree"

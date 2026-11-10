@@ -811,7 +811,8 @@
             "discussion": "Discussion",
             "vote": "Vote"
           },
-          "unknownUser": "Unknown user"
+          "unknownUser": "Unknown user",
+          "votes": "{agree} agree · {disagree} disagree"
         },
         "fields": {
           "subject": "Subject",

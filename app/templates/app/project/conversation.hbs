@@ -66,6 +66,16 @@
                   {{/if}}
                 {{/if}}
                 {{if conversation.createdBy.name conversation.createdBy.name (t "views.app.conversation.browser.unknownUser")}} · {{format-date-time date=conversation.dateModified humanize=true}}
+                {{#let (get this.threadCounts.byRoom conversation.id) as |counts|}}
+                  {{#if counts}}
+                    <br>
+                    {{#if (eq conversation.roomType "vote")}}
+                      <span data-conversation-votes>{{t "views.app.conversation.browser.votes" agree=counts.agreeCount disagree=counts.disagreeCount}}</span>
+                    {{else}}
+                      <span data-conversation-comments><i class="fa fa-comment-o"></i> {{counts.commentCount}}</span>
+                    {{/if}}
+                  {{/if}}
+                {{/let}}
               </:secondary>
             </Item>
           </:item>

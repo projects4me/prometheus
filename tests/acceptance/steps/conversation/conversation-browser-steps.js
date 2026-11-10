@@ -21,6 +21,27 @@ function pageRequests(ctx) {
 export const given = function () {
     return [
         {
+            "The thread $subject has $count comments": (assert) => async function (subject, count) {
+                let room = server.schema.conversationrooms.findBy({ subject });
+                for (let i = 0; i < Number(count); i++) {
+                    server.create('comment', { relatedId: room.id, comment: `Comment ${i}` });
+                }
+                assert.ok(true, `${count} comments on ${subject}`);
+            }
+        },
+        {
+            "The vote thread $subject has $agree agree and $disagree disagree votes": (assert) => async function (subject, agree, disagree) {
+                let room = server.create('conversationroom', { subject, roomType: 'vote', dateModified: '2026-10-01 10:00:00' });
+                for (let i = 0; i < Number(agree); i++) {
+                    server.create('comment', { relatedId: room.id, comment: 'I agree' });
+                }
+                for (let i = 0; i < Number(disagree); i++) {
+                    server.create('comment', { relatedId: room.id, comment: 'I disagree' });
+                }
+                assert.ok(true, `votes on ${subject}`);
+            }
+        },
+        {
             "The threads of the project are\n$table": (assert, ctx) => async function (table) {
                 let milestones = {};
                 let issueNumber = 100;
@@ -75,6 +96,18 @@ export const when = function () {
 
 export const then = function () {
     return [
+        {
+            "The thread $subject shows $count comments": (assert) => async function (subject, count) {
+                let row = [...document.querySelectorAll(`${BROWSER} [data-conversation]`)].find(node => node.querySelector('[data-conversation-subject]').textContent.trim() === subject);
+                assert.equal(row.querySelector('[data-conversation-comments]').textContent.trim(), String(count));
+            }
+        },
+        {
+            'The vote thread $subject shows "$text"': (assert) => async function (subject, text) {
+                let row = [...document.querySelectorAll(`${BROWSER} [data-conversation]`)].find(node => node.querySelector('[data-conversation-subject]').textContent.trim() === subject);
+                assert.equal(row.querySelector('[data-conversation-votes]').textContent.trim(), text);
+            }
+        },
         {
             "The thread $subject is open": (assert) => async function (subject) {
                 assert.dom(`${BROWSER} .quick-list-item--active [data-conversation-subject]`).hasText(subject);
