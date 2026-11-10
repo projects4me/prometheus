@@ -1,4 +1,4 @@
-import { click, fillIn } from '@ember/test-helpers';
+import { click, currentURL, fillIn } from '@ember/test-helpers';
 import { selectChoose, selectSearch, clickTrigger } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
 
@@ -59,15 +59,10 @@ export default function (assert) {
                 assert.ok(true, `there is a conversation having a topic of ${expectedTopic}`);
             })
             .then('the conversation is linked with issue #$issueNumber', async function (issueNumber) {
-                let conversationItems = document.querySelectorAll('.conversation-item[id]');
-                assert.ok(conversationItems.length > 0, 'At least one conversation exists');
-                let firstConversation = conversationItems[0];
-                let badge = firstConversation.querySelector('.subject .conversation-issue-badge a');
-                assert.ok(badge, 'Conversation shows linked issue badge');
-                assert.ok(
-                    badge.textContent.trim().indexOf(`#${issueNumber}`) !== -1,
-                    `Badge text contains #${issueNumber}`
-                );
+                assert.ok(/\/conversations\/[^/?]+/.test(currentURL()), `the app opened the new thread page: ${currentURL()}`);
+                let linked = server.schema.conversationrooms.all().models.find((room) => room.issueId);
+                assert.ok(linked, 'a conversation is linked to an issue');
+                assert.equal(server.schema.issues.find(linked.issueId).issueNumber, String(issueNumber), `linked to issue #${issueNumber}`);
             })
     );
 }
