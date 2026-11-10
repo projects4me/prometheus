@@ -98,3 +98,45 @@ Feature: open conversation in a sidepanel
     When User navigates to app/project/PROJECT_1
     And User clicks on conversation 1 from latest conversations section
     Then The linked issue box says there is no linked issue
+
+
+  Scenario: Creating an issue from a discussion links it to the thread
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 selects Project 1
+    And Project has following details
+    ---------------------------------------------------------------------
+    | conversations(conversationroom) | milestone | issuetype | issuestatus |
+    | 5                               | 4         | 4         | 4           |
+    ---------------------------------------------------------------------
+    And Conversation 1 is a discussion with 2 comments
+    When User navigates to app/project/PROJECT_1
+    And User clicks on conversation 1 from latest conversations section
+    And User clicks on create issue from thread
+    Then The issue form is prefilled from conversation 1
+    When User selects option 3 of issue type
+    And User selects start date of issue
+    And User selects end date of issue
+    And User selects option 4 of issue status
+    And User clicks on save button
+    Then User is back on conversation 1 which shows the new issue in the linked issue box
+    And The thread list row of conversation 1 shows the new issue key
+
+  Scenario: A thread with a linked issue offers no create issue button
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User_1 selects Project 1
+    And Project has following details
+    -----------------------------------
+    | conversations(conversationroom) |
+    | 5                               |
+    -----------------------------------
+    And Conversation 1 is a discussion with 1 comments
+    And Conversation 1 is linked to issue 101 with subject Fix the login page
+    When User navigates to app/project/PROJECT_1
+    And User clicks on conversation 1 from latest conversations section
+    Then The linked issue box offers no create issue button

@@ -798,6 +798,7 @@
           "retry": "Retry",
           "linkedIssue": "Linked issue",
           "noLinkedIssue": "No linked issue",
+          "createIssue": "Create issue from thread",
           "participants": "Participants"
         },
         "browser": {
@@ -1319,6 +1320,7 @@
           "parentIssue": "Parent Issue",
           "parent": "Parent",
           "selectparent": "Select the issue parent",
+          "fromThread": "Created from the thread",
           "people": "People",
           "estimates": "Estimates",
           "validations": {
