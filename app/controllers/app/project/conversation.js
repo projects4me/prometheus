@@ -16,7 +16,8 @@ import { peekOrPush, pushIfMissing, removeById } from 'prometheus/utils/live/col
 import { htmlSafe } from '@ember/template';
 import UrlState from 'prometheus/utils/state/url-state';
 import ListLoader from 'prometheus/utils/state/list-loader';
-import ThreadCounts, { fetchThreadComments } from 'prometheus/utils/conversation/thread-counts';
+import ThreadCounts from 'prometheus/utils/conversation/thread-counts';
+import { fetchRoomCounts } from 'prometheus/utils/conversation/room-counts';
 import { BROWSER_PARAMS } from 'prometheus/utils/conversation/browser-defaults';
 import {
     buildConversationListRequest, buildSortOptions, buildGroupOptions, arrangeConversations
@@ -132,7 +133,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             owner: this,
             buildRequest: values => buildConversationListRequest(this.trackedProject.getProjectId(), values)
         });
-        this.threadCounts = new ThreadCounts({ owner: this, fetch: roomId => fetchThreadComments(this.store, roomId) });
+        this.threadCounts = new ThreadCounts({ owner: this, fetch: roomIds => fetchRoomCounts(this.store, roomIds) });
         this.urlState = new UrlState(this, { schema: BROWSER_PARAMS, routeName: 'app.project.conversation' });
         this.urlState.onChange(values => this.paramsChanged(values));
     }
@@ -1255,7 +1256,12 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @public
      */
     handleCommentDeleted(envelope) {
-        this.threadCounts.removeComment(envelope.resource.id, envelope.changes?.relatedId);
+        let known = this.store.peekRecord('comment', envelope.resource.id);
+        this.threadCounts.removeComment(
+            envelope.resource.id,
+            envelope.changes?.relatedId ?? known?.relatedId,
+            envelope.changes?.comment ?? known?.comment
+        );
         let room = this.findConversationForEvent(envelope);
         if (this.isOpenThread(room)) {
             return;

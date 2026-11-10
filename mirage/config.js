@@ -6,6 +6,7 @@ import * as Activity from './route-handlers/activity';
 import * as Chatroom from './route-handlers/chatroom';
 import * as Comment from './route-handlers/comment';
 import * as Conversationroom from './route-handlers/conversationroom';
+import * as Conversationroomcount from './route-handlers/conversationroomcount';
 import * as Converser from './route-handlers/converser';
 import * as Dashboard from './route-handlers/dashboard';
 import * as Issue from './route-handlers/issue';
@@ -74,6 +75,7 @@ function routes() {
     Chatroom.register(this, ctx);
     Comment.register(this, ctx);
     Conversationroom.register(this, ctx);
+    Conversationroomcount.register(this, ctx);
     Converser.register(this, ctx);
     Dashboard.register(this, ctx);
     Issue.register(this, ctx);

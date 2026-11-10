@@ -8,47 +8,9 @@ export const AGREE_TEXT = 'I agree';
 export const DISAGREE_TEXT = 'I disagree';
 
 /**
- * The counts of a thread from its comments: all comments, and for vote rooms the "I agree" and "I disagree" ones
- *
- * @method tallyComments
- * @param {Array<{id: String, comment: String}>} comments
- * @returns {{commentCount: Number, agreeCount: Number, disagreeCount: Number}}
- */
-export function tallyComments(comments) {
-	let counts = { commentCount: 0, agreeCount: 0, disagreeCount: 0 };
-	for (let comment of comments) {
-		counts.commentCount++;
-		if (comment.comment === AGREE_TEXT) {
-			counts.agreeCount++;
-		} else if (comment.comment === DISAGREE_TEXT) {
-			counts.disagreeCount++;
-		}
-	}
-	return counts;
-}
-
-/**
- * The count source: one query per thread for its comments with the minimal fields. This is the only place that
- * knows where the counts come from, so a later issue can swap it for one Gaia call per page.
- *
- * @method fetchThreadComments
- * @param {Object} store the Ember Data store
- * @param {String} roomId
- * @returns {Promise<Array<{id: String, comment: String}>>}
- */
-export async function fetchThreadComments(store, roomId) {
-	let records = await store.query('comment', {
-		query: `Comment.relatedId : ${roomId}`,
-		fields: 'Comment.id,Comment.createdUser,Comment.comment',
-		limit: -1
-	});
-	return records.toArray().map((record) => ({ id: record.id, comment: record.comment }));
-}
-
-/**
- * The comment counts and vote tallies of the threads on the loaded list page. `load` fetches the counts of a
- * page of rooms in parallel and only the newest call writes; rows render without counts while they load.
- * Live comment events adjust a thread's counts through `addComment` and `removeComment`, which are idempotent.
+ * The comment counts and vote tallies of the threads on the loaded list page. `load` fetches the counts of the
+ * whole page with one call and only the newest call writes; rows render without counts while they load.
+ * Live comment events adjust a thread's counts through `addComment` and `removeComment`, each comment once.
  *
  * @class ThreadCounts
  * @namespace Prometheus.Utils.Conversation
@@ -63,20 +25,20 @@ export default class ThreadCounts {
 	@tracked byRoom = {};
 
 	/**
-	 * The comments (id to text) behind each room's counts
+	 * The comment ids already applied live, so an event delivered twice counts once
 	 *
-	 * @property comments
-	 * @type {Object}
+	 * @property applied
+	 * @type {Set<String>}
 	 * @private
 	 */
-	comments = {};
+	applied = new Set();
 
 	token = 0;
 
 	/**
 	 * @constructor
 	 * @param {Object} options
-	 * @param {Function} options.fetch `(roomId) => Promise<Array<{id, comment}>>`
+	 * @param {Function} options.fetch `(roomIds) => Promise<{[roomId]: {commentCount, agreeCount, disagreeCount}}>`
 	 * @param {Object} [options.owner] no writes once it is destroying or destroyed
 	 */
 	constructor({ fetch, owner } = {}) {
@@ -89,7 +51,7 @@ export default class ThreadCounts {
 	}
 
 	/**
-	 * Loads the counts of the rooms of a page; a result of an older call (an older page) is dropped
+	 * Loads the counts of the rooms of a page with one call; a result of an older call (an older page) is dropped
 	 *
 	 * @method load
 	 * @param {Array<String>} roomIds
@@ -97,23 +59,18 @@ export default class ThreadCounts {
 	 */
 	async load(roomIds) {
 		let token = ++this.token;
-		this.comments = {};
+		this.applied = new Set();
 		this.byRoom = {};
-		await Promise.all(
-			roomIds.map(async (roomId) => {
-				let comments;
-				try {
-					comments = await this.fetch(roomId);
-				} catch (error) {
-					return;
-				}
-				if (token !== this.token || this.isOwnerGone) {
-					return;
-				}
-				this.comments[roomId] = Object.fromEntries(comments.map((comment) => [comment.id, comment.comment]));
-				this.publish(roomId);
-			})
-		);
+		let counts;
+		try {
+			counts = await this.fetch(roomIds);
+		} catch (error) {
+			return;
+		}
+		if (token !== this.token || this.isOwnerGone) {
+			return;
+		}
+		this.byRoom = counts;
 	}
 
 	/**
@@ -136,32 +93,41 @@ export default class ThreadCounts {
 	 * @param {String} text
 	 */
 	addComment(roomId, commentId, text) {
-		if (!this.comments[roomId] || commentId in this.comments[roomId]) {
+		let key = `+${commentId}`;
+		if (!this.byRoom[roomId] || this.applied.has(key)) {
 			return;
 		}
-		this.comments[roomId][commentId] = text;
-		this.publish(roomId);
+		this.applied.add(key);
+		this.applied.delete(`-${commentId}`);
+		this.adjust(roomId, text, 1);
 	}
 
 	/**
-	 * Stops counting a comment deleted live; the room is found by the comment when the event does not name it
+	 * Stops counting a comment deleted live, once. The event names the room; without it nothing can be adjusted.
 	 *
 	 * @method removeComment
 	 * @param {String} commentId
 	 * @param {String} [roomId]
+	 * @param {String} [text]
 	 */
-	removeComment(commentId, roomId) {
-		let ids = roomId ? [roomId] : Object.keys(this.comments);
-		for (let id of ids) {
-			if (this.comments[id] && commentId in this.comments[id]) {
-				delete this.comments[id][commentId];
-				this.publish(id);
-			}
+	removeComment(commentId, roomId, text) {
+		let key = `-${commentId}`;
+		if (!roomId || !this.byRoom[roomId] || this.applied.has(key)) {
+			return;
 		}
+		this.applied.add(key);
+		this.applied.delete(`+${commentId}`);
+		this.adjust(roomId, text, -1);
 	}
 
-	publish(roomId) {
-		let texts = Object.entries(this.comments[roomId]).map(([id, comment]) => ({ id, comment }));
-		this.byRoom = { ...this.byRoom, [roomId]: tallyComments(texts) };
+	adjust(roomId, text, delta) {
+		let counts = { ...this.byRoom[roomId] };
+		counts.commentCount = Math.max(0, counts.commentCount + delta);
+		if (text === AGREE_TEXT) {
+			counts.agreeCount = Math.max(0, counts.agreeCount + delta);
+		} else if (text === DISAGREE_TEXT) {
+			counts.disagreeCount = Math.max(0, counts.disagreeCount + delta);
+		}
+		this.byRoom = { ...this.byRoom, [roomId]: counts };
 	}
 }

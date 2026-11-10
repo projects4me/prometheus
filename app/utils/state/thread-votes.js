@@ -4,10 +4,11 @@
 
 import { tracked } from '@glimmer/tracking';
 import { AGREE_TEXT, DISAGREE_TEXT } from 'prometheus/utils/conversation/thread-counts';
+import { fetchRoomCounts } from 'prometheus/utils/conversation/room-counts';
 
 /**
- * The votes of one vote thread: all of the room's vote comments from their own query (minimal fields), so the
- * tallies do not depend on the pages of comments the thread page loads. Votes cast by the user or pushed live are
+ * The votes of one vote thread: the tallies come from the room's Gaia count, the voter list from the room's vote
+ * comments (own query, minimal fields), so neither depends on the pages of comments the thread page loads. Votes cast by the user or pushed live are
  * added without a reload, once. The tallies, the voter list and the result are all derived from the same votes.
  *
  * @class ThreadVotes
@@ -22,6 +23,16 @@ export default class ThreadVotes {
      * @public
      */
     @tracked records = [];
+
+    /**
+     * The tallies Gaia counted for the room, `{ agree, disagree }`; null until they load or when they failed, then
+     * the tallies come from the loaded votes
+     *
+     * @property serverCounts
+     * @type Object
+     * @public
+     */
+    @tracked serverCounts = null;
 
     /**
      * Whether the votes are being loaded
@@ -72,10 +83,12 @@ export default class ThreadVotes {
     async open(roomId) {
         this.roomId = roomId ?? null;
         this.records = [];
+        this.serverCounts = null;
         this.failed = false;
         this.isLoading = false;
         if (!this.roomId) return;
         this.isLoading = true;
+        this.loadCounts(roomId);
         try {
             let result = await this.store.query('comment', {
                 query: `(Comment.relatedId : ${roomId}) AND (Comment.relatedTo : conversationrooms)`,
@@ -96,6 +109,25 @@ export default class ThreadVotes {
     }
 
     /**
+     * Loads the tallies of the room from its count; a failure leaves the tallies to the loaded votes
+     *
+     * @method loadCounts
+     * @param {String} roomId
+     * @returns {Promise}
+     * @private
+     */
+    async loadCounts(roomId) {
+        try {
+            let counts = await fetchRoomCounts(this.store, [roomId]);
+            if (this.isStale(roomId) || !counts[roomId]) return;
+            let { agreeCount, disagreeCount } = counts[roomId];
+            this.serverCounts = { agree: agreeCount, disagree: disagreeCount };
+        } catch (error) {
+            Logger.error('ThreadVotes::loadCounts - Error:', error);
+        }
+    }
+
+    /**
      * Adds a vote (the user's own or a live one) of the open thread, once
      *
      * @method add
@@ -107,6 +139,7 @@ export default class ThreadVotes {
         let vote = ThreadVotes.toVote(comment);
         if (vote.text !== AGREE_TEXT && vote.text !== DISAGREE_TEXT) return;
         this.records = [...this.records, vote];
+        this.adjustCounts(vote.text, 1);
     }
 
     /**
@@ -117,7 +150,23 @@ export default class ThreadVotes {
      * @public
      */
     remove(commentId) {
+        let gone = this.records.find((vote) => vote.id === commentId);
+        if (gone) this.adjustCounts(gone.text, -1);
         this.records = this.records.filter((vote) => vote.id !== commentId);
+    }
+
+    /**
+     * Moves the Gaia tallies with a vote added or dropped after they were counted
+     *
+     * @method adjustCounts
+     * @param {String} text
+     * @param {Number} delta
+     * @private
+     */
+    adjustCounts(text, delta) {
+        if (!this.serverCounts) return;
+        let key = text === AGREE_TEXT ? 'agree' : 'disagree';
+        this.serverCounts = { ...this.serverCounts, [key]: Math.max(0, this.serverCounts[key] + delta) };
     }
 
     /**
@@ -148,6 +197,7 @@ export default class ThreadVotes {
      * @public
      */
     get agreeCount() {
+        if (this.serverCounts) return this.serverCounts.agree;
         return this.votes.filter((vote) => vote.text === AGREE_TEXT).length;
     }
 
@@ -157,6 +207,7 @@ export default class ThreadVotes {
      * @public
      */
     get disagreeCount() {
+        if (this.serverCounts) return this.serverCounts.disagree;
         return this.votes.filter((vote) => vote.text === DISAGREE_TEXT).length;
     }
 
@@ -166,7 +217,7 @@ export default class ThreadVotes {
      * @public
      */
     get total() {
-        return this.votes.length;
+        return this.agreeCount + this.disagreeCount;
     }
 
     /**
