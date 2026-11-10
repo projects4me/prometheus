@@ -1,20 +1,45 @@
-// QuickList toolbar. Not imported yet: the assemble issue imports it.
+// QuickList toolbar. Controls wrap inside the box at any width; long labels truncate.
 .quick-list-toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
+  max-width: 100%;
   padding: 0.4rem 0;
+
+  .quick-list-toolbar-start {
+    min-width: 0;
+  }
 
   .quick-list-toolbar-menus {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: flex-end;
     gap: 0.5rem;
+    min-width: 0;
+    max-width: 100%;
     margin-left: auto;
+  }
+
+  .app-dropdown {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .app-dropdown .app-dropdown-btn {
     height: auto;
+    max-width: 100%;
     border-radius: 0;
+
+    > span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   .quick-list-toolbar-option {
