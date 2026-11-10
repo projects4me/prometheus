@@ -10,6 +10,7 @@ import { peekOrPush } from 'prometheus/utils/live/collection';
 import ThreadComments from 'prometheus/utils/state/thread-comments';
 import ThreadVotes from 'prometheus/utils/state/thread-votes';
 import ThreadParticipants, { buildParticipants } from 'prometheus/utils/state/thread-participants';
+import ThreadActivities from 'prometheus/utils/state/thread-activities';
 
 /**
  * The controller of one open thread: it owns the thread's comments (their own paged query, replies and the live
@@ -77,6 +78,15 @@ export default class AppProjectConversationPageController extends Controller {
     threadParticipants = new ThreadParticipants({ store: this.store, owner: this });
 
     /**
+     * The newest activities of the open thread (started, edited, issue linked), for the Activity box
+     *
+     * @property threadActivities
+     * @type ThreadActivities
+     * @public
+     */
+    threadActivities = new ThreadActivities({ store: this.store, owner: this, limit: 5 });
+
+    /**
      * The participants of the open thread: its creator, then the distinct authors of its comments or votes
      *
      * @property participants
@@ -110,6 +120,7 @@ export default class AppProjectConversationPageController extends Controller {
      */
     openThread(room, projectId) {
         this.closeThread();
+        this.threadActivities.open(room?.id ?? null);
         this.threadParticipants.open(room?.roomType === 'discussion' ? room.id : null);
         if (room?.roomType === 'vote') {
             this.threadComments.open(null);
@@ -144,6 +155,22 @@ export default class AppProjectConversationPageController extends Controller {
     closeThread() {
         this.hermesDisposer?.();
         this.hermesDisposer = null;
+    }
+
+    /**
+     * Saves the thread's edit through the layout, then reloads the Activity box: the edit recorded activities
+     *
+     * @method updateThread
+     * @param {Prometheus.Models.Conversationroom} conversation
+     * @param {Object} changes { subject, description, linkedIssue }
+     * @returns {Promise}
+     * @public
+     */
+    @action async updateThread(conversation, changes) {
+        await this.layout.updateConversation(conversation, changes);
+        if (!this.isDestroying && !this.isDestroyed) {
+            this.threadActivities.reload();
+        }
     }
 
     /**
