@@ -1,0 +1,27 @@
+{{!-- The short history of a thread: started, edited, issue linked, newest first --}}
+<div class="box box-danger" data-activity-box>
+  <div class="box-header with-border">
+    <h3 class="box-title">{{t "views.app.conversation.thread.activity.title"}}</h3>
+  </div>
+  <div class="box-body">
+    {{#if this.lines.length}}
+      <ul class="list-unstyled thread-activities">
+        {{#each this.lines as |line|}}
+          <li data-activity-row>
+            <small class="text-muted" data-activity-date>{{line.date}}</small>
+            <span data-activity-sentence>{{t line.key user=line.params.user number=line.params.number from=line.params.from to=line.params.to}}</span>
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p class="text-muted" data-activity-empty>{{t "views.app.conversation.thread.activity.empty"}}</p>
+    {{/if}}
+  </div>
+  {{#if @activities.hasMore}}
+    <div class="box-footer">
+      <button type="button" class="btn btn-default btn-sm" data-btn="show-more-activities" {{on "click" this.showMore}}>
+        {{t "views.app.conversation.thread.activity.showMore"}}
+      </button>
+    </div>
+  {{/if}}
+</div>

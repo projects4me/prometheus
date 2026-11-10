@@ -799,7 +799,21 @@
           "linkedIssue": "Linked issue",
           "noLinkedIssue": "No linked issue",
           "createIssue": "Create issue from thread",
-          "participants": "Participants"
+          "participants": "Participants",
+          "activity": {
+            "title": "Activity",
+            "empty": "No activity yet",
+            "showMore": "Show more",
+            "startedThread": "{user} started the thread",
+            "startedVote": "{user} started the vote",
+            "edited": {
+              "subject": "{user} edited the subject",
+              "description": "{user} edited the description"
+            },
+            "linkedIssue": "{user} linked issue #{number}",
+            "changedIssue": "{user} changed the linked issue from #{from} to #{to}",
+            "unlinkedIssue": "{user} cleared the linked issue #{number}"
+          }
         },
         "browser": {
           "title": "Threads",
