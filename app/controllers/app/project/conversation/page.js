@@ -8,6 +8,7 @@ import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { peekOrPush } from 'prometheus/utils/live/collection';
 import ThreadComments from 'prometheus/utils/state/thread-comments';
+import ThreadVotes from 'prometheus/utils/state/thread-votes';
 
 /**
  * The controller of one open thread: it owns the thread's comments (their own paged query, replies and the live
@@ -57,6 +58,15 @@ export default class AppProjectConversationPageController extends Controller {
     threadComments = new ThreadComments({ store: this.store, pageSize: 10, owner: this });
 
     /**
+     * The votes of the open vote thread, loaded with their own query
+     *
+     * @property threadVotes
+     * @type ThreadVotes
+     * @public
+     */
+    threadVotes = new ThreadVotes({ store: this.store, owner: this });
+
+    /**
      * Disposer returned by hermes.register() for the open thread
      *
      * @property hermesDisposer
@@ -66,7 +76,7 @@ export default class AppProjectConversationPageController extends Controller {
     hermesDisposer = null;
 
     /**
-     * Opens a thread: loads its newest comments (discussions only) and listens to its comment events
+     * Opens a thread: loads its newest comments (discussions) or its votes (vote threads) and listens to its comment events
      *
      * @method openThread
      * @param {Prometheus.Models.Conversationroom} room
@@ -76,6 +86,17 @@ export default class AppProjectConversationPageController extends Controller {
      */
     openThread(room, projectId) {
         this.closeThread();
+        if (room?.roomType === 'vote') {
+            this.threadComments.open(null);
+            if (projectId) {
+                this.hermesDisposer = this.hermes.register(this, projectId, {
+                    'conversation.comment.created': this.handleVoteCreated.bind(this),
+                    'conversation.comment.deleted': this.handleVoteDeleted.bind(this)
+                });
+            }
+            return this.threadVotes.open(room.id);
+        }
+        this.threadVotes.open(null);
         if (!room || room.roomType !== 'discussion') {
             return this.threadComments.open(null);
         }
@@ -128,6 +149,46 @@ export default class AppProjectConversationPageController extends Controller {
             this.threadComments.add(comment);
         }
         return comment;
+    }
+
+    /**
+     * Casts the user's vote on the open vote thread and counts it
+     *
+     * @method castVote
+     * @param {String} text `I agree` or `I disagree`
+     * @returns {Promise}
+     * @public
+     */
+    @action async castVote(text) {
+        let roomId = this.threadVotes.roomId;
+        if (!roomId) return;
+        let comment = await this.layout.vote(text, roomId);
+        if (this.isDestroying || this.isDestroyed || !comment || this.threadVotes.roomId !== roomId) return;
+        this.threadVotes.add(comment);
+    }
+
+    /**
+     * Counts a vote created live in the open vote thread
+     *
+     * @method handleVoteCreated
+     * @param {Object} envelope Domain-event envelope
+     * @public
+     */
+    handleVoteCreated(envelope) {
+        let roomId = envelope?.changes?.relatedId || envelope?.meta?.relatedId || envelope?.meta?.conversationId;
+        if (!roomId || roomId !== this.threadVotes.roomId) return;
+        this.threadVotes.add({ ...envelope.changes, id: envelope.resource.id });
+    }
+
+    /**
+     * Stops counting a vote comment deleted live
+     *
+     * @method handleVoteDeleted
+     * @param {Object} envelope Domain-event envelope
+     * @public
+     */
+    handleVoteDeleted(envelope) {
+        this.threadVotes.remove(envelope?.resource?.id);
     }
 
     /**

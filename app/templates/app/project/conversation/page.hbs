@@ -7,6 +7,8 @@
         @currentUser={{this.layout.currentUser}}
         @toggleVote={{this.layout.toggleVote}}
         @comments={{this.threadComments}}
+        @votes={{this.threadVotes}}
+        @onVote={{this.castVote}}
         @onLoadOlderComments={{this.loadOlderComments}}
         @onReply={{this.postComment}}
         @search={{this.layout.search}}
@@ -15,7 +17,11 @@
       />
     </div>
     <div class="col-md-4">
-      <Conversation::LinkedIssueBox @issue={{this.model.issue}} />
+      {{#if (eq this.model.roomType "vote")}}
+        <Conversation::ResultBox @votes={{this.threadVotes}} @members={{this.layout.membersList}} />
+      {{else}}
+        <Conversation::LinkedIssueBox @issue={{this.model.issue}} />
+      {{/if}}
       {{!-- Room below for the Participants, Create issue and Activity boxes --}}
     </div>
   </div>

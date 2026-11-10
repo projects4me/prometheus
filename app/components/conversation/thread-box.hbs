@@ -50,8 +50,10 @@
     <div class="box-body">
       <p>{{translate-comment @entity.description}}</p>
     </div>
-    {{!-- Body slot by roomType: the vote body plugs in here; until then a vote room shows the description only --}}
-    {{#if this.isDiscussion}}
+    {{!-- Body slot by roomType: the comments of a discussion, the tallies and voters of a vote --}}
+    {{#if this.isVote}}
+      <Conversation::VoteBody @votes={{@votes}} @currentUser={{@currentUser}} @onVote={{@onVote}} />
+    {{else if this.isDiscussion}}
       <Conversation::ThreadComments
         @roomId={{@entity.id}}
         @comments={{@comments.items}}

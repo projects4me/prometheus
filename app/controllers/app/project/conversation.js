@@ -492,8 +492,8 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @method vote
      * @param {String} vote
      * @param {String} relatedId
+     * @returns {Promise<Object>|Boolean} The saved vote comment
      * @public
-     * @todo Check if the user has already voted if so then disable the vote
      */
     @action vote(vote, relatedId) {
         if (relatedId === null) {
@@ -508,15 +508,16 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         });
 
 
-        comment.save().then(function (savedComment) {
+        return comment.save().then(function (savedComment) {
             if(_self.selectedConversation?.id === relatedId) {
                 pushIfMissing(_self.selectedConversation.comments, savedComment);
             } else {
                 pushIfMissing(
-                    _self.listedConversations.find((conversation) => conversation.id === relatedId).comments,
+                    _self.listedConversations.find((conversation) => conversation.id === relatedId)?.comments,
                     savedComment
                 );
             }
+            return savedComment;
         });
     }
 

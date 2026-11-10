@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 
 /**
  * The thread box of the thread page: the thread's header and description, with the body chosen by room type
- * (discussion comments; the vote body plugs in later)
+ * (discussion comments, vote tallies and voters)
  *
  * @class ConversationThreadBoxComponent
  * @namespace Prometheus.Components
@@ -22,7 +22,18 @@ export default class ConversationThreadBoxComponent extends AppComponent {
     @tracked showEditConversationModal = false;
 
     /**
-     * Whether the thread is a discussion (a vote room shows the description only until the vote body is added)
+     * Whether the thread is a vote
+     *
+     * @property isVote
+     * @type Boolean
+     * @public
+     */
+    get isVote() {
+        return this.args.entity?.roomType === 'vote';
+    }
+
+    /**
+     * Whether the thread is a discussion
      *
      * @property isDiscussion
      * @type Boolean
