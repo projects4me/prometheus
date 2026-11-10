@@ -9,6 +9,18 @@ import { action } from '@ember/object';
 import { readAuthLog, clearAuthLog } from 'prometheus/utils/auth/auth-log';
 
 /**
+ * ISO time, or an empty string when the value is not a valid date.
+ *
+ * @param {number|string} t
+ * @return {string}
+ */
+const fmtTime = (t) => {
+    const d = new Date(t);
+
+    return Number.isNaN(d.getTime()) ? '' : d.toISOString();
+};
+
+/**
  * Public auth diagnostics page. Reads only the session service's public API
  * (`isAuthenticated`, `data`) and the auth-log module.
  *
@@ -50,7 +62,7 @@ export default class AuthStatusController extends Controller {
             .slice()
             .reverse()
             .map((e) => ({
-                time: new Date(e.time).toISOString(),
+                time: fmtTime(e.time),
                 tab: e.tab,
                 event: e.event,
                 detail: Object.keys(e.detail || {}).length ? JSON.stringify(e.detail) : '',
@@ -67,14 +79,14 @@ export default class AuthStatusController extends Controller {
         void this.tick;
         const auth = this.session.data?.authenticated || {};
         const expiresAt = auth.expires_at;
-        const seconds = expiresAt ? Math.round((expiresAt - Date.now()) / 1000) : null;
+        const seconds = expiresAt && !Number.isNaN(Number(expiresAt)) ? Math.round((expiresAt - Date.now()) / 1000) : null;
 
         return {
             authenticated: !!this.session.isAuthenticated,
             authenticator: auth.authenticator || '',
             accessToken: auth.access_token ? `…${String(auth.access_token).slice(-4)}` : '',
             hasRefreshToken: !!auth.refresh_token,
-            expiresAt: expiresAt ? new Date(expiresAt).toISOString() : '',
+            expiresAt: fmtTime(expiresAt),
             expiresIn: seconds === null ? '' : `${seconds}s`,
             tokenType: auth.token_type || '',
             scope: auth.scope || '',
@@ -93,7 +105,7 @@ export default class AuthStatusController extends Controller {
         const refresh = last((e) => /^refresh (succeeded|failed)$/.test(e.event));
         const cross = last((e) => /cross-tab/.test(e.event));
         const text = (e) =>
-            e ? `${e.event} ${Object.keys(e.detail || {}).length ? JSON.stringify(e.detail) : ''} (${new Date(e.time).toISOString()})` : '';
+            e ? `${e.event} ${Object.keys(e.detail || {}).length ? JSON.stringify(e.detail) : ''} (${fmtTime(e.time)})` : '';
 
         return { refresh: text(refresh), crossTab: text(cross) };
     }
@@ -115,8 +127,9 @@ export default class AuthStatusController extends Controller {
      */
     @action
     async copyLog() {
+        this.copied = false;
         const text = readAuthLog()
-            .map((e) => `${new Date(e.time).toISOString()} [${e.tab}] ${e.event} ${JSON.stringify(e.detail || {})}`)
+            .map((e) => `${fmtTime(e.time)} [${e.tab}] ${e.event} ${JSON.stringify(e.detail || {})}`)
             .join('\n');
 
         try {
@@ -136,8 +149,8 @@ export default class AuthStatusController extends Controller {
      * @method clearSession
      */
     @action
-    clearSession() {
-        this.session.clearStoredSession();
+    async clearSession() {
+        await this.session.clearStoredSession();
         this._goToSignin();
     }
 

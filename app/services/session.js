@@ -81,7 +81,7 @@ export default ESASession.extend({
             delete this.oldRequestedUrl;
         }
 
-        logAuthEvent('post-auth navigation', { destination: String(destination) });
+        logAuthEvent('post-auth navigation', { destination: String(destination).split('?')[0] });
 
         if (!this._localAuthenticationInProgress) {
             Logger.debug(
@@ -163,16 +163,28 @@ export default ESASession.extend({
     },
 
     /**
-     * Removes the persisted session and the cross-tab refresh lock from
-     * localStorage (used by the public auth status page to recover a stuck
+     * Removes the persisted session (active store) and the cross-tab refresh lock
+     * from localStorage (used by the public auth status page to recover a stuck
      * session). The caller reloads the app afterwards.
      *
      * @method clearStoredSession
      * @public
      */
-    clearStoredSession() {
-        localStorage.removeItem(SESSION_STORAGE_KEY);
-        localStorage.removeItem(LS_LOCK_KEY);
+    async clearStoredSession() {
+        try {
+            // clears whichever store is active (localStorage or the cookie fallback)
+            await this.get('store')?.clear();
+        } catch (e) {
+            // store unavailable
+        }
+
+        [SESSION_STORAGE_KEY, LS_LOCK_KEY].forEach((key) => {
+            try {
+                localStorage.removeItem(key);
+            } catch (e) {
+                // storage unavailable
+            }
+        });
     },
 
     _tokenNeedsRefresh() {
