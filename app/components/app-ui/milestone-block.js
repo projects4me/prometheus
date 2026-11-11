@@ -32,10 +32,10 @@ export default class AppUiMilestoneBlockComponent extends Component {
         // Calculate the progres
         if (totalIssues > 0) {
             let closed = 0;
-            closed += milestone.issues.filterBy('status', 'done').length;
-            closed += milestone.issues.filterBy('status', 'complete').length;
-            closed += milestone.issues.filterBy('status', 'closed').length;
-            closed += milestone.issues.filterBy('status', 'deferred').length;
+            closed += milestone.issues.filter((item) => item.status === 'done').length;
+            closed += milestone.issues.filter((item) => item.status === 'complete').length;
+            closed += milestone.issues.filter((item) => item.status === 'closed').length;
+            closed += milestone.issues.filter((item) => item.status === 'deferred').length;
             progress = _.round((closed / totalIssues) * 100);
         }
 

@@ -15,6 +15,16 @@ import { tracked } from '@glimmer/tracking';
  * @extends WidgetsComponent
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
+/**
+ * A plain array from a record array or a plain array
+ *
+ * @param {Array|Object} list
+ * @returns {Array}
+ */
+function toArray(list) {
+	return typeof list?.toArray === 'function' ? list.toArray() : list ?? [];
+}
+
 export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 	
 	/**
@@ -154,8 +164,8 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 		issueOptions.limit = paginationInfo.pageSize;
 		let issues = await this.store.query('issue', issueOptions);
 		let filteredIssues = this.reApplyFilters(issues, activeFilters);
-		this.filteredData = [...this.filteredData.toArray(), ...filteredIssues];
-		this.originalData = [...this.originalData.toArray(), ...issues.toArray()];
+		this.filteredData = [...toArray(this.filteredData), ...filteredIssues];
+		this.originalData = [...toArray(this.originalData), ...issues.toArray()];
 
 		// return OG issues list got from API
 		return {
@@ -172,7 +182,7 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 	 */
 	@action
 	reApplyFilters(data, activeFilters) {
-		let issues = data.toArray();
+		let issues = [...toArray(data)];
 
 		activeFilters?.forEach(filter => {
 			const filterCallback = this.filterCallbacks[filter];

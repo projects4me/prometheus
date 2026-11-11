@@ -1,6 +1,7 @@
 /*
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
+import { objectAt } from 'prometheus/utils/array/object-at';
 
 /**
  * This utility class is used to convert model objects to tree
@@ -32,7 +33,7 @@ export default {
         // Convert the model to flat object
         for (let i=0;i<length;i++)
         {
-            node = model.objectAt(i);
+            node = objectAt(model, i);
             temp[node.get('id')] = {id:node.get('id'),name:node.get('name')};
             if (!(node.get('parentId') === '' || node.get('parentId') === undefined || node.get('parentId') === null))
             {

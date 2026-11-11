@@ -7,6 +7,7 @@ import { inject } from '@ember/service';
 import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The wiki route
  *
@@ -123,11 +124,11 @@ export default App.extend({
 
         // Set project
         if (projectId !== null) {
-            projectName = model.project.findBy('id', projectId).get('name');
+            projectName = model.project.find((item) => item.id === projectId).get('name');
             controller.set('projectId', projectId);
             controller.set('projectName', projectName);
         }
-        controller.set('model', model.project.objectAt(0));
+        controller.set('model', objectAt(model.project, 0));
 
         // Set issues
         controller.set('issuetime', model.issues);
@@ -150,7 +151,7 @@ export default App.extend({
      */
     loadMilestones(milestones, issues, controller) {
         milestones.forEach(function (milestone) {
-            let milestoneIssues = issues?.filterBy('milestoneId', milestone.get('id'));
+            let milestoneIssues = issues?.filter((item) => item.milestoneId === milestone.get('id'));
             if (milestoneIssues !== undefined) {
                 milestone.get('issues').pushObjects(milestoneIssues);
             }

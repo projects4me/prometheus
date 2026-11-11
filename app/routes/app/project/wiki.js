@@ -10,6 +10,7 @@ import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 import { inject } from '@ember/service';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The project wiki page route, it is loaded when a user tried to navigate to
  * the route :projectId e.g. acme.projects4.me/app/wiki/:projectId
@@ -117,7 +118,7 @@ export default App.extend({
         let temp = null;
 
         for (let i = 0; i < tags.length; i++) {
-            temp = tags.objectAt(i);
+            temp = objectAt(tags, i);
             tagList[i] = { label: temp.get('tag'), value: temp.get('id') };
         }
 
@@ -146,7 +147,7 @@ export default App.extend({
 
         wikiList[0] = { label: htmlSafe(intl.t("global.blank")), value: null };
         for (let i = 1; i <= wikis.length; i++) {
-            temp = wikis.objectAt(i - 1);
+            temp = objectAt(wikis, i - 1);
             wikiList[i] = { label: temp.get('name'), value: temp.get('id') };
         }
 
@@ -165,7 +166,7 @@ export default App.extend({
 
         // We need the direction
         if (this.get('router.currentRouteName') === 'app.project.wiki.index') {
-            if (wikis.findBy('name', 'Home') !== undefined) {
+            if (wikis.find((item) => item.name === 'Home') !== undefined) {
                 this.router.transitionTo('app.project.wiki.page', 'Home');
             }
         }

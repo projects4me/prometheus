@@ -8,6 +8,7 @@ import { getOwner, setOwner } from '@ember/application';
 import { htmlSafe } from '@ember/template';
 import { issueStatusLabel, issueTypeRecordLabel } from 'prometheus/utils/issue-status/label';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * This utility class is used to format data
  *
@@ -68,7 +69,7 @@ export default class Format {
         }
 
         for (let i = 0; i < count; i++) {
-            temp = model.objectAt(i);
+            temp = objectAt(model, i);
             if (map) {
                 list[i] = _.mapValues(map, function (o) { return temp.get(o) });
             } else {

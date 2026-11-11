@@ -5,6 +5,7 @@
 import App from "prometheus/routes/app";
 import { inject } from '@ember/service';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The module route, it is loaded when a user tried to navigate to the route
  * :wikiName e.g. acme.projects4.me/app/wiki/1/Home
@@ -73,7 +74,7 @@ export default App.extend({
      * @param {Prometheus.Models.Wiki} model 
      */
     setupController(controller, model) {
-        model = model.objectAt(0);
+        model = objectAt(model, 0);
         let wikiName = this.paramsFor('app.project.wiki.page').wiki_name;
 
         controller.set('model', model);
@@ -82,9 +83,9 @@ export default App.extend({
             let tagCount = tags.get('length');
             let selectedTags = [];
             for (let i = 0; i < tagCount; i++) {
-                selectedTags[i] = { label: tags.objectAt(i).get('tag'), value: tags.objectAt(i).get('id') };
+                selectedTags[i] = { label: objectAt(tags, i).get('tag'), value: objectAt(tags, i).get('id') };
             }
-            controller.set('iVoted', model.get('vote').filterBy('createdUser', "1").length);
+            controller.set('iVoted', model.get('vote').filter((item) => item.createdUser === "1").length);
             controller.set('selectedTags', selectedTags);
             controller.set('parentId', model.get('parentId'));
         }

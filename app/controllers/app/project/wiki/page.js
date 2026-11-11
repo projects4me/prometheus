@@ -10,6 +10,7 @@ import $ from 'jquery';
 import { htmlSafe } from '@ember/template';
 import { action } from '@ember/object';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The controller for the wiki page route, it is loaded when a user tried to
  * navigate to a particular wiki page
@@ -302,7 +303,7 @@ export default class AppProjectWikiPageController extends PrometheusController {
         };
         Logger.debug('Retrieving upload with options ' + options);
         this.store.query('upload', options).then(function (data) {
-            let downloadLink = data.objectAt(0).get('downloadLink');
+            let downloadLink = objectAt(data, 0).get('downloadLink');
             Logger.debug('Download link found : ' + downloadLink);
 
             // navigate user to the page for download
@@ -333,7 +334,7 @@ export default class AppProjectWikiPageController extends PrometheusController {
         };
         Logger.debug('Retrieving upload with options ' + options);
         _self.get('store').query('upload', options).then(function (contents) {
-            let downloadLink = contents.objectAt(0).get('downloadLink');
+            let downloadLink = objectAt(contents, 0).get('downloadLink');
             Logger.debug('Download link found : ' + downloadLink);
 
             let path = _self.get('store').adapterFor('upload').host + '/preview/get/' + downloadLink;

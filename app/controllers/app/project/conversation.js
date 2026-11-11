@@ -845,7 +845,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
         let rooms = this.selectedConversation
             ? [this.selectedConversation, ...(this.listedConversations || [])]
             : (this.listedConversations || []);
-        return rooms.find((room) => room[collectionName]?.findBy('id', resourceId)) || null;
+        return rooms.find((room) => room[collectionName]?.find((item) => item.id === resourceId)) || null;
     }
 
     /**

@@ -270,7 +270,7 @@ export default class AppProjectGanttController extends PrometheusController {
 	 */
 	findIssueById(issueId) {
 		for (let milestone of this.milestones || []) {
-			let issue = milestone.issues?.findBy('id', issueId);
+			let issue = milestone.issues?.find((item) => item.id === issueId);
 			if (issue) {
 				return issue;
 			}
@@ -288,7 +288,7 @@ export default class AppProjectGanttController extends PrometheusController {
 	 */
 	findLoadedIssue(issueId) {
 		for (let milestone of this.milestones || []) {
-			let issue = milestone.issues?.findBy('id', issueId);
+			let issue = milestone.issues?.find((item) => item.id === issueId);
 			if (issue) {
 				return issue;
 			}

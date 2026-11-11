@@ -14,6 +14,7 @@ import { refreshView } from 'prometheus/utils/live/reload';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 import { htmlSafe } from '@ember/template';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
 
 /**
@@ -519,7 +520,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
         (laneMilestoneId == "" || laneMilestoneId === "backlog") && (laneMilestoneId = null);
 
         let milestone = this.findMilestoneById(issueMilestoneId);
-        let issue = milestone?.issues?.findBy('id', issueId)
+        let issue = milestone?.issues?.find((item) => item.id === issueId)
             || this.findIssueAcrossMilestones(issueId)
             || this.store.peekRecord('issue', issueId);
         let targetMilestone = this.findMilestoneById(laneMilestoneId);
@@ -555,10 +556,10 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      */
     findMilestoneById(milestoneId) {
         if (milestoneId == null || milestoneId === '' || milestoneId === 'backlog') {
-            return this.milestones.findBy('milestoneType', 'backlog')
-                || this.milestones.findBy('id', null);
+            return this.milestones.find((item) => item.milestoneType === 'backlog')
+                || this.milestones.find((item) => item.id === null);
         }
-        return this.milestones.findBy('id', milestoneId);
+        return this.milestones.find((item) => item.id === milestoneId);
     }
 
     /**
@@ -571,7 +572,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      */
     findIssueAcrossMilestones(issueId) {
         for (let milestone of this.milestones || []) {
-            let issue = milestone.issues?.findBy('id', issueId);
+            let issue = milestone.issues?.find((item) => item.id === issueId);
             if (issue) {
                 return issue;
             }
@@ -700,7 +701,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
         if (!milestone) {
             return;
         }
-        let backlog = this.milestones.findBy('milestoneType', 'backlog');
+        let backlog = this.milestones.find((item) => item.milestoneType === 'backlog');
         let index = backlog ? this.milestones.indexOf(backlog) : this.milestones.length;
         insertAtIfMissing(this.milestones, milestone, index);
     }
@@ -714,9 +715,9 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      * @public
      */
     handleMilestoneCompleted(envelope) {
-        let milestone = this.milestones?.findBy('id', envelope.resource.id);
+        let milestone = this.milestones?.find((item) => item.id === envelope.resource.id);
         if (milestone) {
-            this.milestones.removeObject(milestone);
+            this.set('milestones', this.milestones.filter((item) => item !== milestone));
         }
     }
 
@@ -746,7 +747,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      */
     removeIssueFromBoard(issueId) {
         for (let milestone of this.milestones || []) {
-            let issue = milestone.issues?.findBy('id', issueId);
+            let issue = milestone.issues?.find((item) => item.id === issueId);
             if (issue) {
                 milestone.issues.removeObject(issue);
             }
@@ -823,8 +824,8 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
         let milestoneEls = [];
         let milestoneEl1 = elTo.closest('div.milestone.box-body');
         let milestoneEl2 = elFrom.closest('div.milestone.box-body');
-        (milestoneEl1 !== milestoneEl2) && (milestoneEls.pushObject(milestoneEl1));
-        milestoneEls.pushObject(milestoneEl2);
+        (milestoneEl1 !== milestoneEl2) && (milestoneEls.push(milestoneEl1));
+        milestoneEls.push(milestoneEl2);
         Logger.debug("-AppProjectBoardController::postUpdateProcessing");
     }
 
@@ -1108,7 +1109,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
         try {
             if(this.projectData === null) {
                 let project = await this.store.query('project', _projectOptions);
-                this.projectData = project.objectAt(0);
+                this.projectData = objectAt(project, 0);
             }
             
             if(this.projectData.issuestatuses === undefined || this.projectData.issuestatuses.length === 0) {
@@ -1120,7 +1121,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
             }
 
             let issueResult = await this.store.query('issue', options);
-            let fullIssue = issueResult.objectAt(0);
+            let fullIssue = objectAt(issueResult, 0);
 
             this.selectedIssueDetails = fullIssue;
             this.issueTypes = this.projectData.issuetypes || [];
@@ -1167,7 +1168,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
         try {
             milestone.set('status', 'completed');
             await milestone.save();
-            this.milestones.removeObject(milestone);
+            this.set('milestones', this.milestones.filter((item) => item !== milestone));
             messenger.update({
                 message: this.intl.t('views.app.board.milestone.markComplete.success', {
                     milestoneName: milestone.name
@@ -1214,10 +1215,10 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      */
     @action getCompletedIssuesCount(milestone) {
 		let closed = 0;
-		closed += milestone.issues.filterBy('status', 'done').length;
-		closed += milestone.issues.filterBy('status', 'complete').length;
-		closed += milestone.issues.filterBy('status', 'closed').length;
-		closed += milestone.issues.filterBy('status', 'deferred').length;
+		closed += milestone.issues.filter((item) => item.status === 'done').length;
+		closed += milestone.issues.filter((item) => item.status === 'complete').length;
+		closed += milestone.issues.filter((item) => item.status === 'closed').length;
+		closed += milestone.issues.filter((item) => item.status === 'deferred').length;
 		return closed;
     }
 }

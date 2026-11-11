@@ -364,7 +364,7 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 		});
 
 		term = _.startCase(term);
-		filteredIssueTypes.pushObject({
+		filteredIssueTypes.push({
 			label: term,
 			value: term
 		});

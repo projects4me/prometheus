@@ -2,6 +2,7 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import AppComponent from 'prometheus/components/app';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * This component previews a file of an issue in a modal. It picks the view from the mime type of the file
  * and requests a one-time preview token only for the types that can be previewed.
@@ -103,7 +104,7 @@ export default class IssueFilePreviewComponent extends AppComponent {
             if (this.isDestroying || this.isDestroyed || this.requestedFile !== file) {
                 return;
             }
-            const upload = uploads.objectAt(0);
+            const upload = objectAt(uploads, 0);
             const token = upload && upload.get('downloadLink');
             if (!token) {
                 this.failed = true;

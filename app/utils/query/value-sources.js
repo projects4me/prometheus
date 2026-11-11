@@ -5,6 +5,7 @@
 import Format from 'prometheus/utils/data/format';
 import { issueStatusLabel, issueTypeRecordLabel } from 'prometheus/utils/issue-status/label';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The value sources of ezSearch fields, by name. A field in `views.<Module>.search` of the metadata
  * names one in `values: { source, ...params }`; the query-schema service calls it to list the values
@@ -70,7 +71,7 @@ function project(context) {
             limit: -1,
         });
 
-        return projects.objectAt(0) ?? null;
+        return objectAt(projects, 0) ?? null;
     });
 }
 

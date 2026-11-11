@@ -7,6 +7,7 @@ import AppComponent from 'prometheus/components/app';
 import RSVP from 'rsvp';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * This component is used to render the issue details.
  *
@@ -492,7 +493,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         };
         Logger.debug('Retrieving upload with options ' + options);
         this.store.query('upload', options).then(function (data) {
-            let downloadLink = data.objectAt(0).get('downloadLink');
+            let downloadLink = objectAt(data, 0).get('downloadLink');
             Logger.debug('Download link found : ' + downloadLink);
 
             let path = _self.store.adapterFor('upload').host + '/download/get/' + downloadLink;
@@ -952,7 +953,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             hideAfter: false
         });
         issue.set('status', newStatus);
-        let statusId = this.args.issueStatuses.findBy('name', newStatus).id;
+        let statusId = this.args.issueStatuses.find((item) => item.name === newStatus).id;
         issue.set('statusId', statusId);
         issue.save().then(() => {
             messenger.update({

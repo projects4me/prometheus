@@ -5,6 +5,7 @@
 import App from 'prometheus/routes/app';
 import { inject as service } from '@ember/service';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The route of one idea, its conversation and plan boxes are built by separate issues
  *
@@ -38,7 +39,7 @@ export default class AppProjectIdeaPageRoute extends App {
                 query: `((Idea.id : ${params.idea_id}) AND (Idea.projectId : ${projectId}))`,
                 limit: -1
             });
-            return ideas.objectAt(0);
+            return objectAt(ideas, 0);
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });
         }

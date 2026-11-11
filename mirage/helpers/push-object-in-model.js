@@ -7,5 +7,5 @@
  */
  export default function pushObjectInModel(model, object) {
     model.models.length = 0;
-    model.models.pushObject(object);
+    model.models.push(object);
 }

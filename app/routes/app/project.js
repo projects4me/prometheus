@@ -8,6 +8,7 @@ import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 import { inject } from '@ember/service';
 
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The wiki route
  *
@@ -68,15 +69,15 @@ export default App.extend({
             });
         });
 
-        if (project.objectAt(0) != undefined &&
-            project.objectAt(0).get('members') != undefined) {
-            _self.set('members', project.objectAt(0).get('members'));
-            _self.set('issuetypes', project.objectAt(0).get('issuetypes'));
+        if (objectAt(project, 0) != undefined &&
+            objectAt(project, 0).get('members') != undefined) {
+            _self.set('members', objectAt(project, 0).get('members'));
+            _self.set('issuetypes', objectAt(project, 0).get('issuetypes'));
         }
 
-        if (project.objectAt(0) != undefined &&
-            project.objectAt(0).get('issuestatuses').length !== 0) {
-            _self.set('issuestatuses', project.objectAt(0).get('issuestatuses'));
+        if (objectAt(project, 0) != undefined &&
+            objectAt(project, 0).get('issuestatuses').length !== 0) {
+            _self.set('issuestatuses', objectAt(project, 0).get('issuestatuses'));
         } else {
             let issueStatuses = await this.store.query('issuestatus', {
                 query: `(Issuestatus.system : 1)`,
@@ -86,10 +87,10 @@ export default App.extend({
         }
 
         // set projectId in trackedProject service
-        let projectId = project.objectAt(0).id;
+        let projectId = objectAt(project, 0).id;
         _self.trackedProject.setProjectId(projectId);
 
-        this.breadcrumb.setTitle(this.routeName, project.objectAt(0).get('name'));
+        this.breadcrumb.setTitle(this.routeName, objectAt(project, 0).get('name'));
     },
 
     afterModel() {
@@ -141,11 +142,11 @@ export default App.extend({
 
         _self.store.query('project', options).then(function (data) {
             if (projectId !== null) {
-                projectName = data.findBy('id', projectId).get('name');
+                projectName = data.find((item) => item.id === projectId).get('name');
                 controller.set('projectId', projectId);
                 controller.set('projectName', projectName);
             }
-            controller.set('model', data.objectAt(0));
+            controller.set('model', objectAt(data, 0));
         });
 
         controller.set('issues', _self.get('issues'));

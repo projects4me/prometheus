@@ -20,17 +20,17 @@ export function getIssuecount(params) {
     {
         if (params[1] === 'open')
         {
-            count += params[0].filterBy('status','new').length;
-            count += params[0].filterBy('status','in_progress').length;
-            count += params[0].filterBy('status','pending').length;
-            count += params[0].filterBy('status','feedback').length;
+            count += params[0].filter((item) => item.status === 'new').length;
+            count += params[0].filter((item) => item.status === 'in_progress').length;
+            count += params[0].filter((item) => item.status === 'pending').length;
+            count += params[0].filter((item) => item.status === 'feedback').length;
         }
         else if (params[1] === 'closed')
         {
-            count += params[0].filterBy('status','done').length;
-            count += params[0].filterBy('status','complete').length;
-            count += params[0].filterBy('status','closed').length;
-            count += params[0].filterBy('status','deferred').length;
+            count += params[0].filter((item) => item.status === 'done').length;
+            count += params[0].filter((item) => item.status === 'complete').length;
+            count += params[0].filter((item) => item.status === 'closed').length;
+            count += params[0].filter((item) => item.status === 'deferred').length;
         }
     }
     return count;

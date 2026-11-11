@@ -168,7 +168,7 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 	 */
 	@action getIssuesCountForStatus(statusName) {
 		let milestone = this.milestone;
-		return milestone.issues.filterBy('status', statusName).length;
+		return milestone.issues.filter((item) => item.status === statusName).length;
 	}
 
 	/**

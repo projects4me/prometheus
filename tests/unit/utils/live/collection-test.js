@@ -5,8 +5,8 @@ module("Unit | Utility | live/collection", function () {
   test("insertAtIfMissing is idempotent by record id", function (assert) {
     let list = {
       items: [],
-      findBy(key, value) {
-        return this.items.find((item) => item[key] === value);
+      find(callback) {
+        return this.items.find(callback);
       },
       insertAt(index, record) {
         this.items.splice(index, 0, record);
@@ -26,8 +26,8 @@ module("Unit | Utility | live/collection", function () {
       includes(record) {
         return this.items.includes(record);
       },
-      findBy(key, value) {
-        return this.items.find((item) => item[key] === value);
+      find(callback) {
+        return this.items.find(callback);
       },
       pushObject(record) {
         this.items.push(record);

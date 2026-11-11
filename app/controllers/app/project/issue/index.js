@@ -11,6 +11,7 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * This controller is used to provide the interaction between the template and
  * the route. The basic features that this controller provide are pagination,
@@ -216,7 +217,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
     @action deleteSearch(search) {
         Logger.debug('Prometheus.Controllers.Project.Issue->deleteSearch');
         let _self = this;
-        let toBeDeleted = _self.get('savedsearches').findBy('id', search.get('id'));
+        let toBeDeleted = _self.get('savedsearches').find((item) => item.id === search.get('id'));
 
         let deleting = new Messenger().post({
             message: htmlSafe(_self.intl.t("views.app.issue.list.savedsearch.delete", { name: search.get('name') })),
@@ -597,7 +598,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
         try {
             if(this.projectData === null) {
                 let project = await this.store.query('project', _projectOptions);
-                this.projectData = project.objectAt(0);
+                this.projectData = objectAt(project, 0);
             }
             
             if(this.projectData.issuestatuses === undefined || this.projectData.issuestatuses.length === 0) {
@@ -609,7 +610,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
             }
 
             let issueResult = await this.store.query('issue', options);
-            let fullIssue = issueResult.objectAt(0);
+            let fullIssue = objectAt(issueResult, 0);
 
             this.selectedIssueDetails = fullIssue;
             this.issueTypes = this.projectData.issuetypes || [];

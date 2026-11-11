@@ -15,7 +15,7 @@ import { helper } from '@ember/component/helper';
  * @todo Handle exception. If possible then make generic
  */
 export function userCreated(params) {
-    return (params[0].filterBy('createdUser',params[1]).length >0 )?true:false;
+    return (params[0].filter((item) => item.createdUser === params[1]).length >0 )?true:false;
 }
 
 /**

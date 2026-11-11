@@ -51,10 +51,10 @@ export default Component.extend({
         if (milestone.get('issues.length') > 0)
         {
             let closed = 0;
-            closed += milestone.get('issues').filterBy('status','done').length;
-            closed += milestone.get('issues').filterBy('status','complete').length;
-            closed += milestone.get('issues').filterBy('status','closed').length;
-            closed += milestone.get('issues').filterBy('status','deferred').length;
+            closed += milestone.get('issues').filter((item) => item.status === 'done').length;
+            closed += milestone.get('issues').filter((item) => item.status === 'complete').length;
+            closed += milestone.get('issues').filter((item) => item.status === 'closed').length;
+            closed += milestone.get('issues').filter((item) => item.status === 'deferred').length;
             progress = _.round((closed/milestone.get('issues.length')) * 100);
         }
 

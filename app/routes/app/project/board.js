@@ -117,9 +117,9 @@ export default App.extend({
         let milestonesArray = [];
 
         milestones.forEach((milestone) => {
-            milestonesArray.pushObject(milestone);
+            milestonesArray.push(milestone);
         });
-        milestonesArray.pushObject(backlog);
+        milestonesArray.push(backlog);
 
 
         let model = hash({
@@ -190,7 +190,7 @@ export default App.extend({
      * @returns {MilestoneModel} The backlog milestone
      */
     getBacklogMilestone(issues) {
-        let backlog = this.store.peekAll('milestone').findBy('milestoneType', 'backlog');
+        let backlog = this.store.peekAll('milestone').find((item) => item.milestoneType === 'backlog');
         if(!backlog) {
             backlog = this.store.createRecord('milestone', {
             id: null,

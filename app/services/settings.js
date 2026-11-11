@@ -4,6 +4,7 @@
 
 import Service, { inject as service } from '@ember/service';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The settings service is used to maintain all of the system level configurations.
  *
@@ -42,7 +43,7 @@ export default class SettingsService extends Service {
     loadSettings() {
         let _self = this;
         return this.store.findAll('systemsetting').then((settings) => {
-            _self.set('_systemSettings', settings.objectAt(0));
+            _self.set('_systemSettings', objectAt(settings, 0));
         });
     }
 

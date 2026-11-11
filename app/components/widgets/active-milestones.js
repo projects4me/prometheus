@@ -159,11 +159,11 @@ export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 		milestoneOptions.limit = paginationInfo.pageSize;
 		let milestones = await this.store.query('milestone', milestoneOptions);
 		this.filteredData = [
-			...this.filteredData.toArray(),
+			...toMilestoneArray(this.filteredData),
 			...milestones.toArray()
 		];
 		this.originalData = [
-			...this.originalData.toArray(),
+			...toMilestoneArray(this.originalData),
 			...milestones.toArray()
 		];
 		await this.fetchMilestoneOverviews(milestones, { merge: true });

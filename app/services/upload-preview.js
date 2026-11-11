@@ -5,6 +5,7 @@
 import Service from '@ember/service';
 import { inject as service } from '@ember/service';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * Resolves what is needed to show an upload: the address of its full image.
  * Components use this service instead of calling the API themselves.
@@ -26,7 +27,7 @@ export default class UploadPreviewService extends Service {
      */
     async previewUrl(uploadId) {
         let uploads = await this.store.query('upload', { id: uploadId, download: true });
-        let downloadLink = uploads.objectAt(0).get('downloadLink');
+        let downloadLink = objectAt(uploads, 0).get('downloadLink');
         return this.store.adapterFor('upload').host + '/preview/get/' + downloadLink;
     }
 }

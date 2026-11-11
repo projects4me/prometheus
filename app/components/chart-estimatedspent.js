@@ -6,6 +6,7 @@ import _ from "lodash";
 import Component from '@ember/component';
 import { inject } from '@ember/service';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * This component is used to render the issue ratio chart in the application
  *
@@ -152,23 +153,23 @@ export default Component.extend({
 
         for (let i=0; i<issuesCount;i++)
         {
-            issue = issues.objectAt(i);
+            issue = objectAt(issues, i);
             estimated = issue.get('estimated');
             spent = issue.get('spent');
             estimatedHours = 0;
             if (estimated !== undefined)
             {
-                estimatedHours = _.sum(estimated.getEach('days').map(Number)) * 24;
-                estimatedHours += _.sum(estimated.getEach('hours').map(Number));
-                estimatedHours += _.sum(estimated.getEach('minutes').map(Number)) / 60;
+                estimatedHours = _.sum(estimated.map((item) => item.days).map(Number)) * 24;
+                estimatedHours += _.sum(estimated.map((item) => item.hours).map(Number));
+                estimatedHours += _.sum(estimated.map((item) => item.minutes).map(Number)) / 60;
             }
 
             spentHours = 0;
             if(spent !== undefined)
             {
-                spentHours = _.sum(spent.getEach('days').map(Number)) * 24;
-                spentHours += _.sum(spent.getEach('hours').map(Number));
-                spentHours += _.sum(spent.getEach('minutes').map(Number)) / 60;
+                spentHours = _.sum(spent.map((item) => item.days).map(Number)) * 24;
+                spentHours += _.sum(spent.map((item) => item.hours).map(Number));
+                spentHours += _.sum(spent.map((item) => item.minutes).map(Number)) / 60;
             }
 
             data.labels[i] = "#"+issue.get('issueNumber');

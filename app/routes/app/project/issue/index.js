@@ -7,6 +7,7 @@ import { inject } from '@ember/service';
 import { hashSettled } from 'rsvp';
 import extractHashSettled from "prometheus/utils/rsvp/extract-hash-settled";
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The issues route
  *
@@ -150,7 +151,7 @@ export default App.extend({
             _self.errorManager.handleError(error, { moduleName: "project" })
         );
 
-        const projectData = project?.objectAt(0);
+        const projectData = objectAt(project, 0);
         if (projectData) {
             _self.set('issueTypes', projectData.get('issuetypes'));
             _self.set('issueStatuses', projectData.get('issuestatuses'));

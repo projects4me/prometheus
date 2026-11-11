@@ -91,10 +91,10 @@ export default class GanttRowComponent extends Component {
         }
         
         let closed = 0;
-        closed += this.args.milestone.issues.filterBy('status', 'done').length;
-        closed += this.args.milestone.issues.filterBy('status', 'complete').length;
-        closed += this.args.milestone.issues.filterBy('status', 'closed').length;
-        closed += this.args.milestone.issues.filterBy('status', 'deferred').length;
+        closed += this.args.milestone.issues.filter((item) => item.status === 'done').length;
+        closed += this.args.milestone.issues.filter((item) => item.status === 'complete').length;
+        closed += this.args.milestone.issues.filter((item) => item.status === 'closed').length;
+        closed += this.args.milestone.issues.filter((item) => item.status === 'deferred').length;
         
         return closed;
     }
