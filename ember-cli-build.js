@@ -16,6 +16,10 @@ module.exports = function (defaults) {
             app: new MergeTrees(['app', new BundledTranslations('translations')]),
         },
         // Add options here
+        // ember-concurrency is a v2 addon: it needs the async-arrow task transform to compile task(async () => {})
+        babel: {
+            plugins: [require.resolve('ember-concurrency/async-arrow-task-transform')]
+        },
         sassOptions: {
             implementation: sass
         },

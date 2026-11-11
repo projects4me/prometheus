@@ -347,7 +347,7 @@ export default class AppRolePageController extends PrometheusCreateController {
      * @method updatePermission
      * @protected
      */
-    @(task(function* () {
+    updatePermission = task(async () => {
         let listEl = document.querySelector('[data-role="permissions"]');
         let permissions = this.getChangedPermissions();
 
@@ -365,7 +365,7 @@ export default class AppRolePageController extends PrometheusCreateController {
                 ? listEl.querySelector(`[data-module-resource="${permission.resourceName}"]`)
                 : null;
             if (permissionEl) {
-                yield this.activateTabForPermission(permissionEl);
+                await this.activateTabForPermission(permissionEl);
                 permissionEl.classList.add("light-gray");
                 this.scrollToPermission(permissionEl);
             }
@@ -373,14 +373,14 @@ export default class AppRolePageController extends PrometheusCreateController {
             this.permissionsState[moduleName][permission.resourceAlias] = this.updatePermissionTask.perform(permission, moduleName, permissions.length);
 
             this.updatePermissionState(moduleName, permission.resourceAlias, null, null);
-            yield this.permissionsState[moduleName][permission.resourceAlias];
+            await this.permissionsState[moduleName][permission.resourceAlias];
 
             if (this.permissionsState[moduleName][permission.resourceAlias].isErrored) {
                 this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
             }
 
             let delay = this.getDelay(permissions.length)
-            yield timeout(delay);
+            await timeout(delay);
 
             this.updatePermissionState(moduleName, permission.resourceAlias, null, false);
             if (permissionEl) {
@@ -393,9 +393,9 @@ export default class AppRolePageController extends PrometheusCreateController {
         // Refresh list-card access % from the role's current permission catalog.
         this.syncListCardCoverage();
 
-        yield this.scrollToLatestCancelledPermission(listEl);
+        await this.scrollToLatestCancelledPermission(listEl);
         this.showMessages();
-    })) updatePermission
+    });
 
     /**
      * Push this role's permissions into the list controller so card coverage
@@ -421,21 +421,21 @@ export default class AppRolePageController extends PrometheusCreateController {
      * @param {Number} permissionsCount Count of permissions that are to be updated.
      * @method updatePermissionTask
      */
-    @(task(function* (permission, moduleName, permissionsCount) {
+    updatePermissionTask = task(async (permission, moduleName, permissionsCount) => {
         let delay = this.getDelay(permissionsCount);
         try {
-            yield timeout(delay);
+            await timeout(delay);
             permission.shouldCreate = !permission.roleId;
             if (!permission.roleId) {
                 permission.roleId = this.model.id;
             }
-            yield permission.save();
-            yield timeout(delay);
+            await permission.save();
+            await timeout(delay);
         } catch (e) {
-            yield timeout(delay);
+            await timeout(delay);
             this.updatePermissionState(moduleName, permission.resourceAlias, true, false);
         }
-    })) updatePermissionTask
+    });
 
     /**
      * This function update the state of the permission by checking the result of the permission.

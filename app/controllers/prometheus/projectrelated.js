@@ -2,22 +2,25 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Mixin from '@ember/object/mixin';
+import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { inject as injectController } from '@ember/controller';
-import { computed } from '@ember/object';
 import { task, timeout } from 'ember-concurrency';
 import RSVP from 'rsvp';
 
 /**
- * This controller provides the base
+ * This controller provides the base of the controllers that work on the data of a project: the issue, member
+ * lists of the project controller and the # issue search of the editors.
  *
- * @class ProjectRelated
- * @namespace Prometheus.Mixins
+ * It is a native class, not a mixin, because ember-concurrency only compiles `task(async () => {})` on a class
+ * property.
+ *
+ * @class ProjectRelatedController
+ * @namespace Prometheus.Controllers
  * @module Prometheus
+ * @extends Prometheus.Controllers.PrometheusCreateController
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-/* eslint-disable ember/no-new-mixins */ 
-export default Mixin.create({
+export default class ProjectRelatedController extends PrometheusCreateController {
 
     /**
      * This is the controller of the project, we are injecting it in order to
@@ -25,36 +28,34 @@ export default Mixin.create({
      *
      * @property projectController
      * @type Prometheus.Controllers.App.Project
-     * @for ProjectRelated
+     * @for ProjectRelatedController
      * @public
      */
-    projectController: injectController('app.project'),
+    @injectController('app.project') projectController;
 
     /**
-     * This is a computed property in which gets the list of issues
-     * associated with a project loaded by the project controller
+     * The list of issues associated with a project loaded by the project controller
      *
      * @property issuesList
      * @type Array
-     * @for ProjectRelated
+     * @for ProjectRelatedController
      * @private
      */
-    issuesList: computed('projectController.issuesList', function(){
+    get issuesList() {
         return this.projectController.get('issuesList');
-    }),
+    }
 
     /**
-     * This is a computed property in which gets the list of user
-     * associated with a project
+     * The list of users associated with a project
      *
-     * @property memberList
+     * @property membersList
      * @type Array
-     * @for ProjectRelated
+     * @for ProjectRelatedController
      * @private
      */
-    membersList: computed('projectController.membersList', function(){
+    get membersList() {
         return this.projectController.get('membersList');
-    }),
+    }
 
     /**
      * This function loads the search data
@@ -62,20 +63,20 @@ export default Mixin.create({
      * @param query
      * @return {RSVP.Promise|Test.Promise|*}
      */
-     loadSearchData(query) {
-        let _self = this;
+    loadSearchData(query) {
         let projectId = this.trackedProject.getProjectId();
         let options = {
             fields: 'Issue.id,Issue.issueNumber,Issue.subject,Issue.status,Issue.priority,Issue.projectShortcode',
-            query: '((Issue.issueNumber CONTAINS ' + query +') AND (Issue.projectId : '+ projectId +'))',
+            query: '((Issue.issueNumber CONTAINS ' + query + ') AND (Issue.projectId : ' + projectId + '))',
             limit: 5,
-            sort:'Issue.issueNumber',
+            sort: 'Issue.issueNumber',
             order: 'DESC'
         };
         return new RSVP.Promise((resolve) => {
-            resolve(_self.get('store').query('issue', options));
+            resolve(this.store.query('issue', options));
         });
-    },
+    }
+
     /**
      * This is the task that is used to perform the search.
      *
@@ -83,9 +84,8 @@ export default Mixin.create({
      * @type task
      * @public
      */
-    search: task(function* (query) {
-        yield timeout(500);
-       return this.loadSearchData(query);
-    })
-
-});
+    search = task(async (query) => {
+        await timeout(500);
+        return this.loadSearchData(query);
+    });
+}

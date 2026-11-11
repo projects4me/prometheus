@@ -3,7 +3,6 @@
  */
 
 import AppProjectWikiCreateController from "prometheus/controllers/app/project/wiki/create";
-import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import _ from "lodash";
 import $ from 'jquery';
 import { htmlSafe } from '@ember/template';
@@ -19,7 +18,7 @@ import { action } from '@ember/object';
  * @module App.Project.Wiki
  * @extends Prometheus
  */
-export default class AppProjectWikiEditController extends AppProjectWikiCreateController.extend(ProjectRelated) {
+export default class AppProjectWikiEditController extends AppProjectWikiCreateController {
 
     /**
      * This object holds all of the information that we need to create our schema and also need to 

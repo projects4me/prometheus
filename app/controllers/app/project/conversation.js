@@ -2,7 +2,6 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import PrometheusCreateController from "prometheus/controllers/prometheus/create";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import Evented from '@ember/object/evented';
 import $ from "jquery";
@@ -32,7 +31,7 @@ import {
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class AppProjectConversationController extends PrometheusCreateController.extend(ProjectRelated, Evented) {
+export default class AppProjectConversationController extends ProjectRelated.extend(Evented) {
 
     /**
      * This object holds all of the information that we need to create our schema and also need to 
@@ -271,8 +270,8 @@ export default class AppProjectConversationController extends PrometheusCreateCo
      * @type {Task}
      * @public
      */
-    @(task(function* (query) {
-        yield timeout(300);
+    linkIssueSearch = task(async (query) => {
+        await timeout(300);
         let projectId = this.projectId;
         let baseQuery = `(Issue.projectId : ${projectId}) AND (Issue.conversationRoomId NULL)`;
         let searchClause = query && String(query).trim()
@@ -284,7 +283,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             sort: 'Issue.issueNumber',
             order: 'DESC'
         };
-        let data = yield this.store.query('issue', options);
+        let data = await this.store.query('issue', options);
         let map = {
             id: 'id',
             name: 'subject',
@@ -293,7 +292,7 @@ export default class AppProjectConversationController extends PrometheusCreateCo
             project: 'project'
         };
         return (new format(this)).getSelectList(data, map);
-    })) linkIssueSearch;
+    });
 
     /**
      * This function is used to create a comment on the conversation.

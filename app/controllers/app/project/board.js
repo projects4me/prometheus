@@ -2,7 +2,6 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import PrometheusCreateController from "prometheus/controllers/prometheus/create";
 import { computed, action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import {inject as controller } from '@ember/controller';
@@ -27,7 +26,7 @@ const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class AppProjectBoardController extends PrometheusCreateController.extend(ProjectRelated) {
+export default class AppProjectBoardController extends ProjectRelated {
 
     /**
      * Hermes socket client used to register board live events.

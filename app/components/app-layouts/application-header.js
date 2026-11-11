@@ -171,9 +171,8 @@ export default class ApplicationHeaderComponent extends AppComponent {
      * @for ApplicationHeader
      * @public
      */
-    @(task(function* (query) {
-        yield timeout(500);
-        let _self = this;
+    search = task(async (query) => {
+        await timeout(500);
         let map = {
             id: 'id',
             name: 'subject',
@@ -181,10 +180,9 @@ export default class ApplicationHeaderComponent extends AppComponent {
             status: 'status',
             project: 'project'
         };
-        return _self.loadSearchData(query).then(function (data) {
-            return (new format(_self)).getSelectList(data, map);
-        });
-    })) search
+        const data = await this.loadSearchData(query);
+        return (new format(this)).getSelectList(data, map);
+    });
 
     /**
      * This function is used to select a searched item

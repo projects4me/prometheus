@@ -2,7 +2,6 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import PrometheusCreateController from "prometheus/controllers/prometheus/create";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { inject as controller } from '@ember/controller';
 import { computed } from '@ember/object';
@@ -20,7 +19,7 @@ import { htmlSafe } from '@ember/template';
  * @extends Prometheus
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class AppProjectWikiCreateController extends PrometheusCreateController.extend(ProjectRelated) {
+export default class AppProjectWikiCreateController extends ProjectRelated {
 
     /**
      * This object holds all of the information that we need to create our schema and also need to 
