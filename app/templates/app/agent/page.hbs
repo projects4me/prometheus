@@ -188,7 +188,7 @@
             </div>
             <div class="box-body agent-activities">
               <AppUi::Timeline @activities={{this.groupedActivities}} @dataKey="data" as |key|>
-                {{moment-format key "Do MMM. YYYY"}}
+                {{date-format key "Do MMM. YYYY"}}
               </AppUi::Timeline>
             </div>
           </div>

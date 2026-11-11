@@ -4,14 +4,16 @@
 
 import steps from '../steps';
 import { click } from '@ember/test-helpers';
+import window from 'ember-window-mock';
 
 export const given = function () {
 	return [
 		{
 			'Browser timezone is detected as $timezone': (assert, ctx) =>
 				async function (timezone) {
-					window.moment.tz.guess = function () {
-						return timezone;
+					// utils/date reads the browser zone from window-mock's Intl; setupWindowMock resets it.
+					window.Intl = {
+						DateTimeFormat: () => ({ resolvedOptions: () => ({ timeZone: timezone }) })
 					};
 					assert.ok(
 						true,

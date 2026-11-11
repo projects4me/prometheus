@@ -3,6 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import CurrentUserStub from '../stub-services/current-user-stub';
+import * as dates from 'prometheus/utils/date';
 
 module('Integration | Helper | format-date-time', function (hooks) {
 	setupRenderingTest(hooks);
@@ -15,9 +16,8 @@ module('Integration | Helper | format-date-time', function (hooks) {
     test('it renders default format', async function (assert) {
         await render(hbs`{{format-date-time date=this.inputDate}}`);
 
-        let currentUserService = new CurrentUserStub();
-        let timezone = currentUserService.user.timezone;
-        let expectedDate = moment.utc(this.inputDate).tz(timezone).format("DD MMM 'YY, h:mm a");
+        // The stub user is in Asia/Karachi (UTC+5).
+        let expectedDate = "04 Apr '24, 2:12 pm";
         assert.dom(this.element).hasText(expectedDate);
     });
 
@@ -25,15 +25,13 @@ module('Integration | Helper | format-date-time', function (hooks) {
         this.set('format', 'YYYY-MM-DD HH:mm:ss');
         await render(hbs`{{format-date-time date=this.inputDate format=this.format}}`);
         
-        let currentUserService = new CurrentUserStub();
-        let timezone = currentUserService.user.timezone;
-        let expectedDate = moment.utc(this.inputDate).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
+        let expectedDate = '2024-04-04 14:12:56';
         assert.dom(this.element).hasText(expectedDate);
     });
 
     test('it renders humanized format when humanize is true', async function (assert) {
         // Use a date that's a few days ago for reliable humanized output
-        let pastDate = moment().subtract(2, 'days').utc().toISOString();
+        let pastDate = dates.toISOString(dates.subtract(dates.now(), 2, 'days'));
         this.set('inputDate', pastDate);
         this.set('humanize', true);
         
@@ -48,9 +46,7 @@ module('Integration | Helper | format-date-time', function (hooks) {
         this.set('format', 'YYYY-MM-DD HH:mm:ss');
         await render(hbs`{{format-date-time date=this.inputDate format=this.format}}`);
         
-        let currentUserService = new CurrentUserStub();
-        let timezone = currentUserService.user.timezone;
-        let expectedDate = moment.utc(this.inputDate).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
+        let expectedDate = '2024-04-04 14:12:56';
         assert.dom(this.element).hasText(expectedDate);
     });
 
@@ -67,9 +63,7 @@ module('Integration | Helper | format-date-time', function (hooks) {
         
         await render(hbs`{{format-date-time date=this.inputDate format=this.format}}`);
         
-        let currentUserService = new CurrentUserStub();
-        let timezone = currentUserService.user.timezone;
-        let expectedDate = moment.utc(dateObj).tz(timezone).format('YYYY-MM-DD HH:mm:ss');
+        let expectedDate = '2024-04-04 14:12:56';
         assert.dom(this.element).hasText(expectedDate);
     });
 });

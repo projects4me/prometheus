@@ -7,6 +7,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import CurrentUserStub from '../../stub-services/current-user-stub';
+import * as dates from 'prometheus/utils/date';
 
 module('Integration | Component | user-profile/recent-activities', function (hooks) {
     setupRenderingTest(hooks);
@@ -58,7 +59,7 @@ module('Integration | Component | user-profile/recent-activities', function (hoo
         `);
 
         expectedAnswers.forEach((activity, i) => {
-            let createdSince = moment.duration(moment(new Date()).diff(moment(activities[i].dateCreated))).humanize();
+            let createdSince = dates.humanizeDuration(dates.diff(dates.now(), activities[i].dateCreated, undefined, { zone: 'UTC' }));
             let activityBlockSelector = `[data-activity-block-type="${activity.activityBlockType}"]`;
             assert.dom(activityBlockSelector).exists();
             assert.dom(`${activityBlockSelector} i`).hasClass(`${activity.iconClass}`);

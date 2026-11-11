@@ -163,7 +163,7 @@ export function hasValidDates(item) {
  *
  * @function formatDate
  * @param {String} date Date in YYYY-MM-DD format
- * @param {String} format Moment format string
+ * @param {String} format utils/date format tokens
  * @returns {String} Formatted date
  */
 export function formatDate(date, format = 'MMM DD, YYYY') {

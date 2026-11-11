@@ -15,7 +15,7 @@
             <div data-milestone-time="estimated">{{t "views.app.board.estimated"}} {{this.estimated.hours}} {{t "views.app.board.hours"}} {{this.estimated.minutes}} {{t "views.app.board.minutes"}}</div>
           </div>
           <span data-milestone="dates">
-            {{moment-format this.milestone.startDate 'Do MMM. YYYY'}} - {{moment-format this.milestone.endDate 'Do MMM. YYYY'}}
+            {{date-format this.milestone.startDate 'Do MMM. YYYY'}} - {{date-format this.milestone.endDate 'Do MMM. YYYY'}}
           </span>
         </div>
         

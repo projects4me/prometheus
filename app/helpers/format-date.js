@@ -38,7 +38,7 @@ export default class FormatDateHelper extends Helper {
 	 * @param {Array} _positional - Unused positional parameters.
 	 * @param {Object} options - The options object.
 	 * @param {string|Date} options.date - The date to format.
-	 * @param {string} [options.format] - The format string to use (follows Moment.js format).
+	 * @param {string} [options.format] - The format string to use (utils/date format tokens).
 	 * @returns {string} The formatted date string or '-' if the date is empty.
 	 */
 	compute([], { date, format }) {

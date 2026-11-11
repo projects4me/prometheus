@@ -50,10 +50,10 @@
           </h3>
           <div class="role-record__caption text-muted" data-role-field="audit">
             {{#if this.model.dateCreated}}
-              {{t "views.app.role.record.created" date=(moment-format this.model.dateCreated "DD MMM YYYY") name=this.model.createdUserName}}
+              {{t "views.app.role.record.created" date=(date-format this.model.dateCreated "DD MMM YYYY") name=this.model.createdUserName}}
             {{/if}}
             {{#if this.model.dateModified}}
-              · {{t "views.app.role.record.modified" date=(moment-format this.model.dateModified "DD MMM YYYY")}}
+              · {{t "views.app.role.record.modified" date=(date-format this.model.dateModified "DD MMM YYYY")}}
             {{/if}}
           </div>
         </div>

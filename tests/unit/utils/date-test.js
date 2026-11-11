@@ -222,6 +222,60 @@ module('Unit | Utility | date', function () {
 		});
 	});
 
+	// Behaviour of the Intl implementation that moment did not define (or defined differently).
+	module('native implementation', function () {
+		test('strings with an offset are absolute instants', function (assert) {
+			assert.strictEqual(dates.toISOString('2024-03-05T10:00:00+05:00', NEW_YORK), '2024-03-05T05:00:00.000Z');
+			assert.strictEqual(dates.toISOString('2024-03-05T10:00:00.250Z', NEW_YORK), '2024-03-05T10:00:00.250Z');
+			assert.strictEqual(dates.toISOString('2024-03-05 10:00:00.0', UTC), '2024-03-05T10:00:00.000Z');
+		});
+
+		test('out-of-range fields are invalid rather than rolled over', function (assert) {
+			assert.false(dates.isValid('2023-02-29', UTC));
+			assert.false(dates.isValid('2024-13-01', UTC));
+			assert.false(dates.isValid('2024-03-05 25:00:00', UTC));
+			assert.strictEqual(dates.toISOString('nope', UTC), null);
+		});
+
+		test('a time skipped by DST moves forward; a repeated time takes the first instant', function (assert) {
+			assert.strictEqual(dates.format('2024-03-10 02:30:00', 'HH:mm Z', NEW_YORK), '03:30 -04:00');
+			assert.strictEqual(dates.format('2024-11-03 01:30:00', 'HH:mm Z', NEW_YORK), '01:30 -04:00');
+		});
+
+		test('an unknown zone reads as UTC instead of throwing', function (assert) {
+			assert.strictEqual(dates.toUserTimezone('2024-03-05 10:00:00', 'Europe/NoWhere'), '2024-03-05 10:00:00');
+			const info = dates.timezoneInfo('Europe/NoWhere');
+			assert.strictEqual(info.offset, 0);
+			assert.strictEqual(info.offsetText, '+00:00');
+		});
+
+		test('more tokens and literals', function (assert) {
+			const input = '2024-03-05 14:07:09';
+			assert.strictEqual(dates.format(input, "MMM Do 'YY, h:mm a", UTC), "Mar 5th '24, 2:07 pm");
+			assert.strictEqual(dates.format(input, '[Week] W, GGGG', UTC), 'Week 10, 2024');
+			assert.strictEqual(dates.format(input, 'dddd A', UTC), 'Tuesday PM');
+			assert.strictEqual(dates.format(input, 'ZZ', { zone: 'Asia/Kolkata' }), '+0530');
+			assert.strictEqual(dates.format(input, 'z', NEW_YORK), 'EST');
+		});
+
+		test('names, relative times and durations follow the locale', function (assert) {
+			try {
+				dates.setLocale('fr-FR');
+				assert.strictEqual(dates.format('2024-03-05', 'DD MMMM YYYY', UTC), '05 mars 2024');
+				assert.strictEqual(dates.humanizeDuration(2, 'days').replace(/\s/g, ' '), '2 jours');
+			} finally {
+				dates.setLocale('en-US');
+			}
+			assert.strictEqual(dates.format('2024-03-05', 'MMMM', UTC), 'March');
+		});
+
+		test('timezoneList keeps the names saved from the moment-timezone list', function (assert) {
+			const names = dates.timezoneList().map((info) => info.name);
+			assert.true(['Asia/Calcutta', 'US/Eastern', 'Etc/UTC', 'Asia/Kolkata'].every((name) => names.includes(name)));
+			assert.deepEqual(names, [...names].sort(), 'sorted');
+		});
+	});
+
 	module('DateUtils', function () {
 		test('getHoursAndMinutes', function (assert) {
 			assert.deepEqual(DateUtils.getHoursAndMinutes(2.75), { hours: 2, minutes: 45 });

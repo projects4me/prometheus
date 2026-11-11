@@ -8,6 +8,7 @@ import { warn } from '@ember/debug';
 import { htmlSafe, isHTMLSafe } from '@ember/template';
 import { formatMessage } from 'prometheus/utils/intl/message-format';
 import bundledTranslations from 'prometheus/utils/intl/bundled-translations';
+import { setLocale as setDateLocale } from 'prometheus/utils/date';
 
 const ESCAPED = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', '`': '&#x60;', '=': '&#x3D;' };
 
@@ -129,6 +130,18 @@ export default class IntlService extends Service {
     constructor() {
         super(...arguments);
         bundledTranslations.forEach(([locale, translations]) => this.addTranslations(locale, translations));
+        setDateLocale(this._locale[0]);
+    }
+
+    /**
+     * Puts `utils/date` back on its default locale, which is module state that outlives this service.
+     *
+     * @method willDestroy
+     * @public
+     */
+    willDestroy() {
+        super.willDestroy(...arguments);
+        setDateLocale();
     }
 
     /**
@@ -169,7 +182,8 @@ export default class IntlService extends Service {
     }
 
     /**
-     * Activates a locale (or a list of them) and sets `<html lang>`.
+     * Activates a locale (or a list of them), sets `<html lang>` and the locale of
+     * date names and relative times in `utils/date`.
      *
      * @method setLocale
      * @param {String|Array} locale
@@ -179,6 +193,7 @@ export default class IntlService extends Service {
         const proposed = toArray(locale).map(normalizeLocale);
         if (proposed.toString() !== this._locale.toString()) {
             this._locale = proposed;
+            setDateLocale(proposed[0]);
             if (typeof document !== 'undefined') {
                 document.documentElement.setAttribute('lang', proposed[0]);
             }

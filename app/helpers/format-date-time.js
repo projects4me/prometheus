@@ -39,7 +39,7 @@ export default class FormatDateTimeHelper extends Helper {
 	 * @param {Array} _positional - Unused positional parameters.
 	 * @param {Object} options - The options object.
 	 * @param {string|Date} options.date - The date to format.
-	 * @param {string} [options.format] - The format string to use (follows Moment.js format).
+	 * @param {string} [options.format] - The format string to use (utils/date format tokens).
 	 * @param {boolean} [options.humanize=false] - If true, returns a relative time string (e.g. "2 days ago").
 	 * @returns {string} The formatted date time string or empty string if date is undefined.
 	 */

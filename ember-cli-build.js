@@ -51,15 +51,12 @@ module.exports = function (defaults) {
     app.import("vendor/jquery-ui/jquery-ui.min.js");
     app.import('node_modules/js-logger/src/logger.min.js');
     app.import('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js');
-    app.import("node_modules/moment/moment.js");
-    app.import("node_modules/moment-timezone/builds/moment-timezone-with-data.js");
     app.import("node_modules/jquery-mask-plugin/dist/jquery.mask.min.js");
     app.import("node_modules/jquery-slimscroll/jquery.slimscroll.min.js");
     app.import("node_modules/highlightjs/highlight.pack.min.js");
     app.import("node_modules/at.js/dist/js/jquery.atwho.min.js");
     app.import("vendor/quill/dist/quill.min.js");
     app.import("vendor/messenger/build/js/messenger.min.js");
-    // app.import("node_modules/fullcalendar/dist/locale-all.js");
     app.import("node_modules/chart.js/dist/chart.min.js");
     app.import("node_modules/color-hash/dist/color-hash.js");
     //    app.import("bower_components/summernote/dist/summernote.js");

@@ -1,6 +1,7 @@
 import { Factory } from 'miragejs';
 import faker from 'faker';
 import * as date from '../helpers/getDate';
+import * as dates from 'prometheus/utils/date';
 import _ from 'lodash';
 
 export default Factory.extend({
@@ -24,13 +25,13 @@ export default Factory.extend({
         return faker.internet.email();
     },
     dateOfBirth() {
-        return moment().format('DD-MM');
+        return dates.format(dates.now(), 'DD-MM');
     },
     language() {
         return faker.locales[faker.random.arrayElement(["en", "de", "az", "fr"])].title;
     },
     timezone() {
-        return moment.tz.guess();
+        return dates.guessTimezone();
     },
     status() {
         return faker.random.arrayElement(["active", "pending", "in_progress", "completed", "new"]);

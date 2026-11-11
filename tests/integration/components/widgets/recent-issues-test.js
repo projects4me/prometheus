@@ -4,6 +4,7 @@ import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { setupMirage } from 'ember-cli-mirage/test-support';
 import CurrentUserStub from '../../stub-services/current-user-stub';
+import * as dates from 'prometheus/utils/date';
 
 module('Integration | Component | widgets/recent-issues', function (hooks) {
 	setupRenderingTest(hooks);
@@ -79,11 +80,11 @@ module('Integration | Component | widgets/recent-issues', function (hooks) {
 				);
 			assert
 				.dom(`${row} td:nth-child(5)`)
-				.hasText(moment(issue.startDate).format("DD MMM 'YY"), `Row ${index + 1} has correct start date`);
+				.hasText(dates.format(issue.startDate, "DD MMM 'YY"), `Row ${index + 1} has correct start date`);
 			assert
 				.dom(`${row} td:nth-child(6)`)
 				.hasText(
-					moment(issue.endDate).format("DD MMM 'YY"),
+					dates.format(issue.endDate, "DD MMM 'YY"),
 					`Row ${index + 1} has correct end date`
 				);
 		});
