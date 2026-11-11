@@ -11,5 +11,4 @@ setupDeprecationReporting(QUnit);
 const App = Application.create(config.APP)
 setup(QUnit.assert);
 setApplication(App);
-App.injectTestHelpers();
 start();
