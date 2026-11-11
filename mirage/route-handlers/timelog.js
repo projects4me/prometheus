@@ -1,6 +1,6 @@
 import { Response } from "miragejs";
 import getRequestData from "../helpers/parse-request";
-import Collection from 'ember-cli-mirage/orm/collection';
+import { Collection } from 'miragejs';
 
 export function register(server, ctx) {
 

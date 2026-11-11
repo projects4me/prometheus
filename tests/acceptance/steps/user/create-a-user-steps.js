@@ -1,7 +1,7 @@
 import steps from '../steps';
 import { fillIn, click } from '@ember/test-helpers';
 import Context from '../../../../mirage/yadda-context/context';
-import Collection from 'ember-cli-mirage/orm/collection';
+import { Collection } from 'miragejs';
 
 export const when = function () {
     return [

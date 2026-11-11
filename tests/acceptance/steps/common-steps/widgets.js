@@ -1,7 +1,7 @@
 import steps from '../steps';
 import { click, find, findAll } from '@ember/test-helpers';
 import DateUtils from 'prometheus/utils/date';
-import Collection from 'ember-cli-mirage/orm/collection';
+import { Collection } from 'miragejs';
 import Context from '../../../../mirage/yadda-context/context';
 
 const ctx = new Context();

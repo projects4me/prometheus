@@ -1,4 +1,4 @@
-import { Factory } from 'ember-cli-mirage';
+import { Factory } from 'miragejs';
 import * as date from '../helpers/getDate';
 
 export default Factory.extend({

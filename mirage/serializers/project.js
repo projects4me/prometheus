@@ -1,5 +1,5 @@
 import ApplicationSerializer from './application';
-import { JSONAPISerializer } from 'ember-cli-mirage';
+import { JSONAPISerializer } from 'miragejs';
 
 export default ApplicationSerializer.extend({
 	serialize(object, request) {

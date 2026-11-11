@@ -1,7 +1,7 @@
 import steps from '../../steps';
 import Context from '../../../../../mirage/yadda-context/context';
 import DateUtils from 'prometheus/utils/date';
-import Collection from 'ember-cli-mirage/orm/collection';
+import { Collection } from 'miragejs';
 
 export default function (assert) {
 	return steps(assert).given(

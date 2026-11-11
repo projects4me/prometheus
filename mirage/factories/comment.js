@@ -1,4 +1,4 @@
-import { Factory } from 'ember-cli-mirage';
+import { Factory } from 'miragejs';
 import faker from 'faker';
 import * as date from '../helpers/getDate';
 import _ from 'lodash';

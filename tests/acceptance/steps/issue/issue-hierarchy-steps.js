@@ -1,7 +1,7 @@
 import steps from '../steps';
 import Context from '../../../../mirage/yadda-context/context';
 import { currentURL, click } from '@ember/test-helpers';
-import Collection from 'ember-cli-mirage/orm/collection';
+import { Collection } from 'miragejs';
 
 export default function (assert) {
 	return (

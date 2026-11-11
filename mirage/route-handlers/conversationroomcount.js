@@ -1,4 +1,4 @@
-import Collection from 'ember-cli-mirage/orm/collection';
+import { Collection } from 'miragejs';
 import Context from '../yadda-context/context';
 
 /**

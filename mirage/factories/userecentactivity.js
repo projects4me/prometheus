@@ -1,4 +1,4 @@
-import { Factory } from 'ember-cli-mirage';
+import { Factory } from 'miragejs';
 import Context from '../yadda-context/context';
 import faker from 'faker';
 import * as date from '../helpers/getDate';
