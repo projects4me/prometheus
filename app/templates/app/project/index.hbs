@@ -382,13 +382,37 @@
           <div class="box-body no-padding" {{did-insert this.scrollToElement 'milestone'}}>
             {{#if this.milestones}}
 
-              {{#each this.milestones as |milestone|}}
+              {{#each this.visibleMilestones as |milestone|}}
                 <Project::Milestones
                   @editMilestone={{action "editMilestone"}}
                   @milestone={{milestone}}
                   @projectShortcode={{this.model.shortCode}}
                 />
-              {{/each}}                      
+              {{/each}}
+
+              {{#if this.showMilestonesPager}}
+                <div class="pagination-container project-milestones-pagination" data-milestones-pagination>
+                  <div class="pagination-footer">
+                    <div class="pagination-controls">
+                      <button type="button" class="pagination-btn pagination-prev {{if this.isMilestonesPreviousDisabled 'disabled'}}"
+                        disabled={{this.isMilestonesPreviousDisabled}}
+                        title={{t "views.components.pagination.previousPage"}}
+                        data-btn="previous" {{on "click" this.previousMilestonesPage}}>
+                        <i class="fa fa-caret-left"></i>
+                      </button>
+                      <div class="pagination-info">
+                        <span class="pagination-text" data-milestones-range>{{t "views.app.project.detail.milestone.pageRange" from=this.milestonesRangeFrom to=this.milestonesRangeTo total=this.milestones.length}}</span>
+                      </div>
+                      <button type="button" class="pagination-btn pagination-next {{if this.isMilestonesNextDisabled 'disabled'}}"
+                        disabled={{this.isMilestonesNextDisabled}}
+                        title={{t "views.components.pagination.nextPage"}}
+                        data-btn="next" {{on "click" this.nextMilestonesPage}}>
+                        <i class="fa fa-caret-right"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              {{/if}}
 
             {{else}}
               <Exceptions::NothingFound
