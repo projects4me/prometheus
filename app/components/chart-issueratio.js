@@ -196,7 +196,7 @@ export default Component.extend({
      */
     buildChartData(issues) {
         let colorHash = new ColorHash();
-        let statuses = _.uniqBy(issues.getEach('status'));
+        let statuses = _.uniq(issues.map((item) => item.status));
 
         let labels = [];
         let statusOrder = [];
@@ -206,7 +206,7 @@ export default Component.extend({
 
         _.forEach(statuses, (statusKey) => {
             let translatedLabel = issueStatusLabel(this.intl, statusKey);
-            let count = issues.filterBy('status', statusKey).length;
+            let count = issues.filter((item) => item.status === statusKey).length;
             let rgba;
             if (this.statusColorMap[statusKey]) {
                 rgba = this.hexToRgba(this.statusColorMap[statusKey], this.sliceAlpha);

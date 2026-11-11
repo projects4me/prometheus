@@ -5,6 +5,7 @@
 import AppComponent from '../../app';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { objectAt } from '../../../utils/array/object-at';
 import issueLink from '../../../utils/notifications/issue-link';
 
 /**
@@ -49,6 +50,17 @@ export default class AppUiNotificationsNotificationComponent extends AppComponen
 		timelog: this.generateIssueSubModulesLink,
 		milestone: this.generateProjectSubModulesLink
 	};
+
+	/**
+	 * Whether the current recipient has not read the notification yet
+	 *
+	 * @property isUnread
+	 * @type Boolean
+	 * @public
+	 */
+	get isUnread() {
+		return objectAt(this.args.notification.recipientRecords, 0)?.isRead === '0';
+	}
 
 	/**
 	 * Gets the appropriate link URL for the notification

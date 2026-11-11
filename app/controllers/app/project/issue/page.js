@@ -239,7 +239,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
     async applyCommentCreated(envelope) {
         let issue = this.issue;
         let id = String(envelope.resource.id);
-        if (this.deletedCommentIds.has(id) || issue.comments.findBy('id', id)) {
+        if (this.deletedCommentIds.has(id) || issue.comments.find((item) => item.id === id)) {
             return;
         }
         try {
@@ -247,7 +247,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
             if (!this.isStillOpen(issue) || this.deletedCommentIds.has(id)) {
                 return;
             }
-            if (issue.comments.findBy('id', comment.id)) {
+            if (issue.comments.find((item) => item.id === comment.id)) {
                 return;
             }
             pushIfMissing(issue.comments, comment);
@@ -268,7 +268,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
      */
     async applyCommentUpdated(envelope) {
         let issue = this.issue;
-        let comment = issue.comments.findBy('id', String(envelope.resource.id));
+        let comment = issue.comments.find((item) => item.id === String(envelope.resource.id));
         if (!comment) {
             return;
         }
@@ -292,7 +292,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
     applyCommentDeleted(envelope) {
         let id = String(envelope.resource.id);
         this.deletedCommentIds.add(id);
-        let comment = this.issue.comments.findBy('id', id);
+        let comment = this.issue.comments.find((item) => item.id === id);
         if (!comment) {
             return;
         }

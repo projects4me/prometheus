@@ -8,6 +8,7 @@ import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { postToast } from 'prometheus/utils/ui/post-toast';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The Credentials box of an agent's detail page: shows the agent's client credential and issues, rotates and
  * revokes it. The secret of a new credential is shown once, in a modal.
@@ -84,7 +85,7 @@ export default class AgentCredentialsComponent extends Component {
 			if (this.isDestroying || this.isDestroyed) {
 				return;
 			}
-			this.credential = credentials.length ? credentials.objectAt(0) : null;
+			this.credential = credentials.length ? objectAt(credentials, 0) : null;
 			this.loaded = true;
 		} catch (error) {
 			// stays unloaded, so Issue is not offered over a credential we could not read

@@ -13,6 +13,7 @@ import {
     accessSplit, accessTier, actionTotals, coverageByRole, roleInitials, toCoverageEntries
 } from 'prometheus/utils/role/access';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The role page controller.
  *
@@ -355,7 +356,7 @@ export default class AppRolePageController extends PrometheusCreateController {
         }
 
         for (let i = 0; i < permissions.length; i++) {
-            let permission = permissions.objectAt(i);
+            let permission = objectAt(permissions, i);
             let moduleName = permission.moduleName;
 
             this.permissionsState[moduleName] = this.permissionsState[moduleName] || {};
@@ -478,9 +479,9 @@ export default class AppRolePageController extends PrometheusCreateController {
         Object.entries(this.permissionsState).forEach(([moduleName, moduleState]) => {
             Object.entries(moduleState || {}).forEach(([key, value]) => {
                 if (value.isErrored) {
-                    let permission = this.model.permissions.findBy('resourceName', key)
-                        || this.model.permissions.findBy('resourceName', `${moduleName}.${key}`)
-                        || this.model.permissions.findBy('resourceName', moduleName);
+                    let permission = this.model.permissions.find((item) => item.resourceName === key)
+                        || this.model.permissions.find((item) => item.resourceName === `${moduleName}.${key}`)
+                        || this.model.permissions.find((item) => item.resourceName === moduleName);
                     new Messenger().post({
                         message: `${moduleName} (${key}) | ${permission.adapterError.detail.suggestion}`,
                         type: 'error',
@@ -632,7 +633,7 @@ export default class AppRolePageController extends PrometheusCreateController {
                     label: htmlSafe(_self.intl.t("global.form.confirmcancel")).toString(),
                     action: function () {
                         userrole.destroyRecord().then(function () {
-                            _self.userroles.removeObject(userrole);
+                            _self.set('userroles', _self.userroles.filter((item) => item !== userrole));
                             _self.syncListMembers();
                             return deleting.update({
                                 message: htmlSafe(_self.intl.t("global.form.deleted")).toString(),
@@ -761,7 +762,7 @@ export default class AppRolePageController extends PrometheusCreateController {
 
                         let user = _self.store.peekRecord('user', data.userId);
                         data.user = user;
-                        _self.userroles.pushObject(data);
+                        _self.set('userroles', [..._self.userroles, data]);
 
                         new Messenger().post({
                             message: _self.intl.t('views.app.role.tabs.user.userrole.created', {

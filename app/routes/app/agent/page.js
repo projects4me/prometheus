@@ -4,6 +4,7 @@
 
 import AppRoute from 'prometheus/routes/app';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The route of an agent's detail page.
  *
@@ -29,7 +30,7 @@ export default class AppAgentPageRoute extends AppRoute {
                 query: `(Agent.id : ${params.agent_id})`,
                 rels: 'user,sponsor'
             });
-            agent = agents.objectAt(0);
+            agent = objectAt(agents, 0);
         } catch (error) {
             this.errorManager.handleLoadError(error, { moduleName: 'agent' });
             return { failed: true };

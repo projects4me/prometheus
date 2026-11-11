@@ -17,7 +17,7 @@ import { helper } from '@ember/component/helper';
 export function getWiki(params) {
     Logger.debug('getWikiHelper::getWiki');
     Logger.debug(params);
-    return params[1].findBy('value',params[0].get('parentId')).label;
+    return params[1].find((item) => item.value === params[0].get('parentId')).label;
 }
 
 /**

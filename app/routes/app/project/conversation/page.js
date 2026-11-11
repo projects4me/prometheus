@@ -5,6 +5,7 @@
 import App from 'prometheus/routes/app';
 import { inject as service } from '@ember/service';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The route of one thread: it loads the thread with its author, issue and votes (comments come through their own
  * query in the page controller), marks it as the open one in the browser and opens it in the page controller.
@@ -40,7 +41,7 @@ export default class AppProjectConversationPageRoute extends App {
                 rels: 'createdBy,issue,votes',
                 limit: -1
             });
-            return rooms.objectAt(0);
+            return objectAt(rooms, 0);
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'conversationroom' });
         }

@@ -171,7 +171,7 @@ export default class AppProjectsIndexController extends PrometheusListController
     @action deleteSearch(search) {
         Logger.debug('Prometheus.Controllers.Projects.Index->deleteSearch');
         let _self = this;
-        let toBeDeleted = _self.get('savedsearches').findBy('id', search.get('id'));
+        let toBeDeleted = _self.get('savedsearches').find((item) => item.id === search.get('id'));
 
         let deleting = new Messenger().post({
             message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.delete", { name: search.get('name') })),

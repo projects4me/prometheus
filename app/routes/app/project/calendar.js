@@ -4,6 +4,7 @@
 
 import App from "prometheus/routes/app";
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * This is the route to load the conversations for a project
  *
@@ -97,7 +98,7 @@ export default App.extend({
             let issue = null;
             for (let i=0; i<issuesCount;i++)
             {
-                issue = data.objectAt(i);
+                issue = objectAt(data, i);
                 issuesList[i] = {
                     id:issue.get('id'),
                     title:'#'+issue.get('issueNumber')+' - '+issue.get('subject'),

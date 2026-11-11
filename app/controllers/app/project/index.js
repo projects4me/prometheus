@@ -619,7 +619,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
             // Add milestone to the system
             newMilestone.save().then(function (data) {
                 if (!isUpdate) {
-                    _self.get('milestones').pushObject(data);
+                    _self.set('milestones', [..._self.get('milestones'), data]);
                     // The new milestone is appended, so show the page it lands on
                     _self.set('milestonesPage', _self.milestonesPageCount);
                 }

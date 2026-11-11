@@ -5,6 +5,7 @@
 import App from "prometheus/routes/app/projects/create";
 import Format from "prometheus/utils/data/format";
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  *  This is the route that will handle the edit of a project
  *
@@ -65,7 +66,7 @@ export default App.extend({
 
         controller.set('status', status);
         controller.set('type', type);
-        controller.set('model', model.objectAt(0));
+        controller.set('model', objectAt(model, 0));
     },
 
 });

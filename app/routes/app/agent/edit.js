@@ -4,6 +4,7 @@
 
 import AppAgentCreateRoute from 'prometheus/routes/app/agent/create';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The route to edit an agent: the create form, filled with the agent and its roles and project memberships.
  *
@@ -29,7 +30,7 @@ export default class AppAgentEditRoute extends AppAgentCreateRoute {
                 query: `(Agent.id : ${params.agent_id})`,
                 rels: 'user,sponsor'
             });
-            return agents.objectAt(0) ?? null;
+            return objectAt(agents, 0) ?? null;
         } catch (error) {
             this.errorManager.handleLoadError(error, { moduleName: 'agent' });
             this.loadFailed = true;

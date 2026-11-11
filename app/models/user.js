@@ -483,12 +483,12 @@ export default Model.extend({
     badgeDetails: computed('badges', 'badgeLevels', function () {
         let array = [];
         this.badges.forEach((badge) => {
-            let badgeLevel = this.badgeLevels.findBy('badgeId', badge.id);
+            let badgeLevel = this.badgeLevels.find((item) => item.badgeId === badge.id);
             let badgeInfo = {
                 'badge': badge,
                 'badgeLevel': badgeLevel
             }
-            array.pushObject(badgeInfo);
+            array.push(badgeInfo);
         });
         return array;
     })

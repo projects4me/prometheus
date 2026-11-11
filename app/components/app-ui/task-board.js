@@ -7,6 +7,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { insertAtIfMissing } from 'prometheus/utils/live/collection';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * This component is used to render milestones of selected project.
  *
@@ -352,8 +353,8 @@ export default class TaskBoardComponent extends AppComponent {
 	getActiveMilestone() {
 		Logger.debug("TaskBoardComponent::getActiveMilestone");
 		let milestoneId = document.querySelector('[data-milestone-tab].active').getAttribute('data-milestone-id');
-		let milestone = this.args.milestones.findBy('id', milestoneId);
-		milestone = milestone ? milestone : this.args.milestones.findBy('milestoneType', milestoneId);
+		let milestone = this.args.milestones.find((item) => item.id === milestoneId);
+		milestone = milestone ? milestone : this.args.milestones.find((item) => item.milestoneType === milestoneId);
 		Logger.debug("-TaskBoardComponent::getActiveMilestone");
 		return milestone;
 	}
@@ -366,7 +367,7 @@ export default class TaskBoardComponent extends AppComponent {
 	 */
 	setNewActiveMilestone() {
 		Logger.debug("TaskBoardComponent::setNewActiveMilestone");
-		let newActiveMilestone = this.args.milestones.objectAt(0);
+		let newActiveMilestone = objectAt(this.args.milestones, 0);
 		if(newActiveMilestone) {
 			this.activeMilestone = newActiveMilestone;
 			document.querySelector(`[data-milestone-id="${newActiveMilestone.id}"] a`).click();

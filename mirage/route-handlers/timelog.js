@@ -38,7 +38,7 @@ export function register(server, ctx) {
  */
  function _setIssueTimeLog(timelog) {
     let timelogs = new Collection('timelog');
-    timelogs.models.pushObject(timelog);
+    timelogs.models.push(timelog);
     let issue = server.schema.issues.find(timelog.issueId);
     let relName = (timelog.context === "spent") ? "spent" : "estimated"
 

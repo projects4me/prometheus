@@ -8,6 +8,7 @@ import Logger from "js-logger";
 import _ from 'lodash';
 import { canCreateIssueFromThread, threadIssueDraft } from 'prometheus/utils/conversation/thread-issue';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * This is the route that will handle the creation of new issues
  *
@@ -46,7 +47,7 @@ export default App.extend({
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::afterModel()');
         try {
             let project = await _self.store.query('project', projectOptions);
-            let projectData = project.objectAt(0);
+            let projectData = objectAt(project, 0);
             if(projectData.issuestatuses === undefined || projectData.issuestatuses.length === 0) {
                 let issueStatuses = await _self.store.query('issuestatus', {
                     query: `(Issuestatus.system : 1)`,

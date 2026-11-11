@@ -5,6 +5,7 @@
 import PrometheusController from "prometheus/controllers/prometheus";
 import { action } from '@ember/object';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The controller for the wiki route, it is loaded when a user tried to navigate to the route
  * wiki
@@ -36,7 +37,7 @@ export default class AppProjectWikiController extends PrometheusController {
      * @public
      */
     @action save() {
-        let model = this.model.objectAt(0);
+        let model = objectAt(this.model, 0);
         model.save();
     }
 

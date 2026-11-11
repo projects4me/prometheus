@@ -5,6 +5,7 @@
 import format from 'prometheus/utils/data/format';
 import App from 'prometheus/routes/app';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The issues edit route
  *
@@ -60,7 +61,7 @@ export default App.extend({
 			let project = await _self
 				.get('store')
 				.query('project', projectOptions);
-			let projectData = project.objectAt(0);
+			let projectData = objectAt(project, 0);
 			if (
 				projectData.issuestatuses === undefined ||
 				projectData.issuestatuses.length === 0
@@ -73,7 +74,7 @@ export default App.extend({
 					});
 				projectData.issuestatuses = issueStatuses;
 			}
-			let issueData = issue.objectAt(0);
+			let issueData = objectAt(issue, 0);
 
 			this.set('issue', issueData);
 			this.set('project', projectData);

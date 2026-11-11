@@ -1,6 +1,7 @@
 /**
  * Helpers for live list and hasMany patches.
  */
+import { notifyPropertyChange } from '@ember/object';
 
 /**
  * Return a peeked record, or push a stub from changed attrs when creating.
@@ -34,7 +35,7 @@ export function peekOrPush(store, modelName, id, attributes) {
  * Insert a record at index when no item with the same id is present.
  *
  * @method insertAtIfMissing
- * @param {Object} list MutableArray or array-like with insertAt/findBy
+ * @param {Object} list MutableArray or array-like with insertAt/find
  * @param {Object} record Record to insert
  * @param {Number} index Target index
  * @returns {Boolean} True when the record was inserted
@@ -44,11 +45,16 @@ export function insertAtIfMissing(list, record, index) {
     if (!list || !record) {
         return false;
     }
-    if (typeof list.findBy === 'function' && list.findBy('id', record.id)) {
+    if (typeof list.find === 'function' && list.find((item) => item.id === record.id)) {
         return false;
     }
     if (typeof list.insertAt === 'function') {
         list.insertAt(index, record);
+        return true;
+    }
+    if (Array.isArray(list)) {
+        list.splice(index, 0, record);
+        notifyPropertyChange(list, '[]');
         return true;
     }
     return false;
@@ -70,11 +76,14 @@ export function pushIfMissing(list, record) {
     if (typeof list.includes === 'function' && list.includes(record)) {
         return;
     }
-    if (typeof list.findBy === 'function' && list.findBy('id', record.id)) {
+    if (typeof list.find === 'function' && list.find((item) => item.id === record.id)) {
         return;
     }
     if (typeof list.pushObject === 'function') {
         list.pushObject(record);
+    } else if (Array.isArray(list)) {
+        list.push(record);
+        notifyPropertyChange(list, '[]');
     }
 }
 
@@ -91,8 +100,11 @@ export function removeById(list, id) {
     if (!list || !id) {
         return;
     }
-    let record = typeof list.findBy === 'function' ? list.findBy('id', id) : null;
+    let record = typeof list.find === 'function' ? list.find((item) => item.id === id) : null;
     if (record && typeof list.removeObject === 'function') {
         list.removeObject(record);
+    } else if (record && Array.isArray(list)) {
+        list.splice(list.indexOf(record), 1);
+        notifyPropertyChange(list, '[]');
     }
 }

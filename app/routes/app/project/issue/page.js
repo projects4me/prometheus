@@ -5,6 +5,7 @@
 import App from "prometheus/routes/app";
 import { inject } from '@ember/service';
 
+import { objectAt } from 'prometheus/utils/array/object-at';
 /**
  * The issues route
  *
@@ -71,8 +72,8 @@ export default App.extend({
     */
     async setupController(controller, model) {
         Logger.debug('AppProjectIssuePageRoute::setupController');
-        let issue = model.issue.objectAt(0);
-        let project = model.project.objectAt(0);
+        let issue = objectAt(model.issue, 0);
+        let project = objectAt(model.project, 0);
         let _self = this;
         _self.setupActivities(controller, issue);
         let timelog = _self.store.createRecord('timelog');
@@ -126,7 +127,7 @@ export default App.extend({
 
         try {
             let project = await _self.get('store').query('project', _projectOptions);
-            let projectData = project.objectAt(0);
+            let projectData = objectAt(project, 0);
             if(projectData.issuestatuses === undefined || projectData.issuestatuses.length === 0) {
                 let issueStatuses = await _self.get('store').query('issuestatus', {
                     query: `(Issuestatus.system : 1)`,

@@ -28,9 +28,9 @@ export function getTimelog(params) {
                 let timelog = issue.get(params[1]);
                 if (timelog !== undefined)
                 {
-                    sum += _.sum(timelog.getEach('days').map(Number)) * 24;
-                    sum += _.sum(timelog.getEach('hours').map(Number));
-                    sum += _.sum(timelog.getEach('hours').map(Number)) / 60;
+                    sum += _.sum(timelog.map((item) => item.days).map(Number)) * 24;
+                    sum += _.sum(timelog.map((item) => item.hours).map(Number));
+                    sum += _.sum(timelog.map((item) => item.hours).map(Number)) / 60;
                 }
             }
         }

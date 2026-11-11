@@ -193,7 +193,7 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
         Logger.debug('AppProjectWikiEditController:removeTag');
 
         let _self = this;
-        let tagged = _self.get('model').get('tagged').filterBy('tagId', tag.value)[0];
+        let tagged = _self.get('model').get('tagged').filter((item) => item.tagId === tag.value)[0];
 
         // Delete the record
         tagged.deleteRecord();
