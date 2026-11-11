@@ -112,6 +112,6 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    createdBy: belongsTo('user')
+    createdBy: belongsTo('user', { async: true, inverse: null })
 
 });

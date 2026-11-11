@@ -111,7 +111,7 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    user: belongsTo('user'),
+    user: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The role assigned to the user.
@@ -121,6 +121,6 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    role: belongsTo('role'),
+    role: belongsTo('role', { async: true, inverse: null }),
 
 });

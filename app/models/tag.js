@@ -102,7 +102,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    createdBy: belongsTo('user', { inverse: null }),
+    createdBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The user last modified the tag
@@ -112,7 +112,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    modifiedBy: belongsTo('user', { inverse: null }),
+    modifiedBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The wiki this tag is associated with
@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    wiki: hasMany('wiki'),
+    wiki: hasMany('wiki', { async: true, inverse: 'tag' }),
 
     /**
      * The issue this tag is associated with
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    issue: hasMany('issue'),
+    issue: hasMany('issue', { async: true, inverse: null }),
 
     /**
      * The project this tag is associated with
@@ -142,6 +142,6 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    project: hasMany('project')
+    project: hasMany('project', { async: true, inverse: null })
 
 });

@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    conversers: hasMany('user'),
+    conversers: hasMany('user', { async: true, inverse: null }),
 
     /**
      * The owner of this chat room
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    ownedBy: hasMany('user'),
+    ownedBy: hasMany('user', { async: true, inverse: null }),
 
     /**
      * Comments made on this conversation room
@@ -142,6 +142,6 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    comments: hasMany('comment'),
+    comments: hasMany('comment', { async: true, inverse: 'chatRoom' }),
 
 });

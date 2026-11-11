@@ -143,5 +143,5 @@ export default class SystemnotificationModel extends Model {
 	 * @for Systemnotification
 	 * @public
 	 */
-	@hasMany('systemnotificationrecipient') recipientRecords;
+	@hasMany('systemnotificationrecipient', { async: true, inverse: null }) recipientRecords;
 }

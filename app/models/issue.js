@@ -276,7 +276,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    assignedTo: belongsTo("user"),
+    assignedTo: belongsTo("user", { async: true, inverse: null }),
 
     /**
      * The user who created this issue
@@ -286,7 +286,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    createdBy: belongsTo("user"),
+    createdBy: belongsTo("user", { async: true, inverse: null }),
 
     /**
      * The user who last modified this issue
@@ -296,7 +296,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    modifiedBy: belongsTo("user"),
+    modifiedBy: belongsTo("user", { async: true, inverse: null }),
 
     /**
      * The user who is responsible for this issue
@@ -306,7 +306,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    ownedBy: belongsTo("user"),
+    ownedBy: belongsTo("user", { async: true, inverse: null }),
 
     /**
      * The user who reported this issue
@@ -316,7 +316,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    reportedBy: belongsTo("user"),
+    reportedBy: belongsTo("user", { async: true, inverse: null }),
 
     /**
      * The project which this issues belongs to
@@ -326,7 +326,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    project: belongsTo("project"),
+    project: belongsTo("project", { async: true, inverse: "issues" }),
 
     /**
      * The milestone which this issue belongs to
@@ -336,7 +336,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    issuemilestone: belongsTo("milestone"),
+    issuemilestone: belongsTo("milestone", { async: true, inverse: "issues" }),
 
     /**
      * The parent issue of this issue
@@ -346,7 +346,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    parentissue: belongsTo("issue", { inverse: null }),
+    parentissue: belongsTo("issue", { async: true, inverse: null }),
 
     /**
      * The conversation room this issue is associated with
@@ -356,7 +356,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    conversationroom: belongsTo("conversationroom"),
+    conversationroom: belongsTo("conversationroom", { async: true, inverse: "issue" }),
 
     /**
      * The type of the issue
@@ -366,7 +366,7 @@ export default Model.extend({
      * @for IssueModel
      * @private
      */
-    issuetype: belongsTo("issuetype"),
+    issuetype: belongsTo("issuetype", { async: true, inverse: null }),
 
     /**
      * The status of the issue
@@ -376,7 +376,7 @@ export default Model.extend({
      * @for IssueModel
      * @private
      */
-    issuestatus: belongsTo("issuestatus"),
+    issuestatus: belongsTo("issuestatus", { async: true, inverse: null }),
 
     /**
      * The estimated time on the issue
@@ -386,7 +386,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    estimated: hasMany("timelog", { inverse: null }),
+    estimated: hasMany("timelog", { async: true, inverse: null }),
 
     /**
      * The spent time on the issue
@@ -396,7 +396,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    spent: hasMany("timelog", { inverse: null }),
+    spent: hasMany("timelog", { async: true, inverse: null }),
 
     /**
      * The child issues of this issue
@@ -406,7 +406,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    childissues: hasMany("issue", { inverse: null }),
+    childissues: hasMany("issue", { async: true, inverse: null }),
 
     /**
      * The comments made on this issue
@@ -416,7 +416,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    comments: hasMany("comment"),
+    comments: hasMany("comment", { async: true, inverse: "issue" }),
 
     /**
      * The activities of the issue
@@ -426,7 +426,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    activities: hasMany("activity"),
+    activities: hasMany("activity", { async: true, inverse: "issue" }),
     
 
     /**
@@ -437,7 +437,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    files: hasMany("upload"),
+    files: hasMany("upload", { async: true, inverse: null }),
 
     /**
      * The watchers of the issue
@@ -447,7 +447,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    watchers: hasMany("issuewatcher"),
+    watchers: hasMany("issuewatcher", { async: true, inverse: null }),
 
     /**
      * The constructor for the issue model. In this we're setting the default status of the issue

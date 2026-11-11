@@ -93,7 +93,7 @@ export default Model.extend({
      * @for Membership
      * @private
      */
-    project: belongsTo('project'),
+    project: belongsTo('project', { async: true, inverse: 'memberships' }),
 
     /**
      * The user to which this membership belongs.
@@ -103,5 +103,5 @@ export default Model.extend({
      * @for Membership
      * @private
      */
-    user: belongsTo('user')
+    user: belongsTo('user', { async: true, inverse: null })
 });

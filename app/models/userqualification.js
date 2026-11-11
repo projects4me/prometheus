@@ -143,6 +143,6 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    user: belongsTo('user'),
+    user: belongsTo('user', { async: true, inverse: 'qualifications' }),
 
 });

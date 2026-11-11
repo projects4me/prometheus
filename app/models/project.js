@@ -204,7 +204,7 @@ export default Model.extend({
     * @for Project
     * @private
     */
-    manager: belongsTo('user', { inverse: null }),
+    manager: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * User who created the project
@@ -214,7 +214,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    createdBy: belongsTo('user', { inverse: null }),
+    createdBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * User who modified the project
@@ -224,7 +224,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    modifiedBy: belongsTo('user', { inverse: null }),
+    modifiedBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The members of this project
@@ -234,7 +234,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    members: hasMany('user', { inverse: null }),
+    members: hasMany('user', { async: true, inverse: 'projects' }),
 
     /**
      * The conversations that are happening on this project
@@ -244,7 +244,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    conversations: hasMany('conversationroom'),
+    conversations: hasMany('conversationroom', { async: true, inverse: 'project' }),
 
     /**
      * These are the issues that are related to the project, since the number of
@@ -256,7 +256,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    issues: hasMany('issue'),
+    issues: hasMany('issue', { async: true, inverse: 'project' }),
 
     /**
      * Project memberships
@@ -266,7 +266,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    memberships: hasMany('membership'),
+    memberships: hasMany('membership', { async: true, inverse: 'project' }),
 
     /**
      * The milestones for this project
@@ -276,7 +276,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    milestones: hasMany('milestone'),
+    milestones: hasMany('milestone', { async: true, inverse: 'project' }),
 
     /**
      * The issue types for this project
@@ -286,7 +286,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    issuetypes: hasMany('issuetype'),
+    issuetypes: hasMany('issuetype', { async: true, inverse: null }),
 
     /**
      * The issue statuses for this project
@@ -296,7 +296,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    issuestatuses: hasMany('issuestatus'),
+    issuestatuses: hasMany('issuestatus', { async: true, inverse: null }),
 
     /**
      * The activities for this project
@@ -306,7 +306,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    activities: hasMany('activity'),
+    activities: hasMany('activity', { async: true, inverse: 'project' }),
 
     /**
      * The issue types for this project

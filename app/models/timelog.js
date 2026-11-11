@@ -184,7 +184,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    issue: belongsTo('issue'),
+    issue: belongsTo('issue', { async: true, inverse: null }),
 
     /**
      * The project this timelog is associated with
@@ -194,7 +194,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    project: belongsTo('project'),
+    project: belongsTo('project', { async: true, inverse: null }),
 
     /**
      * The user who created this timelog
@@ -204,7 +204,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    createdBy: belongsTo('user'),
+    createdBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The user who last modified this timelog
@@ -214,6 +214,6 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    modifiedBy: belongsTo('user')
+    modifiedBy: belongsTo('user', { async: true, inverse: null })
 
 });

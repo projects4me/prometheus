@@ -101,5 +101,5 @@ export default class UseridentityModel extends Model {
 	 * @for Useridentity
 	 * @private
 	 */
-	@belongsTo('user') user;
+	@belongsTo('user', { async: true, inverse: 'identities' }) user;
 }

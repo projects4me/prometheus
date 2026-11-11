@@ -161,7 +161,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    createdBy: belongsTo('user'),
+    createdBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The user who last modified this uploaded file
@@ -171,6 +171,6 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    modifiedBy: belongsTo('user')
+    modifiedBy: belongsTo('user', { async: true, inverse: null })
 
 });

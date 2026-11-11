@@ -53,7 +53,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    tag: hasMany('tag'),
+    tag: hasMany('tag', { async: true, inverse: null }),
     
     /**
      * The project this tagged is associated with
@@ -63,7 +63,7 @@ export default Model.extend({
      * @for Tagged
      * @Tagged
      */
-    project: hasMany('project'),
+    project: hasMany('project', { async: true, inverse: null }),
 
     /**
      * The issue this tagged is associated with
@@ -73,7 +73,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    issue: hasMany('issue'),
+    issue: hasMany('issue', { async: true, inverse: null }),
 
     /**
      * The wiki this tagged is associated with
@@ -83,6 +83,6 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    wiki: hasMany('wiki')
+    wiki: hasMany('wiki', { async: true, inverse: 'tagged' })
     
 });

@@ -112,7 +112,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    createdBy: belongsTo('user'),
+    createdBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The user who last modified the vote
@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    modifiedBy: belongsTo('user'),
+    modifiedBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The user who last modified the vote
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    wiki: hasMany('wiki'),
+    wiki: hasMany('wiki', { async: true, inverse: 'vote' }),
 
     /**
      * The user who last modified the vote
@@ -142,7 +142,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    comment: hasMany('comment'),
+    comment: hasMany('comment', { async: true, inverse: null }),
 
     /**
      * The user who last modified the vote
@@ -152,6 +152,6 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    conversationroom: hasMany('conversationroom'),
+    conversationroom: hasMany('conversationroom', { async: true, inverse: 'votes' }),
 
 });
