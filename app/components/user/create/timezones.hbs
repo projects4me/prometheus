@@ -7,7 +7,7 @@
   @data-field={{or @data-field "user.timezone"}}
   @searchField="label"
   @searchEnabled={{true}}
-  @onchange={{action @selectRelated @model "timezone"}}
+  @onchange={{fn @selectRelated @model "timezone"}}
   @relateType="relate-simple"
   @validate={{@validate}}
   @message={{@message}}

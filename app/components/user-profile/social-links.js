@@ -24,12 +24,13 @@ export default class UserProfileSocialLinksComponent extends Component {
     }
 
     /**
-     * This method return redirect function of the 'user.page' controller
+     * This method return redirect function of the 'user.page' controller,
+     * a no-op when none is passed so the {{on}} modifier always gets a function
      *
      * @method get
      * @public
      */
     get redirect() {
-        return this.args.redirect;
+        return this.args.redirect ?? (() => {});
     }
 }

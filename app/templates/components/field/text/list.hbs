@@ -1,7 +1,7 @@
 {{!-- List template for text input field--}}
 <span>
   {{#if this.definition.link}}
-    <a href="javascript:void(0);" {{action this.navigate}}>{{get-prop this.model this.field}}</a>
+    <a href="javascript:void(0);" {{on "click" this.navigate}}>{{get-prop this.model this.field}}</a>
   {{else}}
     {{get-prop this.model this.field}}
   {{/if}}

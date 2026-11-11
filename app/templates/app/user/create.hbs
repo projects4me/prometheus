@@ -37,7 +37,7 @@
                     @value={{this.model.name}} 
                     @data-field="user.name"
                     @lengthRequired={{false}}
-                    @validate={{action this.validateField "userCreate" (hash name="name" value=this.model.name)}}
+                    @validate={{fn this.validateField "userCreate" (hash name="name" value=this.model.name)}}
                     @message={{this.message.userCreate.name}}
                     {{autofocus}} 
                   />
@@ -51,7 +51,7 @@
                     @lengthRequired={{false}} 
                     @mask="email"
                     @aclContext="user.email.create"
-                    @validate={{action this.validateField "userCreate" (hash name="email" value=this.model.email)}}
+                    @validate={{fn this.validateField "userCreate" (hash name="email" value=this.model.email)}}
                     @message={{this.message.userCreate.email}}     
                   />
                   <p class="help-block email-password-hint">
@@ -63,7 +63,7 @@
                     @placeholder={{t "views.app.user.create.dobplaceholder" }}
                     @label={{t "views.app.user.create.dateofbirth" }} 
                     @value="{{readonly this.model.dateOfBirth}}"
-                    @update={{action "selectStatic" this.model 'dateOfBirth' }} 
+                    @update={{fn this.selectStatic this.model 'dateOfBirth'}} 
                     @mask="alphanumeric"
                     @data-field="user.dateOfBirth" 
                     @format="DD-MM" 
@@ -78,7 +78,7 @@
                     @endDate="31-12"
                     @maxDate="31-12"
                     @aclContext="user.dateOfBirth.create"
-                    @validate={{action this.validateField "userCreate" (hash name="dateOfBirth" value=this.model.dateOfBirth)}}
+                    @validate={{fn this.validateField "userCreate" (hash name="dateOfBirth" value=this.model.dateOfBirth)}}
                     @message={{this.message.userCreate.dateOfBirth}}     
                   />
                 </div>
@@ -143,10 +143,10 @@
                 @placeholder={{t "views.app.user.create.languageplaceholder"}}
                 @label={{t "views.app.user.create.languagelabel"}}
                 @value={{this.model.language}}
-                @onchange={{action "selectRelated" this.model 'language'}}
+                @onchange={{fn this.selectRelated this.model 'language'}}
                 @model={{this.model}}
                 @data-field="user.language"
-                @validate={{action this.validateField "userCreate" (hash name="language" value=this.model.language)}}
+                @validate={{fn this.validateField "userCreate" (hash name="language" value=this.model.language)}}
                 @message={{this.message.language}}
                 @disabled={{true}}
               />
@@ -167,7 +167,7 @@
                 @value={{this.model.timezone}}
                 @model={{this.model}}
                 @selectRelated={{this.selectRelated}}
-                @validate={{action this.validateField "userCreate" (hash name="timezone" value=this.model.timezone)}}
+                @validate={{fn this.validateField "userCreate" (hash name="timezone" value=this.model.timezone)}}
                 @message={{this.message.timezone}}
               />
             </div>

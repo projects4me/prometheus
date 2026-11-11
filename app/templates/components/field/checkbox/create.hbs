@@ -5,5 +5,5 @@
 <span class="hidden field-error">{{t this.definition.errorMsg}}</span>
 <div class="clearfix"></div>
 <span class="btn-group">
-  {{checkbox-field action=(action "changed") type="checkbox" readonly=this.definition.readonly name=this.definition.fieldName value=this.definition.fieldName}} {{t this.definition.label}}
+  {{checkbox-field action=this.changed type="checkbox" readonly=this.definition.readonly name=this.definition.fieldName value=this.definition.fieldName}} {{t this.definition.label}}
 </span>

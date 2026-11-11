@@ -3,6 +3,7 @@
  */
 
 import Component from '@ember/component';
+import { action } from '@ember/object';
 import jQuery from 'jquery'
 
 /**
@@ -109,37 +110,27 @@ export default Component.extend({
     },
 
     /**
-     * These are the actions supported by this components
-     *
-     * @property actions
-     * @type Object
-     * @for BootstrapModal
-     * @public
-     */
-    actions: {
-
-        /**
          * The optional left footer button (`leftLabel`, `leftAction`): run its action, then hide the modal
          *
-         * @method left
+         * @method onLeft
          * @public
          */
-        left: function() {
+        onLeft: action(function() {
             if (this.busy) {
                 return;
             }
             this.leftAction();
             this._hide();
-        },
+        }),
 
         /**
          * This action is captures the confirm button and send it forward to be
          * handled by the controller
          *
-         * @method confirm
+         * @method onConfirm
          * @public
          */
-        confirm: function() {
+        onConfirm: action(function() {
             if (this.busy) {
                 return;
             }
@@ -154,7 +145,6 @@ export default Component.extend({
             if (result === true) {
                 this._hide();
             }
-        }
-    },
+        })
 
 });

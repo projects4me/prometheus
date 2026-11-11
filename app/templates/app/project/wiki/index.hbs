@@ -7,7 +7,7 @@
       <div class="clearfix"></div>
       {{safe-html (t "views.app.wiki.nohome")}}
       <div class="clearfix"></div>
-      <a href="#" class="btn btn-primary margin-bottom" {{action "create"}}><i class="fa fa-plus"></i> {{t "views.app.wiki.create.page"}}</a>
+      <a href="#" class="btn btn-primary margin-bottom" {{on "click" (prevent-default this.create)}}><i class="fa fa-plus"></i> {{t "views.app.wiki.create.page"}}</a>
     </div>
   </div>
 </div>

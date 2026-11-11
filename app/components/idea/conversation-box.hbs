@@ -49,8 +49,8 @@
       title=(if this.isArchived "views.app.idea.conversation.unarchiveTitle" "views.app.idea.conversation.archiveTitle")
       closeLabel="global.form.cancel"
       confirmLabel=(if this.isArchived "views.app.idea.conversation.unarchive" "views.app.idea.conversation.archive")
-      close=(action this.closeArchive)
-      confirm=(action this.confirmArchive)
+      close=this.closeArchive
+      confirm=this.confirmArchive
     }}
       <div class="alert alert-warning flex-row flex-ai-c" data-idea-archive-confirm>
         <i class="fa fa-exclamation-triangle"></i>

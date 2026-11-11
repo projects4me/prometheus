@@ -19,7 +19,7 @@
         allowClear=true
         selected=this.selected
         search=(perform this.search)
-        onChange=(action "itemSelected")
+        onChange=this.itemSelected
     as |issue|
     }}
       <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
@@ -164,13 +164,13 @@
           {{!-- Menu Footer--}}
           <li class="user-footer">
             <div class="pull-left">
-              <a href="#" class="btn btn-default btn-flat" {{action "viewProfile"}}>{{t "views.app.profile"}}</a>
+              <a href="#" class="btn btn-default btn-flat" {{on "click" (prevent-default this.viewProfile)}}>{{t "views.app.profile"}}</a>
             </div>
             <div class="pull-right">
               {{#if this.session.isAuthenticated}}
-                <a class="btn btn-default btn-flat" href="javascript:void(0);" {{action 'signOut'}}>{{t "global.form.signout"}}</a>
+                <a class="btn btn-default btn-flat" href="javascript:void(0);" {{on "click" this.signOut}}>{{t "global.form.signout"}}</a>
               {{else}}
-                <a class="btn btn-default btn-flat" href="javascript:void(0)" {{action 'signIn'}}>{{t "global.form.signin"}}</a>
+                <a class="btn btn-default btn-flat" href="javascript:void(0)" {{on "click" this.signIn}}>{{t "global.form.signin"}}</a>
               {{/if}}
             </div>
           </li>

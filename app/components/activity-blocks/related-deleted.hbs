@@ -6,7 +6,7 @@
     <LinkTo @route="app.user.page" data-activity="userName" @model={{@activity.createdUser}}>{{@activity.createdUserName}}</LinkTo>
     <Agent::UserTag @userId={{@activity.createdUser}} />
     {{t (concat "views.app.activity.related." @activity.relatedActivity)}}
-    <a href="javascript:void(0);" {{action "openMilestone" @activity.relatedActivityId}}>
+    <a href="javascript:void(0);">
       {{t (concat "global.module.singular." @activity.relatedActivityModule)}}
     </a>
   </h3>

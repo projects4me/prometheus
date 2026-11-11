@@ -28,7 +28,7 @@
           <div class="box-body no-padding">
             <div class="list-controls">
               <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-                <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="agent.read"/>
+                <FormFields::FieldCheckbox @select={{this.selectAll}} @data-select="all" @aclContext="agent.read"/>
               </span>
               <div class="btn-group">
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="delete-agents" title="{{t "global.form.delete"}}" @onClick={{this.deleteSelected}} @aclContext="agent.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
@@ -74,7 +74,7 @@
                     {{#each this.model as |agent|}}
                       <tr data-agent-id={{agent.id}}>
                         <td class="select-box">
-                          <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{agent.id}} @aclContext="agent.read"/>
+                          <FormFields::FieldCheckbox @select={{this.select}} @data-select={{agent.id}} @aclContext="agent.read"/>
                         </td>
                         <td class="agent-cell" data-agent-field="agent">
                           <Agent::Avatar @user={{agent.user}} />

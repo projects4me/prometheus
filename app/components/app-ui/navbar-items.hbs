@@ -23,11 +23,11 @@
         {{#each-in menu as |entity item|}}
           <li>
             {{#if definition.projectRelated}}
-              <a href="/{{@appPrefix}}/project/{{@trackedProject.shortCode}}/{{item.anchorRoute}}" {{action @navigate item.route definition.projectRelated @trackedProject.shortCode}}>
+              <a href="/{{@appPrefix}}/project/{{@trackedProject.shortCode}}/{{item.anchorRoute}}" {{on "click" (prevent-default @navigate item.route definition.projectRelated @trackedProject.shortCode)}}>
                 <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
               </a>
             {{else}}
-              <a href="/{{@appPrefix}}/{{item.anchorRoute}}" {{action @navigate item.route}}>
+              <a href="/{{@appPrefix}}/{{item.anchorRoute}}" {{on "click" (prevent-default @navigate item.route)}}>
                 <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
               </a>
             {{/if}}
@@ -42,12 +42,12 @@
 {{else}}
   <li class="treeview {{if (is-active-route definition.route) 'active'}}" data-navigation-module={{module}}>
     {{#if definition.projectRelated}}
-      <a href="/{{@appPrefix}}/project/{{@trackedProject.shortCode}}/{{definition.anchorRoute}}" {{action @navigate definition.route definition.projectRelated @trackedProject.shortCode}}>
+      <a href="/{{@appPrefix}}/project/{{@trackedProject.shortCode}}/{{definition.anchorRoute}}" {{on "click" (prevent-default @navigate definition.route definition.projectRelated @trackedProject.shortCode)}}>
         <i class="fa fa-{{definition.icon}}"></i>
         <span>{{t definition.label}}</span>
       </a>
     {{else}}
-      <a href="/{{@appPrefix}}/{{definition.anchorRoute}}" {{action @navigate definition.route}}>
+      <a href="/{{@appPrefix}}/{{definition.anchorRoute}}" {{on "click" (prevent-default @navigate definition.route)}}>
         <i class="fa fa-{{definition.icon}}"></i>
         <span>{{t definition.label}}</span>
       </a>

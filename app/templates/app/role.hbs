@@ -105,7 +105,7 @@
                 @label={{t "views.app.role.create.name"}}
                 @value={{this.newRole.name}}
                 @data-field="role.name"
-                @validate={{action this.validateField "roleCreate" (hash name="name" value=this.newRole.name model=this.newRole)}}
+                @validate={{fn this.validateField "roleCreate" (hash name="name" value=this.newRole.name model=this.newRole)}}
                 @message={{this.message.roleCreate.name}}
               />
 
@@ -114,7 +114,7 @@
                 @label={{t "views.app.role.create.description"}}
                 @value={{this.newRole.description}}
                 @data-field="role.description"
-                @validate={{action this.validateField "roleCreate" (hash name="description" value=this.newRole.description model=this.newRole)}}
+                @validate={{fn this.validateField "roleCreate" (hash name="description" value=this.newRole.description model=this.newRole)}}
                 @message={{this.message.roleCreate.description}}
               />
             </div>

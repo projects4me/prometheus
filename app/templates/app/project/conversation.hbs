@@ -118,8 +118,8 @@
         title="views.app.conversation.create"
         confirmLabel="global.form.save"
         closeLabel="global.form.cancel"
-        confirm=(action "addConversation")
-        close=(action "removeModal")}}
+        confirm=this.addConversation
+        close=this.removeModal}}
         <div class="box-body">
           <FormFields::FieldText
               @placeholder={{t "views.app.conversation.new.subject"}}
@@ -127,7 +127,7 @@
               @value={{this.newConversation.subject}}
               @mask="alphanumeric"
               @data-field="newConversation.subject"
-              @focus-out={{action (mut this.showSubjectError) true}}
+              @focus-out={{fn (mut this.showSubjectError) true}}
               @v-focus={{this.showSubjectError}}
               @v-model={{this.newConversation}}
               @v-field='subject'
@@ -142,7 +142,7 @@
                 @initialValue={{this.newConversation.description}}
                 @editType='wysiwyg'
                 @hide={{array 'footer'}}
-                @onContentChange={{action (mut this.newConversation.description)}}
+                @onContentChange={{fn (mut this.newConversation.description)}}
             />
             <span class="highlight"></span>
             <span class="bar"></span>
@@ -160,10 +160,10 @@
               @options={{this.roomTypes}}
               @selected={{find-by "value" this.newConversation.roomType this.roomTypes}}
               @searchField="label"
-              @onchange={{action "selectNewType"}}
+              @onchange={{this.selectNewType}}
               @relateType="relate-simple"
               @data-field="newConversation.roomType"
-              @focus-out={{action (mut this.showTypeError) true}}
+              @focus-out={{fn (mut this.showTypeError) true}}
               @v-focus={{this.showTypeError}}
               @v-model={{this.newConversation}}
               @v-field='roomType'

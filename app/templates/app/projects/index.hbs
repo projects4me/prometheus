@@ -32,8 +32,8 @@
                   title="global.form.savesearch"
                   confirmLabel="global.form.save"
                   closeLabel="global.form.cancel"
-                  confirm=(action "saveEzSearch")
-                  close=(action "removeSaveSearchDialog")}}
+                  confirm=this.saveEzSearch
+                  close=this.removeSaveSearchDialog}}
 
                 <div class="ember-view">
                   <label>{{t "views.app.project.list.savedsearch.query"}}</label>
@@ -56,7 +56,7 @@
             <div class="list-controls">
               {{!-- Check all button --}}
               <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-                <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContex="App.Project.List.SelectAllProjects"/>
+                <FormFields::FieldCheckbox @select={{this.selectAll}} @data-select="all" @aclContex="App.Project.List.SelectAllProjects"/>
               </span>
               <div class="btn-group">
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="delete-projects" title="{{t "global.form.delete"}}" @onClick={{this.deleteSelected}} @aclContext="project.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
@@ -101,7 +101,7 @@
                     {{#each this.model as |project|}}
                       <tr data-project-id={{project.id}}>
                         <td class="select-box">
-                          <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{project.id}} @aclContex="App.Project.List.SelectProject"/>
+                          <FormFields::FieldCheckbox @select={{this.select}} @data-select={{project.id}} @aclContex="App.Project.List.SelectProject"/>
                         </td>
                         
                         <td class="project-name"><LinkTo @route="app.project" @model={{project.shortCode}}>{{project.name}}</LinkTo></td>
@@ -131,7 +131,7 @@
             <div class="list-controls">
 
               <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-                <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContex="App.Project.List.SelectAllProjects"/>
+                <FormFields::FieldCheckbox @select={{this.selectAll}} @data-select="all" @aclContex="App.Project.List.SelectAllProjects"/>
               </span>
               <div class="btn-group">
                 <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="delete-projects" title="{{t "global.form.delete"}}" @onClick={{this.deleteSelected}} @aclContext="project.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
@@ -165,8 +165,8 @@
                 title="global.form.export"
                 confirmLabel="global.form.export"
                 closeLabel="global.form.cancel"
-                confirm=(action "exportModules")
-                close=(action "removeExportDialog")}}
+                confirm=this.exportModules
+                close=this.removeExportDialog}}
                 
                 <div class="form-group">
                   <FormFields::FieldRelateMulti
@@ -186,8 +186,8 @@
                 title="global.form.massupdate"
                 confirmLabel="global.form.save"
                 closeLabel="global.form.cancel"
-                confirm=(action "massUpdateProject")
-                close=(action "removeMassUpdateDialog")}}
+                confirm=this.massUpdateProject
+                close=this.removeMassUpdateDialog}}
 
                 <div class="form-group">
                   <FormFields::FieldRelate
@@ -197,7 +197,7 @@
                     @options={{this.statusOptions}}
                     @selected={{find-by "value" this.massUpdateModel.status this.statusOptions}}
                     @searchField="label"
-                    @onchange={{action "selectRelated" this.massUpdateModel 'status'}}
+                    @onchange={{fn this.selectRelated this.massUpdateModel 'status'}}
                     @relateType="relate-simple"
                     @data-field="project.status"
                   />

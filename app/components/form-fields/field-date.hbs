@@ -2,7 +2,7 @@
   <div data-field={{@data-field}} class="form-field ember-view field-date">
     <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}} readonly={{true}}
       aria-invalid="true" aria-describedBy={{@data-field}} autocomplete="off"
-      {{on "focusout" (action (mut this.shouldValidate) true) }}
+      {{on "focusout" this.enableValidation}}
       {{on "blur" (fn this.validate)}}
       {{date-picker @update @format @singleDatePicker @showDropdowns @positionX @positionY @timePicker @timePickerIncrement @startDate @endDate @minDate this.maxDate @maxSpan @minYear @maxYear @autoApply @parentEl}} />
     <span class="highlight"></span>

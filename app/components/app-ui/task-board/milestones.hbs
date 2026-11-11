@@ -152,8 +152,8 @@
     title="views.app.board.issue.create"
     closeLabel="global.form.close"
     confirmLabel="global.form.save"
-    close=(action "removeAddIssueModal")
-    confirm=(action "saveIssue")
+    close=this.removeAddIssueModal
+    confirm=this.saveIssue
   }}
     <div class="form-group">
       <FormFields::FieldText
@@ -163,7 +163,7 @@
         @value={{this.newIssue.subject}}
         @data-field="issue.subject"
         @length="255"
-        @validate={{action @validateField "issueCreate" (hash name="subject" value=this.newIssue.subject model=this.newIssue)}}
+        @validate={{fn @validateField "issueCreate" (hash name="subject" value=this.newIssue.subject model=this.newIssue)}}
         @message={{@message.issueCreate.subject}}
         @aclContext="issue.create"
         {{autofocus}}
@@ -177,7 +177,7 @@
           @initialValue={{this.newIssue.description}}
           @editType='wysiwyg'
           @hide={{array 'footer'}}
-          @onContentChange={{action @selectStatic this.newIssue 'description'}}              
+          @onContentChange={{fn @selectStatic this.newIssue 'description'}}              
         />
         <span class="highlight"></span>
         <span class="bar"></span>
@@ -195,10 +195,10 @@
         @options={{this.typeList}}
         @selected={{find-by "value" this.newIssue.typeId this.typeList}}
         @searchField="label"
-        @onchange={{action @selectRelated this.newIssue 'typeId'}}
+        @onchange={{fn @selectRelated this.newIssue 'typeId'}}
         @relateType="relate-simple"
         @data-field="issue.type"
-        @validate={{action @validateField "issueCreate" (hash name="typeId" value=this.newIssue.typeId model=this.newIssue)}}
+        @validate={{fn @validateField "issueCreate" (hash name="typeId" value=this.newIssue.typeId model=this.newIssue)}}
         @message={{@message.issueCreate.typeId}}
       />
 
@@ -209,10 +209,10 @@
         @options={{this.issueStatusList}}
         @selected={{find-by "value" this.newIssue.statusId this.issueStatusList}}
         @searchField="label"
-        @onchange={{action @selectRelated this.newIssue 'statusId'}}
+        @onchange={{fn @selectRelated this.newIssue 'statusId'}}
         @relateType="relate-simple"
         @data-field="issue.status"
-        @validate={{action @validateField "issueCreate" (hash name="statusId" value=this.newIssue.statusId model=this.newIssue)}}                
+        @validate={{fn @validateField "issueCreate" (hash name="statusId" value=this.newIssue.statusId model=this.newIssue)}}                
         @message={{@message.issueCreate.statusId}}
         @disabled={{true}}
       />
@@ -224,10 +224,10 @@
         @options={{this.priority}}
         @selected={{find-by "value" this.newIssue.priority this.priority}}
         @searchField="label"
-        @onchange={{action @selectRelated this.newIssue 'priority'}}
+        @onchange={{fn @selectRelated this.newIssue 'priority'}}
         @relateType="relate-issuepriority"
         @data-field="issue.priority"
-        @validate={{action @validateField "issueCreate" (hash name="priority" value=this.newIssue.priority model=this.newIssue)}}
+        @validate={{fn @validateField "issueCreate" (hash name="priority" value=this.newIssue.priority model=this.newIssue)}}
         @message={{@message.issueCreate.priority}}
       />
 
@@ -235,7 +235,7 @@
         @placeholder={{t "views.app.issue.create.placeholder.startDate"}}
         @label={{t "views.app.issue.create.startDate"}}
         @value="{{readonly this.newIssue.startDate}}"
-        @update={{action @selectStatic this.newIssue 'startDate'}}
+        @update={{fn @selectStatic this.newIssue 'startDate'}}
         @data-field="issue.startDate"
         @format="YYYY-MM-DD"
         @singleDatePicker={{true}}
@@ -244,7 +244,7 @@
         @positionY="down"
         @autoApply={{true}}
         @minDate='1990'
-        @validate={{action @validateField "issueCreate" (hash name="startDate" value=this.newIssue.startDate model=this.newIssue)}}                
+        @validate={{fn @validateField "issueCreate" (hash name="startDate" value=this.newIssue.startDate model=this.newIssue)}}                
         @message={{@message.issueCreate.startDate}}
       />
 
@@ -252,7 +252,7 @@
         @placeholder={{t "views.app.issue.create.placeholder.endDate"}}
         @label={{t "views.app.issue.create.endDate"}}
         @value={{readonly this.newIssue.endDate}}
-        @update={{action @selectStatic this.newIssue 'endDate'}}
+        @update={{fn @selectStatic this.newIssue 'endDate'}}
         @data-field="issue.endDate"
         @format="YYYY-MM-DD"
         @singleDatePicker={{true}}
@@ -261,7 +261,7 @@
         @positionY="down"
         @autoApply={{true}}
         @minDate='1990'
-        @validate={{action @validateField "issueCreate" (hash name="endDate" value=this.newIssue.endDate model=this.newIssue)}}                
+        @validate={{fn @validateField "issueCreate" (hash name="endDate" value=this.newIssue.endDate model=this.newIssue)}}                
         @message={{@message.issueCreate.endDate}}
       />
     </div>

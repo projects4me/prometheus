@@ -177,8 +177,8 @@
             title="views.app.role.tabs.user.userrole.title"
             confirmLabel="global.form.save"
             closeLabel="global.form.cancel"
-            confirm=(action "addUserrole")
-            close=(action "removeModal")
+            confirm=this.addUserrole
+            close=this.removeModal
             disableSaveBtn=(or this.isAddingUserroles (not this.usersList.length))
           }}
           <div class="form-group" data-role="add-userrole-form">
@@ -191,7 +191,7 @@
                 @data-field="userrole.user"
                 @options={{this.usersList}}
                 @selected={{this.selectedUsers}}
-                @onchange={{action "selectStatic" this 'selectedUsers'}}
+                @onchange={{fn this.selectStatic this 'selectedUsers'}}
                 @relateType="relate-user"
                 @closeOnSelect={{false}}
                 @aclContext="userrole.create"
@@ -211,7 +211,7 @@
           {{#bootstrap-modal
             title="views.app.role.tabs.user.viewallmembers"
             closeLabel="global.form.close"
-            close=(action "removeViewAllMembersModal")
+            close=this.removeViewAllMembersModal
           }}
             <div class="role-members-view-all" data-role="role-members-view-all">
               <div class="role-members-view-all__search">

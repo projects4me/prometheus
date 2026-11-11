@@ -27,7 +27,7 @@
                   @label={{t "views.app.agent.form.name"}}
                   @value={{this.model.name}}
                   @data-field="agent.name"
-                  @validate={{action this.validateField "agentForm" (hash name="name" value=this.model.name)}}
+                  @validate={{fn this.validateField "agentForm" (hash name="name" value=this.model.name)}}
                   @message={{this.message.agentForm.name}}
                   {{autofocus}}
                 />
@@ -40,7 +40,7 @@
                   @data-field="agent.email"
                   @showFieldInfo={{this.showFieldInfo}}
                   @info={{t "views.app.agent.form.emailInfo"}}
-                  @validate={{action this.validateField "agentForm" (hash name="email" value=this.model.email)}}
+                  @validate={{fn this.validateField "agentForm" (hash name="email" value=this.model.email)}}
                   @message={{this.message.agentForm.email}}
                 />
 
@@ -58,7 +58,7 @@
                     @initialValue={{this.model.rolePrompt}}
                     @editType="markdown"
                     @hide={{array "footer"}}
-                    @onContentChange={{action "selectStatic" this.model "rolePrompt"}}
+                    @onContentChange={{fn this.selectStatic this.model "rolePrompt"}}
                   />
                   <FormFields::Label @label={{t "views.app.agent.form.rolePrompt"}} @data-field="agent.rolePrompt" />
                 </div>
@@ -126,7 +126,7 @@
                       @options={{this.permissionModeOptions}}
                       @selected={{find-by "value" this.model.permissionMode this.permissionModeOptions}}
                       @searchEnabled={{false}}
-                      @onchange={{action "selectRelated" this.model "permissionMode"}}
+                      @onchange={{fn this.selectRelated this.model "permissionMode"}}
                       @relateType="relate-simple"
                       @data-field="agent.permissionMode"
                     />
@@ -150,7 +150,7 @@
                   @options={{this.usersList}}
                   @selected={{find-by "value" this.model.sponsorId this.usersList}}
                   @searchField="label"
-                  @onchange={{action "selectRelated" this.model "sponsorId"}}
+                  @onchange={{fn this.selectRelated this.model "sponsorId"}}
                   @relateType="relate-user"
                   @showFieldInfo={{this.showFieldInfo}}
                   @info={{t "views.app.agent.form.sponsorInfo"}}

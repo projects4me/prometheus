@@ -66,8 +66,8 @@
       title=(if this.editing.isNew "views.app.settings.issueTypes.add" "views.app.settings.issueTypes.edit")
       confirmLabel="global.form.save"
       closeLabel="global.form.cancel"
-      confirm=(action "saveIssueType")
-      close=(action "removeModal")
+      confirm=this.saveIssueType
+      close=this.removeModal
     }}
       <div class="box-body">
         {{#each this.form.labels as |field|}}
@@ -77,7 +77,7 @@
             @required={{field.required}}
             @value={{field.text}}
             @data-field={{concat "issuetype.label." field.locale}}
-            @validate={{if field.required (action this.validateField "issueTypeForm" (hash name="defaultLabel" model=this.form))}}
+            @validate={{if field.required (fn this.validateField "issueTypeForm" (hash name="defaultLabel" model=this.form))}}
             @message={{if field.required this.message.issueTypeForm.defaultLabel}}
           />
         {{/each}}
@@ -91,7 +91,7 @@
             @value={{this.form.name}}
             @onInput={{this.setValue}}
             @data-field="issuetype.name"
-            @validate={{action this.validateField "issueTypeForm" (hash name="name" model=this.form)}}
+            @validate={{fn this.validateField "issueTypeForm" (hash name="name" model=this.form)}}
             @message={{this.message.issueTypeForm.name}}
           />
         {{else}}

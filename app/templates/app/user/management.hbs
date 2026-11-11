@@ -38,7 +38,7 @@
             <div class="box-body no-padding">
               <div class="list-controls">
                 <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-                  <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="user.update"/>
+                  <FormFields::FieldCheckbox @select={{this.selectAll}} @data-select="all" @aclContext="user.update"/>
                 </span>
 
                 <div class="btn-group">
@@ -90,7 +90,7 @@
                       {{#each this.model as |user|}}
                         <tr data-user-id={{user.id}}>
                           <td>
-                            <FormFields::FieldCheckbox @select={{action this.select}} @data-select={{user.id}} @aclContext="user.update"/>
+                            <FormFields::FieldCheckbox @select={{this.select}} @data-select={{user.id}} @aclContext="user.update"/>
                           </td>
 
                           <td class="user-profile" data-user-field="profile">
@@ -133,7 +133,7 @@
 
                             <UserManagement::AccountStatus
                               @user={{user}}
-                              @changeUserStatus={{action this.changeUserStatus user}}
+                              @changeUserStatus={{fn this.changeUserStatus user}}
                               @aclContext="user.update"
                               @switchSize="sm"
                             />
@@ -156,7 +156,7 @@
             <div class="box-footer no-padding">
               <div class="list-controls">
                 <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
-                  <FormFields::FieldCheckbox @select={{action this.selectAll}} @data-select="all" @aclContext="user.update"/>
+                  <FormFields::FieldCheckbox @select={{this.selectAll}} @data-select="all" @aclContext="user.update"/>
                 </span>
                 <div class="btn-group">
                   <AppUi::Button data-btn="delete" type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.form.delete"}}" @aclContext="user.delete">

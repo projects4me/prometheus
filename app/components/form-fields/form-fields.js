@@ -330,6 +330,15 @@ export default class FormFieldsComponent extends Component {
     }
 
     /**
+     * Flags the field so its validation message is shown.
+     *
+     * @method enableValidation
+     */
+    @action enableValidation() {
+        this.shouldValidate = true;
+    }
+
+    /**
      * Handles keydown events for power select component.
      * 
      * @method handlePowerSelectKeydown
