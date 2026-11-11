@@ -17,8 +17,12 @@ module.exports = function (defaults) {
         },
         // Add options here
         // ember-concurrency is a v2 addon: it needs the async-arrow task transform to compile task(async () => {})
+        // ember-cli-code-coverage adds the istanbul plugin only when COVERAGE=true
         babel: {
-            plugins: [require.resolve('ember-concurrency/async-arrow-task-transform')]
+            plugins: [
+                require.resolve('ember-concurrency/async-arrow-task-transform'),
+                ...require('ember-cli-code-coverage').buildBabelPlugin()
+            ]
         },
         sassOptions: {
             implementation: sass

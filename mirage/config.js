@@ -54,10 +54,11 @@ import * as Workflowreference from './route-handlers/workflowreference';
 import * as Workflowevent from './route-handlers/workflowevent';
 import * as Ideaplanissue from './route-handlers/ideaplanissue';
 
-export function makeServer(config) {
+// ember-cli-mirage 3 starts Mirage with the default export and passes the app's store in config
+export default function makeServer(config) {
     let finalConfig = {
         ...config,
-        models: { ...discoverEmberDataModels(), ...config.models },
+        models: { ...discoverEmberDataModels(config.store), ...config.models },
         routes,
     };
     let server = createServer(finalConfig);

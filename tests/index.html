@@ -33,6 +33,19 @@
     </div>
 
     <script src="/testem.js" integrity="" data-embroider-ignore></script>
+    <script>
+      // ember-cli 4.1's test-support.js hooks Testem in before QUnit exists (ember-qunit 9 loads QUnit
+      // through ember-auto-import, later). Skip that early call, as ember-cli 4.12 does; ember-qunit
+      // hooks Testem in once QUnit has loaded. Drop this when ember-cli is 4.12 or newer.
+      if (typeof Testem !== 'undefined') {
+        var hookIntoTestFramework = Testem.hookIntoTestFramework;
+        Testem.hookIntoTestFramework = function () {
+          if (typeof QUnit !== 'undefined') {
+            hookIntoTestFramework.apply(this, arguments);
+          }
+        };
+      }
+    </script>
     <script src="{{rootURL}}assets/vendor.js"></script>
     <script src="{{rootURL}}assets/test-support.js"></script>
     <script src="{{rootURL}}assets/prometheus.js"></script>
