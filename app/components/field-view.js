@@ -4,6 +4,7 @@
 
 import Validator from  "../utils/validator/fields";
 import Component from '@ember/component';
+import { getOwner } from '@ember/application';
 import { computed, action } from '@ember/object';
 import $ from 'jquery';
 
@@ -34,7 +35,7 @@ export default Component.extend({
         let view = this.view;
 
         let template = 'components/field/'+type+'/'+view;
-        if (Prometheus.__container__.lookup('template:'+template) === undefined) {
+        if (getOwner(this).lookup('template:'+template) === undefined) {
             template = 'components/field/text/'+view;
         }
         return template;

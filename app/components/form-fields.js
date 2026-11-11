@@ -3,6 +3,7 @@
  */
 
 import Component from '@ember/component';
+import { getOwner } from '@ember/application';
 import { computed } from '@ember/object';
 import { cancel } from '@ember/runloop';
 import { later } from '@ember/runloop';
@@ -219,16 +220,7 @@ export default Component.extend({
         let type = this.get('type');
 
         let template = 'components/form-fields/'+type;
-        let container;
-        if (Prometheus.__container__ === undefined && Prometheus._applicationInstances[0] != undefined) {
-            container = Prometheus._applicationInstances[0].__container__;
-        } else if (Prometheus._applicationInstances[0] === undefined) {
-            container = Prometheus._applicationInstances.entries().next().value[0].__container__;
-        } else {
-            container = Prometheus.__container__;
-        }
-
-        if (container.lookup('template:'+template) === undefined) {
+        if (getOwner(this).lookup('template:'+template) === undefined) {
             template = 'components/form-fields/text';
         }
 
