@@ -1,25 +1,41 @@
 <AccessControl @aclContext={{@aclContext}}>
-  <div data-field={{@data-field}} class="form-field ember-view field-date">
-    <Input placeholder={{@placeholder}} @type={{@type}} class="form-control input-sm data-input" @value={{@value}} readonly={{true}}
-      aria-invalid="true" aria-describedBy={{@data-field}} autocomplete="off"
-      {{on "focusout" this.enableValidation}}
-      {{on "blur" (fn this.validate)}}
-      {{date-picker @update @format @singleDatePicker @showDropdowns @positionX @positionY @timePicker @timePickerIncrement @startDate @endDate @minDate this.maxDate @maxSpan @minYear @maxYear @autoApply @parentEl}} />
-    <span class="highlight"></span>
-    <span class="bar"></span>
-
-    <FormFields::Label
+  {{#if this.isDayMonth}}
+    <FormFields::FieldDayMonth
+      @value={{@value}}
+      @update={{@update}}
       @label={{@label}}
       @showFieldInfo={{@showFieldInfo}}
       @info={{@info}}
-      @data-field={{@data-field}}
       @required={{@required}}
+      @disabled={{@disabled}}
+      @validate={{@validate}}
+      @message={{@message}}
+      @data-field={{@data-field}}
     />
+  {{else}}
+    <div data-field={{@data-field}} class="form-field ember-view field-date">
+      <input type="date" placeholder={{@placeholder}} class="form-control input-sm data-input"
+        value={{@value}} min={{this.min}} max={{this.max}} disabled={{@disabled}}
+        aria-invalid="true" aria-describedBy={{@data-field}} autocomplete="off"
+        {{on "change" this.onDateChange}}
+        {{on "focusout" this.enableValidation}}
+        {{on "blur" (fn this.validate)}} />
+      <span class="highlight"></span>
+      <span class="bar"></span>
 
-    {{#if (and @message this.shouldValidate)}}
-      <span class="error text-red" id={{@data-field}}>
-        {{@message}}
-      </span>
-    {{/if}}
-  </div>
+      <FormFields::Label
+        @label={{@label}}
+        @showFieldInfo={{@showFieldInfo}}
+        @info={{@info}}
+        @data-field={{@data-field}}
+        @required={{@required}}
+      />
+
+      {{#if (and @message this.shouldValidate)}}
+        <span class="error text-red" id={{@data-field}}>
+          {{@message}}
+        </span>
+      {{/if}}
+    </div>
+  {{/if}}
 </AccessControl>

@@ -53,24 +53,6 @@
                 flex: 1;
             }
         }
-
-        [data-field="user.dateOfBirth"] {
-            .daterangepicker {
-                .yearselect,
-                .next.available,
-                .prev.available {
-                    display: none;
-                }
-
-                th:not([class]) {
-                    display: none;
-                }
-
-                .monthselect {
-                    float: left;
-                }
-            }
-        }
     }
 
     .profile-picture {
