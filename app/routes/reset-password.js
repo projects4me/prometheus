@@ -34,7 +34,18 @@ export default class ResetPasswordRoute extends Route {
         const token = transition.to.queryParams.token;
 
         await this.validateResetToken(token)
-        this.router.resetToken = token;
+        this.resetToken = token;
+    }
+
+    /**
+     * Hands the validated reset token to the controller.
+     *
+     * @param {Controller} controller
+     * @param {*} model
+     */
+    setupController(controller, model) {
+        super.setupController(controller, model);
+        controller.resetToken = this.resetToken;
     }
 
     /**

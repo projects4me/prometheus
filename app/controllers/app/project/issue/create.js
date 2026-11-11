@@ -393,10 +393,10 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
      */
     navigateToSuccess(model) {
         if (this.sourceThread) {
-            this.transitionToRoute('app.project.conversation.page', this.sourceThread.id);
+            this.router.transitionTo('app.project.conversation.page', this.sourceThread.id);
             return;
         }
-        this.transitionToRoute('app.project.issue.page', model.get('issueNumber'));
+        this.router.transitionTo('app.project.issue.page', model.get('issueNumber'));
     }
 
     /**
@@ -445,10 +445,10 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
      */
     afterCancel() {
         if (this.sourceThread) {
-            this.transitionToRoute('app.project.conversation.page', this.sourceThread.id);
+            this.router.transitionTo('app.project.conversation.page', this.sourceThread.id);
             return;
         }
-        this.transitionToRoute('app.project.issue', {  shortcode: this.trackedProject.shortCode });
+        this.router.transitionTo('app.project.issue', {  shortcode: this.trackedProject.shortCode });
     }
 
     /**

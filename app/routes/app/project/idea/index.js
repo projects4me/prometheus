@@ -3,6 +3,7 @@
  */
 
 import App from 'prometheus/routes/app';
+import { browserQueryParams } from 'prometheus/utils/idea/browser-defaults';
 
 /**
  * The route shown when no idea is selected
@@ -31,7 +32,8 @@ export default class AppProjectIdeaIndexRoute extends App {
      */
     redirect() {
         if (this.acl.checkAccess('idea.create')) {
-            this.transitionTo('app.project.idea.create');
+            let queryParams = browserQueryParams(this.paramsFor('app.project.idea'));
+            this.router.transitionTo(this.router.urlFor('app.project.idea.create', this.paramsFor('app.project').shortcode, { queryParams }));
         }
     }
 }

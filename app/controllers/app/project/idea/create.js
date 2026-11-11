@@ -9,6 +9,7 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { htmlSafe } from '@ember/template';
 import { guidFor } from '@ember/object/internals';
+import { browserQueryParams } from 'prometheus/utils/idea/browser-defaults';
 
 /**
  * The controller of the new idea page. It creates the idea with its first message
@@ -136,7 +137,8 @@ export default class AppProjectIdeaCreateController extends PrometheusCreateCont
      */
     navigateToSuccess(idea) {
         this.ideaController.addIdea(idea);
-        this.transitionToRoute('app.project.idea.page', idea.id);
+        let queryParams = browserQueryParams(this.ideaController);
+        this.router.transitionTo(this.router.urlFor('app.project.idea.page', idea.id, { queryParams }));
     }
 
     /**

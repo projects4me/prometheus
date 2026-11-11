@@ -26,6 +26,6 @@ export default class AppProjectWikiIndexController extends PrometheusController 
      * @public
      */
     @action create() {
-        this.transitionToRoute('app.project.wiki.create', { shortcode: this.trackedProject.shortCode });
+        this.router.transitionTo('app.project.wiki.create', { shortcode: this.trackedProject.shortCode });
     }
 }

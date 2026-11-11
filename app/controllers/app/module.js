@@ -166,7 +166,7 @@ export default class AppModuleController extends PrometheusController {
      */
     @action detail(id) {
         let URIData = navi.buildURL(camelize(this.module), 'detail', { id: id });
-        this.transitionToRoute(URIData.route, URIData.options);
+        this.router.transitionTo(URIData.route, URIData.options);
     }
 
     /**
@@ -242,6 +242,6 @@ export default class AppModuleController extends PrometheusController {
             this.set('page', 0);
         }
         let URIData = navi.buildURL(camelize(this.module), 'module');
-        this.transitionToRoute(URIData.route, URIData.options, { queryParams: { page: this.page, query: this.queryString, sort: this.sort, order: this.sortOrder } });
+        this.router.transitionTo(URIData.route, URIData.options, { queryParams: { page: this.page, query: this.queryString, sort: this.sort, order: this.sortOrder } });
     }
 }

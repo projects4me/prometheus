@@ -49,6 +49,6 @@ export default class AppProjectWikiController extends PrometheusController {
     @action create() {
         Logger.debug('Create a page for ');
         Logger.debug(this.projectId);
-        this.transitionToRoute('app.project.wiki.create', { shortcode: this.trackedProject.shortCode });
+        this.router.transitionTo('app.project.wiki.create', { shortcode: this.trackedProject.shortCode });
     }
 }

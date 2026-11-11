@@ -25,6 +25,15 @@ export default class ResetPasswordController extends PrometheusCreateController 
 	 * @for ResetPasswordController
 	 * @public
 	 */
+	/**
+	 * The validated password reset token, set by the route
+	 *
+	 * @property resetToken
+	 * @type String
+	 * @public
+	 */
+	resetToken = null;
+
 	@tracked password = '';
 
 	/**
@@ -136,7 +145,7 @@ export default class ResetPasswordController extends PrometheusCreateController 
 	 */
 	@action
 	async updateUserPassword() {
-		let token = this.router.resetToken;
+		let token = this.resetToken;
 		let url = `${ENV.api.host}/api/v${ENV.api.version}/resetpassword/${token}`;
 		let requestBody = {
 			password: this.password,

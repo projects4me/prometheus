@@ -131,7 +131,7 @@ export default class AppController extends PrometheusController {
         let self = this;
         let user_id = self.get('currentUser').user.id;
 
-        self.transitionToRoute('app.user.page', user_id);
+        self.router.transitionTo('app.user.page', user_id);
         Logger.debug('-Prometheus.Controllers.App::userProfile');
     }
 
@@ -145,8 +145,8 @@ export default class AppController extends PrometheusController {
         Logger.debug('+Prometheus.Controllers.App::itemSearched');
         let _self = this;
 
-        _self.transitionToRoute('app.project', selected.project.get('shortCode'));
-        _self.transitionToRoute('app.project.issue.page', selected.number);
+        _self.router.transitionTo('app.project', selected.project.get('shortCode'));
+        _self.router.transitionTo('app.project.issue.page', selected.number);
         Logger.debug('-Prometheus.Controllers.App::itemSearched');
     }
 

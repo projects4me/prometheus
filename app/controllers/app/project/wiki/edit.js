@@ -244,7 +244,7 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
      */
     afterCancel(model) {
         model.rollbackAttributes();
-        this.transitionToRoute('app.project.wiki.page', {
+        this.router.transitionTo('app.project.wiki.page', {
             shortcode: this.trackedProject.shortCode,
             wiki_name: model.get('name')
         });

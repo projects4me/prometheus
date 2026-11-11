@@ -319,7 +319,7 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	 * @protected
 	 */
 	afterCancel() {
-		this.transitionToRoute('app.user.management');
+		this.router.transitionTo('app.user.management');
 	}
 
 	/**
