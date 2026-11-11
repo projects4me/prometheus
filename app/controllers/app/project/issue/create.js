@@ -2,7 +2,6 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import PrometheusCreateController from "prometheus/controllers/prometheus/create";
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { inject as controller } from '@ember/controller';
 import { computed, action } from '@ember/object';
@@ -18,10 +17,10 @@ import { htmlSafe } from '@ember/template';
  * @class AppProjectIssueCreateController
  * @namespace Prometheus.Controllers
  * @module App.Project.Issue
- * @extends PrometheusCreateController
+ * @extends ProjectRelatedController
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default class AppProjectIssueCreateController extends PrometheusCreateController.extend(ProjectRelated) {
+export default class AppProjectIssueCreateController extends ProjectRelated {
 
     /**
      * This object holds all of the information that we need to create our schema and also need to 
@@ -467,8 +466,8 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
      * @type {Task}
      * @public
      */
-    @(task(function* (query) {
-        yield timeout(300);
+    parentIssueSearch = task(async (query) => {
+        await timeout(300);
         let projectId = this.project?.id;
         if (!projectId) return [];
         let baseQuery = `((Issue.projectId : ${projectId}) AND (Issue.issueNumber !: ${this.model.issueNumber}))`;
@@ -481,7 +480,7 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
             sort: 'Issue.issueNumber',
             order: 'DESC'
         };
-        let data = yield this.store.query('issue', options);
+        let data = await this.store.query('issue', options);
         let map = {
             id: 'id',
             name: 'subject',
@@ -490,7 +489,7 @@ export default class AppProjectIssueCreateController extends PrometheusCreateCon
             project: 'project'
         };
         return (new format(this)).getSelectList(data, map);
-    })) parentIssueSearch;
+    });
 
     /**
      * Sets the parent issue from the PowerSelect selection.

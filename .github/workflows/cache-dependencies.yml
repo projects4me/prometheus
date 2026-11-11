@@ -20,18 +20,12 @@ jobs:
       uses: actions/cache@v3
       with:
         path: node_modules
-        key: npm-cache
+        # Keyed on package.json, so a dependency change misses the cache and reinstalls.
+        key: npm-${{ hashFiles('package.json') }}
 
-    - name: Watch change in package.json
-      id: watch-package-json
-      uses: tj-actions/changed-files@v32
-      with:
-          files: "package.json"
-
+    # The image's npm 8.1.2 ignores package.json "overrides" (npm >= 8.3), so install with npm 8.19.4 (Node 16 compatible).
     - name: Install Node modules
-      if: |
-        steps.watch-package-json.outputs.any_changed == 'true'
-        || steps.node-packages.outputs.cache-hit != 'true'
+      if: ${{ steps.node-packages.outputs.cache-hit != 'true' }}
       run: |
         rm -rf node_modules/
-        npm install
+        npx -y npm@8.19.4 install --no-audit --no-fund

@@ -257,14 +257,13 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @type task
      * @private
      */
-    @(task(function* (file) {
-        let _self = this;
+    handleUpload = task({ maxConcurrency: 3, enqueue: true }, async (file) => {
         Logger.debug('Trying to upload a file');
-        let maxFileSize = _self.config.app.upload.maxFileSize;
+        let maxFileSize = this.config.app.upload.maxFileSize;
 
         if(file.size > maxFileSize) {
             new Messenger().post({
-                message: _self.intl.t("views.app.issue.detail.file.uploadFailedSize", { size: maxFileSize / 1024 / 1024 }),
+                message: this.intl.t("views.app.issue.detail.file.uploadFailedSize", { size: maxFileSize / 1024 / 1024 }),
                 type: 'error',
                 showCloseButton: true
             });
@@ -278,13 +277,13 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'issue',
-                    relatedId: _self.issue.id
+                    relatedId: this.issue.id
                 },
                 headers: upload.store.adapterFor('upload').headers
             };
 
-            let response = yield file.upload(options);
-            let data = yield response.json();
+            let response = await file.upload(options);
+            let data = await response.json();
             
             // Update the upload record with the response data
             upload.setProperties({
@@ -297,17 +296,17 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             });
 
             // Add to the relationship
-            _self.issue.get('files').pushObject(upload);
+            this.issue.get('files').pushObject(upload);
 
         } catch (e) {
             new Messenger().post({
-                message: _self.intl.t("views.app.issue.detail.file.uploadfailed"),
+                message: this.intl.t("views.app.issue.detail.file.uploadfailed"),
                 type: 'error',
                 showCloseButton: true
             });
             upload.rollback();
         }
-    })).maxConcurrency(3).enqueue() handleUpload
+    });
 
     /**
      * This function saves the comment in the database
@@ -1286,8 +1285,8 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      * @type task
      * @public
      */
-    @task(function* (query) {
-       yield timeout(500);
+    search = task(async (query) => {
+       await timeout(500);
        return this.loadSearchData(query);
-    }) search
+    });
 }

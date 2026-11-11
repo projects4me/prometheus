@@ -75,23 +75,21 @@ export default class AppProjectWikiPageController extends PrometheusController {
      * @type task
      * @private
      */
-    @(task(function* (file) {
-        let _self = this;
-
+    handleUpload = task({ maxConcurrency: 3, enqueue: true }, async (file) => {
         let upload = this.store.createRecord('upload', {});
 
         try {
-            let { access_token } = _self.get('session.data.authenticated');
+            let { access_token } = this.get('session.data.authenticated');
             let options = {
                 url: upload.store.adapterFor('upload').buildURL('upload'),
                 data: {
                     relatedTo: 'wiki',
-                    relatedId: _self.get('model').get('id')
+                    relatedId: this.get('model').get('id')
                 },
                 headers: { 'Authorization': `Bearer ${access_token}` }
             };
 
-            let response = yield file.upload(options);
+            let response = await file.upload(options);
 
             let data = JSON.parse(response.body);
             set(upload, 'id', data.data.id);
@@ -102,16 +100,16 @@ export default class AppProjectWikiPageController extends PrometheusController {
             set(upload, 'relatedTo', data.data.attributes.relatedTo);
             set(upload, 'relatedId', data.data.attributes.relatedId);
             set(upload, 'fileThumbnail', data.data.attributes.fileThumbnail);
-            _self.get('model').get('files').pushObject(upload);
+            this.get('model').get('files').pushObject(upload);
         } catch (e) {
             new Messenger().post({
-                message: _self.intl.t("global.oops"),
+                message: this.intl.t("global.oops"),
                 type: 'error',
                 showCloseButton: true
             });
             //upload.rollback();
         }
-    })).maxConcurrency(3).enqueue() handleUpload
+    });
 
 
     /**

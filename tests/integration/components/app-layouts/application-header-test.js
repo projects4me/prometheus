@@ -4,7 +4,9 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, settled } from '@ember/test-helpers';
+import { setupMirage } from 'ember-cli-mirage/test-support';
+import { clickTrigger, typeInSearch } from 'ember-power-select/test-support/helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import CurrentUserStub from '../../stub-services/current-user-stub';
 import AclStub from '../../stub-services/acl-stub';
@@ -65,5 +67,37 @@ module('Integration | Component | application-header', function (hooks) {
         ['fa-tasks', 'fa-comments', 'fa-briefcase'].forEach((icon, idx) => {
             assert.ok(links[idx].firstElementChild.classList.contains(icon), `${icon} is the first child`);
         });
+    });
+});
+module('Integration | Component | application-header search task', function (hooks) {
+    setupRenderingTest(hooks);
+    setupMirage(hooks);
+
+    hooks.beforeEach(function () {
+        this.owner.register('service:acl', AclStub);
+        this.owner.register('service:current-user', CurrentUserStub);
+    });
+
+    test('typing twice within the debounce sends one search request for the second query', async function (assert) {
+        const queries = [];
+        this.server.get('/issue', (schema, request) => {
+            queries.push(request.queryParams.query || '');
+            return {
+                data: [{ id: '1', type: 'issue', attributes: { subject: 'beta two', issueNumber: 2, status: 'new' } }],
+                meta: { count: 1 }
+            };
+        });
+
+        await render(hbs`<AppLayouts::ApplicationHeader />`);
+        await clickTrigger('.global-search');
+        const first = typeInSearch('alp');
+        const second = typeInSearch('beta');
+        await Promise.all([first, second]);
+        await settled();
+
+        const searches = queries.filter((q) => q.includes('CONTAINS'));
+        assert.strictEqual(searches.length, 1, 'exactly one search request');
+        assert.ok(searches[0].includes('beta'), 'the request is for the second query');
+        assert.ok(!searches[0].includes('alp'), 'the first query was cancelled');
     });
 });
