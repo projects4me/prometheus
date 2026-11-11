@@ -43,7 +43,7 @@ export default Model.extend({
      * @for Converser
      * @private
      */
-    chatroom: belongsTo('chatroom'),
+    chatroom: belongsTo('chatroom', { async: true, inverse: null }),
 
     /**
      * The users who are conversing
@@ -53,6 +53,6 @@ export default Model.extend({
      * @for Converser
      * @private
      */
-    users: hasMany('user')
+    users: hasMany('user', { async: true, inverse: null })
     
 });

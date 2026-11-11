@@ -121,6 +121,6 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    user: belongsTo('user'),
+    user: belongsTo('user', { async: true, inverse: 'skills' }),
 
 });

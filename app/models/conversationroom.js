@@ -162,7 +162,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    createdBy: belongsTo('user'),
+    createdBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The user who modified the room
@@ -172,7 +172,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    modifiedBy: belongsTo('user'),
+    modifiedBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The project this room belongs to
@@ -182,7 +182,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    project: belongsTo('project'),
+    project: belongsTo('project', { async: true, inverse: 'conversations' }),
 
     /**
      * The issue this room belongs to
@@ -192,7 +192,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    issue: belongsTo('issue'),
+    issue: belongsTo('issue', { async: true, inverse: 'conversationroom' }),
 
     /**
      * Comments made on this conversation room
@@ -202,7 +202,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    comments: hasMany('comment'),
+    comments: hasMany('comment', { async: true, inverse: 'conversationRoom' }),
 
     /**
      * Votes made on this conversation room
@@ -212,6 +212,6 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    votes: hasMany('vote')
+    votes: hasMany('vote', { async: true, inverse: 'conversationroom' })
 
 });

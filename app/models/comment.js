@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    createdby: belongsTo('user'),
+    createdby: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The user who last modified the comment
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    modifiedBy: belongsTo('user'),
+    modifiedBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The conversation room the comment is associated with
@@ -142,7 +142,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    conversationRoom: belongsTo('conversationroom'),
+    conversationRoom: belongsTo('conversationroom', { async: true, inverse: 'comments' }),
     
     /**
      * The chat room the comment is associated with
@@ -152,7 +152,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    chatRoom: belongsTo('chatroom'),
+    chatRoom: belongsTo('chatroom', { async: true, inverse: 'comments' }),
 
     /**
      * The issue the comment is associated with
@@ -162,6 +162,6 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    issue: belongsTo('issue')
+    issue: belongsTo('issue', { async: true, inverse: 'comments' })
     
 });

@@ -102,5 +102,5 @@ export default class BadgeModel extends Model {
      * @for Badge
      * @private
      */
-    @belongsTo('user') user;
+    @belongsTo('user', { async: true, inverse: 'badges' }) user;
 }

@@ -162,7 +162,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    createdBy: belongsTo('user'),
+    createdBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The user who last modified the wiki
@@ -172,7 +172,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    modifiedBy: belongsTo('user'),
+    modifiedBy: belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The tags for the wiki page
@@ -182,7 +182,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    tag: hasMany('tag'),
+    tag: hasMany('tag', { async: true, inverse: 'wiki' }),
 
     /**
      * These are the tag relationship entries
@@ -192,7 +192,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    tagged: hasMany('tagged'),
+    tagged: hasMany('tagged', { async: true, inverse: 'wiki' }),
 
     /**
      * The votes for this wiki page
@@ -202,7 +202,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    vote: hasMany('vote'),
+    vote: hasMany('vote', { async: true, inverse: 'wiki' }),
 
     /**
      * The file associated with this wiki
@@ -212,6 +212,6 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    files: hasMany('upload')
+    files: hasMany('upload', { async: true, inverse: null })
 
 });

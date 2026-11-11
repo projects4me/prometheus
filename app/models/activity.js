@@ -145,7 +145,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    createdBy : belongsTo('user'),
+    createdBy : belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The project the activity is related to
@@ -155,7 +155,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    project : belongsTo('project'),
+    project : belongsTo('project', { async: true, inverse: 'activities' }),
 
     /**
      * The issue the activity is related to
@@ -165,5 +165,5 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    issue : belongsTo('issue'),
+    issue : belongsTo('issue', { async: true, inverse: 'activities' }),
 });

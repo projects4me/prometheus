@@ -142,7 +142,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    createdBy : belongsTo('user'),
+    createdBy : belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The user who last modified the milestone
@@ -152,7 +152,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    modifiedBy : belongsTo('user'),
+    modifiedBy : belongsTo('user', { async: true, inverse: null }),
 
     /**
      * The project the milestone is related to
@@ -162,7 +162,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    project : belongsTo('project'),
+    project : belongsTo('project', { async: true, inverse: 'milestones' }),
 
     /**
      * The issues that belongs to this milestone
@@ -172,6 +172,6 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    issues : hasMany('issue', {async : false}),
+    issues : hasMany('issue', { async: false, inverse: 'issuemilestone' }),
 
 });

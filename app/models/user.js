@@ -307,7 +307,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    dashboard: belongsTo('dashboard'),
+    dashboard: belongsTo('dashboard', { async: true, inverse: null }),
 
     /**
      * Open closed projects of user.
@@ -317,7 +317,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    openClosedProject: belongsTo('useropenclosedproject'),
+    openClosedProject: belongsTo('useropenclosedproject', { async: true, inverse: null }),
 
     /**
      * Open closed issues of user.
@@ -327,7 +327,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    openClosedIssue: belongsTo('useropenclosedissue'),
+    openClosedIssue: belongsTo('useropenclosedissue', { async: true, inverse: null }),
 
     /**
       * Total time spent by user on issues.
@@ -337,7 +337,7 @@ export default Model.extend({
       * @for User
       * @private
       */
-    timeSpent: belongsTo('usertimespent'),
+    timeSpent: belongsTo('usertimespent', { async: true, inverse: null }),
 
     /**
      * Daily collaboration of user in application.
@@ -347,7 +347,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    collaboration: belongsTo('usercollaboration'),
+    collaboration: belongsTo('usercollaboration', { async: true, inverse: null }),
 
     /**
      * These are the latest projects of user.
@@ -357,7 +357,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    latestProjects: hasMany('userlatestproject'),
+    latestProjects: hasMany('userlatestproject', { async: true, inverse: null }),
 
     /**
      * These are the latest issues of user.
@@ -367,7 +367,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    latestIssues: hasMany('userlatestissue'),
+    latestIssues: hasMany('userlatestissue', { async: true, inverse: null }),
 
     /**
      * These are the members whom worked most with the user.
@@ -377,7 +377,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    mostWorkedMembers: hasMany('userworkmostwith'),
+    mostWorkedMembers: hasMany('userworkmostwith', { async: true, inverse: null }),
 
     /**
      * These are the recent activities of the user.
@@ -387,7 +387,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    recentActivities: hasMany('userecentactivity'),
+    recentActivities: hasMany('userecentactivity', { async: true, inverse: null }),
 
     /**
      * These are the tag relationship entries
@@ -397,7 +397,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    tagged: hasMany('tagged'),
+    tagged: hasMany('tagged', { async: true, inverse: null }),
 
     /**
      * These are the user projects
@@ -407,7 +407,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    projects: hasMany('project'),
+    projects: hasMany('project', { async: true, inverse: 'members' }),
 
     /**
      * These are the badges earned by user.
@@ -417,7 +417,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    badges: hasMany('badge'),
+    badges: hasMany('badge', { async: true, inverse: 'user' }),
 
     /**
      * These are the user acl permissions.
@@ -427,7 +427,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    aclPermissions: hasMany('userpermission', {async: false}),
+    aclPermissions: hasMany('userpermission', { async: false, inverse: null }),
 
     /**
      * These are the level of each badge, earned by user.
@@ -437,7 +437,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    badgeLevels: hasMany('badgelevel'),
+    badgeLevels: hasMany('badgelevel', { async: true, inverse: null }),
 
     /**
      * Skills associated with this user.
@@ -447,7 +447,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    skills: hasMany('userskill'),
+    skills: hasMany('userskill', { async: true, inverse: 'user' }),
 
     /**
      * External identities (provider, handle, ...) of this user or agent.
@@ -457,7 +457,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    identities: hasMany('useridentity'),
+    identities: hasMany('useridentity', { async: true, inverse: 'user' }),
 
     /**
      * Qualification entries (education or certification) for this user.
@@ -467,7 +467,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    qualifications: hasMany('userqualification'),
+    qualifications: hasMany('userqualification', { async: true, inverse: 'user' }),
 
     /**
      * This computed property is used in order to prepare an array of 
