@@ -9,6 +9,7 @@ import { inject as service } from '@ember/service';
 import { calculateBarWidth, calculateBarPosition } from 'prometheus/utils/gantt-helpers';
 import DateUtils from 'prometheus/utils/date';
 import { later } from '@ember/runloop';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This component renders a single Gantt bar (milestone or task)
@@ -837,12 +838,10 @@ export default class GanttBarComponent extends AppComponent {
 
                 if (this.resizeHandle === 'left') {
                     // Resizing from left: adjust start date
-                    newStartDate = moment(this.originalStartDate)
-                        .add(daysOffset, 'days')
-                        .format('YYYY-MM-DD');
+                    newStartDate = dates.format(dates.add(this.originalStartDate, daysOffset, 'days'), 'YYYY-MM-DD');
                     
                     // Ensure start date doesn't exceed end date
-                    if (moment(newStartDate).isAfter(this.originalEndDate)) {
+                    if (dates.isAfter(newStartDate, this.originalEndDate)) {
                         newStartDate = this.originalEndDate;
                     }
                 } else if (this.resizeHandle === 'right') {
@@ -854,12 +853,10 @@ export default class GanttBarComponent extends AppComponent {
                     
                     // End date = start date + (width in days - 1) because width is inclusive
                     // For example: start Oct 15, width 5 days = Oct 15, 16, 17, 18, 19 (end = Oct 19)
-                    newEndDate = moment(this.originalStartDate)
-                        .add(newWidthInDays - 1, 'days')
-                        .format('YYYY-MM-DD');
+                    newEndDate = dates.format(dates.add(this.originalStartDate, newWidthInDays - 1, 'days'), 'YYYY-MM-DD');
                     
                     // Ensure end date doesn't go before start date
-                    if (moment(newEndDate).isBefore(this.originalStartDate)) {
+                    if (dates.isBefore(newEndDate, this.originalStartDate)) {
                         newEndDate = this.originalStartDate;
                     }
                 }

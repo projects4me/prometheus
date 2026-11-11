@@ -8,6 +8,7 @@ import { tracked } from '@glimmer/tracking';
 import { htmlSafe } from '@ember/template';
 import DateUtils from 'prometheus/utils/date';
 import format from 'prometheus/utils/data/format';
+import * as dates from 'prometheus/utils/date';
 
 const TIME_LEFT_WARNING_THRESHOLD_HOURS = 8;
 const TIME_LEFT_HIDDEN_STATUSES = ['done', 'deferred', 'wont_fix'];
@@ -92,7 +93,7 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 
 		// Check if milestone is overdue
 		if (status === 'in_progress' || status === 'planned') {
-			if (moment().isSameOrAfter(milestone.endDate)) {
+			if (dates.isSameOrAfter(dates.now(), milestone.endDate)) {
 				status = 'overdue';
 			}
 		}
@@ -116,7 +117,7 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 
 		// Check if milestone is overdue
 		if (status === 'in_progress' || status === 'planned') {
-			if (moment().isSameOrAfter(milestone.endDate)) {
+			if (dates.isSameOrAfter(dates.now(), milestone.endDate)) {
 				status = 'overdue';
 			}
 		}
@@ -445,11 +446,11 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 			};
 		}
 
-		let now = moment();
-		let startDate = moment(issue.startDate);
-		let endDate = moment(issue.endDate);
+		let now = dates.now();
+		let startDate = issue.startDate;
+		let endDate = issue.endDate;
 
-		if (!startDate.isValid() || !endDate.isValid() || endDate.isBefore(startDate)) {
+		if (!dates.isValid(startDate) || !dates.isValid(endDate) || dates.isBefore(endDate, startDate)) {
 			return {
 				label: this.intl.t('views.app.board.notAvailable'),
 				state: 'normal',
@@ -459,10 +460,10 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 		}
 
 		let hoursLeft = 0;
-		if (now.isBefore(startDate)) {
-			hoursLeft = endDate.diff(startDate, 'hours');
+		if (dates.isBefore(now, startDate)) {
+			hoursLeft = dates.diff(endDate, startDate, 'hours');
 		} else {
-			hoursLeft = endDate.diff(now, 'hours');
+			hoursLeft = dates.diff(endDate, now, 'hours');
 		}
 
 		if (hoursLeft <= 0) {

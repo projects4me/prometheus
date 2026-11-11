@@ -3,6 +3,7 @@
  */
 
 import Helper from '@ember/component/helper';
+import { format as formatDate } from 'prometheus/utils/date';
 
 /**
  * Formats a date string according to the specified format.
@@ -47,6 +48,6 @@ export default class FormatDateHelper extends Helper {
 			return this.emptyValue;
 		}
 
-		return moment(date).format(format);
+		return formatDate(date, format);
 	}
 }

@@ -3,6 +3,7 @@
  */
 
 import UserProfileBaseInlineSectionComponent from 'prometheus/components/user-profile/base-inline-section';
+import * as dates from 'prometheus/utils/date';
 
 const MIN_COMPLETION_YEAR = 1965;
 const QUALIFICATION_TYPE_DEFINITIONS = [
@@ -227,7 +228,7 @@ export default class UserProfileQualificationComponent extends UserProfileBaseIn
 	get completionYearOptions() {
 		return this.buildYearOptions(
 			MIN_COMPLETION_YEAR,
-			moment().year()
+			dates.part(dates.now(), 'year')
 		);
 	}
 

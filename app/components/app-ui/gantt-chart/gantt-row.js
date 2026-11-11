@@ -5,6 +5,7 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { hasValidDates } from 'prometheus/utils/gantt-helpers';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This component renders a single milestone row in the Gantt chart
@@ -113,16 +114,15 @@ export default class GanttRowComponent extends Component {
             return null;
         }
 
-        let earliestDate = moment(this.args.milestone.startDate);
+        let earliestDate = this.args.milestone.startDate;
 
         this.validIssues.forEach((issue) => {
-            let issueStart = moment(issue.startDate);
-            if (issueStart.isBefore(earliestDate)) {
-                earliestDate = issueStart;
+            if (dates.isBefore(issue.startDate, earliestDate)) {
+                earliestDate = issue.startDate;
             }
         });
 
-        return earliestDate.format('YYYY-MM-DD');
+        return dates.format(earliestDate, 'YYYY-MM-DD');
     }
 
     /**
@@ -139,16 +139,15 @@ export default class GanttRowComponent extends Component {
             return null;
         }
 
-        let latestDate = moment(this.args.milestone.endDate);
+        let latestDate = this.args.milestone.endDate;
 
         this.validIssues.forEach((issue) => {
-            let issueEnd = moment(issue.endDate);
-            if (issueEnd.isAfter(latestDate)) {
-                latestDate = issueEnd;
+            if (dates.isAfter(issue.endDate, latestDate)) {
+                latestDate = issue.endDate;
             }
         });
 
-        return latestDate.format('YYYY-MM-DD');
+        return dates.format(latestDate, 'YYYY-MM-DD');
     }
 
     /**

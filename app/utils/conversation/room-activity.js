@@ -2,6 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import * as dates from 'prometheus/utils/date';
+
 const PREFIX = 'views.app.conversation.thread.activity';
 
 /**
@@ -46,8 +48,9 @@ export function describeRoomActivity(activity, roomType) {
  */
 export function activityDateLabel(dateCreated) {
     if (!dateCreated) return '';
-    let date = moment(dateCreated);
-    return date.isSame(moment(), 'day') ? date.format('HH:mm') : date.format('DD MMM');
+    return dates.isSame(dateCreated, dates.now(), { unit: 'day' })
+        ? dates.format(dateCreated, 'HH:mm')
+        : dates.format(dateCreated, 'DD MMM');
 }
 
 /**

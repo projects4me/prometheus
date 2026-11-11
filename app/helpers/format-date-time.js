@@ -4,6 +4,7 @@
 
 import { inject as service } from '@ember/service';
 import Helper from '@ember/component/helper';
+import { fromNow, toUserTimezone } from 'prometheus/utils/date';
 
 /**
  * Formats a date time string according to the specified format.
@@ -46,12 +47,10 @@ export default class FormatDateTimeHelper extends Helper {
 		let formattedDate = '';
 		format = format || this.format; // prefer the format passed in, otherwise use the default
 		let userTimezone = this.currentUser.user.timezone;
-		let momentDate;
 		if (date) {
-			momentDate = moment.utc(date).tz(userTimezone);
 			formattedDate = humanize
-				? momentDate.fromNow()
-				: momentDate.format(format);
+				? fromNow(date, { zone: 'UTC' })
+				: toUserTimezone(date, userTimezone, format);
 		}
 
 		return formattedDate;

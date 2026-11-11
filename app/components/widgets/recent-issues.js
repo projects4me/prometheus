@@ -5,6 +5,7 @@
 import WidgetsComponent from '../widgets';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * A widget component that displays recent issues in a table format.
@@ -142,7 +143,7 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 		let issueOptions = this.baseOptions();
 		let query = issueOptions.query;
 		let matches = query.match(/\([^()]+\)/g);
-		let now = moment.utc().format('YYYY-MM-DD HH:mm:ss');
+		let now = dates.format(dates.now(), 'YYYY-MM-DD HH:mm:ss', { zone: 'UTC' });
 		let updatedQuery = `(${matches[0]} AND (Issue.dateModified <: ${now}))`;
 		issueOptions.query = updatedQuery;
 		let issues = await this.store.query('issue', issueOptions);

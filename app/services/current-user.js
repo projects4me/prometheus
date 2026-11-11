@@ -4,6 +4,7 @@
 
 import Service from '@ember/service';
 import { inject } from '@ember/service';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This is a service that provides currentUser. This service can be injected
@@ -64,7 +65,7 @@ export default Service.extend({
      */
     setUserAttributes: async function (user) {
         if(!user.dateJoined) {
-            user.dateJoined = moment().format('YYYY-MM-DD HH:mm:ss');
+            user.dateJoined = dates.format(dates.now(), 'YYYY-MM-DD HH:mm:ss');
         }
 
         if(user.accountStatus === 'invited') {

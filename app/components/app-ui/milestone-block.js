@@ -6,6 +6,7 @@ import Component from '@glimmer/component';
 import { getOwner } from '@ember/application';
 import { ensureSafeComponent } from '@embroider/util';
 import { set } from '@ember/object';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This component is used to render milestone block.
@@ -71,7 +72,7 @@ export default class AppUiMilestoneBlockComponent extends Component {
          * If end date crossed then render a milestone block having "overdue" status.
          */
         if (status === 'in_progress' || status === 'planned') {
-            if (moment().isSameOrAfter(milestone.endDate)) {
+            if (dates.isSameOrAfter(dates.now(), milestone.endDate)) {
                 status = 'overdue';
             }
         }

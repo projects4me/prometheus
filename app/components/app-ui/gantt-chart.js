@@ -13,6 +13,7 @@ import {
 	calculateBarPosition
 } from 'prometheus/utils/gantt-helpers';
 import { guidFor } from '@ember/object/internals';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This component renders the main Gantt chart view with timeline and milestones/issues
@@ -372,7 +373,7 @@ export default class GanttChartComponent extends AppComponent {
 		let current = null;
 
 		this.dateRange.forEach((day) => {
-			let year = moment(day.date).year();
+			let year = dates.part(day.date, 'year');
 			if (!current || current.year !== year) {
 				current = {
 					year,
@@ -403,9 +404,8 @@ export default class GanttChartComponent extends AppComponent {
 		let current = null;
 
 		this.dateRange.forEach((day) => {
-			let dayMoment = moment(day.date);
-			let week = dayMoment.isoWeek();
-			let year = dayMoment.isoWeekYear();
+			let week = dates.part(day.date, 'isoWeek');
+			let year = dates.part(day.date, 'isoWeekYear');
 
 			if (!current || current.week !== week || current.year !== year) {
 				current = {
@@ -446,7 +446,7 @@ export default class GanttChartComponent extends AppComponent {
 		let current = null;
 
 		this.dateRange.forEach((day) => {
-			let year = moment(day.date).year();
+			let year = dates.part(day.date, 'year');
 			if (!current || current.year !== year) {
 				current = {
 					year,
@@ -477,9 +477,8 @@ export default class GanttChartComponent extends AppComponent {
 		let current = null;
 
 		this.dateRange.forEach((day) => {
-			let dayMoment = moment(day.date);
-			let week = dayMoment.isoWeek();
-			let year = dayMoment.isoWeekYear();
+			let week = dates.part(day.date, 'isoWeek');
+			let year = dates.part(day.date, 'isoWeekYear');
 			if (!current || current.week !== week || current.year !== year) {
 				current = {
 					week,
@@ -507,7 +506,7 @@ export default class GanttChartComponent extends AppComponent {
 
 		return this.dateRange
 			.map((date, index) => ({
-				isWeekend: [0, 6].includes(moment(date.date).day()),
+				isWeekend: [0, 6].includes(dates.part(date.date, 'day')),
 				left: index * dayWidth
 			}))
 			.filter((item) => item.isWeekend)

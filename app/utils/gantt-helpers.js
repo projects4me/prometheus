@@ -9,6 +9,8 @@
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 
+import * as dateUtil from 'prometheus/utils/date';
+
 /**
  * Calculate the number of days between two dates
  *
@@ -18,9 +20,7 @@
  * @returns {Number} Number of days between the dates
  */
 export function getDaysBetween(startDate, endDate) {
-    let start = moment(startDate);
-    let end = moment(endDate);
-    return end.diff(start, 'days');
+    return dateUtil.diff(endDate, startDate, 'days');
 }
 
 /**
@@ -32,9 +32,7 @@ export function getDaysBetween(startDate, endDate) {
  * @returns {Number} Number of days from timeline start
  */
 export function getPositionInDays(timelineStart, itemStart) {
-    let start = moment(timelineStart);
-    let item = moment(itemStart);
-    return item.diff(start, 'days');
+    return dateUtil.diff(itemStart, timelineStart, 'days');
 }
 
 /**
@@ -80,20 +78,19 @@ export function calculateBarPosition(timelineStart, itemStart, dayWidth) {
  */
 export function generateDateRange(startDate, endDate) {
     let dates = [];
-    let current = moment(startDate);
-    let end = moment(endDate);
+    let current = dateUtil.parse(startDate);
 
-    while (current.isSameOrBefore(end)) {
+    while (dateUtil.isSameOrBefore(current, endDate)) {
         dates.push({
-            date: current.format('YYYY-MM-DD'),
-            day: current.format('DD'),
-            month: current.format('MMM'),
-            year: current.format('YYYY'),
-            dayOfWeek: current.format('ddd'),
-            isFirstOfMonth: current.date() === 1,
-            isMonday: current.day() === 1
+            date: dateUtil.format(current, 'YYYY-MM-DD'),
+            day: dateUtil.format(current, 'DD'),
+            month: dateUtil.format(current, 'MMM'),
+            year: dateUtil.format(current, 'YYYY'),
+            dayOfWeek: dateUtil.format(current, 'ddd'),
+            isFirstOfMonth: dateUtil.part(current, 'date') === 1,
+            isMonday: dateUtil.part(current, 'day') === 1
         });
-        current.add(1, 'day');
+        current = dateUtil.add(current, 1, 'day');
     }
 
     return dates;
@@ -157,8 +154,8 @@ export function getTotalDays(startDate, endDate) {
  */
 export function hasValidDates(item) {
     return item.startDate && item.endDate && 
-           moment(item.startDate).isValid() && 
-           moment(item.endDate).isValid();
+           dateUtil.isValid(item.startDate) &&
+           dateUtil.isValid(item.endDate);
 }
 
 /**
@@ -170,5 +167,5 @@ export function hasValidDates(item) {
  * @returns {String} Formatted date
  */
 export function formatDate(date, format = 'MMM DD, YYYY') {
-    return moment(date).format(format);
+    return dateUtil.format(date, format);
 }

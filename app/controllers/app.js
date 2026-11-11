@@ -7,6 +7,7 @@ import format from "../utils/data/format";
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This the app controller. App is as the main route for the application's
@@ -160,7 +161,7 @@ export default class AppController extends PrometheusController {
     detectTimezoneChange() {
         Logger.debug('Prometheus.Controllers.AppLoadingAssets::detectTimezoneChange');
         let userTimezone = this.currentUser.user.timezone;
-        let currentTimezone = moment.tz.guess(true);
+        let currentTimezone = dates.guessTimezone();
         if (userTimezone !== currentTimezone) {
             this.showTimezoneChangeNotification(currentTimezone);
         }
