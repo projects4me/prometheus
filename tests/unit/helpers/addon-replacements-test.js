@@ -16,7 +16,7 @@ import { keys } from 'prometheus/helpers/keys';
 import { noop } from 'prometheus/helpers/noop';
 import { lowercase } from 'prometheus/helpers/lowercase';
 import { dasherize } from 'prometheus/helpers/dasherize';
-import { momentFromNow } from 'prometheus/helpers/moment-from-now';
+import { dateFromNow } from 'prometheus/helpers/date-from-now';
 
 module('Unit | Helpers | addon replacements', function () {
 	test('math helpers take any number of arguments', function (assert) {
@@ -59,10 +59,10 @@ module('Unit | Helpers | addon replacements', function () {
 		assert.deepEqual(keys([{ a: 1, b: 2 }]), ['a', 'b']);
 	});
 
-	test('string and moment helpers', function (assert) {
+	test('string and date helpers', function (assert) {
 		assert.strictEqual(lowercase(['AbC']), 'abc');
 		assert.strictEqual(dasherize(['fooBar']), 'foo-bar');
-		assert.strictEqual(momentFromNow([null]), '-');
-		assert.ok(momentFromNow([new Date()]).length > 0);
+		assert.strictEqual(dateFromNow([null]), '-');
+		assert.ok(dateFromNow([new Date()]).length > 0);
 	});
 });

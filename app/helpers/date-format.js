@@ -5,12 +5,12 @@
 import { helper } from '@ember/component/helper';
 import { format } from 'prometheus/utils/date';
 
-/** {{moment-format date 'format'}}: formats a date with moment; '-' for empty values. */
-export function momentFormat([value, pattern]) {
+/** {{date-format date 'format'}}: formats a date with utils/date; '-' for empty values. */
+export function dateFormat([value, pattern]) {
 	if (value === undefined || value === null || value === '') {
 		return '-';
 	}
 	return format(value, pattern);
 }
 
-export default helper(momentFormat);
+export default helper(dateFormat);

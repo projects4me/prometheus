@@ -3,6 +3,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { buildActivityLines } from 'prometheus/utils/conversation/room-activity';
+import * as dates from 'prometheus/utils/date';
 
 module('Integration | Component | conversation/activity-box', function (hooks) {
     setupRenderingTest(hooks);
@@ -52,7 +53,7 @@ module('Integration | Component | conversation/activity-box', function (hooks) {
     });
 
     test('the date is the time today and DD MMM before', function (assert) {
-        let today = moment().format('YYYY-MM-DD') + ' 09:30:00';
+        let today = dates.format(dates.now(), 'YYYY-MM-DD') + ' 09:30:00';
         let [a, b] = buildActivityLines([activity(1, 'created', {}, today), activity(2, 'created', {}, '2020-03-04 10:00:00')], 'discussion');
         assert.strictEqual(a.date, '09:30');
         assert.strictEqual(b.date, '04 Mar');

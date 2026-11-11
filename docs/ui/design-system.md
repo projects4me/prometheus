@@ -154,7 +154,7 @@ High, a crimson target for Medium).
 - Form labels: 14px, **crimson** (`$primaryColor`), shown above the field.
 - Meta text (dates, roles, "created on …"): small grey, often italic.
 - Labels/badges: AdminLTE `.label` (bold, about 10.5px, white text).
-- Dates use `ember-moment` formats already in use: `13 Oct '26` in tables, `13th Oct '26` in details,
+- Dates use the `utils/date` formats already in use (`date-format` / `format-date` helpers): `13 Oct '26` in tables, `13th Oct '26` in details,
   `2 minutes ago` in activity.
 
 ## 7. Forms

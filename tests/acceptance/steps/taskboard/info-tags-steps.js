@@ -1,4 +1,5 @@
 import steps from '../steps';
+import * as dates from 'prometheus/utils/date';
 
 export default function (assert) {
 	return steps(assert)
@@ -34,7 +35,7 @@ export default function (assert) {
 	})
 	.given('Issue has future endDate', function () {
 		let issue = server.schema.issues.all().models[0];
-		let futureDate = moment().add(30, 'days').format('YYYY-MM-DD');
+		let futureDate = dates.format(dates.add(dates.now(), 30, 'days'), 'YYYY-MM-DD');
 		issue.update({ endDate: futureDate });
 	})
 	.given('Issue has no description', function () {

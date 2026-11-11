@@ -82,7 +82,7 @@
                       {{/if}}
                     </span>
                     {{#if row.modified}}
-                      <span class="role-row__modified" data-role-field="dateModified">{{moment-format row.modified "DD MMM YYYY"}}</span>
+                      <span class="role-row__modified" data-role-field="dateModified">{{date-format row.modified "DD MMM YYYY"}}</span>
                     {{/if}}
                   </div>
                 </:secondary>

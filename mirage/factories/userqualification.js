@@ -1,6 +1,7 @@
 import { Factory } from 'miragejs';
 import faker from 'faker';
 import * as date from '../helpers/getDate';
+import * as dates from 'prometheus/utils/date';
 import _ from 'lodash';
 
 export default Factory.extend({
@@ -27,7 +28,7 @@ export default Factory.extend({
 		return faker.company.companyName();
 	},
 	completionYear() {
-		return moment().year();
+		return dates.part(dates.now(), 'year');
 	},
 	afterCreate(userqualification) {
 		userqualification.update({

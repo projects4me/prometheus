@@ -7,6 +7,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import CurrentUserStub from '../../stub-services/current-user-stub';
+import * as dates from 'prometheus/utils/date';
 
 module('Integration | Component | app-ui/activity-block', function (hooks) {
     setupRenderingTest(hooks);
@@ -36,7 +37,7 @@ module('Integration | Component | app-ui/activity-block', function (hooks) {
         `);
 
         let activityBlockSelector = `[data-activity-block-type="${expectedAnswer.activityBlockType}"]`;
-        let createdSince = moment.duration(moment(new Date()).diff(moment(activity.dateCreated))).humanize();
+        let createdSince = dates.humanizeDuration(dates.diff(dates.now(), activity.dateCreated, undefined, { zone: 'UTC' }));
 
         assert.dom(activityBlockSelector).exists();
         assert.dom(`${activityBlockSelector} i`).hasClass(`${expectedAnswer.iconClass}`);

@@ -104,7 +104,7 @@
                     <td><code>{{if row.server.endpoint row.server.endpoint "–"}}</code></td>
                     <td data-cell="tools">{{row.toolCount}}</td>
                     <td data-cell="agents">{{row.agentCount}}</td>
-                    <td>{{if row.server.schemaRefreshedAt (moment-from-now row.server.schemaRefreshedAt) (t "views.app.agent.tools.server.never")}}</td>
+                    <td>{{if row.server.schemaRefreshedAt (date-from-now row.server.schemaRefreshedAt) (t "views.app.agent.tools.server.never")}}</td>
                     <td class="text-right">
                       {{#if row.canRefresh}}
                         <AccessControl @aclContext="agent.update">

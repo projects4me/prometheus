@@ -5,12 +5,12 @@
 import { helper } from '@ember/component/helper';
 import { fromNow } from 'prometheus/utils/date';
 
-/** {{moment-from-now date}}: relative time such as '3 hours ago'; '-' when empty. */
-export function momentFromNow([value]) {
+/** {{date-from-now date}}: relative time such as '3 hours ago'; '-' when empty. */
+export function dateFromNow([value]) {
 	if (value === undefined || value === null || value === '') {
 		return '-';
 	}
 	return fromNow(value);
 }
 
-export default helper(momentFromNow);
+export default helper(dateFromNow);

@@ -6,6 +6,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import * as dates from 'prometheus/utils/date';
 
 module('Integration | Component | user-profile/latest-issues', function (hooks) {
     setupRenderingTest(hooks);
@@ -24,7 +25,7 @@ module('Integration | Component | user-profile/latest-issues', function (hooks) 
             }
         ]
 
-        let currentDate = moment().format('DD MMMM YYYY');
+        let currentDate = dates.format(dates.now(), 'DD MMMM YYYY');
 
         let expectedAnswers = [
             {
