@@ -69,7 +69,7 @@ export default class AppProjectsIndexController extends PrometheusListController
      */
     @action openDetail(project) {
         Logger.debug("Prometheus.Controllers.Projects.Index::openDetail");
-        this.transitionToRoute('app.project.index', { shortcode: project.shortCode });
+        this.router.transitionTo('app.project.index', { shortcode: project.shortCode });
         Logger.debug("-Prometheus.Controllers.Projects.Index::openDetail");
     }
 
@@ -126,7 +126,7 @@ export default class AppProjectsIndexController extends PrometheusListController
      */
     @action createProject() {
         Logger.debug("Prometheus.Controllers.Projects.Index::createProject()");
-        this.transitionToRoute('app.projects.create');
+        this.router.transitionTo('app.projects.create');
         Logger.debug("-Prometheus.Controllers.Projects.Index::createProject()");
     }
 

@@ -25,12 +25,12 @@ export default class AppProjectConversationIndexRoute extends App {
         let layout = this.modelFor('app.project.conversation');
         let cId = this.paramsFor('app.project.conversation').c_id;
         if (cId) {
-            return this.replaceWith('app.project.conversation.page', cId, { queryParams: { c_id: null } });
+            return this.router.replaceWith('app.project.conversation.page', cId, { queryParams: { c_id: null } });
         }
         let records = layout?.firstPage?.records?.toArray?.() ?? [];
         let first = arrangeConversations(records, { group: layout?.values?.group, milestones: layout?.milestones ?? {} }).at(0);
         if (first) {
-            return this.replaceWith('app.project.conversation.page', first.id);
+            return this.router.replaceWith('app.project.conversation.page', first.id);
         }
     }
 

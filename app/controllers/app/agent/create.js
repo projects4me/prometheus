@@ -341,7 +341,7 @@ export default class AppAgentCreateController extends PrometheusCreateController
      * @param {Prometheus.Models.Agent} agent the saved agent
      */
     navigateToSuccess(agent) {
-        this.transitionToRoute('app.agent.page', agent.id);
+        this.router.transitionTo('app.agent.page', agent.id);
     }
 
     /**
@@ -349,9 +349,9 @@ export default class AppAgentCreateController extends PrometheusCreateController
      */
     afterCancel() {
         if (this.isEdit) {
-            this.transitionToRoute('app.agent.page', this.model.id);
+            this.router.transitionTo('app.agent.page', this.model.id);
         } else {
-            this.transitionToRoute('app.agent.index');
+            this.router.transitionTo('app.agent.index');
         }
     }
 }

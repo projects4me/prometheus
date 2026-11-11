@@ -166,7 +166,7 @@ export default App.extend({
         // We need the direction
         if (this.get('router.currentRouteName') === 'app.project.wiki.index') {
             if (wikis.findBy('name', 'Home') !== undefined) {
-                this.transitionTo('app.project.wiki.page', 'Home');
+                this.router.transitionTo('app.project.wiki.page', 'Home');
             }
         }
     },

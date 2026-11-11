@@ -125,7 +125,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
      */
     @action openDetail(issue) {
         Logger.debug("AppProjectIssueController::openDetail");
-        this.transitionToRoute('app.project.issue.page', issue.issueNumber);
+        this.router.transitionTo('app.project.issue.page', issue.issueNumber);
         Logger.debug("-AppProjectIssueController::openDetail");
     }
 
@@ -449,7 +449,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
     @action routeToIssueComments(issue) {
         Logger.debug('AppProjectIssueIndexController::routeToIssueComments');
         this.settings.scrollToElement = true;
-        this.transitionToRoute('app.project.issue.page', issue.issueNumber);
+        this.router.transitionTo('app.project.issue.page', issue.issueNumber);
         Logger.debug('-AppProjectIssueIndexController::routeToIssueComments');
     }
 

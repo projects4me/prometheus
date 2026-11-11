@@ -31,7 +31,7 @@ export default class AppRoleIndexRoute extends App {
             first = records ? (records.toArray?.() ?? [...records])[0] : null;
         }
         if (first) {
-            this.replaceWith('app.role.page', first.id);
+            this.router.replaceWith('app.role.page', first.id);
         }
     }
 

@@ -455,7 +455,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
      */
     @action navigateToProjectPage(entity, query) {
         Logger.debug("AppProjectIndexController::navigateToProjectPage(" + entity + "," + query + ")");
-        this.transitionToRoute('app.project.' + entity, { shortcode: this.trackedProject.shortCode });
+        this.router.transitionTo('app.project.' + entity, { shortcode: this.trackedProject.shortCode });
     }
 
     /**
@@ -469,7 +469,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
      */
     @action navigateToIssuePage(issueNumber) {
         Logger.debug("AppProjectIndexController::navigateToIssuePage(" + issueNumber + ")");
-        this.transitionToRoute('app.project.issue.page', { shortcode: this.trackedProject.shortCode, issue_number: issueNumber });
+        this.router.transitionTo('app.project.issue.page', { shortcode: this.trackedProject.shortCode, issue_number: issueNumber });
     }
 
     /**
@@ -481,7 +481,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
      */
     @action editProject(projectShortCode) {
         Logger.debug('Prometheus.App.Projects.Edit::editProject(' + projectShortCode + ')');
-        this.transitionToRoute('app.projects.edit', projectShortCode);
+        this.router.transitionTo('app.projects.edit', projectShortCode);
         Logger.debug('-Prometheus.App.Projects.Edit::editProject');
     }
 

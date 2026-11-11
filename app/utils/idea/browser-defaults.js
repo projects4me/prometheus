@@ -46,3 +46,26 @@ export function browserValues(params = {}) {
         archived: params.archived === true || params.archived === 'true'
     };
 }
+
+/**
+ * The browser's query params that differ from their defaults, for a URL that keeps the browser state. The router
+ * service writes default values into the URL, so the callers build the URL themselves from these.
+ *
+ * @method browserQueryParams
+ * @param {Object} controller The app.project.idea controller, or the route params of app.project.idea
+ * @returns {Object}
+ */
+export function browserQueryParams(controller) {
+    let params = {};
+    for (let [key, { default: value }] of Object.entries(BROWSER_PARAMS)) {
+        if (controller[key] !== value) {
+            params[key] = controller[key];
+        }
+    }
+    for (let key of ['view', 'searchId']) {
+        if (controller[key] != null) {
+            params[key] = controller[key];
+        }
+    }
+    return params;
+}

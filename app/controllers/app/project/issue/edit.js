@@ -49,7 +49,7 @@ export default class AppProjectIssueEditController extends AppProjectIssueCreate
      * @protected
      */
     afterCancel(model) {
-        this.transitionToRoute('app.project.issue.page', model.get('issueNumber'));
+        this.router.transitionTo('app.project.issue.page', model.get('issueNumber'));
         model.rollbackAttributes();
     }
 }

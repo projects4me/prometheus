@@ -135,7 +135,7 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
   test("a saved idea is listed once, also when a reload brought it in first", function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
     let create = this.owner.lookup("controller:app.project.idea.create");
-    create.transitionToRoute = () => {};
+    create.router = { urlFor: () => "/x", transitionTo() {} };
     let idea = EmberObject.create({ id: "i1" });
     browser.ideaList.seed([EmberObject.create({ id: "i0" }), EmberObject.create({ id: "i1" })], {});
 

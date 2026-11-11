@@ -492,7 +492,7 @@ export default class AppProjectBoardController extends PrometheusCreateControlle
      */
     @action openIssue(issue) {
         Logger.debug("AppProjectBoardController::openIssue");
-        this.transitionToRoute('app.project.issue.page', issue.issueNumber);
+        this.router.transitionTo('app.project.issue.page', issue.issueNumber);
         Logger.debug("-AppProjectBoardController::openIssue");
     }
 

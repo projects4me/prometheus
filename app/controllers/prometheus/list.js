@@ -597,7 +597,7 @@ export default class PrometheusListController extends PrometheusController {
      */
     @action create(module) {
         Logger.debug("Prometheus.Controllers.List::create");
-        this.transitionToRoute('app.project.' + module + '.create');
+        this.router.transitionTo('app.project.' + module + '.create');
         Logger.debug("-Prometheus.Controllers.List::create");
     }
 

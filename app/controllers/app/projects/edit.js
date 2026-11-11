@@ -61,7 +61,7 @@ export default class AppProjectsEditController extends AppProjectsCreateControll
      * @protected
      */
     afterCancel(model) {
-        this.transitionToRoute('app.project', {
+        this.router.transitionTo('app.project', {
             shortcode: model.shortCode,
         });
         model.rollbackAttributes();

@@ -41,7 +41,7 @@ export default Page.extend({
          */
         redirectOnSave:function(routeParams){
             this.refresh();
-            this.transitionTo('app.project.wiki.page',routeParams);
+            this.router.transitionTo('app.project.wiki.page',routeParams);
         }
 
     }

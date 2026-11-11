@@ -319,9 +319,9 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 	 */
 	navigateToSuccess(model) {
 		if(this.model.projectManager === this.currentUser.user.id) {
-			this.transitionToRoute('app.project', model.shortCode.toLowerCase());
+			this.router.transitionTo('app.project', model.shortCode.toLowerCase());
 		} else {
-			this.transitionToRoute('app.projects.index');
+			this.router.transitionTo('app.projects.index');
 		}
 	}
 
@@ -344,7 +344,7 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 	 * @protected
 	 */
 	afterCancel() {
-		this.transitionToRoute('app.projects');
+		this.router.transitionTo('app.projects');
 	}
 
 	/**
