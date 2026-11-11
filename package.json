@@ -11,7 +11,7 @@
   "author": "Hammad Hassan <hammad@projects4.me>",
   "repository": "",
   "engines": {
-    "node": "12.* || 14.* || >= 16"
+    "node": ">= 22"
   },
   "scripts": {
     "build": "ember build",
