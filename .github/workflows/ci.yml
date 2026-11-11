@@ -8,11 +8,15 @@ jobs:
   Build-and-Test:
 
     runs-on: ubuntu-latest
-    container:
-      image: rananoman/prometheus:1.0.0
     steps:
     - name: Checkout to Repository
       uses: actions/checkout@v3
+
+    # ubuntu-latest ships Google Chrome, which testem launches headless.
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: .nvmrc
 
     - name: Cache Node packages
       id: cache
@@ -20,18 +24,17 @@ jobs:
       with:
         path: node_modules
         # Keyed on package.json, so a dependency change misses the cache and reinstalls.
-        key: npm-${{ hashFiles('package.json') }}
+        key: npm-node22-${{ hashFiles('package.json') }}
 
-    # The image's npm 8.1.2 ignores package.json "overrides" (npm >= 8.3), so install with npm 8.19.4 (Node 16 compatible).
     - name: Install Node modules
       if: ${{ steps.cache.outputs.cache-hit != 'true' }}
       run: |
         rm -rf node_modules/
-        npx -y npm@8.19.4 install --no-audit --no-fund
+        npm install --no-audit --no-fund
 
     - name: Run Ember test
       run: |
-        COVERAGE=true ember test    
+        COVERAGE=true npx ember test
 
     - name: Upload Code coverage report
       uses: actions/upload-artifact@v4
