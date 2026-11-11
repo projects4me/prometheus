@@ -3,9 +3,9 @@
   {{!-- Main Header --}}
   <AppLayouts::ApplicationHeader
       @session={{this.session}}
-      @invalidateSession={{action "invalidateSession"}}
-      @userProfile={{action "userProfile"}}
-      @searchedItem={{action "itemSearched"}}
+      @invalidateSession={{this.invalidateSession}}
+      @userProfile={{this.userProfile}}
+      @searchedItem={{this.itemSearched}}
   />
 
   {{!-- Left side column. contains the logo and sidebar --}}

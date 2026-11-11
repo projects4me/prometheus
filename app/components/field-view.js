@@ -4,7 +4,7 @@
 
 import Validator from  "../utils/validator/fields";
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { computed, action } from '@ember/object';
 import $ from 'jquery';
 
 /**
@@ -161,14 +161,15 @@ export default Component.extend({
     },
 
     /**
-     * These are the events that are handled by the this components
-     *
-     * @property actions
-     * @for FieldView
-     * @type Object
-     * @public
-     */
-    actions:{
+         * Handles a native change event by passing the new value on to changed()
+         *
+         * @method changedFromEvent
+         * @param {Event} event
+         * @public
+         */
+    changedFromEvent: action(function(event) {
+        return this.changed(event.target.value);
+    }),
 
         /**
          * This function is called whenever a value is changed in the field
@@ -180,7 +181,7 @@ export default Component.extend({
          * @todo at the moment the meta key used for field validation is 'filter', verify if that will be used instead of the 'type'
          * @todo implement field masking in order to support better user experience
          */
-        changed:function(value){
+        changed: action(function(value){
             Logger.debug('Value changed to '+value);
             let result = true;
             let validationFailure = false;
@@ -218,7 +219,7 @@ export default Component.extend({
             if(validationFailure === true){
                 this.blinkError();
             }
-        },
+        }),
 
         // /**
         //  * This action is triggerd when a user tries to navigate to the deatil view
@@ -235,6 +236,5 @@ export default Component.extend({
         //     //var URIData = navi.buildURL(Ember.String.camelize(module),'detail',{id:id});
         //     //this.transitionToRoute(URIData.route,URIData.options);
         // },
-    }
 
 });

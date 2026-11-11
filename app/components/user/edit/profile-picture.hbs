@@ -1,8 +1,8 @@
-{{#let (file-queue name="photos" onFileAdded=(action @uploadImage "user-profile-img")) as |queue|}}
+{{#let (file-queue name="photos" onFileAdded=(fn @uploadImage "user-profile-img")) as |queue|}}
 
   <div class="profile-picture" data-field="user.image">
 
-    <a href="#" aria-label={{t "views.app.user.profilePicture.edit"}} {{action this.selectImage}}>
+    <a href="#" aria-label={{t "views.app.user.profilePicture.edit"}} {{on "click" (prevent-default this.selectImage)}}>
       {{#if (has-block)}}
         {{yield}}
       {{else}}

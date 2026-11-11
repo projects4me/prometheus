@@ -12,7 +12,7 @@
               @label={{t "views.app.settings.email.host"}}
               @value={{this.draft.host}}
               @data-field="setting.host"
-              @validate={{action this.validateField "emailForm" (hash name="host" value=this.draft.host model=this.draft)}}
+              @validate={{fn this.validateField "emailForm" (hash name="host" value=this.draft.host model=this.draft)}}
               @message={{this.message.emailForm.host}}
             />
             <FormFields::FieldText
@@ -20,7 +20,7 @@
               @label={{t "views.app.settings.email.port"}}
               @value={{this.draft.port}}
               @data-field="setting.port"
-              @validate={{action this.validateField "emailForm" (hash name="port" value=this.draft.port model=this.draft)}}
+              @validate={{fn this.validateField "emailForm" (hash name="port" value=this.draft.port model=this.draft)}}
               @message={{this.message.emailForm.port}}
             />
             <FormFields::FieldRelate
@@ -61,7 +61,7 @@
               @label={{t "views.app.settings.email.fromEmail"}}
               @value={{this.draft.fromEmail}}
               @data-field="setting.fromEmail"
-              @validate={{action this.validateField "emailForm" (hash name="fromEmail" value=this.draft.fromEmail model=this.draft)}}
+              @validate={{fn this.validateField "emailForm" (hash name="fromEmail" value=this.draft.fromEmail model=this.draft)}}
               @message={{this.message.emailForm.fromEmail}}
             />
           </div>

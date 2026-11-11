@@ -5,7 +5,7 @@
       <div class="wiki-list-wrapper col-md-2">
         <div class="wiki-list">
 
-          <a href="#" class="btn btn-primary btn-block margin-bottom" {{action "create"}}><i class="fa fa-plus"></i> {{t "views.app.wiki.create.page"}}</a>
+          <a href="#" class="btn btn-primary btn-block margin-bottom" {{on "click" (prevent-default this.create)}}><i class="fa fa-plus"></i> {{t "views.app.wiki.create.page"}}</a>
 
           <div class="box box-solid">
             <div class="box-header with-border">

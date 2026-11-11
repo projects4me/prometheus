@@ -5,7 +5,7 @@
   <h3 class="timeline-header" data-activity="activityInfo">
     <LinkTo @route="app.user.page" data-activity="userName" @model={{@activity.createdUser}}>{{@activity.createdUserName}}</LinkTo>
     {{t (concat "views.app.activity.related." @activity.relatedActivity)}}
-    <a href="javascript:void(0);" {{action "openMilestone" @activity.relatedActivityId}} data-activity="relatedActivityModule">
+    <a href="javascript:void(0);" data-activity="relatedActivityModule">
       {{t (concat "global.module.singular." @activity.relatedActivityModule)}}
     </a>
   </h3>

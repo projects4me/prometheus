@@ -27,7 +27,7 @@
                   @value={{this.model.subject}}
                   @data-field="issue.subject"
                   @length="255"
-                  @validate={{action this.validateField "issueCreate" (hash name="subject" value=this.model.subject)}}
+                  @validate={{fn this.validateField "issueCreate" (hash name="subject" value=this.model.subject)}}
                   @message={{this.message.issueCreate.subject}}
                   {{autofocus}}
               />
@@ -39,7 +39,7 @@
                     @initialValue={{this.issueDescription}}
                     @editType='wysiwyg'
                     @hide={{array 'footer'}}
-                    @onContentChange={{action "selectStatic" this.model 'description'}}              
+                    @onContentChange={{fn this.selectStatic this.model 'description'}}              
                 />
                 <span class="highlight"></span>
                 <span class="bar"></span>
@@ -57,10 +57,10 @@
                   @options={{this.typeList}}
                   @selected={{find-by "value" this.model.typeId this.typeList}}
                   @searchField="label"
-                  @onchange={{action "selectRelated" this.model 'typeId'}}
+                  @onchange={{fn this.selectRelated this.model 'typeId'}}
                   @relateType="relate-simple"
                   @data-field="issue.type"
-                  @validate={{action this.validateField "issueCreate" (hash name="typeId" value=this.model.typeId)}}
+                  @validate={{fn this.validateField "issueCreate" (hash name="typeId" value=this.model.typeId)}}
                   @message={{this.message.issueCreate.typeId}}
               />
 
@@ -71,10 +71,10 @@
                 @options={{this.milestoneList}}
                 @selected={{find-by "value" this.model.milestoneId this.milestoneList}}
                 @searchField="label"
-                @onchange={{action "selectMilestone" this.model 'milestoneId'}}
+                @onchange={{fn this.selectMilestone this.model 'milestoneId'}}
                 @relateType="relate-simple"
                 @data-field="issue.milestone"
-                @validate={{action this.validateField "issueCreate" (hash name="milestoneId" value=this.model.milestoneId)}}
+                @validate={{fn this.validateField "issueCreate" (hash name="milestoneId" value=this.model.milestoneId)}}
                 @message={{this.message.issueCreate.milestoneId}}
                 @aclContext="issue.create"
               />              
@@ -83,7 +83,7 @@
                   @placeholder={{t "views.app.issue.create.placeholder.startDate"}}
                   @label={{t "views.app.issue.create.startDate"}}
                   @value="{{readonly this.model.startDate}}"
-                  @update={{action "selectStatic" this.model 'startDate'}}
+                  @update={{fn this.selectStatic this.model 'startDate'}}
                   @data-field="issue.startDate"
                   @format="YYYY-MM-DD"
                   @singleDatePicker={{true}}
@@ -92,7 +92,7 @@
                   @positionY="down"
                   @autoApply={{true}}
                   @minDate='1990'
-                  @validate={{action this.validateField "issueCreate" (hash name="startDate" value=this.model.startDate)}}                
+                  @validate={{fn this.validateField "issueCreate" (hash name="startDate" value=this.model.startDate)}}                
                   @message={{this.message.issueCreate.startDate}}
               />
 
@@ -100,7 +100,7 @@
                   @placeholder={{t "views.app.issue.create.placeholder.endDate"}}
                   @label={{t "views.app.issue.create.endDate"}}
                   @value={{readonly this.model.endDate}}
-                  @update={{action "selectStatic" this.model 'endDate'}}
+                  @update={{fn this.selectStatic this.model 'endDate'}}
                   @data-field="issue.endDate"
                   @format="YYYY-MM-DD"
                   @singleDatePicker={{true}}
@@ -109,7 +109,7 @@
                   @positionY="down"
                   @autoApply={{true}}
                   @minDate='1990'
-                  @validate={{action this.validateField "issueCreate" (hash name="endDate" value=this.model.endDate)}}                
+                  @validate={{fn this.validateField "issueCreate" (hash name="endDate" value=this.model.endDate)}}                
                   @message={{this.message.issueCreate.endDate}}
               />
 
@@ -120,10 +120,10 @@
                   @options={{this.issueStatusList}}
                   @selected={{find-by "value" this.model.statusId this.issueStatusList}}
                   @searchField="label"
-                  @onchange={{action "selectRelated" this.model 'statusId'}}
+                  @onchange={{fn this.selectRelated this.model 'statusId'}}
                   @relateType="relate-simple"
                   @data-field="issue.status"
-                  @validate={{action this.validateField "issueCreate" (hash name="statusId" value=this.model.statusId)}}                
+                  @validate={{fn this.validateField "issueCreate" (hash name="statusId" value=this.model.statusId)}}                
                   @message={{this.message.issueCreate.statusId}}
               />
 
@@ -134,10 +134,10 @@
                   @options={{this.priority}}
                   @selected={{find-by "value" this.model.priority this.priority}}
                   @searchField="label"
-                  @onchange={{action "selectRelated" this.model 'priority'}}
+                  @onchange={{fn this.selectRelated this.model 'priority'}}
                   @relateType="relate-issuepriority"
                   @data-field="issue.priority"
-                  @validate={{action this.validateField "issueCreate" (hash name="priority" value=this.model.priority)}}
+                  @validate={{fn this.validateField "issueCreate" (hash name="priority" value=this.model.priority)}}
                   @message={{this.message.issueCreate.priority}}
               />
             </div>
@@ -165,10 +165,10 @@
                 @options={{this.assigneeGroups}}
                 @selected={{find-by "value" this.model.assignee this.assigneeOptions}}
                 @searchField="label"
-                @onchange={{action "selectRelated" this.model 'assignee'}}
+                @onchange={{fn this.selectRelated this.model 'assignee'}}
                 @relateType="relate-user"
                 @data-field="issue.assignee"
-                @validate={{action this.validateField "issueCreate" (hash name="assignee" value=this.model.assignee)}}
+                @validate={{fn this.validateField "issueCreate" (hash name="assignee" value=this.model.assignee)}}
                 @message={{this.message.issueCreate.assignee}}
             />
 
@@ -179,10 +179,10 @@
                 @options={{this.activeMembersList}}
                 @selected={{find-by "value" this.model.owner this.activeMembersList}}
                 @searchField="label"
-                @onchange={{action "selectRelated" this.model 'owner'}}
+                @onchange={{fn this.selectRelated this.model 'owner'}}
                 @relateType="relate-user"
                 @data-field="issue.owner"
-                @validate={{action this.validateField "issueCreate" (hash name="owner" value=this.model.owner)}}
+                @validate={{fn this.validateField "issueCreate" (hash name="owner" value=this.model.owner)}}
                 @message={{this.message.issueCreate.owner}}
             />
 

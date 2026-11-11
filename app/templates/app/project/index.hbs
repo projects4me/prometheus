@@ -105,7 +105,7 @@
               </div>
               {{!-- /.box-body --}}
               <div class="box-footer text-center">
-                <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "conversation"}}>{{t "views.app.project.detail.viewallconversations"}}</a>
+                <a href="javascript:void(0)" class="uppercase" {{on "click" (fn this.navigateToProjectPage "conversation")}}>{{t "views.app.project.detail.viewallconversations"}}</a>
               </div>
               {{!-- /.box-footer --}}
             </div>
@@ -151,7 +151,7 @@
               </div>
               {{!-- /.box-body --}}
               <div class="box-footer text-center">
-                <a href="javascript:void(0)" class="uppercase" {{action "navigateToProjectPage" "issue"}}>{{t "views.app.project.detail.viewallissues"}}</a>
+                <a href="javascript:void(0)" class="uppercase" {{on "click" (fn this.navigateToProjectPage "issue")}}>{{t "views.app.project.detail.viewallissues"}}</a>
               </div>
               {{!-- /.box-footer --}}
             </div>
@@ -298,8 +298,8 @@
                   title="views.app.project.detail.membership.add"
                   confirmLabel="global.form.save"
                   closeLabel="global.form.cancel"
-                  confirm=(action "addMembers")
-                  close=(action "removeAddMemberModal")}}
+                  confirm=this.addMembers
+                  close=this.removeAddMemberModal}}
                   <div class="form-group">
                       <FormFields::FieldRelateMulti
                           @placeholder={{t "views.app.project.detail.membership.selectuser"}}
@@ -308,7 +308,7 @@
                           @options={{this.usersList}}
                           @selected={{this.selectedUsers}}
                           @searchField="label"
-                          @onchange={{action "selectStatic" this 'selectedUsers'}}
+                          @onchange={{fn this.selectStatic this 'selectedUsers'}}
                           @relateType="relate-user"
                           @aclContext="membership.create"
                           @closeOnSelect={{false}}
@@ -322,8 +322,8 @@
                   title="views.app.project.detail.membership.delete"
                   confirmLabel="global.form.remove"
                   closeLabel="global.form.cancel"
-                  confirm=(action "deleteMember")
-                  close=(action "removeDeleteMemberModal")}}
+                  confirm=this.deleteMember
+                  close=this.removeDeleteMemberModal}}
                   
                   <div class="flex-row" data-remove-member-warning>
                     <i class="fa fa-exclamation-triangle"></i>
@@ -347,12 +347,12 @@
                           @data-field="new-assignee"
                           @options={{this.otherMembers}}
                           @selected={{find-by "value" this.selectedNewIssuesAssignee.value this.otherMembers}}
-                          @onchange={{action "selectStatic" this 'selectedNewIssuesAssignee'}}
+                          @onchange={{fn this.selectStatic this 'selectedNewIssuesAssignee'}}
                           @searchField="label"
                           @relateType="relate-user"
                           @aclContext="membership.delete"
                           @closeOnSelect={{false}}
-                          @validate={{action this.validateField "memberDelete" (hash name="reAssignIssues" model=this.reAssignIssuesModel)}}
+                          @validate={{fn this.validateField "memberDelete" (hash name="reAssignIssues" model=this.reAssignIssuesModel)}}
                           @message={{this.message.memberDelete.reAssignIssues}}
                           @required={{true}}
                       />
@@ -384,7 +384,7 @@
 
               {{#each this.visibleMilestones as |milestone|}}
                 <Project::Milestones
-                  @editMilestone={{action "editMilestone"}}
+                  @editMilestone={{this.editMilestone}}
                   @milestone={{milestone}}
                   @projectShortcode={{this.model.shortCode}}
                 />
@@ -426,8 +426,8 @@
                 title="views.app.project.detail.milestone.manage"
                 closeLabel="global.form.close"
                 confirmLabel="global.form.save"
-                close=(action "removeMilestoneDialog")
-                confirm=(action "saveMilestone")}}
+                close=this.removeMilestoneDialog
+                confirm=this.saveMilestone}}
 
               <FormFields::FieldText
                   @placeholder={{t "views.app.project.detail.milestone.inputname"}}
@@ -439,7 +439,7 @@
                   @placeholder={{t "views.app.project.detail.milestone.inputstartdate"}}
                   @label={{t "views.app.project.detail.milestone.startdate"}}
                   @value={{readonly this.newMilestone.startDate}}
-                  @update={{action "milestoneStartDateChanged"}}
+                  @update={{this.milestoneStartDateChanged}}
                   @mask="alphanumeric"
                   @data-field="project.milestone.startDate"
                   @format="YYYY-MM-DD"
@@ -455,7 +455,7 @@
                   @placeholder={{t "views.app.project.detail.milestone.inputenddate"}}
                   @label={{t "views.app.project.detail.milestone.enddate"}}
                   @value={{readonly this.newMilestone.endDate}}
-                  @update={{action "milestoneEndDateChanged"}}
+                  @update={{this.milestoneEndDateChanged}}
                   @mask="alphanumeric"
                   @data-field="project.milestone.endDate"
                   @format="YYYY-MM-DD"
@@ -474,7 +474,7 @@
                   @options={{this.milestoneTypes}}
                   @selected={{find-by "value" this.newMilestone.milestoneType this.milestoneTypes}}
                   @searchField="label"
-                  @onchange={{action "selectMilestoneType"}}
+                  @onchange={{this.selectMilestoneType}}
                   @relateType="relate-simple"
               />
 
@@ -485,7 +485,7 @@
                   @options={{this.milestoneStatuses}}
                   @selected={{find-by "value" this.newMilestone.status this.milestoneStatuses}}
                   @searchField="label"
-                  @onchange={{action "selectMilestoneStatus"}}
+                  @onchange={{this.selectMilestoneStatus}}
                   @relateType="relate-simple"
               />
 

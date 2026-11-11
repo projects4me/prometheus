@@ -4,11 +4,11 @@
       <div class="box-header with-border">
         {{#if (eq this.model.createdUser this.currentUser.user.id)}}
           {{#if (eq this.model.locked "0")}}
-            <a href="javascript:void(0);" {{action "lockWiki" "unlock"}}>
+            <a href="javascript:void(0);" {{on "click" (fn this.lockWiki "unlock")}}>
               <i class="fa fa-unlock lock" data-toggle="tooltip" title="{{t "views.app.wiki.lock"}}"></i>
             </a>
           {{else}}
-            <a href="javascript:void(0);" {{action "lockWiki" "lock"}}>
+            <a href="javascript:void(0);" {{on "click" (fn this.lockWiki "lock")}}>
               <i class="fa fa-lock lock" data-toggle="tooltip" title="{{t "views.app.wiki.unlock"}}"></i>
             </a>
           {{/if}}
@@ -18,7 +18,7 @@
         <h2 class="box-title">{{this.model.name}} - </h2>
         {{#if this.model.parentId}}
           {{#if this.wikiList}}
-            <a href="javascript:void(0);" {{action "loadWiki" this.model.projectId (get-wiki this.model this.wikiList)}}>{{get-wiki this.model this.wikiList}}</a>
+            <a href="javascript:void(0);" {{on "click" (fn this.loadWiki this.model.projectId (get-wiki this.model this.wikiList))}}>{{get-wiki this.model this.wikiList}}</a>
           {{/if}}
         {{/if}}
         <span class="path-seperator"></span> {{this.model.name}}
@@ -27,7 +27,7 @@
           {{#if this.iVoted}}
             <i class="fa fa-heart" data-toggle="tooltip" title="{{t "views.app.wiki.voted"}}" ></i>
           {{else}}
-            <a href="javascript:void(0);" {{action "upvote" this.model.id}}>
+            <a href="javascript:void(0);" {{on "click" (fn this.upvote this.model.id)}}>
               <i class="fa fa-heart-o" data-toggle="tooltip" title="{{t "views.app.wiki.upvote"}}"></i>
             </a>
           {{/if}}
@@ -101,13 +101,13 @@
                 {{/if}}
                 <div class="attachment-info">
                   <div class="attachment-name clearfix">
-                    <a href="#" {{action "previewFile" file}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
+                    <a href="#" {{on "click" (prevent-default this.previewFile file)}}><i class="fa fa-paperclip"></i><span class="attachment-file-name">{{file.name}}</span></a>
                   </div>
                   <div class="attachment-additional">
                     <span class="attachment-size">
                       {{file-size file.fileSize}}
-                      <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
-                      <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                      <a href="#" {{on "click" (prevent-default this.deleteFile file)}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
+                      <a href="#" {{on "click" (prevent-default this.downloadFile file)}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
                     </span>
                   </div>
                 </div>
@@ -119,7 +119,7 @@
               {{#bootstrap-modal
                   title="views.app.wiki.page.file.preview"
                   closeLabel="global.form.close"
-                  close=(action "removeModal")}}
+                  close=this.removeModal}}
                 <iframe title="{{t "views.app.wiki.page.file.preview"}}" id="file_preview"></iframe>
               {{/bootstrap-modal}}
             {{/if}}
@@ -128,7 +128,7 @@
         </div>
         {{field-upload
             label=(t "views.app.wiki.page.selectfile")
-            uploadFile=(action "uploadFile")
+            uploadFile=this.uploadFile
         }}
 
       </div>

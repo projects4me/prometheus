@@ -20,7 +20,7 @@
         selected=(find-by "value" this.projectId this.projectsList)
         placeholder=(t "views.nav.selectproject")
         searchField="label"
-        onChange=(action "projectChanged")
+        onChange=this.projectChanged
     as |project|}}
       {{project.label}}
     {{/power-select}}
@@ -58,11 +58,11 @@
             {{#each-in menu as |entity item|}}
               <li>
                 {{#if definition.projectRelated}}
-                  <a href="/{{this.appPrefix}}/{{this.projectId}}/{{item.anchorRoute}}" {{action "navigate" item.route  item.routeParams item.anchorRoute this.projectId}}>
+                  <a href="/{{this.appPrefix}}/{{this.projectId}}/{{item.anchorRoute}}" {{on "click" (prevent-default this.navigate item.route item.routeParams item.anchorRoute this.projectId)}}>
                     <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
                   </a>
                 {{else}}
-                  <a href="/{{this.appPrefix}}/{{item.anchorRoute}}" {{action "navigate" item.route  item.routeParams item.anchorRoute}}>
+                  <a href="/{{this.appPrefix}}/{{item.anchorRoute}}" {{on "click" (prevent-default this.navigate item.route item.routeParams item.anchorRoute)}}>
                     <i class="fa fa-circle-o {{item.className}}"></i>{{t item.label}}
                   </a>
                 {{/if}}
@@ -77,12 +77,12 @@
     {{else}}
       <li class="treeview">
         {{#if definition.projectRelated}}
-          <a href="/{{this.appPrefix}}/{{this.projectId}}/{{definition.anchorRoute}}" {{action "navigate" definition.route definition.routeParams definition.anchorRoute this.projectId}}>
+          <a href="/{{this.appPrefix}}/{{this.projectId}}/{{definition.anchorRoute}}" {{on "click" (prevent-default this.navigate definition.route definition.routeParams definition.anchorRoute this.projectId)}}>
             <i class="fa fa-{{definition.icon}}"></i>
             <span>{{t definition.label}}</span>
           </a>
         {{else}}
-          <a href="/{{this.appPrefix}}/{{definition.anchorRoute}}" {{action "navigate" definition.route definition.routeParams definition.anchorRoute}}>
+          <a href="/{{this.appPrefix}}/{{definition.anchorRoute}}" {{on "click" (prevent-default this.navigate definition.route definition.routeParams definition.anchorRoute)}}>
             <i class="fa fa-{{definition.icon}}"></i>
             <span>{{t definition.label}}</span>
           </a>

@@ -23,7 +23,7 @@
             <p class="login-box-msg">{{t "views.signin.message"}}</p>
           {{/if}}
 
-          <form {{action 'authenticate' on='submit'}} method="post" data-signin-form>
+          <form {{on "submit" this.submitSignin}} method="post" data-signin-form>
             <div class="form-group has-feedback">
               <Input id='email' class='form-control' placeholder={{t "views.signin.email"}} @value={{this.signinEmail}}/>
               <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -36,7 +36,7 @@
 
               <div class="col-sm-12 text-center">
                 <div class="checkbox icheck">
-                  <input type="checkbox" onchange={{action "setRememberMe"}} checked={{this.rememberMe}}>
+                  <input type="checkbox" {{on "change" this.setRememberMe}} checked={{this.rememberMe}}>
                   <label>{{t "views.signin.remember"}}</label>
                 </div>
               </div>
@@ -66,13 +66,13 @@
           </div>
 
             <div class="col-md-8 col-xs-12 text-right">
-              <a data-toggle-forget-password onclick={{this.toggleForgetPassword}}>{{t "views.signin.forgot"}}</a><br>
+              <a data-toggle-forget-password {{on "click" this.toggleForgetPassword}}>{{t "views.signin.forgot"}}</a><br>
             </div>
           </div>      
         </div>
       {{else}}
         <div class="login-logo">
-          <a data-toggle-forget-password onclick={{action this.toggleForgetPassword}}><img alt="{{t "application"}}" src="/img/forgot-password.png">
+          <a data-toggle-forget-password {{on "click" this.toggleForgetPassword}}><img alt="{{t "application"}}" src="/img/forgot-password.png">
             <div class="clearfix"></div>{{safe-html (t "views.signin.forgetPassword.title")}}
           </a>
         </div>
@@ -85,7 +85,7 @@
             @value={{this.email}}
             @data-field="user.email" 
             @lengthRequired={{false}}
-            @validate={{action this.validateField "forgetPasswordSection" (hash name="email" value=this.email model=(hash email=this.email))}}
+            @validate={{fn this.validateField "forgetPasswordSection" (hash name="email" value=this.email model=(hash email=this.email))}}
             @message={{this.message.forgetPasswordSection.email}}        
             @mask="email"
           />

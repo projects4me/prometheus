@@ -14,7 +14,7 @@
       closeLabel="global.form.close"
       containerClass="idea-screen-modal"
       removeConfirmBtn=true
-      close=(action this.closePreview)
+      close=this.closePreview
     }}
       <p data-idea-screen-preview-title>{{@screen.title}} <small class="text-muted">{{t "views.app.idea.conversation.screenVersion" version=@screen.version}}</small></p>
       {{#if this.previewFailed}}

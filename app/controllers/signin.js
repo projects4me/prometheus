@@ -184,6 +184,17 @@ export default class SignInController extends PrometheusCreateController {
      * @method authenticate
      * @public
      */
+    @action submitSignin(event) {
+        event.preventDefault();
+        return this.authenticate();
+    }
+
+    /**
+     * Authenticates the user and routes into the app shell when credentials are valid.
+     *
+     * @method authenticate
+     * @public
+     */
     @action async authenticate() {
         if (!this.signInControl.canSubmitSignIn) {
             return;

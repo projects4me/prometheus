@@ -24,13 +24,13 @@
         <span class="list-view-count pull-left">{{t "global.list.selected"}} {{this.selectedCount}}</span>
         <span class="pagination">
           {{#if this.model.content.meta._links.prev}}
-            <AppUi::Button type="button" class="btn btn-default" {{action "paginate" (get-page this.model.content.meta._links.next.href)}}><i class="fa fa-angle-double-left"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default" {{on "click" (fn this.paginate (get-page this.model.content.meta._links.next.href))}}><i class="fa fa-angle-double-left"></i></AppUi::Button>
           {{else}}
             <AppUi::Button type="button" class="btn btn-default disabled"><i class="fa fa-angle-double-left"></i></AppUi::Button>
           {{/if}}
 
           {{#if this.model.content.meta._links.next}}
-            <AppUi::Button type="button" class="btn btn-default" {{action "paginate" (get-page this.model.content.meta._links.next.href)}}><i class="fa fa-angle-double-right"></i></AppUi::Button>
+            <AppUi::Button type="button" class="btn btn-default" {{on "click" (fn this.paginate (get-page this.model.content.meta._links.next.href))}}><i class="fa fa-angle-double-right"></i></AppUi::Button>
           {{else}}
             <AppUi::Button type="button" class="btn btn-default disabled"><i class="fa fa-angle-double-right"></i></AppUi::Button>
           {{/if}}
@@ -44,22 +44,22 @@
           <tr>
             <th>
               <div class="btn-group">
-                <AppUi::Button type="button" class="btn">{{checkbox-field action=(action "selectAll") type="checkbox" data-select="all"}}</AppUi::Button>
+                <AppUi::Button type="button" class="btn">{{checkbox-field action=this.selectAll type="checkbox" data-select="all"}}</AppUi::Button>
                 <AppUi::Button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <span class="caret"></span>
                   <span class="sr-only">{{t 'global.list.toggleDropdown'}}</span>
                 </AppUi::Button>
                 <ul class="dropdown-menu">
-                  <li><a href="javascript:void(0);" {{action "selectAll"}}>{{t 'global.list.selectAll'}}</a></li>
-                  <li><a href="javascript:void(0);" {{action "deleteAll"}}>{{t 'global.list.deleteAll'}}</a></li>
-                  <li><a href="javascript:void(0);" {{action "exportAll"}}>{{t 'global.list.exportAll'}}</a></li>
-                  <li><a href="javascript:void(0);" {{action "updateAll"}}>{{t 'global.list.updateAll'}}</a></li>
+                  <li><a href="javascript:void(0);" {{on "click" this.selectAll}}>{{t 'global.list.selectAll'}}</a></li>
+                  <li><a href="javascript:void(0);" {{on "click" this.deleteAll}}>{{t 'global.list.deleteAll'}}</a></li>
+                  <li><a href="javascript:void(0);" {{on "click" this.exportAll}}>{{t 'global.list.exportAll'}}</a></li>
+                  <li><a href="javascript:void(0);" {{on "click" this.updateAll}}>{{t 'global.list.updateAll'}}</a></li>
                 </ul>
               </div>
             </th>
             {{#each-in this.metaData.fields as |field definition|}}
               {{#if definition.sort}}
-                <th class="sortable" data-sort="{{this.module}}.{{definition.fieldName}}Sortable"><a href="javascript:void(0);" {{action "sortData" definition.fieldName}}>{{t definition.label}}</a></th>
+                <th class="sortable" data-sort="{{this.module}}.{{definition.fieldName}}Sortable"><a href="javascript:void(0);" {{on "click" (fn this.sortData definition.fieldName)}}>{{t definition.label}}</a></th>
               {{else}}
                 <th>{{t definition.label}}</th>
               {{/if}}
@@ -71,22 +71,22 @@
             <tr>
               <td>
                 <div class="btn-group">
-                  <AppUi::Button type="button" class="btn">{{checkbox-field action=(action "select") type="checkbox" data-select=entity.id}}</AppUi::Button>
+                  <AppUi::Button type="button" class="btn">{{checkbox-field action=this.select type="checkbox" data-select=entity.id}}</AppUi::Button>
                   <AppUi::Button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="caret"></span>
                     <span class="sr-only">{{t "global.list.toggleDropdown"}}</span>
                   </AppUi::Button>
                   <ul class="dropdown-menu">
-                    <li><a href="javascript:void(0);" {{action "select"}}>{{t 'global.list.select'}}</a></li>
-                    <li><a href="javascript:void(0);" {{action "export"}}>{{t 'global.list.export'}}</a></li>
-                    <li><a href="javascript:void(0);" {{action "delete"}}>{{t 'global.list.delete'}}</a></li>
-                    <li><a href="javascript:void(0);" {{action "edit" entity.id}}>{{t 'global.list.edit'}}</a></li>
-                    <li><a href="javascript:void(0);" {{action "detail" entity.id}}>{{t 'global.list.detail'}}</a></li>
+                    <li><a href="javascript:void(0);" {{on "click" this.select}}>{{t 'global.list.select'}}</a></li>
+                    <li><a href="javascript:void(0);" {{on "click" this.export}}>{{t 'global.list.export'}}</a></li>
+                    <li><a href="javascript:void(0);" {{on "click" this.delete}}>{{t 'global.list.delete'}}</a></li>
+                    <li><a href="javascript:void(0);" {{on "click" (fn this.edit entity.id)}}>{{t 'global.list.edit'}}</a></li>
+                    <li><a href="javascript:void(0);" {{on "click" (fn this.detail entity.id)}}>{{t 'global.list.detail'}}</a></li>
                   </ul>
                 </div>
               </td>
               {{#each-in this.metaData.fields as |field definition|}}
-                <td>{{field-view view='list' navigate=(action "detail" entity.id) definition=definition model=entity field=field module=this.module}}</td>
+                <td>{{field-view view='list' navigate=(fn this.detail entity.id) definition=definition model=entity field=field module=this.module}}</td>
               {{/each-in}}
             </tr>
           {{/each}}

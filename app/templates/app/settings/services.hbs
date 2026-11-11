@@ -221,8 +221,8 @@
       title=(if (eq this.decision "approved") "views.app.settings.services.requests.approveTitle" "views.app.settings.services.requests.denyTitle")
       confirmLabel=(if (eq this.decision "approved") "views.app.settings.services.requests.approve" "views.app.settings.services.requests.deny")
       closeLabel="global.form.cancel"
-      confirm=(action this.decide)
-      close=(action this.cancelDecision)
+      confirm=this.decide
+      close=this.cancelDecision
     }}
       <div class="box-body" data-request-confirm>
         {{#if (eq this.decision "approved")}}
@@ -239,7 +239,7 @@
     {{#bootstrap-modal
       title="views.app.settings.services.tokens.createdTitle"
       closeLabel="views.app.settings.services.tokens.copiedIt"
-      close=(action this.closeCreatedToken)
+      close=this.closeCreatedToken
       removeConfirmBtn=true
     }}
       <div class="box-body" data-token-created>
@@ -259,8 +259,8 @@
       title=(if this.confirmingDisable "views.app.settings.services.disableTitle" "views.app.settings.services.enableTitle")
       confirmLabel=(if this.confirmingDisable "views.app.settings.services.disable" "views.app.settings.services.enable")
       closeLabel="global.form.cancel"
-      confirm=(action this.toggleStatus)
-      close=(action this.cancelToggle)
+      confirm=this.toggleStatus
+      close=this.cancelToggle
     }}
       <div class="box-body" data-services-confirm>
         {{#if this.confirmingDisable}}

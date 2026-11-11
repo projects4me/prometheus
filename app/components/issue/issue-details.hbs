@@ -173,7 +173,7 @@
               <div class="col-xs-6 col-md-4" data-field="issue.parentissue">
                 <h4>{{t "views.app.issue.detail.parent"}}</h4>
                 {{#if this.issue.parentId}}
-                  <LinkTo @route="app.project.issue.page" @model={{this.issue.parentissue.issueNumber}} {{action "navigateToIssue" this.issue.parentissue.issueNumber this.issue.projectId}}>
+                  <LinkTo @route="app.project.issue.page" @model={{this.issue.parentissue.issueNumber}} {{on "click" (fn this.navigateToIssue this.issue.parentissue.issueNumber this.issue.projectId)}}>
                     #{{this.issue.parentissue.issueNumber}} - {{this.issue.parentissue.subject}}
                   </LinkTo>
                 {{else}}
@@ -338,8 +338,8 @@
                       <div class="attachment-additional">
                         <span class="attachment-size">
                           {{file-size file.fileSize}}
-                          <a href="#" {{action 'deleteFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
-                          <a href="#" {{action 'downloadFile' file}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
+                          <a href="#" {{on "click" (prevent-default this.deleteFile file)}} class="btn btn-default btn-xs pull-right"><i class="fa fa-trash-o"></i></a>
+                          <a href="#" {{on "click" (prevent-default this.downloadFile file)}} class="btn btn-default btn-xs pull-right"><i class="fa fa-cloud-download"></i></a>
                         </span>
                       </div>
                     </div>
@@ -353,7 +353,7 @@
             </div>
             <FormFields::FieldUpload
                 @label={{t "views.app.issue.detail.selectfile"}}
-                @uploadFile={{action "uploadFile"}}
+                @uploadFile={{this.uploadFile}}
             />
 
           </div>
@@ -380,8 +380,8 @@
                       <Agent::UserTag @userId={{timelog.createdUser}} />
                       <span>{{t "views.app.issue.detail.timelog.estimatedon"}}<strong>{{moment-format timelog.dateCreated 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
                       <span class="log-edit pull-right">
-                        <a href="javascript:void(0);" {{action "showEditEstimateDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
-                        <a href="javascript:void(0);" {{action "deleteLog" timelog}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
+                        <a href="javascript:void(0);" {{on "click" (fn this.showEditEstimateDialog timelog)}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
+                        <a href="javascript:void(0);" {{on "click" (fn this.deleteLog timelog)}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
                       </span>
                       <span class="log-entry pull-right">
                         {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}
@@ -404,8 +404,8 @@
                   title="views.app.issue.detail.estimate.edit"
                   closeLabel="global.form.close"
                   confirmLabel="global.form.save"
-                  close=(action "removeEditEstimateModal")
-                  confirm=(action "editLog")}}
+                  close=this.removeEditEstimateModal
+                  confirm=this.editLog}}
 
                 <IntervalSelector
                   @days={{this.editingLog.days}}
@@ -437,8 +437,8 @@
                   title="views.app.issue.detail.timelog.estimate"
                   closeLabel="global.form.close"
                   confirmLabel="global.form.save"
-                  close=(action "removeEstimateTimeModal")
-                  confirm=(action "addEstimate")}}
+                  close=this.removeEstimateTimeModal
+                  confirm=this.addEstimate}}
 
                 <IntervalSelector
                   @days={{this.newTimeLog.days}}
@@ -468,7 +468,7 @@
 
           <div class="box-footer text-center">
             <span>
-              <a href="javascript:void(0);" id="addEstimateTime" {{action "showEstimateTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
+              <a href="javascript:void(0);" id="addEstimateTime" {{on "click" this.showEstimateTimeDialog}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.estimate"}}</a>
             </span>
           </div>
         </div>
@@ -494,8 +494,8 @@
                       <Agent::UserTag @userId={{timelog.createdUser}} />
                       <span>{{t "views.app.issue.detail.timelog.on"}}<strong>{{moment-format timelog.spentOn 'MMM Do `YY' 'YYYY-MM-DD 00:00:00'}}</strong></span>
                       <span class="log-edit pull-right">
-                        <a href="javascript:void(0);" {{action "showEditLogDialog" timelog}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
-                        <a href="javascript:void(0);" {{action "deleteLog" timelog}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
+                        <a href="javascript:void(0);" {{on "click" (fn this.showEditLogDialog timelog)}} data-toggle="tooltip" title="{{t "global.form.edit"}}"><i class="fa fa-pencil"></i></a>&nbsp;
+                        <a href="javascript:void(0);" {{on "click" (fn this.deleteLog timelog)}} data-toggle="tooltip" title="{{t "global.form.delete"}}"><i class="fa fa-trash-o"></i></a>
                       </span>
                       <span class="log-entry pull-right">
                         {{#if (gt timelog.days 0)}}{{timelog.days}}{{t "views.app.issue.detail.timelog.d"}}{{/if}}
@@ -518,8 +518,8 @@
                   title="views.app.issue.detail.timelog.edit"
                   closeLabel="global.form.close"
                   confirmLabel="global.form.save"
-                  close=(action "removeEditLogModal")
-                  confirm=(action "editLog")}}
+                  close=this.removeEditLogModal
+                  confirm=this.editLog}}
 
                 <IntervalSelector
                   @days={{this.editingLog.days}}
@@ -568,8 +568,8 @@
                   title="views.app.issue.detail.timelog.log"
                   closeLabel="global.form.close"
                   confirmLabel="global.form.save"
-                  close=(action "removeLogTimeModal")
-                  confirm=(action "logTime")}}
+                  close=this.removeLogTimeModal
+                  confirm=this.logTime}}
 
                 <IntervalSelector
                   @days={{this.newTimeLog.days}}
@@ -615,7 +615,7 @@
 
           <div class="box-footer text-center">
             <span>
-              <a href="javascript:void();" id="addLogTime" {{action "showLogTimeDialog"}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.log"}}</a>
+              <a href="javascript:void(0);" id="addLogTime" {{on "click" this.showLogTimeDialog}}><ion class="ion-md-stopwatch"></ion> {{t "views.app.issue.detail.timelog.log"}}</a>
             </span>
           </div>
           {{!-- /.box-footer --}}
@@ -691,7 +691,7 @@
   @data={{this.issuePlanData}}
   @issue={{this.issue}}
   @project={{this.project}}
-  @onClose={{action this.removeIssuePlanDialog}}
+  @onClose={{this.removeIssuePlanDialog}}
   @issueStatuses={{@issueStatuses}}
   @issueTypes={{@issueTypes}}
   @scrollAndHighlight={{this.scrollAndHighlight}}
@@ -702,7 +702,7 @@
   {{#bootstrap-modal
       title="views.app.issue.watcher.addWatchers"
       closeLabel="global.form.close"
-      close=(action "removeAddWatcherDialog")}}
+      close=this.removeAddWatcherDialog}}
     <div class="project-members-list">
       {{#if this.availableProjectMembers.length}}
         {{#each this.availableProjectMembers as |member|}}

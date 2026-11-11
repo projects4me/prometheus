@@ -1,11 +1,11 @@
 {{#each-in this.lists as |key item|}}
   {{#if (object-empty item.nodes)}}
     <li class="wiki-list-no-parent">
-      <a href="javascript:void(0);" {{action "loadWiki" item.name}}>{{item.name}}</a>
+      <a href="javascript:void(0);" {{on "click" (fn this.loadWiki item.name)}}>{{item.name}}</a>
     </li>
   {{else}}
     <li class="wiki-list-parent">
-      <a href="javascript:void(0);" {{action "loadWiki" item.name}}>{{item.name}}</a>
+      <a href="javascript:void(0);" {{on "click" (fn this.loadWiki item.name)}}>{{item.name}}</a>
       <ul>
         {{tree-list lists=item.nodes}}
       </ul>

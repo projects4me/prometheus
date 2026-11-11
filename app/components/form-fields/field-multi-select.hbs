@@ -13,7 +13,7 @@
         @onKeydown={{this.handlePowerSelectKeydown}}
         @matcher={{@matcher}}
         @closeOnSelect={{@closeOnSelect}}
-        @onFocus={{fn (mut this.shouldValidate) true}}
+        @onFocus={{this.enableValidation}}
         @onBlur={{this.validate}}
         @onClose={{this.validate}} as |data|>
         <span data-multi-select-value={{data}}>{{data}}</span>

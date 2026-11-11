@@ -71,12 +71,12 @@
           {{!-- Menu Footer--}}
           <li class="user-footer">
             <div class="pull-left">
-              <LinkTo @route="app.user.page" @model={{this.currentUser.user.id}} class="btn btn-default btn-flat" {{action "viewProfile"}}>{{t "views.app.profile"}}</LinkTo>
+              <LinkTo @route="app.user.page" @model={{this.currentUser.user.id}} class="btn btn-default btn-flat" {{on "click" this.viewProfile}}>{{t "views.app.profile"}}</LinkTo>
             </div>
             <div class="pull-right">
               {{#if this.session.isAuthenticated}}
                 <div id="btn-signout">
-                  <a class="btn btn-default btn-flat" href="javascript:void(0);" {{action 'signOut'}}>{{t "global.form.signout"}}</a>
+                  <a class="btn btn-default btn-flat" href="javascript:void(0);" {{on "click" this.signOut}}>{{t "global.form.signout"}}</a>
                 </div>
               {{else}}
                 <div id="btn-signin">
@@ -85,7 +85,7 @@
                     href="javascript:void(0)"
                     aria-disabled={{if this.isHeaderSignInEnabled "false" "true"}}
                     tabindex={{if this.isHeaderSignInEnabled "0" "-1"}}
-                    {{action 'signIn'}}
+                    {{on "click" this.signIn}}
                   >{{t "global.form.signin"}}</a>
                 </div>
               {{/if}}

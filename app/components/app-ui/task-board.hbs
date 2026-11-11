@@ -84,8 +84,8 @@
     title="views.app.board.milestone.create"
     closeLabel="global.form.close"
     confirmLabel="global.form.save"
-    close=(action "removeAddMilestoneModal")
-    confirm=(action "saveMilestone")
+    close=this.removeAddMilestoneModal
+    confirm=this.saveMilestone
   }}
     <div class="form-group">
       <FormFields::FieldText
@@ -95,7 +95,7 @@
         @value={{this.newMilestone.name}}
         @data-field="milestone.name"
         @length="255"
-        @validate={{action @validateField "milestoneCreate" (hash name="name" value=this.newMilestone.name model=this.newMilestone)}}
+        @validate={{fn @validateField "milestoneCreate" (hash name="name" value=this.newMilestone.name model=this.newMilestone)}}
         @message={{@message.milestoneCreate.name}}
         {{autofocus}}
       />
@@ -104,7 +104,7 @@
         @placeholder={{t "views.app.project.detail.milestone.inputstartdate"}}
         @label={{t "views.app.project.detail.milestone.startdate"}}
         @value="{{readonly this.newMilestone.startDate}}"
-        @update={{action @selectStatic this.newMilestone 'startDate'}}
+        @update={{fn @selectStatic this.newMilestone 'startDate'}}
         @data-field="milestone.startDate"
         @format="YYYY-MM-DD"
         @singleDatePicker={{true}}
@@ -113,7 +113,7 @@
         @positionY="down"
         @autoApply={{true}}
         @minDate='1990'
-        @validate={{action @validateField "milestoneCreate" (hash name="startDate" value=this.newMilestone.startDate model=this.newMilestone)}}                
+        @validate={{fn @validateField "milestoneCreate" (hash name="startDate" value=this.newMilestone.startDate model=this.newMilestone)}}                
         @message={{@message.milestoneCreate.startDate}}
       />
 
@@ -121,7 +121,7 @@
         @placeholder={{t "views.app.project.detail.milestone.inputenddate"}}
         @label={{t "views.app.project.detail.milestone.enddate"}}
         @value={{readonly this.newMilestone.endDate}}
-        @update={{action @selectStatic this.newMilestone 'endDate'}}
+        @update={{fn @selectStatic this.newMilestone 'endDate'}}
         @data-field="milestone.endDate"
         @format="YYYY-MM-DD"
         @singleDatePicker={{true}}
@@ -130,7 +130,7 @@
         @positionY="down"
         @autoApply={{true}}
         @minDate='1990'
-        @validate={{action @validateField "milestoneCreate" (hash name="endDate" value=this.newMilestone.endDate model=this.newMilestone)}}                
+        @validate={{fn @validateField "milestoneCreate" (hash name="endDate" value=this.newMilestone.endDate model=this.newMilestone)}}                
         @message={{@message.milestoneCreate.endDate}}
       />
 
@@ -141,10 +141,10 @@
         @options={{this.milestoneTypes}}
         @selected={{find-by "value" this.newMilestone.milestoneType this.milestoneTypes}}
         @searchField="label"
-        @onchange={{action @selectRelated this.newMilestone 'milestoneType'}}
+        @onchange={{fn @selectRelated this.newMilestone 'milestoneType'}}
         @relateType="relate-simple"
         @data-field="milestone.type"
-        @validate={{action @validateField "milestoneCreate" (hash name="milestoneType" value=this.newMilestone.milestoneType model=this.newMilestone)}}
+        @validate={{fn @validateField "milestoneCreate" (hash name="milestoneType" value=this.newMilestone.milestoneType model=this.newMilestone)}}
         @message={{@message.milestoneCreate.milestoneType}}
       />
 
@@ -155,10 +155,10 @@
         @options={{this.milestoneStatuses}}
         @selected={{find-by "value" this.newMilestone.status this.milestoneStatuses}}
         @searchField="label"
-        @onchange={{action @selectRelated this.newMilestone 'status'}}
+        @onchange={{fn @selectRelated this.newMilestone 'status'}}
         @relateType="relate-simple"
         @data-field="milestone.status"
-        @validate={{action @validateField "milestoneCreate" (hash name="status" value=this.newMilestone.status model=this.newMilestone)}}
+        @validate={{fn @validateField "milestoneCreate" (hash name="status" value=this.newMilestone.status model=this.newMilestone)}}
         @message={{@message.milestoneCreate.status}}
       />
 
@@ -167,7 +167,7 @@
         @label={{t "views.app.project.detail.milestone.description"}}
         @value={{this.newMilestone.description}}
         @data-field="milestone.description"
-        @validate={{action @validateField "milestoneCreate" (hash name="description" value=this.newMilestone.description model=this.newMilestone)}}
+        @validate={{fn @validateField "milestoneCreate" (hash name="description" value=this.newMilestone.description model=this.newMilestone)}}
         @message={{@message.milestoneCreate.description}}
       />
     </div>
@@ -180,8 +180,8 @@
     title="views.app.board.milestone.markComplete.title"
     closeLabel="global.form.cancel"
     confirmLabel="views.app.board.milestone.markComplete.confirm"
-    close=(action "cancelMarkMilestoneAsComplete")
-    confirm=(action "markMilestoneAsComplete")
+    close=this.cancelMarkMilestoneAsComplete
+    confirm=this.markMilestoneAsComplete
     confirmClass="btn-danger"
   }}
     <div class="close-milestone-confirmation">

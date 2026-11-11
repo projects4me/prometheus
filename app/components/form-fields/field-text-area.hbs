@@ -9,7 +9,7 @@
       {{on "input" this.onInput}}
       {{on "blur" this.validate}}
       {{on "blur" this.onBlur}}
-      {{on "focusout" (action (mut this.shouldValidate) true) }}
+      {{on "focusout" this.enableValidation}}
       ...attributes
     />
     <span class="highlight"></span>

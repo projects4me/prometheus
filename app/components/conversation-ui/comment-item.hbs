@@ -39,8 +39,8 @@
       title="views.app.conversation.comment.edit.title"
       closeLabel="global.form.cancel"
       confirmLabel="views.app.conversation.comment.edit.update"
-      close=(action "removeEditCommentModal")
-      confirm=(action "updateComment")
+      close=this.removeEditCommentModal
+      confirm=this.updateComment
     }}
       <div class="edit-comment-form">
         <div data-field="comment.edit" data-field-type="wysiwyg" class="form-field ember-view">
@@ -67,8 +67,8 @@
       title="views.app.conversation.comment.delete.title"
       closeLabel="global.form.cancel"
       confirmLabel="views.app.conversation.comment.delete.confirm"
-      close=(action "removeDeleteCommentModal")
-      confirm=(action "deleteComment")
+      close=this.removeDeleteCommentModal
+      confirm=this.deleteComment
       confirmClass="btn-danger"
     }}
       <div class="delete-comment-confirmation">

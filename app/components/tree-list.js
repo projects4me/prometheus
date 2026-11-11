@@ -3,6 +3,7 @@
  */
 
 import Component from '@ember/component';
+import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 /**
@@ -34,9 +35,7 @@ export default Component.extend({
      * @for TreeList
      * @public
      */
-    actions: {
-
-        /**
+    /**
          * Load a particular wiki page
          *
          * @method loadWiki
@@ -44,14 +43,12 @@ export default Component.extend({
          * @public
          * @todo Trigger the notificaiton
          */
-        loadWiki: function(wikiName) {
+        loadWiki: action(function(wikiName) {
             // This route is not exposed by EmbberJS, we included this by utilizing
             // intializer. Normally this would not be required but the tree view
             // causes us to call the same component recursively and thus it becomes
             // very difficult to pass action context across
             this.router.transitionTo('app.project.wiki.page', wikiName);
-        }
-
-    }
+        })
 
 });
