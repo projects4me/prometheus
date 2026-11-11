@@ -240,6 +240,138 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     }
 
     /**
+     * Number of milestones shown per page in the Project Milestones box.
+     *
+     * @property milestonesPageSize
+     * @type {number}
+     * @for AppProjectIndexController
+     * @public
+     */
+    milestonesPageSize = 5;
+
+    /**
+     * Current page of the Project Milestones box (1-based).
+     *
+     * @property milestonesPage
+     * @type {number}
+     * @for AppProjectIndexController
+     * @public
+     */
+    @tracked milestonesPage = 1;
+
+    /**
+     * Total number of pages of milestones (at least 1).
+     *
+     * @property milestonesPageCount
+     * @for AppProjectIndexController
+     * @public
+     */
+    get milestonesPageCount() {
+        let total = this.get('milestones')?.length || 0;
+        return Math.max(1, Math.ceil(total / this.milestonesPageSize));
+    }
+
+    /**
+     * The current page, clamped to the existing pages so a shrinking list never shows an empty page.
+     *
+     * @property currentMilestonesPage
+     * @for AppProjectIndexController
+     * @public
+     */
+    get currentMilestonesPage() {
+        return Math.min(Math.max(1, this.milestonesPage), this.milestonesPageCount);
+    }
+
+    /**
+     * Whether the milestones box needs a pager (more than one page of milestones).
+     *
+     * @property showMilestonesPager
+     * @for AppProjectIndexController
+     * @public
+     */
+    get showMilestonesPager() {
+        return this.milestonesPageCount > 1;
+    }
+
+    /**
+     * The milestones on the current page, in the list's existing order.
+     *
+     * @property visibleMilestones
+     * @for AppProjectIndexController
+     * @public
+     */
+    get visibleMilestones() {
+        let list = this.get('milestones') || [];
+        let start = (this.currentMilestonesPage - 1) * this.milestonesPageSize;
+        return list.slice(start, start + this.milestonesPageSize);
+    }
+
+    /**
+     * 1-based index of the first milestone on the current page (0 when there are none).
+     *
+     * @property milestonesRangeFrom
+     * @for AppProjectIndexController
+     * @public
+     */
+    get milestonesRangeFrom() {
+        return this.visibleMilestones.length ? (this.currentMilestonesPage - 1) * this.milestonesPageSize + 1 : 0;
+    }
+
+    /**
+     * 1-based index of the last milestone on the current page (0 when there are none).
+     *
+     * @property milestonesRangeTo
+     * @for AppProjectIndexController
+     * @public
+     */
+    get milestonesRangeTo() {
+        let from = this.milestonesRangeFrom;
+        return from ? from + this.visibleMilestones.length - 1 : 0;
+    }
+
+    /**
+     * Whether the previous-page button is disabled.
+     *
+     * @property isMilestonesPreviousDisabled
+     * @for AppProjectIndexController
+     * @public
+     */
+    get isMilestonesPreviousDisabled() {
+        return this.currentMilestonesPage <= 1;
+    }
+
+    /**
+     * Whether the next-page button is disabled.
+     *
+     * @property isMilestonesNextDisabled
+     * @for AppProjectIndexController
+     * @public
+     */
+    get isMilestonesNextDisabled() {
+        return this.currentMilestonesPage >= this.milestonesPageCount;
+    }
+
+    /**
+     * Shows the previous page of milestones.
+     *
+     * @method previousMilestonesPage
+     * @public
+     */
+    @action previousMilestonesPage() {
+        this.milestonesPage = Math.max(1, this.currentMilestonesPage - 1);
+    }
+
+    /**
+     * Shows the next page of milestones.
+     *
+     * @method nextMilestonesPage
+     * @public
+     */
+    @action nextMilestonesPage() {
+        this.milestonesPage = Math.min(this.milestonesPageCount, this.currentMilestonesPage + 1);
+    }
+
+    /**
      * Options for the estimated vs spent milestone filter (relate field shape).
      *
      * @property estimatedSpentMilestoneOptions
@@ -488,6 +620,8 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
             newMilestone.save().then(function (data) {
                 if (!isUpdate) {
                     _self.get('milestones').pushObject(data);
+                    // The new milestone is appended, so show the page it lands on
+                    _self.set('milestonesPage', _self.milestonesPageCount);
                 }
 
                 new Messenger().post({

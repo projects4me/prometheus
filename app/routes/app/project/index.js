@@ -136,6 +136,7 @@ export default App.extend({
         this.loadMilestones(model.milestones, model.issues, controller);
         controller.setDefaultMilestoneForEstimatedSpentChart();
 
+        controller.set('milestonesPage', 1);
         controller.send('resetNewMilestone');
         controller.set('conversations', model.conversations);
     },
