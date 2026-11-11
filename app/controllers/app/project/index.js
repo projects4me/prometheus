@@ -11,6 +11,7 @@ import { tracked } from '@glimmer/tracking';
 import $ from "jquery";
 import { htmlSafe } from "@ember/template";
 import { A } from '@ember/array';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This is the index page of the project, index page for the project is
@@ -801,8 +802,8 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
         let _self = this;
 
         let newMilestone = _self.get('store').createRecord('milestone', {
-            startDate: moment().format('YYYY-MM-DD'),
-            endDate: moment().format('YYYY-MM-DD'),
+            startDate: dates.format(dates.now(), 'YYYY-MM-DD'),
+            endDate: dates.format(dates.now(), 'YYYY-MM-DD'),
         });
 
         _self.set('newMilestone', newMilestone);

@@ -3,6 +3,7 @@
  */
 
 import FormFieldsComponent from "./form-fields";
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This is the date field
@@ -21,7 +22,7 @@ export default class FieldDateComponent extends FormFieldsComponent {
      * @public
      */
     get maxDate() {
-        let currentYear = moment().year();
+        let currentYear = dates.part(dates.now(), 'year');
         return currentYear + 30;
     }
 

@@ -5,6 +5,7 @@
 import Model, { attr, belongsTo, hasMany } from "@ember-data/model";
 import { inject as service } from "@ember/service";
 import { computed } from "@ember/object";
+import * as dates from 'prometheus/utils/date';
 
 /**
  * The issue model
@@ -155,7 +156,7 @@ export default Model.extend({
      */
     startDate: attr("string", {
         defaultValue: () => {
-            return moment().format("YYYY-MM-DD");
+            return dates.format(dates.now(), "YYYY-MM-DD");
         }
     }),
 
@@ -543,7 +544,7 @@ export default Model.extend({
 		if (!this.endDate) {
 			return false;
 		}
-		return moment().isAfter(moment(this.endDate));
+		return dates.isAfter(dates.now(), this.endDate);
 	},
 
 	/**

@@ -3,14 +3,14 @@
  */
 
 import { helper } from '@ember/component/helper';
-import moment from 'moment';
+import { format } from 'prometheus/utils/date';
 
 /** {{moment-format date 'format'}}: formats a date with moment; '-' for empty values. */
-export function momentFormat([value, format]) {
+export function momentFormat([value, pattern]) {
 	if (value === undefined || value === null || value === '') {
 		return '-';
 	}
-	return moment(value).format(format);
+	return format(value, pattern);
 }
 
 export default helper(momentFormat);

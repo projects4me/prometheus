@@ -4,6 +4,7 @@
 
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * Timeline header renderer for months/weeks/days
@@ -23,31 +24,31 @@ export default class TimelineHeaderComponent extends Component {
 	 * @public
 	 */
 	get today() {
-		return moment().format('YYYY-MM-DD');
+		return dates.format(dates.now(), 'YYYY-MM-DD');
 	}
 
 	/**
 	 * Get the start of the current week (Monday)
 	 *
 	 * @property currentWeekStart
-	 * @type moment
+	 * @type Date
 	 * @for TimelineHeaderComponent
 	 * @public
 	 */
 	get currentWeekStart() {
-		return moment().startOf('isoWeek');
+		return dates.startOf(dates.now(), 'isoWeek');
 	}
 
 	/**
 	 * Get the end of the current week (Sunday)
 	 *
 	 * @property currentWeekEnd
-	 * @type moment
+	 * @type Date
 	 * @for TimelineHeaderComponent
 	 * @public
 	 */
 	get currentWeekEnd() {
-		return moment().endOf('isoWeek');
+		return dates.endOf(dates.now(), 'isoWeek');
 	}
 
 	/**
@@ -72,9 +73,8 @@ export default class TimelineHeaderComponent extends Component {
 		let lastCurrentWeekIndex = -1;
 		
 		const datesWithFlags = this.args.dateRange.map((date, index) => {
-			const dateMoment = moment(date.date);
-			const isCurrentWeek = dateMoment.isSameOrAfter(weekStart, 'day') && 
-			                      dateMoment.isSameOrBefore(weekEnd, 'day');
+			const isCurrentWeek = dates.isSameOrAfter(date.date, weekStart, { unit: 'day' }) &&
+			                      dates.isSameOrBefore(date.date, weekEnd, { unit: 'day' });
 			
 			// Track first and last current week indices
 			if (isCurrentWeek) {

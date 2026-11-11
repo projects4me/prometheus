@@ -3,6 +3,7 @@
  */
 
 import Component from '@glimmer/component';
+import { timezoneList } from 'prometheus/utils/date';
 
 /**
  * This component is used to render dropdown of timezones.
@@ -21,15 +22,7 @@ export default class UserCreateTimezonesComponent extends Component {
      * @method get
      */
     get timezonesList() {
-        const selectorOptions = moment.tz.names()
-            .reduce((timezoneslist, zoneName) => {
-                timezoneslist.push({
-                    name: zoneName,
-                    offset: moment.tz(zoneName).utcOffset()
-                });
-
-                return timezoneslist;
-            }, [])
+        const selectorOptions = timezoneList()
             //sort according to timezone idenftifier
             .sort((tz1, tz2) => {
                 return tz1.name - tz2.name
@@ -39,7 +32,7 @@ export default class UserCreateTimezonesComponent extends Component {
 
                 //check if the timezone has offset or not.
                 if (timezone.offset) {
-                    timezone.preferredzoneAbbr = moment.tz(timezone.name).zoneAbbr();
+                    timezone.preferredzoneAbbr = timezone.abbr;
                     if (!isNaN(timezone.preferredzoneAbbr)) {
                         timezone.preferredzoneAbbr = 'GMT';
                     }
@@ -50,7 +43,7 @@ export default class UserCreateTimezonesComponent extends Component {
                 }
 
                 //Change format of offset. e.g 300 to +05:00
-                const offset = timezone.offset ? moment.tz(timezone.name).format('Z') : '';
+                const offset = timezone.offset ? timezone.offsetText : '';
 
                 timezoneslist.push({
                     label: `${timezone.name} (${timezone.preferredzoneAbbr}${offset})`,

@@ -3,9 +3,10 @@
  */
 
 import { helper } from '@ember/component/helper';
+import { format } from 'prometheus/utils/date';
 
 /**
- * This is a helper function that is used to change the date to humanized format using momentjs.
+ * This is a helper function that is used to change the date to humanized format using the date utility.
  *
  * @method getHumanizedDate
  * @param {Object} data The object that contains the date
@@ -13,6 +14,6 @@ import { helper } from '@ember/component/helper';
  * @private
  */
 export default helper(function getHumanizedDate(positional/*, named*/) {
-    let date = (new moment(positional[0])).format('DD MMMM YYYY');
+    let date = format(positional[0], 'DD MMMM YYYY');
     return date;
 });

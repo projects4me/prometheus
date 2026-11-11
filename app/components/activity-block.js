@@ -7,6 +7,7 @@ import { inject } from '@ember/service';
 import { set } from '@ember/object';
 import { computed } from '@ember/object';
 import { getOwner } from '@ember/application';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This component is used to render different activity blocks for the system
@@ -87,11 +88,8 @@ export default Component.extend({
      */
     didInsertElement(){
         let activity = this.activity;
-        let userTimezone = this.currentUser.user.timezone;
-        const now = moment().tz(userTimezone);
-        const dateInUserTz = moment.utc(activity.get('dateCreated')).tz(userTimezone);
-        
-        const createdSince = moment.duration(now.diff(dateInUserTz)).humanize();
+        const elapsed = dates.diff(dates.now(), activity.get('dateCreated'), undefined, { zone: 'UTC' });
+        const createdSince = dates.humanizeDuration(elapsed);
         set(activity,"createdSince", createdSince);
     }
 

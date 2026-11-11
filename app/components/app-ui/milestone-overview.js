@@ -7,6 +7,7 @@ import {
 	unwrapOverviewPayload,
 	aggregateTimeSegment,
 } from 'prometheus/utils/milestone-overview-api';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * Presentational strip for milestone overview metrics (open/closed counts, progress bar,
@@ -150,7 +151,7 @@ export default class AppUiMilestoneOverviewComponent extends Component {
 		let workflowStatus = milestone.status;
 		let isActiveSchedule =
 			workflowStatus === 'in_progress' || workflowStatus === 'planned';
-		if (isActiveSchedule && milestone.endDate && moment().isSameOrAfter(milestone.endDate)) {
+		if (isActiveSchedule && milestone.endDate && dates.isSameOrAfter(dates.now(), milestone.endDate)) {
 			return 'overdue';
 		}
 		return workflowStatus;

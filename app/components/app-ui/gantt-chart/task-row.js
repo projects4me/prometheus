@@ -4,6 +4,7 @@
 
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This component renders a single task/issue row in the Gantt chart
@@ -47,8 +48,8 @@ export default class TaskRowComponent extends Component {
      * @public
      */
     get dateRange() {
-        let start = moment(this.args.issue.startDate).format('MMM DD');
-        let end = moment(this.args.issue.endDate).format('MMM DD');
+        let start = dates.format(this.args.issue.startDate, 'MMM DD');
+        let end = dates.format(this.args.issue.endDate, 'MMM DD');
         return `${start} - ${end}`;
     }
 
@@ -180,12 +181,8 @@ export default class TaskRowComponent extends Component {
     handleDragEnd(daysMoved) {
         if (this.args.onIssueDragEnd) {
             // Calculate new dates based on the number of days moved
-			let newStartDate = moment(this.args.issue.startDate)
-				.add(daysMoved, 'days')
-				.format('YYYY-MM-DD');
-			let newEndDate = moment(this.args.issue.endDate)
-				.add(daysMoved, 'days')
-				.format('YYYY-MM-DD');
+			let newStartDate = dates.format(dates.add(this.args.issue.startDate, daysMoved, 'days'), 'YYYY-MM-DD');
+			let newEndDate = dates.format(dates.add(this.args.issue.endDate, daysMoved, 'days'), 'YYYY-MM-DD');
             
 			return this.args.onIssueDragEnd(
 				this.args.issue,

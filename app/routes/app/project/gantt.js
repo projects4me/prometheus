@@ -5,6 +5,7 @@
 import App from 'prometheus/routes/app';
 import { hash, hashSettled } from 'rsvp';
 import { inject as service } from '@ember/service';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This is the route to load the Gantt chart for a project
@@ -175,48 +176,44 @@ export default class GanttRoute extends App {
 	 * @returns {Object} Object with start and end dates
 	 */
 	calculateTimelineBounds(milestones) {
-		let earliestDate = moment().startOf('day');
-		let latestDate = moment().add(3, 'months').endOf('day');
+		let earliestDate = dates.startOf(dates.now(), 'day');
+		let latestDate = dates.endOf(dates.add(dates.now(), 3, 'months'), 'day');
 
 		milestones.forEach((milestone) => {
 			// Check milestone dates
 			if (milestone.startDate) {
-				let mStart = moment(milestone.startDate);
-				if (mStart.isValid() && mStart.isBefore(earliestDate)) {
-					earliestDate = mStart;
+				if (dates.isValid(milestone.startDate) && dates.isBefore(milestone.startDate, earliestDate)) {
+					earliestDate = dates.parse(milestone.startDate);
 				}
 			}
 			if (milestone.endDate) {
-				let mEnd = moment(milestone.endDate);
-				if (mEnd.isValid() && mEnd.isAfter(latestDate)) {
-					latestDate = mEnd;
+				if (dates.isValid(milestone.endDate) && dates.isAfter(milestone.endDate, latestDate)) {
+					latestDate = dates.parse(milestone.endDate);
 				}
 			}
 
 			// Check issues dates
 			milestone.issues.forEach((issue) => {
 				if (issue.startDate) {
-					let iStart = moment(issue.startDate);
-					if (iStart.isValid() && iStart.isBefore(earliestDate)) {
-						earliestDate = iStart;
+					if (dates.isValid(issue.startDate) && dates.isBefore(issue.startDate, earliestDate)) {
+						earliestDate = dates.parse(issue.startDate);
 					}
 				}
 				if (issue.endDate) {
-					let iEnd = moment(issue.endDate);
-					if (iEnd.isValid() && iEnd.isAfter(latestDate)) {
-						latestDate = iEnd;
+					if (dates.isValid(issue.endDate) && dates.isAfter(issue.endDate, latestDate)) {
+						latestDate = dates.parse(issue.endDate);
 					}
 				}
 			});
 		});
 
 		// Add some padding
-		earliestDate = earliestDate.subtract(1, 'week').startOf('week');
-		latestDate = latestDate.add(2, 'weeks').endOf('week');
+		earliestDate = dates.startOf(dates.subtract(earliestDate, 1, 'week'), 'week');
+		latestDate = dates.endOf(dates.add(latestDate, 2, 'weeks'), 'week');
 
 		return {
-			start: earliestDate.format('YYYY-MM-DD'),
-			end: latestDate.format('YYYY-MM-DD')
+			start: dates.format(earliestDate, 'YYYY-MM-DD'),
+			end: dates.format(latestDate, 'YYYY-MM-DD')
 		};
 	}
 

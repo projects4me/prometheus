@@ -5,6 +5,7 @@
 import Component from '@glimmer/component';
 import { set } from '@ember/object';
 import { inject as service } from '@ember/service';
+import * as dates from 'prometheus/utils/date';
 /**
  * This component is used to render activity block.
  *
@@ -56,11 +57,8 @@ export default class AppUiActivityBlockComponent extends Component {
      * @public
      */
     setActivityTime(activity) {
-		let userTimezone = this.currentUser.user.timezone;
-		const now = moment().tz(userTimezone);
-		const dateInUserTz = moment.utc(activity.dateCreated).tz(userTimezone);
-
-        const createdSince = moment.duration(now.diff(dateInUserTz)).humanize();
+		const elapsed = dates.diff(dates.now(), activity.dateCreated, undefined, { zone: 'UTC' });
+        const createdSince = dates.humanizeDuration(elapsed);
         set(activity,"createdSince", createdSince);
     }
 }

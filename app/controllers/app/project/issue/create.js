@@ -10,6 +10,7 @@ import { task, timeout } from 'ember-concurrency';
 import format from "prometheus/utils/data/format";
 import _ from "lodash";
 import { htmlSafe } from '@ember/template';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This is the controller for issue create page
@@ -367,8 +368,8 @@ export default class AppProjectIssueCreateController extends ProjectRelated {
      */
     beforeSave(model) {
         model.set('reportedUser', this.currentUser.user.id);
-        model.set('startDate', moment(model.get('startDate')).format("YYYY-MM-DD"));
-        model.set('endDate', moment(model.get('endDate')).format("YYYY-MM-DD"));
+        model.set('startDate', dates.format(model.get('startDate'), "YYYY-MM-DD"));
+        model.set('endDate', dates.format(model.get('endDate'), "YYYY-MM-DD"));
     }
 
     /**

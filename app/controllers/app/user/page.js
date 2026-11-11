@@ -8,6 +8,7 @@ import { computed, action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This controller is used to manage the user detail/page view
@@ -281,13 +282,13 @@ export default class AppUserPageController extends PrometheusCreateController {
         }
 
         try {
-            let zone = moment.tz(zoneName);
-            let abbr = zone.zoneAbbr();
+            let zone = dates.timezoneInfo(zoneName);
+            let abbr = zone.abbr;
             if (!Number.isNaN(Number(abbr))) {
                 abbr = "GMT";
             }
 
-            let offset = zone.utcOffset() ? zone.format("Z") : "";
+            let offset = zone.offset ? zone.offsetText : "";
             return `${zoneName} (${abbr}${offset})`;
         } catch {
             return zoneName;

@@ -11,6 +11,7 @@ import { all } from 'rsvp';
 import _ from 'lodash';
 import { toLabelValue } from 'prometheus/utils/issue-status/value';
 import { htmlSafe } from '@ember/template';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This is empty controller, normally we do not create them. However
@@ -265,9 +266,9 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 		model.set('deleted', '0');
 		model.set(
 			'startDate',
-			moment(model.get('startDate')).format('YYYY-MM-DD')
+			dates.format(model.get('startDate'), 'YYYY-MM-DD')
 		);
-		model.set('endDate', moment(model.get('endDate')).format('YYYY-MM-DD'));
+		model.set('endDate', dates.format(model.get('endDate'), 'YYYY-MM-DD'));
 	}
 
 	/**

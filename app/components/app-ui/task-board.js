@@ -8,6 +8,7 @@ import { action } from '@ember/object';
 import { insertAtIfMissing } from 'prometheus/utils/live/collection';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
+import * as dates from 'prometheus/utils/date';
 /**
  * This component is used to render milestones of selected project.
  *
@@ -130,8 +131,8 @@ export default class TaskBoardComponent extends AppComponent {
 		if (this.newMilestone === null) {
 			this.newMilestone = this.store.createRecord('milestone', {
 				projectId: this.trackedProject.getProjectId(),
-				startDate: moment().format('YYYY-MM-DD'),
-				endDate: moment().format('YYYY-MM-DD'),
+				startDate: dates.format(dates.now(), 'YYYY-MM-DD'),
+				endDate: dates.format(dates.now(), 'YYYY-MM-DD'),
 				milestoneType: 'milestone',
 				status: 'planned'
 			});

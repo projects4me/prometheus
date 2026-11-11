@@ -3,14 +3,14 @@
  */
 
 import { helper } from '@ember/component/helper';
-import moment from 'moment';
+import { fromNow } from 'prometheus/utils/date';
 
 /** {{moment-from-now date}}: relative time such as '3 hours ago'; '-' when empty. */
 export function momentFromNow([value]) {
 	if (value === undefined || value === null || value === '') {
 		return '-';
 	}
-	return moment(value).fromNow();
+	return fromNow(value);
 }
 
 export default helper(momentFromNow);

@@ -5,6 +5,10 @@
 import App from "prometheus/routes/app";
 import MD from "prometheus/utils/metadata/metadata";
 import _ from 'lodash';
+import * as dates from 'prometheus/utils/date';
+
+const UTC = { zone: 'UTC' };
+const stamp = (date) => dates.format(date, 'YYYY-MM-DD HH:mm:ss', UTC);
 
 const DEFAULT_WIDGETS = ['recentIssues', 'activeMilestones', 'weeklyActivities', 'weeklyIssueTimelogs', 'weeklyConversations'];
 
@@ -138,17 +142,17 @@ export default App.extend({
         _.forEach(widgetSettings,function(widgetSetting,idx){
             let query = widgetSettings[idx].options.query;
             query = _.replace(query,'```ME```',_self.get('currentUser.user.id'));
-            query = _.replace(query,'```TODAY_START```',moment.utc().startOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```TODAY_END```',moment.utc().endOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```WEEK_START```',moment.utc().startOf('week').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```WEEK_END```',moment.utc().endOf('week').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```YEAR_START```',moment.utc().startOf('year').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```YEAR_END```',moment.utc().endOf('year').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```YESTERDAY_START```',moment.utc().add(-1,'days').startOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```YESTERDAY_END```',moment.utc().add(-1,'days').endOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```TOMORROW_START```',moment.utc().add(1,'days').startOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```TOMORROW_END```',moment.utc().add(1,'days').endOf('day').format('YYYY-MM-DD HH:mm:ss'));
-            query = _.replace(query,'```NOW```',moment.utc().format('YYYY-MM-DD HH:mm:ss'));
+            query = _.replace(query,'```TODAY_START```',stamp(dates.startOf(dates.now(), 'day', UTC)));
+            query = _.replace(query,'```TODAY_END```',stamp(dates.endOf(dates.now(), 'day', UTC)));
+            query = _.replace(query,'```WEEK_START```',stamp(dates.startOf(dates.now(), 'week', UTC)));
+            query = _.replace(query,'```WEEK_END```',stamp(dates.endOf(dates.now(), 'week', UTC)));
+            query = _.replace(query,'```YEAR_START```',stamp(dates.startOf(dates.now(), 'year', UTC)));
+            query = _.replace(query,'```YEAR_END```',stamp(dates.endOf(dates.now(), 'year', UTC)));
+            query = _.replace(query,'```YESTERDAY_START```',stamp(dates.startOf(dates.add(dates.now(), -1, 'days', UTC), 'day', UTC)));
+            query = _.replace(query,'```YESTERDAY_END```',stamp(dates.endOf(dates.add(dates.now(), -1, 'days', UTC), 'day', UTC)));
+            query = _.replace(query,'```TOMORROW_START```',stamp(dates.startOf(dates.add(dates.now(), 1, 'days', UTC), 'day', UTC)));
+            query = _.replace(query,'```TOMORROW_END```',stamp(dates.endOf(dates.add(dates.now(), 1, 'days', UTC), 'day', UTC)));
+            query = _.replace(query,'```NOW```',stamp(dates.now()));
             query = _.replace(query,'```MY_PROJECTS```',_self.getProjectIds(LoadingAssetsController.get('projects')));
             widgetSettings[idx].options.query = query;
             Logger.debug(query);

@@ -8,6 +8,7 @@ import { inject } from '@ember/service';
 import { computed } from '@ember/object';
 import $ from 'jquery';
 import { getOwner } from '@ember/application';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * This component is used to render different milestone blocks for the system
@@ -64,7 +65,7 @@ export default Component.extend({
         // Check if milestone is overdue
         if (status === 'in_progress' || status === 'planned')
         {
-            if (moment().isSameOrAfter(milestone.get('endDate')))
+            if (dates.isSameOrAfter(dates.now(), milestone.get('endDate')))
             {
                 status = 'overdue';
             }

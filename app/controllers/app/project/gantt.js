@@ -10,6 +10,7 @@ import { inject as service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
 import { refreshView } from 'prometheus/utils/live/reload';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * Gantt chart controller, including Hermes live handlers for dates,
@@ -448,21 +449,21 @@ export default class AppProjectGanttController extends PrometheusController {
 	 * @private
 	 */
 	refreshGantt() {
-		let start = moment().startOf('day');
-		let end = moment().add(3, 'months').endOf('day');
+		let start = dates.startOf(dates.now(), 'day');
+		let end = dates.endOf(dates.add(dates.now(), 3, 'months'), 'day');
 		(this.milestones || []).forEach((milestone) => {
 			[milestone].concat(milestone.issues?.toArray?.() || milestone.issues || [])
 				.forEach((item) => {
-					if (item.startDate && moment(item.startDate).isBefore(start)) {
-						start = moment(item.startDate);
+					if (item.startDate && dates.isBefore(item.startDate, start)) {
+						start = dates.parse(item.startDate);
 					}
-					if (item.endDate && moment(item.endDate).isAfter(end)) {
-						end = moment(item.endDate);
+					if (item.endDate && dates.isAfter(item.endDate, end)) {
+						end = dates.parse(item.endDate);
 					}
 				});
 		});
-		this.timelineStart = start.subtract(1, 'week').startOf('week').format('YYYY-MM-DD');
-		this.timelineEnd = end.add(2, 'weeks').endOf('week').format('YYYY-MM-DD');
+		this.timelineStart = dates.format(dates.startOf(dates.subtract(start, 1, 'week'), 'week'), 'YYYY-MM-DD');
+		this.timelineEnd = dates.format(dates.endOf(dates.add(end, 2, 'weeks'), 'week'), 'YYYY-MM-DD');
 		this.liveSyncRevision++;
 		this.milestones = [...this.milestones];
 	}
@@ -623,8 +624,8 @@ export default class AppProjectGanttController extends PrometheusController {
 			messenger.update({
 				message: htmlSafe(this.intl.t('views.app.gantt.issue.updated', {
 					issueNumber: issue.issueNumber,
-					startDate: moment(newStartDate).format('MMM DD, YYYY'),
-					endDate: moment(newEndDate).format('MMM DD, YYYY')
+					startDate: dates.format(newStartDate, 'MMM DD, YYYY'),
+					endDate: dates.format(newEndDate, 'MMM DD, YYYY')
 				})),
 				type: 'success',
 				showCloseButton: true,

@@ -5,6 +5,7 @@
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
 import { computed } from '@ember/object';
 import { imagePathToBase64 } from 'prometheus/utils/image-to-base64';
+import * as dates from 'prometheus/utils/date';
 
 /**
  * Eagerly fetch the default profile picture and cache it as a base64 data URI.
@@ -105,7 +106,7 @@ export default Model.extend({
      */
     timezone: attr('string', {
         defaultValue: () => {
-            return moment.tz.guess();
+            return dates.guessTimezone();
         }
     }),
 
