@@ -53,7 +53,6 @@ module.exports = function (defaults) {
     app.import('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js');
     app.import("node_modules/moment/moment.js");
     app.import("node_modules/moment-timezone/builds/moment-timezone-with-data.js");
-    app.import("node_modules/bootstrap-daterangepicker/daterangepicker.js");
     app.import("node_modules/jquery-mask-plugin/dist/jquery.mask.min.js");
     app.import("node_modules/jquery-slimscroll/jquery.slimscroll.min.js");
     app.import("node_modules/highlightjs/highlight.pack.min.js");

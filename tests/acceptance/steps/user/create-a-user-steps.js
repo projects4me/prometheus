@@ -1,5 +1,5 @@
 import steps from '../steps';
-import { fillIn, click } from '@ember/test-helpers';
+import { fillIn } from '@ember/test-helpers';
 import Context from '../../../../mirage/yadda-context/context';
 import { Collection } from 'miragejs';
 
@@ -15,9 +15,8 @@ export const when = function () {
         },
         {
             "User selects date of birth": (assert) => async function () {
-                await click(`div[data-field="user.dateOfBirth"] > input.ember-text-field`);
-                let dateOfBirthEl = document.querySelector('div.daterangepicker[style*="display: block"] > div.drp-calendar > div.calendar-table > table.table-condensed > tbody > tr:nth-child(3) td');
-                await click(dateOfBirthEl);
+                await fillIn('div[data-field="user.dateOfBirth"] select[data-part="day"]', '10');
+                await fillIn('div[data-field="user.dateOfBirth"] select[data-part="month"]', '5');
                 assert.ok(true, "Date of birth selected");
             }
         },

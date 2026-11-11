@@ -102,25 +102,6 @@ export default Component.extend({
         if (definition.type === 'enum' || definition.type === 'multienum') {
             $('#'+this.elementId+' select').selectpicker();
         }
-        else if (definition.type === 'date') {
-            $('#'+this.elementId+' input').daterangepicker({
-                singleDatePicker: true,
-                showDropdowns: true,
-                locale: {
-                    format: 'MMMM D, YYYY'
-                }
-            });
-        }
-        else if (definition.type === 'datetime') {
-            $('#'+this.elementId+' input').daterangepicker({
-                singleDatePicker: true,
-                timePicker: true,
-                showDropdowns: true,
-                locale: {
-                    format: 'MMMM D, YYYY  h:mm A'
-                }
-            });
-        }
         else if (definition.type === 'email') {
             $('#'+this.elementId+' input').mask("A", {
                 translation: {

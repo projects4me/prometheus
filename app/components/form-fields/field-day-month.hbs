@@ -1,0 +1,34 @@
+<div data-field={{@data-field}} class="form-field ember-view field-date field-day-month">
+  <div class="field-day-month-selects">
+    <select class="form-control input-sm data-input" disabled={{@disabled}} data-part="day"
+      {{on "change" this.onDayChange}} {{on "focusout" this.enableValidation}} {{on "blur" (fn this.validate)}}>
+      <option value=""></option>
+      {{#each this.days as |d|}}
+        <option value={{d.value}} selected={{d.selected}}>{{d.value}}</option>
+      {{/each}}
+    </select>
+    <select class="form-control input-sm data-input" disabled={{@disabled}} data-part="month"
+      {{on "change" this.onMonthChange}} {{on "focusout" this.enableValidation}} {{on "blur" (fn this.validate)}}>
+      <option value=""></option>
+      {{#each this.months as |m|}}
+        <option value={{m.value}} selected={{m.selected}}>{{m.name}}</option>
+      {{/each}}
+    </select>
+  </div>
+  <span class="highlight"></span>
+  <span class="bar"></span>
+
+  <FormFields::Label
+    @label={{@label}}
+    @showFieldInfo={{@showFieldInfo}}
+    @info={{@info}}
+    @data-field={{@data-field}}
+    @required={{@required}}
+  />
+
+  {{#if (and @message this.shouldValidate)}}
+    <span class="error text-red" id={{@data-field}}>
+      {{@message}}
+    </span>
+  {{/if}}
+</div>

@@ -498,3 +498,33 @@ $toggle-control-ease: ease-in;
     color: green;
   }
 }
+
+/* Native date input: keep the field box, tint the browser calendar icon */
+.field-date input[type="date"] {
+  min-height: 3.6rem;
+  border-radius: 0;
+
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+/* Day and month selects (birthday) */
+.field-day-month .field-day-month-selects {
+  display: flex;
+
+  select {
+    flex: 1;
+    border-radius: 0;
+    margin-right: 1rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
