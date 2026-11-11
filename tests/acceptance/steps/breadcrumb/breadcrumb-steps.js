@@ -4,7 +4,7 @@
 
 import { click } from '@ember/test-helpers';
 import { find, findAll } from '@ember/test-helpers';
-import Collection from 'ember-cli-mirage/orm/collection';
+import { Collection } from 'miragejs';
 import steps from '../steps';
 import Context from '../../../../mirage/yadda-context/context';
 

@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import { Factory } from 'ember-cli-mirage';
+import { Factory } from 'miragejs';
 import * as date from '../helpers/getDate';
 import _ from 'lodash';
 

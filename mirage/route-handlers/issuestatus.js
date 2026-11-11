@@ -1,5 +1,5 @@
 import getRequestData from '../helpers/parse-request';
-import { Response } from 'ember-cli-mirage';
+import { Response } from 'miragejs';
 
 export function register(server, ctx) {
     server.get('/issuestatus', (schema, request) => {

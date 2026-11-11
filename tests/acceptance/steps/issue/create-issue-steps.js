@@ -1,7 +1,7 @@
 import { fillIn, currentURL, visit, click } from '@ember/test-helpers';
 import { clickTrigger, selectChoose, selectSearch } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
-import Collection from 'ember-cli-mirage/orm/collection';
+import { Collection } from 'miragejs';
 
 export const given = function () {
     return [

@@ -1,4 +1,4 @@
-import { Factory } from 'ember-cli-mirage';
+import { Factory } from 'miragejs';
 
 export default Factory.extend({
     "access_token": "8ad7fdaaf7cc550174dd7070e697404eff7e5c50",

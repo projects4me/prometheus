@@ -1,5 +1,5 @@
 import paginate from '../helpers/paginate';
-import Collection from 'ember-cli-mirage/orm/collection';
+import { Collection } from 'miragejs';
 
 export function register(server, ctx) {
 	server.get('/activity', (schema, request) => {

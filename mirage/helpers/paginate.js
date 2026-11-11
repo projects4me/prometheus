@@ -1,4 +1,4 @@
-import Collection from 'ember-cli-mirage/orm/collection';
+import { Collection } from 'miragejs';
 
 /**
  * This function paginates a mirage collection based on the query parameters.
