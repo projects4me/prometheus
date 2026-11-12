@@ -3,6 +3,7 @@
  */
 
 import Modifier from 'ember-modifier';
+import { registerDestructor } from '@ember/destroyable';
 import Sortable from 'sortablejs';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
@@ -44,6 +45,55 @@ const TOUCH_DRAG_DELAY = 150;
 export default class InitializeSortable extends Modifier {
 
     /**
+     * The element the modifier is installed on
+     *
+     * @property element
+     * @type HTMLElement
+     * @private
+     */
+    element = null;
+
+    /**
+     * The named arguments of the latest run
+     *
+     * @property named
+     * @type Object
+     * @private
+     */
+    named = {};
+
+    /**
+     * Removes Sortable from the task board when the modifier is torn down.
+     *
+     * @method constructor
+     * @param {Object} owner
+     * @param {Object} args
+     */
+    constructor(owner, args) {
+        super(owner, args);
+        registerDestructor(this, () => this._teardown());
+    }
+
+    /**
+     * Installs Sortable on the first run and refreshes it when the arguments change.
+     *
+     * @method modify
+     * @param {HTMLElement} element
+     * @param {Array} positional
+     * @param {Object} named
+     * @public
+     */
+    modify(element, positional, named) {
+        this.named = named;
+        if (this.element) {
+            this._update();
+            return;
+        }
+        this.element = element;
+        this._install();
+    }
+
+    /**
      * This function returns group name. This property is attached with every lane of taskboard.
      * An item can be switched from one lane to other if the other lane, on which we are dropping
      * our item, has same group as the dragged item's lane have.
@@ -53,7 +103,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get groupName() {
-        return this.args.named.group;
+        return this.named.group;
     }
 
     /**
@@ -66,7 +116,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get scroll() {
-        return this.args.named.scroll;
+        return this.named.scroll;
     }
 
     /**
@@ -79,7 +129,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get scrollSensitivity() {
-        return this.args.named.scrollSensitivity;   
+        return this.named.scrollSensitivity;   
     }
 
     /**
@@ -91,7 +141,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get scrollSpeed() {
-        return this.args.named.scrollSpeed;
+        return this.named.scrollSpeed;
     }
 
     /**
@@ -103,7 +153,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get sort() {
-        return this.args.named.sort;
+        return this.named.sort;
     }
 
     /**
@@ -115,7 +165,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get forceFallback() {
-        return this.args.named.forceFallback;
+        return this.named.forceFallback;
     }
 
     /**
@@ -126,7 +176,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get disableSortable() {
-        return this.args.named.disableSortable;
+        return this.named.disableSortable;
     }
 
     /**
@@ -138,7 +188,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get animationSpeed() {
-        return this.args.named.animationSpeed;
+        return this.named.animationSpeed;
     }
 
     /**
@@ -149,7 +199,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get dragClass() {
-        return this.args.named.dragClass;
+        return this.named.dragClass;
     }
 
     /**
@@ -160,7 +210,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get chosenClass() {
-        return this.args.named.chosenClass;
+        return this.named.chosenClass;
     }
 
     /**
@@ -172,7 +222,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get updateIssue() {
-        return this.args.named.updateIssue;
+        return this.named.updateIssue;
     }
 
     /**
@@ -183,7 +233,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get milestones() {
-        return this.args.named.milestones;
+        return this.named.milestones;
     }
 
     /**
@@ -195,7 +245,7 @@ export default class InitializeSortable extends Modifier {
      * @public
      */
     get query() {
-        return this.args.named.query;
+        return this.named.query;
     }
 
     /**
@@ -236,12 +286,16 @@ export default class InitializeSortable extends Modifier {
      */
     projectId = this.trackedProject.getProjectId();
 
-    //Called when the modifier is installed on the DOM element
-    didInstall() {
+    /**
+     * Attaches Sortable to the lanes and the milestone tabs.
+     *
+     * @method _install
+     * @private
+     */
+    _install() {
         this._attachSortableToLanes();
         this._setupMilestoneTabsAsSortable();
         this._setupTabSwitching();
-        let milestoneEls = document.querySelectorAll('div.milestone.box-body');
     }
 
     /**
@@ -298,8 +352,13 @@ export default class InitializeSortable extends Modifier {
         return milestoneEls;
     }
 
-    //Called when the arguments provided to modifier are updated
-    didUpdateArguments() {
+    /**
+     * Re-attaches Sortable to lanes re-rendered after the arguments changed.
+     *
+     * @method _update
+     * @private
+     */
+    _update() {
         // Only update the sortable to lanes if the project id has changed
         let lastProjectId = this.trackedProject.getProjectId();
         if(this.projectId !== lastProjectId) {
@@ -309,7 +368,7 @@ export default class InitializeSortable extends Modifier {
 
         // Lanes re-rendered by a new milestone or a search reload (paramsQuery) need Sortable again;
         // lanes that already have it are skipped by _attachSortableToLanes.
-        if(this.args.named.newMilestoneAdded || this.args.named.paramsQuery !== undefined) {
+        if(this.named.newMilestoneAdded || this.named.paramsQuery !== undefined) {
             this._attachSortableToLanes();
         }
         this._cleanupMilestoneTabSortables();
@@ -638,9 +697,17 @@ export default class InitializeSortable extends Modifier {
         }
     }
 
-    //Removing sortable from each items of task board.
-    willDestroy() {
+    /**
+     * Removes Sortable from each item of the task board.
+     *
+     * @method _teardown
+     * @private
+     */
+    _teardown() {
         let _self = this;
+        if (!_self.element) {
+            return;
+        }
         let elementsList = _self.element.querySelectorAll('.lane.box-body');
         elementsList.forEach((el) => {
             if (Sortable.get(el)) {

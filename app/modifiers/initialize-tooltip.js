@@ -3,6 +3,7 @@
  */
 
 import Modifier from 'ember-modifier';
+import { registerDestructor } from '@ember/destroyable';
 import $ from 'jquery';
 import tippy, { followCursor } from 'tippy.js';
 
@@ -25,6 +26,18 @@ export default class InitializeTooltipModifier extends Modifier {
 	 * @private
 	 */
 	_tooltip = null;
+
+	/**
+	 * Destroys the tooltip when the modifier is torn down.
+	 *
+	 * @method constructor
+	 * @param {Object} owner
+	 * @param {Object} args
+	 */
+	constructor(owner, args) {
+		super(owner, args);
+		registerDestructor(this, () => this._destroyTooltip());
+	}
 
 	/**
 	 * Triggered when the element is installed or updated on the DOM.
@@ -79,15 +92,6 @@ export default class InitializeTooltipModifier extends Modifier {
 			return template?.innerHTML;
 		} else {
 			return content;
-		}
-	}
-
-	/**
-	 * This function is called when the modifier is destroyed.
-	 */
-	willRemove() {
-		if (this._tooltip) {
-			this._destroyTooltip();
 		}
 	}
 

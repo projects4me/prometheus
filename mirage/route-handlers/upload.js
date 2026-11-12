@@ -1,7 +1,7 @@
-import { upload } from 'ember-file-upload/mirage';
+import { uploadHandler } from 'ember-file-upload';
 
 export function register(server) {
-	server.post('/upload', upload(function (schema, request) {
+	server.post('/upload', uploadHandler(function (schema, request) {
 		let { file, relatedTo, relatedId } = request.requestBody;
 		return schema.uploads.create({
 			name: file.name,

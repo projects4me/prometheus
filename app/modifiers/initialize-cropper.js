@@ -3,6 +3,7 @@
  */
 
 import Modifier from 'ember-modifier';
+import { registerDestructor } from '@ember/destroyable';
 import Cropper from 'cropperjs';
 
 /**
@@ -31,6 +32,18 @@ export default class InitializeCropper extends Modifier {
     cropperInstance = null;
 
     /**
+     * Destroys the Cropper.js instance when the modifier is torn down.
+     *
+     * @method constructor
+     * @param {Object} owner
+     * @param {Object} args
+     */
+    constructor(owner, args) {
+        super(owner, args);
+        registerDestructor(this, () => this.destroyCropper());
+    }
+
+    /**
      * The callback supplied by the parent component that receives the Cropper
      * instance once it has been initialised.
      *
@@ -39,7 +52,7 @@ export default class InitializeCropper extends Modifier {
      * @private
      */
     get onInit() {
-        return this.args.named.onInit;
+        return this.named.onInit;
     }
 
     /**
@@ -48,11 +61,18 @@ export default class InitializeCropper extends Modifier {
      * with the drag-to-move mode so the user pans the image inside a fixed
      * crop box.
      *
-     * @method didInstall
+     * @method modify
+     * @param {Element} element
+     * @param {Array} positional
+     * @param {Object} named
      * @public
      */
-    didInstall() {
-        this.cropperInstance = new Cropper(this.element, {
+    modify(element, positional, named) {
+        this.named = named;
+        if (this.cropperInstance) {
+            return;
+        }
+        this.cropperInstance = new Cropper(element, {
             aspectRatio: 1,
             viewMode: 1,
             dragMode: 'move',
@@ -75,10 +95,10 @@ export default class InitializeCropper extends Modifier {
      * Called when the modifier is removed from the DOM. Destroys the Cropper.js
      * instance to prevent memory leaks.
      *
-     * @method willDestroy
+     * @method destroyCropper
      * @public
      */
-    willDestroy() {
+    destroyCropper() {
         if (this.cropperInstance) {
             this.cropperInstance.destroy();
             this.cropperInstance = null;

@@ -18,9 +18,22 @@ import $ from 'jquery';
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
 export default class InitializeSlimscrollModifier extends Modifier {
-	/** Called when the modifier is installed on the DOM element*/
-	didInstall() {
-		this._attachSlimScroll();
+	/**
+	 * Attaches slimscroll the first time the modifier runs on the element.
+	 *
+	 * @method modify
+	 * @param {Element} element
+	 * @param {Array} positional
+	 * @param {Object} named
+	 * @public
+	 */
+	modify(element, positional, named) {
+		this.element = element;
+		this.named = named;
+		if (!this._attached) {
+			this._attached = true;
+			this._attachSlimScroll();
+		}
 	}
 	/**
 	 * This function returns the value that will be used to set the width of the scroll bar.
@@ -30,7 +43,7 @@ export default class InitializeSlimscrollModifier extends Modifier {
 	 * @public
 	 */
 	get width() {
-		return this.args.named.width;
+		return this.named.width;
 	}
 
 	/**

@@ -3,6 +3,7 @@
  */
 
 import Modifier from 'ember-modifier';
+import { registerDestructor } from '@ember/destroyable';
 import Editor from '@toast-ui/editor';
 import Tribute from "tributejs";
 import format from "prometheus/utils/data/format";
@@ -41,6 +42,54 @@ export default class ToastEditor extends Modifier {
     @service pubSub;
 
     /**
+     * The element the modifier is installed on
+     *
+     * @property element
+     * @type HTMLElement
+     * @private
+     */
+    element = null;
+
+    /**
+     * The named arguments of the latest run
+     *
+     * @property named
+     * @type Object
+     * @private
+     */
+    named = {};
+
+    /**
+     * Detaches the editor's listeners when the modifier is torn down.
+     *
+     * @method constructor
+     * @param {Object} owner
+     * @param {Object} args
+     */
+    constructor(owner, args) {
+        super(owner, args);
+        registerDestructor(this, () => this._teardown());
+    }
+
+    /**
+     * Sets up the editor on the first run; later runs only refresh the named arguments.
+     *
+     * @method modify
+     * @param {HTMLElement} element
+     * @param {Array} positional
+     * @param {Object} named
+     * @public
+     */
+    modify(element, positional, named) {
+        this.named = named;
+        if (this.element) {
+            return;
+        }
+        this.element = element;
+        this._install();
+    }
+
+    /**
      * This function returns list of users 
      *
      * @method get
@@ -48,7 +97,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get usersList() {
-        return this.args.named.usersList;
+        return this.named.usersList;
     }
 
     /**
@@ -60,7 +109,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get issueSearch() {
-        return this.args.named.issueSearch;
+        return this.named.issueSearch;
     }
 
     /**
@@ -71,7 +120,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get translatedEmojis() {
-        return this.args.named.translatedEmojis;
+        return this.named.translatedEmojis;
     }
 
     /**
@@ -82,7 +131,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get contents() {
-        return this.args.named.contents;
+        return this.named.contents;
     }
 
     /**
@@ -94,7 +143,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get onContentChange() {
-        return this.args.named.onContentChange;
+        return this.named.onContentChange;
     }
 
     /**
@@ -105,7 +154,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
      get onBlur() {
-        return this.args.named.onBlur ?? (() => {});
+        return this.named.onBlur ?? (() => {});
     }    
 
     /**
@@ -117,7 +166,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get editType() {
-        return this.args.named.editType;
+        return this.named.editType;
     }
 
     /**
@@ -129,7 +178,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get hide() {
-        return this.args.named.hide;
+        return this.named.hide;
     }
 
     /**
@@ -140,7 +189,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get placeholder() {
-        return this.args.named.placeholder;
+        return this.named.placeholder;
     }
 
     /**
@@ -151,7 +200,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get initialValue() {
-        return this.args.named.initialValue;
+        return this.named.initialValue;
     }
 
     /**
@@ -163,7 +212,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get output() {
-        return this.args.named.output;
+        return this.named.output;
     }
 
     /**
@@ -187,7 +236,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get onKeyboardSubmit() {
-        return this.args.named.onKeyboardSubmit;
+        return this.named.onKeyboardSubmit;
     }
 
     /**
@@ -198,7 +247,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get clearEventName() {
-        return this.args.named.clearEvent ?? 'clearContents';
+        return this.named.clearEvent ?? 'clearContents';
     }
 
     /**
@@ -210,7 +259,7 @@ export default class ToastEditor extends Modifier {
      * @public
      */
     get onImage() {
-        return this.args.named.onImage;
+        return this.named.onImage;
     }
 
     /**
@@ -243,8 +292,13 @@ export default class ToastEditor extends Modifier {
      */
     mentionedIssues = [];
 
-    //Called when the modifier is installed on the DOM element
-    didInstall() {
+    /**
+     * Sets up tribute mentions on the editor.
+     *
+     * @method _install
+     * @private
+     */
+    _install() {
         let _self = this;
         // Initializing tribute object
         _self.tribute = _self.setupTribute();
@@ -570,13 +624,20 @@ export default class ToastEditor extends Modifier {
           });
     }
 
-    //Removing tribute from element and keyboard event listener
-    willDestroy() {
+    /**
+     * Removes tribute from the element and the keyboard event listener.
+     *
+     * @method _teardown
+     * @private
+     */
+    _teardown() {
         if (this.clearListener) {
             this.pubSub.off(this.clearEvent, this.clearListener);
         }
-        this.tribute.detach(this.targetElement);
-        
+        if (this.tribute && this.targetElement) {
+            this.tribute.detach(this.targetElement);
+        }
+
         if (this.keyboardHandler && this.targetElement) {
             this.targetElement.removeEventListener('keydown', this.keyboardHandler);
         }

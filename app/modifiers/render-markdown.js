@@ -3,6 +3,7 @@
  */
 
 import Modifier from 'ember-modifier';
+import { registerDestructor } from '@ember/destroyable';
 import Editor from '@toast-ui/editor';
 import { inject as service } from '@ember/service';
 import Logger from 'js-logger';
@@ -76,15 +77,30 @@ export default class RenderMarkdown extends Modifier {
     imageUploads = new Map();
 
     /**
+     * Destroys the viewer when the modifier is torn down.
+     *
+     * @method constructor
+     * @param {Object} owner
+     * @param {Object} args
+     */
+    constructor(owner, args) {
+        super(owner, args);
+        registerDestructor(this, () => this.teardown());
+    }
+
+    /**
      * Creates the viewer on the first run and updates its markdown on the next ones. It runs while the
      * template is tracked, so it reads only its argument and leaves the address lookup to a later task:
      * store state read by the lookup would otherwise make the modifier re-run each time the lookup resolves.
      *
-     * @method didReceiveArguments
+     * @method modify
+     * @param {Element} element
+     * @param {Array} positional
      * @private
      */
-    didReceiveArguments() {
-        let markdown = this.args.positional[0] ?? '';
+    modify(element, [markdown = '']) {
+        this.element = element;
+        markdown = markdown ?? '';
         if (this.viewer && markdown === this.markdown) {
             return;
         }
@@ -207,10 +223,10 @@ export default class RenderMarkdown extends Modifier {
     /**
      * Destroys the viewer with the element
      *
-     * @method willRemove
+     * @method teardown
      * @private
      */
-    willRemove() {
+    teardown() {
         this.element?.removeEventListener('click', this.openImage);
         this.viewer?.remove?.();
         this.viewer = null;

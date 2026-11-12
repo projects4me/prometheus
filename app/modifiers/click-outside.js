@@ -1,4 +1,5 @@
 import Modifier from 'ember-modifier';
+import { registerDestructor } from '@ember/destroyable';
 
 /**
  * A modifier that triggers a handler when a click occurs outside the element.
@@ -21,6 +22,18 @@ export default class ClickOutsideModifier extends Modifier {
 	 * @private
 	 */
 	_handler = null;
+
+	/**
+	 * Removes the click listener when the modifier is torn down.
+	 *
+	 * @method constructor
+	 * @param {Object} owner
+	 * @param {Object} args
+	 */
+	constructor(owner, args) {
+		super(owner, args);
+		registerDestructor(this, () => this._removeListener());
+	}
 
 	/**
 	 * This function is called when the element is rendered in the DOM.
@@ -55,10 +68,12 @@ export default class ClickOutsideModifier extends Modifier {
 	}
 
 	/**
-	 * This function is called when the modifier is destroyed.
-	 * It cleans up the click event listener.
+	 * Cleans up the click event listener.
+	 *
+	 * @method _removeListener
+	 * @private
 	 */
-	willRemove() {
+	_removeListener() {
 		if (this._onClick) {
 			document.removeEventListener('click', this._onClick, true);
 		}

@@ -2,6 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 import Modifier from 'ember-modifier';
+import { registerDestructor } from '@ember/destroyable';
 
 /**
  * This modifier is called on the initialization of OpenClosedChart component. In this we attach
@@ -26,16 +27,33 @@ export default class InitializeDoughnutChartModifier extends Modifier {
      * @public
      */
     get data() {
-        return this.args.named.data;
+        return this.named.data;
     }
 
-    /** Called when the modifier is installed on the DOM element */
-    didInstall() {
-        this.initializeChart();
+    /**
+     * Destroys the chart when the modifier is torn down.
+     *
+     * @method constructor
+     * @param {Object} owner
+     * @param {Object} args
+     */
+    constructor(owner, args) {
+        super(owner, args);
+        registerDestructor(this, () => this.destroyChart());
     }
 
-    /**Called when the arguments provided to modifier are updated */
-    didUpdateArguments() {
+    /**
+     * Draws the chart on install and redraws it when the arguments change.
+     *
+     * @method modify
+     * @param {Element} element
+     * @param {Array} positional
+     * @param {Object} named
+     * @public
+     */
+    modify(element, positional, named) {
+        this.element = element;
+        this.named = named;
         this.destroyChart();
         this.initializeChart();
     }
@@ -78,11 +96,6 @@ export default class InitializeDoughnutChartModifier extends Modifier {
                 }
             }
         });
-    }
-
-    /** Called when user routed to another page. In this function we're destroying chart*/
-    willDestroy() {
-        this.destroyChart();
     }
 
     /**
