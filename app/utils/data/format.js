@@ -9,6 +9,7 @@ import { htmlSafe } from '@ember/template';
 import { issueStatusLabel, issueTypeRecordLabel } from 'prometheus/utils/issue-status/label';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
+import { toArray } from 'prometheus/utils/array/to-array';
 /**
  * This utility class is used to format data
  *
@@ -120,7 +121,7 @@ export default class Format {
     getTranslatedModelList(model, listPath, identifier = 'id') {
         let _self = this;
         
-        const translatedModels = model?.map(item => {
+        const translatedModels = toArray(model).map(item => {
             return {
                 id: item[identifier],
                 name: _self.intl.t(`${listPath}.${item.name}`),
@@ -142,7 +143,7 @@ export default class Format {
     getIssueStatusList(statuses, identifier = 'id') {
         let _self = this;
 
-        const labelledStatuses = statuses?.map(status => {
+        const labelledStatuses = toArray(statuses).map(status => {
             return {
                 id: status[identifier],
                 name: issueStatusLabel(_self.intl, status.name),
@@ -161,7 +162,7 @@ export default class Format {
      * @return {Array}
      */
     getIssueTypeList(types) {
-        const labelledTypes = (types?.toArray?.() ?? types ?? []).map((type) => ({
+        const labelledTypes = toArray(types).map((type) => ({
             id: type.id,
             name: issueTypeRecordLabel(this.intl, type)
         }));

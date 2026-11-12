@@ -263,7 +263,7 @@
           {{!-- /.box-header --}}
           <div class="box-body no-padding">
             <ul class="users-list clearfix">
-            {{#if this.model.members}}
+            {{#if this.model.members.length}}
               {{#each this.model.members as |member|}}
                 <li data-member-id={{member.id}} class="member-item">
                   {{!-- Delete Member --}}

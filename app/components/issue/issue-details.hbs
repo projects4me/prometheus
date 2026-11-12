@@ -647,7 +647,7 @@
                   </div>
                 </li>
               {{/if}}
-              {{#if this.issue.childissues}}
+              {{#if this.issue.childissues.length}}
                 {{#each this.issue.childissues as |child|}}
                   <li class="child-issue" data-child-issue-id={{child.id}}>
                     <div class="issue-block">

@@ -76,11 +76,5 @@ export class FakeUploadStore extends Service {
 }
 
 export function fakeFilesRelation() {
-    const pushed = [];
-    return {
-        pushed,
-        pushObject(item) {
-            pushed.push(item);
-        },
-    };
+    return [];
 }

@@ -6,7 +6,9 @@ import App from 'prometheus/routes/app';
 import { hash, hashSettled } from 'rsvp';
 import { inject as service } from '@ember/service';
 import * as dates from 'prometheus/utils/date';
+import { toArray } from 'prometheus/utils/array/to-array';
 
+import { replaceRecords } from 'prometheus/utils/array/record-list';
 /**
  * This is the route to load the Gantt chart for a project
  *
@@ -117,13 +119,12 @@ export default class GanttRoute extends App {
 					.catch((error) => {
 						_self.errorManager.handleError(error);
 					});
-				milestone.issues.clear();
-				milestone.issues.pushObjects(issues);
+				replaceRecords(milestone.issues, issues);
 			})
 		);
 
 		// Convert milestones to array
-		let milestonesArray = milestones.toArray ? milestones.toArray() : Array.from(milestones);
+		let milestonesArray = toArray(milestones);
 
 		// Calculate project timeline bounds
 		let timelineBounds = this.calculateTimelineBounds(milestonesArray);

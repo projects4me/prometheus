@@ -145,7 +145,7 @@ export default class ThreadComments {
                 page: 1
             });
             if (this.isStale(roomId)) return;
-            let fetched = result.toArray();
+            let fetched = result.slice();
             this.records = [...this.records, ...fetched.filter((comment) => !this.records.includes(comment))];
             let oldest = fetched[fetched.length - 1];
             if (oldest?.dateCreated) {

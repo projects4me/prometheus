@@ -3,6 +3,7 @@
  */
 
 import { get } from '@ember/object';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * The access summary of roles: permission coverage, access tier, members and initials, shared by the role browser.
@@ -29,7 +30,7 @@ export const ACTION_VERBS = new Set(['get', 'create', 'update', 'delete']);
 export const TIERS = ['high', 'elevated', 'medium', 'low', 'none'];
 
 /**
- * Turns a value that may be a RecordArray into a plain array
+ * Turns a value that may be a RecordArray into a plain array, without unloaded records
  *
  * @method toList
  * @param {*} records
@@ -37,10 +38,20 @@ export const TIERS = ['high', 'elevated', 'medium', 'low', 'none'];
  * @private
  */
 function toList(records) {
-    if (!records) {
-        return [];
-    }
-    return typeof records.toArray === 'function' ? records.toArray() : Array.from(records);
+    return toArray(records).filter((record) => !isUnloaded(record));
+}
+
+/**
+ * Whether a record was unloaded (or is being unloaded): Ember Data 4.12 unloads a deleted record once the delete is
+ * saved, and reading a relationship of an unloaded record throws.
+ *
+ * @method isUnloaded
+ * @param {Object} record
+ * @returns {Boolean}
+ * @public
+ */
+export function isUnloaded(record) {
+    return !!(record?.isDestroyed || record?.isDestroying);
 }
 
 /**
@@ -131,13 +142,17 @@ export function coverageByRole(entries) {
 }
 
 /**
- * The id of the role of a user assignment: its roleId, or the id its role relationship links
+ * The id of the role of a user assignment: its roleId, or the id its role relationship links (null once the
+ * assignment was unloaded)
  *
  * @method userroleRoleId
  * @param {Object} userrole
  * @returns {String|null}
  */
 export function userroleRoleId(userrole) {
+    if (isUnloaded(userrole)) {
+        return null;
+    }
     let roleId = get(userrole, 'roleId');
     if (!roleId && typeof userrole?.belongsTo === 'function') {
         roleId = userrole.belongsTo('role').id();

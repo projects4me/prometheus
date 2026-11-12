@@ -4,7 +4,7 @@
 
 import { module, test } from 'qunit';
 import {
-    isActionAllowed, toCoverageEntries, coverageByRole, membersByRole, accessTier, roleInitials, accessSplit
+    isActionAllowed, toCoverageEntries, coverageByRole, membersByRole, accessTier, roleInitials, accessSplit, userroleRoleId
 } from 'prometheus/utils/role/access';
 import { buildRoleListRequest, buildUserrolesRequest } from 'prometheus/utils/role/browser-requests';
 import { browserValues } from 'prometheus/utils/role/browser-defaults';
@@ -40,6 +40,16 @@ module('Unit | Utility | role/access', function () {
             { roleId: '', user: { id: '9', name: 'Cid' } }
         ]);
         assert.deepEqual(members, { 1: [{ id: '7', name: 'Ann' }, { id: '8', name: 'Bob' }] });
+    });
+
+    test('membersByRole skips records that were unloaded (Ember Data 4.12 unloads a deleted record after save)', function (assert) {
+        let members = membersByRole([
+            { roleId: '1', user: { id: '7', name: 'Ann' } },
+            { isDestroyed: true, belongsTo() { throw new Error('unloaded'); } },
+            { isDestroying: true, belongsTo() { throw new Error('unloaded'); } }
+        ]);
+        assert.deepEqual(members, { 1: [{ id: '7', name: 'Ann' }] });
+        assert.strictEqual(userroleRoleId({ roleId: '1', isDestroyed: true }), null);
     });
 
     test('accessTier and accessSplit follow the card tiers', function (assert) {

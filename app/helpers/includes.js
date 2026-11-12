@@ -3,13 +3,14 @@
  */
 
 import { helper } from '@ember/component/helper';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /** {{includes value array}}: when value is an array, all of its items must be included. */
 export function includes([needle, haystack]) {
 	if (!haystack) {
 		return false;
 	}
-	const list = typeof haystack.toArray === 'function' ? haystack.toArray() : haystack;
+	const list = Array.isArray(haystack) ? haystack : toArray(haystack);
 	if (typeof list.includes !== 'function') {
 		return false;
 	}

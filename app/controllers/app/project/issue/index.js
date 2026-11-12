@@ -606,7 +606,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
                     query: `(Issuestatus.system : 1)`,
                     limit: -1,
                 });
-                this.projectData.issuestatuses = issueStatuses.toArray();
+                this.projectData.issuestatuses = issueStatuses.slice();
             }
 
             let issueResult = await this.store.query('issue', options);

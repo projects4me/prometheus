@@ -25,6 +25,7 @@
     "@ember/render-modifiers": "^2.0.0",
     "@ember/string": "^3.0.0",
     "@ember/test-helpers": "^5.8.0",
+    "@ember/test-waiters": "^4.1.2",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
     "babel-eslint": "^8.2.6",
@@ -33,26 +34,27 @@
     "broccoli-merge-trees": "^3.0.2",
     "broccoli-plugin": "^1.3.1",
     "ember-auto-import": "^2.12.0",
-    "ember-cli": "~4.1.1",
+    "ember-cli": "~4.12.3",
     "ember-cli-app-version": "^7.0.0",
     "ember-cli-babel": "^8.3.2",
     "ember-cli-code-coverage": "^3.1.0",
     "ember-cli-dependency-checker": "^3.2.0",
+    "ember-cli-deprecation-workflow": "^2.2.0",
     "ember-cli-htmlbars": "^7.0.1",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-mirage": "^3.0.4",
     "ember-cli-sass": "^10.0.1",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
-    "ember-data": "~4.1.0",
+    "ember-data": "~4.12.8",
     "ember-fetch": "^8.1.1",
     "ember-inflector": "^4.0.3",
     "ember-load-initializers": "^2.1.2",
     "ember-modifier": "^4.3.0",
     "ember-page-title": "^9.1.0",
     "ember-qunit": "^9.2.0",
-    "ember-resolver": "^8.0.3",
-    "ember-source": "~4.1.0",
+    "ember-resolver": "^10.1.1",
+    "ember-source": "~4.12.4",
     "ember-template-lint": "^3.15.0",
     "ember-window-mock": "^2.0.0",
     "eslint": "^7.32.0",
@@ -68,9 +70,9 @@
     "prettier": "^2.5.1",
     "qunit": "^2.24.1",
     "qunit-dom": "^3.5.0",
+    "testem": "3.18.0",
     "webpack": "^5.65.0",
-    "yuidoc-lucid-theme": "0.1.2",
-    "testem": "3.18.0"
+    "yuidoc-lucid-theme": "0.1.2"
   },
   "dependencies": {
     "@ember/jquery": "^1.1.0",
@@ -109,9 +111,7 @@
     "ember-power-select": {
       "ember-concurrency": "$ember-concurrency"
     },
-    "ember-file-upload": {
-      "@ember/test-waiters": "^4.1.2"
-    }
+    "@ember/test-waiters": "$@ember/test-waiters"
   },
   "ember": {
     "edition": "octane"

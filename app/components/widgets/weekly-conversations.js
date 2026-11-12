@@ -83,7 +83,7 @@ export default class WidgetsWeeklyConversationsComponent extends WidgetsComponen
 	 * @public
 	 */
 	get data() {
-		let comments = this.comments.toArray() || [];
+		let comments = this.comments.slice() || [];
 		let commentsByRelatedModule = {};
 
 		comments.forEach((comment) => {

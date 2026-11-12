@@ -98,7 +98,7 @@ export default App.extend({
     async loadAgents() {
         try {
             let agents = await this.store.query('agent', { rels: 'user,sponsor', limit: -1 });
-            return agents.toArray();
+            return agents.slice();
         } catch (error) {
             Logger.debug('Prometheus.Routes.App.Project.Issue.Create::loadAgents() agents not available');
             return [];

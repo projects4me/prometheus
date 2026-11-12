@@ -475,7 +475,7 @@ export default class AppWorkflowPageController extends Controller {
         try {
             let milestones = await this.store.query('milestone', options);
             if (!this.isDestroying && !this.isDestroyed && request === this._milestoneRequest) {
-                this.milestoneOptions = milestones.toArray().map(milestone => ({ value: String(milestone.id), label: milestone.name }));
+                this.milestoneOptions = milestones.slice().map(milestone => ({ value: String(milestone.id), label: milestone.name }));
             }
         } catch (error) {
             if (request === this._milestoneRequest) {

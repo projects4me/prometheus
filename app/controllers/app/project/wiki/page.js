@@ -11,6 +11,7 @@ import { htmlSafe } from '@ember/template';
 import { action } from '@ember/object';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
+import { addRecord, pushRecords, removeRecord } from 'prometheus/utils/array/record-list';
 /**
  * The controller for the wiki page route, it is loaded when a user tried to
  * navigate to a particular wiki page
@@ -100,7 +101,7 @@ export default class AppProjectWikiPageController extends PrometheusController {
             set(upload, 'relatedTo', data.data.attributes.relatedTo);
             set(upload, 'relatedId', data.data.attributes.relatedId);
             set(upload, 'fileThumbnail', data.data.attributes.fileThumbnail);
-            this.get('model').get('files').pushObject(upload);
+            pushRecords(this.get('model').get('files'), [upload]);
         } catch (e) {
             new Messenger().post({
                 message: this.intl.t("global.oops"),
@@ -185,7 +186,7 @@ export default class AppProjectWikiPageController extends PrometheusController {
                     tpye: 'success',
                     showCloseButton: true
                 });
-                _self.get('model').get('vote').addObject(data);
+                addRecord(_self.get('model').get('vote'), data);
                 _self.set('iVoted', 1);
             }
         });
@@ -257,7 +258,7 @@ export default class AppProjectWikiPageController extends PrometheusController {
                         // destroy the upload
                         file.destroyRecord().then(function () {
                             // remove from the view by updating the model
-                            _self.get('model').get('files').removeObject(file);
+                            removeRecord(_self.get('model').get('files'), file);
 
                             return deleting.update({
                                 message: _self.intl.t("views.app.wiki.page.file.deleted"),

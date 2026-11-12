@@ -4,6 +4,7 @@
 
 import { module, test } from 'qunit';
 import ListLoader from 'prometheus/utils/state/list-loader';
+import { recordArray } from '../../../helpers/record-array';
 
 /**
  * A query result like Ember Data's: an array of records with the response meta
@@ -77,9 +78,9 @@ module('Unit | Utility | state/list-loader', function () {
 		assert.false(loader.hasNext);
 	});
 
-	test('items uses toArray when the result has one', function (assert) {
+	test('items copies the records of a record array', function (assert) {
 		let loader = loaderFor(storeStub());
-		loader.seed({ toArray: () => ['a'], meta: {} }, { page: 1 });
+		loader.seed(recordArray(['a'], {}), { page: 1 });
 		assert.deepEqual(loader.items, ['a']);
 	});
 

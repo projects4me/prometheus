@@ -5,6 +5,7 @@
 import App from "prometheus/routes/app";
 import { hash, hashSettled } from 'rsvp';
 import { inject as service } from '@ember/service';
+import { replaceRecords } from 'prometheus/utils/array/record-list';
 
 /**
  * This is the route to load the task board for a project
@@ -107,8 +108,7 @@ export default App.extend({
             }).catch((error) => {
                 _self.errorManager.handleError(error);
             });
-            milestone.issues.clear();
-            milestone.issues.pushObjects(issues);
+            replaceRecords(milestone.issues, issues);
         }));
 
         //Create a milestone of type backlog
@@ -152,7 +152,7 @@ export default App.extend({
         }
 
         //Board columns follow the order configured in Settings
-        model.issueStatuses = [...model.issueStatuses.toArray()].sort((a, b) => a.sortOrder - b.sortOrder);
+        model.issueStatuses = [...model.issueStatuses.slice()].sort((a, b) => a.sortOrder - b.sortOrder);
         await this.loadSearchData();
         return model;
     },
@@ -199,8 +199,7 @@ export default App.extend({
             issues: issues || []
             });
         } else {
-            backlog.issues.clear();
-            backlog.issues.pushObjects(issues);
+            replaceRecords(backlog.issues, issues);
         }
         return backlog;
     },

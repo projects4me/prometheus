@@ -6,6 +6,7 @@ import WidgetsComponent from '../widgets';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import * as dates from 'prometheus/utils/date';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * A widget component that displays recent issues in a table format.
@@ -16,16 +17,6 @@ import * as dates from 'prometheus/utils/date';
  * @extends WidgetsComponent
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-/**
- * A plain array from a record array or a plain array
- *
- * @param {Array|Object} list
- * @returns {Array}
- */
-function toArray(list) {
-	return typeof list?.toArray === 'function' ? list.toArray() : list ?? [];
-}
-
 export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 	
 	/**
@@ -166,7 +157,7 @@ export default class WidgetsRecentIssuesComponent extends WidgetsComponent {
 		let issues = await this.store.query('issue', issueOptions);
 		let filteredIssues = this.reApplyFilters(issues, activeFilters);
 		this.filteredData = [...toArray(this.filteredData), ...filteredIssues];
-		this.originalData = [...toArray(this.originalData), ...issues.toArray()];
+		this.originalData = [...toArray(this.originalData), ...toArray(issues)];
 
 		// return OG issues list got from API
 		return {

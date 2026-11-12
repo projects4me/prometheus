@@ -17,6 +17,7 @@ import { htmlSafe } from '@ember/template';
 import { buildSortOptions, buildGroupOptions, buildCreators } from 'prometheus/utils/ideas/list-options';
 import UrlState from 'prometheus/utils/state/url-state';
 import ListLoader from 'prometheus/utils/state/list-loader';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
 const STORAGE_KEY = 'ideaBrowserCollapsed';
@@ -1019,7 +1020,7 @@ export default class AppProjectIdeaController extends Controller {
             return;
         }
         let latest = {};
-        for (let plan of plans.toArray?.() ?? plans) {
+        for (let plan of toArray(plans)) {
             let known = latest[plan.ideaId];
             if (!known || Number(plan.version) > Number(known.version)) {
                 latest[plan.ideaId] = plan;

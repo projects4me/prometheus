@@ -9,6 +9,7 @@ import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import * as dates from 'prometheus/utils/date';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * This controller is used to manage the user detail/page view
@@ -209,7 +210,7 @@ export default class AppUserPageController extends PrometheusCreateController {
         }
 
         const skills =
-            this.model?.skills?.toArray?.() ?? this.model?.skills ?? [];
+            toArray(this.model?.skills);
 
         return !skills.some(
             (skill) => skill.name?.trim().toLowerCase() === normalized

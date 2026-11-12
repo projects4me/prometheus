@@ -9,6 +9,7 @@ import { htmlSafe } from '@ember/template';
 import DateUtils from 'prometheus/utils/date';
 import format from 'prometheus/utils/data/format';
 import * as dates from 'prometheus/utils/date';
+import { pushRecords } from 'prometheus/utils/array/record-list';
 
 const TIME_LEFT_WARNING_THRESHOLD_HOURS = 8;
 const TIME_LEFT_HIDDEN_STATUSES = ['done', 'deferred', 'wont_fix'];
@@ -288,7 +289,7 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 				showCloseButton: true,
 				hideAfter: 3
 			});
-			this.milestone.issues.pushObject(this.newIssue);
+			pushRecords(this.milestone.issues, [this.newIssue]);
 			this.removeAddIssueModal();
 			this.newIssue = null;
 		} catch (error) {

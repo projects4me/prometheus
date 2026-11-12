@@ -58,7 +58,7 @@
 
         <div class="pull-right">
           {{t "views.app.wiki.tags"}}<span class="colon"></span>
-          {{#if this.model.tag}}
+          {{#if this.model.tag.length}}
             {{#each this.model.tag as |tags|}}
               <span class="label label-primary"><i class="fa fa-tag"></i> {{tags.tag}}</span>
             {{/each}}

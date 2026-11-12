@@ -8,6 +8,8 @@ import RSVP from 'rsvp';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
+import { pushRecords, removeRecord } from 'prometheus/utils/array/record-list';
+import { toArray } from 'prometheus/utils/array/to-array';
 /**
  * This component is used to render the issue details.
  *
@@ -296,7 +298,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             });
 
             // Add to the relationship
-            this.issue.get('files').pushObject(upload);
+            pushRecords(this.issue.get('files'), [upload]);
 
         } catch (e) {
             new Messenger().post({
@@ -330,7 +332,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         Logger.debug('-Prometheus.Controllers.App.Project.Issue.Page::_createComment');
 
         return comment.save({adapterOptions: {mentionedIssues: mentionedIssues}}).then(function (savedComment) {
-            issue.get('comments').pushObject(savedComment);
+            pushRecords(issue.get('comments'), [savedComment]);
         }).catch(function (error) {
             if (comment.isNew) {
                 comment.unloadRecord();
@@ -441,7 +443,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                     label: htmlSafe(_self.intl.t("views.app.issue.detail.file.confirmdelete")).toString(),
                     action: function () {
                         // First remove from the relationship
-                        _self.issue.get('files').removeObject(file);
+                        removeRecord(_self.issue.get('files'), file);
                         
                         // Then destroy the record
                         file.destroyRecord().then(function () {
@@ -452,7 +454,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                             });
                         }).catch(() => {
                             // If destroy fails, add the file back to the relationship
-                            _self.issue.get('files').pushObject(file);
+                            pushRecords(_self.issue.get('files'), [file]);
                             deleting.update({
                                 message: _self.intl.t("views.app.issue.detail.file.deletefailed"),
                                 type: 'error',
@@ -563,7 +565,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
 
                 let timelog = _self.store.createRecord('timelog');
                 _self.newTimeLog = timelog;
-                _self.issue.get('spent').pushObject(newLog);
+                pushRecords(_self.issue.get('spent'), [newLog]);
                 new Messenger().post({
                     message: _self.intl.t("views.app.issue.detail.timelog.added"),
                     type: 'success',
@@ -606,7 +608,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
 
                 let timelog = _self.store.createRecord('timelog');
                 _self.newTimeLog = timelog;
-                _self.issue.estimated.pushObject(newLog);
+                pushRecords(_self.issue.estimated, [newLog]);
 
                 new Messenger().post({
                     message: _self.intl.t("views.app.issue.detail.timelog.estimated"),
@@ -952,7 +954,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             hideAfter: false
         });
         issue.set('status', newStatus);
-        let statusId = this.args.issueStatuses.find((item) => item.name === newStatus).id;
+        let statusId = toArray(this.args.issueStatuses).find((item) => item.name === newStatus).id;
         issue.set('statusId', statusId);
         issue.save().then(() => {
             messenger.update({
@@ -1006,7 +1008,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             return;
         }        
 
-        let watcher = this.issue.watchers.find(watcher => watcher.userId === this.currentUser.user.id);
+        let watcher = toArray(this.issue.watchers).find(watcher => watcher.userId === this.currentUser.user.id);
         if(watcher) {
             watcher.isWatching = !watcher.isWatching;
         } else {
@@ -1016,7 +1018,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                 isWatching: true
             });
 
-            this.issue.watchers.pushObject(watcher);
+            pushRecords(this.issue.watchers, [watcher]);
         }
         watcher.save().then(() => {
             let messageKey = watcher.isWatching ? 'views.app.issue.watcher.enabled' : 'views.app.issue.watcher.disabled';
@@ -1071,7 +1073,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     async addWatcher(member) {
         Logger.debug('IssueIssueDetailsComponent::addWatcher - Member:', member.name);
         try {
-            let existingWatcher = this.issue.watchers.find(watcher => watcher.userId === member.id);
+            let existingWatcher = toArray(this.issue.watchers).find(watcher => watcher.userId === member.id);
             if(existingWatcher) {
                 existingWatcher.isWatching = true;
                 await existingWatcher.save();
@@ -1089,7 +1091,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                 isWatching: true
             });
             await watcher.save();
-            this.issue.watchers.pushObject(watcher);
+            pushRecords(this.issue.watchers, [watcher]);
             new Messenger().post({
                 message: htmlSafe(this.intl.t('views.app.issue.watcher.added', { name: member.name })),
                 type: 'success',
@@ -1190,7 +1192,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     }
 
     get isWatching() {
-        return this.issue.watchers.find(watcher => watcher.userId === this.currentUser.user.id)?.isWatching || false;
+        return toArray(this.issue.watchers).find(watcher => watcher.userId === this.currentUser.user.id)?.isWatching || false;
     }
 
     /**
@@ -1225,7 +1227,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         }
 
         const currentUserId = this.currentUser.user.id;
-        const activeWatcherIds = this.issue.watchers
+        const activeWatcherIds = toArray(this.issue.watchers)
             .filter(watcher => watcher.isWatching === true)
             .map(watcher => watcher.userId);
         
@@ -1237,7 +1239,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             this.issue.reportedUser
         ].filter(id => id); // Filter out undefined/null values
 
-        return this.projectController.members.filter(member => 
+        return toArray(this.projectController.members).filter(member => 
             member.get('id') !== currentUserId && 
             !activeWatcherIds.includes(member.get('id')) &&
             !coreMemberIds.includes(member.get('id'))

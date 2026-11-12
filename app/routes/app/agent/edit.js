@@ -58,7 +58,7 @@ export default class AppAgentEditRoute extends AppAgentCreateRoute {
                 this.store.query('membership', { query: `(Membership.userId : ${agent.userId})`, limit: -1 })
             ]);
             this.options = options;
-            this.current = { userroles: userroles.toArray(), memberships: memberships.toArray() };
+            this.current = { userroles: userroles.slice(), memberships: memberships.slice() };
         } catch (error) {
             this.errorManager.handleLoadError(error, { moduleName: 'agent' });
             this.loadFailed = true;

@@ -4,6 +4,7 @@
 
 import App from 'prometheus/routes/app';
 import { arrangeConversations } from 'prometheus/utils/conversation/list-options';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * The route of the threads without a selected thread: it opens the thread of an old `?c_id=` link, else the first
@@ -27,7 +28,7 @@ export default class AppProjectConversationIndexRoute extends App {
         if (cId) {
             return this.router.replaceWith('app.project.conversation.page', cId, { queryParams: { c_id: null } });
         }
-        let records = layout?.firstPage?.records?.toArray?.() ?? [];
+        let records = toArray(layout?.firstPage?.records);
         let first = arrangeConversations(records, { group: layout?.values?.group, milestones: layout?.milestones ?? {} }).at(0);
         if (first) {
             return this.router.replaceWith('app.project.conversation.page', first.id);

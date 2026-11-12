@@ -20,7 +20,7 @@ export async function fetchRoomCounts(store, roomIds) {
 		limit: -1
 	});
 	return Object.fromEntries(
-		records.toArray().map((record) => [
+		records.slice().map((record) => [
 			record.id,
 			{
 				commentCount: Number(record.commentCount) || 0,

@@ -3,6 +3,7 @@
  */
 
 import AppComponent from 'prometheus/components/app';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * This component renders a compact stack of member avatars for a project row,
@@ -44,7 +45,7 @@ export default class ProjectMemberAvatarsComponent extends AppComponent {
         if (!members) {
             return [];
         }
-        return members.slice(0, this.maxVisible);
+        return toArray(members).slice(0, this.maxVisible);
     }
 
     /**

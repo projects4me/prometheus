@@ -45,7 +45,7 @@ export default class AgentDirectoryService extends Service {
         if (!this.loading) {
             this.loading = this.store.query('agent', { rels: 'sponsor', page: 1, limit: 200 })
                 .then((agents) => {
-                    this.agents = agents.toArray();
+                    this.agents = agents.slice();
                 })
                 .catch(() => {
                     this.agents = [];

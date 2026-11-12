@@ -57,7 +57,7 @@ export default class AgentWorkflowsComponent extends Component {
 			let references = (await this.store.query('workflowreference', {
 				query: `(Workflowreference.entityType : Agent) (Workflowreference.entityId : ${this.args.agent.id})`,
 				limit: -1
-			})).toArray();
+			})).slice();
 			let workflowIds = [...new Set(references.map((reference) => String(reference.workflowId)))];
 			let workflows = [];
 			let nodes = [];
@@ -70,9 +70,9 @@ export default class AgentWorkflowsComponent extends Component {
 					this.store.query('workflownode', { query: any('Workflownode.workflowId'), limit: -1 }),
 					this.store.query('project', { limit: -1 })
 				]);
-				workflows = workflowRecords.toArray();
-				nodes = nodeRecords.toArray();
-				projects = projectRecords.toArray();
+				workflows = workflowRecords.slice();
+				nodes = nodeRecords.slice();
+				projects = projectRecords.slice();
 			}
 			if (this.isDestroying || this.isDestroyed) {
 				return;

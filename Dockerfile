@@ -8,7 +8,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /usr/bin/chromium /usr/local/bin/google-chrome
 
-RUN npm install -g ember-cli@4.1.1 \
+RUN npm install -g ember-cli@4.12.3 \
     && npm cache clean --force
 
 ENV PORT=4200

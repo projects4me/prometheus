@@ -1,6 +1,7 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import EmberObject from "@ember/object";
+import { recordArray } from '../../../../helpers/record-array';
 
 module("Unit | Controller | app/project/idea browser state", function (hooks) {
   setupTest(hooks);
@@ -11,7 +12,7 @@ module("Unit | Controller | app/project/idea browser state", function (hooks) {
     let store = {
       query(type, options) {
         requests.push([type, options]);
-        return Promise.resolve({ toArray: () => [EmberObject.create({ id: `i${requests.length}` })], meta: {} });
+        return Promise.resolve(recordArray([EmberObject.create({ id: `i${requests.length}` })], {}));
       },
     };
     browser.store = store;

@@ -6,6 +6,7 @@ import Model, { attr, belongsTo, hasMany } from "@ember-data/model";
 import { inject as service } from "@ember/service";
 import { computed } from "@ember/object";
 import * as dates from 'prometheus/utils/date';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * The issue model
@@ -481,7 +482,7 @@ export default Model.extend({
      * @returns {void}
      */
     setDefaultStatusToIssue(statuses, issue, statusName) {
-        let status = statuses.find((status) => {
+        let status = toArray(statuses).find((status) => {
             return status.get("name") === statusName.toLowerCase();
         });
         if (status) {

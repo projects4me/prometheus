@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import ThreadVotes from "prometheus/utils/state/thread-votes";
+import { recordArray } from '../../../helpers/record-array';
 
 module("Unit | Utility | state/thread-votes", function () {
   function row(id, user, text, dateCreated) {
@@ -11,7 +12,7 @@ module("Unit | Utility | state/thread-votes", function () {
       requests: [],
       query(modelName, params) {
         this.requests.push(params);
-        return Promise.resolve({ toArray: () => rows });
+        return Promise.resolve(recordArray(rows));
       },
     };
   }
@@ -63,9 +64,9 @@ module("Unit | Utility | state/thread-votes", function () {
       query(modelName, params) {
         this.requests.push(modelName);
         if (modelName === "conversationroomcount") {
-          return Promise.resolve({ toArray: () => [{ id: "r1", commentCount: 9, agreeCount: 5, disagreeCount: 2 }] });
+          return Promise.resolve(recordArray([{ id: "r1", commentCount: 9, agreeCount: 5, disagreeCount: 2 }]));
         }
-        return Promise.resolve({ toArray: () => [row("c1", "u1", "I agree", "d")] });
+        return Promise.resolve(recordArray([row("c1", "u1", "I agree", "d")]));
       },
     };
     let votes = new ThreadVotes({ store });

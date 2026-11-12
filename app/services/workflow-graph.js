@@ -43,7 +43,7 @@ export default class WorkflowGraphService extends Service {
             this.store.query('workflownode', { query: `(Workflownode.workflowId : ${workflowId})`, limit: -1 }),
             this.store.query('workflowedge', { query: `(Workflowedge.workflowId : ${workflowId})`, limit: -1 })
         ]);
-        return WorkflowGraph.fromRecords(nodes.toArray(), edges.toArray());
+        return WorkflowGraph.fromRecords(nodes.slice(), edges.slice());
     }
 
     /**

@@ -65,7 +65,7 @@ export default class AppAgentIndexRoute extends AppRoute {
      * @return {Promise}
      */
     async afterModel(agents) {
-        let userIds = (agents ? agents.toArray() : []).map((agent) => agent.userId).filter(Boolean);
+        let userIds = (agents ? agents.slice() : []).map((agent) => agent.userId).filter(Boolean);
         let userId = this.currentUser.user.id;
         this.memberships = [];
         this.savedsearches = [];
@@ -76,7 +76,7 @@ export default class AppAgentIndexRoute extends AppRoute {
                 query: `((Savedsearch.relatedTo : agent) AND (Savedsearch.createdUser : ${userId}))`,
                 limit: -1
             });
-            this.savedsearches = savedsearches.toArray();
+            this.savedsearches = savedsearches.slice();
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'agent' });
         }
@@ -96,7 +96,7 @@ export default class AppAgentIndexRoute extends AppRoute {
                     rels: 'project',
                     limit: -1
                 });
-                this.memberships = memberships.toArray();
+                this.memberships = memberships.slice();
             }
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'agent' });

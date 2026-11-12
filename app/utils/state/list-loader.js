@@ -4,6 +4,7 @@
 
 import AsyncResource from 'prometheus/utils/state/async-resource';
 import { hasNextPage } from 'prometheus/utils/quick-list/page-window';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * The records of a query result as an array, an empty array when there is none
@@ -15,7 +16,7 @@ function toItems(records) {
 	if (!records) {
 		return [];
 	}
-	return typeof records.toArray === 'function' ? records.toArray() : Array.from(records);
+	return toArray(records);
 }
 
 /**

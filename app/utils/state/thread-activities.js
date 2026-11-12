@@ -101,7 +101,7 @@ export default class ThreadActivities {
                 limit: this.showAll ? -1 : this.limit + 1
             });
             if (this.roomId !== roomId || this.owner?.isDestroying || this.owner?.isDestroyed) return;
-            let rows = result.toArray();
+            let rows = result.slice();
             this.hasMore = !this.showAll && rows.length > this.limit;
             this.records = this.showAll ? rows : rows.slice(0, this.limit);
         } catch (error) {

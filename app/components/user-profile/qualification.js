@@ -4,6 +4,7 @@
 
 import UserProfileBaseInlineSectionComponent from 'prometheus/components/user-profile/base-inline-section';
 import * as dates from 'prometheus/utils/date';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 const MIN_COMPLETION_YEAR = 1965;
 const QUALIFICATION_TYPE_DEFINITIONS = [
@@ -152,9 +153,7 @@ export default class UserProfileQualificationComponent extends UserProfileBaseIn
 	 */
 	get sortedQualifications() {
 		const qualifications =
-			this.args.user?.qualifications?.toArray?.() ??
-			this.args.user?.qualifications ??
-			[];
+			toArray(this.args.user?.qualifications);
 
 		return [...qualifications].sort(
 			(a, b) => (b.completionYear ?? 0) - (a.completionYear ?? 0)

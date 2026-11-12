@@ -8,6 +8,7 @@ import { isArray } from '@ember/array';
 import AppComponent from 'prometheus/components/app';
 import DateUtils from 'prometheus/utils/date';
 import { htmlSafe } from '@ember/template';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * The value of the issue type given to the sub-tasks created from a plan.
@@ -533,7 +534,7 @@ export default class IssueIssuePlanningComponent extends AppComponent {
 	@action
 	getIssueStatus(messenger) {
 		try {
-			let issueStatus = this.args.issueStatuses.find(
+			let issueStatus = toArray(this.args.issueStatuses).find(
 				(status) => status.name === 'new'
 			);
 			if (issueStatus) {
@@ -558,7 +559,7 @@ export default class IssueIssuePlanningComponent extends AppComponent {
 	@action
 	getIssueType(messenger) {
 		try {
-			let issueType = this.args.issueTypes.find(
+			let issueType = toArray(this.args.issueTypes).find(
 				(type) =>
 					type.name === SUB_TASK_TYPE_VALUE ||
 					type.name === LEGACY_SUB_TASK_TYPE_NAME

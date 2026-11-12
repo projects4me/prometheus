@@ -2,6 +2,7 @@ import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import EmberObject from "@ember/object";
 import ThreadComments from "prometheus/utils/state/thread-comments";
+import { recordArray } from '../../../../../helpers/record-array';
 
 module("Unit | Controller | app/project/conversation/page", function (hooks) {
   setupTest(hooks);
@@ -18,7 +19,7 @@ module("Unit | Controller | app/project/conversation/page", function (hooks) {
       query(modelName, params) {
         requests.push({ modelName, params });
         let response = responses[requests.length - 1] || [];
-        let result = { toArray: () => response, meta: { links: requests.length < responses.length ? { next: {} } : {} } };
+        let result = recordArray(response, { links: requests.length < responses.length ? { next: {} } : {} });
         return Promise.resolve(result);
       },
       peekRecord(modelName, id) {

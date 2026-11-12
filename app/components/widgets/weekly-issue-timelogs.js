@@ -8,6 +8,7 @@ import { action } from '@ember/object';
 import { next } from '@ember/runloop';
 import DateUtils from 'prometheus/utils/date';
 import { cached } from '@glimmer/tracking';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * A widget component that displays weekly timelogs grouped by issue.
@@ -178,8 +179,8 @@ export default class WidgetsWeeklyIssueTimelogsComponent extends WidgetsComponen
 
 		data?.forEach((issue) => {
 			['spent', 'estimated'].forEach((context) => {
-				if (issue[context].length > 0) {
-					issue[context].forEach((timelog) => {
+				if (toArray(issue[context]).length > 0) {
+					toArray(issue[context]).forEach((timelog) => {
 						let daysToHours = timelog.days * 8;
 						let hours =
 							parseInt(timelog.hours, 10) +
@@ -442,7 +443,7 @@ export default class WidgetsWeeklyIssueTimelogsComponent extends WidgetsComponen
 		let _self = this;
 		let otherContext = context === 'spent' ? 'estimated' : 'spent';
 		return issues.map((issue) => {
-			let filteredTimelogs = issue[context]?.filter((timelog) => {
+			let filteredTimelogs = toArray(issue[context]).filter((timelog) => {
 				return timelog.createdUser === _self.args.currentUser.user.id;
 			});
 			let updatedIssue = {

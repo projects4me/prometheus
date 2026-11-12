@@ -11,6 +11,7 @@ import { htmlSafe } from '@ember/template';
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
 import { refreshView } from 'prometheus/utils/live/reload';
 import * as dates from 'prometheus/utils/date';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * Gantt chart controller, including Hermes live handlers for dates,
@@ -452,7 +453,7 @@ export default class AppProjectGanttController extends PrometheusController {
 		let start = dates.startOf(dates.now(), 'day');
 		let end = dates.endOf(dates.add(dates.now(), 3, 'months'), 'day');
 		(this.milestones || []).forEach((milestone) => {
-			[milestone].concat(milestone.issues?.toArray?.() || milestone.issues || [])
+			[milestone].concattoArray(milestone.issues)
 				.forEach((item) => {
 					if (item.startDate && dates.isBefore(item.startDate, start)) {
 						start = dates.parse(item.startDate);

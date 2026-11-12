@@ -35,7 +35,7 @@ export default class SavedSearchService extends Service {
 
         let result = await this.store.query('savedsearch', { query: `(${query})`, limit: -1 });
 
-        return result.toArray();
+        return result.slice();
     }
 
     /**

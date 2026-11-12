@@ -3,12 +3,13 @@
  */
 
 import { helper } from '@ember/component/helper';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /** {{slice start end array}} (or {{slice start array}}). */
 export function slice(params) {
 	const array = params[params.length - 1];
 	const [start = 0, end] = params.slice(0, -1);
-	const list = array && typeof array.toArray === 'function' ? array.toArray() : array;
+	const list = toArray(array);
 	return Array.from(list || []).slice(start, end);
 }
 

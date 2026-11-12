@@ -3,6 +3,7 @@
  */
 
 import { helper } from '@ember/component/helper';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * This helper is used to find if among the objects passed the user created any
@@ -15,7 +16,7 @@ import { helper } from '@ember/component/helper';
  * @todo Handle exception. If possible then make generic
  */
 export function userCreated(params) {
-    return (params[0].filter((item) => item.createdUser === params[1]).length >0 )?true:false;
+    return (toArray(params[0]).filter((item) => item.createdUser === params[1]).length >0 )?true:false;
 }
 
 /**

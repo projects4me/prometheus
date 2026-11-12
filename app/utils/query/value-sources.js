@@ -6,6 +6,7 @@ import Format from 'prometheus/utils/data/format';
 import { issueStatusLabel, issueTypeRecordLabel } from 'prometheus/utils/issue-status/label';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
+import { toArray } from 'prometheus/utils/array/to-array';
 /**
  * The value sources of ezSearch fields, by name. A field in `views.<Module>.search` of the metadata
  * names one in `values: { source, ...params }`; the query-schema service calls it to list the values
@@ -82,7 +83,8 @@ function project(context) {
  * @private
  */
 async function projectRecords(context, relationship) {
-    return (await project(context))?.get(relationship)?.toArray() ?? [];
+    const record = await project(context);
+    return toArray(await record?.[relationship]);
 }
 
 /**
@@ -109,7 +111,7 @@ export const VALUE_SOURCES = Object.freeze({
         let statuses = await projectRecords(context, 'issuestatuses');
 
         if (statuses.length === 0) {
-            statuses = (await context.store.query('issuestatus', { query: '(Issuestatus.system : 1)', limit: -1 })).toArray();
+            statuses = (await context.store.query('issuestatus', { query: '(Issuestatus.system : 1)', limit: -1 })).slice();
         }
 
         return statuses.map((status) => ({ value: status.name, label: issueStatusLabel(context.intl, status.name) }));
@@ -131,7 +133,7 @@ export const VALUE_SOURCES = Object.freeze({
             limit: -1,
         });
 
-        return milestones.toArray().map((milestone) => ({ value: milestone.name, label: milestone.name }));
+        return milestones.slice().map((milestone) => ({ value: milestone.name, label: milestone.name }));
     },
 
     /**
@@ -155,7 +157,7 @@ export const VALUE_SOURCES = Object.freeze({
     async users(params, context) {
         let users = await context.store.query('user', { fields: 'User.id,User.name,User.profilePicture', sort: 'User.name', order: 'ASC', limit: -1 });
 
-        return userOptions(users.toArray(), params, context);
+        return userOptions(users.slice(), params, context);
     },
 });
 

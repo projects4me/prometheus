@@ -78,7 +78,7 @@ export default class ThreadParticipants {
                 limit: -1
             });
             if (this.isStale(roomId)) return;
-            let loaded = result.toArray().map((comment) => ThreadParticipants.toEntry(comment));
+            let loaded = result.slice().map((comment) => ThreadParticipants.toEntry(comment));
             let known = new Set(loaded.map((entry) => entry.id));
             this.records = [...loaded, ...this.records.filter((entry) => !known.has(entry.id))];
         } catch (error) {

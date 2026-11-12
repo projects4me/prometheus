@@ -10,6 +10,7 @@ import { postToast } from 'prometheus/utils/ui/post-toast';
 import { pushIfMissing, removeById } from 'prometheus/utils/live/collection';
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
 import { isOpenIssueEvent, isIssueRoomEvent, resolveStatusName, findOrLoad } from 'prometheus/utils/live/issue';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * This controller is used to manage the issues detail/page view
@@ -239,7 +240,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
     async applyCommentCreated(envelope) {
         let issue = this.issue;
         let id = String(envelope.resource.id);
-        if (this.deletedCommentIds.has(id) || issue.comments.find((item) => item.id === id)) {
+        if (this.deletedCommentIds.has(id) || toArray(issue.comments).find((item) => item.id === id)) {
             return;
         }
         try {
@@ -247,7 +248,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
             if (!this.isStillOpen(issue) || this.deletedCommentIds.has(id)) {
                 return;
             }
-            if (issue.comments.find((item) => item.id === comment.id)) {
+            if (toArray(issue.comments).find((item) => item.id === comment.id)) {
                 return;
             }
             pushIfMissing(issue.comments, comment);
@@ -268,7 +269,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
      */
     async applyCommentUpdated(envelope) {
         let issue = this.issue;
-        let comment = issue.comments.find((item) => item.id === String(envelope.resource.id));
+        let comment = toArray(issue.comments).find((item) => item.id === String(envelope.resource.id));
         if (!comment) {
             return;
         }
@@ -292,7 +293,7 @@ export default class AppProjectIssuePageController extends PrometheusController 
     applyCommentDeleted(envelope) {
         let id = String(envelope.resource.id);
         this.deletedCommentIds.add(id);
-        let comment = this.issue.comments.find((item) => item.id === id);
+        let comment = toArray(this.issue.comments).find((item) => item.id === id);
         if (!comment) {
             return;
         }
