@@ -3,13 +3,14 @@
  */
 
 import { helper } from '@ember/component/helper';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /** {{join ', ' array}}: joins the array with the separator. */
 export function join([separator, array]) {
 	if (array === undefined || array === null) {
 		return '';
 	}
-	const list = typeof array.toArray === 'function' ? array.toArray() : array;
+	const list = toArray(array);
 	return Array.from(list).join(separator);
 }
 

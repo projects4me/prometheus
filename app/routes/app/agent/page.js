@@ -5,6 +5,7 @@
 import AppRoute from 'prometheus/routes/app';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
+import { pushRecords } from 'prometheus/utils/array/record-list';
 /**
  * The route of an agent's detail page.
  *
@@ -60,12 +61,12 @@ export default class AppAgentPageRoute extends AppRoute {
 
             return {
                 agent,
-                userroles: userroles.toArray(),
-                memberships: memberships.toArray(),
-                identities: identities.toArray(),
+                userroles: userroles.slice(),
+                memberships: memberships.slice(),
+                identities: identities.slice(),
                 grantedTools: this.describeToolGrants(toolGrants, tools, servers),
                 grantedSkills: this.describeSkillGrants(skillGrants, skills),
-                activities: activities.toArray()
+                activities: activities.slice()
             };
         } catch (error) {
             this.errorManager.handleLoadError(error, { moduleName: 'agent' });
@@ -83,9 +84,9 @@ export default class AppAgentPageRoute extends AppRoute {
      * @return {Array} `{ name, server, isServer, permissionRule }` per grant
      */
     describeToolGrants(grants, tools, servers) {
-        return grants.toArray().map((grant) => {
-            let tool = tools.toArray().find((item) => item.id === grant.toolId);
-            let server = servers.toArray().find((item) => item.id === (grant.toolServerId ?? tool?.toolServerId));
+        return grants.slice().map((grant) => {
+            let tool = tools.slice().find((item) => item.id === grant.toolId);
+            let server = servers.slice().find((item) => item.id === (grant.toolServerId ?? tool?.toolServerId));
 
             return {
                 name: tool ? tool.name : server?.name,
@@ -103,8 +104,8 @@ export default class AppAgentPageRoute extends AppRoute {
      * @return {Array} `{ name, version }` per grant
      */
     describeSkillGrants(grants, skills) {
-        return grants.toArray().map((grant) => {
-            let skill = skills.toArray().find((item) => item.id === grant.skillId);
+        return grants.slice().map((grant) => {
+            let skill = skills.slice().find((item) => item.id === grant.skillId);
 
             return { name: skill?.name, version: skill?.version };
         });
@@ -124,7 +125,7 @@ export default class AppAgentPageRoute extends AppRoute {
             controller.set('model', null);
             return;
         }
-        agent.user?.identities?.pushObjects(identities);
+        pushRecords(agent.user?.identities, identities);
         controller.set('model', agent);
         controller.set('userroles', userroles);
         controller.set('memberships', memberships);

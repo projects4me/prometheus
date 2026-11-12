@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import ThreadParticipants, { buildParticipants } from "prometheus/utils/state/thread-participants";
+import { recordArray } from '../../../helpers/record-array';
 
 module("Unit | Utility | state/thread-participants", function () {
   const creator = { id: "u1", name: "Creator" };
@@ -25,7 +26,7 @@ module("Unit | Utility | state/thread-participants", function () {
     let store = {
       query(model, params) {
         requests.push(params);
-        return Promise.resolve({ toArray: () => [{ id: "c1", createdUser: "u2", createdUserName: "U2", dateCreated: "2026-01-01 10:00:01" }] });
+        return Promise.resolve(recordArray([{ id: "c1", createdUser: "u2", createdUserName: "U2", dateCreated: "2026-01-01 10:00:01" }]));
       },
     };
     let participants = new ThreadParticipants({ store });

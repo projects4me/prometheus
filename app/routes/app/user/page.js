@@ -7,6 +7,8 @@ import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
+import { toArray } from 'prometheus/utils/array/to-array';
+import { pushRecords } from 'prometheus/utils/array/record-list';
 /**
  * The user page
  *
@@ -72,13 +74,13 @@ export default App.extend({
         Logger.debug('+Prometheus.Routes.App.User::setupController()');
 
         const user = objectAt(model.user, 0);
-        const skills = model.skills?.toArray?.() ?? model.skills ?? [];
-        const identities = model.identities?.toArray?.() ?? model.identities ?? [];
-        const qualifications = model.qualifications?.toArray?.() ?? model.qualifications ?? [];
+        const skills = toArray(model.skills);
+        const identities = toArray(model.identities);
+        const qualifications = toArray(model.qualifications);
 
-        user.skills.pushObjects(skills);
-        user.identities.pushObjects(identities);
-        user.qualifications.pushObjects(qualifications);
+        pushRecords(user.skills, skills);
+        pushRecords(user.identities, identities);
+        pushRecords(user.qualifications, qualifications);
 
         controller.set('model', user);
         this.breadcrumb.setTitle(this.routeName, user.get('name'));

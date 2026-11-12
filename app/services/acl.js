@@ -4,6 +4,7 @@
 
 import Service, { inject as service } from '@ember/service';
 import { computed } from '@ember/object';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * Template action → catalog action. `read` is the UI/permission verb;
@@ -124,7 +125,7 @@ export default class AclService extends Service {
         if (!user || !user.aclPermissions) {
             return [];
         }
-        return user.aclPermissions.toArray ? user.aclPermissions.toArray() : user.aclPermissions;
+        return toArray(user.aclPermissions);
     }
 
     /**

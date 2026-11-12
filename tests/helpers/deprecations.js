@@ -1,7 +1,7 @@
 import { registerDeprecationHandler } from '@ember/debug';
 
 // Deprecation IDs hidden in test output. Add more, one at a time, as they are handled.
-export const HIDDEN_DEPRECATION_IDS = ['ember-polyfills.deprecate-assign'];
+export const HIDDEN_DEPRECATION_IDS = [];
 
 export function createDeprecationCounter(hiddenIds = HIDDEN_DEPRECATION_IDS) {
   const counts = {};

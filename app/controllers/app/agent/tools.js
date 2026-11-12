@@ -52,10 +52,10 @@ export default class AppAgentToolsController extends Controller {
      * @param {Object} model the servers, tools, grants and agents
      */
     load(model) {
-        this.servers = model.servers.toArray();
-        this.tools = model.tools.toArray();
-        this.grants = model.grants.toArray();
-        this.agents = model.agents.toArray();
+        this.servers = model.servers.slice();
+        this.tools = model.tools.slice();
+        this.grants = model.grants.slice();
+        this.agents = model.agents.slice();
         this.selectedServerId = null;
         this.selectedToolId = null;
         this.showServerForm = false;
@@ -267,7 +267,7 @@ export default class AppAgentToolsController extends Controller {
             if (this.isDestroying || this.isDestroyed) {
                 return;
             }
-            this.tools = tools.toArray();
+            this.tools = tools.slice();
         } catch (e) {
             this.error = 'refresh';
         } finally {

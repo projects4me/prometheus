@@ -67,7 +67,7 @@ export default class AppWorkflowIndexRoute extends AppRoute {
      * @return {Promise}
      */
     async afterModel(workflows) {
-        let list = workflows ? workflows.toArray() : [];
+        let list = workflows ? workflows.slice() : [];
         let userId = this.currentUser.user.id;
         this.nodes = [];
         this.runs = [];
@@ -81,7 +81,7 @@ export default class AppWorkflowIndexRoute extends AppRoute {
                 query: `((Savedsearch.relatedTo : workflow) AND (Savedsearch.createdUser : ${userId}))`,
                 limit: -1
             });
-            this.savedsearches = savedsearches.toArray();
+            this.savedsearches = savedsearches.slice();
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'workflow' });
         }
@@ -100,22 +100,22 @@ export default class AppWorkflowIndexRoute extends AppRoute {
 
             let anyOf = (type, field, values) => `(${[...values].map((value) => `(${type}.${field} : ${value})`).join(' OR ')})`;
             let ids = list.map((workflow) => workflow.id);
-            this.nodes = (await this.store.query('workflownode', { query: anyOf('Workflownode', 'workflowId', ids), limit: -1 })).toArray();
+            this.nodes = (await this.store.query('workflownode', { query: anyOf('Workflownode', 'workflowId', ids), limit: -1 })).slice();
             this.runs = (await this.store.query('workflowrun', {
                 query: anyOf('Workflowrun', 'workflowId', ids),
                 sort: 'Workflowrun.dateCreated',
                 order: 'DESC',
                 limit: -1
-            })).toArray();
+            })).slice();
 
             let agentIds = new Set(actorsOf(this.nodes).filter((actor) => actor.type === 'agent' && actor.id).map((actor) => actor.id));
             let projectIds = new Set(list.flatMap((workflow) => scopeOf(workflow.scope)));
 
             if (agentIds.size) {
-                this.agents = (await this.store.query('agent', { query: anyOf('Agent', 'id', agentIds), limit: -1 })).toArray();
+                this.agents = (await this.store.query('agent', { query: anyOf('Agent', 'id', agentIds), limit: -1 })).slice();
             }
             if (projectIds.size) {
-                this.projects = (await this.store.query('project', { query: anyOf('Project', 'id', projectIds), limit: -1 })).toArray();
+                this.projects = (await this.store.query('project', { query: anyOf('Project', 'id', projectIds), limit: -1 })).slice();
             }
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'workflow' });

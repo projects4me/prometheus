@@ -8,6 +8,7 @@ import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
+import { pushRecords } from 'prometheus/utils/array/record-list';
 /**
  * The wiki route
  *
@@ -153,10 +154,10 @@ export default App.extend({
         milestones.forEach(function (milestone) {
             let milestoneIssues = issues?.filter((item) => item.milestoneId === milestone.get('id'));
             if (milestoneIssues !== undefined) {
-                milestone.get('issues').pushObjects(milestoneIssues);
+                pushRecords(milestone.get('issues'), milestoneIssues);
             }
         });
-        controller.set('milestones', milestones.toArray());
+        controller.set('milestones', milestones.slice());
     },
 
     /**
@@ -192,7 +193,7 @@ export default App.extend({
          */
         willTransition() {
             this.controller?.milestones?.forEach((milestone) => {
-                let issues = milestone.issues.toArray();
+                let issues = milestone.issues.slice();
                 issues.forEach((issue) => {
                     issue.unloadRecord();
                 });

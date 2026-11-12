@@ -2,6 +2,7 @@ import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import EmberObject from "@ember/object";
 import { installFakeHermes, emitDomainEvent } from "../../../../helpers/hermes-fake";
+import { recordArray } from '../../../../helpers/record-array';
 
 module("Unit | Controller | app/project/idea live events", function (hooks) {
   setupTest(hooks);
@@ -26,7 +27,7 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
       },
       query(type) {
         calls.push(["query", type]);
-        return Promise.resolve({ toArray: () => [] });
+        return Promise.resolve(recordArray([]));
       },
     };
   }
@@ -91,7 +92,7 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
     let store = {
       query(type, options) {
         requests.push([type, options]);
-        return Promise.resolve({ toArray: () => [], length: 0 });
+        return Promise.resolve(recordArray([]));
       },
     };
     browser.store = store;
@@ -248,7 +249,7 @@ module("Unit | Controller | app/project/idea live events", function (hooks) {
   test("the next page comes from meta.links.next, never from a total", async function (assert) {
     let browser = this.owner.lookup("controller:app.project.idea");
     browser.loadPlans = async () => [];
-    let page = (ids, meta) => ({ meta, toArray: () => ids.map((id) => EmberObject.create({ id, status: "open" })) });
+    let page = (ids, meta) => recordArray(ids.map((id) => EmberObject.create({ id, status: "open" })), meta);
 
     await browser.showFirstPage({ page: 1 }, { records: page(["i1"], { links: { next: { href: "/idea?page=2" } } }) }, 2);
     assert.true(browser.hasNext);

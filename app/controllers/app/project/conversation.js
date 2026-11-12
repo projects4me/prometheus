@@ -17,6 +17,8 @@ import ListLoader from 'prometheus/utils/state/list-loader';
 import ThreadCounts from 'prometheus/utils/conversation/thread-counts';
 import { fetchRoomCounts } from 'prometheus/utils/conversation/room-counts';
 import { BROWSER_PARAMS } from 'prometheus/utils/conversation/browser-defaults';
+import { addRecord, removeRecord } from 'prometheus/utils/array/record-list';
+import { toArray } from 'prometheus/utils/array/to-array';
 import {
     buildConversationListRequest, buildSortOptions, buildGroupOptions, arrangeConversations
 } from 'prometheus/utils/conversation/list-options';
@@ -401,9 +403,9 @@ export default class AppProjectConversationController extends ProjectRelated.ext
                 });
 
                 if(_self.selectedConversation?.id === conversationId) {
-                    _self.selectedConversation.votes.addObject(data);
+                    addRecord(_self.selectedConversation.votes, data);
                 } else {
-                    _self.listedConversations.find((conversation) => conversation.id === conversationId).votes.addObject(data);
+                    addRecord(_self.listedConversations.find((conversation) => conversation.id === conversationId).votes, data);
                 }
             }
         } catch(error) {
@@ -445,7 +447,7 @@ export default class AppProjectConversationController extends ProjectRelated.ext
                 ? _self.selectedConversation
                 : _self.listedConversations.find((c) => c.id === conversationId);
             if (conversation && conversation.votes) {
-                conversation.votes.removeObject(voteRecord);
+                removeRecord(conversation.votes, voteRecord);
             }
         } catch (error) {
             messenger.update({
@@ -471,7 +473,7 @@ export default class AppProjectConversationController extends ProjectRelated.ext
             : this.listedConversations.find((c) => c.id === conversationId);
         if (!conversation || !conversation.votes) return;
 
-        let userVote = conversation.votes.find((v) => v.createdUser === this.currentUser.user.id);
+        let userVote = toArray(conversation.votes).find((v) => v.createdUser === this.currentUser.user.id);
         if (userVote) {
             await this.removeVote(conversationId, userVote);
         } else {

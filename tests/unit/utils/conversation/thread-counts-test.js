@@ -5,6 +5,7 @@
 import { module, test } from 'qunit';
 import ThreadCounts from 'prometheus/utils/conversation/thread-counts';
 import { fetchRoomCounts } from 'prometheus/utils/conversation/room-counts';
+import { recordArray } from '../../../helpers/record-array';
 
 const counts = (commentCount, agreeCount = 0, disagreeCount = 0) => ({ commentCount, agreeCount, disagreeCount });
 
@@ -14,7 +15,7 @@ module('Unit | Utility | conversation/thread-counts', function () {
 		let store = {
 			query: async (model, params) => {
 				requests.push([model, params]);
-				return { toArray: () => [{ id: 'a', commentCount: '2', agreeCount: 1, disagreeCount: null }] };
+				return recordArray([{ id: 'a', commentCount: '2', agreeCount: 1, disagreeCount: null }]);
 			}
 		};
 		let result = await fetchRoomCounts(store, ['a', 'b']);

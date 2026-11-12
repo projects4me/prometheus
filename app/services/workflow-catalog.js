@@ -58,7 +58,7 @@ export default class WorkflowCatalogService extends Service {
     async _loadEvents() {
         try {
             let events = await this.store.findAll('workflowevent');
-            return events.toArray();
+            return events.slice();
         } catch (error) {
             Logger.debug('WorkflowCatalogService: the trigger catalog could not be read', error);
             return null;
@@ -78,7 +78,7 @@ export default class WorkflowCatalogService extends Service {
                 rels: 'user',
                 limit: -1
             });
-            return agents.toArray();
+            return agents.slice();
         } catch (error) {
             Logger.debug('WorkflowCatalogService: the agents could not be read', error);
             return [];

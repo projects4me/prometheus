@@ -97,7 +97,7 @@ export default class ThreadVotes {
             });
             if (this.isStale(roomId)) return;
             // Votes cast while loading are kept
-            let loaded = result.toArray().map((comment) => ThreadVotes.toVote(comment));
+            let loaded = result.slice().map((comment) => ThreadVotes.toVote(comment));
             let known = new Set(loaded.map((vote) => vote.id));
             this.records = [...loaded, ...this.records.filter((vote) => !known.has(vote.id))];
         } catch (error) {

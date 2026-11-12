@@ -2,6 +2,7 @@
  * Helpers for live list and hasMany patches.
  */
 import { notifyPropertyChange } from '@ember/object';
+import { isPromiseManyArray } from 'prometheus/utils/array/to-array';
 
 /**
  * Return a peeked record, or push a stub from changed attrs when creating.
@@ -32,79 +33,70 @@ export function peekOrPush(store, modelName, id, attributes) {
 }
 
 /**
+ * The array behind a list: the list itself, or the loaded ManyArray of an async hasMany's PromiseManyArray.
+ * Ember Data 4.12 deprecates the Ember Array methods on its arrays (gone in 5.0), so lists change natively.
+ *
+ * @method items
+ * @param {Object} list An array, a record array or a PromiseManyArray
+ * @return {Array|undefined} The array, undefined when there is none
+ * @private
+ */
+function items(list) {
+    let target = isPromiseManyArray(list) ? list.content : list;
+    return Array.isArray(target) ? target : undefined;
+}
+
+/**
  * Insert a record at index when no item with the same id is present.
  *
  * @method insertAtIfMissing
- * @param {Object} list MutableArray or array-like with insertAt/find
+ * @param {Object} list An array, a record array or a PromiseManyArray
  * @param {Object} record Record to insert
  * @param {Number} index Target index
- * @returns {Boolean} True when the record was inserted
+ * @return {Boolean} True when the record was inserted
  * @public
  */
 export function insertAtIfMissing(list, record, index) {
-    if (!list || !record) {
+    let target = items(list);
+    if (!target || !record || target.find((item) => item.id === record.id)) {
         return false;
     }
-    if (typeof list.find === 'function' && list.find((item) => item.id === record.id)) {
-        return false;
-    }
-    if (typeof list.insertAt === 'function') {
-        list.insertAt(index, record);
-        return true;
-    }
-    if (Array.isArray(list)) {
-        list.splice(index, 0, record);
-        notifyPropertyChange(list, '[]');
-        return true;
-    }
-    return false;
+    target.splice(index, 0, record);
+    notifyPropertyChange(target, '[]');
+    return true;
 }
 
 /**
- * Append a record to a hasMany / MutableArray if it is not already there.
+ * Append a record to a list if it is not already there.
  *
  * @method pushIfMissing
- * @param {Object} list hasMany or MutableArray
+ * @param {Object} list An array, a record array or a PromiseManyArray
  * @param {Object} record Record to append
- * @returns {void}
  * @public
  */
 export function pushIfMissing(list, record) {
-    if (!list || !record) {
+    let target = items(list);
+    if (!target || !record || target.includes(record) || target.find((item) => item.id === record.id)) {
         return;
     }
-    if (typeof list.includes === 'function' && list.includes(record)) {
-        return;
-    }
-    if (typeof list.find === 'function' && list.find((item) => item.id === record.id)) {
-        return;
-    }
-    if (typeof list.pushObject === 'function') {
-        list.pushObject(record);
-    } else if (Array.isArray(list)) {
-        list.push(record);
-        notifyPropertyChange(list, '[]');
-    }
+    target.push(record);
+    notifyPropertyChange(target, '[]');
 }
 
 /**
- * Remove a record by id from a hasMany / MutableArray.
+ * Remove a record by id from a list.
  *
  * @method removeById
- * @param {Object} list hasMany or MutableArray
+ * @param {Object} list An array, a record array or a PromiseManyArray
  * @param {String} id Record id to remove
- * @returns {void}
  * @public
  */
 export function removeById(list, id) {
-    if (!list || !id) {
-        return;
-    }
-    let record = typeof list.find === 'function' ? list.find((item) => item.id === id) : null;
-    if (record && typeof list.removeObject === 'function') {
-        list.removeObject(record);
-    } else if (record && Array.isArray(list)) {
-        list.splice(list.indexOf(record), 1);
-        notifyPropertyChange(list, '[]');
+    let target = items(list);
+    let index = target && id ? target.findIndex((item) => item.id === id) : -1;
+    if (index > -1) {
+        target.splice(index, 1);
+        notifyPropertyChange(target, '[]');
     }
 }
+

@@ -35,7 +35,7 @@ export default class WorkflowRunsService extends Service {
             order: 'DESC',
             limit: 20
         });
-        return runs.toArray();
+        return runs.slice();
     }
 
     /**
@@ -53,7 +53,7 @@ export default class WorkflowRunsService extends Service {
             order: 'ASC',
             limit: -1
         });
-        return normalizeSteps(steps.toArray().map(step => step.getProperties(
+        return normalizeSteps(steps.slice().map(step => step.getProperties(
             'sequence', 'nodeId', 'category', 'kind', 'status', 'port', 'inputs', 'outputs', 'error'
         )));
     }

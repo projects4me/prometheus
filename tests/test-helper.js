@@ -1,6 +1,9 @@
 // must stay first: ember-qunit reads @ember/test/adapter when it loads
 import './helpers/ember-testing-adapter';
 import './helpers/test-helpers-legacy-paths';
+// ember-data 4.12's RequestManager loads @ember/test-waiters with importSync (a runtime require) in test builds.
+// Importing it here makes ember-auto-import register the module with the loader.
+import '@ember/test-waiters';
 import Application from 'prometheus/app';
 import config from 'prometheus/config/environment';
 import * as QUnit from 'qunit';

@@ -8,6 +8,7 @@ import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import Logger from 'js-logger';
 import { fetchMilestoneOverviewsBulk } from 'prometheus/utils/milestone-overview-api';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * Normalizes milestone data from args, RecordArray, or plain array into a plain array.
@@ -19,10 +20,7 @@ function toMilestoneArray(data) {
 	if (!data) {
 		return [];
 	}
-	if (typeof data.toArray === 'function') {
-		return data.toArray();
-	}
-	return Array.isArray(data) ? data : [];
+	return toArray(data);
 }
 
 /**
@@ -160,11 +158,11 @@ export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 		let milestones = await this.store.query('milestone', milestoneOptions);
 		this.filteredData = [
 			...toMilestoneArray(this.filteredData),
-			...milestones.toArray()
+			...milestones.slice()
 		];
 		this.originalData = [
 			...toMilestoneArray(this.originalData),
-			...milestones.toArray()
+			...milestones.slice()
 		];
 		await this.fetchMilestoneOverviews(milestones, { merge: true });
 		return {

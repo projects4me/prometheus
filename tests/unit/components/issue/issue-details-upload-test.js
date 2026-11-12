@@ -52,7 +52,7 @@ module('Unit | Component | issue/issue-details upload queue', function (hooks) {
         }
         assert.ok(tracker.maxInFlight <= 3, 'never more than 3 in flight');
         assert.deepEqual(tracker.finished.slice().sort(), names, 'every file finished');
-        assert.strictEqual(files.pushed.length, 5, 'every file was added to the issue');
+        assert.strictEqual(files.length, 5, 'every file was added to the issue');
     });
 
     test('it rejects a file over the size limit without uploading it', async function (assert) {
@@ -63,7 +63,7 @@ module('Unit | Component | issue/issue-details upload queue', function (hooks) {
         await new Promise((resolve) => setTimeout(resolve, 0));
 
         assert.deepEqual(tracker.started, [], 'no upload request was started');
-        assert.strictEqual(files.pushed.length, 0, 'nothing was added to the issue');
+        assert.strictEqual(files.length, 0, 'nothing was added to the issue');
         assert.strictEqual(toasts.length, 1, 'the user was told');
         assert.strictEqual(toasts[0].type, 'error');
     });

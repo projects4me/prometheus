@@ -82,7 +82,7 @@ export default class AppWorkflowPageRoute extends App {
             order: 'ASC',
             limit: -1
         });
-        return projects.toArray();
+        return projects.slice();
     }
 
     /**

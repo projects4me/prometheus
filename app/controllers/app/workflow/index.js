@@ -55,7 +55,7 @@ export default class AppWorkflowIndexController extends PrometheusListController
      */
     get rows() {
         let now = Date.now();
-        return (this.model ? this.model.toArray() : []).map((workflow) => {
+        return (this.model ? this.model.slice() : []).map((workflow) => {
             let nodes = this.nodes.filter((node) => String(node.workflowId) === String(workflow.id));
             let runs = this.runs.filter((run) => String(run.workflowId) === String(workflow.id));
 

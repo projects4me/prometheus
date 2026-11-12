@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import ThreadComments from "prometheus/utils/state/thread-comments";
+import { recordArray } from '../../../helpers/record-array';
 
 module("Unit | Utility | state/thread-comments", function () {
   function comment(id, dateCreated) {
@@ -16,7 +17,7 @@ module("Unit | Utility | state/thread-comments", function () {
         if (response instanceof Error) {
           return Promise.reject(response);
         }
-        return Promise.resolve({ toArray: () => response, meta: { links: requests.length < responses.length ? { next: {} } : {} } });
+        return Promise.resolve(recordArray(response, { links: requests.length < responses.length ? { next: {} } : {} }));
       },
     };
   }
@@ -94,10 +95,10 @@ module("Unit | Utility | state/thread-comments", function () {
         this.calls++;
         if (this.calls === 1) {
           return new Promise((resolve) => {
-            release = () => resolve({ toArray: () => [comment("a1", "2026-01-01 10:00:01")], meta: { links: {} } });
+            release = () => resolve(recordArray([comment("a1", "2026-01-01 10:00:01")], { links: {} }));
           });
         }
-        return Promise.resolve({ toArray: () => [comment("b1", "2026-01-01 10:00:01")], meta: { links: {} } });
+        return Promise.resolve(recordArray([comment("b1", "2026-01-01 10:00:01")], { links: {} }));
       },
     };
     let loader = new ThreadComments({ store, pageSize: 2 });

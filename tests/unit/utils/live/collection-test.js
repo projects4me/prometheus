@@ -3,47 +3,38 @@ import { peekOrPush, pushIfMissing, removeById, insertAtIfMissing } from "promet
 
 module("Unit | Utility | live/collection", function () {
   test("insertAtIfMissing is idempotent by record id", function (assert) {
-    let list = {
-      items: [],
-      find(callback) {
-        return this.items.find(callback);
-      },
-      insertAt(index, record) {
-        this.items.splice(index, 0, record);
-      },
-    };
+    let list = [{ id: "m0" }];
     let record = { id: "m1" };
 
     assert.true(insertAtIfMissing(list, record, 0));
     assert.false(insertAtIfMissing(list, record, 0));
-    assert.strictEqual(list.items.length, 1);
-    assert.strictEqual(list.items[0].id, "m1");
+    assert.strictEqual(list.length, 2);
+    assert.strictEqual(list[0].id, "m1");
+  });
+
+  test("the helpers change the loaded ManyArray of an async hasMany", function (assert) {
+    let content = [];
+    let relation = { content, isFulfilled: true, then() {} };
+    let record = { id: "c1" };
+
+    pushIfMissing(relation, record);
+    assert.deepEqual(content, [record]);
+    assert.false(insertAtIfMissing(relation, { id: "c1" }, 0));
+
+    removeById(relation, "c1");
+    assert.strictEqual(content.length, 0);
   });
 
   test("pushIfMissing is idempotent and removeById removes the record", function (assert) {
-    let list = {
-      items: [],
-      includes(record) {
-        return this.items.includes(record);
-      },
-      find(callback) {
-        return this.items.find(callback);
-      },
-      pushObject(record) {
-        this.items.push(record);
-      },
-      removeObject(record) {
-        this.items = this.items.filter((item) => item !== record);
-      },
-    };
+    let list = [];
     let record = { id: "c1" };
 
     pushIfMissing(list, record);
     pushIfMissing(list, record);
-    assert.strictEqual(list.items.length, 1);
+    assert.strictEqual(list.length, 1);
 
     removeById(list, "c1");
-    assert.strictEqual(list.items.length, 0);
+    assert.strictEqual(list.length, 0);
   });
 
   test("peekOrPush patches an existing record", function (assert) {

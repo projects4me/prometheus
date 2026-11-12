@@ -1,6 +1,7 @@
 import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import AppComponent from 'prometheus/components/app';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * Shows an issue's assignee and lets the user pick another project member.
@@ -23,7 +24,7 @@ export default class IssueAssigneeSelectComponent extends AppComponent {
             return [];
         }
 
-        return this.args.members.filter(member =>
+        return toArray(this.args.members).filter(member =>
             member.get('id') !== this.args.issue.assignedTo?.get('id') &&
             member.get('accountStatus') === 'active'
         );

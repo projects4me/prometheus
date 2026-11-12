@@ -168,7 +168,7 @@ export default App.extend({
         const milestones = await this.store.query('milestone', milestoneOptions).catch(error =>
             _self.errorManager.handleError(error, { moduleName: "milestone" })
         );
-        _self.set('milestones', milestones?.toArray() || []);
+        _self.set('milestones', milestones?.slice() || []);
     },
 
     /**

@@ -4,13 +4,14 @@
 
 import { helper } from '@ember/component/helper';
 import { get } from '@ember/object';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /** {{find-by 'path' value array}}: first item whose path equals value; works on plain arrays, record arrays and proxies. */
 export function findBy([path, value, array]) {
 	if (!array) {
 		return undefined;
 	}
-	const list = typeof array.toArray === 'function' ? array.toArray() : Array.from(array);
+	const list = toArray(array);
 	return list.find((item) => get(item, path) === value);
 }
 

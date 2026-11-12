@@ -3,6 +3,7 @@
  */
 
 import App from 'prometheus/routes/app';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * The roles index, shown while no role is open: it opens the first listed role in place of itself, so Back does not
@@ -28,7 +29,7 @@ export default class AppRoleIndexRoute extends App {
             first = browser.isListLoading ? null : browser.roles[0];
         } else {
             let records = this.modelFor('app.role')?.firstPage?.records;
-            first = records ? (records.toArray?.() ?? [...records])[0] : null;
+            first = records ? toArray(records)[0] : null;
         }
         if (first) {
             this.router.replaceWith('app.role.page', first.id);

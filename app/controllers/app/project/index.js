@@ -12,6 +12,8 @@ import $ from "jquery";
 import { htmlSafe } from "@ember/template";
 import { A } from '@ember/array';
 import * as dates from 'prometheus/utils/date';
+import { pushRecords } from 'prometheus/utils/array/record-list';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * This is the index page of the project, index page for the project is
@@ -420,7 +422,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
         if (!issues) {
             return false;
         }
-        let len = typeof issues.get === 'function' ? issues.get('length') : issues.length;
+        let len = issues.length;
         return len > 0;
     }
 
@@ -510,8 +512,8 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
                     });
 
                     let data = await membership.save();
-                    _self.model.memberships.pushObject(data);
-                    _self.model.members.pushObject(user);
+                    pushRecords(_self.model.memberships, [data]);
+                    pushRecords(_self.model.members, [user]);
 
                     new Messenger().post({
                         message: htmlSafe(_self.intl.t("views.app.project.detail.membership.added", { user: user.get('name') })),
@@ -727,8 +729,8 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
                             }
                         });
             
-                        this.model.memberships = this.model.memberships.filter((membership) => membership.userId !== this.selectedUser.id);
-                        this.model.members = this.model.members.filter((member) => member.id !== this.selectedUser.id);
+                        this.model.memberships = toArray(this.model.memberships).filter((membership) => membership.userId !== this.selectedUser.id);
+                        this.model.members = toArray(this.model.members).filter((member) => member.id !== this.selectedUser.id);
                         this.removeDeleteMemberModal();
             
                         new Messenger().post({

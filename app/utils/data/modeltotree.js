@@ -1,7 +1,7 @@
 /*
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
-import { objectAt } from 'prometheus/utils/array/object-at';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * This utility class is used to convert model objects to tree
@@ -26,20 +26,18 @@ export default {
         Logger.debug('The model received is');
         Logger.debug(model);
 
-        let length = model.get('length');
-        let node = null;
         let temp = {};
 
         // Convert the model to flat object
-        for (let i=0;i<length;i++)
-        {
-            node = objectAt(model, i);
-            temp[node.get('id')] = {id:node.get('id'),name:node.get('name')};
-            if (!(node.get('parentId') === '' || node.get('parentId') === undefined || node.get('parentId') === null))
+        toArray(model).forEach((node) => {
+            let id = node.id;
+            let parentId = node.parentId;
+            temp[id] = {id: id, name: node.name};
+            if (!(parentId === '' || parentId === undefined || parentId === null))
             {
-                temp[node.get('id')]['parentId'] = node.get('parentId');
+                temp[id]['parentId'] = parentId;
             }
-        }
+        });
 
         // un-flatten the object to get nodes
         tree = this.unflatten(temp);

@@ -7,6 +7,8 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { postToast } from 'prometheus/utils/ui/post-toast';
+import { pushRecords } from 'prometheus/utils/array/record-list';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * Base class for user profile sections that add, validate, save, and remove
@@ -371,8 +373,8 @@ export default class UserProfileBaseInlineSectionComponent extends Component {
 
 		this.draft.set('user', user);
 
-		if (!collection.includes(this.draft)) {
-			collection.pushObject(this.draft);
+		if (!toArray(collection).includes(this.draft)) {
+			pushRecords(collection, [this.draft]);
 		}
 	}
 

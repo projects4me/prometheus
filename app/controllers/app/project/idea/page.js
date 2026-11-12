@@ -225,7 +225,7 @@ export default class AppProjectIdeaPageController extends Controller {
                 limit: -1
             });
             if (this.model?.id === idea.id && sequence === this.loadSequence) {
-                let loaded = messages.toArray();
+                let loaded = messages.slice();
                 let appended = this.messages.filter(item => !loaded.some(message => message.id === item.id));
                 this.messages = [...loaded, ...appended];
             }
@@ -262,8 +262,8 @@ export default class AppProjectIdeaPageController extends Controller {
                 this.store.query('ideaplanissue', { query: `(Ideaplanissue.ideaId : ${idea.id})`, rels: 'issue', limit: -1 })
             ]);
             if (this.model?.id === idea.id && sequence === this.planSequence) {
-                this.plans = plans.toArray();
-                this.planIssues = links.toArray();
+                this.plans = plans.slice();
+                this.planIssues = links.slice();
             }
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'idea' });

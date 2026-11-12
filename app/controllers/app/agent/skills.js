@@ -42,9 +42,9 @@ export default class AppAgentSkillsController extends Controller {
      * @param {Object} model the skills, grants and agents
      */
     load(model) {
-        this.skills = model.skills.toArray();
-        this.grants = model.grants.toArray();
-        this.agents = model.agents.toArray();
+        this.skills = model.skills.slice();
+        this.grants = model.grants.slice();
+        this.agents = model.agents.slice();
         this.startDraft(null);
     }
 

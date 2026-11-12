@@ -48,7 +48,7 @@ export default App.extend({
         }).then(function(results){
             let data = extractHashSettled(results);
             _self.set('project',data.project);
-            _self.set('issuetypes',data.issuetypes.toArray());
+            _self.set('issuetypes',data.issuetypes.slice());
             _self.set('issueStatuses',data.issueStatuses);
         }).catch((error) => {
             _self.errorManager.handleError(error, {

@@ -11,6 +11,7 @@ import format from "prometheus/utils/data/format";
 import _ from "lodash";
 import { htmlSafe } from '@ember/template';
 import * as dates from 'prometheus/utils/date';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * This is the controller for issue create page
@@ -231,7 +232,7 @@ export default class AppProjectIssueCreateController extends ProjectRelated {
      */
     @computed('project.milestones.[]')
     get milestoneList() {
-        let milestones = (this.project?.milestones ?? []).slice().sort((a, b) => (a.dateCreated > b.dateCreated) - (a.dateCreated < b.dateCreated)).reverse();
+        let milestones = toArray(this.project?.milestones).sort((a, b) => (a.dateCreated > b.dateCreated) - (a.dateCreated < b.dateCreated)).reverse();
         let blankPlaceholder = this.intl.t('views.app.milestone.lists.type.backlog');
         return (new format(this)).getSelectList(milestones, false, {isRequired: true, placeholder: blankPlaceholder});
     }
@@ -285,7 +286,7 @@ export default class AppProjectIssueCreateController extends ProjectRelated {
      * @public
      */
     get activeMembersList() {
-        let members = this.project?.members ?? [];
+        let members = toArray(this.project?.members);
         let activeMembers = members.filter((member) => member?.accountStatus === 'active');
         return (new format(this)).getSelectList(activeMembers);
     }
@@ -336,7 +337,7 @@ export default class AppProjectIssueCreateController extends ProjectRelated {
         let agents = [];
 
         for (let option of options) {
-            let member = (this.project?.members ?? []).find((m) => m.id === option.value);
+            let member = toArray(this.project?.members).find((m) => m.id === option.value);
             if (member?.type === 'agent') {
                 agents.push({ ...option, isAgent: true, sponsorName: sponsors.get(String(option.value)) ?? null });
             } else {

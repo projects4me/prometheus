@@ -42,6 +42,6 @@ export default class AppSettingsEmailRoute extends AppRoute {
      */
     setupController(controller, model) {
         controller.set('model', model);
-        controller.loadSettings(model ? model.toArray() : []);
+        controller.loadSettings(model ? model.slice() : []);
     }
 }

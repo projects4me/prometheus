@@ -28,6 +28,6 @@ module('Unit | Controller | app/project/wiki/page upload queue', function (hooks
         }
         assert.ok(tracker.maxInFlight <= 3, 'never more than 3 in flight');
         assert.deepEqual(tracker.finished.slice().sort(), names, 'every file finished');
-        assert.strictEqual(files.pushed.length, 5, 'every file was added to the wiki page');
+        assert.strictEqual(files.length, 5, 'every file was added to the wiki page');
     });
 });

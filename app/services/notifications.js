@@ -9,6 +9,7 @@ import { action } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import groupByIssue from 'prometheus/utils/notifications/group-by-issue';
 import { peekOrPush, pushIfMissing } from 'prometheus/utils/live/collection';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * Service for managing user notifications, including Hermes live sync for
@@ -186,7 +187,7 @@ export default class NotificationsService extends Service {
 		);
 
 		return {
-			notifications: userNotifications.toArray(),
+			notifications: userNotifications.slice(),
 			meta: userNotifications.meta
 		};
 	}
@@ -213,7 +214,7 @@ export default class NotificationsService extends Service {
 		);
 
 		return {
-			notifications: unreadNotifications.toArray()
+			notifications: unreadNotifications.slice()
 		};
 	}
 
@@ -283,7 +284,7 @@ export default class NotificationsService extends Service {
 		if (!notification) return;
 
 		try {
-			const recipientRecord = notification.recipientRecords.find(
+			const recipientRecord = toArray(notification.recipientRecords).find(
 				(un) => un.userId === this.currentUser.user.id
 			);
 
@@ -382,7 +383,7 @@ export default class NotificationsService extends Service {
 
 			// Update local state - mark all loaded notifications as read
 			this.notifications.forEach((notification) => {
-				const recipientRecord = notification.recipientRecords.find(
+				const recipientRecord = toArray(notification.recipientRecords).find(
 					(un) => un.userId === this.currentUser.user.id
 				);
 
@@ -469,7 +470,7 @@ export default class NotificationsService extends Service {
 				)
 				.map((n) => ({
 					notificationId: n.id,
-					record: n.recipientRecords.find((r) => r.userId === userId)
+					record: toArray(n.recipientRecords).find((r) => r.userId === userId)
 				}))
 				.filter((t) => t.record && t.record.isRead === '0');
 
@@ -534,7 +535,7 @@ export default class NotificationsService extends Service {
 					(!only || only.includes(String(n.id)))
 			)
 			.forEach((notification) => {
-				const recipientRecord = notification.recipientRecords.find(
+				const recipientRecord = toArray(notification.recipientRecords).find(
 					(un) => un.userId === this.currentUser.user?.id
 				);
 				if (recipientRecord) {
@@ -681,7 +682,7 @@ export default class NotificationsService extends Service {
 	_handleCrossTabMessage(data) {
 		if (data.type === 'MARK_ALL_AS_READ') {
 			this.notifications.forEach((notification) => {
-				const recipientRecord = notification.recipientRecords.find(
+				const recipientRecord = toArray(notification.recipientRecords).find(
 					(un) => un.userId === this.currentUser.user?.id
 				);
 				if (recipientRecord) {
@@ -700,7 +701,7 @@ export default class NotificationsService extends Service {
 			);
 
 			if (notification) {
-				const recipientRecord = notification.recipientRecords.find(
+				const recipientRecord = toArray(notification.recipientRecords).find(
 					(un) => un.userId === this.currentUser.user?.id
 				);
 				if (recipientRecord) {

@@ -14,6 +14,7 @@ import {
 } from 'prometheus/utils/gantt-helpers';
 import { guidFor } from '@ember/object/internals';
 import * as dates from 'prometheus/utils/date';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * This component renders the main Gantt chart view with timeline and milestones/issues
@@ -623,7 +624,7 @@ export default class GanttChartComponent extends AppComponent {
 		(this.args.milestones || []).forEach((milestone) => {
 			if (milestone?.issues) {
 				issues.push(
-					...(milestone.issues.toArray?.() || milestone.issues)
+					...toArray(milestone.issues)
 				);
 			}
 		});

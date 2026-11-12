@@ -64,7 +64,7 @@ export default class AppSettingsServicesController extends Controller {
      * @public
      */
     get serviceClients() {
-        return this.model && this.model.serviceClients ? this.model.serviceClients.toArray() : [];
+        return this.model && this.model.serviceClients ? this.model.serviceClients.slice() : [];
     }
 
     /**
@@ -234,8 +234,8 @@ export default class AppSettingsServicesController extends Controller {
         this.tokenName = '';
         this.tokenKind = 'runtime';
         let model = this.model || {};
-        this.enrollments = model.enrollments ? model.enrollments.toArray() : [];
-        this.tokens = model.tokens ? model.tokens.toArray() : [];
+        this.enrollments = model.enrollments ? model.enrollments.slice() : [];
+        this.tokens = model.tokens ? model.tokens.slice() : [];
     }
 
     /**

@@ -5,6 +5,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Service from '@ember/service';
+import { recordArray } from '../../helpers/record-array';
 
 module('Unit | Service | saved-search', function (hooks) {
     setupTest(hooks);
@@ -17,7 +18,7 @@ module('Unit | Service | saved-search', function (hooks) {
             query(type, options) {
                 calls.push([type, options]);
 
-                return Promise.resolve({ toArray: () => ['a'] });
+                return Promise.resolve(recordArray(['a']));
             }
         });
         this.owner.register('service:current-user', class extends Service {

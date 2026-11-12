@@ -14,6 +14,7 @@ import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 import { htmlSafe } from '@ember/template';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
+import { pushRecords, removeRecord } from 'prometheus/utils/array/record-list';
 const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
 
 /**
@@ -530,10 +531,10 @@ export default class AppProjectBoardController extends ProjectRelated {
         }
 
         if (milestone && milestone !== targetMilestone) {
-            milestone.issues.removeObject(issue);
+            removeRecord(milestone.issues, issue);
         }
         if (!targetMilestone.issues.includes(issue)) {
-            targetMilestone.issues.pushObject(issue);
+            pushRecords(targetMilestone.issues, [issue]);
         }
 
         issue.set('status', status);
@@ -748,7 +749,7 @@ export default class AppProjectBoardController extends ProjectRelated {
         for (let milestone of this.milestones || []) {
             let issue = milestone.issues?.find((item) => item.id === issueId);
             if (issue) {
-                milestone.issues.removeObject(issue);
+                removeRecord(milestone.issues, issue);
             }
         }
     }
@@ -781,11 +782,11 @@ export default class AppProjectBoardController extends ProjectRelated {
 
         for (let milestone of this.milestones || []) {
             if (milestone !== targetMilestone && milestone.issues?.includes(issue)) {
-                milestone.issues.removeObject(issue);
+                removeRecord(milestone.issues, issue);
             }
         }
         if (!targetMilestone.issues.includes(issue)) {
-            targetMilestone.issues.pushObject(issue);
+            pushRecords(targetMilestone.issues, [issue]);
         }
 
         if (payload.actorId && payload.actorId === this.currentUser.user?.id) {
@@ -868,14 +869,9 @@ export default class AppProjectBoardController extends ProjectRelated {
         }
 
         this.milestones.forEach((milestone) => {
-            //clone milestone issue
-            let issues = _.clone(milestone.issues);
-            
-            /**
-             * clear all milestone issues in order to set new sorted issues.
-             * https://api.emberjs.com/ember/4.11/classes/MutableArray/methods/clear?anchor=clear
-             */
-            milestone.issues.clear();
+            //copy the milestone issues
+            let issues = milestone.issues.slice();
+            let sorted = [];
 
             statusList.forEach(status => {
                 //filter issues based on status
@@ -889,9 +885,11 @@ export default class AppProjectBoardController extends ProjectRelated {
                 //now sort issues of each status based on priorities
                 issuesByStatus.sort((a, b) => b.priorityNumber - a.priorityNumber);
 
-                //push new sorted issues
-                milestone.issues.pushObjects(issuesByStatus);
+                sorted.push(...issuesByStatus);
             });
+
+            //replace the milestone issues with the sorted ones
+            milestone.issues.splice(0, milestone.issues.length, ...sorted);
         });
         return this.milestones;
     }

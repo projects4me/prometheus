@@ -47,7 +47,7 @@ export default class AppSettingsIssueStatusesRoute extends AppRoute {
      */
     setupController(controller, model) {
         controller.set('model', model);
-        controller.set('issueStatuses', model ? model.toArray() : []);
+        controller.set('issueStatuses', model ? model.slice() : []);
         controller.set('editing', null);
     }
 }

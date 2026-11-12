@@ -409,7 +409,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
                 order: 'ASC',
                 limit: -1
             }).then((statuses) => {
-                this.issueStatuses = statuses.toArray();
+                this.issueStatuses = statuses.slice();
             }).finally(() => {
                 new Messenger().post({
                     message: this.intl.t('views.app.settings.issueStatuses.reorderFailed'),

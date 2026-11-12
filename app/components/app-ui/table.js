@@ -6,6 +6,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * A reusable table component that provides search, filtering, and pagination functionality.
@@ -256,7 +257,7 @@ export default class AppUiTableComponent extends Component {
 	 * @private
 	 */
 	applyFilters(data) {
-		let filteredData = data.toArray ? data.toArray() : [...data];
+		let filteredData = toArray(data);
 
 		this.activeFilters.forEach((filterName) => {
 			const filterCallback = this.filterCallbacks[filterName];

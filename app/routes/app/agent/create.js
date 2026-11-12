@@ -54,7 +54,7 @@ export default class AppAgentCreateRoute extends AppRoute {
      * @return {Array<Object>} `{ label, value }` options
      */
     toOptions(records) {
-        return records.toArray()
+        return records.slice()
             .map((record) => ({ label: record.name, value: record.id }))
             .sort((a, b) => (a.label ?? '').localeCompare(b.label ?? '', undefined, { sensitivity: 'base' }));
     }

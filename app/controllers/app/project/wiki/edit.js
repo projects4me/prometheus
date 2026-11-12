@@ -7,6 +7,7 @@ import _ from "lodash";
 import $ from 'jquery';
 import { htmlSafe } from '@ember/template';
 import { action } from '@ember/object';
+import { pushRecords } from 'prometheus/utils/array/record-list';
 
 /**
  * The controller for the wiki edit route, it is loaded when a user clicks on the
@@ -111,7 +112,7 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
                 relatedId: _self.get('model').get('id'),
                 relatedTo: "wiki"
             }).save().then(function (tagRel) {
-                _self.get('model.tagged').pushObject(tagRel);
+                pushRecords(_self.get('model.tagged'), [tagRel]);
                 new Messenger().post({
                     message: htmlSafe(_self.intl.t("views.app.wiki.tag.associated", { name: selectedTag[0].label })),
                     type: 'success',
@@ -158,7 +159,7 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
                         });
 
                         selectedTags = _.concat(selectedTags, { label: tag.get('tag'), value: tag.get('id') });
-                        _self.get('model.tagged').pushObject(tagRel);
+                        pushRecords(_self.get('model.tagged'), [tagRel]);
                         // set the values
                         _self.set('selectedTags', selectedTags);
                         _self.set('newTag', _self.get('store').createRecord('tag', {}));

@@ -4,6 +4,7 @@
  * FakeSocket helpers without opening a real Socket.IO connection.
  */
 import steps from '../steps';
+import { toArray } from 'prometheus/utils/array/to-array';
 import { settled } from '@ember/test-helpers';
 import {
 	buildDomainEvent,
@@ -284,7 +285,7 @@ export const then = function () {
 						let issue = null;
 						for (let milestone of controller.milestones || []) {
 							issue =
-								milestone.issues?.findBy?.('id', issueId) ||
+								toArray(milestone.issues).find((item) => item.id === issueId) ||
 								null;
 							if (issue) {
 								break;

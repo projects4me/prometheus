@@ -3,6 +3,7 @@
  */
 
 import steps from '../steps';
+import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
  * #UNCOMMON steps for issue-page-live-updates.feature only.
@@ -52,7 +53,7 @@ export default function (assert) {
 			assert.equal(String(pageController(this).issue.get('assignedTo.id')), id, 'Assignee follows the event');
 		})
 		.then('The open issue lists the comment $id once', async function (id) {
-			let comments = pageController(this).issue.comments.filter((comment) => comment.id === id);
+			let comments = toArray(pageController(this).issue.comments).filter((comment) => comment.id === id);
 			assert.equal(comments.length, 1, 'Comment is listed once');
 		})
 		.then('$count toasts were shown', async function (count) {

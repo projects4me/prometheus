@@ -11,6 +11,7 @@ import AdapterError from '@ember-data/adapter/error';
 import ForbiddenError from './errors/forbidden-error';
 import UnauthorizedError from './errors/unauthorized-error';
 import { logAuthEvent } from 'prometheus/utils/auth/auth-log';
+import { waitForPromise } from '@ember/test-waiters';
 
 /**
  * This is the application adapter that fetches the information from the API.
@@ -252,7 +253,24 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
      * @returns {Promise} The response from the server
      * @method ajax
      */
-    async ajax(url, type, options, isUnauthorizedRetry = false) {
+    ajax(url, type, options, isUnauthorizedRetry = false) {
+        // Ember Data 4.12 sends requests through the native fetch, which the test helpers do not wait for
+        // (ember-fetch's did); the waiter keeps settled() waiting for direct adapter.ajax calls too.
+        return waitForPromise(this._ajaxWithFreshToken(url, type, options, isUnauthorizedRetry));
+    }
+
+    /**
+     * The request behind ajax: refreshes the token first and retries once after a 401.
+     *
+     * @method _ajaxWithFreshToken
+     * @param {String} url - The URL to make the request to
+     * @param {String} type - The type of the request
+     * @param {Object} options - The options for the request
+     * @param {Boolean} isUnauthorizedRetry - Internal retry guard
+     * @returns {Promise} The response from the server
+     * @private
+     */
+    async _ajaxWithFreshToken(url, type, options, isUnauthorizedRetry) {
         if (this.session.isAuthenticated) {
             await this.session.ensureFreshToken();
         }

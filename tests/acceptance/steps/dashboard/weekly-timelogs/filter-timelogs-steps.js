@@ -11,9 +11,9 @@ export default function (assert) {
 			for (let i = 0; i < timelogs.length; i++) {
 				let contextValue = i < 10 ? 'spent' : 'est';
 				models[i].update({
-					days: 0,
+					days: '0',
 					hours: hr,
-					minutes: 0,
+					minutes: '0',
 					context: contextValue
 				});
 			}

@@ -14,8 +14,9 @@ import {
     DEFAULT_PAGE, DEFAULT_SORT, DEFAULT_ORDER, DEFAULT_GROUP, PAGE_SIZE, BROWSER_PARAMS
 } from 'prometheus/utils/role/browser-defaults';
 import { buildRoleListRequest, buildUserrolesRequest } from 'prometheus/utils/role/browser-requests';
+import { toArray } from 'prometheus/utils/array/to-array';
 import {
-    TIERS, accessTier, accessSplit, coverageByRole, membersByRole, roleInitials, toCoverageEntries, userroleRoleId
+    TIERS, accessTier, accessSplit, coverageByRole, membersByRole, roleInitials, toCoverageEntries, userroleRoleId, isUnloaded
 } from 'prometheus/utils/role/access';
 
 const SAVED_SEARCH_MESSAGES = 'views.app.issue.list.savedsearch';
@@ -613,7 +614,7 @@ export default class AppRoleController extends PrometheusCreateController {
             this.errorManager.handleError(userroles.reason, { moduleName: 'role' });
         }
         this.allPermissions = entries;
-        this.allUserroles = userroles.state === 'fulfilled' ? (userroles.value?.toArray?.() ?? [...userroles.value]) : [];
+        this.allUserroles = userroles.state === 'fulfilled' ? toArray(userroles.value) : [];
         this.detailsLoadedIds = new Set(roleIds);
     }
 
@@ -644,8 +645,9 @@ export default class AppRoleController extends PrometheusCreateController {
      */
     syncRoleMembers(roleId, userroles) {
         let id = String(roleId);
-        let retained = this.allUserroles.filter(userrole => userroleRoleId(userrole) !== id);
-        this.allUserroles = [...retained, ...(userroles?.toArray?.() ?? userroles ?? [])];
+        // a removed assignment is unloaded once its delete is saved: drop it rather than read its role
+        let retained = this.allUserroles.filter(userrole => !isUnloaded(userrole) && userroleRoleId(userrole) !== id);
+        this.allUserroles = [...retained, ...toArray(userroles)];
     }
 
     /**
