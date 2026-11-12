@@ -3,6 +3,7 @@
  */
 
 import Modifier from 'ember-modifier';
+import { registerDestructor } from '@ember/destroyable';
 
 /**
  * This modifier implements sticky status-header behaviour for the Task Board.
@@ -44,14 +45,31 @@ export default class StickyBoardHeadersModifier extends Modifier {
 	_scrollHandler = null;
 
 	/**
+	 * Removes the scroll listener when the modifier is torn down.
+	 *
+	 * @method constructor
+	 * @param {Object} owner
+	 * @param {Object} args
+	 */
+	constructor(owner, args) {
+		super(owner, args);
+		registerDestructor(this, () => this._teardown());
+	}
+
+	/**
 	 * Called when the modifier is first installed.
 	 * Resolves the navbar height dynamically (falls back to 50 px) and
 	 * attaches a passive window scroll listener.
 	 *
-	 * @method didInstall
+	 * @method modify
+	 * @param {Element} element
 	 * @public
 	 */
-	didInstall() {
+	modify(element) {
+		this.element = element;
+		if (this._scrollHandler) {
+			return;
+		}
 		const navbar = document.querySelector('.main-header');
 		if (navbar) {
 			this._navbarHeight = navbar.offsetHeight;
@@ -65,10 +83,10 @@ export default class StickyBoardHeadersModifier extends Modifier {
 	 * Called when the modifier is removed from the element.
 	 * Removes the scroll listener and resets any active transforms.
 	 *
-	 * @method willDestroy
-	 * @public
+	 * @method _teardown
+	 * @private
 	 */
-	willDestroy() {
+	_teardown() {
 		if (this._scrollHandler) {
 			window.removeEventListener('scroll', this._scrollHandler);
 		}
