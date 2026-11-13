@@ -13,13 +13,13 @@
   </a>
   <div class="global-search">
 
-    <PowerSelect
+    <AppUi::Select
       @placeholder={{t "global.form.searchPlaceholder"}}
       @searchEnabled={{true}}
       @search={{perform this.search}}
       @onChange={{this.itemSelected}} as |issue|>
       <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
-    </PowerSelect> 
+    </AppUi::Select> 
   </div>
 
   {{!-- Navbar Right Menu --}}

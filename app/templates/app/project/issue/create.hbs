@@ -197,25 +197,18 @@
           </div>
           {{!-- /.box-header --}}
           <div class="box-body no-padding" {{did-insert this.setParentIssueAsSelected}}>
-            <div class="form-field ember-view" data-field="issue.parentId">
-              <div data-form-field="label">
-                <label class="floating-label">{{t "views.app.issue.create.parentId"}}</label>
-              </div>
-              <PowerSelect
-                @placeholder={{t "views.app.issue.create.selectparent"}}
-                @searchEnabled={{true}}
-                @search={{perform this.parentIssueSearch}}
-                @selected={{this.selectedParentIssue}}
-                @onChange={{this.setParentIssue}}
-                @allowClear={{true}}
-                as |issue|
-              >
-                <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
-              </PowerSelect>
-              {{#if this.message.issueCreate.parentId}}
-                <span class="help-block text-danger">{{this.message.issueCreate.parentId}}</span>
-              {{/if}}
-            </div>
+            <FormFields::FieldRelate
+              @placeholder={{t "views.app.issue.create.selectparent"}}
+              @label={{t "views.app.issue.create.parentId"}}
+              @search={{perform this.parentIssueSearch}}
+              @searchEnabled={{true}}
+              @selected={{this.selectedParentIssue}}
+              @onchange={{this.setParentIssue}}
+              @allowClear={{true}}
+              @relateType="relate-issue"
+              @data-field="issue.parentId"
+              @message={{this.message.issueCreate.parentId}}
+            />
           </div>
         </div>
       </AccessControl>

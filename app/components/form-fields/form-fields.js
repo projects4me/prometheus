@@ -339,13 +339,13 @@ export default class FormFieldsComponent extends Component {
     }
 
     /**
-     * Handles keydown events for power select component.
+     * Handles keydown events for the AppUi::Select of the field.
      * 
-     * @method handlePowerSelectKeydown
-     * @param {Object} select - The power select component instance.
+     * @method handleSelectKeydown
+     * @param {Object} select - The select API (from AppUi::Select).
      * @param {Event} e - The keydown event object.
      */
-    @action handlePowerSelectKeydown(select, e) {
+    @action handleSelectKeydown(select, e) {
         this.args.onKeydown && this.args.onKeydown(select, e);
         if(e.keyCode === 27) {
             e.stopPropagation();

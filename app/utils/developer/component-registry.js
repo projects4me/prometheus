@@ -68,6 +68,21 @@ export const ENTRIES = [
         variants: 10
     },
     {
+        name: 'select',
+        label: 'Select',
+        group: 'Forms',
+        status: 'stable',
+        summary: 'AppUi::Select, the single and multiple searchable select every relate field, the header search and the project switcher render.',
+        usedIn: [
+            { label: 'Global search' },
+            { label: 'Sidebar project switcher' },
+            { label: 'Form fields relate and multi-select' }
+        ],
+        demo: 'developer/demos/select',
+        doc: 'select.md',
+        variants: ['Single', 'Multiple']
+    },
+    {
         name: 'modal',
         label: 'Modal',
         group: 'Overlays',
