@@ -13,9 +13,12 @@ service:
 
 ingress:
   enabled: true
-  host: devv.projects4.me
+  host: prom.projects4.me
   path: /
   pathType: Prefix
   port: 80
+  tls:
+    enabled: true
+    issuer: letsencrypt
 
 resources: {}
