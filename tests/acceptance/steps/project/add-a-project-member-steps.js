@@ -1,5 +1,5 @@
 import steps from '../steps';
-import { selectChoose } from 'ember-power-select/test-support/helpers';
+import { selectChoose } from 'ember-power-select/test-support';
 import { click } from '@ember/test-helpers';
 
 export const given = function () {

@@ -1,5 +1,5 @@
 /**
- * Test helpers for the handleUpload ember-concurrency tasks (issue attachments, wiki attachments).
+ * Test helpers for the handleUpload ember-concurrency tasks (issue attachment queue, wiki attachments).
  * A fake file's upload() stays pending until the test finishes it, so the test can see how many
  * uploads are in flight at once.
  */

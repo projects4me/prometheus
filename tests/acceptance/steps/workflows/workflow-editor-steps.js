@@ -1,7 +1,7 @@
 /* global server */
 import { click, currentURL, fillIn, find, findAll, triggerEvent } from '@ember/test-helpers';
 import { Response } from 'miragejs';
-import { selectChoose } from 'ember-power-select/test-support/helpers';
+import { selectChoose } from 'ember-power-select/test-support';
 import steps from '../steps';
 
 const CONFIG = name => `[data-field="workflownode.config.${name}"]`;

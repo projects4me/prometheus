@@ -15,7 +15,7 @@ module.exports = function(environment) {
         modulePrefix: 'prometheus',
         environment: environment,
         rootURL: '/',
-        locationType: 'auto',
+        locationType: 'history',
         api: {
             version: '1',
             clientId: 'projects4me',

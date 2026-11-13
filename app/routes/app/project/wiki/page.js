@@ -80,7 +80,7 @@ export default App.extend({
         controller.set('model', model);
         if (this.model !== undefined) {
             let tags = model.get('tag');
-            let tagCount = tags.get('length');
+            let tagCount = tags.length;
             let selectedTags = [];
             for (let i = 0; i < tagCount; i++) {
                 selectedTags[i] = { label: objectAt(tags, i).get('tag'), value: objectAt(tags, i).get('id') };

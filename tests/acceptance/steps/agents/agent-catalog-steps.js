@@ -1,6 +1,6 @@
 /* global server */
 import { visit, click, fillIn, settled } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support/helpers';
+import { selectChoose } from 'ember-power-select/test-support';
 import steps from '../steps';
 import agentFixtureSteps from './agent-fixtures';
 

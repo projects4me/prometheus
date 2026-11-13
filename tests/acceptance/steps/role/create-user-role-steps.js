@@ -1,6 +1,7 @@
 import steps from '../steps';
 import { click } from '@ember/test-helpers';
-import { clickTrigger, selectChoose } from 'ember-power-select/test-support/helpers';
+import { selectChoose } from 'ember-power-select/test-support';
+import { clickTrigger } from 'ember-power-select/test-support/helpers';
 
 export default function (assert) {
     return steps(assert)

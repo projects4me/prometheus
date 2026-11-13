@@ -1,5 +1,5 @@
 import { click, fillIn, settled, waitUntil } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support/helpers';
+import { selectChoose } from 'ember-power-select/test-support';
 import Sortable from 'sortablejs';
 import steps from '../steps';
 import { translationsUrl } from 'prometheus/mirage/route-handlers/translation';

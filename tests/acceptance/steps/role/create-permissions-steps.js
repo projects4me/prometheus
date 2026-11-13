@@ -1,6 +1,6 @@
 import steps from '../steps';
 import { click, settled } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support/helpers';
+import { selectChoose } from 'ember-power-select/test-support';
 import $ from 'jquery';
 
 const ACTION_LABELS = { '1': 'Allow', '0': 'None' };

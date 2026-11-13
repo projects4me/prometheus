@@ -7,6 +7,7 @@ import Component from '@ember/component';
 import { inject } from '@ember/service';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
+import { toArray } from 'prometheus/utils/array/to-array';
 /**
  * This component is used to render the issue ratio chart in the application
  *
@@ -144,7 +145,7 @@ export default Component.extend({
                 }
             ]};
 
-        let issuesCount = issues.get('length');
+        let issuesCount = issues.length;
         let estimated = null;
         let spent = null;
         let estimatedHours = 0;
@@ -154,8 +155,8 @@ export default Component.extend({
         for (let i=0; i<issuesCount;i++)
         {
             issue = objectAt(issues, i);
-            estimated = issue.get('estimated');
-            spent = issue.get('spent');
+            estimated = toArray(issue.get('estimated'));
+            spent = toArray(issue.get('spent'));
             estimatedHours = 0;
             if (estimated !== undefined)
             {
