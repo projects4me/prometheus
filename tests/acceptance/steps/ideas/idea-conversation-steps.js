@@ -45,7 +45,7 @@ export const when = function () {
         {
             "User archives the idea": (assert) => async function () {
                 await click('[data-idea-archive]');
-                await click('.modal .btn-primary');
+                await click('dialog.app-modal [data-btn="save"]');
                 assert.ok(true, 'User archives the idea');
             }
         }

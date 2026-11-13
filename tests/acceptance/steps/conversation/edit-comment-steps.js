@@ -28,9 +28,9 @@ export default function (assert) {
             await click('[data-btn="edit"]');
         })
         .when('User updates comment having description $commentDescription', async function (commentDescription) {
-            let contentEditableDiv = document.querySelector('.modal .edit-comment-form div.tui-editor-contents[contenteditable="true"]');
+            let contentEditableDiv = document.querySelector('dialog.app-modal .edit-comment-form div.tui-editor-contents[contenteditable="true"]');
             if (!contentEditableDiv) {
-                contentEditableDiv = document.querySelector('.modal div.tui-editor-contents[contenteditable="true"]');
+                contentEditableDiv = document.querySelector('dialog.app-modal div.tui-editor-contents[contenteditable="true"]');
             }
             await fillIn(contentEditableDiv, commentDescription);
             assert.ok(true, "User updates comment description");

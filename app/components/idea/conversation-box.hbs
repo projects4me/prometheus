@@ -45,17 +45,17 @@
   </div>
 
   {{#if this.showArchiveModal}}
-    {{#bootstrap-modal
-      title=(if this.isArchived "views.app.idea.conversation.unarchiveTitle" "views.app.idea.conversation.archiveTitle")
-      closeLabel="global.form.cancel"
-      confirmLabel=(if this.isArchived "views.app.idea.conversation.unarchive" "views.app.idea.conversation.archive")
-      close=this.closeArchive
-      confirm=this.confirmArchive
-    }}
+    <AppUi::Modal
+      @title={{if this.isArchived "views.app.idea.conversation.unarchiveTitle" "views.app.idea.conversation.archiveTitle"}}
+      @closeLabel="global.form.cancel"
+      @confirmLabel={{if this.isArchived "views.app.idea.conversation.unarchive" "views.app.idea.conversation.archive"}}
+      @onClose={{this.closeArchive}}
+      @confirm={{this.confirmArchive}}
+    >
       <div class="alert alert-warning flex-row flex-ai-c" data-idea-archive-confirm>
         <i class="fa fa-exclamation-triangle"></i>
         <p>{{t (if this.isArchived "views.app.idea.conversation.unarchiveMessage" "views.app.idea.conversation.archiveMessage")}}</p>
       </div>
-    {{/bootstrap-modal}}
+    </AppUi::Modal>
   {{/if}}
 </div>

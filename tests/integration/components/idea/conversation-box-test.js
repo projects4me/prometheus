@@ -35,11 +35,11 @@ module('Integration | Component | idea/conversation-box', function (hooks) {
         await click('[data-idea-archive]');
         assert.dom('[data-idea-archive-confirm]').exists();
 
-        await click('.modal .btn-primary');
+        await click('dialog.app-modal [data-btn="save"]');
         await waitUntil(() => !document.querySelector('[data-idea-archive-confirm]'), { timeout: 2000 });
 
         assert.strictEqual(toggled, 1);
-        assert.dom('.modal').doesNotExist('closed through hidden.bs.modal, so the modal is removed');
+        assert.dom('dialog.app-modal').doesNotExist('the modal is removed');
     });
 
     test('a working message only shows while it is the last message', async function (assert) {

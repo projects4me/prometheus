@@ -1,10 +1,10 @@
-{{#bootstrap-modal
-  title="views.app.conversation.edit.title"
-  closeLabel="global.form.cancel"
-  confirmLabel="views.app.conversation.edit.update"
-  close=this.close
-  confirm=this.updateConversation
-}}
+<AppUi::Modal
+  @title="views.app.conversation.edit.title"
+  @closeLabel="global.form.cancel"
+  @confirmLabel="views.app.conversation.edit.update"
+  @onClose={{this.close}}
+  @confirm={{this.updateConversation}}
+>
   <div class="edit-conversation-form">
     <div class="form-group">
       <FormFields::FieldText
@@ -45,6 +45,7 @@
           @selected={{this.editedLinkedIssue}}
           @onChange={{this.setEditedLinkedIssue}}
           @allowClear={{true}}
+          @renderInPlace={{true}}
           as |issue|
         >
           <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
@@ -52,4 +53,4 @@
       </div>
     {{/if}}
   </div>
-{{/bootstrap-modal}}
+</AppUi::Modal>

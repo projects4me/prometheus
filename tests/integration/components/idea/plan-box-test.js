@@ -72,10 +72,10 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         assert.dom('[data-idea-plan-approve]').includesText('Approve v2');
         await click('[data-idea-plan-approve]');
         assert.dom('[data-idea-plan-approve-confirm]').exists();
-        await click('.modal .btn-primary');
+        await click('dialog.app-modal [data-btn="save"]');
         assert.deepEqual(approved, ['2']);
         await waitUntil(() => !document.querySelector('[data-idea-plan-approve-confirm]'), { timeout: 2000 });
-        assert.dom('.modal').doesNotExist('the approve modal closes after confirming');
+        assert.dom('dialog.app-modal').doesNotExist('the approve modal closes after confirming');
 
         this.set('plans', [{ id: '2', version: 2, status: 'created', body: body('S', 'X') }]);
         assert.dom('[data-idea-plan-approve]').doesNotExist();
@@ -89,11 +89,11 @@ module('Integration | Component | idea/plan-box', function (hooks) {
         this.set('onApprove', () => new Promise((_, r) => { reject = r; }));
         await render(hbs`<Idea::PlanBox @plans={{this.plans}} @onApprove={{this.onApprove}} />`);
         await click('[data-idea-plan-approve]');
-        await click('.modal .btn-primary');
+        await click('dialog.app-modal [data-btn="save"]');
         assert.dom('[data-idea-plan-approve]').isDisabled('Approve is disabled while saving');
         reject(new Error('no'));
         await settled();
-        assert.dom('.modal').exists('the modal stays open when the approval fails');
+        assert.dom('dialog.app-modal').exists('the modal stays open when the approval fails');
         assert.dom('[data-idea-plan-approve]').isNotDisabled('Approve is enabled again after a failure');
 
         assert.dom('[data-idea-plan-creating]').doesNotExist();

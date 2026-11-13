@@ -47,7 +47,7 @@ export const when = function () {
         {
             "User approves the plan": (assert) => async function () {
                 await click('[data-idea-plan-approve]');
-                await click('.modal .btn-primary');
+                await click('dialog.app-modal [data-btn="save"]');
                 assert.ok(true, 'User approves the plan');
             }
         }

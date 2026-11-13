@@ -3,7 +3,7 @@ import { selectChoose, selectSearch } from 'ember-power-select/test-support';
 import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
 
-const LINK_ISSUE_SELECTOR = '.modal [data-field="conversation.linkedIssue"]';
+const LINK_ISSUE_SELECTOR = 'dialog.app-modal [data-field="conversation.linkedIssue"]';
 
 export default function (assert) {
     return (
