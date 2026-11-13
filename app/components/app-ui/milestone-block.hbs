@@ -1,3 +1,5 @@
-<this.milestoneBlockToRender @milestone={{this.milestone}}>
-  {{yield}}
-</this.milestoneBlockToRender>
+{{#let (component (concat 'milestone-blocks/' this.milestoneBlockType)) as |Block|}}
+  <Block @milestone={{this.milestone}}>
+    {{yield}}
+  </Block>
+{{/let}}
