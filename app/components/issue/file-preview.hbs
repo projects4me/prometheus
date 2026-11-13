@@ -1,8 +1,8 @@
 <div class="filePreviewModal" {{did-insert this.load}} {{did-update this.load @file}}>
-  <BootstrapModal
+  <AppUi::Modal
       @title="views.app.issue.detail.file.preview"
       @closeLabel="global.form.close"
-      @close={{@onClose}}>
+      @onClose={{@onClose}}>
     {{#if this.canPreview}}
       {{#if this.loading}}
         <p class="text-center file-preview-loading"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i> {{t "views.app.issue.detail.file.loading"}}</p>
@@ -21,5 +21,5 @@
         <button type="button" class="btn btn-primary" {{on "click" this.download}}><i class="fa fa-cloud-download" aria-hidden="true"></i> {{t "views.app.issue.detail.file.download"}}</button>
       </div>
     {{/if}}
-  </BootstrapModal>
+  </AppUi::Modal>
 </div>

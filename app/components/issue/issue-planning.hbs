@@ -1,8 +1,8 @@
 {{#if @isOpen}}
-  <BootstrapModal
+  <AppUi::Modal
     @title="views.app.issue.planWithAi.modalTitle"
     @closeLabel="global.form.close"
-    @close={{@onClose}}
+    @onClose={{@onClose}}
     @confirmLabel="views.app.issue.planWithAi.modalConfirm"
     @confirm={{this.onConfirm}}
     @dataSaveBtn="create-issue-plan"
@@ -88,5 +88,5 @@
         {{/each}}
       </div>
     {{/if}}
-  </BootstrapModal>
+  </AppUi::Modal>
 {{/if}} 
