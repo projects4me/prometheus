@@ -1,0 +1,22 @@
+<dialog class={{concat "app-modal " @containerClass}} aria-labelledby={{this.titleId}} aria-busy={{if this.busy "true"}} {{this.setupDialog}} ...attributes>
+  <div class="modal-dialog">
+    <div class="modal-content box box-primary">
+      <div class="modal-header">
+        <AppUi::Button type="button" class="close" disabled={{this.busy}} aria-label={{t "global.form.close"}} @onClick={{this.requestClose}}><i class="fa fa-times" aria-hidden="true"></i></AppUi::Button>
+        <h4 class="modal-title" id={{this.titleId}}>{{t @title}}</h4>
+      </div>
+      <div class="modal-body">
+        {{yield}}
+      </div>
+      <div class="modal-footer">
+        {{#if (and @leftLabel @leftAction)}}
+          <AppUi::Button type="button" data-btn="left" @onClick={{this.onLeft}} disabled={{this.busy}} class="btn btn-default pull-left">{{t @leftLabel}}</AppUi::Button>
+        {{/if}}
+        <AppUi::Button type="button" data-btn="cancel" @onClick={{this.requestClose}} disabled={{this.busy}} class="btn btn-default">{{t @closeLabel}}</AppUi::Button>
+        {{#if (and @confirmLabel (not @removeConfirmBtn))}}
+          <AppUi::Button type="button" data-btn={{if @dataSaveBtn @dataSaveBtn "save"}} disabled={{or this.busy @disableSaveBtn}} class="btn btn-primary" @onClick={{this.onConfirm}}>{{#if this.busy}}<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> {{/if}}{{t @confirmLabel}}</AppUi::Button>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</dialog>

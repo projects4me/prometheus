@@ -80,6 +80,16 @@ export const ENTRIES = [
         doc: 'modal.md'
     },
     {
+        name: 'app-modal',
+        label: 'Modal (dialog)',
+        group: 'Overlays',
+        status: 'experimental',
+        summary: 'AppUi::Modal on the native dialog element: the replacement for bootstrap-modal, rendered in the top layer.',
+        usedIn: [],
+        demo: 'developer/demos/app-modal',
+        doc: 'app-modal.md'
+    },
+    {
         name: 'dropdown',
         label: 'Dropdown',
         group: 'Menus',
