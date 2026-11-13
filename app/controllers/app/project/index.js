@@ -690,7 +690,6 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
         if (this.isDestroyed || this.isDestroying) return;
         this.deleteMemberDialog = false;
         this.selectedNewIssuesAssignee = null;
-        $('.modal').modal('hide');
     }
 
     /**
@@ -760,7 +759,6 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     @action removeAddMemberModal() {
         if (this.isDestroyed || this.isDestroying) return;
         this.set('addMemberDialog', false);
-        $('.modal').modal('hide');
         this.selectedUsers = [];
     }
 
@@ -791,7 +789,6 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
 
         _self.send('resetNewMilestone');
         _self.set('milestoneDialog', false);
-        $('.modal').modal('hide');
     }
 
     /**

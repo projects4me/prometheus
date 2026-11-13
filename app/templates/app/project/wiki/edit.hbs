@@ -69,12 +69,12 @@
 
             <AppUi::Button type="button" class="btn btn-primary" @onClick={{this.showDialog}} @aclContext="wiki.create">{{t "views.app.wiki.tag.add"}}</AppUi::Button>
             {{#if this.addTagDialog}}
-              {{#bootstrap-modal
-                  title="views.app.wiki.tag.create"
-                  confirmLabel="global.form.save"
-                  closeLabel="global.form.cancel"
-                  confirm=this.addTag
-                  close=this.removeModal}}
+              <AppUi::Modal
+                  @title="views.app.wiki.tag.create"
+                  @confirmLabel="global.form.save"
+                  @closeLabel="global.form.cancel"
+                  @confirm={{this.addTag}}
+                  @onClose={{this.removeModal}}>
                 <div class="form-group">
                   <FormFields::FieldText
                       placeholder={{t "views.app.wiki.edit.name"}}
@@ -90,7 +90,7 @@
                       @aclContex="App.Project.Wiki.Edit.Tag.Create.Name"
                   />
                 </div>
-              {{/bootstrap-modal}}
+              </AppUi::Modal>
             {{/if}}
           </div>
         </div>

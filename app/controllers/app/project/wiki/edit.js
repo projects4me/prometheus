@@ -165,7 +165,6 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
                         _self.set('newTag', _self.get('store').createRecord('tag', {}));
 
                         // Remove the modal
-                        $('.modal').modal('hide');
                         _self.set('addTagDialog', false);
                     });
                 });
@@ -231,7 +230,6 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
     @action removeModal() {
         if (this.isDestroyed || this.isDestroying) return;
         this.set('addTagDialog', false);
-        $('.modal').modal('hide');
     }
 
 

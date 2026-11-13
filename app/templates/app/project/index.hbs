@@ -294,14 +294,15 @@
             {{/if}}              
             </ul>
             {{#if this.addMemberDialog}}
-              {{#bootstrap-modal
-                  title="views.app.project.detail.membership.add"
-                  confirmLabel="global.form.save"
-                  closeLabel="global.form.cancel"
-                  confirm=this.addMembers
-                  close=this.removeAddMemberModal}}
+              <AppUi::Modal
+                  @title="views.app.project.detail.membership.add"
+                  @confirmLabel="global.form.save"
+                  @closeLabel="global.form.cancel"
+                  @confirm={{this.addMembers}}
+                  @onClose={{this.removeAddMemberModal}}>
                   <div class="form-group">
                       <FormFields::FieldRelateMulti
+                          @renderInPlace={{true}}
                           @placeholder={{t "views.app.project.detail.membership.selectuser"}}
                           @label={{t "views.app.project.detail.membership.user"}}
                           @data-field="select-member"
@@ -314,16 +315,16 @@
                           @closeOnSelect={{false}}
                       />
                   </div>
-              {{/bootstrap-modal}}
+              </AppUi::Modal>
             {{/if}}
 
             {{#if this.deleteMemberDialog}}
-              {{#bootstrap-modal
-                  title="views.app.project.detail.membership.delete"
-                  confirmLabel="global.form.remove"
-                  closeLabel="global.form.cancel"
-                  confirm=this.deleteMember
-                  close=this.removeDeleteMemberModal}}
+              <AppUi::Modal
+                  @title="views.app.project.detail.membership.delete"
+                  @confirmLabel="global.form.remove"
+                  @closeLabel="global.form.cancel"
+                  @confirm={{this.deleteMember}}
+                  @onClose={{this.removeDeleteMemberModal}}>
                   
                   <div class="flex-row" data-remove-member-warning>
                     <i class="fa fa-exclamation-triangle"></i>
@@ -331,6 +332,7 @@
                   </div>
                   <div class="form-group">
                       <FormFields::FieldRelate
+                          @renderInPlace={{true}}
                           @label={{t "views.app.project.detail.membership.user"}}
                           @data-field="selected-member"
                           @options={{this.currentMembers}}
@@ -342,6 +344,7 @@
                           @disabled={{true}}
                       />
                       <FormFields::FieldRelate
+                          @renderInPlace={{true}}
                           @placeholder={{t "views.app.project.detail.membership.reAssignIssuesPlaceholder"}}
                           @label={{t "views.app.project.detail.membership.reAssignIssues"}}
                           @data-field="new-assignee"
@@ -357,7 +360,7 @@
                           @required={{true}}
                       />
                   </div>
-              {{/bootstrap-modal}}
+              </AppUi::Modal>
             {{/if}}                     
           </div>
           {{!-- /.box-body --}}
@@ -422,12 +425,12 @@
           </div>
 
           {{#if this.milestoneDialog}}
-            {{#bootstrap-modal
-                title="views.app.project.detail.milestone.manage"
-                closeLabel="global.form.close"
-                confirmLabel="global.form.save"
-                close=this.removeMilestoneDialog
-                confirm=this.saveMilestone}}
+            <AppUi::Modal
+                @title="views.app.project.detail.milestone.manage"
+                @closeLabel="global.form.close"
+                @confirmLabel="global.form.save"
+                @onClose={{this.removeMilestoneDialog}}
+                @confirm={{this.saveMilestone}}>
 
               <FormFields::FieldText
                   @placeholder={{t "views.app.project.detail.milestone.inputname"}}
@@ -468,6 +471,7 @@
               />
 
               <FormFields::FieldRelate
+                  @renderInPlace={{true}}
                   @placeholder={{t "views.app.project.detail.milestone.inputtype"}}
                   @label={{t "views.app.project.detail.milestone.type"}}
                   @value={{this.newMilestone.milestoneType}}
@@ -479,6 +483,7 @@
               />
 
               <FormFields::FieldRelate
+                  @renderInPlace={{true}}
                   @placeholder={{t "views.app.project.detail.milestone.inputstatus"}}
                   @label={{t "views.app.project.detail.milestone.status"}}
                   @value={{this.newMilestone.status}}
@@ -495,7 +500,7 @@
                   @value={{this.newMilestone.description}}
               />
 
-            {{/bootstrap-modal}}
+            </AppUi::Modal>
           {{/if}}
         </div>
       </AccessControl>

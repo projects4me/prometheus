@@ -259,7 +259,6 @@ export default class TaskBoardMilestonesComponent extends AppComponent {
 	@action removeAddIssueModal() {
 		if (this.isDestroyed || this.isDestroying) return;
 		this.addIssueDialog = false;
-		$('.modal').modal('hide');
 	}
 
 	/**
