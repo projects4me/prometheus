@@ -7,6 +7,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
+import { placeholderSelector, selectedItemSelector } from 'prometheus/tests/helpers/select';
 
 module('Integration | Component | field-relate', function (hooks) {
     setupRenderingTest(hooks);
@@ -105,7 +106,7 @@ module('Integration | Component | field-relate', function (hooks) {
                 />
             `);
 
-            assert.dom(`span.ember-power-select-selected-item > ${relatedField.selector}`).hasText(`${relatedField.expectedValue}`)
+            assert.dom(`${selectedItemSelector('')} > ${relatedField.selector}`).hasText(`${relatedField.expectedValue}`)
 
         });
     });
@@ -123,7 +124,7 @@ module('Integration | Component | field-relate', function (hooks) {
             />
         `);
 
-        assert.dom('span.ember-power-select-placeholder').hasText('Issue Status', 'placeholder matched');
+        assert.dom(placeholderSelector()).hasText('Issue Status', 'placeholder matched');
         assert.dom('label').hasText('Issue Status', 'label matched');
     });
 });

@@ -1,9 +1,8 @@
 /* global server */
 import { click, currentURL, fillIn, find, findAll, settled, visit } from '@ember/test-helpers';
 import { Response } from 'miragejs';
-import { removeMultipleOption, selectChoose, selectSearch } from 'ember-power-select/test-support';
-import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
+import { chooseOption, isSelectOpen, openSelect, removeSelectedOption, searchSelect, selectOptionTexts, selectedOptionTexts } from 'prometheus/tests/helpers/select';
 
 const FIELDS = { scopes: '[data-field="agent.delegationScopes"]', projects: '[data-field="agent.projects"]', roles: '[data-field="agent.roles"]' };
 
@@ -23,8 +22,8 @@ export default function (assert) {
 			assert.ok(true, 'Saving a project membership fails');
 		})
 		.when('User selects the role "$role" and the project "$project" for the agent', async function (role, project) {
-			await selectChoose('[data-field="agent.roles"]', role);
-			await selectChoose('[data-field="agent.projects"]', project);
+			await chooseOption('[data-field="agent.roles"]', role);
+			await chooseOption('[data-field="agent.projects"]', project);
 			assert.ok(true, `User selected the role ${role} and the project ${project}`);
 		})
 		.given('Projects "$items" exist', function (list) {
@@ -36,25 +35,25 @@ export default function (assert) {
 			assert.ok(true, `Roles ${list} exist`);
 		})
 		.then('The agent $field list shows "$items" in that order', async function (field, list) {
-			if (find(`${FIELDS[field]} .ember-power-select-trigger`).getAttribute('aria-expanded') !== 'true') {
-				await clickTrigger(FIELDS[field]);
+			if (!isSelectOpen(FIELDS[field])) {
+				await openSelect(FIELDS[field]);
 			}
-			assert.deepEqual(texts('.ember-power-select-option'), names(list), `The ${field} list shows ${list}`);
+			assert.deepEqual(selectOptionTexts(), names(list), `The ${field} list shows ${list}`);
 		})
 		.when('User searches "$query" in the agent $field field', async function (query, field) {
-			await selectSearch(FIELDS[field], query);
+			await searchSelect(FIELDS[field], query);
 			assert.ok(true, `User searched ${query} in the ${field} field`);
 		})
 		.when('User picks "$name" in the agent $field field', async function (name, field) {
-			await selectChoose(FIELDS[field], name);
+			await chooseOption(FIELDS[field], name);
 			assert.ok(true, `User picked ${name} in the ${field} field`);
 		})
 		.when('User removes "$name" from the agent $field field', async function (name, field) {
-			await removeMultipleOption(FIELDS[field], name);
+			await removeSelectedOption(FIELDS[field], name);
 			assert.ok(true, `User removed ${name} from the ${field} field`);
 		})
 		.then('The agent $field field shows "$items"', function (field, list) {
-			let picked = texts(`${FIELDS[field]} .ember-power-select-multiple-option`).map((text) => text.replace('×', '').trim());
+			let picked = selectedOptionTexts(FIELDS[field]);
 			assert.deepEqual(picked, names(list), `The ${field} field shows ${list}`);
 		})
 		.when('User enters "$value" in agent name field', async function (value) {
@@ -95,8 +94,8 @@ export default function (assert) {
 			assert.equal(server.schema.users.find(agent.userId).accountStatus, 'active', `Agent ${name} is active`);
 		})
 		.when('User types the scope "$scope" in the agent scopes field', async function (scope) {
-			await selectSearch(FIELDS.scopes, scope);
-			await selectChoose(FIELDS.scopes, scope);
+			await searchSelect(FIELDS.scopes, scope);
+			await chooseOption(FIELDS.scopes, scope);
 			assert.ok(true, `User typed the scope ${scope}`);
 		})
 		.then('Agent "$name" has the delegation scopes "$items"', function (name, list) {

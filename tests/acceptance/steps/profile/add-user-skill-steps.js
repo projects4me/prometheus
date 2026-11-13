@@ -3,8 +3,8 @@
  */
 
 import { click, fillIn, settled, visit } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support';
 import steps from '../steps';
+import { chooseOptionAt } from 'prometheus/tests/helpers/select';
 
 const SKILL_SECTION = '.user-skills-section';
 const PROFICIENCY_INDEX = {
@@ -21,11 +21,7 @@ async function selectSkillProficiency(level) {
 	const selectEl = document.querySelector(
 		'[data-field="user-skill.proficiencyLevel"] > div.input-group'
 	);
-	await selectChoose(
-		selectEl.querySelector('div'),
-		'.ember-power-select-option',
-		PROFICIENCY_INDEX[level]
-	);
+	await chooseOptionAt(selectEl.querySelector('div'), PROFICIENCY_INDEX[level]);
 }
 
 export default function (assert) {

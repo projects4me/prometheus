@@ -1,8 +1,8 @@
 /* global server */
 import { visit, click, fillIn, settled } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support';
 import steps from '../steps';
 import agentFixtureSteps from './agent-fixtures';
+import { chooseOption } from 'prometheus/tests/helpers/select';
 
 const clean = (el) => el?.textContent.replace(/\s+/g, ' ').trim();
 const byAttribute = (attribute, value) => Array.from(document.querySelectorAll(`[${attribute}]`)).find((el) => el.getAttribute(attribute) === value);
@@ -33,7 +33,7 @@ export default function (assert) {
 			assert.ok(true, `User selected ${serverName} and ${toolName}`);
 		})
 		.when('User grants the selected tool to "$agent" with the rule "$rule"', async function (agentName, rule) {
-			await selectChoose('[data-field="agenttool.agentId"]', agentName);
+			await chooseOption('[data-field="agenttool.agentId"]', agentName);
 			await fillIn('[data-field="agenttool.newRule"] input', rule);
 			await click('[data-catalog-form="grant"] [data-btn="add-grant"]');
 			assert.ok(true, `User granted the tool to ${agentName}`);
@@ -49,7 +49,7 @@ export default function (assert) {
 			assert.ok(true, `User selected the skill ${skill}`);
 		})
 		.when('User grants the selected skill to "$agent"', async function (agentName) {
-			await selectChoose('[data-field="agentskill.agentId"]', agentName);
+			await chooseOption('[data-field="agentskill.agentId"]', agentName);
 			await click('[data-catalog-box="skill-grants"] [data-btn="add-grant"]');
 			assert.ok(true, `User granted the skill to ${agentName}`);
 		})

@@ -4,6 +4,7 @@
 
 import steps from '../steps';
 import { click, fillIn } from '@ember/test-helpers';
+import { openSelect, selectOptions, typeInSelectSearch } from 'prometheus/tests/helpers/select';
 
 export default function (assert) {
     return steps(assert)
@@ -32,9 +33,9 @@ export default function (assert) {
             assert.ok(true, 'User clicked on timezone field to edit');
         })
         .when('User selects "$timezone" from timezone dropdown', async function (timezone) {
-            await click('[data-field="user-page.timezone"] .ember-power-select-trigger');
-            await fillIn('.ember-power-select-search input', timezone);
-            let options = document.querySelectorAll('.ember-power-select-option');
+            await openSelect('[data-field="user-page.timezone"]');
+            await typeInSelectSearch(timezone);
+            let options = selectOptions();
             let target = Array.from(options).find((opt) => opt.textContent.trim().startsWith(timezone));
             await click(target || options[0]);
             assert.ok(true, `User selected timezone ${timezone}`);

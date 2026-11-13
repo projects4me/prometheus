@@ -1,8 +1,8 @@
 import { click, fillIn, settled, waitUntil } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support';
 import Sortable from 'sortablejs';
 import steps from '../steps';
 import { translationsUrl } from 'prometheus/mirage/route-handlers/translation';
+import { chooseOption, selectedItemSelector } from 'prometheus/tests/helpers/select';
 
 const TABLE = '[data-issue-statuses-table]';
 
@@ -193,7 +193,7 @@ export const when = function () {
         },
         {
             "User picks the text colour $label": (assert) => async function (label) {
-                await selectChoose(TEXT_COLOR_FIELD, label);
+                await chooseOption(TEXT_COLOR_FIELD, label);
                 assert.ok(true, `User picks the text colour ${label}`);
             }
         },
@@ -268,7 +268,7 @@ export const then = function () {
         },
         {
             "The text colour reads $label": (assert) => async function (label) {
-                assert.dom(`${TEXT_COLOR_FIELD} .ember-power-select-selected-item`).hasText(label);
+                assert.dom(selectedItemSelector(TEXT_COLOR_FIELD)).hasText(label);
             }
         },
         {
