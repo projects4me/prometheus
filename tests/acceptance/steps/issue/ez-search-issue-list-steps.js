@@ -1,6 +1,7 @@
 import { click, currentURL, fillIn, focus, settled, triggerKeyEvent } from '@ember/test-helpers';
 import steps from '../steps';
 import { runSearch, pressEnter } from '../ez-search-run';
+import { findSelectOption, openSelect, selectOptions } from 'prometheus/tests/helpers/select';
 
 const INPUT = '[data-field="ez-search-input"] input, input[data-field="ez-search-input"]';
 const PROJECT = '(Issue.projectId : ';
@@ -81,11 +82,11 @@ export const when = function () {
         {
             'User adds a Status condition in the issue search builder': (assert) => async function () {
                 await click('[data-ez-add-condition]');
-                await click('[data-ez-condition] [data-field="ez-search.condition.field"] .ember-power-select-trigger');
-                let option = [...document.querySelectorAll('.ember-power-select-option')].find((el) => /status/i.test(el.textContent));
+                await openSelect('[data-ez-condition] [data-field="ez-search.condition.field"]');
+                let option = findSelectOption(/status/i);
                 await click(option);
-                await click('[data-ez-condition] [data-field="ez-search.value"] .ember-power-select-trigger');
-                await click(document.querySelector('.ember-power-select-option'));
+                await openSelect('[data-ez-condition] [data-field="ez-search.value"]');
+                await click(selectOptions()[0]);
             }
         },
     ];

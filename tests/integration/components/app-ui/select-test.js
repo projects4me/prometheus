@@ -5,9 +5,8 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import { clickTrigger, typeInSearch } from 'ember-power-select/test-support/helpers';
-import { selectChoose } from 'ember-power-select/test-support';
 import { hbs } from 'ember-cli-htmlbars';
+import { chooseOption, noMatchesSelector, openSelect, optionsSelector, selectedOptionsSelector, triggerSelector, typeInSelectSearch } from 'prometheus/tests/helpers/select';
 
 const OPTIONS = [
 	{ value: 'a', label: 'Alpha' },
@@ -34,13 +33,13 @@ module('Integration | Component | app-ui/select', function (hooks) {
 			</AppUi::Select></div>
 		`);
 
-		assert.dom('[data-test-select]').hasClass('ember-power-select-trigger');
+		assert.dom(triggerSelector('[data-test-wrap]')).exists();
 		assert.dom('[data-test-select]').includesText('Pick one');
 
-		await clickTrigger('[data-test-wrap]');
-		assert.dom('.ember-power-select-option [data-option]').exists({ count: 2 });
+		await openSelect('[data-test-wrap]');
+		assert.dom(`${optionsSelector()} [data-option]`).exists({ count: 2 });
 
-		await selectChoose('[data-test-wrap]', 'Beta');
+		await chooseOption('[data-test-wrap]', 'Beta');
 		assert.strictEqual(this.selected.value, 'b');
 		assert.dom('[data-test-select] [data-option="b"]').exists();
 	});
@@ -65,15 +64,15 @@ module('Integration | Component | app-ui/select', function (hooks) {
 			</AppUi::Select></div>
 		`);
 
-		await clickTrigger('[data-test-wrap]');
-		await typeInSearch('zzz');
-		assert.dom('.ember-power-select-option--no-matches-message').hasText('Nothing here');
-		await typeInSearch('');
+		await openSelect('[data-test-wrap]');
+		await typeInSelectSearch('zzz');
+		assert.dom(noMatchesSelector()).hasText('Nothing here');
+		await typeInSelectSearch('');
 
-		await selectChoose('[data-test-wrap]', 'Alpha');
-		await selectChoose('[data-test-wrap]', 'Beta');
+		await chooseOption('[data-test-wrap]', 'Alpha');
+		await chooseOption('[data-test-wrap]', 'Beta');
 		assert.deepEqual(this.selected.map((option) => option.value), ['a', 'b']);
-		assert.dom('.ember-power-select-multiple-option').exists({ count: 2 });
+		assert.dom(selectedOptionsSelector('[data-test-wrap]')).exists({ count: 2 });
 	});
 
 	test('it is disabled when asked', async function (assert) {

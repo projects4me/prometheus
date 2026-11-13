@@ -6,9 +6,9 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import { selectChoose, selectSearch } from 'ember-power-select/test-support';
 import { scopeOptions, searchScopes } from 'prometheus/utils/agent-scopes';
 import AclStub from '../../stub-services/acl-stub';
+import { chooseOption, searchSelect } from 'prometheus/tests/helpers/select';
 
 module('Integration | Component | delegation scopes field', function (hooks) {
     setupRenderingTest(hooks);
@@ -39,12 +39,12 @@ module('Integration | Component | delegation scopes field', function (hooks) {
 
         assert.dom('span.relate-simple').hasText('issue.read');
 
-        await selectSearch('[data-field="agent.delegationScopes"]', 'issue.*');
-        await selectChoose('[data-field="agent.delegationScopes"]', 'issue.*');
+        await searchSelect('[data-field="agent.delegationScopes"]', 'issue.*');
+        await chooseOption('[data-field="agent.delegationScopes"]', 'issue.*');
         assert.deepEqual(chosen, ['issue.read', 'issue.*'], 'a module wildcard can be picked');
 
-        await selectSearch('[data-field="agent.delegationScopes"]', 'custom.thing');
-        await selectChoose('[data-field="agent.delegationScopes"]', 'custom.thing');
+        await searchSelect('[data-field="agent.delegationScopes"]', 'custom.thing');
+        await chooseOption('[data-field="agent.delegationScopes"]', 'custom.thing');
         assert.deepEqual(chosen, ['issue.read', 'issue.*', 'custom.thing'], 'free entry is accepted');
     });
 });

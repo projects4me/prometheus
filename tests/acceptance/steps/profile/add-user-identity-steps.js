@@ -3,8 +3,8 @@
  */
 
 import { click, fillIn, settled, visit } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support';
 import steps from '../steps';
+import { chooseOptionAt } from 'prometheus/tests/helpers/select';
 
 const SECTION = '.user-identities-section';
 const PROVIDER_INDEX = { git: 0, github: 1, gitlab: 2, slack: 3, ssh: 4 };
@@ -25,11 +25,7 @@ export default function (assert) {
 			const selectEl = document.querySelector(
 				'[data-field="user-identity.provider"] > div.input-group'
 			);
-			await selectChoose(
-				selectEl.querySelector('div'),
-				'.ember-power-select-option',
-				PROVIDER_INDEX[provider]
-			);
+			await chooseOptionAt(selectEl.querySelector('div'), PROVIDER_INDEX[provider]);
 			assert.ok(true, `User selected ${provider} as identity provider`);
 		})
 		.when('User enters "$handle" in identity handle field', async function (handle) {

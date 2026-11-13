@@ -1,7 +1,6 @@
 import steps from '../steps';
-import { selectChoose } from 'ember-power-select/test-support';
-import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import { click } from '@ember/test-helpers';
+import { chooseOptionAt, openSelect } from 'prometheus/tests/helpers/select';
 
 export const when = function () {
 	return [
@@ -27,14 +26,10 @@ export const when = function () {
 		{
 			'Issues of that member are assigned to User 1': (assert) =>
 				async function () {
-					await clickTrigger(
+					await openSelect(
 						'div[data-field="new-assignee"] > div.input-group.select-input'
 					);
-					await selectChoose(
-						'div[data-field="new-assignee"] > div.input-group.select-input > div',
-						'.ember-power-select-option',
-						1
-					);
+					await chooseOptionAt('div[data-field="new-assignee"] > div.input-group.select-input > div', 1);
 
 					assert.ok(
 						true,

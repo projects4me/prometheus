@@ -1,7 +1,7 @@
 import steps from '../steps';
 import { click, settled } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support';
 import $ from 'jquery';
+import { chooseOption } from 'prometheus/tests/helpers/select';
 
 const ACTION_LABELS = { '1': 'Allow', '0': 'None' };
 const FIELD_LABELS = { none: 'None', read: 'Read Only', write: 'Write + Read' };
@@ -11,7 +11,7 @@ export default function (assert) {
         .when('User sets action permission $resourceName to $allowed', async function (resourceName, allowed) {
             let selector = `[data-role="permission-actions"] [data-field="action-${resourceName}"] .input-group`;
             assert.ok(document.querySelector(selector), `Action permission select for ${resourceName} exists`);
-            await selectChoose(selector, ACTION_LABELS[allowed] ?? allowed);
+            await chooseOption(selector, ACTION_LABELS[allowed] ?? allowed);
             await settled();
             assert.ok(true, `User sets action permission ${resourceName} to ${allowed}`);
         })
@@ -32,7 +32,7 @@ export default function (assert) {
         .when('User sets field $field access to $mode', async function (field, mode) {
             let selector = `[data-role="permission-fields"] [data-field="field-access-issue.${field}"] .input-group`;
             assert.ok(document.querySelector(selector), `Field access select for ${field} exists`);
-            await selectChoose(selector, FIELD_LABELS[mode] ?? mode);
+            await chooseOption(selector, FIELD_LABELS[mode] ?? mode);
             await settled();
             assert.ok(true, `User sets field ${field} access to ${mode}`);
         })

@@ -1,10 +1,9 @@
 import steps from '../steps';
-import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import { click } from '@ember/test-helpers';
+import { openSelect, selectOptionTexts } from 'prometheus/tests/helpers/select';
 
 function getOptionTexts() {
-    return [...document.querySelectorAll('.ember-power-select-option')]
-        .map((option) => option.textContent.trim());
+    return selectOptionTexts();
 }
 
 export default function (assert) {
@@ -32,7 +31,7 @@ export default function (assert) {
                 let invitedUser = server.schema.users.find(parseInt(invitedUserId, 10));
                 let inactiveUser = server.schema.users.find(parseInt(inactiveUserId, 10));
 
-                await clickTrigger('div[data-field="issue.assignee"] > div.input-group.select-input');
+                await openSelect('div[data-field="issue.assignee"] > div.input-group.select-input');
                 let assigneeOptions = getOptionTexts();
 
                 assert.notOk(
@@ -53,7 +52,7 @@ export default function (assert) {
                 let invitedUser = server.schema.users.find(parseInt(invitedUserId, 10));
                 let inactiveUser = server.schema.users.find(parseInt(inactiveUserId, 10));
 
-                await clickTrigger('div[data-field="issue.owner"] > div.input-group.select-input');
+                await openSelect('div[data-field="issue.owner"] > div.input-group.select-input');
                 let ownerOptions = getOptionTexts();
 
                 assert.notOk(

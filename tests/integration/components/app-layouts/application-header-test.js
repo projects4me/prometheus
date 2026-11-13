@@ -6,10 +6,10 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, settled } from '@ember/test-helpers';
 import { setupMirage } from 'ember-cli-mirage/test-support';
-import { clickTrigger, typeInSearch } from 'ember-power-select/test-support/helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import CurrentUserStub from '../../stub-services/current-user-stub';
 import AclStub from '../../stub-services/acl-stub';
+import { openSelect, typeInSelectSearch } from 'prometheus/tests/helpers/select';
 
 module('Integration | Component | application-header', function (hooks) {
     setupRenderingTest(hooks);
@@ -89,9 +89,9 @@ module('Integration | Component | application-header search task', function (hoo
         });
 
         await render(hbs`<AppLayouts::ApplicationHeader />`);
-        await clickTrigger('.global-search');
-        const first = typeInSearch('alp');
-        const second = typeInSearch('beta');
+        await openSelect('.global-search');
+        const first = typeInSelectSearch('alp');
+        const second = typeInSelectSearch('beta');
         await Promise.all([first, second]);
         await settled();
 

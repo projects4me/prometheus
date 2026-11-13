@@ -10,6 +10,7 @@ import AclStub from '../../stub-services/acl-stub';
 import { issueQuerySchema } from '../../../helpers/query-schema';
 import { group, condition, isGroup } from 'prometheus/utils/query/ast';
 import { serialize } from 'prometheus/utils/query/serializer';
+import { openSelect, selectOptions } from 'prometheus/tests/helpers/select';
 
 function buildTree() {
     return group(
@@ -107,8 +108,8 @@ module('Integration | Component | ez-search/panel', function (hooks) {
 
     test('changing the field resets the operator and clears the value', async function (assert) {
         await show(this);
-        await click('[data-ez-condition="c1"] [data-field="ez-search.condition.field"] .ember-power-select-trigger');
-        let options = [...document.querySelectorAll('.ember-power-select-option')];
+        await openSelect('[data-ez-condition="c1"] [data-field="ez-search.condition.field"]');
+        let options = selectOptions();
         let subject = options.find((option) => option.textContent.trim() === 'Subject');
 
         await click(subject);

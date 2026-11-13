@@ -1,7 +1,6 @@
 import steps from '../steps';
-import { selectChoose, selectSearch } from 'ember-power-select/test-support';
-import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import { currentURL } from '@ember/test-helpers';
+import { chooseOption, openSelect, searchSelect } from 'prometheus/tests/helpers/select';
 
 export const given = function () {
     return [
@@ -28,21 +27,21 @@ export const when = function () {
     return [
         {
             "User clicks on global search": (assert) => async function () {
-                await clickTrigger('div.global-search');
+                await openSelect('div.global-search');
                 assert.ok(true, 'drop down opens up');
             }
         },
         {
             "User search for $issue": (assert, ctx) => async function (issue) {
                 ctx.set('fieldSearched', 'Issue.issueSubject');
-                await selectSearch('div.global-search', `${issue}`);
+                await searchSelect('div.global-search', `${issue}`);
                 assert.ok(true, `User searched for ${issue}`);
                 ctx.set('fieldSearched', null);
             }
         },
         {
             "User selects $issue": (assert) => async function (issue) {
-                await selectChoose('div.global-search', `${issue}`);
+                await chooseOption('div.global-search', `${issue}`);
                 assert.ok(true, `${issue} selected`);
             }
         }
