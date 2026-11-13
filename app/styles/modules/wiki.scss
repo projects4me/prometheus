@@ -65,24 +65,6 @@
   height: 100%;
 }
 
-.wiki-detail .ember-power-select-trigger {
-  border-radius: 0px;
-  line-height: 1.42857;
-  padding: 0.6rem 1.2rem;
-  border-color: #ccc;
-
-  .ember-power-select-placeholder {
-    margin-left: 0px;
-  }
-}
-
-.ember-power-select-dropdown {
-  border-color: #ccc;
-  .ember-power-select-search-input {
-    border-color: #ccc;
-  }
-}
-
 .wiki-default-page {
   white-space: pre-line;
   padding: 0rem 0rem;
@@ -118,33 +100,6 @@
   }
   .btn {
     margin-top: 2rem;
-  }
-}
-
-.wiki-tags {
-  display: inline-flex;
-  line-height: 2.6rem;
-
-  .ember-power-select-trigger {
-    padding: 0.6rem 0.6rem 0rem;
-    line-height: 2.6rem;
-    min-width: 30rem;
-    height: 3.2rem;
-  }
-
-  .ember-power-select-multiple-option {
-    background-color: $primaryColor;
-    color: $backgroundColor;
-    border-color: $primaryColor;
-    line-height: 1.42;
-    border: none !important;
-    margin: 0rem 0.2rem;
-  }
-
-  .ember-power-select-trigger-multiple-input {
-    line-height: 1.42;
-    border: none !important;
-    margin: 0rem;
   }
 }
 

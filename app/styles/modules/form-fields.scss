@@ -127,13 +127,6 @@
       -o-transition: none;
       transition: none;
     }
-
-    .ember-power-select-multiple-option {
-      background-color: $primaryColor;
-      color: #fff;
-      border-color: $primaryColor;
-      border-radius: 0.2rem;
-    }
   }
 
   /* BOTTOM BARS ================================= */
@@ -237,7 +230,6 @@
   border-radius: 2rem;
 }
 
-.ember-power-select-option,
 .select-input {
   .fa {
     margin-right: 0.5rem;
@@ -264,7 +256,6 @@
   }
 }
 
-.ember-power-select-trigger,
 .btn {
   border-radius: 0rem;
 }
