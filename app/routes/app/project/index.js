@@ -4,6 +4,7 @@
 
 import App from "prometheus/routes/app";
 import { service } from '@ember/service';
+import { schedule } from '@ember/runloop';
 import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
@@ -140,7 +141,8 @@ export default App.extend({
         // The first page of the box; a failed page shows its error and retry
         controller.milestoneList.reset();
         controller.milestonesPage = 1;
-        controller.loadMilestonesPage(1);
+        // Highlight the s_id milestone once the first page has rendered; page changes do not
+        controller.loadMilestonesPage(1).then(() => schedule('afterRender', controller, 'highlightTargetMilestone'));
         controller.send('resetNewMilestone');
         controller.set('conversations', model.conversations);
     },

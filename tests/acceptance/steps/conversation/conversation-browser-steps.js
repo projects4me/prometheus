@@ -49,7 +49,7 @@ export const given = function () {
                     let attrs = { subject: row.subject, roomType: row.roomType, dateModified: row.dateModified };
                     if (row.milestone) {
                         milestones[row.milestone] = milestones[row.milestone]
-                            || server.create('milestone', { name: row.milestone });
+                            || server.create('milestone', { name: row.milestone, projectId: ctx.get('currentProject').id });
                         attrs.issue = server.create('issue', {
                             subject: `Issue of ${row.subject}`,
                             issueNumber: String(++issueNumber),

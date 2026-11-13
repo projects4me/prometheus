@@ -12,6 +12,11 @@ export function register(server, ctx) {
 		}
 
 		let milestones = schema.milestones.all();
+		// Like Gaia: (Milestone.projectId : <id>)
+		let project = /Milestone\.projectId\s*:\s*(\S+?)\)/.exec(params.query || '');
+		if (project) {
+			milestones = new Collection('milestone', milestones.models.filter(m => String(m.projectId) === project[1]));
+		}
 		if (params.sort === 'Milestone.startDate') {
 			// Like Gaia, order by the start date
 			let direction = params.order === 'DESC' ? -1 : 1;

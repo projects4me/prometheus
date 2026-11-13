@@ -19,6 +19,18 @@ Feature: Project dashboard | milestones box pages from the server
     And The milestones pager reads 6-9 / 9
     And The milestones next button is disabled
 
+  Scenario: Milestones of another project do not take the page
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The project has 9 milestones
+    And Another project has 5 newer milestones
+    When User opens the dashboard of the project
+    Then The milestones box lists the milestones Milestone 09, Milestone 08, Milestone 07, Milestone 06, Milestone 05
+    And The milestones pager reads 1-5 / 5+
+
   Scenario: Five milestones or fewer show no pager
 
     Given There is no pre-existing data

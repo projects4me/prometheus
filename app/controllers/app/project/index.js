@@ -840,23 +840,21 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     }
 
     /**
-     * This action is used to scroll to the comment.
+     * Scrolls to and highlights the milestone targeted by s_id, once its row is rendered.
      *
-     * @method scrollToComment
+     * @method highlightTargetMilestone
      * @public
      */
-    @action scrollToElement(element, type) {
-        let selectors = {
-            'milestone': {
-                'selector': `[data-milestone-id="${this.s_id}"]`,
-                'spread': '0.9rem',
-                'blur': '0.4rem'
-            },
+    highlightTargetMilestone() {
+        if (!this.s_id || this.isDestroying || this.isDestroyed) {
+            return;
         }
-        let el = element.querySelector(selectors[type].selector);
-        this.scrollAndHighlight(el, true, {
-            spread: selectors[type]?.spread,
-            blur: selectors[type]?.blur
-        });
+        let el = document.querySelector(`.project-milestones-section [data-milestone-id="${this.s_id}"]`);
+        if (el) {
+            this.scrollAndHighlight(el, true, {
+                spread: '0.9rem',
+                blur: '0.4rem'
+            });
+        }
     }
 }

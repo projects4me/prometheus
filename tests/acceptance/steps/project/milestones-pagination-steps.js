@@ -25,6 +25,19 @@ export const given = function () {
             }
         },
         {
+            "Another project has $count newer milestones": (assert) => async function (count) {
+                let other = server.create('project', { name: 'Other project' });
+                for (let i = 1; i <= Number(count); i++) {
+                    server.create('milestone', {
+                        projectId: other.id,
+                        name: `Other ${i}`,
+                        startDate: `2026-12-${String(i).padStart(2, '0')}`
+                    });
+                }
+                assert.ok(true, `${count} milestones of another project exist`);
+            }
+        },
+        {
             "The second page of milestones fails to load": (assert, ctx) => async function () {
                 ctx.set('milestonePageFails', true);
                 assert.ok(true, 'page 2 requests fail');
