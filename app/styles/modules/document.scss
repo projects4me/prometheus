@@ -277,10 +277,6 @@ span[id="#"]{
   display: block; /* For Firefox */
 }
 
-.ember-basic-dropdown-content{
-  z-index:2000 !important;
-}
-
 .editable{
   height: 8rem;
   border: 0.1rem solid $borderColor;
@@ -393,19 +389,6 @@ span[id="#"]{
   display: inline-block;
   padding:1.2rem;
   width: 40rem;
-
-  .ember-power-select-trigger {
-    height: 2.4rem;
-    overflow: hidden;
-  }
-
-  .ember-power-select-selected-item {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 315px;
-    display: inline-block;
-  }
 }
 
 .dotted-circle-add {

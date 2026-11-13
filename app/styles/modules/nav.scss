@@ -30,27 +30,6 @@
   width: 100%;
 }
 
-.main-sidebar .ember-power-select-trigger{
-  background-color: $primaryColor;
-  border: none;
-  font-size: 1.8rem;
-  color: $backgroundColor;
-  width: 20.8rem;
-
-  .ember-power-select-selected-item{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .ember-power-select-placeholder{
-    color: $backgroundColor;
-  }
-  .ember-power-select-status-icon{
-    border-color: $backgroundColor transparent transparent transparent;
-  }
-}
-
 .control-sidebar-menu {
   .progress-bar{
     width: 70%;
