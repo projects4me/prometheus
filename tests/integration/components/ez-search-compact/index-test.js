@@ -6,7 +6,6 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click, fillIn, focus, blur, waitUntil, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import jQuery from 'jquery';
 import AclStub from '../../stub-services/acl-stub';
 import { issueQuerySchema } from '../../../helpers/query-schema';
 
@@ -31,11 +30,6 @@ module('Integration | Component | ez-search-compact', function (hooks) {
         this.onSave = (query) => this.saves.push(query);
         this.onUpdate = (search, query) => this.updates.push([search.id, query]);
         this.onChange = (search) => this.changes.push(search && search.id);
-    });
-
-    hooks.afterEach(function () {
-        jQuery('.modal-backdrop').remove();
-        jQuery('body').removeClass('modal-open');
     });
 
     async function show(full = false) {
@@ -195,11 +189,11 @@ module('Integration | Component | ez-search-compact', function (hooks) {
         this.query = DONE;
         await show();
         await click('[data-ez-builder-toggle]');
-        assert.dom('.modal [data-ez-panel]').exists();
+        assert.dom('dialog.app-modal [data-ez-panel]').exists();
 
-        await click('.modal [data-ez-remove-condition]');
-        await click('.modal [data-btn="save"]');
-        await waitUntil(() => !document.querySelector('.modal'));
+        await click('dialog.app-modal [data-ez-remove-condition]');
+        await click('dialog.app-modal [data-btn="save"]');
+        await waitUntil(() => !document.querySelector('dialog.app-modal'));
 
         assert.strictEqual(this.applied.length, 1);
     });
@@ -208,10 +202,10 @@ module('Integration | Component | ez-search-compact', function (hooks) {
         this.query = DONE;
         await show();
         await click('[data-ez-builder-toggle]');
-        await click('.modal [data-ez-remove-condition]');
-        assert.dom('.modal [data-ez-condition]').doesNotExist();
-        await click('.modal [data-btn="cancel"]');
-        await waitUntil(() => !document.querySelector('.modal'));
+        await click('dialog.app-modal [data-ez-remove-condition]');
+        assert.dom('dialog.app-modal [data-ez-condition]').doesNotExist();
+        await click('dialog.app-modal [data-btn="cancel"]');
+        await waitUntil(() => !document.querySelector('dialog.app-modal'));
         await settled();
 
         assert.strictEqual(this.applied.length, 0);
@@ -223,8 +217,8 @@ module('Integration | Component | ez-search-compact', function (hooks) {
         this.query = DONE;
         await show();
         await click('[data-ez-builder-toggle]');
-        await click('.modal [data-btn="left"]');
-        await waitUntil(() => !document.querySelector('.modal'));
+        await click('dialog.app-modal [data-btn="left"]');
+        await waitUntil(() => !document.querySelector('dialog.app-modal'));
 
         assert.strictEqual(this.applied.length, 1);
         assert.dom(INPUT).hasValue('');

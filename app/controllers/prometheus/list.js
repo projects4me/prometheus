@@ -639,7 +639,6 @@ export default class PrometheusListController extends PrometheusController {
     @action removeSaveSearchDialog() {
         Logger.debug('Prometheus.Controllers.List::removeSaveSearchDialog');
         this.set('saveSearchDialog', false);
-        $('.modal').modal('hide');
         Logger.debug('-Prometheus.Controllers.List::removeSaveSearchDialog');
     }
 
@@ -691,7 +690,6 @@ export default class PrometheusListController extends PrometheusController {
     @action removeExportDialog() {
         Logger.debug('Prometheus.Controllers.List::removeExportDialog');
         this.exportDialog = false;
-        $('.modal').modal('hide');
         this.exportRelationships = [];
         Logger.debug('-Prometheus.Controllers.List::removeExportDialog');
     }
@@ -836,7 +834,6 @@ export default class PrometheusListController extends PrometheusController {
         Logger.debug('Prometheus.Controllers.List::removeMassUpdateDialog');
         this.massUpdateDialog = false;
         this.massUpdateModel.unloadRecord();
-        $('.modal').modal('hide');
         Logger.debug('-Prometheus.Controllers.List::removeMassUpdateDialog');
     }
 

@@ -10,12 +10,12 @@
   @aclContext={{@aclContext}}
 />
 {{#if this.newSavedsearch}}
-  {{#bootstrap-modal
-      title="global.form.savesearch"
-      confirmLabel="global.form.save"
-      closeLabel="global.form.cancel"
-      confirm=this.save
-      close=this.closeSaveDialog}}
+  <AppUi::Modal
+      @title="global.form.savesearch"
+      @confirmLabel="global.form.save"
+      @closeLabel="global.form.cancel"
+      @confirm={{this.save}}
+      @onClose={{this.closeSaveDialog}}>
 
     <div class="ember-view">
       <label>{{t (concat this.messages ".query")}}</label>
@@ -28,5 +28,5 @@
       @value={{this.newSavedsearch.name}}
     />
 
-  {{/bootstrap-modal}}
+  </AppUi::Modal>
 {{/if}}
