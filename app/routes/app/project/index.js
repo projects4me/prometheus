@@ -8,7 +8,6 @@ import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
-import { pushRecords } from 'prometheus/utils/array/record-list';
 /**
  * The wiki route
  *
@@ -87,10 +86,10 @@ export default App.extend({
             limit: -1
         };
 
+        // Every milestone, light: only the chart's dropdown reads it; the box pages its own milestones
         let _milestoneOptions = {
             query: "(Milestone.projectId : " + projectId + ")",
-            sort: "Milestone.startDate",
-            order: 'DESC',
+            fields: 'Milestone.id,Milestone.name,Milestone.dateCreated',
             limit: -1
         };
 
@@ -135,29 +134,15 @@ export default App.extend({
         controller.set('issuetime', model.issues);
 
         this.loadActivities(model.activities, controller);
-        this.loadMilestones(model.milestones, model.issues, controller);
+        controller.set('chartMilestones', model.milestones.slice());
         controller.setDefaultMilestoneForEstimatedSpentChart();
 
-        controller.set('milestonesPage', 1);
+        // The first page of the box; a failed page shows its error and retry
+        controller.milestoneList.reset();
+        controller.milestonesPage = 1;
+        controller.loadMilestonesPage(1);
         controller.send('resetNewMilestone');
         controller.set('conversations', model.conversations);
-    },
-
-    /**
-     * This function is used to set the milestones to the project contorller.
-     * 
-     * @param {Prometheus.Models.Milestone} milestones 
-     * @param {Prometheus.Models.Issue} issues 
-     * @param {Prometheus.Controller.Project} controller 
-     */
-    loadMilestones(milestones, issues, controller) {
-        milestones.forEach(function (milestone) {
-            let milestoneIssues = issues?.filter((item) => item.milestoneId === milestone.get('id'));
-            if (milestoneIssues !== undefined) {
-                pushRecords(milestone.get('issues'), milestoneIssues);
-            }
-        });
-        controller.set('milestones', milestones.slice());
     },
 
     /**

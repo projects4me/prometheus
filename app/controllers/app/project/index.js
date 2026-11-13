@@ -14,6 +14,7 @@ import { A } from '@ember/array';
 import * as dates from 'prometheus/utils/date';
 import { pushRecords } from 'prometheus/utils/array/record-list';
 import { toArray } from 'prometheus/utils/array/to-array';
+import ListLoader from 'prometheus/utils/state/list-loader';
 
 /**
  * This is the index page of the project, index page for the project is
@@ -71,7 +72,8 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     /**
      * This function is called on the initialization of the controller. In this function
      * we're calling setupSchema method in order to generate schema, by analyzing metadata
-     * defined in the controller, that will be used to validate the form of the template.
+     * defined in the controller, that will be used to validate the form of the template. It also
+     * builds the loader of the Project Milestones box.
      *
      * @method constructor
      * @public
@@ -79,6 +81,18 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     constructor() {
         super(...arguments);
         this.setupSchema();
+        this.milestoneList = new ListLoader({
+            store: this.store,
+            modelName: 'milestone',
+            pageSize: this.milestonesPageSize,
+            owner: this,
+            buildRequest: ({ page }) => ({
+                query: `(Milestone.projectId : ${this.trackedProject.getProjectId()})`,
+                sort: 'Milestone.startDate',
+                order: 'DESC',
+                page
+            })
+        });
     }    
 
     /**
@@ -224,14 +238,24 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     @tracked selectedMilestoneId = null;
 
     /**
-     * Milestones ordered by `dateCreated` descending (newest first).
+     * Every milestone of the project (id, name and dateCreated only), for the chart's milestone dropdown.
+     *
+     * @property chartMilestones
+     * @type {Array}
+     * @for AppProjectIndexController
+     * @public
+     */
+    @tracked chartMilestones = [];
+
+    /**
+     * Chart milestones ordered by `dateCreated` descending (newest first).
      *
      * @property milestonesByDateCreatedDesc
      * @for AppProjectIndexController
      * @public
      */
     get milestonesByDateCreatedDesc() {
-        let list = this.get('milestones');
+        let list = this.chartMilestones;
         if (!list?.length) {
             return [];
         }
@@ -243,7 +267,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     }
 
     /**
-     * Number of milestones shown per page in the Project Milestones box.
+     * Number of milestones requested per page of the Project Milestones box.
      *
      * @property milestonesPageSize
      * @type {number}
@@ -253,7 +277,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     milestonesPageSize = 5;
 
     /**
-     * Current page of the Project Milestones box (1-based).
+     * Current page of the Project Milestones box (1-based); controller state, not a query param.
      *
      * @property milestonesPage
      * @type {number}
@@ -263,115 +287,120 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
     @tracked milestonesPage = 1;
 
     /**
-     * Total number of pages of milestones (at least 1).
+     * The page last requested, which a retry loads again.
      *
-     * @property milestonesPageCount
+     * @property pendingMilestonesPage
+     * @type {number}
+     * @default 1
+     * @private
+     */
+    pendingMilestonesPage = 1;
+
+    /**
+     * The milestones of the current page.
+     *
+     * @property milestones
+     * @type {Array}
      * @for AppProjectIndexController
      * @public
      */
-    get milestonesPageCount() {
-        let total = this.get('milestones')?.length || 0;
-        return Math.max(1, Math.ceil(total / this.milestonesPageSize));
+    get milestones() {
+        return this.milestoneList.items;
     }
 
     /**
-     * The current page, clamped to the existing pages so a shrinking list never shows an empty page.
+     * Whether Gaia has a page of milestones after the current one.
      *
-     * @property currentMilestonesPage
+     * @property hasNextMilestones
+     * @type {boolean}
      * @for AppProjectIndexController
      * @public
      */
-    get currentMilestonesPage() {
-        return Math.min(Math.max(1, this.milestonesPage), this.milestonesPageCount);
+    get hasNextMilestones() {
+        return this.milestoneList.hasNext;
     }
 
     /**
-     * Whether the milestones box needs a pager (more than one page of milestones).
+     * Whether a page of milestones is loading.
      *
-     * @property showMilestonesPager
+     * @property isMilestonesLoading
+     * @type {boolean}
      * @for AppProjectIndexController
      * @public
      */
-    get showMilestonesPager() {
-        return this.milestonesPageCount > 1;
+    get isMilestonesLoading() {
+        return this.milestoneList.isLoading;
     }
 
     /**
-     * The milestones on the current page, in the list's existing order.
+     * The error of the latest page load.
      *
-     * @property visibleMilestones
+     * @property milestonesError
      * @for AppProjectIndexController
      * @public
      */
-    get visibleMilestones() {
-        let list = this.get('milestones') || [];
-        let start = (this.currentMilestonesPage - 1) * this.milestonesPageSize;
-        return list.slice(start, start + this.milestonesPageSize);
+    get milestonesError() {
+        return this.milestoneList.error;
     }
 
     /**
-     * 1-based index of the first milestone on the current page (0 when there are none).
+     * Loads a page of milestones and attaches to each the project issues the route already loaded.
      *
-     * @property milestonesRangeFrom
-     * @for AppProjectIndexController
+     * @method loadMilestonesPage
+     * @param {number} page
+     * @returns {Promise}
      * @public
      */
-    get milestonesRangeFrom() {
-        return this.visibleMilestones.length ? (this.currentMilestonesPage - 1) * this.milestonesPageSize + 1 : 0;
+    async loadMilestonesPage(page) {
+        this.pendingMilestonesPage = page;
+        let records = await this.milestoneList.run({ page });
+        // The shown page (and so the pager) only moves once its rows have loaded
+        if (records && this.pendingMilestonesPage === page) {
+            this.milestonesPage = page;
+        }
+        this.attachIssues(records);
     }
 
     /**
-     * 1-based index of the last milestone on the current page (0 when there are none).
+     * Attaches to the milestones the issues (issuetime) that belong to them.
      *
-     * @property milestonesRangeTo
-     * @for AppProjectIndexController
-     * @public
+     * @method attachIssues
+     * @param {Array} milestones
+     * @private
      */
-    get milestonesRangeTo() {
-        let from = this.milestonesRangeFrom;
-        return from ? from + this.visibleMilestones.length - 1 : 0;
+    attachIssues(milestones) {
+        if (!milestones || this.isDestroying || this.isDestroyed) {
+            return;
+        }
+        milestones.forEach((milestone) => {
+            let milestoneIssues = this.issuetime?.filter((item) => item.milestoneId === milestone.get('id'));
+            if (milestoneIssues !== undefined) {
+                pushRecords(milestone.get('issues'), milestoneIssues);
+            }
+        });
     }
 
     /**
-     * Whether the previous-page button is disabled.
+     * Loads the page again, the retry of a failed page.
      *
-     * @property isMilestonesPreviousDisabled
-     * @for AppProjectIndexController
+     * @method retryMilestones
      * @public
      */
-    get isMilestonesPreviousDisabled() {
-        return this.currentMilestonesPage <= 1;
+    @action
+    retryMilestones() {
+        return this.loadMilestonesPage(this.pendingMilestonesPage);
     }
 
     /**
-     * Whether the next-page button is disabled.
+     * Shows another page of milestones.
      *
-     * @property isMilestonesNextDisabled
-     * @for AppProjectIndexController
+     * @method changeMilestonesPage
+     * @param {number} page
      * @public
      */
-    get isMilestonesNextDisabled() {
-        return this.currentMilestonesPage >= this.milestonesPageCount;
-    }
-
-    /**
-     * Shows the previous page of milestones.
-     *
-     * @method previousMilestonesPage
-     * @public
-     */
-    @action previousMilestonesPage() {
-        this.milestonesPage = Math.max(1, this.currentMilestonesPage - 1);
-    }
-
-    /**
-     * Shows the next page of milestones.
-     *
-     * @method nextMilestonesPage
-     * @public
-     */
-    @action nextMilestonesPage() {
-        this.milestonesPage = Math.min(this.milestonesPageCount, this.currentMilestonesPage + 1);
+    @action
+    changeMilestonesPage(page) {
+        return this.loadMilestonesPage(page);
     }
 
     /**
@@ -399,15 +428,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
         if (!this.selectedMilestoneId) {
             return A();
         }
-        let list = this.get('milestones');
-        if (!list?.length) {
-            return A();
-        }
-        let milestone = list.find((m) => m.get('id') === this.selectedMilestoneId);
-        if (!milestone) {
-            return A();
-        }
-        return milestone.get('issues');
+        return A((this.issuetime || []).filter((issue) => issue.milestoneId === this.selectedMilestoneId));
     }
 
     /**
@@ -622,9 +643,9 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
             // Add milestone to the system
             newMilestone.save().then(function (data) {
                 if (!isUpdate) {
-                    _self.set('milestones', [..._self.get('milestones'), data]);
-                    // The new milestone is appended, so show the page it lands on
-                    _self.set('milestonesPage', _self.milestonesPageCount);
+                    _self.chartMilestones = [..._self.chartMilestones, data];
+                    // The newest start date comes first, so show page 1 again
+                    _self.loadMilestonesPage(1);
                 }
 
                 new Messenger().post({

@@ -703,7 +703,6 @@
             "overdue": "overdue",
             "progress": "{closed} out of {total} issues complete",
             "noentry": "No milestone found for the project, please create one",
-            "pageRange": "{from} – {to} / {total}",
             "add": "Add a Milestone",
             "manage": "Manage Milestone",
             "inputname": "Please specify the name of the milestone",
