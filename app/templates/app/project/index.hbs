@@ -383,46 +383,41 @@
           </div>
 
           <div class="box-body no-padding" {{did-insert this.scrollToElement 'milestone'}}>
-            {{#if this.milestones}}
-
-              {{#each this.visibleMilestones as |milestone|}}
+            {{#if this.milestonesError}}
+              <p class="quick-list__state quick-list__state--error" data-test-milestones-error>
+                <i class="fa fa-exclamation-triangle"></i>
+                {{t "components.quickList.error"}}
+                <button type="button" class="btn btn-link quick-list__state-action" data-test-milestones-retry {{on "click" this.retryMilestones}}>
+                  {{t "components.quickList.retry"}}
+                </button>
+              </p>
+            {{else if this.milestones.length}}
+              {{#each this.milestones as |milestone|}}
                 <Project::Milestones
                   @editMilestone={{this.editMilestone}}
                   @milestone={{milestone}}
                   @projectShortcode={{this.model.shortCode}}
                 />
               {{/each}}
-
-              {{#if this.showMilestonesPager}}
-                <div class="pagination-container project-milestones-pagination" data-milestones-pagination>
-                  <div class="pagination-footer">
-                    <div class="pagination-controls">
-                      <button type="button" class="pagination-btn pagination-prev {{if this.isMilestonesPreviousDisabled 'disabled'}}"
-                        disabled={{this.isMilestonesPreviousDisabled}}
-                        title={{t "views.components.pagination.previousPage"}}
-                        data-btn="previous" {{on "click" this.previousMilestonesPage}}>
-                        <i class="fa fa-caret-left"></i>
-                      </button>
-                      <div class="pagination-info">
-                        <span class="pagination-text" data-milestones-range>{{t "views.app.project.detail.milestone.pageRange" from=this.milestonesRangeFrom to=this.milestonesRangeTo total=this.milestones.length}}</span>
-                      </div>
-                      <button type="button" class="pagination-btn pagination-next {{if this.isMilestonesNextDisabled 'disabled'}}"
-                        disabled={{this.isMilestonesNextDisabled}}
-                        title={{t "views.components.pagination.nextPage"}}
-                        data-btn="next" {{on "click" this.nextMilestonesPage}}>
-                        <i class="fa fa-caret-right"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              {{/if}}
-
-            {{else}}
+            {{else if (not this.isMilestonesLoading)}}
               <Exceptions::NothingFound
                 @description={{t "views.app.project.detail.milestone.noentry"}}
-              />            
+              />
             {{/if}}
           </div>
+
+          {{#if (or (gt this.milestonesPage 1) this.hasNextMilestones)}}
+            <div class="box-footer no-padding" data-milestones-pagination>
+              <QuickList::Pagination
+                @page={{this.milestonesPage}}
+                @limit={{this.milestonesPageSize}}
+                @hasNext={{this.hasNextMilestones}}
+                @count={{this.milestones.length}}
+                @disabled={{this.isMilestonesLoading}}
+                @onPage={{this.changeMilestonesPage}}
+              />
+            </div>
+          {{/if}}
 
           {{#if this.milestoneDialog}}
             <AppUi::Modal
