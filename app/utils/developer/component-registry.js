@@ -68,26 +68,16 @@ export const ENTRIES = [
         variants: 10
     },
     {
-        name: 'bootstrap-modal',
+        name: 'modal',
         label: 'Modal',
         group: 'Overlays',
         status: 'stable',
-        summary: 'The bootstrap-modal dialog: title, confirm handling and rendering outside stacking contexts.',
+        summary: 'AppUi::Modal on the native dialog element: title, confirm handling and rendering in the top layer.',
         usedIn: [
             { label: 'Projects list', route: 'app.projects' }
         ],
         demo: 'developer/demos/modal',
         doc: 'modal.md'
-    },
-    {
-        name: 'app-modal',
-        label: 'Modal (dialog)',
-        group: 'Overlays',
-        status: 'experimental',
-        summary: 'AppUi::Modal on the native dialog element: the replacement for bootstrap-modal, rendered in the top layer.',
-        usedIn: [],
-        demo: 'developer/demos/app-modal',
-        doc: 'app-modal.md'
     },
     {
         name: 'dropdown',

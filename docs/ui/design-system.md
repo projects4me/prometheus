@@ -213,7 +213,7 @@ translation, from the app or from Gaia, must extend the formatter first.
 | Inline edit | `AppUi::InlineEditable` |
 | Tables | `AppUi::Table` and `components/table.scss` |
 | Toolbars | `AppUi::Toolbar` and `components/toolbar.scss` |
-| Modals | `bootstrap-modal` (Bootstrap 3 modal, square); `AppUi::Modal` (native `<dialog>`, experimental) replaces it as screens migrate |
+| Modals | `AppUi::Modal` (native `<dialog>`, square) |
 | Tooltips | tippy.js themes in `components/tooltip-themes.scss` |
 | Reply / comment box | `ConversationUi::CommentComposer` (toast-ui WYSIWYG with its toolbar, mentions and issue links); never a plain textarea |
 | Record boxes | Plain `box box-*`, with no extra shadow or border |
