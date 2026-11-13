@@ -11,6 +11,7 @@ Shared by the fields that extend the base field: `@data-field` (the field's test
 | FieldText: `@value`, `@placeholder`, `@type`, `@mask`, `@length`, `@readonly`, `@onInput` | mixed | none | Single line text; `@onInput` gets the input event |
 | FieldTextArea: `@value`, `@placeholder`, `@onInput` | mixed | none | Multi line text |
 | FieldRelate: `@options`, `@selected`, `@relateType`, `@searchField`, `@searchEnabled`, `@disabled`, `@onchange` | mixed | none | One related record; `@relateType="relate-simple"` renders the option label |
+| FieldRelate, FieldRelateMulti, FieldMultiSelect: `@renderInPlace` | Boolean | false | Renders the options list next to the field instead of in the body; pass `true` inside `AppUi::Modal` |
 | FieldRelateMulti: same as FieldRelate | mixed | none | Several related records; `@onchange` gets the selected list |
 | FieldMultiSelect: `@options`, `@selected`, `@searchEnabled`, `@closeOnSelect`, `@onchange` | mixed | none | Several plain values |
 | FieldDate: `@value`, `@format`, `@singleDatePicker`, `@update` | mixed | none | Date picker; `@update` gets the formatted date |

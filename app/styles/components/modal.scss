@@ -1,0 +1,86 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+// AppUi::Modal on the native <dialog>. The dialog is a transparent, scrolling layer over the
+// whole viewport; the visible box is Bootstrap's .modal-dialog inside it, so its width,
+// margins and containerClass rules apply unchanged. Bootstrap's .modal class is not used:
+// Bootstrap 3 hides it until its jQuery plugin adds .in.
+
+dialog.app-modal {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  opacity: 0;
+  transition:
+    opacity 0.15s linear,
+    overlay 0.3s allow-discrete,
+    display 0.3s allow-discrete;
+
+  .modal-dialog {
+    transform: translate(0, -25%);
+    transition: transform 0.3s ease-out;
+  }
+
+  &[open] {
+    opacity: 1;
+
+    .modal-dialog {
+      transform: translate(0, 0);
+    }
+  }
+
+  &::backdrop {
+    background: rgb(0 0 0 / 0%);
+    backdrop-filter: blur(0);
+    transition:
+      background-color 0.15s linear,
+      backdrop-filter 0.15s linear,
+      overlay 0.3s allow-discrete,
+      display 0.3s allow-discrete;
+  }
+
+  &[open]::backdrop {
+    background: rgb(0 0 0 / 50%);
+    backdrop-filter: blur(0.5rem);
+  }
+}
+
+@starting-style {
+  dialog.app-modal[open] {
+    opacity: 0;
+  }
+
+  dialog.app-modal[open] .modal-dialog {
+    transform: translate(0, -25%);
+  }
+
+  dialog.app-modal[open]::backdrop {
+    background: rgb(0 0 0 / 0%);
+    backdrop-filter: blur(0);
+  }
+}
+
+// Lock the page behind an open modal; the dialog scrolls on its own
+body:has(dialog.app-modal[open]) {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.app-modal,
+  dialog.app-modal .modal-dialog,
+  dialog.app-modal::backdrop {
+    transition: none;
+  }
+}
