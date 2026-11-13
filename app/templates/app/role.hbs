@@ -92,13 +92,7 @@
         </QuickList>
 
         {{#if this.addRoleDialog}}
-          {{#bootstrap-modal
-            title="views.app.role.create.title"
-            confirmLabel="global.form.save"
-            closeLabel="global.form.cancel"
-            confirm=this.addRole
-            close=this.removeModal
-          }}
+          <AppUi::Modal @title="views.app.role.create.title" @confirmLabel="global.form.save" @closeLabel="global.form.cancel" @confirm={{this.addRole}} @onClose={{this.removeModal}}>
             <div class="box-body">
               <FormFields::FieldText
                 @placeholder={{t "views.app.role.create.nameplaceholder"}}
@@ -118,16 +112,11 @@
                 @message={{this.message.roleCreate.description}}
               />
             </div>
-          {{/bootstrap-modal}}
+          </AppUi::Modal>
         {{/if}}
 
         {{#if this.saveSearchDialog}}
-          {{#bootstrap-modal
-              title="global.form.savesearch"
-              confirmLabel="global.form.save"
-              closeLabel="global.form.cancel"
-              confirm=this.saveEzSearch
-              close=this.removeSaveSearchDialog}}
+          <AppUi::Modal @title="global.form.savesearch" @confirmLabel="global.form.save" @closeLabel="global.form.cancel" @confirm={{this.saveEzSearch}} @onClose={{this.removeSaveSearchDialog}}>
 
             <div class="ember-view">
               <label>{{t "views.app.issue.list.savedsearch.query"}}</label>
@@ -140,7 +129,7 @@
               @value={{this.newSavedsearch.name}}
             />
 
-          {{/bootstrap-modal}}
+          </AppUi::Modal>
         {{/if}}
       </div>
 

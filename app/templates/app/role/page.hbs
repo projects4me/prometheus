@@ -173,17 +173,11 @@
         {{/if}}
 
         {{#if this.addUserroleDialog}}
-          {{#bootstrap-modal
-            title="views.app.role.tabs.user.userrole.title"
-            confirmLabel="global.form.save"
-            closeLabel="global.form.cancel"
-            confirm=this.addUserrole
-            close=this.removeModal
-            disableSaveBtn=(or this.isAddingUserroles (not this.usersList.length))
-          }}
+          <AppUi::Modal @title="views.app.role.tabs.user.userrole.title" @confirmLabel="global.form.save" @closeLabel="global.form.cancel" @confirm={{this.addUserrole}} @onClose={{this.removeModal}} @disableSaveBtn={{(or this.isAddingUserroles (not this.usersList.length))}}>
           <div class="form-group" data-role="add-userrole-form">
             {{#if this.usersList.length}}
               <FormFields::FieldRelateMulti
+                @renderInPlace={{true}}
                 @searchEnabled={{true}}
                 @searchField="label"
                 @placeholder={{t "views.app.role.tabs.user.userrole.selectuser"}}
@@ -204,15 +198,11 @@
               </div>
             {{/if}}
           </div>
-          {{/bootstrap-modal}}
+          </AppUi::Modal>
         {{/if}}
 
         {{#if this.viewAllMembersDialog}}
-          {{#bootstrap-modal
-            title="views.app.role.tabs.user.viewallmembers"
-            closeLabel="global.form.close"
-            close=this.removeViewAllMembersModal
-          }}
+          <AppUi::Modal @title="views.app.role.tabs.user.viewallmembers" @closeLabel="global.form.close" @onClose={{this.removeViewAllMembersModal}}>
             <div class="role-members-view-all" data-role="role-members-view-all">
               <div class="role-members-view-all__search">
                 <div class="input-group">
@@ -264,7 +254,7 @@
                 {{/if}}
               </ul>
             </div>
-          {{/bootstrap-modal}}
+          </AppUi::Modal>
         {{/if}}
       </div>
     </div>

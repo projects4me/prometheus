@@ -31,13 +31,13 @@ function waitForMessenger(selector) {
 }
 
 function labelInput(locale) {
-    return `.modal [data-field="issuestatus.label.${locale}"] input`;
+    return `dialog.app-modal [data-field="issuestatus.label.${locale}"] input`;
 }
 
-const VALUE_INPUT = '.modal [data-field="issuestatus.name"] input';
-const PICKER_INPUT = '.modal [data-field="issuestatus.color.picker"] input';
-const TEXT_COLOR_FIELD = '.modal [data-field="issuestatus.textColor"]';
-const PREVIEW_LABEL = '.modal [data-field="issuestatus.color.preview"] .label';
+const VALUE_INPUT = 'dialog.app-modal [data-field="issuestatus.name"] input';
+const PICKER_INPUT = 'dialog.app-modal [data-field="issuestatus.color.picker"] input';
+const TEXT_COLOR_FIELD = 'dialog.app-modal [data-field="issuestatus.textColor"]';
+const PREVIEW_LABEL = 'dialog.app-modal [data-field="issuestatus.color.preview"] .label';
 
 /**
  * The colour of a text, rgb() as browsers report it, for a tone: dark or light.
@@ -89,7 +89,7 @@ function createRequests() {
 }
 
 async function submitModal() {
-    await click('.modal .btn-primary');
+    await click('dialog.app-modal .btn-primary');
     await settled();
 }
 
@@ -137,7 +137,7 @@ export const when = function () {
                 await click('[data-btn="add-issue-status"]');
                 await fillIn(labelInput('en-us'), label);
                 await fillIn(PICKER_INPUT, color);
-                await click('.modal [data-field="issuestatus.done"] input');
+                await click('dialog.app-modal [data-field="issuestatus.done"] input');
                 await submitModal();
                 assert.ok(true, `User adds the issue status ${label}`);
             }
@@ -316,7 +316,7 @@ export const then = function () {
         },
         {
             "The dialog has a label field for $locales": (assert) => async function (locales) {
-                let fields = [...document.querySelectorAll('.modal [data-field^="issuestatus.label."]')]
+                let fields = [...document.querySelectorAll('dialog.app-modal [data-field^="issuestatus.label."]')]
                     .map(field => field.dataset.field.replace('issuestatus.label.', ''));
                 assert.deepEqual(fields, splitNames(locales), 'label fields');
             }
@@ -333,7 +333,7 @@ export const then = function () {
         },
         {
             "The issue status is not saved and the dialog stays open": (assert) => async function () {
-                assert.dom('.modal [data-field="issuestatus.name"]').exists('the dialog is open');
+                assert.dom('dialog.app-modal [data-field="issuestatus.name"]').exists('the dialog is open');
                 assert.strictEqual(createRequests().length, 0, 'no create request');
             }
         },

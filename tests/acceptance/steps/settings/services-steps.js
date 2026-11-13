@@ -70,23 +70,23 @@ export const when = function () {
         {
             "User approves the request $name and cancels": (assert) => async function (name) {
                 await click(findByAttr('data-request', name).querySelector('[data-btn="approve-request"]'));
-                assert.ok(document.querySelector('.modal [data-request-confirm] [data-request-code]'), 'confirmation shows the code');
-                await click('.modal .btn-default');
+                assert.ok(document.querySelector('dialog.app-modal [data-request-confirm] [data-request-code]'), 'confirmation shows the code');
+                await click('dialog.app-modal .btn-default');
                 await settled();
             }
         },
         {
             "User approves the request $name and confirms": (assert) => async function (name) {
                 await click(findByAttr('data-request', name).querySelector('[data-btn="approve-request"]'));
-                await click('.modal .btn-primary');
+                await click('dialog.app-modal .btn-primary');
                 await settled();
             }
         },
         {
             "User denies the request $name and confirms": (assert) => async function (name) {
                 await click(findByAttr('data-request', name).querySelector('[data-btn="deny-request"]'));
-                assert.ok(document.querySelector('.modal [data-request-confirm]'), 'confirmation is open');
-                await click('.modal .btn-primary');
+                assert.ok(document.querySelector('dialog.app-modal [data-request-confirm]'), 'confirmation is open');
+                await click('dialog.app-modal .btn-primary');
                 await settled();
             }
         },
@@ -99,7 +99,7 @@ export const when = function () {
         },
         {
             "User closes the created token": (assert) => async function () {
-                await click('.modal [data-btn="cancel"]');
+                await click('dialog.app-modal [data-btn="cancel"]');
                 await waitUntil(() => !document.querySelector('[data-token-created]'), { timeout: 3000 });
                 await settled();
             }
@@ -113,16 +113,16 @@ export const when = function () {
         {
             "User disables the service $name and cancels": (assert) => async function (name) {
                 await click(findRow(name).querySelector('[data-btn="disable-service"]'));
-                assert.ok(document.querySelector('.modal [data-services-confirm]'), 'confirmation is open');
-                await click('.modal .btn-default');
+                assert.ok(document.querySelector('dialog.app-modal [data-services-confirm]'), 'confirmation is open');
+                await click('dialog.app-modal .btn-default');
                 await settled();
             }
         },
         {
             "User disables the service $name and confirms": (assert) => async function (name) {
                 await click(findRow(name).querySelector('[data-btn="disable-service"]'));
-                assert.ok(document.querySelector('.modal [data-services-confirm]'), 'confirmation is open');
-                await click('.modal .btn-primary');
+                assert.ok(document.querySelector('dialog.app-modal [data-services-confirm]'), 'confirmation is open');
+                await click('dialog.app-modal .btn-primary');
                 await settled();
             }
         }
@@ -159,9 +159,9 @@ export const then = function () {
         },
         {
             "The created token is shown with the single-use warning": (assert) => async function () {
-                assert.ok(document.querySelector('.modal [data-token-value]').value, 'token is shown');
-                assert.ok(document.querySelector('.modal [data-token-warning]').textContent.includes('single time'), 'warning');
-                assert.ok(document.querySelector('.modal [data-btn="copy-token"]'), 'copy button');
+                assert.ok(document.querySelector('dialog.app-modal [data-token-value]').value, 'token is shown');
+                assert.ok(document.querySelector('dialog.app-modal [data-token-warning]').textContent.includes('single time'), 'warning');
+                assert.ok(document.querySelector('dialog.app-modal [data-btn="copy-token"]'), 'copy button');
             }
         },
         {

@@ -837,7 +837,6 @@ export default class AppRoleController extends PrometheusCreateController {
             return;
         }
         this.addRoleDialog = false;
-        $('.modal').modal('hide');
     }
 
     /**

@@ -2,13 +2,13 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
+import $ from 'jquery';
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { action, computed } from '@ember/object';
 import { inject as controller } from '@ember/controller';
 import { htmlSafe } from '@ember/template';
 import { tracked } from '@glimmer/tracking';
 import { task, timeout } from 'ember-concurrency';
-import $ from 'jquery';
 import {
     accessSplit, accessTier, actionTotals, coverageByRole, roleInitials, toCoverageEntries
 } from 'prometheus/utils/role/access';
@@ -697,7 +697,6 @@ export default class AppRolePageController extends PrometheusCreateController {
         if (this.isDestroyed || this.isDestroying) return;
         this.addUserroleDialog = false;
         this.selectedUsers = [];
-        $('.modal').modal('hide');
     }
 
     /**
@@ -710,7 +709,6 @@ export default class AppRolePageController extends PrometheusCreateController {
         if (this.isDestroyed || this.isDestroying) return;
         this.viewAllMembersDialog = false;
         this.membersSearchQuery = '';
-        $('.modal').modal('hide');
     }
 
     /**
