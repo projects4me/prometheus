@@ -116,12 +116,12 @@
           </ul>
           <div class="filePreviewModal">
             {{#if this.filePreviewDialog}}
-              {{#bootstrap-modal
-                  title="views.app.wiki.page.file.preview"
-                  closeLabel="global.form.close"
-                  close=this.removeModal}}
+              <AppUi::Modal
+                  @title="views.app.wiki.page.file.preview"
+                  @closeLabel="global.form.close"
+                  @onClose={{this.removeModal}}>
                 <iframe title="{{t "views.app.wiki.page.file.preview"}}" id="file_preview"></iframe>
-              {{/bootstrap-modal}}
+              </AppUi::Modal>
             {{/if}}
           </div>
 

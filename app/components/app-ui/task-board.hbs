@@ -80,13 +80,13 @@
 
 {{!-- Create Milestone Modal --}}
 {{#if this.addMilestoneDialog}}
-  {{#bootstrap-modal
-    title="views.app.board.milestone.create"
-    closeLabel="global.form.close"
-    confirmLabel="global.form.save"
-    close=this.removeAddMilestoneModal
-    confirm=this.saveMilestone
-  }}
+  <AppUi::Modal
+    @title="views.app.board.milestone.create"
+    @closeLabel="global.form.close"
+    @confirmLabel="global.form.save"
+    @onClose={{this.removeAddMilestoneModal}}
+    @confirm={{this.saveMilestone}}
+  >
     <div class="form-group">
       <FormFields::FieldText
         @placeholder={{t "views.app.project.detail.milestone.inputname"}}
@@ -171,19 +171,18 @@
         @message={{@message.milestoneCreate.description}}
       />
     </div>
-  {{/bootstrap-modal}}
+  </AppUi::Modal>
 {{/if}}
 
 {{!-- Close Milestone Confirmation Modal --}}
 {{#if this.showMarkMilestoneAsCompleteModal}}
-  {{#bootstrap-modal
-    title="views.app.board.milestone.markComplete.title"
-    closeLabel="global.form.cancel"
-    confirmLabel="views.app.board.milestone.markComplete.confirm"
-    close=this.cancelMarkMilestoneAsComplete
-    confirm=this.markMilestoneAsComplete
-    confirmClass="btn-danger"
-  }}
+  <AppUi::Modal
+    @title="views.app.board.milestone.markComplete.title"
+    @closeLabel="global.form.cancel"
+    @confirmLabel="views.app.board.milestone.markComplete.confirm"
+    @onClose={{this.cancelMarkMilestoneAsComplete}}
+    @confirm={{this.markMilestoneAsComplete}}
+  >
     <div class="close-milestone-confirmation">
       <div class="alert alert-warning flex-row flex-ai-c">
         <i class="fa fa-exclamation-triangle"></i>
@@ -199,5 +198,5 @@
         </ul>
       </div>
     </div>
-  {{/bootstrap-modal}}
+  </AppUi::Modal>
 {{/if}}

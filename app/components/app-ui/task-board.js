@@ -150,7 +150,6 @@ export default class TaskBoardComponent extends AppComponent {
 	removeAddMilestoneModal() {
 		if (this.isDestroyed || this.isDestroying) return;
 		this.addMilestoneDialog = false;
-		$('.modal').modal('hide');
 	}
 
 	/**
@@ -291,7 +290,6 @@ export default class TaskBoardComponent extends AppComponent {
 		Logger.debug("TaskBoardComponent::cancelMarkMilestoneAsComplete");
         if (this.isDestroyed || this.isDestroying) return;
 		this.showMarkMilestoneAsCompleteModal = false;
-		$('.modal').modal('hide');
 		Logger.debug("-TaskBoardComponent::cancelMarkMilestoneAsComplete");
 	}
 

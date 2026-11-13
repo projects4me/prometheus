@@ -148,13 +148,13 @@
 
 {{!-- Add Issue Modal --}}
 {{#if this.addIssueDialog}}
-  {{#bootstrap-modal
-    title="views.app.board.issue.create"
-    closeLabel="global.form.close"
-    confirmLabel="global.form.save"
-    close=this.removeAddIssueModal
-    confirm=this.saveIssue
-  }}
+  <AppUi::Modal
+    @title="views.app.board.issue.create"
+    @closeLabel="global.form.close"
+    @confirmLabel="global.form.save"
+    @onClose={{this.removeAddIssueModal}}
+    @confirm={{this.saveIssue}}
+  >
     <div class="form-group">
       <FormFields::FieldText
         @placeholder={{t "views.app.issue.create.placeholder.subject"}}
@@ -189,6 +189,7 @@
       </div>        
 
       <FormFields::FieldRelate
+        @renderInPlace={{true}}
         @placeholder={{t "views.app.issue.create.type"}}
         @label={{t "views.app.issue.create.type"}}
         @value={{this.newIssue.typeId}}
@@ -203,6 +204,7 @@
       />
 
       <FormFields::FieldRelate
+        @renderInPlace={{true}}
         @placeholder={{t "views.app.issue.create.status"}}
         @label={{t "views.app.issue.create.status"}}
         @value={{this.newIssue.statusId}}
@@ -218,6 +220,7 @@
       />
 
       <FormFields::FieldRelate
+        @renderInPlace={{true}}
         @placeholder={{t "views.app.issue.create.priority"}}
         @label={{t "views.app.issue.create.priority"}}
         @value={{this.newIssue.priority}}
@@ -265,5 +268,5 @@
         @message={{@message.issueCreate.endDate}}
       />
     </div>
-  {{/bootstrap-modal}}
+  </AppUi::Modal>
 {{/if}}
