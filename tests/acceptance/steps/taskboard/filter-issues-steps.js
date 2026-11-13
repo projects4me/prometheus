@@ -32,14 +32,14 @@ export const when = function () {
         {
             'User opens the board Filter modal': () => async function () {
                 await click(`${SEARCH} [data-ez-builder-toggle]`);
-                await waitUntil(() => document.querySelector('.modal.in .modal-dialog'));
+                await waitUntil(() => document.querySelector('dialog.app-modal[open] .modal-dialog'));
             }
         },
         {
             'User adds a condition and searches in the board Filter modal': (assert, ctx) => async function () {
                 ctx.set('issueQueries', []);
-                await click('.modal [data-ez-add-condition]');
-                await click('.modal [data-btn="save"]');
+                await click('dialog.app-modal [data-ez-add-condition]');
+                await click('dialog.app-modal [data-btn="save"]');
                 await settled();
             }
         },
@@ -81,17 +81,16 @@ export const then = function () {
                 // Messenger toasts live in the body and outlive the test that raised them; a success toast left over
                 // from an earlier scenario can sit over the dialog centre and is not what this check is about.
                 document.querySelectorAll('.messenger-message').forEach((toast) => toast.remove());
-                let dialog = document.querySelector('.modal .modal-dialog');
+                let dialog = document.querySelector('dialog.app-modal .modal-dialog');
                 let rect = dialog.getBoundingClientRect();
                 let top = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
                 assert.ok(top && dialog.contains(top), `the dialog is on top of the overlay, got ${top && top.outerHTML.slice(0, 120)}`);
-                assert.notOk(document.querySelector(SEARCH).contains(dialog), 'the modal is outside the board search');
             }
         },
         {
             'The board Filter modal and its backdrop are gone': (assert) => async function () {
-                await waitUntil(() => !document.querySelector('.modal'));
-                assert.dom('.modal').doesNotExist();
+                await waitUntil(() => !document.querySelector('dialog.app-modal'));
+                assert.dom('dialog.app-modal').doesNotExist();
                 assert.dom('.modal-backdrop').doesNotExist();
             }
         },

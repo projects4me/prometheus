@@ -28,12 +28,12 @@
               />
             {{/if}}
             {{#if this.saveSearchDialog}}
-              {{#bootstrap-modal
-                  title="global.form.savesearch"
-                  confirmLabel="global.form.save"
-                  closeLabel="global.form.cancel"
-                  confirm=this.saveEzSearch
-                  close=this.removeSaveSearchDialog}}
+              <AppUi::Modal
+                  @title="global.form.savesearch"
+                  @confirmLabel="global.form.save"
+                  @closeLabel="global.form.cancel"
+                  @confirm={{this.saveEzSearch}}
+                  @onClose={{this.removeSaveSearchDialog}}>
 
                 <div class="ember-view">
                   <label>{{t "views.app.project.list.savedsearch.query"}}</label>
@@ -47,7 +47,7 @@
                   @aclContex="App.Project.List.SavedSearch.Create.Name"
                 />
 
-              {{/bootstrap-modal}}
+              </AppUi::Modal>
             {{/if}}
             {{!-- /.box-tools --}}
           </div>
@@ -161,15 +161,16 @@
 
           {{!-- Modals --}}
           {{#if this.exportDialog}}
-            {{#bootstrap-modal
-                title="global.form.export"
-                confirmLabel="global.form.export"
-                closeLabel="global.form.cancel"
-                confirm=this.exportModules
-                close=this.removeExportDialog}}
+            <AppUi::Modal
+                @title="global.form.export"
+                @confirmLabel="global.form.export"
+                @closeLabel="global.form.cancel"
+                @confirm={{this.exportModules}}
+                @onClose={{this.removeExportDialog}}>
                 
                 <div class="form-group">
                   <FormFields::FieldRelateMulti
+                    @renderInPlace={{true}}
                     @options={{get-relationships "project" this.store}}
                     @placeholder={{t "views.app.module.list.export.selectRelationship.placeholder"}}
                     @selected={{this.exportRelationships}}
@@ -179,18 +180,19 @@
                     @closeOnSelect={{false}}
                   />
                 </div>
-            {{/bootstrap-modal}}
+            </AppUi::Modal>
           {{/if}}
           {{#if this.massUpdateDialog}}
-            {{#bootstrap-modal
-                title="global.form.massupdate"
-                confirmLabel="global.form.save"
-                closeLabel="global.form.cancel"
-                confirm=this.massUpdateProject
-                close=this.removeMassUpdateDialog}}
+            <AppUi::Modal
+                @title="global.form.massupdate"
+                @confirmLabel="global.form.save"
+                @closeLabel="global.form.cancel"
+                @confirm={{this.massUpdateProject}}
+                @onClose={{this.removeMassUpdateDialog}}>
 
                 <div class="form-group">
                   <FormFields::FieldRelate
+                    @renderInPlace={{true}}
                     @placeholder={{t "views.app.project.create.statusplaceholder"}}
                     @label={{t "views.app.project.create.status"}}
                     @value={{this.massUpdateModel.status}}
@@ -202,7 +204,7 @@
                     @data-field="project.status"
                   />
                 </div>
-            {{/bootstrap-modal}}
+            </AppUi::Modal>
           {{/if}}
 
         </div>

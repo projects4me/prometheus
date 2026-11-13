@@ -64,8 +64,8 @@ export const when = function () {
                 await click(`${BAR} [data-ez-saved] button`);
                 await click(`${BAR} [data-ez-save]`);
                 assert.dom('[data-save-search-query]').includesText('Issue.subject');
-                await fillIn('.modal input', name);
-                await click('.modal [data-btn="save"]');
+                await fillIn('dialog.app-modal input', name);
+                await click('dialog.app-modal [data-btn="save"]');
                 await settled();
             }
         },
@@ -125,9 +125,8 @@ export const then = function () {
         },
         {
             'The gantt save dialog is closed': (assert) => async function () {
-                await waitUntil(() => !document.querySelector('.modal-backdrop'), { timeout: 3000 });
-                assert.dom('.modal').doesNotExist();
-                assert.dom('.modal-backdrop').doesNotExist();
+                await waitUntil(() => !document.querySelector('dialog.app-modal'), { timeout: 3000 });
+                assert.dom('dialog.app-modal').doesNotExist();
             }
         },
         {
