@@ -85,12 +85,12 @@
           </:empty>
         </QuickList>
         {{#if this.saveSearchDialog}}
-          {{#bootstrap-modal
-              title="global.form.savesearch"
-              confirmLabel="global.form.save"
-              closeLabel="global.form.cancel"
-              confirm=this.saveEzSearch
-              close=this.removeSaveSearchDialog}}
+          <AppUi::Modal
+              @title="global.form.savesearch"
+              @confirmLabel="global.form.save"
+              @closeLabel="global.form.cancel"
+              @confirm={{this.saveEzSearch}}
+              @onClose={{this.removeSaveSearchDialog}}>
 
             <div class="ember-view">
               <label>{{t "views.app.issue.list.savedsearch.query"}}</label>
@@ -103,7 +103,7 @@
               @value={{this.newSavedsearch.name}}
             />
 
-          {{/bootstrap-modal}}
+          </AppUi::Modal>
         {{/if}}
       </div>
 
@@ -114,12 +114,12 @@
   </div>
 
   {{#if this.addConversationDialog}}
-      {{#bootstrap-modal
-        title="views.app.conversation.create"
-        confirmLabel="global.form.save"
-        closeLabel="global.form.cancel"
-        confirm=this.addConversation
-        close=this.removeModal}}
+      <AppUi::Modal
+        @title="views.app.conversation.create"
+        @confirmLabel="global.form.save"
+        @closeLabel="global.form.cancel"
+        @confirm={{this.addConversation}}
+        @onClose={{this.removeModal}}>
         <div class="box-body">
           <FormFields::FieldText
               @placeholder={{t "views.app.conversation.new.subject"}}
@@ -160,6 +160,7 @@
               @options={{this.roomTypes}}
               @selected={{find-by "value" this.newConversation.roomType this.roomTypes}}
               @searchField="label"
+              @renderInPlace={{true}}
               @onchange={{this.selectNewType}}
               @relateType="relate-simple"
               @data-field="newConversation.roomType"
@@ -180,12 +181,13 @@
               @onchange={{this.setNewConversationLinkedIssue}}
               @disabled={{not (eq this.newConversation.roomType "discussion")}}
               @allowClear={{true}}
+              @renderInPlace={{true}}
               @relateType="relate-issue"
               @data-field="conversation.linkedIssue"
               @aclContext='conversationroom.create'
           />
 
         </div>
-      {{/bootstrap-modal}}
+      </AppUi::Modal>
 
     {{/if}}

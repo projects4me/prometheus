@@ -91,7 +91,6 @@ export default class ConversationUiCommentItemComponent extends AppComponent {
         if (this.isDestroyed || this.isDestroying) return;
         this.showEditCommentModal = false;
         this.editedCommentContent = '';
-        $('.modal').modal('hide');
     }
 
     /**
@@ -144,6 +143,7 @@ export default class ConversationUiCommentItemComponent extends AppComponent {
             });
             
             this.removeEditCommentModal();
+            return true;
         } catch (error) {
             Logger.error('ConversationUiCommentItemComponent::updateComment - Error:', error);
             comment.rollbackAttributes();
@@ -178,7 +178,6 @@ export default class ConversationUiCommentItemComponent extends AppComponent {
         Logger.debug('ConversationUiCommentItemComponent::removeDeleteCommentModal');
         if (this.isDestroyed || this.isDestroying) return;
         this.showDeleteCommentModal = false;
-        $('.modal').modal('hide');
         Logger.debug('ConversationUiCommentItemComponent::removeDeleteCommentModal - Done');
     }
 

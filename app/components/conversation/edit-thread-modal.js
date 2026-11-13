@@ -63,7 +63,6 @@ export default class ConversationEditThreadModalComponent extends AppComponent {
      */
     @action close() {
         Logger.debug('ConversationEditThreadModalComponent::close');
-        $('.modal').modal('hide');
         if (typeof this.args.onClose === 'function') {
             this.args.onClose();
         }
@@ -103,7 +102,7 @@ export default class ConversationEditThreadModalComponent extends AppComponent {
     }
 
     /**
-     * Hands the edited values to @onSave and closes the modal once they are saved
+     * Hands the edited values to @onSave; resolves true once saved, so the modal closes
      *
      * @method updateConversation
      * @public
@@ -142,9 +141,7 @@ export default class ConversationEditThreadModalComponent extends AppComponent {
                 hideAfter: 3
             });
 
-            if (!this.isDestroying && !this.isDestroyed) {
-                this.close();
-            }
+            return true;
         } catch (error) {
             Logger.error('ConversationEditThreadModalComponent::updateConversation - Error:', error);
             messenger.update({

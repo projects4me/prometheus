@@ -639,7 +639,6 @@ export default class AppProjectConversationController extends ProjectRelated.ext
         if (this.isDestroyed || this.isDestroying) return;
         this.set('addConversationDialog', false);
         this.set('newConversationLinkedIssue', null);
-        $('.modal').modal('hide');
     }
 
     /**

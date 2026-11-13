@@ -14,14 +14,14 @@ export default function (assert) {
             assert.ok(true, "User clicks on edit button of conversation");
         })
         .when('User updates conversation subject to $subject', async function (subject) {
-            let subjectInput = document.querySelector('.modal div[data-field="conversation.subject"] input');
+            let subjectInput = document.querySelector('dialog.app-modal div[data-field="conversation.subject"] input');
             await fillIn(subjectInput, subject);
             assert.ok(true, "User updates conversation subject");
         })
         .when('User updates conversation description to $description', async function (description) {
-            let contentEditableDiv = document.querySelector('.modal .edit-conversation-form div.tui-editor-contents[contenteditable="true"]');
+            let contentEditableDiv = document.querySelector('dialog.app-modal .edit-conversation-form div.tui-editor-contents[contenteditable="true"]');
             if (!contentEditableDiv) {
-                contentEditableDiv = document.querySelector('.modal div.tui-editor-contents[contenteditable="true"]');
+                contentEditableDiv = document.querySelector('dialog.app-modal div.tui-editor-contents[contenteditable="true"]');
             }
             await fillIn(contentEditableDiv, description);
             assert.ok(true, "User updates conversation description");

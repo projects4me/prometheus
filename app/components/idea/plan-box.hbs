@@ -89,17 +89,17 @@
   {{/if}}
 
   {{#if this.showApproveModal}}
-    {{#bootstrap-modal
-      title="views.app.idea.plan.approveTitle"
-      closeLabel="global.form.cancel"
-      confirmLabel="views.app.idea.plan.approveConfirm"
-      close=this.closeApprove
-      confirm=this.confirmApprove
-    }}
+    <AppUi::Modal
+      @title="views.app.idea.plan.approveTitle"
+      @closeLabel="global.form.cancel"
+      @confirmLabel="views.app.idea.plan.approveConfirm"
+      @onClose={{this.closeApprove}}
+      @confirm={{this.confirmApprove}}
+    >
       <div class="alert alert-warning flex-row flex-ai-c" data-idea-plan-approve-confirm>
         <i class="fa fa-exclamation-triangle"></i>
         <p>{{t "views.app.idea.plan.approveMessage" version=this.selected.version}}</p>
       </div>
-    {{/bootstrap-modal}}
+    </AppUi::Modal>
   {{/if}}
 </div>

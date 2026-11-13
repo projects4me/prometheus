@@ -77,7 +77,7 @@ export default class IdeaConversationBoxComponent extends Component {
      * Archives or unarchives the idea after the confirmation
      *
      * @method confirmArchive
-     * @returns {Boolean} true, for bootstrap-modal to hide the dialog
+     * @returns {Boolean} true, so AppUi::Modal closes
      * @public
      */
     @action
