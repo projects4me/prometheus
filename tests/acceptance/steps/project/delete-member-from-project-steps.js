@@ -1,8 +1,6 @@
 import steps from '../steps';
-import {
-	clickTrigger,
-	selectChoose
-} from 'ember-power-select/test-support/helpers';
+import { selectChoose } from 'ember-power-select/test-support';
+import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import { click } from '@ember/test-helpers';
 
 export const when = function () {

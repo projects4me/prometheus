@@ -1,5 +1,6 @@
 <div class="input-group multiselect-input">
-  {{#power-select-multiple
+  {{#power-select
+      multiple=true
       class="form-control"
       options=this.options
       placeholder=this.placeholder
@@ -8,7 +9,7 @@
       onChange=this.onchange
   as |data|}}
     {{component this.relateType data=data}}
-  {{/power-select-multiple}}
+  {{/power-select}}
 </div>
 <span class="highlight"></span>
 <span class="bar"></span>

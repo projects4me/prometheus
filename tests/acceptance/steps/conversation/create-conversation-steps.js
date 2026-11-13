@@ -1,5 +1,6 @@
 import { click, currentURL, fillIn } from '@ember/test-helpers';
-import { selectChoose, selectSearch, clickTrigger } from 'ember-power-select/test-support/helpers';
+import { selectChoose, selectSearch } from 'ember-power-select/test-support';
+import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
 
 const LINK_ISSUE_SELECTOR = '.modal [data-field="conversation.linkedIssue"]';

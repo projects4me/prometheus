@@ -5,7 +5,9 @@ import { htmlSafe } from "@ember/template";
 import { tracked } from '@glimmer/tracking';
 import AppComponent from 'prometheus/components/app';
 import RSVP from 'rsvp';
+import { associateDestroyableChild } from '@ember/destroyable';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
+import IssueAttachmentQueue from 'prometheus/utils/upload/issue-attachment-queue';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
 import { pushRecords, removeRecord } from 'prometheus/utils/array/record-list';
@@ -253,62 +255,47 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     }
 
     /**
-     * This is a task to handle file uploading
+     * The upload queue for the issue's attachments
      *
-     * @param handleUpload
-     * @type task
+     * @property attachmentQueue
+     * @type IssueAttachmentQueue
      * @private
      */
-    handleUpload = task({ maxConcurrency: 3, enqueue: true }, async (file) => {
-        Logger.debug('Trying to upload a file');
-        let maxFileSize = this.config.app.upload.maxFileSize;
+    attachmentQueue = this.createAttachmentQueue();
 
-        if(file.size > maxFileSize) {
-            new Messenger().post({
-                message: this.intl.t("views.app.issue.detail.file.uploadFailedSize", { size: maxFileSize / 1024 / 1024 }),
-                type: 'error',
-                showCloseButton: true
-            });
-            return;
-        }
+    /**
+     * Creates the attachment upload queue, destroyed with this component
+     *
+     * @method createAttachmentQueue
+     * @return {IssueAttachmentQueue}
+     * @private
+     */
+    createAttachmentQueue() {
+        let queue = new IssueAttachmentQueue({
+            store: this.store,
+            intl: this.intl,
+            maxFileSize: this.config.app.upload.maxFileSize,
+            issue: () => this.issue,
+            notifyError: (message) => this.showUploadError(message)
+        });
+        associateDestroyableChild(this, queue);
+        return queue;
+    }
 
-        let upload = this.store.createRecord('upload', {});
-
-        try {
-            let options = {
-                url: upload.store.adapterFor('upload').buildURL('upload'),
-                data: {
-                    relatedTo: 'issue',
-                    relatedId: this.issue.id
-                },
-                headers: upload.store.adapterFor('upload').headers
-            };
-
-            let response = await file.upload(options);
-            let data = await response.json();
-            
-            // Update the upload record with the response data
-            upload.setProperties({
-                id: data.data.id,
-                name: data.data.attributes.name,
-                fileSize: data.data.attributes.fileSize,
-                fileType: data.data.attributes.fileType,
-                fileMime: data.data.attributes.fileMime,
-                fileThumbnail: data.data.attributes.fileThumbnail
-            });
-
-            // Add to the relationship
-            pushRecords(this.issue.get('files'), [upload]);
-
-        } catch (e) {
-            new Messenger().post({
-                message: this.intl.t("views.app.issue.detail.file.uploadfailed"),
-                type: 'error',
-                showCloseButton: true
-            });
-            upload.rollback();
-        }
-    });
+    /**
+     * Shows an error toast for a rejected or failed upload
+     *
+     * @method showUploadError
+     * @param {String} message
+     * @private
+     */
+    showUploadError(message) {
+        new Messenger().post({
+            message,
+            type: 'error',
+            showCloseButton: true
+        });
+    }
 
     /**
      * This function saves the comment in the database
@@ -422,7 +409,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
      */
     @action uploadFile(file) {
         Logger.debug("Uploading a file");
-        this.handleUpload.perform(file);
+        this.attachmentQueue.add(file);
     }
 
     /**

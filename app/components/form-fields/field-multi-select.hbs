@@ -1,7 +1,8 @@
 <AccessControl @aclContext={{@aclContext}}>
   <div data-field={{@data-field}} class="form-field ember-view">
     <div class="input-group multiselect-input">
-      <PowerSelectMultiple
+      <PowerSelect
+        @multiple={{true}}
         @class="form-control"
         @options={{@options}}
         @placeholder={{@placeholder}}
@@ -17,7 +18,7 @@
         @onBlur={{this.validate}}
         @onClose={{this.validate}} as |data|>
         <span data-multi-select-value={{data}}>{{data}}</span>
-      </PowerSelectMultiple>
+      </PowerSelect>
     </div>
     <span class="highlight"></span>
     <span class="bar"></span>

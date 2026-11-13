@@ -1,4 +1,5 @@
-import { clickTrigger, selectChoose, selectSearch } from 'ember-power-select/test-support/helpers';
+import { selectChoose, selectSearch } from 'ember-power-select/test-support';
+import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import { find } from '@ember/test-helpers';
 import steps from '../steps';
 

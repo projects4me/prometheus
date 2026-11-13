@@ -8,6 +8,7 @@ import Application from 'prometheus/app';
 import config from 'prometheus/config/environment';
 import * as QUnit from 'qunit';
 import { setApplication } from '@ember/test-helpers';
+import { setConfig as setDropdownConfig } from 'ember-basic-dropdown/config';
 import { setup } from 'qunit-dom';
 import { loadTests } from 'ember-qunit/test-loader';
 import { start, setupEmberOnerrorValidation } from 'ember-qunit';
@@ -17,6 +18,10 @@ import { setupDeprecationReporting } from './helpers/deprecations';
 
 setupDeprecationReporting(QUnit);
 setApplication(Application.create(config.APP));
+
+// The app renders dropdowns into <BasicDropdownWormhole /> in its application template. Tests run inside #ember-testing,
+// and integration tests have no application template: point ember-basic-dropdown there.
+setDropdownConfig({ rootElement: config.APP.rootElement });
 
 setup(QUnit.assert);
 setupEmberOnerrorValidation();

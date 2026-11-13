@@ -29,6 +29,8 @@
 @import 'node_modules/bootstrap-sass/assets/stylesheets/_bootstrap';
 @import 'node_modules/ionicons/dist/scss/ionicons.scss';
 @import 'node_modules/font-awesome/scss/font-awesome.scss';
+// ember-power-select 9 no longer pulls in ember-basic-dropdown's styles (content positioning)
+@import 'ember-basic-dropdown';
 @import 'ember-power-select';
 @import 'vendor/AdminLTE/dist/css/AdminLTE.min.scss';
 @import 'vendor/AdminLTE/dist/css/skins/skin-black-light.min.scss';

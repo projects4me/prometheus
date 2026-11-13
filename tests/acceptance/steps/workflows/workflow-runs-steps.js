@@ -1,6 +1,6 @@
 /* global server */
 import { click, fillIn } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support/helpers';
+import { selectChoose } from 'ember-power-select/test-support';
 import steps from '../steps';
 
 const NODE = kind => `[data-workflow-node][data-node-kind="${kind}"]`;

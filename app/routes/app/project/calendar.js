@@ -94,7 +94,7 @@ export default App.extend({
 
         this.store.query(module,options).then(function(data){
             let issuesList = [];
-            let issuesCount = data.get('length');
+            let issuesCount = data.length;
             let issue = null;
             for (let i=0; i<issuesCount;i++)
             {

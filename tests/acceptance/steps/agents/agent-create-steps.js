@@ -1,7 +1,8 @@
 /* global server */
 import { click, currentURL, fillIn, find, findAll, settled, visit } from '@ember/test-helpers';
 import { Response } from 'miragejs';
-import { clickTrigger, removeMultipleOption, selectChoose, selectSearch } from 'ember-power-select/test-support/helpers';
+import { removeMultipleOption, selectChoose, selectSearch } from 'ember-power-select/test-support';
+import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
 
 const FIELDS = { scopes: '[data-field="agent.delegationScopes"]', projects: '[data-field="agent.projects"]', roles: '[data-field="agent.roles"]' };
