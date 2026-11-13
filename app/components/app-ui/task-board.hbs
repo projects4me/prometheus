@@ -4,7 +4,8 @@
       {{#each @milestones as |milestone index|}}
         <li class="milestone-tab {{if (eq index 0) "active" ""}} not-draggable" data-milestone-tab data-milestone-id={{if milestone.id milestone.id "backlog"}}>
           <a href="#tab_{{if milestone.id milestone.id "backlog"}}" data-toggle="tab" aria-expanded={{if (eq index 0) "true" "false"}} {{on "click" (fn this.updateActiveMilestone milestone)}}>
-            {{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}
+            <span data-milestone-tab-name>{{t (concat "views.app.milestone.lists.type." milestone.milestoneType)}} {{milestone.name}}</span>
+            <span class="label label-default milestone-tab-count" data-milestone-issue-count title={{t "views.app.board.milestone.issueCount" count=milestone.issues.length}}>{{milestone.issues.length}}</span>
           </a>
           <div class="drop-zone-area">
           </div>

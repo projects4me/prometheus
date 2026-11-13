@@ -1784,6 +1784,7 @@
         },
         "milestone": {
           "create": "Create Milestone",
+          "issueCount": "{count, plural, one {# issue} other {# issues}}",
           "creating": "Creating milestone ..",
           "created": "Milestone <strong>{name}</strong> created successfully",
           "error": "Failed to create milestone",
