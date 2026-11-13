@@ -1,15 +1,14 @@
 <AccessControl @aclContext={{@aclContext}}>
   <div data-field={{@data-field}} class="form-field ember-view">
     <div class="input-group select-input">
-      <PowerSelect
+      <AppUi::Select
         @renderInPlace={{@renderInPlace}}
-        @class="form-control"
         @options={{@options}}
         @placeholder={{@placeholder}}
         @selected={{@selected}}
         @searchField={{@searchField}}
         @onChange={{this.onChange}}
-        @onKeydown={{this.handlePowerSelectKeydown}}
+        @onKeydown={{this.handleSelectKeydown}}
         @matcher={{@matcher}}
         @onFocus={{this.enableValidation}}
         @onBlur={{this.validate}}
@@ -19,7 +18,7 @@
         @disabled={{@disabled}}
         @onClose={{this.validate}} as |data|>
         {{component (concat 'related-fields/'@relateType) data=data}}
-      </PowerSelect>
+      </AppUi::Select>
     </div>
       <span class="highlight"></span>
       <span class="bar"></span>

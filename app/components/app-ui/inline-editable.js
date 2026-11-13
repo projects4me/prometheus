@@ -280,7 +280,7 @@ export default class AppUiInlineEditableComponent extends Component {
 
     /**
      * This method updates the draft value when the new value arrives directly
-     * rather than via a DOM event. It is used by date pickers, power-select,
+     * rather than via a DOM event. It is used by date pickers, AppUi::Select,
      * multi-select and the draftModel adapter which all pass the value itself
      * to their onChange or @update callback. If a validation message is
      * currently displayed it is cleared immediately.

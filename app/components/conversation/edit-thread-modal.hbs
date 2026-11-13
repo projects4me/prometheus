@@ -33,23 +33,19 @@
       />
     </div>
     {{#if @linkIssueSearch}}
-      {{!-- Carried over from ConversationItem as it was; the new thread form uses FormFields::FieldRelate for this field --}}
-      <div class="form-group form-field ember-view" data-field="conversation.linkedIssue">
-        <div data-form-field="label">
-          <label class="floating-label">{{t "views.app.conversation.linkIssue"}}</label>
-        </div>
-        <PowerSelect
+      <div class="form-group">
+        <FormFields::FieldRelate
           @placeholder={{t "views.app.conversation.linkIssuePlaceholder"}}
-          @searchEnabled={{true}}
+          @label={{t "views.app.conversation.linkIssue"}}
           @search={{perform @linkIssueSearch}}
+          @searchEnabled={{true}}
           @selected={{this.editedLinkedIssue}}
-          @onChange={{this.setEditedLinkedIssue}}
+          @onchange={{this.setEditedLinkedIssue}}
           @allowClear={{true}}
           @renderInPlace={{true}}
-          as |issue|
-        >
-          <i class="fa fa-tasks"></i> <strong>#{{issue.number}}</strong> - {{issue.name}}
-        </PowerSelect>
+          @relateType="relate-issue"
+          @data-field="conversation.linkedIssue"
+        />
       </div>
     {{/if}}
   </div>

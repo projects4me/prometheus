@@ -14,7 +14,7 @@
 {{!-- search form (Optional) --}}
 <div class="sidebar-form">
   <div class="input-group">
-    <PowerSelect
+    <AppUi::Select
         class="form-control"
         @options={{this.projectsList}}
         @selected={{find-by "value" this.trackedProject.id this.projectsList}}
@@ -25,7 +25,7 @@
         @onChange={{this.projectChanged}}
         as |project|>
         {{project.label}}
-    </PowerSelect>
+    </AppUi::Select>
   </div>
 </div>
 {{!-- /.search form --}}

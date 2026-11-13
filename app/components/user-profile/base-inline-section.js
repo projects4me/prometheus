@@ -204,7 +204,7 @@ export default class UserProfileBaseInlineSectionComponent extends Component {
 	}
 
 	/**
-	 * Maps static definitions to relate-simple / PowerSelect options with translated labels.
+	 * Maps static definitions to relate-simple / AppUi::Select options with translated labels.
 	 *
 	 * @method buildIntlOptions
 	 * @param {Array} definitions
