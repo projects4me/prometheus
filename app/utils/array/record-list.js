@@ -11,6 +11,9 @@ import { isPromiseManyArray } from './to-array';
  * `clear`, `insertAt`) on its arrays and every array method on a PromiseManyArray; they go in Ember Data 5.0.
  * A PromiseManyArray is changed through its loaded ManyArray; while it is still loading nothing changes.
  *
+ * Adding is idempotent: a record the list already holds, or one given twice, is added once. Ember Data 5.3
+ * deprecates duplicates in a hasMany (`ember-data:deprecate-many-array-duplicates`) and 6.0 throws on them.
+ *
  * @class RecordList
  * @namespace Prometheus.Utils.Array
  */
@@ -28,7 +31,27 @@ function target(list) {
 }
 
 /**
- * Appends records to a list.
+ * The records not yet in a list, each once, in their given order.
+ *
+ * @method missingRecords
+ * @param {Array} items The records the list holds
+ * @param {Array} records The records to add
+ * @returns {Array} The records to add without the ones already held or repeated
+ * @private
+ */
+function missingRecords(items, records) {
+	let seen = new Set(items);
+	return records.filter((record) => {
+		if (seen.has(record)) {
+			return false;
+		}
+		seen.add(record);
+		return true;
+	});
+}
+
+/**
+ * Appends records to a list, skipping the ones it already holds.
  *
  * @method pushRecords
  * @param {Object} list An Ember Data record list
@@ -36,7 +59,13 @@ function target(list) {
  * @public
  */
 export function pushRecords(list, records) {
-	target(list)?.push(...records);
+	let items = target(list);
+	if (items) {
+		let missing = missingRecords(items, records);
+		if (missing.length) {
+			items.push(...missing);
+		}
+	}
 }
 
 /**
@@ -48,10 +77,7 @@ export function pushRecords(list, records) {
  * @public
  */
 export function addRecord(list, record) {
-	let items = target(list);
-	if (items && !items.includes(record)) {
-		items.push(record);
-	}
+	pushRecords(list, [record]);
 }
 
 /**
@@ -71,7 +97,7 @@ export function removeRecord(list, record) {
 }
 
 /**
- * Inserts a record into a list at a position.
+ * Inserts a record into a list at a position, unless the list already holds it.
  *
  * @method insertRecordAt
  * @param {Object} list An Ember Data record list
@@ -80,11 +106,14 @@ export function removeRecord(list, record) {
  * @public
  */
 export function insertRecordAt(list, index, record) {
-	target(list)?.splice(index, 0, record);
+	let items = target(list);
+	if (items && !items.includes(record)) {
+		items.splice(index, 0, record);
+	}
 }
 
 /**
- * Replaces every record of a list.
+ * Replaces every record of a list; a record given twice is kept once.
  *
  * @method replaceRecords
  * @param {Object} list An Ember Data record list
@@ -93,5 +122,5 @@ export function insertRecordAt(list, index, record) {
  */
 export function replaceRecords(list, records) {
 	let items = target(list);
-	items?.splice(0, items.length, ...records);
+	items?.splice(0, items.length, ...missingRecords([], records));
 }

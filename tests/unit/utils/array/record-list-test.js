@@ -17,6 +17,25 @@ module("Unit | Utility | array/record-list", function () {
     assert.deepEqual(list, [c, a, b]);
   });
 
+  test("adding is idempotent: records already held or given twice are added once", function (assert) {
+    let a = { id: "a" };
+    let b = { id: "b" };
+    let c = { id: "c" };
+    let list = [a];
+
+    pushRecords(list, [a, b, b]);
+    assert.deepEqual(list, [a, b], "pushRecords skips held and repeated records");
+
+    pushRecords(list, [a, b]);
+    assert.deepEqual(list, [a, b], "pushing the same records again changes nothing");
+
+    insertRecordAt(list, 0, b);
+    assert.deepEqual(list, [a, b], "insertRecordAt skips a held record");
+
+    replaceRecords(list, [c, a, c]);
+    assert.deepEqual(list, [c, a], "replaceRecords keeps a repeated record once");
+  });
+
   test("removeRecord and replaceRecords change the list in place", function (assert) {
     let a = { id: "a" };
     let b = { id: "b" };
