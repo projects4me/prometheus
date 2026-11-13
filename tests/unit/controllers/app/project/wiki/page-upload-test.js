@@ -30,4 +30,21 @@ module('Unit | Controller | app/project/wiki/page upload queue', function (hooks
         assert.deepEqual(tracker.finished.slice().sort(), names, 'every file finished');
         assert.strictEqual(files.length, 5, 'every file was added to the wiki page');
     });
+
+    test('a failed upload leaves the queue and leaves no upload record', async function (assert) {
+        const controller = this.owner.lookup('controller:app.project.wiki.page');
+        const files = fakeFilesRelation();
+        controller.set('model', { get: (key) => (key === 'files' ? files : '1') });
+        controller.set('session', { data: { authenticated: { access_token: 'token' } } });
+        const tracker = createUploadTracker();
+        tracker.failUploads = true;
+
+        controller.uploadFile(tracker.createFile('bad'));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        const store = this.owner.lookup('service:store');
+        assert.deepEqual(tracker.removed, ['bad'], 'the file left the ember-file-upload queue');
+        assert.strictEqual(files.length, 0, 'nothing was added to the wiki page');
+        assert.true(store.records.every((r) => r.rolledBack), 'the new upload record was rolled back');
+    });
 });

@@ -68,5 +68,20 @@ module('Unit | Utility | upload/issue-attachment-queue', function (hooks) {
         assert.deepEqual(tracker.started, [], 'no upload request was started');
         assert.strictEqual(files.length, 0, 'nothing was added to the issue');
         assert.deepEqual(errors, ['views.app.issue.detail.file.uploadFailedSize'], 'the user was told');
+        assert.deepEqual(tracker.removed, ['big'], 'the file left the ember-file-upload queue');
+    });
+
+    test('a failed upload is reported, leaves the queue and leaves no upload record', async function (assert) {
+        const tracker = createUploadTracker();
+        tracker.failUploads = true;
+        const { queue, files } = build(this.owner);
+        queue.add(tracker.createFile('bad'));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        const store = this.owner.lookup('service:store');
+        assert.deepEqual(errors, ['views.app.issue.detail.file.uploadfailed'], 'the user was told');
+        assert.deepEqual(tracker.removed, ['bad'], 'the file left the ember-file-upload queue');
+        assert.strictEqual(files.length, 0, 'nothing was added to the issue');
+        assert.true(store.records.every((r) => r.rolledBack), 'the new upload record was rolled back');
     });
 });
