@@ -77,13 +77,7 @@
   </div>
 
   {{#if this.editing}}
-    {{#bootstrap-modal
-      title=(if this.editing.isNew "views.app.settings.issueStatuses.add" "views.app.settings.issueStatuses.edit")
-      confirmLabel="global.form.save"
-      closeLabel="global.form.cancel"
-      confirm=this.saveIssueStatus
-      close=this.removeModal
-    }}
+    <AppUi::Modal @title={{if this.editing.isNew "views.app.settings.issueStatuses.add" "views.app.settings.issueStatuses.edit"}} @confirmLabel="global.form.save" @closeLabel="global.form.cancel" @confirm={{this.saveIssueStatus}} @onClose={{this.removeModal}}>
       <div class="box-body">
         {{#each this.form.labels as |field|}}
           <FormFields::FieldText
@@ -132,6 +126,7 @@
               @data-field="issuestatus.color.picker"
             />
             <FormFields::FieldRelate
+              @renderInPlace={{true}}
               @label={{t "views.app.settings.issueStatuses.textColor"}}
               @options={{this.textColors}}
               @selected={{this.selectedTextColor}}
@@ -149,6 +144,6 @@
           </label>
         </div>
       </div>
-    {{/bootstrap-modal}}
+    </AppUi::Modal>
   {{/if}}
 </section>

@@ -217,13 +217,7 @@
   </div>
 
   {{#if this.deciding}}
-    {{#bootstrap-modal
-      title=(if (eq this.decision "approved") "views.app.settings.services.requests.approveTitle" "views.app.settings.services.requests.denyTitle")
-      confirmLabel=(if (eq this.decision "approved") "views.app.settings.services.requests.approve" "views.app.settings.services.requests.deny")
-      closeLabel="global.form.cancel"
-      confirm=this.decide
-      close=this.cancelDecision
-    }}
+    <AppUi::Modal @title={{if (eq this.decision "approved") "views.app.settings.services.requests.approveTitle" "views.app.settings.services.requests.denyTitle"}} @confirmLabel={{if (eq this.decision "approved") "views.app.settings.services.requests.approve" "views.app.settings.services.requests.deny"}} @closeLabel="global.form.cancel" @confirm={{this.decide}} @onClose={{this.cancelDecision}}>
       <div class="box-body" data-request-confirm>
         {{#if (eq this.decision "approved")}}
           {{t "views.app.settings.services.requests.approveMessage" name=this.deciding.name}}
@@ -232,16 +226,11 @@
         {{/if}}
         <p class="lead text-center"><code data-request-code>{{this.deciding.userCode}}</code></p>
       </div>
-    {{/bootstrap-modal}}
+    </AppUi::Modal>
   {{/if}}
 
   {{#if this.createdToken}}
-    {{#bootstrap-modal
-      title="views.app.settings.services.tokens.createdTitle"
-      closeLabel="views.app.settings.services.tokens.copiedIt"
-      close=this.closeCreatedToken
-      removeConfirmBtn=true
-    }}
+    <AppUi::Modal @title="views.app.settings.services.tokens.createdTitle" @closeLabel="views.app.settings.services.tokens.copiedIt" @onClose={{this.closeCreatedToken}} @removeConfirmBtn={{true}}>
       <div class="box-body" data-token-created>
         <div class="alert alert-warning" data-token-warning>{{t "views.app.settings.services.tokens.warning"}}</div>
         <div class="input-group">
@@ -251,17 +240,11 @@
           </span>
         </div>
       </div>
-    {{/bootstrap-modal}}
+    </AppUi::Modal>
   {{/if}}
 
   {{#if this.confirming}}
-    {{#bootstrap-modal
-      title=(if this.confirmingDisable "views.app.settings.services.disableTitle" "views.app.settings.services.enableTitle")
-      confirmLabel=(if this.confirmingDisable "views.app.settings.services.disable" "views.app.settings.services.enable")
-      closeLabel="global.form.cancel"
-      confirm=this.toggleStatus
-      close=this.cancelToggle
-    }}
+    <AppUi::Modal @title={{if this.confirmingDisable "views.app.settings.services.disableTitle" "views.app.settings.services.enableTitle"}} @confirmLabel={{if this.confirmingDisable "views.app.settings.services.disable" "views.app.settings.services.enable"}} @closeLabel="global.form.cancel" @confirm={{this.toggleStatus}} @onClose={{this.cancelToggle}}>
       <div class="box-body" data-services-confirm>
         {{#if this.confirmingDisable}}
           {{t "views.app.settings.services.disableMessage" name=this.confirming.name}}
@@ -269,6 +252,6 @@
           {{t "views.app.settings.services.enableMessage" name=this.confirming.name}}
         {{/if}}
       </div>
-    {{/bootstrap-modal}}
+    </AppUi::Modal>
   {{/if}}
 </section>

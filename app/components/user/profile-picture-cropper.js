@@ -53,17 +53,19 @@ export default class UserProfilePictureCropperComponent extends AppComponent {
      */
     @action apply() {
         if (!this.cropperInstance) {
-            return;
+            return false;
         }
 
         const canvas = this.cropperInstance.getCroppedCanvas({ width: 300, height: 300 });
 
         if (!canvas) {
-            return;
+            return false;
         }
 
         const base64 = canvas.toDataURL('image/jpeg', 0.9);
         this.args.onApply(base64);
+
+        return false;
     }
 
     /**
