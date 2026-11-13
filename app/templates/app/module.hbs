@@ -86,7 +86,7 @@
                 </div>
               </td>
               {{#each-in this.metaData.fields as |field definition|}}
-                <td>{{field-view view='list' navigate=(fn this.detail entity.id) definition=definition model=entity field=field module=this.module}}</td>
+                <td><FieldView @navigate={{fn this.detail entity.id}} @definition={{definition}} @model={{entity}} @field={{field}} /></td>
               {{/each-in}}
             </tr>
           {{/each}}

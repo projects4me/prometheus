@@ -4,7 +4,7 @@
 
 import Service from "@ember/service";
 import io from "socket.io-client";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import config from "prometheus/config/environment";
 import { resolveHermesUrl } from "prometheus/utils/live/url";
 

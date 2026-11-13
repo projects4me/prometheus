@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * The AGENT label of a user who is an agent, with 'for <sponsor>' after it when asked. Renders nothing for anyone else.

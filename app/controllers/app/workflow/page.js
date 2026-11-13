@@ -5,7 +5,7 @@
 /* global Messenger */
 import Controller, { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { bounds } from 'prometheus/utils/workflow/node-geometry';
 import RunSession from 'prometheus/utils/workflow/run-session';

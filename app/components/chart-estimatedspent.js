@@ -4,7 +4,7 @@
 
 import _ from "lodash";
 import Component from '@ember/component';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
 import { toArray } from 'prometheus/utils/array/to-array';
@@ -26,7 +26,7 @@ export default Component.extend({
      * @for ChartIssueratio
      * @private
      */
-    intl: inject(),
+    intl: service(),
 
     /**
      * These are the classes the must be registered with the component

@@ -5,7 +5,7 @@
 import FormFieldsComponent from "./form-fields";
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 // Leap year, so 29 February can be chosen.
 const REFERENCE_YEAR = 2000;

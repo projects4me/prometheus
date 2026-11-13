@@ -5,7 +5,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { parse } from 'prometheus/utils/query/parse';
 import { serialize } from 'prometheus/utils/query/serializer';
 import { complete } from 'prometheus/utils/query/completer';

@@ -3,7 +3,7 @@
  */
 
 /* global Logger */
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 
 /**
  * Loads what the workflow editor's step forms pick from: Gaia's trigger catalog (the payload paths filters and

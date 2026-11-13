@@ -3,7 +3,7 @@
  */
 
 import App from 'prometheus/routes/app';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { hash, hashSettled } from 'rsvp';
 import UrlState from 'prometheus/utils/state/url-state';
 import { BROWSER_PARAMS, browserValues } from 'prometheus/utils/idea/browser-defaults';

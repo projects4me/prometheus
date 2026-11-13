@@ -4,7 +4,7 @@
 
 import App from "prometheus/routes/app";
 import { hash, hashSettled } from 'rsvp';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { replaceRecords } from 'prometheus/utils/array/record-list';
 
 /**

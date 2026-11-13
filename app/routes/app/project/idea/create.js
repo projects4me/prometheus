@@ -3,7 +3,7 @@
  */
 
 import App from 'prometheus/routes/app';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * The route of the new idea page, it prepares the idea that the form fills

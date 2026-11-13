@@ -8,7 +8,7 @@ import { tracked } from '@glimmer/tracking';
 import { buildConfig, configFields } from 'prometheus/utils/workflow/node-config';
 import { portsOf } from 'prometheus/utils/workflow/node-catalog';
 import { fillAgentDefaults, modelChoice } from 'prometheus/utils/workflow/agent-defaults';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * The form of one workflow step: its name and the settings of its kind, edited as a draft and applied to the step

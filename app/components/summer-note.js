@@ -3,7 +3,7 @@
  */
 
 import Component from '@ember/component';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 import $ from 'jquery';
 
 /**
@@ -26,7 +26,7 @@ export default Component.extend({
      * @for Prometheus.Components.SummerNote
      * @private
      */
-    intl: inject(),
+    intl: service(),
 
     /**
      * This is the list of emojis that we support

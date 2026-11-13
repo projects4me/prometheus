@@ -5,7 +5,7 @@
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * The controller of an agent's detail page. It extends the create controller for the validation and saving the

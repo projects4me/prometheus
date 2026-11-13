@@ -5,7 +5,7 @@
 import JSONAPIAdapter from '@ember-data/adapter/json-api';
 import ENV from "prometheus/config/environment";
 import { singularize } from 'ember-inflector';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import AdapterError from '@ember-data/adapter/error';
 import ForbiddenError from './errors/forbidden-error';

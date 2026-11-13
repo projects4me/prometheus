@@ -4,7 +4,7 @@
 
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { isComplete, isCondition, isGroup, remove } from 'prometheus/utils/query/ast';
 import { operator as findOperator } from 'prometheus/utils/query/operators';
 

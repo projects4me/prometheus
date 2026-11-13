@@ -4,7 +4,7 @@
 
 import PrometheusController from "prometheus/controllers/prometheus";
 import { task } from 'ember-concurrency';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { set } from '@ember/object';
 import $ from 'jquery';
 import { htmlSafe } from '@ember/template';

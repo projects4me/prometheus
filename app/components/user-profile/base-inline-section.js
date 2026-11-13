@@ -5,7 +5,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { postToast } from 'prometheus/utils/ui/post-toast';
 import { pushRecords } from 'prometheus/utils/array/record-list';
 import { toArray } from 'prometheus/utils/array/to-array';

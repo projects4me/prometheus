@@ -8,7 +8,7 @@ import { set } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
 /**
@@ -51,7 +51,7 @@ export default App.extend({
      * @for ProjectWikiRoute
      * @private
      */
-    trackedProject: inject(),
+    trackedProject: service(),
 
     /**
      * The model hook for this route. In this we're fetching the list of wikis against the selected project.

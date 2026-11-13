@@ -3,7 +3,7 @@
  */
 
 import Model, { attr, belongsTo, hasMany } from "@ember-data/model";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { computed } from "@ember/object";
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';

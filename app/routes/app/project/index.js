@@ -3,7 +3,7 @@
  */
 
 import App from "prometheus/routes/app";
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
@@ -27,7 +27,7 @@ export default App.extend({
      * @for Project
      * @private
      */
-    trackedProject: inject(),
+    trackedProject: service(),
 
     /**
      * Query params that the route supports.

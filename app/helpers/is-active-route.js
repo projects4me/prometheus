@@ -3,7 +3,7 @@
  */
 
 import Helper from '@ember/component/helper';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * This helper checks whether a given route name is the currently active route

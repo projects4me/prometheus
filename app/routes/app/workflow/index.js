@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import AppRoute from 'prometheus/routes/app';
 import { scopeOf, actorsOf } from 'prometheus/utils/workflow/list-summary';
 

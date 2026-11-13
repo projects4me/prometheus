@@ -4,7 +4,7 @@
 
 import App from 'prometheus/routes/app';
 import { hash, hashSettled } from 'rsvp';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
 

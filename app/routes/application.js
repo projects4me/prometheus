@@ -3,7 +3,7 @@
  */
 
 import Route from '@ember/routing/route';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 import ENV from "prometheus/config/environment";
 import getCurrentUrl from "prometheus/utils/location/current-url";
 
@@ -28,7 +28,7 @@ export default Route.extend({
      * @for Application
      * @public
      */
-    intl: inject(),
+    intl: service(),
 
     /**
      * The router service is used in order to redirect to other route
@@ -38,7 +38,7 @@ export default Route.extend({
      * @for Application
      * @public
      */
-    router: inject(),
+    router: service(),
 
     /**
      * The session service (services/session.js) that will be used
@@ -49,7 +49,7 @@ export default Route.extend({
      * @for Application
      * @public
      */
-    session: inject(),
+    session: service(),
 
     /**
      * The translations service that loads the backend translations before the app renders
@@ -59,7 +59,7 @@ export default Route.extend({
      * @for Application
      * @public
      */
-    translations: inject(),
+    translations: service(),
 
     /**
      * This function get triggered before a model fetch is called, this is

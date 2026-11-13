@@ -3,7 +3,7 @@
  */
 
 import App from 'prometheus/routes/app';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
 /**

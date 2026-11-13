@@ -3,7 +3,7 @@
  */
 
 import Component from '@ember/component';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 import { once } from '@ember/runloop';
 import { computed } from '@ember/object';
 import { observer } from '@ember/object';
@@ -38,7 +38,7 @@ export default Component.extend({
      * @for MessageBox
      * @private
      */
-    intl: inject(),
+    intl: service(),
 
     /**
      * This is the list of emojis that we support

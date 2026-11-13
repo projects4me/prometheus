@@ -3,7 +3,7 @@
  */
 
 import App from "prometheus/routes/app";
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
 /**
@@ -39,7 +39,7 @@ export default App.extend({
      * @for ProjectWikiPageRoute
      * @private
      */
-    trackedProject: inject(),
+    trackedProject: service(),
 
     /**
      * The model hook for this route. In this we're fetching the wiki by the provided wiki name.

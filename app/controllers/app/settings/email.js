@@ -5,7 +5,7 @@
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { tracked, cached } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { testSettings } from 'prometheus/utils/setting-test-api';
 
 /**

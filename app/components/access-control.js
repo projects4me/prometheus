@@ -3,7 +3,7 @@
  */
 
 import Component from '@glimmer/component';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * This component is used to check user access on the component to be yield by using the

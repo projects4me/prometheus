@@ -3,7 +3,7 @@
  */
 
 import Route from '@ember/routing/route';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 import { UnauthorizedError } from '@ember-data/adapter/error';
 
 /**
@@ -26,7 +26,7 @@ export default Route.extend({
      * @for App
      * @public
      */
-    session: inject(),
+    session: service(),
 
     /**
      * The route name on which user will authenticate for the appliation.
@@ -45,7 +45,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    intl: inject(),
+    intl: service(),
 
     /**
      * The current user service
@@ -55,7 +55,7 @@ export default Route.extend({
      * @for App
      * @public
      */
-    currentUser: inject(),
+    currentUser: service(),
 
     /**
      * The store service that is used to interact ember data APIs.
@@ -65,7 +65,7 @@ export default Route.extend({
      * @for App
      * @public
      */
-    store: inject(),
+    store: service(),
 
     /**
      * The Ember router service.
@@ -75,7 +75,7 @@ export default Route.extend({
      * @for App
      * @public
      */
-    router: inject(),
+    router: service(),
 
     /**
      * Acl service used to maintain allowed resources for current loggedin user and
@@ -86,7 +86,7 @@ export default Route.extend({
      * @for App
      * @public
      */
-    acl: inject(),
+    acl: service(),
 
     /**
      * This service is used to different types of errors.
@@ -96,7 +96,7 @@ export default Route.extend({
      * @for App
      * @protected
      */
-    errorManager: inject(),
+    errorManager: service(),
 
     /**
      * The trackedProject service provides the selected project.
@@ -106,7 +106,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    trackedProject: inject(),
+    trackedProject: service(),
 
     /**
      * The notifications service
@@ -116,7 +116,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    notifications: inject(),
+    notifications: service(),
 
     /**
      * The breadcrumb service.
@@ -126,7 +126,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    breadcrumb: inject(),
+    breadcrumb: service(),
 
     /**
      * Blocks transitions when a controller is dirty or an async operation is
@@ -137,7 +137,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    navigationGuard: inject(),
+    navigationGuard: service(),
 
     /**
      * Hermes Socket.IO client. Connected here when assets are already loaded
@@ -148,7 +148,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    hermes: inject(),
+    hermes: service(),
 
     /**
      * This function is called by EmberJs before it retrieves the model. In this method

@@ -5,7 +5,7 @@
 import { computed, action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import {inject as controller } from '@ember/controller';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import { peekOrPush, insertAtIfMissing } from 'prometheus/utils/live/collection';
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';

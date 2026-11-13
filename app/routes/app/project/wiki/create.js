@@ -3,7 +3,7 @@
  */
 
 import App from "prometheus/routes/app";
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 import _ from 'lodash';
 
 /**
@@ -29,7 +29,7 @@ export default App.extend({
      * @for Prometheus.Routes.Wiki.Create
      * @public
      */
-    currentUser: inject(),
+    currentUser: service(),
 
     /**
      * The setup controller function that will be called every time the user visits the module route,

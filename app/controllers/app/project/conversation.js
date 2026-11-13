@@ -5,7 +5,7 @@
 import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import Evented from '@ember/object/evented';
 import $ from "jquery";
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { task, timeout } from 'ember-concurrency';

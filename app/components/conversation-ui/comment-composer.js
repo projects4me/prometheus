@@ -5,7 +5,7 @@
 import AppComponent from 'prometheus/components/app';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { guidFor } from '@ember/object/internals';
 
 /**
