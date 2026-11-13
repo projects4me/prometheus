@@ -108,7 +108,8 @@ export default class AppProjectWikiPageController extends PrometheusController {
                 type: 'error',
                 showCloseButton: true
             });
-            //upload.rollback();
+            upload.rollbackAttributes();
+            file.queue?.remove(file);
         }
     });
 
