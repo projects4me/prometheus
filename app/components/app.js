@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import ENV from 'prometheus/config/environment';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * This component inject services and other components will extend this component for reusability.

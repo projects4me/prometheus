@@ -5,8 +5,7 @@
 import App from "prometheus/routes/app";
 import MD from "prometheus/utils/metadata/metadata";
 import ENV from "../../config/environment";
-import { inject } from '@ember/service';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { capitalize} from '@ember/string';
 
 /**
@@ -68,7 +67,7 @@ export default App.extend({
      * @for Module
      * @private
      */
-    intl: inject(),
+    intl: service(),
 
     /**
      * Loads the ezSearch schema of the module from its search metadata

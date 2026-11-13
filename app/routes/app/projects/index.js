@@ -3,7 +3,7 @@
  */
 
 import App from "prometheus/routes/app";
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
@@ -101,7 +101,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    currentUser: inject(),
+    currentUser: service(),
 
     /**
      * The saved search calls
@@ -110,7 +110,7 @@ export default App.extend({
      * @type Prometheus.Services.SavedSearchService
      * @private
      */
-    savedSearch: inject('saved-search'),
+    savedSearch: service('saved-search'),
 
     /**
      * Loads the ezSearch schema of the projects.
@@ -119,7 +119,7 @@ export default App.extend({
      * @type Prometheus.Services.QuerySchemaService
      * @private
      */
-    querySchema: inject('query-schema'),
+    querySchema: service('query-schema'),
 
     /**
      * The trackedProject service provides id of the selected project.
@@ -129,7 +129,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    trackedProject: inject(),
+    trackedProject: service(),
 
     /**
      * The model for this route

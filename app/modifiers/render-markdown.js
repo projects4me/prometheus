@@ -5,7 +5,7 @@
 import Modifier from 'ember-modifier';
 import { registerDestructor } from '@ember/destroyable';
 import Editor from '@toast-ui/editor';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import Logger from 'js-logger';
 import { replaceUploadImages, uploadImageIds } from 'prometheus/utils/upload-reference';
 

@@ -8,7 +8,7 @@ import { action } from '@ember/object';
 import Logger from "js-logger";
 import { tracked } from '@glimmer/tracking';
 import AppComponent from '../app';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * This component is used to render the navbar

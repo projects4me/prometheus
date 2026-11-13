@@ -24,6 +24,12 @@ module.exports = function (defaults) {
                 ...require('ember-cli-code-coverage').buildBabelPlugin()
             ]
         },
+        // The app's store uses no EmberObject API (get/set, observers), so it no longer needs to extend it
+        emberData: {
+            deprecations: {
+                DEPRECATE_STORE_EXTENDS_EMBER_OBJECT: false
+            }
+        },
         sassOptions: {
             implementation: sass
         },

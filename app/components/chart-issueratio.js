@@ -4,7 +4,7 @@
 
 import _ from "lodash";
 import Component from '@ember/component';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 
 /**
@@ -53,7 +53,7 @@ export default Component.extend({
      * @for ChartIssueratio
      * @private
      */
-    intl: inject(),
+    intl: service(),
 
     /**
      * Status slices hidden by default. They remain available via legend toggle.

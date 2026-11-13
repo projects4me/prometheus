@@ -5,7 +5,7 @@
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
 import { allSettled } from 'rsvp';
 import UrlState from 'prometheus/utils/state/url-state';

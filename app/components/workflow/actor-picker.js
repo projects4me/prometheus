@@ -4,7 +4,7 @@
 
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { actorPaths, expressionOf } from 'prometheus/utils/workflow/node-config';
 
 /**

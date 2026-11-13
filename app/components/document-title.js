@@ -3,7 +3,7 @@
  */
 
 import Component from '@glimmer/component';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * Reactively updates the browser tab title based on the current route, the

@@ -3,7 +3,7 @@
  */
 
 import App from "prometheus/routes/app";
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 import { hashSettled } from 'rsvp';
 import extractHashSettled from "prometheus/utils/rsvp/extract-hash-settled";
 
@@ -27,7 +27,7 @@ export default App.extend({
      * @for Project
      * @private
      */
-    trackedProject: inject(),
+    trackedProject: service(),
 
     /**
      * Loads the ezSearch schema of the issues.
@@ -36,7 +36,7 @@ export default App.extend({
      * @type Prometheus.Services.QuerySchemaService
      * @private
      */
-    querySchema: inject('query-schema'),    
+    querySchema: service('query-schema'),    
 
     /**
      * We need to reload the model as the values related ot the page's data are
@@ -121,7 +121,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    currentUser: inject(),
+    currentUser: service(),
 
     /**
      * The saved search calls
@@ -130,7 +130,7 @@ export default App.extend({
      * @type Prometheus.Services.SavedSearchService
      * @private
      */
-    savedSearch: inject('saved-search'),
+    savedSearch: service('saved-search'),
 
     /**
      * In this hook we're loading list of issue statuses and types available in the project.

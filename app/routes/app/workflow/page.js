@@ -4,7 +4,7 @@
 
 /* global Logger */
 import App from 'prometheus/routes/app';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * The editor of a saved workflow: the workflow, its graph and the projects it can be scoped to

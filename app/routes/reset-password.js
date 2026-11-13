@@ -4,7 +4,7 @@
 
 import Route from '@ember/routing/route';
 import ENV from "prometheus/config/environment";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 /**
  * The reset password route.

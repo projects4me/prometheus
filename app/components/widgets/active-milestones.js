@@ -5,7 +5,7 @@
 import WidgetsComponent from '../widgets';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import Logger from 'js-logger';
 import { fetchMilestoneOverviewsBulk } from 'prometheus/utils/milestone-overview-api';
 import { toArray } from 'prometheus/utils/array/to-array';

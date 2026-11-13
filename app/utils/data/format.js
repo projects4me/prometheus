@@ -3,7 +3,7 @@
  */
 
 import _ from 'lodash';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { getOwner, setOwner } from '@ember/application';
 import { htmlSafe } from '@ember/template';
 import { issueStatusLabel, issueTypeRecordLabel } from 'prometheus/utils/issue-status/label';

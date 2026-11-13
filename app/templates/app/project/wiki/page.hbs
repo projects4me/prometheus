@@ -126,10 +126,10 @@
           </div>
 
         </div>
-        {{field-upload
-            label=(t "views.app.wiki.page.selectfile")
-            uploadFile=this.uploadFile
-        }}
+        <FormFields::FieldUpload
+            @label={{t "views.app.wiki.page.selectfile"}}
+            @uploadFile={{this.uploadFile}}
+        />
 
       </div>
     </div>

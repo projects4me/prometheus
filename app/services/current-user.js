@@ -3,7 +3,7 @@
  */
 
 import Service from '@ember/service';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 import * as dates from 'prometheus/utils/date';
 
 /**
@@ -25,7 +25,7 @@ export default Service.extend({
      * @for CurrentUser
      * @private
      */
-    session: inject(),
+    session: service(),
 
     /**
      * The store is injected as a service
@@ -35,7 +35,7 @@ export default Service.extend({
      * @for CurrentUser
      * @private
      */
-    store: inject(),
+    store: service(),
 
     /**
      * This function is called to load the currentUser

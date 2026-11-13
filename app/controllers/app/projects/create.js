@@ -5,7 +5,7 @@
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import format from '../../../utils/data/format';
 import { inject as controller } from '@ember/controller';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { computed, action } from '@ember/object';
 import { all } from 'rsvp';
 import _ from 'lodash';

@@ -4,7 +4,7 @@
 
 import Component from '@ember/component';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * This component is used to help the event handling of route request in the

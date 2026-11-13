@@ -1,7 +1,0 @@
-{{!-- Create template for text input field--}}
-<label>{{t this.definition.label}}</label>
-{{#if this.definition.required}}<span class="required">*</span>{{/if}}
-{{#if this.definition.help}}<i data-toggle="tooltip" data-placement="top" title="{{t this.definition.help}}" class="fa fa-question-circle"></i>{{/if}}
-<span class="hidden field-error">{{t this.definition.errorMsg}}</span>
-<div class="clearfix" />
-{{text-field key-up="changed" readonly=this.definition.readonly name=this.definition.fieldName placeholder=(t this.definition.label)}}

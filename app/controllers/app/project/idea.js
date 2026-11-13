@@ -4,7 +4,7 @@
 
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import {
     DEFAULT_PAGE, DEFAULT_SORT, DEFAULT_ORDER, DEFAULT_GROUP, BROWSER_PARAMS
 } from 'prometheus/utils/idea/browser-defaults';

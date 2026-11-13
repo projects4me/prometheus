@@ -5,7 +5,7 @@
 import App from "prometheus/routes/app";
 import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 
 
 import { objectAt } from 'prometheus/utils/array/object-at';
@@ -28,7 +28,7 @@ export default App.extend({
      * @for Project
      * @private
      */
-    trackedProject: inject(),
+    trackedProject: service(),
 
     /**
      * The beforeModel hook of the ember.js. In this hook we're loading the project and its members.

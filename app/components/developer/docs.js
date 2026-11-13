@@ -6,7 +6,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import Logger from 'js-logger';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * Shows the documentation of a component: the markdown file public/ui-docs/<@doc>, split on its "## "

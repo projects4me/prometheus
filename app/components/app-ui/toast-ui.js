@@ -3,7 +3,7 @@
  */
 
 import Component from '@glimmer/component';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * This component is used to render the toast editor

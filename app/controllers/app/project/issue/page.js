@@ -4,7 +4,7 @@
 
 import PrometheusController from "prometheus/controllers/prometheus";
 import { inject as controller } from '@ember/controller';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
 import { postToast } from 'prometheus/utils/ui/post-toast';
 import { pushIfMissing, removeById } from 'prometheus/utils/live/collection';

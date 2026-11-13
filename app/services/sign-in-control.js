@@ -3,7 +3,7 @@
  */
 
 import Service from '@ember/service';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 
 const SIGN_IN_ROUTE_NAMES = ['signin', 'signin.index'];

@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import { assert } from '@ember/debug';
 import MD from 'prometheus/utils/metadata/metadata';
 import { createSchema } from 'prometheus/utils/query/schema';

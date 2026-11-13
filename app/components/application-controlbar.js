@@ -3,7 +3,7 @@
  */
 
 import Component from '@ember/component';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 import $ from 'jquery';
 
 /**
@@ -23,7 +23,7 @@ export default Component.extend({
      * @type Ember.Service
      * @for ApplicationControlbar
      */
-    currentUser: inject('current-user'),
+    currentUser: service('current-user'),
 
     /**
      * The tag to be used for this component

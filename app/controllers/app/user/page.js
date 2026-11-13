@@ -6,7 +6,7 @@ import PrometheusCreateController from "prometheus/controllers/prometheus/create
 import window from "ember-window-mock";
 import { computed, action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';

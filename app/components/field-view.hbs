@@ -1,0 +1,12 @@
+{{!-- One cell of the generic module list --}}
+<div class={{@definition.size}}>
+  <span>
+    {{#if @definition.link}}
+      <a href="javascript:void(0);" {{on "click" @navigate}}>
+        {{#if this.isDatetime}}{{format-date date=(get-prop @model @field)}}{{else}}{{get-prop @model @field}}{{/if}}
+      </a>
+    {{else}}
+      {{#if this.isDatetime}}{{format-date date=(get-prop @model @field)}}{{else}}{{get-prop @model @field}}{{/if}}
+    {{/if}}
+  </span>
+</div>

@@ -8,7 +8,7 @@ import Editor from '@toast-ui/editor';
 import Tribute from "tributejs";
 import format from "prometheus/utils/data/format";
 import Icon from "prometheus/utils/ui/priority-icon";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import $ from 'jquery';
 import Logger from 'js-logger';
 

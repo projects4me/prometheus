@@ -6,7 +6,7 @@ import Modifier from 'ember-modifier';
 import { registerDestructor } from '@ember/destroyable';
 import Sortable from 'sortablejs';
 import { action } from '@ember/object';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 
 /**
  * Pixels the pointer must travel after mousedown before SortableJS starts a fallback drag.

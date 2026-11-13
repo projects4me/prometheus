@@ -3,7 +3,7 @@
  */
 
 import Route from '@ember/routing/route';
-import { inject } from '@ember/service';
+import { service } from '@ember/service';
 
 
 /**
@@ -28,7 +28,7 @@ export default Route.extend({
      * @for SigninRoute
      * @public
      */
-    session: inject(),
+    session: service(),
 
     /**
      * The intl library service that is used in order to get the translations.
@@ -38,7 +38,7 @@ export default Route.extend({
      * @for SigninRoute
      * @public
      */
-    intl: inject(),
+    intl: service(),
 
     beforeModel() {
         this.session.prohibitAuthentication(this.routeIfAlreadyAuthenticated);

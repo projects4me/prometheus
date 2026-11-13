@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
 import ENV from 'prometheus/config/environment';
 import { fileToBase64 } from 'prometheus/utils/image-to-base64';
