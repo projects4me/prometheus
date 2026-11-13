@@ -72,12 +72,14 @@ export const when = function () {
                 await click(findByAttr('data-request', name).querySelector('[data-btn="approve-request"]'));
                 assert.ok(document.querySelector('dialog.app-modal [data-request-confirm] [data-request-code]'), 'confirmation shows the code');
                 await click('dialog.app-modal .btn-default');
+                await waitUntil(() => !document.querySelector('dialog.app-modal'), { timeout: 3000 });
                 await settled();
             }
         },
         {
             "User approves the request $name and confirms": (assert) => async function (name) {
                 await click(findByAttr('data-request', name).querySelector('[data-btn="approve-request"]'));
+                await waitUntil(() => document.querySelector('dialog.app-modal .btn-primary'), { timeout: 3000 });
                 await click('dialog.app-modal .btn-primary');
                 await settled();
             }
