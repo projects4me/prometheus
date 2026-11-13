@@ -400,12 +400,12 @@
             </ul>
 
             {{#if this.editEstimateDialog}}
-              {{#bootstrap-modal
-                  title="views.app.issue.detail.estimate.edit"
-                  closeLabel="global.form.close"
-                  confirmLabel="global.form.save"
-                  close=this.removeEditEstimateModal
-                  confirm=this.editLog}}
+              <AppUi::Modal
+                  @title="views.app.issue.detail.estimate.edit"
+                  @closeLabel="global.form.close"
+                  @confirmLabel="global.form.save"
+                  @onClose={{this.removeEditEstimateModal}}
+                  @confirm={{this.editLog}}>
 
                 <IntervalSelector
                   @days={{this.editingLog.days}}
@@ -429,16 +429,16 @@
                   />
                 </div>
 
-              {{/bootstrap-modal}}
+              </AppUi::Modal>
             {{/if}}
 
             {{#if this.estimateTimeDialog}}
-              {{#bootstrap-modal
-                  title="views.app.issue.detail.timelog.estimate"
-                  closeLabel="global.form.close"
-                  confirmLabel="global.form.save"
-                  close=this.removeEstimateTimeModal
-                  confirm=this.addEstimate}}
+              <AppUi::Modal
+                  @title="views.app.issue.detail.timelog.estimate"
+                  @closeLabel="global.form.close"
+                  @confirmLabel="global.form.save"
+                  @onClose={{this.removeEstimateTimeModal}}
+                  @confirm={{this.addEstimate}}>
 
                 <IntervalSelector
                   @days={{this.newTimeLog.days}}
@@ -461,7 +461,7 @@
                   />
                 </div>
 
-              {{/bootstrap-modal}}
+              </AppUi::Modal>
             {{/if}}
 
           </div>
@@ -514,12 +514,12 @@
             </ul>
 
             {{#if this.editLogDialog}}
-              {{#bootstrap-modal
-                  title="views.app.issue.detail.timelog.edit"
-                  closeLabel="global.form.close"
-                  confirmLabel="global.form.save"
-                  close=this.removeEditLogModal
-                  confirm=this.editLog}}
+              <AppUi::Modal
+                  @title="views.app.issue.detail.timelog.edit"
+                  @closeLabel="global.form.close"
+                  @confirmLabel="global.form.save"
+                  @onClose={{this.removeEditLogModal}}
+                  @confirm={{this.editLog}}>
 
                 <IntervalSelector
                   @days={{this.editingLog.days}}
@@ -559,17 +559,17 @@
                   />
                 </div>
 
-              {{/bootstrap-modal}}
+              </AppUi::Modal>
             {{/if}}
 
 
             {{#if this.logTimeDialog}}
-              {{#bootstrap-modal
-                  title="views.app.issue.detail.timelog.log"
-                  closeLabel="global.form.close"
-                  confirmLabel="global.form.save"
-                  close=this.removeLogTimeModal
-                  confirm=this.logTime}}
+              <AppUi::Modal
+                  @title="views.app.issue.detail.timelog.log"
+                  @closeLabel="global.form.close"
+                  @confirmLabel="global.form.save"
+                  @onClose={{this.removeLogTimeModal}}
+                  @confirm={{this.logTime}}>
 
                 <IntervalSelector
                   @days={{this.newTimeLog.days}}
@@ -609,7 +609,7 @@
                   />
                 </div>
 
-              {{/bootstrap-modal}}
+              </AppUi::Modal>
             {{/if}}
           </div>
 
@@ -699,10 +699,10 @@
 
 {{!-- Add Watchers Modal --}}
 {{#if this.addWatcherDialog}}
-  {{#bootstrap-modal
-      title="views.app.issue.watcher.addWatchers"
-      closeLabel="global.form.close"
-      close=this.removeAddWatcherDialog}}
+  <AppUi::Modal
+      @title="views.app.issue.watcher.addWatchers"
+      @closeLabel="global.form.close"
+      @onClose={{this.removeAddWatcherDialog}}>
     <div class="project-members-list">
       {{#if this.availableProjectMembers.length}}
         {{#each this.availableProjectMembers as |member|}}
@@ -722,5 +722,5 @@
         />
       {{/if}}
     </div>
-  {{/bootstrap-modal}}
+  </AppUi::Modal>
 {{/if}}

@@ -4,11 +4,10 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled, waitFor } from '@ember/test-helpers';
+import { click, render, settled, waitFor } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 import EmberObject from '@ember/object';
-import jQuery from 'jquery';
 import AclStub from '../../stub-services/acl-stub';
 
 // a loadable data URL (the path becomes a fragment), so the browser never reports a native image load error
@@ -45,10 +44,6 @@ module('Integration | Component | issue/file-preview', function (hooks) {
         this.set('download', (file) => this.downloaded.push(file));
     });
 
-    hooks.afterEach(function () {
-        jQuery('.modal-backdrop').remove();
-        jQuery('body').removeClass('modal-open');
-    });
 
     const renderPreview = (context, mime, id = '1') => {
         context.set('file', EmberObject.create({ id, name: 'file', fileMime: mime }));
@@ -106,7 +101,7 @@ module('Integration | Component | issue/file-preview', function (hooks) {
         await renderPreview(this, 'application/zip');
         assert.dom('.file-preview-unsupported').includesText('No preview available for this file type');
         assert.strictEqual(this.store.queries.length, 0, 'no token requested');
-        await jQuery('.file-preview-unsupported button').trigger('click');
+        await click('.file-preview-unsupported button');
         await settled();
         assert.strictEqual(this.downloaded.length, 1, 'download flow called');
     });

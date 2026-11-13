@@ -834,7 +834,6 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     @action removeLogTimeModal() {
         if (this.isDestroyed || this.isDestroying) return;
         this.logTimeDialog = false;
-        $('.modal').modal('hide');
     }
 
     /**
@@ -846,7 +845,6 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     @action removeEstimateTimeModal() {
         if (this.isDestroyed || this.isDestroying) return;        
         this.estimateTimeDialog = false;
-        $('.modal').modal('hide');
     }
 
     /**
@@ -873,7 +871,6 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         this._rollbackEditingLog();
         this.editingLog = null;
         this.editLogDialog = false;
-        $('.modal').modal('hide');
     }
 
     /**
@@ -887,7 +884,6 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         this._rollbackEditingLog();
         this.editingLog = null;
         this.editEstimateDialog = false;
-        $('.modal').modal('hide');
     }
 
     /**
@@ -1035,7 +1031,6 @@ export default class IssueIssueDetailsComponent extends AppComponent {
     @action removeAddWatcherDialog() {
         if (this.isDestroyed || this.isDestroying) return;
         this.addWatcherDialog = false;
-        $('.modal').modal('hide');
     }
 
     /**
@@ -1104,7 +1099,6 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         this.issuePlanDialog = false;
         this.issuePlanData = null;
         this.issuePlanError = null;
-        $('.modal').modal('hide');
     }
 
     /**
