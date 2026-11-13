@@ -2,8 +2,8 @@
 # Stage 1 builds the app on Node 22; stage 2 serves dist/ with Apache on port 4000.
 FROM node:22-bookworm AS build
 
-ENV API_HOST_PRODUCTION='http://devapi.projects4.me'
-ENV HERMES_URL_PRODUCTION='http://hermes.projects4.me'
+ENV API_HOST_PRODUCTION='https://devapi.projects4.me'
+ENV HERMES_URL_PRODUCTION='https://hermes.projects4.me'
 
 WORKDIR /prometheus
 
