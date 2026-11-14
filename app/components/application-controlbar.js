@@ -2,19 +2,20 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { service } from '@ember/service';
-import $ from 'jquery';
+import ENV from 'prometheus/config/environment';
 
 /**
- * Application control sidebar (AdminLTE).
+ * Application control sidebar (AdminLTE). The sidebar itself is activated by the activate-control-sidebar
+ * modifier.
  *
  * @class ApplicationControlbar
  * @namespace Prometheus.Components
- * @extends Ember.Component
+ * @extends Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Component.extend({
+export default class ApplicationControlbarComponent extends Component {
 
     /**
      * The current user of the application
@@ -23,38 +24,23 @@ export default Component.extend({
      * @type Ember.Service
      * @for ApplicationControlbar
      */
-    currentUser: service('current-user'),
+    @service currentUser;
 
     /**
-     * The tag to be used for this component
+     * The API host, used for the user images
      *
-     * @property tagName
-     * @for ApplicationControlbar
+     * @property apiHost
      * @type String
-     * @private
+     * @for ApplicationControlbar
      */
-    tagName: 'aside',
+    apiHost = ENV.api.host;
 
     /**
-     * The classes to be rendered with the element
+     * The online users listed in the sidebar (none are loaded yet)
      *
-     * @property classNames
-     * @for ApplicationControlbar
+     * @property users
      * @type Array
-     * @private
-     */
-    classNames: ["control-sidebar control-sidebar-dark"],
-
-    /**
-     * This function enables the control sidebar
-     *
-     * @method didInsertElement
      * @for ApplicationControlbar
-     * @protected
      */
-    didInsertElement(){
-        $.AdminLTE.controlSidebar.activate();
-        this._super(...arguments);
-        this.users = [];
-    }
-});
+    users = [];
+}

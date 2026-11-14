@@ -11,8 +11,6 @@ module.exports = {
   extends: 'recommended',
   ignore: ['dist/**', 'tmp/**', 'coverage/**', 'vendor/**', 'public/**', 'custom/**', 'docs/**'],
   rules: {
-    // Component invocations without arguments stay as curly calls.
-    'no-implicit-this': { allow: ['application-controlbar'] },
     // Octane: use tracked state and actions instead of two-way {{mut}}.
     'no-mut-helper': 'error',
   },
