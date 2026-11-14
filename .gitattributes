@@ -1,2 +1,6 @@
 # Shell scripts run inside Linux containers: keep LF on every OS (with CRLF, bash fails on Windows checkouts).
 *.sh text eol=lf
+# ember-template-lint todos (.lint-todo) hash the template source, line endings included: keep templates and the
+# todo file LF on every OS, so the todos recorded on one machine match on CI and on Windows checkouts.
+*.hbs text eol=lf
+.lint-todo text eol=lf

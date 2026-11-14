@@ -1,0 +1,1844 @@
+{
+  "app/adapters/application.js": {
+    "no-undef": {
+      "count": 3
+    }
+  },
+  "app/adapters/permission.js": {
+    "ember/no-ember-super-in-es-classes": {
+      "count": 1
+    },
+    "no-undef": {
+      "count": 2
+    }
+  },
+  "app/authenticators/oauth2.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/components/activity-blocks/issue/mentioned.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/agent/credentials.js": {
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "app/components/agent/workflows.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/components/app-ui/accordion.js": {
+    "ember/no-incorrect-calls-with-inline-anonymous-functions": {
+      "count": 1
+    },
+    "ember/no-runloop": {
+      "count": 1
+    },
+    "ember/no-side-effects": {
+      "count": 1
+    }
+  },
+  "app/components/app-ui/button.js": {
+    "no-undef": {
+      "count": 1
+    }
+  },
+  "app/components/app-ui/gantt-chart.js": {
+    "ember/no-runloop": {
+      "count": 3
+    },
+    "no-dupe-class-members": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/components/app-ui/gantt-chart/gantt-bar.js": {
+    "ember/no-runloop": {
+      "count": 1
+    }
+  },
+  "app/components/app-ui/gantt-chart/issue-details-panel.js": {
+    "ember/no-runloop": {
+      "count": 2
+    }
+  },
+  "app/components/app-ui/milestone-block.js": {
+    "no-undef": {
+      "count": 1
+    }
+  },
+  "app/components/app-ui/navbar-items.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/app-ui/notifications.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/app-ui/table.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/components/app-ui/table/table-content.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/app-ui/tag-parser.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/components/app-ui/task-board.js": {
+    "no-undef": {
+      "count": 1
+    }
+  },
+  "app/components/application-controlbar.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    },
+    "ember/no-classic-components": {
+      "count": 1
+    },
+    "ember/no-component-lifecycle-hooks": {
+      "count": 1
+    },
+    "ember/require-tagless-components": {
+      "count": 1
+    }
+  },
+  "app/components/chart-estimatedspent.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    },
+    "ember/no-classic-components": {
+      "count": 1
+    },
+    "ember/no-component-lifecycle-hooks": {
+      "count": 3
+    },
+    "ember/require-super-in-lifecycle-hooks": {
+      "count": 3
+    },
+    "ember/require-tagless-components": {
+      "count": 1
+    }
+  },
+  "app/components/chart-issueratio.js": {
+    "ember/avoid-leaking-state-in-ember-objects": {
+      "count": 2
+    },
+    "ember/no-classic-classes": {
+      "count": 1
+    },
+    "ember/no-classic-components": {
+      "count": 1
+    },
+    "ember/no-component-lifecycle-hooks": {
+      "count": 2
+    },
+    "ember/no-get": {
+      "count": 2
+    },
+    "ember/require-super-in-lifecycle-hooks": {
+      "count": 2
+    },
+    "ember/require-tagless-components": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/components/checkbox-field.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    },
+    "ember/no-component-lifecycle-hooks": {
+      "count": 1
+    },
+    "ember/no-jquery": {
+      "count": 1
+    },
+    "ember/require-super-in-lifecycle-hooks": {
+      "count": 1
+    }
+  },
+  "app/components/conversation-ui/comment-composer.js": {
+    "no-undef": {
+      "count": 1
+    }
+  },
+  "app/components/developer/event-log.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/components/errors/403.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/errors/404.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/errors/500.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/form-fields/field-checkbox.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/form-fields/field-search.js": {
+    "ember/no-runloop": {
+      "count": 1
+    }
+  },
+  "app/components/form-fields/field-upload.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/form-fields/form-fields.js": {
+    "ember/no-runloop": {
+      "count": 2
+    }
+  },
+  "app/components/idea/composer.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/components/idea/plan-box.js": {
+    "ember/no-get": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/components/infinite-scroll.js": {
+    "ember/no-runloop": {
+      "count": 2
+    },
+    "no-undef": {
+      "count": 1
+    }
+  },
+  "app/components/issue/file-preview.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/components/issue/issue-details.js": {
+    "no-unreachable": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/components/issue/issue-planning.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-escape": {
+      "count": 2
+    }
+  },
+  "app/components/pagination.js": {
+    "ember/no-runloop": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/components/priority-icon.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    },
+    "ember/no-classic-components": {
+      "count": 1
+    },
+    "ember/require-tagless-components": {
+      "count": 1
+    }
+  },
+  "app/components/project/milestones.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/quick-list/index.js": {
+    "ember/no-runloop": {
+      "count": 1
+    }
+  },
+  "app/components/relate-simple.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    },
+    "ember/no-classic-components": {
+      "count": 1
+    },
+    "ember/require-tagless-components": {
+      "count": 1
+    }
+  },
+  "app/components/relate-user.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    },
+    "ember/no-classic-components": {
+      "count": 1
+    },
+    "ember/require-tagless-components": {
+      "count": 1
+    }
+  },
+  "app/components/role/permissions.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "app/components/saved-search/compact-bar.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "app/components/tree-list.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    },
+    "ember/no-classic-components": {
+      "count": 1
+    },
+    "ember/require-tagless-components": {
+      "count": 1
+    }
+  },
+  "app/components/user-profile/latest-issues.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/components/user-profile/latest-projects.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/user-profile/recent-activities.js": {
+    "ember/no-empty-glimmer-component-classes": {
+      "count": 1
+    }
+  },
+  "app/components/user/edit/profile-picture.js": {
+    "no-undef": {
+      "count": 1
+    }
+  },
+  "app/components/widgets.js": {
+    "no-undef": {
+      "count": 3
+    }
+  },
+  "app/components/widgets/weekly-issue-timelogs.js": {
+    "ember/no-runloop": {
+      "count": 1
+    }
+  },
+  "app/components/workflow/flow-canvas.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/agent/skills.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "app/controllers/app/agent/tools.js": {
+    "no-unused-vars": {
+      "count": 6
+    }
+  },
+  "app/controllers/app/module.js": {
+    "ember/classic-decorator-no-classic-methods": {
+      "count": 11
+    },
+    "ember/no-jquery": {
+      "count": 11
+    }
+  },
+  "app/controllers/app/project.js": {
+    "ember/no-computed-properties-in-native-classes": {
+      "count": 2
+    },
+    "ember/require-computed-property-dependencies": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/project/board.js": {
+    "ember/classic-decorator-no-classic-methods": {
+      "count": 2
+    },
+    "ember/no-computed-properties-in-native-classes": {
+      "count": 1
+    },
+    "ember/require-computed-property-dependencies": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/project/conversation.js": {
+    "ember/classic-decorator-no-classic-methods": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/controllers/app/project/gantt.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/project/idea.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "app/controllers/app/project/idea/page.js": {
+    "no-dupe-class-members": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/project/index.js": {
+    "ember/classic-decorator-no-classic-methods": {
+      "count": 10
+    },
+    "ember/no-assignment-of-untracked-properties-used-in-tracking-contexts": {
+      "count": 1
+    },
+    "ember/no-computed-properties-in-native-classes": {
+      "count": 1
+    },
+    "ember/no-get": {
+      "count": 6
+    },
+    "ember/require-computed-property-dependencies": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/project/issue/create.js": {
+    "ember/no-computed-properties-in-native-classes": {
+      "count": 4
+    },
+    "ember/require-computed-property-dependencies": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/project/issue/index.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/project/wiki/create.js": {
+    "ember/no-computed-properties-in-native-classes": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/project/wiki/edit.js": {
+    "ember/classic-decorator-no-classic-methods": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/project/wiki/page.js": {
+    "ember/classic-decorator-no-classic-methods": {
+      "count": 5
+    },
+    "ember/no-get": {
+      "count": 3
+    },
+    "ember/no-jquery": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/projects/create.js": {
+    "ember/no-computed-properties-in-native-classes": {
+      "count": 4
+    }
+  },
+  "app/controllers/app/projects/index.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/role/page.js": {
+    "ember/no-computed-properties-in-native-classes": {
+      "count": 6
+    },
+    "ember/no-jquery": {
+      "count": 4
+    },
+    "ember/require-computed-property-dependencies": {
+      "count": 1
+    },
+    "ember/use-brace-expansion": {
+      "count": 3
+    },
+    "no-undef": {
+      "count": 6
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/settings/services.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/controllers/app/user/create.js": {
+    "no-undef": {
+      "count": 2
+    }
+  },
+  "app/controllers/app/user/management.js": {
+    "ember/classic-decorator-no-classic-methods": {
+      "count": 1
+    },
+    "no-undef": {
+      "count": 3
+    }
+  },
+  "app/controllers/app/user/page.js": {
+    "ember/no-computed-properties-in-native-classes": {
+      "count": 4
+    }
+  },
+  "app/controllers/app/workflow/page.js": {
+    "no-redeclare": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/controllers/auth-status.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/controllers/prometheus/create.js": {
+    "ember/no-computed-properties-in-native-classes": {
+      "count": 1
+    },
+    "no-async-promise-executor": {
+      "count": 1
+    }
+  },
+  "app/controllers/prometheus/list.js": {
+    "ember/classic-decorator-no-classic-methods": {
+      "count": 28
+    },
+    "ember/no-incorrect-calls-with-inline-anonymous-functions": {
+      "count": 1
+    },
+    "ember/no-jquery": {
+      "count": 5
+    },
+    "ember/no-runloop": {
+      "count": 1
+    },
+    "no-prototype-builtins": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "app/controllers/signin.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/helpers/format-date-time.js": {
+    "no-empty-pattern": {
+      "count": 1
+    }
+  },
+  "app/helpers/format-date.js": {
+    "no-empty-pattern": {
+      "count": 1
+    }
+  },
+  "app/helpers/get-permission-options.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/helpers/type-label.js": {
+    "ember/no-get": {
+      "count": 2
+    }
+  },
+  "app/initializers/javascript-behaviors.js": {
+    "ember/no-jquery": {
+      "count": 2
+    }
+  },
+  "app/models/activity.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/agent.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/models/chatroom.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/comment.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/conversationroom.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/converser.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/dashboard.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/issue.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/issuewatcher.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/models/membership.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/milestone.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/project.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/role.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/savedsearch.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/tag.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/tagged.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/timelog.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/token.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/upload.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/user.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/userqualification.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/userrole.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/userskill.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/vote.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/models/wiki.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/modifiers/apply-mask.js": {
+    "ember/no-jquery": {
+      "count": 2
+    }
+  },
+  "app/modifiers/autofocus.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/modifiers/initialize-sidebar.js": {
+    "ember/no-jquery": {
+      "count": 10
+    }
+  },
+  "app/modifiers/initialize-slimscroll.js": {
+    "ember/no-jquery": {
+      "count": 1
+    }
+  },
+  "app/modifiers/initialize-sortable.js": {
+    "no-undef": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/modifiers/initialize-toastui.js": {
+    "ember/no-jquery": {
+      "count": 1
+    }
+  },
+  "app/modifiers/initialize-tooltip.js": {
+    "no-dupe-keys": {
+      "count": 1
+    },
+    "no-empty-pattern": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/modifiers/modify-links.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "app/router.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    },
+    "ember/no-unnecessary-route-path-option": {
+      "count": 1
+    }
+  },
+  "app/routes/app.js": {
+    "ember/no-actions-hash": {
+      "count": 1
+    },
+    "ember/no-classic-classes": {
+      "count": 1
+    },
+    "ember/no-controller-access-in-routes": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/routes/app/index.js": {
+    "ember/no-get": {
+      "count": 1
+    }
+  },
+  "app/routes/app/module.js": {
+    "ember/no-implicit-injections": {
+      "count": 1
+    }
+  },
+  "app/routes/app/project.js": {
+    "ember/no-implicit-injections": {
+      "count": 2
+    }
+  },
+  "app/routes/app/project/board.js": {
+    "ember/no-implicit-injections": {
+      "count": 3
+    }
+  },
+  "app/routes/app/project/calendar.js": {
+    "ember/no-implicit-injections": {
+      "count": 1
+    }
+  },
+  "app/routes/app/project/index.js": {
+    "ember/no-actions-hash": {
+      "count": 1
+    },
+    "ember/no-controller-access-in-routes": {
+      "count": 2
+    }
+  },
+  "app/routes/app/project/issue/create.js": {
+    "ember/no-implicit-injections": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/routes/app/project/issue/edit.js": {
+    "ember/no-get": {
+      "count": 5
+    }
+  },
+  "app/routes/app/project/issue/index.js": {
+    "ember/no-implicit-injections": {
+      "count": 4
+    }
+  },
+  "app/routes/app/project/issue/page.js": {
+    "ember/no-actions-hash": {
+      "count": 1
+    }
+  },
+  "app/routes/app/project/wiki.js": {
+    "ember/avoid-leaking-state-in-ember-objects": {
+      "count": 1
+    },
+    "ember/no-actions-hash": {
+      "count": 1
+    },
+    "ember/no-controller-access-in-routes": {
+      "count": 5
+    },
+    "ember/no-get": {
+      "count": 2
+    }
+  },
+  "app/routes/app/project/wiki/create.js": {
+    "ember/no-implicit-injections": {
+      "count": 1
+    }
+  },
+  "app/routes/app/project/wiki/edit.js": {
+    "ember/avoid-leaking-state-in-ember-objects": {
+      "count": 1
+    },
+    "ember/no-implicit-injections": {
+      "count": 1
+    }
+  },
+  "app/routes/app/project/wiki/page.js": {
+    "ember/avoid-leaking-state-in-ember-objects": {
+      "count": 1
+    }
+  },
+  "app/routes/app/projects/edit.js": {
+    "ember/no-implicit-injections": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/routes/app/projects/index.js": {
+    "ember/no-implicit-injections": {
+      "count": 2
+    }
+  },
+  "app/routes/app/workflow/create.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "app/routes/app/workflow/page.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "app/routes/application.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/routes/not-found.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/routes/signin.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/serializers/application.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/serializers/issuestatus.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/serializers/issuetype.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/services/acl.js": {
+    "ember/no-computed-properties-in-native-classes": {
+      "count": 1
+    },
+    "ember/use-brace-expansion": {
+      "count": 1
+    }
+  },
+  "app/services/breadcrumb.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/services/current-user.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/services/error-manager.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/services/field-info.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/services/live-reload-prompt.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "app/services/notifications.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/services/pub-sub.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/services/session.js": {
+    "ember/no-runloop": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "app/services/workflow-catalog.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "app/services/workflow-graph.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/session-stores/local-storage.js": {
+    "ember/no-runloop": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/transforms/bool.js": {
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/transforms/json-list.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/transforms/json.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/utils/auth/auth-log.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "app/utils/conversation/thread-counts.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/utils/data/modeltotree.js": {
+    "no-prototype-builtins": {
+      "count": 1
+    }
+  },
+  "app/utils/date.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "app/utils/idea-plan-body.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/utils/live/url.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/utils/metadata/metadata.js": {
+    "ember/avoid-leaking-state-in-ember-objects": {
+      "count": 3
+    },
+    "ember/no-classic-classes": {
+      "count": 1
+    }
+  },
+  "app/utils/role/access.js": {
+    "ember/no-get": {
+      "count": 6
+    }
+  },
+  "app/utils/setting-test-api.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/utils/ui/pace-config.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/utils/upload/issue-attachment-queue.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/utils/workflow/graph.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/utils/workflow/list-summary.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "app/utils/workflow/run-trace.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "ember-cli-build.js": {
+    "no-redeclare": {
+      "count": 2
+    }
+  },
+  "lib/bundled-translations.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "mirage/factories/userecentactivity.js": {
+    "no-undef": {
+      "count": 2
+    }
+  },
+  "mirage/factories/userlatestproject.js": {
+    "no-undef": {
+      "count": 3
+    }
+  },
+  "mirage/helpers/limit-model.js": {
+    "no-undef": {
+      "count": 2
+    }
+  },
+  "mirage/helpers/model/sort-model.js": {
+    "no-undef": {
+      "count": 1
+    }
+  },
+  "mirage/route-handlers/chatroom.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "mirage/route-handlers/conversationroom.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "mirage/route-handlers/converser.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "mirage/route-handlers/dashboard.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "mirage/route-handlers/issueplanning.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "mirage/route-handlers/issuestatus.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "mirage/route-handlers/permission.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "mirage/route-handlers/savedsearch.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "mirage/route-handlers/systemnotificationrecipient.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "mirage/route-handlers/systemsetting.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "mirage/route-handlers/tag.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "mirage/route-handlers/tagged.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "mirage/route-handlers/timelog.js": {
+    "no-undef": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "mirage/route-handlers/token.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "mirage/route-handlers/wiki.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "mirage/serializers/application.js": {
+    "no-undef": {
+      "count": 8
+    }
+  },
+  "mirage/serializers/project.js": {
+    "no-undef": {
+      "count": 2
+    }
+  },
+  "scripts/compare-intl-messageformat.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/agents/agent-catalog-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 2
+    },
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/agents/agent-create-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 2
+    },
+    "no-redeclare": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/agents/agent-detail-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 6
+    },
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/agents/agent-fixtures.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/agents/agents-list-steps.js": {
+    "no-redeclare": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/app/auth-flows-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/app/inactive-user-sign-in-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/breadcrumb/breadcrumb-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/common-steps/widgets.js": {
+    "no-unused-vars": {
+      "count": 5
+    }
+  },
+  "tests/acceptance/steps/common-steps/yadda-context-steps.js": {
+    "ember/no-string-prototype-extensions": {
+      "count": 1
+    },
+    "no-undef": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/conversation/conversation-browser-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/dashboard/recent-issues/filter-issues-steps.js": {
+    "no-unused-vars": {
+      "count": 13
+    }
+  },
+  "tests/acceptance/steps/dashboard/recent-issues/search-issue-from-list-steps.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "tests/acceptance/steps/dashboard/recent-issues/select-and-navigate-to-issue-steps.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/developer/component-library-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/ez-search-run.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/form-fields/inline-editing.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/gantt/gantt-search-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "tests/acceptance/steps/ideas/idea-browser-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/ideas/idea-search-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "tests/acceptance/steps/issue/agents-on-issue-steps.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/issue/assignee-picker-agents-steps.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/issue/comment-on-issue-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/issue/create-issue-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/issue/edit-issue-steps.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/issue/ez-search-issue-list-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 9
+    }
+  },
+  "tests/acceptance/steps/issue/issue-hierarchy-steps.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/issue/issue-planning-steps.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/issue/search-issue-from-list-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/live/issue-page-live-updates-steps.js": {
+    "no-undef": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/mirage/mirage-server-config-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/mirage/update-factory-field-steps.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/notification/mark-read-notifications-steps.js": {
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "tests/acceptance/steps/notification/open-issue-from-notification-steps.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/notification/render-list-of-notifications-steps.js": {
+    "no-unused-vars": {
+      "count": 7
+    }
+  },
+  "tests/acceptance/steps/profile/add-user-identity-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 3
+    }
+  },
+  "tests/acceptance/steps/profile/add-user-qualification-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 4
+    }
+  },
+  "tests/acceptance/steps/profile/add-user-skill-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 4
+    }
+  },
+  "tests/acceptance/steps/project/add-a-project-member-steps.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "tests/acceptance/steps/project/create-project-steps.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/project/delete-member-from-project-steps.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/project/search-project-from-list-steps.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/role/create-permissions-steps.js": {
+    "ember/no-jquery": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/role/create-role-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/role/edit-role-fields-steps.js": {
+    "no-unused-vars": {
+      "count": 6
+    }
+  },
+  "tests/acceptance/steps/role/role-browser-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/role/search-role-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/settings/email-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 4
+    }
+  },
+  "tests/acceptance/steps/settings/issue-statuses-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/settings/issue-types-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/settings/services-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 6
+    },
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "tests/acceptance/steps/steps.js": {
+    "no-control-regex": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/taskboard/board-collapse-steps.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/acceptance/steps/taskboard/change-assignee-from-card-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/taskboard/create-quick-issue-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/taskboard/filter-issues-steps.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/user-management/change-multiple-user-account-status-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/user-management/change-user-account-status-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/user-management/navigate-to-a-user-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/user/create-a-user-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/user/timezone-change-steps.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/workflows/workflow-editor-steps.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/workflows/workflow-runs-steps.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "tests/acceptance/steps/workflows/workflows-list-steps.js": {
+    "no-redeclare": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/app-layouts/application-header-test.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "qunit/no-negated-ok": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/app-layouts/notifications-sidebar-test.js": {
+    "qunit/require-expect": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/app-ui/attachment-icon-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/app-ui/dropdown-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/app-ui/language-test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/app-ui/modal-test.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 3
+    },
+    "qunit/no-assert-logical-expression": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/app-ui/task-board/milestones-test.js": {
+    "qunit/no-assert-logical-expression": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/developer/component-nav-test.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 2
+    }
+  },
+  "tests/integration/components/developer/demos/dropdown-test.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 2
+    }
+  },
+  "tests/integration/components/developer/demos/ez-search-test.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/developer/demos/modal-test.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/developer/docs-test.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 6
+    }
+  },
+  "tests/integration/components/ez-search/index-test.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 2
+    },
+    "qunit/no-conditional-assertions": {
+      "count": 2
+    }
+  },
+  "tests/integration/components/ez-search/search-bar-test.js": {
+    "qunit/no-assert-logical-expression": {
+      "count": 3
+    }
+  },
+  "tests/integration/components/ez-search/value-editor-test.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/form-fields/field-date-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 6
+    }
+  },
+  "tests/integration/components/form-fields/field-multi-select-test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/form-fields/field-text-area-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/form-fields/field-text-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 3
+    }
+  },
+  "tests/integration/components/infinite-scroll-test.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    },
+    "qunit/require-expect": {
+      "count": 2
+    }
+  },
+  "tests/integration/components/issue/assignee-select-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 4
+    }
+  },
+  "tests/integration/components/issue/file-preview-test.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/quick-list/item-test.js": {
+    "qunit/no-assert-logical-expression": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/quick-list/toolbar-test.js": {
+    "qunit/require-expect": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/widgets/active-milestones-test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/integration/components/widgets/recent-issues-test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/integration/helpers/format-date-time-test.js": {
+    "qunit/no-assert-logical-expression": {
+      "count": 1
+    }
+  },
+  "tests/integration/helpers/html-safe-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 3
+    }
+  },
+  "tests/integration/modifiers/autofocus-test.js": {
+    "ember/no-settled-after-test-helper": {
+      "count": 1
+    }
+  },
+  "tests/integration/modifiers/click-outside-test.js": {
+    "ember/no-get": {
+      "count": 7
+    }
+  },
+  "tests/integration/modifiers/initialize-doughnut-chart-test.js": {
+    "qunit/literal-compare-order": {
+      "count": 1
+    },
+    "qunit/no-assert-equal": {
+      "count": 1
+    }
+  },
+  "tests/integration/modifiers/initialize-toastui-test.js": {
+    "qunit/no-assert-logical-expression": {
+      "count": 1
+    }
+  },
+  "tests/integration/modifiers/lock-item-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 3
+    }
+  },
+  "tests/integration/services/notifications-test.js": {
+    "no-unused-vars": {
+      "count": 2
+    },
+    "qunit/no-ok-equality": {
+      "count": 1
+    }
+  },
+  "tests/unit/authenticators/oauth2-test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/unit/controllers/app/project/idea-browser-state-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 19
+    }
+  },
+  "tests/unit/controllers/app/project/idea-live-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 16
+    }
+  },
+  "tests/unit/controllers/app/project/issue-page-live-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 20
+    }
+  },
+  "tests/unit/services/intl-test.js": {
+    "qunit/no-assert-logical-expression": {
+      "count": 1
+    }
+  },
+  "tests/unit/services/session-test.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "qunit/no-conditional-assertions": {
+      "count": 2
+    },
+    "qunit/require-expect": {
+      "count": 4
+    }
+  },
+  "tests/unit/utils/date-test.js": {
+    "qunit/no-assert-logical-expression": {
+      "count": 1
+    }
+  },
+  "tests/unit/utils/query/ast-test.js": {
+    "qunit/no-assert-logical-expression": {
+      "count": 2
+    }
+  },
+  "tests/unit/utils/query/parse-test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/unit/utils/state/thread-votes-test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/unit/utils/workflow/run-trace-test.js": {
+    "qunit/no-assert-equal": {
+      "count": 2
+    }
+  }
+}

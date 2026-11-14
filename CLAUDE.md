@@ -5,6 +5,7 @@
 
 ## Run
 - Run, lint and test commands: workspace skills `p4m-stack` and `run-tests` (acceptance tests are Gherkin `.feature` files via ember-cli-yadda on Mirage).
+- Lint: `npm run lint:js` (ESLint 9 flat config, `eslint.config.mjs`) and `npm run lint:hbs` (ember-template-lint, `.template-lintrc.js`); CI runs both. Existing violations are recorded in `eslint-suppressions.json` and `.lint-todo`, so only new ones fail. Never add to them to get a change through: fix the violation. When you fix a recorded one, `npm run lint:js` fails until you run `npm run lint:js:prune`, and `npm run lint:hbs` drops the fixed todo from `.lint-todo` itself: commit the shrunken file so the fix stays fixed. Formatting is Prettier's (`npx prettier --write <files>` on the files you touch), not a lint gate.
 
 ## Architecture
 - API: `app/adapters/application.js` (host `ENV.api.host`, namespace `api/v1`, singular paths, Bearer token, refresh via `services/session.js`).

@@ -14,12 +14,15 @@
     />
   {{else}}
     <div data-field={{@data-field}} class="form-field ember-view field-date">
+      {{! The rule takes a date input for a button and reports aria-invalid and aria-describedby twice on one node, which a todo can't record. }}
+      {{! template-lint-disable no-unsupported-role-attributes }}
       <input type="date" placeholder={{@placeholder}} class="form-control input-sm data-input"
         value={{@value}} min={{this.min}} max={{this.max}} disabled={{@disabled}}
         aria-invalid="true" aria-describedBy={{@data-field}} autocomplete="off"
         {{on "change" this.onDateChange}}
         {{on "focusout" this.enableValidation}}
         {{on "blur" (fn this.validate)}} />
+      {{! template-lint-enable no-unsupported-role-attributes }}
       <span class="highlight"></span>
       <span class="bar"></span>
 
