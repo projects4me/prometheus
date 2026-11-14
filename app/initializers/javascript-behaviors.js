@@ -2,8 +2,8 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import $ from 'jquery';
 import { applyPaceTransportExclusions } from 'prometheus/utils/ui/pace-config';
+import { registerDelegatedTooltips } from 'prometheus/utils/ui/delegated-tooltips';
 
 /* Maintain some global variables to keep a track of what has happened */
 var alreadyRun = false;
@@ -45,7 +45,7 @@ export default {
 
         applyPaceTransportExclusions();
 
-        $(document.body).tooltip({ selector: '[data-toggle="tooltip"]' });
+        registerDelegatedTooltips();
 
         Messenger.options = {
             extraClasses: 'messenger-fixed messenger-on-top',

@@ -1,8 +1,7 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "ember-qunit";
-import { render, triggerEvent } from "@ember/test-helpers";
+import { render, triggerEvent, waitUntil } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import $ from "jquery";
 import initializer from "prometheus/initializers/javascript-behaviors";
 
 module("Integration | Initializer | tooltips", function (hooks) {
@@ -13,9 +12,8 @@ module("Integration | Initializer | tooltips", function (hooks) {
         await render(
             hbs`<span id="tip" data-toggle="tooltip" title="Hello tip">x</span>`
         );
-        $("#tip").trigger("mouseover");
         await triggerEvent("#tip", "mouseover");
-        assert.dom(".tooltip", document.body).exists();
-        $("#tip").tooltip("destroy");
+        await waitUntil(() => document.querySelector("[data-tippy-root]"));
+        assert.dom("[data-tippy-root]", document.body).includesText("Hello tip");
     });
 });
