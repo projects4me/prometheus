@@ -194,9 +194,7 @@
               <ul class="project-estimated-spent">
                 {{#if this.estimatedSpentMilestoneOptions.length}}
                   {{#if this.hasEstimatedSpentChartData}}
-                    {{chart-estimatedspent
-                        issues=this.estimatedSpentChartIssues
-                    }}
+                    <ChartEstimatedspent @issues={{this.estimatedSpentChartIssues}} />
                   {{else}}
                     <Exceptions::NothingFound
                       @description={{t "views.app.project.detail.charts.noIssuesForEstimatedSpent"}}
@@ -514,7 +512,7 @@
         </div>
         <div class="box-body no-padding">
           <ul class="users-list clearfix">
-            {{chart-issueratio issues=this.issuetime}}
+            <ChartIssueratio @issues={{this.issuetime}} />
           </ul>
         </div>
       </div>

@@ -2,53 +2,39 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 
 /**
- * This component is used to help the event handling of route request in the
- * tree-list
+ * Renders the wiki page tree (recursively) and opens a wiki page when its name is clicked.
  *
  * @class TreeList
  * @namespace Prometheus.Components
- * @extends Ember.Component
+ * @extends Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Component.extend({
+export default class TreeListComponent extends Component {
 
     /**
      * The router Service
      *
      * @property router
-     * @type Prometheus.Services.Router
+     * @type Ember.Service
      * @for TreeList
      * @private
      */
-    router: service(),
+    @service router;
 
     /**
-     * These are the evet handlers for the component.
+     * Load a particular wiki page
      *
-     * @property actions
-     * @type Object
-     * @for TreeList
+     * @method loadWiki
+     * @param {String} wikiName The name of the wiki to which we need to navigate to
      * @public
      */
-    /**
-         * Load a particular wiki page
-         *
-         * @method loadWiki
-         * @param {String} wikiName The name of the wiki to which we need to navigate to
-         * @public
-         * @todo Trigger the notificaiton
-         */
-        loadWiki: action(function(wikiName) {
-            // This route is not exposed by EmbberJS, we included this by utilizing
-            // intializer. Normally this would not be required but the tree view
-            // causes us to call the same component recursively and thus it becomes
-            // very difficult to pass action context across
-            this.router.transitionTo('app.project.wiki.page', wikiName);
-        })
-
-});
+    @action
+    loadWiki(wikiName) {
+        this.router.transitionTo('app.project.wiki.page', wikiName);
+    }
+}

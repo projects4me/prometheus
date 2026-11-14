@@ -52,7 +52,7 @@
                   <div class="flex-row flex-ai-c issue-card-meta flex-jc-sb">
                     <span class="issue-number">#{{issue.issueNumber}}</span>
                     <span class="issue-priority badge priority-{{issue.priority}}">
-                      {{priority-icon priority=(readonly issue.priority)}}
+                      <AppUi::PriorityIcon @priority={{issue.priority}} />
                       {{t (concat "views.app.issue.lists.priority." issue.priority)}}
                     </span>
                   </div>

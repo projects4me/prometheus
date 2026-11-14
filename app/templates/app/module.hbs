@@ -44,7 +44,7 @@
           <tr>
             <th>
               <div class="btn-group">
-                <AppUi::Button type="button" class="btn">{{checkbox-field action=this.selectAll type="checkbox" data-select="all"}}</AppUi::Button>
+                <AppUi::Button type="button" class="btn"><CheckboxField @onChange={{this.selectAll}} data-select="all" /></AppUi::Button>
                 <AppUi::Button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <span class="caret"></span>
                   <span class="sr-only">{{t 'global.list.toggleDropdown'}}</span>
@@ -71,7 +71,7 @@
             <tr>
               <td>
                 <div class="btn-group">
-                  <AppUi::Button type="button" class="btn">{{checkbox-field action=this.select type="checkbox" data-select=entity.id}}</AppUi::Button>
+                  <AppUi::Button type="button" class="btn"><CheckboxField @onChange={{this.select}} data-select={{entity.id}} /></AppUi::Button>
                   <AppUi::Button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="caret"></span>
                     <span class="sr-only">{{t "global.list.toggleDropdown"}}</span>

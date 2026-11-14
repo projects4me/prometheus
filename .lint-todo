@@ -9,9 +9,6 @@ add|ember-template-lint|no-at-ember-render-modifiers|34|4|34|4|6704a40d5e70f7798
 add|ember-template-lint|no-at-ember-render-modifiers|35|4|35|4|8b77cd00fe25c627c16ad759c7d74ce0011c5051|1794614400000|||app/components/infinite-scroll.hbs
 add|ember-template-lint|require-valid-named-block-naming-format|6|19|6|19|3fd633a41e0fb99855cfa700965ce1d681759462|1794614400000|||app/components/pagination.hbs
 add|ember-template-lint|require-valid-named-block-naming-format|8|14|8|14|5bd7151968b52ee3db77b21a9c264f6613065389|1794614400000|||app/components/pagination.hbs
-add|ember-template-lint|no-yield-only|1|0|1|0|a5fa6e8c1e0f03fb31b5cd17770e4368d44932e4|1794614400000|||app/components/priority-icon.hbs
-add|ember-template-lint|no-curly-component-invocation|10|8|10|8|ad9ce260965da6fa7a8491b06ee3dc5de3876c0e|1794614400000|||app/components/tree-list.hbs
-add|ember-template-lint|no-curly-component-invocation|26|2|26|2|872c077898e36333bce6610cdae16d5d5f9091df|1794614400000|||app/templates/app.hbs
 add|ember-template-lint|link-href-attributes|15|10|15|10|e0e04a7b0b3fc688cf9a9352dbb3ddc870ac4b7b|1794614400000|||app/templates/reset-password.hbs
 add|ember-template-lint|link-href-attributes|16|10|16|10|7f2df6ce914b719f74333cb09315da7f780a075d|1794614400000|||app/templates/signin.hbs
 add|ember-template-lint|link-href-attributes|69|14|69|14|657ee97d444301c3062a6a1886ea304bb7e5f62f|1794614400000|||app/templates/signin.hbs
@@ -141,8 +138,6 @@ add|ember-template-lint|no-curly-component-invocation|26|8|26|8|cd126b92c08ea586
 add|ember-template-lint|require-presentational-children|51|14|51|14|a3c0f616ab629dd415665d80bc84fd03edd48241|1794614400000|||app/components/workflow/flow-canvas.hbs
 add|ember-template-lint|require-presentational-children|52|14|52|14|f42cdb2daf6ac720e9b582d99017e9564aff939b|1794614400000|||app/components/workflow/flow-canvas.hbs
 add|ember-template-lint|no-invalid-interactive|22|77|22|77|ea89ce5e30fb20d89bf0a393e4db1537da8bca49|1794614400000|||app/components/workflow/runs-box.hbs
-add|ember-template-lint|no-curly-component-invocation|47|57|47|57|023eb339e77577cb0ad16935c823fed817114ebe|1794614400000|||app/templates/app/module.hbs
-add|ember-template-lint|no-curly-component-invocation|74|59|74|59|f773e1980585193c525cb8192c670f72efd14d12|1794614400000|||app/templates/app/module.hbs
 add|ember-template-lint|no-empty-headings|2|2|2|2|69a3602c1e1e951e42a2ff99fd84b14f6ff52be1|1794614400000|||app/templates/app/settings-loading.hbs
 add|ember-template-lint|no-curly-component-invocation|14|25|14|25|df96a559278c68873d64aab34f1a31d36c2a20ba|1794614400000|||tests/integration/helpers/format-date-test.js
 add|ember-template-lint|no-curly-component-invocation|21|25|21|25|d302c2055458b50903234351639c7f5484ed2d33|1794614400000|||tests/integration/helpers/format-date-test.js
@@ -334,7 +329,6 @@ add|ember-template-lint|no-inline-styles|74|68|74|68|ebbf61cdca4353913e5a950b654
 add|ember-template-lint|no-inline-styles|93|68|93|68|ebbf61cdca4353913e5a950b6547bfd413f28f68|1794614400000|||app/components/app-ui/skeleton/user-profile.hbs
 add|ember-template-lint|no-inline-styles|102|25|102|25|6198a34d1016c416bec20607ca4a8ed3d1eaa5fd|1794614400000|||app/components/app-ui/skeleton/user-profile.hbs
 add|ember-template-lint|no-inline-styles|114|68|114|68|896cdf62cabbb97637e247ecf5e0ca904776cc05|1794614400000|||app/components/app-ui/skeleton/user-profile.hbs
-add|ember-template-lint|no-curly-component-invocation|55|22|55|22|09cb8c9fd01cb347ac61ca2313d1fb9c8a2ae58e|1794614400000|||app/components/app-ui/task-board/milestones.hbs
 add|ember-template-lint|no-inline-styles|51|46|51|46|df21caf8b1b2bae4781a4a3d682a435c2b5baac0|1794614400000|||app/components/app-ui/task-board/milestones.hbs
 add|ember-template-lint|style-concatenation|51|46|51|46|df21caf8b1b2bae4781a4a3d682a435c2b5baac0|1794614400000|||app/components/app-ui/task-board/milestones.hbs
 add|ember-template-lint|no-at-ember-render-modifiers|4|52|4|52|8a2ab834a2892963a6ea18c5ff29312df0373009|1794614400000|||app/components/developer/demos/dropdown.hbs
@@ -351,14 +345,11 @@ add|ember-template-lint|no-mut-helper|145|38|145|38|2350da0d8c590ba0b0133c4fe598
 add|ember-template-lint|no-mut-helper|167|30|167|30|f16ee554b4bb6d2f92619bf218671172f8728144|1794614400000|||app/templates/app/project/conversation.hbs
 add|ember-template-lint|no-curly-component-invocation|71|104|71|104|b8d5b3a5e2fcda2dec68a9a7a8fa94a00472a10e|1794614400000|||app/templates/app/project/idea.hbs
 add|ember-template-lint|no-at-ember-render-modifiers|385|43|385|43|f36f24a63b1d2cc76272f478d062358cc1edaf73|1794614400000|||app/templates/app/project/index.hbs
-add|ember-template-lint|no-curly-component-invocation|197|20|197|20|d95ec601e2a41391653aee2c4df3dd54f319ac58|1794614400000|||app/templates/app/project/index.hbs
-add|ember-template-lint|no-curly-component-invocation|517|12|517|12|539ed1de358ff3dbe33fbcaf4cc7f72c8629bf91|1794614400000|||app/templates/app/project/index.hbs
 add|ember-template-lint|no-whitespace-for-layout|77|24|77|24|5dd267c896476cc02e964f8feb4a55d24ee30c29|1794614400000|||app/templates/app/project/index.hbs
 add|ember-template-lint|no-empty-headings|2|2|2|2|cc239c596a1065fda3404189c7b76232c5b5e88a|1794614400000|||app/templates/app/projects/edit-loading.hbs
 add|ember-template-lint|no-empty-headings|2|2|2|2|cc239c596a1065fda3404189c7b76232c5b5e88a|1794614400000|||app/templates/app/projects/index-loading.hbs
 add|ember-template-lint|no-empty-headings|2|2|2|2|cc239c596a1065fda3404189c7b76232c5b5e88a|1794614400000|||app/templates/app/projects/create-loading.hbs
 add|ember-template-lint|no-curly-component-invocation|110|49|110|49|d7938c2edb14c42cb0833d249649dae240c37831|1794614400000|||app/templates/app/projects/index.hbs
-add|ember-template-lint|no-curly-component-invocation|19|18|19|18|918ff565edd1de4f9bc95a771448dad093a03585|1794614400000|||app/templates/app/project/wiki.hbs
 add|ember-template-lint|no-autofocus-attribute|45|18|45|18|0d2b98a9093686a223ccc82022c3db762739720f|1794614400000|||app/templates/app/role/page.hbs
 add|ember-template-lint|no-autofocus-attribute|82|14|82|14|0d2b98a9093686a223ccc82022c3db762739720f|1794614400000|||app/templates/app/role/page.hbs
 add|ember-template-lint|no-builtin-form-components|212|18|212|18|a66534de4460e20133cc069b7a87d84c3423005d|1794614400000|||app/templates/app/role/page.hbs
