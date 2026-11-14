@@ -26,11 +26,11 @@ export default class ApplicationRoute extends Route {
      * Wires the router service to the Pace progress bar once the route exists, so
      * nothing touches the router before the application has set it up.
      *
-     * @method init
+     * @method constructor
      * @public
      */
-    init() {
-        super.init(...arguments);
+    constructor() {
+        super(...arguments);
         restartPaceOnTransition(this.router);
     }
 

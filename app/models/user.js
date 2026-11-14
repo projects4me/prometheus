@@ -3,7 +3,6 @@
  */
 
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
-import { computed } from '@ember/object';
 import { imagePathToBase64 } from 'prometheus/utils/image-to-base64';
 import * as dates from 'prometheus/utils/date';
 
@@ -481,7 +480,6 @@ export default class UserModel extends Model {
      * @for User
      * @private
      */
-    @computed('badges', 'badgeLevels')
     get badgeDetails() {
         let array = [];
         this.badges.forEach((badge) => {

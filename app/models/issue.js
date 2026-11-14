@@ -4,7 +4,6 @@
 
 import Model, { attr, belongsTo, hasMany } from "@ember-data/model";
 import { service } from "@ember/service";
-import { computed } from "@ember/object";
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
 
@@ -455,6 +454,8 @@ export default class IssueModel extends Model {
      * The constructor for the issue model. In this we're setting the default status of the issue
      * to new if new issue is being created, project has issue statuses and status is not set.
      */
+    // Ember Data assigns the createRecord() properties before init() runs, a constructor would not see them.
+    // eslint-disable-next-line ember/classic-decorator-hooks
     init() {
         super.init(...arguments);
 
@@ -498,15 +499,6 @@ export default class IssueModel extends Model {
      * @for Issue
      * @public
      */
-    @computed(
-        'parentissue.status',
-        'status',
-        'endDate',
-        'isReopened',
-        'spent.length',
-        'description',
-        'issuetype.name'
-    )
     get infoTag() {
         {
             let parentissue = this.parentissue;

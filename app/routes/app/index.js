@@ -5,6 +5,7 @@
 import App from "prometheus/routes/app";
 import MD from "prometheus/utils/metadata/metadata";
 import _ from 'lodash';
+import { get } from '@ember/object';
 import * as dates from 'prometheus/utils/date';
 
 const UTC = { zone: 'UTC' };
@@ -94,7 +95,7 @@ export default class AppIndexRoute extends App {
      * @private
      */
     _getValidWidgets(widgetSettings){
-        let configured = _.split(this.get('currentUser.user.dashboard.widgets') || '', ',');
+        let configured = _.split(get(this, 'currentUser.user.dashboard.widgets') || '', ',');
         let widgets = _.filter(_.map(configured, _.trim), function(widget){
             if (widget === '' || !_.has(widgetSettings, [widget])) {
                 if (widget !== '') {
