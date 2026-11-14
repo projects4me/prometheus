@@ -2,7 +2,7 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Object from '@ember/object';
+import EmberObject from '@ember/object';
 
 /**
  * The meta is the main object storing the different types of metadata that the
@@ -15,7 +15,7 @@ import Object from '@ember/object';
  * @author Hammad Hassan <gollomer@gmail.com>
  * @todo Allow the metadata to be retrived from the server
  */
-export default Object.extend({
+export default class MetadataMetadata extends EmberObject {
 
     /**
      * The list of modules in the system and their default behaviors
@@ -25,7 +25,7 @@ export default Object.extend({
      * @for Metadata
      * @private
      */
-    modules:{
+    static MODULES = {
         "dashboard":{
             "nav": true,
         },
@@ -59,7 +59,7 @@ export default Object.extend({
         "wiki":{
             "nav": true,
         }
-    },
+    };
 
     /**
      * The metadata for the views in the sysetm. I want to built all the views via
@@ -71,7 +71,7 @@ export default Object.extend({
      * @for Metadata
      * @private
      */
-    views: {
+    static VIEWS = {
         Navigation: {
             items: {
                 Dashboard: {
@@ -667,7 +667,7 @@ export default Object.extend({
                 }
             }
         }
-    },
+    };
 
     /**
      * This variable store the business logic for the system, although the basic
@@ -684,7 +684,44 @@ export default Object.extend({
      * @private
      * @todo Yet to be implemented :D
      */
-    businessLogic:{},
+    static BUSINESS_LOGIC = {};
+
+    /**
+     * The shared modules definition. It lives on the class, as it did on the prototype of the
+     * classic object, so every instance (and anyone extending it at runtime) sees the same object.
+     *
+     * @property modules
+     * @type Object
+     * @for Metadata
+     * @private
+     */
+    get modules() {
+        return MetadataMetadata.MODULES;
+    }
+
+    /**
+     * The shared views definition (see modules)
+     *
+     * @property views
+     * @type Object
+     * @for Metadata
+     * @private
+     */
+    get views() {
+        return MetadataMetadata.VIEWS;
+    }
+
+    /**
+     * The shared business logic definition (see modules)
+     *
+     * @property businessLogic
+     * @type Object
+     * @for Metadata
+     * @private
+     */
+    get businessLogic() {
+        return MetadataMetadata.BUSINESS_LOGIC;
+    }
 
     /**
      * This function is used to retrieve the metadata for the different views in the
@@ -695,7 +732,7 @@ export default Object.extend({
      * @param {String} view The view of the module whose meta is required
      * @return {Object} metadata The requested metadata
      */
-    getViewMeta:function(module,view){
+    getViewMeta(module,view) {
         if (this.views[module] !== undefined && this.views[module][view] !== undefined)
         {
             let meta = this.views[module][view];
@@ -703,5 +740,4 @@ export default Object.extend({
         }
         return false;
     }
-
-});
+}

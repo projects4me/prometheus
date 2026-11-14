@@ -102,7 +102,7 @@
                   @label={{t "views.app.user.create.access.project"}}
                   @options={{this.projectsList}}
                   @selected={{this.selectedProject}}
-                  @onchange={{fn (mut this.selectedProject)}}
+                  @onchange={{this.setSelectedProject}}
                   @relateType="relate-simple"
                   @searchEnabled={{false}}
                   @data-field="user.membership.project"
@@ -116,7 +116,7 @@
                   @label={{t "views.app.user.create.access.role"}}
                   @options={{this.rolesList}}
                   @selected={{this.selectedRole}}
-                  @onchange={{fn (mut this.selectedRole)}}
+                  @onchange={{this.setSelectedRole}}
                   @relateType="relate-simple"
                   @searchEnabled={{false}}
                   @data-field="user.userrole.role"

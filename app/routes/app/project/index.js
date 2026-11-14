@@ -3,6 +3,7 @@
  */
 
 import App from "prometheus/routes/app";
+import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
@@ -18,7 +19,7 @@ import { pushRecords } from 'prometheus/utils/array/record-list';
  * @extends App
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class ProjectIndexRoute extends App {
     /**
      * The trackedProject service provides id of the selected project.
      *
@@ -27,7 +28,7 @@ export default App.extend({
      * @for Project
      * @private
      */
-    trackedProject: service(),
+    @service trackedProject;
 
     /**
      * Query params that the route supports.
@@ -37,11 +38,11 @@ export default App.extend({
      * @for AppProjectIndexRoute
      * @public
      */
-    queryParams: {
+    queryParams = {
         s_id: {
             refreshModel: false
         }
-    },    
+    };
 
     /**
      * The model hook for this route used for fetching required data.
@@ -109,7 +110,7 @@ export default App.extend({
                     moduleName: "project"
                 });
             })
-    },
+    }
     /**
      * The setup controller function that will be called every time the user visits
      * the route, this function is responsible for loading the required data
@@ -141,7 +142,7 @@ export default App.extend({
         controller.set('milestonesPage', 1);
         controller.send('resetNewMilestone');
         controller.set('conversations', model.conversations);
-    },
+    }
 
     /**
      * This function is used to set the milestones to the project contorller.
@@ -158,7 +159,7 @@ export default App.extend({
             }
         });
         controller.set('milestones', milestones.slice());
-    },
+    }
 
     /**
      * This function is used to set the activities to the project controller.
@@ -179,29 +180,28 @@ export default App.extend({
             }
         });
         controller.set('activities', updatedActivities);
-    },
-    actions: {
-        /**
-         * This event is triggered when user attempt to transition to another route. In this we're unloading
-         * array of issue model from the ember store. Because when user will navigate from this route to
-         * project/board route, where we're again fetching the issues against the same project, then store
-         * will use the loaded issue models against the same xhr call and this makes board to render issues
-         * lanes twice.
-         * 
-         * @event willTransition
-         * @public
-         */
-        willTransition() {
-            this.controller?.milestones?.forEach((milestone) => {
-                let issues = milestone.issues.slice();
-                issues.forEach((issue) => {
-                    issue.unloadRecord();
-                });
-            });
-
-            this.controller?.issuetime?.forEach((issue) => {
-                issue.unloadRecord();
-            })
-        }
     }
-});
+    /**
+     * This event is triggered when user attempt to transition to another route. In this we're unloading
+     * array of issue model from the ember store. Because when user will navigate from this route to
+     * project/board route, where we're again fetching the issues against the same project, then store
+     * will use the loaded issue models against the same xhr call and this makes board to render issues
+     * lanes twice.
+     * 
+     * @event willTransition
+     * @public
+     */
+    @action
+    willTransition() {
+        this.controller?.milestones?.forEach((milestone) => {
+            let issues = milestone.issues.slice();
+            issues.forEach((issue) => {
+                issue.unloadRecord();
+            });
+        });
+
+        this.controller?.issuetime?.forEach((issue) => {
+            issue.unloadRecord();
+        })
+    }
+}

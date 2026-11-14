@@ -14,7 +14,7 @@ import { camelize } from '@ember/string';
  * @author Hammad Hassan <gollomer@gmail.com>
  */
 
-export default JSONAPISerializer.extend({
+export default class ApplicationSerializer extends JSONAPISerializer {
 
     /**
      * Setting the primary key as the field id
@@ -24,7 +24,7 @@ export default JSONAPISerializer.extend({
      * @for Application
      * @protected
      */
-    primaryKey: 'id',
+    primaryKey = 'id';
 
     /**
      * By default EmberJS process the model name by pluralizing it, we want to
@@ -35,9 +35,9 @@ export default JSONAPISerializer.extend({
      * @return {String} modelName The model name as it is
      * @protected
      */
-    modelNameFromPayloadKey :function(modelName){
+    modelNameFromPayloadKey(modelName) {
         return modelName;
-    },
+    }
 
     /**
      * By default EmberJS process the field name, we want to camelize it
@@ -49,7 +49,7 @@ export default JSONAPISerializer.extend({
      */
     keyForAttribute(key/*, method*/) {
         return camelize(key);
-    },
+    }
 
     /**
      * Camelize the relationship key
@@ -61,6 +61,5 @@ export default JSONAPISerializer.extend({
      */
     keyForRelationship(key/*, typeClass, method)*/) {
         return camelize(key);
-    },
-
-});
+    }
+}

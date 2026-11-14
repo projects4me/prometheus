@@ -3,6 +3,7 @@
  */
 
 import Route from '@ember/routing/route';
+import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { UnauthorizedError } from '@ember-data/adapter/error';
 
@@ -15,7 +16,7 @@ import { UnauthorizedError } from '@ember-data/adapter/error';
  * @uses AuthenticatedRouteMixin
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Route.extend({
+export default class AppRoute extends Route {
 
     /**
      * The session service (services/session.js) that will be used
@@ -26,7 +27,7 @@ export default Route.extend({
      * @for App
      * @public
      */
-    session: service(),
+    @service session;
 
     /**
      * The route name on which user will authenticate for the appliation.
@@ -36,7 +37,7 @@ export default Route.extend({
      * @for App
      * @public
      */
-    authenticationRoute: 'signin',
+    authenticationRoute = 'signin';
     /**
      * The intl library service that is used in order to get the translations
      *
@@ -45,7 +46,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    intl: service(),
+    @service intl;
 
     /**
      * The current user service
@@ -55,7 +56,7 @@ export default Route.extend({
      * @for App
      * @public
      */
-    currentUser: service(),
+    @service currentUser;
 
     /**
      * The store service that is used to interact ember data APIs.
@@ -65,7 +66,7 @@ export default Route.extend({
      * @for App
      * @public
      */
-    store: service(),
+    @service store;
 
     /**
      * The Ember router service.
@@ -75,7 +76,7 @@ export default Route.extend({
      * @for App
      * @public
      */
-    router: service(),
+    @service router;
 
     /**
      * Acl service used to maintain allowed resources for current loggedin user and
@@ -86,7 +87,7 @@ export default Route.extend({
      * @for App
      * @public
      */
-    acl: service(),
+    @service acl;
 
     /**
      * This service is used to different types of errors.
@@ -96,7 +97,7 @@ export default Route.extend({
      * @for App
      * @protected
      */
-    errorManager: service(),
+    @service errorManager;
 
     /**
      * The trackedProject service provides the selected project.
@@ -106,7 +107,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    trackedProject: service(),
+    @service trackedProject;
 
     /**
      * The notifications service
@@ -116,7 +117,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    notifications: service(),
+    @service notifications;
 
     /**
      * The breadcrumb service.
@@ -126,7 +127,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    breadcrumb: service(),
+    @service breadcrumb;
 
     /**
      * Blocks transitions when a controller is dirty or an async operation is
@@ -137,7 +138,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    navigationGuard: service(),
+    @service navigationGuard;
 
     /**
      * Hermes Socket.IO client. Connected here when assets are already loaded
@@ -148,7 +149,7 @@ export default Route.extend({
      * @for App
      * @private
      */
-    hermes: service(),
+    @service hermes;
 
     /**
      * This function is called by EmberJs before it retrieves the model. In this method
@@ -174,7 +175,7 @@ export default Route.extend({
         if (loadingAssetsController.get('dataLoaded')) {
             this.notifications.startLiveSync();
         }
-    },
+    }
 
     /**
      * Registers a single `routeWillChange` listener (once per session) that
@@ -204,7 +205,7 @@ export default Route.extend({
                 this.navigationGuard.finishConfirmedLeave();
             }
         });
-    },
+    }
 
     /**
      * Returns true when the transition should be blocked. Checks two sources:
@@ -237,7 +238,7 @@ export default Route.extend({
         }
 
         return controllerIsDirty || this.navigationGuard.isDirty;
-    },
+    }
 
     /**
      * The setup controller function that will be called every time the user visits
@@ -247,7 +248,7 @@ export default Route.extend({
      * @param {Prometheus.Controllers.App} controller the controller object for this route
      * @protected
      */
-    setupController: function (controller) {
+    setupController(controller) {
         Logger.debug('Prometheus.App.Route::setupController()');
 
         let loadingAssetsController = this.controllerFor('app.loading-assets');
@@ -259,24 +260,23 @@ export default Route.extend({
         }
 
         Logger.debug('-Prometheus.App.Route::setupController()');
-    },
-    actions: {
-        /**
-         * This event is triggered when user will get error from one of the model hooks of the ember e.g. afterModel, beforeModel
-         * or model. In this event we're invalidating the session if the error has status code of 401 or type "UnauthorizedError" and
-         * for the other errors having different type of status code e.g. 403 or 404 we're returning true, that will allow Ember to
-         * render the error template. 
-         * 
-         * @param {*} error 
-         * @param {*} transition 
-         * @returns 
-         */
-        error(error, transition) {
-            if (error instanceof UnauthorizedError) {
-                this.session.invalidate();
-            } else {
-                return true;
-            }
+    }
+    /**
+     * This event is triggered when user will get error from one of the model hooks of the ember e.g. afterModel, beforeModel
+     * or model. In this event we're invalidating the session if the error has status code of 401 or type "UnauthorizedError" and
+     * for the other errors having different type of status code e.g. 403 or 404 we're returning true, that will allow Ember to
+     * render the error template. 
+     * 
+     * @param {*} error 
+     * @param {*} transition 
+     * @returns 
+     */
+    @action
+    error(error, transition) {
+        if (error instanceof UnauthorizedError) {
+            this.session.invalidate();
+        } else {
+            return true;
         }
     }
-});
+}

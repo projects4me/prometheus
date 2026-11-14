@@ -16,7 +16,7 @@ import { objectAt } from 'prometheus/utils/array/object-at';
  * @extends AppRoute
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class PageRoute extends App {
 
     /**
      * The wiki list, this list is retrieved by the app.wiki.project route but
@@ -29,7 +29,7 @@ export default App.extend({
      * @for Page
      * @private
      */
-    wikilist: {},
+    wikilist = {};
 
     /**
      * The trackedProject service provides id of the selected project.
@@ -39,7 +39,7 @@ export default App.extend({
      * @for ProjectWikiPageRoute
      * @private
      */
-    trackedProject: service(),
+    @service trackedProject;
 
     /**
      * The model hook for this route. In this we're fetching the wiki by the provided wiki name.
@@ -66,7 +66,7 @@ export default App.extend({
                 moduleName: 'wiki'
             });
         });
-    },
+    }
 
     /**
      * The setupController hook.
@@ -92,4 +92,4 @@ export default App.extend({
 
         this.breadcrumb.setTitle(this.routeName, wikiName);
     }
-});
+}

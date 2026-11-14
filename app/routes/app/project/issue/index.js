@@ -17,7 +17,7 @@ import { objectAt } from 'prometheus/utils/array/object-at';
  * @extends App
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class IssueIndexRoute extends App {
 
     /**
      * The trackedProject service provides id of the selected project.
@@ -27,7 +27,7 @@ export default App.extend({
      * @for Project
      * @private
      */
-    trackedProject: service(),
+    @service trackedProject;
 
     /**
      * Loads the ezSearch schema of the issues.
@@ -36,7 +36,7 @@ export default App.extend({
      * @type Prometheus.Services.QuerySchemaService
      * @private
      */
-    querySchema: service('query-schema'),    
+    @service('query-schema') querySchema;
 
     /**
      * We need to reload the model as the values related ot the page's data are
@@ -48,7 +48,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    queryParams:{
+    queryParams = {
         sort:{
             refreshModel:true,
         },
@@ -61,7 +61,7 @@ export default App.extend({
         query:{
             refreshModel:true,
         }
-    },
+    };
 
     /**
      * The field on which we want to sort by default
@@ -71,7 +71,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    sort: 'Issue.issueNumber',
+    sort = 'Issue.issueNumber';
 
     /**
      * The order in which to sort by
@@ -81,7 +81,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    order: 'desc',
+    order = 'desc';
 
     /**
      * The default page that we need to load
@@ -91,7 +91,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    page: 1,
+    page = 1;
 
     /**
      * The default query that we need to load
@@ -101,7 +101,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    query: '',
+    query = '';
 
     /**
      * These are the saved searches related to the issues
@@ -111,7 +111,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    savedsearches: null,
+    savedsearches = null;
 
     /**
      * The current user
@@ -121,7 +121,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    currentUser: service(),
+    @service currentUser;
 
     /**
      * The saved search calls
@@ -130,7 +130,7 @@ export default App.extend({
      * @type Prometheus.Services.SavedSearchService
      * @private
      */
-    savedSearch: service('saved-search'),
+    @service('saved-search') savedSearch;
 
     /**
      * In this hook we're loading list of issue statuses and types available in the project.
@@ -153,8 +153,8 @@ export default App.extend({
 
         const projectData = objectAt(project, 0);
         if (projectData) {
-            _self.set('issueTypes', projectData.get('issuetypes'));
-            _self.set('issueStatuses', projectData.get('issuestatuses'));
+            _self.issueTypes = projectData.get('issuetypes');
+            _self.issueStatuses = projectData.get('issuestatuses');
         }
 
         const milestoneOptions = {
@@ -168,8 +168,8 @@ export default App.extend({
         const milestones = await this.store.query('milestone', milestoneOptions).catch(error =>
             _self.errorManager.handleError(error, { moduleName: "milestone" })
         );
-        _self.set('milestones', milestones?.slice() || []);
-    },
+        _self.milestones = milestones?.slice() || [];
+    }
 
     /**
      * The model for this route
@@ -179,7 +179,7 @@ export default App.extend({
      * @return Prometheus.Models.Issue
      * @private
      */
-    model:function(params){
+    model(params) {
         Logger.debug('AppIssueRoute::model()');
         Logger.debug(params);
         let _self = this;
@@ -188,19 +188,19 @@ export default App.extend({
 
         // Load the data if are passed via the parameter
         if(params.sort){
-            this.set('sort',params.sort);
+            this.sort = params.sort;
         }
         if(params.order){
-            this.set('order',params.order);
+            this.order = params.order;
         }
         if(params.query === ''){
-            this.set('query',null);
+            this.query = null;
         } else if(params.query){
             query = params.query;
-            this.set('query',params.query);
+            this.query = params.query;
         }
         if(params.page){
-            this.set('page',params.page);
+            this.page = params.page;
         }
 
         // Get the projectId from the parent
@@ -232,7 +232,7 @@ export default App.extend({
         });
 
         return data;
-    },
+    }
 
     /**
      * This function is called by Ember after the model function
@@ -255,15 +255,15 @@ export default App.extend({
                 _self.errorManager.handleError(results.schema.reason, { moduleName: "issue" });
             }
             let data = extractHashSettled(results);
-            _self.set('savedsearches',data.savedsearches);
-            _self.set('schema', Array.isArray(data.schema) ? null : data.schema);
+            _self.savedsearches = data.savedsearches;
+            _self.schema = Array.isArray(data.schema) ? null : data.schema;
         }).catch((error) =>{
             _self.errorManager.handleError(error, {
                 moduleName: "issue"
             });
         });
 
-    },
+    }
 
     /**
      * This function is called by the route when it has created the controller and
@@ -279,7 +279,7 @@ export default App.extend({
      * @param {Prometheus.Models.Issue} model The model that is created by this route
      * @private
      */
-    setupController:function(controller,model){
+    setupController(controller,model) {
         let savedSearch = this.store.createRecord('savedsearch');
         controller.set('newSavedsearch',savedSearch);
         controller.set('savedsearches',this.savedsearches);
@@ -298,7 +298,7 @@ export default App.extend({
         if(controller.searchId && this.savedsearches) {
             controller.set('activeSearch', this.savedsearches.find(search => search.id === controller.searchId) || null);
         }
-    },
+    }
 
     /**
      * This function is called by the route when it is exiting.
@@ -308,7 +308,7 @@ export default App.extend({
      * @param {boolean} isExiting Whether the route is exiting
      * @private
      */
-    resetController:function(controller, isExiting) {
+    resetController(controller, isExiting) {
         if (isExiting) {
             controller.unregisterIssuePreview();
             controller.selectedIssue = null;
@@ -317,5 +317,4 @@ export default App.extend({
             controller.projectData = null;
         }
     }
-
-});
+}

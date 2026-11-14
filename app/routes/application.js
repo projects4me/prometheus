@@ -18,9 +18,9 @@ import { restartPaceOnTransition } from "prometheus/utils/ui/pace-router";
  * @uses ApplicationRouteMixin
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Route.extend({
+export default class ApplicationRoute extends Route {
 
-    routeAfterAuthentication: 'app',
+    routeAfterAuthentication = 'app';
 
     /**
      * Wires the router service to the Pace progress bar once the route exists, so
@@ -30,9 +30,9 @@ export default Route.extend({
      * @public
      */
     init() {
-        this._super(...arguments);
+        super.init(...arguments);
         restartPaceOnTransition(this.router);
-    },
+    }
 
     /**
      * The intl library service that is used in order to get the translations
@@ -42,7 +42,7 @@ export default Route.extend({
      * @for Application
      * @public
      */
-    intl: service(),
+    @service intl;
 
     /**
      * The router service is used in order to redirect to other route
@@ -52,7 +52,7 @@ export default Route.extend({
      * @for Application
      * @public
      */
-    router: service(),
+    @service router;
 
     /**
      * The session service (services/session.js) that will be used
@@ -63,7 +63,7 @@ export default Route.extend({
      * @for Application
      * @public
      */
-    session: service(),
+    @service session;
 
     /**
      * The translations service that loads the backend translations before the app renders
@@ -73,7 +73,7 @@ export default Route.extend({
      * @for Application
      * @public
      */
-    translations: service(),
+    @service translations;
 
     /**
      * This function get triggered before a model fetch is called, this is
@@ -83,8 +83,8 @@ export default Route.extend({
      * @method beforeModel
      * @private
      */
-    beforeModel: async function () {
-        this._super(...arguments);
+    async beforeModel() {
+        super.beforeModel(...arguments);
         // restore the persisted session and enable its sign-in/sign-out handlers
         await this.session.setup();
         await this.translations.load();
@@ -108,5 +108,5 @@ export default Route.extend({
             route = 'signin';
         }
         this.router.transitionTo(route);
-    },
-});
+    }
+}

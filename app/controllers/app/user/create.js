@@ -214,6 +214,28 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	@tracked selectedRole = null;
 
 	/**
+	 * Stores the project picked in the project-membership dropdown
+	 *
+	 * @method setSelectedProject
+	 * @param {Object} project The selected option
+	 * @public
+	 */
+	@action setSelectedProject(project) {
+		this.selectedProject = project;
+	}
+
+	/**
+	 * Stores the role picked in the role dropdown
+	 *
+	 * @method setSelectedRole
+	 * @param {Object} role The selected option
+	 * @public
+	 */
+	@action setSelectedRole(role) {
+		this.selectedRole = role;
+	}
+
+	/**
 	 * Returns the formatted project select list sourced from the app
 	 * controller so the project-membership dropdown stays in sync with the
 	 * globally loaded project list.

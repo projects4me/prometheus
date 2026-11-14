@@ -13,7 +13,7 @@ import Model, { attr, hasMany } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class TaggedModel extends Model {
 
     /**
      * The identifier of the entity the tag is related to
@@ -23,7 +23,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    "relatedId": attr('string'),
+    @attr('string') relatedId;
 
     /**
      * The entity the tag is related to
@@ -33,7 +33,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    "relatedTo": attr('string'),
+    @attr('string') relatedTo;
 
     /**
      * The identifier of the tag
@@ -43,7 +43,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    "tagId": attr('string'),
+    @attr('string') tagId;
 
     /**
      * The tag this tagged is associated with
@@ -53,7 +53,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    tag: hasMany('tag', { async: true, inverse: null }),
+    @hasMany('tag', { async: true, inverse: null }) tag;
     
     /**
      * The project this tagged is associated with
@@ -63,7 +63,7 @@ export default Model.extend({
      * @for Tagged
      * @Tagged
      */
-    project: hasMany('project', { async: true, inverse: null }),
+    @hasMany('project', { async: true, inverse: null }) project;
 
     /**
      * The issue this tagged is associated with
@@ -73,7 +73,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    issue: hasMany('issue', { async: true, inverse: null }),
+    @hasMany('issue', { async: true, inverse: null }) issue;
 
     /**
      * The wiki this tagged is associated with
@@ -83,6 +83,6 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    wiki: hasMany('wiki', { async: true, inverse: 'tagged' })
+    @hasMany('wiki', { async: true, inverse: 'tagged' }) wiki;
     
-});
+}

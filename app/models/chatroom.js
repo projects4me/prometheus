@@ -12,7 +12,7 @@ import Model, { attr,hasMany } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class ChatroomModel extends Model {
 
     /**
      * Subject of the chat room
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    subject: attr('string'),
+    @attr('string') subject;
 
     /**
      * The date on which the chatroom was created
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * The date on which the chatroom was last modified on
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * The identifier of the user who created the chat room
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The identifier of the user who last modified the chat room
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * Name of the user who created the chat room
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * The name of the user who last modified the chat room
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    modifiedUserName: attr('string'),
+    @attr('string') modifiedUserName;
 
     /**
      * Has this model been deleted
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * Status of the chat room
@@ -102,7 +102,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    status: attr('string'),
+    @attr('string') status;
 
     /**
      * The type of chat room, group or private
@@ -112,7 +112,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    type: attr('string'),
+    @attr('string') type;
 
     /**
      * The conversers in this chat room
@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    conversers: hasMany('user', { async: true, inverse: null }),
+    @hasMany('user', { async: true, inverse: null }) conversers;
 
     /**
      * The owner of this chat room
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    ownedBy: hasMany('user', { async: true, inverse: null }),
+    @hasMany('user', { async: true, inverse: null }) ownedBy;
 
     /**
      * Comments made on this conversation room
@@ -142,6 +142,6 @@ export default Model.extend({
      * @for Chatroom
      * @private
      */
-    comments: hasMany('comment', { async: true, inverse: 'chatRoom' }),
+    @hasMany('comment', { async: true, inverse: 'chatRoom' }) comments;
 
-});
+}

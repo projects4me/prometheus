@@ -18,7 +18,7 @@ import { objectAt } from 'prometheus/utils/array/object-at';
  * @extends App
  * @author Hammad Hassan <gollomer@gamil.com>
  */
-export default App.extend({    
+export default class CreateRoute extends App {
 
     /**
      * We are using dynamic segments and since model is not called
@@ -33,7 +33,7 @@ export default App.extend({
      */
     async afterModel(model, transition) {
         Logger.debug('Prometheus.Routes.App.Project.Issue.Create::afterModel()');
-        this.set('sourceThread', await this.loadSourceThread(transition?.to?.queryParams?.fromThread));
+        this.sourceThread = await this.loadSourceThread(transition?.to?.queryParams?.fromThread);
         let _self = this;
         let projectId = _self.trackedProject.getProjectId();
 
@@ -55,14 +55,14 @@ export default App.extend({
                 });
                 projectData.issuestatuses = issueStatuses;
             }
-            this.set('project', projectData);
-            this.set('agents', await this.loadAgents());
+            this.project = projectData;
+            this.agents = await this.loadAgents();
         } catch (error) {
             _self.errorManager.handleError(error, {
                 moduleName: 'project'
             })
         }
-    },
+    }
 
     /**
      * Loads the thread the issue is created from (the `fromThread` query parameter). Only a discussion without a
@@ -85,7 +85,7 @@ export default App.extend({
             Logger.debug('Prometheus.Routes.App.Project.Issue.Create::loadSourceThread() thread not available');
             return null;
         }
-    },
+    }
 
     /**
      * Loads the agents with their sponsor, so the assignee picker can show who an agent runs for.
@@ -103,7 +103,7 @@ export default App.extend({
             Logger.debug('Prometheus.Routes.App.Project.Issue.Create::loadAgents() agents not available');
             return [];
         }
-    },
+    }
 
     /**
      * This function is called by the route when it has created the controller and
@@ -118,32 +118,32 @@ export default App.extend({
      * @param {Prometheus.Controllers.Issue} controller The controller object for the issues
      * @private
          */
-    setupController: function (controller) {
+    setupController(controller) {
         Logger.debug('Prometheus.Routes.App.Project.Issue.Create::setupController');
 
         let _self = this;
         let issue = _self.store.createRecord('issue', {
             assignee: _self.currentUser.user.id,
             owner: _self.currentUser.user.id,
-            project: _self.get('project'),
-            projectId: _self.get('project').id,
-            projectShortcode: _self.get('project').shortCode,
+            project: _self.project,
+            projectId: _self.project.id,
+            projectShortcode: _self.project.shortCode,
             milestoneId: ''
         });
 
-        let sourceThread = _self.get('sourceThread');
+        let sourceThread = _self.sourceThread;
         if (sourceThread) {
-            let draft = threadIssueDraft(sourceThread, _self.get('project').shortCode,
+            let draft = threadIssueDraft(sourceThread, _self.project.shortCode,
                 this.intl.t('views.app.issue.create.fromThread'));
             issue.setProperties({ subject: draft.subject, description: draft.description, conversationRoomId: sourceThread.id });
         }
 
         const issueDescription = _.clone(issue.description);
         controller.set('model', issue);
-        controller.set('project', _self.get('project'));
-        controller.set('types', _self.get('project').issuetypes);
-        controller.set('agents', _self.get('agents') ?? []);
-        controller.set('statuses', _self.get('project').issuestatuses);
+        controller.set('project', _self.project);
+        controller.set('types', _self.project.issuetypes);
+        controller.set('agents', _self.agents ?? []);
+        controller.set('statuses', _self.project.issuestatuses);
         controller.set('issueDescription', issueDescription);
         controller.set('sourceThread', sourceThread ?? null);
 
@@ -151,7 +151,7 @@ export default App.extend({
         controller.set('priority', priority);
 
         Logger.debug('-Prometheus.Routes.App.Project.Issue.Create::setupController');
-    },
+    }
 
     /**
      * This function is trigged on route exit. So on route exit we're destroying empty model of issue.
@@ -171,4 +171,4 @@ export default App.extend({
             controller.set('sourceThread', null);
         }
     }
-});
+}

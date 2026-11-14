@@ -21,7 +21,7 @@ const DEFAULT_WIDGETS = ['recentIssues', 'activeMilestones', 'weeklyActivities',
  * @extends AppRoute
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class AppIndexRoute extends App {
 
     /**
      * These are the widgets that the current user has on the
@@ -32,7 +32,7 @@ export default App.extend({
      * @for Index
      * @public
      */
-    widgets: null,
+    widgets = null;
 
     /**
      * These are the widgets that are available in the system
@@ -42,7 +42,7 @@ export default App.extend({
      * @for Index
      * @public
      */
-    availableWidgets: null,
+    availableWidgets = null;
 
     /**
      * This function is called by ember when the model has been
@@ -58,10 +58,10 @@ export default App.extend({
         let _self = this;
 
         let widgetSettings = _self._getWidgetSettings();
-        _self.set('availableWidgets', _.keys(widgetSettings));
+        _self.availableWidgets = _.keys(widgetSettings);
         let widgets = _self._getValidWidgets(widgetSettings);
 
-        _self.set('widgets', widgets);
+        _self.widgets = widgets;
 
         let widgetResults = {};
 
@@ -71,18 +71,18 @@ export default App.extend({
         for (let widget of widgets) {
             widgetResults[widget] = await _self.store.query(widgetSettings[widget].model,widgetSettings[widget].options)
         }
-        _self.set('widgetSettings', widgetSettings);
+        _self.widgetSettings = widgetSettings;
         Logger.debug(_self);
         Logger.debug(widgetSettings);
         Logger.debug(widgets);
         Logger.debug('-Prometheus.Routes.Index::afterModel');
 
         try {
-            _self.set('widgets', widgetResults);
+            _self.widgets = widgetResults;
         } catch (error) {
             _self.errorManager.handleError(error);
         }
-    },
+    }
 
     /**
      * Returns the dashboard widgets of the current user, without blank or
@@ -108,7 +108,7 @@ export default App.extend({
             widgets = _.filter(DEFAULT_WIDGETS, function(widget){ return _.has(widgetSettings, widget); });
         }
         return widgets;
-    },
+    }
 
     /**
      * This function is called when the route needs to setup the
@@ -122,7 +122,7 @@ export default App.extend({
         let _self = this;
         controller.set('widgets',_self.widgets);
         controller.set('widgetSettings',_self.widgetSettings);
-    },
+    }
 
     /**
      * This function is used to return the widget settings available
@@ -160,7 +160,7 @@ export default App.extend({
 
         Logger.debug('-_getWidgetSettings');
         return widgetSettings;
-    },
+    }
 
     /**
      * Prepare comma separated project ids from the provided projects array.
@@ -178,4 +178,4 @@ export default App.extend({
         projectIds = projectIds.slice(0, -1);
         return projectIds;
     }
-});
+}

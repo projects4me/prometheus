@@ -13,7 +13,7 @@ import Model, { attr, belongsTo } from '@ember-data/model';
  * @namespace Prometheus.Models
  * @extends DS.Model
  */
-export default Model.extend({
+export default class UserqualificationModel extends Model {
 
     /**
      * The user this qualification belongs to.
@@ -23,7 +23,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    userId: attr('string'),
+    @attr('string') userId;
 
     /**
      * Qualification kind e.g. education, certification.
@@ -33,7 +33,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    type: attr('string'),
+    @attr('string') type;
 
     /**
      * Degree or certification title.
@@ -43,7 +43,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    title: attr('string'),
+    @attr('string') title;
 
     /**
      * School, university, or issuing institution.
@@ -53,7 +53,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    institution: attr('string'),
+    @attr('string') institution;
 
     /**
      * Completion year.
@@ -63,7 +63,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    completionYear: attr('number'),
+    @attr('number') completionYear;
 
     /**
      * Soft deletion flag.
@@ -73,7 +73,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * Date the record was created.
@@ -83,7 +83,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * Date the record was last modified.
@@ -93,7 +93,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * Identifier of the user who created the record.
@@ -103,7 +103,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * Display name of the user who created the record.
@@ -113,7 +113,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * Identifier of the user who last modified the record.
@@ -123,7 +123,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * Display name of the user who last modified the record.
@@ -133,7 +133,7 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    modifiedUserName: attr('string'),
+    @attr('string') modifiedUserName;
 
     /**
      * The user this qualification belongs to.
@@ -143,6 +143,6 @@ export default Model.extend({
      * @for Userqualification
      * @private
      */
-    user: belongsTo('user', { async: true, inverse: 'qualifications' }),
+    @belongsTo('user', { async: true, inverse: 'qualifications' }) user;
 
-});
+}

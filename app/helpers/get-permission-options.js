@@ -18,21 +18,21 @@ import { service } from '@ember/service';
  * @extends Ember.Component.Helper
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default Helper.extend({
+export default class GetPermissionOptionsHelper extends Helper {
 
     /**
      * @property settings
      * @type Ember.Service
      * @private
      */
-    settings: service(),
+    @service settings;
 
     /**
      * @property intl
      * @type Ember.Service
      * @private
      */
-    intl: service(),
+    @service intl;
 
     /**
      * @param {string} resourceOrType resourceName (e.g. project.get) or legacy options key
@@ -60,7 +60,7 @@ export default Helper.extend({
         }
 
         return optionsList;
-    },
+    }
 
     /**
      * @param {string} resourceOrType
@@ -90,7 +90,7 @@ export default Helper.extend({
         }
 
         return 'apiOptions';
-    },
+    }
 
     /**
      * @param {string} optionsKey
@@ -110,4 +110,4 @@ export default Helper.extend({
             none: '0'
         };
     }
-});
+}

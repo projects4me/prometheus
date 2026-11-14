@@ -12,7 +12,7 @@ import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class WikiModel extends Model {
 
     /**
      * Name of the wiki page
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    name: attr('string'),
+    @attr('string') name;
 
     /**
      * Date on which the wiki page was created
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * Date on which the wiki page was last modified
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * The identifier of the user who created the wiki page
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The name of the use who created the wiki page
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * The identifier of the user who last modified the wiki page
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * The name of the user who last modified the wiki page
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    modifiedUserName: attr('string'),
+    @attr('string') modifiedUserName;
 
     /**
      * The soft deletion flag of the wiki page
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * The status of the wiki page
@@ -102,7 +102,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    status: attr('string'),
+    @attr('string') status;
 
     /**
      * The lock flag of the wiki page
@@ -112,7 +112,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    locked: attr('string'),
+    @attr('string') locked;
 
     /**
      * The upvotes given to the project
@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    upvotes: attr('string'),
+    @attr('string') upvotes;
 
     /**
      * The identifier of the project that the wiki page is linked to
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    projectId: attr('string'),
+    @attr('string') projectId;
 
     /**
      * The mark up of the wiki page
@@ -142,7 +142,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    markUp: attr('string'),
+    @attr('string') markUp;
 
     /**
      * The identifier of the parent wiki page
@@ -152,7 +152,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    parentId: attr('string'),
+    @attr('string') parentId;
 
     /**
      * The user who created the wiki
@@ -162,7 +162,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    createdBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) createdBy;
 
     /**
      * The user who last modified the wiki
@@ -172,7 +172,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    modifiedBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) modifiedBy;
 
     /**
      * The tags for the wiki page
@@ -182,7 +182,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    tag: hasMany('tag', { async: true, inverse: 'wiki' }),
+    @hasMany('tag', { async: true, inverse: 'wiki' }) tag;
 
     /**
      * These are the tag relationship entries
@@ -192,7 +192,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    tagged: hasMany('tagged', { async: true, inverse: 'wiki' }),
+    @hasMany('tagged', { async: true, inverse: 'wiki' }) tagged;
 
     /**
      * The votes for this wiki page
@@ -202,7 +202,7 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    vote: hasMany('vote', { async: true, inverse: 'wiki' }),
+    @hasMany('vote', { async: true, inverse: 'wiki' }) vote;
 
     /**
      * The file associated with this wiki
@@ -212,6 +212,6 @@ export default Model.extend({
      * @for Wiki
      * @private
      */
-    files: hasMany('upload', { async: true, inverse: null })
+    @hasMany('upload', { async: true, inverse: null }) files;
 
-});
+}

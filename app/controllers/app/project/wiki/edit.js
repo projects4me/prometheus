@@ -6,6 +6,7 @@ import AppProjectWikiCreateController from "prometheus/controllers/app/project/w
 import _ from "lodash";
 import $ from 'jquery';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import { pushRecords } from 'prometheus/utils/array/record-list';
 
 /**
@@ -84,6 +85,25 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
      * @private
      */
     addTagDialog = false;
+
+    /**
+     * Whether the tag name field was left, so its validation error is shown
+     *
+     * @property showTagNameError
+     * @type {Boolean}
+     * @public
+     */
+    @tracked showTagNameError;
+
+    /**
+     * Marks the tag name field as visited
+     *
+     * @method markTagNameVisited
+     * @public
+     */
+    @action markTagNameVisited() {
+        this.showTagNameError = true;
+    }
 
     /**
      * This function is used to select the tags from the system

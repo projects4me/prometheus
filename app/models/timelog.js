@@ -12,7 +12,7 @@ import Model, { attr,belongsTo } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class TimelogModel extends Model {
 
     /**
      * The date on which the time log entry was made
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "dateCreated": attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * The date on which the time log entry was last modified
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "dateModified": attr('string'),
+    @attr('string') dateModified;
 
     /**
      * The soft deletion flag of the time log entry
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "deleted": attr('string'),
+    @attr('string') deleted;
 
     /**
      * The identifier of the user who created the time log entry
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "createdUser": attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The name of the user who created the time log entry
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "createdUserName": attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * The identifier of the user who last modifed the time log entry
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "modifiedUser": attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * The name of the user who last modified the time log entry
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "modifiedUserName": attr('string'),
+    @attr('string') modifiedUserName;
 
     /**
      * The identifier of the issue for which the time log entry was made
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "issueId": attr('string'),
+    @attr('string') issueId;
 
     /**
      * The minutes part of the time log entry
@@ -102,7 +102,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "minutes": attr('string'),
+    @attr('string') minutes;
 
     /**
      * The hours part of the time log entry
@@ -112,7 +112,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "hours": attr('string'),
+    @attr('string') hours;
 
     /**
      * The days part of the time log entry
@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "days": attr('string'),
+    @attr('string') days;
 
     /**
      * The context in which the time log entry was made, currently we are supporting
@@ -134,7 +134,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "context": attr('string'),
+    @attr('string') context;
 
     /**
      * The description of the task
@@ -144,7 +144,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "description": attr('string'),
+    @attr('string') description;
 
     /**
      * The date the time was spent on
@@ -154,7 +154,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "spentOn": attr('string'),
+    @attr('string') spentOn;
 
     /**
      * The project id
@@ -164,7 +164,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "projectId": attr('string'),
+    @attr('string') projectId;
 
     /**
      * The shortcode of the project
@@ -174,7 +174,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    "projectShortcode": attr('string'),
+    @attr('string') projectShortcode;
 
     /**
      * The issue this timelog is associated with
@@ -184,7 +184,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    issue: belongsTo('issue', { async: true, inverse: null }),
+    @belongsTo('issue', { async: true, inverse: null }) issue;
 
     /**
      * The project this timelog is associated with
@@ -194,7 +194,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    project: belongsTo('project', { async: true, inverse: null }),
+    @belongsTo('project', { async: true, inverse: null }) project;
 
     /**
      * The user who created this timelog
@@ -204,7 +204,7 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    createdBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) createdBy;
 
     /**
      * The user who last modified this timelog
@@ -214,6 +214,6 @@ export default Model.extend({
      * @for Timelog
      * @private
      */
-    modifiedBy: belongsTo('user', { async: true, inverse: null })
+    @belongsTo('user', { async: true, inverse: null }) modifiedBy;
 
-});
+}

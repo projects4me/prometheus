@@ -16,7 +16,7 @@ import Format from "prometheus/utils/data/format";
  *  @extends App
  *  @author Hammad Hassan <gollomer@gamil.com>
  */
-export default App.extend({
+export default class CreateRoute extends App {
 
     /**
      * This function returns returns the project being created
@@ -39,24 +39,24 @@ export default App.extend({
         }
 
         return hashSettled({
-            project: _self.get('store').createRecord('project',{
-                assignee: _self.get('currentUser').user.id,
-                projectManager: _self.get('currentUser').user.id
+            project: _self.store.createRecord('project',{
+                assignee: _self.currentUser.user.id,
+                projectManager: _self.currentUser.user.id
             }),
             issuetypes: _self.store.query('issuetype',issuetypeOptions),
             issueStatuses: _self.store.query('issuestatus', issueStatusOptions)
         }).then(function(results){
             let data = extractHashSettled(results);
-            _self.set('project',data.project);
-            _self.set('issuetypes',data.issuetypes.slice());
-            _self.set('issueStatuses',data.issueStatuses);
+            _self.project = data.project;
+            _self.issuetypes = data.issuetypes.slice();
+            _self.issueStatuses = data.issueStatuses;
         }).catch((error) => {
             _self.errorManager.handleError(error, {
                 moduleName: 'project'
             });
         });
 
-    },
+    }
 
     /**
      * This function is called every time the controller is being setup
@@ -66,13 +66,13 @@ export default App.extend({
      * @protected
      * @todo Store static lists elsewhere
      */
-    setupController:function(controller)
+    setupController(controller)
     {
         Logger.debug('AppProjectIndexRoute::setupController');
         let _self = this;
 
-        controller.set('model',_self.get('project'));
-        controller.set('issuetypes',_self.get('issuetypes'));
+        controller.set('model',_self.project);
+        controller.set('issuetypes',_self.issuetypes);
         controller.set('issueStatuses', _self.issueStatuses);
 
         let format = new Format(this);
@@ -81,7 +81,7 @@ export default App.extend({
         
         controller.set('type',type);
         controller.set('status', status);
-    },
+    }
 
     /**
      * This function is used to destroy the model if it is not saved yet and 
@@ -91,7 +91,7 @@ export default App.extend({
      * @param {Prometheus.Controllers.Project} controller
      * @protected
      */
-    resetController:function(controller)
+    resetController(controller)
     {
         Logger.debug('AppProjectIndexRoute::resetController');
         if (!controller.model.id) {
@@ -101,5 +101,4 @@ export default App.extend({
         controller.set('selectedIssuetypes',[]);
         Logger.debug('AppProjectIndexRoute::resetController');
     }
-
-});
+}

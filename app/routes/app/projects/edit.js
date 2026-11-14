@@ -15,7 +15,7 @@ import { objectAt } from 'prometheus/utils/array/object-at';
  *  @extends App
  *  @author Hammad Hassan <gollomer@gamil.com>
  */
-export default App.extend({
+export default class EditRoute extends App {
 
     /**
      * This is the template that we want to display for this the Edit view
@@ -25,7 +25,7 @@ export default App.extend({
      * @type String
      * @public
      */
-    templateName: 'app/projects/create',
+    templateName = 'app/projects/create';
 
     /**
      * The model for this route
@@ -47,7 +47,7 @@ export default App.extend({
                     moduleName: 'project'
                 });
             });
-    },
+    }
 
     /**
      * This function is called every time the controller is being setup
@@ -57,7 +57,7 @@ export default App.extend({
      * @param {Prometheus.Models.Issue} model
      * @protected
      */
-    setupController: function (controller, model) {
+    setupController(controller, model) {
         Logger.debug('AppProjectIndexRoute::setupController');
 
         let format = new Format(this);
@@ -67,6 +67,5 @@ export default App.extend({
         controller.set('status', status);
         controller.set('type', type);
         controller.set('model', objectAt(model, 0));
-    },
-
-});
+    }
+}
