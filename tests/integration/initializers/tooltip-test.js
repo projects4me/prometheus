@@ -13,7 +13,9 @@ module("Integration | Initializer | tooltips", function (hooks) {
             hbs`<span id="tip" data-toggle="tooltip" title="Hello tip">x</span>`
         );
         await triggerEvent("#tip", "mouseover");
-        await waitUntil(() => document.querySelector("[data-tippy-root]"));
-        assert.dom("[data-tippy-root]", document.body).includesText("Hello tip");
+        await waitUntil(() => document.querySelector(".tooltip.in"));
+        assert.dom(".tooltip.in .tooltip-inner", document.body).hasText("Hello tip");
+        await triggerEvent("#tip", "mouseout");
+        assert.dom(".tooltip.in", document.body).doesNotExist();
     });
 });
