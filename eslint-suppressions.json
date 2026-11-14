@@ -497,11 +497,6 @@
       "count": 2
     }
   },
-  "app/initializers/javascript-behaviors.js": {
-    "ember/no-jquery": {
-      "count": 2
-    }
-  },
   "app/models/activity.js": {
     "ember/no-classic-classes": {
       "count": 1

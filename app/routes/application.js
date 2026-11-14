@@ -6,6 +6,7 @@ import Route from '@ember/routing/route';
 import { service } from '@ember/service';
 import ENV from "prometheus/config/environment";
 import getCurrentUrl from "prometheus/utils/location/current-url";
+import { restartPaceOnTransition } from "prometheus/utils/ui/pace-router";
 
 /**
  * This is the application route, in EmberJs the application route is the main
@@ -20,6 +21,19 @@ import getCurrentUrl from "prometheus/utils/location/current-url";
 export default Route.extend({
 
     routeAfterAuthentication: 'app',
+
+    /**
+     * Wires the router service to the Pace progress bar once the route exists, so
+     * nothing touches the router before the application has set it up.
+     *
+     * @method init
+     * @public
+     */
+    init() {
+        this._super(...arguments);
+        restartPaceOnTransition(this.router);
+    },
+
     /**
      * The intl library service that is used in order to get the translations
      *
