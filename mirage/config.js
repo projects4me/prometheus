@@ -9,6 +9,7 @@ import * as Conversationroom from './route-handlers/conversationroom';
 import * as Conversationroomcount from './route-handlers/conversationroomcount';
 import * as Converser from './route-handlers/converser';
 import * as Dashboard from './route-handlers/dashboard';
+import * as Doc from './route-handlers/doc';
 import * as Issue from './route-handlers/issue';
 import * as Issuestatus from './route-handlers/issuestatus';
 import * as Issuetype from './route-handlers/issuetype';
@@ -79,6 +80,7 @@ function routes() {
     Conversationroomcount.register(this, ctx);
     Converser.register(this, ctx);
     Dashboard.register(this, ctx);
+    Doc.register(this);
     Issue.register(this, ctx);
     Issuestatus.register(this, ctx);
     Issuetype.register(this, ctx);
