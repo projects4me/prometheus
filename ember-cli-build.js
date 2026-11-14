@@ -59,14 +59,9 @@ module.exports = function (defaults) {
     app.import('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js');
     app.import("node_modules/jquery-mask-plugin/dist/jquery.mask.min.js");
     app.import("node_modules/jquery-slimscroll/jquery.slimscroll.min.js");
-    app.import("node_modules/highlightjs/highlight.pack.min.js");
-    app.import("node_modules/at.js/dist/js/jquery.atwho.min.js");
-    app.import("vendor/quill/dist/quill.min.js");
     app.import("vendor/messenger/build/js/messenger.min.js");
     app.import("node_modules/chart.js/dist/chart.min.js");
     app.import("node_modules/color-hash/dist/color-hash.js");
-    //    app.import("bower_components/summernote/dist/summernote.js");
-    app.import("vendor/summernote/summernote.js");
     app.import("vendor/custom-charts/doughnut-chart.js");
     app.import("vendor/AdminLTE/dist/js/app.js");
 

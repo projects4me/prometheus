@@ -32,9 +32,6 @@
 @import 'components/power-select.scss';
 @import 'vendor/AdminLTE/dist/css/AdminLTE.min.scss';
 @import 'vendor/AdminLTE/dist/css/skins/skin-black-light.min.scss';
-@import 'highlight/monokai_sublime.scss';
-@import 'quill.scss';
-@import 'quill-bubble.scss';
 @import 'messenger/messenger.scss';
 @import 'messenger/messenger-spinner.scss';
 @import 'messenger/messenger-theme-air.scss';
@@ -64,7 +61,6 @@
 @import "modules/nav.scss";
 @import "modules/search.scss";
 @import "modules/wiki.scss";
-@import "modules/atwho.scss";
 @import "modules/conversation.scss";
 @import "modules/calendar.scss";
 @import "modules/chat.scss";
@@ -87,7 +83,6 @@
 @import "modules/workflow.scss";
 @import "modules/developer.scss";
 @import "issue/issue-status.scss";
-@import 'summernote.scss';
 
 /*
 * Components styles
