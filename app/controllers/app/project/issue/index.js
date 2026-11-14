@@ -153,7 +153,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
                 _self.set('newSavedsearch', {});
 
                 new Messenger().post({
-                    message: htmlSafe(_self.intl.t("views.app.issue.list.savedsearch.added", { name: data.get('name') })),
+                    message: _self.intl.t("views.app.issue.list.savedsearch.added", { name: data.get('name'), htmlSafe: true }),
                     type: 'success',
                     showCloseButton: true
                 });
@@ -198,7 +198,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
             _self.set('newSavedsearch', newSavedSearch);
 
             new Messenger().post({
-                message: htmlSafe(_self.intl.t("views.app.issue.list.savedsearch.copied", { name: data.get('name') })),
+                message: _self.intl.t("views.app.issue.list.savedsearch.copied", { name: data.get('name'), htmlSafe: true }),
                 type: 'success',
                 showCloseButton: true
             });
@@ -220,12 +220,12 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
         let toBeDeleted = _self.get('savedsearches').find((item) => item.id === search.get('id'));
 
         let deleting = new Messenger().post({
-            message: htmlSafe(_self.intl.t("views.app.issue.list.savedsearch.delete", { name: search.get('name') })),
+            message: _self.intl.t("views.app.issue.list.savedsearch.delete", { name: search.get('name'), htmlSafe: true }),
             type: 'warning',
             showCloseButton: true,
             actions: {
                 confirm: {
-                    label: htmlSafe(_self.intl.t("views.app.issue.list.savedsearch.confirmdelete")),
+                    label: _self.intl.t("views.app.issue.list.savedsearch.confirmdelete", { htmlSafe: true }),
                     action: function () {
 
                         // destroy the saved search
@@ -234,7 +234,7 @@ export default class AppProjectIssueIndexController extends PrometheusListContro
                             _self.savedsearches = (_self.savedsearches || []).filter((item) => item !== toBeDeleted);
 
                             return deleting.update({
-                                message: htmlSafe(_self.intl.t("views.app.issue.list.savedsearch.deleted", { name: search.get('name') })),
+                                message: _self.intl.t("views.app.issue.list.savedsearch.deleted", { name: search.get('name'), htmlSafe: true }),
                                 type: 'success',
                                 actions: false
                             });

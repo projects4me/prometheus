@@ -3,7 +3,6 @@
  */
 
 import Service, { service } from '@ember/service';
-import { htmlSafe } from '@ember/template';
 import ENV from 'prometheus/config/environment';
 import { fileToBase64 } from 'prometheus/utils/image-to-base64';
 
@@ -60,7 +59,7 @@ export default class ProfilePictureService extends Service {
 
         try {
             await user.save();
-            this.notify('success', htmlSafe(this.intl.t('views.app.user.profilePicture.updated')));
+            this.notify('success', this.intl.t('views.app.user.profilePicture.updated', { htmlSafe: true }));
             return true;
         } catch (error) {
             user.profilePicture = previousProfilePicture;

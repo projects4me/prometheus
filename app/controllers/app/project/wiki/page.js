@@ -7,7 +7,6 @@ import { task } from 'ember-concurrency';
 import { service } from '@ember/service';
 import { set } from '@ember/object';
 import $ from 'jquery';
-import { htmlSafe } from '@ember/template';
 import { action } from '@ember/object';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
@@ -248,12 +247,12 @@ export default class AppProjectWikiPageController extends PrometheusController {
         let _self = this;
 
         let deleting = new Messenger().post({
-            message: htmlSafe(_self.intl.t("views.app.wiki.page.file.delete", { name: file.get('name') })),
+            message: _self.intl.t("views.app.wiki.page.file.delete", { name: file.get('name'), htmlSafe: true }),
             type: 'warning',
             showCloseButton: true,
             actions: {
                 confirm: {
-                    label: htmlSafe(_self.intl.t("views.app.wiki.page.file.confirmdelete")),
+                    label: _self.intl.t("views.app.wiki.page.file.confirmdelete", { htmlSafe: true }),
                     action: function () {
 
                         // destroy the upload

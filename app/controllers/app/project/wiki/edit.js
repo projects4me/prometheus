@@ -5,7 +5,6 @@
 import AppProjectWikiCreateController from "prometheus/controllers/app/project/wiki/create";
 import _ from "lodash";
 import $ from 'jquery';
-import { htmlSafe } from '@ember/template';
 import { action } from '@ember/object';
 import { pushRecords } from 'prometheus/utils/array/record-list';
 
@@ -114,7 +113,7 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
             }).save().then(function (tagRel) {
                 pushRecords(_self.get('model.tagged'), [tagRel]);
                 new Messenger().post({
-                    message: htmlSafe(_self.intl.t("views.app.wiki.tag.associated", { name: selectedTag[0].label })),
+                    message: _self.intl.t("views.app.wiki.tag.associated", { name: selectedTag[0].label, htmlSafe: true }),
                     type: 'success',
                     showCloseButton: true
                 });
@@ -153,7 +152,7 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
                     tagged.save().then(function (tagRel) {
                         // After it has been saved then show the message to the user
                         new Messenger().post({
-                            message: htmlSafe(_self.intl.t("views.app.wiki.tag.created", { name: tag.get('tag') })),
+                            message: _self.intl.t("views.app.wiki.tag.created", { name: tag.get('tag'), htmlSafe: true }),
                             type: 'success',
                             showCloseButton: true
                         });
@@ -200,7 +199,7 @@ export default class AppProjectWikiEditController extends AppProjectWikiCreateCo
 
             // Display the message
             new Messenger().post({
-                message: htmlSafe(_self.intl.t("views.app.wiki.tag.removed", { name: tag.label })),
+                message: _self.intl.t("views.app.wiki.tag.removed", { name: tag.label, htmlSafe: true }),
                 type: 'success',
                 showCloseButton: true
             });

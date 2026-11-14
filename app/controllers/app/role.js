@@ -6,7 +6,6 @@ import PrometheusCreateController from 'prometheus/controllers/prometheus/create
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import { htmlSafe } from '@ember/template';
 import { allSettled } from 'rsvp';
 import UrlState from 'prometheus/utils/state/url-state';
 import ListLoader from 'prometheus/utils/state/list-loader';
@@ -777,7 +776,7 @@ export default class AppRoleController extends PrometheusCreateController {
             }
             this.savedsearches = [...this.savedsearches, data];
             this.newSavedsearch = this.store.createRecord('savedsearch');
-            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.added`, { name: data.get('name') })));
+            this.notify('success', this.intl.t(`${SAVED_SEARCH_MESSAGES}.added`, { name: data.get('name'), htmlSafe: true }));
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'savedsearch' });
         }
@@ -807,7 +806,7 @@ export default class AppRoleController extends PrometheusCreateController {
                 return;
             }
             this.savedsearches = [...this.savedsearches];
-            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.updated`, { name: record.get('name') })));
+            this.notify('success', this.intl.t(`${SAVED_SEARCH_MESSAGES}.updated`, { name: record.get('name'), htmlSafe: true }));
         } catch (error) {
             record.rollbackAttributes();
             this.errorManager.handleError(error, { moduleName: 'savedsearch' });

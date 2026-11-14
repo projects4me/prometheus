@@ -3,7 +3,6 @@
  */
 
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
-import { htmlSafe } from '@ember/template';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { fileToBase64 } from 'prometheus/utils/image-to-base64';
@@ -260,11 +259,8 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	 * @param model
 	 */
 	getSuccessMessage(model) {
-		return htmlSafe(
-			this.intl.t('views.app.user.created', {
-				name: model.get('name')
-			})
-		);
+		return this.intl.t('views.app.user.created', {
+				name: model.get('name'), htmlSafe: true });
 	}
 
 	/**

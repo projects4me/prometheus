@@ -7,7 +7,6 @@ import window from "ember-window-mock";
 import { computed, action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
 
@@ -254,7 +253,7 @@ export default class AppUserPageController extends PrometheusCreateController {
      * @protected
      */
     getSaveModelAttributeSuccessMessage(model) {
-        return htmlSafe(this.intl.t("views.app.user.updated", { name: model.name }));
+        return this.intl.t("views.app.user.updated", { name: model.name, htmlSafe: true });
     }
 
     /**

@@ -7,7 +7,6 @@ import { inject as controller } from '@ember/controller';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { htmlSafe } from '@ember/template';
 import { guidFor } from '@ember/object/internals';
 import { browserQueryParams } from 'prometheus/utils/idea/browser-defaults';
 
@@ -147,7 +146,7 @@ export default class AppProjectIdeaCreateController extends PrometheusCreateCont
      * @protected
      */
     getSuccessMessage(idea) {
-        return htmlSafe(this.intl.t('views.app.idea.created', { title: idea.title }));
+        return this.intl.t('views.app.idea.created', { title: idea.title, htmlSafe: true });
     }
 
     /**
