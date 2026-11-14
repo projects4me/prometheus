@@ -104,77 +104,6 @@
       "count": 1
     }
   },
-  "app/components/application-controlbar.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    },
-    "ember/no-classic-components": {
-      "count": 1
-    },
-    "ember/no-component-lifecycle-hooks": {
-      "count": 1
-    },
-    "ember/require-tagless-components": {
-      "count": 1
-    }
-  },
-  "app/components/chart-estimatedspent.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    },
-    "ember/no-classic-components": {
-      "count": 1
-    },
-    "ember/no-component-lifecycle-hooks": {
-      "count": 3
-    },
-    "ember/require-super-in-lifecycle-hooks": {
-      "count": 3
-    },
-    "ember/require-tagless-components": {
-      "count": 1
-    }
-  },
-  "app/components/chart-issueratio.js": {
-    "ember/avoid-leaking-state-in-ember-objects": {
-      "count": 2
-    },
-    "ember/no-classic-classes": {
-      "count": 1
-    },
-    "ember/no-classic-components": {
-      "count": 1
-    },
-    "ember/no-component-lifecycle-hooks": {
-      "count": 2
-    },
-    "ember/no-get": {
-      "count": 2
-    },
-    "ember/require-super-in-lifecycle-hooks": {
-      "count": 2
-    },
-    "ember/require-tagless-components": {
-      "count": 1
-    },
-    "no-unused-vars": {
-      "count": 2
-    }
-  },
-  "app/components/checkbox-field.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    },
-    "ember/no-component-lifecycle-hooks": {
-      "count": 1
-    },
-    "ember/no-jquery": {
-      "count": 1
-    },
-    "ember/require-super-in-lifecycle-hooks": {
-      "count": 1
-    }
-  },
   "app/components/conversation-ui/comment-composer.js": {
     "no-undef": {
       "count": 1
@@ -270,17 +199,6 @@
       "count": 1
     }
   },
-  "app/components/priority-icon.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    },
-    "ember/no-classic-components": {
-      "count": 1
-    },
-    "ember/require-tagless-components": {
-      "count": 1
-    }
-  },
   "app/components/project/milestones.js": {
     "ember/no-empty-glimmer-component-classes": {
       "count": 1
@@ -291,28 +209,6 @@
       "count": 1
     }
   },
-  "app/components/relate-simple.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    },
-    "ember/no-classic-components": {
-      "count": 1
-    },
-    "ember/require-tagless-components": {
-      "count": 1
-    }
-  },
-  "app/components/relate-user.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    },
-    "ember/no-classic-components": {
-      "count": 1
-    },
-    "ember/require-tagless-components": {
-      "count": 1
-    }
-  },
   "app/components/role/permissions.js": {
     "no-unused-vars": {
       "count": 3
@@ -320,17 +216,6 @@
   },
   "app/components/saved-search/compact-bar.js": {
     "no-redeclare": {
-      "count": 1
-    }
-  },
-  "app/components/tree-list.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    },
-    "ember/no-classic-components": {
-      "count": 1
-    },
-    "ember/require-tagless-components": {
       "count": 1
     }
   },
@@ -355,11 +240,6 @@
   "app/components/user/edit/profile-picture.js": {
     "no-undef": {
       "count": 1
-    }
-  },
-  "app/components/widgets.js": {
-    "no-undef": {
-      "count": 3
     }
   },
   "app/components/widgets/weekly-issue-timelogs.js": {
