@@ -4,7 +4,6 @@
 
 import Model, { attr, belongsTo, hasMany } from "@ember-data/model";
 import { service } from "@ember/service";
-import { computed } from "@ember/object";
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
 
@@ -17,7 +16,7 @@ import { toArray } from 'prometheus/utils/array/to-array';
  * @module Issue
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class IssueModel extends Model {
     /**
      * The intl service
      *
@@ -26,7 +25,7 @@ export default Model.extend({
      * @for Issue
      * @public
      */
-    intl: service(),
+    @service intl;
     /**
      * Subject of the issue
      *
@@ -35,7 +34,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    subject: attr("string"),
+    @attr("string") subject;
 
     /**
      * Date on which the issue was created
@@ -45,7 +44,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    dateCreated: attr("string"),
+    @attr("string") dateCreated;
 
     /**
      * Date on which the issue was last modified
@@ -55,7 +54,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    dateModified: attr("string"),
+    @attr("string") dateModified;
 
     /**
      * Soft deletion flag
@@ -65,7 +64,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    deleted: attr("string"),
+    @attr("string") deleted;
 
     /**
      * Description of the issue
@@ -75,7 +74,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    description: attr("string"),
+    @attr("string") description;
 
     /**
      * Identifier of the create who created the issue
@@ -85,7 +84,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    createdUser: attr("string"),
+    @attr("string") createdUser;
 
     /**
      * The identifier of the user who is designated as the owner of the issue
@@ -95,7 +94,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    owner: attr("string"),
+    @attr("string") owner;
 
     /**
      * The identifier of the user who is currently the assignee of the issue
@@ -105,7 +104,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    assignee: attr("string"),
+    @attr("string") assignee;
 
     /**
      * The identifier of the user who reported the issue
@@ -115,7 +114,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    reportedUser: attr("string"),
+    @attr("string") reportedUser;
 
     /**
      * The identifier of the user who last modified the issue
@@ -125,7 +124,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    modifiedUser: attr("string"),
+    @attr("string") modifiedUser;
 
     /**
      * The number of the issue
@@ -135,7 +134,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    issueNumber: attr("string"),
+    @attr("string") issueNumber;
 
     /**
      * The end data set for the issue
@@ -145,7 +144,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    endDate: attr("string"),
+    @attr("string") endDate;
 
     /**
      * The date on which the issue is set to start
@@ -155,11 +154,11 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    startDate: attr("string", {
+    @attr("string", {
         defaultValue: () => {
             return dates.format(dates.now(), "YYYY-MM-DD");
         }
-    }),
+    }) startDate;
 
     /**
      * Priority of the issue
@@ -169,7 +168,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    priority: attr("string", { defaultValue: "medium" }),
+    @attr("string", { defaultValue: "medium" }) priority;
 
     /**
      * The identifier of the project the issue belongs to
@@ -179,7 +178,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    projectId: attr("string"),
+    @attr("string") projectId;
 
     /**
      * The short code of the project the issue belongs to
@@ -188,7 +187,7 @@ export default Model.extend({
      * @type String
      * @for Issue
      */
-    projectShortcode: attr("string"),
+    @attr("string") projectShortcode;
 
     /**
      * The identifier of the conversation room for this issue
@@ -198,7 +197,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    conversationRoomId: attr("string"),
+    @attr("string") conversationRoomId;
 
     /**
      * The identifier of the milestone this issue is set for
@@ -208,7 +207,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    milestoneId: attr("string"),
+    @attr("string") milestoneId;
 
     /**
      * The identifier of the parent of the issue
@@ -218,7 +217,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    parentId: attr("string"),
+    @attr("string") parentId;
 
     /**
      * The identifier of the type this issue belongs to
@@ -228,7 +227,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    typeId: attr("string"),
+    @attr("string") typeId;
 
     /**
      * The status of the issue
@@ -238,7 +237,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    status: attr("string"),
+    @attr("string") status;
 
     /**
      * The identifier of the status this issue belongs to
@@ -248,7 +247,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    statusId: attr("string"),
+    @attr("string") statusId;
 
     /**
      * The issue plan of the issue
@@ -258,7 +257,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    isPlanned: attr("bool"),
+    @attr("bool") isPlanned;
 
     /**
      * The issue is reopened flag
@@ -268,7 +267,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    isReopened: attr("bool"),
+    @attr("bool") isReopened;
 
     /**
      * The user to whom this issue is currently assigned to
@@ -278,7 +277,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    assignedTo: belongsTo("user", { async: true, inverse: null }),
+    @belongsTo("user", { async: true, inverse: null }) assignedTo;
 
     /**
      * The user who created this issue
@@ -288,7 +287,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    createdBy: belongsTo("user", { async: true, inverse: null }),
+    @belongsTo("user", { async: true, inverse: null }) createdBy;
 
     /**
      * The user who last modified this issue
@@ -298,7 +297,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    modifiedBy: belongsTo("user", { async: true, inverse: null }),
+    @belongsTo("user", { async: true, inverse: null }) modifiedBy;
 
     /**
      * The user who is responsible for this issue
@@ -308,7 +307,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    ownedBy: belongsTo("user", { async: true, inverse: null }),
+    @belongsTo("user", { async: true, inverse: null }) ownedBy;
 
     /**
      * The user who reported this issue
@@ -318,7 +317,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    reportedBy: belongsTo("user", { async: true, inverse: null }),
+    @belongsTo("user", { async: true, inverse: null }) reportedBy;
 
     /**
      * The project which this issues belongs to
@@ -328,7 +327,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    project: belongsTo("project", { async: true, inverse: "issues" }),
+    @belongsTo("project", { async: true, inverse: "issues" }) project;
 
     /**
      * The milestone which this issue belongs to
@@ -338,7 +337,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    issuemilestone: belongsTo("milestone", { async: true, inverse: "issues" }),
+    @belongsTo("milestone", { async: true, inverse: "issues" }) issuemilestone;
 
     /**
      * The parent issue of this issue
@@ -348,7 +347,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    parentissue: belongsTo("issue", { async: true, inverse: null }),
+    @belongsTo("issue", { async: true, inverse: null }) parentissue;
 
     /**
      * The conversation room this issue is associated with
@@ -358,7 +357,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    conversationroom: belongsTo("conversationroom", { async: true, inverse: "issue" }),
+    @belongsTo("conversationroom", { async: true, inverse: "issue" }) conversationroom;
 
     /**
      * The type of the issue
@@ -368,7 +367,7 @@ export default Model.extend({
      * @for IssueModel
      * @private
      */
-    issuetype: belongsTo("issuetype", { async: true, inverse: null }),
+    @belongsTo("issuetype", { async: true, inverse: null }) issuetype;
 
     /**
      * The status of the issue
@@ -378,7 +377,7 @@ export default Model.extend({
      * @for IssueModel
      * @private
      */
-    issuestatus: belongsTo("issuestatus", { async: true, inverse: null }),
+    @belongsTo("issuestatus", { async: true, inverse: null }) issuestatus;
 
     /**
      * The estimated time on the issue
@@ -388,7 +387,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    estimated: hasMany("timelog", { async: true, inverse: null }),
+    @hasMany("timelog", { async: true, inverse: null }) estimated;
 
     /**
      * The spent time on the issue
@@ -398,7 +397,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    spent: hasMany("timelog", { async: true, inverse: null }),
+    @hasMany("timelog", { async: true, inverse: null }) spent;
 
     /**
      * The child issues of this issue
@@ -408,7 +407,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    childissues: hasMany("issue", { async: true, inverse: null }),
+    @hasMany("issue", { async: true, inverse: null }) childissues;
 
     /**
      * The comments made on this issue
@@ -418,7 +417,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    comments: hasMany("comment", { async: true, inverse: "issue" }),
+    @hasMany("comment", { async: true, inverse: "issue" }) comments;
 
     /**
      * The activities of the issue
@@ -428,7 +427,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    activities: hasMany("activity", { async: true, inverse: "issue" }),
+    @hasMany("activity", { async: true, inverse: "issue" }) activities;
     
 
     /**
@@ -439,7 +438,7 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    files: hasMany("upload", { async: true, inverse: null }),
+    @hasMany("upload", { async: true, inverse: null }) files;
 
     /**
      * The watchers of the issue
@@ -449,14 +448,16 @@ export default Model.extend({
      * @for Issue
      * @private
      */
-    watchers: hasMany("issuewatcher", { async: true, inverse: null }),
+    @hasMany("issuewatcher", { async: true, inverse: null }) watchers;
 
     /**
      * The constructor for the issue model. In this we're setting the default status of the issue
      * to new if new issue is being created, project has issue statuses and status is not set.
      */
+    // Ember Data assigns the createRecord() properties before init() runs, a constructor would not see them.
+    // eslint-disable-next-line ember/classic-decorator-hooks
     init() {
-        this._super(...arguments);
+        super.init(...arguments);
 
         // set the default status to the issue
         if (
@@ -470,7 +471,7 @@ export default Model.extend({
                 "new"
             );
         }
-    },
+    }
 
     /**
      * This function is used to set the default status to the issue.
@@ -488,7 +489,7 @@ export default Model.extend({
         if (status) {
             issue.statusId = status.id;
         }
-    },
+    }
     /**
      * Computed property that determines which info tag to display for an issue based on priority.
      * Returns the highest priority tag that applies to the issue.
@@ -498,15 +499,8 @@ export default Model.extend({
      * @for Issue
      * @public
      */
-    infoTag: computed(
-        'parentissue.status',
-        'status',
-        'endDate',
-        'isReopened',
-        'spent.length',
-        'description',
-        'issuetype.name',
-        function() {
+    get infoTag() {
+        {
             let parentissue = this.parentissue;
             
             // Priority 1: Blocked (when parent issue status is 'in_progress')
@@ -531,7 +525,7 @@ export default Model.extend({
 
             return null;
         }
-    ),
+    }
 
 	/**
 	 * Checks if an issue is overdue by comparing its endDate with current date.
@@ -546,7 +540,7 @@ export default Model.extend({
 			return false;
 		}
 		return dates.isAfter(dates.now(), this.endDate);
-	},
+	}
 
 	/**
 	 * Checks if an issue has spent timelogs.
@@ -558,7 +552,7 @@ export default Model.extend({
 	 */
 	hasTimelogs() {
 		return this.spent && this.spent.length > 0;
-	},
+	}
 
 	/**
 	 * Checks if an issue has a meaningful description.
@@ -571,4 +565,4 @@ export default Model.extend({
 	hasDescription() {
 		return this.description && this.description.trim().length > 0;
 	}
-});
+}

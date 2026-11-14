@@ -12,7 +12,7 @@ import ApplicationSerializer from 'prometheus/serializers/application';
  * @namespace Prometheus.Serializers
  * @extends Application
  */
-export default ApplicationSerializer.extend({
+export default class IssuetypeSerializer extends ApplicationSerializer {
 
     /**
      * Attribute serialization options
@@ -21,15 +21,15 @@ export default ApplicationSerializer.extend({
      * @type Object
      * @protected
      */
-    attrs: {
+    attrs = {
         projectCount: { serialize: false }
-    },
+    };
 
     serializeAttribute(snapshot, json, key, attribute) {
         if (key === 'translations' && !('translations' in snapshot.changedAttributes())) {
             return;
         }
 
-        this._super(...arguments);
+        super.serializeAttribute(...arguments);
     }
-});
+}

@@ -12,7 +12,7 @@ import Model, { attr } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class RoleModel extends Model {
 
     /**
      * Name of the role
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Role
      * @private
      */
-    name: attr('string'),
+    @attr('string') name;
 
     /**
      * The date on which the role was created
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Role
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * The date on which the role was last modified
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Role
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * The soft deletion flag of the role
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Role
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * The description of the role
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Role
      * @private
      */
-    description: attr('string'),
+    @attr('string') description;
 
     /**
      * The identifier of the user who created the role
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Role
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The name of the user who created the role
@@ -80,7 +80,7 @@ export default Model.extend({
      * @property createdUserName
      * @type String
      */
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * The identifier of the user who last modified the role
@@ -90,6 +90,6 @@ export default Model.extend({
      * @for Role
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
-});
+}

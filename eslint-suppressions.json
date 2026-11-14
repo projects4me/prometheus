@@ -485,9 +485,6 @@
     }
   },
   "app/helpers/get-permission-options.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    },
     "no-unused-vars": {
       "count": 1
     }
@@ -497,128 +494,13 @@
       "count": 2
     }
   },
-  "app/models/activity.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
   "app/models/agent.js": {
     "no-unused-vars": {
       "count": 1
     }
   },
-  "app/models/chatroom.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/comment.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/conversationroom.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/converser.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/dashboard.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/issue.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
   "app/models/issuewatcher.js": {
     "no-unused-vars": {
-      "count": 1
-    }
-  },
-  "app/models/membership.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/milestone.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/project.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/role.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/savedsearch.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/tag.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/tagged.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/timelog.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/token.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/upload.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/user.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/userqualification.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/userrole.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/userskill.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/vote.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/models/wiki.js": {
-    "ember/no-classic-classes": {
       "count": 1
     }
   },
@@ -672,20 +554,11 @@
     }
   },
   "app/router.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    },
     "ember/no-unnecessary-route-path-option": {
       "count": 1
     }
   },
   "app/routes/app.js": {
-    "ember/no-actions-hash": {
-      "count": 1
-    },
-    "ember/no-classic-classes": {
-      "count": 1
-    },
     "ember/no-controller-access-in-routes": {
       "count": 3
     },
@@ -698,100 +571,14 @@
       "count": 1
     }
   },
-  "app/routes/app/module.js": {
-    "ember/no-implicit-injections": {
-      "count": 1
-    }
-  },
-  "app/routes/app/project.js": {
-    "ember/no-implicit-injections": {
-      "count": 2
-    }
-  },
-  "app/routes/app/project/board.js": {
-    "ember/no-implicit-injections": {
-      "count": 3
-    }
-  },
-  "app/routes/app/project/calendar.js": {
-    "ember/no-implicit-injections": {
-      "count": 1
-    }
-  },
-  "app/routes/app/project/index.js": {
-    "ember/no-actions-hash": {
-      "count": 1
-    },
-    "ember/no-controller-access-in-routes": {
-      "count": 2
-    }
-  },
   "app/routes/app/project/issue/create.js": {
-    "ember/no-implicit-injections": {
-      "count": 3
-    },
     "no-unused-vars": {
       "count": 2
-    }
-  },
-  "app/routes/app/project/issue/edit.js": {
-    "ember/no-get": {
-      "count": 5
-    }
-  },
-  "app/routes/app/project/issue/index.js": {
-    "ember/no-implicit-injections": {
-      "count": 4
-    }
-  },
-  "app/routes/app/project/issue/page.js": {
-    "ember/no-actions-hash": {
-      "count": 1
-    }
-  },
-  "app/routes/app/project/wiki.js": {
-    "ember/avoid-leaking-state-in-ember-objects": {
-      "count": 1
-    },
-    "ember/no-actions-hash": {
-      "count": 1
-    },
-    "ember/no-controller-access-in-routes": {
-      "count": 5
-    },
-    "ember/no-get": {
-      "count": 2
-    }
-  },
-  "app/routes/app/project/wiki/create.js": {
-    "ember/no-implicit-injections": {
-      "count": 1
-    }
-  },
-  "app/routes/app/project/wiki/edit.js": {
-    "ember/avoid-leaking-state-in-ember-objects": {
-      "count": 1
-    },
-    "ember/no-implicit-injections": {
-      "count": 1
-    }
-  },
-  "app/routes/app/project/wiki/page.js": {
-    "ember/avoid-leaking-state-in-ember-objects": {
-      "count": 1
     }
   },
   "app/routes/app/projects/edit.js": {
-    "ember/no-implicit-injections": {
-      "count": 1
-    },
     "no-unused-vars": {
       "count": 1
-    }
-  },
-  "app/routes/app/projects/index.js": {
-    "ember/no-implicit-injections": {
-      "count": 2
     }
   },
   "app/routes/app/workflow/create.js": {
@@ -804,23 +591,8 @@
       "count": 1
     }
   },
-  "app/routes/application.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
   "app/routes/not-found.js": {
     "no-unused-vars": {
-      "count": 1
-    }
-  },
-  "app/routes/signin.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
-  "app/serializers/application.js": {
-    "ember/no-classic-classes": {
       "count": 1
     }
   },
@@ -903,11 +675,6 @@
       "count": 2
     }
   },
-  "app/transforms/bool.js": {
-    "ember/no-classic-classes": {
-      "count": 1
-    }
-  },
   "app/transforms/json-list.js": {
     "no-unused-vars": {
       "count": 1
@@ -945,14 +712,6 @@
   },
   "app/utils/live/url.js": {
     "no-unused-vars": {
-      "count": 1
-    }
-  },
-  "app/utils/metadata/metadata.js": {
-    "ember/avoid-leaking-state-in-ember-objects": {
-      "count": 3
-    },
-    "ember/no-classic-classes": {
       "count": 1
     }
   },

@@ -12,7 +12,7 @@ import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class TagModel extends Model {
 
     /**
      * The tag
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    "tag": attr('string'),
+    @attr('string') tag;
 
     /**
      * The date on which the tag was created
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    "dateCreated": attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * The date on which the tag was last mofidied
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    "dateModified": attr('string'),
+    @attr('string') dateModified;
 
     /**
      * The soft deletion flag of the tag
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    "deleted": attr('string'),
+    @attr('string') deleted;
 
     /**
      * The identifier of the user who last created the tag
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    "createdUser": attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The name of the user who created the tag
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    "createdUserName": attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * The identifier of the user who last modified the tag
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    "modifiedUser": attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * The name of the user who last modified the tag
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Tagged
      * @private
      */
-    "modifiedUserName": attr('string'),
+    @attr('string') modifiedUserName;
 
     /**
      * The user who created the tag
@@ -102,7 +102,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    createdBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) createdBy;
 
     /**
      * The user last modified the tag
@@ -112,7 +112,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    modifiedBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) modifiedBy;
 
     /**
      * The wiki this tag is associated with
@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    wiki: hasMany('wiki', { async: true, inverse: 'tag' }),
+    @hasMany('wiki', { async: true, inverse: 'tag' }) wiki;
 
     /**
      * The issue this tag is associated with
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    issue: hasMany('issue', { async: true, inverse: null }),
+    @hasMany('issue', { async: true, inverse: null }) issue;
 
     /**
      * The project this tag is associated with
@@ -142,6 +142,6 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    project: hasMany('project', { async: true, inverse: null })
+    @hasMany('project', { async: true, inverse: null }) project;
 
-});
+}

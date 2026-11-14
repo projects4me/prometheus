@@ -12,7 +12,7 @@ import Model, { attr } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class TokenModel extends Model {
 
     /**
      * Access Token
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Token
      * @private
      */
-    access_token: attr('string'),
+    @attr('string') access_token;
 
     /**
      * Expires In
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Token
      * @private
      */
-    expires_in: attr('date'),
+    @attr('date') expires_in;
 
     /**
      * Token Type
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Token
      * @private
      */
-    token_type: attr('string'),
+    @attr('string') token_type;
 
     /**
      * Scope
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Token
      * @private
      */
-    scope: attr('string'),
+    @attr('string') scope;
 
     /**
      * Refresh Token
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Token
      * @private
      */
-    refresh_token: attr('string'),
+    @attr('string') refresh_token;
 
     /**
      * Grent Type
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Token
      * @private
      */
-    grant_type:attr('string'),
+    @attr('string') grant_type;
 
     /**
      * Client Id
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Token
      * @private
      */
-    client_id:attr('string'),
+    @attr('string') client_id;
 
     /**
      * Client Secret
@@ -92,6 +92,6 @@ export default Model.extend({
      * @for Token
      * @private
      */
-    client_secret:attr('string')
+    @attr('string') client_secret;
 
-});
+}

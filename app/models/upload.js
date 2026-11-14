@@ -12,7 +12,7 @@ import Model, { attr, belongsTo } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class UploadModel extends Model {
 
     /**
      * File name
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    name: attr('string'),
+    @attr('string') name;
 
     /**
      * The timestamp on which the file was uploaded
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * The date on which the upload was modified
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * The identifier of the user who uploaded this file
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The identifier of the user who last modified this file
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * The status of the upload
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    status: attr('string'),
+    @attr('string') status;
 
     /**
      * The identifier of the record this file is uploaded against
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    relatedId: attr('string'),
+    @attr('string') relatedId;
 
     /**
      * The type of the file
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    fileType: attr('string'),
+    @attr('string') fileType;
     /**
      * The size of the file uploaded
      *
@@ -101,7 +101,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    fileSize: attr('string'),
+    @attr('string') fileSize;
 
     /**
      * The MIME of the file uploaded
@@ -111,7 +111,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    fileMime: attr('string'),
+    @attr('string') fileMime;
 
     /**
      * The local path on which the file is stored
@@ -121,7 +121,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    filePath: attr('string'),
+    @attr('string') filePath;
 
     /**
      * Does this file have a thumbnail
@@ -131,7 +131,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    fileThumbnail: attr('string'),
+    @attr('string') fileThumbnail;
 
     /**
      * Where is this file stored.
@@ -141,7 +141,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    fileDestination: attr('string'),
+    @attr('string') fileDestination;
 
     /**
      * This is the download token to be used for download
@@ -151,7 +151,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    downloadLink: attr('string'),
+    @attr('string') downloadLink;
     
     /**
      * The user who uploaded this file
@@ -161,7 +161,7 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    createdBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) createdBy;
 
     /**
      * The user who last modified this uploaded file
@@ -171,6 +171,6 @@ export default Model.extend({
      * @for Upload
      * @private
      */
-    modifiedBy: belongsTo('user', { async: true, inverse: null })
+    @belongsTo('user', { async: true, inverse: null }) modifiedBy;
 
-});
+}

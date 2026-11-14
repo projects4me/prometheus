@@ -12,7 +12,7 @@ import Model, { attr } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class DashboardModel extends Model {
 
     /**
      * The identifier of the user to whom this dashboard
@@ -23,7 +23,7 @@ export default Model.extend({
      * @for Dashboard
      * @private
      */
-    userId: attr('string'),
+    @attr('string') userId;
 
     /**
      * The identifier of the user to whom this dashboard
@@ -34,7 +34,7 @@ export default Model.extend({
      * @for Dashboard
      * @private
      */
-    name: attr('string'),
+    @attr('string') name;
 
     /**
      * The identifier of the user to whom this dashboard
@@ -45,7 +45,7 @@ export default Model.extend({
      * @for Dashboard
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * The identifier of the user to whom this dashboard
@@ -56,7 +56,7 @@ export default Model.extend({
      * @for Dashboard
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * The identifier of the user to whom this dashboard
@@ -67,7 +67,7 @@ export default Model.extend({
      * @for Dashboard
      * @private
      */
-    widgets: attr('string'),
+    @attr('string') widgets;
 
     /**
      * Has this model been deleted
@@ -77,6 +77,6 @@ export default Model.extend({
      * @for Dashboard
      * @private
      */
-    deleted: attr('string')
+    @attr('string') deleted;
     
-});
+}

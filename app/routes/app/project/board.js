@@ -16,7 +16,7 @@ import { replaceRecords } from 'prometheus/utils/array/record-list';
  * @extends AppRoute
  * @author Rana Nouman <ranamnouman@gmail.com>
  */
-export default App.extend({
+export default class BoardRoute extends App {
 
     /**
      * These are the query params that the route supports.
@@ -25,14 +25,14 @@ export default App.extend({
      * @type Array
      * @for Board
      */
-    queryParams: {
+    queryParams = {
         query: {
             refreshModel: true
         },
         searchId: {
             refreshModel: false
         }
-    },
+    };
 
     /**
      * The ezSearch schema builder.
@@ -40,7 +40,7 @@ export default App.extend({
      * @property querySchema
      * @type Ember.Service
      */
-    querySchema: service('query-schema'),
+    @service('query-schema') querySchema;
 
     /**
      * The saved searches service.
@@ -48,7 +48,7 @@ export default App.extend({
      * @property savedSearch
      * @type Ember.Service
      */
-    savedSearch: service('saved-search'),
+    @service('saved-search') savedSearch;
 
     /**
      * This function is called by ember when we enter this route and returns
@@ -128,7 +128,7 @@ export default App.extend({
         });
 
         return model;
-    },
+    }
 
     /**
      * This function get triggered after model() hook. In this function we're fetching
@@ -155,7 +155,7 @@ export default App.extend({
         model.issueStatuses = [...model.issueStatuses.slice()].sort((a, b) => a.sortOrder - b.sortOrder);
         await this.loadSearchData();
         return model;
-    },
+    }
 
     /**
      * Loads the ezSearch schema and the saved searches of the issues once per visit; a failure only drops the search.
@@ -180,7 +180,7 @@ export default App.extend({
             schema: results.schema.state === 'fulfilled' ? results.schema.value : null,
             savedsearches: results.savedsearches.state === 'fulfilled' ? results.savedsearches.value : []
         };
-    },
+    }
 
     /**
      * This function is used to get the backlog milestone.
@@ -202,7 +202,7 @@ export default App.extend({
             replaceRecords(backlog.issues, issues);
         }
         return backlog;
-    },
+    }
 
     /**
      * Sets board model data on the controller, registers Hermes intents
@@ -213,7 +213,7 @@ export default App.extend({
      * @param {Prometheus.Controllers.Board} controller the controller object for this route
      * @private
      */
-    setupController: function (controller, model) {
+    setupController(controller, model) {
         Logger.debug('Prometheus.Routes.Board::setupController');
         controller.set('milestones', model.milestones);
         controller.set('issueStatuses', model.issueStatuses);
@@ -225,7 +225,7 @@ export default App.extend({
         controller.set('selectedIssue', null);
         controller.registerHermesIntents(this.trackedProject.getProjectId());
         controller.registerIssuePreview();
-    },
+    }
 
     /**
      * On exit, dispose Hermes intents and the issue preview registration, and
@@ -236,7 +236,7 @@ export default App.extend({
      * @param {boolean} isExiting Whether the route is exiting
      * @private
      */
-    resetController: function (controller, isExiting) {
+    resetController(controller, isExiting) {
         if (isExiting) {
             controller.unregisterHermesIntents();
             controller.unregisterIssuePreview();
@@ -249,4 +249,4 @@ export default App.extend({
             this.searchData = null;
         }
     }
-});
+}

@@ -17,7 +17,7 @@ import { capitalize} from '@ember/string';
  * @extends AppRoute
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class ModuleRoute extends App {
 
     /**
      * The requested module
@@ -27,7 +27,7 @@ export default App.extend({
      * @for Module
      * @private
      */
-    module: null,
+    module = null;
 
     /**
      * The data for the current route
@@ -37,7 +37,7 @@ export default App.extend({
      * @for Module
      * @private
      */
-    data: null,
+    data = null;
 
     /**
      * The meta data for the detail view for the requested module
@@ -47,7 +47,7 @@ export default App.extend({
      * @for Module
      * @private
      */
-    metaData:null,
+    metaData = null;
 
     /**
      * The selected items in the list view
@@ -57,7 +57,7 @@ export default App.extend({
      * @for Module
      * @private
      */
-    selectedCount:0,
+    selectedCount = 0;
 
     /**
      * The internationalization service
@@ -67,7 +67,7 @@ export default App.extend({
      * @for Module
      * @private
      */
-    intl: service(),
+    @service intl;
 
     /**
      * Loads the ezSearch schema of the module from its search metadata
@@ -77,7 +77,7 @@ export default App.extend({
      * @for Module
      * @private
      */
-    querySchemaService: service('query-schema'),
+    @service('query-schema') querySchemaService;
 
     /**
      * The setup controller function that will be called every time the user visits
@@ -88,7 +88,7 @@ export default App.extend({
      * @param {Prometheus.Controllers.Module} controller the controller object for this route
      * @private
      */
-    setupController:function(controller){
+    setupController(controller) {
         // Get the parameters for the current route every time as they might change from one record to another
         let params = this.paramsFor('app.module');
 
@@ -141,5 +141,4 @@ export default App.extend({
             }
         });
     }
-
-});
+}

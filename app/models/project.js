@@ -12,7 +12,7 @@ import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class ProjectModel extends Model {
 
     /**
      * Name of project
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    name: attr('string'),
+    @attr('string') name;
 
     /**
      * Short Code of project
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    shortCode: attr('string'),
+    @attr('string') shortCode;
 
     /**
      * Date on which the project was created
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * Date on which the project was last modified
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * The start date of the project
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    startDate: attr('string'),
+    @attr('string') startDate;
 
     /**
      * The end date of the project
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    endDate: attr('string'),
+    @attr('string') endDate;
 
     /**
      * Type of the project
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    type: attr('string', { defaultValue: 'Kanban' }),
+    @attr('string', { defaultValue: 'Kanban' }) type;
 
     /**
      * User who last modified the project
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * Soft deletion flag of the project
@@ -102,7 +102,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * Description of the project
@@ -112,7 +112,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    description: attr('string'),
+    @attr('string') description;
 
     /**
      * Status of the project
@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    status: attr('string'),
+    @attr('string') status;
 
     /**
      * Scope of the project
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    scope: attr('string'),
+    @attr('string') scope;
 
     /**
      * Product Vision
@@ -142,7 +142,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    vision: attr('string'),
+    @attr('string') vision;
 
     /**
      * User who created the project
@@ -152,7 +152,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The estimated budget of the project
@@ -162,7 +162,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    estimatedBudget: attr('string'),
+    @attr('string') estimatedBudget;
 
     /**
      * The amount of budget spent on the project
@@ -172,7 +172,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    spentBudget: attr('string'),
+    @attr('string') spentBudget;
 
     /**
      * This flag tells us that whether the status is in the done category or not. For example
@@ -184,7 +184,7 @@ export default Model.extend({
      * @for Issuestatus
      * @private
      */
-    done: attr('string'),
+    @attr('string') done;
 
     /**
      * Project manager
@@ -194,7 +194,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    projectManager: attr('string'),
+    @attr('string') projectManager;
 
     /**
     * Project manager
@@ -204,7 +204,7 @@ export default Model.extend({
     * @for Project
     * @private
     */
-    manager: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) manager;
 
     /**
      * User who created the project
@@ -214,7 +214,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    createdBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) createdBy;
 
     /**
      * User who modified the project
@@ -224,7 +224,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    modifiedBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) modifiedBy;
 
     /**
      * The members of this project
@@ -234,7 +234,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    members: hasMany('user', { async: true, inverse: 'projects' }),
+    @hasMany('user', { async: true, inverse: 'projects' }) members;
 
     /**
      * The conversations that are happening on this project
@@ -244,7 +244,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    conversations: hasMany('conversationroom', { async: true, inverse: 'project' }),
+    @hasMany('conversationroom', { async: true, inverse: 'project' }) conversations;
 
     /**
      * These are the issues that are related to the project, since the number of
@@ -256,7 +256,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    issues: hasMany('issue', { async: true, inverse: 'project' }),
+    @hasMany('issue', { async: true, inverse: 'project' }) issues;
 
     /**
      * Project memberships
@@ -266,7 +266,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    memberships: hasMany('membership', { async: true, inverse: 'project' }),
+    @hasMany('membership', { async: true, inverse: 'project' }) memberships;
 
     /**
      * The milestones for this project
@@ -276,7 +276,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    milestones: hasMany('milestone', { async: true, inverse: 'project' }),
+    @hasMany('milestone', { async: true, inverse: 'project' }) milestones;
 
     /**
      * The issue types for this project
@@ -286,7 +286,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    issuetypes: hasMany('issuetype', { async: true, inverse: null }),
+    @hasMany('issuetype', { async: true, inverse: null }) issuetypes;
 
     /**
      * The issue statuses for this project
@@ -296,7 +296,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    issuestatuses: hasMany('issuestatus', { async: true, inverse: null }),
+    @hasMany('issuestatus', { async: true, inverse: null }) issuestatuses;
 
     /**
      * The activities for this project
@@ -306,7 +306,7 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    activities: hasMany('activity', { async: true, inverse: 'project' }),
+    @hasMany('activity', { async: true, inverse: 'project' }) activities;
 
     /**
      * The issue types for this project
@@ -316,6 +316,6 @@ export default Model.extend({
      * @for Project
      * @private
      */
-    hasIssuetypes: attr('string', { defaultValue: true })
+    @attr('string', { defaultValue: true }) hasIssuetypes;
 
-});
+}

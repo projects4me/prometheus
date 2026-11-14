@@ -12,7 +12,7 @@ import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class ConverserModel extends Model {
 
     /**
      * The identifier of the user who is involved in this chat
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Converser
      * @private
      */
-    userId: attr('string'),
+    @attr('string') userId;
 
     /**
      * The identifier of the chatroom to whom this user belongs
@@ -33,7 +33,7 @@ export default Model.extend({
      * @for Converser
      * @private
      */
-    chatRoomId: attr('string'),
+    @attr('string') chatRoomId;
 
     /**
      * The chatroom the converser is associated with
@@ -43,7 +43,7 @@ export default Model.extend({
      * @for Converser
      * @private
      */
-    chatroom: belongsTo('chatroom', { async: true, inverse: null }),
+    @belongsTo('chatroom', { async: true, inverse: null }) chatroom;
 
     /**
      * The users who are conversing
@@ -53,6 +53,6 @@ export default Model.extend({
      * @for Converser
      * @private
      */
-    users: hasMany('user', { async: true, inverse: null })
+    @hasMany('user', { async: true, inverse: null }) users;
     
-});
+}

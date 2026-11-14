@@ -3,7 +3,6 @@
  */
 
 import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
-import { computed } from '@ember/object';
 import { imagePathToBase64 } from 'prometheus/utils/image-to-base64';
 import * as dates from 'prometheus/utils/date';
 
@@ -34,7 +33,7 @@ export function isDefaultProfilePicture(picture) {
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class UserModel extends Model {
 
     /**
      * Email Address
@@ -44,7 +43,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    email: attr('string'),
+    @attr('string') email;
 
     /**
      * Profile picture of the user stored as a base64 encoded string.
@@ -54,7 +53,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    profilePicture: attr('string', { defaultValue: () => defaultProfilePicture }),
+    @attr('string', { defaultValue: () => defaultProfilePicture }) profilePicture;
 
     /**
      * Status
@@ -64,7 +63,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    status: attr('string'),
+    @attr('string') status;
 
     /**
      * Account Status of user.
@@ -74,7 +73,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    accountStatus: attr('string'),
+    @attr('string') accountStatus;
 
     /**
      * The kind of account: `human` or `agent`.
@@ -84,7 +83,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    type: attr('string', { defaultValue: 'human' }),
+    @attr('string', { defaultValue: 'human' }) type;
 
     /**
      * User preferred language.
@@ -94,7 +93,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    language: attr('string', { defaultValue: "en" }),
+    @attr('string', { defaultValue: "en" }) language;
 
     /**
      * User's timezone.
@@ -104,11 +103,11 @@ export default Model.extend({
      * @for User
      * @private
      */
-    timezone: attr('string', {
+    @attr('string', {
         defaultValue: () => {
             return dates.guessTimezone();
         }
-    }),
+    }) timezone;
 
     /**
      * Name
@@ -118,7 +117,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    name: attr('string'),
+    @attr('string') name;
 
     /**
      * Date on which the user was created
@@ -128,7 +127,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * Date on which the user was last modified
@@ -138,7 +137,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * Soft deletion flag
@@ -148,7 +147,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * Description
@@ -158,7 +157,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    description: attr('string'),
+    @attr('string') description;
 
     /**
      * User who created this user
@@ -168,7 +167,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The name of the user who created this user.
@@ -178,7 +177,7 @@ export default Model.extend({
      * @for User
      * @private
      */    
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * User who modified this user
@@ -188,7 +187,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * The name of the user who modified this user.
@@ -198,7 +197,7 @@ export default Model.extend({
      * @for User
      * @private
      */    
-    modifiedUserName: attr('string'),    
+    @attr('string') modifiedUserName;
 
     /**
      * Title of the user
@@ -208,7 +207,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    title: attr('string'),
+    @attr('string') title;
 
     /**
      * Date of birth of the user.
@@ -218,7 +217,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    dateOfBirth: attr('string'),
+    @attr('string') dateOfBirth;
 
     /**
      * Phone number of the user
@@ -228,7 +227,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    phone: attr('string'),
+    @attr('string') phone;
 
     /**
      * Github url of the User
@@ -238,7 +237,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    githubUrl: attr('string'),
+    @attr('string') githubUrl;
 
     /**
      * Skype url of the User
@@ -248,7 +247,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    skypeUrl: attr('string'),
+    @attr('string') skypeUrl;
 
     /**
      * Linkedin url of the User
@@ -258,7 +257,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    linkedinUrl: attr('string'),
+    @attr('string') linkedinUrl;
 
     /**
      * Gitlab url of the User
@@ -268,7 +267,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    gitlabUrl: attr('string'),
+    @attr('string') gitlabUrl;
 
     /**
      * Slack url of the User
@@ -278,7 +277,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    slackUrl: attr('string'),
+    @attr('string') slackUrl;
 
     /**
      * Date on which the user was last active
@@ -288,7 +287,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    lastActivityAt: attr('string'),
+    @attr('string') lastActivityAt;
 
     /**
      * Date on which the user was joined
@@ -298,7 +297,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    dateJoined: attr('string'),
+    @attr('string') dateJoined;
 
     /**
      * The users's dashboard
@@ -308,7 +307,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    dashboard: belongsTo('dashboard', { async: true, inverse: null }),
+    @belongsTo('dashboard', { async: true, inverse: null }) dashboard;
 
     /**
      * Open closed projects of user.
@@ -318,7 +317,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    openClosedProject: belongsTo('useropenclosedproject', { async: true, inverse: null }),
+    @belongsTo('useropenclosedproject', { async: true, inverse: null }) openClosedProject;
 
     /**
      * Open closed issues of user.
@@ -328,7 +327,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    openClosedIssue: belongsTo('useropenclosedissue', { async: true, inverse: null }),
+    @belongsTo('useropenclosedissue', { async: true, inverse: null }) openClosedIssue;
 
     /**
       * Total time spent by user on issues.
@@ -338,7 +337,7 @@ export default Model.extend({
       * @for User
       * @private
       */
-    timeSpent: belongsTo('usertimespent', { async: true, inverse: null }),
+    @belongsTo('usertimespent', { async: true, inverse: null }) timeSpent;
 
     /**
      * Daily collaboration of user in application.
@@ -348,7 +347,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    collaboration: belongsTo('usercollaboration', { async: true, inverse: null }),
+    @belongsTo('usercollaboration', { async: true, inverse: null }) collaboration;
 
     /**
      * These are the latest projects of user.
@@ -358,7 +357,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    latestProjects: hasMany('userlatestproject', { async: true, inverse: null }),
+    @hasMany('userlatestproject', { async: true, inverse: null }) latestProjects;
 
     /**
      * These are the latest issues of user.
@@ -368,7 +367,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    latestIssues: hasMany('userlatestissue', { async: true, inverse: null }),
+    @hasMany('userlatestissue', { async: true, inverse: null }) latestIssues;
 
     /**
      * These are the members whom worked most with the user.
@@ -378,7 +377,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    mostWorkedMembers: hasMany('userworkmostwith', { async: true, inverse: null }),
+    @hasMany('userworkmostwith', { async: true, inverse: null }) mostWorkedMembers;
 
     /**
      * These are the recent activities of the user.
@@ -388,7 +387,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    recentActivities: hasMany('userecentactivity', { async: true, inverse: null }),
+    @hasMany('userecentactivity', { async: true, inverse: null }) recentActivities;
 
     /**
      * These are the tag relationship entries
@@ -398,7 +397,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    tagged: hasMany('tagged', { async: true, inverse: null }),
+    @hasMany('tagged', { async: true, inverse: null }) tagged;
 
     /**
      * These are the user projects
@@ -408,7 +407,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    projects: hasMany('project', { async: true, inverse: 'members' }),
+    @hasMany('project', { async: true, inverse: 'members' }) projects;
 
     /**
      * These are the badges earned by user.
@@ -418,7 +417,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    badges: hasMany('badge', { async: true, inverse: 'user' }),
+    @hasMany('badge', { async: true, inverse: 'user' }) badges;
 
     /**
      * These are the user acl permissions.
@@ -428,7 +427,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    aclPermissions: hasMany('userpermission', { async: false, inverse: null }),
+    @hasMany('userpermission', { async: false, inverse: null }) aclPermissions;
 
     /**
      * These are the level of each badge, earned by user.
@@ -438,7 +437,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    badgeLevels: hasMany('badgelevel', { async: true, inverse: null }),
+    @hasMany('badgelevel', { async: true, inverse: null }) badgeLevels;
 
     /**
      * Skills associated with this user.
@@ -448,7 +447,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    skills: hasMany('userskill', { async: true, inverse: 'user' }),
+    @hasMany('userskill', { async: true, inverse: 'user' }) skills;
 
     /**
      * External identities (provider, handle, ...) of this user or agent.
@@ -458,7 +457,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    identities: hasMany('useridentity', { async: true, inverse: 'user' }),
+    @hasMany('useridentity', { async: true, inverse: 'user' }) identities;
 
     /**
      * Qualification entries (education or certification) for this user.
@@ -468,7 +467,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    qualifications: hasMany('userqualification', { async: true, inverse: 'user' }),
+    @hasMany('userqualification', { async: true, inverse: 'user' }) qualifications;
 
     /**
      * This computed property is used in order to prepare an array of 
@@ -481,7 +480,7 @@ export default Model.extend({
      * @for User
      * @private
      */
-    badgeDetails: computed('badges', 'badgeLevels', function () {
+    get badgeDetails() {
         let array = [];
         this.badges.forEach((badge) => {
             let badgeLevel = this.badgeLevels.find((item) => item.badgeId === badge.id);
@@ -492,6 +491,6 @@ export default Model.extend({
             array.push(badgeInfo);
         });
         return array;
-    })
+    }
 
-});
+}

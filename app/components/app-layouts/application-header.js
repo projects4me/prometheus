@@ -213,6 +213,17 @@ export default class ApplicationHeaderComponent extends AppComponent {
     }
 
     /**
+     * Closes the create-module dropdown
+     *
+     * @method closeCreateDropdown
+     * @for ApplicationHeader
+     * @public
+     */
+    @action closeCreateDropdown() {
+        this.isCreateDropdownOpen = false;
+    }
+
+    /**
      * This function is used to forward the signOut function
      *
      * @method signOut

@@ -127,7 +127,7 @@
               @value={{this.newConversation.subject}}
               @mask="alphanumeric"
               @data-field="newConversation.subject"
-              @focus-out={{fn (mut this.showSubjectError) true}}
+              @focus-out={{this.markSubjectVisited}}
               @v-focus={{this.showSubjectError}}
               @v-model={{this.newConversation}}
               @v-field='subject'
@@ -142,7 +142,7 @@
                 @initialValue={{this.newConversation.description}}
                 @editType='wysiwyg'
                 @hide={{array 'footer'}}
-                @onContentChange={{fn (mut this.newConversation.description)}}
+                @onContentChange={{this.setNewConversationDescription}}
             />
             <span class="highlight"></span>
             <span class="bar"></span>
@@ -164,7 +164,7 @@
               @onchange={{this.selectNewType}}
               @relateType="relate-simple"
               @data-field="newConversation.roomType"
-              @focus-out={{fn (mut this.showTypeError) true}}
+              @focus-out={{this.markTypeVisited}}
               @v-focus={{this.showTypeError}}
               @v-model={{this.newConversation}}
               @v-field='roomType'

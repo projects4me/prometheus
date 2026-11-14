@@ -12,7 +12,7 @@ import Model, { attr, belongsTo } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class SavedsearchModel extends Model {
 
     /**
      * Name of the saved search
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    name: attr('string'),
+    @attr('string') name;
 
     /**
      * The date on which the saved search was created
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * The identifier of the user who saved the search
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * Name of the user who saved this search
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * Has this model been deleted
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * The flag that indicates whether this search is available publicly
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    public: attr('bool'),
+    @attr('bool') public;
 
     /**
      * The query string for the search
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    searchquery: attr('string'),
+    @attr('string') searchquery;
 
     /**
      * The module for which this saved search was created
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    relatedTo: attr('string'),
+    @attr('string') relatedTo;
 
     /**
      * The project for which this search was created
@@ -102,7 +102,7 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    projectId: attr('string'),
+    @attr('string') projectId;
 
     /**
      * The user who saved this search
@@ -112,6 +112,6 @@ export default Model.extend({
      * @for Savedsearch
      * @private
      */
-    createdBy: belongsTo('user', { async: true, inverse: null })
+    @belongsTo('user', { async: true, inverse: null }) createdBy;
 
-});
+}

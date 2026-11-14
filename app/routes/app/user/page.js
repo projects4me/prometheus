@@ -18,7 +18,7 @@ import { pushRecords } from 'prometheus/utils/array/record-list';
  * @extends App
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class PageRoute extends App {
     model(params) {
         Logger.debug('+Prometheus.Routes.App.User::model()');
         let _self = this;
@@ -61,7 +61,7 @@ export default App.extend({
                 moduleName: 'user'
             });
         });
-    },
+    }
 
     /**
      * The setupController hook.
@@ -70,7 +70,7 @@ export default App.extend({
      * @param {Prometheus.Controllers.User} controller The controller object for this route
      * @private
      */
-    setupController: function (controller, model) {
+    setupController(controller, model) {
         Logger.debug('+Prometheus.Routes.App.User::setupController()');
 
         const user = objectAt(model.user, 0);
@@ -87,4 +87,4 @@ export default App.extend({
 
         Logger.debug('-Prometheus.Routes.App.User::setupController()');
     }
-});
+}

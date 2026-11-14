@@ -11,7 +11,7 @@ import Model, { attr, belongsTo } from '@ember-data/model';
  * @namespace Prometheus.Models
  * @extends DS.Model
  */
-export default Model.extend({
+export default class UserroleModel extends Model {
 
     /**
      * The identifier of the user this role assignment belongs to.
@@ -21,7 +21,7 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    userId: attr('string'),
+    @attr('string') userId;
 
     /**
      * The identifier of the role assigned to the user.
@@ -31,7 +31,7 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    roleId: attr('string'),
+    @attr('string') roleId;
 
     /**
      * Soft deletion flag.
@@ -41,7 +41,7 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * Date the record was created.
@@ -51,7 +51,7 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * Date the record was last modified.
@@ -61,7 +61,7 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * Identifier of the user who created the record.
@@ -71,7 +71,7 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * Display name of the user who created the record.
@@ -81,7 +81,7 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * Identifier of the user who last modified the record.
@@ -91,7 +91,7 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * Display name of the user who last modified the record.
@@ -101,7 +101,7 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    modifiedUserName: attr('string'),
+    @attr('string') modifiedUserName;
 
     /**
      * The user this role assignment belongs to.
@@ -111,7 +111,7 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    user: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) user;
 
     /**
      * The role assigned to the user.
@@ -121,6 +121,6 @@ export default Model.extend({
      * @for Userrole
      * @private
      */
-    role: belongsTo('role', { async: true, inverse: null }),
+    @belongsTo('role', { async: true, inverse: null }) role;
 
-});
+}

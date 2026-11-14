@@ -12,7 +12,7 @@ import Model, { attr,belongsTo } from '@ember-data/model';
  * @extend DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class CommentModel extends Model {
 
     /**
      * The date on which the comment was created
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    dateCreated: attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}),
+    @attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}) dateCreated;
 
     /**
      * The date on which the comment was last modified
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    dateModified: attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}),
+    @attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}) dateModified;
 
     /**
      * The soft deletion flag of the comment
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * The comment
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for CommentModel
      * @private
      */
-    comment: attr('string'),
+    @attr('string') comment;
 
     /**
      * The identifier of the user who created the comment
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The name of the user who created the comment
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * The identifier of the user who last modified the comment
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * The name of the user who last modified the comment
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    modifiedUserName: attr('string'),
+    @attr('string') modifiedUserName;
 
     /**
      * The entity the comment is related to
@@ -102,7 +102,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    relatedTo: attr('string'),
+    @attr('string') relatedTo;
 
     /**
      * The identifier of the record the comment is related to
@@ -112,7 +112,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    relatedId: attr('string'),
+    @attr('string') relatedId;
 
     /**
      * The user who created the comment
@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    createdby: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) createdby;
 
     /**
      * The user who last modified the comment
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    modifiedBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) modifiedBy;
 
     /**
      * The conversation room the comment is associated with
@@ -142,7 +142,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    conversationRoom: belongsTo('conversationroom', { async: true, inverse: 'comments' }),
+    @belongsTo('conversationroom', { async: true, inverse: 'comments' }) conversationRoom;
     
     /**
      * The chat room the comment is associated with
@@ -152,7 +152,7 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    chatRoom: belongsTo('chatroom', { async: true, inverse: 'comments' }),
+    @belongsTo('chatroom', { async: true, inverse: 'comments' }) chatRoom;
 
     /**
      * The issue the comment is associated with
@@ -162,6 +162,6 @@ export default Model.extend({
      * @for Comment
      * @private
      */
-    issue: belongsTo('issue', { async: true, inverse: 'comments' })
+    @belongsTo('issue', { async: true, inverse: 'comments' }) issue;
     
-});
+}

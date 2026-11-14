@@ -14,7 +14,7 @@ import { objectAt } from 'prometheus/utils/array/object-at';
  * @extends AppRoute
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class CalendarRoute extends App {
 
     /**
      * The requested module
@@ -24,7 +24,7 @@ export default App.extend({
      * @for Calendar
      * @private
      */
-    module: 'issue',
+    module = 'issue';
 
     /**
      * The data for the current route
@@ -34,7 +34,7 @@ export default App.extend({
      * @for Calendar
      * @private
      */
-    data: null,
+    data = null;
 
     /**
      * The query being used to load the calendar items
@@ -44,7 +44,7 @@ export default App.extend({
      * @for Calendar
      * @private
      */
-    query:'',
+    query = '';
 
     /**
      * This controller is used to load the issues that we have in the system
@@ -53,7 +53,7 @@ export default App.extend({
      * @param {Prometheus.Controllers.Calendar} controller the controller object for this route
      * @private
      */
-    setupController:function(controller){
+    setupController(controller) {
         Logger.debug('AppProjectCalendarRoute::setupController');
         Logger.debug(this);
         let self = this;
@@ -67,7 +67,7 @@ export default App.extend({
         controller.set('intl',intl);
         controller.set('projectId',params.project_id);
         controller.set('module',this.module);
-    },
+    }
 
     /**
      * This function is used to load the Issues List. This list is used in the
@@ -77,7 +77,7 @@ export default App.extend({
      * @param {String} projectId
      * @private
      */
-    loadIssues:function(projectId){
+    loadIssues(projectId) {
         Logger.debug("AppProjectCalendarRoute::loadIssues("+projectId+")");
         let _self = this;
         let module = "issue";
@@ -115,9 +115,8 @@ export default App.extend({
 
                 };
             }
-            _self.get('controller').set('events',issuesList);
+            _self.controller.set('events',issuesList);
         });
 
-    },
-
-});
+    }
+}
