@@ -30,12 +30,14 @@ module('Integration | Component | application-controlbar', function (hooks) {
         document.body.appendChild(toggle);
 
         try {
+            // eslint-disable-next-line ember/no-jquery -- mimics the jQuery handler AdminLTE binds on the toggle
             $(toggle).on('click', () => assert.step('toggle'));
 
             await render(hbs`<ApplicationControlbar />`);
             assert.strictEqual(activations, 1, 'activated once');
 
             await clearRender();
+            // eslint-disable-next-line ember/no-jquery -- fires the jQuery handler bound above
             $(toggle).trigger('click');
             assert.verifySteps([], 'toggle click handler removed');
         } finally {

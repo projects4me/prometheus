@@ -64,6 +64,7 @@ export default class ActivateControlSidebarModifier extends Modifier {
         if (!this.activated) {
             return;
         }
+        // eslint-disable-next-line ember/no-jquery -- AdminLTE binds this handler with jQuery; only jQuery can unbind it
         $($.AdminLTE.options.controlSidebarOptions.toggleBtnSelector).off('click');
         this.activated = false;
     }
