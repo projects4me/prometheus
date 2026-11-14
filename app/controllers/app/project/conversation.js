@@ -11,7 +11,6 @@ import { tracked } from '@glimmer/tracking';
 import { task, timeout } from 'ember-concurrency';
 import format from 'prometheus/utils/data/format';
 import { peekOrPush, pushIfMissing, removeById } from 'prometheus/utils/live/collection';
-import { htmlSafe } from '@ember/template';
 import UrlState from 'prometheus/utils/state/url-state';
 import ListLoader from 'prometheus/utils/state/list-loader';
 import ThreadCounts from 'prometheus/utils/conversation/thread-counts';
@@ -1358,7 +1357,7 @@ export default class AppProjectConversationController extends ProjectRelated.ext
             this.savedsearches = [...this.savedsearches, data];
             this.newSavedsearch = this.store.createRecord('savedsearch');
             new Messenger().post({
-                message: htmlSafe(this.intl.t('views.app.conversation.browser.savedSearchAdded', { name: data.get('name') })),
+                message: this.intl.t('views.app.conversation.browser.savedSearchAdded', { name: data.get('name'), htmlSafe: true }),
                 type: 'success',
                 showCloseButton: true
             });

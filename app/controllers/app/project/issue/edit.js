@@ -3,7 +3,6 @@
  */
 
 import AppProjectIssueCreateController from "prometheus/controllers/app/project/issue/create";
-import { htmlSafe } from '@ember/template';
 
 /**
  * This is the controller for issue create page
@@ -34,10 +33,9 @@ export default class AppProjectIssueEditController extends AppProjectIssueCreate
      * @param model
      */
     getSuccessMessage(model) {
-        return htmlSafe(this.intl.t('views.app.issue.updated', {
+        return this.intl.t('views.app.issue.updated', {
             name: model.get('subject'),
-            issueNumber: model.get('issueNumber')
-        }));
+            issueNumber: model.get('issueNumber'), htmlSafe: true });
     }
 
     /**

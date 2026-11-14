@@ -5,7 +5,6 @@
 import App from "prometheus/routes/app";
 import M2T from "prometheus/utils/data/modeltotree";
 import { set } from '@ember/object';
-import { htmlSafe } from '@ember/template';
 import { hashSettled } from 'rsvp';
 import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 import { service } from '@ember/service';
@@ -145,7 +144,7 @@ export default App.extend({
         let intl = this.intl;
         let tree = {};
 
-        wikiList[0] = { label: htmlSafe(intl.t("global.blank")), value: null };
+        wikiList[0] = { label: intl.t("global.blank", { htmlSafe: true }), value: null };
         for (let i = 1; i <= wikis.length; i++) {
             temp = objectAt(wikis, i - 1);
             wikiList[i] = { label: temp.get('name'), value: temp.get('id') };

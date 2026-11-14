@@ -13,7 +13,6 @@ import {
 } from 'prometheus/utils/idea/browser-requests';
 import { planStatusClass } from 'prometheus/utils/idea/plan-status';
 import { tracked } from '@glimmer/tracking';
-import { htmlSafe } from '@ember/template';
 import { buildSortOptions, buildGroupOptions, buildCreators } from 'prometheus/utils/ideas/list-options';
 import UrlState from 'prometheus/utils/state/url-state';
 import ListLoader from 'prometheus/utils/state/list-loader';
@@ -813,7 +812,7 @@ export default class AppProjectIdeaController extends Controller {
             }
             this.savedsearches = [...this.savedsearches, data];
             this.newSavedsearch = this.store.createRecord('savedsearch');
-            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.added`, { name: data.get('name') })));
+            this.notify('success', this.intl.t(`${SAVED_SEARCH_MESSAGES}.added`, { name: data.get('name'), htmlSafe: true }));
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'savedsearch' });
         }
@@ -843,7 +842,7 @@ export default class AppProjectIdeaController extends Controller {
                 return;
             }
             this.savedsearches = [...this.savedsearches];
-            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.updated`, { name: record.get('name') })));
+            this.notify('success', this.intl.t(`${SAVED_SEARCH_MESSAGES}.updated`, { name: record.get('name'), htmlSafe: true }));
         } catch (error) {
             record.rollbackAttributes();
             this.errorManager.handleError(error, { moduleName: 'savedsearch' });

@@ -438,7 +438,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             showCloseButton: true,
             actions: {
                 confirm: {
-                    label: htmlSafe(this.intl.t('views.app.module.list.delete.confirmDelete', { moduleName })).toString(),
+                    label: this.intl.t('views.app.module.list.delete.confirmDelete', { moduleName, htmlSafe: true }).toString(),
                     action: () => {
                         deleting.update({
                             message: this.intl.t('views.app.module.list.delete.deleting', { moduleName }),

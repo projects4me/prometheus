@@ -5,7 +5,6 @@
 import PrometheusController from "prometheus/controllers/prometheus";
 import format from "prometheus/utils/data/format";
 import { computed, action } from '@ember/object';
-import { htmlSafe } from '@ember/template';
 
 /**
  * This the app controller. App is as the main route for the application's
@@ -59,7 +58,7 @@ export default class AppProjectController extends PrometheusController {
         let issueList = (new format(this)).getSelectList(this.issues, map);
         issueList.unshift({
             id: '',
-            name: htmlSafe(this.intl.t('global.blank')).toHTML(),
+            name: this.intl.t('global.blank', { htmlSafe: true }).toHTML(),
             number: '',
             status: '',
             projectId: ''

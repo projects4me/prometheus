@@ -9,7 +9,6 @@ import { inject as controller } from '@ember/controller';
 import { computed, action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import $ from "jquery";
-import { htmlSafe } from "@ember/template";
 import { A } from '@ember/array';
 import * as dates from 'prometheus/utils/date';
 import { pushRecords } from 'prometheus/utils/array/record-list';
@@ -516,7 +515,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
                     pushRecords(_self.model.members, [user]);
 
                     new Messenger().post({
-                        message: htmlSafe(_self.intl.t("views.app.project.detail.membership.added", { user: user.get('name') })),
+                        message: _self.intl.t("views.app.project.detail.membership.added", { user: user.get('name'), htmlSafe: true }),
                         type: 'success',
                         showCloseButton: true
                     });
@@ -628,7 +627,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
                 }
 
                 new Messenger().post({
-                    message: htmlSafe(_self.intl.t("views.app.project.detail.milestone.added", { name: data.get('name') })),
+                    message: _self.intl.t("views.app.project.detail.milestone.added", { name: data.get('name'), htmlSafe: true }),
                     type: 'success',
                     showCloseButton: true
                 });
@@ -733,7 +732,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
                         this.removeDeleteMemberModal();
             
                         new Messenger().post({
-                            message: htmlSafe(this.intl.t("views.app.project.detail.membership.deleted", { user: this.selectedUser.name})),
+                            message: this.intl.t("views.app.project.detail.membership.deleted", { user: this.selectedUser.name, htmlSafe: true }),
                             type: 'success',
                             showCloseButton: true
                         });
@@ -815,7 +814,7 @@ export default class AppProjectIndexController extends PrometheusCreateControlle
      * @returns {SafeString} A localized HTML-safe string containing the delete warning message with the selected user's name
      */
     get deleteMemberWarning() {
-        return htmlSafe(this.intl.t("views.app.project.detail.membership.deleteWarning", { user: this.selectedUser.name }));
+        return this.intl.t("views.app.project.detail.membership.deleteWarning", { user: this.selectedUser.name, htmlSafe: true });
     }
 
     /**

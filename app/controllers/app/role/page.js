@@ -6,7 +6,6 @@ import $ from 'jquery';
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
 import { action, computed } from '@ember/object';
 import { inject as controller } from '@ember/controller';
-import { htmlSafe } from '@ember/template';
 import { tracked } from '@glimmer/tracking';
 import { task, timeout } from 'ember-concurrency';
 import {
@@ -301,7 +300,7 @@ export default class AppRolePageController extends PrometheusCreateController {
             && _self.hasChanged(this.model)
             && !_self.model.isSaving) {
             _self.model.save().then(() => {
-                let successMessage = htmlSafe(_self.intl.t('views.app.role.list.updated', { field: fieldToEdit }));
+                let successMessage = _self.intl.t('views.app.role.list.updated', { field: fieldToEdit, htmlSafe: true });
                 new Messenger().post({
                     message: successMessage,
                     type: 'success',
@@ -623,20 +622,19 @@ export default class AppRolePageController extends PrometheusCreateController {
         let _self = this;
 
         let deleting = new Messenger().post({
-            message: htmlSafe(_self.intl.t("views.app.role.tabs.user.confirmdelete", {
-                user: userrole.user.get('name')
-            })),
+            message: _self.intl.t("views.app.role.tabs.user.confirmdelete", {
+                user: userrole.user.get('name'), htmlSafe: true }),
             type: 'warning',
             showCloseButton: true,
             actions: {
                 confirm: {
-                    label: htmlSafe(_self.intl.t("global.form.confirmcancel")).toString(),
+                    label: _self.intl.t("global.form.confirmcancel", { htmlSafe: true }).toString(),
                     action: function () {
                         userrole.destroyRecord().then(function () {
                             _self.set('userroles', _self.userroles.filter((item) => item !== userrole));
                             _self.syncListMembers();
                             return deleting.update({
-                                message: htmlSafe(_self.intl.t("global.form.deleted")).toString(),
+                                message: _self.intl.t("global.form.deleted", { htmlSafe: true }).toString(),
                                 type: 'success',
                                 actions: false
                             });
@@ -644,7 +642,7 @@ export default class AppRolePageController extends PrometheusCreateController {
                     }
                 },
                 cancel: {
-                    label: htmlSafe(_self.intl.t("global.form.cancel")).toString(),
+                    label: _self.intl.t("global.form.cancel", { htmlSafe: true }).toString(),
                     action: function () {
                         return deleting.update({
                             message: _self.intl.t("global.form.deletecancel"),
@@ -826,17 +824,15 @@ export default class AppRolePageController extends PrometheusCreateController {
         let moduleTranslated = _self.intl.t('global.module.singular.role');
 
         let deleting = new Messenger().post({
-            message: htmlSafe(_self.intl.t('views.app.module.list.delete.message', {
+            message: _self.intl.t('views.app.module.list.delete.message', {
                 moduleName: moduleTranslated,
-                name: role.name
-            })),
+                name: role.name, htmlSafe: true }),
             type: 'warning',
             showCloseButton: true,
             actions: {
                 confirm: {
-                    label: htmlSafe(_self.intl.t('views.app.module.list.delete.confirmDelete', {
-                        moduleName: moduleTranslated
-                    })).toString(),
+                    label: _self.intl.t('views.app.module.list.delete.confirmDelete', {
+                        moduleName: moduleTranslated, htmlSafe: true }).toString(),
                     action: function () {
                         deleting.update({
                             message: _self.intl.t('views.app.module.list.delete.deleting', {
@@ -881,7 +877,7 @@ export default class AppRolePageController extends PrometheusCreateController {
                     }
                 },
                 cancel: {
-                    label: htmlSafe(_self.intl.t('views.app.module.list.delete.onsecondthought')).toString(),
+                    label: _self.intl.t('views.app.module.list.delete.onsecondthought', { htmlSafe: true }).toString(),
                     action: function () {
                         return deleting.update({
                             message: _self.intl.t('views.app.module.list.delete.deletecancel'),
