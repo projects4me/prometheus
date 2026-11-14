@@ -15,20 +15,29 @@
   },
   "scripts": {
     "build": "ember build",
-    "lint:js": "eslint ./*.js app config lib server tests",
+    "format": "prettier . --write",
+    "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
+    "lint:fix": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*:fix",
+    "lint:hbs": "ember-template-lint .",
+    "lint:hbs:fix": "ember-template-lint . --fix",
+    "lint:js": "eslint . --cache",
+    "lint:js:fix": "eslint . --fix",
+    "lint:js:prune": "eslint . --prune-suppressions",
     "start": "ember serve",
     "test": "COVERAGE=true ember test"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
+    "@babel/eslint-parser": "^7.29.13",
+    "@babel/plugin-proposal-decorators": "^7.29.7",
     "@ember/optional-features": "^3.0.0",
     "@ember/render-modifiers": "^3.0.0",
     "@ember/string": "^4.0.1",
     "@ember/test-helpers": "^5.8.0",
     "@ember/test-waiters": "^4.1.2",
+    "@eslint/js": "^9.39.5",
     "@glimmer/component": "^2.2.1",
     "@glimmer/tracking": "^1.1.2",
-    "babel-eslint": "^8.2.6",
     "bootstrap-sass": "^3.4.1",
     "broccoli-asset-rev": "^3.0.0",
     "broccoli-merge-trees": "^3.0.2",
@@ -55,19 +64,19 @@
     "ember-qunit": "^9.2.0",
     "ember-resolver": "^13.2.0",
     "ember-source": "~6.12.1",
-    "ember-template-lint": "^3.15.0",
+    "ember-template-lint": "^7.9.4",
     "ember-window-mock": "^2.0.0",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-ember": "^10.5.8",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-qunit": "^7.2.0",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-ember": "^13.10.1",
+    "eslint-plugin-n": "^17.24.0",
+    "eslint-plugin-qunit": "^8.2.6",
     "express": "^4.17.1",
     "faker": "^5.4.0",
+    "globals": "^17.14.0",
     "loader.js": "^4.7.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.5.1",
+    "prettier": "^3.10.1",
     "qunit": "^2.24.1",
     "qunit-dom": "^3.5.0",
     "testem": "3.18.0",
@@ -117,5 +126,10 @@
   },
   "ember": {
     "edition": "octane"
+  },
+  "lintTodo": {
+    "ember-template-lint": {
+      "daysToDecay": {}
+    }
   }
 }

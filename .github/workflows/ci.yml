@@ -32,6 +32,13 @@ jobs:
         rm -rf node_modules/
         npm install --no-audit --no-fund
 
+    # Recorded violations (eslint-suppressions.json, .lint-todo) pass; only new ones fail the build.
+    - name: Lint JavaScript
+      run: npm run lint:js
+
+    - name: Lint templates
+      run: npm run lint:hbs
+
     - name: Run Ember test
       run: |
         COVERAGE=true npx ember test
