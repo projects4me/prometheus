@@ -8,22 +8,18 @@ import Resolver from './resolver';
 import loadInitializers from 'ember-load-initializers';
 import config from './config/environment';
 
-let App;
-
 /**
- * This is the Application variable what is used to extend the Ember Application object
+ * This is the Application class of Prometheus
  *
  * @class Application
  * @namespace Prometheus
  * @extends Ember.Application
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-App = Application.extend({
-    modulePrefix: config.modulePrefix,
-    podModulePrefix: config.podModulePrefix,
-    Resolver
-});
+export default class App extends Application {
+    modulePrefix = config.modulePrefix;
+    podModulePrefix = config.podModulePrefix;
+    Resolver = Resolver;
+}
 
 loadInitializers(App, config.modulePrefix);
-
-export default App;
