@@ -156,13 +156,13 @@ module("Unit | Controller | app/project/issue/page live events", function (hooks
 
   test("a failed findRecord leaves the page unchanged", async function (assert) {
     let { comments } = setup(this.owner, { failFind: true });
-    let warn = console.warn; // eslint-disable-line no-console
-    console.warn = () => {}; // eslint-disable-line no-console
+    let warn = console.warn;  
+    console.warn = () => {};  
     try {
       emitDomainEvent(this.owner, comment("conversation.comment.created", "c2", "room1"));
       await tick();
     } finally {
-      console.warn = warn; // eslint-disable-line no-console
+      console.warn = warn;  
     }
     assert.equal(comments.length, 1);
     assert.equal(toasts.length, 0);

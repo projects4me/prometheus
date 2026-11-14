@@ -310,6 +310,6 @@ export default class AppProjectIssuePageController extends PrometheusController 
      * @private
      */
     logLiveFailure(error) {
-        console.warn('AppProjectIssuePageController: live update failed', error); // eslint-disable-line no-console
+        console.warn('AppProjectIssuePageController: live update failed', error);  
     }
 }
