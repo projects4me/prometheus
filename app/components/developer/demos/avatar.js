@@ -3,38 +3,24 @@
  */
 
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
 
 /**
- * The AppUi::Avatar demo of the Component Library: the size of the avatar of a few users.
+ * The AppUi::Avatar demo of the Component Library: a person, an agent and a missing image in each size.
  *
  * @class DeveloperDemosAvatarComponent
  * @namespace Prometheus.Components.Developer.Demos
  * @extends Glimmer.Component
  */
 export default class DeveloperDemosAvatarComponent extends Component {
-    sizes = ['sm', 'md', 'lg'];
+    sizes = [
+        { label: 'default', value: undefined },
+        { label: 'sm', value: 'sm' },
+        { label: 'xs', value: 'xs' }
+    ];
 
-    // No id, so there is no image request and the initials show
-    users = [{ name: 'Ada Lovelace' }, { name: 'Grace' }, { name: 'Agent Odysseus' }];
-
-    @tracked size = 'md';
-
-    /**
-     * @method setSize
-     * @param {String} size
-     */
-    @action
-    setSize(size) {
-        this.size = size;
-    }
-
-    /**
-     * @method reset
-     */
-    @action
-    reset() {
-        this.size = 'md';
-    }
+    users = [
+        { label: 'Person', record: { id: 1, name: 'Ada Lovelace', type: 'user' } },
+        { label: 'Agent', record: { id: 2, name: 'Agent Odysseus', type: 'agent' } },
+        { label: 'Missing image', record: { id: 0, name: 'No Image' } }
+    ];
 }

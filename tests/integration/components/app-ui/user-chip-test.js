@@ -15,18 +15,7 @@ module('Integration | Component | app-ui/user-chip', function (hooks) {
         await render(hbs`<AppUi::UserChip @user={{this.user}} @size="sm" />`);
 
         assert.dom('[data-test-user-chip-name]').hasText('Ada Lovelace');
-        assert.dom('[data-test-user-chip-name]').hasAttribute('title', 'Ada Lovelace');
-        assert.dom('[data-test-user-chip] [data-test-avatar]').hasClass('app-avatar-sm');
-    });
-
-    test('it truncates a long name with an ellipsis', async function (assert) {
-        this.set('user', { id: 2, name: 'A very long name that cannot fit in the box it is given' });
-        await render(hbs`<div data-test-wrap><AppUi::UserChip @user={{this.user}} /></div>`);
-
-        this.element.querySelector('[data-test-wrap]').style.width = '120px';
-        let name = this.element.querySelector('[data-test-user-chip-name]');
-
-        assert.strictEqual(getComputedStyle(name).textOverflow, 'ellipsis');
-        assert.ok(name.scrollWidth > name.clientWidth, 'the name is cut');
+        assert.dom('[data-test-user-chip] [data-test-avatar]').hasClass('img-sm');
+        assert.dom('a[data-test-user-chip-name]').doesNotExist();
     });
 });

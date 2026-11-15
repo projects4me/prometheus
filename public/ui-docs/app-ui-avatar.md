@@ -1,13 +1,13 @@
 ## Overview
 
-`AppUi::Avatar` is the round picture of a user. It works for people and agents, which share one record shape. It shows the user's picture, and the initials of the name when there is no picture or it fails to load. Extra attributes (a class, a title) go on the outer element.
+`AppUi::Avatar` is the round picture of a user. It works for people and agents, which share one record shape. It builds on `Agent::UserAvatar`: the user's image, or the agent avatar for an agent. It uses the AdminLTE `img-circle` classes. Extra attributes (a class, a title) go on the image.
 
 ## Arguments
 
 | Argument | Type | Default | Meaning |
 |---|---|---|---|
-| @user | Object | none | The user record: `id`, `name` and optionally `profilePicture` |
-| @size | String | md | `sm` (24px), `md` (36px) or `lg` (64px) |
+| @user | Object | none | The user record: `id`, `name` and optionally `type` |
+| @size | String | none | `sm` (img-sm), `xs` (img-xs); none gives the plain img-circle, for a caller that sizes it itself |
 
 ## Blocks
 

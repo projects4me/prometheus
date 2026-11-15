@@ -2,10 +2,11 @@
   "name": "AppUi::UserChip",
   "component": "app-ui/user-chip",
   "doc": "app-ui-user-chip.md",
-  "description": "An avatar and the user's name, truncated with an ellipsis.",
+  "description": "An avatar and the user's name.",
   "arguments": {
     "user": { "type": "object", "required": true, "description": "The user record" },
-    "size": { "type": "string", "required": false, "default": "md", "description": "The avatar size: sm, md or lg" }
+    "linked": { "type": "boolean", "required": false, "default": false, "description": "Link the name to the user page" },
+    "size": { "type": "string", "required": false, "description": "The avatar size: sm, xs or none" }
   },
   "events": {},
   "blocks": {},
@@ -13,9 +14,9 @@
     "user": {
       "type": "object",
       "fields": {
-        "id": { "type": "string|number", "required": false, "description": "Used for the user image address" },
+        "id": { "type": "string|number", "required": false, "description": "The user image address and agent lookup" },
         "name": { "type": "string", "required": false, "description": "Shown as the name" },
-        "profilePicture": { "type": "string", "required": false, "description": "The picture address" }
+        "type": { "type": "string", "required": false, "description": "agent for an agent" }
       }
     }
   }

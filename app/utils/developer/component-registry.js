@@ -160,11 +160,11 @@ export const ENTRIES = [
         label: 'Avatar',
         group: 'Display',
         status: 'stable',
-        summary: 'AppUi::Avatar, the round picture of a user or agent, or their initials when there is no picture.',
+        summary: 'AppUi::Avatar, the round picture of a user, or the agent avatar for an agent.',
         usedIn: [],
         demo: 'developer/demos/avatar',
         doc: 'app-ui-avatar.md',
-        variants: ['sm', 'md', 'lg']
+        variants: ['default', 'sm', 'xs']
     },
     {
         name: 'status-label',

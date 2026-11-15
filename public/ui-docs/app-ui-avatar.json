@@ -2,10 +2,10 @@
   "name": "AppUi::Avatar",
   "component": "app-ui/avatar",
   "doc": "app-ui-avatar.md",
-  "description": "The round picture of a user (person or agent), with the initials as the fallback.",
+  "description": "The round picture of a user (person or agent).",
   "arguments": {
     "user": { "type": "object", "required": true, "description": "The user record" },
-    "size": { "type": "string", "required": false, "default": "md", "description": "sm, md or lg" }
+    "size": { "type": "string", "required": false, "description": "sm, xs or none" }
   },
   "events": {},
   "blocks": {},
@@ -13,9 +13,9 @@
     "user": {
       "type": "object",
       "fields": {
-        "id": { "type": "string|number", "required": false, "description": "Used for the user image address" },
+        "id": { "type": "string|number", "required": false, "description": "The user image address and agent lookup" },
         "name": { "type": "string", "required": false, "description": "The alternative text and the source of the initials" },
-        "profilePicture": { "type": "string", "required": false, "description": "The picture address; the placeholder counts as none" }
+        "type": { "type": "string", "required": false, "description": "agent for an agent" }
       }
     }
   }

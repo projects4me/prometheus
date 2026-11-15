@@ -1,22 +1,22 @@
 <Developer::EntryHeader @entry={{@entry}} />
-<Developer::Entry @onReset={{this.reset}}>
+<Developer::Entry>
   <:demo>
-    <div data-demo-avatar>
-      {{#each this.users as |user|}}
-        <AppUi::Avatar @user={{user}} @size={{this.size}} title={{user.name}} />
-      {{/each}}
-    </div>
-  </:demo>
-  <:controls>
-    <div class="form-group">
-      <label>Size</label>
-      <div class="btn-group" data-control-size>
-        {{#each this.sizes as |size|}}
-          <button type="button" class="btn btn-default {{if (eq size this.size) 'active'}}" data-size={{size}} {{on "click" (fn this.setSize size)}}>{{size}}</button>
+    <table class="table table-condensed" data-demo-avatar>
+      <thead>
+        <tr><th></th>{{#each this.sizes as |size|}}<th>{{size.label}}</th>{{/each}}</tr>
+      </thead>
+      <tbody>
+        {{#each this.users as |user|}}
+          <tr>
+            <th>{{user.label}}</th>
+            {{#each this.sizes as |size|}}
+              <td><AppUi::Avatar @user={{user.record}} @size={{size.value}} /></td>
+            {{/each}}
+          </tr>
         {{/each}}
-      </div>
-    </div>
-  </:controls>
+      </tbody>
+    </table>
+  </:demo>
   <:docs>
     <Developer::Docs @doc="app-ui-avatar.md" />
   </:docs>
