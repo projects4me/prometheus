@@ -1,17 +1,17 @@
 ## Overview
 
-`AppUi::EmptyState` is the centred grey text a box or list shows when there is nothing to show. It replaces the hand-written copies in the QuickList, the role and idea browsers and the workflow boxes. Extra attributes go on the outer element.
+`AppUi::EmptyState` is the message a box or list shows when there is nothing to show. It matches the QuickList empty state: grey text, an info icon and an action inline after the message. QuickList and AppUi::DataTable use it for their default empty state. Extra attributes go on the outer element.
 
 ## Arguments
 
 | Argument | Type | Default | Meaning |
 |---|---|---|---|
-| @icon | String | none | A Font Awesome class, such as `fa-info-circle` |
+| @icon | String | fa-info-circle | A Font Awesome class |
 | @message | String | none | The text, already translated |
 
 ## Blocks
 
-- action: a link or button centred under the message.
+- action: a link or button, such as `btn btn-link quick-list__state-action`, shown after the message.
 
 ## Events
 

@@ -1,0 +1,23 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo>
+    <div class="box box-primary" data-test-demo-empty-state>
+      <div class="box-body">
+        <AppUi::EmptyState @icon={{if this.customIcon "fa-search"}} @message="No records found.">
+          <:action>
+            {{#if this.withAction}}
+              <button type="button" class="btn btn-link quick-list__state-action">Clear the search</button>
+            {{/if}}
+          </:action>
+        </AppUi::EmptyState>
+      </div>
+    </div>
+  </:demo>
+  <:controls>
+    <div class="checkbox"><label><input type="checkbox" data-control-icon checked={{this.customIcon}} {{on "change" (fn this.toggle "customIcon")}}> Custom icon</label></div>
+    <div class="checkbox"><label><input type="checkbox" data-control-action checked={{this.withAction}} {{on "change" (fn this.toggle "withAction")}}> Action</label></div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="app-ui-empty-state.md" />
+  </:docs>
+</Developer::Entry>

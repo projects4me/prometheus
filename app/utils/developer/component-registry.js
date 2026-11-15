@@ -156,6 +156,16 @@ export const ENTRIES = [
         variants: ['primary', 'default', 'info', 'success', 'warning', 'danger']
     },
     {
+        name: 'empty-state',
+        label: 'EmptyState',
+        group: 'Display',
+        status: 'stable',
+        summary: 'AppUi::EmptyState, the message a list or box shows when there is nothing to show: an icon, the text and an inline action.',
+        usedIn: [{ label: 'QuickList and DataTable empty states' }],
+        demo: 'developer/demos/empty-state',
+        doc: 'app-ui-empty-state.md'
+    },
+    {
         name: 'avatar',
         label: 'Avatar',
         group: 'Display',

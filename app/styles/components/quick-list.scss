@@ -11,6 +11,31 @@
 @import 'quick-list/toolbar';
 @import 'quick-list/selection';
 
+/* Shared with AppUi::EmptyState, so QuickList and DataTable show the same empty state. */
+.quick-list__state {
+  margin: 0;
+  padding: 1.5rem 1rem;
+  text-align: center;
+
+  .fa {
+    margin-right: 0.4rem;
+  }
+
+  &--empty {
+    color: $mediumColor;
+  }
+
+  &--error {
+    color: $dangerColor;
+  }
+}
+
+.quick-list__state-action {
+  border-radius: 0;
+  padding: 0 0 0 0.4rem;
+  vertical-align: baseline;
+}
+
 .quick-list {
   border-radius: 0;
   box-shadow: none;
@@ -120,30 +145,6 @@
     .skeleton-line:last-child {
       margin-bottom: 0;
     }
-  }
-
-  .quick-list__state {
-    margin: 0;
-    padding: 1.5rem 1rem;
-    text-align: center;
-
-    .fa {
-      margin-right: 0.4rem;
-    }
-
-    &--empty {
-      color: $mediumColor;
-    }
-
-    &--error {
-      color: $dangerColor;
-    }
-  }
-
-  .quick-list__state-action {
-    border-radius: 0;
-    padding: 0 0 0 0.4rem;
-    vertical-align: baseline;
   }
 
   .quick-list__row--selectable {
