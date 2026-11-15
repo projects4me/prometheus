@@ -27,4 +27,21 @@ module('Integration | Component | app-ui/list-toolbar', function (hooks) {
 		assert.dom('[data-test-list-toolbar-pager]').doesNotExist();
 		assert.dom('[data-test-list-toolbar] [data-test-bulk]').exists();
 	});
+
+	test('at the bottom position there is only the controls row', async function (assert) {
+		await render(hbs`<AppUi::ListToolbar @position="bottom">
+			<:search><input aria-label="Search" data-test-search /></:search>
+			<:selection><button type="button" data-test-bulk>Delete</button></:selection>
+			<:pager><span data-test-range>1-20</span></:pager>
+		</AppUi::ListToolbar>`);
+		assert.dom('[data-test-list-toolbar-header]').doesNotExist();
+		assert.dom('[data-test-list-toolbar]').hasAttribute('data-test-list-toolbar-position', 'bottom');
+		assert.dom('[data-test-list-toolbar] [data-test-bulk]').exists();
+		assert.dom('[data-test-list-toolbar-pager] [data-test-range]').exists();
+	});
+
+	test('the search sits in a growing wrapper', async function (assert) {
+		await render(hbs`<AppUi::ListToolbar><:search><input aria-label="Search" data-test-search /></:search></AppUi::ListToolbar>`);
+		assert.dom('[data-test-list-toolbar-search] [data-test-search]').exists();
+	});
 });

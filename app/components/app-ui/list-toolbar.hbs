@@ -1,12 +1,14 @@
-{{#if (or (has-block "search") (has-block "actions"))}}
+{{#if (and (not-eq @position "bottom") (or (has-block "search") (has-block "actions")))}}
   <div class="box-header with-border" data-test-list-toolbar-header>
     <div class="search">
-      {{yield to="search"}}
+      <div class="list-toolbar-search" data-test-list-toolbar-search>
+        {{yield to="search"}}
+      </div>
       {{yield to="actions"}}
     </div>
   </div>
 {{/if}}
-<div class="list-controls" data-test-list-toolbar ...attributes>
+<div class="list-controls {{if (eq @position "bottom") "list-controls-bottom"}}" data-test-list-toolbar data-test-list-toolbar-position={{if (eq @position "bottom") "bottom" "top"}} ...attributes>
   {{yield to="selection"}}
   {{#if (has-block "pager")}}
     <div class="pull-right" data-test-list-toolbar-pager>

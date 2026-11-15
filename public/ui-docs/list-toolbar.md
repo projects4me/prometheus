@@ -8,7 +8,7 @@ Used in the Agents and Workflows lists, inside the `box box-primary list-view` a
 
 ## Arguments
 
-None.
+- position: `top` (default) draws the header and the controls row; `bottom` draws only the controls row, with a top border, to close the list. A page can show a toolbar above the list, below it or both.
 
 ## Blocks
 
@@ -17,7 +17,7 @@ None.
 - selection: the left of the controls row: the select-all checkbox and the bulk action buttons.
 - pager: the right of the controls row: the selected count and AppUi::Pager.
 
-The header is drawn only with a search or actions block, the pager slot only with a pager block.
+The search takes all the width the actions leave. The header is drawn only with a search or actions block and never at the bottom, the pager slot only with a pager block.
 
 ## Events
 

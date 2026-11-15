@@ -5,6 +5,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { fixtureSchema, SAVED_SEARCHES } from 'prometheus/utils/developer/ez-search-fixture';
 
 /**
  * The fixture records of the demo.
@@ -44,8 +45,34 @@ export default class DeveloperDemosListPageComponent extends Component {
 	@tracked order = 'asc';
 	@tracked selected = [];
 	@tracked empty = false;
+	@tracked position = 'top';
 
 	limit = LIMIT;
+
+	/**
+	 * The fixture schema and saved searches of the demo's search.
+	 *
+	 * @property schema
+	 * @type Object
+	 */
+	schema = fixtureSchema();
+	savedSearches = SAVED_SEARCHES;
+
+	/**
+	 * Where the toolbar is shown: above the list, below it or both.
+	 *
+	 * @property positions
+	 * @type Array
+	 */
+	positions = ['top', 'bottom', 'both'];
+
+	get showTop() {
+		return this.position !== 'bottom';
+	}
+
+	get showBottom() {
+		return this.position !== 'top';
+	}
 
 	/**
 	 * The columns of the demo table.
@@ -108,6 +135,24 @@ export default class DeveloperDemosListPageComponent extends Component {
 	}
 
 	@action
+	applyQuery(log, query) {
+		log.log('search', String(query));
+	}
+
+	@action
+	selectAll(event) {
+		let checked = event.target.checked;
+		let boxes = event.target.closest('[data-test-demo-list-page]').querySelectorAll('input[data-test-data-table-select]');
+		boxes.forEach((box) => (box.checked = checked));
+		this.selected = checked ? Array.from(boxes).map((box) => box.dataset.select) : [];
+	}
+
+	@action
+	setPosition(event) {
+		this.position = event.target.value;
+	}
+
+	@action
 	create(log) {
 		log.log('create');
 	}
@@ -130,5 +175,6 @@ export default class DeveloperDemosListPageComponent extends Component {
 		this.order = 'asc';
 		this.selected = [];
 		this.empty = false;
+		this.position = 'top';
 	}
 }
