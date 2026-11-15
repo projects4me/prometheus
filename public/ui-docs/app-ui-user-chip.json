@@ -1,0 +1,22 @@
+{
+  "name": "AppUi::UserChip",
+  "component": "app-ui/user-chip",
+  "doc": "app-ui-user-chip.md",
+  "description": "An avatar and the user's name, truncated with an ellipsis.",
+  "arguments": {
+    "user": { "type": "object", "required": true, "description": "The user record" },
+    "size": { "type": "string", "required": false, "default": "md", "description": "The avatar size: sm, md or lg" }
+  },
+  "events": {},
+  "blocks": {},
+  "data": {
+    "user": {
+      "type": "object",
+      "fields": {
+        "id": { "type": "string|number", "required": false, "description": "Used for the user image address" },
+        "name": { "type": "string", "required": false, "description": "Shown as the name" },
+        "profilePicture": { "type": "string", "required": false, "description": "The picture address" }
+      }
+    }
+  }
+}

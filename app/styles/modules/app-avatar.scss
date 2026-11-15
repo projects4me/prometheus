@@ -1,0 +1,54 @@
+/*!
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+/** AppUi::Avatar and AppUi::UserChip. */
+
+.app-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f4f4f4;
+  color: $highlightColor;
+  font-size: 14px;
+  font-weight: 700;
+  vertical-align: middle;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &.app-avatar-sm {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
+  &.app-avatar-lg {
+    width: 64px;
+    height: 64px;
+    font-size: 22px;
+  }
+}
+
+.app-user-chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+
+  .app-user-chip-name {
+    margin-left: 8px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
