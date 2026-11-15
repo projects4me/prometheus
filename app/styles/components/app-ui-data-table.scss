@@ -1,0 +1,107 @@
+/*
+ * AppUi::DataTable: follows the QuickList look (compact controls, primary colour for the applied sort,
+ * group headings like quick-list-group-heading).
+ */
+.app-ui-data-table {
+  .table > thead > tr > th {
+    vertical-align: middle;
+    white-space: nowrap;
+
+    &.sortable {
+      padding-right: 4px;
+    }
+  }
+
+  .select-box {
+    width: 32px;
+    text-align: center;
+    vertical-align: middle;
+
+    input[type='checkbox'] {
+      width: 13px;
+      height: 13px;
+      margin: 0;
+    }
+
+    .btn {
+      border-radius: 0;
+      padding: 0 4px;
+      font-size: 12px;
+    }
+  }
+
+  .data-table-sort {
+    padding: 0 4px;
+    color: #999;
+
+    &.active {
+      color: $primaryColor;
+    }
+  }
+
+  .actions {
+    white-space: nowrap;
+    text-align: right;
+    vertical-align: middle;
+
+    .btn {
+      border-radius: 0;
+      padding: 2px 6px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+  }
+
+  .data-table-sub {
+    font-size: 12px;
+  }
+
+  .data-table-group > td {
+    padding: 0;
+    background: #f4f4f4;
+  }
+
+  .data-table-group-heading {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: 0;
+    border-radius: 0;
+    background: #f4f4f4;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    .fa {
+      width: 12px;
+      margin-right: 6px;
+    }
+  }
+
+  .data-table-more {
+    position: relative;
+    display: inline-block;
+
+    .data-table-more-menu {
+      position: absolute;
+      right: 0;
+      top: 100%;
+      z-index: 1000;
+      min-width: 140px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 0;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+
+      > * {
+        display: block;
+        padding: 4px 10px;
+        text-align: left;
+      }
+    }
+  }
+}

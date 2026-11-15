@@ -91,4 +91,47 @@ module('Integration | Component | app-ui/data-table', function (hooks) {
 		assert.dom('[data-test-data-table-empty] [data-test-nothing]').exists();
 		assert.dom('[data-test-data-table-actions]').doesNotExist();
 	});
+
+	test('the sort icon shows on every sortable column and the applied one is marked', async function (assert) {
+		this.columns = [
+			{ key: 'name', label: 'Name', sortable: true },
+			{ key: 'models', label: 'Models', sortable: true },
+		];
+		await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @sort="name" @order="asc" />`);
+		assert.dom('[data-test-data-table-sort="models"] i').hasClass('fa-sort');
+		assert.dom('[data-test-data-table-sort="models"]').doesNotHaveClass('active');
+		assert.dom('[data-test-data-table-sort="name"]').hasClass('active');
+	});
+
+	test('the select-all box reports and the selection spans pages', async function (assert) {
+		this.set('selectedIds', ['9']);
+		this.onSelectAll = (rows, checked) => this.calls.push(['all', rows.length, checked]);
+		await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @selectable={{true}} @selectedIds={{this.selectedIds}} @onSelectAll={{this.onSelectAll}} />`);
+		assert.dom('[data-quick-list-select-all]').hasAttribute('data-state', 'none');
+		await click('[data-quick-list-select-all]');
+		assert.deepEqual(this.calls, [['all', 2, true]]);
+		this.set('selectedIds', ['9', '1', '2']);
+		assert.dom('[data-quick-list-select-all]').hasAttribute('data-state', 'all');
+		assert.dom('[data-test-data-table-row="1"] input').isChecked();
+	});
+
+	test('rows group by a key and a group collapses', async function (assert) {
+		this.groupKey = (r) => r.models;
+		await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @groupKey={{this.groupKey}} />`);
+		assert.dom('[data-test-data-table-group]').exists({ count: 2 });
+		await click('[data-test-data-table-group="opus"] [data-test-data-table-group-toggle]');
+		assert.dom('[data-test-data-table-row="2"]').doesNotExist();
+		assert.dom('[data-test-data-table-row="1"]').exists();
+	});
+
+	test('a second line and the more actions menu show', async function (assert) {
+		this.columns = [{ key: 'name', label: 'Name', subKey: 'models' }];
+		await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}}>
+			<:moreActions as |record|><button type="button" data-test-more-item={{record.id}}>Del</button></:moreActions>
+		</AppUi::DataTable>`);
+		assert.dom('[data-test-data-table-row="1"] [data-test-data-table-sub="name"]').hasText('sonnet');
+		assert.dom('[data-test-data-table-more-menu]').doesNotExist();
+		await click('[data-test-data-table-row="1"] [data-test-data-table-more]');
+		assert.dom('[data-test-more-item="1"]').exists();
+	});
 });

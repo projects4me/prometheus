@@ -4,6 +4,8 @@
 
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { groupItems } from 'prometheus/utils/quick-list/group-items';
 
 /**
  * A slim list table: one header per column descriptor, one row per record, an optional checkbox per row and
@@ -11,6 +13,11 @@ import { action } from '@ember/object';
  *
  * A column is `{ key, label, sortable, sortKey, cell, class }`. A cell renders the `cell` component when the
  * column names one, else the `<:cell>` block when the caller gives it, else the record's `key` value.
+ *
+ * Like QuickList it can show a select-all box (`@selectedIds` and `@onSelectAll`; the owner keeps the ids, so the
+ * selection survives paging), group rows (`@groupKey`, `@groupLabel`) and show a second line under a cell
+ * (`column.subKey`). Sort icons are always visible and the applied one is marked with the primary colour.
+ * Extra row actions go into the `<:moreActions>` block, shown in a dropdown.
  *
  * The row checkboxes carry `data-select` with the record id, so a page can find them by record.
  *
@@ -27,6 +34,47 @@ import { action } from '@ember/object';
  * </AppUi::DataTable>
  */
 export default class AppUiDataTableComponent extends Component {
+	@tracked collapsed = [];
+	@tracked menuOpenId = null;
+
+	get controlled() {
+		return Array.isArray(this.args.selectedIds);
+	}
+
+	get showSelectAll() {
+		return this.args.selectable && typeof this.args.onSelectAll === 'function';
+	}
+
+	/**
+	 * `none`, `some` or `all` of the shown rows are selected.
+	 *
+	 * @property selectionState
+	 * @type String
+	 */
+	get selectionState() {
+		let ids = (this.args.selectedIds || []).map(String);
+		let count = this.rows.filter((r) => ids.includes(String(r.id))).length;
+		return count === 0 ? 'none' : count === this.rows.length ? 'all' : 'some';
+	}
+
+	/**
+	 * The rows in sections: one headed section per group when `@groupKey` is given, else one plain section.
+	 *
+	 * @property sections
+	 * @type Array
+	 */
+	get sections() {
+		if (typeof this.args.groupKey !== 'function') {
+			return [{ plain: true, items: this.rows }];
+		}
+		return groupItems(this.rows, { groupKey: this.args.groupKey, groupLabel: this.args.groupLabel }).map((g) => ({
+			...g,
+			isCollapsed: this.collapsed.includes(g.key),
+		}));
+	}
+
+	isSelected = (record) => this.controlled && this.args.selectedIds.map(String).includes(String(record.id));
+
 	/**
 	 * The column descriptors with their sort key and sort icon.
 	 *
@@ -37,10 +85,11 @@ export default class AppUiDataTableComponent extends Component {
 		return (this.args.columns || []).map((column) => {
 			let sortKey = column.sortKey || column.key;
 			let icon = 'fa-sort';
-			if (column.sortable && sortKey === this.args.sort) {
+			let active = !!column.sortable && sortKey === this.args.sort;
+			if (active) {
 				icon = this.args.order === 'desc' ? 'fa-sort-desc' : 'fa-sort-asc';
 			}
-			return { ...column, sortKey, sortIcon: icon };
+			return { ...column, sortKey, sortIcon: icon, active };
 		});
 	}
 
@@ -64,6 +113,21 @@ export default class AppUiDataTableComponent extends Component {
 	@action
 	sort(column) {
 		this.args.onSort?.(column.sortKey);
+	}
+
+	@action
+	toggleAll() {
+		this.args.onSelectAll?.(this.rows, this.selectionState !== 'all');
+	}
+
+	@action
+	toggleGroup(key) {
+		this.collapsed = this.collapsed.includes(key) ? this.collapsed.filter((k) => k !== key) : [...this.collapsed, key];
+	}
+
+	@action
+	toggleMenu(record) {
+		this.menuOpenId = this.menuOpenId === record.id ? null : record.id;
 	}
 
 	/**
