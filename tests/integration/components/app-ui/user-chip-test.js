@@ -15,7 +15,7 @@ module('Integration | Component | app-ui/user-chip', function (hooks) {
         await render(hbs`<AppUi::UserChip @user={{this.user}} @size="sm" />`);
 
         assert.dom('[data-test-user-chip-name]').hasText('Ada Lovelace');
-        assert.dom('[data-test-user-chip] [data-test-avatar]').hasClass('img-sm');
+        assert.dom('[data-test-user-chip] [data-test-avatar]').hasAttribute('data-size', 's');
         assert.dom('a[data-test-user-chip-name]').doesNotExist();
     });
 });
