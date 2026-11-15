@@ -175,6 +175,17 @@ export const ENTRIES = [
         usedIn: [],
         demo: 'developer/demos/status-label',
         doc: 'app-ui-status-label.md'
+    },
+    {
+        name: 'tag',
+        label: 'Tag',
+        group: 'Display',
+        status: 'stable',
+        summary: 'AppUi::Tag, a tag or small label with square edges, in the default look of the app.',
+        usedIn: [],
+        demo: 'developer/demos/tag',
+        doc: 'app-ui-tag.md',
+        variants: ['default', 'primary', 'success', 'info', 'warning', 'danger']
     }
 ];
 

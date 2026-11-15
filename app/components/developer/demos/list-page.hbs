@@ -30,7 +30,7 @@
         <AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @sort={{this.sort}} @order={{this.order}} @selectable={{true}} @onSort={{fn this.changeSort log}} @onSelect={{fn this.select log}}>
           <:cell as |record column|>
             {{#if (eq column.key "status")}}
-              <span class="label {{if record.isActive "label-success" "label-danger"}}">{{if record.isActive "Active" "Disabled"}}</span>
+              <AppUi::Tag @variant={{if record.isActive "success" "danger"}}>{{if record.isActive "Active" "Disabled"}}</AppUi::Tag>
             {{else}}
               {{get record column.key}}
             {{/if}}
