@@ -1,0 +1,7 @@
+<span class="app-avatar app-avatar-{{this.size}}" data-test-avatar ...attributes>
+  {{#if this.showImage}}
+    <img src={{this.src}} alt={{@user.name}} data-test-avatar-image {{on "error" this.onError}}>
+  {{else}}
+    <span class="app-avatar-initials" aria-hidden="true" data-test-avatar-initials>{{this.initials}}</span>
+  {{/if}}
+</span>
