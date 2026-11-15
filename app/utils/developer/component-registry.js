@@ -40,6 +40,36 @@ export const ENTRIES = [
         doc: 'quick-list.md'
     },
     {
+        name: 'list-toolbar',
+        label: 'ListToolbar',
+        group: 'Lists',
+        status: 'experimental',
+        summary: 'AppUi::ListToolbar, the top of a list page box: search and actions in the header, bulk actions and the pager below.',
+        usedIn: [{ label: 'Agents list', route: 'app.agent' }, { label: 'Workflows list', route: 'app.workflow' }],
+        demo: 'developer/demos/list-page',
+        doc: 'list-toolbar.md'
+    },
+    {
+        name: 'data-table',
+        label: 'DataTable',
+        group: 'Lists',
+        status: 'experimental',
+        summary: 'AppUi::DataTable, the slim list table from column descriptors, with sorting, selection and row actions reported out.',
+        usedIn: [{ label: 'Agents list', route: 'app.agent' }, { label: 'Workflows list', route: 'app.workflow' }],
+        demo: 'developer/demos/list-page',
+        doc: 'data-table.md'
+    },
+    {
+        name: 'pager',
+        label: 'Pager',
+        group: 'Lists',
+        status: 'experimental',
+        summary: 'AppUi::Pager, the range text and previous/next buttons of a paged list, from an offset and whether more rows exist.',
+        usedIn: [{ label: 'Agents list', route: 'app.agent' }, { label: 'Workflows list', route: 'app.workflow' }, { label: 'QuickList footer' }],
+        demo: 'developer/demos/list-page',
+        doc: 'pager.md'
+    },
+    {
         name: 'ez-search',
         label: 'ezSearch',
         group: 'Search',

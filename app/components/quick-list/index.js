@@ -41,7 +41,7 @@ import { groupItems } from 'prometheus/utils/quick-list/group-items';
  * - `<:selectionActions as |selected clear|>`: the actions in the selection bar; `selected` is the
  *   array of selected ids and `clear` clears the selection.
  *
- * Paging (`QuickList::Pagination`, under the items, shown when `@onPage` is passed):
+ * Paging (`AppUi::Pager`, under the items, shown when `@onPage` is passed):
  * - `@page` {Number}, `@limit` {Number}: the current page and the page size; `@total` is the record count.
  * - `@hasNext` {Boolean}: whether a next page exists; used when there is no `@total` (Gaia sends none). Then
  *   the range reads `1-20 / 20+` with a next page and `21-25 / 25` on the last one, › follows `@hasNext`,
@@ -201,6 +201,57 @@ export default class QuickListComponent extends Component {
 	}
 
 	/**
+	 * The current page, at least 1.
+	 *
+	 * @property page
+	 * @type {Number}
+	 * @public
+	 */
+	get page() {
+		return Math.max(1, Number(this.args.page) || 1);
+	}
+
+	/**
+	 * The page size, at least 1.
+	 *
+	 * @property limit
+	 * @type {Number}
+	 * @public
+	 */
+	get limit() {
+		return Math.max(1, Number(this.args.limit) || 1);
+	}
+
+	/**
+	 * The offset of the first item of the page, for the pager.
+	 *
+	 * @property offset
+	 * @type {Number}
+	 * @public
+	 */
+	get offset() {
+		return (this.page - 1) * this.limit;
+	}
+
+	/**
+	 * The pager shows with `@onPage` when there is more than one page: with `@total` when it exceeds the page
+	 * size, without one on any page after the first or while a next page exists.
+	 *
+	 * @property showPager
+	 * @type {Boolean}
+	 * @public
+	 */
+	get showPager() {
+		if (!this.args.onPage) {
+			return false;
+		}
+		if (this.args.total !== undefined && this.args.total !== null) {
+			return Number(this.args.total) > this.limit;
+		}
+		return this.page > 1 || Boolean(this.args.hasNext);
+	}
+
+	/**
 	 * `none`, `some` or `all` of the shown items are selected.
 	 *
 	 * @property selectionState
@@ -240,6 +291,18 @@ export default class QuickListComponent extends Component {
 	@action
 	toggleAll() {
 		this.selection.toggleAll(this.items);
+	}
+
+	/**
+	 * Reports the page the pager moved to through `@onPage`.
+	 *
+	 * @method changeOffset
+	 * @param {Number} offset the offset of the first item of the new page
+	 * @public
+	 */
+	@action
+	changeOffset(offset) {
+		this.args.onPage?.(Math.floor(offset / this.limit) + 1);
 	}
 
 	/**

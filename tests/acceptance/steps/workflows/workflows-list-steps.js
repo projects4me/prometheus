@@ -3,9 +3,9 @@ import steps from '../steps';
 import agentFixtureSteps from '../agents/agent-fixtures';
 import listToolbarSteps from '../common-steps/list-toolbar-steps';
 
-const row = (name) => Array.from(document.querySelectorAll('[data-workflow-id]')).find((el) => el.querySelector('[data-workflow-field="name"]').textContent.trim() === name);
-const text = (name, field) => row(name)?.querySelector(`[data-workflow-field="${field}"]`).textContent.replace(/\s+/g, ' ').trim();
-const actors = (name) => Array.from(row(name)?.querySelectorAll('[data-workflow-actor]') ?? []);
+const row = (name) => Array.from(document.querySelectorAll('[data-test-data-table-row]')).find((el) => el.querySelector('[data-test-workflow-name]').textContent.trim() === name);
+const text = (name, column) => row(name)?.querySelector(`[data-test-data-table-cell="${column}"]`).textContent.replace(/\s+/g, ' ').trim();
+const actors = (name) => Array.from(row(name)?.querySelectorAll('[data-test-workflow-actor]') ?? []);
 
 function createWorkflow(name, status, kind, nodes) {
 	let workflow = server.create('workflow', { name, status });
@@ -14,7 +14,7 @@ function createWorkflow(name, status, kind, nodes) {
 }
 
 export default function (assert) {
-	return listToolbarSteps(agentFixtureSteps(steps(assert)), assert, 'workflow')
+	return listToolbarSteps(agentFixtureSteps(steps(assert)), assert, 'workflow', { dataTest: true })
 		.given('The $status workflow "$name" triggers on $kind and runs the agent "$agent"', async function (status, name, kind, agent) {
 			let record = server.schema.agents.findBy({ name: agent });
 			createWorkflow(name, status, kind, [{ category: 'actor', kind: 'run_agent', config: JSON.stringify({ agentId: record.id }) }]);
@@ -29,7 +29,7 @@ export default function (assert) {
 			}
 		})
 		.then('Workflows list has $count workflows', function (count) {
-			assert.equal(document.querySelectorAll('[data-workflow-id]').length, Number(count), `Workflows list has ${count} workflows`);
+			assert.equal(document.querySelectorAll('[data-test-data-table-row]').length, Number(count), `Workflows list has ${count} workflows`);
 		})
 		.then('Workflow "$name" shows trigger "$trigger" and $runs runs', function (name, trigger, runs) {
 			assert.equal(text(name, 'trigger'), trigger, `Workflow ${name} shows trigger ${trigger}`);

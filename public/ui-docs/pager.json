@@ -1,0 +1,27 @@
+{
+  "name": "AppUi::Pager",
+  "component": "app-ui/pager",
+  "doc": "pager.md",
+  "description": "The range text (1-20 / 20+) and the previous and next buttons of a paged list. It only shows where the list is and reports the offset of the page asked for.",
+  "arguments": {
+    "offset": { "type": "number", "required": false, "default": 0, "description": "The offset of the first row shown" },
+    "limit": { "type": "number", "required": true, "description": "The page size" },
+    "count": { "type": "number", "required": false, "default": 0, "description": "The rows shown on this page; the range ends there on the last page" },
+    "hasMore": { "type": "boolean", "required": false, "default": false, "description": "Whether rows exist after this page; Gaia sends no totals" },
+    "total": { "type": "number", "required": false, "description": "The record count, when the caller has one; then the range reads it and next follows it" },
+    "disabled": { "type": "boolean", "required": false, "default": false, "description": "Disables both buttons, e.g. while the next page loads" },
+    "compact": { "type": "boolean", "required": false, "default": false, "description": "Extra-small buttons with angle icons, for narrow lists such as the QuickList footer" }
+  },
+  "events": {
+    "onPageChange": {
+      "payload": [{ "name": "offset", "type": "number", "description": "The offset of the first row of the page asked for" }],
+      "description": "Previous or next was clicked"
+    }
+  },
+  "blocks": {},
+  "variants": [
+    { "name": "without a total", "description": "Gaia lists: the range reads 20+ while more rows exist", "arguments": ["offset", "limit", "count", "hasMore", "onPageChange"] },
+    { "name": "with a total", "description": "The range reads the total", "arguments": ["offset", "limit", "total", "onPageChange"] },
+    { "name": "compact", "description": "The QuickList footer", "arguments": ["compact", "disabled"] }
+  ]
+}

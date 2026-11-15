@@ -75,8 +75,8 @@ module('Integration | Component | quick-list', function (hooks) {
         this.noop = () => {};
         await render(hbs`<QuickList @title="Ideas" @items={{this.items}} @page={{1}} @limit={{2}} @hasNext={{this.hasNext}} @onPage={{this.noop}} />`);
         assert.dom('[data-test-quick-list-count]').hasText('2+');
-        assert.dom('[data-quick-list-pagination-range]').hasText('1-2 / 2+');
-        assert.dom('[data-quick-list-pagination-next]').isNotDisabled();
+        assert.dom('[data-test-pager-range]').hasText('1-2 / 2+');
+        assert.dom('[data-test-pager-next]').isNotDisabled();
     });
 
     test('it marks the active item', async function (assert) {

@@ -1,0 +1,16 @@
+{{#if (or (has-block "search") (has-block "actions"))}}
+  <div class="box-header with-border" data-test-list-toolbar-header>
+    <div class="search">
+      {{yield to="search"}}
+      {{yield to="actions"}}
+    </div>
+  </div>
+{{/if}}
+<div class="list-controls" data-test-list-toolbar ...attributes>
+  {{yield to="selection"}}
+  {{#if (has-block "pager")}}
+    <div class="pull-right" data-test-list-toolbar-pager>
+      {{yield to="pager"}}
+    </div>
+  {{/if}}
+</div>

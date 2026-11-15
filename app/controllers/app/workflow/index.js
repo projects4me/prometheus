@@ -37,6 +37,23 @@ export default class AppWorkflowIndexController extends PrometheusListController
     order = 'asc';
 
     /**
+     * The columns of the list's `<AppUi::DataTable>`; the template's cell block draws them.
+     *
+     * @property columns
+     * @type Array
+     */
+    get columns() {
+        return [
+            { key: 'workflow', label: this.intl.t('views.app.workflow.list.name'), sortable: true, sortKey: 'Workflow.name', class: 'workflow-cell' },
+            { key: 'trigger', label: this.intl.t('views.app.workflow.list.trigger') },
+            { key: 'scope', label: this.intl.t('views.app.workflow.list.scope') },
+            { key: 'actors', label: this.intl.t('views.app.workflow.list.actors'), class: 'workflow-actors' },
+            { key: 'runs', label: this.intl.t('views.app.workflow.list.runs') },
+            { key: 'last-run', label: this.intl.t('views.app.workflow.list.lastRun') }
+        ];
+    }
+
+    /**
      * The workflownode, workflowrun, agent and project records of the page.
      *
      * @property nodes
@@ -60,6 +77,7 @@ export default class AppWorkflowIndexController extends PrometheusListController
             let runs = this.runs.filter((run) => String(run.workflowId) === String(workflow.id));
 
             return {
+                id: workflow.id,
                 workflow,
                 trigger: triggerOf(nodes),
                 projects: scopeOf(workflow.scope)

@@ -1,0 +1,23 @@
+<div class="app-ui-pager" data-test-pager ...attributes>
+  <span class="app-ui-pager__range" data-test-pager-range>{{t "components.pager.range" from=this.from to=this.to total=this.totalText}}</span>
+  <div class="btn-group">
+    <button
+      type="button"
+      class="btn btn-default {{if @compact "btn-xs" "btn-sm"}}"
+      data-test-pager-previous
+      title={{t "components.pager.previous"}}
+      aria-label={{t "components.pager.previous"}}
+      disabled={{this.isPreviousDisabled}}
+      {{on "click" this.previous}}
+    ><i class="fa {{if @compact "fa-angle-left" "fa-chevron-left"}}"></i></button>
+    <button
+      type="button"
+      class="btn btn-default {{if @compact "btn-xs" "btn-sm"}}"
+      data-test-pager-next
+      title={{t "components.pager.next"}}
+      aria-label={{t "components.pager.next"}}
+      disabled={{this.isNextDisabled}}
+      {{on "click" this.next}}
+    ><i class="fa {{if @compact "fa-angle-right" "fa-chevron-right"}}"></i></button>
+  </div>
+</div>
