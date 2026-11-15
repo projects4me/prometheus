@@ -17,6 +17,10 @@ Used in the Agents and Workflows lists. AppUi::Table (the older table with loadi
 | @sort | String | none | The active sort key; its column shows asc or desc |
 | @order | String | none | asc or desc |
 | @selectable | Boolean | false | Adds a checkbox per row |
+| @selectedIds | Array | | Ids of the selected rows, kept by the owner; makes the checkboxes controlled |
+| @onSelectAll | Function | | Select-all box toggled; called with (rows, checked) |
+| @groupKey | Function | | (record) => group key; groups rows under collapsible headings |
+| @groupLabel | Function | | (key) => translated group label |
 | @onSort | Function | none | Called with the sort key of the column clicked |
 | @onSelect | Function | none | Called with the row's id and whether it is now checked |
 
@@ -34,6 +38,8 @@ Used in the Agents and Workflows lists. AppUi::Table (the older table with loadi
 ## Blocks
 
 - cell: draws the cells of the columns without a cell component; yields the record and the column. Branch on the column key.
+- moreActions: extra row actions in a dropdown; yields the record.
+- groupHeading: replaces a group heading label; yields the group.
 - rowActions: the last cell of every row; yields the record. Put AccessControl around each button, as on the other list pages.
 - empty: shown across the table when there are no rows; use Exceptions::NothingFound.
 

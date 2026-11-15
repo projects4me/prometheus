@@ -342,6 +342,7 @@
       "next": "Next page"
     },
     "quickList": {
+      "moreActions": "More actions",
       "countOfTotal": "{count} of {total}",
       "empty": "No records found.",
       "clearSearch": "Clear the search",
