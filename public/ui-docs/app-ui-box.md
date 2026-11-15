@@ -7,12 +7,17 @@
 | Argument | Type | Default | Meaning |
 |---|---|---|---|
 | @variant | String | primary | `primary`, `default`, `info`, `success`, `warning` or `danger` |
+| @listView | Boolean | false | adds the `list-view` modifier of list page boxes |
+| @noPadding | Boolean | false | adds `no-padding` to the body, for tables |
+| @collapsed | Boolean | false | adds the `collapsed-box` modifier |
 
 ## Blocks
 
 - header: the header content, usually `<h3 class="box-title">`.
 - tools: icon buttons (`btn btn-box-tool`), placed on the right of the header.
+- top: content between the header and the body, such as `AppUi::ListToolbar`.
 - body: the box body.
+- bottom: content between the body and the footer, such as a bottom `AppUi::ListToolbar`.
 - footer: the box footer.
 
 ## Events

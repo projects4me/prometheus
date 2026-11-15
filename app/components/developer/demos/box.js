@@ -20,6 +20,9 @@ export default class DeveloperDemosBoxComponent extends Component {
     @tracked showHeader = true;
     @tracked showTools = true;
     @tracked showFooter = true;
+    @tracked listView = false;
+    @tracked noPadding = false;
+    @tracked collapsed = false;
 
     /**
      * @method setVariant
@@ -48,5 +51,8 @@ export default class DeveloperDemosBoxComponent extends Component {
         this.showHeader = true;
         this.showTools = true;
         this.showFooter = true;
+        this.listView = false;
+        this.noPadding = false;
+        this.collapsed = false;
     }
 }

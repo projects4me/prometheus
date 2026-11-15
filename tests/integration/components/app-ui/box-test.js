@@ -41,4 +41,19 @@ module('Integration | Component | app-ui/box', function (hooks) {
 
         assert.dom('[data-test-box]').hasClass('box-primary');
     });
+
+    test('it supports the existing box modifiers', async function (assert) {
+        await render(hbs`<AppUi::Box @listView={{true}} @noPadding={{true}} @collapsed={{true}}><:body>x</:body></AppUi::Box>`);
+
+        assert.dom('[data-test-box]').hasClass('list-view');
+        assert.dom('[data-test-box]').hasClass('collapsed-box');
+        assert.dom('[data-test-box-body]').hasClass('no-padding');
+    });
+
+    test('it yields top and bottom between the parts', async function (assert) {
+        await render(hbs`<AppUi::Box><:top><i data-t="top"></i></:top><:body>x</:body><:bottom><i data-t="bottom"></i></:bottom></AppUi::Box>`);
+
+        assert.dom('[data-t="top"]').exists();
+        assert.dom('[data-t="bottom"]').exists();
+    });
 });
