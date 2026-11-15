@@ -217,6 +217,35 @@ export default class PrometheusListController extends PrometheusController {
     }
 
     /**
+     * The page size of the list's query.
+     *
+     * @property pageSize
+     * @type Number
+     */
+    pageSize = 20;
+
+    /**
+     * The offset of the first row of the current page, for `<AppUi::Pager>`.
+     *
+     * @property offset
+     * @type Number
+     */
+    get offset() {
+        return (Math.max(1, Number(this.page) || 1) - 1) * this.pageSize;
+    }
+
+    /**
+     * Moves to the page that starts at an offset; `<AppUi::Pager>` reports offsets.
+     *
+     * @method changeOffset
+     * @param {Number} offset the offset of the first row of the page to show
+     * @public
+     */
+    @action changeOffset(offset) {
+        this.paginate(Math.floor(offset / this.pageSize) + 1);
+    }
+
+    /**
      * This action is used to sort the data
      *
      * @method sortData
@@ -225,23 +254,24 @@ export default class PrometheusListController extends PrometheusController {
      */
     @action sortData(field) {
         Logger.debug('Prometheus.Controllers.List::sortData(' + field + ')');
+        // Lists on <AppUi::DataTable> draw the sort icons from sort and order; the others still have them set here
         let el = document.querySelector(`[data-sort="${field}"] button i`);
         // If the current field is being sorted then toggle it
         if (field === this.sort) {
             if (this.order === 'desc') {
-                el.classList.add('fa-sort-asc');
-                el.classList.remove('fa-sort-desc');
+                el?.classList.add('fa-sort-asc');
+                el?.classList.remove('fa-sort-desc');
                 this.set('order', 'asc');
             } else {
-                el.classList.add('fa-sort-desc');
-                el.classList.remove('fa-sort-asc');
+                el?.classList.add('fa-sort-desc');
+                el?.classList.remove('fa-sort-asc');
                 this.set('order', 'desc');
             }
         }
         // Otherwise start with the default value
         else {
-            el.classList.add('fa-sort-desc');
-            el.classList.remove('fa-sort');
+            el?.classList.add('fa-sort-desc');
+            el?.classList.remove('fa-sort');
             this.set('order', 'desc');
 
             let previouslySorted = document.querySelector(`[data-sort="${this.sort}"] button i`);
@@ -528,8 +558,18 @@ export default class PrometheusListController extends PrometheusController {
      *@public
      */
     @action select(evt) {
-        let isChecked = evt.target.checked;
-        let id = evt.target.dataset.select;
+        this.selectRow(evt.target.dataset.select, evt.target.checked);
+    }
+
+    /**
+     * Adds a row to the selection of the current page or removes it; `<AppUi::DataTable>` reports rows this way.
+     *
+     * @method selectRow
+     * @param {String} id the id of the row's record
+     * @param {Boolean} isChecked whether the row is now selected
+     * @public
+     */
+    @action selectRow(id, isChecked) {
         let currentPage = this.page.toString();
         
         Logger.debug('Prometheus.Controllers.List::select');
@@ -1195,7 +1235,7 @@ export default class PrometheusListController extends PrometheusController {
         for (const page in this.selectedIds) {
             if (this.selectedIds.hasOwnProperty(page)) {
                 this.selectedIds[page].forEach(id => {
-                    let el = document.querySelector(`tr[data-${modelName}-id='${id}'] input[type=checkbox]`);
+                    let el = document.querySelector(`tr[data-${modelName}-id='${id}'] input[type=checkbox], .list-view tr input[type=checkbox][data-select='${id}']`);
                     el && (el.checked = true);
                 });
             }

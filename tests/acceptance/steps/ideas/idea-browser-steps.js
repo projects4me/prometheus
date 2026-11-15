@@ -261,18 +261,18 @@ export const then = function () {
         },
         {
             "User opens the next page of the idea browser": (assert) => async function () {
-                await click(`${BROWSER} [data-quick-list-pagination-next]`);
+                await click(`${BROWSER} [data-test-pager-next]`);
                 assert.ok(true, 'the next page is requested');
             }
         },
         {
             "The idea browser pagination reads $text": (assert) => async function (text) {
-                assert.dom(`${BROWSER} [data-quick-list-pagination-range]`).hasText(text);
+                assert.dom(`${BROWSER} [data-test-pager-range]`).hasText(text);
             }
         },
         {
             "The next page button of the idea browser is $state": (assert) => async function (state) {
-                let next = `${BROWSER} [data-quick-list-pagination-next]`;
+                let next = `${BROWSER} [data-test-pager-next]`;
                 state === 'enabled' ? assert.dom(next).isNotDisabled() : assert.dom(next).isDisabled();
             }
         },

@@ -49,12 +49,12 @@ module('Integration | Component | quick-list assembly', function (hooks) {
 
     test('pagination reports the page and is disabled while loading', async function (assert) {
         await render(LIST);
-        assert.dom('[data-quick-list-pagination-range]').hasText('11-20 / 30');
-        await click('[data-quick-list-pagination-next]');
+        assert.dom('[data-test-pager-range]').hasText('11-20 / 30');
+        await click('[data-test-pager-next]');
         assert.deepEqual(this.calls, [['page', 3]]);
 
         this.set('isLoading', true);
-        assert.dom('[data-quick-list-pagination-next]').isDisabled();
+        assert.dom('[data-test-pager-next]').isDisabled();
     });
 
     test('no pagination without @onPage and no toolbar without options', async function (assert) {
@@ -62,7 +62,7 @@ module('Integration | Component | quick-list assembly', function (hooks) {
         this.set('groupOptions', undefined);
         this.set('sortOptions', undefined);
         await render(LIST);
-        assert.dom('[data-quick-list-pagination]').doesNotExist();
+        assert.dom('[data-test-pager]').doesNotExist();
         assert.dom('.quick-list-toolbar').doesNotExist();
     });
 

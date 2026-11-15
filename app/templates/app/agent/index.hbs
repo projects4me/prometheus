@@ -11,123 +11,84 @@
     <div class="col-md-12">
       <AccessControl @aclContext="agent.read">
         <div class="box box-primary list-view">
-          <div class="box-header with-border">
-            {{#if this.querySchema}}
-              <EzSearch
-                @schema={{this.querySchema}}
-                @query={{this.query}}
-                @savedSearches={{this.ezSavedSearches}}
-                @activeSavedSearchId={{this.searchId}}
-                @onSavedSearchChange={{this.selectSavedSearch}}
-                @onApply={{this.applyQuery}}
-                @aclContext="agent.read"
-              />
-            {{/if}}
-          </div>
-
-          <div class="box-body no-padding">
-            <div class="list-controls">
+          <AppUi::ListToolbar>
+            <:search>
+              {{#if this.querySchema}}
+                <EzSearch
+                  @schema={{this.querySchema}}
+                  @query={{this.query}}
+                  @savedSearches={{this.ezSavedSearches}}
+                  @activeSavedSearchId={{this.searchId}}
+                  @onSavedSearchChange={{this.selectSavedSearch}}
+                  @onApply={{this.applyQuery}}
+                  @aclContext="agent.read"
+                />
+              {{/if}}
+            </:search>
+            <:selection>
               <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
                 <FormFields::FieldCheckbox @select={{this.selectAll}} @data-select="all" @aclContext="agent.read"/>
               </span>
               <div class="btn-group">
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="delete-agents" title="{{t "global.form.delete"}}" @onClick={{this.deleteSelected}} @aclContext="agent.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="activate-agents" title="{{t "views.app.module.list.activation.activate"}}" @onClick={{fn this.setSelectedActive true}} @aclContext="agent.update"><i class="fa fa-toggle-on"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="deactivate-agents" title="{{t "views.app.module.list.activation.deactivate"}}" @onClick={{fn this.setSelectedActive false}} @aclContext="agent.update"><i class="fa fa-toggle-off"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="export-agents" title="{{t "views.app.module.list.export.label"}}" @onClick={{this.exportSelected}} @aclContext="agent.read"><i class="fa fa-download"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="delete" title="{{t "global.form.delete"}}" @onClick={{this.deleteSelected}} @aclContext="agent.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="activate" title="{{t "views.app.module.list.activation.activate"}}" @onClick={{fn this.setSelectedActive true}} @aclContext="agent.update"><i class="fa fa-toggle-on"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="deactivate" title="{{t "views.app.module.list.activation.deactivate"}}" @onClick={{fn this.setSelectedActive false}} @aclContext="agent.update"><i class="fa fa-toggle-off"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="export" title="{{t "views.app.module.list.export.label"}}" @onClick={{this.exportSelected}} @aclContext="agent.read"><i class="fa fa-download"></i></AppUi::Button>
               </div>
-              <div class="pull-right">
-                <span class="list-view-count">{{t "global.list.selectedCount" count=this.checkboxCount}}</span>
-                {{add (mult (sub this.page 1) 20) 1}}-{{add (mult (sub this.page 1) 20) this.model.length}} / {{add (mult (sub this.page 1) 20) this.model.length}}
-                {{#if this.model.meta.links.next}}+{{/if}}
-                <div class="btn-group">
-                  {{#if this.model.meta.links.prev}}
-                    <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="agent.read"><i class="fa fa-chevron-left"></i></AppUi::Button>
-                  {{else}}
-                    <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}}"><i class="fa fa-chevron-left"></i></AppUi::Button>
-                  {{/if}}
-                  {{#if this.model.meta.links.next}}
-                    <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="agent.read"><i class="fa fa-chevron-right"></i></AppUi::Button>
-                  {{else}}
-                    <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></AppUi::Button>
-                  {{/if}}
-                </div>
-              </div>
-            </div>
+            </:selection>
+            <:pager>
+              <span class="list-view-count">{{t "global.list.selectedCount" count=this.checkboxCount}}</span>
+              <AppUi::Pager @offset={{this.offset}} @limit={{this.pageSize}} @count={{this.model.length}} @hasMore={{if this.model.meta.links.next true false}} @onPageChange={{this.changeOffset}} />
+            </:pager>
+          </AppUi::ListToolbar>
 
-            <div class="table-responsive list-view">
-              <table class="table table-hover table-striped">
-                <thead>
-                  <tr>
-                    <th class="select-box"></th>
-                    <th data-sort="Agent.name">{{t "views.app.agent.list.agent"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData "Agent.name")}}><i class="fa fa-sort"></i></AppUi::Button></th>
-                    <th data-sort="sponsor.name">{{t "views.app.agent.list.sponsor"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData "sponsor.name")}}><i class="fa fa-sort"></i></AppUi::Button></th>
-                    <th data-sort="Agent.modelConfig">{{t "views.app.agent.list.models"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData "Agent.modelConfig")}}><i class="fa fa-sort"></i></AppUi::Button></th>
-                    <th>{{t "views.app.agent.list.projects"}}</th>
-                    <th>{{t "views.app.agent.list.grants"}}</th>
-                    <th data-sort="user.lastActivityAt">{{t "views.app.agent.list.lastActive"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData "user.lastActivityAt")}}><i class="fa fa-sort"></i></AppUi::Button></th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {{#if this.model.length}}
-                    {{#each this.model as |agent|}}
-                      <tr data-agent-id={{agent.id}}>
-                        <td class="select-box">
-                          <FormFields::FieldCheckbox @select={{this.select}} @data-select={{agent.id}} @aclContext="agent.read"/>
-                        </td>
-                        <td class="agent-cell" data-agent-field="agent">
-                          <Agent::Avatar @user={{agent.user}} />
-                          <div>
-                            <LinkTo @route="app.agent.page" @model={{agent.id}} data-agent-field="name">{{agent.name}}</LinkTo>
-                            {{#if agent.isActive}}
-                              <span class="label label-success" data-agent-field="status">{{t "views.app.agent.status.active"}}</span>
-                            {{else}}
-                              <span class="label label-danger" data-agent-field="status">{{t "views.app.agent.status.disabled"}}</span>
-                            {{/if}}
-                            <span class="agent-purpose">{{agent.purpose}}</span>
-                          </div>
-                        </td>
-                        <td data-agent-field="sponsor">
-                          {{#if agent.sponsor.id}}
-                            <LinkTo @route="app.user.page" @model={{agent.sponsor.id}}>{{agent.sponsor.name}}</LinkTo>
-                          {{else}}
-                            <em>{{t "views.app.agent.autonomous"}}</em>
-                          {{/if}}
-                        </td>
-                        <td data-agent-field="models">{{agent.models}}</td>
-                        <td class="agent-projects" data-agent-field="projects">
-                          {{#each (call (fn this.projectsOf agent)) as |project|}}
-                            <span class="label label-default">{{project.name}}</span>
-                          {{/each}}
-                        </td>
-                        <td data-agent-field="grants">&mdash;</td>
-                        <td data-agent-field="last-active">
-                          {{#if agent.user.lastActivityAt}}
-                            {{format-date-time date=agent.user.lastActivityAt humanize=true}}
-                          {{else}}
-                            {{t "views.app.user.management.list.noLastActivity"}}
-                          {{/if}}
-                        </td>
-                        <td class="actions">
-                          <AccessControl @aclContext="agent.update">
-                            <LinkTo @route="app.agent.edit" @model={{agent.id}} class="btn btn-default btn-sm" data-btn="edit" title={{t "global.form.edit"}}>
-                              <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </LinkTo>
-                          </AccessControl>
-                        </td>
-                      </tr>
-                    {{/each}}
+          <div class="box-body no-padding">
+            <AppUi::DataTable @columns={{this.columns}} @rows={{this.model}} @sort={{this.sort}} @order={{this.order}} @selectable={{true}} @onSort={{this.sortData}} @onSelect={{this.selectRow}}>
+              <:cell as |agent column|>
+                {{#if (eq column.key "agent")}}
+                  <Agent::Avatar @user={{agent.user}} />
+                  <div>
+                    <LinkTo @route="app.agent.page" @model={{agent.id}} data-test-agent-name>{{agent.name}}</LinkTo>
+                    {{#if agent.isActive}}
+                      <span class="label label-success" data-test-agent-status>{{t "views.app.agent.status.active"}}</span>
+                    {{else}}
+                      <span class="label label-danger" data-test-agent-status>{{t "views.app.agent.status.disabled"}}</span>
+                    {{/if}}
+                    <span class="agent-purpose">{{agent.purpose}}</span>
+                  </div>
+                {{else if (eq column.key "sponsor")}}
+                  {{#if agent.sponsor.id}}
+                    <LinkTo @route="app.user.page" @model={{agent.sponsor.id}}>{{agent.sponsor.name}}</LinkTo>
                   {{else}}
-                    <tr>
-                      <td colspan="100%">
-                        <Exceptions::NothingFound @description={{t "views.app.agent.list.noAgents"}} />
-                      </td>
-                    </tr>
+                    <em>{{t "views.app.agent.autonomous"}}</em>
                   {{/if}}
-                </tbody>
-              </table>
-            </div>
+                {{else if (eq column.key "projects")}}
+                  {{#each (call (fn this.projectsOf agent)) as |project|}}
+                    <span class="label label-default">{{project.name}}</span>
+                  {{/each}}
+                {{else if (eq column.key "grants")}}
+                  &mdash;
+                {{else if (eq column.key "last-active")}}
+                  {{#if agent.user.lastActivityAt}}
+                    {{format-date-time date=agent.user.lastActivityAt humanize=true}}
+                  {{else}}
+                    {{t "views.app.user.management.list.noLastActivity"}}
+                  {{/if}}
+                {{else}}
+                  {{get agent column.key}}
+                {{/if}}
+              </:cell>
+              <:rowActions as |agent|>
+                <AccessControl @aclContext="agent.update">
+                  <LinkTo @route="app.agent.edit" @model={{agent.id}} class="btn btn-default btn-sm" data-test-row-action="edit" title={{t "global.form.edit"}}>
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                  </LinkTo>
+                </AccessControl>
+              </:rowActions>
+              <:empty>
+                <Exceptions::NothingFound @description={{t "views.app.agent.list.noAgents"}} />
+              </:empty>
+            </AppUi::DataTable>
           </div>
         </div>
       </AccessControl>

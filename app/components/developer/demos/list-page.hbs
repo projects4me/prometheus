@@ -1,0 +1,48 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo as |log|>
+    <div class="box box-primary list-view" data-test-demo-list-page>
+      <AppUi::ListToolbar>
+        <:actions>
+          <button type="button" class="btn btn-default" data-test-demo-list-create {{on "click" (fn this.create log)}}>
+            <i class="fa fa-plus" aria-hidden="true"></i> New agent
+          </button>
+        </:actions>
+        <:selection>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm" title="Delete" aria-label="Delete" data-test-demo-list-delete {{on "click" (fn this.bulk log)}}><i class="fa fa-trash-o"></i></button>
+          </div>
+        </:selection>
+        <:pager>
+          <span class="list-view-count">(Selected : {{this.selected.length}})</span>
+          <AppUi::Pager @offset={{this.offset}} @limit={{this.limit}} @count={{this.rows.length}} @hasMore={{this.hasMore}} @onPageChange={{fn this.changePage log}} />
+        </:pager>
+      </AppUi::ListToolbar>
+      <div class="box-body no-padding">
+        <AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @sort={{this.sort}} @order={{this.order}} @selectable={{true}} @onSort={{fn this.changeSort log}} @onSelect={{fn this.select log}}>
+          <:cell as |record column|>
+            {{#if (eq column.key "status")}}
+              <span class="label {{if record.isActive "label-success" "label-danger"}}">{{if record.isActive "Active" "Disabled"}}</span>
+            {{else}}
+              {{get record column.key}}
+            {{/if}}
+          </:cell>
+          <:rowActions>
+            <button type="button" class="btn btn-default btn-sm" title="Edit" aria-label="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+          </:rowActions>
+          <:empty>
+            <Exceptions::NothingFound @description="No agents found." />
+          </:empty>
+        </AppUi::DataTable>
+      </div>
+    </div>
+  </:demo>
+  <:controls>
+    <div class="checkbox">
+      <label><input type="checkbox" data-control-empty checked={{this.empty}} {{on "change" this.toggleEmpty}}> Empty</label>
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc={{@entry.doc}} />
+  </:docs>
+</Developer::Entry>

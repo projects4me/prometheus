@@ -1,0 +1,18 @@
+{
+  "name": "AppUi::ListToolbar",
+  "component": "app-ui/list-toolbar",
+  "doc": "list-toolbar.md",
+  "description": "The top of a list page box: the search and the page actions in the box header, the select-all and bulk actions on the left of the controls row and the pager on its right. It only lays out its blocks.",
+  "arguments": {},
+  "events": {},
+  "blocks": {
+    "search": { "description": "The search in the box header: EzSearch or a saved-search picker", "yields": [] },
+    "actions": { "description": "Page actions after the search, such as the create button (with AccessControl)", "yields": [] },
+    "selection": { "description": "The left of the controls row: the select-all checkbox and the bulk action buttons", "yields": [] },
+    "pager": { "description": "The right of the controls row: the selected count and AppUi::Pager", "yields": [] }
+  },
+  "variants": [
+    { "name": "list page", "description": "Search, create button, bulk actions and pager", "blocks": ["search", "actions", "selection", "pager"] },
+    { "name": "controls only", "description": "No header; the selection and the pager", "blocks": ["selection", "pager"] }
+  ]
+}

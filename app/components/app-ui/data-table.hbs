@@ -1,0 +1,57 @@
+<div class="table-responsive list-view" data-test-data-table ...attributes>
+  <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        {{#if @selectable}}
+          <th class="select-box"></th>
+        {{/if}}
+        {{#each this.columns as |column|}}
+          <th data-test-data-table-header={{column.key}}>
+            {{column.label}}
+            {{#if column.sortable}}
+              <button type="button" class="btn btn-box-tool" data-test-data-table-sort={{column.key}} {{on "click" (fn this.sort column)}}><i class="fa {{column.sortIcon}}"></i></button>
+            {{/if}}
+          </th>
+        {{/each}}
+        {{#if (has-block "rowActions")}}
+          <th></th>
+        {{/if}}
+      </tr>
+    </thead>
+    <tbody>
+      {{#if this.rows.length}}
+        {{#each this.rows as |record|}}
+          <tr data-test-data-table-row={{record.id}}>
+            {{#if @selectable}}
+              <td class="select-box">
+                <input type="checkbox" aria-label={{t "global.list.select"}} data-select={{record.id}} data-test-data-table-select {{on "input" (fn this.select record)}} />
+              </td>
+            {{/if}}
+            {{#each this.columns as |column|}}
+              <td class={{column.class}} data-test-data-table-cell={{column.key}}>
+                {{#if column.cell}}
+                  {{component column.cell record=record column=column}}
+                {{else if (has-block "cell")}}
+                  {{yield record column to="cell"}}
+                {{else}}
+                  {{get record column.key}}
+                {{/if}}
+              </td>
+            {{/each}}
+            {{#if (has-block "rowActions")}}
+              <td class="actions" data-test-data-table-actions>
+                {{yield record to="rowActions"}}
+              </td>
+            {{/if}}
+          </tr>
+        {{/each}}
+      {{else}}
+        <tr>
+          <td colspan="100%" data-test-data-table-empty>
+            {{yield to="empty"}}
+          </td>
+        </tr>
+      {{/if}}
+    </tbody>
+  </table>
+</div>

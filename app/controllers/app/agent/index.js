@@ -36,6 +36,23 @@ export default class AppAgentIndexController extends PrometheusListController {
     order = 'asc';
 
     /**
+     * The columns of the list's `<AppUi::DataTable>`; the template's cell block draws them.
+     *
+     * @property columns
+     * @type Array
+     */
+    get columns() {
+        return [
+            { key: 'agent', label: this.intl.t('views.app.agent.list.agent'), sortable: true, sortKey: 'Agent.name', class: 'agent-cell' },
+            { key: 'sponsor', label: this.intl.t('views.app.agent.list.sponsor'), sortable: true, sortKey: 'sponsor.name' },
+            { key: 'models', label: this.intl.t('views.app.agent.list.models'), sortable: true, sortKey: 'Agent.modelConfig' },
+            { key: 'projects', label: this.intl.t('views.app.agent.list.projects'), class: 'agent-projects' },
+            { key: 'grants', label: this.intl.t('views.app.agent.list.grants') },
+            { key: 'last-active', label: this.intl.t('views.app.agent.list.lastActive'), sortable: true, sortKey: 'user.lastActivityAt' }
+        ];
+    }
+
+    /**
      * The project memberships of the agents on the page.
      *
      * @property memberships
