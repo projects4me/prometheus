@@ -30,7 +30,7 @@ module('Integration | Component | app-ui/tabs', function (hooks) {
 
     test('it renders the nav-tabs markup with the active tab and its pane', async function (assert) {
         await render(template);
-        assert.dom('[data-test-tabs] ul.nav.nav-tabs').exists();
+        assert.dom('[data-test-tabs].nav-tabs-custom ul.nav.nav-tabs').exists();
         assert.dom('[data-test-tab]').exists({ count: 2 });
         assert.dom('[data-test-tab="a"]').hasText('Alpha').hasAttribute('aria-selected', 'true');
         assert.dom('[data-test-tab="a"]').hasAttribute('href', '#');
@@ -55,6 +55,23 @@ module('Integration | Component | app-ui/tabs', function (hooks) {
         assert.dom('li.active [data-test-tab="b"]').exists();
         assert.dom('[data-test-pane="b"]').hasText('Beta content');
         assert.dom('[data-test-pane="a"]').doesNotExist();
+    });
+
+    test('it shows the count label, also 0, and the tools', async function (assert) {
+        await render(hbs`
+            <AppUi::Tabs @active="a">
+                <:tabs as |t|>
+                    <t.tab @name="a" @count={{3}} data-test-tab="a">Alpha</t.tab>
+                    <t.tab @name="b" @count={{0}} data-test-tab="b">Beta</t.tab>
+                    <t.tab @name="c" data-test-tab="c">Gamma</t.tab>
+                </:tabs>
+                <:tools><button type="button" data-test-tool>Tool</button></:tools>
+                <:panes as |t|><t.pane @name="a">x</t.pane></:panes>
+            </AppUi::Tabs>`);
+        assert.dom('[data-test-tab="a"] .label.label-default.milestone-tab-count').hasText('3');
+        assert.dom('[data-test-tab="b"] .milestone-tab-count').hasText('0');
+        assert.dom('[data-test-tab="c"] .milestone-tab-count').doesNotExist();
+        assert.dom('ul.nav-tabs > li.pull-right [data-test-tool]').exists();
     });
 
     test('it works without @onChange', async function (assert) {

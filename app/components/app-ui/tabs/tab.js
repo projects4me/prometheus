@@ -6,7 +6,7 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 
 /**
- * One tab of AppUi::Tabs, yielded as `t.tab`. `@name` identifies it; it is active when it equals the
+ * One tab of AppUi::Tabs, yielded as `t.tab`. `@name` identifies it, the optional `@count` shows a count label; it is active when it equals the
  * `@active` of the Tabs. `@active` and `@onSelect` are set by AppUi::Tabs.
  *
  * @class AppUiTabsTabComponent
@@ -22,6 +22,16 @@ export default class AppUiTabsTabComponent extends Component {
      */
     get isActive() {
         return this.args.name === this.args.active;
+    }
+
+    /**
+     * Whether the optional `@count` label is shown (0 is shown, null/undefined is not)
+     *
+     * @property hasCount
+     * @type Boolean
+     */
+    get hasCount() {
+        return this.args.count !== undefined && this.args.count !== null;
     }
 
     /**

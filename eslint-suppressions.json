@@ -1110,11 +1110,6 @@
       "count": 2
     }
   },
-  "tests/acceptance/steps/role/create-permissions-steps.js": {
-    "ember/no-jquery": {
-      "count": 1
-    }
-  },
   "tests/acceptance/steps/role/create-role-steps.js": {
     "no-unused-vars": {
       "count": 1

@@ -17,12 +17,16 @@
       "description": "The tab headers, inside the nav-tabs list",
       "yields": [{ "name": "t", "type": "object", "description": "Holds tab and pane, the contextual components curried with the active tab" }]
     },
+    "tools": {
+      "description": "Optional tools on the right of the tab headers, such as a button",
+      "yields": []
+    },
     "panes": {
       "description": "The panes, inside the tab-content container",
       "yields": [{ "name": "t", "type": "object", "description": "Holds tab and pane, the contextual components curried with the active tab" }]
     }
   },
   "variants": [
-    { "name": "basic", "description": "A tab and a pane per name", "arguments": ["active", "onChange"], "blocks": ["tabs", "panes"] }
+    { "name": "basic", "description": "A tab and a pane per name", "arguments": ["active", "onChange"], "blocks": ["tabs", "panes", "tools"] }
   ]
 }
