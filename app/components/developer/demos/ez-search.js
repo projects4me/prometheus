@@ -5,6 +5,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { htmlSafe } from '@ember/template';
 import {
     BASE_QUERY,
     QUERY_PRESETS,
@@ -33,6 +34,13 @@ export default class DeveloperDemosEzSearchComponent extends Component {
 
     savedSearches = SAVED_SEARCHES;
 
+    widths = [
+        { key: 'full', label: 'Full', css: '100%' },
+        { key: 'half', label: '50%', css: '50%' },
+        { key: 'narrow', label: '320px', css: '320px' },
+    ];
+
+    @tracked widthKey = 'full';
     @tracked variant = 'full';
     @tracked preset = 'empty';
     @tracked useBase = false;
@@ -54,6 +62,10 @@ export default class DeveloperDemosEzSearchComponent extends Component {
 
     get activeKey() {
         return this.activeId || 'none';
+    }
+
+    get widthStyle() {
+        return htmlSafe(`width: ${this.widths.find((width) => width.key === this.widthKey).css}; max-width: 100%;`);
     }
 
     get isFull() {

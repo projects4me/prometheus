@@ -4,7 +4,8 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, fillIn, focus, blur, settled } from '@ember/test-helpers';
+import { render, click, fillIn, focus, blur, settled, waitUntil } from '@ember/test-helpers';
+import { htmlSafe } from '@ember/template';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
 import { issueQuerySchema } from '../../../helpers/query-schema';
@@ -355,5 +356,43 @@ module('Integration | Component | ez-search', function (hooks) {
         assert.dom('[data-ez-saved-name]').doesNotExist();
         assert.dom('[data-ez-saved-edited]').doesNotExist();
         assert.deepEqual(this.changes, [null]);
+    });
+
+    module('narrow mode', function () {
+        test('@narrow={{true}} shows icon-only buttons that keep their title and label', async function (assert) {
+            this.activeId = 's1';
+            await render(hbs`<EzSearch @schema={{this.schema}} @savedSearches={{this.saved}} @activeSavedSearchId={{this.activeId}} @narrow={{true}} @aclContext="issue.read" />`);
+
+            assert.dom('[data-ez-search]').hasClass('ez-search--narrow');
+            assert.dom('[data-ez-saved-icon]').hasAttribute('title', 'Done ones');
+            assert.dom('[data-ez-saved-name]').doesNotExist();
+            assert.dom('[data-ez-builder-toggle] .fa-sliders').exists();
+            assert.dom('[data-ez-builder-toggle] span').doesNotExist();
+            assert.dom('[data-ez-builder-toggle]').hasAttribute('title').hasAttribute('aria-label');
+            assert.dom('[data-ez-search-apply] .fa-search').exists();
+            assert.dom('[data-ez-search-apply]').hasAttribute('title').hasAttribute('aria-label');
+            assert.dom('[data-ez-search-clear] .fa-times').exists();
+            assert.dom('[data-ez-search-clear]').hasAttribute('title').hasAttribute('aria-label');
+        });
+
+        test('@narrow={{false}} keeps the labels', async function (assert) {
+            await render(hbs`<EzSearch @schema={{this.schema}} @savedSearches={{this.saved}} @narrow={{false}} @aclContext="issue.read" />`);
+
+            assert.dom('[data-ez-search]').doesNotHaveClass('ez-search--narrow');
+            assert.dom('[data-ez-search-apply]').hasText('Search');
+            assert.dom('[data-ez-search-apply] .fa-search').doesNotExist();
+            assert.dom('[data-ez-search-clear]').hasText('Clear');
+        });
+
+        test('without @narrow it follows its own width', async function (assert) {
+            this.boxStyle = htmlSafe('width: 300px');
+            await render(hbs`<div style={{this.boxStyle}}><EzSearch @schema={{this.schema}} @savedSearches={{this.saved}} @aclContext="issue.read" /></div>`);
+            await waitUntil(() => document.querySelector('[data-ez-search]').classList.contains('ez-search--narrow'));
+            assert.dom('[data-ez-search-apply] .fa-search').exists();
+
+            this.set('boxStyle', htmlSafe('width: 900px'));
+            await waitUntil(() => !document.querySelector('[data-ez-search]').classList.contains('ez-search--narrow'));
+            assert.dom('[data-ez-search-apply]').hasText('Search');
+        });
     });
 });

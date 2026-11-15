@@ -2,7 +2,7 @@
 <Developer::Entry @onReset={{this.reset}}>
   <:demo as |log|>
     {{#each (array this.mountKey) key="@identity"}}
-      <div data-ez-search-demo={{this.variant}}>
+      <div data-ez-search-demo={{this.variant}} data-ez-demo-box style={{this.widthStyle}}>
         {{#if this.isFull}}
           <EzSearch
             @schema={{this.schema}}
@@ -40,6 +40,14 @@
       <div class="btn-group" data-ez-demo-variants>
         {{#each this.variants as |variant|}}
           <button type="button" class="btn btn-default {{if (eq variant.key this.variant) 'active'}}" data-variant={{variant.key}} {{on "click" (fn this.setVariant variant.key)}}>{{variant.label}}</button>
+        {{/each}}
+      </div>
+    </div>
+    <div class="form-group" data-ez-demo-widths>
+      <label>Box width</label>
+      <div class="btn-group">
+        {{#each this.widths as |width|}}
+          <button type="button" class="btn btn-default {{if (eq width.key this.widthKey) 'active'}}" data-width={{width.key}} {{on "click" (fn this.setWidth width.key)}}>{{width.label}}</button>
         {{/each}}
       </div>
     </div>

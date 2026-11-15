@@ -26,6 +26,7 @@ Both components take the arguments of `EzSearchBase` (`components/ez-search/base
 | `@onUpdateSavedSearch` | Function | none | Called with the search and the edited query; the Update entry shows only when given |
 | `@onSavedSearchChange` | Function | none | Called with the search, or null when it is deselected or cleared |
 | `@aclContext` | String | none | The ACL context of the apply button |
+| `@narrow` | Boolean | automatic | EzSearch only: `true` or `false` forces the icon-only mode; left out, it follows the component's own width |
 | `@linear` | Boolean | false | EzSearchCompact only: one row instead of several |
 
 ### Metadata format
@@ -39,6 +40,10 @@ The schema comes from `views.<Module>.search` of the metadata, built by `service
 ### Value sources
 
 An `enum` or `user` field lists its values with `values: { source, ...params }`. The sources are registered in `utils/query/value-sources.js`: `translation` lists a translation key's values, `users` lists the project's members, and others read the store. The service loads each source once per schema and project.
+
+### Narrow box
+
+EzSearch measures its own box. Below 560px it adds `ez-search--narrow`: Saved Searches, Builder, Search and Clear show only their icons (each keeps its title and label for screen readers, and Saved Searches shows the saved name as its title) and the input keeps at least 160px. The xs viewport behaviour stays. Use `@narrow` to force either mode.
 
 ## Blocks
 
