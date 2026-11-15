@@ -21,11 +21,11 @@ module('Integration | Component | app-ui/empty-state', function (hooks) {
         assert.dom('[data-test-empty-state-action]').hasText('Add one');
     });
 
-    test('icon and action are optional', async function (assert) {
+    test('icon defaults to info-circle and action is optional', async function (assert) {
         await render(hbs`<AppUi::EmptyState @message="Empty" />`);
 
         assert.dom('[data-test-empty-state-message]').hasText('Empty');
-        assert.dom('[data-test-empty-state-icon]').doesNotExist();
+        assert.dom('[data-test-empty-state-icon]').hasClass('fa-info-circle');
         assert.dom('[data-test-empty-state-action]').doesNotExist();
     });
 });

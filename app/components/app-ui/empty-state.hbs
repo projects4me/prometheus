@@ -1,11 +1,9 @@
-<div class="app-empty-state" data-test-empty-state ...attributes>
-  {{#if @icon}}
-    <i class="fa {{@icon}}" aria-hidden="true" data-test-empty-state-icon></i>
-  {{/if}}
-  <span class="app-empty-state-message" data-test-empty-state-message>{{@message}}</span>
+<p class="quick-list__state quick-list__state--empty" data-test-empty-state ...attributes>
+  <i class="fa {{if @icon @icon "fa-info-circle"}}" aria-hidden="true" data-test-empty-state-icon></i>
+  <span data-test-empty-state-message>{{@message}}</span>
   {{#if (has-block "action")}}
-    <div class="app-empty-state-action" data-test-empty-state-action>
+    <span data-test-empty-state-action>
       {{yield to="action"}}
-    </div>
+    </span>
   {{/if}}
-</div>
+</p>

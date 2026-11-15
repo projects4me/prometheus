@@ -99,7 +99,11 @@
       {{else}}
         <tr>
           <td colspan="100%" data-test-data-table-empty>
-            {{yield to="empty"}}
+            {{#if (has-block "empty")}}
+              {{yield to="empty"}}
+            {{else}}
+              <AppUi::EmptyState @message={{t "components.quickList.empty"}} />
+            {{/if}}
           </td>
         </tr>
       {{/if}}

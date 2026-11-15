@@ -40,15 +40,15 @@
       {{#if (has-block "empty")}}
         {{yield to="empty"}}
       {{else}}
-        <p class="quick-list__state quick-list__state--empty" data-test-quick-list-empty>
-          <i class="fa fa-info-circle"></i>
-          {{t "components.quickList.empty"}}
-          {{#if @onClearSearch}}
-            <button type="button" class="btn btn-link quick-list__state-action" data-test-quick-list-clear-search {{on "click" @onClearSearch}}>
-              {{t "components.quickList.clearSearch"}}
-            </button>
-          {{/if}}
-        </p>
+        <AppUi::EmptyState @message={{t "components.quickList.empty"}} data-test-quick-list-empty>
+          <:action>
+            {{#if @onClearSearch}}
+              <button type="button" class="btn btn-link quick-list__state-action" data-test-quick-list-clear-search {{on "click" @onClearSearch}}>
+                {{t "components.quickList.clearSearch"}}
+              </button>
+            {{/if}}
+          </:action>
+        </AppUi::EmptyState>
       {{/if}}
     {{else}}
       <ul class="quick-list__items">
