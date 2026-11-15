@@ -1,5 +1,5 @@
 import { Factory } from 'miragejs';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import * as date from '../helpers/getDate';
 import _ from 'lodash';
 
@@ -27,7 +27,7 @@ export default Factory.extend({
         return (_.random(0, 30)).toString();
     },
     context() {
-        return faker.random.arrayElement(["spent", "est"]);
+        return faker.helpers.arrayElement(["spent", "est"]);
     },
     description() {
         return faker.lorem.sentence();

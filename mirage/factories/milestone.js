@@ -1,5 +1,5 @@
 import { Factory } from 'miragejs';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import * as date from '../helpers/getDate';
 import _ from 'lodash';
 
@@ -30,10 +30,10 @@ export default Factory.extend({
         return date.startDate(30, 40);
     },
     status() {
-        return faker.random.arrayElement(["in_progress", "planned"]);
+        return faker.helpers.arrayElement(["in_progress", "planned"]);
     },
     milestoneType() {
-        return faker.random.arrayElement(["milestone", "version", "patch", "release", "sprint"]);
+        return faker.helpers.arrayElement(["milestone", "version", "patch", "release", "sprint"]);
     },
     afterCreate(milestone) {
         milestone.update({
