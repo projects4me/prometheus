@@ -85,7 +85,7 @@
     {{/if}}
   </div>
   {{#if this.showPager}}
-    <AppUi::Pager class="quick-list-pagination" @compact={{true}} @offset={{this.offset}} @limit={{this.limit}} @total={{@total}} @hasMore={{@hasNext}} @count={{this.items.length}} @disabled={{@isLoading}} @onPageChange={{this.changeOffset}} />
+    <AppUi::Pager class="quick-list-pagination" @offset={{this.offset}} @limit={{this.limit}} @total={{@total}} @hasMore={{@hasNext}} @count={{this.items.length}} @disabled={{@isLoading}} @onPageChange={{this.changeOffset}} />
   {{/if}}
   {{yield to="footer"}}
 </div>

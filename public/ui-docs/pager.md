@@ -6,7 +6,7 @@ AppUi::Pager is the range text and the previous and next buttons of a paged list
 
 Gaia sends no totals, so the pager works from the offset, the page size, the rows shown and whether more rows exist: the range reads `1-20 / 20+` while more rows exist and `21-25 / 25` on the last page. When the caller does have a total, the range reads it.
 
-Used in the list toolbar of the Agents and Workflows lists and in the QuickList footer (compact).
+Used in the list toolbar of the Agents and Workflows lists and in the QuickList footer.
 
 ## Arguments
 
@@ -18,7 +18,6 @@ Used in the list toolbar of the Agents and Workflows lists and in the QuickList 
 | @hasMore | Boolean | false | Whether rows exist after this page |
 | @total | Number | none | The record count, when the caller has one |
 | @disabled | Boolean | false | Disables both buttons, e.g. while a page loads |
-| @compact | Boolean | false | Extra-small buttons with angle icons, for narrow lists |
 | @onPageChange | Function | none | Called with the offset of the page asked for |
 
 ## Blocks

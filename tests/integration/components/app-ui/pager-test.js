@@ -65,9 +65,11 @@ module('Integration | Component | app-ui/pager', function (hooks) {
 		assert.dom('[data-test-pager-next]').isDisabled();
 	});
 
-	test('@compact draws the small buttons', async function (assert) {
-		await render(hbs`<AppUi::Pager @offset={{0}} @limit={{20}} @count={{3}} @compact={{true}} />`);
+	test('it always draws the small buttons with angle icons and the app tooltip', async function (assert) {
+		await render(hbs`<AppUi::Pager @offset={{0}} @limit={{20}} @count={{3}} />`);
 		assert.dom('[data-test-pager-next]').hasClass('btn-xs');
+		assert.dom('[data-test-pager-next]').hasAttribute('data-toggle', 'tooltip');
 		assert.dom('[data-test-pager-next] i').hasClass('fa-angle-right');
+		assert.dom('[data-test-pager-previous] i').hasClass('fa-angle-left');
 	});
 });

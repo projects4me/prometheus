@@ -9,8 +9,7 @@
     "count": { "type": "number", "required": false, "default": 0, "description": "The rows shown on this page; the range ends there on the last page" },
     "hasMore": { "type": "boolean", "required": false, "default": false, "description": "Whether rows exist after this page; Gaia sends no totals" },
     "total": { "type": "number", "required": false, "description": "The record count, when the caller has one; then the range reads it and next follows it" },
-    "disabled": { "type": "boolean", "required": false, "default": false, "description": "Disables both buttons, e.g. while the next page loads" },
-    "compact": { "type": "boolean", "required": false, "default": false, "description": "Extra-small buttons with angle icons, for narrow lists such as the QuickList footer" }
+    "disabled": { "type": "boolean", "required": false, "default": false, "description": "Disables both buttons, e.g. while the next page loads" }
   },
   "events": {
     "onPageChange": {
@@ -22,6 +21,6 @@
   "variants": [
     { "name": "without a total", "description": "Gaia lists: the range reads 20+ while more rows exist", "arguments": ["offset", "limit", "count", "hasMore", "onPageChange"] },
     { "name": "with a total", "description": "The range reads the total", "arguments": ["offset", "limit", "total", "onPageChange"] },
-    { "name": "compact", "description": "The QuickList footer", "arguments": ["compact", "disabled"] }
+    { "name": "disabled", "description": "Both buttons off while the next page loads", "arguments": ["disabled"] }
   ]
 }

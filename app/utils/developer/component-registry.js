@@ -66,7 +66,7 @@ export const ENTRIES = [
         status: 'experimental',
         summary: 'AppUi::Pager, the range text and previous/next buttons of a paged list, from an offset and whether more rows exist.',
         usedIn: [{ label: 'Agents list', route: 'app.agent' }, { label: 'Workflows list', route: 'app.workflow' }, { label: 'QuickList footer' }],
-        demo: 'developer/demos/list-page',
+        demo: 'developer/demos/pager',
         doc: 'pager.md'
     },
     {
