@@ -4,6 +4,7 @@ import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { setComponentTemplate } from '@ember/component';
 import templateOnly from '@ember/component/template-only';
+import Selection from 'prometheus/utils/state/selection';
 
 module('Integration | Component | app-ui/data-table', function (hooks) {
 	setupRenderingTest(hooks);
@@ -113,6 +114,37 @@ module('Integration | Component | app-ui/data-table', function (hooks) {
 		this.set('selectedIds', ['9', '1', '2']);
 		assert.dom('[data-quick-list-select-all]').hasAttribute('data-state', 'all');
 		assert.dom('[data-test-data-table-row="1"] input').isChecked();
+	});
+
+	test('a shared selection is kept across pages and reported', async function (assert) {
+		this.selection = new Selection();
+		this.changes = [];
+		this.onSelectionChange = (ids) => this.changes.push(ids);
+		this.set('page', this.rows);
+		await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.page}} @selectable={{true}} @selection={{this.selection}} @onSelectionChange={{this.onSelectionChange}} />`);
+		assert.dom('[data-quick-list-select-all]').hasAttribute('data-state', 'none');
+		await click('[data-test-data-table-row="1"] [data-test-data-table-select]');
+		assert.dom('[data-quick-list-select-all]').hasAttribute('data-state', 'some');
+
+		this.set('page', [
+			{ id: 3, name: 'Hector', models: 'haiku' },
+			{ id: 4, name: 'Paris', models: 'sonnet' },
+		]);
+		assert.dom('[data-test-data-table-select]:checked').doesNotExist();
+		await click('[data-quick-list-select-all]');
+		assert.dom('[data-test-data-table-row="3"] input').isChecked();
+		assert.dom('[data-test-data-table-row="4"] input').isChecked();
+
+		this.set('page', this.rows);
+		assert.dom('[data-test-data-table-row="1"] input').isChecked();
+		assert.dom('[data-test-data-table-row="2"] input').isNotChecked();
+		assert.dom('[data-quick-list-select-all]').hasAttribute('data-state', 'some');
+		assert.strictEqual(this.selection.count, 3);
+		assert.deepEqual(this.changes, [['1'], ['1', '3', '4']]);
+
+		await click('[data-test-data-table-row="1"] [data-test-data-table-select]');
+		assert.false(this.selection.has(1));
+		assert.deepEqual(this.selection.ids, ['3', '4']);
 	});
 
 	test('rows group by a key and a group collapses', async function (assert) {

@@ -9,7 +9,8 @@
     "sort": { "type": "string", "required": false, "description": "The active sort key; its column shows the order" },
     "order": { "type": "string", "required": false, "description": "asc or desc" },
     "selectable": { "type": "boolean", "required": false, "default": false, "description": "Adds a checkbox per row" },
-    "selectedIds": { "type": "array", "required": false, "description": "The ids of the selected rows, kept by the owner so the selection survives paging; makes the row checkboxes controlled" },
+    "selection": { "type": "object", "required": false, "description": "A Selection (utils/state/selection) shared with the toolbar; the row boxes and the select-all box (rows shown) toggle through it and it is kept across pages. Replaces selectedIds, onSelect and onSelectAll" },
+    "selectedIds": { "type": "array", "required": false, "description": "The ids of the selected rows, kept by the owner so the selection survives paging; makes the row checkboxes controlled (when selection is not given)" },
     "groupKey": { "type": "function", "required": false, "description": "(record) => the group key of a record; groups the rows under collapsible headings" },
     "groupLabel": { "type": "function", "required": false, "description": "(key) => the translated group label" }
   },
@@ -19,7 +20,7 @@
         { "name": "rows", "type": "array", "description": "The rows shown" },
         { "name": "checked", "type": "boolean", "description": "Whether they should all be selected" }
       ],
-      "description": "The select-all box was toggled (with selectable)"
+      "description": "The select-all box was toggled (with selectable, without selection)"
     },
     "onSort": {
       "payload": [{ "name": "sortKey", "type": "string", "description": "The sort key of the column clicked" }],
@@ -30,7 +31,11 @@
         { "name": "id", "type": "string", "description": "The id of the row's record" },
         { "name": "checked", "type": "boolean", "description": "Whether the row is now selected" }
       ],
-      "description": "A row checkbox changed (with selectable)"
+      "description": "A row checkbox changed (with selectable, without selection)"
+    },
+    "onSelectionChange": {
+      "payload": [{ "name": "ids", "type": "array", "description": "The selected ids, as strings, across pages" }],
+      "description": "A row box or the select-all box changed the shared selection (with selectable and selection)"
     }
   },
   "blocks": {
@@ -77,6 +82,7 @@
   },
   "variants": [
     { "name": "plain", "description": "Record fields by column key", "arguments": ["columns", "rows"] },
-    { "name": "list page", "description": "Sorting, selection, hand-built cells and row actions", "arguments": ["columns", "rows", "sort", "order", "selectable", "onSort", "onSelect"], "blocks": ["cell", "rowActions", "empty"] }
+    { "name": "list page", "description": "Sorting, selection, hand-built cells and row actions", "arguments": ["columns", "rows", "sort", "order", "selectable", "onSort", "onSelect"], "blocks": ["cell", "rowActions", "empty"] },
+    { "name": "shared selection", "description": "Selection kept across pages and shared with the toolbar", "arguments": ["columns", "rows", "selectable", "selection", "onSelectionChange"] }
   ]
 }
