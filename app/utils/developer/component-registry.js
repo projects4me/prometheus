@@ -10,7 +10,7 @@
  * @type {Array<string>}
  * @public
  */
-export const GROUPS = ['Lists', 'Search', 'Forms', 'Overlays', 'Menus'];
+export const GROUPS = ['Lists', 'Search', 'Forms', 'Overlays', 'Menus', 'Navigation'];
 
 /**
  * The registered library entries, in display order. Each entry is
@@ -103,6 +103,16 @@ export const ENTRIES = [
         usedIn: [{ label: 'ezSearch saved searches', route: 'app.projects' }],
         demo: 'developer/demos/dropdown',
         doc: 'dropdown.md'
+    },
+    {
+        name: 'tabs',
+        label: 'Tabs',
+        group: 'Navigation',
+        status: 'stable',
+        summary: 'AdminLTE nav-tabs with their panes; the active tab is an argument and a change is an event.',
+        usedIn: [{ label: 'Component Library docs', route: 'app.developer.components' }],
+        demo: 'developer/demos/tabs',
+        doc: 'tabs.md'
     }
 ];
 
