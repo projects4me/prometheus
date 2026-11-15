@@ -1,0 +1,25 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo as |log|>
+    <div data-test-demo-pager>
+      <AppUi::Pager
+        @offset={{this.offset}}
+        @limit={{this.limit}}
+        @count={{this.count}}
+        @hasMore={{this.hasMore}}
+        @total={{this.total}}
+        @disabled={{eq this.state "disabled"}}
+        @onPageChange={{fn this.changePage log}}
+      />
+    </div>
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <label>State</label>
+      <Developer::StateSwitch @value={{this.state}} @states={{this.states}} @onChange={{this.setState}} />
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc={{@entry.doc}} />
+  </:docs>
+</Developer::Entry>
