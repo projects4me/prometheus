@@ -106,6 +106,10 @@ from `services/breadcrumb.js`.
 </div>
 ```
 
+**New boxes use `AppUi::Box`** (`@variant`, blocks `<:header>`, `<:tools>`, `<:body>`, `<:footer>`; see
+`public/ui-docs/app-ui-box.md`), which renders the markup above. The existing boxes are not migrated. New empty
+states use `AppUi::EmptyState` (`@icon`, `@message`, `<:action>`).
+
 - Every box has a **4px gradient bar on top** (`modules/document.scss`, `gradient-border-top`). The variant
   picks the start colour; every gradient ends in plum `#640c44`.
 - Header: 10px padding, 1px `#f4f4f4` bottom border. Title: 18px/500, `#444`.

@@ -1,0 +1,11 @@
+<div class="app-empty-state" data-test-empty-state ...attributes>
+  {{#if @icon}}
+    <i class="fa {{@icon}}" aria-hidden="true" data-test-empty-state-icon></i>
+  {{/if}}
+  <span class="app-empty-state-message" data-test-empty-state-message>{{@message}}</span>
+  {{#if (has-block "action")}}
+    <div class="app-empty-state-action" data-test-empty-state-action>
+      {{yield to="action"}}
+    </div>
+  {{/if}}
+</div>
