@@ -1,0 +1,28 @@
+{
+  "name": "Tabs",
+  "component": "app-ui/tabs",
+  "doc": "tabs.md",
+  "description": "AdminLTE nav-tabs with their panes. The active tab is an argument and a change is an event; the tabs and the panes are yielded contextual components.",
+  "arguments": {
+    "active": { "type": "string", "required": true, "description": "The name of the active tab" }
+  },
+  "events": {
+    "onChange": {
+      "payload": [{ "name": "name", "type": "string", "description": "The name of the tab that was clicked" }],
+      "description": "A tab was clicked; the caller sets active"
+    }
+  },
+  "blocks": {
+    "tabs": {
+      "description": "The tab headers, inside the nav-tabs list",
+      "yields": [{ "name": "t", "type": "object", "description": "Holds tab and pane, the contextual components curried with the active tab" }]
+    },
+    "panes": {
+      "description": "The panes, inside the tab-content container",
+      "yields": [{ "name": "t", "type": "object", "description": "Holds tab and pane, the contextual components curried with the active tab" }]
+    }
+  },
+  "variants": [
+    { "name": "basic", "description": "A tab and a pane per name", "arguments": ["active", "onChange"], "blocks": ["tabs", "panes"] }
+  ]
+}

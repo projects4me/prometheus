@@ -11,18 +11,20 @@
     {{else if this.failed}}
       <p class="text-danger" data-docs-error>{{t "components.developerDocs.error"}}</p>
     {{else}}
-      <ul class="nav nav-tabs">
-        {{#each this.sections as |section|}}
-          <li class={{if (eq section this.active) "active"}}>
-            <a href="#" data-docs-tab={{section.title}} {{on "click" (fn this.select section)}}>{{section.title}}</a>
-          </li>
-        {{/each}}
-      </ul>
-      <div class="tab-content" data-docs-content>
-        {{#if this.active}}
-          <div {{render-markdown this.active.body}}></div>
-        {{/if}}
-      </div>
+      <AppUi::Tabs @active={{this.active.title}} @onChange={{this.select}}>
+        <:tabs as |t|>
+          {{#each this.sections as |section|}}
+            <t.tab @name={{section.title}} data-docs-tab={{section.title}}>{{section.title}}</t.tab>
+          {{/each}}
+        </:tabs>
+        <:panes as |t|>
+          {{#if this.active}}
+            <t.pane @name={{this.active.title}} data-docs-content data-test-docs-pane>
+              <div {{render-markdown this.active.body}}></div>
+            </t.pane>
+          {{/if}}
+        </:panes>
+      </AppUi::Tabs>
     {{/if}}
   </div>
 </div>

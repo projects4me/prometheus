@@ -1,0 +1,3 @@
+<li class={{if this.isActive "active"}} role="presentation">
+  <a href="#" role="tab" aria-selected={{if this.isActive "true" "false"}} {{on "click" this.select}} ...attributes>{{yield}}</a>
+</li>

@@ -116,12 +116,10 @@ export default class DeveloperDocsComponent extends Component {
      * Opens the tab of a section
      *
      * @method select
-     * @param {Object} section
-     * @param {Event} event
+     * @param {String} title The title of the section to open
      */
     @action
-    select(section, event) {
-        event?.preventDefault();
-        this.active = section;
+    select(title) {
+        this.active = this.sections.find((section) => section.title === title) ?? this.active;
     }
 }

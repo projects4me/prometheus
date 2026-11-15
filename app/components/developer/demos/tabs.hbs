@@ -1,0 +1,23 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo as |log|>
+    <AppUi::Tabs @active={{this.active}} @onChange={{fn this.change log}}>
+      <:tabs as |t|>
+        {{#each this.names as |name|}}
+          <t.tab @name={{name}} data-test-demo-tab={{name}}>{{name}}</t.tab>
+        {{/each}}
+      </:tabs>
+      <:panes as |t|>
+        {{#each this.names as |name|}}
+          <t.pane @name={{name}} data-test-demo-pane={{name}}>Content of {{name}}</t.pane>
+        {{/each}}
+      </:panes>
+    </AppUi::Tabs>
+  </:demo>
+  <:controls>
+    <p class="text-muted">Click a tab: the demo sets the active name from the onChange event.</p>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="tabs.md" />
+  </:docs>
+</Developer::Entry>
