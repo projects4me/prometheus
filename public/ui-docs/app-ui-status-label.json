@@ -1,0 +1,11 @@
+{
+  "name": "AppUi::StatusLabel",
+  "component": "app-ui/status-label",
+  "doc": "app-ui-status-label.md",
+  "description": "An issue status as a badge: the translated name painted with the colour of the status.",
+  "arguments": {
+    "status": { "type": "string", "required": true, "description": "The name of the issue status" }
+  },
+  "events": {},
+  "blocks": {}
+}
