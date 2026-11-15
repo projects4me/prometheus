@@ -258,6 +258,15 @@ export default class InitializeSortable extends Modifier {
     oldLane = null;
 
     /**
+     * The number of milestones of the latest run.
+     *
+     * @property milestoneCount
+     * @type Number
+     * @private
+     */
+    milestoneCount = 0;
+
+    /**
      * This property is used to keep in track the item dragged by user.
      *
      * @property draggedItem
@@ -368,7 +377,11 @@ export default class InitializeSortable extends Modifier {
 
         // Lanes re-rendered by a new milestone or a search reload (paramsQuery) need Sortable again;
         // lanes that already have it are skipped by _attachSortableToLanes.
-        if(this.named.newMilestoneAdded || this.named.paramsQuery !== undefined) {
+        // Reading the milestones length makes the modifier re-run for every added or removed milestone,
+        // not only the first one (newMilestoneAdded stays true after it flips once).
+        let milestoneCount = this.named.milestones ? this.named.milestones.length : 0;
+        if(milestoneCount !== this.milestoneCount || this.named.newMilestoneAdded || this.named.paramsQuery !== undefined) {
+            this.milestoneCount = milestoneCount;
             this._attachSortableToLanes();
         }
         this._cleanupMilestoneTabSortables();
