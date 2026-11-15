@@ -3,7 +3,9 @@
   "component": "app-ui/list-toolbar",
   "doc": "list-toolbar.md",
   "description": "The top of a list page box: the search and the page actions in the box header, the select-all and bulk actions on the left of the controls row and the pager on its right. It only lays out its blocks.",
-  "arguments": {},
+  "arguments": {
+    "position": { "type": "string", "description": "top (default) draws the header and the controls row; bottom draws only the controls row below the list", "required": false, "default": "top" }
+  },
   "events": {},
   "blocks": {
     "search": { "description": "The search in the box header: EzSearch or a saved-search picker", "yields": [] },
@@ -13,6 +15,7 @@
   },
   "variants": [
     { "name": "list page", "description": "Search, create button, bulk actions and pager", "blocks": ["search", "actions", "selection", "pager"] },
-    { "name": "controls only", "description": "No header; the selection and the pager", "blocks": ["selection", "pager"] }
+    { "name": "controls only", "description": "No header; the selection and the pager", "blocks": ["selection", "pager"] },
+    { "name": "bottom", "description": "position bottom: the selection and the pager below the list", "blocks": ["selection", "pager"] }
   ]
 }

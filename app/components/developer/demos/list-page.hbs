@@ -2,13 +2,20 @@
 <Developer::Entry @onReset={{this.reset}}>
   <:demo as |log|>
     <div class="box box-primary list-view" data-test-demo-list-page>
+      {{#if this.showTop}}
       <AppUi::ListToolbar>
+        <:search>
+          <EzSearch @schema={{this.schema}} @query="" @savedSearches={{this.savedSearches}} @onApply={{fn this.applyQuery log}} @aclContext="agent.read" />
+        </:search>
         <:actions>
           <button type="button" class="btn btn-default" data-test-demo-list-create {{on "click" (fn this.create log)}}>
             <i class="fa fa-plus" aria-hidden="true"></i> New agent
           </button>
         </:actions>
         <:selection>
+          <span class="btn btn-default btn-sm checkbox-toggle" title="Select all">
+            <input type="checkbox" aria-label="Select all" data-select="all" data-test-demo-list-select-all {{on "input" this.selectAll}} />
+          </span>
           <div class="btn-group">
             <button type="button" class="btn btn-default btn-sm" title="Delete" aria-label="Delete" data-test-demo-list-delete {{on "click" (fn this.bulk log)}}><i class="fa fa-trash-o"></i></button>
           </div>
@@ -18,6 +25,7 @@
           <AppUi::Pager @offset={{this.offset}} @limit={{this.limit}} @count={{this.rows.length}} @hasMore={{this.hasMore}} @onPageChange={{fn this.changePage log}} />
         </:pager>
       </AppUi::ListToolbar>
+      {{/if}}
       <div class="box-body no-padding">
         <AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @sort={{this.sort}} @order={{this.order}} @selectable={{true}} @onSort={{fn this.changeSort log}} @onSelect={{fn this.select log}}>
           <:cell as |record column|>
@@ -35,9 +43,33 @@
           </:empty>
         </AppUi::DataTable>
       </div>
+      {{#if this.showBottom}}
+      <AppUi::ListToolbar @position="bottom">
+        <:selection>
+          <span class="btn btn-default btn-sm checkbox-toggle" title="Select all">
+            <input type="checkbox" aria-label="Select all" data-select="all" data-test-demo-list-select-all-bottom {{on "input" this.selectAll}} />
+          </span>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm" title="Delete" aria-label="Delete" data-test-demo-list-delete-bottom {{on "click" (fn this.bulk log)}}><i class="fa fa-trash-o"></i></button>
+          </div>
+        </:selection>
+        <:pager>
+          <span class="list-view-count">(Selected : {{this.selected.length}})</span>
+          <AppUi::Pager @offset={{this.offset}} @limit={{this.limit}} @count={{this.rows.length}} @hasMore={{this.hasMore}} @onPageChange={{fn this.changePage log}} />
+        </:pager>
+      </AppUi::ListToolbar>
+      {{/if}}
     </div>
   </:demo>
   <:controls>
+    <div class="form-group">
+      <label for="demo-list-position">Toolbar position</label>
+      <select id="demo-list-position" class="form-control" data-control-position {{on "change" this.setPosition}}>
+        {{#each this.positions as |position|}}
+          <option value={{position}} selected={{eq position this.position}}>{{position}}</option>
+        {{/each}}
+      </select>
+    </div>
     <div class="checkbox">
       <label><input type="checkbox" data-control-empty checked={{this.empty}} {{on "change" this.toggleEmpty}}> Empty</label>
     </div>
