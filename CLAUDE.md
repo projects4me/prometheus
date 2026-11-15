@@ -25,6 +25,7 @@
 - Reuse Bootstrap/AdminLTE classes. Add a new class only when nothing existing works, scoped under the module class in `app/styles/modules/<module>.scss`.
 - Colours only from `app/styles/variables.scss` (crimson `$primaryColor`, plum `$highlightColor`, link blue `$secondaryColor`). No new colours, fonts (Source Sans Pro only), shadows, gradients or UI/icon libraries (Font Awesome 4 only).
 - Follow the page patterns: list = one full-width `box-primary` with search toolbar, table and pagination; detail = `col-md-8` record box + `col-md-4` side boxes; create/edit = `col-md-8` form box + `col-md-4` side boxes, Save/Cancel below the boxes.
+- **Composing components:** follow rules R1–R7 in `docs/ui/design-system.md` §13 (rule of three, blocks before args, data in/events out, change only with a benefit, `data-test-*` selectors only, ship docs + manifest + tests, `app-ui/` vs domain folders).
 - Before calling a UI change done, open it in the running app (`https://app.local-projects4.me`) next to an existing screen of the same type and compare.
 
 ## Rules
