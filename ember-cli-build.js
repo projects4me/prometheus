@@ -8,12 +8,16 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var sass = require('sass');
 var MergeTrees = require('broccoli-merge-trees');
 var BundledTranslations = require('./lib/bundled-translations');
+var ComponentContractSources = require('./lib/component-contract-sources');
 
 module.exports = function (defaults) {
     let app = new EmberApp(defaults, {
         // translations/*.json become the module prometheus/utils/intl/bundled-translations
         trees: {
             app: new MergeTrees(['app', new BundledTranslations('translations')]),
+            // public/ui-docs/*.json manifests + the component sources they describe become the test module
+            // prometheus/tests/helpers/component-contract-sources (tests/unit/component-contracts-test.js)
+            tests: new MergeTrees(['tests', new ComponentContractSources('public/ui-docs', 'app/components')]),
         },
         // Add options here
         // ember-concurrency is a v2 addon: it needs the async-arrow task transform to compile task(async () => {})
