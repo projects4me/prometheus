@@ -2,10 +2,10 @@
   "name": "AppUi::Avatar",
   "component": "app-ui/avatar",
   "doc": "app-ui-avatar.md",
-  "description": "The round picture of a user (person or agent).",
+  "description": "The round picture of a user (person or agent) in the standard sizes, with a default image for a person and a robot marker for an agent.",
   "arguments": {
     "user": { "type": "object", "required": true, "description": "The user record" },
-    "size": { "type": "string", "required": false, "description": "sm, xs or none" }
+    "size": { "type": "string", "required": false, "description": "xs (20px), s (30px, alias sm), m (40px, default) or l (96px); unknown values give m" }
   },
   "events": {},
   "blocks": {},
@@ -15,7 +15,8 @@
       "fields": {
         "id": { "type": "string|number", "required": false, "description": "The user image address and agent lookup" },
         "name": { "type": "string", "required": false, "description": "The alternative text and the source of the initials" },
-        "type": { "type": "string", "required": false, "description": "agent for an agent" }
+        "type": { "type": "string", "required": false, "description": "agent for an agent" },
+        "profilePicture": { "type": "string", "required": false, "description": "The agent picture; without one the agent shows the robot icon" }
       }
     }
   }

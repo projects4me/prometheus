@@ -1,1 +1,10 @@
-<Agent::UserAvatar @class={{this.class}} @userId={{@user.id}} @type={{@user.type}} @name={{@user.name}} data-test-avatar ...attributes />
+<span class="app-ui-avatar app-ui-avatar-{{this.size}} {{if this.isAgent "app-ui-avatar-agent"}}" title={{this.title}} data-test-avatar data-size={{this.size}} ...attributes>
+  {{#if this.isAgent}}
+    <Agent::Avatar @user={{@user}} data-user-agent-avatar />
+    {{#if this.hasPicture}}
+      <span class="app-ui-avatar-marker" data-test-avatar-marker><i class="fa fa-android" aria-hidden="true"></i></span>
+    {{/if}}
+  {{else}}
+    <img class="img-circle" src={{this.src}} alt={{this.title}} data-test-avatar-image data-image-url={{this.imageUrl}} {{on "error" this.onError}}>
+  {{/if}}
+</span>

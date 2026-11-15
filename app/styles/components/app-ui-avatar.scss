@@ -1,0 +1,67 @@
+/*
+  AppUi::Avatar: the round picture of a user in the standard sizes xs 20px, s 30px, m 40px and l 96px.
+  An agent shows a small robot marker at the bottom right from size s up.
+*/
+.app-ui-avatar {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  vertical-align: middle;
+
+  > img,
+  > .agent-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  > .agent-avatar {
+    border: 0;
+    font-size: 20px;
+    background: $highlightColor;
+    color: #fff;
+  }
+
+  .app-ui-avatar-marker {
+    display: none;
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    align-items: center;
+    justify-content: center;
+    width: 40%;
+    height: 40%;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    background: $highlightColor;
+    color: #fff;
+    font-size: 10px;
+    line-height: 1;
+  }
+
+  &.app-ui-avatar-xs {
+    width: 20px;
+    height: 20px;
+    > .agent-avatar { font-size: 11px; }
+  }
+
+  &.app-ui-avatar-s {
+    width: 30px;
+    height: 30px;
+    > .agent-avatar { font-size: 16px; }
+    .app-ui-avatar-marker { display: inline-flex; font-size: 8px; }
+  }
+
+  &.app-ui-avatar-m {
+    .app-ui-avatar-marker { display: inline-flex; }
+  }
+
+  &.app-ui-avatar-l {
+    width: 96px;
+    height: 96px;
+    > .agent-avatar { font-size: 48px; }
+    .app-ui-avatar-marker { display: inline-flex; font-size: 20px; right: 2px; bottom: 2px; }
+  }
+}
