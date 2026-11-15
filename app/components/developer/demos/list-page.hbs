@@ -1,7 +1,8 @@
 <Developer::EntryHeader @entry={{@entry}} />
 <Developer::Entry @onReset={{this.reset}}>
   <:demo as |log|>
-    <div class="box box-primary list-view" data-test-demo-list-page>
+    <AppUi::Box @listView={{true}} @noPadding={{true}} data-test-demo-list-page>
+      <:top>
       {{#if this.showTop}}
       <AppUi::ListToolbar>
         <:search>
@@ -26,7 +27,8 @@
         </:pager>
       </AppUi::ListToolbar>
       {{/if}}
-      <div class="box-body no-padding">
+      </:top>
+      <:body>
         <AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @sort={{this.sort}} @order={{this.order}} @selectable={{true}} @onSort={{fn this.changeSort log}} @onSelect={{fn this.select log}}>
           <:cell as |record column|>
             {{#if (eq column.key "status")}}
@@ -42,7 +44,8 @@
             <Exceptions::NothingFound @description="No agents found." />
           </:empty>
         </AppUi::DataTable>
-      </div>
+      </:body>
+      <:bottom>
       {{#if this.showBottom}}
       <AppUi::ListToolbar @position="bottom">
         <:selection>
@@ -59,7 +62,8 @@
         </:pager>
       </AppUi::ListToolbar>
       {{/if}}
-    </div>
+      </:bottom>
+    </AppUi::Box>
   </:demo>
   <:controls>
     <div class="form-group">
