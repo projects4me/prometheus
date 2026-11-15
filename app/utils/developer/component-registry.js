@@ -10,7 +10,7 @@
  * @type {Array<string>}
  * @public
  */
-export const GROUPS = ['Lists', 'Search', 'Forms', 'Overlays', 'Menus', 'Navigation'];
+export const GROUPS = ['Lists', 'Search', 'Forms', 'Overlays', 'Menus', 'Navigation', 'Display'];
 
 /**
  * The registered library entries, in display order. Each entry is
@@ -143,6 +143,38 @@ export const ENTRIES = [
         usedIn: [{ label: 'Component Library docs', route: 'app.developer.components' }],
         demo: 'developer/demos/tabs',
         doc: 'tabs.md'
+    },
+    {
+        name: 'box',
+        label: 'Box',
+        group: 'Display',
+        status: 'stable',
+        summary: 'AppUi::Box, the AdminLTE box with square edges: header, tools, body and footer blocks in six variants.',
+        usedIn: [],
+        demo: 'developer/demos/box',
+        doc: 'app-ui-box.md',
+        variants: ['primary', 'default', 'info', 'success', 'warning', 'danger']
+    },
+    {
+        name: 'avatar',
+        label: 'Avatar',
+        group: 'Display',
+        status: 'stable',
+        summary: 'AppUi::Avatar, the round picture of a user or agent, or their initials when there is no picture.',
+        usedIn: [],
+        demo: 'developer/demos/avatar',
+        doc: 'app-ui-avatar.md',
+        variants: ['sm', 'md', 'lg']
+    },
+    {
+        name: 'status-label',
+        label: 'Status',
+        group: 'Display',
+        status: 'stable',
+        summary: 'AppUi::StatusLabel, an issue status as a badge: the translated name in the colour of the status.',
+        usedIn: [],
+        demo: 'developer/demos/status-label',
+        doc: 'app-ui-status-label.md'
     }
 ];
 
