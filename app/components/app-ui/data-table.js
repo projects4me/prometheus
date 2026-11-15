@@ -21,6 +21,11 @@ import { groupItems } from 'prometheus/utils/quick-list/group-items';
  *
  * The row checkboxes carry `data-select` with the record id, so a page can find them by record.
  *
+ * With `@selection` (a `Selection` from `utils/state/selection`) the row boxes and the select-all box (the rows
+ * shown) read and change that selection, which the page shares with its toolbar and keeps across pages;
+ * `@onSelectionChange` is then called with the selected ids. Without it, `@selectedIds`, `@onSelect` and
+ * `@onSelectAll` work as before.
+ *
  * @class AppUiDataTableComponent
  * @namespace Prometheus.Components
  * @extends Glimmer.Component
@@ -37,12 +42,22 @@ export default class AppUiDataTableComponent extends Component {
 	@tracked collapsed = [];
 	@tracked menuOpenId = null;
 
+	/**
+	 * The shared selection model, when the caller gives one.
+	 *
+	 * @property selection
+	 * @type Selection
+	 */
+	get selection() {
+		return this.args.selection || null;
+	}
+
 	get controlled() {
-		return Array.isArray(this.args.selectedIds);
+		return !!this.selection || Array.isArray(this.args.selectedIds);
 	}
 
 	get showSelectAll() {
-		return this.args.selectable && typeof this.args.onSelectAll === 'function';
+		return this.args.selectable && (!!this.selection || typeof this.args.onSelectAll === 'function');
 	}
 
 	/**
@@ -52,6 +67,9 @@ export default class AppUiDataTableComponent extends Component {
 	 * @type String
 	 */
 	get selectionState() {
+		if (this.selection) {
+			return this.selection.stateFor(this.rows);
+		}
 		let ids = (this.args.selectedIds || []).map(String);
 		let count = this.rows.filter((r) => ids.includes(String(r.id))).length;
 		return count === 0 ? 'none' : count === this.rows.length ? 'all' : 'some';
@@ -73,7 +91,12 @@ export default class AppUiDataTableComponent extends Component {
 		}));
 	}
 
-	isSelected = (record) => this.controlled && this.args.selectedIds.map(String).includes(String(record.id));
+	isSelected = (record) => {
+		if (this.selection) {
+			return this.selection.has(record.id);
+		}
+		return this.controlled && this.args.selectedIds.map(String).includes(String(record.id));
+	};
 
 	/**
 	 * The column descriptors with their sort key and sort icon.
@@ -117,7 +140,13 @@ export default class AppUiDataTableComponent extends Component {
 
 	@action
 	toggleAll() {
-		this.args.onSelectAll?.(this.rows, this.selectionState !== 'all');
+		let checked = this.selectionState !== 'all';
+		if (this.selection) {
+			this.selection.set(this.rows.map((r) => r.id), checked);
+			this.args.onSelectionChange?.(this.selection.ids);
+			return;
+		}
+		this.args.onSelectAll?.(this.rows, checked);
 	}
 
 	@action
@@ -131,7 +160,7 @@ export default class AppUiDataTableComponent extends Component {
 	}
 
 	/**
-	 * Reports that a row was checked or unchecked.
+	 * Reports that a row was checked or unchecked; with `@selection`, changes it and reports the ids.
 	 *
 	 * @method select
 	 * @param {Object} record the record of the row
@@ -139,6 +168,11 @@ export default class AppUiDataTableComponent extends Component {
 	 */
 	@action
 	select(record, event) {
+		if (this.selection) {
+			this.selection.set([record.id], event.target.checked);
+			this.args.onSelectionChange?.(this.selection.ids);
+			return;
+		}
 		this.args.onSelect?.(String(record.id), event.target.checked);
 	}
 }

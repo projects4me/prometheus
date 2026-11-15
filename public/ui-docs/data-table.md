@@ -17,7 +17,9 @@ Used in the Agents and Workflows lists. AppUi::Table (the older table with loadi
 | @sort | String | none | The active sort key; its column shows asc or desc |
 | @order | String | none | asc or desc |
 | @selectable | Boolean | false | Adds a checkbox per row |
-| @selectedIds | Array | | Ids of the selected rows, kept by the owner; makes the checkboxes controlled |
+| @selection | Selection | | The shared selection model (`utils/state/selection`); rows and the select-all box (rows shown) toggle through it, kept across pages. Replaces @selectedIds, @onSelect and @onSelectAll |
+| @onSelectionChange | Function | | With @selection: called with the selected ids after a change |
+| @selectedIds | Array | | Ids of the selected rows, kept by the owner; makes the checkboxes controlled (when @selection is not given) |
 | @onSelectAll | Function | | Select-all box toggled; called with (rows, checked) |
 | @groupKey | Function | | (record) => group key; groups rows under collapsible headings |
 | @groupLabel | Function | | (key) => translated group label |
@@ -48,12 +50,15 @@ Used in the Agents and Workflows lists. AppUi::Table (the older table with loadi
 | Callback | Payload |
 |---|---|
 | onSort | The sort key of the column clicked |
-| onSelect | The row's id and whether it is now checked |
+| onSelect | The row's id and whether it is now checked (without @selection) |
+| onSelectAll | The rows shown and whether they should all be selected (without @selection) |
+| onSelectionChange | The selected ids, across pages (with @selection) |
 
 ## Do and Avoid
 
 ### Do
 
+- Share one `Selection` owned by the controller between the table and the toolbar; new list pages use @selection rather than @selectedIds.
 - Build the descriptors in the controller with translated labels.
 - Hand the select-all checkbox to the selection block of AppUi::ListToolbar; the row checkboxes carry `data-select`, which the list controller's select-all reads.
 - Find rows and cells in tests by `data-test-data-table-row` (the record id) and `data-test-data-table-cell` (the column key).
