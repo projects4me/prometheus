@@ -1,0 +1,15 @@
+{
+  "name": "AppUi::EmptyState",
+  "component": "app-ui/empty-state",
+  "doc": "app-ui-empty-state.md",
+  "description": "The centred grey message shown when a box or list has nothing to show, with an optional icon and action.",
+  "arguments": {
+    "icon": { "type": "string", "required": false, "description": "A Font Awesome class such as fa-info-circle" },
+    "message": { "type": "string", "required": true, "description": "The text, already translated" }
+  },
+  "events": {},
+  "blocks": {
+    "action": { "description": "A link or button under the message", "yields": [] }
+  },
+  "data": {}
+}

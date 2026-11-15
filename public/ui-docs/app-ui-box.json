@@ -1,0 +1,17 @@
+{
+  "name": "AppUi::Box",
+  "component": "app-ui/box",
+  "doc": "app-ui-box.md",
+  "description": "An AdminLTE box with square edges: header, tools, body and footer blocks.",
+  "arguments": {
+    "variant": { "type": "string", "required": false, "default": "primary", "description": "primary, default, info, success, warning or danger" }
+  },
+  "events": {},
+  "blocks": {
+    "header": { "description": "The header content, usually a box-title", "yields": [] },
+    "tools": { "description": "Icon buttons on the right of the header", "yields": [] },
+    "body": { "description": "The box body", "yields": [] },
+    "footer": { "description": "The box footer", "yields": [] }
+  },
+  "data": {}
+}

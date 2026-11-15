@@ -1,0 +1,22 @@
+<div class="box box-{{this.variant}}" data-test-box ...attributes>
+  {{#if (or (has-block "header") (has-block "tools"))}}
+    <div class="box-header with-border" data-test-box-header>
+      {{yield to="header"}}
+      {{#if (has-block "tools")}}
+        <div class="box-tools pull-right" data-test-box-tools>
+          {{yield to="tools"}}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
+  {{#if (has-block "body")}}
+    <div class="box-body" data-test-box-body>
+      {{yield to="body"}}
+    </div>
+  {{/if}}
+  {{#if (has-block "footer")}}
+    <div class="box-footer" data-test-box-footer>
+      {{yield to="footer"}}
+    </div>
+  {{/if}}
+</div>
