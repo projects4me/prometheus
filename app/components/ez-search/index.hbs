@@ -1,17 +1,22 @@
-<div class="ez-search" data-ez-search {{did-update this.onActiveChange @activeSavedSearchId @savedSearches}} ...attributes>
+<div class="ez-search {{if this.isNarrow 'ez-search--narrow'}}" data-ez-search {{observe-width this.onWidth}} {{did-update this.onActiveChange @activeSavedSearchId @savedSearches}} ...attributes>
   <div class="search ez-search-toolbar">
     <div class="ez-search-saved" data-ez-saved>
       <AppUi::Dropdown @isPrimary={{true}}>
         <:button>
-          <i class="fa fa-bookmark visible-xs-inline"></i>
-          <span class="sr-only visible-xs-inline">{{t "views.app.issue.list.savedsearch.label"}}</span>
-          {{#if this.pickedSearch}}
-            <span class="hidden-xs ez-search-saved-name" title={{this.pickedSearch.name}} data-ez-saved-name>{{this.pickedSearch.name}}</span>
-            {{#if this.isEdited}}
-              <span class="hidden-xs ez-search-saved-edited" data-ez-saved-edited>&middot; {{t "components.ezSearch.savedSearch.edited"}}</span>
-            {{/if}}
+          {{#if this.isNarrow}}
+            <i class="fa fa-bookmark" title={{this.savedTitle}} data-ez-saved-icon></i>
+            <span class="sr-only">{{this.savedTitle}}</span>
           {{else}}
-            <span class="hidden-xs">{{t "views.app.issue.list.savedsearch.label"}}</span>
+            <i class="fa fa-bookmark visible-xs-inline"></i>
+            <span class="sr-only visible-xs-inline">{{t "views.app.issue.list.savedsearch.label"}}</span>
+            {{#if this.pickedSearch}}
+              <span class="hidden-xs ez-search-saved-name" title={{this.pickedSearch.name}} data-ez-saved-name>{{this.pickedSearch.name}}</span>
+              {{#if this.isEdited}}
+                <span class="hidden-xs ez-search-saved-edited" data-ez-saved-edited>&middot; {{t "components.ezSearch.savedSearch.edited"}}</span>
+              {{/if}}
+            {{else}}
+              <span class="hidden-xs">{{t "views.app.issue.list.savedsearch.label"}}</span>
+            {{/if}}
           {{/if}}
         </:button>
         <:content>
@@ -57,12 +62,15 @@
       type="button"
       class="btn btn-default ez-search-builder {{if this.builderOpen 'active'}}"
       title={{t "components.ezSearch.builderToggle"}}
+      aria-label={{t "components.ezSearch.builderToggle"}}
       aria-pressed={{if this.builderOpen "true" "false"}}
       data-ez-builder-toggle
       {{on "click" this.toggleBuilder}}
     >
       <i class="fa fa-sliders"></i>
-      <span class="hidden-xs">{{t "components.ezSearch.builderToggle"}}</span>
+      {{#unless this.isNarrow}}
+        <span class="hidden-xs">{{t "components.ezSearch.builderToggle"}}</span>
+      {{/unless}}
     </button>
 
     <div class="ez-search-actions">
@@ -72,9 +80,10 @@
         @aclContext={{@aclContext}}
         disabled={{this.hasErrors}}
         title={{t "components.ezSearch.searchBar.searchTitle"}}
+        aria-label={{t "global.form.search"}}
         data-ez-search-apply
-      >{{t "global.form.search"}}</AppUi::Button>
-      <AppUi::Button class="btn btn-default" @onClick={{this.clear}} data-ez-search-clear>{{t "global.form.clear"}}</AppUi::Button>
+      >{{#if this.isNarrow}}<i class="fa fa-search"></i>{{else}}{{t "global.form.search"}}{{/if}}</AppUi::Button>
+      <AppUi::Button class="btn btn-default" @onClick={{this.clear}} title={{t "global.form.clear"}} aria-label={{t "global.form.clear"}} data-ez-search-clear>{{#if this.isNarrow}}<i class="fa fa-times"></i>{{else}}{{t "global.form.clear"}}{{/if}}</AppUi::Button>
     </div>
   </div>
 

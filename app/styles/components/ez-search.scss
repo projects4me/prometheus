@@ -106,3 +106,22 @@
         white-space: nowrap;
     }
 }
+
+// Narrow box (set by the component from its own width): the buttons show only icons, the input keeps the room.
+.ez-search.ez-search--narrow .ez-search-toolbar {
+    gap: 4px;
+
+    .ez-search-field {
+        flex: 1 1 160px;
+        min-width: 160px;
+    }
+
+    .ez-search-actions {
+        gap: 4px;
+    }
+
+    .btn {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
