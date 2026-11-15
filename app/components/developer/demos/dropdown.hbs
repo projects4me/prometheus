@@ -2,7 +2,7 @@
 <Developer::Entry @onReset={{this.reset}}>
   <:demo as |log|>
     <div class={{this.boxClass}} data-demo-dropdown {{did-insert (fn this.watch log)}}>
-      <AppUi::Dropdown>
+      <AppUi::Dropdown @align={{this.align}}>
         <:button>
           <span data-demo-dropdown-trigger>Saved searches</span>
         </:button>
@@ -27,6 +27,14 @@
       <div class="btn-group" data-control-placement>
         {{#each this.placements as |placement|}}
           <button type="button" class="btn btn-default {{if (eq placement this.placement) 'active'}}" data-placement={{placement}} {{on "click" (fn this.setPlacement placement)}}>{{placement}} edge</button>
+        {{/each}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Align</label>
+      <div class="btn-group" data-control-align>
+        {{#each this.aligns as |align|}}
+          <button type="button" class="btn btn-default {{if (eq align this.align) 'active'}}" data-align={{align}} {{on "click" (fn this.setAlign align)}}>{{align}}</button>
         {{/each}}
       </div>
     </div>

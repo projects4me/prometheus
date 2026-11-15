@@ -10,7 +10,7 @@ const LONG_LABEL =
 	'A saved search with a very long name that has to wrap instead of running off the screen';
 
 /**
- * The AppUi::Dropdown demo of the Component Library. It holds the demo's controls (placement, scoped
+ * The AppUi::Dropdown demo of the Component Library. It holds the demo's controls (placement, align, scoped
  * alignment, item count) and logs open, close and item-chosen events to the entry's event log.
  *
  * @class DeveloperDemosDropdownComponent
@@ -19,11 +19,13 @@ const LONG_LABEL =
  */
 export default class DeveloperDemosDropdownComponent extends Component {
 	@tracked placement = 'left';
+	@tracked align = 'auto';
 	@tracked scoped = false;
 	@tracked many = false;
 	@tracked selected = 'recent';
 
-	placements = ['left', 'right'];
+	placements = ['left', 'right', 'bottom'];
+	aligns = ['auto', 'start', 'end'];
 
 	observer = null;
 
@@ -69,6 +71,11 @@ export default class DeveloperDemosDropdownComponent extends Component {
 	@action
 	setPlacement(placement) {
 		this.placement = placement;
+	}
+
+	@action
+	setAlign(align) {
+		this.align = align;
 	}
 
 	@action
@@ -125,6 +132,7 @@ export default class DeveloperDemosDropdownComponent extends Component {
 	@action
 	reset() {
 		this.placement = 'left';
+		this.align = 'auto';
 		this.scoped = false;
 		this.many = false;
 		this.selected = 'recent';

@@ -35,6 +35,7 @@
 
 		&.is-left { justify-content: flex-start; }
 		&.is-right { justify-content: flex-end; }
+		&.is-bottom { align-items: flex-end; min-height: 100px; margin-top: 260px; }
 
 		&.is-scroll .app-dropdown-content {
 			max-height: 150px;
@@ -47,18 +48,6 @@
 		}
 
 		.app-dropdown-content {
-			hr {
-				margin: 2px 0;
-				padding: 0;
-				height: 1px;
-				width: 100%;
-			}
-
-			> .active {
-				background-color: $highlightColor;
-				color: #fff;
-			}
-
 			> .dropdown-long {
 				white-space: normal;
 				overflow-wrap: anywhere;
