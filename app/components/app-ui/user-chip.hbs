@@ -1,4 +1,8 @@
 <span class="app-user-chip" data-test-user-chip ...attributes>
   <AppUi::Avatar @user={{@user}} @size={{@size}} />
-  <strong class="app-user-chip-name" title={{@user.name}} data-test-user-chip-name>{{@user.name}}</strong>
+  {{#if @linked}}
+    <LinkTo @route="app.user.page" @model={{@user.id}} class="users-list-name" data-test-user-chip-name>{{@user.name}}</LinkTo>
+  {{else}}
+    <span data-test-user-chip-name>{{@user.name}}</span>
+  {{/if}}
 </span>

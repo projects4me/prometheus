@@ -20,11 +20,11 @@ module('Integration | Component | developer/demos/display', function (hooks) {
 		assert.dom('[data-test-demo-box] .box-footer').hasText('');
 	});
 
-	test('avatar shows initials and applies the size', async function (assert) {
+	test('avatar shows a person, an agent and a missing image in each size', async function (assert) {
 		await render(hbs`<Developer::Demos::Avatar @entry={{this.entry}} />`);
-		assert.dom('[data-test-avatar]').exists({ count: 3 });
-		await click('[data-size="lg"]');
-		assert.dom('[data-test-avatar]').hasClass('app-avatar-lg');
+		assert.dom('[data-test-avatar]').exists({ count: 9 });
+		assert.dom('[data-test-avatar].img-sm').exists({ count: 2 });
+		assert.dom('[data-test-avatar].img-xs').exists({ count: 2 });
 	});
 
 	test('status label shows the chosen status', async function (assert) {

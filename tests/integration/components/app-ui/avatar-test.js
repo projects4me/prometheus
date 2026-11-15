@@ -4,47 +4,35 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-
-const PIXEL = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
 module('Integration | Component | app-ui/avatar', function (hooks) {
     setupRenderingTest(hooks);
 
-    test('it shows the profile picture', async function (assert) {
-        this.set('user', { id: 1, name: 'Ada Lovelace', profilePicture: 'http://x.test/a.png' });
+    test('it shows the user image as an img-circle', async function (assert) {
+        this.set('user', { id: 7, name: 'Ada Lovelace' });
         await render(hbs`<AppUi::Avatar @user={{this.user}} />`);
 
-        assert.dom('[data-test-avatar-image]').hasAttribute('src', 'http://x.test/a.png');
-        assert.dom('[data-test-avatar-image]').hasAttribute('alt', 'Ada Lovelace');
-        assert.dom('[data-test-avatar]').hasClass('app-avatar-md');
+        assert.dom('img[data-test-avatar]').hasClass('img-circle');
+        assert.dom('img[data-test-avatar]').hasAttribute('src', /\/userimage\/get\/7$/);
+        assert.dom('img[data-test-avatar]').hasAttribute('alt', 'Ada Lovelace');
+        assert.dom('img[data-test-avatar]').doesNotHaveClass('img-sm');
     });
 
-    test('it uses the user image endpoint for the placeholder picture', async function (assert) {
-        this.set('user', { id: 7, name: 'Ada', profilePicture: '/img/default.png' });
-        await render(hbs`<AppUi::Avatar @user={{this.user}} />`);
+    test('it applies the AdminLTE sizes', async function (assert) {
+        this.set('user', { id: 1, name: 'Ada' });
+        await render(hbs`<AppUi::Avatar @user={{this.user}} @size="sm" /><AppUi::Avatar @user={{this.user}} @size="xs" />`);
 
-        assert.dom('[data-test-avatar-image]').hasAttribute('src', /\/userimage\/get\/7$/);
+        assert.dom('img.img-sm').exists({ count: 1 });
+        assert.dom('img.img-xs').exists({ count: 1 });
     });
 
-    test('it shows initials without an id', async function (assert) {
-        this.set('user', { name: 'ada  byron lovelace' });
-        await render(hbs`<AppUi::Avatar @user={{this.user}} @size="lg" />`);
-
-        assert.dom('[data-test-avatar-image]').doesNotExist();
-        assert.dom('[data-test-avatar-initials]').hasText('AB');
-        assert.dom('[data-test-avatar]').hasClass('app-avatar-lg');
-    });
-
-    test('it falls back to initials when the image fails', async function (assert) {
-        this.set('user', { id: 3, name: 'Grace Hopper', profilePicture: PIXEL });
+    test('it shows the agent avatar for an agent', async function (assert) {
+        this.set('user', { id: 2, name: 'Agent', type: 'agent' });
         await render(hbs`<AppUi::Avatar @user={{this.user}} @size="sm" />`);
-        // an image error does not bubble; a bubbling one would reach window.onerror
-        this.element.querySelector('[data-test-avatar-image]').dispatchEvent(new Event('error'));
-        await settled();
 
-        assert.dom('[data-test-avatar-initials]').hasText('GH');
-        assert.dom('[data-test-avatar]').hasClass('app-avatar-sm');
+        assert.dom('[data-user-agent-avatar]').exists();
+        assert.dom('img').doesNotExist();
     });
 });
