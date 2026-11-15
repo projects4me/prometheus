@@ -28,6 +28,7 @@ Used in the Roles, Ideas and Threads browsers. The page layout around it is in t
 | @onPage | Function | none | Shows the pagination and handles a page change |
 | @onSort | Function | none | Handles a sort change |
 | @onGroup | Function | none | Handles a group change |
+| @onSelect | Function | none | Called with the selected ids when the selection changes |
 | @onRetry | Function | none | Shows the Try again button of the error state |
 | @onClearSearch | Function | none | Shows the Clear the search button of the empty state |
 
@@ -48,6 +49,7 @@ Used in the Roles, Ideas and Threads browsers. The page layout around it is in t
 | onPage | The new page number |
 | onSort | The sort key and the order |
 | onGroup | The group key |
+| onSelect | The selected ids, whenever the selection changes |
 | onRetry | None |
 | onClearSearch | None |
 | onApply (search block) | The query string |

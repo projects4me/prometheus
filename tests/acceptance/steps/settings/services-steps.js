@@ -87,9 +87,11 @@ export const when = function () {
         {
             "User denies the request $name and confirms": (assert) => async function (name) {
                 await click(findByAttr('data-request', name).querySelector('[data-btn="deny-request"]'));
+                await waitUntil(() => document.querySelector('dialog.app-modal [data-request-confirm]'), { timeout: 3000 });
                 assert.ok(document.querySelector('dialog.app-modal [data-request-confirm]'), 'confirmation is open');
                 await click('dialog.app-modal .btn-primary');
                 await settled();
+                await waitUntil(() => !document.querySelector('dialog.app-modal'), { timeout: 3000 });
             }
         },
         {
@@ -115,17 +117,21 @@ export const when = function () {
         {
             "User disables the service $name and cancels": (assert) => async function (name) {
                 await click(findRow(name).querySelector('[data-btn="disable-service"]'));
+                await waitUntil(() => document.querySelector('dialog.app-modal [data-services-confirm]'), { timeout: 3000 });
                 assert.ok(document.querySelector('dialog.app-modal [data-services-confirm]'), 'confirmation is open');
                 await click('dialog.app-modal .btn-default');
                 await settled();
+                await waitUntil(() => !document.querySelector('dialog.app-modal'), { timeout: 3000 });
             }
         },
         {
             "User disables the service $name and confirms": (assert) => async function (name) {
                 await click(findRow(name).querySelector('[data-btn="disable-service"]'));
+                await waitUntil(() => document.querySelector('dialog.app-modal [data-services-confirm]'), { timeout: 3000 });
                 assert.ok(document.querySelector('dialog.app-modal [data-services-confirm]'), 'confirmation is open');
                 await click('dialog.app-modal .btn-primary');
                 await settled();
+                await waitUntil(() => !document.querySelector('dialog.app-modal'), { timeout: 3000 });
             }
         }
     ];

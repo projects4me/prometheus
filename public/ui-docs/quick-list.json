@@ -1,0 +1,121 @@
+{
+  "name": "QuickList",
+  "component": "quick-list",
+  "doc": "quick-list.md",
+  "description": "A narrow list of records inside a box: header with title and count, optional search, one row per record, grouping, selection, paging and the loading, empty and error states. It only displays what it is given.",
+  "arguments": {
+    "title": { "type": "string", "required": false, "description": "The box title, already translated" },
+    "items": { "type": "array", "required": false, "default": [], "description": "The records to show, one row each" },
+    "total": { "type": "number", "required": false, "description": "Record count; the header reads \"shown of total\" when it differs from the items shown" },
+    "hasNext": { "type": "boolean", "required": false, "default": false, "description": "Whether a next page exists; used when there is no total" },
+    "page": { "type": "number", "required": false, "default": 1, "description": "The current page" },
+    "limit": { "type": "number", "required": false, "description": "The page size" },
+    "activeId": { "type": "string|number", "required": false, "description": "The id of the open record; its row gets the active bar" },
+    "isLoading": { "type": "boolean", "required": false, "default": false, "description": "Shows skeleton rows instead of the items" },
+    "error": { "type": "any", "required": false, "description": "A truthy value shows the error state" },
+    "selectable": { "type": "boolean", "required": false, "default": false, "description": "Adds a checkbox per row and the selection bar" },
+    "groupBy": { "type": "string", "required": false, "default": "", "description": "The key of the active group option; empty for no grouping" },
+    "groupOptions": { "type": "array", "required": false, "default": [], "description": "The group choices; see data" },
+    "sortOptions": { "type": "array", "required": false, "default": [], "description": "The sort choices; see data" },
+    "sort": { "type": "string", "required": false, "description": "The active sort key" },
+    "order": { "type": "string", "required": false, "description": "The sort order: asc or desc" }
+  },
+  "events": {
+    "onPage": {
+      "payload": [{ "name": "page", "type": "number", "description": "The new page number" }],
+      "description": "A page change; the pagination is shown only with this callback"
+    },
+    "onSort": {
+      "payload": [
+        { "name": "key", "type": "string", "description": "The sort key" },
+        { "name": "order", "type": "string", "description": "asc or desc" }
+      ],
+      "description": "A sort change from the toolbar"
+    },
+    "onGroup": {
+      "payload": [{ "name": "key", "type": "string", "description": "The group option key, empty for no grouping" }],
+      "description": "A group change from the toolbar"
+    },
+    "onSelect": {
+      "payload": [{ "name": "ids", "type": "array", "description": "The ids of the selected records" }],
+      "description": "The selection changed (with selectable)"
+    },
+    "onRetry": {
+      "payload": [],
+      "description": "The Try again button of the error state; the button is shown only with this callback"
+    },
+    "onClearSearch": {
+      "payload": [],
+      "description": "The Clear the search button of the default empty state; the button is shown only with this callback"
+    }
+  },
+  "blocks": {
+    "actions": { "description": "Header tools, in the box tools of the header; the create button goes here", "yields": [] },
+    "search": { "description": "A slot under the header for EzSearchCompact; rendered as is", "yields": [] },
+    "item": {
+      "description": "One row per record",
+      "yields": [
+        { "name": "record", "type": "object", "description": "The record of the row" },
+        {
+          "name": "Item",
+          "type": "component",
+          "component": "quick-list/item",
+          "description": "The row content: primary and secondary lines, an optional leading visual on the left",
+          "curried": ["isActive"],
+          "arguments": {
+            "route": { "type": "string", "required": false, "description": "The route the row links to; without it the row is not a link" },
+            "model": { "type": "any", "required": false, "description": "The model or id for the route" },
+            "query": { "type": "object", "required": false, "default": {}, "description": "The query params of the link" }
+          },
+          "blocks": ["leading", "primary", "secondary"]
+        }
+      ]
+    },
+    "group": {
+      "description": "Replaces the label of a group heading",
+      "yields": [{ "name": "group", "type": "object", "description": "The group: key, label, items, count" }]
+    },
+    "selectionActions": {
+      "description": "The actions of the selection bar",
+      "yields": [
+        { "name": "ids", "type": "array", "description": "The selected ids" },
+        { "name": "clear", "type": "function", "description": "Clears the selection" }
+      ]
+    },
+    "empty": { "description": "Replaces the default empty state", "yields": [] },
+    "footer": { "description": "Rendered under the pagination, inside the box", "yields": [] }
+  },
+  "data": {
+    "items": {
+      "type": "array",
+      "of": "object",
+      "fields": { "id": { "type": "string|number", "required": true, "description": "Matched against activeId and used for the selection" } }
+    },
+    "groupOptions": {
+      "type": "array",
+      "of": "object",
+      "fields": {
+        "key": { "type": "string", "required": true, "description": "The option key, passed as groupBy" },
+        "label": { "type": "string", "required": true, "description": "The translated option label" },
+        "groupKey": { "type": "function", "required": true, "description": "(record) => the group key of a record" },
+        "groupLabel": { "type": "function", "required": true, "description": "(key) => the translated group label" }
+      }
+    },
+    "sortOptions": {
+      "type": "array",
+      "of": "object",
+      "fields": {
+        "key": { "type": "string", "required": true, "description": "The sort key, passed as sort" },
+        "label": { "type": "string", "required": true, "description": "The translated option label" }
+      }
+    }
+  },
+  "variants": [
+    { "name": "basic", "description": "Title, items and the item block", "arguments": ["title", "items"], "blocks": ["item"] },
+    { "name": "paged", "description": "Adds the pagination", "arguments": ["page", "limit", "total", "hasNext", "onPage"] },
+    { "name": "searchable", "description": "EzSearchCompact in the search block, with a clear action in the empty state", "arguments": ["onClearSearch"], "blocks": ["search"] },
+    { "name": "grouped", "description": "Group headings from a group option", "arguments": ["groupBy", "groupOptions", "onGroup"], "blocks": ["group"] },
+    { "name": "sortable", "description": "Sort choices in the toolbar", "arguments": ["sortOptions", "sort", "order", "onSort"] },
+    { "name": "selectable", "description": "A checkbox per row and the selection bar", "arguments": ["selectable", "onSelect"], "blocks": ["selectionActions"] }
+  ]
+}
