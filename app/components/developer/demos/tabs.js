@@ -24,6 +24,36 @@ export default class DeveloperDemosTabsComponent extends Component {
     names = ['First', 'Second', 'Third'];
 
     /**
+     * The tabs of the second demo, which show a count and tools
+     *
+     * @property counted
+     * @type Array
+     */
+    counted = [
+        { name: 'Open', count: 12 },
+        { name: 'Closed', count: 0 }
+    ];
+
+    /**
+     * The name of the active tab of the counted demo
+     *
+     * @property activeCounted
+     * @type String
+     */
+    @tracked activeCounted = 'Open';
+
+    /**
+     * Logs the change and makes the named counted tab active
+     *
+     * @method changeCounted
+     * @param {String} name
+     */
+    @action
+    changeCounted(name) {
+        this.activeCounted = name;
+    }
+
+    /**
      * The name of the active tab
      *
      * @property active
@@ -52,5 +82,6 @@ export default class DeveloperDemosTabsComponent extends Component {
     @action
     reset() {
         this.active = 'First';
+        this.activeCounted = 'Open';
     }
 }

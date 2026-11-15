@@ -74,6 +74,25 @@ export default class RolePermissionsComponent extends Component {
     @service intl;
 
     /**
+     * The open tab, `actions` or `fields`.
+     *
+     * @property activeTab
+     * @type {string}
+     */
+    @tracked activeTab = 'actions';
+
+    /**
+     * Opens a tab.
+     *
+     * @method setActiveTab
+     * @param {string} name
+     */
+    @action
+    setActiveTab(name) {
+        this.activeTab = name;
+    }
+
+    /**
      * Bumped when field access modes change so getters recompute from dirty models.
      *
      * @property fieldAccessRevision

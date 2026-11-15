@@ -1,6 +1,5 @@
 import steps from '../steps';
 import { click, settled } from '@ember/test-helpers';
-import $ from 'jquery';
 import { chooseOption } from 'prometheus/tests/helpers/select';
 
 const ACTION_LABELS = { '1': 'Allow', '0': 'None' };
@@ -16,17 +15,8 @@ export default function (assert) {
             assert.ok(true, `User sets action permission ${resourceName} to ${allowed}`);
         })
         .when('User opens fields permissions tab', async function () {
-            let $tab = $('[data-role="permissions"] a[href="#role-permission-fields"]');
-            assert.ok($tab.length, 'Fields permissions tab link exists');
-            await new Promise((resolve) => {
-                $tab.one('shown.bs.tab', () => resolve());
-                $tab.tab('show');
-            });
-            await settled();
-            assert.ok(
-                document.querySelector('#role-permission-fields.active, #role-permission-fields.in.active'),
-                'Fields permissions tab pane is active'
-            );
+            await click('[data-role="permissions"] [data-tab="fields"]');
+            assert.ok(document.querySelector('[data-role="permission-fields"]'), 'Fields permissions tab pane is active');
             assert.ok(true, 'User opens fields permissions tab');
         })
         .when('User sets field $field access to $mode', async function (field, mode) {
