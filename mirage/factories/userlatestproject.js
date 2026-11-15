@@ -1,13 +1,13 @@
 import { Factory } from 'miragejs';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import Context from '../yadda-context/context';
 
 export default Factory.extend({
     name() {
-        return faker.company.companyName(0);
+        return faker.company.name();
     },
     status() {
-        return faker.random.arrayElement(["new", "in_progress", "pending", "done", "wont_fix"]);
+        return faker.helpers.arrayElement(["new", "in_progress", "pending", "done", "wont_fix"]);
     },
     description() {
         return faker.lorem.sentence();

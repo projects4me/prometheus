@@ -1,5 +1,5 @@
 import { Factory } from 'miragejs';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import * as date from '../helpers/getDate';
 import _ from 'lodash';
 
@@ -14,19 +14,19 @@ export default Factory.extend({
         return (_.random(1, 10)).toString();
     },
     relatedTo() {
-        return faker.random.arrayElement(["issue", "project"])
+        return faker.helpers.arrayElement(["issue", "project"])
     },
     relatedId() {
         return (_.random(1, 5)).toString();
     },
     type() {
-        return faker.random.arrayElement(["updated", "created", "related", "deleted", "closed"])
+        return faker.helpers.arrayElement(["updated", "created", "related", "deleted", "closed"])
     },
     "deleted": "0",
     afterCreate(activity) {
         if (activity.type == "related") {
             activity.update({
-                "relatedActivity": faker.random.arrayElement(["created", "updated", "attached", "deleted"]),
+                "relatedActivity": faker.helpers.arrayElement(["created", "updated", "attached", "deleted"]),
                 "relatedActivityId": (_.random(1, 5)).toString(),
                 "relatedActivityModule": "milestone"
             })

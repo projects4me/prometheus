@@ -1,5 +1,5 @@
 import { Factory } from 'miragejs';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import * as date from '../helpers/getDate';
 import _ from 'lodash';
 
@@ -33,12 +33,12 @@ export default Factory.extend({
         return date.startDate(10, 20);
     },
     status() {
-        return faker.random.arrayElement(["new", "in_progress", "pending", "done", "wont_fix"]);
+        return faker.helpers.arrayElement(["new", "in_progress", "pending", "done", "wont_fix"]);
     },
     "estimatedBudget": null,
     "spentBudget": null,
     type() {
-        return faker.random.arrayElement(["scrum", "kanban"]);
+        return faker.helpers.arrayElement(["scrum", "kanban"]);
     },
     scope() {
         return faker.lorem.text();

@@ -1,5 +1,5 @@
 import { Factory } from 'miragejs';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import * as date from '../helpers/getDate';
 import * as dates from 'prometheus/utils/date';
 import _ from 'lodash';
@@ -22,10 +22,10 @@ export default Factory.extend({
 		return 'education';
 	},
 	title() {
-		return faker.random.arrayElement(['BSCS', 'BBA', 'MBA', 'CA', 'BFA']);
+		return faker.helpers.arrayElement(['BSCS', 'BBA', 'MBA', 'CA', 'BFA']);
 	},
 	institution() {
-		return faker.company.companyName();
+		return faker.company.name();
 	},
 	completionYear() {
 		return dates.part(dates.now(), 'year');

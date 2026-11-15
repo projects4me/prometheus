@@ -1,5 +1,5 @@
 import { Factory } from 'miragejs';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 
 export default Factory.extend({
 	description(i) {
@@ -12,10 +12,10 @@ export default Factory.extend({
 
 	context(i) {
 		return {
-			userId: faker.random.number({ min: 1, max: 10 }).toString(),
+			userId: faker.number.int({ min: 1, max: 10 }).toString(),
 			userName: faker.internet.userName(),
-			projectId: faker.random.number({ min: 1, max: 10 }).toString(),
-			projectShortcode: faker.random.arrayElement(['TST', 'DEV', 'PRJ']),
+			projectId: faker.number.int({ min: 1, max: 10 }).toString(),
+			projectShortcode: faker.helpers.arrayElement(['TST', 'DEV', 'PRJ']),
 			projectName: `project_${++i}`,
 			issueNumber: `issue_${++i}`,
 			relatedTo: 'project'
@@ -25,11 +25,11 @@ export default Factory.extend({
 	relatedTo: 'project',
 
 	relatedId() {
-		return faker.random.number({ min: 1, max: 10 }).toString();
+		return faker.number.int({ min: 1, max: 10 }).toString();
 	},
 
 	createdUser() {
-		return faker.random.number({ min: 1, max: 10 }).toString();
+		return faker.number.int({ min: 1, max: 10 }).toString();
 	},
 
 	createdUserName() {
@@ -40,7 +40,7 @@ export default Factory.extend({
 		server.create('systemnotificationrecipient', {
 			systemnotificationId: systemnotification.id,
 			userId: server.schema.users.first()?.id || '1',
-			isRead: faker.random.arrayElement(['0', '1'])
+			isRead: faker.helpers.arrayElement(['0', '1'])
 		});
 	}
 });
