@@ -1,4 +1,4 @@
-<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue paramsQuery=@paramsQuery creatingIssue=this.creatingIssue newMilestoneAdded=this.newMilestoneAdded}}>
+<div class="board-container" {{initialize-sortable group=@group scroll=@scroll scrollSensitivity=@scrollSensitivity scrollSpeed=@scrollSpeed sort=@sort forceFallback=@forceFallback disableSortable=@disableSortable animationSpeed=@animationSpeed dragClass=@dragClass chosenClass=@chosenClass updateIssue=@updateIssue paramsQuery=@paramsQuery creatingIssue=this.creatingIssue newMilestoneAdded=this.newMilestoneAdded milestones=@milestones}}>
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs milestone-tabs">
       {{#each @milestones as |milestone index|}}
