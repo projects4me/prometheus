@@ -253,3 +253,13 @@ separate task with its own issue.
 - [ ] List + detail pages follow the QuickList order (create in the header, pagination in the footer)
 - [ ] Issue statuses use `status-label`; the comment input is the `CommentComposer`
 - [ ] Compared side by side in the browser with an existing screen of the same type
+
+## 13. Composing views from components
+
+- **R1 Rule of three.** Extract a shared component only when the same markup and behaviour exists in 3+ places. Two copies stay copies.
+- **R2 Blocks before arguments.** Optional or variable content is a named block or a yielded contextual component (like QuickList). Args are for data and simple switches; more than ~10 args triggers a design review.
+- **R3 Data in, events out.** Components take records, descriptors and callbacks; they never inject a controller or load route data. Services are fine for cross-cutting concerns (intl, acl, notifications).
+- **R4 Change only with a benefit.** Pages move to shared components when they are a pilot target or are being edited anyway.
+- **R5 Test selectors are `data-test-*` only.** `ember-test-selectors` strips them from production builds; CSS and app JS never use them. The existing `data-field`, `data-btn` and `data-column` stay (4 stylesheets, `form-fields/label.js`, `controllers/app/project/board.js` and `modifiers/initialize-sortable.js` depend on them) and are replaced only when a page is touched.
+- **R6 Ship the whole set.** Every shared component ships with a ui-docs page, a contract manifest and integration tests.
+- **R7 Where components live.** Generic UI lives in `app-ui/`, domain UI in `<domain>/`. No new top-level components.
