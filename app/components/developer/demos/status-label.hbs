@@ -1,0 +1,21 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo>
+    <div data-demo-status>
+      <AppUi::StatusLabel @status={{this.status}} data-test-demo-status />
+    </div>
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <label>Status</label>
+      <div class="btn-group" data-control-status>
+        {{#each this.statuses as |status|}}
+          <button type="button" class="btn btn-default {{if (eq status this.status) 'active'}}" data-status={{status}} {{on "click" (fn this.setStatus status)}}>{{status}}</button>
+        {{/each}}
+      </div>
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="app-ui-status-label.md" />
+  </:docs>
+</Developer::Entry>

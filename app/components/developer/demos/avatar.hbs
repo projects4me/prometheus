@@ -1,0 +1,23 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo>
+    <div data-demo-avatar>
+      {{#each this.users as |user|}}
+        <AppUi::Avatar @user={{user}} @size={{this.size}} title={{user.name}} />
+      {{/each}}
+    </div>
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <label>Size</label>
+      <div class="btn-group" data-control-size>
+        {{#each this.sizes as |size|}}
+          <button type="button" class="btn btn-default {{if (eq size this.size) 'active'}}" data-size={{size}} {{on "click" (fn this.setSize size)}}>{{size}}</button>
+        {{/each}}
+      </div>
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="app-ui-avatar.md" />
+  </:docs>
+</Developer::Entry>
