@@ -27,10 +27,15 @@ module('Integration | Component | developer/demos/display', function (hooks) {
 		assert.dom('[data-test-avatar].img-xs').exists({ count: 2 });
 	});
 
-	test('status label shows the chosen status', async function (assert) {
+	test('status label shows every status', async function (assert) {
 		await render(hbs`<Developer::Demos::StatusLabel @entry={{this.entry}} />`);
-		assert.dom('[data-test-demo-status]').exists();
-		await click('[data-status="Closed"]');
-		assert.dom('[data-test-demo-status]').hasClass('Closed');
+		assert.dom('[data-test-demo-status]').exists({ count: 8 });
+		assert.dom('[data-demo-status-row="in_progress"] .badge').hasClass('in_progress');
+	});
+
+	test('tag demo shows the tags and the variants', async function (assert) {
+		await render(hbs`<Developer::Demos::Tag @entry={{this.entry}} />`);
+		assert.dom('[data-test-demo-tag]').hasClass('label-default');
+		assert.dom('[data-test-demo-tag-variant="danger"]').hasClass('label-danger');
 	});
 });

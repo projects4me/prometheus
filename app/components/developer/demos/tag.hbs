@@ -1,0 +1,17 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo>
+    <div data-demo-tag>
+      {{#each this.tags as |tag|}}<AppUi::Tag data-test-demo-tag>{{tag}}</AppUi::Tag> {{/each}}
+    </div>
+    <p>
+      {{#each this.variants as |variant|}}<AppUi::Tag @variant={{variant}} data-test-demo-tag-variant={{variant}}>{{variant}}</AppUi::Tag> {{/each}}
+    </p>
+  </:demo>
+  <:controls>
+    <p class="text-muted">Tags and small labels, drawn only through AppUi::Tag.</p>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="app-ui-tag.md" />
+  </:docs>
+</Developer::Entry>

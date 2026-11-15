@@ -1,19 +1,19 @@
 <Developer::EntryHeader @entry={{@entry}} />
 <Developer::Entry @onReset={{this.reset}}>
   <:demo>
-    <div data-demo-status>
-      <AppUi::StatusLabel @status={{this.status}} data-test-demo-status />
-    </div>
+    <table class="table" data-demo-status>
+      <tbody>
+        {{#each this.statuses as |status|}}
+          <tr data-demo-status-row={{status}}>
+            <td><code>{{status}}</code></td>
+            <td><AppUi::StatusLabel @status={{status}} data-test-demo-status /></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
   </:demo>
   <:controls>
-    <div class="form-group">
-      <label>Status</label>
-      <div class="btn-group" data-control-status>
-        {{#each this.statuses as |status|}}
-          <button type="button" class="btn btn-default {{if (eq status this.status) 'active'}}" data-status={{status}} {{on "click" (fn this.setStatus status)}}>{{status}}</button>
-        {{/each}}
-      </div>
-    </div>
+    <p class="text-muted">Every issue status, drawn only through AppUi::StatusLabel.</p>
   </:controls>
   <:docs>
     <Developer::Docs @doc="app-ui-status-label.md" />

@@ -3,35 +3,24 @@
  */
 
 import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { QUICK_LIST_FIXTURE_STATUSES } from 'prometheus/utils/dev/quick-list-fixture';
 
 /**
- * The AppUi::StatusLabel demo of the Component Library: the badge of each issue status.
+ * The AppUi::StatusLabel demo of the Component Library: the badge of every issue status.
  *
  * @class DeveloperDemosStatusLabelComponent
  * @namespace Prometheus.Components.Developer.Demos
  * @extends Glimmer.Component
  */
 export default class DeveloperDemosStatusLabelComponent extends Component {
-    statuses = ['New', 'In Progress', 'In Review', 'Closed'];
-
-    @tracked status = 'New';
+    statuses = QUICK_LIST_FIXTURE_STATUSES;
 
     /**
-     * @method setStatus
-     * @param {String} status
-     */
-    @action
-    setStatus(status) {
-        this.status = status;
-    }
-
-    /**
+     * Nothing to reset: the demo has no state.
+     *
      * @method reset
      */
     @action
-    reset() {
-        this.status = 'New';
-    }
+    reset() {}
 }
