@@ -126,7 +126,7 @@
             <div class="row issue-details-assignee-row">
               <div class="issue-details-assignee" data-field="issue.assignee">
                 <div class="project-manager">
-                  <AppUi::Avatar @user={{hash id=this.issue.assignedTo.id type=this.issue.assignedTo.type name=this.issue.assignedTo.name profilePicture=this.issue.assignedTo.profilePicture}} @size="l" />
+                  <AppUi::Avatar @user={{hash id=this.issue.assignedTo.id type=this.issue.assignedTo.type name=this.issue.assignedTo.name profilePicture=this.issue.assignedTo.profilePicture}} @size="l" @minSize="m" />
                   <LinkTo @route="app.user.page" @model={{this.issue.assignedTo.id}} class="users-list-name">{{this.issue.assignedTo.name}}</LinkTo>
                   <Agent::UserTag @userId={{this.issue.assignedTo.id}} @type={{this.issue.assignedTo.type}} />
                   <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>

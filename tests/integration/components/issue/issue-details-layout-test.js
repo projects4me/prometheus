@@ -4,11 +4,13 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, waitUntil, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import EmberObject from '@ember/object';
 import Service from '@ember/service';
 import AclStub from '../../stub-services/acl-stub';
+
+const ASSIGNEE_AVATAR = '[data-field="issue.assignee"] [data-test-avatar]';
 
 module('Integration | Component | issue/issue-details layout', function (hooks) {
     setupRenderingTest(hooks);
@@ -30,21 +32,50 @@ module('Integration | Component | issue/issue-details layout', function (hooks) 
                 files: [],
             })
         );
+        this.hostStyle = document.createElement('style');
+        document.head.appendChild(this.hostStyle);
+    });
+
+    hooks.afterEach(function () {
+        this.hostStyle.remove();
     });
 
     test('the description starts to the right of the assignee column in a narrow container', async function (assert) {
-        const style = document.createElement('style');
-        style.textContent = '.narrow-details-host { width: 320px; }';
-        document.head.appendChild(style);
+        this.hostStyle.textContent = '.narrow-details-host { width: 320px; }';
         await render(hbs`
             <div id="narrow" class="narrow-details-host">
                 <Issue::IssueDetails @issue={{this.issue}} @projectController={{this.projectController}} />
             </div>
         `);
+        await waitUntil(() => document.querySelector(ASSIGNEE_AVATAR).dataset.size !== 'l', { timeoutMessage: 'avatar did not step down' });
+        await settled();
         const assignee = document.querySelector('[data-field="issue.assignee"] .app-ui-avatar').getBoundingClientRect();
         const description = document.querySelector('[data-field="issue.description"]').getBoundingClientRect();
         assert.ok(description.left >= assignee.right, 'description does not overlap the assignee avatar');
-        style.remove();
         assert.ok(description.right <= document.querySelector('#narrow').getBoundingClientRect().right + 1, 'description stays inside the container');
+    });
+
+    test('the assignee avatar steps down in a narrow container', async function (assert) {
+        this.hostStyle.textContent = '.narrow-details-host { width: 320px; }';
+        await render(hbs`
+            <div class="narrow-details-host">
+                <Issue::IssueDetails @issue={{this.issue}} @projectController={{this.projectController}} />
+            </div>
+        `);
+        await waitUntil(() => document.querySelector(ASSIGNEE_AVATAR).dataset.size !== 'l', { timeoutMessage: 'avatar did not step down' });
+        const avatar = document.querySelector(ASSIGNEE_AVATAR);
+        assert.ok(['m', 'ml'].includes(avatar.dataset.size), `renders m or ml (got ${avatar.dataset.size})`);
+        const column = document.querySelector('[data-field="issue.assignee"]').getBoundingClientRect();
+        assert.ok(avatar.getBoundingClientRect().right <= column.right + 1, 'avatar stays inside its column');
+    });
+
+    test('the assignee avatar is large at full width', async function (assert) {
+        this.hostStyle.textContent = '.wide-details-host { width: 1200px; }';
+        await render(hbs`
+            <div class="wide-details-host">
+                <Issue::IssueDetails @issue={{this.issue}} @projectController={{this.projectController}} />
+            </div>
+        `);
+        assert.strictEqual(document.querySelector(ASSIGNEE_AVATAR).dataset.size, 'l');
     });
 });

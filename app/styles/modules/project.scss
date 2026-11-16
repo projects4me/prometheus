@@ -17,6 +17,25 @@
   }
 }
 
+.project-manager-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.project-manager-col {
+  flex: 0 0 auto;
+  max-width: 25%;
+  min-width: 70px; // the 40px m avatar plus the 15px gutter on both sides
+  padding: 0 15px;
+  overflow-wrap: anywhere;
+}
+
+.project-manager-details {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 15px;
+}
+
 .project-details .badge {
   border-radius: 0.2rem;
 }
