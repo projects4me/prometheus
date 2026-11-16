@@ -23,7 +23,7 @@ export default function (assert) {
         .then('Agent "$name" is listed under Agents with the text "$text"', async function (name, text) {
             let option = selectOptions()
                 .find((el) => el.querySelector('.username')?.textContent.trim() === name);
-            assert.ok(option?.querySelector('[data-relate-agent-avatar]'), 'agent has the robot avatar');
+            assert.ok(option?.querySelector('.app-ui-avatar-agent[data-test-avatar]'), 'agent has the robot avatar');
             assert.equal(option?.querySelector('[data-relate-agent-sponsor]')?.textContent.trim(), text, 'sponsor text');
             await click(document.body);
         })

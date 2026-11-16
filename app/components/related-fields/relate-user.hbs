@@ -1,8 +1,6 @@
 <span class="relate-user {{if @data.isAgent "relate-agent"}}">
-  {{#if @data.isAgent}}
-    <Agent::Avatar data-relate-agent-avatar />
-  {{else if @data.value}}
-    <img src="{{this.apiHost}}/userimage/get/{{@data.value}}" class="user-relate-icon" alt="{{t "global.form.image"}}">
+  {{#if (or @data.value @data.isAgent)}}
+    <AppUi::Avatar @size="xs" @user={{hash id=@data.value name=@data.label type=(if @data.isAgent "agent")}} />
   {{/if}}
   <span class="username">{{@data.label}}</span>
   {{#if @data.sponsorName}}

@@ -15,7 +15,7 @@ module('Integration | Component | related-fields/relate-actor', function (hooks)
         await render(hbs`<RelatedFields::RelateActor @data={{this.data}} />`);
 
         assert.dom('span.relate-user.relate-agent').exists();
-        assert.dom('[data-agent-avatar]').exists();
+        assert.dom('[data-test-avatar][data-size="xs"]').exists();
         assert.dom('span.username').hasText('Helper');
     });
 
@@ -25,7 +25,7 @@ module('Integration | Component | related-fields/relate-actor', function (hooks)
 
         assert.dom('span.relate-user').exists();
         assert.dom('span.relate-agent').doesNotExist();
-        assert.dom('img.user-relate-icon').exists();
+        assert.dom('[data-test-avatar][data-size="xs"]').exists();
     });
 
     test('an agent with a picture shows it', async function (assert) {
@@ -37,7 +37,7 @@ module('Integration | Component | related-fields/relate-actor', function (hooks)
         await render(hbs`<RelatedFields::RelateActor @data={{this.data}} />`);
 
         assert.dom('[data-agent-avatar-picture]').hasAttribute('src', 'data:image/png;base64,AAAA');
-        assert.dom('.fa-android').doesNotExist();
+        assert.dom('[data-test-avatar-marker]').exists();
     });
 
     test('an agent without a picture shows the robot', async function (assert) {
