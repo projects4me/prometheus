@@ -76,7 +76,7 @@
                   <div class="role-row__footer">
                     <span class="role-row__members" data-role-field="members">
                       {{#if row.members.length}}
-                        <Project::MemberAvatars @members={{row.members}} @maxVisible={{2}} />
+                        <Project::MemberAvatars @members={{row.members}} @maxVisible={{2}} @size="s" />
                       {{else}}
                         {{t "views.app.role.card.noMembers"}}
                       {{/if}}

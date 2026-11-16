@@ -326,8 +326,6 @@
   align-items: center;
 
   .member-avatar {
-    width: 4rem;
-    height: 4rem;
     margin-left: -0.25rem;
     transition: transform 0.15s ease;
 
@@ -346,14 +344,21 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 3.5rem;
-    height: 3.5rem;
+    flex: none;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-color: #e4e7ea;
     border: 2px solid #fff;
     font-size: 1.2rem;
     font-weight: bold;
     cursor: default;
+
+    // the same diameters as the AppUi::Avatar sizes
+    &.member-avatars-overflow-xs { width: 20px; height: 20px; font-size: 0.9rem; }
+    &.member-avatars-overflow-s { width: 30px; height: 30px; font-size: 1.1rem; }
+    &.member-avatars-overflow-ml { width: 64px; height: 64px; }
+    &.member-avatars-overflow-l { width: 96px; height: 96px; }
   }
 }
 
