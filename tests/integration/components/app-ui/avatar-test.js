@@ -24,12 +24,12 @@ module('Integration | Component | app-ui/avatar', function (hooks) {
         ENV.api.host = host;
     });
 
-    test('it shows the user image as an img-circle at size m by default', async function (assert) {
+    test('it shows the user image with the component image class at size m by default', async function (assert) {
         this.set('user', { id: 7, name: 'Ada Lovelace' });
         await render(hbs`<AppUi::Avatar @user={{this.user}} />`);
 
         assert.dom('[data-test-avatar]').hasAttribute('data-size', 'm');
-        assert.dom('[data-test-avatar-image]').hasClass('img-circle');
+        assert.dom('[data-test-avatar-image]').hasClass('app-ui-avatar-image');
         assert.dom('[data-test-avatar-image]').hasAttribute('data-image-url', /\/userimage\/get\/7$/);
         assert.dom('[data-test-avatar-image]').hasAttribute('alt', 'Ada Lovelace');
     });
