@@ -27,7 +27,7 @@
 
               <div class="col-xs-3 col-md-2">
                 <div class="project-manager">
-                  <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{this.model.manager.id}}" alt="{{this.model.manager.name}}">
+                  <AppUi::Avatar @user={{this.model.manager}} @size="l" />
                   <LinkTo @route="app.user.page" @model={{this.model.manager.id}} class="users-list-name" >{{this.model.manager.name}}</LinkTo>
                   <span class="users-list-date">{{t "views.app.project.detail.manager"}}</span>
                 </div>
@@ -89,7 +89,7 @@
                     {{#each this.conversations as |conversation|}}
                       <li data-conversation-id="{{conversation.id}}">
                         <div class="user-block">
-                          <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{conversation.createdBy}}" alt="{{t "global.form.image"}}">
+                          <AppUi::Avatar @user={{hash id=conversation.createdBy}} @size="m" />
                           <LinkTo @route="app.project.conversation.page" @model={{conversation.id}}><span class="subject">{{conversation.subject}}</span></LinkTo>
                           <span class="description">{{translate-comment conversation.description}}</span>
                         </div>
@@ -270,7 +270,7 @@
                   </AppUi::Button>
 
                   <div class="member-avatar-wrap">
-                    <img src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
+                    <AppUi::Avatar @user={{member}} @size="ml" />
                     {{#if (eq member.accountStatus "inactive")}}
                       <span class="member-account-status member-account-status-inactive">
                         {{t "views.app.user.accountStatus.inactive"}}
