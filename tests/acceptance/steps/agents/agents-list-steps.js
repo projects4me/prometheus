@@ -11,6 +11,11 @@ export default function (assert) {
 		.then('Agents list has $count agents', function (count) {
 			assert.equal(document.querySelectorAll('[data-test-data-table-row]').length, Number(count), `Agents list has ${count} agents`);
 		})
+		.then('The agents show 40px avatars', function () {
+			const avatars = document.querySelectorAll('[data-test-data-table-row] [data-test-avatar]');
+			assert.equal(avatars.length, 2, 'Each agent row has an AppUi::Avatar');
+			avatars.forEach((a) => assert.equal(a.getAttribute('data-size'), 'm', 'Avatar is size m'));
+		})
 		.then('Agent "$name" shows sponsor "$sponsor" and models "$models"', function (name, sponsor, models) {
 			assert.equal(text(name, 'sponsor'), sponsor, `Agent ${name} shows sponsor ${sponsor}`);
 			assert.equal(text(name, 'models'), models, `Agent ${name} shows models ${models}`);

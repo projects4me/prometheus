@@ -46,7 +46,7 @@
             <AppUi::DataTable @columns={{this.columns}} @rows={{this.model}} @sort={{this.sort}} @order={{this.order}} @selectable={{true}} @onSort={{this.sortData}} @onSelect={{this.selectRow}}>
               <:cell as |agent column|>
                 {{#if (eq column.key "agent")}}
-                  <Agent::Avatar @user={{agent.user}} />
+                  <AppUi::Avatar @user={{agent.user}} @size="m" />
                   <div>
                     <LinkTo @route="app.agent.page" @model={{agent.id}} data-test-agent-name>{{agent.name}}</LinkTo>
                     {{#if agent.isActive}}

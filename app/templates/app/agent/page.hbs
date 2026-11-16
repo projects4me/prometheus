@@ -51,11 +51,11 @@
                       @onApplyCrop={{this.applyCrop}}
                       @onCancelCrop={{this.cancelCrop}}
                     >
-                      <Agent::Avatar @large={{true}} @user={{this.model.user}} />
+                      <AppUi::Avatar @user={{this.model.user}} @size="l" />
                     </User::Edit::ProfilePicture>
                     </:default>
                     <:fallback>
-                      <Agent::Avatar @large={{true}} @user={{this.model.user}} />
+                      <AppUi::Avatar @user={{this.model.user}} @size="l" />
                     </:fallback>
                   </AccessControl>
                   <div><strong data-agent-field="name">{{this.model.name}}</strong></div>
