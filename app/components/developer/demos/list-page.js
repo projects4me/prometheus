@@ -5,6 +5,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import Selection from 'prometheus/utils/state/selection';
 import { fixtureSchema, SAVED_SEARCHES } from 'prometheus/utils/developer/ez-search-fixture';
 
 /**
@@ -43,7 +44,16 @@ export default class DeveloperDemosListPageComponent extends Component {
 	@tracked offset = 0;
 	@tracked sort = 'name';
 	@tracked order = 'asc';
-	@tracked selected = [];
+	@tracked width = 'full';
+
+	/**
+	 * The one selection the toolbars and the table share; it is kept across pages.
+	 *
+	 * @property selection
+	 * @type Selection
+	 */
+	selection = new Selection();
+	widths = ['full', 'col-md-4'];
 	@tracked empty = false;
 	@tracked position = 'top';
 
@@ -129,9 +139,8 @@ export default class DeveloperDemosListPageComponent extends Component {
 	}
 
 	@action
-	select(log, id, checked) {
-		this.selected = checked ? [...this.selected, id] : this.selected.filter((item) => item !== id);
-		log.log('select', `${id} ${checked}`);
+	selectionChange(log, ids) {
+		log.log('select', ids.join(', ') || 'none');
 	}
 
 	@action
@@ -140,11 +149,8 @@ export default class DeveloperDemosListPageComponent extends Component {
 	}
 
 	@action
-	selectAll(event) {
-		let checked = event.target.checked;
-		let boxes = event.target.closest('[data-test-demo-list-page]').querySelectorAll('input[data-test-data-table-select]');
-		boxes.forEach((box) => (box.checked = checked));
-		this.selected = checked ? Array.from(boxes).map((box) => box.dataset.select) : [];
+	setWidth(event) {
+		this.width = event.target.value;
 	}
 
 	@action
@@ -158,8 +164,9 @@ export default class DeveloperDemosListPageComponent extends Component {
 	}
 
 	@action
-	bulk(log) {
-		log.log('delete', this.selected.join(', ') || 'none');
+	bulk(log, ids, clear) {
+		log.log('delete', ids.join(', ') || 'none');
+		clear();
 	}
 
 	@action
@@ -173,7 +180,8 @@ export default class DeveloperDemosListPageComponent extends Component {
 		this.offset = 0;
 		this.sort = 'name';
 		this.order = 'asc';
-		this.selected = [];
+		this.selection.clear();
+		this.width = 'full';
 		this.empty = false;
 		this.position = 'top';
 	}

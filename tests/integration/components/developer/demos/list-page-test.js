@@ -21,7 +21,7 @@ module('Integration | Component | developer/demos/list-page', function (hooks) {
 		assert.dom('[data-test-data-table-sort="name"] i').hasClass('fa-sort-desc');
 
 		await click('[data-test-data-table-row] [data-test-data-table-select]');
-		assert.dom('[data-test-demo-list-page]').includesText('(Selected : 1)');
+		assert.dom('[data-test-list-toolbar-count]').includesText('1 selected');
 
 		await click('[data-control-empty]');
 		assert.dom('[data-test-data-table-row]').doesNotExist();
@@ -33,9 +33,15 @@ module('Integration | Component | developer/demos/list-page', function (hooks) {
 		await render(hbs`<Developer::Demos::ListPage @entry={{this.entry}} />`);
 		assert.dom('[data-test-list-toolbar-header] [data-ez-search]').exists();
 
-		await click('[data-test-demo-list-select-all]');
-		assert.dom('[data-test-demo-list-page]').includesText('(Selected : 10)');
+		await click('[data-quick-list-select-all]');
+		assert.dom('[data-test-list-toolbar-count]').includesText('10 selected');
 		assert.dom('[data-test-data-table-select]:checked').exists({ count: 10 });
+		await click('[data-test-pager-next]');
+		assert.dom('[data-test-list-toolbar-breakdown]').includesText('0 on this page, 10 on other pages');
+		await click('[data-test-pager-previous]');
+
+		await fillIn('[data-control-width]', 'col-md-4');
+		assert.dom('[data-test-demo-list-width]').hasClass('col-md-4');
 
 		await fillIn('[data-control-position]', 'both');
 		assert.dom('[data-test-list-toolbar-position="top"]').exists();

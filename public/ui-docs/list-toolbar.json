@@ -2,19 +2,28 @@
   "name": "AppUi::ListToolbar",
   "component": "app-ui/list-toolbar",
   "doc": "list-toolbar.md",
-  "description": "The top of a list page box: the search and the page actions in the box header, the select-all and bulk actions on the left of the controls row and the pager on its right. It only lays out its blocks.",
+  "description": "The top of a list page box: the search and the page actions in the box header, the selection bar with bulk actions on the left of the controls row and the pager on its right. It shows the selection of the list it is given and gives the search the width first in small spaces.",
   "arguments": {
-    "position": { "type": "string", "description": "top (default) draws the header and the controls row; bottom draws only the controls row below the list", "required": false, "default": "top" }
+    "position": { "type": "string", "description": "top (default) draws the header and the controls row; bottom draws only the controls row below the list", "required": false, "default": "top" },
+    "selection": { "type": "Selection", "description": "The Selection (utils/state/selection.js) also given to AppUi::DataTable; with it the toolbar draws the selection bar and the selection block is not used", "required": false },
+    "rows": { "type": "array", "description": "The rows of the current page; the select-all and the counts work on them", "required": false }
   },
-  "events": {},
+  "events": {
+    "onSelectionChange": {
+      "payload": [{ "name": "ids", "type": "array", "description": "The selected ids" }],
+      "description": "The select-all or clear changed the selection"
+    }
+  },
   "blocks": {
-    "search": { "description": "The search in the box header: EzSearch or a saved-search picker", "yields": [] },
-    "actions": { "description": "Page actions after the search, such as the create button (with AccessControl)", "yields": [] },
-    "selection": { "description": "The left of the controls row: the select-all checkbox and the bulk action buttons", "yields": [] },
-    "pager": { "description": "The right of the controls row: the selected count and AppUi::Pager", "yields": [] }
+    "search": { "description": "The search in the box header: put EzSearch here and pass it @narrow={{narrow}}", "yields": ["narrow"] },
+    "actions": { "description": "Page actions after the search, such as the create button (with AccessControl); show icon-only buttons when narrow", "yields": ["narrow"] },
+    "bulkActions": { "description": "In the selection bar, while rows are selected: the bulk buttons", "yields": ["ids", "clear"] },
+    "selection": { "description": "The left of the controls row when @selection is not given: the select-all checkbox and the bulk action buttons", "yields": [] },
+    "pager": { "description": "The right of the controls row: AppUi::Pager", "yields": [] }
   },
   "variants": [
-    { "name": "list page", "description": "Search, create button, bulk actions and pager", "blocks": ["search", "actions", "selection", "pager"] },
+    { "name": "with selection", "description": "@selection and @rows: the selection bar with counts and bulk actions", "arguments": ["selection", "rows"], "blocks": ["search", "actions", "bulkActions", "pager"] },
+    { "name": "list page", "description": "Search, create button, own selection controls and pager", "blocks": ["search", "actions", "selection", "pager"] },
     { "name": "controls only", "description": "No header; the selection and the pager", "blocks": ["selection", "pager"] },
     { "name": "bottom", "description": "position bottom: the selection and the pager below the list", "blocks": ["selection", "pager"] }
   ]
