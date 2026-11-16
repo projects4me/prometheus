@@ -1,0 +1,136 @@
+/*
+ * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
+ */
+
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render, triggerKeyEvent, triggerEvent, focus } from '@ember/test-helpers';
+import { hbs } from 'ember-cli-htmlbars';
+import CurrentUserStub from '../../../stub-services/current-user-stub';
+
+module('Integration | Component | app-ui/gantt-chart/gantt-bar', function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+        this.owner.register('service:current-user', CurrentUserStub);
+        this.calls = { open: [], move: [], resize: [], dragStart: 0 };
+        this.issue = { id: '7', issueNumber: 42, subject: 'Fix login', projectShortcode: 'aprom' };
+        this.onOpen = (issue) => this.calls.open.push(issue);
+        this.onDragEnd = (days) => {
+            this.calls.move.push(days);
+            return Promise.resolve();
+        };
+        this.onResizeEnd = (start, end) => {
+            this.calls.resize.push([start, end]);
+            return Promise.resolve();
+        };
+        this.onDragStart = () => this.calls.dragStart++;
+        this.noop = () => {};
+    });
+
+    const renderTaskBar = (context) =>
+        render(hbs`<AppUi::GanttChart::GanttBar
+            @type="task"
+            @issue={{this.issue}}
+            @label="#42 - Fix login"
+            @startDate="2026-11-10"
+            @endDate="2026-11-12"
+            @timelineStart="2026-11-01"
+            @dayWidth={{30}}
+            @onOpen={{this.onOpen}}
+            @onDragStart={{this.onDragStart}}
+            @onDragEnd={{this.onDragEnd}}
+            @onResizeEnd={{this.onResizeEnd}}
+            @updateDependencyPositions={{this.noop}}
+        />`, context);
+
+    test('a task bar is a focusable group named after its issue', async function (assert) {
+        await renderTaskBar(this);
+        assert.dom('[data-test-gantt-bar]').hasAttribute('role', 'group');
+        assert.dom('[data-test-gantt-bar]').hasAttribute('tabindex', '0');
+        assert.dom('[data-test-gantt-bar]').hasAttribute('aria-label', '#42 - Fix login');
+        assert.dom('[data-test-gantt-bar]').hasAttribute('aria-describedby', 'gantt-bar-hint-7');
+        assert.dom('#gantt-bar-hint-7').exists();
+
+        await focus('[data-test-gantt-bar]');
+        assert.dom('[data-test-gantt-bar]').isFocused();
+    });
+
+    test('Enter and Space open the issue', async function (assert) {
+        await renderTaskBar(this);
+        await triggerKeyEvent('[data-test-gantt-bar]', 'keydown', 'Enter');
+        await triggerKeyEvent('[data-test-gantt-bar]', 'keydown', ' ');
+        assert.deepEqual(this.calls.open, [this.issue, this.issue]);
+        assert.deepEqual(this.calls.move, [], 'opening does not move the bar');
+    });
+
+    test('the arrow keys move the bar by a day', async function (assert) {
+        await renderTaskBar(this);
+        await triggerKeyEvent('[data-test-gantt-bar]', 'keydown', 'ArrowRight');
+        await triggerKeyEvent('[data-test-gantt-bar]', 'keydown', 'ArrowLeft');
+        assert.deepEqual(this.calls.move, [1, -1]);
+        assert.deepEqual(this.calls.resize, []);
+    });
+
+    test('Shift and the arrow keys move the end date by a day', async function (assert) {
+        await renderTaskBar(this);
+        await triggerKeyEvent('[data-test-gantt-bar]', 'keydown', 'ArrowRight', { shiftKey: true });
+        await triggerKeyEvent('[data-test-gantt-bar]', 'keydown', 'ArrowLeft', { shiftKey: true });
+        assert.deepEqual(this.calls.resize, [
+            ['2026-11-10', '2026-11-13'],
+            ['2026-11-10', '2026-11-11']
+        ]);
+        assert.deepEqual(this.calls.move, []);
+    });
+
+    test('Shift and the left arrow never put the end date before the start date', async function (assert) {
+        await render(hbs`<AppUi::GanttChart::GanttBar
+            @type="task"
+            @issue={{this.issue}}
+            @label="#42 - Fix login"
+            @startDate="2026-11-10"
+            @endDate="2026-11-10"
+            @timelineStart="2026-11-01"
+            @dayWidth={{30}}
+            @onResizeEnd={{this.onResizeEnd}}
+            @updateDependencyPositions={{this.noop}}
+        />`);
+        await triggerKeyEvent('[data-test-gantt-bar]', 'keydown', 'ArrowLeft', { shiftKey: true });
+        assert.deepEqual(this.calls.resize, []);
+    });
+
+    test('other keys do nothing', async function (assert) {
+        await renderTaskBar(this);
+        await triggerKeyEvent('[data-test-gantt-bar]', 'keydown', 'ArrowUp');
+        await triggerKeyEvent('[data-test-gantt-bar]', 'keydown', 'Tab');
+        assert.deepEqual(this.calls, { open: [], move: [], resize: [], dragStart: 0 });
+    });
+
+    test('mouse drag still moves the bar', async function (assert) {
+        await renderTaskBar(this);
+        const bar = this.element.querySelector('[data-test-gantt-bar]');
+        const rect = bar.getBoundingClientRect();
+        const startX = rect.left + rect.width / 2;
+        await triggerEvent(bar, 'mousedown', { button: 0, clientX: startX, clientY: rect.top + 2 });
+        await triggerEvent(document, 'mousemove', { clientX: startX + 30, clientY: rect.top + 2 });
+        await triggerEvent(document, 'mouseup', { button: 0, clientX: startX + 30, clientY: rect.top + 2 });
+        assert.strictEqual(this.calls.dragStart, 1);
+        assert.deepEqual(this.calls.move, [1]);
+    });
+
+    test('a milestone bar is not keyboard-operable', async function (assert) {
+        await render(hbs`<AppUi::GanttChart::GanttBar
+            @type="milestone"
+            @label="Release 1"
+            @startDate="2026-11-10"
+            @endDate="2026-11-20"
+            @timelineStart="2026-11-01"
+            @dayWidth={{30}}
+            @onOpen={{this.onOpen}}
+        />`);
+        assert.dom('[data-test-gantt-bar]').hasAttribute('tabindex', '-1');
+        assert.dom('[data-test-gantt-bar]').doesNotHaveAttribute('aria-describedby');
+        await triggerKeyEvent('[data-test-gantt-bar]', 'keydown', 'Enter');
+        assert.deepEqual(this.calls.open, []);
+    });
+});

@@ -2489,6 +2489,9 @@
           "startConnector": "Dependency start connector",
           "endConnector": "Dependency end connector"
         },
+        "bar": {
+          "keyboardHint": "Press Enter to open the issue. Arrow keys move it by a day; Shift and the arrow keys change its end date."
+        },
         "tooltip": {
           "estimatedHours": "Estimated hours",
           "spentHours": "Spent hours",

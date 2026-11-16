@@ -5,11 +5,17 @@
   {{on "mousedown" this.handleMouseDown}}
   {{on "mousemove" this.handleBarMouseMove}}
   {{on "click" this.handleClick}}
+  {{on "keydown" this.handleKeyDown}}
   {{on "mouseenter" this.handleMouseEnter}}
   {{on "mouseleave" this.handleMouseLeave}}
   {{did-insert this.registerElement}}
   {{will-destroy this.unregisterElement}}
   data-issue-id="{{@issue.id}}"
+  role="group"
+  tabindex={{if this.isKeyboardOperable "0" "-1"}}
+  aria-label={{this.accessibleLabel}}
+  aria-describedby={{if this.isKeyboardOperable (concat "gantt-bar-hint-" @issue.id)}}
+  data-test-gantt-bar
   {{initialize-tooltip templateId=@issue.issueNumber interactive=true theme="gantt-issue-tooltip"}}
 >
   {{#if (and (eq @type "task") @issue)}}
@@ -56,6 +62,9 @@
     {{else}}
       <span class="bar-label {{if this.isCompleted 'completed'}}">{{this.displayLabel}}</span>
     {{/if}}
+  {{/if}}
+  {{#if this.isKeyboardOperable}}
+    <span id="gantt-bar-hint-{{@issue.id}}" class="sr-only">{{t 'views.app.gantt.bar.keyboardHint'}}</span>
   {{/if}}
   {{#if (eq @type "milestone")}}
     <i class="fa fa-caret-up milestone-caret milestone-caret-end"></i>
