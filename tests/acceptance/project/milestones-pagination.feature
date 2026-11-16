@@ -77,3 +77,13 @@ Feature: Project dashboard | milestones box pages from the server
     When The second page of milestones loads again
     And User retries the milestones page
     Then The milestones box lists the milestones Milestone 04, Milestone 03, Milestone 02, Milestone 01
+
+  Scenario: Opening the dashboard loads its boxes in one bulk request
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And User selects Project 1
+    And The dashboard requests are recorded
+    When User opens the dashboard of the project
+    Then The dashboard sent one bulk request and no separate box requests

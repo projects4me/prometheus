@@ -5,8 +5,6 @@
 import App from "prometheus/routes/app";
 import { action } from '@ember/object';
 import { service } from '@ember/service';
-import { hashSettled } from 'rsvp';
-import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
 /**
@@ -28,6 +26,15 @@ export default class ProjectIndexRoute extends App {
      * @private
      */
     @service trackedProject;
+
+    /**
+     * Batches the overview's queries into one bulk request.
+     *
+     * @property bulk
+     * @type Ember.Service
+     * @private
+     */
+    @service bulk;
 
     /**
      * Query params that the route supports.
@@ -94,21 +101,23 @@ export default class ProjectIndexRoute extends App {
             limit: -1
         };
 
-        return hashSettled({
-            project: _self.store.query('project', _projectOptions),
-            milestones: _self.store.query('milestone', _milestoneOptions),
-            activities: _self.store.query('activity', _activityOptions),
-            issues: _self.store.query('issue', _issueOptions),
-            conversations: _self.store.query('conversationroom', _conversationOptions)
-        })
-            .then((data) => {
-                return extractHashSettled(data, 'project');
-            })
-            .catch((error) => {
-                _self.errorManager.handleError(error, {
-                    moduleName: "project"
-                });
-            })
+        // One bulk request; a failed item leaves its box empty, only a failed project is an error
+        let results = await _self.bulk.query([
+            { id: 'project', modelName: 'project', query: _projectOptions },
+            { id: 'milestones', modelName: 'milestone', query: _milestoneOptions },
+            { id: 'activities', modelName: 'activity', query: _activityOptions },
+            { id: 'issues', modelName: 'issue', query: _issueOptions },
+            { id: 'conversations', modelName: 'conversationroom', query: _conversationOptions }
+        ]);
+
+        if (results.project.error) {
+            _self.errorManager.handleError(results.project.error, {
+                moduleName: "project"
+            });
+            return undefined;
+        }
+
+        return Object.fromEntries(Object.entries(results).map(([key, result]) => [key, result.records ?? []]));
     }
     /**
      * The setup controller function that will be called every time the user visits

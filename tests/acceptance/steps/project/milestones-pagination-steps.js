@@ -12,6 +12,15 @@ function listedNames() {
 export const given = function () {
     return [
         {
+            "The dashboard requests are recorded": (assert, ctx) => async function () {
+                ctx.set('dashboardRequests', []);
+                server.pretender.handledRequest = (verb, path) => {
+                    ctx.set('dashboardRequests', [...ctx.get('dashboardRequests'), `${verb} ${path.split('?')[0]}`]);
+                };
+                assert.ok(true, 'requests are recorded');
+            }
+        },
+        {
             "The project has $count milestones": (assert, ctx) => async function (count) {
                 let project = ctx.get('currentProject');
                 for (let i = 1; i <= Number(count); i++) {
@@ -78,6 +87,17 @@ export const when = function () {
 
 export const then = function () {
     return [
+        {
+            "The dashboard sent one bulk request and no separate box requests": (assert, ctx) => async function () {
+                let sent = ctx.get('dashboardRequests') || [];
+                let count = (verb, model) => sent.filter((r) => r === `${verb} ${model}` || r.endsWith(`/${model}`) && r.startsWith(verb)).length;
+                assert.strictEqual(sent.filter((r) => r.startsWith('POST') && r.endsWith('/bulk')).length, 1, sent.join(' | '));
+                // the milestones box pages itself (limit 5) and is out of the bulk; the rest come through bulk
+                ['activity', 'conversationroom'].forEach((model) => {
+                    assert.strictEqual(count('GET', model), 0, sent.join(' | '));
+                });
+            }
+        },
         {
             "The milestones box requested page $page with limit $limit": (assert, ctx) => async function (page, limit) {
                 let requests = (ctx.get('milestoneRequests') || []).filter(params => params.page);
