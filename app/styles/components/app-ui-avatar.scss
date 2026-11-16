@@ -65,3 +65,58 @@
     .app-ui-avatar-marker { display: inline-flex; font-size: 20px; right: 2px; bottom: 2px; }
   }
 }
+
+/*
+  Generated avatar (no image): initials on a base colour with a pattern in the accent colour at 50% opacity.
+  The order of this list must never change and must match COLORS in app/utils/ui/avatar-identity.js
+  (reordering changes every user's avatar): c0..c5 are the base, a0..a5 the accent.
+*/
+$avatarColors: $primaryColor, $highlightColor, $secondaryColor, $dangerColor, $warningColor, $darkColor;
+
+.app-ui-avatar {
+  .app-ui-avatar-initials {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 50%;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1;
+    user-select: none;
+
+    > .fa-user { font-size: 20px; }
+  }
+
+  .app-ui-avatar-text,
+  .app-ui-avatar-initials > .fa {
+    position: relative;
+  }
+
+  .app-ui-avatar-pattern {
+    position: absolute;
+    opacity: 0.5;
+
+    &.app-ui-avatar-pattern--half-bottom { left: 0; right: 0; bottom: 0; height: 50%; }
+    &.app-ui-avatar-pattern--half-left { left: 0; top: 0; bottom: 0; width: 50%; }
+    &.app-ui-avatar-pattern--corner-top-right { top: -25%; right: -25%; width: 60%; height: 60%; border-radius: 50%; }
+    &.app-ui-avatar-pattern--corner-bottom-left { bottom: -25%; left: -25%; width: 60%; height: 60%; border-radius: 50%; }
+    &.app-ui-avatar-pattern--ring { top: 8%; left: 8%; right: 8%; bottom: 8%; border-radius: 50%; background: transparent !important; border: 3px solid; }
+  }
+
+  @each $color in $avatarColors {
+    $i: index($avatarColors, $color) - 1;
+    .app-ui-avatar--c#{$i} { background: $color; }
+    .app-ui-avatar--a#{$i} { background: $color; border-color: $color; }
+  }
+
+  &.app-ui-avatar-xs .app-ui-avatar-initials { font-size: 10px; > .fa-user { font-size: 11px; } }
+  &.app-ui-avatar-s .app-ui-avatar-initials { font-size: 13px; > .fa-user { font-size: 16px; } }
+  &.app-ui-avatar-l .app-ui-avatar-initials { font-size: 38px; > .fa-user { font-size: 48px; } }
+  &.app-ui-avatar-xs .app-ui-avatar-pattern--ring { border-width: 2px; }
+  &.app-ui-avatar-l .app-ui-avatar-pattern--ring { border-width: 6px; }
+}

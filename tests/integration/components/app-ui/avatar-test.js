@@ -6,9 +6,22 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
+import ENV from 'prometheus/config/environment';
+
+// A data URL as the API host, so the user image address (host + /userimage/get/id) loads without a network.
+const PIXEL = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==#';
 
 module('Integration | Component | app-ui/avatar', function (hooks) {
     setupRenderingTest(hooks);
+
+    let host;
+    hooks.beforeEach(function () {
+        host = ENV.api.host;
+        ENV.api.host = PIXEL;
+    });
+    hooks.afterEach(function () {
+        ENV.api.host = host;
+    });
 
     test('it shows the user image as an img-circle at size m by default', async function (assert) {
         this.set('user', { id: 7, name: 'Ada Lovelace' });
@@ -34,20 +47,34 @@ module('Integration | Component | app-ui/avatar', function (hooks) {
         }
     });
 
-    test('it shows the default image when there is no id', async function (assert) {
-        this.set('user', { name: 'No Image' });
+    test('it shows the initials when there is no id', async function (assert) {
+        this.set('user', { name: 'Ada Lovelace' });
         await render(hbs`<AppUi::Avatar @user={{this.user}} @size="l" />`);
 
-        assert.dom('[data-test-avatar-image]').hasAttribute('src', '/img/default.png');
+        assert.dom('[data-test-avatar-image]').doesNotExist();
+        assert.dom('[data-test-avatar-text]').hasText('AL');
+        assert.dom('[data-test-avatar]').hasAttribute('title', 'Ada Lovelace');
+        assert.dom('[data-test-avatar-initials]').hasClass(/app-ui-avatar--c\d/);
+        assert.dom('[data-test-avatar-pattern]').hasClass(/app-ui-avatar--a\d/);
     });
 
-    test('it falls back to the default image when the image fails', async function (assert) {
-        this.set('user', { id: 7, name: 'Ada' });
-        await render(hbs`<AppUi::Avatar @user={{this.user}} />`);
+    test('it shows the initials when the image fails, the same look for the same user', async function (assert) {
+        this.set('user', { id: 7, name: 'Ada Lovelace' });
+        await render(hbs`<AppUi::Avatar @user={{this.user}} /><AppUi::Avatar @user={{this.user}} @size="s" />`);
         this.element.querySelector('[data-test-avatar-image]').dispatchEvent(new Event('error'));
         await settled();
 
-        assert.dom('[data-test-avatar-image]').hasAttribute('src', '/img/default.png');
+        assert.dom('[data-test-avatar-text]').hasText('AL');
+        assert.dom('[data-test-avatar-image]').exists({ count: 1 }, 'the other avatar still has its own image');
+    });
+
+    test('it shows a user icon when the name is missing', async function (assert) {
+        this.set('user', { id: 0 });
+        await render(hbs`<AppUi::Avatar @user={{this.user}} />`);
+
+        assert.dom('[data-test-avatar-icon]').exists();
+        assert.dom('[data-test-avatar-text]').doesNotExist();
+        assert.dom('[data-test-avatar-initials]').hasClass(/app-ui-avatar--c\d/);
     });
 
     test('an agent with a picture shows it with the robot marker from size s up', async function (assert) {
@@ -67,6 +94,7 @@ module('Integration | Component | app-ui/avatar', function (hooks) {
         await render(hbs`<AppUi::Avatar @user={{this.user}} @size="l" />`);
 
         assert.dom('[data-user-agent-avatar] .fa-android').exists();
+        assert.dom('[data-test-avatar-initials]').doesNotExist();
         assert.dom('[data-agent-avatar-picture]').doesNotExist();
         assert.dom('[data-test-avatar-marker]').doesNotExist();
     });
