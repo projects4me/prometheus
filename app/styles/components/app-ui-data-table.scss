@@ -43,7 +43,8 @@
     }
   }
 
-  // Row actions: icon-only box-tool look, grey, 14px, square, right-aligned with one gap.
+  // Row actions: the same icon-only btn-box-tool look as the Issue and Project lists
+  // (AdminLTE grey, 12px, 5px padding, primary colour on hover), right-aligned with one gap.
   .actions {
     white-space: nowrap;
     text-align: right;
@@ -67,16 +68,19 @@
       border: 0;
       border-radius: 0;
       box-shadow: none;
-      color: $mediumColor;
-      font-size: 14px;
+      color: #97a0b3;
+      font-size: 12px;
       height: auto;
-      line-height: 1;
-      padding: 2px 6px;
+      line-height: 1.5;
+      padding: 5px;
+      outline: none;
 
       &:hover,
-      &:focus {
+      &:focus,
+      &:hover .fa,
+      &:focus .fa {
         background: transparent;
-        color: #444;
+        color: $primaryColor;
       }
     }
   }
