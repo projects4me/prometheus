@@ -4,7 +4,8 @@
 
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled } from '@ember/test-helpers';
+import { render, settled, waitUntil } from '@ember/test-helpers';
+import { htmlSafe } from '@ember/template';
 import { hbs } from 'ember-cli-htmlbars';
 import ENV from 'prometheus/config/environment';
 
@@ -111,5 +112,98 @@ module('Integration | Component | app-ui/avatar', function (hooks) {
         assert.dom('[data-test-avatar-initials]').doesNotExist();
         assert.dom('[data-agent-avatar-picture]').doesNotExist();
         assert.dom('[data-test-avatar-marker]').doesNotExist();
+    });
+
+    module('@minSize', function (hooks) {
+        // Two animation frames, so a pending width report (sent in the next frame) has been applied.
+        const frames = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        const avatar = () => document.querySelector('[data-test-avatar]');
+        const sizedAs = (size) => waitUntil(() => avatar().getAttribute('data-size') === size, { timeout: 2000 });
+
+        hooks.beforeEach(function () {
+            this.set('user', { name: 'Ada Lovelace' });
+        });
+
+        test('it stays at l when the parent has room for it', async function (assert) {
+            this.set('box', htmlSafe('width: 300px'));
+            await render(hbs`<div style={{this.box}}><AppUi::Avatar @user={{this.user}} @size="l" @minSize="m" /></div>`);
+            await frames();
+            await settled();
+
+            assert.dom('[data-test-avatar]').hasAttribute('data-size', 'l');
+            assert.dom('[data-test-avatar]').hasClass('app-ui-avatar-l');
+            assert.strictEqual(avatar().offsetWidth, 96);
+        });
+
+        test('it steps down to ml, then m, and back up as the parent resizes', async function (assert) {
+            this.set('box', htmlSafe('width: 80px'));
+            await render(hbs`<div style={{this.box}}><AppUi::Avatar @user={{this.user}} @size="l" @minSize="m" /></div>`);
+            await sizedAs('ml');
+            assert.dom('[data-test-avatar]').hasClass('app-ui-avatar-ml');
+            assert.strictEqual(avatar().offsetWidth, 64);
+
+            this.set('box', htmlSafe('width: 50px'));
+            await sizedAs('m');
+            assert.dom('[data-test-avatar]').hasClass('app-ui-avatar-m');
+            assert.strictEqual(avatar().offsetWidth, 40);
+
+            this.set('box', htmlSafe('width: 200px'));
+            await sizedAs('l');
+            assert.strictEqual(avatar().offsetWidth, 96);
+        });
+
+        test('it stays at @minSize when no size fits', async function (assert) {
+            this.set('box', htmlSafe('width: 10px'));
+            await render(hbs`<div style={{this.box}}><AppUi::Avatar @user={{this.user}} @size="l" @minSize="m" /></div>`);
+            await sizedAs('m');
+            await frames();
+            await settled();
+
+            assert.dom('[data-test-avatar]').hasAttribute('data-size', 'm');
+        });
+
+        test('it settles in a parent whose width follows its content', async function (assert) {
+            this.set('box', htmlSafe('display: inline-block; max-width: 80px'));
+            await render(hbs`<div style={{this.box}} data-test-parent><AppUi::Avatar @user={{this.user}} @size="l" @minSize="m" /></div>`);
+            await sizedAs('ml');
+
+            let sizes = [];
+            for (let i = 0; i < 5; i++) {
+                await frames();
+                await settled();
+                sizes.push(avatar().getAttribute('data-size'));
+            }
+            assert.deepEqual(sizes, ['ml', 'ml', 'ml', 'ml', 'ml'], 'the size does not change once settled');
+            assert.strictEqual(document.querySelector('[data-test-parent]').offsetWidth, 64);
+        });
+
+        test('it does not observe anything without a valid @minSize smaller than @size', async function (assert) {
+            let original = window.ResizeObserver;
+            let observed = 0;
+            window.ResizeObserver = class extends original {
+                observe(...args) {
+                    observed++;
+                    return super.observe(...args);
+                }
+            };
+            try {
+                this.set('box', htmlSafe('width: 10px'));
+                this.set('minSize', undefined);
+                await render(hbs`<div style={{this.box}}><AppUi::Avatar @user={{this.user}} @size="l" @minSize={{this.minSize}} /></div>`);
+                for (let minSize of [undefined, 'huge', 'l']) {
+                    this.set('minSize', minSize);
+                    await frames();
+                    await settled();
+                    assert.dom('[data-test-avatar]').hasAttribute('data-size', 'l', `@minSize ${minSize} keeps l`);
+                }
+                assert.strictEqual(observed, 0, 'no ResizeObserver was attached');
+
+                this.set('minSize', 'sm');
+                await sizedAs('s');
+                assert.strictEqual(observed, 1, 'a valid @minSize (alias sm) attaches one observer');
+            } finally {
+                window.ResizeObserver = original;
+            }
+        });
     });
 });

@@ -5,10 +5,12 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { htmlSafe } from '@ember/template';
 
 /**
  * The AppUi::Avatar demo of the Component Library: a person, a person without image, and an agent with and
- * without a picture in each standard size, with controls for the size and for a failing image.
+ * without a picture in each standard size, with controls for the size and for a failing image, and an avatar with
+ * @minSize in a container whose width can be changed.
  *
  * @class DeveloperDemosAvatarComponent
  * @namespace Prometheus.Components.Developer.Demos
@@ -17,6 +19,7 @@ import { action } from '@ember/object';
 export default class DeveloperDemosAvatarComponent extends Component {
     @tracked size = 'm';
     @tracked imageFails = false;
+    @tracked boxWidth = 120;
 
     sizes = [
         { label: 'xs', value: 'xs' },
@@ -45,6 +48,10 @@ export default class DeveloperDemosAvatarComponent extends Component {
         return { id: this.imageFails ? 'missing-image' : 1, name: 'Ada Lovelace', type: 'user' };
     }
 
+    get boxStyle() {
+        return htmlSafe(`width: ${Number(this.boxWidth)}px; border: 1px dashed #d2d6de;`);
+    }
+
     get selectedUser() {
         return this.person;
     }
@@ -57,5 +64,10 @@ export default class DeveloperDemosAvatarComponent extends Component {
     @action
     toggleImageFails(event) {
         this.imageFails = event.target.checked;
+    }
+
+    @action
+    setBoxWidth(event) {
+        this.boxWidth = Number(event.target.value);
     }
 }
