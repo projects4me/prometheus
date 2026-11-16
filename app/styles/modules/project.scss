@@ -10,8 +10,10 @@
 
 .project-manager {
   text-align: center;
-  > img {
-    width: 100%;
+
+  .app-ui-avatar {
+    display: block;
+    margin: 0 auto 0.5rem;
   }
 }
 
@@ -75,6 +77,10 @@
   li {
     border-bottom: 1px solid #f4f4f4;
     padding: 1rem;
+
+    .user-block .app-ui-avatar {
+      float: left;
+    }
 
     .subject {
       margin-left: 1rem;
@@ -279,6 +285,10 @@
   .member-avatar-wrap {
     position: relative;
     display: inline-block;
+
+    .app-ui-avatar > img {
+      max-width: none;
+    }
   }
 
   .member-account-status {
