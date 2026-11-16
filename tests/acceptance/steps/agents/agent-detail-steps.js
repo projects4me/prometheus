@@ -94,6 +94,10 @@ export default function (assert) {
 		.then('The agent detail shows the AGENT label', function () {
 			assert.ok(document.querySelector('[data-agent-box="header"] [data-agent-badge]'), 'The agent detail shows the AGENT label');
 		})
+		.then('The agent detail shows a 96px avatar', function () {
+			const avatar = document.querySelector('[data-agent-box="header"] [data-test-avatar]');
+			assert.equal(avatar && avatar.getAttribute('data-size'), 'l', 'The agent detail avatar is size l');
+		})
 		.then('The agent detail shows sponsor "$sponsor", model simple "$simple" and model complex "$complex"', function (sponsor, simple, complex) {
 			assert.equal(field('sponsor'), sponsor, 'sponsor');
 			assert.equal(field('model-simple'), simple, 'model simple');

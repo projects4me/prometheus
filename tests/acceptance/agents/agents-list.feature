@@ -14,6 +14,7 @@ Feature: Agents | list
     Then Agents list has 2 agents
     And Agent "Agent Achilles" shows sponsor "Sponsor One" and models "sonnet · opus"
     And Agent "Agent Argus" shows sponsor "Autonomous" and models "sonnet"
+    And The agents show 40px avatars
 
   Scenario: User deactivates and activates the selected agents
 

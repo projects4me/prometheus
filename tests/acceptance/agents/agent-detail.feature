@@ -9,6 +9,7 @@ Feature: Agents | detail
     And Agent "Agent Achilles" runs for "Sponsor One" with models "sonnet" and "opus"
     When User opens the detail page of agent "Agent Achilles"
     Then The agent detail shows the AGENT label
+    And The agent detail shows a 96px avatar
     And The agent detail shows sponsor "Sponsor One", model simple "sonnet" and model complex "opus"
 
   Scenario: The agent page loads its related data in one bulk request
