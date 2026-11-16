@@ -9,11 +9,13 @@ Feature: Workflows | list
     And The Active workflow "Agent coding loop" triggers on issue.assignee.changed and runs the agent "Agent Achilles"
     And The Draft workflow "Triage new issues" triggers on issue.created and asks the user placeholder "{issue.reporterId}"
     And The workflow "Agent coding loop" ran 3 times in the last week
+    And API requests are recorded
     When User navigates to app/workflow
 
   Scenario: User sees the workflows with trigger, actors and runs
 
     Then Workflows list has 2 workflows
+    And The list should have loaded through at most 2 bulk requests
     And Workflow "Agent coding loop" shows trigger "Issue · Assignee changed" and 3 runs
     And Workflow "Agent coding loop" has the agent actor "Agent Achilles"
     And Workflow "Triage new issues" shows trigger "Issue · Created" and 0 runs
