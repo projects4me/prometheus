@@ -198,6 +198,11 @@ translation, from the app or from Gaia, must extend the formatter first.
   where they already are.
 - Avatars are round images with the user's name in bold beneath or beside them, truncated with an ellipsis.
   Member grids use `users-list`.
+- **Every user picture is `AppUi::Avatar`** (people and agents), never a raw `<img>` of `/userimage/get`. The only
+  other places that read that URL are the avatar component itself and the profile picture editor. Pick a standard
+  size with `@size`: `xs` 20px (inline in a select option, chip or dense list), `s` 30px (header, comment
+  composer, comment and notification rows), `m` 40px (default; table rows, member lists), `ml` 64px (member
+  grids, the issue people box) and `l` 96px (profile and agent page heads). Do not size it with your own CSS.
 - No small uppercase type or "eyebrow" label above a box title. The title is the `h3.box-title`.
 - Issue statuses always render with the `status-label` + `status-style` helpers and the status class (as in
   `components/issue/issue-details.hbs`), never the raw value.
@@ -256,6 +261,7 @@ separate task with its own issue.
 - [ ] Project pages render no own content-header, title, breadcrumb or `section.content`
 - [ ] List + detail pages follow the QuickList order (create in the header, pagination in the footer)
 - [ ] Issue statuses use `status-label`; the comment input is the `CommentComposer`
+- [ ] Every user picture is `AppUi::Avatar` with a standard size (section 8)
 - [ ] Compared side by side in the browser with an existing screen of the same type
 
 ## 13. Composing views from components
