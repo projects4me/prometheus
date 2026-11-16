@@ -7,14 +7,15 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import ENV from 'prometheus/config/environment';
 import { isDefaultProfilePicture } from 'prometheus/models/user';
+import { initials, identity, PATTERNS } from 'prometheus/utils/ui/avatar-identity';
 
 const SIZES = ['xs', 's', 'm', 'l'];
 const ALIASES = { sm: 's' };
-const DEFAULT_IMAGE = '/img/default.png';
 
 /**
  * The round picture of a user (person or agent) in the standard sizes xs, s, m (default) and l. A person
- * without an image, or whose image fails to load, shows the default image. An agent shows its own picture with
+ * without an image, or whose image fails to load, shows the initials on a generated background that is stable
+ * per user (or a user icon when there is no name). An agent shows its own picture with
  * a small robot marker, or the robot icon when it has none.
  *
  * @class AppUiAvatarComponent
@@ -63,8 +64,28 @@ export default class AppUiAvatarComponent extends Component {
         return id ? `${ENV.api.host}/userimage/get/${id}` : null;
     }
 
-    get src() {
-        return this.imageUrl && !this.failed ? this.imageUrl : DEFAULT_IMAGE;
+    get showInitials() {
+        return !this.imageUrl || this.failed;
+    }
+
+    get initials() {
+        return initials(this.args.user?.name, this.size);
+    }
+
+    get identity() {
+        let user = this.args.user;
+
+        return identity(user?.id || user?.name || '');
+    }
+
+    get identityClass() {
+        let { base, pattern } = this.identity;
+
+        return `app-ui-avatar--c${base} app-ui-avatar--p${pattern}`;
+    }
+
+    get patternClass() {
+        return `app-ui-avatar-pattern app-ui-avatar-pattern--${PATTERNS[this.identity.pattern]} app-ui-avatar--a${this.identity.accent}`;
     }
 
     onError = () => {

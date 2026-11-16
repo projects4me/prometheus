@@ -22,13 +22,13 @@ module('Integration | Component | developer/demos/display', function (hooks) {
 
 	test('avatar shows people and agents in each size, with size and failing image controls', async function (assert) {
 		await render(hbs`<Developer::Demos::Avatar @entry={{this.entry}} />`);
-		assert.dom('[data-demo-avatar] [data-test-avatar]').exists({ count: 16 });
-		assert.dom('[data-demo-avatar] [data-test-avatar][data-size="l"]').exists({ count: 4 });
+		assert.dom('[data-demo-avatar] [data-test-avatar]').exists({ count: 36 });
+		assert.dom('[data-demo-avatar] [data-test-avatar][data-size="l"]').exists({ count: 9 });
 		assert.dom('[data-demo-avatar-selected] [data-test-avatar]').hasAttribute('data-size', 'm');
 		await fillIn('[data-demo-avatar-size]', 'l');
 		assert.dom('[data-demo-avatar-selected] [data-test-avatar]').hasAttribute('data-size', 'l');
 		await click('[data-demo-avatar-fails]');
-		assert.dom('[data-demo-avatar-selected] [data-test-avatar-image]').hasAttribute('data-image-url', /missing-image/);
+		assert.dom('[data-demo-avatar-selected] [data-test-avatar-initials]').exists();
 	});
 
 	test('status label shows every status', async function (assert) {

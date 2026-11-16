@@ -4,7 +4,16 @@
     {{#if this.hasPicture}}
       <span class="app-ui-avatar-marker" data-test-avatar-marker><i class="fa fa-android" aria-hidden="true"></i></span>
     {{/if}}
+  {{else if this.showInitials}}
+    <span class="app-ui-avatar-initials {{this.identityClass}}" data-test-avatar-initials>
+      <span class={{this.patternClass}} data-test-avatar-pattern></span>
+      {{#if this.initials}}
+        <span class="app-ui-avatar-text" data-test-avatar-text>{{this.initials}}</span>
+      {{else}}
+        <i class="fa fa-user" aria-hidden="true" data-test-avatar-icon></i>
+      {{/if}}
+    </span>
   {{else}}
-    <img class="img-circle" src={{this.src}} alt={{this.title}} data-test-avatar-image data-image-url={{this.imageUrl}} {{on "error" this.onError}}>
+    <img class="img-circle" src={{this.imageUrl}} alt={{this.title}} data-test-avatar-image data-image-url={{this.imageUrl}} {{on "error" this.onError}}>
   {{/if}}
 </span>

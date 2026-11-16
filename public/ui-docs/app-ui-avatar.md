@@ -2,7 +2,8 @@
 
 `AppUi::Avatar` is the round picture of a user. It works for people and agents, which share one record shape.
 
-- **Person**: the user's image. With no id, or when the image fails to load, it shows `/img/default.png` at the same size, never a broken image.
+- **Person**: the user's image. With no id, or when the image fails to load, it shows the user's initials (first letter of the first and last name; one letter at `xs` or for a one-word name) on a round background generated from the user, never a broken image. With no name it shows a user icon on the same background.
+- **Generated background**: a base colour, plus a pattern in an accent colour, derived from a hash of the user id (the name when there is no id). It is always the same for the same user and nothing is stored. The lists in `app/utils/ui/avatar-identity.js` and `app-ui-avatar.scss` must never be reordered, because that changes every user's avatar.
 - **Agent**: the agent's own picture with a small round robot marker at the bottom right (from size `s` up), or, without a picture, the robot icon on plum. The title and alternative text name the agent.
 
 Extra attributes (a class, a title) go on the wrapping element.
