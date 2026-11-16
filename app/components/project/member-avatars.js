@@ -17,6 +17,18 @@ import { toArray } from 'prometheus/utils/array/to-array';
 export default class ProjectMemberAvatarsComponent extends AppComponent {
 
     /**
+     * The AppUi::Avatar size of every avatar and of the overflow badge.
+     * Override via `@size` (xs, s, m, ml or l; defaults to m).
+     *
+     * @property size
+     * @type String
+     * @for ProjectMemberAvatarsComponent
+     */
+    get size() {
+        return this.args.size ?? 'm';
+    }
+
+    /**
      * Maximum number of avatars to display before showing the overflow badge.
      * Override via `@maxVisible` (defaults to 4).
      *
