@@ -6,6 +6,8 @@ import agentFixtureSteps from './agent-fixtures';
 
 const field = (name) => document.querySelector(`[data-agent-field="${name}"]`)?.textContent.replace(/\s+/g, ' ').trim();
 
+let recorded = [];
+
 export default function (assert) {
 	return agentFixtureSteps(steps(assert))
 		.given('Agent "$name" has $count activities', function (name, count) {
@@ -38,6 +40,18 @@ export default function (assert) {
 				}
 				return schema.activities.all();
 			});
+		})
+		.given('API requests are recorded', function () {
+			recorded = [];
+			server.pretender.handledRequest = (verb, path) => {
+				recorded.push({ verb, path: path.split('?')[0] });
+			};
+		})
+		.then('The agent page made one agent request and one bulk request', function () {
+			let count = (verb, pattern) => recorded.filter((request) => request.verb === verb && pattern.test(request.path)).length;
+			assert.equal(count('GET', /\/agent$/), 1, 'one agent GET');
+			assert.equal(count('POST', /\/bulk$/), 1, 'one bulk POST');
+			assert.equal(count('GET', /\/(userrole|membership|useridentity|agenttool|agentskill|tool|toolserver|skill|activity)$/), 0, 'no separate related requests');
 		})
 		.given('Gaia fails to load agents', function () {
 			server.get('/agent', () => new Response(500, {}, { errors: [{ status: '500', title: 'Internal Server Error' }] }));

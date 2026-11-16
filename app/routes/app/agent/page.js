@@ -3,6 +3,7 @@
  */
 
 import AppRoute from 'prometheus/routes/app';
+import { service } from '@ember/service';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
 import { pushRecords } from 'prometheus/utils/array/record-list';
@@ -16,7 +17,15 @@ import { pushRecords } from 'prometheus/utils/array/record-list';
  */
 export default class AppAgentPageRoute extends AppRoute {
     /**
-     * Loads the agent with its user and sponsor, then its user's roles, project memberships and identities.
+     * Batches the agent's related queries into one bulk request.
+     *
+     * @property bulk
+     * @type Ember.Service
+     */
+    @service bulk;
+
+    /**
+     * Loads the agent with its user and sponsor, then its user's roles, project memberships, identities, grants and activities in one bulk request.
      * These are separate queries because Gaia limits the joined rows of a hasMany, not the parents.
      * Resolves to `{ notFound: true }` when there is no such agent and to `{ failed: true }` when a query fails.
      *
@@ -40,38 +49,52 @@ export default class AppAgentPageRoute extends AppRoute {
             return { notFound: true };
         }
 
+        let userId = agent.userId;
+        let results;
         try {
-            let userId = agent.userId;
-            let [userroles, memberships, identities, toolGrants, skillGrants, tools, servers, skills, activities] = await Promise.all([
-                this.store.query('userrole', { query: `(Userrole.userId : ${userId})`, rels: 'role', limit: -1 }),
-                this.store.query('membership', { query: `(Membership.userId : ${userId})`, rels: 'project', limit: -1 }),
-                this.store.query('useridentity', { query: `(Useridentity.userId : ${userId})`, limit: -1 }),
-                this.store.query('agenttool', { query: `(Agenttool.agentId : ${agent.id})`, limit: -1 }),
-                this.store.query('agentskill', { query: `(Agentskill.agentId : ${agent.id})`, limit: -1 }),
-                this.store.query('tool', { limit: -1 }),
-                this.store.query('toolserver', { limit: -1 }),
-                this.store.query('skill', { limit: -1 }),
-                this.store.query('activity', {
-                    query: `((Activity.createdUser : ${userId}) OR ((Activity.relatedTo : agent) AND (Activity.relatedId : ${agent.id})))`,
-                    sort: 'Activity.dateCreated',
-                    order: 'DESC',
-                    limit: 50
-                })
+            results = await this.bulk.query([
+                { id: 'userroles', modelName: 'userrole', query: { query: `(Userrole.userId : ${userId})`, rels: 'role', limit: -1 } },
+                { id: 'memberships', modelName: 'membership', query: { query: `(Membership.userId : ${userId})`, rels: 'project', limit: -1 } },
+                { id: 'identities', modelName: 'useridentity', query: { query: `(Useridentity.userId : ${userId})`, limit: -1 } },
+                { id: 'toolGrants', modelName: 'agenttool', query: { query: `(Agenttool.agentId : ${agent.id})`, limit: -1 } },
+                { id: 'skillGrants', modelName: 'agentskill', query: { query: `(Agentskill.agentId : ${agent.id})`, limit: -1 } },
+                { id: 'tools', modelName: 'tool', query: { limit: -1 } },
+                { id: 'servers', modelName: 'toolserver', query: { limit: -1 } },
+                { id: 'skills', modelName: 'skill', query: { limit: -1 } },
+                {
+                    id: 'activities',
+                    modelName: 'activity',
+                    query: {
+                        query: `((Activity.createdUser : ${userId}) OR ((Activity.relatedTo : agent) AND (Activity.relatedId : ${agent.id})))`,
+                        sort: 'Activity.dateCreated',
+                        order: 'DESC',
+                        limit: 50
+                    }
+                }
             ]);
-
-            return {
-                agent,
-                userroles: userroles.slice(),
-                memberships: memberships.slice(),
-                identities: identities.slice(),
-                grantedTools: this.describeToolGrants(toolGrants, tools, servers),
-                grantedSkills: this.describeSkillGrants(skillGrants, skills),
-                activities: activities.slice()
-            };
         } catch (error) {
             this.errorManager.handleLoadError(error, { moduleName: 'agent' });
             return { failed: true };
         }
+
+        // a failing item fails the page, as a failing query did before
+        let failed = Object.values(results).find((result) => result.error);
+        if (failed) {
+            this.errorManager.handleLoadError(failed.error, { moduleName: 'agent' });
+            return { failed: true };
+        }
+
+        let records = (id) => results[id].records;
+
+        return {
+            agent,
+            userroles: records('userroles').slice(),
+            memberships: records('memberships').slice(),
+            identities: records('identities').slice(),
+            grantedTools: this.describeToolGrants(records('toolGrants'), records('tools'), records('servers')),
+            grantedSkills: this.describeSkillGrants(records('skillGrants'), records('skills')),
+            activities: records('activities').slice()
+        };
     }
 
     /**

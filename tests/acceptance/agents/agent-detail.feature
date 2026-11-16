@@ -11,6 +11,16 @@ Feature: Agents | detail
     Then The agent detail shows the AGENT label
     And The agent detail shows sponsor "Sponsor One", model simple "sonnet" and model complex "opus"
 
+  Scenario: The agent page loads its related data in one bulk request
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_1 is logged in
+    And Agent "Agent Achilles" runs for "Sponsor One" with models "sonnet" and "opus"
+    And API requests are recorded
+    When User opens the detail page of agent "Agent Achilles"
+    Then The agent page made one agent request and one bulk request
+
   Scenario: User issues, rotates and revokes the credentials of an agent
 
     Given There is no pre-existing data
