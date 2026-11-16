@@ -44,12 +44,15 @@ export default function (assert) {
 		.given('API requests are recorded', function () {
 			recorded = [];
 			server.pretender.handledRequest = (verb, path) => {
-				recorded.push({ verb, path: path.split('?')[0] });
+				let [route, query = ''] = path.split('?');
+				recorded.push({ verb, path: route, query });
 			};
 		})
 		.then('The agent page made one agent request and one bulk request', function () {
 			let count = (verb, pattern) => recorded.filter((request) => request.verb === verb && pattern.test(request.path)).length;
-			assert.equal(count('GET', /\/agent$/), 1, 'one agent GET');
+			// The application shell's avatars load the agent directory once (limit 200); that is not the page's request.
+			let directory = recorded.filter((request) => request.verb === 'GET' && /\/agent$/.test(request.path) && /limit=200/.test(request.query)).length;
+			assert.equal(count('GET', /\/agent$/) - directory, 1, 'one agent GET');
 			assert.equal(count('POST', /\/bulk$/), 1, 'one bulk POST');
 			assert.equal(count('GET', /\/(userrole|membership|useridentity|agenttool|agentskill|tool|toolserver|skill|activity)$/), 0, 'no separate related requests');
 		})

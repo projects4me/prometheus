@@ -4,7 +4,6 @@
 
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
-import ENV from 'prometheus/config/environment';
 
 /**
  * Application control sidebar (AdminLTE). The sidebar itself is activated by the activate-control-sidebar
@@ -25,15 +24,6 @@ export default class ApplicationControlbarComponent extends Component {
      * @for ApplicationControlbar
      */
     @service currentUser;
-
-    /**
-     * The API host, used for the user images
-     *
-     * @property apiHost
-     * @type String
-     * @for ApplicationControlbar
-     */
-    apiHost = ENV.api.host;
 
     /**
      * The online users listed in the sidebar (none are loaded yet)

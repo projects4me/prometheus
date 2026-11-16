@@ -1,0 +1,20 @@
+/*
+  Layout of AppUi::Avatar in the app shell. The AdminLTE rules for the old raw images (.navbar .user-image,
+  .user-header > img, .contacts-list-img) no longer match the avatar, so the float and margin they gave are
+  scoped here instead of restyling the avatar.
+*/
+.navbar .header-user-avatar {
+  float: left;
+  margin-top: -2px;
+  margin-right: 10px;
+}
+
+.user-header > .header-menu-avatar {
+  display: block;
+  margin: 0 auto;
+}
+
+.control-sidebar-menu .contacts-list-avatar {
+  float: left;
+  margin-right: 10px;
+}
