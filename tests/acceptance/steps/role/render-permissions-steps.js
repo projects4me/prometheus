@@ -60,7 +60,7 @@ export const then = function () {
         },
         {
             "There are $permissionCount field permissions for issue module": (assert) => async function (permissionCount) {
-                await click('[data-role="permissions"] a[href="#role-permission-fields"]');
+                await click('[data-role="permissions"] [data-tab="fields"]');
                 assert.dom('[data-role="permission-fields"] [data-permission-module="issue"] [data-module-resource]').exists({
                     count: parseInt(permissionCount, 10)
                 });

@@ -84,3 +84,60 @@ Feature: render milestone
     When User navigates to app/project/project_1/board
     And User clicks on first issue quick view
     Then User should see issue details section with issue subject
+
+
+  Scenario: Render the taskboard through two bulk requests, with and without an ezSearch query
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_4 is logged in
+    And User_4 selects Project 1
+    And Project has following details
+    ------------------------------------------------------
+    | milestones(milestone) | issuestatuses(issuestatus) |
+    | 1                     | 7                          |
+    ------------------------------------------------------
+    And Each milestone has 5 issues and there status are
+    ------------------------------------------------------------------------
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 1           | 1         | 2    |  0       | 0       | 0        |
+    ------------------------------------------------------------------------
+    And backlog has 2 issues
+    ------------------------------------------------------------------------
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 0           | 0         | 0    |  1       | 0       | 0        |
+    ------------------------------------------------------------------------
+    And There is custom callback for board issues
+    And API requests are recorded
+    When User navigates to app/project/project_1/board
+    Then The board should have loaded through 2 bulk requests and no per-milestone issue requests
+    And User should see 1 issues in new status
+    And User should see 2 issues in done status
+
+  Scenario: Render the taskboard with an ezSearch query applied
+
+    Given There is no pre-existing data
+    And default scenario is loaded
+    And User_4 is logged in
+    And User_4 selects Project 1
+    And Project has following details
+    ------------------------------------------------------
+    | milestones(milestone) | issuestatuses(issuestatus) |
+    | 1                     | 7                          |
+    ------------------------------------------------------
+    And Each milestone has 5 issues and there status are
+    ------------------------------------------------------------------------
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 1           | 1         | 2    |  0       | 0       | 0        |
+    ------------------------------------------------------------------------
+    And backlog has 2 issues
+    ------------------------------------------------------------------------
+    | new | in_progress | in_review | done | feedback | pending | deferred |
+    | 1   | 0           | 0         | 0    |  1       | 0       | 0        |
+    ------------------------------------------------------------------------
+    And There is custom callback for board issues
+    And API requests are recorded
+    When User navigates to app/project/project_1/board?query=(Issue.priority%20%3A%20high)
+    Then The board should have loaded through 2 bulk requests and no per-milestone issue requests
+    And User should see 1 issues in new status
+    And User should see 2 issues in done status

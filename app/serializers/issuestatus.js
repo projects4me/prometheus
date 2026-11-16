@@ -14,7 +14,7 @@ import ApplicationSerializer from 'prometheus/serializers/application';
  * @namespace Prometheus.Serializers
  * @extends Application
  */
-export default ApplicationSerializer.extend({
+export default class IssuestatusSerializer extends ApplicationSerializer {
 
     /**
      * Attribute serialization options
@@ -23,9 +23,9 @@ export default ApplicationSerializer.extend({
      * @type Object
      * @protected
      */
-    attrs: {
+    attrs = {
         issueCount: { serialize: false }
-    },
+    };
 
     /**
      * Leaves the labels out of the payload unless they changed.
@@ -42,6 +42,6 @@ export default ApplicationSerializer.extend({
             return;
         }
 
-        this._super(...arguments);
+        super.serializeAttribute(...arguments);
     }
-});
+}

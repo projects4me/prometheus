@@ -14,7 +14,8 @@ export default function (assert) {
 		.then('There is a new milestone created with $milestoneName', async function (milestoneName) {
 			const firstTab = document.querySelector('.milestone-tab:first-child');
 			assert.ok(firstTab, 'First milestone tab should exist');
-			assert.equal(firstTab.innerText.replace(/"/g, ''), milestoneName, `Milestone "${milestoneName}" should be created`);
+			const tabName = firstTab.querySelector('[data-milestone-tab-name]').innerText;
+			assert.equal(tabName.replace(/"/g, '').trim(), milestoneName, `Milestone "${milestoneName}" should be created`);
 		})
 		.then('That milestone tab is active', async function () {
 			const firstTab = document.querySelector('.milestone-tab:first-child');

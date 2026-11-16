@@ -1,5 +1,5 @@
 import { Factory } from 'miragejs';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import * as date from '../helpers/getDate';
 import * as dates from 'prometheus/utils/date';
 import _ from 'lodash';
@@ -28,23 +28,23 @@ export default Factory.extend({
         return dates.format(dates.now(), 'DD-MM');
     },
     language() {
-        return faker.locales[faker.random.arrayElement(["en", "de", "az", "fr"])].title;
+        return faker.helpers.arrayElement(["English", "German", "Azerbaijani", "French"]);
     },
     timezone() {
         return dates.guessTimezone();
     },
     status() {
-        return faker.random.arrayElement(["active", "pending", "in_progress", "completed", "new"]);
+        return faker.helpers.arrayElement(["active", "pending", "in_progress", "completed", "new"]);
     },
     accountStatus: "active",
     title() {
-        return faker.name.jobTitle();
+        return faker.person.jobTitle();
     },
     phone() {
-        return faker.phone.phoneNumber();
+        return faker.phone.number();
     },
     education() {
-        return faker.random.arrayElement(["BSCS", "BBA", "MBA", "CA", "BFA"]);
+        return faker.helpers.arrayElement(["BSCS", "BBA", "MBA", "CA", "BFA"]);
     },
     afterCreate(user) {
         user.update({

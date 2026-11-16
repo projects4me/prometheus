@@ -5,10 +5,10 @@
 import config from './config/environment';
 import EmberRouter from '@ember/routing/router';
 
-const Router = EmberRouter.extend({
-    location: config.locationType,
-    rootURL: config.rootURL
-});
+class Router extends EmberRouter {
+    location = config.locationType;
+    rootURL = config.rootURL;
+}
 
 /*
  * This is the default router mapping

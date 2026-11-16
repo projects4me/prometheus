@@ -1,0 +1,86 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo as |log|>
+    <div class={{if (eq this.width "full") "" this.width}} data-test-demo-list-width>
+    <AppUi::Box @listView={{true}} @noPadding={{true}} data-test-demo-list-page>
+      <:top>
+      {{#if this.showTop}}
+      <AppUi::ListToolbar @selection={{this.selection}} @rows={{this.rows}} @onSelectionChange={{fn this.selectionChange log}}>
+        <:search as |narrow|>
+          <EzSearch @schema={{this.schema}} @query="" @savedSearches={{this.savedSearches}} @narrow={{narrow}} @onApply={{fn this.applyQuery log}} @aclContext="agent.read" />
+        </:search>
+        <:actions as |narrow|>
+          <button type="button" class="btn btn-default" title="New agent" aria-label="New agent" data-test-demo-list-create {{on "click" (fn this.create log)}}>
+            <i class="fa fa-plus" aria-hidden="true"></i>{{#unless narrow}} New agent{{/unless}}
+          </button>
+        </:actions>
+        <:bulkActions as |ids clear|>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm" title="Delete" aria-label="Delete" data-test-demo-list-delete {{on "click" (fn this.bulk log ids clear)}}><i class="fa fa-trash-o"></i></button>
+          </div>
+        </:bulkActions>
+        <:pager>
+          <AppUi::Pager @offset={{this.offset}} @limit={{this.limit}} @count={{this.rows.length}} @hasMore={{this.hasMore}} @onPageChange={{fn this.changePage log}} />
+        </:pager>
+      </AppUi::ListToolbar>
+      {{/if}}
+      </:top>
+      <:body>
+        <AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @sort={{this.sort}} @order={{this.order}} @selectable={{true}} @selection={{this.selection}} @onSort={{fn this.changeSort log}} @onSelectionChange={{fn this.selectionChange log}}>
+          <:cell as |record column|>
+            {{#if (eq column.key "status")}}
+              <AppUi::Tag @variant={{if record.isActive "success" "danger"}}>{{if record.isActive "Active" "Disabled"}}</AppUi::Tag>
+            {{else}}
+              {{get record column.key}}
+            {{/if}}
+          </:cell>
+          <:rowActions>
+            <button type="button" class="btn btn-default btn-sm" title="Edit" aria-label="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+          </:rowActions>
+          <:empty>
+            <Exceptions::NothingFound @description="No agents found." />
+          </:empty>
+        </AppUi::DataTable>
+      </:body>
+      <:bottom>
+      {{#if this.showBottom}}
+      <AppUi::ListToolbar @position="bottom" @selection={{this.selection}} @rows={{this.rows}} @onSelectionChange={{fn this.selectionChange log}}>
+        <:bulkActions as |ids clear|>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm" title="Delete" aria-label="Delete" data-test-demo-list-delete-bottom {{on "click" (fn this.bulk log ids clear)}}><i class="fa fa-trash-o"></i></button>
+          </div>
+        </:bulkActions>
+        <:pager>
+          <AppUi::Pager @offset={{this.offset}} @limit={{this.limit}} @count={{this.rows.length}} @hasMore={{this.hasMore}} @onPageChange={{fn this.changePage log}} />
+        </:pager>
+      </AppUi::ListToolbar>
+      {{/if}}
+      </:bottom>
+    </AppUi::Box>
+    </div>
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <label for="demo-list-position">Toolbar position</label>
+      <select id="demo-list-position" class="form-control" data-control-position {{on "change" this.setPosition}}>
+        {{#each this.positions as |position|}}
+          <option value={{position}} selected={{eq position this.position}}>{{position}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="demo-list-width">Width</label>
+      <select id="demo-list-width" class="form-control" data-control-width {{on "change" this.setWidth}}>
+        {{#each this.widths as |width|}}
+          <option value={{width}} selected={{eq width this.width}}>{{width}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" data-control-empty checked={{this.empty}} {{on "change" this.toggleEmpty}}> Empty</label>
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc={{@entry.doc}} />
+  </:docs>
+</Developer::Entry>

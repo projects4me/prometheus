@@ -1,0 +1,106 @@
+<div class="table-responsive list-view app-ui-data-table" data-test-data-table ...attributes>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        {{#if @selectable}}
+          <th class="select-box">
+            {{#if this.showSelectAll}}
+              <QuickList::SelectAll @state={{this.selectionState}} @onToggle={{this.toggleAll}} />
+            {{/if}}
+          </th>
+        {{/if}}
+        {{#each this.columns as |column|}}
+          <th class="{{if column.sortable "sortable"}} {{if column.active "sorted"}}" data-test-data-table-header={{column.key}}>
+            {{column.label}}
+            {{#if column.sortable}}
+              <button type="button" class="btn btn-box-tool data-table-sort {{if column.active "active"}}" data-test-data-table-sort={{column.key}} {{on "click" (fn this.sort column)}}><i class="fa {{column.sortIcon}}"></i></button>
+            {{/if}}
+          </th>
+        {{/each}}
+        {{#if (has-block "rowActions")}}
+          <th class="actions"></th>
+        {{else if (has-block "moreActions")}}
+          <th class="actions"></th>
+        {{/if}}
+      </tr>
+    </thead>
+    <tbody>
+      {{#if this.rows.length}}
+        {{#each this.sections as |section|}}
+          {{#unless section.plain}}
+            <tr class="data-table-group" data-test-data-table-group={{section.key}}>
+              <td colspan="100%">
+                <button type="button" class="data-table-group-heading" aria-expanded={{if section.isCollapsed "false" "true"}} data-test-data-table-group-toggle {{on "click" (fn this.toggleGroup section.key)}}>
+                  <i class="fa {{if section.isCollapsed "fa-caret-right" "fa-caret-down"}}" aria-hidden="true"></i>
+                  {{#if (has-block "groupHeading")}}
+                    {{yield section to="groupHeading"}}
+                  {{else if section.label}}
+                    {{section.label}}
+                  {{else}}
+                    {{t "components.quickList.group.none"}}
+                  {{/if}}
+                  <span class="badge" data-test-data-table-group-count>{{section.count}}</span>
+                </button>
+              </td>
+            </tr>
+          {{/unless}}
+          {{#unless section.isCollapsed}}
+            {{#each section.items as |record|}}
+              <tr class="{{if (this.isSelected record) "data-table-row--selected"}}" data-test-data-table-row={{record.id}}>
+                {{#if @selectable}}
+                  <td class="select-box">
+                    <button type="button" class="data-table-check" aria-pressed={{if (this.isSelected record) "true" "false"}} aria-label={{t "global.list.select"}} data-select={{record.id}} data-test-data-table-select {{on "click" (fn this.select record)}}>
+                      <i class="fa {{if (this.isSelected record) "fa-check-square" "fa-square-o"}}" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                {{/if}}
+                {{#each this.columns as |column|}}
+                  <td class={{column.class}} data-test-data-table-cell={{column.key}}>
+                    {{#if column.cell}}
+                      {{component column.cell record=record column=column}}
+                    {{else if (has-block "cell")}}
+                      {{yield record column to="cell"}}
+                    {{else}}
+                      {{get record column.key}}
+                    {{/if}}
+                    {{#if column.subKey}}
+                      <div class="data-table-sub text-muted" data-test-data-table-sub={{column.key}}>{{get record column.subKey}}</div>
+                    {{/if}}
+                  </td>
+                {{/each}}
+                {{#if (has-block "rowActions")}}
+                  <td class="actions" data-test-data-table-actions>
+                    {{yield record to="rowActions"}}
+                    {{#if (has-block "moreActions")}}
+                      <AppUi::Dropdown @align="end" @title={{t "components.quickList.moreActions"}} class="data-table-more" data-test-data-table-more>
+                        <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
+                        <:content>{{yield record to="moreActions"}}</:content>
+                      </AppUi::Dropdown>
+                    {{/if}}
+                  </td>
+                {{else if (has-block "moreActions")}}
+                  <td class="actions" data-test-data-table-actions>
+                    <AppUi::Dropdown @align="end" @title={{t "components.quickList.moreActions"}} class="data-table-more" data-test-data-table-more>
+                      <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
+                      <:content>{{yield record to="moreActions"}}</:content>
+                    </AppUi::Dropdown>
+                  </td>
+                {{/if}}
+              </tr>
+            {{/each}}
+          {{/unless}}
+        {{/each}}
+      {{else}}
+        <tr>
+          <td colspan="100%" data-test-data-table-empty>
+            {{#if (has-block "empty")}}
+              {{yield to="empty"}}
+            {{else}}
+              <AppUi::EmptyState @message={{t "components.quickList.empty"}} />
+            {{/if}}
+          </td>
+        </tr>
+      {{/if}}
+    </tbody>
+  </table>
+</div>

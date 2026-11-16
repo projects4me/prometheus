@@ -160,6 +160,11 @@
   .milestone-tabs {
     .milestone-tab {
       transition: all 0.3s ease;
+
+      .milestone-tab-count {
+        margin-left: 0.5rem;
+        border-radius: 0;
+      }
       
       &.milestone-tab-droppable {
         background-color: rgba(179, 36, 79, 0.1);

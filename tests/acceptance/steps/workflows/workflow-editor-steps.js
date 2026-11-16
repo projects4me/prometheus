@@ -1,8 +1,8 @@
 /* global server */
 import { click, currentURL, fillIn, find, findAll, triggerEvent } from '@ember/test-helpers';
 import { Response } from 'miragejs';
-import { selectChoose } from 'ember-power-select/test-support';
 import steps from '../steps';
+import { chooseOption } from 'prometheus/tests/helpers/select';
 
 const CONFIG = name => `[data-field="workflownode.config.${name}"]`;
 
@@ -86,15 +86,15 @@ export const when = function () {
         {
             "User adds the condition $field $operator $value": (assert) => async function (field, operator, value) {
                 await click('[data-add-condition]');
-                await selectChoose('[data-condition="0"] [data-field="workflownode.condition.field"]', field);
-                await selectChoose('[data-condition="0"] [data-field="workflownode.condition.operator"]', operator);
+                await chooseOption('[data-condition="0"] [data-field="workflownode.condition.field"]', field);
+                await chooseOption('[data-condition="0"] [data-field="workflownode.condition.operator"]', operator);
                 await fillIn('[data-condition="0"] [data-field="workflownode.condition.value"] input', value);
                 assert.ok(true, 'User adds a condition');
             }
         },
         {
             "User picks $label as the $setting": (assert) => async function (label, setting) {
-                await selectChoose(CONFIG(setting), label);
+                await chooseOption(CONFIG(setting), label);
                 assert.ok(true, `User picks the ${setting}`);
             }
         },
@@ -106,7 +106,7 @@ export const when = function () {
         },
         {
             "User inserts $path into the $setting": (assert) => async function (path, setting) {
-                await selectChoose(CONFIG(`${setting}.expression`), path);
+                await chooseOption(CONFIG(`${setting}.expression`), path);
                 assert.ok(true, `User inserts ${path}`);
             }
         },

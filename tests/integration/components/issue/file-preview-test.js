@@ -11,12 +11,16 @@ import EmberObject from '@ember/object';
 import AclStub from '../../stub-services/acl-stub';
 
 // a loadable data URL (the path becomes a fragment), so the browser never reports a native image load error
+// Image host: a data: URL keeps the img free of network fetches.
 const HOST = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22/%3E#';
+// Frame host: Ember 7 rewrites data: URLs in an iframe src to unsafe:data:, so the iframe case uses about:.
+const FRAME_HOST = 'about:blank#';
 
 class StoreStub extends Service {
     queries = [];
     pending = null;
     fail = false;
+    host = HOST;
 
     query(modelName, options) {
         this.queries.push([modelName, options]);
@@ -28,7 +32,7 @@ class StoreStub extends Service {
     }
 
     adapterFor() {
-        return { host: HOST };
+        return { host: this.host };
     }
 }
 
@@ -57,8 +61,9 @@ module('Integration | Component | issue/file-preview', function (hooks) {
     });
 
     test('it shows a pdf in an iframe', async function (assert) {
+        this.store.host = FRAME_HOST;
         await renderPreview(this, 'application/pdf');
-        assert.dom('iframe.file-preview-frame').hasAttribute('src', HOST + '/preview/get/tok1');
+        assert.dom('iframe.file-preview-frame').hasAttribute('src', FRAME_HOST + '/preview/get/tok1');
         assert.dom('iframe.file-preview-frame').hasAttribute('sandbox', '');
     });
 

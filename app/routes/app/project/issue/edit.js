@@ -15,7 +15,7 @@ import { objectAt } from 'prometheus/utils/array/object-at';
  * @extends App
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class EditRoute extends App {
 	/**
 	 * This is the template that we want to display for this the Edit view
 	 *
@@ -24,7 +24,7 @@ export default App.extend({
 	 * @type String
 	 * @public
 	 */
-	templateName: 'app/project/issue/create',
+	templateName = 'app/project/issue/create';
 
 	/**
 	 * We are using dynamic segments and since model is not called
@@ -57,7 +57,7 @@ export default App.extend({
 			limit: -1
 		};
 		try {
-			let issue = await _self.get('store').query('issue', issueOptions);
+			let issue = await _self.store.query('issue', issueOptions);
 			let project = await _self
 				.get('store')
 				.query('project', projectOptions);
@@ -76,8 +76,8 @@ export default App.extend({
 			}
 			let issueData = objectAt(issue, 0);
 
-			this.set('issue', issueData);
-			this.set('project', projectData);
+			this.issue = issueData;
+			this.project = projectData;
 			Logger.debug(
 				'-Prometheus.Routes.App.Project.Issue.Edit::afterModel()'
 			);
@@ -86,7 +86,7 @@ export default App.extend({
 				moduleName: 'issue'
 			});
 		}
-	},
+	}
 
 	/**
 	 * The setupController hook for issue edit route.
@@ -94,18 +94,18 @@ export default App.extend({
 	 * @method setupController
 	 * @param {Prometheus.Controllers.Issue} controller The controller object for the issues
 	 */
-	setupController: function (controller) {
+	setupController(controller) {
 		Logger.debug(
 			'Prometheus.Routes.App.Project.Issue.Edit::setupController'
 		);
 		let params = this.paramsFor('app.project.issue.edit');
 
 		this.breadcrumb.setTitle('app.project.issue.page', `#${params.issue_number}`);
-		controller.set('model', this.get('issue'));
-		controller.set('project', this.get('project'));
-		controller.set('types', this.get('project').issuetypes);
-		controller.set('statuses', this.get('project').issuestatuses);
-		controller.set('issueDescription', this.get('issue').description);
+		controller.set('model', this.issue);
+		controller.set('project', this.project);
+		controller.set('types', this.project.issuetypes);
+		controller.set('statuses', this.project.issuestatuses);
+		controller.set('issueDescription', this.issue.description);
 
 		let priority = new format(this).getList(
 			'views.app.issue.lists.priority'
@@ -116,4 +116,4 @@ export default App.extend({
 			'-Prometheus.Routes.App.Project.Issue.Edit::setupController'
 		);
 	}
-});
+}

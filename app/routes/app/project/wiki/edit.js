@@ -14,13 +14,13 @@ import Page from "prometheus/routes/app/project/wiki/page";
  * @extends Page
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Page.extend({
+export default class EditRoute extends Page {
 
     setupController(controller){
-        this._super(controller);
+        super.setupController(controller);
         let newTag = this.store.createRecord('tag',{});
         controller.set('newTag', newTag);
-    },
+    }
 
     /**
      * These are the events that are handled by this route
@@ -30,7 +30,7 @@ export default Page.extend({
      * @for Edit
      * @public
      */
-    action:{
+    action = {
 
         /**
          * This function is used to navigate the user the the page route on save
@@ -44,6 +44,5 @@ export default Page.extend({
             this.router.transitionTo('app.project.wiki.page',routeParams);
         }
 
-    }
-
-});
+    };
+}

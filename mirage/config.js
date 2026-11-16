@@ -3,6 +3,7 @@ import { discoverEmberDataModels } from "ember-cli-mirage";
 import Context from './yadda-context/context';
 import ENV from "prometheus/config/environment";
 import * as Activity from './route-handlers/activity';
+import * as Bulk from './route-handlers/bulk';
 import * as Chatroom from './route-handlers/chatroom';
 import * as Comment from './route-handlers/comment';
 import * as Conversationroom from './route-handlers/conversationroom';
@@ -73,6 +74,7 @@ function routes() {
 
     /**Register routes */
     Activity.register(this, ctx);
+    Bulk.register(this);
     Chatroom.register(this, ctx);
     Comment.register(this, ctx);
     Conversationroom.register(this, ctx);

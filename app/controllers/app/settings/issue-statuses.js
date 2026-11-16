@@ -7,7 +7,6 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { htmlSafe } from '@ember/template';
-import $ from 'jquery';
 import { addIssueStatusLabels, issueStatusRecordLabel, ISSUE_STATUS_LABEL_PATH } from 'prometheus/utils/issue-status/label';
 import { labelCaption } from 'prometheus/utils/issue-status/caption';
 import IssueStatusForm from 'prometheus/utils/issue-status/form';
@@ -292,7 +291,6 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
         }
         this.editing = null;
         this.form = null;
-        $('.modal').modal('hide');
     }
 
     /**
@@ -352,7 +350,6 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
 
                 this.editing = null;
                 this.form = null;
-                $('.modal').modal('hide');
 
                 new Messenger().post({
                     message: this.intl.t(
@@ -441,7 +438,7 @@ export default class AppSettingsIssueStatusesController extends PrometheusCreate
             showCloseButton: true,
             actions: {
                 confirm: {
-                    label: htmlSafe(this.intl.t('views.app.module.list.delete.confirmDelete', { moduleName })).toString(),
+                    label: this.intl.t('views.app.module.list.delete.confirmDelete', { moduleName, htmlSafe: true }).toString(),
                     action: () => {
                         deleting.update({
                             message: this.intl.t('views.app.module.list.delete.deleting', { moduleName }),

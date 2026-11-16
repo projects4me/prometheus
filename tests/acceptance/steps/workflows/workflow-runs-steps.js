@@ -1,7 +1,7 @@
 /* global server */
 import { click, fillIn } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support';
 import steps from '../steps';
+import { chooseOption } from 'prometheus/tests/helpers/select';
 
 const NODE = kind => `[data-workflow-node][data-node-kind="${kind}"]`;
 
@@ -39,7 +39,7 @@ export const when = function () {
         },
         {
             "User test runs the workflow for the milestone $name": (assert) => async function (name) {
-                await selectChoose('[data-field="workflowrun.milestone"]', name);
+                await chooseOption('[data-field="workflowrun.milestone"]', name);
                 await click('[data-run-test]');
                 assert.ok(true, 'User test runs the workflow for a milestone');
             }

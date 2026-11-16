@@ -1,0 +1,50 @@
+<div class="list-toolbar" data-test-list-toolbar-root data-narrow={{if this.narrow "true" "false"}} {{observe-width this.measure}}>
+{{#if (and (not-eq @position "bottom") (or (has-block "search") (has-block "actions")))}}
+  <div class="box-header with-border" data-test-list-toolbar-header>
+    <div class="search">
+      <div class="list-toolbar-search" data-test-list-toolbar-search>
+        {{yield this.narrow to="search"}}
+      </div>
+      {{yield this.narrow to="actions"}}
+    </div>
+  </div>
+{{/if}}
+<div class="list-controls {{if (eq @position "bottom") "list-controls-bottom"}}" data-test-list-toolbar data-test-list-toolbar-position={{if (eq @position "bottom") "bottom" "top"}} ...attributes>
+  {{#if this.selection}}
+    {{#if (gt this.count 0)}}
+      <div class="quick-list-selection" data-test-list-toolbar-selection-bar>
+        <QuickList::SelectAll @state={{this.state}} @onToggle={{this.toggleAll}} />
+        <strong class="quick-list-selection-count" data-test-list-toolbar-count>
+          {{t "components.quickList.selection.count" count=this.count}}
+        </strong>
+        <span class="text-muted" data-test-list-toolbar-breakdown>
+          {{t "components.listToolbar.breakdown" onPage=this.onPage otherPages=this.onOtherPages}}
+        </span>
+        <div class="quick-list-selection-actions" data-test-list-toolbar-bulk>
+          {{yield this.ids this.clear to="bulkActions"}}
+        </div>
+        <button
+          type="button"
+          class="btn btn-default btn-xs quick-list-selection-clear"
+          data-test-list-toolbar-clear
+          title={{t "components.quickList.selection.clear"}}
+          aria-label={{t "components.quickList.selection.clear"}}
+          {{on "click" this.clear}}
+        ><i class="fa fa-times"></i></button>
+      </div>
+    {{else}}
+      <div class="quick-list-selection" data-test-list-toolbar-idle>
+        <QuickList::SelectAll @state={{this.state}} @onToggle={{this.toggleAll}} />
+        <span class="text-muted" data-test-list-toolbar-hint>{{t "components.listToolbar.hint"}}</span>
+      </div>
+    {{/if}}
+  {{else}}
+    {{yield to="selection"}}
+  {{/if}}
+  {{#if (has-block "pager")}}
+    <div class="pull-right" data-test-list-toolbar-pager>
+      {{yield to="pager"}}
+    </div>
+  {{/if}}
+</div>
+</div>

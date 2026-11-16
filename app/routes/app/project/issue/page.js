@@ -3,6 +3,7 @@
  */
 
 import App from "prometheus/routes/app";
+import { action } from '@ember/object';
 import { service } from '@ember/service';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
@@ -15,7 +16,7 @@ import { objectAt } from 'prometheus/utils/array/object-at';
  * @extends App
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class PageRoute extends App {
 
     /**
      * The trackedProject service provides id of the selected project.
@@ -25,7 +26,7 @@ export default App.extend({
      * @for ProjectIssuePageRoute
      * @private
      */
-    trackedProject: service(),
+    @service trackedProject;
 
     /**
      * Query params that the route supports.
@@ -35,11 +36,11 @@ export default App.extend({
      * @for AppProjectIssuePageRoute
      * @public
      */
-    queryParams: {
+    queryParams = {
         s_id: {
             refreshModel: false
         }
-    },
+    };
 
     /**
      * The model hook for this route. In this function we fetch and return issue by the 
@@ -54,7 +55,7 @@ export default App.extend({
         let params = _self.paramsFor('app.project.issue.page');
         Logger.debug('-AppProjectIssuePageRoute::model()');
         return await _self.loadIssue(params);
-    },
+    }
 
     /**
     * This function is called by the route when it has created the controller and
@@ -86,7 +87,7 @@ export default App.extend({
         this.breadcrumb.setIcon(this.routeName, 'bug');
         controller.registerHermesIntents(this.trackedProject.getProjectId());
         Logger.debug('-AppProjectIssuePageRoute::setupController');
-    },
+    }
 
     /**
      * Disposes the Hermes registration when leaving the issue
@@ -100,7 +101,7 @@ export default App.extend({
         if (isExiting) {
             controller.unregisterHermesIntents();
         }
-    },
+    }
 
     /**
      * This function load the issue
@@ -126,17 +127,17 @@ export default App.extend({
         }; 
 
         try {
-            let project = await _self.get('store').query('project', _projectOptions);
+            let project = await _self.store.query('project', _projectOptions);
             let projectData = objectAt(project, 0);
             if(projectData.issuestatuses === undefined || projectData.issuestatuses.length === 0) {
-                let issueStatuses = await _self.get('store').query('issuestatus', {
+                let issueStatuses = await _self.store.query('issuestatus', {
                     query: `(Issuestatus.system : 1)`,
                     limit: -1,
                 });
                 projectData.issuestatuses = issueStatuses;
             }
             
-            let issue = await _self.get('store').query('issue', options);
+            let issue = await _self.store.query('issue', options);
 
         return {
                 project: project,
@@ -147,7 +148,7 @@ export default App.extend({
                 moduleName: 'issue'
             })
         }
-    },
+    }
 
     /**
      * This function is used to setup the activities for the issue
@@ -157,7 +158,7 @@ export default App.extend({
      * @param {Prometheus.Models.Issue} model
      * @private
      */
-    setupActivities: function (controller, model) {
+    setupActivities(controller, model) {
         let activities = {};
         controller.set('activities', activities);
         Logger.debug('AppProjectIssuePageRoute::setupActivities');
@@ -176,19 +177,17 @@ export default App.extend({
             controller.set('activities', activities);
         }
         Logger.debug('-AppProjectIssuePageRoute::setupActivities');
-    },
-
-    actions: {
-
-        reload() {
-            let _self = this;
-            Logger.debug('Reloading the route for issue page');
-            Logger.debug(_self);
-            let params = _self.paramsFor('app.project.issue.page');
-            let controller = _self.get('controller');
-
-            this.loadIssue(controller, params);
-        }
     }
 
-});
+
+    @action
+    reload() {
+        let _self = this;
+        Logger.debug('Reloading the route for issue page');
+        Logger.debug(_self);
+        let params = _self.paramsFor('app.project.issue.page');
+        let controller = _self.controller;
+
+        this.loadIssue(controller, params);
+    }
+}

@@ -40,15 +40,15 @@
       {{#if (has-block "empty")}}
         {{yield to="empty"}}
       {{else}}
-        <p class="quick-list__state quick-list__state--empty" data-test-quick-list-empty>
-          <i class="fa fa-info-circle"></i>
-          {{t "components.quickList.empty"}}
-          {{#if @onClearSearch}}
-            <button type="button" class="btn btn-link quick-list__state-action" data-test-quick-list-clear-search {{on "click" @onClearSearch}}>
-              {{t "components.quickList.clearSearch"}}
-            </button>
-          {{/if}}
-        </p>
+        <AppUi::EmptyState @message={{t "components.quickList.empty"}} data-test-quick-list-empty>
+          <:action>
+            {{#if @onClearSearch}}
+              <button type="button" class="btn btn-link quick-list__state-action" data-test-quick-list-clear-search {{on "click" @onClearSearch}}>
+                {{t "components.quickList.clearSearch"}}
+              </button>
+            {{/if}}
+          </:action>
+        </AppUi::EmptyState>
       {{/if}}
     {{else}}
       <ul class="quick-list__items">
@@ -84,8 +84,8 @@
       </ul>
     {{/if}}
   </div>
-  {{#if @onPage}}
-    <QuickList::Pagination @page={{@page}} @limit={{@limit}} @total={{@total}} @hasNext={{@hasNext}} @count={{this.items.length}} @disabled={{@isLoading}} @onPage={{@onPage}} />
+  {{#if this.showPager}}
+    <AppUi::Pager class="quick-list-pagination" @offset={{this.offset}} @limit={{this.limit}} @total={{@total}} @hasMore={{@hasNext}} @count={{this.items.length}} @disabled={{@isLoading}} @onPageChange={{this.changeOffset}} />
   {{/if}}
   {{yield to="footer"}}
 </div>

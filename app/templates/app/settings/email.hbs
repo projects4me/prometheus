@@ -77,32 +77,25 @@
   </AccessControl>
 
   {{#if this.testOpen}}
-    <div class="settings-email-test-overlay" data-email-test-modal>
-      <div class="modal-dialog">
-        <div class="modal-content box box-primary">
-          <div class="modal-header">
-            <h4 class="modal-title">{{t "views.app.settings.email.test.title"}}</h4>
-          </div>
-          <div class="modal-body">
-            <div class="form-group" data-field="test.recipient">
-              <label>{{t "views.app.settings.email.test.recipient"}}</label>
-              <input type="email" class="form-control" value={{this.recipient}} {{on "input" this.updateRecipient}}>
-            </div>
-            {{#if this.testResult}}
-              <div class="callout {{if (eq this.testResult "TEST_EMAIL_SENT") "callout-success" "callout-danger"}}" data-test-result={{this.testResult}}>
-                <p>{{t (concat "views.app.settings.email.test." this.testResult)}}</p>
-              </div>
-            {{/if}}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-btn="close-test" {{on "click" this.closeTest}}>{{t "global.form.cancel"}}</button>
-            <button type="button" class="btn btn-primary" data-btn="submit-test" disabled={{or (not this.recipientValid) this.testing}} {{on "click" this.runTest}}>
-              {{#if this.testing}}<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>{{/if}}
-              {{t "views.app.settings.email.test.send"}}
-            </button>
-          </div>
-        </div>
+    <AppUi::Modal
+      data-email-test-modal
+      @title="views.app.settings.email.test.title"
+      @confirmLabel="views.app.settings.email.test.send"
+      @closeLabel="global.form.cancel"
+      @dataSaveBtn="submit-test"
+      @disableSaveBtn={{or (not this.recipientValid) this.testing}}
+      @confirm={{this.runTest}}
+      @onClose={{this.closeTest}}
+    >
+      <div class="form-group" data-field="test.recipient">
+        <label>{{t "views.app.settings.email.test.recipient"}}</label>
+        <input type="email" class="form-control" value={{this.recipient}} {{on "input" this.updateRecipient}}>
       </div>
-    </div>
+      {{#if this.testResult}}
+        <div class="callout {{if (eq this.testResult "TEST_EMAIL_SENT") "callout-success" "callout-danger"}}" data-test-result={{this.testResult}}>
+          <p>{{t (concat "views.app.settings.email.test." this.testResult)}}</p>
+        </div>
+      {{/if}}
+    </AppUi::Modal>
   {{/if}}
 </section>

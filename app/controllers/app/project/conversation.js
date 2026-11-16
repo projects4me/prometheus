@@ -6,12 +6,11 @@ import ProjectRelated from "prometheus/controllers/prometheus/projectrelated";
 import Evented from '@ember/object/evented';
 import $ from "jquery";
 import { service } from '@ember/service';
-import { action } from '@ember/object';
+import { action, set } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { task, timeout } from 'ember-concurrency';
 import format from 'prometheus/utils/data/format';
 import { peekOrPush, pushIfMissing, removeById } from 'prometheus/utils/live/collection';
-import { htmlSafe } from '@ember/template';
 import UrlState from 'prometheus/utils/state/url-state';
 import ListLoader from 'prometheus/utils/state/list-loader';
 import ThreadCounts from 'prometheus/utils/conversation/thread-counts';
@@ -263,6 +262,55 @@ export default class AppProjectConversationController extends ProjectRelated.ext
      * @public
      */
     @tracked newConversationLinkedIssue = null;
+
+    /**
+     * Whether the subject field was left, so its validation error is shown
+     *
+     * @property showSubjectError
+     * @type {Boolean}
+     * @public
+     */
+    @tracked showSubjectError;
+
+    /**
+     * Whether the type field was left, so its validation error is shown
+     *
+     * @property showTypeError
+     * @type {Boolean}
+     * @public
+     */
+    @tracked showTypeError;
+
+    /**
+     * Marks the subject field as visited
+     *
+     * @method markSubjectVisited
+     * @public
+     */
+    @action markSubjectVisited() {
+        this.showSubjectError = true;
+    }
+
+    /**
+     * Marks the type field as visited
+     *
+     * @method markTypeVisited
+     * @public
+     */
+    @action markTypeVisited() {
+        this.showTypeError = true;
+    }
+
+    /**
+     * Stores the description typed in the new conversation editor
+     *
+     * @method setNewConversationDescription
+     * @param {String} description The editor content
+     * @public
+     */
+    @action setNewConversationDescription(description) {
+        set(this.newConversation, 'description', description);
+    }
 
     /**
      * Task to load issue options for the Link Issue dropdown (create/edit modals).
@@ -1358,7 +1406,7 @@ export default class AppProjectConversationController extends ProjectRelated.ext
             this.savedsearches = [...this.savedsearches, data];
             this.newSavedsearch = this.store.createRecord('savedsearch');
             new Messenger().post({
-                message: htmlSafe(this.intl.t('views.app.conversation.browser.savedSearchAdded', { name: data.get('name') })),
+                message: this.intl.t('views.app.conversation.browser.savedSearchAdded', { name: data.get('name'), htmlSafe: true }),
                 type: 'success',
                 showCloseButton: true
             });

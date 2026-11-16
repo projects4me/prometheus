@@ -6,7 +6,6 @@ import PrometheusCreateController from 'prometheus/controllers/prometheus/create
 import { inject as controller } from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { htmlSafe } from '@ember/template';
 import { scopeOptions, searchScopes } from 'prometheus/utils/agent-scopes';
 
 /**
@@ -318,7 +317,7 @@ export default class AppAgentCreateController extends PrometheusCreateController
      * @return {String}
      */
     getSuccessMessage(agent) {
-        return htmlSafe(this.intl.t('views.app.agent.saved', { name: agent.name }));
+        return this.intl.t('views.app.agent.saved', { name: agent.name, htmlSafe: true });
     }
 
     /**

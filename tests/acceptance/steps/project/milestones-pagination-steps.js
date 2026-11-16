@@ -63,7 +63,7 @@ export const when = function () {
         },
         {
             "User pages the milestones box forward": (assert) => async function () {
-                await click(`${BOX} [data-quick-list-pagination-next]`);
+                await click(`${BOX} [data-test-pager-next]`);
                 assert.ok(true, 'User pages forward');
             }
         },
@@ -95,22 +95,22 @@ export const then = function () {
         },
         {
             "The milestones pager reads $range": (assert) => async function (range) {
-                assert.dom(`${BOX} [data-quick-list-pagination-range]`).hasText(range);
+                assert.dom(`${BOX} [data-test-pager-range]`).hasText(range);
             }
         },
         {
             "The milestones previous button is disabled": (assert) => async function () {
-                assert.dom(`${BOX} [data-quick-list-pagination-prev]`).isDisabled();
+                assert.dom(`${BOX} [data-test-pager-previous]`).isDisabled();
             }
         },
         {
             "The milestones next button is disabled": (assert) => async function () {
-                assert.dom(`${BOX} [data-quick-list-pagination-next]`).isDisabled();
+                assert.dom(`${BOX} [data-test-pager-next]`).isDisabled();
             }
         },
         {
             "The milestones pager is not shown": (assert) => async function () {
-                assert.dom(`${BOX} [data-quick-list-pagination]`).doesNotExist();
+                assert.dom(`${BOX} [data-test-pager]`).doesNotExist();
             }
         },
         {

@@ -7,7 +7,6 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import { htmlSafe } from '@ember/template';
 
 /**
  * An `<EzSearchCompact>` with the saved searches of a module: it lists them, saves the applied query under a name
@@ -142,7 +141,7 @@ export default class SavedSearchCompactBarComponent extends Component {
                 return false;
             }
             this.addedSearches = [...this.addedSearches, data];
-            this.notify('success', htmlSafe(this.intl.t(`${this.messages}.added`, { name: data.get('name') })));
+            this.notify('success', this.intl.t(`${this.messages}.added`, { name: data.get('name'), htmlSafe: true }));
             // the modal hides itself on a truthy result and then calls closeSaveDialog
             return true;
         } catch (error) {
@@ -171,7 +170,7 @@ export default class SavedSearchCompactBarComponent extends Component {
             if (this.isDestroying || this.isDestroyed) {
                 return;
             }
-            this.notify('success', htmlSafe(this.intl.t(`${this.messages}.updated`, { name: record.get('name') })));
+            this.notify('success', this.intl.t(`${this.messages}.updated`, { name: record.get('name'), htmlSafe: true }));
         } catch (error) {
             record.rollbackAttributes();
             this.errorManager.handleError(error, { moduleName: 'savedsearch' });

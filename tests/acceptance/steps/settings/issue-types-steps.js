@@ -3,7 +3,7 @@ import steps from '../steps';
 import { translationsUrl } from 'prometheus/mirage/route-handlers/translation';
 
 const TABLE = '[data-issue-types-table]';
-const VALUE_INPUT = '.modal [data-field="issuetype.name"] input';
+const VALUE_INPUT = 'dialog.app-modal [data-field="issuetype.name"] input';
 
 /**
  * Finds the table row of the default issue type with the given value.
@@ -18,7 +18,7 @@ function splitNames(names) {
 }
 
 function labelInput(locale) {
-    return `.modal [data-field="issuetype.label.${locale}"] input`;
+    return `dialog.app-modal [data-field="issuetype.label.${locale}"] input`;
 }
 
 /**
@@ -67,7 +67,7 @@ function sentRequests(verb) {
 }
 
 async function submitModal() {
-    await click('.modal .btn-primary');
+    await click('dialog.app-modal .btn-primary');
     await settled();
 }
 
@@ -104,7 +104,7 @@ export const when = function () {
                 recordWrites();
                 await click('[data-btn="add-issue-type"]');
                 await fillIn(labelInput('en-us'), label);
-                await fillIn('.modal [data-field="issuetype.description"] input', description);
+                await fillIn('dialog.app-modal [data-field="issuetype.description"] input', description);
                 await submitModal();
                 assert.ok(true, `User adds the issue type ${label}`);
             }
@@ -137,7 +137,7 @@ export const when = function () {
         },
         {
             "User types the issue type description $description": (assert) => async function (description) {
-                await fillIn('.modal [data-field="issuetype.description"] input', description);
+                await fillIn('dialog.app-modal [data-field="issuetype.description"] input', description);
                 assert.ok(true, `User types the description ${description}`);
             }
         },
@@ -204,7 +204,7 @@ export const then = function () {
         },
         {
             "The issue type dialog has a label field for $locales": (assert) => async function (locales) {
-                let fields = [...document.querySelectorAll('.modal [data-field^="issuetype.label."]')]
+                let fields = [...document.querySelectorAll('dialog.app-modal [data-field^="issuetype.label."]')]
                     .map(field => field.dataset.field.replace('issuetype.label.', ''));
                 assert.deepEqual(fields, splitNames(locales), 'label fields');
             }
@@ -221,7 +221,7 @@ export const then = function () {
         },
         {
             "The issue type is not saved and the dialog stays open": (assert) => async function () {
-                assert.dom('.modal [data-field="issuetype.name"]').exists('the dialog is open');
+                assert.dom('dialog.app-modal [data-field="issuetype.name"]').exists('the dialog is open');
                 assert.strictEqual(sentRequests('POST').length, 0, 'no create request');
             }
         },

@@ -1,0 +1,24 @@
+<div class="box box-{{this.variant}} {{if @listView "list-view"}} {{if @collapsed "collapsed-box"}}" data-test-box ...attributes>
+  {{#if (or (has-block "header") (has-block "tools"))}}
+    <div class="box-header with-border" data-test-box-header>
+      {{yield to="header"}}
+      {{#if (has-block "tools")}}
+        <div class="box-tools pull-right" data-test-box-tools>
+          {{yield to="tools"}}
+        </div>
+      {{/if}}
+    </div>
+  {{/if}}
+  {{yield to="top"}}
+  {{#if (has-block "body")}}
+    <div class="box-body {{if @noPadding "no-padding"}}" data-test-box-body>
+      {{yield to="body"}}
+    </div>
+  {{/if}}
+  {{yield to="bottom"}}
+  {{#if (has-block "footer")}}
+    <div class="box-footer" data-test-box-footer>
+      {{yield to="footer"}}
+    </div>
+  {{/if}}
+</div>

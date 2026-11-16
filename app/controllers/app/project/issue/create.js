@@ -9,7 +9,6 @@ import { tracked } from '@glimmer/tracking';
 import { task, timeout } from 'ember-concurrency';
 import format from "prometheus/utils/data/format";
 import _ from "lodash";
-import { htmlSafe } from '@ember/template';
 import * as dates from 'prometheus/utils/date';
 import { toArray } from 'prometheus/utils/array/to-array';
 
@@ -380,10 +379,9 @@ export default class AppProjectIssueCreateController extends ProjectRelated {
      * @param model
      */
     getSuccessMessage(model) {
-        return htmlSafe(this.intl.t('views.app.issue.created', {
+        return this.intl.t('views.app.issue.created', {
             name: model.get('subject'),
-            issueNumber: model.get('issueNumber')
-        }));
+            issueNumber: model.get('issueNumber'), htmlSafe: true });
     }
 
     /**

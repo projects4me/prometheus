@@ -66,6 +66,7 @@ export default class IssueAttachmentQueue {
 
         if (file.size > this.maxFileSize) {
             this.notifyError(this.intl.t("views.app.issue.detail.file.uploadFailedSize", { size: this.maxFileSize / 1024 / 1024 }));
+            file.queue?.remove(file);
             return;
         }
 
@@ -96,7 +97,8 @@ export default class IssueAttachmentQueue {
             pushRecords(issue.get('files'), [upload]);
         } catch (e) {
             this.notifyError(this.intl.t("views.app.issue.detail.file.uploadfailed"));
-            upload.rollback();
+            upload.rollbackAttributes();
+            file.queue?.remove(file);
         }
     });
 }

@@ -10,6 +10,7 @@ The toolkit lives in `app/utils/state/`. Decisions and their reasons: [decisions
 | `AsyncResource` | `app/utils/state/async-resource.js` | One async load: `value`, `error`, `isLoading`, `params`. `run(params)`, `retry()`, `reset()`, `seed(value, params)`. Only the newest `run` writes; no writes once the `owner` is destroying or destroyed. An error keeps the previous value. |
 | `ListLoader` | `app/utils/state/list-loader.js` | One page of a list on top of `AsyncResource`: `items`, `hasNext`, `isLoading`, `error`, `params`, plus `run`, `retry`, `reset`, `seed`. `request(params)` is `buildRequest(params)` plus `limit`; it sends no totals (see [lists decisions](../lists/decisions.md), D-001). |
 | `UrlState` | `app/utils/state/url-state.js` | Typed controller query params from a schema `{ default, type, resetOnChange }`: `values`, `set(changes)`, `isDefault(name)`, `resetToDefaults()`, `onChange((values, changedNames) => ...)`. Static helpers `queryParamsConfig(schema)` and `resetController(controller)`. |
+| `Selection` | `app/utils/state/selection.js` | The selected rows of a list, kept across page changes: `ids`, `count`, `has(id)`, `toggle(id)`, `set(ids, on)`, `clear()`, `countIn(rows)`, `stateFor(rows)` (`none`/`some`/`all` of the rows given). Ids are strings. |
 
 ## URL or controller?
 
@@ -51,6 +52,16 @@ resetController(controller, isExiting, transition) {
 	controller.ideas.reset();
 }
 ```
+
+## Selection across pages
+
+A list page's controller owns one `Selection` (`selection = new Selection()`) and hands it to everything that shows or
+acts on the selection: `AppUi::DataTable @selection={{this.selection}}` toggles rows and the select-all box through it,
+and the toolbar reads `selection.count` and `selection.ids` from the same object. It lives in the controller, not the
+URL: it is transient and nobody expects it back after a reload. It is kept while `page`, sort or filters change, so a
+user can pick rows on several pages and act on them together; the select-all box covers the rows shown. Lists send no
+totals (see [lists decisions](../lists/decisions.md), D-001), so there is no "select all matching". Call `clear()` after a
+bulk action and in the route's `resetController`, so the selection does not outlive the page or the project.
 
 ## Rules of thumb
 

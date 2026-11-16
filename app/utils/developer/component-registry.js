@@ -10,7 +10,7 @@
  * @type {Array<string>}
  * @public
  */
-export const GROUPS = ['Lists', 'Search', 'Forms', 'Overlays', 'Menus'];
+export const GROUPS = ['Lists', 'Search', 'Forms', 'Overlays', 'Menus', 'Navigation', 'Display'];
 
 /**
  * The registered library entries, in display order. Each entry is
@@ -38,6 +38,36 @@ export const ENTRIES = [
         usedIn: [{ label: 'Ideas browser', route: 'app.projects' }],
         demo: 'developer/demos/quick-list',
         doc: 'quick-list.md'
+    },
+    {
+        name: 'list-toolbar',
+        label: 'ListToolbar',
+        group: 'Lists',
+        status: 'experimental',
+        summary: 'AppUi::ListToolbar, the top of a list page box: search and actions in the header, bulk actions and the pager below.',
+        usedIn: [{ label: 'Agents list', route: 'app.agent' }, { label: 'Workflows list', route: 'app.workflow' }],
+        demo: 'developer/demos/list-page',
+        doc: 'list-toolbar.md'
+    },
+    {
+        name: 'data-table',
+        label: 'DataTable',
+        group: 'Lists',
+        status: 'experimental',
+        summary: 'AppUi::DataTable, the slim list table from column descriptors, with sorting, selection and row actions reported out.',
+        usedIn: [{ label: 'Agents list', route: 'app.agent' }, { label: 'Workflows list', route: 'app.workflow' }],
+        demo: 'developer/demos/data-table',
+        doc: 'data-table.md'
+    },
+    {
+        name: 'pager',
+        label: 'Pager',
+        group: 'Lists',
+        status: 'experimental',
+        summary: 'AppUi::Pager, the range text and previous/next buttons of a paged list, from an offset and whether more rows exist.',
+        usedIn: [{ label: 'Agents list', route: 'app.agent' }, { label: 'Workflows list', route: 'app.workflow' }, { label: 'QuickList footer' }],
+        demo: 'developer/demos/pager',
+        doc: 'pager.md'
     },
     {
         name: 'ez-search',
@@ -68,26 +98,31 @@ export const ENTRIES = [
         variants: 10
     },
     {
-        name: 'bootstrap-modal',
+        name: 'select',
+        label: 'Select',
+        group: 'Forms',
+        status: 'stable',
+        summary: 'AppUi::Select, the single and multiple searchable select every relate field, the header search and the project switcher render.',
+        usedIn: [
+            { label: 'Global search' },
+            { label: 'Sidebar project switcher' },
+            { label: 'Form fields relate and multi-select' }
+        ],
+        demo: 'developer/demos/select',
+        doc: 'select.md',
+        variants: ['Single', 'Multiple']
+    },
+    {
+        name: 'modal',
         label: 'Modal',
         group: 'Overlays',
         status: 'stable',
-        summary: 'The bootstrap-modal dialog: title, confirm handling and rendering outside stacking contexts.',
+        summary: 'AppUi::Modal on the native dialog element: title, confirm handling and rendering in the top layer.',
         usedIn: [
             { label: 'Projects list', route: 'app.projects' }
         ],
         demo: 'developer/demos/modal',
         doc: 'modal.md'
-    },
-    {
-        name: 'app-modal',
-        label: 'Modal (dialog)',
-        group: 'Overlays',
-        status: 'experimental',
-        summary: 'AppUi::Modal on the native dialog element: the replacement for bootstrap-modal, rendered in the top layer.',
-        usedIn: [],
-        demo: 'developer/demos/app-modal',
-        doc: 'app-modal.md'
     },
     {
         name: 'dropdown',
@@ -98,6 +133,69 @@ export const ENTRIES = [
         usedIn: [{ label: 'ezSearch saved searches', route: 'app.projects' }],
         demo: 'developer/demos/dropdown',
         doc: 'dropdown.md'
+    },
+    {
+        name: 'tabs',
+        label: 'Tabs',
+        group: 'Navigation',
+        status: 'stable',
+        summary: 'AdminLTE nav-tabs with their panes; the active tab is an argument and a change is an event.',
+        usedIn: [{ label: 'Component Library docs', route: 'app.developer.components' }],
+        demo: 'developer/demos/tabs',
+        doc: 'tabs.md'
+    },
+    {
+        name: 'box',
+        label: 'Box',
+        group: 'Display',
+        status: 'stable',
+        summary: 'AppUi::Box, the AdminLTE box with square edges: header, tools, body and footer blocks in six variants.',
+        usedIn: [],
+        demo: 'developer/demos/box',
+        doc: 'app-ui-box.md',
+        variants: ['primary', 'default', 'info', 'success', 'warning', 'danger']
+    },
+    {
+        name: 'empty-state',
+        label: 'EmptyState',
+        group: 'Display',
+        status: 'stable',
+        summary: 'AppUi::EmptyState, the message a list or box shows when there is nothing to show: an icon, the text and an inline action.',
+        usedIn: [{ label: 'QuickList and DataTable empty states' }],
+        demo: 'developer/demos/empty-state',
+        doc: 'app-ui-empty-state.md'
+    },
+    {
+        name: 'avatar',
+        label: 'Avatar',
+        group: 'Display',
+        status: 'stable',
+        summary: 'AppUi::Avatar, the round picture of a user, or the agent avatar for an agent.',
+        usedIn: [],
+        demo: 'developer/demos/avatar',
+        doc: 'app-ui-avatar.md',
+        variants: ['default', 'sm', 'xs']
+    },
+    {
+        name: 'status-label',
+        label: 'Status',
+        group: 'Display',
+        status: 'stable',
+        summary: 'AppUi::StatusLabel, an issue status as a badge: the translated name in the colour of the status.',
+        usedIn: [],
+        demo: 'developer/demos/status-label',
+        doc: 'app-ui-status-label.md'
+    },
+    {
+        name: 'tag',
+        label: 'Tag',
+        group: 'Display',
+        status: 'stable',
+        summary: 'AppUi::Tag, a tag in the Task Board look: variant or palette colour from text, optionally removable.',
+        usedIn: [],
+        demo: 'developer/demos/tag',
+        doc: 'app-ui-tag.md',
+        variants: ['default', 'primary', 'info', 'success', 'warning', 'danger']
     }
 ];
 

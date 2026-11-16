@@ -12,7 +12,7 @@ import Model, { attr,belongsTo,hasMany } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class ConversationroomModel extends Model {
 
     /**
      * Subject of the conversation room
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    subject: attr('string'),
+    @attr('string') subject;
 
     /**
      * Date on which the conversation room was created on
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * Date on which the conversation room was last modified
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * Soft deletion flag
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * Description of the conversation room
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    description: attr('string'),
+    @attr('string') description;
 
     /**
      * The identifier of the user who created the room
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The name of the user who created the room
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * The name of the user who last modified the room
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    modifiedUserName: attr('string'),
+    @attr('string') modifiedUserName;
 
     /**
      * The identifier of the user who last modified the room
@@ -102,7 +102,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * Type of conversation room e.g. vote, discussion
@@ -112,7 +112,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    roomType: attr('string'),
+    @attr('string') roomType;
 
     /**
      * The identifier of the project that this room belongs to
@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    projectId: attr('string'),
+    @attr('string') projectId;
 
     /**
      * The identifier of the issue that this room belongs to
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    issueId: attr('string'),
+    @attr('string') issueId;
 
     /**
      * The shortcode of the project that this room belongs to
@@ -142,7 +142,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    projectShortcode: attr('string'),
+    @attr('string') projectShortcode;
 
     /**
      * The number of the issue that this room belongs to
@@ -152,7 +152,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    issueNumber: attr('string'),
+    @attr('string') issueNumber;
     
     /**
      * The user who created the room
@@ -162,7 +162,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    createdBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) createdBy;
 
     /**
      * The user who modified the room
@@ -172,7 +172,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    modifiedBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) modifiedBy;
 
     /**
      * The project this room belongs to
@@ -182,7 +182,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    project: belongsTo('project', { async: true, inverse: 'conversations' }),
+    @belongsTo('project', { async: true, inverse: 'conversations' }) project;
 
     /**
      * The issue this room belongs to
@@ -192,7 +192,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    issue: belongsTo('issue', { async: true, inverse: 'conversationroom' }),
+    @belongsTo('issue', { async: true, inverse: 'conversationroom' }) issue;
 
     /**
      * Comments made on this conversation room
@@ -202,7 +202,7 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    comments: hasMany('comment', { async: true, inverse: 'conversationRoom' }),
+    @hasMany('comment', { async: true, inverse: 'conversationRoom' }) comments;
 
     /**
      * Votes made on this conversation room
@@ -212,6 +212,6 @@ export default Model.extend({
      * @for Conversationroom
      * @private
      */
-    votes: hasMany('vote', { async: true, inverse: 'conversationroom' })
+    @hasMany('vote', { async: true, inverse: 'conversationroom' }) votes;
 
-});
+}

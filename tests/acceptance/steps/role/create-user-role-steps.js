@@ -1,7 +1,6 @@
 import steps from '../steps';
 import { click } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support';
-import { clickTrigger } from 'ember-power-select/test-support/helpers';
+import { chooseOption, openSelect, optionsSelector } from 'prometheus/tests/helpers/select';
 
 export default function (assert) {
     return steps(assert)
@@ -10,7 +9,7 @@ export default function (assert) {
             assert.ok(true, 'User clicks on create userrole button');
         })
         .when('User selects $userName as a role member', async function (userName) {
-            await selectChoose('div[data-field="userrole.user"] div.input-group', `${userName}`);
+            await chooseOption('div[data-field="userrole.user"] div.input-group', `${userName}`);
             assert.ok(true, `${userName} selected as role member`);
         })
         .then('There should $count userroles exists', async function (count) {
@@ -29,8 +28,8 @@ export default function (assert) {
             assert.dom('[data-role="user-userroles"]').includesText(userName);
         })
         .then('Add role member picker should offer $count users', async function (count) {
-            await clickTrigger('div[data-field="userrole.user"] div.input-group');
-            assert.dom('.ember-power-select-options .ember-power-select-option').exists({
+            await openSelect('div[data-field="userrole.user"] div.input-group');
+            assert.dom(optionsSelector()).exists({
                 count: parseInt(count, 10)
             });
         })

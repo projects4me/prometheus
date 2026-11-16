@@ -51,4 +51,19 @@ module('Integration | Component | app-ui/task-board layout', function (hooks) {
             assert.ok(rect.right <= tabList.getBoundingClientRect().right + 1, 'tab is not clipped');
         });
     });
+    test('every milestone tab shows its issue count, 0 when empty', async function (assert) {
+        this.set('milestones', [
+            { id: null, name: 'Backlog', milestoneType: 'backlog', issues: [{ id: 1 }, { id: 2 }] },
+            { id: 5, name: 'Sprint', milestoneType: 'sprint', issues: [] }
+        ]);
+        this.set('statuses', []);
+        this.set('statusClass', {});
+        this.set('noop', () => 0);
+
+        await render(hbs`<AppUi::TaskBoard @milestones={{this.milestones}} @statuses={{this.statuses}} @statusClass={{this.statusClass}} @selectIssue={{this.noop}} @getMilestoneProgress={{this.noop}} @getCompletedIssuesCount={{this.noop}} />`);
+
+        let counts = [...this.element.querySelectorAll('[data-milestone-tab] [data-milestone-issue-count]')];
+        assert.deepEqual(counts.map((el) => el.textContent.trim()), ['2', '0'], 'counts are shown');
+        assert.ok(counts[0].getAttribute('title').includes('2'), 'tooltip carries the count');
+    });
 });

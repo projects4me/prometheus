@@ -1,5 +1,5 @@
 import { Factory } from 'miragejs';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import * as date from '../helpers/getDate';
 import _ from 'lodash';
 
@@ -15,7 +15,7 @@ export default Factory.extend({
     },
     "deleted": "0",
     public() {
-        return faker.random.arrayElement(["0", "1"]);
+        return faker.helpers.arrayElement(["0", "1"]);
     },
     "searchquery": "savedsearch",
     "relatedTo": "",

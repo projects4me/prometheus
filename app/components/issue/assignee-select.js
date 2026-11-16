@@ -1,5 +1,4 @@
 import { action } from '@ember/object';
-import { htmlSafe } from '@ember/template';
 import AppComponent from 'prometheus/components/app';
 import { toArray } from 'prometheus/utils/array/to-array';
 
@@ -55,7 +54,7 @@ export default class IssueAssigneeSelectComponent extends AppComponent {
     @action updateAssignee(newAssignee) {
         const issue = this.args.issue;
         const messenger = new Messenger().post({
-            message: htmlSafe(this.intl.t('views.app.issue.detail.assigneeUpdating', { name: newAssignee.name })),
+            message: this.intl.t('views.app.issue.detail.assigneeUpdating', { name: newAssignee.name, htmlSafe: true }),
             type: 'info',
             showCloseButton: false,
             hideAfter: false
@@ -66,7 +65,7 @@ export default class IssueAssigneeSelectComponent extends AppComponent {
 
         issue.save().then(() => {
             messenger.update({
-                message: htmlSafe(this.intl.t('views.app.issue.detail.assigneeUpdated', { name: newAssignee.name })),
+                message: this.intl.t('views.app.issue.detail.assigneeUpdated', { name: newAssignee.name, htmlSafe: true }),
                 type: 'success',
                 showCloseButton: true,
                 hideAfter: 3
@@ -74,7 +73,7 @@ export default class IssueAssigneeSelectComponent extends AppComponent {
             this.notifyUpdated(issue);
         }).catch(() => {
             messenger.update({
-                message: htmlSafe(this.intl.t('views.app.issue.detail.assigneeUpdateFailed', { name: newAssignee.name })),
+                message: this.intl.t('views.app.issue.detail.assigneeUpdateFailed', { name: newAssignee.name, htmlSafe: true }),
                 type: 'error',
                 showCloseButton: true,
                 hideAfter: 3

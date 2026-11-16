@@ -26,11 +26,11 @@
             <:leading><span class="quick-list-demo-initials" data-demo-initials>{{record.initials}}</span></:leading>
             <:primary>
               <span>{{record.title}}</span>
-              <span class="label {{record.status}}">{{status-label record.status}}</span>
+              <AppUi::StatusLabel @status={{record.status}} />
             </:primary>
             <:secondary>
               {{record.creator}} · {{format-date date=record.updated}}
-              {{#each record.tags as |tag|}}<span class="label label-default">{{tag}}</span> {{/each}}
+              {{#each record.tags as |tag|}}<AppUi::Tag>{{tag}}</AppUi::Tag> {{/each}}
             </:secondary>
           </Item>
         </:item>

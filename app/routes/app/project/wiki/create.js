@@ -19,7 +19,7 @@ import _ from 'lodash';
  * @extends App
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class CreateRoute extends App {
 
     /**
      * The current user service
@@ -29,7 +29,7 @@ export default App.extend({
      * @for Prometheus.Routes.Wiki.Create
      * @public
      */
-    currentUser: service(),
+    @service currentUser;
 
     /**
      * The setup controller function that will be called every time the user visits the module route,
@@ -39,7 +39,7 @@ export default App.extend({
      * @param {Prometheus.Controllers.Wiki} controller the controller object for this route
      * @private
      */
-    setupController:function(controller){
+    setupController(controller) {
         let _self = this;
 
         let projectId = _self.trackedProject.getProjectId();
@@ -53,5 +53,5 @@ export default App.extend({
 
         controller.set('model',wiki);
         controller.set('markUp', _.clone(wiki.markUp));
-    },
-});
+    }
+}

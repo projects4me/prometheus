@@ -6,7 +6,6 @@ import Service from '@ember/service';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { htmlSafe } from '@ember/template';
 import groupByIssue from 'prometheus/utils/notifications/group-by-issue';
 import { peekOrPush, pushIfMissing } from 'prometheus/utils/live/collection';
 import { toArray } from 'prometheus/utils/array/to-array';
@@ -356,9 +355,7 @@ export default class NotificationsService extends Service {
 	@action
 	async markAllAsRead() {
 		let messenger = new Messenger().post({
-			message: htmlSafe(
-				this.intl.t('views.app.notifications.markingAllAsRead')
-			),
+			message: this.intl.t('views.app.notifications.markingAllAsRead', { htmlSafe: true }),
 			type: 'info',
 			showCloseButton: false,
 			hideAfter: false
@@ -403,18 +400,14 @@ export default class NotificationsService extends Service {
 			this._broadcastChannel.postMessage({ type: 'MARK_ALL_AS_READ' });
 
 			messenger.update({
-				message: htmlSafe(
-					this.intl.t('views.app.notifications.markAllAsReadSuccess')
-				),
+				message: this.intl.t('views.app.notifications.markAllAsReadSuccess', { htmlSafe: true }),
 				type: 'success',
 				showCloseButton: true,
 				hideAfter: 3
 			});
 		} catch (error) {
 			messenger.update({
-				message: htmlSafe(
-					this.intl.t('views.app.notifications.markAllAsReadError')
-				),
+				message: this.intl.t('views.app.notifications.markAllAsReadError', { htmlSafe: true }),
 				type: 'error',
 				showCloseButton: true,
 				hideAfter: 3

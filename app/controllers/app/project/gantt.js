@@ -7,7 +7,6 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as controller } from '@ember/controller';
 import { service } from '@ember/service';
-import { htmlSafe } from '@ember/template';
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
 import { refreshView } from 'prometheus/utils/live/reload';
 import * as dates from 'prometheus/utils/date';
@@ -606,9 +605,8 @@ export default class AppProjectGanttController extends PrometheusController {
 		Logger.debug('AppProjectGanttController::updateIssueDates');
 
 		let messenger = new Messenger().post({
-			message: htmlSafe(this.intl.t('views.app.gantt.issue.updating', {
-				issueNumber: issue.issueNumber
-			})),
+			message: this.intl.t('views.app.gantt.issue.updating', {
+				issueNumber: issue.issueNumber, htmlSafe: true }),
 			type: 'info',
 			showCloseButton: false,
 			hideAfter: false
@@ -623,11 +621,10 @@ export default class AppProjectGanttController extends PrometheusController {
 			await issue.save();
 
 			messenger.update({
-				message: htmlSafe(this.intl.t('views.app.gantt.issue.updated', {
+				message: this.intl.t('views.app.gantt.issue.updated', {
 					issueNumber: issue.issueNumber,
 					startDate: dates.format(newStartDate, 'MMM DD, YYYY'),
-					endDate: dates.format(newEndDate, 'MMM DD, YYYY')
-				})),
+					endDate: dates.format(newEndDate, 'MMM DD, YYYY'), htmlSafe: true }),
 				type: 'success',
 				showCloseButton: true,
 				hideAfter: 3
@@ -643,7 +640,7 @@ export default class AppProjectGanttController extends PrometheusController {
 			issue.rollbackAttributes();
 
 			messenger.update({
-				message: htmlSafe(this.intl.t('views.app.gantt.issue.updateError')),
+				message: this.intl.t('views.app.gantt.issue.updateError', { htmlSafe: true }),
 				type: 'error',
 				showCloseButton: true,
 				hideAfter: 5
@@ -668,10 +665,9 @@ export default class AppProjectGanttController extends PrometheusController {
 
 		if (successorIssue.parentId === predecessorIssue.id) {
 			new Messenger().post({
-				message: htmlSafe(this.intl.t('views.app.gantt.dependency.duplicate', {
+				message: this.intl.t('views.app.gantt.dependency.duplicate', {
 					predecessor: predecessorIssue.issueNumber,
-					successor: successorIssue.issueNumber
-				})),
+					successor: successorIssue.issueNumber, htmlSafe: true }),
 				type: 'info',
 				hideAfter: 3,
 				showCloseButton: true
@@ -681,10 +677,9 @@ export default class AppProjectGanttController extends PrometheusController {
 
 		if (this.createsCircularDependency(predecessorIssue, successorIssue)) {
 			new Messenger().post({
-				message: htmlSafe(this.intl.t('views.app.gantt.dependency.cycleError', {
+				message: this.intl.t('views.app.gantt.dependency.cycleError', {
 					predecessor: predecessorIssue.issueNumber,
-					successor: successorIssue.issueNumber
-				})),
+					successor: successorIssue.issueNumber, htmlSafe: true }),
 				type: 'error',
 				hideAfter: 5,
 				showCloseButton: true
@@ -693,10 +688,9 @@ export default class AppProjectGanttController extends PrometheusController {
 		}
 
 		let messenger = new Messenger().post({
-			message: htmlSafe(this.intl.t('views.app.gantt.dependency.creating', {
+			message: this.intl.t('views.app.gantt.dependency.creating', {
 				predecessor: predecessorIssue.issueNumber,
-				successor: successorIssue.issueNumber
-			})),
+				successor: successorIssue.issueNumber, htmlSafe: true }),
 			type: 'info',
 			showCloseButton: false,
 			hideAfter: false
@@ -709,10 +703,9 @@ export default class AppProjectGanttController extends PrometheusController {
 			await successorIssue.save();
 
 			messenger.update({
-				message: htmlSafe(this.intl.t('views.app.gantt.dependency.created', {
+				message: this.intl.t('views.app.gantt.dependency.created', {
 					predecessor: predecessorIssue.issueNumber,
-					successor: successorIssue.issueNumber
-				})),
+					successor: successorIssue.issueNumber, htmlSafe: true }),
 				type: 'success',
 				showCloseButton: true,
 				hideAfter: 3
@@ -726,7 +719,7 @@ export default class AppProjectGanttController extends PrometheusController {
 			successorIssue.rollbackAttributes();
 
 			messenger.update({
-				message: htmlSafe(this.intl.t('views.app.gantt.dependency.createError')),
+				message: this.intl.t('views.app.gantt.dependency.createError', { htmlSafe: true }),
 				type: 'error',
 				showCloseButton: true,
 				hideAfter: 5
@@ -774,10 +767,9 @@ export default class AppProjectGanttController extends PrometheusController {
 		}
 
 		let messenger = new Messenger().post({
-			message: htmlSafe(this.intl.t('views.app.gantt.dependency.deleting', {
+			message: this.intl.t('views.app.gantt.dependency.deleting', {
 				predecessor: predecessorIssue.issueNumber,
-				successor: successorIssue.issueNumber
-			})),
+				successor: successorIssue.issueNumber, htmlSafe: true }),
 			type: 'info',
 			showCloseButton: false,
 			hideAfter: false
@@ -790,10 +782,9 @@ export default class AppProjectGanttController extends PrometheusController {
 			await successorIssue.save();
 
 			messenger.update({
-				message: htmlSafe(this.intl.t('views.app.gantt.dependency.deleted', {
+				message: this.intl.t('views.app.gantt.dependency.deleted', {
 					predecessor: predecessorIssue.issueNumber,
-					successor: successorIssue.issueNumber
-				})),
+					successor: successorIssue.issueNumber, htmlSafe: true }),
 				type: 'success',
 				showCloseButton: true,
 				hideAfter: 3
@@ -806,7 +797,7 @@ export default class AppProjectGanttController extends PrometheusController {
 			successorIssue.rollbackAttributes();
 
 			messenger.update({
-				message: htmlSafe(this.intl.t('views.app.gantt.dependency.deleteError')),
+				message: this.intl.t('views.app.gantt.dependency.deleteError', { htmlSafe: true }),
 				type: 'error',
 				showCloseButton: true,
 				hideAfter: 5

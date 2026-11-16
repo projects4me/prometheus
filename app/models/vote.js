@@ -12,7 +12,7 @@ import Model, { attr, belongsTo, hasMany } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class VoteModel extends Model {
 
     /**
      * Date on which the vote was created
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * Date on which the vote was last modified
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * The identifier of the user who created the vote
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The name of the use who created the vote
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * The identifier of the user who last modified the vote
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * The name of the user who last modified the vote
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    modifiedUserName: attr('string'),
+    @attr('string') modifiedUserName;
 
     /**
      * The vote flag
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    vote: attr('string'),
+    @attr('string') vote;
 
     /**
      * The identifier of the record this vote is related to
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    relatedId: attr('string'),
+    @attr('string') relatedId;
 
     /**
      * The model this vote is related to
@@ -102,7 +102,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    relatedTo: attr('string'),
+    @attr('string') relatedTo;
 
     /**
      * The user who created the vote
@@ -112,7 +112,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    createdBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) createdBy;
 
     /**
      * The user who last modified the vote
@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    modifiedBy: belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) modifiedBy;
 
     /**
      * The user who last modified the vote
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    wiki: hasMany('wiki', { async: true, inverse: 'vote' }),
+    @hasMany('wiki', { async: true, inverse: 'vote' }) wiki;
 
     /**
      * The user who last modified the vote
@@ -142,7 +142,7 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    comment: hasMany('comment', { async: true, inverse: null }),
+    @hasMany('comment', { async: true, inverse: null }) comment;
 
     /**
      * The user who last modified the vote
@@ -152,6 +152,6 @@ export default Model.extend({
      * @for Vote
      * @private
      */
-    conversationroom: hasMany('conversationroom', { async: true, inverse: 'votes' }),
+    @hasMany('conversationroom', { async: true, inverse: 'votes' }) conversationroom;
 
-});
+}

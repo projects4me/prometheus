@@ -8,12 +8,16 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var sass = require('sass');
 var MergeTrees = require('broccoli-merge-trees');
 var BundledTranslations = require('./lib/bundled-translations');
+var ComponentContractSources = require('./lib/component-contract-sources');
 
 module.exports = function (defaults) {
     let app = new EmberApp(defaults, {
         // translations/*.json become the module prometheus/utils/intl/bundled-translations
         trees: {
             app: new MergeTrees(['app', new BundledTranslations('translations')]),
+            // public/ui-docs/*.json manifests + the component sources they describe become the test module
+            // prometheus/tests/helpers/component-contract-sources (tests/unit/component-contracts-test.js)
+            tests: new MergeTrees(['tests', new ComponentContractSources('public/ui-docs', 'app/components')]),
         },
         // Add options here
         // ember-concurrency is a v2 addon: it needs the async-arrow task transform to compile task(async () => {})
@@ -59,14 +63,9 @@ module.exports = function (defaults) {
     app.import('node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js');
     app.import("node_modules/jquery-mask-plugin/dist/jquery.mask.min.js");
     app.import("node_modules/jquery-slimscroll/jquery.slimscroll.min.js");
-    app.import("node_modules/highlightjs/highlight.pack.min.js");
-    app.import("node_modules/at.js/dist/js/jquery.atwho.min.js");
-    app.import("vendor/quill/dist/quill.min.js");
     app.import("vendor/messenger/build/js/messenger.min.js");
     app.import("node_modules/chart.js/dist/chart.min.js");
     app.import("node_modules/color-hash/dist/color-hash.js");
-    //    app.import("bower_components/summernote/dist/summernote.js");
-    app.import("vendor/summernote/summernote.js");
     app.import("vendor/custom-charts/doughnut-chart.js");
     app.import("vendor/AdminLTE/dist/js/app.js");
 

@@ -11,7 +11,6 @@ import { peekOrPush, insertAtIfMissing } from 'prometheus/utils/live/collection'
 import { applyIssueAssigneeChange } from 'prometheus/utils/live/assignee';
 import { refreshView } from 'prometheus/utils/live/reload';
 import { issueStatusLabel } from 'prometheus/utils/issue-status/label';
-import { htmlSafe } from '@ember/template';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
 import { pushRecords, removeRecord } from 'prometheus/utils/array/record-list';
@@ -963,7 +962,7 @@ export default class AppProjectBoardController extends ProjectRelated {
             }
             this.savedsearches = [...this.savedsearches, data];
             this.newSavedsearch = this.store.createRecord('savedsearch');
-            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.added`, { name: data.get('name') })));
+            this.notify('success', this.intl.t(`${SAVED_SEARCH_MESSAGES}.added`, { name: data.get('name'), htmlSafe: true }));
         } catch (error) {
             this.errorManager.handleError(error, { moduleName: 'savedsearch' });
         }
@@ -992,7 +991,7 @@ export default class AppProjectBoardController extends ProjectRelated {
                 return;
             }
             this.savedsearches = [...this.savedsearches];
-            this.notify('success', htmlSafe(this.intl.t(`${SAVED_SEARCH_MESSAGES}.updated`, { name: record.get('name') })));
+            this.notify('success', this.intl.t(`${SAVED_SEARCH_MESSAGES}.updated`, { name: record.get('name'), htmlSafe: true }));
         } catch (error) {
             record.rollbackAttributes();
             this.errorManager.handleError(error, { moduleName: 'savedsearch' });

@@ -6,7 +6,6 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { click, render, settled, waitUntil } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import jQuery from 'jquery';
 import AclStub from '../../stub-services/acl-stub';
 import CurrentUserStub from '../../stub-services/current-user-stub';
 
@@ -19,11 +18,6 @@ module('Integration | Component | idea/conversation-box', function (hooks) {
         this.set('idea', { title: 'An idea', status: 'new' });
         this.set('messages', []);
         this.set('noop', () => {});
-    });
-
-    hooks.afterEach(function () {
-        jQuery('.modal-backdrop').remove();
-        jQuery('body').removeClass('modal-open');
     });
 
     test('the archive modal closes after confirming', async function (assert) {

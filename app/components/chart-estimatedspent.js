@@ -2,178 +2,150 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import _ from "lodash";
-import Component from '@ember/component';
+import _ from 'lodash';
+import Component from '@glimmer/component';
 import { service } from '@ember/service';
 
 import { objectAt } from 'prometheus/utils/array/object-at';
 import { toArray } from 'prometheus/utils/array/to-array';
+
 /**
- * This component is used to render the issue ratio chart in the application
+ * Bar colour of an issue whose spent time is within its estimate.
+ *
+ * @property WITHIN_ESTIMATE_COLOR
+ * @type String
+ * @final
+ */
+const WITHIN_ESTIMATE_COLOR = '#00a65a';
+
+/**
+ * Bar colour of an issue whose spent time reached or passed its estimate.
+ *
+ * @property OVER_ESTIMATE_COLOR
+ * @type String
+ * @final
+ */
+const OVER_ESTIMATE_COLOR = '#dd4b39';
+
+/**
+ * Renders the estimated vs spent chart of a project's issues. The chart is drawn by the render-chart
+ * modifier, which redraws it when @issues changes.
  *
  * @class ChartEstimatedspent
  * @namespace Prometheus.Components
- * @extends Ember.Component
+ * @extends Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Component.extend({
+export default class ChartEstimatedspentComponent extends Component {
 
     /**
      * The intl library service that is used in order to get the translations
      *
      * @property intl
      * @type Ember.Service
-     * @for ChartIssueratio
+     * @for ChartEstimatedspent
      * @private
      */
-    intl: service(),
+    @service intl;
 
     /**
-     * These are the classes the must be registered with the component
+     * The Chart.js configuration, or null when there are no issues to chart.
      *
-     * @property classNames
-     * @type Array
-     * @for ChartIssueratio
-     * @private
+     * @property chartConfig
+     * @type Object
+     * @for ChartEstimatedspent
+     * @public
      */
-    classNames: ["chart-estimatedspent"],
-
-    /**
-     * These are the attributes that are bound with the element
-     *
-     * @property attributeBindings
-     * @type Array
-     * @for ChartIssueratio
-     * @private
-     */
-    /**
-     * The tag name of this component
-     *
-     * @property tagName
-     * @type Bool
-     * @for ChartIssueratio
-     * @private
-     */
-    tagName: 'canvas',
-
-    /**
-     * This function is called when the object is created, we are using this
-     * function to translate the emojis
-     *
-     * @method init
-     * @private
-     */
-    init(){
-        this._super(...arguments);
-    },
-
-    /**
-     * This function is called after the component has been rendered, this is where
-     * we initiate the chart
-     *
-     * @method didRender
-     * @private
-     */
-    didRender(){
-        let self = this;
-        let issues = this.issues;
-        let chartel = self.get('estimatedspent');
-        if (chartel !== undefined) {
-            chartel.destroy();
+    get chartConfig() {
+        let issues = this.args.issues;
+        if (issues === undefined || issues === null) {
+            return null;
         }
 
-        if (issues !== undefined){
-            var estimatedspent = new Chart(self.get('element'),{
-                type:"bar",
-                data: self.getDatasets(issues),
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            bottom: 8
+        return {
+            type: 'bar',
+            data: this.getDatasets(issues),
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        bottom: 8
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            autoSkip: true,
+                            maxRotation: 45,
+                            minRotation: 0
                         }
                     },
-                    scales: {
-                        x: {
-                            ticks: {
-                                autoSkip: true,
-                                maxRotation: 45,
-                                minRotation: 0
-                            }
-                        },
-                        y: {
-                            min: 0,
-                            max: 100,
-                            ticks: {
-                                callback: function (value) {
-                                    return `${value}%`;
-                                }
-                            }
+                    y: {
+                        min: 0,
+                        max: 100,
+                        ticks: {
+                            callback: (value) => `${value}%`
                         }
                     }
                 }
-            });
-            self.set('estimatedspent',estimatedspent);
-        }
-    },
+            }
+        };
+    }
 
     /**
-     * This function is used in order to retrive the data set for the charting library to use.
+     * Returns the total hours of a list of time entries ({ days, hours, minutes }).
+     *
+     * @method toHours
+     * @param {Array} entries
+     * @return {Number}
+     * @private
+     */
+    toHours(entries) {
+        if (entries === undefined) {
+            return 0;
+        }
+        let hours = _.sum(entries.map((item) => item.days).map(Number)) * 24;
+        hours += _.sum(entries.map((item) => item.hours).map(Number));
+        hours += _.sum(entries.map((item) => item.minutes).map(Number)) / 60;
+        return hours;
+    }
+
+    /**
+     * Builds the chart data: one bar per issue with the spent share of its estimate (in %), plus the
+     * efficiency line (the remaining share).
      *
      * @method getDatasets
      * @param {Object} issues
-     * @return {{labels: Array, datasets: [*,*]}}
+     * @return {{labels: Array, datasets: Array}}
+     * @public
      */
-    getDatasets(issues){
-        //var self = this;
+    getDatasets(issues) {
         let data = {
-            labels:[],
-            datasets:[{
-                label: this.intl.t("views.app.project.detail.charts.estimatedspent"),
-                data:[],
+            labels: [],
+            datasets: [{
+                label: this.intl.t('views.app.project.detail.charts.estimatedspent'),
+                data: [],
                 backgroundColor: [],
                 type: 'bar',
                 borderWidth: 0
             },
-                {
-                    label: this.intl.t("views.app.project.detail.charts.efficiency"),
-                    type: "line",
-                    data:[],
-                    backgroundColor: "rgba(220,220,220,0)",
-                    borderColor: "rgba(220,20,20,0.8)",
-                }
-            ]};
+            {
+                label: this.intl.t('views.app.project.detail.charts.efficiency'),
+                type: 'line',
+                data: [],
+                backgroundColor: 'rgba(220,220,220,0)',
+                borderColor: 'rgba(220,20,20,0.8)',
+            }]
+        };
 
         let issuesCount = issues.length;
-        let estimated = null;
-        let spent = null;
-        let estimatedHours = 0;
-        let spentHours = 0;
-        let issue = null;
+        for (let i = 0; i < issuesCount; i++) {
+            let issue = objectAt(issues, i);
+            let estimatedHours = this.toHours(toArray(issue.get('estimated')));
+            let spentHours = this.toHours(toArray(issue.get('spent')));
 
-        for (let i=0; i<issuesCount;i++)
-        {
-            issue = objectAt(issues, i);
-            estimated = toArray(issue.get('estimated'));
-            spent = toArray(issue.get('spent'));
-            estimatedHours = 0;
-            if (estimated !== undefined)
-            {
-                estimatedHours = _.sum(estimated.map((item) => item.days).map(Number)) * 24;
-                estimatedHours += _.sum(estimated.map((item) => item.hours).map(Number));
-                estimatedHours += _.sum(estimated.map((item) => item.minutes).map(Number)) / 60;
-            }
-
-            spentHours = 0;
-            if(spent !== undefined)
-            {
-                spentHours = _.sum(spent.map((item) => item.days).map(Number)) * 24;
-                spentHours += _.sum(spent.map((item) => item.hours).map(Number));
-                spentHours += _.sum(spent.map((item) => item.minutes).map(Number)) / 60;
-            }
-
-            data.labels[i] = "#"+issue.get('issueNumber');
+            data.labels[i] = '#' + issue.get('issueNumber');
 
             let spentVsEstimatedPercentage = 0;
             if (estimatedHours > 0) {
@@ -186,47 +158,15 @@ export default Component.extend({
             }
 
             spentVsEstimatedPercentage = _.clamp(spentVsEstimatedPercentage, 0, 100);
-            data.datasets[0]['data'][i] = spentVsEstimatedPercentage;
-            data.datasets[1]['data'][i] = _.clamp(100 - spentVsEstimatedPercentage, 0, 100);
-
-            if (data.datasets[0]['data'][i] === 0) {
-                data.datasets[1]['data'][i] = 0;
-            }
-
-            data.datasets[0]['backgroundColor'][i] = '#dd4b39';
-            if (estimatedHours > spentHours) {
-                data.datasets[0]['backgroundColor'][i] = '#00a65a';
-            }
-
+            data.datasets[0].data[i] = spentVsEstimatedPercentage;
+            data.datasets[1].data[i] = spentVsEstimatedPercentage === 0
+                ? 0
+                : _.clamp(100 - spentVsEstimatedPercentage, 0, 100);
+            data.datasets[0].backgroundColor[i] = estimatedHours > spentHours
+                ? WITHIN_ESTIMATE_COLOR
+                : OVER_ESTIMATE_COLOR;
         }
 
         return data;
-    },
-
-    /**
-     * This function is called after the elements drawn by ember js needs to be deleted, we destroy the chart
-     *
-     * @method willDestroyElement
-     * @private
-     */
-    willDestroyElement(){
-        Logger.debug('ChartEstimatedspentComponent::willDestroyElement()');
-        if (this.estimatedspent !== undefined) {
-            this.estimatedspent.destroy();
-        }
-    },
-
-    /**
-     * This function is called after the view rendered must be cleared
-     *
-     * @method
-     * @private
-     */
-    willClearRender(){
-        Logger.debug('ChartEstimatedspentComponent::willDestroyElement()');
-        if (this.estimatedspent !== undefined) {
-            this.estimatedspent.destroy();
-        }
-    },
-
-});
+    }
+}

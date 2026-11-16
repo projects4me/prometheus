@@ -22,7 +22,7 @@ RUN apt-get update \
 COPY docker/apache/prometheus.conf /etc/apache2/sites-available/prometheus.conf
 RUN a2dissite 000-default \
     && a2ensite prometheus.conf \
-    && a2enmod rewrite
+    && a2enmod rewrite headers
 
 COPY --from=build /prometheus/dist /prometheus/dist
 

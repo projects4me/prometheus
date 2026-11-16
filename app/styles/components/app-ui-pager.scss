@@ -1,0 +1,7 @@
+/*
+  AppUi::Pager: the range text and the previous/next buttons of a paged list. In a list toolbar it sits
+  inline after the selected count; QuickList lays it out as its footer (quick-list/_pagination.scss).
+*/
+.list-controls .app-ui-pager {
+  display: inline-block;
+}

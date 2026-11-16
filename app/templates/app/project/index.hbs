@@ -194,9 +194,7 @@
               <ul class="project-estimated-spent">
                 {{#if this.estimatedSpentMilestoneOptions.length}}
                   {{#if this.hasEstimatedSpentChartData}}
-                    {{chart-estimatedspent
-                        issues=this.estimatedSpentChartIssues
-                    }}
+                    <ChartEstimatedspent @issues={{this.estimatedSpentChartIssues}} />
                   {{else}}
                     <Exceptions::NothingFound
                       @description={{t "views.app.project.detail.charts.noIssuesForEstimatedSpent"}}
@@ -408,13 +406,13 @@
 
           {{#if (or (gt this.milestonesPage 1) this.hasNextMilestones)}}
             <div class="box-footer no-padding" data-milestones-pagination>
-              <QuickList::Pagination
-                @page={{this.milestonesPage}}
+              <AppUi::Pager
+                @offset={{this.milestonesOffset}}
                 @limit={{this.milestonesPageSize}}
-                @hasNext={{this.hasNextMilestones}}
+                @hasMore={{this.hasNextMilestones}}
                 @count={{this.milestones.length}}
                 @disabled={{this.isMilestonesLoading}}
-                @onPage={{this.changeMilestonesPage}}
+                @onPageChange={{this.changeMilestonesOffset}}
               />
             </div>
           {{/if}}
@@ -509,7 +507,7 @@
         </div>
         <div class="box-body no-padding">
           <ul class="users-list clearfix">
-            {{chart-issueratio issues=this.issuetime}}
+            <ChartIssueratio @issues={{this.issuetime}} />
           </ul>
         </div>
       </div>

@@ -95,6 +95,13 @@ export function register(server, ctx) {
             issuetype: schema.issuetypes.find(attributes.typeId),
             status: schema.issuestatuses.find(issue.statusId).name,
         });
+        // Gaia derives assignedTo from the assignee id. Returning it unlinked would overwrite the
+        // assignedTo the app set locally (ember-data:deprecate-relationship-remote-update-clearing-local-state).
+        if (attributes.assignee) {
+            issue.update({
+                assignedTo: schema.users.find(attributes.assignee)
+            });
+        }
         if(attributes.parentId) {
             issue.update({
                 parentissue: schema.issues.find(attributes.parentId)

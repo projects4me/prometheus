@@ -7,6 +7,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
+import { placeholderSelector } from 'prometheus/tests/helpers/select';
 
 module('Integration | Component | form-fields/field-relate-multi', function (hooks) {
     setupRenderingTest(hooks);
@@ -72,7 +73,7 @@ module('Integration | Component | form-fields/field-relate-multi', function (hoo
         `);
 
         //checking placeholder and label
-        assert.dom('.ember-power-select-placeholder').hasText('Select Issue types');
+        assert.dom(placeholderSelector()).hasText('Select Issue types');
         assert.dom('label').hasText('Issue Types');
     });
 });

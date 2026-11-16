@@ -7,7 +7,6 @@ import { action } from '@ember/object';
 import { isArray } from '@ember/array';
 import AppComponent from 'prometheus/components/app';
 import DateUtils from 'prometheus/utils/date';
-import { htmlSafe } from '@ember/template';
 import { toArray } from 'prometheus/utils/array/to-array';
 
 /**
@@ -675,12 +674,9 @@ export default class IssueIssuePlanningComponent extends AppComponent {
 	 */
 	updateMessengerForIssue(messenger, intl, issue) {
 		messenger.update({
-			message: htmlSafe(
-				intl.t('views.app.issue.planWithAi.issueCreated', {
+			message: intl.t('views.app.issue.planWithAi.issueCreated', {
 					issueNumber: issue.issueNumber,
-					subject: issue.subject
-				})
-			),
+					subject: issue.subject, htmlSafe: true }),
 			type: 'success',
 			showCloseButton: true,
 			hideAfter: 3

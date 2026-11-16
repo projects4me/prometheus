@@ -58,12 +58,16 @@ export default function (assert) {
 					childissues: childIssues
 				});
 				
-				// Also update the project to include the new child issues
+				// Also make sure the project holds the child issues, each once: an id listed twice in a
+				// relationship is deprecated by ember-data (deprecate-non-unique-relationship-entries).
 				let project = ctx.get('currentProject');
-				let allProjectIssues = project.issues.models.concat(childIssues);
-				project.update({
-					issues: allProjectIssues
-				});
+				let projectIssueIds = project.issues.models.map((issue) => issue.id);
+				let missingIssues = childIssues.filter((issue) => !projectIssueIds.includes(issue.id));
+				if (missingIssues.length) {
+					project.update({
+						issues: project.issues.models.concat(missingIssues)
+					});
+				}
 				
 				assert.ok(true, `Linked child issues to parent issue ${parentIssueNumber}`);
 			})

@@ -1,0 +1,30 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo>
+    <AppUi::Box @variant={{this.variant}} @listView={{this.listView}} @noPadding={{this.noPadding}} @collapsed={{this.collapsed}} data-test-demo-box>
+      <:header>{{#if this.showHeader}}<h3 class="box-title">Box title</h3>{{/if}}</:header>
+      <:tools>{{#if this.showTools}}<button type="button" class="btn btn-box-tool"><i class="fa fa-cog"></i></button>{{/if}}</:tools>
+      <:body>The body of the box.</:body>
+      <:footer>{{#if this.showFooter}}The footer of the box.{{/if}}</:footer>
+    </AppUi::Box>
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <label>Variant</label>
+      <div class="btn-group" data-control-variant>
+        {{#each this.variants as |variant|}}
+          <button type="button" class="btn btn-default {{if (eq variant this.variant) 'active'}}" data-variant={{variant}} {{on "click" (fn this.setVariant variant)}}>{{variant}}</button>
+        {{/each}}
+      </div>
+    </div>
+    <div class="checkbox"><label><input type="checkbox" data-control-header checked={{this.showHeader}} {{on "change" (fn this.toggle "showHeader")}}> Header</label></div>
+    <div class="checkbox"><label><input type="checkbox" data-control-tools checked={{this.showTools}} {{on "change" (fn this.toggle "showTools")}}> Tools</label></div>
+    <div class="checkbox"><label><input type="checkbox" data-control-footer checked={{this.showFooter}} {{on "change" (fn this.toggle "showFooter")}}> Footer</label></div>
+    <div class="checkbox"><label><input type="checkbox" data-control-list-view checked={{this.listView}} {{on "change" (fn this.toggle "listView")}}> List view</label></div>
+    <div class="checkbox"><label><input type="checkbox" data-control-no-padding checked={{this.noPadding}} {{on "change" (fn this.toggle "noPadding")}}> No-padding body</label></div>
+    <div class="checkbox"><label><input type="checkbox" data-control-collapsed checked={{this.collapsed}} {{on "change" (fn this.toggle "collapsed")}}> Collapsed</label></div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="app-ui-box.md" />
+  </:docs>
+</Developer::Entry>

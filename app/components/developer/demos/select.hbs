@@ -1,0 +1,43 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo as |log|>
+    <div class="form-group" data-demo-select>
+      <AppUi::Select
+        @multiple={{this.multiple}}
+        @options={{this.options}}
+        @selected={{if this.multiple this.selectedMany this.selected}}
+        @onChange={{fn this.change log}}
+        @searchEnabled={{this.searchEnabled}}
+        @searchField="label"
+        @placeholder="Select a project"
+        @noMatchesMessage="No projects found"
+        @allowClear={{this.allowClear}}
+        @disabled={{this.disabled}}
+        @renderInPlace={{true}}
+        @onOpen={{fn this.opened log}}
+        @onClose={{fn this.closed log}}
+        data-test-demo-select
+        as |option|
+      >
+        <span data-demo-select-option={{option.value}}>{{option.label}}</span>
+      </AppUi::Select>
+    </div>
+  </:demo>
+  <:controls>
+    <div class="checkbox">
+      <label><input type="checkbox" data-control-multiple checked={{this.multiple}} {{on "change" (fn this.toggle "multiple")}}> Multiple</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" data-control-search checked={{this.searchEnabled}} {{on "change" (fn this.toggle "searchEnabled")}}> Search enabled</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" data-control-clear checked={{this.allowClear}} {{on "change" (fn this.toggle "allowClear")}}> Allow clear</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" data-control-disabled checked={{this.disabled}} {{on "change" (fn this.toggle "disabled")}}> Disabled</label>
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="select.md" />
+  </:docs>
+</Developer::Entry>

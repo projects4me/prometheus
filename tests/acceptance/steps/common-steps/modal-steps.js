@@ -3,21 +3,19 @@
  */
 
 /**
- * Shared modal helpers for acceptance steps. They work with both `bootstrap-modal` (a `.modal`
- * shown by Bootstrap's plugin) and `AppUi::Modal` (a native `dialog.app-modal`), so step files
- * written against either keep working while screens move from one to the other.
+ * Shared modal helpers for acceptance steps, for `AppUi::Modal` (a native `dialog.app-modal`).
  */
 
 /**
- * Matches the root of either modal; prefix inner selectors with it, e.g.
+ * Matches the root of a modal; prefix inner selectors with it, e.g.
  * `${MODAL} [data-btn="save"]`.
  */
-export const MODAL = ':is(.modal, dialog.app-modal)';
+export const MODAL = 'dialog.app-modal';
 
 /**
- * Matches an open modal of either kind.
+ * Matches an open modal.
  */
-export const OPEN_MODAL = ':is(.modal.in, dialog.app-modal[open])';
+export const OPEN_MODAL = 'dialog.app-modal[open]';
 
 /**
  * A selector inside any modal
@@ -30,7 +28,7 @@ export function inModal(inner) {
 }
 
 /**
- * Whether a modal of either kind is open
+ * Whether a modal is open
  *
  * @return {Boolean}
  */
@@ -39,12 +37,9 @@ export function isModalOpen() {
 }
 
 /**
- * Clear modals left over from a previous scenario: Bootstrap backdrops and open dialogs.
+ * Clear modals left over from a previous scenario: open dialogs.
  */
 export function removeExistingModals() {
-	document.querySelectorAll('.modal-backdrop.fade.in').forEach((backdrop) => {
-		backdrop.remove();
-	});
 	document.querySelectorAll('dialog.app-modal[open]').forEach((dialog) => {
 		dialog.close();
 	});

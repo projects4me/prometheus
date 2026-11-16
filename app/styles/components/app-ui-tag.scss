@@ -1,0 +1,59 @@
+/*
+  AppUi::Tag: the Task Board tag look. 1px border and text in the variant colour on a 16% tint of it,
+  11px semibold, square edges. Tags next to each other have a 4px gap and wrap.
+*/
+@import '../variables.scss';
+
+.app-ui-tag {
+  display: inline-flex;
+  align-items: center;
+  max-width: 200px;
+  margin: 0 4px 4px 0;
+  padding: 2px 7px;
+  border: 1px solid $borderColor;
+  border-radius: 0;
+  background: $backgroundColor;
+  color: $darkColor;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  vertical-align: middle;
+
+  .app-ui-tag-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .app-ui-tag-remove {
+    margin: 0 0 0 5px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    opacity: 0.7;
+    font-size: 11px;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      opacity: 1;
+    }
+  }
+}
+
+.app-ui-tag-default {
+  border-color: $lightColor;
+  background: $backgroundColor;
+  color: $darkColor;
+}
+
+@each $name, $colour in (primary: $primaryColor, info: $infoColor, success: $successColor, warning: $warningColor, danger: $dangerColor) {
+  .app-ui-tag-#{$name} {
+    border-color: $colour;
+    background: rgba($colour, 0.16);
+    color: $colour;
+  }
+}

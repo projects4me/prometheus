@@ -12,7 +12,7 @@ import Model, { attr,belongsTo,hasMany } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class MilestoneModel extends Model {
 
     /**
      * The name of the milestone
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    name: attr('string'),
+    @attr('string') name;
 
     /**
      * The date on which the milestone was created
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * The date on which the milestone was created
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * The description of the milestone
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    description: attr('string'),
+    @attr('string') description;
 
     /**
      * The identifier of the user who created the milestone
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The identifier of the user who laste modified the milestone
@@ -72,7 +72,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * The type of the milestone
@@ -82,7 +82,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    milestoneType: attr('string'),
+    @attr('string') milestoneType;
 
     /**
      * The status of the milestone
@@ -92,7 +92,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    status: attr('string'),
+    @attr('string') status;
 
     /**
      * The start date set for the milestone
@@ -102,7 +102,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    startDate: attr('string'),
+    @attr('string') startDate;
 
     /**
      * The end date set for the milestone
@@ -112,7 +112,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    endDate: attr('string'),
+    @attr('string') endDate;
 
     /**
      * The identifier of the project to which this milestone belongs to
@@ -122,7 +122,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    projectId: attr('string'),
+    @attr('string') projectId;
 
     /**
      * The soft deletion flag of the milestone
@@ -132,7 +132,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * The user who created the milestone
@@ -142,7 +142,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    createdBy : belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) createdBy;
 
     /**
      * The user who last modified the milestone
@@ -152,7 +152,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    modifiedBy : belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) modifiedBy;
 
     /**
      * The project the milestone is related to
@@ -162,7 +162,7 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    project : belongsTo('project', { async: true, inverse: 'milestones' }),
+    @belongsTo('project', { async: true, inverse: 'milestones' }) project;
 
     /**
      * The issues that belongs to this milestone
@@ -172,6 +172,6 @@ export default Model.extend({
      * @for Milestone
      * @private
      */
-    issues : hasMany('issue', { async: false, inverse: 'issuemilestone' }),
+    @hasMany('issue', { async: false, inverse: 'issuemilestone' }) issues;
 
-});
+}

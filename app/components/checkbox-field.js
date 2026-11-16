@@ -2,68 +2,34 @@
  * Projects4Me Copyright (c) 2017. Licensing : http://legal.projects4.me/LICENSE.txt. Do not remove this line
  */
 
-import Checkbox from '@ember/component/checkbox';
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
 
 /**
- * This object is used to modify the default TextField of EmberJs in order to
- * allow run time binding of fields based on metadata. By default EmberJs
- * does not allow valueBinding with dynamic field names.
- * This code is a slightly modified version of code implemented by Jason Porritt
- * which can be found here
- * https://gist.github.com/jasonporritt/5473506#file-dynamic_bound_text_field-coffee
- * Thank you Jason for sharing :), I have been at this problem for some time now.
+ * A checkbox that reports its checked state to @onChange when the user toggles it. Attributes such as
+ * data-select are passed through to the input.
+ *
+ * @example
+ *  <CheckboxField @onChange={{this.select}} data-select={{entity.id}} />
  *
  * @class CheckboxField
  * @namespace Prometheus.Components
- * @extends Ember.Checkbox
+ * @extends Component
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Checkbox.extend({
+export default class CheckboxFieldComponent extends Component {
 
     /**
-     * Adding parameter binding for data-select so that it is disabled on the view and then used to identify selected
-     * items
+     * Forwards the new checked state to @onChange.
      *
-     * @property attributeBindings
-     * @type Array
-     * @for CheckboxField
-     * @private
+     * @method change
+     * @param {Event} event
+     * @public
      */
-    attributeBindings: ['data-select'],
-
-    /**
-     * Setup a listener on field change on initialization
-     *
-     * @method init
-     * @private
-     */
-    init(){
-        this._super(...arguments);
-
-        let action = this.action;
-        if(action){
-            this.on('change', this, this.changeEvent);
+    @action
+    change(event) {
+        if (typeof this.args.onChange === 'function') {
+            this.args.onChange(event.target.checked);
         }
-    },
-
-    /**
-     * Forward the action to the field-view controller to handle
-     *
-     * @method changeEvent
-     * @public
-     */
-    changeEvent(){
-         this.action(this.$().prop('checked'));
-        //this.sendAction('action',  );
-    },
-
-    /**
-     * Cleanup the event registered up destruction of the view to avoid memory leaks
-     *
-     * @method cleanup
-     * @public
-     */
-    willDestroyElement(){
-        this.off('change', this, this.changeEvent);
     }
-});
+}

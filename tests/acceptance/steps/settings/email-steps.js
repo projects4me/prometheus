@@ -1,6 +1,6 @@
 import { click, fillIn, settled } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support';
 import steps from '../steps';
+import { chooseOption } from 'prometheus/tests/helpers/select';
 
 const KEYS = {
     host: 'email.smtpHost',
@@ -82,7 +82,7 @@ export const when = function () {
         },
         {
             "User chooses the email encryption $value": (assert) => async function (value) {
-                await selectChoose('[data-field="setting.encryption"]', value.toUpperCase());
+                await chooseOption('[data-field="setting.encryption"]', value.toUpperCase());
                 assert.ok(true, `User chooses the encryption ${value}`);
             }
         },

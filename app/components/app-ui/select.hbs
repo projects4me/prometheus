@@ -1,0 +1,31 @@
+{{!--
+  AppUi::Select is the only component that renders ember-power-select. Everything else (the FormFields
+  relate and multi-select fields, the header search and the sidebar project switcher) goes through it.
+  Its API is deliberately small: add an argument here when a caller needs it, do not pass every
+  PowerSelect argument through. See public/ui-docs/select.md.
+--}}
+<PowerSelect
+  @multiple={{@multiple}}
+  @options={{@options}}
+  @selected={{@selected}}
+  @onChange={{@onChange}}
+  @search={{@search}}
+  @searchEnabled={{@searchEnabled}}
+  @searchField={{@searchField}}
+  @matcher={{@matcher}}
+  @placeholder={{@placeholder}}
+  @noMatchesMessage={{@noMatchesMessage}}
+  @allowClear={{@allowClear}}
+  @disabled={{@disabled}}
+  @closeOnSelect={{@closeOnSelect}}
+  @renderInPlace={{@renderInPlace}}
+  @onOpen={{@onOpen}}
+  @onClose={{@onClose}}
+  @onFocus={{@onFocus}}
+  @onBlur={{@onBlur}}
+  @onKeydown={{@onKeydown}}
+  ...attributes
+  as |option select|
+>
+  {{yield option select}}
+</PowerSelect>

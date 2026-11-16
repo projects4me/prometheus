@@ -29,14 +29,9 @@
 @import 'node_modules/bootstrap-sass/assets/stylesheets/_bootstrap';
 @import 'node_modules/ionicons/dist/scss/ionicons.scss';
 @import 'node_modules/font-awesome/scss/font-awesome.scss';
-// ember-power-select 9 no longer pulls in ember-basic-dropdown's styles (content positioning)
-@import 'ember-basic-dropdown';
-@import 'ember-power-select';
+@import 'components/power-select.scss';
 @import 'vendor/AdminLTE/dist/css/AdminLTE.min.scss';
 @import 'vendor/AdminLTE/dist/css/skins/skin-black-light.min.scss';
-@import 'highlight/monokai_sublime.scss';
-@import 'quill.scss';
-@import 'quill-bubble.scss';
 @import 'messenger/messenger.scss';
 @import 'messenger/messenger-spinner.scss';
 @import 'messenger/messenger-theme-air.scss';
@@ -66,7 +61,6 @@
 @import "modules/nav.scss";
 @import "modules/search.scss";
 @import "modules/wiki.scss";
-@import "modules/atwho.scss";
 @import "modules/conversation.scss";
 @import "modules/calendar.scss";
 @import "modules/chat.scss";
@@ -85,11 +79,11 @@
 @import "modules/user.scss";
 @import "modules/role.scss";
 @import "modules/agent.scss";
+@import "components/app-ui-avatar.scss";
 @import "modules/setting.scss";
 @import "modules/workflow.scss";
 @import "modules/developer.scss";
 @import "issue/issue-status.scss";
-@import 'summernote.scss';
 
 /*
 * Components styles
@@ -101,6 +95,7 @@
 @import 'components/skeleton.scss';
 @import 'components/notifications-sidebar.scss';
 @import 'components/dropdown.scss';
+@import 'components/app-ui-tag.scss';
 @import 'components/widgets.scss';
 @import 'components/ez-search.scss';
 @import 'components/ez-search-bar.scss';
@@ -109,9 +104,12 @@
 @import 'components/ez-search-panel.scss';
 @import 'components/table.scss';
 @import 'components/pagination.scss';
+@import 'components/app-ui-pager.scss';
+@import 'components/app-ui-list-toolbar.scss';
 @import 'components/accordion.scss';
 @import 'components/toolbar.scss';
 @import 'components/quick-list.scss';
+@import 'components/app-ui-data-table.scss';
 @import 'components/tooltip-themes.scss';
 @import 'components/modal.scss';
 /*

@@ -3,7 +3,6 @@
  */
 
 import PrometheusCreateController from 'prometheus/controllers/prometheus/create';
-import { htmlSafe } from '@ember/template';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { fileToBase64 } from 'prometheus/utils/image-to-base64';
@@ -215,6 +214,28 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	@tracked selectedRole = null;
 
 	/**
+	 * Stores the project picked in the project-membership dropdown
+	 *
+	 * @method setSelectedProject
+	 * @param {Object} project The selected option
+	 * @public
+	 */
+	@action setSelectedProject(project) {
+		this.selectedProject = project;
+	}
+
+	/**
+	 * Stores the role picked in the role dropdown
+	 *
+	 * @method setSelectedRole
+	 * @param {Object} role The selected option
+	 * @public
+	 */
+	@action setSelectedRole(role) {
+		this.selectedRole = role;
+	}
+
+	/**
 	 * Returns the formatted project select list sourced from the app
 	 * controller so the project-membership dropdown stays in sync with the
 	 * globally loaded project list.
@@ -260,11 +281,8 @@ export default class AppUserCreateController extends PrometheusCreateController 
 	 * @param model
 	 */
 	getSuccessMessage(model) {
-		return htmlSafe(
-			this.intl.t('views.app.user.created', {
-				name: model.get('name')
-			})
-		);
+		return this.intl.t('views.app.user.created', {
+				name: model.get('name'), htmlSafe: true });
 	}
 
 	/**

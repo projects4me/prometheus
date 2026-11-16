@@ -1,6 +1,6 @@
 import steps from '../steps';
-import { selectChoose } from 'ember-power-select/test-support';
 import { click } from '@ember/test-helpers';
+import { chooseOption } from 'prometheus/tests/helpers/select';
 
 export const given = function () {
     return [
@@ -46,7 +46,7 @@ export const when = function () {
         },
         {
             "User selects $userName as a member of project": (assert, ctx) => async function (userName) {
-                await selectChoose('div[data-field="select-member"] div.input-group', `${userName}`);
+                await chooseOption('div[data-field="select-member"] div.input-group', `${userName}`);
                 assert.ok(true, `${userName} selected`);
             }
         }

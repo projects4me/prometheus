@@ -64,7 +64,9 @@ export default class AppUiTagParserComponent extends AppComponent {
 	 * @public
 	 */
 	get parsedContent() {
-		let content = this.replaceModuleTags(this.args.content || '');
+		// The description may carry user text outside the tags, so escape it first.
+		// Tag syntax only uses characters that _.escape leaves alone.
+		let content = this.replaceModuleTags(_.escape(this.args.content || ''));
 		content = this.replaceFieldTags(content);
 		return htmlSafe(content);
 	}
@@ -93,11 +95,11 @@ export default class AppUiTagParserComponent extends AppComponent {
 					content = content.replace(fullMatch, replacementHtml);
 				} else {
 					// If module handler not found, replace with module name and ID
-					content = content.replace(fullMatch, `${moduleName} ${id}`);
+					content = content.replace(fullMatch, _.escape(`${moduleName} ${id}`));
 				}
 			} catch (error) {
 				// If module not found, leave as is or replace with ID
-				content = content.replace(fullMatch, `${moduleName} ${id}`);
+				content = content.replace(fullMatch, _.escape(`${moduleName} ${id}`));
 			}
 		}
 
@@ -136,7 +138,7 @@ export default class AppUiTagParserComponent extends AppComponent {
 		if (!context.userId || !context.userName) {
 			return '';
 		}
-		return `<a href="/app/user/${context.userId}">${context.userName}</a>`;
+		return `<a href="/app/user/${_.escape(context.userId)}">${_.escape(context.userName)}</a>`;
 	}
 
 	/**
@@ -151,7 +153,7 @@ export default class AppUiTagParserComponent extends AppComponent {
 		if (!context.projectShortcode || !context.projectName) {
 			return '';
 		}
-		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}">${context.projectName}</a>`;
+		return `<a href="/app/project/${_.escape(context.projectShortcode.toLowerCase())}">${_.escape(context.projectName)}</a>`;
 	}
 
 	/**
@@ -166,7 +168,7 @@ export default class AppUiTagParserComponent extends AppComponent {
 		if (!context.projectShortcode || !context.issueNumber) {
 			return '';
 		}
-		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/issue/${context.issueNumber}">#${context.issueNumber}</a>`;
+		return `<a href="/app/project/${_.escape(context.projectShortcode.toLowerCase())}/issue/${_.escape(context.issueNumber)}">#${_.escape(context.issueNumber)}</a>`;
 	}
 
 	/**
@@ -181,7 +183,7 @@ export default class AppUiTagParserComponent extends AppComponent {
 		if (!context.projectShortcode || !context.issueNumber || !context.commentId) {
 			return '';
 		}
-		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/issue/${context.issueNumber}?s_id=${context.commentId}">commented</a>`;
+		return `<a href="/app/project/${_.escape(context.projectShortcode.toLowerCase())}/issue/${_.escape(context.issueNumber)}?s_id=${_.escape(context.commentId)}">commented</a>`;
 	}
 
 	/**
@@ -196,7 +198,7 @@ export default class AppUiTagParserComponent extends AppComponent {
 		if (!context.projectShortcode || !context.issueNumber || !context.timelogId || !context.timelogType) {
 			return '';
 		}
-		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/issue/${context.issueNumber}?s_id=${context.timelogId}">${context.timelogType}</a>`;
+		return `<a href="/app/project/${_.escape(context.projectShortcode.toLowerCase())}/issue/${_.escape(context.issueNumber)}?s_id=${_.escape(context.timelogId)}">${_.escape(context.timelogType)}</a>`;
 	}
 
 	/**
@@ -211,7 +213,7 @@ export default class AppUiTagParserComponent extends AppComponent {
 		if (!context.projectShortcode || !context.milestoneId || !context.milestoneName) {
 			return '';
 		}
-		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/milestone/${context.milestoneId}">${context.milestoneName}</a>`;
+		return `<a href="/app/project/${_.escape(context.projectShortcode.toLowerCase())}/milestone/${_.escape(context.milestoneId)}">${_.escape(context.milestoneName)}</a>`;
 	}
 
 	/**
@@ -226,7 +228,7 @@ export default class AppUiTagParserComponent extends AppComponent {
 		if (!context.projectShortcode || !context.conversationId) {
 			return '';
 		}
-		return `<a href="/app/project/${context.projectShortcode.toLowerCase()}/conversations/${context.conversationId}">${this.intl.t('views.app.activity.conversation')}</a>`;
+		return `<a href="/app/project/${_.escape(context.projectShortcode.toLowerCase())}/conversations/${_.escape(context.conversationId)}">${_.escape(this.intl.t('views.app.activity.conversation'))}</a>`;
 	}
 
 	/**
@@ -252,8 +254,8 @@ export default class AppUiTagParserComponent extends AppComponent {
 	 * @public
 	 */
 	renderPriorityField(value) {
-		let translatedPriority = this.intl.t(`views.app.issue.lists.priority.${value}`);
-		return `<span class="priority-tag ${value}">${translatedPriority}</span>`;
+		let translatedPriority = _.escape(this.intl.t(`views.app.issue.lists.priority.${value}`));
+		return `<span class="priority-tag ${_.escape(value)}">${translatedPriority}</span>`;
 	}
 
 	/**
@@ -269,7 +271,7 @@ export default class AppUiTagParserComponent extends AppComponent {
 		if (!value || !createdUserName) {
 			return '';
 		}
-		return `<a href="/app/user/${value}">${createdUserName}</a>`;
+		return `<a href="/app/user/${_.escape(value)}">${_.escape(createdUserName)}</a>`;
 	}
 
 	/**
@@ -282,7 +284,7 @@ export default class AppUiTagParserComponent extends AppComponent {
 	 * @public
 	 */
 	renderDefaultField(fieldName, value) {
-		return `<span class="field-tag ${fieldName}">${value}</span>`;
+		return `<span class="field-tag ${_.escape(fieldName)}">${_.escape(value)}</span>`;
 	}
 }
 

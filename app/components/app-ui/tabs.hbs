@@ -1,0 +1,11 @@
+<div class="nav-tabs-custom app-tabs" ...attributes>
+  <ul class="nav nav-tabs" role="tablist">
+    {{yield (hash tab=(component "app-ui/tabs/tab" active=@active onSelect=@onChange) pane=(component "app-ui/tabs/pane" active=@active)) to="tabs"}}
+    {{#if (has-block "tools")}}
+      <li class="app-tabs-tools pull-right" data-app-tabs-tools>{{yield to="tools"}}</li>
+    {{/if}}
+  </ul>
+  <div class="tab-content">
+    {{yield (hash tab=(component "app-ui/tabs/tab" active=@active onSelect=@onChange) pane=(component "app-ui/tabs/pane" active=@active)) to="panes"}}
+  </div>
+</div>

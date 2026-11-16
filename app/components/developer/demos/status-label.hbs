@@ -1,0 +1,21 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo>
+    <table class="table" data-demo-status>
+      <tbody>
+        {{#each this.statuses as |status|}}
+          <tr data-demo-status-row={{status}}>
+            <td><code>{{status}}</code></td>
+            <td><AppUi::StatusLabel @status={{status}} data-test-demo-status /></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </:demo>
+  <:controls>
+    <p class="text-muted">Every issue status, drawn only through AppUi::StatusLabel.</p>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc="app-ui-status-label.md" />
+  </:docs>
+</Developer::Entry>

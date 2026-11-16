@@ -4,6 +4,7 @@ import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import LanguageStub from '../../stub-services/language-stub';
 import AclStub from '../../stub-services/acl-stub';
+import { openSelect, optionsSelector } from 'prometheus/tests/helpers/select';
 
 module('Integration | Component | app-ui/language', function (hooks) {
     setupRenderingTest(hooks);
@@ -23,7 +24,7 @@ module('Integration | Component | app-ui/language', function (hooks) {
         `);
 
         assert.dom('[data-field="select-language"]').exists();
-        await click('[data-field="select-language"] div.ember-basic-dropdown-trigger');
-        assert.dom('li.ember-power-select-option').exists({ count: 2 });
+        await openSelect('[data-field="select-language"]');
+        assert.dom(optionsSelector()).exists({ count: 2 });
     });
 });

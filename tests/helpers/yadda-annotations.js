@@ -36,7 +36,7 @@ function ignoreIt(testElement) {
 }
 
 function logIt(testElement) {
-  console.info(`Not running or skipping: "${testElement.title}"`); // eslint-disable-line no-console
+  console.info(`Not running or skipping: "${testElement.title}"`);  
 }
 
 // exported functions

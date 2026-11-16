@@ -18,7 +18,7 @@ import { objectAt } from 'prometheus/utils/array/object-at';
  * @extends App
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class ProjectRoute extends App {
 
     /**
      * The trackedProject service provides id of the selected project.
@@ -28,7 +28,7 @@ export default App.extend({
      * @for Project
      * @private
      */
-    trackedProject: service(),
+    @service trackedProject;
 
     /**
      * The beforeModel hook of the ember.js. In this hook we're loading the project and its members.
@@ -71,19 +71,19 @@ export default App.extend({
 
         if (objectAt(project, 0) != undefined &&
             objectAt(project, 0).get('members') != undefined) {
-            _self.set('members', objectAt(project, 0).get('members'));
-            _self.set('issuetypes', objectAt(project, 0).get('issuetypes'));
+            _self.members = objectAt(project, 0).get('members');
+            _self.issuetypes = objectAt(project, 0).get('issuetypes');
         }
 
         if (objectAt(project, 0) != undefined &&
             objectAt(project, 0).get('issuestatuses').length !== 0) {
-            _self.set('issuestatuses', objectAt(project, 0).get('issuestatuses'));
+            _self.issuestatuses = objectAt(project, 0).get('issuestatuses');
         } else {
             let issueStatuses = await this.store.query('issuestatus', {
                 query: `(Issuestatus.system : 1)`,
                 limit: -1,
             });
-            _self.set('issuestatuses', issueStatuses);
+            _self.issuestatuses = issueStatuses;
         }
 
         // set projectId in trackedProject service
@@ -91,7 +91,7 @@ export default App.extend({
         _self.trackedProject.setProjectId(projectId);
 
         this.breadcrumb.setTitle(this.routeName, objectAt(project, 0).get('name'));
-    },
+    }
 
     afterModel() {
         let _self = this;
@@ -110,13 +110,13 @@ export default App.extend({
             issues: _self.store.query('issue', issuesOptions),
         }).then(function (results) {
             let data = extractHashSettled(results);
-            _self.set('issues', data.issues);
+            _self.issues = data.issues;
         }).catch((error) => {
             _self.errorManager.handleError(error, {
                 moduleName: "project"
             });
         });
-    },
+    }
 
     /**
      * The setup controller function that will be called every time the user visits
@@ -126,7 +126,7 @@ export default App.extend({
      * @param {Prometheus.Controllers.Project} controller the controller object for this route
      * @private
      */
-    setupController: function (controller) {
+    setupController(controller) {
         Logger.debug('AppProjectRoute::setupController');
         let _self = this;
 
@@ -149,10 +149,9 @@ export default App.extend({
             controller.set('model', objectAt(data, 0));
         });
 
-        controller.set('issues', _self.get('issues'));
-        controller.set('members', _self.get('members'));
-        controller.set('issueStatuses', _self.get('issuestatuses'));
-        controller.set('issuetypes', _self.get('issuetypes'));
-    },
-
-});
+        controller.set('issues', _self.issues);
+        controller.set('members', _self.members);
+        controller.set('issueStatuses', _self.issuestatuses);
+        controller.set('issuetypes', _self.issuetypes);
+    }
+}

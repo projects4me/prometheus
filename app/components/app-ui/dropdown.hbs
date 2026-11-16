@@ -7,13 +7,15 @@
     type="button"
     class="btn {{if @isPrimary 'btn-primary' 'btn-default'}} app-dropdown-btn"
     {{on "click" this.toggleDropdown}}
+    title={{@title}}
+    aria-label={{@title}}
     aria-haspopup="true"
     aria-expanded={{this.isOpen}}
   >
     {{yield to="button"}}
     <i class="fa {{if this.isOpen 'fa-caret-up' 'fa-caret-down'}}"></i>
   </button>
-  <div class="app-dropdown-content {{if this.isOpen 'show'}}">
+  <div class="app-dropdown-content {{if this.isOpen 'show'}} is-{{this.resolvedAlign}} {{if this.opensUp 'is-up'}}">
     {{yield to="content"}}
   </div>
 </div>

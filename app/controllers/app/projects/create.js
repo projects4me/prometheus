@@ -10,7 +10,6 @@ import { computed, action } from '@ember/object';
 import { all } from 'rsvp';
 import _ from 'lodash';
 import { toLabelValue } from 'prometheus/utils/issue-status/value';
-import { htmlSafe } from '@ember/template';
 import * as dates from 'prometheus/utils/date';
 
 /**
@@ -305,11 +304,8 @@ export default class AppProjectsCreateController extends PrometheusCreateControl
 	 * @param model
 	 */
 	getSuccessMessage(model) {
-		return htmlSafe(
-			this.intl.t('views.app.project.created', {
-				name: model.get('name')
-			})
-		);
+		return this.intl.t('views.app.project.created', {
+				name: model.get('name'), htmlSafe: true });
 	}
 
 	/**

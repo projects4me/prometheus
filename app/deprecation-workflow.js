@@ -8,18 +8,12 @@ import setupDeprecationWorkflow from 'ember-cli-deprecation-workflow';
  * ember-cli-deprecation-workflow: the deprecations still known in the app, each silenced on purpose.
  * app/app.js imports this file first, so the handler is in place before anything else runs.
  *
- * Every deprecation that Ember 7.0 or Ember Data 6.0 removes is fixed. The entries below come from addons
- * and go in their own next major:
- * - ember-concurrency.deprecate-decorator-task: the `@task` decorator, removed in ember-concurrency 5.0.
- * - ensure-safe-component.string: `ensureSafeComponent` with a component name, deprecated by @embroider/util.
+ * Every deprecation that Ember 7.0 or Ember Data 6.0 removes is fixed, and no entry is silenced any more.
  *
  * To work one off: change its handler to `throw`, run the tests, fix the call sites, then delete the entry.
  * Anything not listed here logs as usual.
  */
 setupDeprecationWorkflow({
   throwOnUnhandled: false,
-  workflow: [
-    { handler: 'silence', matchId: 'ember-concurrency.deprecate-decorator-task' },
-    { handler: 'silence', matchId: 'ensure-safe-component.string' }
-  ]
+  workflow: []
 });

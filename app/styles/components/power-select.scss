@@ -1,0 +1,131 @@
+/*
+  PowerSelect (ember-power-select / ember-basic-dropdown): all styling lives here.
+  Vendor styles first, then the AdminLTE theme (square edges), then context-specific overrides.
+*/
+// ember-power-select 9 no longer pulls in ember-basic-dropdown's styles (content positioning)
+@import 'ember-basic-dropdown';
+@import 'ember-power-select';
+
+.ember-basic-dropdown-content {
+  z-index: 2000 !important;
+}
+
+.ember-power-select-trigger {
+  border-radius: 0rem;
+}
+
+.ember-power-select-dropdown {
+  border-color: #ccc;
+
+  .ember-power-select-search-input {
+    border-color: #ccc;
+  }
+}
+
+/* Icons inside options */
+.ember-power-select-option {
+  .fa {
+    margin-right: 0.5rem;
+  }
+  .fa-ban {
+    color: #d33724;
+  }
+  .fa-angle-double-up {
+    color: #d33724;
+    font-weight: bold;
+  }
+  .fa-arrow-up {
+    color: #e98a7e;
+  }
+  .fa-dot-circle-o {
+    color: $primaryColor;
+  }
+  .fa-arrow-down {
+    color: #5ac594;
+  }
+  .fa-angle-double-down {
+    color: #00a65a;
+    font-weight: bold;
+  }
+}
+
+/* Header global search */
+.global-search {
+  .ember-power-select-trigger {
+    height: 2.4rem;
+    overflow: hidden;
+  }
+
+  .ember-power-select-selected-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 315px;
+    display: inline-block;
+  }
+}
+
+/* Form fields: multi select */
+.form-field .multiselect-input .ember-power-select-multiple-option {
+  background-color: $primaryColor;
+  color: #fff;
+  border-color: $primaryColor;
+  border-radius: 0.2rem;
+}
+
+/* Sidebar switcher */
+.main-sidebar .ember-power-select-trigger {
+  background-color: $primaryColor;
+  border: none;
+  font-size: 1.8rem;
+  color: $backgroundColor;
+  width: 20.8rem;
+
+  .ember-power-select-selected-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ember-power-select-placeholder {
+    color: $backgroundColor;
+  }
+  .ember-power-select-status-icon {
+    border-color: $backgroundColor transparent transparent transparent;
+  }
+}
+
+/* Wiki detail */
+.wiki-detail .ember-power-select-trigger {
+  line-height: 1.42857;
+  padding: 0.6rem 1.2rem;
+  border-color: #ccc;
+
+  .ember-power-select-placeholder {
+    margin-left: 0px;
+  }
+}
+
+.wiki-tags {
+  .ember-power-select-trigger {
+    padding: 0.6rem 0.6rem 0rem;
+    line-height: 2.6rem;
+    min-width: 30rem;
+    height: 3.2rem;
+  }
+
+  .ember-power-select-multiple-option {
+    background-color: $primaryColor;
+    color: $backgroundColor;
+    border-color: $primaryColor;
+    line-height: 1.42;
+    border: none !important;
+    margin: 0rem 0.2rem;
+  }
+
+  .ember-power-select-trigger-multiple-input {
+    line-height: 1.42;
+    border: none !important;
+    margin: 0rem;
+  }
+}

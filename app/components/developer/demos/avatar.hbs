@@ -1,0 +1,38 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry>
+  <:demo>
+    <div class="form-inline form-group">
+      <label>Size
+        <select class="form-control input-sm" data-demo-avatar-size {{on "change" this.setSize}}>
+          {{#each this.sizes as |size|}}
+            <option value={{size.value}} selected={{eq size.value this.size}}>{{size.label}}</option>
+          {{/each}}
+        </select>
+      </label>
+      <label>
+        <input type="checkbox" data-demo-avatar-fails checked={{this.imageFails}} {{on "change" this.toggleImageFails}}> Image fails
+      </label>
+    </div>
+    <table class="table table-condensed" data-demo-avatar>
+      <thead>
+        <tr><th></th>{{#each this.sizes as |size|}}<th>{{size.label}}</th>{{/each}}</tr>
+      </thead>
+      <tbody>
+        {{#each this.users as |user|}}
+          <tr>
+            <th>{{user.label}}</th>
+            {{#each this.sizes as |size|}}
+              <td><AppUi::Avatar @user={{user.record}} @size={{size.value}} /></td>
+            {{/each}}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <p data-demo-avatar-selected>Selected size:
+      <AppUi::Avatar @user={{this.selectedUser}} @size={{this.size}} />
+    </p>
+  </:demo>
+  <:docs>
+    <Developer::Docs @doc="app-ui-avatar.md" />
+  </:docs>
+</Developer::Entry>

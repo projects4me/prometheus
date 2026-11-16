@@ -12,13 +12,23 @@ export function createUploadTracker() {
         started: [],
         finished: [],
         pending: [],
+        removed: [],
+        records: [],
     };
 
     tracker.createFile = function (name, size = 100) {
         return {
             name,
             size,
+            queue: {
+                remove(file) {
+                    tracker.removed.push(file.name);
+                },
+            },
             upload() {
+                if (tracker.failUploads) {
+                    return Promise.reject(new Error('server error'));
+                }
                 tracker.inFlight++;
                 tracker.maxInFlight = Math.max(tracker.maxInFlight, tracker.inFlight);
                 tracker.started.push(name);
@@ -58,16 +68,20 @@ export function createUploadTracker() {
 }
 
 export class FakeUploadStore extends Service {
+    records = [];
+
     createRecord() {
-        return {
+        const record = {
             store: this,
             setProperties(props) {
                 Object.assign(this, props);
             },
-            rollback() {
+            rollbackAttributes() {
                 this.rolledBack = true;
             },
         };
+        this.records.push(record);
+        return record;
     }
 
     adapterFor() {

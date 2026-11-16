@@ -15,7 +15,7 @@ import { isNone } from '@ember/utils';
  * @extends DS.Transform
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Transform.extend({
+export default class BoolTransform extends Transform {
 
     /**
      * This function receives a 0 or 1 from the JSON object
@@ -30,7 +30,7 @@ export default Transform.extend({
         }
 
         return Boolean(parseInt(serialized, 10));
-    },
+    }
 
     /**
      * When given a deserialized value from a record this function
@@ -60,5 +60,4 @@ export default Transform.extend({
 
         return (val)?'1':'0';
     }
-
-});
+}

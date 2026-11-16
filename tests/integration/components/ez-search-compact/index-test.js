@@ -80,8 +80,11 @@ module('Integration | Component | ez-search-compact', function (hooks) {
             const item = this.element.querySelector('[data-ez-saved-item]');
             item.focus();
             const style = getComputedStyle(item);
+            // The compact bar keeps its own crimson row; the full bar uses the shared standard menu.
+            const expected = full ? { background: 'rgb(244, 244, 244)', color: 'rgb(68, 68, 68)' } : { background: style.backgroundColor, color: 'rgb(255, 255, 255)' };
             assert.notEqual(style.backgroundColor, 'rgba(0, 0, 0, 0)', 'has a background');
-            assert.strictEqual(style.color, 'rgb(255, 255, 255)', 'white text');
+            assert.strictEqual(style.backgroundColor, expected.background, 'background');
+            assert.strictEqual(style.color, expected.color, 'text colour');
         });
     }
 

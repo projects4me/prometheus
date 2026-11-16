@@ -4,30 +4,8 @@
 
 import Component from '@glimmer/component';
 import { set } from '@ember/object';
+import { getOwner } from '@ember/owner';
 import * as dates from 'prometheus/utils/date';
-import ClosedBlock from 'prometheus/components/milestone-blocks/closed';
-import CompleteBlock from 'prometheus/components/milestone-blocks/complete';
-import CompletedBlock from 'prometheus/components/milestone-blocks/completed';
-import DeferredBlock from 'prometheus/components/milestone-blocks/deferred';
-import FailedBlock from 'prometheus/components/milestone-blocks/failed';
-import IndexBlock from 'prometheus/components/milestone-blocks/index';
-import OverdueBlock from 'prometheus/components/milestone-blocks/overdue';
-
-/**
- * The milestone block component for each milestone status. Statuses without their own block use IndexBlock.
- *
- * @property BLOCKS_BY_STATUS
- * @type Object
- * @private
- */
-const BLOCKS_BY_STATUS = Object.freeze({
-    closed: ClosedBlock,
-    complete: CompleteBlock,
-    completed: CompletedBlock,
-    deferred: DeferredBlock,
-    failed: FailedBlock,
-    overdue: OverdueBlock
-});
 
 /**
  * This component is used to render milestone block.
@@ -76,14 +54,14 @@ export default class AppUiMilestoneBlockComponent extends Component {
     }
 
     /**
-     * This function returns milestone block component based on milestone status.
-     * E.g if status of milestone is "completed" then it returns the milestone-blocks/completed component,
-     * and milestone-blocks/index for a status without its own block.
+     * This function returns the name of the milestone block component to render, based on milestone status.
+     * E.g if status of milestone is "completed" then it returns "completed" (milestone-blocks/completed),
+     * and "index" for a status without its own block.
      * 
      * @method get
      * @public
      */
-    get milestoneBlockToRender() {
+    get milestoneBlockType() {
         let milestone = this.milestone;
         let status = milestone.status;
 
@@ -97,6 +75,10 @@ export default class AppUiMilestoneBlockComponent extends Component {
             }
         }
 
-        return BLOCKS_BY_STATUS[status] ?? IndexBlock;
+        let owner = getOwner(this);
+        let hasBlock = owner.hasRegistration(`component:milestone-blocks/${status}`) ||
+            owner.hasRegistration(`template:components/milestone-blocks/${status}`);
+
+        return hasBlock ? status : 'index';
     }
 }

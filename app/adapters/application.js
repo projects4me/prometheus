@@ -255,7 +255,7 @@ export default class ApplicationAdapter extends JSONAPIAdapter {
      */
     ajax(url, type, options, isUnauthorizedRetry = false) {
         // Ember Data 4.12 sends requests through the native fetch, which the test helpers do not wait for
-        // (ember-fetch's did); the waiter keeps settled() waiting for direct adapter.ajax calls too.
+        // (the old ember-fetch did); the waiter keeps settled() waiting for direct adapter.ajax calls too.
         return waitForPromise(this._ajaxWithFreshToken(url, type, options, isUnauthorizedRetry));
     }
 

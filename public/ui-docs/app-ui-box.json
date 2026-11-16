@@ -1,0 +1,22 @@
+{
+  "name": "AppUi::Box",
+  "component": "app-ui/box",
+  "doc": "app-ui-box.md",
+  "description": "An AdminLTE box with square edges: header, tools, body and footer blocks.",
+  "arguments": {
+    "variant": { "type": "string", "required": false, "default": "primary", "description": "primary, default, info, success, warning or danger" },
+    "listView": { "type": "boolean", "required": false, "default": false, "description": "Adds the list-view class for list pages" },
+    "noPadding": { "type": "boolean", "required": false, "default": false, "description": "Removes the padding of the box body" },
+    "collapsed": { "type": "boolean", "required": false, "default": false, "description": "Renders the box collapsed" }
+  },
+  "events": {},
+  "blocks": {
+    "header": { "description": "The header content, usually a box-title", "yields": [] },
+    "tools": { "description": "Icon buttons on the right of the header", "yields": [] },
+    "top": { "description": "Unwrapped content between the header and the body, e.g. a list toolbar", "yields": [] },
+    "body": { "description": "The box body", "yields": [] },
+    "bottom": { "description": "Unwrapped content between the body and the footer, e.g. pagination", "yields": [] },
+    "footer": { "description": "The box footer", "yields": [] }
+  },
+  "data": {}
+}

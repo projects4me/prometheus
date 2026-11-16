@@ -1,5 +1,5 @@
 import { Factory } from 'miragejs';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import * as date from '../helpers/getDate';
 import _ from 'lodash';
 
@@ -23,7 +23,7 @@ export default Factory.extend({
         return (_.random(1, 5)).toString();
     },
     relatedTo() {
-        return faker.random.arrayElement(["wiki", "conversationrooms"])
+        return faker.helpers.arrayElement(["wiki", "conversationrooms"])
     },
     afterCreate(votes) {
         votes.update({

@@ -1,7 +1,6 @@
 import { click, currentURL, fillIn } from '@ember/test-helpers';
-import { selectChoose, selectSearch } from 'ember-power-select/test-support';
-import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
+import { chooseOption, chooseOptionAt, openSelect, searchSelect } from 'prometheus/tests/helpers/select';
 
 const LINK_ISSUE_SELECTOR = 'dialog.app-modal [data-field="conversation.linkedIssue"]';
 
@@ -42,18 +41,18 @@ export default function (assert) {
             })
             .when('User selects type of conversation', async function () {
                 let selectEl = document.querySelector('[data-field="newConversation.roomType"] > div.input-group');
-                await selectChoose(selectEl.querySelector('div'), '.ember-power-select-option', 1);
+                await chooseOptionAt(selectEl.querySelector('div'), 1);
                 assert.ok(true, 'User selects type of conversation');
             })
             .when('User selects Discussion as conversation type', async function () {
                 let selectEl = document.querySelector('[data-field="newConversation.roomType"] > div.input-group');
-                await selectChoose(selectEl.querySelector('div'), '.ember-power-select-option', 0);
+                await chooseOptionAt(selectEl.querySelector('div'), 0);
                 assert.ok(true, 'User selects Discussion as conversation type');
             })
             .when('User searches and selects issue #$issueNumber in link issue', async function (issueNumber) {
-                await clickTrigger(LINK_ISSUE_SELECTOR);
-                await selectSearch(LINK_ISSUE_SELECTOR, issueNumber);
-                await selectChoose(LINK_ISSUE_SELECTOR, `#${issueNumber}`);
+                await openSelect(LINK_ISSUE_SELECTOR);
+                await searchSelect(LINK_ISSUE_SELECTOR, issueNumber);
+                await chooseOption(LINK_ISSUE_SELECTOR, `#${issueNumber}`);
                 assert.ok(true, `User searches and selects issue #${issueNumber} in link issue`);
             })
             .then('there is a conversation having a topic of $expectedTopic', async function (expectedTopic) {

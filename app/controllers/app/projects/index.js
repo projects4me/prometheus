@@ -3,7 +3,6 @@
  */
 
 import PrometheusListController from "prometheus/controllers/prometheus/list";
-import { htmlSafe } from '@ember/template';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import format from "prometheus/utils/data/format";
@@ -152,7 +151,7 @@ export default class AppProjectsIndexController extends PrometheusListController
             _self.set('newSavedsearch', newSavedSearch);
 
             new Messenger().post({
-                message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.copied", { name: data.get('name') })),
+                message: _self.intl.t("views.app.project.list.savedsearch.copied", { name: data.get('name'), htmlSafe: true }),
                 type: 'success',
                 showCloseButton: true
             });
@@ -174,12 +173,12 @@ export default class AppProjectsIndexController extends PrometheusListController
         let toBeDeleted = _self.get('savedsearches').find((item) => item.id === search.get('id'));
 
         let deleting = new Messenger().post({
-            message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.delete", { name: search.get('name') })),
+            message: _self.intl.t("views.app.project.list.savedsearch.delete", { name: search.get('name'), htmlSafe: true }),
             type: 'warning',
             showCloseButton: true,
             actions: {
                 confirm: {
-                    label: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.confirmdelete")),
+                    label: _self.intl.t("views.app.project.list.savedsearch.confirmdelete", { htmlSafe: true }),
                     action: function () {
 
                         // destroy the saved search
@@ -188,7 +187,7 @@ export default class AppProjectsIndexController extends PrometheusListController
                             _self.savedsearches = _self.savedsearches.filter((item) => item !== toBeDeleted);
 
                             return deleting.update({
-                                message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.deleted", { name: search.get('name') })),
+                                message: _self.intl.t("views.app.project.list.savedsearch.deleted", { name: search.get('name'), htmlSafe: true }),
                                 type: 'success',
                                 actions: false
                             });
@@ -199,7 +198,7 @@ export default class AppProjectsIndexController extends PrometheusListController
                     label: _self.intl.t("views.app.project.list.savedsearch.onsecondthought").toString(),
                     action: function () {
                         return deleting.update({
-                            message: htmlSafe(_self.intl.t("views.app.project.list.savedsearch.deletecancel")),
+                            message: _self.intl.t("views.app.project.list.savedsearch.deletecancel", { htmlSafe: true }),
                             type: 'success',
                             actions: false
                         });

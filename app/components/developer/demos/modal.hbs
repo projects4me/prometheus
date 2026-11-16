@@ -2,35 +2,38 @@
   <:demo as |log|>
     <button type="button" class="btn btn-primary" data-modal-open {{on "click" (fn this.open log)}}>Open modal</button>
     <div data-modal-box style="margin-top: 15px; height: 120px; overflow: hidden; transform: translateZ(0); border: 1px dashed #d2d6de; padding: 10px;">
-      <small class="text-muted">Constrained box: overflow hidden and a transform, so a modal rendered inside it is clipped and positioned against the box.</small>
+      <small class="text-muted">Constrained box: overflow hidden and a transform. The modal is rendered inside it and still covers the page, with no in-element.</small>
       {{#if this.isOpen}}
-        {{#if this.inElement}}
-          {{#in-element this.modalRoot insertBefore=null}}
-            {{#bootstrap-modal
-              title=this.title
-              closeLabel="global.form.close"
-              confirmLabel="global.form.save"
-              containerClass=this.containerClass
-              removeConfirmBtn=this.removeConfirmBtn
-              confirm=(fn this.confirm log)
-              close=(fn this.closed log)
-            }}
-              <p data-modal-content>Modal rendered with in-element.</p>
-            {{/bootstrap-modal}}
-          {{/in-element}}
-        {{else}}
-          {{#bootstrap-modal
-            title=this.title
-            closeLabel="global.form.close"
-            confirmLabel="global.form.save"
-            containerClass=this.containerClass
-            removeConfirmBtn=this.removeConfirmBtn
-            confirm=(fn this.confirm log)
-            close=(fn this.closed log)
-          }}
-            <p data-modal-content>Modal rendered inside the box.</p>
-          {{/bootstrap-modal}}
-        {{/if}}
+        <AppUi::Modal
+          @title={{this.title}}
+          @closeLabel="global.form.close"
+          @confirmLabel="global.form.save"
+          @containerClass={{this.containerClass}}
+          @removeConfirmBtn={{this.removeConfirmBtn}}
+          @confirm={{fn this.confirm log}}
+          @onClose={{fn this.closed log}}>
+          <p data-modal-content>Modal rendered inside the box.</p>
+          <FormFields::FieldMultiSelect
+            @data-field="demo.modal.tags"
+            @label="Tags (rendered in place)"
+            @options={{this.tagOptions}}
+            @selected={{this.tags}}
+            @renderInPlace={{true}}
+            @onchange={{this.setTags}}
+          />
+          {{#if this.nested}}
+            <button type="button" class="btn btn-default" data-modal-open-nested {{on "click" (fn this.openNested log)}}>Open nested modal</button>
+            {{#if this.isNestedOpen}}
+              <AppUi::Modal
+                @title="global.form.save"
+                @closeLabel="global.form.close"
+                @containerClass="demo-nested-modal"
+                @onClose={{fn this.closedNested log}}>
+                <p data-modal-nested-content>Nested modal, stacked above the first one.</p>
+              </AppUi::Modal>
+            {{/if}}
+          {{/if}}
+        </AppUi::Modal>
       {{/if}}
     </div>
   </:demo>
@@ -52,8 +55,8 @@
       <Developer::StateSwitch @states={{this.behaviours}} @value={{this.behaviour}} @onChange={{fn this.setField "behaviour"}} />
     </div>
     <div class="form-group">
-      <label>Rendering</label>
-      <Developer::StateSwitch @states={{this.renderings}} @value={{this.rendering}} @onChange={{this.setRendering}} />
+      <label>Nested modal</label>
+      <Developer::StateSwitch @states={{this.nestedStates}} @value={{this.nestedState}} @onChange={{this.setNested}} />
     </div>
   </:controls>
   <:docs>

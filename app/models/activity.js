@@ -12,7 +12,7 @@ import Model, { attr,belongsTo } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class ActivityModel extends Model {
 
     /**
      * The date on which the activity was created
@@ -22,7 +22,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    dateCreated: attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}),
+    @attr('string',{defaultValue:function(){return 'CURRENT_DATETIME';}}) dateCreated;
 
     /**
      * The description of the activity
@@ -32,7 +32,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    description: attr('string'),
+    @attr('string') description;
 
     /**
      * The identifier of the user who created the activity
@@ -42,7 +42,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The name of the entity the activity is related to
@@ -52,7 +52,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    relatedTo: attr('string'),
+    @attr('string') relatedTo;
 
     /**
      * The identifier of the activity
@@ -62,7 +62,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    relatedId: attr('string'),
+    @attr('string') relatedId;
 
     /**
      * The type of the activity, the type is used to determine the layout of the
@@ -73,7 +73,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    type: attr('string'),
+    @attr('string') type;
 
     /**
      * Has this record been deleted?
@@ -83,7 +83,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * The name of the user who created the activity
@@ -93,7 +93,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * If the type of activity is related when this field tells us the type of
@@ -104,7 +104,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    relatedActivity: attr('string'),
+    @attr('string') relatedActivity;
 
     /**
      * The identifier of related entity that created the activity
@@ -114,7 +114,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    relatedActivityId: attr('string'),
+    @attr('string') relatedActivityId;
 
     /**
      * If the type of activity is related when this field tells us the type of
@@ -125,7 +125,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    relatedActivityModule: attr('string'),
+    @attr('string') relatedActivityModule;
 
     /**
      * The context of the activity
@@ -135,7 +135,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    context: attr('json'),
+    @attr('json') context;
 
     /**
      * The object of the user who created te activity
@@ -145,7 +145,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    createdBy : belongsTo('user', { async: true, inverse: null }),
+    @belongsTo('user', { async: true, inverse: null }) createdBy;
 
     /**
      * The project the activity is related to
@@ -155,7 +155,7 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    project : belongsTo('project', { async: true, inverse: 'activities' }),
+    @belongsTo('project', { async: true, inverse: 'activities' }) project;
 
     /**
      * The issue the activity is related to
@@ -165,5 +165,5 @@ export default Model.extend({
      * @for Activity
      * @private
      */
-    issue : belongsTo('issue', { async: true, inverse: 'activities' }),
-});
+    @belongsTo('issue', { async: true, inverse: 'activities' }) issue;
+}

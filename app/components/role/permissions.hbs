@@ -1,17 +1,11 @@
-<div class="nav-tabs-custom role-permissions" data-role="permissions">
-  <ul class="nav nav-tabs">
-    <li class="active">
-      <a href="#role-permission-actions" data-toggle="tab">{{t "views.app.role.tabs.permission.actions"}}</a>
-    </li>
-    <li>
-      <a href="#role-permission-fields" data-toggle="tab">{{t "views.app.role.tabs.permission.fields"}}</a>
-    </li>
-  </ul>
-
-  <div class="tab-content">
-
+<AppUi::Tabs class="role-permissions" data-role="permissions" @active={{this.activeTab}} @onChange={{this.setActiveTab}}>
+  <:tabs as |ui|>
+    <ui.tab @name="actions" data-tab="actions">{{t "views.app.role.tabs.permission.actions"}}</ui.tab>
+    <ui.tab @name="fields" data-tab="fields">{{t "views.app.role.tabs.permission.fields"}}</ui.tab>
+  </:tabs>
+  <:panes as |ui|>
     {{!-- ── Actions tab ────────────────────────────────────────────────────── --}}
-    <div class="tab-pane fade in active" id="role-permission-actions" data-role="permission-actions">
+    <ui.pane @name="actions" data-role="permission-actions">
       {{#if this.actionPermissionModules.length}}
         {{#each this.permissionScopes as |scopeConfig|}}
           {{#let (call (fn this.getPermissionModules scopeConfig.name "actions")) as |modules|}}
@@ -72,10 +66,10 @@
           @description={{t "views.app.role.tabs.permission.noActions"}}
         />
       {{/if}}
-    </div>
+    </ui.pane>
 
     {{!-- ── Fields tab ─────────────────────────────────────────────────────── --}}
-    <div class="tab-pane fade" id="role-permission-fields" data-role="permission-fields">
+    <ui.pane @name="fields" data-role="permission-fields">
       {{#if this.fieldPermissionModules.length}}
         {{#each this.permissionScopes as |scopeConfig|}}
           {{#let (call (fn this.getPermissionModules scopeConfig.name "fields")) as |modules|}}
@@ -141,7 +135,7 @@
           @description={{t "views.app.role.tabs.permission.noFields"}}
         />
       {{/if}}
-    </div>
+    </ui.pane>
 
-  </div>
-</div>
+  </:panes>
+</AppUi::Tabs>

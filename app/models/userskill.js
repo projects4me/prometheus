@@ -11,7 +11,7 @@ import Model, { attr, belongsTo } from '@ember-data/model';
  * @namespace Prometheus.Models
  * @extends DS.Model
  */
-export default Model.extend({
+export default class UserskillModel extends Model {
 
     /**
      * The user this skill belongs to.
@@ -21,7 +21,7 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    userId: attr('string'),
+    @attr('string') userId;
 
     /**
      * The skill name e.g. PHP, Ember.js.
@@ -31,7 +31,7 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    name: attr('string'),
+    @attr('string') name;
 
     /**
      * Proficiency level for the skill.
@@ -41,7 +41,7 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    proficiencyLevel: attr('string'),
+    @attr('string') proficiencyLevel;
 
     /**
      * Soft deletion flag.
@@ -51,7 +51,7 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * Date the record was created.
@@ -61,7 +61,7 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * Date the record was last modified.
@@ -71,7 +71,7 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * Identifier of the user who created the record.
@@ -81,7 +81,7 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * Display name of the user who created the record.
@@ -91,7 +91,7 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    createdUserName: attr('string'),
+    @attr('string') createdUserName;
 
     /**
      * Identifier of the user who last modified the record.
@@ -101,7 +101,7 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * Display name of the user who last modified the record.
@@ -111,7 +111,7 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    modifiedUserName: attr('string'),
+    @attr('string') modifiedUserName;
 
     /**
      * The user this skill belongs to.
@@ -121,6 +121,6 @@ export default Model.extend({
      * @for Userskill
      * @private
      */
-    user: belongsTo('user', { async: true, inverse: 'skills' }),
+    @belongsTo('user', { async: true, inverse: 'skills' }) user;
 
-});
+}

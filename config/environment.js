@@ -65,6 +65,9 @@ module.exports = function(environment) {
         APP: {
             // Here you can pass flags/options to your application instance
             // when it is created
+
+            // services/bulk.js: most calls one POST /api/v1/bulk may hold; keep it at Gaia's BULK_MAX_REQUESTS (25)
+            bulkMaxRequests: 25
         },
 
         'ember-cli-mirage': {

@@ -336,17 +336,22 @@
       "missing": "No documentation yet. Expected file:",
       "error": "The documentation could not be loaded."
     },
+    "pager": {
+      "range": "{from}-{to} / {total}",
+      "previous": "Previous page",
+      "next": "Next page"
+    },
+    "listToolbar": {
+      "hint": "Select rows to act on them",
+      "breakdown": "{onPage} on this page, {otherPages} on other pages"
+    },
     "quickList": {
+      "moreActions": "More actions",
       "countOfTotal": "{count} of {total}",
       "empty": "No records found.",
       "clearSearch": "Clear the search",
       "error": "The list could not be loaded.",
       "retry": "Try again",
-      "pagination": {
-        "range": "{from}-{to} / {total}",
-        "previous": "Previous page",
-        "next": "Next page"
-      },
       "toolbar": {
         "groupBy": "Group by",
         "sortBy": "Sort",
@@ -1783,6 +1788,7 @@
         },
         "milestone": {
           "create": "Create Milestone",
+          "issueCount": "{count, plural, one {# issue} other {# issues}}",
           "creating": "Creating milestone ..",
           "created": "Milestone <strong>{name}</strong> created successfully",
           "error": "Failed to create milestone",

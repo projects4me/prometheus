@@ -91,7 +91,6 @@ export const then = function () {
             'The board Filter modal and its backdrop are gone': (assert) => async function () {
                 await waitUntil(() => !document.querySelector('dialog.app-modal'));
                 assert.dom('dialog.app-modal').doesNotExist();
-                assert.dom('.modal-backdrop').doesNotExist();
             }
         },
         {

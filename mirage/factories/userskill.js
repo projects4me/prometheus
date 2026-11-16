@@ -1,5 +1,5 @@
 import { Factory } from 'miragejs';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import * as date from '../helpers/getDate';
 import _ from 'lodash';
 
@@ -18,7 +18,7 @@ export default Factory.extend({
 		return _.random(1, 10).toString();
 	},
 	name() {
-		return faker.random.arrayElement([
+		return faker.helpers.arrayElement([
 			'EmberJS',
 			'Phalcon',
 			'PHP',
@@ -27,7 +27,7 @@ export default Factory.extend({
 		]);
 	},
 	proficiencyLevel() {
-		return faker.random.arrayElement([
+		return faker.helpers.arrayElement([
 			'beginner',
 			'intermediate',
 			'advanced',

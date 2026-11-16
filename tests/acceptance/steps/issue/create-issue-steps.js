@@ -1,8 +1,7 @@
 import { fillIn, currentURL, visit, click } from '@ember/test-helpers';
-import { selectChoose, selectSearch } from 'ember-power-select/test-support';
-import { clickTrigger } from 'ember-power-select/test-support/helpers';
 import steps from '../steps';
 import { Collection } from 'miragejs';
+import { chooseOption, chooseOptionAt, openSelect, searchSelect, selectedItemSelector } from 'prometheus/tests/helpers/select';
 
 export const given = function () {
     return [
@@ -58,29 +57,29 @@ export const when = function () {
         {
             "User selects option $id of $module $field": (assert) => async function (id, module, field) {
                 let selectEl = document.querySelector(`div[data-field="${module}.${field}"] > div.input-group`);
-                await selectChoose(selectEl.querySelector('div'), '.ember-power-select-option', id - 1);
+                await chooseOptionAt(selectEl.querySelector('div'), id - 1);
                 assert.ok(true, "User selects type");
             }
         },
         {
             "User selects $value value for $module $field": (assert) => async function (value, module, field) {
                 let selectEl = document.querySelector(`div[data-field="${module}.${field}"] > div.input-group > div`);
-                await selectChoose(selectEl, value);
+                await chooseOption(selectEl, value);
                 assert.ok(true, `User selects option ${value} of ${module} ${field}`);
             }
         },
         {
             "User selects option $id from milestone": (assert) => async function (id) {
-                await clickTrigger('div[data-field="issue.milestone"] > div.input-group.select-input');
-                await selectChoose('div[data-field="issue.milestone"] > div.input-group.select-input > div', '.ember-power-select-option', id); //not subtracted by 1 because it has it default value
+                await openSelect('div[data-field="issue.milestone"] > div.input-group.select-input');
+                await chooseOptionAt('div[data-field="issue.milestone"] > div.input-group.select-input > div', id); //not subtracted by 1 because it has it default value
                 assert.ok(true, "User selects milestone");
             }
         },
         {
             "User selects issue #$issueNumber as parent issue": (assert) => async function (issueNumber) {
-                await clickTrigger('div[data-field="issue.parentId"]');
-                await selectSearch('div[data-field="issue.parentId"]', issueNumber);
-                await selectChoose('div[data-field="issue.parentId"]', `.ember-power-select-option`, issueNumber);
+                await openSelect('div[data-field="issue.parentId"]');
+                await searchSelect('div[data-field="issue.parentId"]', issueNumber);
+                await chooseOptionAt('div[data-field="issue.parentId"]', issueNumber);
                 assert.ok(true, `User selects issue #${issueNumber} as parent issue`);
             }
         },
@@ -102,7 +101,7 @@ export const then = function () {
     return [
         {
             "$userName should be $field": (assert) => async function (userName, field) {
-                let selector = `div[data-field='issue.${field}'] span.ember-power-select-selected-item span.username`;
+                let selector = `${selectedItemSelector(`div[data-field='issue.${field}']`)} span.username`;
                 let assigneeElement = document.querySelector(selector);
                 assert.equal(assigneeElement.innerText, userName, `${userName} should be ${field}`);
             }

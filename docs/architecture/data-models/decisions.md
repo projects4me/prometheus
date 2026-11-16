@@ -45,3 +45,12 @@ Agreed decisions for how Ember Data models declare relationships.
 | Decision | When both sides exist, each names the other (`project.members` ↔ `user.projects`). When the other side has no matching relationship (for example `createdBy`, `modifiedBy`), use `inverse: null`. |
 | Rationale | A one-sided inverse makes Ember Data update a relationship that does not exist, or leave the other side stale after a save or a Hermes live update. |
 | Implications | Renaming a relationship means updating its inverse's option in the same change. |
+
+### D-004 — Relationship state stays unique and local edits are never overwritten by a payload
+
+| | |
+|---|---|
+| Status | Accepted |
+| Decision | Code that adds to a `hasMany` goes through `utils/array/record-list.js` (or `utils/live/collection.js` for live updates), whose add helpers are idempotent: a record the list already holds, or one given twice, is added once. Payloads (Gaia and Mirage) list each related id once. A response that carries relationship linkage carries the state the request set; Mirage derives belongsTo links from the foreign-key attributes the way Gaia does (for example `issue.assignee` → `issue.assignedTo`). |
+| Rationale | Ember Data 5.3 deprecates duplicate hasMany entries (`ember-data:deprecate-many-array-duplicates`, `ember-data:deprecate-non-unique-relationship-entries`) and the remote update that silently clears a local relationship edit (`ember-data:deprecate-relationship-remote-update-clearing-local-state`); 6.0 throws on duplicates and keeps the local edit. Saving a record often adds it to the inverse hasMany already (`project.memberships`, `issue.spent`), so a blind push after the save duplicated it. |
+| Implications | Do not push into a ManyArray directly; use the helpers. Do not silence these deprecations in `app/deprecation-workflow.js`. Before reloading a record from a live event, save or roll back any unsaved relationship edit on it; today's reload paths (`idea.updated`, `comment.updated`) reload records the screen edits only through attributes. A Mirage handler that returns a relationship must return what the request set, not the factory default. |

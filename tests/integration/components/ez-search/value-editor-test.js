@@ -8,6 +8,7 @@ import { render, fillIn, click, settled } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import AclStub from '../../stub-services/acl-stub';
 import { operator } from 'prometheus/utils/query/operators';
+import { openSelect, selectOptions, selectedItemSelector, selectedOptionsSelector } from 'prometheus/tests/helpers/select';
 
 const STATUS = {
     id: 'Issue.status',
@@ -58,16 +59,16 @@ module('Integration | Component | ez-search/value-editor', function (hooks) {
     test('enum field renders a select', async function (assert) {
         await show(this, STATUS, ':', 'b');
         assert.dom('[data-ez-value-editor="select"]').exists();
-        assert.dom('[data-ez-value-editor="select"] .ember-power-select-selected-item').includesText('Closed');
+        assert.dom(selectedItemSelector('[data-ez-value-editor="select"]')).includesText('Closed');
     });
 
     test('enum IN renders a multi select and does not mutate the value', async function (assert) {
         let value = ['a'];
         await show(this, STATUS, 'IN', value);
         assert.dom('[data-ez-value-editor="list"]').exists();
-        assert.dom('[data-ez-value-editor="list"] .ember-power-select-multiple-option').exists({ count: 1 });
-        await click('[data-ez-value-editor="list"] .ember-power-select-trigger');
-        await click(document.querySelectorAll('.ember-power-select-option')[1]);
+        assert.dom(selectedOptionsSelector('[data-ez-value-editor="list"]')).exists({ count: 1 });
+        await openSelect('[data-ez-value-editor="list"]');
+        await click(selectOptions()[1]);
         await settled();
         assert.deepEqual(this.emitted.at(-1), ['a', 'b']);
         assert.deepEqual(value, ['a']);
@@ -75,7 +76,7 @@ module('Integration | Component | ez-search/value-editor', function (hooks) {
 
     test('a single value shows as a one item array when switching to IN', async function (assert) {
         await show(this, STATUS, 'IN', 'a');
-        assert.dom('[data-ez-value-editor="list"] .ember-power-select-multiple-option').exists({ count: 1 });
+        assert.dom(selectedOptionsSelector('[data-ez-value-editor="list"]')).exists({ count: 1 });
     });
 
     test('user field uses the user option template', async function (assert) {

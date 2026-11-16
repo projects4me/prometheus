@@ -82,7 +82,7 @@
                       value={{this.newTag.tag}}
                       mask="alphanumeric"
                       data-field="tag.tag"
-                      focus-out={{fn (mut this.showTagNameError) true}}
+                      focus-out={{this.markTagNameVisited}}
                       v-focus={{this.showTagNameError}}
                       v-model={{this.newTag}}
                       v-field='tag'

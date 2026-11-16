@@ -3,8 +3,8 @@
  */
 
 import { click, fillIn, settled } from '@ember/test-helpers';
-import { selectChoose } from 'ember-power-select/test-support';
 import steps from '../steps';
+import { chooseOption, chooseOptionAt } from 'prometheus/tests/helpers/select';
 
 const QUALIFICATION_SECTION = '.user-qualification-section';
 const TYPE_INDEX = {
@@ -20,18 +20,14 @@ async function selectQualificationType(type) {
 	const selectEl = document.querySelector(
 		'[data-field="user-qualification.type"] > div.input-group'
 	);
-	await selectChoose(
-		selectEl.querySelector('div'),
-		'.ember-power-select-option',
-		TYPE_INDEX[type]
-	);
+	await chooseOptionAt(selectEl.querySelector('div'), TYPE_INDEX[type]);
 }
 
 async function selectCompletionYear(year) {
 	const selectEl = document.querySelector(
 		'[data-field="user-qualification.completionYear"] > div.input-group'
 	);
-	await selectChoose(selectEl.querySelector('div'), String(year));
+	await chooseOption(selectEl.querySelector('div'), String(year));
 }
 
 export default function (assert) {

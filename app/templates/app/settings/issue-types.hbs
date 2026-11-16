@@ -62,13 +62,7 @@
   </div>
 
   {{#if this.editing}}
-    {{#bootstrap-modal
-      title=(if this.editing.isNew "views.app.settings.issueTypes.add" "views.app.settings.issueTypes.edit")
-      confirmLabel="global.form.save"
-      closeLabel="global.form.cancel"
-      confirm=this.saveIssueType
-      close=this.removeModal
-    }}
+    <AppUi::Modal @title={{if this.editing.isNew "views.app.settings.issueTypes.add" "views.app.settings.issueTypes.edit"}} @confirmLabel="global.form.save" @closeLabel="global.form.cancel" @confirm={{this.saveIssueType}} @onClose={{this.removeModal}}>
       <div class="box-body">
         {{#each this.form.labels as |field|}}
           <FormFields::FieldText
@@ -111,6 +105,6 @@
           @data-field="issuetype.description"
         />
       </div>
-    {{/bootstrap-modal}}
+    </AppUi::Modal>
   {{/if}}
 </section>

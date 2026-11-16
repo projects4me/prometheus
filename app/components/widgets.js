@@ -3,13 +3,12 @@
  */
 
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
+import _ from 'lodash';
 import { service } from '@ember/service';
 
 /**
  * Base component for all widget components in the application.
- * Provides common functionality for widget components including field translation
- * and sortable widget containers.
+ * Provides common functionality for widget components, such as field translation.
  *
  * @class WidgetsComponent
  * @extends Component
@@ -83,27 +82,5 @@ export default class WidgetsComponent extends Component {
 			}
 		});
 		return fields;
-	}
-
-	/**
-	 * Initializes jQuery UI sortable functionality for widget containers
-	 * Makes widget containers draggable and sortable
-	 *
-	 * @method initSortable
-	 * @public
-	 * @action
-	 */
-	@action
-	initSortable() {
-		$('.connectedSortable').sortable({
-			placeholder: 'sort-highlight',
-			connectWith: '.connectedSortable',
-			handle: '.box-header, .nav-tabs',
-			forcePlaceholderSize: true,
-			zIndex: 999999
-		});
-		$(
-			'.connectedSortable .box-header, .connectedSortable .nav-tabs-custom'
-		).css('cursor', 'move');
 	}
 }

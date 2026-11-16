@@ -1,7 +1,6 @@
 import { action } from '@ember/object';
 import { service } from '@ember/service';
 import { task, timeout } from 'ember-concurrency';
-import { htmlSafe } from "@ember/template";
 import { tracked } from '@glimmer/tracking';
 import AppComponent from 'prometheus/components/app';
 import RSVP from 'rsvp';
@@ -422,12 +421,12 @@ export default class IssueIssueDetailsComponent extends AppComponent {
         let _self = this;
 
         let deleting = new Messenger().post({
-            message: htmlSafe(_self.intl.t("views.app.issue.detail.file.delete", { name: file.get('name') })),
+            message: _self.intl.t("views.app.issue.detail.file.delete", { name: file.get('name'), htmlSafe: true }),
             type: 'warning',
             showCloseButton: true,
             actions: {
                 confirm: {
-                    label: htmlSafe(_self.intl.t("views.app.issue.detail.file.confirmdelete")).toString(),
+                    label: _self.intl.t("views.app.issue.detail.file.confirmdelete", { htmlSafe: true }).toString(),
                     action: function () {
                         // First remove from the relationship
                         removeRecord(_self.issue.get('files'), file);
@@ -1060,7 +1059,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
                 existingWatcher.isWatching = true;
                 await existingWatcher.save();
                 new Messenger().post({
-                    message: htmlSafe(this.intl.t('views.app.issue.watcher.added', { name: member.name })),
+                    message: this.intl.t('views.app.issue.watcher.added', { name: member.name, htmlSafe: true }),
                     type: 'success',
                     showCloseButton: true
                 });
@@ -1075,7 +1074,7 @@ export default class IssueIssueDetailsComponent extends AppComponent {
             await watcher.save();
             pushRecords(this.issue.watchers, [watcher]);
             new Messenger().post({
-                message: htmlSafe(this.intl.t('views.app.issue.watcher.added', { name: member.name })),
+                message: this.intl.t('views.app.issue.watcher.added', { name: member.name, htmlSafe: true }),
                 type: 'success',
                 showCloseButton: true
             });

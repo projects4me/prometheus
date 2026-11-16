@@ -13,7 +13,7 @@ import Model, { attr, belongsTo } from '@ember-data/model';
  * @extends DS.Model
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Model.extend({
+export default class MembershipModel extends Model {
 
     /**
      * The identifier of the project this membership grants access to.
@@ -23,7 +23,7 @@ export default Model.extend({
      * @for Membership
      * @private
      */
-    projectId: attr('string'),
+    @attr('string') projectId;
 
     /**
      * The identifier of the user who is a member of the project.
@@ -33,7 +33,7 @@ export default Model.extend({
      * @for Membership
      * @private
      */
-    userId: attr('string'),
+    @attr('string') userId;
 
     /**
      * The soft deletion flag for the membership
@@ -43,7 +43,7 @@ export default Model.extend({
      * @for Membership
      * @private
      */
-    deleted: attr('string'),
+    @attr('string') deleted;
 
     /**
      * The date on which this membership was created
@@ -53,7 +53,7 @@ export default Model.extend({
      * @for Membership
      * @private
      */
-    dateCreated: attr('string'),
+    @attr('string') dateCreated;
 
     /**
      * The date on which this membership was last modified
@@ -63,7 +63,7 @@ export default Model.extend({
      * @for Membership
      * @private
      */
-    dateModified: attr('string'),
+    @attr('string') dateModified;
 
     /**
      * The identifier of the user who created the membership
@@ -73,7 +73,7 @@ export default Model.extend({
      * @for Membership
      * @private
      */
-    createdUser: attr('string'),
+    @attr('string') createdUser;
 
     /**
      * The identifier of the user who last modified the membership
@@ -83,7 +83,7 @@ export default Model.extend({
      * @for Membership
      * @private
      */
-    modifiedUser: attr('string'),
+    @attr('string') modifiedUser;
 
     /**
      * The project to which this membership belongs.
@@ -93,7 +93,7 @@ export default Model.extend({
      * @for Membership
      * @private
      */
-    project: belongsTo('project', { async: true, inverse: 'memberships' }),
+    @belongsTo('project', { async: true, inverse: 'memberships' }) project;
 
     /**
      * The user to which this membership belongs.
@@ -103,5 +103,5 @@ export default Model.extend({
      * @for Membership
      * @private
      */
-    user: belongsTo('user', { async: true, inverse: null })
-});
+    @belongsTo('user', { async: true, inverse: null }) user;
+}

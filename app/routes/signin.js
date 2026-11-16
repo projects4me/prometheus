@@ -15,9 +15,9 @@ import { service } from '@ember/service';
  * @uses UnauthenticatedRouteMixin
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default Route.extend({
+export default class SigninRoute extends Route {
 
-    routeIfAlreadyAuthenticated: 'app',
+    routeIfAlreadyAuthenticated = 'app';
 
     /**
      * The session service (services/session.js) that will be used
@@ -28,7 +28,7 @@ export default Route.extend({
      * @for SigninRoute
      * @public
      */
-    session: service(),
+    @service session;
 
     /**
      * The intl library service that is used in order to get the translations.
@@ -38,12 +38,12 @@ export default Route.extend({
      * @for SigninRoute
      * @public
      */
-    intl: service(),
+    @service intl;
 
     beforeModel() {
         this.session.prohibitAuthentication(this.routeIfAlreadyAuthenticated);
         this.notifySessionExpired();
-    },
+    }
     /**
      * This function notifies the user when their session has expired.
      * 
@@ -62,4 +62,4 @@ export default Route.extend({
             localStorage.removeItem('sessionExpired');
         }
     }
-});
+}

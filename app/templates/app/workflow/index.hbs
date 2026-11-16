@@ -11,8 +11,8 @@
     <div class="col-md-12">
       <AccessControl @aclContext="workflow.read">
         <div class="box box-primary list-view">
-          <div class="box-header with-border">
-            <div class="search">
+          <AppUi::ListToolbar>
+            <:search>
               {{#if this.querySchema}}
                 <EzSearch
                   @schema={{this.querySchema}}
@@ -24,116 +24,75 @@
                   @aclContext="workflow.read"
                 />
               {{/if}}
+            </:search>
+            <:actions>
               <AccessControl @aclContext="workflow.create">
-                <LinkTo @route="app.workflow.create" class="btn btn-default" data-btn="new-workflow">
+                <LinkTo @route="app.workflow.create" class="btn btn-default" data-test-list-create>
                   <i class="fa fa-plus" aria-hidden="true"></i> {{t "views.app.workflow.list.new"}}
                 </LinkTo>
               </AccessControl>
-            </div>
-          </div>
-
-          <div class="box-body no-padding">
-            <div class="list-controls">
+            </:actions>
+            <:selection>
               <span class="btn btn-default btn-sm checkbox-toggle" data-toggle="tooltip" title="{{t "global.list.selectAll"}}">
                 <FormFields::FieldCheckbox @select={{this.selectAll}} @data-select="all" @aclContext="workflow.read"/>
               </span>
               <div class="btn-group">
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="delete-workflows" title="{{t "global.form.delete"}}" @onClick={{this.deleteSelected}} @aclContext="workflow.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="activate-workflows" title="{{t "views.app.module.list.activation.activate"}}" @onClick={{fn this.setSelectedActive true}} @aclContext="workflow.update"><i class="fa fa-toggle-on"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="deactivate-workflows" title="{{t "views.app.module.list.activation.deactivate"}}" @onClick={{fn this.setSelectedActive false}} @aclContext="workflow.update"><i class="fa fa-toggle-off"></i></AppUi::Button>
-                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-btn="export-workflows" title="{{t "views.app.module.list.export.label"}}" @onClick={{this.exportSelected}} @aclContext="workflow.read"><i class="fa fa-download"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="delete" title="{{t "global.form.delete"}}" @onClick={{this.deleteSelected}} @aclContext="workflow.delete"><i class="fa fa-trash-o"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="activate" title="{{t "views.app.module.list.activation.activate"}}" @onClick={{fn this.setSelectedActive true}} @aclContext="workflow.update"><i class="fa fa-toggle-on"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="deactivate" title="{{t "views.app.module.list.activation.deactivate"}}" @onClick={{fn this.setSelectedActive false}} @aclContext="workflow.update"><i class="fa fa-toggle-off"></i></AppUi::Button>
+                <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-test-list-action="export" title="{{t "views.app.module.list.export.label"}}" @onClick={{this.exportSelected}} @aclContext="workflow.read"><i class="fa fa-download"></i></AppUi::Button>
               </div>
-              <div class="pull-right">
-                <span class="list-view-count">{{t "global.list.selectedCount" count=this.checkboxCount}}</span>
-                {{add (mult (sub this.page 1) 20) 1}}-{{add (mult (sub this.page 1) 20) this.model.length}} / {{add (mult (sub this.page 1) 20) this.model.length}}
-                {{#if this.model.meta.links.next}}+{{/if}}
-                <div class="btn-group">
-                  {{#if this.model.meta.links.prev}}
-                    <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.prevPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.prev.href)}} @aclContext="workflow.read"><i class="fa fa-chevron-left"></i></AppUi::Button>
-                  {{else}}
-                    <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.prevPage"}}"><i class="fa fa-chevron-left"></i></AppUi::Button>
-                  {{/if}}
-                  {{#if this.model.meta.links.next}}
-                    <AppUi::Button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{t "global.list.nextPage"}}" @onClick={{fn this.paginate (get-page this.model.meta.links.next.href)}} @aclContext="workflow.read"><i class="fa fa-chevron-right"></i></AppUi::Button>
-                  {{else}}
-                    <AppUi::Button type="button" class="btn btn-default btn-sm disabled" data-toggle="tooltip" title="{{t "global.list.nextPage"}}"><i class="fa fa-chevron-right"></i></AppUi::Button>
-                  {{/if}}
-                </div>
-              </div>
-            </div>
+            </:selection>
+            <:pager>
+              <span class="list-view-count">{{t "global.list.selectedCount" count=this.checkboxCount}}</span>
+              <AppUi::Pager @offset={{this.offset}} @limit={{this.pageSize}} @count={{this.model.length}} @hasMore={{if this.model.meta.links.next true false}} @onPageChange={{this.changeOffset}} />
+            </:pager>
+          </AppUi::ListToolbar>
 
-            <div class="table-responsive list-view">
-              <table class="table table-hover table-striped">
-                <thead>
-                  <tr>
-                    <th class="select-box"></th>
-                    <th data-sort="Workflow.name">{{t "views.app.workflow.list.name"}} <AppUi::Button type="button" class="btn btn-box-tool" {{on "click" (fn this.sortData "Workflow.name")}}><i class="fa fa-sort"></i></AppUi::Button></th>
-                    <th>{{t "views.app.workflow.list.trigger"}}</th>
-                    <th>{{t "views.app.workflow.list.scope"}}</th>
-                    <th>{{t "views.app.workflow.list.actors"}}</th>
-                    <th>{{t "views.app.workflow.list.runs"}}</th>
-                    <th>{{t "views.app.workflow.list.lastRun"}}</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {{#if this.rows.length}}
-                    {{#each this.rows as |row|}}
-                      <tr data-workflow-id={{row.workflow.id}}>
-                        <td class="select-box">
-                          <FormFields::FieldCheckbox @select={{this.select}} @data-select={{row.workflow.id}} @aclContext="workflow.read"/>
-                        </td>
-                        <td class="workflow-cell" data-workflow-field="workflow">
-                          <LinkTo @route="app.workflow.page" @model={{row.workflow.id}} data-workflow-field="name">{{row.workflow.name}}</LinkTo>
-                          <span class="label {{if (eq row.workflow.status "Active") "label-success" (if (eq row.workflow.status "Disabled") "label-danger" "label-warning")}}" data-workflow-field="status">{{t (concat "views.app.workflow.status." row.workflow.status)}}</span>
-                          <span class="workflow-description">{{row.workflow.description}}</span>
-                        </td>
-                        <td data-workflow-field="trigger">
-                          {{#if row.trigger}}
-                            <strong>{{row.trigger.entity}}</strong>{{#if row.trigger.event}} &middot; {{row.trigger.event}}{{/if}}
-                          {{else}}
-                            <em>{{t "views.app.workflow.list.noTrigger"}}</em>
-                          {{/if}}
-                        </td>
-                        <td data-workflow-field="scope">
-                          {{#if row.projects.length}}
-                            {{join ", " row.projects}}
-                          {{else}}
-                            {{t "views.app.workflow.list.allProjects"}}
-                          {{/if}}
-                        </td>
-                        <td class="workflow-actors" data-workflow-field="actors">
-                          {{#each row.actors as |actor|}}
-                            <span class="workflow-actor" data-workflow-actor>{{actor.label}}{{#if actor.isAgent}} <Agent::Badge />{{/if}}</span>
-                          {{/each}}
-                        </td>
-                        <td data-workflow-field="runs">{{row.runStats.count}}</td>
-                        <td data-workflow-field="last-run">
-                          {{#if row.runStats.last}}
-                            {{format-date-time date=row.runStats.last humanize=true}}
-                          {{else}}
-                            {{t "views.app.workflow.list.neverRun"}}
-                          {{/if}}
-                        </td>
-                        <td class="actions">
-                          <AccessControl @aclContext="workflow.update">
-                            <LinkTo @route="app.workflow.page" @model={{row.workflow.id}} class="btn btn-default btn-sm" data-btn="edit" title={{t "global.form.edit"}}>
-                              <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </LinkTo>
-                          </AccessControl>
-                        </td>
-                      </tr>
-                    {{/each}}
+          <div class="box-body no-padding">
+            <AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @sort={{this.sort}} @order={{this.order}} @selectable={{true}} @onSort={{this.sortData}} @onSelect={{this.selectRow}}>
+              <:cell as |row column|>
+                {{#if (eq column.key "workflow")}}
+                  <LinkTo @route="app.workflow.page" @model={{row.id}} data-test-workflow-name>{{row.workflow.name}}</LinkTo>
+                  <span class="label {{if (eq row.workflow.status "Active") "label-success" (if (eq row.workflow.status "Disabled") "label-danger" "label-warning")}}" data-test-workflow-status>{{t (concat "views.app.workflow.status." row.workflow.status)}}</span>
+                  <span class="workflow-description">{{row.workflow.description}}</span>
+                {{else if (eq column.key "trigger")}}
+                  {{#if row.trigger}}
+                    <strong>{{row.trigger.entity}}</strong>{{#if row.trigger.event}} &middot; {{row.trigger.event}}{{/if}}
                   {{else}}
-                    <tr>
-                      <td colspan="100%">
-                        <Exceptions::NothingFound @description={{t "views.app.workflow.list.noWorkflows"}} />
-                      </td>
-                    </tr>
+                    <em>{{t "views.app.workflow.list.noTrigger"}}</em>
                   {{/if}}
-                </tbody>
-              </table>
-            </div>
+                {{else if (eq column.key "scope")}}
+                  {{#if row.projects.length}}
+                    {{join ", " row.projects}}
+                  {{else}}
+                    {{t "views.app.workflow.list.allProjects"}}
+                  {{/if}}
+                {{else if (eq column.key "actors")}}
+                  {{#each row.actors as |actor|}}
+                    <span class="workflow-actor" data-test-workflow-actor>{{actor.label}}{{#if actor.isAgent}} <Agent::Badge />{{/if}}</span>
+                  {{/each}}
+                {{else if (eq column.key "runs")}}
+                  {{row.runStats.count}}
+                {{else if (eq column.key "last-run")}}
+                  {{#if row.runStats.last}}
+                    {{format-date-time date=row.runStats.last humanize=true}}
+                  {{else}}
+                    {{t "views.app.workflow.list.neverRun"}}
+                  {{/if}}
+                {{/if}}
+              </:cell>
+              <:rowActions as |row|>
+                <AccessControl @aclContext="workflow.update">
+                  <LinkTo @route="app.workflow.page" @model={{row.id}} class="btn btn-default btn-sm" data-test-row-action="edit" title={{t "global.form.edit"}}>
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                  </LinkTo>
+                </AccessControl>
+              </:rowActions>
+              <:empty>
+                <Exceptions::NothingFound @description={{t "views.app.workflow.list.noWorkflows"}} />
+              </:empty>
+            </AppUi::DataTable>
           </div>
         </div>
       </AccessControl>

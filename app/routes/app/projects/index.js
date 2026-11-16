@@ -16,7 +16,7 @@ import extractHashSettled from 'prometheus/utils/rsvp/extract-hash-settled';
  * @extends AppRoute
  * @author Hammad Hassan <gollomer@gmail.com>
  */
-export default App.extend({
+export default class ProjectsIndexRoute extends App {
 
     /**
      * We need to reload the model as the values related ot the page's data are
@@ -28,7 +28,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    queryParams: {
+    queryParams = {
         sort: {
             refreshModel: true,
         },
@@ -41,7 +41,7 @@ export default App.extend({
         query: {
             refreshModel: true,
         }
-    },
+    };
 
     /**
      * The field on which we want to sort by default
@@ -51,7 +51,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    sort: 'Project.dateModified',
+    sort = 'Project.dateModified';
 
     /**
      * The order in which to sort by
@@ -61,7 +61,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    order: 'desc',
+    order = 'desc';
 
     /**
      * The default page that we need to load
@@ -71,7 +71,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    page: 1,
+    page = 1;
 
     /**
      * The default query that we need to load
@@ -81,7 +81,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    query: '',
+    query = '';
 
     /**
      * These are the saved searches related to the projects
@@ -91,7 +91,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    savedsearches: null,
+    savedsearches = null;
 
     /**
      * The current user
@@ -101,7 +101,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    currentUser: service(),
+    @service currentUser;
 
     /**
      * The saved search calls
@@ -110,7 +110,7 @@ export default App.extend({
      * @type Prometheus.Services.SavedSearchService
      * @private
      */
-    savedSearch: service('saved-search'),
+    @service('saved-search') savedSearch;
 
     /**
      * Loads the ezSearch schema of the projects.
@@ -119,7 +119,7 @@ export default App.extend({
      * @type Prometheus.Services.QuerySchemaService
      * @private
      */
-    querySchema: service('query-schema'),
+    @service('query-schema') querySchema;
 
     /**
      * The trackedProject service provides id of the selected project.
@@ -129,7 +129,7 @@ export default App.extend({
      * @for Index
      * @private
      */
-    trackedProject: service(),
+    @service trackedProject;
 
     /**
      * The model for this route
@@ -139,7 +139,7 @@ export default App.extend({
      * @return Prometheus.Model.Project
      * @private
      */
-    model: function (params) {
+    model(params) {
         Logger.debug('Prometheus.App.Routes.Projects::model()');
         let _self = this;
         Logger.debug(params);
@@ -148,19 +148,19 @@ export default App.extend({
 
         // Load the data if are passed via the parameter
         if (params.sort) {
-            this.set('sort', params.sort);
+            this.sort = params.sort;
         }
         if (params.order) {
-            this.set('order', params.order);
+            this.order = params.order;
         }
         if (params.query === '') {
-            this.set('query', null);
+            this.query = null;
         } else if (params.query) {
             query = params.query;
-            this.set('query', params.query);
+            this.query = params.query;
         }
         if (params.page) {
-            this.set('page', params.page);
+            this.page = params.page;
         }
 
         // Prepare the options
@@ -179,7 +179,7 @@ export default App.extend({
                 moduleName: 'project'
             });
         });
-    },
+    }
 
     /**
      * This function is called by Ember after the model function
@@ -197,13 +197,13 @@ export default App.extend({
             schema: _self.querySchema.load('Project')
         }).then(function (results) {
             let data = extractHashSettled(results);
-            _self.set('savedsearches', data.savedsearches);
-            _self.set('schema', Array.isArray(data.schema) ? null : data.schema);
+            _self.savedsearches = data.savedsearches;
+            _self.schema = Array.isArray(data.schema) ? null : data.schema;
         }).catch((error) => {
             _self.errorManager.handleError(error);
         });
 
-    },
+    }
 
     /**
      * This function is called by the route when it has created the controller and
@@ -219,7 +219,7 @@ export default App.extend({
      * @param {Prometheus.Models.Project} model The model that is created by this route
      * @private
      */
-    setupController: function (controller, model) {
+    setupController(controller, model) {
         Logger.debug('Prometheus.App.Routes.Projects::setupController()');
         let savedSearch = this.store.createRecord('savedsearch');
         controller.set('newSavedsearch', savedSearch);
@@ -235,6 +235,5 @@ export default App.extend({
             controller.set('activeSearch', this.savedsearches.find(search => search.id === controller.searchId) || null);
         }
         Logger.debug('Prometheus.App.Routes.Projects::setupController()');
-    },
-
-});
+    }
+}

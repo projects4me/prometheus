@@ -1,6 +1,6 @@
 import { Factory } from 'miragejs';
 import * as date from '../helpers/getDate';
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 import Context from '../yadda-context/context';
 
 export default Factory.extend({
@@ -11,7 +11,7 @@ export default Factory.extend({
         return `${++i}`;
     },
     status() {
-        return faker.random.arrayElement(["new", "in_progress", "done", "feedback", "pending", "deferred"]);
+        return faker.helpers.arrayElement(["new", "in_progress", "done", "feedback", "pending", "deferred"]);
     },
     dateCreated() {
         return date.createdDate(10, 30);
