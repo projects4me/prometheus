@@ -39,7 +39,7 @@ module('Integration | Component | developer/demos/display', function (hooks) {
 
 	test('tag demo shows the tags and the variants', async function (assert) {
 		await render(hbs`<Developer::Demos::Tag @entry={{this.entry}} />`);
-		assert.dom('[data-test-demo-tag]').hasClass('label-default');
-		assert.dom('[data-test-demo-tag-variant="danger"]').hasClass('label-danger');
+		assert.dom('[data-test-demo-tag]').hasClass('app-ui-tag');
+		assert.dom('[data-test-demo-tag-variant="danger"]').hasClass('app-ui-tag-danger');
 	});
 });

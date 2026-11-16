@@ -1,15 +1,26 @@
 <Developer::EntryHeader @entry={{@entry}} />
 <Developer::Entry @onReset={{this.reset}}>
   <:demo>
-    <div data-demo-tag>
-      {{#each this.tags as |tag|}}<AppUi::Tag data-test-demo-tag>{{tag}}</AppUi::Tag> {{/each}}
+    <h4>Variants</h4>
+    <div data-demo-tag-variants>
+      {{#each this.variants as |variant|}}<AppUi::Tag @variant={{variant}} data-test-demo-tag-variant={{variant}}>{{variant}}</AppUi::Tag>{{/each}}
     </div>
-    <p>
-      {{#each this.variants as |variant|}}<AppUi::Tag @variant={{variant}} data-test-demo-tag-variant={{variant}}>{{variant}}</AppUi::Tag> {{/each}}
-    </p>
+    <h4>Colour from text</h4>
+    <div data-demo-tag>
+      {{#each this.tags as |tag|}}<AppUi::Tag @colorKey={{tag}} data-test-demo-tag>{{tag}}</AppUi::Tag>{{/each}}
+    </div>
+    <h4>Removable</h4>
+    <div data-demo-tag-removable>
+      {{#each this.removable as |tag|}}<AppUi::Tag @colorKey={{tag}} @onRemove={{fn this.remove tag}} data-test-demo-tag-removable>{{tag}}</AppUi::Tag>{{/each}}
+    </div>
+    <h4>Wrapping row with a long tag</h4>
+    <div data-demo-tag-row>
+      {{#each this.row as |tag|}}<AppUi::Tag @colorKey={{tag}} data-test-demo-tag-row>{{tag}}</AppUi::Tag>{{/each}}
+    </div>
   </:demo>
   <:controls>
     <p class="text-muted">Tags and small labels, drawn only through AppUi::Tag.</p>
+    {{#if this.log}}<pre data-demo-tag-log>{{this.log}}</pre>{{/if}}
   </:controls>
   <:docs>
     <Developer::Docs @doc="app-ui-tag.md" />
