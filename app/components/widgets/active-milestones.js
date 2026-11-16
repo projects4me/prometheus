@@ -34,12 +34,12 @@ function toMilestoneArray(data) {
 export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 
 	/**
-	 * The session service used to retrieve the auth token for raw fetch calls.
-	 * @property session
+	 * The bulk service that loads every overview in one request.
+	 * @property bulk
 	 * @type {Ember.Service}
 	 * @private
 	 */
-	@service session;
+	@service bulk;
 
 	/**
 	 * The filtered data based on search criteria
@@ -96,10 +96,8 @@ export default class WidgetsActiveMilestonesComponent extends WidgetsComponent {
 			this.milestoneOverviews = {};
 		}
 
-		let token = this.session.data.authenticated.access_token;
-
 		try {
-			let results = await fetchMilestoneOverviewsBulk(milestones, token);
+			let results = await fetchMilestoneOverviewsBulk(this.bulk, milestones);
 			let overviewsMap = {};
 			results.forEach(({ id, overview }) => {
 				overviewsMap[id] = overview;
