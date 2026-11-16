@@ -2,9 +2,23 @@
   AppUi::ListToolbar: the search takes the width the actions leave in the box header, and the bottom
   toolbar closes the list with a top border.
 */
+.list-view .box-header .search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+
+/* The search flexes first and keeps a minimum width; when the actions would push it below that they wrap under it. */
 .list-view .box-header .search .list-toolbar-search {
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 1 1 220px;
+  min-width: 220px;
+}
+
+.list-controls .quick-list-selection {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .list-controls.list-controls-bottom {

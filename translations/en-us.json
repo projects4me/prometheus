@@ -341,6 +341,10 @@
       "previous": "Previous page",
       "next": "Next page"
     },
+    "listToolbar": {
+      "hint": "Select rows to act on them",
+      "breakdown": "{onPage} on this page, {otherPages} on other pages"
+    },
     "quickList": {
       "moreActions": "More actions",
       "countOfTotal": "{count} of {total}",
