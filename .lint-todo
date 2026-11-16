@@ -374,3 +374,4 @@ add|ember-template-lint|no-curly-component-invocation|114|69|114|69|17cfa1e2a6b1
 add|ember-template-lint|no-at-ember-render-modifiers|199|43|199|43|db91e28a7f5d99c9ae77717f40bcffcb1fc3c46a|1794614400000|||app/templates/app/project/issue/create.hbs
 add|ember-template-lint|no-inline-styles|26|31|26|31|b00966baff974390b46b170c5b7de04601e6d047|1794614400000|||tests/integration/components/app-ui/task-board/layout-test.js
 add|ember-template-lint|no-inline-styles|33|31|33|31|ea01c4cda5bc6652e7ff847e611b4d8ac15861ec|1794614400000|||tests/integration/components/app-ui/task-board/milestones-test.js
+remove|ember-template-lint|no-at-ember-render-modifiers|385|43|385|43|f36f24a63b1d2cc76272f478d062358cc1edaf73|1794614400000|||app/templates/app/project/index.hbs

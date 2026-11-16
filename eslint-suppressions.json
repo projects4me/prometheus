@@ -317,7 +317,7 @@
   },
   "app/controllers/app/project/index.js": {
     "ember/classic-decorator-no-classic-methods": {
-      "count": 10
+      "count": 6
     },
     "ember/no-assignment-of-untracked-properties-used-in-tracking-contexts": {
       "count": 1
@@ -326,7 +326,7 @@
       "count": 1
     },
     "ember/no-get": {
-      "count": 6
+      "count": 2
     },
     "ember/require-computed-property-dependencies": {
       "count": 1
@@ -938,11 +938,6 @@
       "count": 1
     },
     "no-undef": {
-      "count": 1
-    }
-  },
-  "tests/acceptance/steps/conversation/conversation-browser-steps.js": {
-    "no-unused-vars": {
       "count": 1
     }
   },
