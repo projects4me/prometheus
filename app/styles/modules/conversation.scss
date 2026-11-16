@@ -407,3 +407,11 @@
   }
 }
 /*=====  End of Conversation Thread Box  ======*/
+
+// AdminLTE floats img.img-sm and offsets the text by 40px; keep that with the AppUi avatar.
+.box-comment > .app-ui-avatar,
+.box-footer > form > .app-ui-avatar {
+  float: left;
+  width: 30px;
+  height: 30px;
+}

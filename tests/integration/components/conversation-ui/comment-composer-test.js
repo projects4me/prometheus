@@ -36,6 +36,12 @@ module('Integration | Component | conversation-ui/comment-composer', function (h
         this.owner.register('service:currentUser', CurrentUserStub);
     });
 
+    test('shows the current user as a 30px AppUi avatar', async function (assert) {
+        await render(hbs`<ConversationUi::CommentComposer @entity="room-1" @save={{this.save}} />`);
+
+        assert.dom('[data-test-avatar]').exists().hasAttribute('data-size', 's');
+    });
+
     test('posting clears the editor and shows the comment as pending until it is saved', async function (assert) {
         let calls = [];
         this.set('save', deferredSave(calls));

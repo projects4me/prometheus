@@ -56,11 +56,7 @@
                 <div class="box-comments">
                   {{#each (call (fn this.getComments comment)) as |comment|}}
                     <div class="box-comment" data-comment-id="{{comment.id}}">
-                      <img
-                        class="img-circle img-sm"
-                        src="{{this.apiHost}}/userimage/get/{{comment.createdUser}}"
-                        alt="{{comment.createdUserName}}"
-                      />
+                      <AppUi::Avatar @user={{hash id=comment.createdUser name=comment.createdUserName}} @size="s" />
 
                       <div class="comment-text">
                         <span class="username">
