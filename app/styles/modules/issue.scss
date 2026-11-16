@@ -61,7 +61,8 @@
 
   .issue-details-assignee {
     flex: 0 0 auto;
-    max-width: 126px; // the 96px avatar plus the 15px gutter on both sides
+    max-width: 25%; // the avatar steps down (@minSize) to fit
+    min-width: 70px; // the 40px m avatar plus the 15px gutter on both sides
     padding: 0 15px;
     text-align: center;
     overflow-wrap: anywhere;

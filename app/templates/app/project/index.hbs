@@ -23,17 +23,17 @@
           {{!-- /.box-header --}}
           <div class="box-body">
 
-            <div class="row">
+            <div class="row project-manager-row">
 
-              <div class="col-xs-3 col-md-2">
+              <div class="project-manager-col">
                 <div class="project-manager">
-                  <AppUi::Avatar @user={{this.model.manager}} @size="l" />
+                  <AppUi::Avatar @user={{this.model.manager}} @size="l" @minSize="m" />
                   <LinkTo @route="app.user.page" @model={{this.model.manager.id}} class="users-list-name" >{{this.model.manager.name}}</LinkTo>
                   <span class="users-list-date">{{t "views.app.project.detail.manager"}}</span>
                 </div>
               </div>
 
-              <div class="col-xs-9 col-md-10">
+              <div class="project-manager-details">
                 <h4>{{t "views.app.project.detail.description"}}</h4>
                 <p class="project-description">
                   {{safe-html this.model.description}}
