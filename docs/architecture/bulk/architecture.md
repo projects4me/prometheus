@@ -52,6 +52,40 @@ The fallback keeps every screen working for roles without `bulk.create`; they
 only lose the saved round trips. Each item is authorized by Gaia like a
 direct call, so the service never widens what a user can read.
 
+## Dashboard widgets: registering a first load
+
+The dashboard (`routes/app/index.js`) loads the system issue statuses and the
+first page of every widget the user shows in **one** `bulk.query`. A widget
+registers its first load by declaring it in its metadata entry,
+`views.Dashboard.widgets.<name>` (`utils/metadata/metadata.js`):
+
+```js
+recentIssues: {
+    model: 'issue',                  // the Ember Data model to query
+    options: {                       // the store.query options of the first load
+        query: "((Issue.projectId CONTAINS ```MY_PROJECTS```) AND ...)",
+        rels: 'project',
+        sort: 'Issue.dateModified',
+        order: 'DESC',
+        limit: 5
+    },
+    // ...display settings (fields, pageSize, filters, ...)
+}
+```
+
+| Rule | Behaviour |
+|---|---|
+| Who is batched | Only the widgets in the user's list (`currentUser.user.dashboard.widgets`, or the defaults) that declare both `model` and `options`; unknown names are dropped before the batch. |
+| Options | The placeholders in `options.query` (`ME`, `MY_PROJECTS`, `WEEK_START`, ...) are filled in by `_getWidgetSettings` before the item is built. |
+| Item id | The widget's name; the statuses item is `system-issuestatuses`. |
+| Result | The widget gets the item's records as `@data` (a plain array). |
+| Failed item | The widget gets an empty `@data` and the error goes to `errorManager.handleLoadError`; the other widgets render. |
+| No declaration | The widget gets no `@data` and loads itself. |
+
+Only the first load goes through the dashboard. Paging, week switching and
+refresh stay in the widget components (`components/widgets/*.js`), which call
+the store directly.
+
 ## Tests
 
 - Unit: `tests/unit/services/bulk-test.js`.
