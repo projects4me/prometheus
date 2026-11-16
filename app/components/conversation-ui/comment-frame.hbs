@@ -1,6 +1,6 @@
 <div class="box-comment" data-comment-id={{@commentId}} ...attributes>
   {{#if @userId}}
-    <Agent::UserAvatar @class="img-circle img-sm" @userId={{@userId}} @name={{@userName}} />
+    <AppUi::Avatar @user={{hash id=@userId name=@userName}} @size="s" />
   {{/if}}
 
   <div class="comment-text" {{modify-links}}>
