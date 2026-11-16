@@ -5,7 +5,7 @@
 >
   {{#if @compact}}
     <div data-toggle="dropdown" role="button" tabindex="0" data-issue-assignee-toggle>
-      <img class="img-circle" src="{{this.apiHost}}/userimage/get/{{@issue.assignedTo.id}}" alt="{{@issue.assignedTo.name}}" title="{{@issue.assignedTo.name}}">
+      <AppUi::Avatar @user={{@issue.assignedTo}} @size="s" />
       <i class="fa fa-caret-down"></i>
     </div>
   {{else}}
@@ -25,7 +25,7 @@
         {{on "click" (fn this.updateAssignee member)}}
         {{on "keydown" (fn this.handleAssigneeOptionKeydown member)}}
       >
-        <img class="assignee-select-option-avatar" src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
+        <AppUi::Avatar class="assignee-select-option-avatar" @user={{member}} @size="xs" />
         {{member.name}}
       </li>
     {{/each}}

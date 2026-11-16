@@ -99,7 +99,7 @@ add|ember-template-lint|require-presentational-children|60|20|60|20|ad88831fa8a2
 add|ember-template-lint|require-presentational-children|61|22|61|22|b6bdc5d430a054d9e311fa7056c02abc4085ccd8|1794614400000|||app/components/idea/plan-box.hbs
 add|ember-template-lint|no-curly-component-invocation|6|133|6|133|d1171753a7400580bb2e85a171da218168014d7e|1794614400000|||app/components/idea/summary-box.hbs
 add|ember-template-lint|no-curly-component-invocation|7|80|7|80|f3cd28df8810cdb3114d22f0c4f8f20adf84fbd3|1794614400000|||app/components/idea/summary-box.hbs
-add|ember-template-lint|require-presentational-children|8|6|8|6|7acfdeb7988bc52aa9d8a74a008dd3abaf767c60|1794614400000|||app/components/issue/assignee-select.hbs
+add|ember-template-lint|require-presentational-children|8|6|8|6|8ae58c720884617181ca2587a2fb919f1cac9c2c|1794614400000|||app/components/issue/assignee-select.hbs
 add|ember-template-lint|require-presentational-children|9|6|9|6|c5387d3f7930df576d9a656ddd87eb76d6421410|1794614400000|||app/components/issue/assignee-select.hbs
 add|ember-template-lint|require-presentational-children|16|6|16|6|c5387d3f7930df576d9a656ddd87eb76d6421410|1794614400000|||app/components/issue/assignee-select.hbs
 add|ember-template-lint|no-at-ember-render-modifiers|1|30|1|30|7312526529ca39ed820819d1478d8e1b8f555279|1794614400000|||app/components/issue/file-preview.hbs
@@ -376,3 +376,9 @@ add|ember-template-lint|no-inline-styles|26|31|26|31|b00966baff974390b46b170c5b7
 add|ember-template-lint|no-inline-styles|33|31|33|31|ea01c4cda5bc6652e7ff847e611b4d8ac15861ec|1794614400000|||tests/integration/components/app-ui/task-board/milestones-test.js
 remove|ember-template-lint|no-at-ember-render-modifiers|385|43|385|43|f36f24a63b1d2cc76272f478d062358cc1edaf73|1794614400000|||app/templates/app/project/index.hbs
 remove|ember-template-lint|no-duplicate-attributes|1|46|1|46|a9eede4f9d695837927696fe167522dacfb391df|1794614400000|||app/components/app-ui/notifications/notification.hbs
+add|ember-template-lint|no-invalid-interactive|5|2|5|2|9fe561833d15a529b46f4c9f30ef857adf9f1216|1794787200000|||app/components/app-ui/gantt-chart/gantt-bar.hbs
+add|ember-template-lint|no-invalid-interactive|6|2|6|2|9fe561833d15a529b46f4c9f30ef857adf9f1216|1794787200000|||app/components/app-ui/gantt-chart/gantt-bar.hbs
+add|ember-template-lint|no-invalid-interactive|7|2|7|2|9fe561833d15a529b46f4c9f30ef857adf9f1216|1794787200000|||app/components/app-ui/gantt-chart/gantt-bar.hbs
+remove|ember-template-lint|no-invalid-interactive|5|2|5|2|8769fa5b509739f4d3f6ea7c03f1ba4af189b175|1794614400000|||app/components/app-ui/gantt-chart/gantt-bar.hbs
+remove|ember-template-lint|no-invalid-interactive|6|2|6|2|8769fa5b509739f4d3f6ea7c03f1ba4af189b175|1794614400000|||app/components/app-ui/gantt-chart/gantt-bar.hbs
+remove|ember-template-lint|no-invalid-interactive|7|2|7|2|8769fa5b509739f4d3f6ea7c03f1ba4af189b175|1794614400000|||app/components/app-ui/gantt-chart/gantt-bar.hbs

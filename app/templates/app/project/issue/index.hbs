@@ -105,7 +105,7 @@
                       </li>
                     </td>
                     <td class="issue-assignee">
-                      <span><img class="img-circle user-img" src="{{this.apiHost}}/userimage/get/{{issue.assignedTo.id}}" alt="{{issue.assignedTo.name}}" title="{{issue.assignedTo.name}}"></span>
+                      <span><AppUi::Avatar @user={{issue.assignedTo}} @size="m" /></span>
                       <span data-field="issue.assignee">{{issue.assignedTo.name}}</span>
                     </td>
                     <td data-field="issuetype.name" class="issue-type">{{type-label issue.issuetype}}</td>
