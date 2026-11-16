@@ -94,7 +94,7 @@
                           </td>
 
                           <td class="user-profile" data-user-field="profile">
-                            <img class="user-img" src="{{this.apiHost}}/userimage/get/{{user.id}}" alt="user-img">
+                            <AppUi::Avatar @user={{user}} @size="m" />
 
                             <div>
                               <LinkTo @route="app.user.page" @model={{user.id}}>

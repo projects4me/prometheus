@@ -35,6 +35,7 @@ module('Integration | Component | user-profile/close-members', function (hooks) 
             let userSelector = `[data-user="${user.name}"]`;
             assert.dom(`${userSelector} [data-close-member="name"]`).hasText(user.name);
             assert.dom(`${userSelector} [data-close-member="title"]`).hasText(user.title);
+            assert.dom(`${userSelector} [data-test-avatar]`).hasAttribute('data-size', 'm');
         });
 
     });
