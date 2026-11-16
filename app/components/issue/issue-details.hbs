@@ -123,8 +123,8 @@
 
           <div class="box-body">
 
-            <div class="row">
-              <div class="col-xs-3 col-md-2" data-field="issue.assignee">
+            <div class="row issue-details-assignee-row">
+              <div class="issue-details-assignee" data-field="issue.assignee">
                 <div class="project-manager">
                   <AppUi::Avatar @user={{hash id=this.issue.assignedTo.id type=this.issue.assignedTo.type name=this.issue.assignedTo.name profilePicture=this.issue.assignedTo.profilePicture}} @size="l" />
                   <LinkTo @route="app.user.page" @model={{this.issue.assignedTo.id}} class="users-list-name">{{this.issue.assignedTo.name}}</LinkTo>
@@ -132,7 +132,7 @@
                   <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
                 </div>
               </div>
-              <div class="col-xs-9 col-md-10 issue-description"  data-field="issue.description">
+              <div class="issue-description"  data-field="issue.description">
                 <h4>{{t "views.app.issue.detail.description"}}</h4>
                 <p>
                   {{safe-html this.issue.description}}

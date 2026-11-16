@@ -54,6 +54,25 @@
     background-color: $primaryColor;
   }
 
+  .issue-details-assignee-row {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .issue-details-assignee {
+    flex: 0 0 auto;
+    max-width: 126px; // the 96px avatar plus the 15px gutter on both sides
+    padding: 0 15px;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  .issue-details-assignee-row > .issue-description {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0 15px;
+  }
+
   .issue-description {
     overflow-wrap: break-word;
 
