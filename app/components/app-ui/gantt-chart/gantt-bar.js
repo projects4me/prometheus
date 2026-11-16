@@ -310,6 +310,22 @@ export default class GanttBarComponent extends AppComponent {
     }
 
     /**
+     * Accessible name of the bar: the label, or the issue number and subject when no label is passed
+     *
+     * @property accessibleLabel
+     * @type String
+     * @for GanttBar
+     * @public
+     */
+    get accessibleLabel() {
+        if (this.displayLabel) {
+            return this.displayLabel;
+        }
+        const issue = this.args.issue;
+        return issue ? `#${issue.issueNumber} - ${issue.subject ?? ''}` : '';
+    }
+
+    /**
      * Check if label should be shown inside bar
      *
      * @property showLabel
@@ -371,6 +387,119 @@ export default class GanttBarComponent extends AppComponent {
             event.stopPropagation();
             this.args.onClick();
         }
+    }
+
+    /**
+     * Track if a keyboard move or resize is being saved, so key repeats
+     * don't stack up updates for the same issue
+     *
+     * @property isSavingFromKeyboard
+     * @type Boolean
+     * @for GanttBar
+     * @private
+     */
+    isSavingFromKeyboard = false;
+
+    /**
+     * Whether the bar can be focused and operated from the keyboard
+     * (task bars of an issue; milestone bars only display a range)
+     *
+     * @property isKeyboardOperable
+     * @type Boolean
+     * @for GanttBar
+     * @public
+     */
+    get isKeyboardOperable() {
+        return this.args.type === 'task' && Boolean(this.args.issue);
+    }
+
+    /**
+     * Keyboard equivalents of the mouse actions on a task bar:
+     * Enter or Space opens the issue, the arrow keys move the bar by a day,
+     * and Shift with the arrow keys moves its end date by a day.
+     *
+     * @method handleKeyDown
+     * @param {KeyboardEvent} event The keyboard event
+     * @public
+     */
+    @action
+    async handleKeyDown(event) {
+        if (!this.isKeyboardOperable || event.target !== event.currentTarget) {
+            return;
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            if (this.args.onOpen) {
+                this.args.onOpen(this.args.issue);
+            }
+            return;
+        }
+
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+            return;
+        }
+
+        event.preventDefault();
+        if (this.isDragging || this.isResizing || this.isSavingFromKeyboard) {
+            return;
+        }
+
+        const days = event.key === 'ArrowRight' ? 1 : -1;
+        const save = event.shiftKey ? this.resizeEndFromKeyboard(days) : this.moveFromKeyboard(days);
+        if (!save) {
+            return;
+        }
+
+        this.isSavingFromKeyboard = true;
+        try {
+            await save;
+        } finally {
+            if (!this.isDestroying && !this.isDestroyed) {
+                this.isSavingFromKeyboard = false;
+                if (this.args.updateDependencyPositions) {
+                    this.args.updateDependencyPositions();
+                }
+            }
+        }
+    }
+
+    /**
+     * Move the bar by a number of days, as a mouse drag would
+     *
+     * @method moveFromKeyboard
+     * @param {Number} days Days to move (negative moves earlier)
+     * @returns {Promise|null} The pending save, or null when nothing is saved
+     * @private
+     */
+    moveFromKeyboard(days) {
+        if (!this.args.onDragEnd) {
+            return null;
+        }
+        return Promise.resolve(this.args.onDragEnd(days));
+    }
+
+    /**
+     * Move the end date by a number of days, as resizing the right edge would.
+     * The end date never goes before the start date.
+     *
+     * @method resizeEndFromKeyboard
+     * @param {Number} days Days to move the end date (negative shortens the bar)
+     * @returns {Promise|null} The pending save, or null when nothing is saved
+     * @private
+     */
+    resizeEndFromKeyboard(days) {
+        const { startDate, endDate } = this.args;
+        if (!this.args.onResizeEnd || !startDate || !endDate) {
+            return null;
+        }
+
+        const newEndDate = dates.format(dates.add(endDate, days, 'days'), 'YYYY-MM-DD');
+        if (dates.isBefore(newEndDate, startDate)) {
+            return null;
+        }
+
+        return Promise.resolve(this.args.onResizeEnd(dates.format(startDate, 'YYYY-MM-DD'), newEndDate));
     }
 
     /**
