@@ -43,7 +43,7 @@ export default function listToolbarSteps(library, assert, module, { dataTest = f
 			this.owner.lookup(`controller:app.${module}.index`).download = (url) => downloads.push(url);
 		})
 		.when('User selects the row "$name"', async function (name) {
-			await click(row(name).querySelector('input[type=checkbox]'));
+			await click(row(name).querySelector('input[type=checkbox], button[data-test-data-table-select]'));
 		})
 		.when('User searches the list for "$query"', async function (query) {
 			this.owner.lookup(`controller:app.${module}.index`).set('query', query);

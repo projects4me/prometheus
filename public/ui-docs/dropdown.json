@@ -5,7 +5,8 @@
   "description": "A button that opens a floating menu. The menu aligns to the button's start or end edge, chosen by measuring on open, and opens upward when there is no room below.",
   "arguments": {
     "align": { "type": "string", "required": false, "default": "auto", "description": "auto, start or end: where the menu lines up with the button" },
-    "isPrimary": { "type": "boolean", "required": false, "default": false, "description": "Renders the button as btn-primary instead of btn-default" }
+    "isPrimary": { "type": "boolean", "required": false, "default": false, "description": "Renders the button as btn-primary instead of btn-default" },
+    "title": { "type": "string", "required": false, "default": "", "description": "Title and accessible label of the button, for icon-only buttons" }
   },
   "events": {},
   "blocks": {
@@ -13,6 +14,6 @@
     "content": { "description": "The menu items; each direct child is styled as a menu row", "yields": [] }
   },
   "variants": [
-    { "name": "basic", "description": "A button with a menu of items", "arguments": ["align", "isPrimary"], "blocks": ["button", "content"] }
+    { "name": "basic", "description": "A button with a menu of items", "arguments": ["align", "isPrimary", "title"], "blocks": ["button", "content"] }
   ]
 }

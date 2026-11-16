@@ -113,7 +113,7 @@ module('Integration | Component | app-ui/data-table', function (hooks) {
 		assert.deepEqual(this.calls, [['all', 2, true]]);
 		this.set('selectedIds', ['9', '1', '2']);
 		assert.dom('[data-quick-list-select-all]').hasAttribute('data-state', 'all');
-		assert.dom('[data-test-data-table-row="1"] input').isChecked();
+		assert.dom('[data-test-data-table-row="1"] [data-test-data-table-select]').hasAttribute('aria-pressed', 'true');
 	});
 
 	test('a shared selection is kept across pages and reported', async function (assert) {
@@ -130,14 +130,14 @@ module('Integration | Component | app-ui/data-table', function (hooks) {
 			{ id: 3, name: 'Hector', models: 'haiku' },
 			{ id: 4, name: 'Paris', models: 'sonnet' },
 		]);
-		assert.dom('[data-test-data-table-select]:checked').doesNotExist();
+		assert.dom('[data-test-data-table-select][aria-pressed="true"]').doesNotExist();
 		await click('[data-quick-list-select-all]');
-		assert.dom('[data-test-data-table-row="3"] input').isChecked();
-		assert.dom('[data-test-data-table-row="4"] input').isChecked();
+		assert.dom('[data-test-data-table-row="3"] [data-test-data-table-select]').hasAttribute('aria-pressed', 'true');
+		assert.dom('[data-test-data-table-row="4"] [data-test-data-table-select]').hasAttribute('aria-pressed', 'true');
 
 		this.set('page', this.rows);
-		assert.dom('[data-test-data-table-row="1"] input').isChecked();
-		assert.dom('[data-test-data-table-row="2"] input').isNotChecked();
+		assert.dom('[data-test-data-table-row="1"] [data-test-data-table-select]').hasAttribute('aria-pressed', 'true');
+		assert.dom('[data-test-data-table-row="2"] [data-test-data-table-select]').hasAttribute('aria-pressed', 'false');
 		assert.dom('[data-quick-list-select-all]').hasAttribute('data-state', 'some');
 		assert.strictEqual(this.selection.count, 3);
 		assert.deepEqual(this.changes, [['1'], ['1', '3', '4']]);
@@ -166,4 +166,37 @@ module('Integration | Component | app-ui/data-table', function (hooks) {
 		await click('[data-test-data-table-row="1"] [data-test-data-table-more]');
 		assert.dom('[data-test-more-item="1"]').exists();
 	});
+
+	test('row check buttons use the QuickList icons and mark the selected row', async function (assert) {
+		await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @selectable={{true}} />`);
+		let btn = '[data-test-data-table-row="1"] [data-test-data-table-select]';
+		assert.dom(btn).hasTagName('button').hasAttribute('aria-pressed', 'false');
+		assert.dom(`${btn} i`).hasClass('fa-square-o');
+		assert.dom('[data-test-data-table-row="1"]').doesNotHaveClass('data-table-row--selected');
+		await click(btn);
+		assert.dom(btn).hasAttribute('aria-pressed', 'true');
+		assert.dom(`${btn} i`).hasClass('fa-check-square');
+		assert.dom('[data-test-data-table-row="1"]').hasClass('data-table-row--selected');
+		assert.dom('[data-test-data-table-row="2"]').doesNotHaveClass('data-table-row--selected');
+	});
+
+	test('the select-all button shows none, some and all', async function (assert) {
+		this.selection = new Selection();
+		await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}} @selectable={{true}} @selection={{this.selection}} />`);
+		assert.dom('[data-quick-list-select-all] i').hasClass('fa-square-o');
+		await click('[data-test-data-table-row="1"] [data-test-data-table-select]');
+		assert.dom('[data-quick-list-select-all] i').hasClass('fa-minus-square-o');
+		await click('[data-test-data-table-row="2"] [data-test-data-table-select]');
+		assert.dom('[data-quick-list-select-all] i').hasClass('fa-check-square');
+	});
+
+	test('row actions are icon buttons next to the more menu', async function (assert) {
+		await render(hbs`<AppUi::DataTable @columns={{this.columns}} @rows={{this.rows}}>
+			<:rowActions as |record|><button type="button" class="btn btn-box-tool" title="Edit" aria-label="Edit" data-test-edit={{record.id}}><i class="fa fa-pencil"></i></button></:rowActions>
+			<:moreActions as |record|><button type="button">Del {{record.id}}</button></:moreActions>
+		</AppUi::DataTable>`);
+		assert.dom('[data-test-data-table-row="1"] td.actions .btn-box-tool').exists();
+		assert.dom('[data-test-data-table-row="1"] td.actions [data-test-data-table-more] .app-dropdown-btn').hasAttribute('aria-label');
+	});
 });
+

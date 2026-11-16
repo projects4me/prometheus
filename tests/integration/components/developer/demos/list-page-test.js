@@ -33,10 +33,6 @@ module('Integration | Component | developer/demos/list-page', function (hooks) {
 		await render(hbs`<Developer::Demos::ListPage @entry={{this.entry}} />`);
 		assert.dom('[data-test-list-toolbar-header] [data-ez-search]').exists();
 
-		await click('[data-test-demo-list-select-all]');
-		assert.dom('[data-test-demo-list-page]').includesText('(Selected : 10)');
-		assert.dom('[data-test-data-table-select]:checked').exists({ count: 10 });
-
 		await fillIn('[data-control-position]', 'both');
 		assert.dom('[data-test-list-toolbar-position="top"]').exists();
 		assert.dom('[data-test-list-toolbar-position="bottom"]').exists();

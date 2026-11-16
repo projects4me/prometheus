@@ -46,10 +46,12 @@
           {{/unless}}
           {{#unless section.isCollapsed}}
             {{#each section.items as |record|}}
-              <tr data-test-data-table-row={{record.id}}>
+              <tr class="{{if (this.isSelected record) "data-table-row--selected"}}" data-test-data-table-row={{record.id}}>
                 {{#if @selectable}}
                   <td class="select-box">
-                    <input type="checkbox" aria-label={{t "global.list.select"}} data-select={{record.id}} checked={{if this.controlled (this.isSelected record)}} data-test-data-table-select {{on "input" (fn this.select record)}} />
+                    <button type="button" class="data-table-check" aria-pressed={{if (this.isSelected record) "true" "false"}} aria-label={{t "global.list.select"}} data-select={{record.id}} data-test-data-table-select {{on "click" (fn this.select record)}}>
+                      <i class="fa {{if (this.isSelected record) "fa-check-square" "fa-square-o"}}" aria-hidden="true"></i>
+                    </button>
                   </td>
                 {{/if}}
                 {{#each this.columns as |column|}}
@@ -70,26 +72,18 @@
                   <td class="actions" data-test-data-table-actions>
                     {{yield record to="rowActions"}}
                     {{#if (has-block "moreActions")}}
-                      <span class="data-table-more {{if (eq this.menuOpenId record.id) "open"}}">
-                        <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" aria-expanded={{if (eq this.menuOpenId record.id) "true" "false"}} title={{t "components.quickList.moreActions"}} data-test-data-table-more {{on "click" (fn this.toggleMenu record)}}><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button>
-                        {{#if (eq this.menuOpenId record.id)}}
-                          <div class="data-table-more-menu" data-test-data-table-more-menu>
-                            {{yield record to="moreActions"}}
-                          </div>
-                        {{/if}}
-                      </span>
+                      <AppUi::Dropdown @align="end" @title={{t "components.quickList.moreActions"}} class="data-table-more" data-test-data-table-more>
+                        <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
+                        <:content>{{yield record to="moreActions"}}</:content>
+                      </AppUi::Dropdown>
                     {{/if}}
                   </td>
                 {{else if (has-block "moreActions")}}
                   <td class="actions" data-test-data-table-actions>
-                    <span class="data-table-more {{if (eq this.menuOpenId record.id) "open"}}">
-                      <button type="button" class="btn btn-default btn-xs" aria-haspopup="true" title={{t "components.quickList.moreActions"}} data-test-data-table-more {{on "click" (fn this.toggleMenu record)}}><i class="fa fa-ellipsis-v" aria-hidden="true"></i></button>
-                      {{#if (eq this.menuOpenId record.id)}}
-                        <div class="data-table-more-menu" data-test-data-table-more-menu>
-                          {{yield record to="moreActions"}}
-                        </div>
-                      {{/if}}
-                    </span>
+                    <AppUi::Dropdown @align="end" @title={{t "components.quickList.moreActions"}} class="data-table-more" data-test-data-table-more>
+                      <:button><i class="fa fa-ellipsis-v" aria-hidden="true"></i></:button>
+                      <:content>{{yield record to="moreActions"}}</:content>
+                    </AppUi::Dropdown>
                   </td>
                 {{/if}}
               </tr>

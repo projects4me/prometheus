@@ -1,0 +1,67 @@
+<Developer::EntryHeader @entry={{@entry}} />
+<Developer::Entry @onReset={{this.reset}}>
+  <:demo as |log|>
+    <div data-test-demo-data-table>
+      {{#if this.showActions}}
+        <AppUi::DataTable
+          @columns={{this.columns}}
+          @rows={{this.rows}}
+          @sort={{this.sort}}
+          @order={{this.order}}
+          @selectable={{this.selectable}}
+          @selection={{this.selection}}
+          @groupKey={{this.groupKey}}
+          @groupLabel={{this.groupLabel}}
+          @onSort={{fn this.sortBy log}}
+          @onSelectionChange={{fn this.selectionChanged log}}
+        >
+          <:rowActions as |record|>
+            <button type="button" class="btn btn-box-tool" title="Edit" aria-label="Edit" data-test-demo-edit {{on "click" (fn this.act log "edit" record)}}><i class="fa fa-pencil"></i></button>
+          </:rowActions>
+          <:moreActions as |record|>
+              <button type="button" data-test-demo-more-item {{on "click" (fn this.act log "delete" record)}}><span>Delete</span></button>
+          </:moreActions>
+          <:empty><AppUi::EmptyState @message="No agents" /></:empty>
+        </AppUi::DataTable>
+      {{else}}
+        <AppUi::DataTable
+          @columns={{this.columns}}
+          @rows={{this.rows}}
+          @sort={{this.sort}}
+          @order={{this.order}}
+          @selectable={{this.selectable}}
+          @selection={{this.selection}}
+          @groupKey={{this.groupKey}}
+          @groupLabel={{this.groupLabel}}
+          @onSort={{fn this.sortBy log}}
+          @onSelectionChange={{fn this.selectionChanged log}}
+        >
+          <:empty><AppUi::EmptyState @message="No agents" /></:empty>
+        </AppUi::DataTable>
+      {{/if}}
+      <div class="btn-group" data-test-demo-pages>
+        {{#each this.pages as |page|}}
+          <button type="button" class="btn btn-default btn-sm {{if (eq page this.page) 'active'}}" data-page={{page}} {{on "click" (fn this.setPage page)}}>{{page}}</button>
+        {{/each}}
+        <span class="list-view-count">(Selected : {{this.selectedCount}})</span>
+      </div>
+    </div>
+  </:demo>
+  <:controls>
+    <div class="form-group">
+      <label><input type="checkbox" checked={{this.selectable}} {{on "change" (fn this.flip "selectable")}} /> Selectable</label>
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" checked={{this.grouped}} {{on "change" (fn this.flip "grouped")}} /> Grouped by status</label>
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" checked={{this.showActions}} {{on "change" (fn this.flip "showActions")}} /> Row actions and more menu</label>
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" checked={{this.empty}} {{on "change" (fn this.flip "empty")}} /> Empty</label>
+    </div>
+  </:controls>
+  <:docs>
+    <Developer::Docs @doc={{@entry.doc}} />
+  </:docs>
+</Developer::Entry>
