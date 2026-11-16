@@ -179,14 +179,6 @@
           padding: 1rem;
         }
 
-        .member-avatar-wrap img {
-          width: 7rem;
-          height: 7rem;
-          max-width: none;
-          object-fit: cover;
-          border-radius: 50%;
-        }
-
         .no-content {
           padding: 1.5rem;
         }
@@ -219,10 +211,6 @@
       }
 
       &__avatar {
-        width: 3.6rem;
-        height: 3.6rem;
-        border-radius: 50%;
-        object-fit: cover;
         flex-shrink: 0;
       }
 
