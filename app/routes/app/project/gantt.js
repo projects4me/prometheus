@@ -54,6 +54,15 @@ export default class GanttRoute extends App {
 	@service('saved-search') savedSearch;
 
 	/**
+	 * Batches the milestone lane queries into one bulk request.
+	 *
+	 * @property bulk
+	 * @type Ember.Service
+	 * @for GanttRoute
+	 */
+	@service bulk;
+
+	/**
 	 * This is the query that is used to filter the issues.
 	 *
 	 * @property query
@@ -103,25 +112,37 @@ export default class GanttRoute extends App {
 				});
 			});
 
-		// Fetch issues for each milestone
-		await hash(
-			milestones.map(async (milestone) => {
-				let query = `((Issue.milestoneId : ${milestone.id}) AND (Issue.projectId : ${projectId}))`;
-				if (searchQuery) {
-					query = `(${query}) AND (${searchQuery})`;
+		// Fetch the issues of every milestone lane in one bulk request
+		if (milestones?.length > 0) {
+			let lanes = await _self.bulk.query(
+				milestones.map((milestone) => {
+					let query = `((Issue.milestoneId : ${milestone.id}) AND (Issue.projectId : ${projectId}))`;
+					if (searchQuery) {
+						query = `(${query}) AND (${searchQuery})`;
+					}
+					return {
+						id: `milestone-${milestone.id}`,
+						modelName: 'issue',
+						query: {
+							query: query,
+							rels: 'assignedTo,modifiedBy,spent,estimated,parentissue,issuetype,issuestatus,reportedBy,ownedBy',
+							limit: -1
+						}
+					};
+				})
+			);
+
+			milestones.forEach((milestone) => {
+				let lane = lanes[`milestone-${milestone.id}`];
+				if (lane.error) {
+					// a failed lane stays empty
+					_self.errorManager.handleError(lane.error);
+					replaceRecords(milestone.issues, undefined);
+				} else {
+					replaceRecords(milestone.issues, lane.records);
 				}
-				let issues = await _self.store
-					.query('issue', {
-						query: query,
-						rels: 'assignedTo,modifiedBy,spent,estimated,parentissue,issuetype,issuestatus,reportedBy,ownedBy',
-						limit: -1
-					})
-					.catch((error) => {
-						_self.errorManager.handleError(error);
-					});
-				replaceRecords(milestone.issues, issues);
-			})
-		);
+			});
+		}
 
 		// Convert milestones to array
 		let milestonesArray = toArray(milestones);
