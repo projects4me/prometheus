@@ -11,7 +11,7 @@ Used in the Agents and Workflows lists. AppUi::Table (the older table with loadi
 ## Look
 
 - Selection: each row has the QuickList check button (fa-square-o, fa-check-square in the primary colour, aria-pressed) and a selected row gets the QuickList selected background (class data-table-row--selected). The header select-all is QuickList::SelectAll and shows none, some or all of the rows shown.
-- Row actions: icon-only btn-box-tool look as in the Issue and Project lists (grey, 12px, square, primary colour on hover), right-aligned with the same gap. The more-actions button is fa-ellipsis-v in the same style.
+- Row actions: icon-only btn-box-tool look as in the Issue and Project lists (grey, icon 1.2rem set on the icon itself so global i rules cannot override it, square, primary colour on hover), right-aligned with the same gap. The more-actions button is fa-ellipsis-v in the same style.
 
 ## Arguments
 
