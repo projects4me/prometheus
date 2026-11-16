@@ -56,7 +56,7 @@ export const ENTRIES = [
         status: 'experimental',
         summary: 'AppUi::DataTable, the slim list table from column descriptors, with sorting, selection and row actions reported out.',
         usedIn: [{ label: 'Agents list', route: 'app.agent' }, { label: 'Workflows list', route: 'app.workflow' }],
-        demo: 'developer/demos/list-page',
+        demo: 'developer/demos/data-table',
         doc: 'data-table.md'
     },
     {

@@ -8,7 +8,7 @@ import { tracked } from '@glimmer/tracking';
 import { groupItems } from 'prometheus/utils/quick-list/group-items';
 
 /**
- * A slim list table: one header per column descriptor, one row per record, an optional checkbox per row and
+ * A slim list table: one header per column descriptor, one row per record, an optional check button per row and
  * a row actions cell. It only displays what it is given; sorting and selection are reported out.
  *
  * A column is `{ key, label, sortable, sortKey, cell, class }`. A cell renders the `cell` component when the
@@ -17,9 +17,9 @@ import { groupItems } from 'prometheus/utils/quick-list/group-items';
  * Like QuickList it can show a select-all box (`@selectedIds` and `@onSelectAll`; the owner keeps the ids, so the
  * selection survives paging), group rows (`@groupKey`, `@groupLabel`) and show a second line under a cell
  * (`column.subKey`). Sort icons are always visible and the applied one is marked with the primary colour.
- * Extra row actions go into the `<:moreActions>` block, shown in a dropdown.
+ * Extra row actions go into the `<:moreActions>` block, shown in an AppUi::Dropdown behind a `fa-ellipsis-v` button.
  *
- * The row checkboxes carry `data-select` with the record id, so a page can find them by record.
+ * The row check buttons (the QuickList icon button, `aria-pressed`) carry `data-select` with the record id, so a page can find them by record.
  *
  * With `@selection` (a `Selection` from `utils/state/selection`) the row boxes and the select-all box (the rows
  * shown) read and change that selection, which the page shares with its toolbar and keeps across pages;
@@ -40,7 +40,7 @@ import { groupItems } from 'prometheus/utils/quick-list/group-items';
  */
 export default class AppUiDataTableComponent extends Component {
 	@tracked collapsed = [];
-	@tracked menuOpenId = null;
+	@tracked localIds = [];
 
 	/**
 	 * The shared selection model, when the caller gives one.
@@ -95,7 +95,8 @@ export default class AppUiDataTableComponent extends Component {
 		if (this.selection) {
 			return this.selection.has(record.id);
 		}
-		return this.controlled && this.args.selectedIds.map(String).includes(String(record.id));
+		let ids = this.controlled ? this.args.selectedIds : this.localIds;
+		return ids.map(String).includes(String(record.id));
 	};
 
 	/**
@@ -154,25 +155,24 @@ export default class AppUiDataTableComponent extends Component {
 		this.collapsed = this.collapsed.includes(key) ? this.collapsed.filter((k) => k !== key) : [...this.collapsed, key];
 	}
 
-	@action
-	toggleMenu(record) {
-		this.menuOpenId = this.menuOpenId === record.id ? null : record.id;
-	}
-
 	/**
 	 * Reports that a row was checked or unchecked; with `@selection`, changes it and reports the ids.
 	 *
 	 * @method select
 	 * @param {Object} record the record of the row
-	 * @param {Event} event the input event of the checkbox
-	 */
+	 * 	 */
 	@action
-	select(record, event) {
+	select(record) {
+		let checked = !this.isSelected(record);
 		if (this.selection) {
-			this.selection.set([record.id], event.target.checked);
+			this.selection.set([record.id], checked);
 			this.args.onSelectionChange?.(this.selection.ids);
 			return;
 		}
-		this.args.onSelect?.(String(record.id), event.target.checked);
+		if (!this.controlled) {
+			let id = String(record.id);
+			this.localIds = checked ? [...this.localIds, id] : this.localIds.filter((i) => i !== id);
+		}
+		this.args.onSelect?.(String(record.id), checked);
 	}
 }

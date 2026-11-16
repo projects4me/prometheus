@@ -2,15 +2,15 @@
   "name": "AppUi::DataTable",
   "component": "app-ui/data-table",
   "doc": "data-table.md",
-  "description": "A slim list table: a header per column descriptor, a row per record, an optional checkbox per row and a row actions cell. Sorting and selection are reported out.",
+  "description": "A slim list table: a header per column descriptor, a row per record, an optional check button per row and a row actions cell. Sorting and selection are reported out.",
   "arguments": {
     "columns": { "type": "array", "required": true, "description": "The column descriptors; see data" },
     "rows": { "type": "array", "required": false, "default": [], "description": "The records, one row each; each needs an id" },
     "sort": { "type": "string", "required": false, "description": "The active sort key; its column shows the order" },
     "order": { "type": "string", "required": false, "description": "asc or desc" },
-    "selectable": { "type": "boolean", "required": false, "default": false, "description": "Adds a checkbox per row" },
-    "selection": { "type": "object", "required": false, "description": "A Selection (utils/state/selection) shared with the toolbar; the row boxes and the select-all box (rows shown) toggle through it and it is kept across pages. Replaces selectedIds, onSelect and onSelectAll" },
-    "selectedIds": { "type": "array", "required": false, "description": "The ids of the selected rows, kept by the owner so the selection survives paging; makes the row checkboxes controlled (when selection is not given)" },
+    "selectable": { "type": "boolean", "required": false, "default": false, "description": "Adds a check button per row and a select-all button in the header" },
+    "selection": { "type": "object", "required": false, "description": "A Selection (utils/state/selection) shared with the toolbar; the row check buttons and the select-all button (rows shown) toggle through it and it is kept across pages. Replaces selectedIds, onSelect and onSelectAll" },
+    "selectedIds": { "type": "array", "required": false, "description": "The ids of the selected rows, kept by the owner so the selection survives paging; makes the row check buttons controlled (when selection is not given)" },
     "groupKey": { "type": "function", "required": false, "description": "(record) => the group key of a record; groups the rows under collapsible headings" },
     "groupLabel": { "type": "function", "required": false, "description": "(key) => the translated group label" }
   },
@@ -31,7 +31,7 @@
         { "name": "id", "type": "string", "description": "The id of the row's record" },
         { "name": "checked", "type": "boolean", "description": "Whether the row is now selected" }
       ],
-      "description": "A row checkbox changed (with selectable, without selection)"
+      "description": "A row check button was toggled (with selectable, without selection)"
     },
     "onSelectionChange": {
       "payload": [{ "name": "ids", "type": "array", "description": "The selected ids, as strings, across pages" }],
