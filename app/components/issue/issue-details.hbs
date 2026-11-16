@@ -126,7 +126,7 @@
             <div class="row">
               <div class="col-xs-3 col-md-2" data-field="issue.assignee">
                 <div class="project-manager">
-                  <Agent::UserAvatar @class="img-circle" @userId={{this.issue.assignedTo.id}} @type={{this.issue.assignedTo.type}} @name={{this.issue.assignedTo.name}} />
+                  <AppUi::Avatar @user={{hash id=this.issue.assignedTo.id type=this.issue.assignedTo.type name=this.issue.assignedTo.name profilePicture=this.issue.assignedTo.profilePicture}} @size="l" />
                   <LinkTo @route="app.user.page" @model={{this.issue.assignedTo.id}} class="users-list-name">{{this.issue.assignedTo.name}}</LinkTo>
                   <Agent::UserTag @userId={{this.issue.assignedTo.id}} @type={{this.issue.assignedTo.type}} />
                   <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
@@ -272,25 +272,25 @@
           <div class="box-body no-padding">
             <ul class="users-list clearfix">
               <li>
-                <Agent::UserAvatar @userId={{this.issue.assignedTo.id}} @type={{this.issue.assignedTo.type}} @name={{this.issue.assignedTo.name}} />
+                <AppUi::Avatar @user={{hash id=this.issue.assignedTo.id type=this.issue.assignedTo.type name=this.issue.assignedTo.name profilePicture=this.issue.assignedTo.profilePicture}} @size="ml" />
                 <Issue::AssigneeSelect @issue={{this.issue}} @members={{this.projectController.model.members}} @onUpdated={{this.postUpdateAssignee}} />
                 <Agent::UserTag @userId={{this.issue.assignedTo.id}} @type={{this.issue.assignedTo.type}} />
                 <span class="users-list-date">{{t "views.app.issue.detail.assignedTo"}}</span>
               </li>
               <li>
-                <Agent::UserAvatar @userId={{this.issue.ownedBy.id}} @type={{this.issue.ownedBy.type}} @name={{this.issue.ownedBy.name}} />
+                <AppUi::Avatar @user={{hash id=this.issue.ownedBy.id type=this.issue.ownedBy.type name=this.issue.ownedBy.name profilePicture=this.issue.ownedBy.profilePicture}} @size="ml" />
                 <LinkTo @route="app.user.page" @model={{this.issue.ownedBy.id}} class="users-list-name">{{this.issue.ownedBy.name}}</LinkTo>
                 <Agent::UserTag @userId={{this.issue.ownedBy.id}} @type={{this.issue.ownedBy.type}} />
                 <span class="users-list-date">{{t "views.app.issue.detail.ownedBy"}}</span>
               </li>
               <li>
-                <Agent::UserAvatar @userId={{this.issue.modifiedBy.id}} @type={{this.issue.modifiedBy.type}} @name={{this.issue.modifiedBy.name}} />
+                <AppUi::Avatar @user={{hash id=this.issue.modifiedBy.id type=this.issue.modifiedBy.type name=this.issue.modifiedBy.name profilePicture=this.issue.modifiedBy.profilePicture}} @size="ml" />
                 <LinkTo @route="app.user.page" @model={{this.issue.modifiedBy.id}} class="users-list-name">{{this.issue.modifiedBy.name}}</LinkTo>
                 <Agent::UserTag @userId={{this.issue.modifiedBy.id}} @type={{this.issue.modifiedBy.type}} />
                 <span class="users-list-date">{{t "views.app.issue.detail.modifiedBy"}}</span>
               </li>
               <li>
-                <Agent::UserAvatar @userId={{this.issue.reportedBy.id}} @type={{this.issue.reportedBy.type}} @name={{this.issue.reportedBy.name}} />
+                <AppUi::Avatar @user={{hash id=this.issue.reportedBy.id type=this.issue.reportedBy.type name=this.issue.reportedBy.name profilePicture=this.issue.reportedBy.profilePicture}} @size="ml" />
                 <LinkTo @route="app.user.page" @model={{this.issue.reportedBy.id}} class="users-list-name">{{this.issue.reportedBy.name}}</LinkTo>
                 <Agent::UserTag @userId={{this.issue.reportedBy.id}} @type={{this.issue.reportedBy.type}} />
                 <span class="users-list-date">{{t "views.app.issue.detail.reportedBy"}}</span>
@@ -372,8 +372,8 @@
               {{#if (gt this.issue.estimated.length 0)}}
                 {{#each this.issue.estimated as |timelog|}}
                   <li class="item" data-issue-estimate-id={{timelog.id}}>
-                    <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
-                      <Agent::UserAvatar @class="img-circle" @userId={{timelog.createdUser}} @name={{timelog.createdUserName}} />
+                    <div class="time-log-user" data-toggle="tooltip" title="{{timelog.createdUserName}}">
+                      <AppUi::Avatar @user={{hash id=timelog.createdUser name=timelog.createdUserName}} @size="m" />
                     </div>
                     <div class="log-info">
                       <LinkTo @route="app.user.page" @model={{timelog.createdUser}} class="user-title">{{timelog.createdUserName}}</LinkTo>
@@ -486,8 +486,8 @@
               {{#if (gt this.issue.spent.length 0)}}
                 {{#each this.issue.spent as |timelog|}}
                   <li class="item" data-issue-spent-id={{timelog.id}}>
-                    <div class="user-img" data-toggle="tooltip" title="{{timelog.createdUserName}}">
-                      <Agent::UserAvatar @class="img-circle" @userId={{timelog.createdUser}} @name={{timelog.createdUserName}} />
+                    <div class="time-log-user" data-toggle="tooltip" title="{{timelog.createdUserName}}">
+                      <AppUi::Avatar @user={{hash id=timelog.createdUser name=timelog.createdUserName}} @size="m" />
                     </div>
                     <div class="log-info">
                       <LinkTo @route="app.user.page" @model={{timelog.createdUser}} class="user-title">{{timelog.createdUserName}}</LinkTo>
@@ -707,7 +707,7 @@
       {{#if this.availableProjectMembers.length}}
         {{#each this.availableProjectMembers as |member|}}
             <div class="member-item flex-column flex-ai-c" data-member-id={{member.id}}>
-              <img class="img-circle img-sm" src="{{this.apiHost}}/userimage/get/{{member.id}}" alt="{{member.name}}">
+              <AppUi::Avatar @user={{member}} @size="s" />
               <button type="button" class="btn btn-xs btn-success" {{on "click" (fn this.addWatcher member)}} data-toggle="tooltip" title="{{t 'views.app.issue.watcher.addWatcher'}}">
                 <i class="fa fa-plus"></i>
               </button>
