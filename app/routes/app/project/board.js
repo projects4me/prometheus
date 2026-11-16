@@ -3,7 +3,7 @@
  */
 
 import App from "prometheus/routes/app";
-import { hash, hashSettled } from 'rsvp';
+import { hashSettled } from 'rsvp';
 import { service } from '@ember/service';
 import { replaceRecords } from 'prometheus/utils/array/record-list';
 
@@ -51,6 +51,14 @@ export default class BoardRoute extends App {
     @service('saved-search') savedSearch;
 
     /**
+     * Batches the board's queries into bulk requests.
+     *
+     * @property bulk
+     * @type Ember.Service
+     */
+    @service bulk;
+
+    /**
      * This function is called by ember when we enter this route and returns
      * resolved promises to the controller. In this function we returns milestone
      * array which contains all milestones and backlog related to the current project.
@@ -62,72 +70,77 @@ export default class BoardRoute extends App {
         let _self = this;
         let projectId = this.trackedProject.getProjectId();
         let searchQuery = params?.query || '';
-        
-        //Fetch milestones of current project
-        let _milestoneOptions = {
-            query: `((Milestone.projectId : ${projectId}) AND ((Milestone.status : in_progress) OR (Milestone.status : planned)))`,
-            sort: 'Milestone.dateModified',
-            order: 'DESC',
-            limit: -1
-        };
-        let milestones = await _self.store.query('milestone', _milestoneOptions).catch((error) => {
-            _self.errorManager.handleError(error, {
-                moduleName: "milestone"
-            });
-        });
+        let withSearch = (query) => searchQuery ? `(${query}) AND (${searchQuery})` : query;
+        let issueRels = 'assignedTo,spent,estimated,parentissue,issuetype,comments,files';
 
-        //Fetch backlog issues
-        let _issueOptions = {
-            query: `(((Issue.milestoneId NULL) OR (Issue.milestoneId EMPTY)) AND (Issue.projectId : ${projectId}))`,
-            rels: 'assignedTo,spent,estimated,parentissue,issuetype,comments,files',
-            limit: -1
-        }
-
-        if(searchQuery) {
-            _issueOptions.query = `(${_issueOptions.query}) AND (${searchQuery})`;
-        }
-        let backlogIssues = await _self.store.query('issue', _issueOptions).catch((error) => _self.errorManager.handleError(error));
-
-        //Fetch issue statuses of project
-        let _issueStatusOptions = {
-            query: `(Issuestatus.projectId : ${projectId})`,
-            limit: -1
-        };
-
-        let issueStatuses = await _self.store.query('issuestatus', _issueStatusOptions).catch((error) => _self.errorManager.handleError(error));
-
-        await hash(milestones.map(async (milestone) => {
-            let query = `((Issue.milestoneId : ${milestone.id} ) AND (Issue.projectId : ${projectId}))`;
-            if(searchQuery) {
-                query = `(${query}) AND (${searchQuery})`;
+        // Round 1: milestones, backlog issues and issue statuses in one bulk request
+        let first = await _self.bulk.query([
+            {
+                id: 'milestones',
+                modelName: 'milestone',
+                query: {
+                    query: `((Milestone.projectId : ${projectId}) AND ((Milestone.status : in_progress) OR (Milestone.status : planned)))`,
+                    sort: 'Milestone.dateModified',
+                    order: 'DESC',
+                    limit: -1
+                }
+            },
+            {
+                id: 'backlog',
+                modelName: 'issue',
+                query: {
+                    query: withSearch(`(((Issue.milestoneId NULL) OR (Issue.milestoneId EMPTY)) AND (Issue.projectId : ${projectId}))`),
+                    rels: issueRels,
+                    limit: -1
+                }
+            },
+            {
+                id: 'statuses',
+                modelName: 'issuestatus',
+                query: {
+                    query: `(Issuestatus.projectId : ${projectId})`,
+                    limit: -1
+                }
             }
-            let issues = await _self.store.query('issue', {
-                rels: 'assignedTo,spent,estimated,parentissue,issuetype,comments,files',
-                query: query,
-                limit: -1
-            }).catch((error) => {
-                _self.errorManager.handleError(error);
+        ]);
+
+        let recordsOf = (result, options = {}) => {
+            if (result.error) {
+                _self.errorManager.handleError(result.error, options);
+                return undefined;
+            }
+            return result.records;
+        };
+
+        let milestones = recordsOf(first.milestones, { moduleName: 'milestone' }) || [];
+        let backlogIssues = recordsOf(first.backlog);
+        let issueStatuses = recordsOf(first.statuses);
+
+        // Round 2: the issues of every milestone lane in one bulk request
+        if (milestones.length > 0) {
+            let lanes = await _self.bulk.query(milestones.map((milestone) => ({
+                id: `milestone-${milestone.id}`,
+                modelName: 'issue',
+                query: {
+                    rels: issueRels,
+                    query: withSearch(`((Issue.milestoneId : ${milestone.id} ) AND (Issue.projectId : ${projectId}))`),
+                    limit: -1
+                }
+            })));
+
+            milestones.forEach((milestone) => {
+                // a failed lane shows as empty
+                replaceRecords(milestone.issues, recordsOf(lanes[`milestone-${milestone.id}`]));
             });
-            replaceRecords(milestone.issues, issues);
-        }));
+        }
 
         //Create a milestone of type backlog
         let backlog = _self.getBacklogMilestone(backlogIssues);
 
-        let milestonesArray = [];
-
-        milestones.forEach((milestone) => {
-            milestonesArray.push(milestone);
-        });
-        milestonesArray.push(backlog);
-
-
-        let model = hash({
-            milestones: milestonesArray,
+        return {
+            milestones: [...milestones, backlog],
             issueStatuses: issueStatuses || []
-        });
-
-        return model;
+        };
     }
 
     /**
