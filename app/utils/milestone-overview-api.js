@@ -37,13 +37,13 @@ function isFlatOverviewShape(value) {
 }
 
 /**
- * Builds the full URL for one milestone overview request.
+ * Builds the relative URL for one milestone overview request.
  *
  * @param {string} milestoneId
  * @return {string}
  */
 function buildMilestoneOverviewUrl(milestoneId) {
-	let apiRoot = `${ENV.api.host}/api/v${ENV.api.version}/milestoneoverview`;
+	let apiRoot = `/api/v${ENV.api.version}/milestoneoverview`;
 	return `${apiRoot}/${milestoneId}?${QUERY_INCLUDE_HOURS}`;
 }
 
@@ -99,54 +99,30 @@ export function aggregateTimeSegment(timeSegment) {
 }
 
 /**
- * Loads overview JSON for one milestone (Bearer auth).
+ * Loads overviews for many milestones in one bulk request (through the adapter, so token refresh applies).
+ * Entries without an `id` are skipped; a failed overview comes back as `null`.
  *
- * @param {string} milestoneId
- * @param {string} accessToken Bearer token (no `Bearer ` prefix)
- * @return {Promise<Object|null>} Parsed JSON, or `null` if missing args, HTTP error, or network failure
- */
-export async function fetchMilestoneOverview(milestoneId, accessToken) {
-	if (!milestoneId || !accessToken) {
-		return null;
-	}
-	let requestUrl = buildMilestoneOverviewUrl(milestoneId);
-	let authHeaders = { Authorization: `Bearer ${accessToken}` };
-
-	try {
-		let httpResponse = await fetch(requestUrl, { headers: authHeaders });
-		if (!httpResponse.ok) {
-			Logger.warn(
-				`milestone-overview-api: GET overview failed for milestone ${milestoneId} (HTTP ${httpResponse.status})`
-			);
-			return null;
-		}
-		return await httpResponse.json();
-	} catch (error) {
-		Logger.error('milestone-overview-api: GET overview threw', error);
-		return null;
-	}
-}
-
-/**
- * Loads overviews for many milestones concurrently (same semantics as {@link fetchMilestoneOverview}).
- * Entries without an `id` are skipped.
- *
+ * @param {Object} bulk The bulk service
  * @param {Array<{ id: string }>} milestones
- * @param {string} accessToken
  * @return {Promise<Array<{ id: string, overview: Object|null }>>}
  */
-export async function fetchMilestoneOverviewsBulk(milestones, accessToken) {
+export async function fetchMilestoneOverviewsBulk(bulk, milestones) {
 	let milestonesWithIds = (milestones || []).filter((milestone) => milestone?.id);
 	if (milestonesWithIds.length === 0) {
 		return [];
 	}
-	return Promise.all(
-		milestonesWithIds.map(async (milestone) => {
-			let overviewJson = await fetchMilestoneOverview(
-				milestone.id,
-				accessToken
-			);
-			return { id: milestone.id, overview: overviewJson };
-		})
+	let results = await bulk.query(
+		milestonesWithIds.map((milestone) => ({
+			id: String(milestone.id),
+			url: buildMilestoneOverviewUrl(milestone.id),
+		}))
 	);
+	return milestonesWithIds.map((milestone) => {
+		let result = results[String(milestone.id)];
+		if (!result || result.error) {
+			Logger.warn(`milestone-overview-api: overview failed for milestone ${milestone.id}`);
+			return { id: milestone.id, overview: null };
+		}
+		return { id: milestone.id, overview: result.body ?? null };
+	});
 }

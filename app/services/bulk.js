@@ -10,7 +10,9 @@ import ENV from 'prometheus/config/environment';
  * gaia/docs/architecture/bulk/decisions.md) and returns ordinary Ember Data records.
  *
  * Each item is `{ id, modelName, query }`, where `query` is the options object a route would pass to
- * `store.query(modelName, query)`. `query(items)` resolves to a map `id → { records, meta }` or
+ * `store.query(modelName, query)`. Instead, an item may be `{ id, url }`: a relative `/api/v1/...` GET that
+ * returns `{ status, body }` with the parsed JSON, never pushed to the store (its fallback uses the adapter's
+ * ajax). `query(items)` resolves to a map `id → { records, meta }` or
  * `id → { error }`; one failing item never affects the others. When the bulk call itself fails
  * (no bulk.create permission, network error, a non-200 answer) the items run as separate
  * `store.query` calls and come back in the same shape. See docs/architecture/bulk/.
@@ -108,7 +110,9 @@ export default class BulkService extends Service {
      * @private
      */
     _requestFor(item) {
-        return { id: item.id, method: 'GET', url: this.urlFor(item.modelName, item.query), body: null };
+        let url = item.url ?? this.urlFor(item.modelName, item.query);
+
+        return { id: item.id, method: 'GET', url, body: null };
     }
 
     /**
@@ -175,6 +179,10 @@ export default class BulkService extends Service {
             return { error: adapter.handleResponse(response.status, {}, body, { method: 'GET', url }) };
         }
 
+        if (item.url) {
+            return { status: response.status, body: response.body };
+        }
+
         try {
             let modelClass = this.store.modelFor(item.modelName);
             let serializer = this.store.serializerFor(item.modelName);
@@ -196,18 +204,42 @@ export default class BulkService extends Service {
      * @private
      */
     async _runSeparately(items) {
-        let settled = await Promise.allSettled(items.map((item) => this.store.query(item.modelName, item.query)));
+        let settled = await Promise.allSettled(items.map((item) => this._runOne(item)));
         let results = {};
 
         items.forEach((item, index) => {
             let outcome = settled[index];
 
-            results[item.id] = outcome.status === 'fulfilled'
-                ? { records: [...outcome.value], meta: outcome.value.meta }
-                : { error: outcome.reason };
+            if (outcome.status !== 'fulfilled') {
+                results[item.id] = { error: outcome.reason };
+            } else if (item.url) {
+                results[item.id] = outcome.value;
+            } else {
+                results[item.id] = { records: [...outcome.value], meta: outcome.value.meta };
+            }
         });
 
         return results;
+    }
+
+    /**
+     * Runs one item on its own: a plain JSON item through the adapter's ajax (token refresh, 401 retry),
+     * a query item through store.query.
+     *
+     * @method _runOne
+     * @param {Object} item The query or plain JSON item
+     * @return {Promise<Object>} The query result, or { status, body } for a plain JSON item
+     * @private
+     */
+    async _runOne(item) {
+        if (!item.url) {
+            return this.store.query(item.modelName, item.query);
+        }
+
+        let adapter = this.store.adapterFor('application');
+        let body = await adapter.ajax(`${adapter.host || ''}${item.url}`, 'GET');
+
+        return { status: 200, body };
     }
 
     /**

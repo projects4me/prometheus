@@ -173,6 +173,41 @@ module('Unit | Service | bulk', function (hooks) {
         assert.strictEqual(this.warnings.length, 0, 'no fallback');
     });
 
+    test('plain JSON items return status and body and are not pushed to the store', async function (assert) {
+        let milestone = this.server.create('milestone');
+        let url = `/api/v${ENV.api.version}/milestoneoverview/${milestone.id}?includeHours=true`;
+
+        let results = await this.service.query([{ id: 'overview', url }]);
+
+        assert.strictEqual(this.bulkCalls.length, 1, 'one bulk request');
+        assert.strictEqual(this.bulkCalls[0][0].url, url, 'the URL is sent as given');
+        assert.strictEqual(this.gets.length, 0, 'no separate GET');
+        assert.strictEqual(results.overview.status, 200);
+        assert.strictEqual(results.overview.body.openIssues, 0, 'parsed JSON body');
+        assert.strictEqual(results.overview.records, undefined, 'no records');
+        assert.strictEqual(this.store.peekAll('milestone').length, 0, 'nothing pushed to the store');
+    });
+
+    test('a failing plain JSON item has its own error', async function (assert) {
+        let url = `/api/v${ENV.api.version}/milestoneoverview/9999`;
+
+        let results = await this.service.query([{ id: 'overview', url }]);
+
+        assert.ok(results.overview.error, 'the item has its error');
+    });
+
+    test('plain JSON items fall back to the adapter ajax when the bulk call fails', async function (assert) {
+        let milestone = this.server.create('milestone');
+        this.server.post('/bulk', () => new Response(403, {}, { error: 'bulk.create denied' }));
+        let url = `/api/v${ENV.api.version}/milestoneoverview/${milestone.id}?includeHours=true`;
+
+        let results = await this.service.query([{ id: 'overview', url }]);
+
+        assert.strictEqual(this.gets.length, 1, 'one separate GET');
+        assert.strictEqual(results.overview.body.openIssues, 0);
+        assert.strictEqual(this.warnings.length, 1, 'one warning');
+    });
+
     test('it refuses missing or repeated ids', async function (assert) {
         await assert.rejects(this.service.query([
             { id: 'a', modelName: 'milestone', query: {} },

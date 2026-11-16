@@ -50,4 +50,12 @@ export function register(server, ctx) {
 		milestone.update(requestData.attributes);
 		return milestone;
 	});
+
+	server.get('/milestoneoverview/:id', (schema, request) => {
+		let milestone = schema.milestones.find(request.params.id);
+		if (!milestone) {
+			return new Response(404, {}, { error: 'Not Found' });
+		}
+		return { openIssues: 0, closedIssues: 0, estimatedTime: {}, spentTime: {} };
+	});
 }
