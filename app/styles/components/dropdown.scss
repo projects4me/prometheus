@@ -1,3 +1,15 @@
+// Alignment rules have no specificity (:where) so a scoped override such as ezSearch's `left: 0; right: auto`
+// always wins over them.
+:where(.app-dropdown-content.is-start) {
+  left: 0;
+  right: auto;
+}
+
+:where(.app-dropdown-content.is-end) {
+  right: 0;
+  left: auto;
+}
+
 .app-dropdown {
     position: relative;
     display: inline-block;
@@ -6,7 +18,6 @@
       cursor: pointer;
       height: 2.6rem;
       @include flexbox($display: inline-flex, $alignItems: center, $justifyContent: center);
-      border: none;
       padding: 0.4rem 0.6rem;
       gap: 0.5rem;
 
@@ -16,22 +27,38 @@
       }
     }
   
+    // The menu looks like a Bootstrap dropdown-menu.
     .app-dropdown-content {
       display: none;
       position: absolute;
       background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 0;
       min-width: 160px;
       box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-      z-index: 99999;
-      right: 0;
+      z-index: 1000;
       top: 100%;
   
       &.show {
         display: block;
       }
+
+      &.is-up {
+        top: auto;
+        bottom: 100%;
+      }
+
+      hr {
+        margin: 2px 0;
+        padding: 0;
+        height: 1px;
+        width: 100%;
+        border: 0;
+        background-color: #e5e5e5;
+      }
   
-      > * {
-        color: inherit;
+      > :not(hr) {
+        color: #444;
         padding: 0.4rem 0.6rem;
         text-decoration: none;
         @include flexbox($display: flex, $alignItems: center, $justifyContent: space-between);
@@ -43,9 +70,27 @@
   
         &:hover,
         &:focus {
-          background-color: $primaryColor;
-          color: #fff;
+          background-color: #f4f4f4;
+          color: #444;
           outline: none;
+        }
+
+        // A selected item: crimson text and a check, no fill.
+        &.active,
+        &[aria-selected="true"] {
+          color: $primaryColor;
+
+          &:hover,
+          &:focus {
+            color: $primaryColor;
+          }
+        }
+
+        &.active:not(:has(.fa-check))::after,
+        &[aria-selected="true"]:not(:has(.fa-check))::after {
+          content: "\f00c";
+          font-family: FontAwesome;
+          margin-left: 0.5rem;
         }
       }
     }

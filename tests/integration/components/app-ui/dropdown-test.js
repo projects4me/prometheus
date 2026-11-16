@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, findAll } from '@ember/test-helpers';
+import { render, findAll, click, triggerKeyEvent } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 
 module('Integration | Component | app-ui/dropdown', function (hooks) {
@@ -152,5 +152,74 @@ module('Integration | Component | app-ui/dropdown', function (hooks) {
 		assert
 			.dom('.app-dropdown-content')
 			.exists('Content container exists even when empty');
+	});
+
+	module('alignment and Escape', function (hooks) {
+		let originalRect;
+		let originalWidth;
+		let originalHeight;
+
+		// Stubs the sizes: the trigger sits at `trigger`, the menu measures `menu`, in a 1000x800 viewport.
+		function stub(trigger, menu) {
+			Element.prototype.getBoundingClientRect = function () {
+				let box = this.classList.contains('app-dropdown-content') ? menu : this.classList.contains('app-dropdown-btn') ? trigger : { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
+				return { ...box, right: box.left + box.width, bottom: box.top + box.height };
+			};
+		}
+
+		hooks.beforeEach(function () {
+			originalRect = Element.prototype.getBoundingClientRect;
+			originalWidth = window.innerWidth;
+			originalHeight = window.innerHeight;
+			Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1000 });
+			Object.defineProperty(window, 'innerHeight', { configurable: true, value: 800 });
+		});
+
+		hooks.afterEach(function () {
+			Element.prototype.getBoundingClientRect = originalRect;
+			Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalWidth });
+			Object.defineProperty(window, 'innerHeight', { configurable: true, value: originalHeight });
+		});
+
+		async function open(align = '') {
+			this.set('align', align || undefined);
+			await render(hbs`
+				<AppUi::Dropdown @align={{this.align}}>
+					<:button>Menu</:button>
+					<:content><a href="#">One</a></:content>
+				</AppUi::Dropdown>
+			`);
+			await click('.app-dropdown-btn');
+		}
+
+		test('start and end are applied as given', async function (assert) {
+			stub({ left: 10, top: 10, width: 50, height: 30 }, { left: 10, top: 40, width: 200, height: 100 });
+			await open.call(this, 'end');
+			assert.dom('.app-dropdown-content').hasClass('is-end');
+			await click('.app-dropdown-btn');
+			await open.call(this, 'start');
+			assert.dom('.app-dropdown-content').hasClass('is-start');
+		});
+
+		test('auto picks start when the menu fits to the right', async function (assert) {
+			stub({ left: 10, top: 10, width: 50, height: 30 }, { left: 10, top: 40, width: 200, height: 100 });
+			await open.call(this);
+			assert.dom('.app-dropdown-content').hasClass('is-start').doesNotHaveClass('is-up');
+		});
+
+		test('auto flips to end at the right edge and opens upward near the bottom', async function (assert) {
+			stub({ left: 900, top: 740, width: 50, height: 30 }, { left: 900, top: 770, width: 200, height: 100 });
+			await open.call(this);
+			assert.dom('.app-dropdown-content').hasClass('is-end').hasClass('is-up');
+		});
+
+		test('Escape closes the menu and returns the focus to the trigger', async function (assert) {
+			stub({ left: 10, top: 10, width: 50, height: 30 }, { left: 10, top: 40, width: 200, height: 100 });
+			await open.call(this);
+			assert.dom('.app-dropdown-content').hasClass('show');
+			await triggerKeyEvent(document, 'keydown', 'Escape');
+			assert.dom('.app-dropdown-content').doesNotHaveClass('show');
+			assert.dom('.app-dropdown-btn').isFocused();
+		});
 	});
 });

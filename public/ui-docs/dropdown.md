@@ -1,13 +1,14 @@
 ## Overview
 
-`AppUi::Dropdown` is a button that opens a floating menu below it. It closes on a second click of the button or a click outside. It is used for the Saved Searches menu of ezSearch and for the Task Board filters.
+`AppUi::Dropdown` is a button that opens a floating menu below it. It closes on a second click of the button, a click outside or Escape; Escape returns the focus to the button. It is used for the Saved Searches menu of ezSearch and for the Task Board filters.
 
-The menu is right-aligned to the button by default (`right: 0`), so it grows to the left. Near the left edge of a screen or box this can push it off-screen: see Do and Avoid.
+The menu looks like a Bootstrap `dropdown-menu`: white, a 1px `#ddd` border, square edges, `#444` items with a `#f4f4f4` hover. A selected item (`.active` or `aria-selected="true"`) shows crimson text and a check, with no fill.
 
 ## Arguments
 
 | Argument | Type | Default | Meaning |
 |---|---|---|---|
+| `@align` | `auto`, `start`, `end` | `auto` | `start` puts the menu's left edge on the button's left edge, `end` aligns the right edges. `auto` measures on open: start when the menu fits in the viewport to the right, otherwise end, and it opens upward when there is no room below. It measures again on window resize while open |
 | `@isPrimary` | boolean | `false` | Renders the button as `btn-primary` instead of `btn-default` |
 | `...attributes` | HTML attributes | none | Applied to the wrapping `.app-dropdown` element |
 
@@ -29,13 +30,12 @@ The menu is right-aligned to the button by default (`right: 0`), so it grows to 
 ### Do
 
 - Make every menu item a direct child of the `:content` block: the row styles apply to direct children only.
-- Mark the selected item with the `active` class and a check icon.
-- Align the menu with a rule scoped under your own root class (for example `.ez-search-saved .app-dropdown-content { left: 0; right: auto; }`) when the button sits near the left edge.
+- Mark the selected item with the `active` class (or `aria-selected`) and a check icon.
+- Leave `@align` on `auto`; set `start` or `end` only when the placement is fixed. A scoped rule such as ezSearch's `.ez-search-saved .app-dropdown-content { left: 0; right: auto; }` still wins over the alignment.
 - Let long labels wrap in your scoped rule (`white-space: normal`, `max-width`) and cap the height with `max-height` and `overflow-y: auto` for many items.
-- Keep hover and selected colours from the theme variables.
 
 ### Avoid
 
-- Do not restyle `.app-dropdown-content` globally: the Saved Searches menu, the board filters and every other user share it (see aprom-4309 and aprom-4346).
+- Do not restyle `.app-dropdown-content` in a page or feature: the Saved Searches menu, the board filters and every other user share it (see aprom-4309 and aprom-4346). Change the shared look in `dropdown.scss` only.
 - Do not wrap items in extra elements, they lose the row styles.
-- Do not use hard-coded colours for hover or selected states.
+- Do not add a fill to the selected item or a crimson hover: the menu colours are standard.

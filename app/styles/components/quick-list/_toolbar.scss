@@ -56,8 +56,10 @@
   .quick-list-toolbar-option.is-current {
     font-weight: 600;
 
-    // The crimson marker is for rest only; hover and focus use the dropdown's white text.
-    &:not(:hover):not(:focus) {
+    // The current option is crimson text, also on hover and focus (the dropdown's standard menu has no fill).
+    &,
+    &:hover,
+    &:focus {
       color: $primaryColor;
     }
   }
