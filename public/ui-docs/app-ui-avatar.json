@@ -5,7 +5,8 @@
   "description": "The round picture of a user (person or agent) in the standard sizes, with initials on a generated per-user background for a person without image and a robot marker for an agent.",
   "arguments": {
     "user": { "type": "object", "required": true, "description": "The user record" },
-    "size": { "type": "string", "required": false, "description": "xs (20px), s (30px, alias sm), m (40px, default), ml (64px, member grids) or l (96px); unknown values give m" }
+    "size": { "type": "string", "required": false, "description": "xs (20px), s (30px, alias sm), m (40px, default), ml (64px, member grids) or l (96px); unknown values give m" },
+    "minSize": { "type": "string", "required": false, "description": "The smallest size to step down to (same values as size): the avatar renders the largest size from size down to minSize that fits its parent's content width; unknown or not smaller than size keeps size fixed" }
   },
   "events": {},
   "blocks": {},

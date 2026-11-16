@@ -6,6 +6,8 @@ import { registerDestructor } from '@ember/destroyable';
 
 /**
  * Reports the width of the element it is set on, now and whenever it changes: `{{observe-width this.onWidth}}`.
+ * With `parent=true` it reports the content width of the element's parent instead, for an element that adapts to
+ * the space it is given and so must not measure itself. Without a callback nothing is observed.
  * The observer is removed when the element is torn down, and nothing happens where ResizeObserver is missing.
  *
  * The callback runs in the next animation frame, not inside the ResizeObserver notification. A callback that
@@ -23,21 +25,22 @@ export default class ObserveWidthModifier extends Modifier {
         registerDestructor(this, () => this.stop());
     }
 
-    modify(element, [callback]) {
+    modify(element, [callback], { parent = false } = {}) {
         this.stop();
-        if (typeof ResizeObserver !== 'function' || typeof callback !== 'function') {
+        let target = parent ? element.parentElement : element;
+        if (typeof ResizeObserver !== 'function' || typeof callback !== 'function' || !target) {
             return;
         }
         this.observer = new ResizeObserver((entries) => {
             let entry = entries[entries.length - 1];
-            let width = entry?.contentRect?.width ?? element.getBoundingClientRect().width;
+            let width = entry?.contentRect?.width ?? target.getBoundingClientRect().width;
             this.cancelFrame();
             this.frame = requestAnimationFrame(() => {
                 this.frame = null;
                 callback(width);
             });
         });
-        this.observer.observe(element);
+        this.observer.observe(target);
     }
 
     cancelFrame() {

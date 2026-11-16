@@ -31,6 +31,15 @@
     <p data-demo-avatar-selected>Selected size:
       <AppUi::Avatar @user={{this.selectedUser}} @size={{this.size}} />
     </p>
+    <div class="form-inline form-group">
+      <label>Container width ({{this.boxWidth}}px)
+        <input type="range" min="30" max="160" step="2" value={{this.boxWidth}} data-demo-avatar-box-width {{on "input" this.setBoxWidth}}>
+      </label>
+    </div>
+    <p>With <code>@size="l" @minSize="m"</code> the avatar steps down to ml and m as the container narrows:</p>
+    <div style={{this.boxStyle}} data-demo-avatar-adaptive>
+      <AppUi::Avatar @user={{this.selectedUser}} @size="l" @minSize="m" />
+    </div>
   </:demo>
   <:docs>
     <Developer::Docs @doc="app-ui-avatar.md" />

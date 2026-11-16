@@ -1,4 +1,4 @@
-<span class="app-ui-avatar app-ui-avatar-{{this.size}} {{if this.isAgent "app-ui-avatar-agent"}}" title={{this.title}} data-test-avatar data-size={{this.size}} ...attributes>
+<span class="app-ui-avatar app-ui-avatar-{{this.size}} {{if this.isAgent "app-ui-avatar-agent"}}" title={{this.title}} data-test-avatar data-size={{this.size}} {{observe-width this.onParentWidth parent=true}} ...attributes>
   {{#if this.isAgent}}
     <Agent::Avatar @user={{@user}} data-user-agent-avatar />
     {{#if this.hasPicture}}

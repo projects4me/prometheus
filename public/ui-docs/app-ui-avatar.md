@@ -20,12 +20,23 @@ Extra attributes (a class, a title) go on the wrapping element.
 
 An unknown value falls back to `m`.
 
+## Stepping down to the space available
+
+A large avatar in a column whose width depends on where the view is shown (a full page or a narrow quick-view panel) can take `@minSize`. The avatar then watches the content width of its parent element and renders the largest standard size from `@size` down to `@minSize` that fits, or `@minSize` when none fits. `data-size` and the size class show the size rendered, and it follows the parent as it resizes.
+
+It decides from the parent's width only, never from its own, so a parent whose width follows its content settles on one size. Without `@minSize`, or with one that is unknown or not smaller than `@size`, the size is fixed and nothing is measured.
+
+```hbs
+<AppUi::Avatar @user={{this.user}} @size="l" @minSize="m" />
+```
+
 ## Arguments
 
 | Argument | Type | Default | Meaning |
 |---|---|---|---|
 | @user | Object | none | The user record: `id`, `name`, and optionally `type` and `profilePicture` |
 | @size | String | m | `xs`, `s` (or `sm`), `m`, `ml` or `l` |
+| @minSize | String | none | The smallest size to step down to when the parent is too narrow for `@size`; same values as `@size` |
 
 ## Blocks
 
@@ -41,4 +52,5 @@ None.
 
 - Pass the record, not its parts.
 - Use `AppUi::UserChip` when the name is shown next to the picture.
+- Use `@minSize` for large avatars in containers of varying width, instead of picking a fixed size per page.
 - Avoid drawing avatar markup by hand in a page.
