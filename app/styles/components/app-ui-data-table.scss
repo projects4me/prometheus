@@ -75,10 +75,19 @@
       padding: 5px;
       outline: none;
 
+      // The icon sets its own size and colour so no global i/.fa rule can override the button.
+      > i,
+      > .fa,
+      i.fa {
+        color: #97a0b3;
+        font-size: 1.2rem;
+        line-height: 1.5;
+      }
+
       &:hover,
       &:focus,
-      &:hover .fa,
-      &:focus .fa {
+      &:hover i.fa,
+      &:focus i.fa {
         background: transparent;
         color: $primaryColor;
       }
