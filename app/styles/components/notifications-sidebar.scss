@@ -97,7 +97,8 @@
               width: 100%;
           }
 
-          .user-image img {
+          .user-image {
+              flex: none;
               width: 4rem;
               height: 4rem;
           }

@@ -257,8 +257,8 @@ export default class AppUiNotificationsNotificationComponent extends AppComponen
 		if (element.tagName === 'A') {
 			link = element.getAttribute('href');
 		}
-		if (element.tagName === 'IMG' && element.classList.contains('user-image')) {
-			link = element.parentElement.getAttribute('href');
+		if (this.isUserClick(element)) {
+			link = element.closest('[data-notification-user-image] a')?.getAttribute('href');
 		}
 		if (!link) {
 			link = this.getNotificationLink;
