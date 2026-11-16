@@ -13,6 +13,8 @@ function createWorkflow(name, status, kind, nodes) {
 	nodes.forEach((node) => server.create('workflownode', { workflowId: workflow.id, ...node }));
 }
 
+let recorded = [];
+
 export default function (assert) {
 	return listToolbarSteps(agentFixtureSteps(steps(assert)), assert, 'workflow', { dataTest: true })
 		.given('The $status workflow "$name" triggers on $kind and runs the agent "$agent"', async function (status, name, kind, agent) {
@@ -21,6 +23,16 @@ export default function (assert) {
 		})
 		.given('The $status workflow "$name" triggers on $kind and asks the user placeholder "$placeholder"', async function (status, name, kind, placeholder) {
 			createWorkflow(name, status, kind, [{ category: 'actor', kind: 'ask_user', config: JSON.stringify({ userId: placeholder }) }]);
+		})
+		.given('API requests are recorded', function () {
+			recorded = [];
+			server.pretender.handledRequest = (verb, path) => {
+				recorded.push({ verb, path });
+			};
+		})
+		.then('The list should have loaded through at most $count bulk requests', function (count) {
+			let bulk = recorded.filter((request) => request.verb === 'POST' && /\/bulk$/.test(request.path.split('?')[0]));
+			assert.ok(bulk.length > 0 && bulk.length <= parseInt(count), `${bulk.length} bulk requests`);
 		})
 		.given('The workflow "$name" ran $count times in the last week', async function (name, count) {
 			let workflow = server.schema.workflows.findBy({ name });
