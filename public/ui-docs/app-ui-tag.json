@@ -1,0 +1,16 @@
+{
+  "name": "AppUi::Tag",
+  "component": "app-ui/tag",
+  "doc": "app-ui-tag.md",
+  "description": "A tag in the Task Board look: border and text in the variant colour on a tint of it, optionally removable.",
+  "arguments": {
+    "variant": { "type": "string", "required": false, "default": "default", "description": "The colour: default, primary, info, success, warning or danger" },
+    "colorKey": { "type": "string", "required": false, "description": "Text to pick the palette colour from, used when there is no @variant; the same text always gets the same colour" }
+  },
+  "events": {
+    "onRemove": { "payload": [], "description": "Shows a remove button and is called when it is clicked" }
+  },
+  "blocks": {
+    "default": { "description": "The text of the tag", "yields": [] }
+  }
+}
